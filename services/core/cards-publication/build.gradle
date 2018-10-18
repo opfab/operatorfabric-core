@@ -1,0 +1,24 @@
+dependencies {
+    compile boot.starterWebflux
+    compile project(':client:cards-client-data')
+    compile project(':tools:spring-amqp-time-utilities'), project(':tools:spring-mongo-utilities')
+
+    testCompile testing.reactor
+}
+
+jar {
+    manifest {
+        attributes("Created-By"         : "David Binder",
+                "Specification-Title": "Operator Fabric Card Manager Service",
+                "Main-Class"         : "org.lfenergy.operatorfabric.cards.Application",
+                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+    }
+}
+
+swaggerSources {
+    endpoints {
+        code {
+            components = ['models']
+        }
+    }
+}

@@ -1,0 +1,106 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://repo.spring.io/release" }
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/libs-snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/libs-milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath testing.junit5Plugin
+        classpath generator.swaggerGeneratorPlugin
+    }
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: plugin.swagger
+
+    /////// COMPILATION
+
+    dependencies {
+        swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+        compile generator.springfoxSwagger2
+        annotationProcessor misc.lombok
+        implementation misc.lombok
+        // compileOnly misc.lombok
+        testRuntime testing.junit5Engine
+        testCompile testing.junit5Api, boot.starterTest, testing.assertJ, misc.lombok
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+                srcDir 'build/swagger/src/main/java'
+            }
+            resources{
+                srcDir 'src/main/resources'
+                srcDir 'build/src/generated/resources'
+            }
+        }
+    }
+
+    swaggerSources {
+        model {
+            inputFile = file("../../services/core/$project.projectDir.name/src/main/modeling/swagger.yaml")
+            code {
+                language = 'org.lfenergy.operatorfabric.generators.OpfabClientGenerator'
+                configFile = file('src/main/modeling/config.json')
+                outputDir = file("./build/swagger")
+                templateDir = file('../src/main/resources/swagger-templates')
+                components = ['models']
+            }
+        }
+
+        doc {
+            inputFile = file("../../services/core/$project.projectDir.name/src/main/modeling/swagger.yaml")
+            code {
+                language = 'html'
+                outputDir = file("./build/doc/api")
+                components = ['models']
+            }
+        }
+    }
+
+
+    configurations {
+        testCompile.exclude module: "junit"
+    }
+
+    /////// CONFIGURATION
+    test {
+        useJUnitPlatform()
+        filter {
+            includeTestsMatching "*Should"
+        }
+    }
+
+    jacocoTestReport {
+        group = "Reporting"
+        reports {
+            xml.enabled true
+            csv.enabled false
+            html.destination file("${buildDir}/reports/coverage")
+        }
+    }
+
+    /////// CUSTOM TASKS
+
+    /*Task that copies all the dependencies under build/libs */
+    task copyDependencies(type: Copy) {
+        from configurations.compile
+        into 'build/libs'
+    }
+
+    tasks.jacocoTestReport.dependsOn test
+    tasks.compileJava.dependsOn generateSwaggerCode
+    tasks.compileTestJava.dependsOn generateSwaggerCode
+}

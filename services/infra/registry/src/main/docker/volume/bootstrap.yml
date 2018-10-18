@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: registry
+  cloud.config:
+    name: registry
+    uri: http://config:8080
+    failFast: true
+    retry:
+      maxAttempts: 10
+

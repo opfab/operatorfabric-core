@@ -1,0 +1,31 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+package org.lfenergy.operatorfabric.cards.config.mongo;
+
+import org.bson.Document;
+import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
+import org.lfenergy.operatorfabric.cards.model.Recipient;
+import org.lfenergy.operatorfabric.cards.model.RecipientData;
+import org.springframework.core.convert.converter.Converter;
+
+import java.util.List;
+
+public class RecipientReadConverter implements Converter<Document,Recipient> {
+    @Override
+    public Recipient convert(Document source) {
+        RecipientData.RecipientDataBuilder builder =
+            RecipientData.builder()
+                .type(RecipientEnum.valueOf(source.getString("type")))
+                .identity(source.getString("identity"))
+                .preserveMain(source.getBoolean("preserveMain"));
+        List<Document> recipientsDocument = (List<Document>) source.get("recipients");
+        if(recipientsDocument!=null)
+            for(Document d:recipientsDocument){
+                builder.recipient(this.convert(d));
+            }
+
+        return builder.build();
+    }
+}

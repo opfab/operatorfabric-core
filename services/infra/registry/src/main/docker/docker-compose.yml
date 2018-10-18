@@ -1,0 +1,18 @@
+version: '2.1'
+services:
+  registry:
+    container_name: registry
+    image: "org.lfenergy.operatorfabric/registry-cloud-service"
+    ports:
+     - "2001:8080"
+     - "3001:5005"
+    expose:
+     - "8080"
+    volumes:
+     - "../../../build/docker-volume:/config"
+    networks:
+     - opfabnet
+networks:
+ opfabnet:
+   external:
+     name: opfabnet

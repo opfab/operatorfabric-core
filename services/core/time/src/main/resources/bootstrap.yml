@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: time
+  cloud:
+    config:
+      name: time
+      fail-fast: true
+      retry:
+        max-attempts: 20
+      discovery:
+        service-id: config
+        enabled: true
+

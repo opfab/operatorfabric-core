@@ -1,0 +1,42 @@
+security:
+  basic:
+    enabled: false
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+#          enabled: true
+          lowerCaseServiceId: true
+      routes:
+      - id: time
+        uri: lb://TIME
+        predicates:
+        - Path=/time/**
+        filters:
+        - RewritePath=/time/(?<path>.*), /$\{path}
+      - id: users
+        uri: lb://USERS
+        predicates:
+        - Path=/users/**
+        filters:
+        - RewritePath=/users/(?<path>.*), /$\{path}
+      - id: cards
+        uri: lb://CARDS-CONSULTATION
+        predicates:
+        - Path=/cards/**
+        filters:
+        - RewritePath=/cards/(?<path>.*), /$\{path}
+#logging:
+  level.root: debug
+#zuul:
+#  ignored-services: '*'
+#  routes:
+#    time:
+#      path: '/time/**'
+#      serviceId: time
+#      sensitiveHeaders: Cookie,Set-Cookie
+#    cards:
+#      path: '/cards/**'
+#      serviceId: cards-consultation
+#      sensitiveHeaders: Cookie,Set-Cookie

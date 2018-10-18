@@ -1,0 +1,16 @@
+server:
+  port: 2002
+#spring:
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+##          enabled: true
+#          lowerCaseServiceId: true
+#      routes:
+#      - id: auth
+#        uri: http://localhost:3000/auth/oauth/
+#        predicates:
+#        - Path=/auth/**
+#        filters:
+#        - RewritePath=/auth/(?<path>.*), /$\{path}

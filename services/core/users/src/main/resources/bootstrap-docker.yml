@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: users
+  cloud:
+    config:
+      name: users
+      failFast: true
+      retry:
+        maxAttempts: 20
+      discovery:
+        service-id: config
+        enabled: true
+#  level.root: debug
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    registryFetchIntervalSeconds: 5
+    service-url:
+      defaultZone: 'http://${REGISTRY_HOST}:${REGISTRY_PORT}/eureka/'

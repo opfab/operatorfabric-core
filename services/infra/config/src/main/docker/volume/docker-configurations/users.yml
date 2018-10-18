@@ -1,0 +1,19 @@
+operatorfabric.users.default:
+  users:
+    - login: admin
+      groups: ["ADMIN"]
+    - login: rte-operator
+      groups: ["RTE","ADMIN","CORESO"]
+    - login: elia-operator
+      groups: ["ELIA"]
+    - login: coreso-operator
+      groups: ["CORESO"]
+  groups:
+    - name: ADMIN
+      description: The admin group
+    - name: RTE
+      description: RTE TSO Group
+    - name: ELIA
+      description: ELIA TSO group
+    - name: CORESO
+      description: CORESO Group

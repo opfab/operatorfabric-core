@@ -1,0 +1,36 @@
+dependencies {
+    compile cloud.eurekaClient, cloud.gateway
+//    compile boot.starterSecurity
+     compile boot.starterAop, spring.retry
+//    compile spring.securityOauthResource, spring.securityOauthJose
+    compile boot.devTools
+}
+
+sourceSets {
+    main {
+        resources{
+            srcDir 'src/main/resources'
+            srcDir 'build/src/generated/resources'
+        }
+    }
+}
+
+bootRun {
+    sourceResources sourceSets.main
+}
+
+configurations {
+    compile.exclude module: "spring-boot-starter-jetty"
+    testCompile.exclude module: "junit"
+}
+
+
+
+jar {
+    manifest {
+        attributes("Created-By"         : "David Binder",
+                "Specification-Title": "Operator Fabric Microservices Gateway",
+                "Main-Class"         : "org.lfenergy.operatorfabric.gateway.Application",
+                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+    }
+}

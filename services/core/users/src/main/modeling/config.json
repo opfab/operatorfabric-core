@@ -1,0 +1,16 @@
+{
+  "library": "spring-boot",
+  "java8": true,
+  "modelPackage": "org.lfenergy.operatorfabric.users.model",
+  "apiPackage": "org.lfenergy.operatorfabric.users.controllers",
+  "configPackage": "org.lfenergy.operatorfabric.users.config",
+  "invokerPackage": "org.lfenergy.operatorfabric.users.invokers",
+  "dateLibrary": "java8",
+  "useBeanValidation": true,
+  "interfaceOnly": true,
+  "delegatePattern": true,
+  "singleContentTypes": false,
+  "importMappings": {
+    "EpochDate": "java.lang.Long"
+  }
+}

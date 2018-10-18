@@ -1,0 +1,43 @@
+rootProject.name = 'operator-fabric'
+
+include 'tools:swagger-spring-generators'
+include 'tools:utilities'
+include 'tools:spring-utilities'
+include 'tools:spring-amqp-time-utilities'
+include 'tools:spring-mongo-utilities'
+include 'tools:spring-oauth2-utilities'
+include 'tools:test-utilities'
+include 'client:time'
+include 'client:cards'
+include 'client:users'
+include 'services:infra:config'
+include 'services:infra:auth'
+include 'services:infra:registry'
+include 'services:infra:client-gateway'
+include 'services:core:thirds'
+include 'services:core:cards-publication'
+include 'services:core:cards-consultation'
+include 'services:core:time'
+include 'services:core:users'
+include 'docker-standalone-images:dummy-card-daemon'
+
+project(':client:time').name = 'time-client-data'
+project(':client:cards').name = 'cards-client-data'
+project(':client:users').name = 'users-client-data'
+project(':services:core:time').name = 'time-business-service'
+project(':services:core:thirds').name = 'third-party-business-service'
+project(':services:core:users').name = 'users-business-service'
+project(':services:core:cards-publication').name = 'cards-publication-business-service'
+project(':services:core:cards-consultation').name = 'cards-consultation-business-service'
+project(':services:infra:auth').name = 'OAuth2-dev-server'
+project(':services:infra:config').name = 'configuration-cloud-service'
+project(':services:infra:registry').name = 'registry-cloud-service'
+project(':services:infra:client-gateway').name = 'client-gateway-cloud-service'
+
+//we check if the modules have gradle configuration files
+rootProject.children.each { project ->
+    project.buildFileName = "${project.name}.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.exists()
+    assert project.buildFile.isFile()
+}

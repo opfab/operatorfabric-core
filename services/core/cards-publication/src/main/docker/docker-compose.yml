@@ -1,0 +1,11 @@
+version: '2.1'
+services:
+  time:
+    image: "org.lfenergy.operatorfabric/cards"
+    ports:
+     - "2101:8080"
+     - "3101:5005"
+    volumes:
+     - "../../../build/docker-volume:/configuration"
+    networks:
+     - operatorfabricnet

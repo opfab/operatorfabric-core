@@ -1,0 +1,7 @@
+operatorfabric.users.default:
+  users:
+    - login: admin
+      groups: [ADMIN]
+  groups:
+    - name: ADMIN
+      description: The admin group

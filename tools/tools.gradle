@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://repo.spring.io/release" }
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/libs-snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/libs-milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath testing.junit5Plugin
+        classpath boot.springBootPlugin
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: plugin.bom
+//    apply plugin: plugin.boot
+
+    dependencyManagement {
+        imports {
+            mavenBom cloud.dependencies
+        }
+    }
+
+    dependencies {
+        compile misc.slf4j
+        annotationProcessor misc.lombok
+        implementation misc.lombok
+        // compileOnly misc.lombok
+        testRuntime testing.junit5Engine
+        testCompile testing.junit5Api, boot.starterTest, testing.assertJ, misc.lombok
+    }
+
+    configurations {
+        testCompile.exclude module: "junit"
+    }
+
+    /////// CONFIGURATION
+    test {
+        useJUnitPlatform()
+        filter {
+            includeTestsMatching "*Should"
+        }
+    }
+    jacocoTestReport {
+        group = "Reporting"
+        reports {
+            xml.enabled true
+            csv.enabled false
+            html.destination file("${buildDir}/reports/coverage")
+        }
+    }
+
+    tasks.jacocoTestReport.dependsOn test
+}

@@ -1,0 +1,24 @@
+{
+  "name": "first",
+  "version": "0.1",
+  "defaultLocale": "fr",
+  "templates": [
+    "template",
+    "template1"
+  ],
+  "csses": [
+    "style1"
+  ],
+  "medias": [
+    {
+      "name": "bidon",
+      "files": [
+        "bidon.txt"
+      ]
+    }
+  ],
+  "locales": [
+    "fr",
+    "en"
+  ]
+}

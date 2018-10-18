@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: client-gateway
+  cloud:
+    config:
+      name: client-gateway
+      fail-fast: true
+      retry:
+        max-attempts: 20
+      discovery:
+        service-id: config
+        enabled: true
+    discovery:
+      service-id: config
+      enabled: true

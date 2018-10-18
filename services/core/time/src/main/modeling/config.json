@@ -1,0 +1,17 @@
+{
+  "library": "spring-boot",
+  "java8": true,
+  "modelPackage": "org.lfenergy.operatorfabric.time.model",
+  "apiPackage": "org.lfenergy.operatorfabric.time.controllers",
+  "configPackage": "org.lfenergy.operatorfabric.time.config",
+  "invokerPackage": "org.lfenergy.operatorfabric.time.invokers",
+  "dateLibrary": "java8",
+  "useBeanValidation": true,
+  "interfaceOnly": true,
+  "delegatePattern": true,
+  "singleContentTypes": false,
+  "importMappings" : {
+    "SpeedEnum": "org.lfenergy.operatorfabric.time.model.SpeedEnum",
+    "EpochDate": "java.lang.Long"
+  }
+}

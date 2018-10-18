@@ -1,0 +1,15 @@
+version: '2.1'
+services:
+  client_gateway:
+    image: "org.lfenergy.operatorfabric/client-gateway-cloud-service"
+    ports:
+     - "2002:8080"
+     - "4002:5005"
+    volumes:
+     - "../../../build/docker-volume:/config"
+    networks:
+     - opfabnet
+networks:
+ opfabnet:
+   external:
+     name: opfabnet

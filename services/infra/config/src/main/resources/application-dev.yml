@@ -1,0 +1,24 @@
+server:
+  port: 2000
+spring:
+  profiles:
+    active: [native,dev]
+  cloud:
+    config:
+      server:
+        native:
+          search-locations:
+           - file:./build/dev-data/dev-configurations
+      discovery:
+        enabled: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client:
+    region: default
+    service-url:
+      defaultZone: http://localhost:2001/eureka
+    registryFetchIntervalSeconds: 5

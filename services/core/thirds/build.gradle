@@ -1,0 +1,71 @@
+dependencies {
+    compile boot.starterWeb, boot.starterJetty
+}
+
+jar {
+    manifest {
+        attributes("Created-By"         : "David Binder",
+                   "Specification-Title": "Operator Fabric Third Parties Manager",
+                   "Main-Class"         : "org.lfenergy.operatorfabric.thirds.Application",
+                   "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+    }
+}
+//bootRun{
+//    systemProperty 'spring.profiles.active', findProperty('spring.profiles.active') ?: 'standalone,native'
+//    systemProperty 'spring.cloud.bootstrap.location', findProperty('spring.cloud.bootstrap.location') ?: ''
+//}
+
+
+/////// CUSTOM TASKS
+// Test data tasks >>>>>
+task compressBundle1Data(type: Exec){
+    workingDir "$project.projectDir/src/test/data/bundles/second/2.0/"
+    executable "bash"
+    args "-c", "tar -czf $project.projectDir/build/test-data/bundles/second-2.0.tar.gz *"
+}
+task compressBundle2Data(type: Exec){
+    workingDir "$project.projectDir/src/test/data/bundles/second/2.1/"
+    executable "bash"
+    args "-c", "tar -czf $project.projectDir/build/test-data/bundles/second-2.1.tar.gz *"
+}
+
+task createDevData(type: Copy){
+    from 'src/main/docker/volume/thirds-storage'
+    into 'build/dev-data/thirds-storage'
+    doFirst{
+        logger.info "copying src/main/docker/volume/* to build/dev-data/thirds-storage/"
+    }
+}
+
+task prepareTestDataDir {
+    doFirst {
+        logger.info "creating $project.projectDir/build/test-data/"
+        new File("$project.projectDir/build/test-data/bundles/").mkdirs()
+    }
+}
+
+task prepareDevDataDir {
+    doFirst {
+        logger.info "creating $project.projectDir/build/dev-data/"
+        new File("$project.projectDir/build/dev-data/bundles/").mkdirs()
+    }
+}
+
+task copyCompileClasspathDependencies(type: Copy) {
+   // unlike copyDependencies, this one will catch lombok that must be sent to sonarqube
+   description 'copy compile classpath dependencies'
+   from configurations.compileClasspath
+   into "$project.buildDir/libs_compile"
+   doFirst{
+       logger.info "copying configurations.compileClasspath to $project.buildDir/libs_compile"
+   }
+}
+
+createDevData.dependsOn prepareDevDataDir
+compressBundle1Data.dependsOn prepareTestDataDir
+compressBundle2Data.dependsOn prepareTestDataDir
+test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data
+unitTest.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data
+bootRun.dependsOn createDevData
+
+// <<<<< Test data tasks

@@ -1,0 +1,16 @@
+dependencies {
+    compile boot.starterWeb, boot.starterJetty
+    compile project(':tools:spring-mongo-utilities')
+    compile project(':tools:spring-oauth2-utilities')
+//    compile project(':client:users-client-data')
+//    compile project(':tools:spring-amqp-time-utilities')
+}
+
+jar {
+    manifest {
+        attributes("Created-By"         : "David Binder",
+                "Specification-Title": "Operator Fabric User Manager Service",
+                "Main-Class"         : "org.lfenergy.operatorfabric.users.Application",
+                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+    }
+}

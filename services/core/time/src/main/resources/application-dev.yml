@@ -1,0 +1,9 @@
+server:
+  port: 2101
+time.default: 1488240000000
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:3000/auth/jwks.json

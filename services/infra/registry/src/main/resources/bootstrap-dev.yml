@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: registry
+  cloud.config:
+    name: registry
+    uri: http://localhost:2000

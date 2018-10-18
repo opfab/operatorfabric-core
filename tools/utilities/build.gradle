@@ -1,0 +1,22 @@
+dependencies{
+    compile misc.compress
+    testCompile project(':tools:test-utilities')
+}
+
+task prepareTestData(type: Copy){
+    from 'src/test/data/simple'
+    into 'build/test-data'
+    doFirst{
+        logger.info "src/test/data/* to build/test-data/"
+    }
+}
+
+task compressTestArchive(type: Exec){
+    workingDir "$project.projectDir/src/test/data/archive"
+    executable "bash"
+    args "-c", "tar -czf $project.projectDir/build/test-data/archive.tar.gz *"
+}
+
+test.dependsOn(prepareTestData)
+test.dependsOn(compressTestArchive)
+compressTestArchive.dependsOn(prepareTestData)

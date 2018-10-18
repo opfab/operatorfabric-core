@@ -1,0 +1,5 @@
+server:
+  port: 2100
+thirds:
+  storage:
+    path: "./build/dev-data/thirds-storage"

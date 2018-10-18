@@ -1,0 +1,197 @@
+swagger: '2.0'
+info:
+  description: Time Service a.k.a. Time management API for Operator Fabric
+  version: 0.0.1
+  title: Time Management
+  termsOfService: ''
+  contact:
+    email: benoit.jeanson@rte-france.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: localhost
+basePath: /apis
+tags:
+  - name: time
+    description: Everything concerning time
+schemes:
+  - http
+definitions:
+  EpochDate:
+    type: object
+    description: number of milliseconds since Epoch (long integer)
+  SpeedEnum:
+    type: string
+    description: the speed of time flow
+    enum:
+      - X1
+      - X2
+      - X10
+      - X60
+      - X3600
+      - HALF
+  TimeData:
+    type: object
+    description: Describe a time configuration
+    properties:
+      referenceTime:
+        $ref: '#/definitions/EpochDate'
+        description: The real server time at last time server change
+      currentTime:
+        $ref: '#/definitions/EpochDate'
+        description: The virtual server time for last time server change
+      computedNow:
+        $ref: '#/definitions/EpochDate'
+        description: Current time computed by server
+      speed:
+        $ref: '#/definitions/SpeedEnum'
+        description: The speed of time flow
+paths:
+  /time:
+    get:
+      tags:
+        - time
+      summary: fetch current time configuration
+      description: fetch current time configuration
+      operationId: fetchTime
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/TimeData'
+      security:
+        - time_auth:
+            - 'read'
+    post:
+      tags:
+        - time
+      summary: sets current time configuration
+      description: sets current time configuration
+      operationId: setTime
+      parameters:
+        - in: body
+          name: time
+          description: Time Data to update time service
+          schema:
+            $ref: '#/definitions/TimeData'
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/TimeData'
+      security:
+        - time_auth:
+            - 'write'
+    put:
+      tags:
+        - time
+      summary: updates current time configuration
+      description: updates current time configuration
+      operationId: updateTime
+      parameters:
+        - in: body
+          name: time
+          description: Time Data to update time service
+          schema:
+            $ref: '#/definitions/TimeData'
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/TimeData'
+      security:
+        - time_auth:
+            - 'write'
+    delete:
+      tags:
+        - time
+      summary: resets time configuration
+      description: resets time configuration
+      operationId: resetTime
+      responses:
+        '200':
+          description: OK
+  /time/current:
+    post:
+      tags:
+        - time
+      summary: Sets current time
+      description: Sets the virtual server time (milliseconds since Epoch)
+      operationId: setCurrentTime
+      parameters:
+        - in: body
+          name: currentTime
+          description: virtual server time (milliseconds since Epoch)
+          schema:
+            $ref: '#/definitions/EpochDate'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EpochDate'
+    put:
+      tags:
+        - time
+      summary: Updates current time
+      description: Updates the virtual server time (milliseconds since Epoch)
+      operationId: updateCurrentTime
+      parameters:
+        - in: body
+          name: currentTime
+          description: virtual server time (milliseconds since Epoch)
+          schema:
+            $ref: '#/definitions/EpochDate'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EpochDate'
+  /time/speed:
+    post:
+      tags:
+        - time
+      summary: Sets current speed
+      description: Sets the virtual server speed
+      operationId: setCurrentSpeed
+      parameters:
+        - in: body
+          name: currentspeed
+          description: virtual server speed
+          schema:
+            $ref: '#/definitions/SpeedEnum'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SpeedEnum'
+    put:
+      tags:
+        - time
+      summary: Updates current speed
+      description: Updates the virtual server speed (milliseconds since Epoch)
+      operationId: updateCurrentspeed
+      parameters:
+        - in: body
+          name: currentspeed
+          description: virtual server speed (milliseconds since Epoch)
+          schema:
+            $ref: '#/definitions/SpeedEnum'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SpeedEnum'
+securityDefinitions:
+  time_auth:
+    type: oauth2
+    authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
+    flow: implicit
+    scopes:
+      'read': access time data
+      'write': access time data
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header

@@ -1,0 +1,17 @@
+{
+  "name": "APOGEE",
+  "version": "0.12",
+  "defaultLocale": "fr",
+  "templates": [
+    "security",
+    "unschedulledPeriodicOp",
+    "operation"
+  ],
+  "csses": [
+    "tabs",
+    "accordions",
+    "filter",
+    "operations",
+    "security"
+  ]
+}

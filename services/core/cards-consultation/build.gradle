@@ -1,0 +1,38 @@
+dependencies {
+    compile boot.starterWebflux
+    compile project(':client:cards-client-data')
+    compile project(':tools:spring-mongo-utilities')
+    compile project(':tools:spring-oauth2-utilities')
+//    compile boot.starterOauth2
+    testCompile testing.reactor
+}
+
+jar {
+    manifest {
+        attributes("Created-By"         : "David Binder",
+                "Specification-Title": "Operator Fabric Card Read Service",
+                "Main-Class"         : "org.lfenergy.operatorfabric.cards.Application",
+                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+    }
+}
+
+swaggerSources {
+    endpoints {
+        inputFile = file('../cards-publication/src/main/modeling/swagger.yaml')
+        code {
+            language = 'org.lfenergy.operatorfabric.generators.OpfabSpringGenerator'
+            configFile = file('../cards-publication/src/main/modeling/config.json')
+            outputDir = file("./build/swagger")
+            templateDir = file('../src/main/resources/swagger-templates')
+            components = ['models']
+        }
+    }
+
+    doc {
+        inputFile = file('../cards-publication/src/main/modeling/swagger.yaml')
+        code {
+            language = 'html'
+            outputDir = file("./build/doc/api")
+        }
+    }
+}

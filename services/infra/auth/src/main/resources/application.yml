@@ -1,0 +1,10 @@
+server:
+  port: 3000
+  servlet:
+    context-path: /auth
+#security:
+#  oauth2:
+#    client:
+#      client-id: test
+#      client-secret: password
+#      scope: password

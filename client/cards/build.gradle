@@ -1,0 +1,15 @@
+jar {
+    manifest {
+        attributes("Created-By"         : "David Binder",
+                "Specification-Title": "Operator Fabric Card Client Data")
+    }
+}
+swaggerSources {
+    model {
+        inputFile = file("../../services/core/cards-publication/src/main/modeling/swagger.yaml")
+    }
+
+    doc {
+        inputFile = file('../../services/core/cards-publication/src/main/modeling/swagger.yaml')
+    }
+}

@@ -1,0 +1,24 @@
+{
+  "library": "spring-boot",
+  "java8": true,
+  "modelPackage": "org.lfenergy.operatorfabric.cards.model",
+  "apiPackage": "org.lfenergy.operatorfabric.cards.controllers",
+  "configPackage": "org.lfenergy.operatorfabric.cards.config",
+  "invokerPackage": "org.lfenergy.operatorfabric.cards.invokers",
+  "dateLibrary": "java8",
+  "useBeanValidation": true,
+  "interfaceOnly": true,
+  "delegatePattern": true,
+  "singleContentTypes": false,
+  "importMappings" : {
+    "CardOperationTypeEnum": "org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum",
+    "SeverityEnum": "org.lfenergy.operatorfabric.cards.model.SeverityEnum",
+    "ActionEnum": "org.lfenergy.operatorfabric.cards.model.ActionEnum",
+    "InputEnum": "org.lfenergy.operatorfabric.cards.model.InputEnum",
+    "TitlePositionEnum": "org.lfenergy.operatorfabric.cards.model.TitlePositionEnum",
+    "RecipientEnum": "org.lfenergy.operatorfabric.cards.model.RecipientEnum",
+    "EpochDate": "java.lang.Long",
+    "LongInteger": "java.lang.Long"
+  },
+  "model": []
+}

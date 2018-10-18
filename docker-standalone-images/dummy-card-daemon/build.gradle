@@ -1,0 +1,3 @@
+docker {
+    files '../../services/core/cards-publication/src/main/bin/push_card_loop.sh'
+}

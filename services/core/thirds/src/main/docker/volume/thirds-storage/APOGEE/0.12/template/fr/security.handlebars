@@ -1,0 +1,333 @@
+<div class="main-div">
+    <div style="display: flex;flex-wrap: wrap;justify-content: space-between;">
+        <div>
+            <h2>Contraintes</h2>
+            <ul>
+            {{#each data.constraints.values}}
+                {{#each this}}
+                    {{#if this.worst}}
+                <li>
+                        {{#with this}}
+                            {{asset}} (
+                            {{#ifEquals type "FLOW"}}
+                                {{load.current}}% de {{#ifGreater severity 9998}}IMAP{{else}}surcharge {{severityMinutes}} min{{/ifGreater}}
+                            {{/ifEquals}}
+                            {{#ifEquals type "VOLTAGE"}}
+                                {{load.current}}% de {{#ifGreater severity 9998}}Alarme U{{threshholdType}}{{else}}U{{threshholdType}} {{severityMinutes}} min{{/ifGreater}}
+                            {{/ifEquals}}
+                            {{#ifEquals type "GENERATOR"}}
+                            {{/ifEquals}}
+                            )
+                        {{/with}}
+                </li>
+                    {{/if}}
+                {{/each}}
+            {{/each}}
+
+            </ul>
+        </div>
+        {{#if data.selectedRemedial}}
+        <div class="remedialSummary">
+            <h2>Parade retenue</h2>
+            {{#with data.remedials.[0]}}
+                {{externalId}}
+                    <ul>
+                        {{#each actions}}
+                            <li>{{this.name}} (categorie : {{this.category}}{{#ifEquals this.category 'TOPOLOGY'}},
+                                poste : {{this.substation}}{{#if this.openLine}},
+                                    openLine : {{this.openLine}}{{/if}}{{/ifEquals}})
+                            </li>
+                        {{/each}}
+                    </ul>
+            {{/with}}
+        </div>
+        {{/if}}
+    </div>
+
+<div class="tabs">
+    <input name="mainTabs" type="radio" id="tab-main-1" checked="checked" class="tab-input"/>
+    <label for="tab-main-1" class="tab-label">Contraintes</label>
+    <div class="tab-panel">
+        {{#if data.constraints.values.VOLTAGE}}
+            <h2>Contraintes de tension</h2>
+        <div class="table-responsive">
+            <input name="voltage-date-filter" type="checkbox" checked id="voltage-date-filter" class="filter-input"/>
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>
+                        <label for="voltage-date-filter" class="filter-label">
+                            <span class="fa-stack">
+                                <i class="fa fa-filter fa-stack-2x"></i>
+                                <i class="fa fa-plus fa-stack-1x"></i>
+                                <i class="fa fa-minus fa-stack-1x"></i>
+                            </span>
+                        </label> Horodate
+                    </th>
+                    <th>Date de calcul</th>
+                    <th>Nom</th>
+                    <th>Contrainte</th>
+                    <th>Charge</th>
+                    <th>Tension</th>
+                    <th>Limite</th>
+                    <th>Étude</th>
+                </tr>
+                </thead>
+                {{#each data.constraints.values.VOLTAGE}}
+                    {{#with this}}
+                        <tr class="{{#if altStyle}}alt-background{{/if}} {{#ifLowerNow caseDate}}filterout{{/ifLowerNow}}">
+                            <td>{{dateFormat caseDate format="YYYYMMDD-HHmm"}}</td>
+                            <td>{{dateFormat computationDate format="YYYYMMDD-HHmm"}} ({{computationType}})</td>
+                            <td>{{asset}}</td>
+                            <td>{{#ifGreater severity 9998}}IMAP{{else}}surcharge {{severityMinutes}} min{{/ifGreater}}</td>
+                            <td>{{load.before}}% / {{load.current}}%</td>
+                            <td>{{voltage.before}}kV / {{voltage.current}}kV</td>
+                            <td>{{threshold}}kV</td>
+                            <td>{{#cardAction "STUDY_" faultId}}{{/cardAction}}</td>
+                        </tr>
+                    {{/with}}
+                {{/each}}
+            </table>
+        </div>
+        {{/if}}
+
+        {{#if data.constraints.values.FLOW}}
+            <h2>Contraintes de transit</h2>
+        <div class="table-responsive">
+            <input name="flow-date-filter" type="checkbox" checked id="flow-date-filter" class="filter-input"/>
+        <table class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>
+                    <label for="flow-date-filter" class="filter-label">
+                        <span class="fa-stack">
+                            <i class="fa fa-filter fa-stack-1x"></i>
+                            <i class="fa fa-ban fa-stack-1x text-danger"></i>
+                            <!--<i class="fa fa-minus fa-stack-1x text-danger"></i>-->
+                        </span>
+                    </label> Horodate
+                </th>
+                <th>Date de calcul</th>
+                <th>Nom</th>
+                <th>Contrainte</th>
+                <th>Charge</th>
+                <th>Intensité</th>
+                <th>Limite</th>
+                <th>Transit</th>
+                <th>Étude</th>
+            </tr>
+            </thead>
+            {{#each data.constraints.values.FLOW}}
+                {{#with this}}
+                <tr class="{{#if altStyle}}alt-background{{/if}} {{#ifLowerNow caseDate}}filterout{{/ifLowerNow}}">
+                    <td>{{dateFormat caseDate format="YYYYMMDD-HHmm"}}</td>
+                    <td>{{dateFormat computationDate format="YYYYMMDD-HHmm"}} ({{computationType}})</td>
+                    <td>{{asset}}</td>
+                    <td>{{#ifGreater severity 9998}}IMAP{{else}}surcharge {{severityMinutes}} min{{/ifGreater}}</td>
+                    <td>{{load.before}}% / {{load.current}}%</td>
+                    <td>{{intensity.before}}A / {{intensity.current}}A</td>
+                    <td>{{threshold}}A</td>
+                    <td>{{power.before}}MW / {{power.current}}MW</td>
+                    <td>{{#cardAction "STUDY_" faultId}}{{/cardAction}}</td>
+                </tr>
+                {{/with}}
+            {{/each}}
+        </table>
+        </div>
+        {{/if}}
+
+        <div class="tabs">
+            {{#each data.constraints.substations}}
+            <input name="constraintTabs" type="radio" id="tab-cstr-{{@key}}" {{#if @first}}checked="checked"{{/if}} class="tab-input"/>
+            <label for="tab-cstr-{{@key}}" class="tab-label">{{@key}}</label>
+            <div class="tab-panel">
+                <div style="display: flex;flex-wrap: wrap;justify-content: space-between;">
+                <div class="accs" style="width:50%; padding-right: 10px">
+                {{#each this}}
+                    <input name="acc-{{@../key}}-{{this.id}}n" type="checkbox" checked id="acc-{{@../key}}-{{this.id}}n" class="acc-input"/>
+                    <label for="acc-{{@../key}}-{{this.id}}n" class="acc-label">{{this.id}} (N)</label>
+                    <div class="acc-panel" style="text-align:center">
+                        {{#svg this.baseImageUri "/n"}}{{/svg}}
+                        <!--<img class="lazy img-responsive" data-src="{{this.baseImageUri}}/n" data-alt="Poste {{this.id}} (N)" alt="Loading..." src="images/loader.gif">-->
+                    </div>
+                {{/each}}
+                </div>
+                <div class="accs" style="width:50%; padding-left: 10px">
+                {{#each this}}
+                    <input name="acc-{{@../key}}-{{this.id}}n-k" type="checkbox" checked id="acc-{{@../key}}-{{this.id}}n-k" class="acc-input"/>
+                    <label for="acc-{{@../key}}-{{this.id}}n-k" class="acc-label">{{this.id}} (N-K)</label>
+                    <div class="acc-panel" style="text-align:center">
+                        {{#svg this.baseImageUri "/nMinusK"}}{{/svg}}
+                        <!--<img class="lazy img-responsive" data-src="{{this.baseImageUri}}/nMinusK" data-alt="Poste {{this.id}} (N-K)" alt="Loading..." src="images/loader.gif">-->
+                    </div>
+                {{/each}}
+                </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+    <input name="mainTabs" type="radio" id="tab-main-2" class="tab-input"/>
+    <label for="tab-main-2" class="tab-label">Rapports</label>
+    <div class="tab-panel">
+        <div class="accs" style="padding-left: 10px">
+            {{#each data.faults}}
+                <div>
+                <input name="acc-report-{{this.id}}n-k" type="checkbox" checked id="acc-report-{{this.id}}n-k" class="acc-input"/>
+                <label for="acc-report-{{this.id}}n-k" class="acc-label">Rapport Synthétique ({{dateFormat caseDate format="YYYYMMDD-HHmm"}})</label>
+                <div class="acc-panel" style="text-align:center">
+                    {{#svg this.reportUri "&full=false"}}{{/svg}}
+                </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+    {{#each data.remedials}}
+    <input name="mainTabs" type="radio" id="tab-main-rem-{{this.id}}" class="tab-input"/>
+    <label for="tab-main-rem-{{this.id}}"
+            class="tab-label {{#if ../data.selectedRemedial}}{{#ifEquals @index 0}}selected{{/ifEquals}}{{/if}} {{#ifEquals success 'FULLY_RELIEVED'}}efficient{{else}}inefficient{{/ifEquals}}">
+        {{this.externalId}}
+    </label>
+    <div class="tab-panel">
+        <h2>Actions</h2>
+        <ul>
+            {{#each this.actions}}
+                <li>{{this.name}} (categorie : {{this.category}}{{#ifEquals this.category 'TOPOLOGY'}},
+                    poste : {{this.substation}}{{#if this.openLine}},
+                        openLine : {{this.openLine}}{{/if}}{{/ifEquals}})
+                </li>
+            {{/each}}
+        </ul>
+
+        {{#if this.constraints.values.VOLTAGE}}
+            <h2>Contraintes de tension</h2>
+            <div class="table-responsive">
+                <input name="voltage-date-filter-rem-{{this.id}}" type="checkbox" checked id="voltage-date-filter-rem-{{this.id}}" class="filter-input"/>
+                <table class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th>
+                            <label for="voltage-date-filter-rem-{{this.id}}" class="filter-label">
+                            <span class="fa-stack">
+                                <i class="fa fa-filter fa-stack-2x"></i>
+                                <i class="fa fa-plus fa-stack-1x"></i>
+                                <i class="fa fa-minus fa-stack-1x"></i>
+                            </span>
+                            </label> Horodate
+                        </th>
+                        <th>Date de calcul</th>
+                        <th>Nom</th>
+                        <th>Contrainte</th>
+                        <th>Charge</th>
+                        <th>Tension</th>
+                        <th>Limite</th>
+                        <th>Étude</th>
+                    </tr>
+                    </thead>
+                    {{#each this.constraints.values.VOLTAGE}}
+                        {{#with this}}
+                            <tr class="{{#if altStyle}}alt-background{{/if}} {{#ifLowerNow caseDate}}filterout{{/ifLowerNow}}">
+                                <td>{{dateFormat caseDate format="YYYYMMDD-HHmm"}}</td>
+                                <td>{{dateFormat computationDate format="YYYYMMDD-HHmm"}} ({{computationType}})</td>
+                                <td>{{asset}}</td>
+                                <td>{{#ifGreater severity 9998}}IMAP{{else}}surcharge {{severityMinutes}} min{{/ifGreater}}</td>
+                                <td>{{load.before}}% / {{load.current}}% / {{load.after}}%</td>
+                                <td>{{voltage.before}}kV / {{voltage.current}}kV / {{voltage.after}}kV</td>
+                                <td>{{threshold}}kV</td>
+                                <td>{{#cardAction "STUDY_" faultId}}{{/cardAction}}</td>
+                            </tr>
+                        {{/with}}
+                    {{/each}}
+                </table>
+            </div>
+        {{/if}}
+
+        {{#if this.constraints.values.FLOW}}
+            <h2>Contraintes de transit</h2>
+            <div class="table-responsive">
+                <input name="flow-date-filter-rem-{{this.id}}" type="checkbox" checked id="flow-date-filter-rem-{{this.id}}" class="filter-input"/>
+                <table class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th>
+                            <label for="flow-date-filter-rem-{{this.id}}" class="filter-label">
+                        <span class="fa-stack">
+                            <i class="fa fa-filter fa-stack-1x"></i>
+                            <i class="fa fa-ban fa-stack-1x text-danger"></i>
+                            <!--<i class="fa fa-minus fa-stack-1x text-danger"></i>-->
+                        </span>
+                            </label> Horodate
+                        </th>
+                        <th>Date de calcul</th>
+                        <th>Nom</th>
+                        <th>Contrainte</th>
+                        <th>Charge</th>
+                        <th>Intensité</th>
+                        <th>Limite</th>
+                        <th>Transit</th>
+                        <th>Étude</th>
+                    </tr>
+                    </thead>
+                    {{#each this.constraints.values.FLOW}}
+                        {{#with this}}
+                            <tr class="{{#if altStyle}}alt-background{{/if}} {{#ifLowerNow caseDate}}filterout{{/ifLowerNow}}">
+                                <td>{{dateFormat caseDate format="YYYYMMDD-HHmm"}}</td>
+                                <td>{{dateFormat computationDate format="YYYYMMDD-HHmm"}} ({{computationType}})</td>
+                                <td>{{asset}}</td>
+                                <td>{{#ifGreater severity 9998}}IMAP{{else}}surcharge {{severityMinutes}} min{{/ifGreater}}</td>
+                                <td>{{load.before}}% / {{load.current}}% / {{load.after}}%</td>
+                                <td>{{intensity.before}}A / {{intensity.current}}A / {{intensity.after}}A</td>
+                                <td>{{threshold}}A</td>
+                                <td>{{power.before}}MW / {{power.current}}MW / {{power.after}}MW</td>
+                                <td>{{#cardAction "STUDY_" faultId}}{{/cardAction}}</td>
+                            </tr>
+                        {{/with}}
+                    {{/each}}
+                </table>
+            </div>
+        {{/if}}
+
+        <div class="tabs">
+            {{#each this.constraints.substations}}
+                <input name="tab-rem-cstr" type="radio" id="tab-rem-cstr-{{@key}}" {{#if @first}}checked="checked"{{/if}} class="tab-input"/>
+                <label for="tab-rem-cstr-{{@key}}" class="tab-label">{{@key}}</label>
+                <div class="tab-panel">
+                    <div style="display: flex;flex-wrap: wrap;justify-content: space-between;">
+                        <div class="accs" style="width:33%; padding-right: 10px">
+                            {{#each this}}
+                                <input name="acc-rem-{{@../key}}-{{this.id}}n" type="checkbox" checked id="acc-rem-{{@../key}}-{{this.id}}n" class="acc-input"/>
+                                <label for="acc-rem-{{@../key}}-{{this.id}}n" class="acc-label">{{this.id}} (N)</label>
+                                <div class="acc-panel" style="text-align:center">
+                                    {{#svg this.baseImageUri "/n"}}{{/svg}}
+                                </div>
+                            {{/each}}
+                        </div>
+                        <div class="accs" style="width:33%; padding-left: 10px">
+                            {{#each this}}
+                                <input name="acc-rem-{{@../key}}-{{this.id}}n-k" type="checkbox" checked id="acc-rem-{{@../key}}-{{this.id}}n-k" class="acc-input"/>
+                                <label for="acc-rem-{{@../key}}-{{this.id}}n-k" class="acc-label">{{this.id}} (N-K)</label>
+                                <div class="acc-panel" style="text-align:center">
+                                    {{#svg this.baseImageUri "/nMinusK"}}{{/svg}}
+                                </div>
+                            {{/each}}
+                        </div>
+                        <div class="accs" style="width:33%; padding-left: 10px">
+                            {{#each this}}
+                                <input name="acc-rem-{{@../key}}-{{this.id}}-curative" type="checkbox" checked id="acc-rem-{{@../key}}-{{this.id}}-curative" class="acc-input"/>
+                                <label for="acc-rem-{{@../key}}-{{this.id}}-curative" class="acc-label">{{this.id}} (Curatif)</label>
+                                <div class="acc-panel" style="text-align:center">
+                                    {{#svg this.baseImageUri "/curative"}}{{/svg}}
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/each}}
+
+</div>
+
+</div>

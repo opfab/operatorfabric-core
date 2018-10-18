@@ -1,0 +1,50 @@
+/**
+ * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
+ */{{#description}}
+@ApiModel(description = "{{{description}}}"){{/description}}
+{{#useBeanValidation}}@Validated{{/useBeanValidation}}
+{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
+public interface {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#serializableModel}}{{#parent}}, {{/parent}}{{^parent}}extends {{/parent}} Serializable{{/serializableModel}} {
+  {{#vars}}
+    {{#isEnum}}
+    {{^isContainer}}
+{{>enumClass}}
+    {{/isContainer}}
+    {{/isEnum}}
+    {{#items.isEnum}}
+      {{#items}}
+      {{^isContainer}}
+{{>enumClass}}
+      {{/isContainer}}
+      {{/items}}
+    {{/items.isEnum}}
+  {{/vars}}
+  {{#vars}}
+
+  /**
+  {{#description}}
+   * {{{description}}}
+  {{/description}}
+  {{^description}}
+   * Get {{name}}
+  {{/description}}
+  {{#minimum}}
+   * minimum: {{minimum}}
+  {{/minimum}}
+  {{#maximum}}
+   * maximum: {{maximum}}
+  {{/maximum}}
+   * @return {{name}}
+  **/
+ {{#vendorExtensions.extraAnnotation}}
+  {{{vendorExtensions.extraAnnotation}}}
+  {{/vendorExtensions.extraAnnotation}}
+  @ApiModelProperty({{#example}}example = "{{{example}}}", {{/example}}{{#required}}required = {{required}}, {{/required}}{{#isReadOnly}}readOnly = {{{isReadOnly}}}, {{/isReadOnly}}value = "{{{description}}}")
+  {{#jackson}}
+  @JsonProperty("{{baseName}}")  {{#withXml}}@JacksonXmlProperty({{#isXmlAttribute}}isAttribute = true, {{/isXmlAttribute}}{{#xmlNamespace}}namespace="{{xmlNamespace}}", {{/xmlNamespace}}localName = "{{#xmlName}}{{xmlName}}{{/xmlName}}{{^xmlName}}{{baseName}}{{/xmlName}}"){{/withXml}}{{/jackson}}
+  {{#gson}}@SerializedName("{{baseName}}")
+  {{/gson}}
+{{#useBeanValidation}}{{>beanValidation}}{{/useBeanValidation}}  public {{{datatypeWithEnum}}} {{#isBoolean}}get{{/isBoolean}}{{getter}}();
+  public void {{setter}}({{{datatypeWithEnum}}} {{name}});
+  {{/vars}}
+}

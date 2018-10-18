@@ -1,0 +1,13 @@
+dependencies {
+    compile boot.starterWeb, boot.starterOauth2, spring.securityJwt
+    compile 'com.nimbusds:nimbus-jose-jwt:6.0'
+}
+
+jar {
+    manifest {
+        attributes("Created-By"         : "David Binder",
+                "Specification-Title": "Operator Fabric Authenticator Service",
+                "Main-Class"         : "org.lfenergy.operatorfabric.auth.Application",
+                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+    }
+}

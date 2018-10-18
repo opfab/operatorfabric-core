@@ -1,0 +1,721 @@
+swagger: '2.0'
+info:
+  description: Operator Fabric Card Consumer Service
+  version: 0.0.1
+  title: Card Management
+  termsOfService: ''
+  contact:
+    email: benoit.jeanson@rte-france.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: localhost
+basePath: /apis
+tags:
+  - name: cards
+    description: Everything concerning cards
+  - name: actions
+    description: Everything concerning actions
+  - name: read
+    description: Everything concerning resource state
+  - name: creation
+    description: Everything concerning resource creation
+  - name: deletion
+    description: Everything concerning resource deletion
+schemes:
+  - http
+definitions:
+  EpochDate:
+    type: object
+    description: number of milliseconds since Epoch (long integer)
+  LongInteger:
+    type: object
+    description: number of milliseconds since Epoch (long integer)
+  CardOperationTypeEnum:
+    type: string
+    description: >-
+      the severity of the card subject >
+
+      * ADD - Operation lists cards object to add
+
+      * UPDATE - Operation lists cards object to update
+
+      * DELETE - Operation lists card ids to delete
+    enum: [ADD,UPDATE,DELETE]
+  SeverityEnum:
+    type: string
+    description: >-
+      the severity of the card subject >
+
+      * ALARM - The process behing the card is in critical condition
+
+      * ACTION - The process behing the card needs an action from an operator
+
+      * QUESTION - The process behing the card needs information from an
+      operator
+
+      * NOTIFICATION - Pure informationnal card
+    enum:
+      - ALARM
+      - ACTION
+      - QUESTION
+      - NOTIFICATION
+  InputEnum:
+    type: string
+    description: |-
+      the type of the input >
+      * TEXT - A simple text input
+      * LONGTEXT - A multilinne text input
+      * BOOLEAN - A checkbox input
+      * LIST - A list with one value selectable
+      * MULTILIST - A list with multiple value selectable
+      * SWITCH_LIST - Two list with exchangeable values
+      * STATIC - A static non editable parameter
+    enum:
+      - TEXT
+      - LONGTEXT
+      - BOOLEAN
+      - LIST
+      - MULTILIST
+      - SWITCH_LIST
+      - STATIC
+  ActionEnum:
+    type: string
+    description: |-
+      Action type >
+      * INTERNAL - Internal Operator fabric action
+      * URI - Uri based action
+      * JNLP - Uri based jnlp action
+    enum:
+      - INTERNAL
+      - URI
+      - JNLP
+  TitlePositionEnum:
+    type: string
+    enum:
+      - UP
+      - DOWN
+      - NONE
+  RecipientEnum:
+    type: string
+    description: >-
+      Recipient type >
+
+      * BROADCAST - Card is sent to everybody
+
+      * DEADEND - Card is sent to no one
+
+      * GROUP - Card is sent to every user belonging to a group (identity)
+
+      * USER - Card is sent to a single user (identity)
+
+      * UNION - Card is sent to users according to the union of a recipient
+      list  (recipients)
+
+      * INTERSECT - Card is sent to users according to the intersection of a
+      recipient list (recipients)
+
+      * RANDOM - Card is sent to user as defined by underlying recipient
+      (recipient) a random user is picked as the main recipient
+
+      * WEIGHTED - Card is sent to user as defined by underlying recipient
+      (recipient) a random user is picked as the main recipient. A favorite user
+      (favorite) may be specified and is favored in the random choosinr process.
+
+      * FAVORITE - Card is sent to user as defined by underlying recipient
+      (recipient), if favorite user (favorite) is in the computed users it will
+      be set as main recipient
+    enum:
+      - BROADCAST
+      - DEADEND
+      - GROUP
+      - USER
+      - UNION
+      - INTERSECT
+      - RANDOM
+      - WEIGHTED
+      - FAVORITE
+  Card:
+    type: object
+    example:
+      publisher: MyService
+      publisherVersion: 0.0.1
+      processId: MyProcess
+      startDate: 1546387200000
+      lttd: 1546387200000
+      publishDate: 1546300800000
+      severity: ACTION
+      tags:
+        - MyService
+        - MyProcess
+        - ACTION
+      title:
+        key: myservice.myprocess.title
+    description: A Card gathers information about a process status
+    properties:
+      publisher:
+        type: string
+        description: Publishing service unique ID
+      publisherVersion:
+        type: string
+        description: Publishing service version
+      processId:
+        type: string
+        description: Unique process ID for associated process
+      publishDate:
+        $ref: '#/definitions/EpochDate'
+        description: The date the card was published (created by the card service )
+        readOnly: true
+      deletionDate:
+        $ref: '#/definitions/EpochDate'
+        description: The date the card was deleted
+        readOnly: true
+      lttd:
+        $ref: '#/definitions/EpochDate'
+        description: >-
+          Last time to decide, once this time is past no action can be triggered
+          on the card
+      startDate:
+        $ref: '#/definitions/EpochDate'
+        description: Card validity start time
+      endDate:
+        $ref: '#/definitions/EpochDate'
+        description: Card validity end time
+      severity:
+        $ref: '#/definitions/SeverityEnum'
+        description: Card severity
+      media:
+        type: string
+        description: Media unique ID for audio notification
+      tags:
+        type: array
+        items:
+          type: string
+        description: Card associated tags
+      actions:
+        type: object
+        description: 'Map of actions, identifying an action by its unique card related id'
+        additionalProperties:
+          $ref: '#/definitions/Action'
+      details:
+        type: array
+        description: List of card associated details
+        items:
+          $ref: '#/definitions/Detail'
+      title:
+        description: Card i18n title
+        $ref: '#/definitions/I18n'
+      summary:
+        description: Card i18n summary
+        $ref: '#/definitions/I18n'
+      recipient:
+        description: recipient computation rule
+        $ref: '#/definitions/Recipient'
+      mainRecipient:
+        description: main user recipient id if any
+        type: string
+        readOnly: true
+      userRecipients:
+        description: complete list of user recipient at computation time
+        readOnly: true
+        type: array
+        items:
+          type: string
+      groupRecipients:
+        description: complete list of group recipient
+        readOnly: true
+        type: array
+        items:
+          type: string
+      data:
+        type: object
+        description: Business data
+    required:
+      - processId
+      - publisher
+      - severity
+      - startDate
+      - title
+      - summary
+  LightCard:
+    type: object
+    description: A Card gathers information about a process status
+    readOnly: true
+    properties:
+      processId:
+        type: string
+        description: Unique process ID for associated process
+      lttd:
+        $ref: '#/definitions/EpochDate'
+        description: >-
+          Last time to decide, once this time is past no action can be triggered
+          on the card
+      startDate:
+        $ref: '#/definitions/EpochDate'
+        description: Card validity start time
+      endDate:
+        $ref: '#/definitions/EpochDate'
+        description: Card validity end time
+      severity:
+        $ref: '#/definitions/SeverityEnum'
+        description: Card severity
+      media:
+        type: string
+        description: Media unique ID for audio notification
+      tags:
+        type: array
+        items:
+          type: string
+        description: Card associated tags
+      title:
+        description: Card i18n title
+        $ref: '#/definitions/I18n'
+      summary:
+        description: Card i18n summary
+        $ref: '#/definitions/I18n'
+      mainRecipient:
+        description: main user recipient id if any
+        type: string
+        readOnly: true
+  Detail:
+    description: detail defines html data rendering
+    type: object
+    properties:
+      title:
+        description: Card i18n title
+        $ref: '#/definitions/I18n'
+      titleStyle:
+        description: css classes applied to title
+        type: string
+      titlePosition:
+        description: title position
+        $ref: '#/definitions/TitlePositionEnum'
+      templateName:
+        description: >-
+          template unique name as defined by Third Party Bundle in Third Party
+          Service
+        type: string
+      styles:
+        description: >-
+          css files names to load as defined by Third Party Bundle in Third
+          Party Service
+        type: array
+        items:
+          type: string
+  LightRecipient:
+    description: Recipient object defines rules for recipient computation
+    type: object
+    properties:
+      mainRecipient:
+        type: string
+  Recipient:
+    description: Recipient object defines rules for recipient computation
+    type: object
+    properties:
+      type:
+        $ref: '#/definitions/RecipientEnum'
+        description: >
+          specifies the recipient type. Please note that BROADCAST and DEADEND
+          do not expose any other properties
+      recipients:
+        type: array
+        items:
+          $ref: '#/definitions/Recipient'
+        description: >-
+          Used by INTERSECT, UNION with multiple Recipients. Used by FAVORITE,
+          RANDOM, WEIGHTED for single Recipient
+      identity:
+        type: string
+        description: 'Used by USER, GROUP, FAVORITE'
+      preserveMain:
+        description: >-
+          if underlying recipients main users are to be propagated. Used by
+          INTERSECT and UNION recipients.
+        type: boolean
+  Action:
+    description: defines an action on card associated business process
+    type: object
+    properties:
+      type:
+        description: Action type
+        $ref: '#/definitions/ActionEnum'
+      lockAction:
+        type: boolean
+        default: false
+        description: 'if true, action will be locked after clicked clientside'
+      lockCard:
+        type: boolean
+        default: false
+        description: 'if true, all card actions will be locked after clicked clientside'
+      needsConfirm:
+        type: boolean
+        default: false
+        description: 'if true, a confirmation will be asked before execution clientside'
+      called:
+        type: boolean
+        default: false
+        readOnly: true
+        description: true if action has already been called at least once
+      updateState:
+        type: boolean
+        default: false
+        description: >-
+          if true, client will attempt an update of ActionStatus before
+          rendering
+      updateStateBeforeAction:
+        type: boolean
+        default: false
+        description: >-
+          if true, client will attempt an update of ActionStatus before
+          execution
+      hidden:
+        type: boolean
+        default: false
+        description: This action is hidden from card and is only available to details;
+      contentStyle:
+        type: string
+        description: css classes of action button content (a <i> tag)
+      buttonStyle:
+        type: string
+        description: css classes of action button
+      label:
+        description: 'button default label, appears as a tooltip'
+        $ref: '#/definitions/I18n'
+      inputs:
+        description: >-
+          list of action input parameters, generate a popup form upon action
+          call
+        type: array
+        items:
+          $ref: '#/definitions/Input'
+    required:
+      - type
+      - label
+  Input:
+    description: describe an input parameter for an Action
+    type: object
+    properties:
+      type:
+        $ref: '#/definitions/InputEnum'
+        description: 'Parameter type, may imply some mandatory attributes, see description'
+      label:
+        $ref: '#/definitions/I18n'
+        description: internationnalized label
+      mandatory:
+        type: boolean
+        default: false
+        description: Is the parameter required
+      name:
+        type: string
+        description: Parameter unique name for action
+      value:
+        type: string
+        description: Parameter default value
+      maxLength:
+        type: integer
+        description: >-
+          Only for TEXT and LONGTEXT parameters. Specifies the maximum allowed
+          character count
+      rows:
+        type: integer
+        description: LONGTEXT parameter. Specifies the maximum number of displayed rows
+      values:
+        type: array
+        description: >-
+          Only for LIST,MULTILIST and SWITCHLIST parameters. Specifies the
+          selectable items in a list
+        items:
+          $ref: '#/definitions/ParameterListItem'
+      selectedValues:
+        type: array
+        description: >-
+          Only for MULTILIST and SWITCHLIST parameters. List selected value.
+          Order matters.
+        items:
+          type: string
+      unSelectedValues:
+        type: array
+        description: Only for SWITCHLIST parameters. List unselected values. Order matters.
+        items:
+          type: string
+    required:
+      - type
+      - label
+      - name
+  ParameterListItem:
+    description: An item of list input parameter
+    type: object
+    properties:
+      value:
+        type: string
+        description: parameter technical value
+      label:
+        $ref: '#/definitions/I18n'
+        description: Value i18n label
+    required:
+      - value
+  I18n:
+    type: object
+    description: describes an i18n label
+    properties:
+      key:
+        type: string
+        description: i18n client side key
+      parameters:
+        type: object
+        description: Optionnal parameters
+        additionalProperties:
+          type: string
+  ActionStatus:
+    type: object
+    properties:
+      unlock:
+        type: boolean
+        description: Unlock action button upon client return after action submission
+        default: true
+      disabled:
+        type: boolean
+        description: disable action button upon client return
+        default: false
+      label:
+        description: 'updated button label, if null no change'
+        $ref: '#/definitions/I18n'
+      contentStyle:
+        type: string
+        description: css classes of action button content (a <i> tag)
+      buttonStyle:
+        type: string
+        description: css classes of action button
+      inputs:
+        description: >-
+          list of action input parameters, generate a popup form upon action
+          call
+        type: array
+        items:
+          $ref: '#/definitions/Input'
+  CardCreationReport:
+    type: object
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+    required:
+      - count
+      - message
+  CardOperation:
+    type: object
+    properties:
+      number:
+        $ref: '#/definitions/LongInteger'
+      publicationDate:
+        $ref: '#/definitions/EpochDate'
+      type:
+        $ref: '#/definitions/CardOperationTypeEnum'
+      cardIds:
+        type: array
+        items:
+          type: string
+      cards:
+        type: array
+        items:
+          $ref: '#/definitions/LightCard'
+      
+paths:
+  /async/cards:
+    post:
+      tags:
+        - cards
+        - creation
+      summary: publish cards
+      description: publish one or more card to Operator Fabric
+      operationId: publishCardsAsync
+      consumes:
+        - application/json
+      parameters:
+        - name: cards
+          in: body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Card'
+      responses:
+        '201':
+          description: accepted
+  /cardOperations:
+    get:
+      tags:
+        - cards
+        - read
+      summary: fetch card operations
+      description: >-
+        fetch cards restricted to calling user. Fetched cards all comes with
+        empty
+      operationId: fetchCardOperations
+      produces:
+        - application/json
+      parameters:
+        - name: publishedFrom
+          type: integer
+          in: query
+        - name: deleted
+          type: boolean
+          default: false
+          in: query
+        - name: clientId
+          type: string
+          in: query
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CardOperation'
+      security:
+        - time_auth:
+            - 'read:card'
+  /cards:
+    get:
+      tags:
+        - cards
+        - read
+      summary: fetch cards
+      description: >-
+        fetch cards restricted to calling user. Fetched cards all comes with
+        empty
+      operationId: fetchCards
+      produces:
+        - application/json
+      parameters:
+        - name: from
+          type: integer
+          in: query
+        - name: to
+          type: integer
+          in: query
+        - name: startingPage
+          type: integer
+          in: query
+        - name: pageSize
+          type: integer
+          in: query
+        - name: published
+          type: integer
+          in: query
+        - name: deleted
+          type: boolean
+          default: false
+          in: query
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LightCard'
+      security:
+        - time_auth:
+            - 'read:card'
+    post:
+      tags:
+        - cards
+        - creation
+      summary: publish cards
+      description: publish one or more card to Operator Fabric
+      operationId: publishCards
+      consumes:
+        - application/json
+      parameters:
+        - name: cards
+          in: body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Card'
+      responses:
+        '200':
+          description: created
+          schema:
+            $ref: '#/definitions/CardCreationReport'
+        '400':
+          description: erroneous payload
+          schema:
+            $ref: '#/definitions/CardCreationReport'
+  '/cards/{processId}':
+    parameters:
+      - in: path
+        name: processId
+        type: string
+        required: true
+    delete:
+      tags:
+        - cards
+        - deletion
+      summary: delete current card
+      description: delete current card for process id
+      responses:
+        '200':
+          description: OK
+    get:
+      tags:
+        - cards
+        - read
+      summary: fetch current card
+      description: fetch current card for process id
+      responses:
+        '200':
+          description: OK
+  '/cards/{processId}/actions/{actionKey}':
+    parameters:
+      - in: path
+        name: processId
+        type: string
+        required: true
+      - in: path
+        name: actionKey
+        type: string
+        required: true
+    get:
+      tags:
+        - cards
+        - actions
+        - read
+      summary: Fetch action status
+      description: >-
+        Fetch an updated action status for action to update client side
+        representation
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActionStatus'
+    put:
+      tags:
+        - cards
+        - actions
+      summary: Trigger action
+      description: >-
+        Trigger corresponding action in operator fabric, returns ActionStatus
+        upon action realization
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActionStatus'
+securityDefinitions:
+  time_auth:
+    type: oauth2
+    authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
+    flow: implicit
+    scopes:
+      'read:card': access card data
+      'write:card': access card data
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header

@@ -1,0 +1,119 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://repo.spring.io/release" }
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/libs-snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/libs-milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath testing.junit5Plugin
+        classpath boot.springBootPlugin
+        classpath generator.swaggerGeneratorPlugin
+        classpath misc.palantir
+        classpath "cz.malohlava:visteg:1.0.3"
+    }
+}
+
+subprojects {
+
+    apply plugin: plugin.swagger
+
+    /////// COMPILATION
+
+
+    dependencies {
+        swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+
+        compile generator.springfoxSwagger2, generator.springfoxSwaggerUI
+        compile project(':tools:utilities'), project(':tools:spring-utilities')
+        compile  cloud.starterBus, cloud.eurekaClient
+        compile boot.starterAop, spring.retry
+
+        compileOnly boot.annotationConfiguration
+        annotationProcessor boot.annotationConfiguration
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+                srcDir 'build/swagger/src/main/java'
+            }
+            resources{
+                srcDir 'src/main/resources'
+                srcDir 'build/src/generated/resources'
+            }
+        }
+    }
+
+    /////// CONFIGURATION
+
+
+    swaggerSources {
+        endpoints {
+            inputFile = file('src/main/modeling/swagger.yaml')
+            code {
+                language = 'org.lfenergy.operatorfabric.generators.OpfabSpringGenerator'
+                configFile = file('src/main/modeling/config.json')
+                outputDir = file("./build/swagger")
+                templateDir = file('../src/main/resources/swagger-templates')
+            }
+        }
+
+        doc {
+            inputFile = file('src/main/modeling/swagger.yaml')
+            code {
+                language = 'html'
+                outputDir = file("./build/doc/api")
+            }
+        }
+    }
+
+    /////// CUSTOM TASKS
+
+   task debugSwaggerOperations(type: JavaExec) {
+        standardOutput = new ByteArrayOutputStream()
+       classpath = configurations.swaggerCodegen
+       main = 'io.swagger.codegen.SwaggerCodegen'
+       debug true
+       systemProperty 'debugOperations', 'true'
+       args ("generate",
+         "-i", "$project.projectDir/src/main/modeling/swagger.yaml",
+         "-l", "org.lfenergy.operatorfabric.generators.OpfabSpringGenerator",
+         "-c", "$project.projectDir/src/main/modeling/config.json",
+         "-o", "$project.projectDir/build/swagger-analyse")
+         doFirst {
+            logger.info "creating $project.projectDir/build/swagger-analyse/"
+            new File("$project.projectDir/build/swagger-analyse/").mkdirs()
+        }
+        doLast {
+            new File("$project.projectDir/build/swagger-analyse/report.json").text = standardOutput.toString()
+        }
+   }
+
+    task swaggerHelp(type: JavaExec) {
+        classpath = configurations.swaggerCodegen
+        main = 'io.swagger.codegen.SwaggerCodegen'
+        systemProperty 'debugOperations', 'true'
+        args ("config-help","-l", "java")
+    }
+
+    /////// LIFE CYCLE (Simplified -- run gradle [task] generateTaskGraph for complete task dependencies)
+    /*
+
+     generateSwaggerCode <= compileJava      <=| classes |<= assemble <=| build             <=| docker
+                            processResources <=|         |<= test     <=|                     |
+                                                               /\         copyConfiguration <=|
+                                                               ||======== jacocoTestReport
+    */
+    tasks.compileJava.dependsOn generateSwaggerCode
+    tasks.compileTestJava.dependsOn generateSwaggerCode
+    tasks.generateSwaggerCodeEndpoints.dependsOn ':tools:swagger-spring-generators:assemble'
+}
+

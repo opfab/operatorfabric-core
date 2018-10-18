@@ -1,0 +1,16 @@
+version: '2.1'
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:4.1.1-xenial
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - opfabnet
+networks:
+  opfabnet:
+    external:
+      name: opfabnet

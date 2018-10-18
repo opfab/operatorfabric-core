@@ -1,0 +1,16 @@
+version: '2.1'
+services:
+  oauth:
+  container_name: oauth2
+    image: "org.lfenergy.operatorfabric/oauth2-dev-server"
+    ports:
+     - "2001:8080"
+     - "3001:5005"
+    volumes:
+     - "../../../build/docker-volume:/config"
+    networks:
+     - opfabnet
+networks:
+  opfabnet:
+    external:
+      name: opfabnet

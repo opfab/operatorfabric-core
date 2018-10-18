@@ -1,0 +1,23 @@
+[
+  { "identifier": "user0"
+  , "token": "123ABC"
+//  , "expirationDate": "2018-10-23T15:48:35.241Z",
+  }
+,  {  "identifier": "user1"
+    , "token": "ABC123"
+//    , "expirationDate": "2018-10-23T15:48:35.241Z",
+}
+,  {  "identifier": "user2"
+    , "token": "auen"
+//    , "expirationDate": "2018-10-23T15:48:35.241Z",
+}
+,  {  "identifier": "user3"
+    , "token": "bbbb"
+//    , "expirationDate": "2018-10-23T15:48:35.241Z",
+}
+,  {  "identifier": "user4"
+    , "token": "13345"
+//    , "expirationDate": "2018-10-23T15:48:35.241Z",
+}
+
+]

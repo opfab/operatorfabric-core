@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: cards-publication
+  cloud:
+    config:
+      name: cards-publication
+      fail-fast: true
+      retry:
+        max-attempts: 20
+      discovery:
+        service-id: config
+        enabled: true

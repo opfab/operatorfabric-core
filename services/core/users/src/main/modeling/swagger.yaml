@@ -1,0 +1,346 @@
+swagger: '2.0'
+info:
+  description: User Management Service for Operator Fabric
+  version: 0.0.1
+  title: User Management
+  termsOfService: ''
+  contact:
+    email: benoit.jeanson@rte-france.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: localhost
+basePath: /apis
+tags:
+  - name: time
+    description: Everything concerning time
+  - name: users
+    description: Everything concerning users
+  - name: groups
+    description: Everything concerning groups
+schemes:
+  - http
+definitions:
+  EpochDate:
+    type: object
+    description: number of milliseconds since Epoch (long integer)
+  SimpleUser:
+    type: object
+    description: User
+    properties:
+      login:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+  User:
+    type: object
+    description: User
+    properties:
+      login:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      groups:
+        type: array
+        items:
+          type: string
+          uniqueItems: true
+  Group:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+paths:
+  /users:
+    get:
+      tags:
+        - users
+      summary: fetch list of existing users
+      description: 'fetch list of existing users, with pagination and filter options'
+      operationId: fetchUsers
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '401':
+          description: Authentication required
+      security:
+        - user_auth:
+            - admin
+    post:
+      tags:
+        - users
+      summary: Create new user
+      description: Create a new user
+      operationId: createUser
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User  to be created
+          schema:
+            $ref: '#/definitions/SimpleUser'
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/SimpleUser'
+        '401':
+          description: Authentication required
+  '/users/{login}':
+    get:
+      tags:
+        - users
+      summary: fetch existing user
+      description: fetch existing user from its login
+      operationId: fetchUser
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: login
+          type: string
+          required: true
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/User'
+        '401':
+          description: Authentication required
+        '403':
+          description: Authenticated users who are not admins can only access their own data
+    put:
+      tags:
+        - users
+      summary: Update new user
+      description: updates existing user
+      operationId: updateUser
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: login
+          type: string
+          required: true
+        - in: body
+          name: user
+          description: User  to be created
+          schema:
+            $ref: '#/definitions/SimpleUser'
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/SimpleUser'
+        '401':
+          description: Authentication required
+  /groups:
+    get:
+      tags:
+        - groups
+      summary: fetch list of existing groups
+      description: 'fetch list of existing users, with pagination and filter options'
+      operationId: fetchGroups
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Group'
+        '401':
+          description: unauthorized user
+      security:
+        - user_auth:
+            - admin
+    post:
+      tags:
+        - groups
+      summary: Create a new group of users
+      description: Create a new group of users
+      operationId: createGroup
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: group
+          description: Group  to be created
+          schema:
+            $ref: '#/definitions/Group'
+      responses:
+        '201':
+          description: created
+          schema:
+            $ref: '#/definitions/Group'
+      security:
+        - user_auth:
+            - admin
+  '/groups/{name}':
+    put:
+      tags:
+        - groups
+      summary: Updates an existing group of users
+      description: Updates an existing group of users
+      operationId: updateGroup
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: name
+          type: string
+          required: true
+        - in: body
+          name: group
+          description: Group to be created
+          schema:
+            $ref: '#/definitions/Group'
+      responses:
+        '200':
+          description: created
+          schema:
+            $ref: '#/definitions/Group'
+      security:
+        - user_auth:
+            - admin
+    get:
+      tags:
+        - groups
+      summary: Create a new group of users
+      description: Create a new group of users
+      operationId: fetchGroup
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: name
+          type: string
+          required: true
+      responses:
+        '200':
+          description: created
+          schema:
+            $ref: '#/definitions/Group'
+      security:
+        - user_auth:
+            - admin
+  '/groups/{name}/users':
+    put:
+      tags:
+        - groups
+        - users
+      summary: Update list of group users
+      description: 'Update list of group users, users not included are removed from group'
+      operationId: updateGroupUsers
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: name
+          type: string
+          required: true
+        - in: body
+          name: users
+          description: Array of user login to be added
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '20':
+          description: updated
+      security:
+        - user_auth:
+            - admin
+    post:
+      tags:
+        - groups
+        - users
+      summary: Adds users to group
+      description: ONLY add users to group
+      operationId: addGroupUsers
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: name
+          type: string
+          required: true
+        - in: body
+          name: users
+          description: Array of user login to be added
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: created
+      security:
+        - user_auth:
+            - admin
+    delete:
+      tags:
+        - groups
+        - users
+      summary: Deletes users from group
+      description: ONLY deletes users from group
+      operationId: deleteGroupUsers
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: name
+          type: string
+          required: true
+        - in: body
+          name: users
+          description: Array of user login to be added
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: created
+      security:
+        - user_auth:
+            - admin
+securityDefinitions:
+  user_auth:
+    type: oauth2
+    authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
+    flow: implicit
+    scopes:
+      read: access user data
+      write: access user data
+      admin: access sensitive data
+      service: access user data only for service clients
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header

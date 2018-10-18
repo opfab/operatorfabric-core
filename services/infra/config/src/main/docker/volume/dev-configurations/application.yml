@@ -1,0 +1,58 @@
+message: common message
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    config:
+      discovery:
+        enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:3000/auth/jwks.json
+#      client:
+#        registration:
+#          opfabDev:
+#            clientId: clientIdPassword
+#            clientSecret: secret
+#            tokenUri: http://localhost:3000/auth/token
+#            userInfoUri: http://localhost:3000/auth/user/me
+#        provider:
+#          opfabDev:
+#            authorizationUri: http://localhost:3000/auth/authorize
+#            tokenUri: http://localhost:3000/auth/token
+#            userInfoUri: http://localhost:3000/auth/user/me
+#            userNameAttribute: name
+#            jwkSetUri: http://localhost:3000/auth/token_key
+  data:
+    mongodb:
+      uris:
+        - mongodb://root:password@localhost:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:2001/eureka
+    region: default
+  registryFetchIntervalSeconds: 5
+security:
+  basic:
+    enabled: false
+  oauth2:
+    client:
+      clientId: clientIdPassword
+      clientSecret: secret
+      accessTokenUri: http://localhost:3000/auth/token
+      userAuthorizationUri: http://localhost:3000/auth/authorize
+    resource:
+#      userInfoUri: http://localhost:3000/auth/user/me
+      jwt.key-value: 123

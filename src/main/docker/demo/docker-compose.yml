@@ -1,0 +1,160 @@
+version: '2.1'
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:4.1.1-xenial
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - opfabnet
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+#      - "15674:15674"
+    networks:
+      - opfabnet
+  oauth:
+    container_name: oauth2
+    image: "org.lfenergy.operatorfabric/oauth2-dev-server"
+    ports:
+     - "3000:8080"
+     - "5000:5005"
+    networks:
+     - opfabnet
+  config:
+    depends_on:
+     - rabbitmq
+    container_name: config
+    image: "org.lfenergy.operatorfabric/configuration-cloud-service:latest"
+    ports:
+     - "2000:8080"
+     - "4000:5005"
+    expose:
+     - "8080"
+    environment:
+     - RABBITMQ_HOST=rabbitmq
+     - RABBITMQ_PORT=5672
+     - RABBITMQ_USER=guest
+     - RABBITMQ_PASSWORD=guest
+     - REGISTRY_HOST=registry
+     - REGISTRY_PORT=8080
+    volumes:
+     - "../../../../services/infra/config/build/docker-volume/docker-configurations:/service-config"
+    networks:
+     - opfabnet
+  registry:
+    depends_on:
+     - config
+    container_name: registry
+    image: "org.lfenergy.operatorfabric/registry-cloud-service"
+    ports:
+     - "2001:8080"
+     - "4001:5005"
+    expose:
+     - "8080"
+    environment:
+     - CONFIG_HOST=config
+     - CONFIG_PORT=8080
+    networks:
+     - opfabnet
+  client_gateway:
+    depends_on:
+     - registry
+    image: "org.lfenergy.operatorfabric/client-gateway-cloud-service"
+    ports:
+     - "2002:8080"
+     - "4002:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    networks:
+     - opfabnet
+  users:
+    depends_on:
+     - registry
+    image: "org.lfenergy.operatorfabric/users-business-service"
+    ports:
+     - "2103:8080"
+     - "4103:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    networks:
+     - opfabnet
+  thirds:
+    depends_on:
+     - registry
+    image: "org.lfenergy.operatorfabric/third-party-business-service"
+    ports:
+     - "2100:8080"
+     - "4100:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    volumes:
+     - "../../../../services/core/thirds/build/docker-volume/thirds-storage:/thirds-storage"
+    networks:
+     - opfabnet
+  time:
+    depends_on:
+     - registry
+    image: "org.lfenergy.operatorfabric/time-business-service"
+    ports:
+     - "2101:8080"
+     - "4101:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    networks:
+     - opfabnet
+  cards-publication:
+    container_name: cards-publication
+    depends_on:
+     - registry
+    image: "org.lfenergy.operatorfabric/cards-publication-business-service"
+    ports:
+     - "2102:8080"
+     - "4102:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    networks:
+     - opfabnet
+  cards-consultation:
+    depends_on:
+     - registry
+    image: "org.lfenergy.operatorfabric/cards-consultation-business-service"
+    ports:
+     - "2104:8080"
+     - "4104:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    networks:
+     - opfabnet
+  dummy-card-daemon:
+    depends_on:
+    - cards-publication
+    image: "org.lfenergy.operatorfabric/dummy-card-daemon"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CARDS-PUBLICATION
+    networks:
+    - opfabnet
+networks:
+  opfabnet:
+    external:
+      name: opfabnet

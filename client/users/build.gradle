@@ -1,0 +1,6 @@
+jar {
+    manifest {
+        attributes("Created-By"         : "David Binder",
+                   "Specification-Title": "Operator Fabric User Client Data")
+    }
+}

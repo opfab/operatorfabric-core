@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://repo.spring.io/release" }
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/libs-snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/libs-milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath misc.palantir
+    }
+}
+
+subprojects {
+
+    apply plugin: plugin.dockerBuild
+
+    docker {
+        name "${project.group}/${project.name}"
+        tags 'latest', "${project.version}"
+        files 'src/main/docker/script.sh', '../../src/main/docker/bash-config-dependent-docker-entrypoint.sh'
+        buildArgs([
+                   'http_proxy': apk.proxy.uri,
+                   'https_proxy': apk.proxy.uri,
+                   'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
+        dockerfile file("src/main/docker/Dockerfile")
+    }
+
+}

@@ -1,0 +1,378 @@
+swagger: '2.0'
+info:
+  description: Third Party Service a.k.a. Thirds management API for Operator Fabric
+  version: 0.0.1
+  title: Thirds Management
+  termsOfService: ''
+  contact:
+    email: benoit.jeanson@rte-france.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: localhost
+basePath: /apis
+tags:
+  - name: thirds
+    description: Everithing concerning specified Third
+schemes:
+  - http
+paths:
+  /thirds:
+    get:
+      tags:
+        - thirds
+      summary: List existing Thirds
+      description: List existing Thirds
+      operationId: getThirds
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Third'
+      security:
+        - thirds_auth:
+            - 'read:thirds'
+  '/thirds/{thirdName}':
+    get:
+      tags:
+        - thirds
+      summary: Access existing Third data
+      description: Access existing Third data
+      operationId: getThird
+      produces:
+        - application/json
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: version
+          in: query
+          required: false
+          description: Expected version of template (defaults to latest)
+          type: string
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/Third'
+      security:
+        - thirds_auth:
+            - 'read:thirds'
+    post:
+      tags:
+        - thirds
+      summary: Uploads Third configuration bundle
+      description: >-
+        Uploads Third configuration bundle. Bundle is a gzipped tarball (tar.gz)
+        containing a config.json file and resource file using the following
+        layout:
+
+        ```
+
+        └──css
+
+        └──i18n
+
+        │   └──en
+
+        │   |  └──i18n.properties
+
+        │   └──fr
+
+        │   |  └──i18n.properties
+
+        │   └...
+
+        └──media
+
+        │   └──sound1.wav
+
+        │   └──sound2.ogg
+
+        └──template
+
+        │   └──en
+
+        │   |  └──emergency.handlebars
+
+        │   |  └──info.handlebars
+
+        │   └──fr
+
+        │   |  └──emergency.handlebars
+
+        │   |  └──info.handlebars
+
+        │   └...
+
+        └──config.json
+
+        ```
+
+        The config.json file contains a Third object in json notation (see
+        [Models](#__Models))
+      operationId: uploadBundle
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: file
+          in: formData
+          description: file to upload
+          required: true
+          type: file
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Third'
+      security:
+        - thirds_auth:
+            - 'write:thirds'
+  '/thirds/{thirdName}/templates/{templateName}':
+    get:
+      tags:
+        - thirds
+      summary: Get template associated with Third
+      description: >-
+        Get template associated with Third, if file exists return file
+        (application/handlebars) otherwise return error message
+        (application/json)
+      operationId: getTemplate
+      produces:
+        - application/json
+        - application/handlebars
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: locale
+          in: query
+          description: Locale iso code
+          required: false
+          type: string
+        - name: templateName
+          in: path
+          description: Name of template to retrieve (w.o. suffix)
+          required: true
+          type: string
+        - name: version
+          in: query
+          required: false
+          description: Expected version of template (defaults to latest)
+          type: string
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: string
+            format: binary
+        '404':
+          description: no such template
+      security:
+        - thirds_auth:
+            - 'read:thirds'
+  '/thirds/{thirdName}/css/{cssFileName}':
+    get:
+      tags:
+        - thirds
+      summary: Get css file associated with Third
+      description: >-
+        Get css file associated with Third, if file exists return file
+        (text/css) otherwise return error message (application/json)
+      operationId: getCss
+      produces:
+        - application/json
+        - text/css
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: cssFileName
+          in: path
+          description: Name of stylesheet file to retrieve (w.o. suffix)
+          required: true
+          type: string
+        - name: version
+          in: query
+          required: false
+          description: Expected version of stylesheet (defaults to latest)
+          type: string
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: string
+            format: binary
+        '404':
+          description: no such template
+      security:
+        - thirds_auth:
+            - 'read:thirds'
+  '/thirds/{thirdName}/media/{mediaFileName}':
+    get:
+      tags:
+        - thirds
+      summary: Get media file associated with Third
+      description: >-
+        Get media file associated with Third, if file exists return file
+        (audio/*) otherwise return error message (application/json)
+      operationId: getMedia
+      produces:
+        - application/json
+        - audio/*
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: mediaFileName
+          in: path
+          description: Name of media file to retrieve  (w. suffix)
+          required: true
+          type: string
+        - name: locale
+          in: query
+          description: Locale iso code
+          required: false
+          type: string
+        - name: version
+          in: query
+          required: false
+          description: Expected version of media (defaults to latest)
+          type: string
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: string
+            format: binary
+        '404':
+          description: no such template
+      security:
+        - thirds_auth:
+            - 'read:thirds'
+  '/thirds/{thirdName}/i18n':
+    get:
+      tags:
+        - thirds
+      summary: Get i18n file associated with Third
+      description: >-
+        Get i18n file associated with Third, if file exists return file
+        (text/plain) otherwise return error message (application/json)
+      operationId: getI18n
+      produces:
+        - application/json
+        - text/plain
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: locale
+          in: query
+          description: Locale iso code
+          required: false
+          type: string
+        - name: version
+          in: query
+          required: false
+          description: Expected version of i18n (defaults to latest)
+          type: string
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: string
+            format: binary
+        '404':
+          description: no such template
+      security:
+        - thirds_auth:
+            - 'read:thirds'
+securityDefinitions:
+  thirds_auth:
+    type: oauth2
+    authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
+    flow: implicit
+    scopes:
+      'read:thirds': access thirds data
+      'write:thirds': access thirds data
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+definitions:
+  Third:
+    type: object
+    description: >-
+      Third party business module configuration. Models Third party properties
+      and list referenced resources.
+    properties:
+      name:
+        type: string
+        description: Third party business module name
+      version:
+        type: string
+        description: Third party business module configuration version
+      defaultLocale:
+        type: string
+        description: default locale (ISO 639 alpha-2 code)
+        example: '"fr","en","de"'
+      templates:
+        type: array
+        description: List of templates name (without extension)
+        example: '"emergency", "security"'
+        items:
+          type: string
+      csses:
+        type: array
+        description: List of css file names (without extension)
+        example: tab-style
+        items:
+          type: string
+      medias:
+        type: object
+        description: List available medias
+        additionalProperties:
+          type: object
+          properties:
+            name:
+              type: string
+              description: media name
+            files:
+              type: array
+              description: list of associated media files (with extension)
+              example: jingle-bells.ogg
+              items:
+                type: string
+      locales:
+        type: array
+        description: supported locale list (ISO 639 alpha-2 code)
+        example:
+          - fr
+          - en
+          - de
+        items:
+          type: string
+    required:
+      - name
+      - version
