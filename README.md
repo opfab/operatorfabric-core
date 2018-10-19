@@ -151,7 +151,7 @@ Port  | Forwards to         |     |                                             
 3000  | oauth               |8080 |Oauth development service http (REST)             |
 4000  | config              |5005 |java debug port                                   |
 4001  | registry            |5005 |java debug port                                   |
-4001  | gateway             |5005 |java debug port                                   |
+4002  | gateway             |5005 |java debug port                                   |
 4100  | thirds              |5005 |java debug port                                   |
 4101  | time                |5005 |java debug port                                   |
 4102  | cards-publication   |5005 |java debug port                                   |
@@ -206,7 +206,7 @@ Port  |                     |                                                  |
 3000  | oauth               |Oauth development service http (REST)             |
 4000  | config              |java debug port                                   |
 4001  | registry            |java debug port                                   |
-4001  | gateway             |java debug port                                   |
+4002  | gateway             |java debug port                                   |
 4100  | thirds              |java debug port                                   |
 4101  | time                |java debug port                                   |
 4102  | cards-publication   |java debug port                                   |
@@ -290,7 +290,7 @@ and plugins official documentation
     
 #### infra
 
-#####config
+##### config
 
 * Test tasks
     * createDevData : prepare data in build/test-data for running bootRun task during developpement
@@ -373,7 +373,7 @@ If you run the services using ```bootRun``` gradle task or the provided docker-c
 | oauth               |         3000 |                   3000 |                         3000 |
 | config              |         4000 |                   4000 |                         4000 |
 | registry            |         4001 |                   4001 |                         4001 |
-| gateway             |         4001 |                   4001 |                         4001 |
+| gateway             |         4002 |                   4002 |                         4002 |
 | thirds              |         4100 |                   4100 |                         4100 |
 | time                |         4101 |                   4101 |                         4101 |
 | cards-publication   |         4102 |                   4102 |                         4102 |
