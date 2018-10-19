@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master)](https://travis-ci.org/opfab/operatorfabric-core)
+
 # Operator Fabric (OpFab)
 
 TODO What is OpFab
