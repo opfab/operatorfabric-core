@@ -103,4 +103,5 @@ subprojects {
     tasks.jacocoTestReport.dependsOn test
     tasks.compileJava.dependsOn generateSwaggerCode
     tasks.compileTestJava.dependsOn generateSwaggerCode
+    tasks.generateSwaggerCodeModel.dependsOn ':tools:swagger-spring-generators:assemble'
 }
