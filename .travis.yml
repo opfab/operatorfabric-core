@@ -1,3 +1,5 @@
 dist: trusty
 language: java
-script: unitTest
+install: true
+script:
+  - ./gradlew build --scan -s
