@@ -1,5 +1,10 @@
 sudo: required
 dist: trusty
+addons:
+    sonarcloud:
+        organization: "opfab"
+        token:
+            secure: ${SONAR_TOKEN}
 services:
   - docker
 language: java
@@ -9,8 +14,7 @@ script:
   - docker-compose -f src/main/docker/rabbitmq/docker-compose.yml up -d
   - docker-compose -f src/main/docker/mongodb/docker-compose.yml up -d
   - ./gradlew build
-#  - docker-compose -f src/main/docker/rabbitmq/docker-compose.yml down
-#  - docker-compose -f src/main/docker/mongodb/docker-compose.yml down
+  - sonar-scanner
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
