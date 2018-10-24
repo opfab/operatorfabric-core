@@ -1,10 +1,10 @@
 ext {
     operatorfabric = [
             group: "org.lfenergy.operatorfabric",
-            version: "0.0.1"
+            version: "0.0.1-SNAPSHOT"
     ]
     //spring libs
-    bootVersion = '2.1.0.M4'
+    bootVersion = '2.1.0.RC1'
     SpringCloudVersion = 'Greenwich.BUILD-SNAPSHOT'
 //    SpringCloudVersion = 'Greenwich.M1'
 //    SpringCloudVersion = 'Finchley.RELEASE'
@@ -17,8 +17,7 @@ ext {
     springOauth2BootVersion = '2.0.1.RELEASE'
     springOauth2Version = '2.3.3.RELEASE'
     springJwtVersion = '1.0.9.RELEASE'
-    springSecurityVersion = "5.1.0.RELEASE"
-    springVersion = "5.1.0.RELEASE"
+    springVersion = "5.1.1.RELEASE"
 //    thymeleafSecurity
     
     //utilities
@@ -76,9 +75,9 @@ ext {
     spring = [
             securityOauth2 : "org.springframework.security.oauth:spring-security-oauth2:$springOauth2Version",
             securityJwt    : "org.springframework.security:spring-security-jwt:$springJwtVersion",
-            securityOauthClient: "org.springframework.security:spring-security-oauth2-client:$springSecurityVersion",
-            securityOauthResource: "org.springframework.security:spring-security-oauth2-resource-server:$springSecurityVersion",
-            securityOauthJose: "org.springframework.security:spring-security-oauth2-jose:$springSecurityVersion",
+            securityOauthClient: "org.springframework.security:spring-security-oauth2-client:$springVersion",
+            securityOauthResource: "org.springframework.security:spring-security-oauth2-resource-server:$springVersion",
+            securityOauthJose: "org.springframework.security:spring-security-oauth2-jose:$springVersion",
             webflux: "org.springframework:spring-webflux:$springVersion",
             retry: "org.springframework.retry:spring-retry:1.2.2.RELEASE"
     ]

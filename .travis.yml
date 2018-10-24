@@ -1,12 +1,19 @@
+sudo: required
 dist: trusty
+services:
+  - docker
 language: java
 install: true
 script:
-  - ./gradlew build unitTest -x test
+  - docker network create opfabnet
+  - docker-compose -f src/main/docker/rabbitmq/docker-compose.yml up -d
+  - docker-compose -f src/main/docker/mongodb/docker-compose.yml up -d
+  - ./gradlew build
+#  - docker-compose -f src/main/docker/rabbitmq/docker-compose.yml down
+#  - docker-compose -f src/main/docker/mongodb/docker-compose.yml down
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
 cache:
   directories:
     - $HOME/.gradle/caches/
