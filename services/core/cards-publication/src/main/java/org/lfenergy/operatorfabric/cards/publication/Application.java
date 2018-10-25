@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
@@ -21,6 +22,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @EnableTimeClient
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories
+@ImportResource("classpath:/amqp.xml")
 public class Application {
 
     public static void main(String[] args) {
