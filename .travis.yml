@@ -14,8 +14,7 @@ before_install:
   - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
 script:
   - docker network create opfabnet
-  - docker-compose -f src/main/docker/rabbitmq/docker-compose.yml up -d
-  - docker-compose -f src/main/docker/mongodb/docker-compose.yml up -d
+  - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
   - ./gradlew copyDependencies build jacocoTestReport && sonar-scanner
 before_cache:
   # cleanup gradle caches
