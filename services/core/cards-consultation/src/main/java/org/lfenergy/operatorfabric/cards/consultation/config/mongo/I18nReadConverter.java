@@ -26,9 +26,9 @@ public class I18nReadConverter implements Converter<Document, I18n> {
         if(source.containsKey("parameters")) {
             Document parameters = (Document) source.get("parameters");
             if(parameters!=null)
-            for(Map.Entry<String,Object> e: parameters.entrySet()){
-                builder.parameter(e.getKey(), (String) e.getValue());
-            }
+                for(Map.Entry<String,Object> e: parameters.entrySet()){
+                    builder.parameter(e.getKey(), (String) e.getValue());
+                }
         }
 
         return builder.build();
