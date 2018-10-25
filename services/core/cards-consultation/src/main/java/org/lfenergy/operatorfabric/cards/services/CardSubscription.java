@@ -29,7 +29,6 @@ import java.util.Set;
  */
 @Slf4j
 @EqualsAndHashCode
-
 public class CardSubscription {
     private long current = 0;
     private String login;

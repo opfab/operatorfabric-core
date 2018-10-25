@@ -10,6 +10,7 @@ services:
 language: java
 install: true
 script:
+  - cat /home/travis/.sonarscanner/sonar-scanner-3.0.3.778/conf/sonar-scanner.properties
   - docker network create opfabnet
   - docker-compose -f src/main/docker/rabbitmq/docker-compose.yml up -d
   - docker-compose -f src/main/docker/mongodb/docker-compose.yml up -d

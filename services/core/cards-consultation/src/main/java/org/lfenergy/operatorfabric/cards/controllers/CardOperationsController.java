@@ -50,16 +50,6 @@ public class CardOperationsController {
         this.mapper = mapper;
     }
 
-//    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-//    public Flux<String> stockTransactionEvents(
-//       @AuthenticationPrincipal User user,
-//       @RequestParam("clientId") String clientId,
-//       @RequestParam(name="publishedFrom", required=false) Long publishedFrom,
-//       @RequestParam(name="deleted", defaultValue = "true") boolean deleted){
-//        Hooks.onOperatorDebug();
-//        return cardSubscriptionService.subscribe(user,clientId).getPublisher();
-//    }
-
     @Bean
     public RouterFunction<ServerResponse> cardOperationRoutes(){
         return RouterFunctions.route(RequestPredicates.GET("/cardOperations"),
