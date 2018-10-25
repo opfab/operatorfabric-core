@@ -240,7 +240,7 @@ public class CardWriteService {
         long windowDuration = System.nanoTime()-windowStart;
 //        double prepareDurationMillis = prepareDuration/1000000;
 //        double writeDurationMillis = writeDuration/1000000;
-        double windowDurationMillis = windowDuration/1000000;
+        double windowDurationMillis = windowDuration/1000000d;
 //        double cardPrepareDurationMillis = prepareDurationMillis/count;
 //        double cardWriteDurationMillis = writeDurationMillis/count;
         double cardWindowDurationMillis = windowDurationMillis/count;
