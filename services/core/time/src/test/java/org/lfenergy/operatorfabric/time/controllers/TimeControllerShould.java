@@ -84,7 +84,7 @@ class TimeControllerShould {
         assertThat(computedNow.getDayOfYear()).isEqualTo(now.getDayOfYear());
         assertThat(computedNow.getHour()).isEqualTo(now.getHour());
         assertThat(computedNow.getMinute()).isEqualTo(now.getMinute());
-        assertThat(computedNow.getSecond()).isEqualTo(now.getSecond());
+        assertThat(computedNow.getSecond()).isCloseTo(now.getSecond(),Offset.offset(1));
 
     }
 
