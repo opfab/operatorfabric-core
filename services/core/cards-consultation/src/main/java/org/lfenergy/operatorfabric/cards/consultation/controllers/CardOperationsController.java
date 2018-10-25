@@ -14,10 +14,13 @@ import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionS
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.springtools.config.oauth.OpFabJwtAuthenticationToken;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +30,7 @@ import reactor.core.publisher.Mono;
 
 import java.security.Principal;
 import java.time.Duration;
+import java.util.Optional;
 
 /**
  * <p></p>
@@ -45,66 +49,81 @@ public class CardOperationsController {
     private final ObjectMapper mapper;
 
     @Autowired
-    public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper){
+    public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper) {
         this.cardSubscriptionService = cardSubscriptionService;
         this.mapper = mapper;
     }
 
     @Bean
-    public RouterFunction<ServerResponse> cardOperationRoutes(){
+    public RouterFunction<ServerResponse> cardOperationRoutes() {
         return RouterFunctions.route(RequestPredicates.GET("/cardOperations"),
-           request-> {
-               ServerResponse.BodyBuilder builder = ServerResponse.ok()
-                  .contentType(MediaType.TEXT_EVENT_STREAM);
-               if(request.queryParam("test").orElse("false").equals("true")){
-                   return builder.body(test(request.principal()),String.class);
-               }else {
-                  return builder.body(request.principal().flatMapMany(principal -> subscribeToCardOperations(request,
-                     principal)),
-                      String.class);
-               }
-           }
-              );
+                request -> {
+                    Optional<String> optionnalClientId = request.queryParam("clientId");
+                    if (!optionnalClientId.isPresent()) {
+                        return ServerResponse.badRequest()
+                                .body(Mono.just("\"clientId\" is a mandatory request parameter"), String.class);
+                    }
+                    ServerResponse.BodyBuilder builder = ServerResponse.ok()
+                            .contentType(MediaType.TEXT_EVENT_STREAM);
+                    if (request.queryParam("test").orElse("false").equals("true")) {
+                        return builder.body(test(request.principal()), String.class);
+                    } else {
+                        return builder.body(request.principal().flatMapMany(principal -> subscribeToCardOperations(request,
+                                principal)),
+                                String.class);
+                    }
+                }
+        );
     }
 
     private Flux<String> subscribeToCardOperations(ServerRequest req, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         User user = (User) jwtPrincipal.getPrincipal();
-        String clientId = req.queryParam("clientId").get();
-        return cardSubscriptionService.subscribe(user, clientId).getPublisher();
+        Optional<String> optionnalClientId = req.queryParam("clientId");
+        if (optionnalClientId.isPresent()) {
+            String clientId = optionnalClientId.get();
+            return cardSubscriptionService.subscribe(user, clientId).getPublisher();
+        } else {
+            //should never happen
+            throw new RuntimeException(new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("\"clientId\" is a mandatory request parameter")
+                    .build())
+            );
+        }
     }
 
-    private Flux<String> test(Mono<? extends Principal> user){
-        return user.flatMapMany(u->Flux
-           .interval(Duration.ofSeconds(5))
-           .doOnEach(l->log.info("message "+l+" to "+ u.getName()))
-           .map(l->CardOperationData.builder()
-              .number(l)
-              .publicationDate(SimulatedTime.getInstance().computeNow().toEpochMilli()-600000)
-              .type(CardOperationTypeEnum.ADD)
-              .card(
-                 LightCardData.builder()
-                    .id(l+"")
-                    .uid(l+"")
-                    .summary(I18nData.builder().key("summary").build())
-                    .title(I18nData.builder().key("title").build())
-                    .mainRecipient("rte-operator")
-                    .severity(SeverityEnum.ALARM)
-                    .startDate(SimulatedTime.getInstance().computeNow().toEpochMilli())
-                    .endDate(SimulatedTime.getInstance().computeNow().toEpochMilli()+3600000)
-                 .build()
-              )
-              .build())
-           .map(o->{
-               try {
-                   return mapper.writeValueAsString(o);
-               }catch (JsonProcessingException e){
-                   log.error("Unnable to convert object to Json string",e);
-                   return "null";
-               }
-           })
-           .doOnCancel(()->log.info("cancelled"))
-           .log()
+    private Flux<String> test(Mono<? extends Principal> user) {
+        return user.flatMapMany(u -> Flux
+                .interval(Duration.ofSeconds(5))
+                .doOnEach(l -> log.info("message " + l + " to " + u.getName()))
+                .map(l -> CardOperationData.builder()
+                        .number(l)
+                        .publicationDate(SimulatedTime.getInstance().computeNow().toEpochMilli() - 600000)
+                        .type(CardOperationTypeEnum.ADD)
+                        .card(
+                                LightCardData.builder()
+                                        .id(l + "")
+                                        .uid(l + "")
+                                        .summary(I18nData.builder().key("summary").build())
+                                        .title(I18nData.builder().key("title").build())
+                                        .mainRecipient("rte-operator")
+                                        .severity(SeverityEnum.ALARM)
+                                        .startDate(SimulatedTime.getInstance().computeNow().toEpochMilli())
+                                        .endDate(SimulatedTime.getInstance().computeNow().toEpochMilli() + 3600000)
+                                        .build()
+                        )
+                        .build())
+                .map(o -> {
+                    try {
+                        return mapper.writeValueAsString(o);
+                    } catch (JsonProcessingException e) {
+                        log.error("Unnable to convert object to Json string", e);
+                        return "null";
+                    }
+                })
+                .doOnCancel(() -> log.info("cancelled"))
+                .log()
         );
     }
 

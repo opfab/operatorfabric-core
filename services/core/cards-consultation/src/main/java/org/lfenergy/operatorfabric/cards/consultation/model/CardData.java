@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.lfenergy.operatorfabric.cards.model.*;
+import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -65,6 +66,6 @@ public class CardData implements Card {
     public void prepare(){
         this.publishDate = SimulatedTime.getInstance().computeNow().toEpochMilli();
         this.id = publisher+"_"+processId;
-        this.setShardKey(Long.valueOf(this.getStartDate()%24*1000).intValue());
+        this.setShardKey(Math.toIntExact(this.getStartDate()%24*1000));
     }
 }
