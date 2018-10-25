@@ -97,3 +97,6 @@ gradle-app.setting
 
 # ignoring logs
 **/logs
+
+# ignoring sonar generated reports
+.sonar
