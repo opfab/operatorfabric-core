@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 //import org.lfenergy.operatorfabric.springtools.config.oauth.EnableOperatorFabricOauth2;
@@ -23,6 +24,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @EnableReactiveOperatorFabricOauth2
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories
+@ImportResource("classpath:/amqp.xml")
 public class Application {
 
     public static void main(String[] args) {
