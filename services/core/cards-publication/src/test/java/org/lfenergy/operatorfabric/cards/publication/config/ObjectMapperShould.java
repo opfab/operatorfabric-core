@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.publication.application.UnitTestApplication;
 import org.lfenergy.operatorfabric.cards.publication.config.json.JacksonConfig;
-import org.lfenergy.operatorfabric.cards.publication.model.CardData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -48,7 +48,7 @@ public class ObjectMapperShould {
                   "}"+
                 "}"+
            "}";
-        CardData card = mapper.readValue(stringCard, CardData.class);
+        CardPublicationData card = mapper.readValue(stringCard, CardPublicationData.class);
         assertThat(card.getData()).isNotNull();
         assertThat(((Map) card.getData()).get("int")).isEqualTo(123);
         assertThat(((Map) card.getData()).get("string")).isEqualTo("test");

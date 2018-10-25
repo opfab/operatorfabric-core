@@ -7,7 +7,7 @@ package org.lfenergy.operatorfabric.cards.publication.config.mongo;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.model.Recipient;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientData;
+import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.List;
@@ -15,8 +15,8 @@ import java.util.List;
 public class RecipientReadConverter implements Converter<Document,Recipient> {
     @Override
     public Recipient convert(Document source) {
-        RecipientData.RecipientDataBuilder builder =
-            RecipientData.builder()
+        RecipientPublicationData.RecipientPublicationDataBuilder builder =
+            RecipientPublicationData.builder()
                 .type(RecipientEnum.valueOf(source.getString("type")))
                 .identity(source.getString("identity"))
                 .preserveMain(source.getBoolean("preserveMain"));

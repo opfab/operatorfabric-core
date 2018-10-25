@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 
 /**
  * <p></p>
@@ -41,7 +42,7 @@ import static org.awaitility.Awaitility.await;
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
-@ActiveProfiles(profiles = {"native","test"})
+@ActiveProfiles(profiles = {"native", "test"})
 @Slf4j
 @Tag("end-to-end")
 @Tag("mongo")
@@ -60,212 +61,241 @@ class CardWriteServiceShould {
     private TestCardReceiver testCardReceiver;
 
     @AfterEach
-    public void cleanAfter(){
+    public void cleanAfter() {
         cardRepository.deleteAll().subscribe();
         archiveRepository.deleteAll().subscribe();
         testCardReceiver.clear();
     }
 
     @BeforeEach
-    public void cleanBefore(){
+    public void cleanBefore() {
         testCardReceiver.clear();
     }
 
-    private Flux<CardData> generateCards(){
+    private Flux<CardPublicationData> generateCards() {
         return Flux.just(
-           CardData.builder()
-              .publisher("PUBLISHER_1")
-              .processId("PROCESS_1")
-              .severity(SeverityEnum.ALARM)
-              .title(I18nData.builder().key("title").build())
-              .summary(I18nData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .build(),
-           CardData.builder()
-              .publisher("PUBLISHER_2")
-              .processId("PROCESS_1")
-              .severity(SeverityEnum.NOTIFICATION)
-              .title(I18nData.builder().key("title").build())
-              .summary(I18nData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .build(),
-           CardData.builder()
-              .publisher("PUBLISHER_2")
-              .processId("PROCESS_2")
-              .severity(SeverityEnum.QUESTION)
-              .title(I18nData.builder().key("title").build())
-              .summary(I18nData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .build(),
-           CardData.builder()
-              .publisher("PUBLISHER_1")
-              .processId("PROCESS_2")
-              .severity(SeverityEnum.NOTIFICATION)
-              .title(I18nData.builder().key("title").build())
-              .summary(I18nData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .build(),
-           CardData.builder()
-              .publisher("PUBLISHER_1")
-              .processId("PROCESS_1")
-              .severity(SeverityEnum.NOTIFICATION)
-              .title(I18nData.builder().key("title").build())
-              .summary(I18nData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .build()
+            CardPublicationData.builder()
+                .publisher("PUBLISHER_1")
+                .publisherVersion("O")
+                .processId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now().toEpochMilli())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .build(),
+            CardPublicationData.builder()
+                .publisher("PUBLISHER_2")
+                .publisherVersion("O")
+                .processId("PROCESS_1")
+                .severity(SeverityEnum.NOTIFICATION)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now().toEpochMilli())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .build(),
+            CardPublicationData.builder()
+                .publisher("PUBLISHER_2")
+                .publisherVersion("O")
+                .processId("PROCESS_2")
+                .severity(SeverityEnum.QUESTION)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now().toEpochMilli())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .build(),
+            CardPublicationData.builder()
+                .publisher("PUBLISHER_1")
+                .publisherVersion("O")
+                .processId("PROCESS_2")
+                .severity(SeverityEnum.NOTIFICATION)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now().toEpochMilli())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .build(),
+            CardPublicationData.builder()
+                .publisher("PUBLISHER_1")
+                .publisherVersion("O")
+                .processId("PROCESS_1")
+                .severity(SeverityEnum.NOTIFICATION)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now().toEpochMilli())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .build()
         );
+    }
+
+    private CardPublicationData generateCardData(String publisher, String process) {
+        return CardPublicationData.builder()
+                .publisher(publisher)
+                .publisherVersion("O")
+                .processId(process)
+                .severity(SeverityEnum.NOTIFICATION)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now().toEpochMilli())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .build();
+    }
+
+    private CardPublicationData generateWrongCardData(String publisher, String process) {
+        return CardPublicationData.builder()
+                .publisher(publisher)
+                .publisherVersion("O")
+                .processId(process)
+                .build();
     }
 
     @Test
     void createAsyncCards() {
         cardWriteService.createCardsAsyncParallel(generateCards());
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkCardCount(4));
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkArchiveCount(5));
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(4));
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(5));
     }
 
     @Test
     void createAsyncCardsWithError() {
-        cardWriteService.createCardsAsyncParallel(Flux.concat(Flux.just(CardData.builder()
-           .publisher("PUBLISHER_1")
-           .processId("PROCESS_1").build()),generateCards()));
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkCardCount(4));
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkArchiveCount(5));
+        String publisher = "PUBLISHER_1";
+        String process = "PROCESS_1";
+        cardWriteService.createCardsAsyncParallel(Flux.concat(Flux.just(generateWrongCardData(publisher, process)), generateCards()));
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(4));
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(5));
     }
 
     @Test
     void createSyncCards() {
         StepVerifier.create(cardWriteService.createCardsWithResult(generateCards()))
-           .expectNextMatches(r->r.getCount().equals(5)).verifyComplete();
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkCardCount(4));
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkArchiveCount(5));
+                .expectNextMatches(r -> r.getCount().equals(5)).verifyComplete();
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(4));
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(5));
     }
 
     @Test
     void createSyncCardsWithError() {
-        StepVerifier.create(cardWriteService.createCardsWithResult(Flux.concat(Flux.just(CardData.builder()
-           .publisher("PUBLISHER_1")
-           .processId("PROCESS_1").build()),generateCards())))
-        .expectNextMatches(r->r.getCount().equals(0)).verifyComplete();
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkCardCount(0));
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkArchiveCount(0));
+        StepVerifier.create(cardWriteService.createCardsWithResult(Flux.concat(Flux.just(generateWrongCardData("PUBLISHER_1", "PROCESS_1")), generateCards())))
+                .expectNextMatches(r -> r.getCount().equals(0)).verifyComplete();
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(0));
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(0));
     }
 
     @Test
-    void preserveData(){
+    void preserveData() {
         Instant start = Instant.now().plusSeconds(3600);
         LinkedHashMap data = new LinkedHashMap();
-        data.put("int",123);
-        data.put("string","test");
+        data.put("int", 123);
+        data.put("string", "test");
         LinkedHashMap subdata = new LinkedHashMap();
-        subdata.put("int",456);
-        subdata.put("string","test2");
-        data.put("object",subdata);
-        CardData newCard = CardData.builder()
-            .publisher("PUBLISHER_1")
-            .publisherVersion("0.0.1")
-            .processId("PROCESS_1")
-            .severity(SeverityEnum.ALARM)
-            .startDate(start.toEpochMilli())
-            .title(I18nData.builder().key("title").build())
-            .summary(I18nData.builder().key("summary").parameter("arg1","value1").build())
-            .endDate(start.plusSeconds(60).toEpochMilli())
-            .lttd(start.minusSeconds(600).toEpochMilli())
-            .deletionDate(start.plusSeconds(3600).toEpochMilli())
-            .tag("tag1").tag("tag2")
-            .media("SOUND")
-            .data(data)
-            .detail(
-                DetailData.builder()
-                .style("style1")
-                .title(I18nData.builder().key("detail.title").build())
-                .templateName("testTemplate")
-                .titleStyle("titleStyle")
-                .build()
-            )
-            .recipient(
-                RecipientData.builder()
-                    .type(RecipientEnum.UNION)
-                    .recipient(
-                        RecipientData.builder()
-                            .type(RecipientEnum.USER)
-                            .identity("graham")
-                            .build()
-                    )
-                    .recipient(
-                        RecipientData.builder()
-                            .type(RecipientEnum.USER)
-                            .identity("eric")
-                            .build()
-                    )
-                .build())
-            .action("act1",
-               ActionData.builder()
-                  .type(ActionEnum.URI)
-                  .label(I18nData.builder().key("action.one").build())
-                  .build())
-           .action("act2",
-              ActionData.builder()
-                 .type(ActionEnum.URI)
-                 .label(I18nData.builder().key("action.two").build())
-                 .input(
-                     InputData.builder()
-                         .type(InputEnum.BOOLEAN)
-                         .label(I18nData.builder().key("action.two.input.one").build())
-                         .name("input1")
-                         .build()
-                 )
-                 .input(
-                    InputData.builder()
-                       .type(InputEnum.LIST)
-                       .label(I18nData.builder().key("action.two.input.two").build())
-                       .name("input2")
-                       .value(
-                            ParameterListItemData.builder()
-                               .label(I18nData.builder().key("value.one").build())
-                               .value("one")
-                               .build())
-                       .value(
-                          ParameterListItemData.builder()
-                             .label(I18nData.builder().key("value.two").build())
-                             .value("two")
-                             .build())
-                       .build()
-                 )
-                 .build())
-            .build();
+        subdata.put("int", 456);
+        subdata.put("string", "test2");
+        data.put("object", subdata);
+        CardPublicationData newCard = CardPublicationData.builder()
+                .publisher("PUBLISHER_1")
+                .publisherVersion("0.0.1")
+                .processId("PROCESS_1")
+                .severity(SeverityEnum.ALARM)
+                .startDate(start.toEpochMilli())
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1").build())
+                .endDate(start.plusSeconds(60).toEpochMilli())
+                .lttd(start.minusSeconds(600).toEpochMilli())
+                .deletionDate(start.plusSeconds(3600).toEpochMilli())
+                .tag("tag1").tag("tag2")
+                .media("SOUND")
+                .data(data)
+                .detail(
+                        DetailPublicationData.builder()
+                                .style("style1")
+                                .title(I18nPublicationData.builder().key("detail.title").build())
+                                .templateName("testTemplate")
+                                .titleStyle("titleStyle")
+                                .build()
+                )
+                .recipient(
+                        RecipientPublicationData.builder()
+                                .type(RecipientEnum.UNION)
+                                .recipient(
+                                        RecipientPublicationData.builder()
+                                                .type(RecipientEnum.USER)
+                                                .identity("graham")
+                                                .build()
+                                )
+                                .recipient(
+                                        RecipientPublicationData.builder()
+                                                .type(RecipientEnum.USER)
+                                                .identity("eric")
+                                                .build()
+                                )
+                                .build())
+                .action("act1",
+                        ActionPublicationData.builder()
+                                .type(ActionEnum.URI)
+                                .label(I18nPublicationData.builder().key("action.one").build())
+                                .build())
+                .action("act2",
+                        ActionPublicationData.builder()
+                                .type(ActionEnum.URI)
+                                .label(I18nPublicationData.builder().key("action.two").build())
+                                .input(
+                                        InputPublicationData.builder()
+                                                .type(InputEnum.BOOLEAN)
+                                                .label(I18nPublicationData.builder().key("action.two.input.one").build())
+                                                .name("input1")
+                                                .build()
+                                )
+                                .input(
+                                        InputPublicationData.builder()
+                                                .type(InputEnum.LIST)
+                                                .label(I18nPublicationData.builder().key("action.two.input.two").build())
+                                                .name("input2")
+                                                .value(
+                                                        ParameterListItemPublicationData.builder()
+                                                                .label(I18nPublicationData.builder().key("value.one").build())
+                                                                .value("one")
+                                                                .build())
+                                                .value(
+                                                        ParameterListItemPublicationData.builder()
+                                                                .label(I18nPublicationData.builder().key("value.two").build())
+                                                                .value("two")
+                                                                .build())
+                                                .build()
+                                )
+                                .build())
+                .build();
         cardWriteService.createCardsAsyncParallel(Flux.just(newCard));
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkCardCount(1));
-        await().atMost(5,TimeUnit.SECONDS).until(()-> checkArchiveCount(1));
-        await().atMost(5,TimeUnit.SECONDS).until(()-> !newCard.getOrphanedUsers().isEmpty());
-        await().atMost(5,TimeUnit.SECONDS).until(()-> testCardReceiver.getEricQueue().size()>=1);
-        CardData persistedCard = cardRepository.findById(newCard.getId()).block();
-        assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard,"orphanedUsers");
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(1));
+        await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(1));
+        await().atMost(5, TimeUnit.SECONDS).until(() -> !newCard.getOrphanedUsers().isEmpty());
+        await().atMost(5, TimeUnit.SECONDS).until(() -> testCardReceiver.getEricQueue().size() >= 1);
+        CardPublicationData persistedCard = cardRepository.findById(newCard.getId()).block();
+        assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard, "orphanedUsers");
 
-        ArchivedCardData archivedPersistedCard = archiveRepository.findById(newCard.getUid()).block();
+        ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid()).block();
         assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(
-                newCard, "id","deletionDate","actions");
+                newCard, "id", "deletionDate", "actions");
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
         assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
         assertThat(testCardReceiver.getAdminQueue().size()).isEqualTo(0);
         assertThat(testCardReceiver.getTsoQueue().size()).isEqualTo(0);
     }
 
-    private boolean checkCardCount(long expectedCount){
+    private boolean checkCardCount(long expectedCount) {
         Long count = cardRepository.count().block();
-        if(count == expectedCount)
+        if (count == expectedCount)
             return true;
         else {
-            log.warn("Expected card count "+expectedCount+" but was "+count);
+            log.warn("Expected card count " + expectedCount + " but was " + count);
             return false;
         }
     }
 
-    private boolean checkArchiveCount(long expectedCount){
+    private boolean checkArchiveCount(long expectedCount) {
         Long count = archiveRepository.count().block();
-        if(count == expectedCount)
+        if (count == expectedCount)
             return true;
         else {
-            log.warn("Expected card count "+expectedCount+" but was "+count);
+            log.warn("Expected card count " + expectedCount + " but was " + count);
             return false;
         }
     }

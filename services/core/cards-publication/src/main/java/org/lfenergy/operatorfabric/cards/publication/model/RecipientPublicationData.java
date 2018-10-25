@@ -8,13 +8,15 @@ import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.Recipient;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RecipientData implements Recipient {
+public class RecipientPublicationData implements Recipient {
+    @NotNull
     private RecipientEnum type;
     private String identity;
     @Singular

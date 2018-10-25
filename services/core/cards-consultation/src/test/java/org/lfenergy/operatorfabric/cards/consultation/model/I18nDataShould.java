@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class I18nDataShould {
     @Test
     public void exposeData(){
-        I18nData i18n = I18nData.builder().key("key").build();
+        I18nConsultationData i18n = I18nConsultationData.builder().key("key").build();
         assertThat(i18n).hasFieldOrPropertyWithValue("key", "key");
     }
 

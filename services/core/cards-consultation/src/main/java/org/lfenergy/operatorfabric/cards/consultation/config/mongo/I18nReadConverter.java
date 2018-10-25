@@ -5,7 +5,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.config.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.consultation.model.I18nData;
+import org.lfenergy.operatorfabric.cards.consultation.model.I18nConsultationData;
 import org.lfenergy.operatorfabric.cards.model.I18n;
 import org.springframework.core.convert.converter.Converter;
 
@@ -22,7 +22,7 @@ public class I18nReadConverter implements Converter<Document, I18n> {
     public I18n convert(Document source) {
         if(source == null)
             return null;
-        I18nData.I18nDataBuilder builder = I18nData.builder().key( source.getString("key"));
+        I18nConsultationData.I18nConsultationDataBuilder builder = I18nConsultationData.builder().key( source.getString("key"));
         if(source.containsKey("parameters")) {
             Document parameters = (Document) source.get("parameters");
             if(parameters!=null)

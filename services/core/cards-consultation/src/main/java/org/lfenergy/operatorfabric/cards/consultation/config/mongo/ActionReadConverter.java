@@ -5,7 +5,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.config.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.consultation.model.ActionData;
+import org.lfenergy.operatorfabric.cards.consultation.model.ActionConsultationData;
 import org.lfenergy.operatorfabric.cards.model.Action;
 import org.lfenergy.operatorfabric.cards.model.ActionEnum;
 import org.springframework.core.convert.converter.Converter;
@@ -19,7 +19,7 @@ public class ActionReadConverter implements Converter<Document,Action> {
 
     @Override
     public Action convert(Document source) {
-        ActionData.ActionDataBuilder builder = ActionData.builder()
+        ActionConsultationData.ActionConsultationDataBuilder builder = ActionConsultationData.builder()
                 .type(ActionEnum.valueOf(source.getString("type")))
                 .label(i18nReadConverter.convert((Document) source.get("label")))
                 .buttonStyle(source.getString("buttonStyle"))

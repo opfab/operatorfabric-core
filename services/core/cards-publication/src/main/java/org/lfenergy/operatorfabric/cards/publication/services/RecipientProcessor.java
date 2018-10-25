@@ -9,16 +9,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 import org.lfenergy.operatorfabric.cards.model.Recipient;
-import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.CardData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
 
 @Component
 public class RecipientProcessor {
@@ -41,7 +38,7 @@ public class RecipientProcessor {
      * @param card
      * @return
      */
-    public ComputedRecipient processAll(CardData card) {
+    public ComputedRecipient processAll(CardPublicationData card) {
         Recipient recipient = card.getRecipient();
         ComputedRecipient computedRecipient = processAll(recipient);
         card.setMainRecipient(computedRecipient.getMain());

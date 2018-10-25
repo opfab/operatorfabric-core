@@ -7,7 +7,7 @@ package org.lfenergy.operatorfabric.cards.publication.config.mongo;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.model.Detail;
 import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.DetailData;
+import org.lfenergy.operatorfabric.cards.publication.model.DetailPublicationData;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class DetailReadConverter implements Converter<Document, Detail> {
     public Detail convert(Document source) {
         if(source == null)
             return null;
-        DetailData.DetailDataBuilder detailBuilder = DetailData.builder()
+        DetailPublicationData.DetailPublicationDataBuilder detailBuilder = DetailPublicationData.builder()
                 .titleStyle(source.getString("titleStyle"))
                 .templateName(source.getString("templateName"))
                 .title(i18nReadConverter.convert((Document) source.get("title")));

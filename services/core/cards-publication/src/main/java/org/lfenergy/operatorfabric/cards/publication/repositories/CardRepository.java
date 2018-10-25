@@ -4,7 +4,7 @@
 
 package org.lfenergy.operatorfabric.cards.publication.repositories;
 
-import org.lfenergy.operatorfabric.cards.publication.model.CardData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
  * @author davibind
  */
 @Repository
-public interface CardRepository extends ReactiveMongoRepository<CardData,String> {
+public interface CardRepository extends ReactiveMongoRepository<CardPublicationData,String> {
 
-    public Mono<CardData> findByProcessId(String processId);
+    public Mono<CardPublicationData> findByProcessId(String processId);
 }

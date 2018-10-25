@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecipientData implements Recipient {
+public class RecipientConsultationData implements Recipient {
     private RecipientEnum type;
     private String identity;
     @Singular

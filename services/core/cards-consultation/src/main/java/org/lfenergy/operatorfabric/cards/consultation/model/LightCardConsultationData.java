@@ -27,7 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LightCardData implements LightCard {
+public class LightCardConsultationData implements LightCard {
 
     private String uid ;
     private String id ;

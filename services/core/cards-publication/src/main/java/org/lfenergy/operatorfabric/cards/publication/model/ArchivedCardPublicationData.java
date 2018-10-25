@@ -2,10 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.lfenergy.operatorfabric.cards.consultation.model;
+package org.lfenergy.operatorfabric.cards.publication.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.lfenergy.operatorfabric.cards.model.*;
@@ -24,47 +22,62 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @Document(collection = "archivedCards")
-public class ArchivedCardData implements Card {
+public class ArchivedCardPublicationData implements Card {
 
     @Id
     private String id;
+    @NotNull
     private String publisher;
     private String publisherVersion;
+    @NotNull
     private String processId;
     private I18n title;
     private I18n summary;
     @CreatedDate
     private Long publishDate;
     @Transient
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long deletionDate;
     private Long lttd;
+    @NotNull
     @Indexed
     private Long startDate;
     @Indexed
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long endDate;
-    @JsonIgnore
     private String media;
     private SeverityEnum severity;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> tags;
     @Transient
-    @JsonIgnore
     private Map<String,? extends Action> actions;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends Detail> details;
-    @JsonIgnore
     private Recipient recipient;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
     @Indexed
     private int shardKey;
     private String mainRecipient;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> userRecipients;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groupRecipients;
 
+    public ArchivedCardPublicationData(CardPublicationData card){
+        this.id = card.getUid();
+        this.publisher = card.getPublisher();
+        this.publisherVersion = card.getPublisherVersion();
+        this.publishDate = card.getPublishDate();
+        this.processId = card.getProcessId();
+        this.startDate = card.getStartDate();
+        this.shardKey = card.getShardKey();
+        this.endDate = card.getEndDate();
+        this.lttd = card.getLttd();
+        this.title = card.getTitle();
+        this.summary = card.getSummary();
+        this.details = new ArrayList<>(card.getDetails());
+        this.tags = new ArrayList<>(card.getTags());
+        this.recipient = card.getRecipient();
+        this.severity = card.getSeverity();
+        this.data = card.getData();
+        this.mainRecipient = card.getMainRecipient();
+        this.userRecipients = new ArrayList<>(card.getUserRecipients());
+        this.groupRecipients = new ArrayList<>(card.getGroupRecipients());
+        this.media = card.getMedia();
+    }
 
 }

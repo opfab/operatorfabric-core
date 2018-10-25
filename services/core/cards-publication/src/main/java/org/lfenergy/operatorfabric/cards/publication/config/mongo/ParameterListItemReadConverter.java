@@ -6,7 +6,7 @@ package org.lfenergy.operatorfabric.cards.publication.config.mongo;
 
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.model.ParameterListItem;
-import org.lfenergy.operatorfabric.cards.publication.model.ParameterListItemData;
+import org.lfenergy.operatorfabric.cards.publication.model.ParameterListItemPublicationData;
 import org.springframework.core.convert.converter.Converter;
 
 public class ParameterListItemReadConverter implements Converter<Document,ParameterListItem> {
@@ -15,7 +15,7 @@ public class ParameterListItemReadConverter implements Converter<Document,Parame
 
     @Override
     public ParameterListItem convert(Document source) {
-        ParameterListItemData.ParameterListItemDataBuilder builder = ParameterListItemData.builder()
+        ParameterListItemPublicationData.ParameterListItemPublicationDataBuilder builder = ParameterListItemPublicationData.builder()
                 .label(i18nReadConverter.convert((Document) source.get("label")))
                 .value(source.getString("value"))
                 ;

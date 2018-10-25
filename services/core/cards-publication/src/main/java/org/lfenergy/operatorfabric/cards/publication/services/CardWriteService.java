@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.model.CardCreationReport;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardData;
+import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.Counter;
 import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.reactivestreams.Publisher;
@@ -52,10 +52,10 @@ import java.util.function.Function;
 @Slf4j
 public class CardWriteService {
 
-    private final EmitterProcessor<CardData> processor;
+    private final EmitterProcessor<CardPublicationData> processor;
     private static final int windowSize=1000;
     private static final long windowTimeOut=500;
-    private final FluxSink<CardData> sink;
+    private final FluxSink<CardPublicationData> sink;
 
     //to inject
     private RecipientProcessor recipientProcessor;
@@ -87,7 +87,7 @@ public class CardWriteService {
            //trigger batched treatment upon window readiness
            .subscribe(cardAndTime->{
                long windowStart = cardAndTime.getT2();
-               Flux<CardData> cards = registerRecipientProcess(cardAndTime.getT1());
+               Flux<CardPublicationData> cards = registerRecipientProcess(cardAndTime.getT1());
                cards = registerTolerantValidationProcess(cards,cardAndTime.getT3());
                registerPersistingProcess(cards, windowStart)
                   .doOnError(t -> log.error("Unexpected Error arrose", t))
@@ -96,7 +96,7 @@ public class CardWriteService {
            });
     }
     /** process effective recipients **/
-    private Flux<CardData> registerRecipientProcess(Flux<CardData> cards){
+    private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards){
         return cards
            .doOnNext(c->{
                ComputedRecipient cr = recipientProcessor.processAll(c);
@@ -104,7 +104,7 @@ public class CardWriteService {
            });
     }
 
-    private Flux<CardData> registerTolerantValidationProcess(Flux<CardData> cards, Long publishDate){
+    private Flux<CardPublicationData> registerTolerantValidationProcess(Flux<CardPublicationData> cards, Long publishDate){
         return cards
            // prepare card computed data (id, shardkey)
            .flatMap(doOnNextOnErrorContinue(c->c.prepare(publishDate)))
@@ -112,7 +112,7 @@ public class CardWriteService {
            .flatMap(doOnNextOnErrorContinue(c->validate(c)));
     }
 
-    private Flux<CardData> registerValidationProcess(Flux<CardData> cards, Long publishDate){
+    private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards, Long publishDate){
         return cards
            // prepare card computed data (id, shardkey)
            .doOnNext(c->c.prepare(Math.round(publishDate/1000d)*1000))
@@ -120,11 +120,11 @@ public class CardWriteService {
            .doOnNext(c->validate(c));
     }
 
-    private Mono<Integer> registerPersistingProcess(Flux<CardData> cards, long windowStart){
-        // this reduce function removes CardData "duplicates" (based on id) but leaves ArchivedCard as is
-        BiFunction<Tuple3<HashMap<String,CardData>,ArrayList<ArchivedCardData>,HashSet<String>>,
-           Tuple2<CardData, ArchivedCardData>,
-           Tuple3<HashMap<String,CardData>,ArrayList<ArchivedCardData>,HashSet<String>>>
+    private Mono<Integer> registerPersistingProcess(Flux<CardPublicationData> cards, long windowStart){
+        // this reduce function removes CardPublicationData "duplicates" (based on id) but leaves ArchivedCard as is
+        BiFunction<Tuple3<HashMap<String,CardPublicationData>,ArrayList<ArchivedCardPublicationData>,HashSet<String>>,
+           Tuple2<CardPublicationData, ArchivedCardPublicationData>,
+           Tuple3<HashMap<String,CardPublicationData>,ArrayList<ArchivedCardPublicationData>,HashSet<String>>>
            fct = (tuple, item)->{
             tuple.getT1().put(item.getT1().getId(),item.getT1());
             tuple.getT2().add(item.getT2());
@@ -134,7 +134,7 @@ public class CardWriteService {
 
         return cards
            // creating archived card
-           .map(card -> Tuples.of(card, new ArchivedCardData(card)))
+           .map(card -> Tuples.of(card, new ArchivedCardPublicationData(card)))
            // removing duplicates and assembling card data in collections
            .reduce(Tuples.of(new LinkedHashMap<>(), new ArrayList<>(), new HashSet<>(), new Counter()), fct)
            // switch to blockable thread before sync treatments (mongo writes)
@@ -156,11 +156,11 @@ public class CardWriteService {
            .map(t->t.getT2());
     }
 
-    private void notifyCards(Collection<CardData> cards) {
+    private void notifyCards(Collection<CardPublicationData> cards) {
         cardNotificationService.notifyCards(cards,CardOperationTypeEnum.ADD);
     }
 
-    private static Function<CardData, Publisher<CardData>> doOnNextOnErrorContinue(Consumer<CardData> onNext){
+    private static Function<CardPublicationData, Publisher<CardPublicationData>> doOnNextOnErrorContinue(Consumer<CardPublicationData> onNext){
         return c->{
             try{
                 onNext.accept(c);
@@ -172,20 +172,20 @@ public class CardWriteService {
         };
     }
 
-    private void validate(CardData c) throws ConstraintViolationException {
-        Set<ConstraintViolation<CardData>> results = localValidatorFactoryBean.validate(c);
+    private void validate(CardPublicationData c) throws ConstraintViolationException {
+        Set<ConstraintViolation<CardPublicationData>> results = localValidatorFactoryBean.validate(c);
         if(!results.isEmpty())
             throw new ConstraintViolationException(results);
     }
 
-    public void createCardsAsyncParallel(Flux<CardData> cards){
+    public void createCardsAsyncParallel(Flux<CardPublicationData> cards){
 
         cards.subscribe(c->sink.next(c));
     }
 
-    public Mono<? extends CardCreationReport> createCardsWithResult(Flux<CardData> inputCards){
+    public Mono<? extends CardCreationReport> createCardsWithResult(Flux<CardPublicationData> inputCards){
         long windowStart = Instant.now().toEpochMilli();
-        Flux<CardData> cards = registerRecipientProcess(inputCards);
+        Flux<CardPublicationData> cards = registerRecipientProcess(inputCards);
         cards = registerValidationProcess(cards,SimulatedTime.getInstance().computeNow().toEpochMilli());
         return registerPersistingProcess(cards, windowStart)
            .doOnNext(count->log.info(count+" cards persisted"))
@@ -198,20 +198,20 @@ public class CardWriteService {
 
     }
 
-    private void doIndexCards(Tuple3<HashMap<String, CardData>, ArrayList<ArchivedCardData>, HashSet<String>> tuple){
+    private void doIndexCards(Tuple3<HashMap<String, CardPublicationData>, ArrayList<ArchivedCardPublicationData>, HashSet<String>> tuple){
         if(tuple.getT1().isEmpty())
             return;
-        BulkOperations bulkCard = template.bulkOps(BulkOperations.BulkMode.ORDERED, CardData.class);
+        BulkOperations bulkCard = template.bulkOps(BulkOperations.BulkMode.ORDERED, CardPublicationData.class);
         tuple.getT1().values().forEach(c->log.info("preparing to write "+c.toString()));
         tuple.getT1().values().forEach(c->addBulkCard(bulkCard,c));
         bulkCard.execute();
 
     }
 
-    private void doIndexArchivedCards(Tuple3<HashMap<String, CardData>, ArrayList<ArchivedCardData>, HashSet<String>>  tuple){
+    private void doIndexArchivedCards(Tuple3<HashMap<String, CardPublicationData>, ArrayList<ArchivedCardPublicationData>, HashSet<String>>  tuple){
         if(tuple.getT2().isEmpty())
             return;
-        BulkOperations bulkArchived = template.bulkOps(BulkOperations.BulkMode.ORDERED, ArchivedCardData.class);
+        BulkOperations bulkArchived = template.bulkOps(BulkOperations.BulkMode.ORDERED, ArchivedCardPublicationData.class);
         tuple.getT2().forEach(c->addBulkArchivedCard(bulkArchived,c));
         bulkArchived.execute();
 
@@ -219,7 +219,7 @@ public class CardWriteService {
 
 
 
-    private void addBulkCard(BulkOperations bulk, CardData c) {
+    private void addBulkCard(BulkOperations bulk, CardPublicationData c) {
         Document objDocument = new Document();
         template.getConverter().write(c,objDocument);
         Update update = new Update();
@@ -230,7 +230,7 @@ public class CardWriteService {
         bulk.upsert(Query.query(Criteria.where("_id").is(c.getId())), update);
     }
 
-    private void addBulkArchivedCard(BulkOperations bulkArchived, ArchivedCardData c) {
+    private void addBulkArchivedCard(BulkOperations bulkArchived, ArchivedCardPublicationData c) {
         bulkArchived.insert(c);
     }
 

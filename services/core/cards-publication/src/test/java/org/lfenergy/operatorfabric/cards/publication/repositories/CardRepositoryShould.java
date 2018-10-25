@@ -8,10 +8,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.Application;
-import org.lfenergy.operatorfabric.cards.publication.model.CardData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -45,17 +47,19 @@ public class CardRepositoryShould {
 
     @Test
     public void persistCard(){
-        CardData card =
-           CardData.builder()
+        CardPublicationData card =
+           CardPublicationData.builder()
               .processId("PROCESS")
               .publisher("PUBLISHER")
+              .publisherVersion("0")
               .startDate(Instant.now().toEpochMilli())
               .severity(SeverityEnum.ALARM)
-              .title(I18nData.builder().key("title").build())
-              .summary(I18nData.builder().key("summary").build())
+              .title(I18nPublicationData.builder().key("title").build())
+              .summary(I18nPublicationData.builder().key("summary").build())
+              .recipient(RecipientPublicationData.builder().type(RecipientEnum.DEADEND).build())
               .build();
         repository.save(card).subscribe();
-        Mono<CardData> result = repository.findById("PUBLISHER_PROCESS");
+        Mono<CardPublicationData> result = repository.findById("PUBLISHER_PROCESS");
         StepVerifier.create(result)
            .expectNextMatches(c->card.getId().equals(c.getId()));
     }

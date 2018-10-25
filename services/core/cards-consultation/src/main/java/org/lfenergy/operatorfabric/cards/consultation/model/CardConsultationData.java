@@ -23,7 +23,7 @@ import java.util.Map;
 @Data
 @Document(collection = "cards")
 @NoArgsConstructor
-public class CardData implements Card {
+public class CardConsultationData implements Card {
 
     private String uid ;
     private String id;

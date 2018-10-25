@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.lfenergy.operatorfabric.cards.consultation.model;
+package org.lfenergy.operatorfabric.cards.publication.model;
 
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.Action;
@@ -10,18 +10,20 @@ import org.lfenergy.operatorfabric.cards.model.ActionEnum;
 import org.lfenergy.operatorfabric.cards.model.I18n;
 import org.lfenergy.operatorfabric.cards.model.Input;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ActionData implements Action {
+@AllArgsConstructor
+@Builder
+public class ActionPublicationData implements Action {
+    @NotNull
     private ActionEnum type;
+    @NotNull
     private I18n label;
-    @Singular
-    private List<? extends Input> inputs = new ArrayList<>();
+    @Singular  private List<? extends Input> inputs = new ArrayList<>();
     private String buttonStyle;
     private String contentStyle;
     private Boolean lockAction = false;

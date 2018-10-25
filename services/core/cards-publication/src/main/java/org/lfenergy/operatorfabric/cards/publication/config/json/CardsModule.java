@@ -18,14 +18,14 @@ public class CardsModule extends SimpleModule {
 
     public CardsModule() {
 
-    addAbstractTypeMapping(I18n.class,I18nData.class);
-    addAbstractTypeMapping(Card.class,CardData.class);
-    addAbstractTypeMapping(LightCard.class,LightCardData.class);
-    addAbstractTypeMapping(Action.class,ActionData.class);
-    addAbstractTypeMapping(Detail.class,DetailData.class);
-    addAbstractTypeMapping(Input.class,InputData.class);
-    addAbstractTypeMapping(Recipient.class,RecipientData.class);
-    addAbstractTypeMapping(ParameterListItem.class,ParameterListItemData.class);
+    addAbstractTypeMapping(I18n.class,I18nPublicationData.class);
+    addAbstractTypeMapping(Card.class,CardPublicationData.class);
+    addAbstractTypeMapping(LightCard.class,LightCardPublicationData.class);
+    addAbstractTypeMapping(Action.class,ActionPublicationData.class);
+    addAbstractTypeMapping(Detail.class,DetailPublicationData.class);
+    addAbstractTypeMapping(Input.class,InputPublicationData.class);
+    addAbstractTypeMapping(Recipient.class,RecipientPublicationData.class);
+    addAbstractTypeMapping(ParameterListItem.class,ParameterListItemPublicationData.class);
     addAbstractTypeMapping(CardOperation.class,CardOperationData.class);
     }
 }

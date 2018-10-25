@@ -7,9 +7,9 @@ package org.lfenergy.operatorfabric.cards.consultation.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.I18nData;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCardData;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.I18nConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
@@ -97,16 +97,16 @@ public class CardOperationsController {
         return user.flatMapMany(u -> Flux
                 .interval(Duration.ofSeconds(5))
                 .doOnEach(l -> log.info("message " + l + " to " + u.getName()))
-                .map(l -> CardOperationData.builder()
+                .map(l -> CardOperationConsultationData.builder()
                         .number(l)
                         .publicationDate(SimulatedTime.getInstance().computeNow().toEpochMilli() - 600000)
                         .type(CardOperationTypeEnum.ADD)
                         .card(
-                                LightCardData.builder()
+                                LightCardConsultationData.builder()
                                         .id(l + "")
                                         .uid(l + "")
-                                        .summary(I18nData.builder().key("summary").build())
-                                        .title(I18nData.builder().key("title").build())
+                                        .summary(I18nConsultationData.builder().key("summary").build())
+                                        .title(I18nConsultationData.builder().key("title").build())
                                         .mainRecipient("rte-operator")
                                         .severity(SeverityEnum.ALARM)
                                         .startDate(SimulatedTime.getInstance().computeNow().toEpochMilli())

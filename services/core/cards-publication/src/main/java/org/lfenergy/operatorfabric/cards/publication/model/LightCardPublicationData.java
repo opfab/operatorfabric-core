@@ -11,6 +11,7 @@ import org.lfenergy.operatorfabric.cards.model.LightCard;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +25,16 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class LightCardData implements LightCard {
+public class LightCardPublicationData implements LightCard {
 
+    @NotNull
     private String uid ;
+    @NotNull
     private String id ;
+    @NotNull
     private String processId;
     private Long lttd;
+    @NotNull
     @Indexed
     private Long startDate;
     @Indexed

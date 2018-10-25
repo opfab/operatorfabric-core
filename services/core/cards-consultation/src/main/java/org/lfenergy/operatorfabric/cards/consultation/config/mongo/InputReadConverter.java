@@ -5,7 +5,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.config.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.consultation.model.InputData;
+import org.lfenergy.operatorfabric.cards.consultation.model.InputConsultationData;
 import org.lfenergy.operatorfabric.cards.model.Input;
 import org.lfenergy.operatorfabric.cards.model.InputEnum;
 import org.springframework.core.convert.converter.Converter;
@@ -19,7 +19,7 @@ public class InputReadConverter implements Converter<Document,Input> {
     private ParameterListItemReadConverter parameterListItemReadConverter = new ParameterListItemReadConverter();
     @Override
     public Input convert(Document source) {
-        InputData.InputDataBuilder builder = InputData.builder()
+        InputConsultationData.InputConsultationDataBuilder builder = InputConsultationData.builder()
                 .type(InputEnum.valueOf(source.getString("type")))
                 .label(i18nReadConverter.convert((Document) source.get("label")))
                 .mandatory(source.getBoolean("mandatory"))

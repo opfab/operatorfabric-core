@@ -5,7 +5,7 @@
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.publication.model.CardData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardWriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class AsyncCardController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public @Valid void createCards(@Valid @RequestBody Flux<CardData> cards){
+    public @Valid void createCards(@Valid @RequestBody Flux<CardPublicationData> cards){
         cardWriteService.createCardsAsyncParallel(cards);
 
     }

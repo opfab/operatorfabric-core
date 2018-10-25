@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.CardData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardOperationData;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Exchange;
@@ -46,8 +46,8 @@ public class CardNotificationService {
     private final TopicExchange groupExchange;
     private final DirectExchange userExchange;
     private final ObjectMapper mapper;
-    private final EmitterProcessor<Tuple2<CardData, CardOperationTypeEnum>> processor;
-    private final FluxSink<Tuple2<CardData, CardOperationTypeEnum>> sink;
+    private final EmitterProcessor<Tuple2<CardPublicationData, CardOperationTypeEnum>> processor;
+    private final FluxSink<Tuple2<CardPublicationData, CardOperationTypeEnum>> sink;
     private AtomicInteger sequence = new AtomicInteger();
     private String uuid = UUID.randomUUID().toString();
 
@@ -132,13 +132,13 @@ public class CardNotificationService {
         return resultMap;
     }
 
-    public void notifyCards(Collection<CardData> cards, CardOperationTypeEnum type) {
+    public void notifyCards(Collection<CardPublicationData> cards, CardOperationTypeEnum type) {
         cards.forEach(c -> sink.next(Tuples.of(c, type)));
 //        notifyCards0(cards,type);
     }
 
 
-    private Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> notifyCardsX(CardData card, CardOperationTypeEnum type) {
+    private Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> notifyCardsX(CardPublicationData card, CardOperationTypeEnum type) {
         Map<String, CardOperationData.CardOperationDataBuilder> groupCardsDictionnay = new HashMap<>();
         Map<String, CardOperationData.CardOperationDataBuilder> userCardsDictionnary = new HashMap<>();
 
@@ -205,7 +205,7 @@ public class CardNotificationService {
                 });
     }
 
-    private void addCardToOperation(CardData c, CardOperationData.CardOperationDataBuilder cardOperation, CardOperationTypeEnum type) {
+    private void addCardToOperation(CardPublicationData c, CardOperationData.CardOperationDataBuilder cardOperation, CardOperationTypeEnum type) {
         switch (type) {
             case ADD:
             case UPDATE:

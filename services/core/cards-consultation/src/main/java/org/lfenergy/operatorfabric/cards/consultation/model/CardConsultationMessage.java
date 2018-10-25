@@ -6,9 +6,6 @@ package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.CardOperation;
-import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.model.LightCard;
 
 import java.util.List;
 
@@ -22,16 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CardOperationData implements CardOperation {
-
-    private Long number;
-    private Long publicationDate;
-    private CardOperationTypeEnum type;
-    @Singular
+public class CardConsultationMessage {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> cardIds;
     @Singular
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<? extends LightCard> cards;
-
+    private List<CardOperationConsultationData> operations;
 }

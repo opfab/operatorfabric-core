@@ -4,18 +4,18 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.I18n;
-import org.lfenergy.operatorfabric.cards.model.ParameterListItem;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ParameterListItemData implements ParameterListItem {
-    private I18n label;
-    private String value;
+@AllArgsConstructor
+public class I18nConsultationData implements I18n {
+    private String key;
+    @Singular
+    private Map<String,String> parameters = new HashMap<>();
 }

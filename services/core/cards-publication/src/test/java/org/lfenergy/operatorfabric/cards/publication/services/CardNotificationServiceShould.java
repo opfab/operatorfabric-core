@@ -15,9 +15,9 @@ import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.Application;
 import org.lfenergy.operatorfabric.cards.publication.config.TestCardReceiver;
-import org.lfenergy.operatorfabric.cards.publication.model.CardData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nData;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -62,38 +62,38 @@ class CardNotificationServiceShould {
     @Test
     public void transmitCards(){
         Instant start = Instant.now().plusSeconds(3600);
-        CardData newCard = CardData.builder()
+        CardPublicationData newCard = CardPublicationData.builder()
            .publisher("PUBLISHER_1")
            .publisherVersion("0.0.1")
            .processId("PROCESS_1")
            .severity(SeverityEnum.ALARM)
            .startDate(start.toEpochMilli())
-           .title(I18nData.builder().key("title").build())
-           .summary(I18nData.builder().key("summary").parameter("arg1","value1").build())
+           .title(I18nPublicationData.builder().key("title").build())
+           .summary(I18nPublicationData.builder().key("summary").parameter("arg1","value1").build())
            .lttd(start.minusSeconds(600).toEpochMilli())
            .recipient(
-              RecipientData.builder()
+              RecipientPublicationData.builder()
                  .type(RecipientEnum.UNION)
                  .recipient(
-                    RecipientData.builder()
+                    RecipientPublicationData.builder()
                        .type(RecipientEnum.USER)
                        .identity("graham")
                        .build()
                  )
                  .recipient(
-                    RecipientData.builder()
+                    RecipientPublicationData.builder()
                        .type(RecipientEnum.USER)
                        .identity("eric")
                        .build()
                  )
                  .recipient(
-                    RecipientData.builder()
+                    RecipientPublicationData.builder()
                     .type(RecipientEnum.GROUP)
                     .identity("mytso")
                     .build()
                  )
                  .recipient(
-                    RecipientData.builder()
+                    RecipientPublicationData.builder()
                        .type(RecipientEnum.GROUP)
                        .identity("admin")
                        .build()

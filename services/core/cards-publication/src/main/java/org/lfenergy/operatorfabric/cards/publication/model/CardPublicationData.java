@@ -21,22 +21,25 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CardData implements Card {
+public class CardPublicationData implements Card {
 
     @Builder.Default private String uid = UUID.randomUUID().toString();
     private String id;
-//    @NotNull
+    @NotNull
     private String publisher;
+    @NotNull
     private String publisherVersion;
-//    @NotNull
+    @NotNull
     private String processId;
+    @NotNull
     private I18n title;
+    @NotNull
     private I18n summary;
     private Long publishDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long deletionDate;
     private Long lttd;
-//    @NotNull
+    @NotNull
     @Indexed
     private Long startDate;
     @Indexed
@@ -55,6 +58,7 @@ public class CardData implements Card {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends Detail> details = new ArrayList<>();
+    @NotNull
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
@@ -73,11 +77,11 @@ public class CardData implements Card {
     public void prepare(Long publishDate){
         this.publishDate = publishDate;
         this.id = publisher+"_"+processId;
-        this.setShardKey(Long.valueOf(this.getStartDate()%24*1000).intValue());
+        this.setShardKey(Math.toIntExact(this.getStartDate()%24*1000));
     }
 
-    public LightCardData toLightCard(){
-        return LightCardData.builder()
+    public LightCardPublicationData toLightCard(){
+        return LightCardPublicationData.builder()
            .id(this.getId())
            .uid(this.getUid())
            .processId(this.getProcessId())
@@ -88,8 +92,8 @@ public class CardData implements Card {
            .media(this.getMedia())
            .tags(this.getTags())
            .mainRecipient(this.getMainRecipient())
-           .title(((I18nData)this.getTitle()).copy())
-           .summary(((I18nData)this.getSummary()).copy())
+           .title(((I18nPublicationData)this.getTitle()).copy())
+           .summary(((I18nPublicationData)this.getSummary()).copy())
            .build();
     }
 }
