@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class LocalMongoConfig extends AbstractLocalMongoConfiguration {
     @Override
-    public List<Converter<?, ?>> converterList() {
+    public List<Converter> converterList() {
         return Collections.emptyList();
     }
 }
