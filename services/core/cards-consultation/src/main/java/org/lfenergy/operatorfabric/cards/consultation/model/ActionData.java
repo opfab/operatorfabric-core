@@ -22,8 +22,8 @@ public class ActionData implements Action {
     private I18n label;
     @Singular
     private List<? extends Input> inputs = new ArrayList<>();
-    public String buttonStyle;
-    public String contentStyle;
+    private String buttonStyle;
+    private String contentStyle;
     private Boolean lockAction = false;
     private Boolean lockCard = false;
     private Boolean updateState = false;
