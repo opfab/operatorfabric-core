@@ -2,5 +2,6 @@ version: '2.1'
 services:
   swagger:
     image: swaggerapi/swagger-editor
+    container_name: swagger-editor
     ports:
       - "88:8080"
