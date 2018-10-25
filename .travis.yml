@@ -16,7 +16,7 @@ script:
   - docker network create opfabnet
   - docker-compose -f src/main/docker/rabbitmq/docker-compose.yml up -d
   - docker-compose -f src/main/docker/mongodb/docker-compose.yml up -d
-  - ./gradlew build
+  - ./gradlew build jacocoTestReport
   - sonar-scanner
 before_cache:
   # cleanup gradle caches
