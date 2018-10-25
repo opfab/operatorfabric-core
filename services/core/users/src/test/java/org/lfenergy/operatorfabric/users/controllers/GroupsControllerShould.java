@@ -4,10 +4,8 @@
 
 package org.lfenergy.operatorfabric.users.controllers;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.users.Application;
 import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
 import org.lfenergy.operatorfabric.users.model.GroupData;
 import org.lfenergy.operatorfabric.users.model.UserData;

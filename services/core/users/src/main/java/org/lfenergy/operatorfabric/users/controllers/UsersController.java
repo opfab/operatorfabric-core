@@ -7,7 +7,6 @@ package org.lfenergy.operatorfabric.users.controllers;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.SimpleUser;
-import org.lfenergy.operatorfabric.users.model.SimpleUserData;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;

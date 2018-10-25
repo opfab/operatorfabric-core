@@ -6,7 +6,6 @@ package org.lfenergy.operatorfabric.users.controllers;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.users.Application;
 import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
@@ -23,9 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 /**

@@ -5,10 +5,8 @@
 package org.lfenergy.operatorfabric.users.repositories;
 
 import org.lfenergy.operatorfabric.users.model.GroupData;
-import org.lfenergy.operatorfabric.users.model.UserData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

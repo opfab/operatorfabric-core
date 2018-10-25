@@ -5,7 +5,6 @@
 package org.lfenergy.operatorfabric.springtools.config.mongo;
 
 import com.mongodb.*;
-//import com.mongodb.async.client.MongoClientSettings;
 import com.mongodb.connection.*;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
@@ -13,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.convert.CustomConversions;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
@@ -27,6 +25,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+//import com.mongodb.async.client.MongoClientSettings;
 
 /**
  * <p></p>

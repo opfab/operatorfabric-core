@@ -6,11 +6,11 @@ package org.lfenergy.operatorfabric.time.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.time.model.ServerTimeData;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
+import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

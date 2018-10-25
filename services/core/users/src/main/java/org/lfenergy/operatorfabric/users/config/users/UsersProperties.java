@@ -8,7 +8,6 @@ import lombok.Data;
 import org.lfenergy.operatorfabric.users.model.GroupData;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

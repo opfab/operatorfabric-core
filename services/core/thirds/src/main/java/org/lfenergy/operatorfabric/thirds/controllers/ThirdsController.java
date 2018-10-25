@@ -5,11 +5,11 @@
 package org.lfenergy.operatorfabric.thirds.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum;
 import org.lfenergy.operatorfabric.thirds.model.Third;
+import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;

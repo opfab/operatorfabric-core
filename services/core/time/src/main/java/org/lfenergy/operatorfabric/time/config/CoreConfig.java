@@ -4,8 +4,8 @@
 
 package org.lfenergy.operatorfabric.time.config;
 
-import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

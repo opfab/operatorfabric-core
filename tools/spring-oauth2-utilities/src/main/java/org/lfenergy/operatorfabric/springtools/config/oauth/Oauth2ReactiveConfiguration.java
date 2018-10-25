@@ -4,24 +4,14 @@
 
 package org.lfenergy.operatorfabric.springtools.config.oauth;
 
-import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.users.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
-
-import java.util.List;
 
 //import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 //import org.springframework.boot.autoconfigure.security.oauth2.resource.JwtAccessTokenConverterConfigurer;
