@@ -9,17 +9,27 @@ services:
   - docker
 language: java
 install: true
+before_install:
+  # Load cached docker images
+  - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
 script:
-  - cat /home/travis/.sonarscanner/sonar-scanner-3.0.3.778/conf/sonar-scanner.properties
   - docker network create opfabnet
   - docker-compose -f src/main/docker/rabbitmq/docker-compose.yml up -d
   - docker-compose -f src/main/docker/mongodb/docker-compose.yml up -d
   - ./gradlew build
   - sonar-scanner
 before_cache:
+  # cleanup gradle caches
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - >
+    mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
+    | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
 cache:
+  bundler: true
   directories:
+    # caches gradle caches
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    # caches docker images
+    - $HOME/docker
