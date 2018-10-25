@@ -1,10 +1,10 @@
-.detail.template main-div * {
+.detail.template .main-div * {
     box-sizing: border-box;
     background-color: transparent;
     color: #fff;
 }
 
-.detail.template main-div{
+.detail.template .main-div{
     display: flex;
     justify-content: center;
     padding: 10px;
