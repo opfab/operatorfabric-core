@@ -12,9 +12,6 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
-//import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
-//import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-//import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
 /**
  * <p></p>
@@ -32,9 +29,6 @@ public class OAuth2ResourceServerConfiguration  {
         http.headers().frameOptions().disable();
         http
                 .authorizeExchange()
-//                .matchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-//                .pathMatchers("/cards")
-//                .authenticated().and()
                 .anyExchange().authenticated().and()
                 .oauth2ResourceServer().jwt().authenticationManager(opfabJwtReactiveAuthenticationManager);
                 return http.build();

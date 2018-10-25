@@ -20,21 +20,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Slf4j
 public class OAuth2ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED.IF_REQUIRED)
            .and()
            .authorizeRequests()
-//           .antMatchers(HttpMethod.POST,"/time/**").authenticated()//.access("#oauth2.hasScope('read')")
-           .antMatchers("/users/**").authenticated()//.access("#oauth2.hasScope('read')")
+           .antMatchers("/users/**").authenticated()
            .anyRequest().permitAll()
            .and()
            .oauth2ResourceServer()
            .jwt()
-// .jwtAuthenticationConverter(opfabJwtConverter)
         ;
     }
 

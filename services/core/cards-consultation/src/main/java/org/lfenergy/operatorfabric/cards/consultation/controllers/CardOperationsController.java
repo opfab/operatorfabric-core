@@ -35,7 +35,6 @@ import java.time.Duration;
  * @author davibind
  */
 @RestController
-//@RequestMapping("/cardOperations")
 @Component
 @Slf4j
 public class CardOperationsController {
@@ -78,9 +77,7 @@ public class CardOperationsController {
     private Flux<String> test(Mono<? extends Principal> user){
         return user.flatMapMany(u->Flux
            .interval(Duration.ofSeconds(5))
-           .doOnEach(l->{
-               log.info("message "+l+" to "+ u.getName());
-           })
+           .doOnEach(l->log.info("message "+l+" to "+ u.getName()))
            .map(l->CardOperationData.builder()
               .number(l)
               .publicationDate(SimulatedTime.getInstance().computeNow().toEpochMilli()-600000)

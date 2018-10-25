@@ -10,5 +10,5 @@ import java.util.List;
 
 public abstract class AbstractLocalMongoConfiguration {
 
-    public abstract List<Converter<?, ?>> converterList();
+    public abstract List<Converter> converterList();
 }
