@@ -23,7 +23,7 @@ public class OAuth2ResourceServerConfiguration extends WebSecurityConfigurerAdap
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED.IF_REQUIRED)
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
            .and()
            .authorizeRequests()
            .antMatchers("/users/**").authenticated()
