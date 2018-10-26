@@ -3,100 +3,132 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 
 export enum LocalStorageAuthContent {
-  token = 'token',
-  expirationDate = 'expirationDate',
-  identifier = 'identifier'
+    token = 'token',
+    expirationDate = 'expirationDate',
+    identifier = 'identifier',
+    clientId = 'clientId'
 }
+
+export const ONE_SECOND = 1000;
 
 @Injectable()
 export class AuthenticationService {
 
-  private authUrl = '/auth/check_token';
 
-  constructor(private httpClient: HttpClient) {}
+    private checkTokenUrl = '/auth/check_token';
+    private askTokenUrl = '/auth/token';
 
-  checkAuthentication(token: string): Observable<CheckTokenResponse> {
+    constructor(private httpClient: HttpClient) {
+    }
 
-    const postData = new FormData();
-    postData.append('token', token);
-    return this.httpClient.post<CheckTokenResponse>(this.authUrl, postData).pipe(
-      map(check => check ),
-      catchError(this.handleError)
+    checkAuthentication(token: string): Observable<CheckTokenResponse> {
+
+        const postData = new FormData();
+        postData.append('token', token);
+        return this.httpClient.post<CheckTokenResponse>(this.checkTokenUrl, postData).pipe(
+            map(check => check),
+            catchError(this.handleError)
+        );
+    }
+
+
+    tempLogin(): Observable<any>{
+        const loginData = new LoginData('rte-operator','test','clientIdPassword');
+        return this.askForToken(loginData);
+    }
+
+    askForToken(loginData): Observable<any> {
+
+        const params = new URLSearchParams();
+        params.append('username', loginData.username);
+        params.append('password', loginData.password);
+        params.append('grant_type', 'password');
+        params.append('client_id', loginData.clientId);
+
+        const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
+        return this.httpClient.post<AuthObjet>(this.askTokenUrl
+            , params.toString()
+            , {headers: headers}).pipe(
+            map(data=> {
+                const trackism = {...data};
+                trackism.identifier = loginData.username;
+                trackism.clientId = loginData.clientId;
+                this.saveTokenAndAuthenticationInformation(trackism);
+                return trackism;
+            }),
+            catchError(this.handleError)
     );
-  }
 
-  private handleError(error: any) {
-    // TODO verifications but seems useless
-    console.error(error);
-    return throwError(error);
-  }
+    }
 
-  // isValidToken(token: string): Observable<any> {
-  //   console.log('isvalidToken called at least once');
-  //   return this.httpClient
-  //     .get<any[]>('assets/authentication-test.json')
-  //     .pipe(
-  //           // delay(1000),
-  //           tap(() => console.log(`in the auth service, token is:'${token}'`)),
-  //           map(users => users.filter(user => user.token === token)),
-  //       tap(users => console.log(`in the auth service, there are '${users.length}' after verification`)),
-  //           map(users => {
-  //             if (!users.length || users.length <= 0) {
-  //               return users[0];
-  //             }
-  //               return null;
-  //           })
-  //     );
-  // }
+    private handleError(error: any) {
+        // TODO verifications but seems useless
+        console.error(error);
+        return throwError(error);
+    }
 
+    public extractToken() {
+        return localStorage.getItem('token');
+    }
 
-  public extractToken(){
-   return localStorage.getItem('token');
-  }
+    public verifyExpirationDate(): boolean {
+        const expirationDate = Date.parse(localStorage.getItem(LocalStorageAuthContent.expirationDate));
+        return (!expirationDate && Date.now() > expirationDate) || isNaN(expirationDate);
+    }
 
-  public verifyExpirationDate(): boolean{
-    const expirationDate = Date.parse(localStorage.getItem(LocalStorageAuthContent.expirationDate));
-    return (!expirationDate && Date.now() > expirationDate) || isNaN(expirationDate);
-  }
+    public clearAuthenticationInformation(): void {
+        localStorage.removeItem(LocalStorageAuthContent.token);
+        localStorage.removeItem(LocalStorageAuthContent.expirationDate);
+        localStorage.removeItem(LocalStorageAuthContent.identifier);
+    }
 
-  public clearAuthenticationInformation():void{
-    localStorage.removeItem(LocalStorageAuthContent.token);
-    localStorage.removeItem(LocalStorageAuthContent.expirationDate);
-    localStorage.removeItem(LocalStorageAuthContent.identifier);
-  }
+    public registerAuthenticationInformation(payload: CheckTokenResponse, token: string) {
+        const identifier = payload.sub;
+        const expirationDate = new Date(payload.exp);
+        localStorage.setItem(LocalStorageAuthContent.identifier, identifier);
+        localStorage.setItem(LocalStorageAuthContent.token, token);
+        localStorage.setItem(LocalStorageAuthContent.expirationDate, expirationDate.toString());
+        return {identifier: identifier, expirationDate: expirationDate};
+    }
 
-  public registerAuthenticationInformation(payload:CheckTokenResponse, token:string){
-    const identifier = payload.sub;
-    const expirationDate = new Date(payload.exp);
-    localStorage.setItem(LocalStorageAuthContent.identifier, identifier);
-    localStorage.setItem(LocalStorageAuthContent.token, token);
-    localStorage.setItem(LocalStorageAuthContent.expirationDate, expirationDate.toString());
-    return {identifier: identifier, expirationDate: expirationDate};
-  }
+    public saveTokenAndAuthenticationInformation(payload: AuthObjet) {
+        const expirationDate = new Date().getTime() + ONE_SECOND * payload.expires_in;
+        localStorage.setItem(LocalStorageAuthContent.identifier, payload.identifier);
+        localStorage.setItem(LocalStorageAuthContent.token, payload.access_token);
+        localStorage.setItem(LocalStorageAuthContent.expirationDate, new Date(expirationDate).toString());
+        localStorage.setItem(LocalStorageAuthContent.clientId, payload.clientId);
+    }
 
 }
 
 export class AuthObjet {
-  access_token: string;
-  token_type: string;
-  refresh_token: string ;
-  expires_in: number;
-  scope: string;
-  jti: string;
+    identifier?: string;
+    access_token: string;
+    token_type: string;
+    refresh_token: string;
+    expires_in: number;
+    scope: string;
+    jti: string;
+    clientId:string;
 }
 
-export class CheckTokenResponse{
-  sub: string;
-  scope: string[];
-  active: boolean;
-  exp: number;
-  authorities:string[];
-  jit:string;
-  client_id:string;
+export class CheckTokenResponse {
+    sub: string;
+    scope: string[];
+    active: boolean;
+    exp: number;
+    authorities: string[];
+    jit: string;
+    client_id: string;
 }
 
+export class LoginData {
+    constructor(public  username:string,
+    public password: string,
+    public clientId: string){}
+}

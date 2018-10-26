@@ -11,11 +11,8 @@ import {
   AuthenticationActionTypes,
   RejectLogin
 } from '@state/authentication/authentication.actions';
-import {AuthenticationService, CheckTokenResponse} from '@core/services/authentication.service';
+import {AuthenticationService, AuthObjet, CheckTokenResponse, ONE_SECOND} from '@core/services/authentication.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
-
-
-
 
 @Injectable()
 export class AuthenticationEffects {
@@ -59,6 +56,19 @@ export class AuthenticationEffects {
     this.authService.clearAuthenticationInformation();
     return new RejectLogin({denialReason: 'invalid token'}) as AuthenticationActions;
   }
+
+  @Effect()
+  TempAutomaticLogin: Observable<AuthenticationActions>=
+      this.actions$
+          .ofType(AuthenticationActionTypes.TempAutomaticLogIn).pipe(
+              switchMap(()=> this.authService.tempLogin()),
+          map((authObj:AuthObjet)=> {
+            const expirationDate = new Date().getTime() + ONE_SECOND*authObj.expires_in;
+              return new AcceptLogIn({identifier: authObj.identifier
+                  , token:authObj.access_token
+                  , expirationDate :new Date(expirationDate)})
+          })
+      );
 
 // gérer le rejet du token et la demande de reconnexion
 //   @Effect()

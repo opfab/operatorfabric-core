@@ -14,7 +14,7 @@ import {AuthenticationService} from "@core/services/authentication.service";
 @Injectable()
 export class CardService {
   // TODO other end point or manage different source of cards...
-  private cardOperationsUrl = '/cards/cardOperations?clientId=test-2018&test=true';
+  private cardOperationsUrl = '/cards/cardOperations?clientId=clientIdPassword&test=true';
   private cardsUrl = '/cards/cards';
 
   constructor(private httpClient: HttpClient,

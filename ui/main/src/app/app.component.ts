@@ -8,7 +8,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@state/app.interface';
 import {Observable} from 'rxjs';
 import {getCurrentUrl, selectRouterState} from '@state/app.reducer';
-import {CheckAuthenticationStatus} from '@state/authentication/authentication.actions';
+import {TempAutomticLogIn} from "@state/authentication/authentication.actions";
 
 @Component({
   selector: 'app-root',
@@ -21,16 +21,13 @@ export class AppComponent implements OnInit{
   getRoutePE: Observable<any>;
   currentPath: any;
 
-  width = 500;
-  height = 500;
-
   constructor(private store: Store<AppState>) {
     this.getRoutePE = this.store.select(selectRouterState);
   }
 
   ngOnInit() {
     this.store.select(getCurrentUrl).subscribe(url => this.currentPath = url);
-    this.store.dispatch(new CheckAuthenticationStatus());
+    this.store.dispatch(new TempAutomticLogIn());
   }
 
 
