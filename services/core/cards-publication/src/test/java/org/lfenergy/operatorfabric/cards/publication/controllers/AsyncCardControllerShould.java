@@ -16,6 +16,7 @@ import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -26,8 +27,9 @@ import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
-import static org.hamcrest.Matchers.*;
 
 /**
  * <p></p>
@@ -42,7 +44,7 @@ import static org.hamcrest.Matchers.*;
 @Slf4j
 @Tag("end-to-end")
 @Tag("mongo")
-class CardControllerShould {
+class AsyncCardControllerShould {
 
     @Autowired
     private CardRepository cardRepository;
@@ -59,11 +61,11 @@ class CardControllerShould {
 
     @Test
     void createSyncCards() {
-        this.webTestClient.post().uri("/cards").accept(MediaType.APPLICATION_JSON)
+        this.webTestClient.post().uri("/async/cards").accept(MediaType.APPLICATION_JSON)
            .body(generateCards(), CardPublicationData.class)
            .exchange()
-           .expectBody(CardCreationReportData.class)
-           .value(hasProperty("count",is(5)));
+           .expectStatus()
+           .value(is(HttpStatus.ACCEPTED.value()));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(4));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(5));
     }

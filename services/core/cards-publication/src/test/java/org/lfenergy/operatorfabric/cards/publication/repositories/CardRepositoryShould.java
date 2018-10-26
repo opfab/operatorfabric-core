@@ -4,14 +4,17 @@
 
 package org.lfenergy.operatorfabric.cards.publication.repositories;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
 import org.lfenergy.operatorfabric.cards.publication.Application;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.DetailPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,10 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Instant;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+
+import static org.awaitility.Awaitility.await;
 
 /**
  * <p></p>
@@ -31,7 +38,7 @@ import java.time.Instant;
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles(profiles = {"native","test"})
+@ActiveProfiles(profiles = {"native", "test"})
 //@Disabled
 @Tag("end-to-end")
 @Tag("mongo")
@@ -41,12 +48,12 @@ public class CardRepositoryShould {
     private CardRepository repository;
 
     @AfterEach
-    public void clean(){
+    public void clean() {
         repository.deleteAll().subscribe();
     }
 
     @Test
-    public void persistCard(){
+    public void persistCard() {
         CardPublicationData card =
            CardPublicationData.builder()
               .processId("PROCESS")
@@ -56,12 +63,45 @@ public class CardRepositoryShould {
               .severity(SeverityEnum.ALARM)
               .title(I18nPublicationData.builder().key("title").build())
               .summary(I18nPublicationData.builder().key("summary").build())
-              .recipient(RecipientPublicationData.builder().type(RecipientEnum.DEADEND).build())
+              .recipient(RecipientPublicationData.builder()
+                 .type(RecipientEnum.UNION)
+                 .recipient(RecipientPublicationData.builder()
+                    .type(RecipientEnum.GROUP)
+                    .identity("group1")
+                    .build())
+                 .recipient(RecipientPublicationData.builder()
+                    .type(RecipientEnum.GROUP)
+                    .identity("group2")
+                    .build())
+                 .build())
+              .detail(DetailPublicationData.builder()
+                 .templateName("template")
+                 .title(I18nPublicationData.builder()
+                    .key("key")
+                    .parameter("param1", "value1")
+                    .build())
+                 .titlePosition(TitlePositionEnum.UP)
+                 .style("style")
+                 .build())
               .build();
-        repository.save(card).subscribe();
-        Mono<CardPublicationData> result = repository.findById("PUBLISHER_PROCESS");
-        StepVerifier.create(result)
-           .expectNextMatches(c->card.getId().equals(c.getId()));
+        card.prepare(Instant.now().toEpochMilli());
+        StepVerifier.create(repository.save(card))
+           .expectNextMatches(computeCardPredicate(card))
+           .expectComplete()
+           .verify();
+
+        StepVerifier.create(repository.findById("PUBLISHER_PROCESS"))
+           .expectNextMatches(computeCardPredicate(card))
+           .expectComplete()
+           .verify();
+    }
+
+    @NotNull
+    private Predicate<CardPublicationData> computeCardPredicate(CardPublicationData card) {
+        Predicate<CardPublicationData> predicate = c -> card.getId().equals(c.getId());
+        predicate = predicate.and(c -> c.getDetails().size() == 1);
+        predicate = predicate.and(c -> c.getDetails().get(0).getTitlePosition() == TitlePositionEnum.UP);
+        return predicate;
     }
 
 }

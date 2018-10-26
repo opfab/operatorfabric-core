@@ -4,7 +4,9 @@
 
 package org.lfenergy.operatorfabric.cards.publication.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.lfenergy.operatorfabric.cards.model.CardCreationReport;
 
@@ -15,6 +17,8 @@ import org.lfenergy.operatorfabric.cards.model.CardCreationReport;
  * @author davibind
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CardCreationReportData implements CardCreationReport {
     @NonNull
     private Integer count;
