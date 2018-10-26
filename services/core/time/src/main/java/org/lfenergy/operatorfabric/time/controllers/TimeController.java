@@ -30,25 +30,20 @@ public class TimeController  {
         this.timeService = timeService;
     }
 
-    @RequestMapping(
-       method = RequestMethod.DELETE)
+    @DeleteMapping
     public Void resetTime() {
         timeService.reset();
         return null;
     }
 
-    @RequestMapping(
-       produces = { "application/json" },
-       method = RequestMethod.GET)
+    @GetMapping(produces = { "application/json" })
     @ResponseBody
     //@PreAuthorize("#oauth2.isClient()")
     public TimeData fetchTime() {
         return timeService.fetchTimeData();
     }
 
-    @RequestMapping(
-       consumes = { "application/json" },
-       method = RequestMethod.POST)
+    @PostMapping(consumes = { "application/json" })
     public TimeData setTime(@AuthenticationPrincipal User user, @ApiParam(value = "Time Data to update time " +
        "service"  )  @Valid
                                 @RequestBody TimeData
@@ -59,7 +54,7 @@ public class TimeController  {
             log.info("Time updated by "+user.getLogin());
         }
         if(time.getSpeed()!=null && time.getCurrentTime()!=null)
-        timeService.setSpeedAndTime(time.getSpeed(),DateTimeUtil.toInstant(time.getCurrentTime()));
+            timeService.setSpeedAndTime(time.getSpeed(),DateTimeUtil.toInstant(time.getCurrentTime()));
         else if(time.getSpeed()!=null)
             setCurrentSpeed(time.getSpeed());
         else if(time.getCurrentTime()!=null)
@@ -67,8 +62,7 @@ public class TimeController  {
         return fetchTime();
     }
 
-    @RequestMapping(
-       method = RequestMethod.PUT)
+    @PutMapping
     //@PreAuthorize("#oauth2.hasScope('write')")
     public TimeData updateTime(@AuthenticationPrincipal User user, @ApiParam(value = "Time Data to update " +
        "time service"  )
@@ -76,28 +70,24 @@ public class TimeController  {
         return setTime(user, time);
     }
 
-    @RequestMapping(value = "/speed",
-       method = RequestMethod.POST)
+    @PostMapping(value = "/speed")
     public SpeedEnum setCurrentSpeed(@Valid @RequestBody SpeedEnum currentspeed) {
         this.timeService.setSpeed(currentspeed);
         return this.timeService.getSpeed();
     }
 
-    @RequestMapping(value = "/current",
-       method = RequestMethod.POST)
+    @PostMapping(value = "/current")
     public Long setCurrentTime(@Valid @RequestBody java.lang.Long currentTime) {
         this.timeService.setTime(Instant.ofEpochMilli(currentTime));
         return this.timeService.computeNow().toEpochMilli();
     }
 
-    @RequestMapping(value = "/current",
-       method = RequestMethod.PUT)
+    @PutMapping(value = "/current")
     public Long updateCurrentTime(@Valid @RequestBody java.lang.Long currentTime) {
         return setCurrentTime(currentTime);
     }
 
-    @RequestMapping(value = "/speed",
-       method = RequestMethod.PUT)
+    @PutMapping(value = "/speed")
     public SpeedEnum updateCurrentspeed(@Valid @RequestBody SpeedEnum currentspeed) {
         return setCurrentSpeed(currentspeed);
     }
