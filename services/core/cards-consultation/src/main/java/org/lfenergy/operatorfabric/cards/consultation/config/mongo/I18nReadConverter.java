@@ -20,16 +20,12 @@ import java.util.Map;
 public class I18nReadConverter implements Converter<Document, I18n> {
     @Override
     public I18n convert(Document source) {
-        if(source == null)
-            return null;
         I18nConsultationData.I18nConsultationDataBuilder builder = I18nConsultationData.builder().key( source.getString("key"));
-        if(source.containsKey("parameters")) {
-            Document parameters = (Document) source.get("parameters");
-            if(parameters!=null)
-                for(Map.Entry<String,Object> e: parameters.entrySet()){
-                    builder.parameter(e.getKey(), (String) e.getValue());
-                }
-        }
+        Document parameters = (Document) source.get("parameters");
+        if(parameters!=null)
+            for(Map.Entry<String,Object> e: parameters.entrySet()){
+                builder.parameter(e.getKey(), (String) e.getValue());
+            }
 
         return builder.build();
     }

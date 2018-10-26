@@ -18,8 +18,6 @@ public class DetailReadConverter implements Converter<Document, Detail> {
 
     @Override
     public Detail convert(Document source) {
-        if(source == null)
-            return null;
         DetailConsultationData.DetailConsultationDataBuilder detailBuilder = DetailConsultationData.builder()
                 .titleStyle(source.getString("titleStyle"))
                 .templateName(source.getString("templateName"))
