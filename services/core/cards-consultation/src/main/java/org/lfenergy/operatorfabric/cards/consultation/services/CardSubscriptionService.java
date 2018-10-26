@@ -34,7 +34,6 @@ public class CardSubscriptionService {
     private final DirectExchange userExchange;
     private final AmqpAdmin amqpAdmin;
     private final ConnectionFactory connectionFactory;
-    //TODO maybe a CardSubscription rolling cache to manage reconnect
     private Map<String,CardSubscription> cache = new ConcurrentHashMap<>();
     private Map<String,ScheduledFuture<?>> pendingEvict = new ConcurrentHashMap<>();
 
