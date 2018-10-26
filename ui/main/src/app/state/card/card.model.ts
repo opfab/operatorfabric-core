@@ -2,33 +2,37 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+import {i18n} from "@state/card-operation/card-operation.model";
+
 export interface Card {
-  id: number;
+  uid: string;
+  id: string;
   processId?: string;
-  lttd?: Date;
-  startDate: Date;
-  endDate: Date;
-  severity: Severity;
-  media?: string;
-  tags?: string[];
-  // title?: I18nData;
-  // summary?: I18nData
+  lttd?: number;
+  startDate: number;
+  endDate: number;
+  severity: string;
+  // media?: string;
+  // tags?: string[];
+  title?: i18n;
+  summary?: i18n
 
 }
 
 export class Card {
 
   constructor(
-    id: number
-    , startDate: Date
-    , endDate: Date
+    uid: string
+,    id: string
+    , startDate: number
+    , endDate: number
     , severity: Severity
-    , lttd?: Date
+    , lttd?: number
     , processId?: string
-    , media?: string
-    , tags?: string[]
-    // , title?: I18nData
-    // , summary?: I18nData
+    // , media?: string
+    // , tags?: string[]
+    , title?: i18n
+    , summary?: i18n
   ) {
   }
 }

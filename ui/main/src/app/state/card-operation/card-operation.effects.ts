@@ -12,9 +12,9 @@ import {
   LoadCardOperationsFail,
   LoadCardOperationsSuccess
 } from "@state/card-operation/card-operation.actions";
-import {catchError, map, switchMap} from "rxjs/operators";
+import {catchError, map, switchMap, tap} from "rxjs/operators";
 import {CardOperation, CardOperationType} from "@state/card-operation/card-operation.model";
-import {AddCard, AddCardFailure} from "@state/card/card.actions";
+import {AddCardFailure, LoadCardsSuccess} from "@state/card/card.actions";
 import {Card} from '@state/card/card.model';
 
 @Injectable()
@@ -35,15 +35,14 @@ export class CardOperationEffects {
     );
   @Effect()
   testTruc = this.service.testCardOperation().pipe(
+    map(operation => {
+      if(operation.type && operation.type.toString()  === 'ADD' ){
+        console.log('add operation');
+        const opCards = operation.cards;
+        return new LoadCardsSuccess({cards:opCards as Card[]});
 
-    map((operation:CardOperation) => {
-      if(operation.type === CardOperationType.ADD){
-        const cardF= operation.cards[0];
-        const card = new Card(cardF.id
-          ,cardF.startDate,cardF.endDate,cardF.severity,cardF.ittd,cardF.processId,
-          cardF.media, cardF.tags );
-        return new AddCard({card: card});
       }
+      console.log('something else than add card');
       return new AddCardFailure({error: new Error(`unhandled action type '${operation.type}'`)});
     }),
     catchError(error => of(new AddCardFailure(error))

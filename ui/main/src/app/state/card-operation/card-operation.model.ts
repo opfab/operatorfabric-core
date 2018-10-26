@@ -2,37 +2,52 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-export interface CardOperation{
- id: string | number;
- number: number;
- publicationDate: number;
- type: CardOperationType;
- cardIds?: string[];
- cards?: LightCard[];
+import {Card} from "@state/card/card.model";
 
+export interface CardOperation {
+  number: number;
+  publicationDate: number;
+  type: CardOperationType;
+  cards?: LightCard[];
+}
+
+export class CardOperation {
+  number: number;
+  publicationDate: number;
+  type: CardOperationType;
+  cards?: LightCard[];
+
+
+  constructor(data?: string) {
+    if (data) {
+
+      const parsedData = JSON.parse(data);
+      Object.assign(this, parsedData)
+    }
+
+  }
 }
 
 export class LightCard {
-  id: number;
+  uid: string;
+  id: string;
   processId?: string;
-  ittd?: Date;
-  startDate?: Date;
-  endDate?: Date;
-  severity?: Severity;
-  media?: string;
-  tags?: string[];
+  lttd?: number;
+  startDate?: number;
+  endDate?: number;
+  severity?: string;
   title?: i18n;
-  summary?:i18n;
-  mainRecipient?:string;
+  summary?: i18n;
+  mainRecipient?: string;
 }
 
-export enum CardOperationType{
+export enum CardOperationType {
   ADD, UPDATE, DELETE
 }
 
 export class i18n {
   key?: string;
-  parameters?: Map<string,string>;
+  parameters?: object;
 }
 
 export enum Severity {

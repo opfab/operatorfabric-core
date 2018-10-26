@@ -66,7 +66,7 @@ export function reducer(
 
     case CardActionTypes.LoadCardsSuccess: {
       return {
-        ...adapter.addAll(action.payload.cards, state),
+        ...adapter.addMany(action.payload.cards, state),
         loading: false
       };
     }

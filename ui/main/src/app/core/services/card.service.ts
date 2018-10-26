@@ -26,7 +26,7 @@ export class CardService {
     return this.httpClient.get <Card[]>(this.cardsUrl);
   }
 
-  getCard(id: number): Observable<Card> {
+  getCard(id: string): Observable<Card> {
     return this.getCards().pipe(
       map(cards => cards.find(
         card => card.id === id))
@@ -39,8 +39,8 @@ export class CardService {
         this.cardOperationsUrl
         , this.handleHeaders());
       eventSource.onmessage = message =>{
-        const cardOpration=JSON.parse(message.data);
-        return observer.next(cardOpration)
+        const cardOperation =new CardOperation(message.data);
+        return observer.next(cardOperation)
       };
       eventSource.onerror = error => observer.error(error);
       return () => {
@@ -54,7 +54,9 @@ export class CardService {
       const eventSource = new EventSourcePolyfill(
         this.cardOperationsUrl
         , this.handleHeaders());
-      eventSource.onmessage = message => observer.next(message.data);
+      eventSource.onmessage = message => {
+        return observer.next(JSON.parse(message.data));
+      };
       eventSource.onerror = error => observer.error(error);
       return () => {
         eventSource.close();

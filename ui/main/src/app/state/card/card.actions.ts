@@ -14,8 +14,8 @@ export enum CardActionTypes {
   LoadCardSuccess = '[Card] Load Card Success',
   LoadCardFail = '[Card] Load Card Fail',
   AddCard = '[Card] Add Card',
-  AddCardSuccess = '[Card] Add Card Sucess',
-  AddCardFailure = '[Card] Add card Faile',
+  AddCardSuccess = '[Card] Add Card Success',
+  AddCardFailure = '[Card] Add card Fail',
   UpsetCard = '[Card] Upset Card',
   AddCards = '[Card] Add Cards',
   UpsetCards = '[Card] Upset Cards',
@@ -44,7 +44,7 @@ export class LoadCardsFail implements Action {
 export class LoadCard implements Action {
   readonly type = CardActionTypes.LoadCard;
 
-  constructor(public payload: { id: number }) {
+  constructor(public payload: { id: string }) {
   }
 }
 
