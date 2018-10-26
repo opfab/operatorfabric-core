@@ -55,7 +55,7 @@ public class RecipientProcessor {
         List<ComputedRecipient> processed =Collections.emptyList();
         if(recipient.getRecipients()!=null && ! recipient.getRecipients().isEmpty()) {
             processed = recipient.getRecipients().stream()
-               .map(r -> processAll(r)).collect(Collectors.toList());
+               .map(this::processAll).collect(Collectors.toList());
         }
         switch (recipient.getType()) {
             case USER:
@@ -144,8 +144,8 @@ public class RecipientProcessor {
             builder.main(
                processed.stream()
                   .filter(pr -> pr.getMain() != null)
-                  .map(pr -> pr.getMain())
-                  .filter(u -> users.contains(u))
+                  .map(ComputedRecipient::getMain)
+                  .filter(users::contains)
                   .findFirst()
                   .orElse(null)
             );
@@ -164,7 +164,7 @@ public class RecipientProcessor {
             builder.main(
                processed.stream()
                   .filter(pr -> pr.getMain() != null)
-                  .map(pr -> pr.getMain())
+                  .map(ComputedRecipient::getMain)
                   .findFirst()
                   .orElse(null)
             );

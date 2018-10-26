@@ -84,23 +84,22 @@ public class CardWriteService {
            //remembering startime for measurement
            .map(card->Tuples.of(card,System.nanoTime(),SimulatedTime.getInstance().computeNow().toEpochMilli()))
            //trigger batched treatment upon window readiness
-           .subscribe(cardAndTime->{
-               long windowStart = cardAndTime.getT2();
-               Flux<CardPublicationData> cards = registerRecipientProcess(cardAndTime.getT1());
-               cards = registerTolerantValidationProcess(cards,cardAndTime.getT3());
-               registerPersistingProcess(cards, windowStart)
-                  .doOnError(t -> log.error("Unexpected Error arrose", t))
-                  .subscribe();
-
-           });
+           .subscribe(cardAndTime -> handleWindowedCardFlux(cardAndTime));
     }
+
+    private void handleWindowedCardFlux(Tuple3<Flux<CardPublicationData>, Long, Long> cardAndTime) {
+        long windowStart = cardAndTime.getT2();
+        Flux<CardPublicationData> cards = registerRecipientProcess(cardAndTime.getT1());
+        cards = registerTolerantValidationProcess(cards,cardAndTime.getT3());
+        registerPersistingProcess(cards, windowStart)
+           .doOnError(t -> log.error("Unexpected Error arrose", t))
+           .subscribe();
+    }
+
     /** process effective recipients **/
     private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards){
         return cards
-           .doOnNext(c->{
-               ComputedRecipient cr = recipientProcessor.processAll(c);
-
-           });
+           .doOnNext(recipientProcessor::processAll);
     }
 
     private Flux<CardPublicationData> registerTolerantValidationProcess(Flux<CardPublicationData> cards, Long publishDate){
@@ -108,7 +107,7 @@ public class CardWriteService {
            // prepare card computed data (id, shardkey)
            .flatMap(doOnNextOnErrorContinue(c->c.prepare(publishDate)))
            // JSR303 bean validation of card
-           .flatMap(doOnNextOnErrorContinue(c->validate(c)));
+           .flatMap(doOnNextOnErrorContinue(this::validate));
     }
 
     private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards, Long publishDate){
@@ -116,7 +115,7 @@ public class CardWriteService {
            // prepare card computed data (id, shardkey)
            .doOnNext(c->c.prepare(Math.round(publishDate/1000d)*1000))
            // JSR303 bean validation of card
-           .doOnNext(c->validate(c));
+           .doOnNext(this::validate);
     }
 
     private Mono<Integer> registerPersistingProcess(Flux<CardPublicationData> cards, long windowStart){
@@ -152,7 +151,7 @@ public class CardWriteService {
                    logMeasures(windowStart, t.getT2());
                }
            })
-           .map(t->t.getT2());
+           .map(Tuple2::getT2);
     }
 
     private void notifyCards(Collection<CardPublicationData> cards) {
@@ -178,7 +177,7 @@ public class CardWriteService {
     }
 
     public void createCardsAsyncParallel(Flux<CardPublicationData> cards){
-        cards.subscribe(c->sink.next(c));
+        cards.subscribe(sink::next);
     }
 
     public Mono<CardCreationReportData> createCardsWithResult(Flux<CardPublicationData> inputCards){
@@ -221,9 +220,7 @@ public class CardWriteService {
         Document objDocument = new Document();
         template.getConverter().write(c,objDocument);
         Update update = new Update();
-        objDocument.entrySet().forEach(e->{
-            update.set(e.getKey(), e.getValue());
-        });
+        objDocument.entrySet().forEach(e->update.set(e.getKey(), e.getValue()));
         bulk.upsert(Query.query(Criteria.where("_id").is(c.getId())), update);
     }
 

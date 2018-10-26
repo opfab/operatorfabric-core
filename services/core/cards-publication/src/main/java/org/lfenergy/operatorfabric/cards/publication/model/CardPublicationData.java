@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,6 +25,7 @@ import java.util.*;
 public class CardPublicationData implements Card {
 
     @Builder.Default private String uid = UUID.randomUUID().toString();
+    @Id
     private String id;
     @NotNull
     private String publisher;
@@ -34,6 +37,7 @@ public class CardPublicationData implements Card {
     private I18n title;
     @NotNull
     private I18n summary;
+    @CreatedDate
     private Long publishDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long deletionDate;

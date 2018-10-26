@@ -65,40 +65,40 @@ public class CardNotificationService {
                 .flatMap(c -> Mono.just(c).subscribeOn(Schedulers.parallel()))
                 //batching cards
                 .windowTimeout(WINDOW_SIZE, Duration.ofMillis(WINDOW_TIME_OUT))
-                .subscribe(flux -> {
+                .subscribe(flux ->
                     flux.map(t -> notifyCardsX(t.getT1(), t.getT2()))
-                            .reduce(Tuples.of(new LinkedHashMap<String, List<CardOperation>>(), new LinkedHashMap<String, List<CardOperation>>()), (result, item) -> {
-                                for (Map.Entry<String, CardOperationData.CardOperationDataBuilder> e : item.getT1().entrySet()) {
-                                    List<CardOperation> opsList = result.getT1().get(e.getKey());
-                                    if (opsList == null) {
-                                        opsList = new ArrayList<>();
-                                        result.getT1().put(e.getKey(), opsList);
-                                    }
-                                    opsList.add(e.getValue().build());
-                                }
+                        .reduce(Tuples.of(new LinkedHashMap<String, List<CardOperation>>(), new LinkedHashMap<String, List<CardOperation>>()), (result, item) ->
+                            reduceCardOperation(result, item))
+                        //group card operation by types and publication/deletion date
+                        .map(t->Tuples.of(fuseCardOperations(t.getT1()),fuseCardOperations(t.getT2())))
 
-                                for (Map.Entry<String, CardOperationData.CardOperationDataBuilder> e : item.getT2().entrySet()) {
-                                    List<CardOperation> opsList = result.getT2().get(e.getKey());
-                                    if (opsList == null) {
-                                        opsList = new ArrayList<>();
-                                        result.getT2().put(e.getKey(), opsList);
-                                    }
-                                    opsList.add(e.getValue().build());
-                                }
-                                return result;
-                            })
-                            .map(t->{
-                                //group card operation by types and publication/deletion date
-                                return Tuples.of(fuseCardOperations(t.getT1()),fuseCardOperations(t.getT2()));
-                            })
+                        .subscribe(t -> {
+                            sendOperation(t.getT1(), groupExchange);
+                            sendOperation(t.getT2(), userExchange);
+                        })
+                );
+    }
 
-                            .subscribe(t -> {
-                                sendOperation(t.getT1(), groupExchange);
-                                sendOperation(t.getT2(), userExchange);
-                            }
-                    )
-                    ;
-                });
+    private Tuple2<LinkedHashMap<String, List<CardOperation>>, LinkedHashMap<String, List<CardOperation>>>
+    reduceCardOperation(Tuple2<LinkedHashMap<String, List<CardOperation>>, LinkedHashMap<String, List<CardOperation>>> result, Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> item) {
+        for (Map.Entry<String, CardOperationData.CardOperationDataBuilder> e : item.getT1().entrySet()) {
+            List<CardOperation> opsList = result.getT1().get(e.getKey());
+            if (opsList == null) {
+                opsList = new ArrayList<>();
+                result.getT1().put(e.getKey(), opsList);
+            }
+            opsList.add(e.getValue().build());
+        }
+
+        for (Map.Entry<String, CardOperationData.CardOperationDataBuilder> e : item.getT2().entrySet()) {
+            List<CardOperation> opsList = result.getT2().get(e.getKey());
+            if (opsList == null) {
+                opsList = new ArrayList<>();
+                result.getT2().put(e.getKey(), opsList);
+            }
+            opsList.add(e.getValue().build());
+        }
+        return result;
     }
 
     /**
@@ -171,7 +171,7 @@ public class CardNotificationService {
     private void sendOperation(Map<String, List<CardOperation>> operationDictionnary, Exchange
             exchange) {
         operationDictionnary.entrySet().stream().
-                forEach(entry -> {
+                forEach(entry ->
                     entry.getValue().forEach(op->{
                         try {
                             rabbitTemplate.convertAndSend(
@@ -184,8 +184,8 @@ public class CardNotificationService {
                         } catch (JsonProcessingException e) {
                             log.error("Unnable to linearize card to json on amqp notification");
                         }
-                    });
-                });
+                    })
+                );
     }
 
     private void addCardToOperation(CardPublicationData c,
