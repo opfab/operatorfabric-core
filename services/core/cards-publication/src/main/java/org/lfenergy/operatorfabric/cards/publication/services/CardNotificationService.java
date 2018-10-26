@@ -39,8 +39,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CardNotificationService {
 
-    private static final int windowSize = 100;
-    private static final long windowTimeOut = 2000;
+    private static final int WINDOW_SIZE = 100;
+    private static final long WINDOW_TIME_OUT = 2000;
 
     private final RabbitTemplate rabbitTemplate;
     private final TopicExchange groupExchange;
@@ -67,7 +67,7 @@ public class CardNotificationService {
                 //parallelizing card treatments
                 .flatMap(c -> Mono.just(c).subscribeOn(Schedulers.parallel()))
                 //batching cards
-                .windowTimeout(windowSize, Duration.ofMillis(windowTimeOut))
+                .windowTimeout(WINDOW_SIZE, Duration.ofMillis(WINDOW_TIME_OUT))
                 .subscribe(flux -> {
                     flux.map(t -> notifyCardsX(t.getT1(), t.getT2()))
                             .reduce(Tuples.of(new LinkedHashMap<String, List<CardOperation>>(), new LinkedHashMap<String, List<CardOperation>>()), (result, item) -> {
@@ -146,12 +146,7 @@ public class CardNotificationService {
         int currentSize = 0;
         for (String g : card.getGroupRecipients()) {
             if (currentSize + g.getBytes().length > 200) {
-                CardOperationData.CardOperationDataBuilder groupCards = groupCardsDictionnay.get(groupSB.toString());
-                if (groupCards == null) {
-                    groupCardsDictionnay.put(groupSB.toString(), groupCards = CardOperationData.builder().type(type)
-                       .publicationDate(card.getPublishDate()));
-                }
-                addCardToOperation(card, groupCards, type);
+                addCardToOperation(card, type,groupCardsDictionnay,groupSB.toString());
                 groupSB = new StringBuilder();
                 currentSize = 0;
             } else {
@@ -165,21 +160,11 @@ public class CardNotificationService {
         }
 
         if (currentSize > 0) {
-            CardOperationData.CardOperationDataBuilder groupCards = groupCardsDictionnay.get(groupSB.toString());
-            if (groupCards == null) {
-                groupCardsDictionnay.put(groupSB.toString(), groupCards = CardOperationData.builder().type(type)
-                   .publicationDate(card.getPublishDate()));
-            }
-            addCardToOperation(card, groupCards, type);
+            addCardToOperation(card, type,groupCardsDictionnay,groupSB.toString());
         }
 
         for (String u : card.getOrphanedUsers()) {
-            CardOperationData.CardOperationDataBuilder userCards = userCardsDictionnary.get(u);
-            if (userCards == null) {
-                userCardsDictionnary.put(u, userCards = CardOperationData.builder().type(type)
-                   .publicationDate(card.getPublishDate()));
-            }
-            addCardToOperation(card, userCards, type);
+            addCardToOperation(card, type,userCardsDictionnary,u);
         }
 
         return Tuples.of(groupCardsDictionnay, userCardsDictionnary);
@@ -205,14 +190,21 @@ public class CardNotificationService {
                 });
     }
 
-    private void addCardToOperation(CardPublicationData c, CardOperationData.CardOperationDataBuilder cardOperation, CardOperationTypeEnum type) {
+    private void addCardToOperation(CardPublicationData c,
+                                    CardOperationTypeEnum type, Map<String,CardOperationData.CardOperationDataBuilder> cardsDictionnay,
+                                    String builderId) {
+        CardOperationData.CardOperationDataBuilder cardOperationBuilder = cardsDictionnay.get(builderId);
+        if (cardOperationBuilder == null) {
+            cardsDictionnay.put(builderId, cardOperationBuilder = CardOperationData.builder().type(type)
+               .publicationDate(c.getPublishDate()));
+        }
         switch (type) {
             case ADD:
             case UPDATE:
-                cardOperation.card(c.toLightCard());
+                cardOperationBuilder.card(c.toLightCard());
                 break;
             case DELETE:
-                cardOperation.cardId(c.getId());
+                cardOperationBuilder.cardId(c.getId());
 
         }
     }

@@ -6,7 +6,6 @@ package org.lfenergy.operatorfabric.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.model.CardCreationReport;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
@@ -53,8 +52,8 @@ import java.util.function.Function;
 public class CardWriteService {
 
     private final EmitterProcessor<CardPublicationData> processor;
-    private static final int windowSize=1000;
-    private static final long windowTimeOut=500;
+    private static final int WINDOW_SIZE =1000;
+    private static final long WINDOW_TIME_OUT =500;
     private final FluxSink<CardPublicationData> sink;
 
     //to inject
@@ -81,7 +80,7 @@ public class CardWriteService {
            //parallelizing card treatments
            .flatMap(c-> Mono.just(c).subscribeOn(Schedulers.parallel()))
            //batching cards
-           .windowTimeout(windowSize,Duration.ofMillis(windowTimeOut))
+           .windowTimeout(WINDOW_SIZE,Duration.ofMillis(WINDOW_TIME_OUT))
            //remembering startime for measurement
            .map(card->Tuples.of(card,System.nanoTime(),SimulatedTime.getInstance().computeNow().toEpochMilli()))
            //trigger batched treatment upon window readiness
@@ -179,11 +178,10 @@ public class CardWriteService {
     }
 
     public void createCardsAsyncParallel(Flux<CardPublicationData> cards){
-
         cards.subscribe(c->sink.next(c));
     }
 
-    public Mono<? extends CardCreationReport> createCardsWithResult(Flux<CardPublicationData> inputCards){
+    public Mono<CardCreationReportData> createCardsWithResult(Flux<CardPublicationData> inputCards){
         long windowStart = Instant.now().toEpochMilli();
         Flux<CardPublicationData> cards = registerRecipientProcess(inputCards);
         cards = registerValidationProcess(cards,SimulatedTime.getInstance().computeNow().toEpochMilli());

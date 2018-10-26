@@ -6,6 +6,7 @@ package org.lfenergy.operatorfabric.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.model.CardCreationReport;
+import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardWriteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class CardController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public @Valid Mono<? extends CardCreationReport> createCards(@Valid @RequestBody Flux<CardPublicationData> cards){
+    public @Valid Mono<CardCreationReportData> createCards(@Valid @RequestBody Flux<CardPublicationData> cards){
         return cardWriteService.createCardsWithResult(cards);
 
     }
