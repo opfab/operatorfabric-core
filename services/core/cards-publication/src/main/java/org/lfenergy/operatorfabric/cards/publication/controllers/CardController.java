@@ -5,7 +5,6 @@
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.model.CardCreationReport;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardWriteService;

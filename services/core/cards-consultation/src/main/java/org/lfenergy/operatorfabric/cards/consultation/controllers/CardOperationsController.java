@@ -120,9 +120,7 @@ public class CardOperationsController {
                                         .build()
                         )
                         .build())
-                .map(o -> {
-                    return objectToJsonString(o);
-                })
+                .map(this::objectToJsonString)
                 .doOnCancel(() -> log.info("cancelled"))
                 .log()
         );

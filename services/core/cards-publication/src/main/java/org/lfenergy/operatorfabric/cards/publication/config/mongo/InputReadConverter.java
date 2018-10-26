@@ -6,8 +6,8 @@ package org.lfenergy.operatorfabric.cards.publication.config.mongo;
 
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.model.Input;
-import org.lfenergy.operatorfabric.cards.publication.model.InputPublicationData;
 import org.lfenergy.operatorfabric.cards.model.InputEnum;
+import org.lfenergy.operatorfabric.cards.publication.model.InputPublicationData;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.Collection;
