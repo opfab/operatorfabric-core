@@ -148,8 +148,8 @@ public class CardWriteService {
            )
            .doOnNext(t->notifyCards(t.getT1()))
            .doOnNext(t -> {
-               if (t.getT2() > 0) {
-                   registerMeasuresAndLog(windowStart, t.getT2());
+               if (t.getT2() > 0 && log.isDebugEnabled()) {
+                   logMeasures(windowStart, t.getT2());
                }
            })
            .map(t->t.getT2());
@@ -224,7 +224,6 @@ public class CardWriteService {
         objDocument.entrySet().forEach(e->{
             update.set(e.getKey(), e.getValue());
         });
-//        bulk.upsert(Query.query(Criteria.where("_id").is(c.getId()).and("shardKey").is(c.getShardKey())), update);
         bulk.upsert(Query.query(Criteria.where("_id").is(c.getId())), update);
     }
 
@@ -232,22 +231,10 @@ public class CardWriteService {
         bulkArchived.insert(c);
     }
 
-    private void registerMeasuresAndLog(long windowStart, long count) {
-        long now = System.nanoTime();
-//        long writeDuration = now-writeStart;
+    private void logMeasures(long windowStart, long count) {
         long windowDuration = System.nanoTime()-windowStart;
-//        double prepareDurationMillis = prepareDuration/1000000;
-//        double writeDurationMillis = writeDuration/1000000;
         double windowDurationMillis = windowDuration/1000000d;
-//        double cardPrepareDurationMillis = prepareDurationMillis/count;
-//        double cardWriteDurationMillis = writeDurationMillis/count;
         double cardWindowDurationMillis = windowDurationMillis/count;
-        long time = Instant.now().toEpochMilli();
-//        prepareVault.register(time,prepareDurationMillis,count);
-//        writeVault.register(time,writeDurationMillis,count);
-//        writeWindowVault.register(time, windowDurationMillis,count);
-//        log.info(count+" cards prepared in "+cardPrepareDurationMillis+" ms each (total: "+prepareDurationMillis+")");
-//        log.info(count+" cards wrote in "+cardWriteDurationMillis+" ms each (total: "+writeDurationMillis+")");
-        log.info(count+" cards handled in "+cardWindowDurationMillis+" ms each (total: "+windowDurationMillis+")");
+        log.debug(count+" cards handled in "+cardWindowDurationMillis+" ms each (total: "+windowDurationMillis+")");
     }
 }

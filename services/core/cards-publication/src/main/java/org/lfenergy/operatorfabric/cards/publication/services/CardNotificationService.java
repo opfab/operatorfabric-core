@@ -48,8 +48,6 @@ public class CardNotificationService {
     private final ObjectMapper mapper;
     private final EmitterProcessor<Tuple2<CardPublicationData, CardOperationTypeEnum>> processor;
     private final FluxSink<Tuple2<CardPublicationData, CardOperationTypeEnum>> sink;
-    private AtomicInteger sequence = new AtomicInteger();
-    private String uuid = UUID.randomUUID().toString();
 
     @Autowired
     public CardNotificationService(RabbitTemplate rabbitTemplate,
@@ -74,7 +72,8 @@ public class CardNotificationService {
                                 for (Map.Entry<String, CardOperationData.CardOperationDataBuilder> e : item.getT1().entrySet()) {
                                     List<CardOperation> opsList = result.getT1().get(e.getKey());
                                     if (opsList == null) {
-                                        result.getT1().put(e.getKey(), opsList = new ArrayList<>());
+                                        opsList = new ArrayList<>();
+                                        result.getT1().put(e.getKey(), opsList);
                                     }
                                     opsList.add(e.getValue().build());
                                 }
@@ -82,7 +81,8 @@ public class CardNotificationService {
                                 for (Map.Entry<String, CardOperationData.CardOperationDataBuilder> e : item.getT2().entrySet()) {
                                     List<CardOperation> opsList = result.getT2().get(e.getKey());
                                     if (opsList == null) {
-                                        result.getT2().put(e.getKey(), opsList = new ArrayList<>());
+                                        opsList = new ArrayList<>();
+                                        result.getT2().put(e.getKey(), opsList);
                                     }
                                     opsList.add(e.getValue().build());
                                 }
@@ -134,7 +134,6 @@ public class CardNotificationService {
 
     public void notifyCards(Collection<CardPublicationData> cards, CardOperationTypeEnum type) {
         cards.forEach(c -> sink.next(Tuples.of(c, type)));
-//        notifyCards0(cards,type);
     }
 
 
@@ -195,8 +194,8 @@ public class CardNotificationService {
                                     String builderId) {
         CardOperationData.CardOperationDataBuilder cardOperationBuilder = cardsDictionnay.get(builderId);
         if (cardOperationBuilder == null) {
-            cardsDictionnay.put(builderId, cardOperationBuilder = CardOperationData.builder().type(type)
-               .publicationDate(c.getPublishDate()));
+            cardOperationBuilder = CardOperationData.builder().type(type).publicationDate(c.getPublishDate());
+            cardsDictionnay.put(builderId, cardOperationBuilder );
         }
         switch (type) {
             case ADD:
