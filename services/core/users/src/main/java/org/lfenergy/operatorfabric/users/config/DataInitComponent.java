@@ -40,36 +40,44 @@ public class DataInitComponent {
     public void init() {
         try {
             for (GroupData g : usersProperties.getGroups()) {
-                try {
-                    groupRepository.insert(g);
-                } catch (DuplicateKeyException ex) {
-                    log.warn("unnable to init " + g.getName() + " group: duplicate");
-                }
+                safeInsertGroup(g);
             }
             for (UserData u : usersProperties.getUsers()) {
-                try {
-                    userRepository.insert(u);
-                } catch (DuplicateKeyException ex) {
-                    log.warn("unnable to init " + u.getLogin() + " user: duplicate");
-                    Optional<UserData> resultUser = userRepository.findById(u.getLogin());
-                    if (resultUser.isPresent()) {
-                        UserData loadedUser = resultUser.get();
-                        boolean updated = false;
-                        for (String groupName : u.getGroupSet()) {
-                            if (!loadedUser.getGroupSet().contains(groupName)) {
-                                loadedUser.addGroup(groupName);
-                                log.info("Added \"" + groupName + "\" to existing user \"" + loadedUser.getLogin() + "\"");
-
-                                updated = true;
-                            }
-                        }
-                        if (updated)
-                            userRepository.save(loadedUser);
-                    }
-                }
+                safeInsertUsers(u);
             }
         }finally {
             initiated=true;
+        }
+    }
+
+    private void safeInsertUsers(UserData u) {
+        try {
+            userRepository.insert(u);
+        } catch (DuplicateKeyException ex) {
+            log.warn("unnable to init " + u.getLogin() + " user: duplicate");
+            Optional<UserData> resultUser = userRepository.findById(u.getLogin());
+            if (resultUser.isPresent()) {
+                UserData loadedUser = resultUser.get();
+                boolean updated = false;
+                for (String groupName : u.getGroupSet()) {
+                    if (!loadedUser.getGroupSet().contains(groupName)) {
+                        loadedUser.addGroup(groupName);
+                        log.info("Added \"" + groupName + "\" to existing user \"" + loadedUser.getLogin() + "\"");
+
+                        updated = true;
+                    }
+                }
+                if (updated)
+                    userRepository.save(loadedUser);
+            }
+        }
+    }
+
+    private void safeInsertGroup(GroupData g) {
+        try {
+            groupRepository.insert(g);
+        } catch (DuplicateKeyException ex) {
+            log.warn("unnable to init " + g.getName() + " group: duplicate");
         }
     }
 }
