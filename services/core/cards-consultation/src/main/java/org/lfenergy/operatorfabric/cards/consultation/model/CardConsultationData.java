@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.lfenergy.operatorfabric.cards.model.*;
 import org.lfenergy.operatorfabric.utilities.SimulatedTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,12 +27,14 @@ import java.util.Map;
 public class CardConsultationData implements Card {
 
     private String uid ;
+    @Id
     private String id;
     private String publisher;
     private String publisherVersion;
     private String processId;
     private I18n title;
     private I18n summary;
+    @CreatedDate
     private Long publishDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long deletionDate;

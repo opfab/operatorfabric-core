@@ -80,7 +80,7 @@ public class CardSubscription {
                 log.info(String.format("LISTENING to messages on Group[%sGroups] queue",this.login));
                 groupMlc.start();
             });
-            emitter.onDispose(()->doOnCancel.run());
+            emitter.onDispose(doOnCancel::run);
         });
         publisher = publisher.doOnError(t->log.error("Unexpected error",t));
 
@@ -117,9 +117,7 @@ public class CardSubscription {
         });
         log.info(String.format("CREATED Group[%sGroups] queue with bindings :",this.login));
         log.info(String.format("CREATED Group[%sGroups] queue with bindings :",this.login));
-        groups.stream().map(g -> "#." + g + ".#").forEach(g -> {
-           log.info("\t* "+g);
-        });
+        groups.stream().map(g -> "#." + g + ".#").forEach(g -> log.info("\t* "+g));
         return queue;
     }
 
