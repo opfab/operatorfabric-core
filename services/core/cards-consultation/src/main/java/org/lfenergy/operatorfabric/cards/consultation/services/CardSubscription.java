@@ -28,6 +28,7 @@ import java.util.Set;
 @Slf4j
 @EqualsAndHashCode
 public class CardSubscription {
+    public static final String GROUPS_SUFFIX = "Groups";
     private long current = 0;
     private String login;
     @Getter
@@ -68,15 +69,15 @@ public class CardSubscription {
         createUserQueue();
         createTopicQueue();
         this.userMlc = createMessageListenerContainer(this.login);
-        this.groupMlc = createMessageListenerContainer(this.login+"Groups");
+        this.groupMlc = createMessageListenerContainer(this.login+ GROUPS_SUFFIX);
         publisher = Flux.create(emitter -> {
             registerListener(userMlc, emitter,this.login);
-            registerListener(groupMlc, emitter,this.login+"Groups");
+            registerListener(groupMlc, emitter,this.login+ GROUPS_SUFFIX);
             emitter.onRequest(v -> {
                 log.info("STARTING subscription");
-                log.info("LISTENING to messages on User["+this.login+"] queue");
+                log.info(String.format("LISTENING to messages on User[%s] queue",this.login));
                 userMlc.start();
-                log.info("LISTENING to messages on Group["+this.login+"Groups] queue");
+                log.info(String.format("LISTENING to messages on Group[%sGroups] queue",this.login));
                 groupMlc.start();
             });
             emitter.onDispose(()->doOnCancel.run());
@@ -99,7 +100,7 @@ public class CardSubscription {
     }
 
     private Queue createUserQueue() {
-        log.info("CREATE User["+this.login+"] queue");
+        log.info(String.format("CREATE User[%s] queue",this.login));
         Queue queue = QueueBuilder.nonDurable(this.login).build();
         amqpAdmin.declareQueue(queue);
         Binding binding = BindingBuilder
@@ -107,20 +108,20 @@ public class CardSubscription {
            .to(this.userExchange)
            .with(this.login);
         amqpAdmin.declareBinding(binding);
-        log.info("CREATED User["+this.login+"] queue");
+        log.info(String.format("CREATED User[%s] queue",this.login));
         return queue;
     }
 
     private Queue createTopicQueue() {
-        log.info("CREATE Group["+this.login+"Groups] queue");
-        Queue queue = QueueBuilder.nonDurable(this.login+"Groups").build();
+        log.info(String.format("CREATE Group[%sGroups] queue",this.login));
+        Queue queue = QueueBuilder.nonDurable(this.login+ GROUPS_SUFFIX).build();
         amqpAdmin.declareQueue(queue);
         groups.stream().map(g -> "#." + g + ".#").forEach(g -> {
             Binding binding = BindingBuilder.bind(queue).to(groupExchange).with(g);
             amqpAdmin.declareBinding(binding);
         });
-        log.info("CREATED Group["+this.login+"Groups] queue with bindings :");
-        log.info("CREATED Group["+this.login+"Groups] queue with bindings :");
+        log.info(String.format("CREATED Group[%sGroups] queue with bindings :",this.login));
+        log.info(String.format("CREATED Group[%sGroups] queue with bindings :",this.login));
         groups.stream().map(g -> "#." + g + ".#").forEach(g -> {
            log.info("\t* "+g);
         });
@@ -128,12 +129,12 @@ public class CardSubscription {
     }
 
     public void clearSubscription() {
-        log.info("STOPPING User["+this.login+"] queue");
+        log.info(String.format("STOPPING User[%s] queue",this.login));
         this.userMlc.stop();
         amqpAdmin.deleteQueue(this.login);
-        log.info("STOPPING Group["+this.login+"Groups] queue");
+        log.info(String.format("STOPPING Group[%sGroups] queue",this.login));
         this.groupMlc.stop();
-        amqpAdmin.deleteQueue(this.login+"Groups");
+        amqpAdmin.deleteQueue(this.login+ GROUPS_SUFFIX);
     }
 
     public MessageListenerContainer createMessageListenerContainer(String queueName) {
