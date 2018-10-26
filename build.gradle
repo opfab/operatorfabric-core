@@ -1,3 +1,8 @@
+import com.github.jk1.license.render.*
+plugins {
+    id "com.github.jk1.dependency-license-report" version "1.3"
+}
+
 ext {
     operatorfabric = [
             group: "org.lfenergy.operatorfabric",
@@ -148,10 +153,19 @@ ext.apk.proxy.user = hasProperty('apk.proxy.user') && property('apk.proxy.user')
 ext.apk.proxy.password = hasProperty('apk.proxy.password') && property('apk.proxy.password') != null && property('apk.proxy.password') != "" ? property('apk.proxy.password') : System.env.APK_PROXY_PASSWORD != null ? "$System.env.APK_PROXY_PASSWORD" : ""
 //println "computed HTTP_PRY_AUTH: basic:*:$apk.proxy.user:$apk.proxy.password"
 
+licenseReport {
+    renderers = [new InventoryHtmlReportRenderer()]
+}
+
 subprojects {
 
     group operatorfabric.group
     version operatorfabric.version
+    apply plugin: "com.github.jk1.dependency-license-report"
+
+    licenseReport {
+        renderers = [new InventoryHtmlReportRenderer()]
+    }
 
     repositories {
         jcenter()
