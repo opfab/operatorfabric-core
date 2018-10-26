@@ -88,11 +88,6 @@ public class CardSubscription {
 
     private void registerListener(MessageListenerContainer userMlc, FluxSink<String> emitter, String queueName) {
         userMlc.setupMessageListener((MessageListener) message -> {
-            //TODO change this to keep the subscription up before definitive eviction
-//            if (emitter.isCancelled()) {
-////                userMlc.stop();
-//                return;
-//            }
             log.info("PUBLISHING message from "+queueName);
             emitter.next(new String(message.getBody()));
 
