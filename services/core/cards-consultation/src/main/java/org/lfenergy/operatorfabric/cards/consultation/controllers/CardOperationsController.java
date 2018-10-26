@@ -58,25 +58,31 @@ public class CardOperationsController {
     public RouterFunction<ServerResponse> cardOperationRoutes() {
         return RouterFunctions.route(RequestPredicates.GET("/cardOperations"),
                 request -> {
-                    Optional<String> optionnalClientId = request.queryParam("clientId");
-                    if (!optionnalClientId.isPresent()) {
-                        return ServerResponse.badRequest()
-                                .body(Mono.just("\"clientId\" is a mandatory request parameter"), String.class);
-                    }
                     ServerResponse.BodyBuilder builder = ServerResponse.ok()
                             .contentType(MediaType.TEXT_EVENT_STREAM);
                     if (request.queryParam("test").orElse("false").equals("true")) {
                         return builder.body(test(request.principal()), String.class);
                     } else {
-                        return builder.body(request.principal().flatMapMany(principal -> subscribeToCardOperations(request,
-                                principal)),
-                                String.class);
+                            return builder.body(request.principal().flatMapMany(principal -> {
+                                   try {
+                                       return subscribeToCardOperations(request, principal);
+                                   } catch (ApiErrorException e) {
+                                       if(e.getError().getStatus().is5xxServerError())
+                                           log.error("Unexpected internal server error",e);
+                                       else if(e.getError().getStatus().is4xxClientError()) {
+                                           log.warn(e.getError().getMessage());
+                                           log.debug("4xx error underlying exception",e);
+                                       }
+                                       return Mono.just(objectToJsonString(e.getError()));
+                                   }
+                               }),
+                               String.class);
                     }
                 }
         );
     }
 
-    private Flux<String> subscribeToCardOperations(ServerRequest req, Principal principal) {
+    private Flux<String> subscribeToCardOperations(ServerRequest req, Principal principal) throws ApiErrorException {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         User user = (User) jwtPrincipal.getPrincipal();
         Optional<String> optionnalClientId = req.queryParam("clientId");
@@ -85,10 +91,10 @@ public class CardOperationsController {
             return cardSubscriptionService.subscribe(user, clientId).getPublisher();
         } else {
             //should never happen
-            throw new RuntimeException(new ApiErrorException(ApiError.builder()
+            throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message("\"clientId\" is a mandatory request parameter")
-                    .build())
+                    .build()
             );
         }
     }
@@ -115,16 +121,20 @@ public class CardOperationsController {
                         )
                         .build())
                 .map(o -> {
-                    try {
-                        return mapper.writeValueAsString(o);
-                    } catch (JsonProcessingException e) {
-                        log.error("Unnable to convert object to Json string", e);
-                        return "null";
-                    }
+                    return objectToJsonString(o);
                 })
                 .doOnCancel(() -> log.info("cancelled"))
                 .log()
         );
+    }
+
+    private String objectToJsonString(Object o) {
+        try {
+            return mapper.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            log.error("Unnable to convert object to Json string", e);
+            return "null";
+        }
     }
 
 
