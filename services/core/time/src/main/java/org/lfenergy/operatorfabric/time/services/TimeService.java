@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
-//TODO init time with forced value
 @Service
 @Slf4j
 public class TimeService {
