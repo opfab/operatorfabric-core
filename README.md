@@ -61,19 +61,21 @@ You can also use the bin/setup_dockerized_environment which builds the services 
 project
 └──bin
 └──client
+│   └──cards (cards-client-data)
 │   └──time (time-client-data)
+│   └──users (users-client-data)
 └──services
-    └──core
-    │   └──cards-consultation (cards-consultation-business-service)
-    │   └──cards-publication (cards-publication-business-service)
-    │   └──thirds (third-party-business-service)
-    │   └──time (time-business-service)
-    │   └──users (users-business-service)
-    └──infra
-    |   └──auth 
-    |   └──client-gateway (client-gateway-cloud-service)
-    |   └──config (configuration-cloud-service)
-    |   └──registry (registry-cloud-service)
+|   └──core
+|   |   └──cards-consultation (cards-consultation-business-service)
+|   |   └──cards-publication (cards-publication-business-service)
+|   |   └──thirds (third-party-business-service)
+|   |   └──time (time-business-service)
+|   |   └──users (users-business-service)
+|   └──infra
+|   |   └──auth 
+|   |   └──client-gateway (client-gateway-cloud-service)
+|   |   └──config (configuration-cloud-service)
+|   |   └──registry (registry-cloud-service)
 └──tools
     └──spring-amqp-utilities
     └──spring-mongo-utilities
@@ -85,6 +87,7 @@ project
 ```
 
 * bin : contains useful scripts
+* client : contains REST APIs simple beans definition, may be used by external projects
 * services: contains business microservices
     * [core](services/core/README.md) : contains core business micro services
         * [cards-consultation (cards-consultation-business-service)](services/core/cards-consultation/README.md) : Card consultation service. 

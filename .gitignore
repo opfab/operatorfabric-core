@@ -100,3 +100,4 @@ gradle-app.setting
 
 # ignoring sonar generated reports
 .sonar
+.scannerwork
