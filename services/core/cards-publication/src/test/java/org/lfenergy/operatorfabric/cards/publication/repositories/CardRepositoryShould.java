@@ -9,14 +9,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.cards.model.*;
+import org.lfenergy.operatorfabric.cards.model.ActionEnum;
+import org.lfenergy.operatorfabric.cards.model.InputEnum;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
 import org.lfenergy.operatorfabric.cards.publication.Application;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.DetailPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -55,45 +55,58 @@ public class CardRepositoryShould {
     @Test
     public void persistCard() {
         CardPublicationData card =
-           CardPublicationData.builder()
-              .processId("PROCESS")
-              .publisher("PUBLISHER")
-              .publisherVersion("0")
-              .startDate(Instant.now().toEpochMilli())
-              .severity(SeverityEnum.ALARM)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .recipient(RecipientPublicationData.builder()
-                 .type(RecipientEnum.UNION)
-                 .recipient(RecipientPublicationData.builder()
-                    .type(RecipientEnum.GROUP)
-                    .identity("group1")
+            CardPublicationData.builder()
+                .processId("PROCESS")
+                .publisher("PUBLISHER")
+                .publisherVersion("0")
+                .startDate(Instant.now().toEpochMilli())
+                .severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .recipient(RecipientPublicationData.builder()
+                    .type(RecipientEnum.UNION)
+                    .recipient(RecipientPublicationData.builder()
+                        .type(RecipientEnum.GROUP)
+                        .identity("group1")
+                        .build())
+                    .recipient(RecipientPublicationData.builder()
+                        .type(RecipientEnum.GROUP)
+                        .identity("group2")
+                        .build())
                     .build())
-                 .recipient(RecipientPublicationData.builder()
-                    .type(RecipientEnum.GROUP)
-                    .identity("group2")
+                .detail(DetailPublicationData.builder()
+                    .templateName("template")
+                    .title(I18nPublicationData.builder()
+                        .key("key")
+                        .parameter("param1", "value1")
+                        .build())
+                    .titlePosition(TitlePositionEnum.UP)
+                    .style("style")
                     .build())
-                 .build())
-              .detail(DetailPublicationData.builder()
-                 .templateName("template")
-                 .title(I18nPublicationData.builder()
-                    .key("key")
-                    .parameter("param1", "value1")
+                .action("action1", ActionPublicationData.builder()
+                    .type(ActionEnum.URI)
+                    .label(I18nPublicationData.builder().key("actione1Key").build())
+                    .input(InputPublicationData.builder()
+                        .type(InputEnum.SWITCH_LIST)
+                        .label(I18nPublicationData.builder().key("paramKey").build())
+                        .name("param")
+                        .value(ParameterListItemPublicationData.builder().value("v1").label(I18nPublicationData.builder().key("v1Key").build()).build())
+                        .value(ParameterListItemPublicationData.builder().value("v2").label(I18nPublicationData.builder().key("v2Key").build()).build())
+                        .selectedValue("v1")
+                        .unSelectedValue("v2")
+                        .build())
                     .build())
-                 .titlePosition(TitlePositionEnum.UP)
-                 .style("style")
-                 .build())
-              .build();
+                .build();
         card.prepare(Instant.now().toEpochMilli());
         StepVerifier.create(repository.save(card))
-           .expectNextMatches(computeCardPredicate(card))
-           .expectComplete()
-           .verify();
+                .expectNextMatches(computeCardPredicate(card))
+                .expectComplete()
+                .verify();
 
         StepVerifier.create(repository.findById("PUBLISHER_PROCESS"))
-           .expectNextMatches(computeCardPredicate(card))
-           .expectComplete()
-           .verify();
+                .expectNextMatches(computeCardPredicate(card))
+                .expectComplete()
+                .verify();
     }
 
     @NotNull

@@ -10,7 +10,6 @@ import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.Counter;
 import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,7 +133,7 @@ public class CardWriteService {
            // creating archived card
            .map(card -> Tuples.of(card, new ArchivedCardPublicationData(card)))
            // removing duplicates and assembling card data in collections
-           .reduce(Tuples.of(new LinkedHashMap<>(), new ArrayList<>(), new HashSet<>(), new Counter()), fct)
+           .reduce(Tuples.of(new LinkedHashMap<>(), new ArrayList<>(), new HashSet<>()), fct)
            // switch to blockable thread before sync treatments (mongo writes)
            .publishOn(Schedulers.immediate())
            .flatMap(tuple ->

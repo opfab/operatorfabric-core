@@ -12,11 +12,10 @@ import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p></p>
+ * <p>Please use builder to instantiate</p>
  * Created on 18/09/18
  *
  * @author davibind
@@ -45,7 +44,7 @@ public class LightCardPublicationData implements LightCard {
     private String media;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> tags = new ArrayList<>();
+    private List<String> tags;
     private I18n title;
     private I18n summary;
     private String mainRecipient;

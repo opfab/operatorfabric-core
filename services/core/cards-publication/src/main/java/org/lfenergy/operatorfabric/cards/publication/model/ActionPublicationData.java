@@ -11,9 +11,11 @@ import org.lfenergy.operatorfabric.cards.model.I18n;
 import org.lfenergy.operatorfabric.cards.model.Input;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Plese use builder to instantiate
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,14 +25,14 @@ public class ActionPublicationData implements Action {
     private ActionEnum type;
     @NotNull
     private I18n label;
-    @Singular  private List<? extends Input> inputs = new ArrayList<>();
+    @Singular  private List<? extends Input> inputs;
     private String buttonStyle;
     private String contentStyle;
-    private Boolean lockAction = false;
-    private Boolean lockCard = false;
-    private Boolean updateState = false;
-    private Boolean updateStateBeforeAction = false;
-    private Boolean called = false;
-    private Boolean needsConfirm = false;
-    private Boolean hidden = false;
+    private Boolean lockAction;
+    private Boolean lockCard;
+    private Boolean updateState;
+    private Boolean updateStateBeforeAction;
+    private Boolean called;
+    private Boolean needsConfirm;
+    private Boolean hidden;
 }

@@ -11,24 +11,27 @@ import org.lfenergy.operatorfabric.cards.model.InputEnum;
 import org.lfenergy.operatorfabric.cards.model.ParameterListItem;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Please use builder to instantiate
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class InputPublicationData implements Input {
+    @NotNull
     private InputEnum type;
     @NotNull
     private String name;
     @NotNull
     private I18n label;
     private String value;
-    private Boolean mandatory = false;
+    private Boolean mandatory;
     private Integer maxLength;
     private Integer rows;
-    @Singular private List< ? extends ParameterListItem> values = new ArrayList<>();
-    @Singular private List<String> selectedValues = new ArrayList<>();
-    @Singular private List<String> unSelectedValues = new ArrayList<>();
+    @Singular private List< ? extends ParameterListItem> values;
+    @Singular private List<String> selectedValues;
+    @Singular private List<String> unSelectedValues;
 }
