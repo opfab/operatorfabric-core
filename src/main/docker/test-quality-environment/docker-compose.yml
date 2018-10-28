@@ -1,0 +1,31 @@
+version: '2.1'
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15674:15674"
+    networks:
+      - opfabnet
+  mongodb:
+    container_name: mongodb
+    image: mongo:4.1.1-xenial
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - opfabnet
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+networks:
+  opfabnet:
+    external:
+      name: opfabnet

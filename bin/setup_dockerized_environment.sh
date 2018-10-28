@@ -92,28 +92,29 @@ if [ -z $https_proxy_uri ]; then
 fi
 
 if [ "$build" = true ] ; then
-    $OF_HOME/bin/build_all.sh $GRADLE_OPTIONS
+    cd $OF_HOME
+    gradle assemble $GRADLE_OPTIONS
     cd $CURRENT_PATH
 fi
 cd $OF_HOME
-cd services/core
+#cd services/core
 gradle copyWorkingDir dockerTag -x test \
 -Papk.proxy.uri=$proxy_uri \
 -Papk.proxy.httpsuri=$https_proxy_uri \
 -Papk.proxy.user=$proxy_user \
 -Papk.proxy.password=$proxy_password $GRADLE_OPTIONS
-cd ../infra
-gradle copyWorkingDir dockerTag -x test \
--Papk.proxy.uri=$proxy_uri \
--Papk.proxy.httpsuri=$https_proxy_uri \
--Papk.proxy.user=$proxy_user \
--Papk.proxy.password=$proxy_password $GRADLE_OPTIONS
-cd ../../docker-standalone-images/
-gradle dockerTag \
--Papk.proxy.uri=$proxy_uri \
--Papk.proxy.httpsuri=$https_proxy_uri \
--Papk.proxy.user=$proxy_user \
--Papk.proxy.password=$proxy_password $GRADLE_OPTIONS
+#cd ../infra
+#gradle copyWorkingDir dockerTag -x test \
+#-Papk.proxy.uri=$proxy_uri \
+#-Papk.proxy.httpsuri=$https_proxy_uri \
+#-Papk.proxy.user=$proxy_user \
+#-Papk.proxy.password=$proxy_password $GRADLE_OPTIONS
+#cd ../../docker-standalone-images/
+#gradle dockerTag \
+#-Papk.proxy.uri=$proxy_uri \
+#-Papk.proxy.httpsuri=$https_proxy_uri \
+#-Papk.proxy.user=$proxy_user \
+#-Papk.proxy.password=$proxy_password $GRADLE_OPTIONS
 cd $CURRENT_PATH
 
 docker network create opfabnet
