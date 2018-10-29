@@ -10,13 +10,17 @@ import org.lfenergy.operatorfabric.cards.model.Input;
 import org.lfenergy.operatorfabric.cards.model.InputEnum;
 import org.lfenergy.operatorfabric.cards.model.ParameterListItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Please use builder to instantiate outside delinearization
+ *
+ * @Author David Binder
+ */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class InputConsultationData implements Input {
     private InputEnum type;
     private String name;
@@ -26,9 +30,9 @@ public class InputConsultationData implements Input {
     private Integer maxLength;
     private Integer rows;
     @Singular
-    private List< ? extends ParameterListItem> values = new ArrayList<>();
+    private List< ? extends ParameterListItem> values;
     @Singular
-    private List<String> selectedValues = new ArrayList<>();
+    private List<String> selectedValues;
     @Singular
-    private List<String> unSelectedValues = new ArrayList<>();
+    private List<String> unSelectedValues;
 }

@@ -6,8 +6,7 @@ package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -18,8 +17,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Please use builder to instantiate outside delinearization
+ *
+ * @Author David Binder
+ */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Document(collection = "archivedCards")
 public class ArchivedConsultationCardData implements Card {
 
@@ -45,11 +51,14 @@ public class ArchivedConsultationCardData implements Card {
     private String media;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
     private List<String> tags;
     @Transient
     @JsonIgnore
-    private Map<String,? extends Action> actions;
+    @Singular
+    private Map<String, ? extends Action> actions;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
     private List<? extends Detail> details;
     @JsonIgnore
     private Recipient recipient;
@@ -59,8 +68,10 @@ public class ArchivedConsultationCardData implements Card {
     private int shardKey;
     private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
     private List<String> userRecipients;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
     private List<String> groupRecipients;
 
 

@@ -17,10 +17,10 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication
 @Import({TimeService.class,AmqpConfig.class,JacksonConfig.class,
    TimeController.class, CoreConfig.class})
-public class UnitTestApplication {
+public class IntegrationTestApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(UnitTestApplication.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(IntegrationTestApplication.class, args);
         assert (ctx != null);
     }
 

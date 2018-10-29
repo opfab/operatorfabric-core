@@ -5,23 +5,18 @@
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.I18n;
 import org.lfenergy.operatorfabric.cards.model.LightCard;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p></p>
- * Created on 18/09/18
+ * Please use builder to instantiate outside delinearization
  *
- * @author davibind
+ * @Author David Binder
  */
 @Data
 @NoArgsConstructor
@@ -42,7 +37,8 @@ public class LightCardConsultationData implements LightCard {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String media;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> tags = new ArrayList<>();
+    @Singular
+    private List<String> tags;
     private I18n title;
     private I18n summary;
     private String mainRecipient;

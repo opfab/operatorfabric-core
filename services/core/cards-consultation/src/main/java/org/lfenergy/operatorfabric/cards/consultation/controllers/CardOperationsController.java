@@ -13,22 +13,17 @@ import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultatio
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.springtools.config.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
-import java.security.Principal;
 import java.time.Duration;
 import java.util.Optional;
 
@@ -38,7 +33,6 @@ import java.util.Optional;
  *
  * @author davibind
  */
-@RestController
 @Component
 @Slf4j
 public class CardOperationsController {
@@ -54,55 +48,31 @@ public class CardOperationsController {
         this.mapper = mapper;
     }
 
-    @Bean
-    public RouterFunction<ServerResponse> cardOperationRoutes() {
-        return RouterFunctions.route(RequestPredicates.GET("/cardOperations"),
-                request -> {
-                    ServerResponse.BodyBuilder builder = ServerResponse.ok()
-                            .contentType(MediaType.TEXT_EVENT_STREAM);
-                    if (request.queryParam("test").orElse("false").equals("true")) {
-                        return builder.body(test(request.principal()), String.class);
-                    } else {
-                            return builder.body(request.principal().flatMapMany(principal -> {
-                                   try {
-                                       return subscribeToCardOperations(request, principal);
-                                   } catch (ApiErrorException e) {
-                                       if(e.getError().getStatus().is5xxServerError())
-                                           log.error("Unexpected internal server error",e);
-                                       else if(e.getError().getStatus().is4xxClientError()) {
-                                           log.warn(e.getError().getMessage());
-                                           log.debug("4xx error underlying exception",e);
-                                       }
-                                       return Mono.just(objectToJsonString(e.getError()));
-                                   }
-                               }),
-                               String.class);
-                    }
-                }
-        );
+
+
+    public Flux<String> registerSubscriptionAndPublish(Mono<Tuple2<User, Optional<String>>> input) {
+        return input
+           .flatMapMany(t -> {
+               if (t.getT2().isPresent()) {
+                   String clientId = t.getT2().get();
+                   return cardSubscriptionService.subscribe(t.getT1(), clientId).getPublisher();
+               } else {
+                   log.warn("\"clientId\" is a mandatory request parameter");
+                   ApiErrorException e = new ApiErrorException(ApiError.builder()
+                      .status(HttpStatus.BAD_REQUEST)
+                      .message("\"clientId\" is a mandatory request parameter")
+                      .build()
+                   );
+                   log.debug("4xx error underlying exception", e);
+                   return Mono.just(objectToJsonString(e.getError()));
+               }
+           });
     }
 
-    private Flux<String> subscribeToCardOperations(ServerRequest req, Principal principal) throws ApiErrorException {
-        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-        User user = (User) jwtPrincipal.getPrincipal();
-        Optional<String> optionnalClientId = req.queryParam("clientId");
-        if (optionnalClientId.isPresent()) {
-            String clientId = optionnalClientId.get();
-            return cardSubscriptionService.subscribe(user, clientId).getPublisher();
-        } else {
-            //should never happen
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("\"clientId\" is a mandatory request parameter")
-                    .build()
-            );
-        }
-    }
-
-    private Flux<String> test(Mono<? extends Principal> user) {
-        return user.flatMapMany(u -> Flux
+    public Flux<String> publishTestData(Mono<Tuple2<User, Optional<String>>> input) {
+        return input.flatMapMany(t -> Flux
                 .interval(Duration.ofSeconds(5))
-                .doOnEach(l -> log.info("message " + l + " to " + u.getName()))
+                .doOnEach(l -> log.info("message " + l + " to " + t.getT1().getLogin()))
                 .map(l -> CardOperationConsultationData.builder()
                         .number(l)
                         .publicationDate(SimulatedTime.getInstance().computeNow().toEpochMilli() - 600000)

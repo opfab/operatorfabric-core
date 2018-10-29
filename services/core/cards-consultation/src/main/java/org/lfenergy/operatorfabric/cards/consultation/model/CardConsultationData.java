@@ -6,24 +6,30 @@ package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.lfenergy.operatorfabric.cards.model.*;
-import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Please use builder to instantiate outside delinearization
+ *
+ * @Author David Binder
+ */
 @Data
-@Document(collection = "cards")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Document(collection = "cards")
 public class CardConsultationData implements Card {
 
     private String uid ;
@@ -48,11 +54,11 @@ public class CardConsultationData implements Card {
     private String media;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> tags = new ArrayList<>();
+    private List<String> tags;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Map<String,? extends Action> actions = new HashMap<>();
+    private Map<String,? extends Action> actions;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<? extends Detail> details = new ArrayList<>();
+    private List<? extends Detail> details;
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
@@ -60,15 +66,9 @@ public class CardConsultationData implements Card {
     private int shardKey;
     private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> userRecipients = new ArrayList<>();
+    private List<String> userRecipients;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> groupRecipients = new ArrayList<>();
+    private List<String> groupRecipients;
     @Transient @JsonIgnore
-    private List<String> orphanedUsers = new ArrayList<>();
-
-    public void prepare(){
-        this.publishDate = SimulatedTime.getInstance().computeNow().toEpochMilli();
-        this.id = publisher+"_"+processId;
-        this.setShardKey(Math.toIntExact(this.getStartDate()%24*1000));
-    }
+    private List<String> orphanedUsers;
 }

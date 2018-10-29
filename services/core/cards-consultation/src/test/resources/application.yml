@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      uris:
+        - mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1
+      database: operator-fabric-test
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud.discovery.enabled: false
+eureka.client.enabled: false

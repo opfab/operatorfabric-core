@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.lfenergy.operatorfabric.cards.consultation.controllers;
+package org.lfenergy.operatorfabric.cards.consultation.config.webflux;
 
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;

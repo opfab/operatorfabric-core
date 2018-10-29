@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.time.application.UnitTestApplication;
+import org.lfenergy.operatorfabric.time.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.time.config.json.JacksonConfig;
 import org.lfenergy.operatorfabric.time.model.ServerTimeData;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author davibind
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes={UnitTestApplication.class, JacksonConfig.class})
+@SpringBootTest(classes={IntegrationTestApplication.class, JacksonConfig.class})
 @ActiveProfiles(profiles = {"test"})
 @Slf4j
 public class ObjectMapperShould {

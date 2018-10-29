@@ -10,10 +10,15 @@ import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 
 import java.util.List;
 
+/**
+ * Please use builder to instantiate outside delinearization
+ *
+ * @Author David Binder
+ */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class RecipientConsultationData implements Recipient {
     private RecipientEnum type;
     private String identity;

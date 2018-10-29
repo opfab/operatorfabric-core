@@ -10,25 +10,29 @@ import org.lfenergy.operatorfabric.cards.model.ActionEnum;
 import org.lfenergy.operatorfabric.cards.model.I18n;
 import org.lfenergy.operatorfabric.cards.model.Input;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Please use builder to instantiate outside delinearization
+ *
+ * @Author David Binder
+ */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ActionConsultationData implements Action {
     private ActionEnum type;
     private I18n label;
     @Singular
-    private List<? extends Input> inputs = new ArrayList<>();
+    private List<? extends Input> inputs;
     private String buttonStyle;
     private String contentStyle;
-    private Boolean lockAction = false;
-    private Boolean lockCard = false;
-    private Boolean updateState = false;
-    private Boolean updateStateBeforeAction = false;
-    private Boolean called = false;
-    private Boolean needsConfirm = false;
-    private Boolean hidden = false;
+    private Boolean lockAction;
+    private Boolean lockCard;
+    private Boolean updateState;
+    private Boolean updateStateBeforeAction;
+    private Boolean called;
+    private Boolean needsConfirm;
+    private Boolean hidden;
 }

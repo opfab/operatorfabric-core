@@ -25,5 +25,6 @@ public class CardsModule extends SimpleModule {
     addAbstractTypeMapping(Input.class,InputConsultationData.class);
     addAbstractTypeMapping(Recipient.class,RecipientConsultationData.class);
     addAbstractTypeMapping(ParameterListItem.class,ParameterListItemConsultationData.class);
+    addAbstractTypeMapping(LightCard.class,LightCardConsultationData.class);
     }
 }

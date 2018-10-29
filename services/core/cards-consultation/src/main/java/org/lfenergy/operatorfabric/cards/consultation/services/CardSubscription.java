@@ -42,6 +42,8 @@ public class CardSubscription {
     private ConnectionFactory connectionFactory;
     private MessageListenerContainer userMlc;
     private MessageListenerContainer groupMlc;
+    @Getter
+    private boolean cleared = false;
 
     @Builder
     public CardSubscription(User user,
@@ -128,7 +130,19 @@ public class CardSubscription {
         log.info(String.format("STOPPING Group[%sGroups] queue",this.login));
         this.groupMlc.stop();
         amqpAdmin.deleteQueue(this.login+ GROUPS_SUFFIX);
+        this.cleared = true;
     }
+
+    /**
+     *
+     * @return true if associated AMQP listeners are still running
+     */
+    public boolean checkActive(){
+        boolean userActive = userMlc == null || userMlc.isRunning();
+        boolean groupActive = groupMlc == null || groupMlc.isRunning();
+        return userActive && groupActive;
+    }
+
 
     public MessageListenerContainer createMessageListenerContainer(String queueName) {
 

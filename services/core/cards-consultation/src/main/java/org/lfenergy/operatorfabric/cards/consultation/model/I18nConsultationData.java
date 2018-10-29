@@ -7,9 +7,13 @@ package org.lfenergy.operatorfabric.cards.consultation.model;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.I18n;
 
-import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Please use builder to instantiate outside delinearization
+ *
+ * @Author David Binder
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -17,5 +21,5 @@ import java.util.Map;
 public class I18nConsultationData implements I18n {
     private String key;
     @Singular
-    private Map<String,String> parameters = new HashMap<>();
+    private Map<String,String> parameters;
 }

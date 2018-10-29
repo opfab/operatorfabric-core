@@ -115,7 +115,7 @@ class UsersControllerShould {
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
            .andExpect(jsonPath("$.message", is("User tgillian not found")))
-           .andExpect(jsonPath("$.errors", hasSize(0)))
+           .andExpect(jsonPath("$.errors").doesNotExist())
         ;
     }
 

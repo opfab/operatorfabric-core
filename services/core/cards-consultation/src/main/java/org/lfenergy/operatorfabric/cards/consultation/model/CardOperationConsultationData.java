@@ -13,10 +13,9 @@ import org.lfenergy.operatorfabric.cards.model.LightCard;
 import java.util.List;
 
 /**
- * <p></p>
- * Created on 07/08/18
+ * Please use builder to instantiate outside delinearization
  *
- * @author davibind
+ * @Author David Binder
  */
 @Data
 @NoArgsConstructor

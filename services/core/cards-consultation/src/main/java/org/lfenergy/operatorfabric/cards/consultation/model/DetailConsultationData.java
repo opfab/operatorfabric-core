@@ -11,10 +11,15 @@ import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
 
 import java.util.List;
 
+/**
+ * Please use builder to instantiate outside delinearization
+ *
+ * @Author David Binder
+ */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class DetailConsultationData implements Detail {
     private TitlePositionEnum titlePosition;
     private I18n title;
