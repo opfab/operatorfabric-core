@@ -4,12 +4,12 @@
 
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '@state/app.interface';
+import {AppState} from '../../state/app.interface';
 import {Observable} from 'rxjs';
-import {Card} from '@state/card/card.model';
-import * as fromStore from '@state/card';
-import {LoadCards} from '@state/card/card.actions';
-import {LoadCardOperations} from "@state/card-operation/card-operation.actions";
+import {Card} from '../../state/card/card.model';
+import * as fromStore from '../../state/card/index';
+import {LoadCards} from '../../state/card/card.actions';
+import {LoadCardOperations} from "../../state/card-operation/card-operation.actions";
 
 @Component({
   selector: 'app-cards',

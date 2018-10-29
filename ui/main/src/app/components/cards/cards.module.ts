@@ -8,7 +8,7 @@ import {CardsListComponent} from './components/cards-list/cards-list.component';
 import {MatButtonModule, MatCardModule, MatListModule} from '@angular/material';
 import {CardsComponent} from './cards.component';
 import {FormsModule} from '@angular/forms';
-import {StateModule} from '@state/state.module';
+import {StateModule} from '../../state/state.module';
 import {CardDetailsComponent} from './components/card-details/card-details.component';
 
 
