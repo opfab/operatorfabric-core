@@ -13,10 +13,10 @@ import {LoadCardOperations} from "../../state/card-operation/card-operation.acti
 
 @Component({
   selector: 'app-cards',
-  templateUrl: './cards.component.html',
-  styleUrls: ['./cards.component.css']
+  templateUrl: './light-cards.component.html',
+  styleUrls: ['./light-cards.component.css']
 })
-export class CardsComponent implements OnInit , AfterViewInit{
+export class LightCardsComponent implements OnInit , AfterViewInit{
 
   cards$: Observable<Card[]>;
   constructor(private store: Store<AppState>) { }

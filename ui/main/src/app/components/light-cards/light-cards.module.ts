@@ -4,12 +4,12 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CardsListComponent} from './components/cards-list/cards-list.component';
+import {LightCardsListComponent} from './components/light-cards-list/light-cards-list.component';
 import {MatButtonModule, MatCardModule, MatListModule} from '@angular/material';
-import {CardsComponent} from './cards.component';
+import {LightCardsComponent} from './light-cards.component';
 import {FormsModule} from '@angular/forms';
 import {StateModule} from '../../state/state.module';
-import {CardDetailsComponent} from './components/card-details/card-details.component';
+import {LightCardDetailsComponent} from './components/light-card-details/light-card-details.component';
 
 
 @NgModule({
@@ -22,8 +22,8 @@ import {CardDetailsComponent} from './components/card-details/card-details.compo
 
     StateModule
   ],
-  declarations: [CardsListComponent, CardsComponent, CardDetailsComponent],
-  exports: [CardsComponent]
+  declarations: [LightCardsListComponent, LightCardsComponent, LightCardDetailsComponent],
+  exports: [LightCardsComponent]
 })
-export class CardsModule {
+export class LightCardsModule {
 }

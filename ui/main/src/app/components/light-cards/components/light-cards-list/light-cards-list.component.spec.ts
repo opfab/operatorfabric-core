@@ -4,21 +4,21 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CardDetailsComponent } from './card-details.component';
+import { LightCardsListComponent } from './light-cards-list.component';
 
-describe('CardDetailsComponent', () => {
-  let component: CardDetailsComponent;
-  let fixture: ComponentFixture<CardDetailsComponent>;
+describe('LightCardsListComponent', () => {
+  let component: LightCardsListComponent;
+  let fixture: ComponentFixture<LightCardsListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CardDetailsComponent ]
+      declarations: [ LightCardsListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CardDetailsComponent);
+    fixture = TestBed.createComponent(LightCardsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

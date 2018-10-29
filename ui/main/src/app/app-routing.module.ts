@@ -5,12 +5,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ArchivesComponent} from './components/archives/archives.component';
-import {CardsComponent} from './components/cards/cards.component';
+import {LightCardsComponent} from './components/light-cards/light-cards.component';
 
 const routes: Routes = [
   {path: 'feed', component:
     // CardOperationsComponent
-    CardsComponent
+    LightCardsComponent
   },
   {path: 'archives', component: ArchivesComponent},
   {path: '**', redirectTo: '/feed'}

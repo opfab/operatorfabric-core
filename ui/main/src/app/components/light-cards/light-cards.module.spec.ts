@@ -2,16 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { CardsRoutingModule } from './cards-routing.module';
+import { LightCardsModule } from './light-cards.module';
 
-describe('CardsRoutingModule', () => {
-  let cardsRoutingModule: CardsRoutingModule;
+describe('LightCardsModule', () => {
+  let cardsModule: LightCardsModule;
 
   beforeEach(() => {
-    cardsRoutingModule = new CardsRoutingModule();
+    cardsModule = new LightCardsModule();
   });
 
   it('should create an instance', () => {
-    expect(cardsRoutingModule).toBeTruthy();
+    expect(cardsModule).toBeTruthy();
   });
 });

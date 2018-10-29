@@ -7,10 +7,10 @@ import {Card} from '../../../../state/card/card.model';
 
 @Component({
   selector: 'app-cards-list',
-  templateUrl: './cards-list.component.html',
-  styleUrls: ['./cards-list.component.css']
+  templateUrl: './light-cards-list.component.html',
+  styleUrls: ['./light-cards-list.component.css']
 })
-export class CardsListComponent  {
+export class LightCardsListComponent  {
 
   @Input() cards: Card[];
 

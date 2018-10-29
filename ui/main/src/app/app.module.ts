@@ -9,7 +9,7 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import {StateModule} from '@state/state.module';
-import {CardsModule} from './components/cards/cards.module';
+import {LightCardsModule} from './components/light-cards/light-cards.module';
 import {AppRoutingModule} from './app-routing.module';
 import {CoreModule} from './core/core.module';
 import {MatSidenavModule, MatTabsModule, MatToolbarModule} from '@angular/material';
@@ -25,7 +25,7 @@ import {CardOperationsModule} from './components/card-operations/card-operations
     MatToolbarModule,
     MatSidenavModule,
     MatTabsModule,
-    CardsModule,
+    LightCardsModule,
     AppRoutingModule,
     HttpClientModule,
     StateModule.forRoot(),

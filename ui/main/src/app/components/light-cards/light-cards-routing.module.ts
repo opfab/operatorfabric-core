@@ -15,4 +15,4 @@ import { CommonModule } from '@angular/common';
   ],
   declarations: []
 })
-export class CardsRoutingModule { }
+export class LightCardsRoutingModule { }
