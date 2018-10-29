@@ -9,7 +9,7 @@ import {LightCardsComponent} from './components/light-cards/light-cards.componen
 
 const routes: Routes = [
   {path: 'feed', component:
-    // CardOperationsComponent
+    // CardComponent
     LightCardsComponent
   },
   {path: 'archives', component: ArchivesComponent},

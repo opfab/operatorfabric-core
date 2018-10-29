@@ -15,7 +15,7 @@ import {CoreModule} from './core/core.module';
 import {MatSidenavModule, MatTabsModule, MatToolbarModule} from '@angular/material';
 import {ArchivesComponent} from './components/archives/archives.component';
 import {LogInComponent} from './components/log-in/log-in.component';
-import {CardOperationsModule} from './components/card-operations/card-operations.module';
+import {CardModule} from './components/card/card.module';
 
 @NgModule({
 
@@ -30,7 +30,7 @@ import {CardOperationsModule} from './components/card-operations/card-operations
     HttpClientModule,
     StateModule.forRoot(),
     CoreModule.forRoot(),
-    CardOperationsModule
+    CardModule
   ],
   declarations: [AppComponent, ArchivesComponent, LogInComponent],
   providers: [],

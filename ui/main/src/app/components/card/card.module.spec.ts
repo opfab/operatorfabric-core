@@ -2,16 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { CoreModule } from './core.module';
+import { CardModule } from './card.module';
 
-describe('CoreModule', () => {
-  let coreModule: CoreModule;
+describe('CardModule', () => {
+  let cardOperationsModule: CardModule;
 
   beforeEach(() => {
-    coreModule = new CoreModule();
+    cardOperationsModule = new CardModule();
   });
 
   it('should create an instance', () => {
-    expect(coreModule).toBeTruthy();
+    expect(cardOperationsModule).toBeTruthy();
   });
 });

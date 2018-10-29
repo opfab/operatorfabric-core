@@ -11,10 +11,10 @@ import {LoadCardOperations} from "../../state/card-operation/card-operation.acti
 import * as fromStore from '../../state/card-operation/index';
 @Component({
   selector: 'app-card-operations',
-  templateUrl: './card-operations.component.html',
-  styleUrls: ['./card-operations.component.css']
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.css']
 })
-export class CardOperationsComponent implements OnInit {
+export class CardComponent implements OnInit {
 
   cardOperations$: Observable<CardOperation[]>;
   constructor(private store: Store<AppState>) { }
