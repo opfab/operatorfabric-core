@@ -7,7 +7,7 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.*;
+import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -15,8 +15,15 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
+/**
+ * Please use builder to instantiate
+ *
+ * @author David Binder
+ */
 @Data
 @Document(collection = "cards")
 @Builder
@@ -54,13 +61,13 @@ public class CardPublicationData implements Card {
     private SeverityEnum severity;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> tags = new ArrayList<>();
+    private List<String> tags;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Map<String,? extends Action> actions = new HashMap<>();
+    private Map<String,? extends Action> actions;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<? extends Detail> details = new ArrayList<>();
+    private List<? extends Detail> details;
     @NotNull
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -70,12 +77,12 @@ public class CardPublicationData implements Card {
     private String mainRecipient;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> userRecipients = new ArrayList<>();
+    private List<String> userRecipients;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> groupRecipients = new ArrayList<>();
+    private List<String> groupRecipients;
     @Singular @Transient @JsonIgnore
-    private List<String> orphanedUsers = new ArrayList<>();
+    private List<String> orphanedUsers;
 
     public void prepare(Long publishDate){
         this.publishDate = publishDate;

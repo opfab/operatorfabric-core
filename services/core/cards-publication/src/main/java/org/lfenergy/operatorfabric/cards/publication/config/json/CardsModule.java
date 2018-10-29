@@ -5,7 +5,6 @@
 package org.lfenergy.operatorfabric.cards.publication.config.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.lfenergy.operatorfabric.cards.model.*;
 import org.lfenergy.operatorfabric.cards.publication.model.*;
 
 /**

@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.lfenergy.operatorfabric.cards.model.I18n;
-import org.lfenergy.operatorfabric.cards.model.ParameterListItem;
 
 /**
  * Please use builder to instantiate outside delinearization

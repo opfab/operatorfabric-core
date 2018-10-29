@@ -5,10 +5,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.Action;
 import org.lfenergy.operatorfabric.cards.model.ActionEnum;
-import org.lfenergy.operatorfabric.cards.model.I18n;
-import org.lfenergy.operatorfabric.cards.model.Input;
 
 import java.util.List;
 

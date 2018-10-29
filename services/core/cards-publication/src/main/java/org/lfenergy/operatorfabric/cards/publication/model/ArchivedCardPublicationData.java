@@ -6,7 +6,7 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.lfenergy.operatorfabric.cards.model.*;
+import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -68,14 +68,14 @@ public class ArchivedCardPublicationData implements Card {
         this.lttd = card.getLttd();
         this.title = card.getTitle();
         this.summary = card.getSummary();
-        this.details = new ArrayList<>(card.getDetails());
-        this.tags = new ArrayList<>(card.getTags());
+        this.details = card.getDetails() == null ? null : new ArrayList<>(card.getDetails());
+        this.tags = card.getTags() == null ? null : new ArrayList<>(card.getTags());
         this.recipient = card.getRecipient();
         this.severity = card.getSeverity();
         this.data = card.getData();
         this.mainRecipient = card.getMainRecipient();
-        this.userRecipients = new ArrayList<>(card.getUserRecipients());
-        this.groupRecipients = new ArrayList<>(card.getGroupRecipients());
+        this.userRecipients = card.getUserRecipients() == null ? null : new ArrayList<>(card.getUserRecipients());
+        this.groupRecipients = card.getGroupRecipients() == null ? null : new ArrayList<>(card.getGroupRecipients());
         this.media = card.getMedia();
     }
 

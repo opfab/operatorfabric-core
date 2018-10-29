@@ -5,7 +5,6 @@
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.I18n;
 
 import java.util.Map;
 

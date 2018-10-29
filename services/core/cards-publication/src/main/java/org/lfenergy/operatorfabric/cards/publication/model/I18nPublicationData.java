@@ -5,12 +5,15 @@
 package org.lfenergy.operatorfabric.cards.publication.model;
 
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.I18n;
 
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Please use builder to instantiate
+ *
+ * @author David Binder
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,7 +21,7 @@ import java.util.Map;
 public class I18nPublicationData implements I18n {
     @NotNull
     private String key;
-    @Singular private Map<String,String> parameters = new HashMap<>();
+    @Singular private Map<String,String> parameters;
 
     public I18n copy(){
         return I18nPublicationData.builder()

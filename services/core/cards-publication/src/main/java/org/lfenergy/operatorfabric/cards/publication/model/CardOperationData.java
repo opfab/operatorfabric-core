@@ -6,17 +6,14 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.model.LightCard;
 
 import java.util.List;
 
 /**
- * <p></p>
- * Created on 07/08/18
+ * Please use builder to instantiate
  *
- * @author davibind
+ * @author David Binder
  */
 @Data
 @NoArgsConstructor

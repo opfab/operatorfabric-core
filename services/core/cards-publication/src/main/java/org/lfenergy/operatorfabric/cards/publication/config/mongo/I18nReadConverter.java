@@ -5,7 +5,7 @@
 package org.lfenergy.operatorfabric.cards.publication.config.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.model.I18n;
+import org.lfenergy.operatorfabric.cards.publication.model.I18n;
 import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
 import org.springframework.core.convert.converter.Converter;
 

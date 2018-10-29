@@ -5,8 +5,8 @@
 package org.lfenergy.operatorfabric.cards.consultation.config.mongo;
 
 import org.bson.Document;
+import org.lfenergy.operatorfabric.cards.consultation.model.I18n;
 import org.lfenergy.operatorfabric.cards.consultation.model.I18nConsultationData;
-import org.lfenergy.operatorfabric.cards.model.I18n;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.Map;

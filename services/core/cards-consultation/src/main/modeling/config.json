@@ -1,7 +1,7 @@
 {
   "library": "spring-boot",
   "java8": true,
-  "modelPackage": "org.lfenergy.operatorfabric.cards.publication.model",
+  "modelPackage": "org.lfenergy.operatorfabric.cards.consultation.model",
   "apiPackage": "org.lfenergy.operatorfabric.cards.controllers",
   "configPackage": "org.lfenergy.operatorfabric.cards.config",
   "invokerPackage": "org.lfenergy.operatorfabric.cards.invokers",

@@ -8,11 +8,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.lfenergy.operatorfabric.cards.model.I18n;
-import org.lfenergy.operatorfabric.cards.model.ParameterListItem;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Please use builder to instantiate
+ *
+ * @author David Binder
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

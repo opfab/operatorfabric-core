@@ -8,8 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
-import org.lfenergy.operatorfabric.cards.model.Recipient;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.Recipient;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

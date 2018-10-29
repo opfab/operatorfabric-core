@@ -5,7 +5,7 @@
 package org.lfenergy.operatorfabric.cards.publication.config.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.model.ParameterListItem;
+import org.lfenergy.operatorfabric.cards.publication.model.ParameterListItem;
 import org.lfenergy.operatorfabric.cards.publication.model.ParameterListItemPublicationData;
 import org.springframework.core.convert.converter.Converter;
 

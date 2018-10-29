@@ -5,8 +5,8 @@
 package org.lfenergy.operatorfabric.cards.consultation.config.mongo;
 
 import org.bson.Document;
+import org.lfenergy.operatorfabric.cards.consultation.model.Recipient;
 import org.lfenergy.operatorfabric.cards.consultation.model.RecipientConsultationData;
-import org.lfenergy.operatorfabric.cards.model.Recipient;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.springframework.core.convert.converter.Converter;
 

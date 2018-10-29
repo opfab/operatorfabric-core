@@ -5,16 +5,15 @@
 package org.lfenergy.operatorfabric.cards.publication.model;
 
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.I18n;
-import org.lfenergy.operatorfabric.cards.model.Input;
 import org.lfenergy.operatorfabric.cards.model.InputEnum;
-import org.lfenergy.operatorfabric.cards.model.ParameterListItem;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
  * Please use builder to instantiate
+ *
+ * @author David Binder
  */
 @Data
 @NoArgsConstructor

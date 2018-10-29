@@ -8,13 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.lfenergy.operatorfabric.cards.model.CardCreationReport;
 
 /**
  * <p></p>
  * Created on 02/08/18
  *
- * @author davibind
+ * @author David Binder
  */
 @Data
 @NoArgsConstructor

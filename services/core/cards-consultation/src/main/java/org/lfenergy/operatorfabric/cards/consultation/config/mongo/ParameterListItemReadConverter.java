@@ -5,8 +5,8 @@
 package org.lfenergy.operatorfabric.cards.consultation.config.mongo;
 
 import org.bson.Document;
+import org.lfenergy.operatorfabric.cards.consultation.model.ParameterListItem;
 import org.lfenergy.operatorfabric.cards.consultation.model.ParameterListItemConsultationData;
-import org.lfenergy.operatorfabric.cards.model.ParameterListItem;
 import org.springframework.core.convert.converter.Converter;
 
 public class ParameterListItemReadConverter implements Converter<Document,ParameterListItem> {

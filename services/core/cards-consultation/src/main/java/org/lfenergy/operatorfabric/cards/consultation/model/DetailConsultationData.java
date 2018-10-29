@@ -5,8 +5,6 @@
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.Detail;
-import org.lfenergy.operatorfabric.cards.model.I18n;
 import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
 
 import java.util.List;

@@ -6,7 +6,6 @@ package org.lfenergy.operatorfabric.cards.consultation.config.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.lfenergy.operatorfabric.cards.consultation.model.*;
-import org.lfenergy.operatorfabric.cards.model.*;
 
 /**
  * <p></p>
