@@ -128,6 +128,8 @@ public class RecipientProcessor {
 
         if (users.contains(recipient.getIdentity()))
             builder.main(recipient.getIdentity());
+        else
+            builder.main(users.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
         return builder;
     }
 
