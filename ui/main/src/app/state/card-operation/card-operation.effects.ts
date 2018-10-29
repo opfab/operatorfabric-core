@@ -25,27 +25,20 @@ export class CardOperationEffects {
     }
 
     @Effect()
-    load: Observable<Action> = this.actions$
-        .ofType(CardOperationActionTypes.LoadCardOperations)
+    getCardOperations: Observable<Action> = this.service.testCardOperation()
         .pipe(
-            switchMap(() => this.service.getCardOperations()),
-            map((operations: CardOperation[]) =>
-                new LoadCardOperationsSuccess({cardOperations: operations})),
-            catchError(err => of(new LoadCardOperationsFail()))
-        );
-    @Effect()
-    getCardOperations: Observable<Action> = this.service.testCardOperation().pipe(
-        map(operation => {
-            if (operation.type && operation.type.toString() === 'ADD') {
-                console.log('add operation');
-                const opCards = operation.cards;
-                return new LoadLightCardsSuccess({lightCards: opCards as LightCard[]});
+            map(operation => {
+                if (operation.type && operation.type.toString() === 'ADD') {
+                    console.log('add operation');
+                    const opCards = operation.cards;
+                    return new LoadLightCardsSuccess({lightCards: opCards as LightCard[]});
 
-            }
-            console.log('something else than add lightCard');
-            return new AddLightCardFailure({error: new Error(`unhandled action type '${operation.type}'`)});
-        }),
-        catchError(error => of(new AddLightCardFailure(error))
-        )
-    );
+                }
+                console.log('something else than add lightCard');
+                return new AddLightCardFailure({error: new Error(`unhandled action type '${operation.type}'`)});
+            }),
+            catchError(error => of(new AddLightCardFailure(error))
+            )
+        );
+
 }

@@ -4,24 +4,24 @@
 
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import * as fromCards from './light-card.reducer';
-import {State as CardsState} from './light-card.reducer';
+import {State as lightCardsState} from './light-card.reducer';
 
-export const getCardsState = createFeatureSelector<CardsState>( 'lightCard');
+export const getLightCardsState = createFeatureSelector<lightCardsState>( 'lightCard');
 
 export const {
-  selectIds: getCardIds,
-  selectAll: getAllCards,
-  selectEntities: getCardEntities
-} = fromCards.adapter.getSelectors(getCardsState);
+  selectIds: getLightCardIds,
+  selectAll: getAllLightCards,
+  selectEntities: getLightCardEntities
+} = fromCards.adapter.getSelectors(getLightCardsState);
 
 
-export const getSelectedCardId = createSelector(
-  getCardsState,
+export const getSelectedLightCardId = createSelector(
+  getLightCardsState,
   fromCards.getSelectedId
 );
 
-export const getSelectedCard = createSelector(
-  getSelectedCardId,
-  getCardEntities,
-  (selectedCardId, entities) => selectedCardId && entities[selectedCardId]
+export const getSelectedLightCard = createSelector(
+  getSelectedLightCardId,
+  getLightCardEntities,
+  (selectedLightCardId, entities) => selectedLightCardId && entities[selectedLightCardId]
 );

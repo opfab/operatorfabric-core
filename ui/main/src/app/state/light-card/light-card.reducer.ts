@@ -66,7 +66,7 @@ export function reducer(
 
         case LightCardActionTypes.LoadLightCardsSuccess: {
             return {
-                ...adapter.addMany(action.payload.lightCards, state),
+                ...adapter.upsertMany(action.payload.lightCards, state),
                 loading: false
             };
         }

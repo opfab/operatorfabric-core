@@ -10,7 +10,6 @@ import {CardOperation} from '@state/card-operation/card-operation.model';
 import {LightCard} from '@state/light-card/light-card.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from '@core/services/authentication.service';
-import {reducer as lightCardReducer} from '@state/light-card/light-card.reducer';
 
 @Injectable()
 export class CardService {
@@ -33,22 +32,6 @@ export class CardService {
             map(lightCards => lightCards.find(
                 lightCard => lightCard.id === id))
         );
-    }
-
-    getCardOperations(): Observable<CardOperation[]> {
-        return Observable.create(observer => {
-            const eventSource = new EventSourcePolyfill(
-                this.cardOperationsUrl
-                , this.handleHeaders());
-            eventSource.onmessage = message => {
-                const cardOperation = new CardOperation(message.data);
-                return observer.next(cardOperation);
-            };
-            eventSource.onerror = error => observer.error(error);
-            return () => {
-                eventSource.close();
-            };
-        });
     }
 
     testCardOperation(): Observable<CardOperation> {
