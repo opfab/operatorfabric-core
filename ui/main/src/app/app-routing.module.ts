@@ -5,9 +5,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ArchivesComponent} from './components/archives/archives.component';
-import {OthersComponent} from './others/others.component';
-import {CardOperationsComponent} from "./components/card-operations/card-operations.component";
-import {CardsComponent} from "./components/cards/cards.component";
+import {CardsComponent} from './components/cards/cards.component';
 
 const routes: Routes = [
   {path: 'feed', component:
@@ -15,7 +13,6 @@ const routes: Routes = [
     CardsComponent
   },
   {path: 'archives', component: ArchivesComponent},
-  {path: 'others', component: OthersComponent},
   {path: '**', redirectTo: '/feed'}
   ];
 // TODO manage visible path more gently
