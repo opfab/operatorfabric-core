@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {CardOperation} from "@state/card-operation/card-operation.model";
+import {CardOperation} from "../../../state/card-operation/card-operation.model";
 
 @Component({
   selector: 'app-card-operations-list',

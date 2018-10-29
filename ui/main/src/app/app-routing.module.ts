@@ -6,7 +6,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ArchivesComponent} from './archives/archives.component';
 import {OthersComponent} from './others/others.component';
-import {CardOperationsComponent} from "./feature/components/card-operations/card-operations.component";
+import {CardOperationsComponent} from "./components/card-operations/card-operations.component";
 import {CardsComponent} from "./cards/cards.component";
 
 const routes: Routes = [

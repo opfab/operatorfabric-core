@@ -15,8 +15,8 @@ import {CoreModule} from './core/core.module';
 import {MatSidenavModule, MatTabsModule, MatToolbarModule} from '@angular/material';
 import {ArchivesComponent} from './archives/archives.component';
 import {OthersComponent} from './others/others.component';
-import {LogInComponent} from './feature/components/log-in/log-in.component';
-import {CardOperationsModule} from "./feature/components/card-operations/card-operations.module";
+import {LogInComponent} from './components/log-in/log-in.component';
+import {CardOperationsModule} from "./components/card-operations/card-operations.module";
 
 @NgModule({
 
