@@ -6,9 +6,9 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../state/app.interface';
 import {Observable} from 'rxjs';
-import {Card} from '../../state/card/card.model';
-import * as fromStore from '../../state/card/index';
-import {LoadCards} from '../../state/card/card.actions';
+import {LightCard} from '../../state/light-card/light-card.model';
+import * as fromStore from '../../state/light-card/index';
+import {LoadLightCards} from '../../state/light-card/light-card.actions';
 import {LoadCardOperations} from "../../state/card-operation/card-operation.actions";
 
 @Component({
@@ -18,12 +18,12 @@ import {LoadCardOperations} from "../../state/card-operation/card-operation.acti
 })
 export class LightCardsComponent implements OnInit , AfterViewInit{
 
-  cards$: Observable<Card[]>;
+  lightCards$: Observable<LightCard[]>;
   constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
-    this.store.dispatch(new LoadCards());
-    this.cards$ = this.store.pipe(select(fromStore.getAllCards));
+    this.store.dispatch(new LoadLightCards());
+    this.lightCards$ = this.store.pipe(select(fromStore.getAllCards));
   }
 
 

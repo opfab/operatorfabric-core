@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import {Component, Input} from '@angular/core';
-import {Card} from '../../../../state/card/card.model';
+import {LightCard} from '../../../../state/light-card/light-card.model';
 
 @Component({
   selector: 'app-cards-list',
@@ -12,7 +12,7 @@ import {Card} from '../../../../state/card/card.model';
 })
 export class LightCardsListComponent  {
 
-  @Input() cards: Card[];
+  @Input() lightCards: LightCard[];
 
   constructor() { }
 

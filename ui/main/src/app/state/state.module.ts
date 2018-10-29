@@ -6,15 +6,15 @@ import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
-import {CardEffects} from './card/card.effects';
+import {LightCardEffects} from './light-card/light-card.effects';
 import {appMetaReducers, appReducer} from './app.reducer';
 import {environment} from '@env/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@state/shared/utils';
 import * as fromAuthentication from './authentication/authentication.reducer';
-import { AuthenticationEffects } from './authentication/authentication.effects';
-import {CardOperationEffects} from "@state/card-operation/card-operation.effects";
+import {AuthenticationEffects} from './authentication/authentication.effects';
+import {CardOperationEffects} from '@state/card-operation/card-operation.effects';
 
 @NgModule({
   imports: [
@@ -38,7 +38,7 @@ import {CardOperationEffects} from "@state/card-operation/card-operation.effects
 
       }
     }),
-    EffectsModule.forRoot([CardEffects, CardOperationEffects]),
+    EffectsModule.forRoot([LightCardEffects, CardOperationEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     StoreModule.forFeature('authentication', fromAuthentication.reducer),
     EffectsModule.forFeature([AuthenticationEffects])

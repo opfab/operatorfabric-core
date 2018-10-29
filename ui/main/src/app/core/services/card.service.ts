@@ -6,68 +6,73 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {CardOperation} from "@state/card-operation/card-operation.model";
-import {Card} from "@state/card/card.model";
-import {EventSourcePolyfill} from "ng-event-source";
-import {AuthenticationService} from "@core/services/authentication.service";
+import {CardOperation} from '@state/card-operation/card-operation.model';
+import {LightCard} from '@state/light-card/light-card.model';
+import {EventSourcePolyfill} from 'ng-event-source';
+import {AuthenticationService} from '@core/services/authentication.service';
+import {reducer as lightCardReducer} from '@state/light-card/light-card.reducer';
 
 @Injectable()
 export class CardService {
-  // TODO other end point or manage different source of cards...
-  private cardOperationsUrl = '/cards/cardOperations?clientId=clientIdPassword&test=true';
-  private cardsUrl = '/cards/cards';
+    // TODO other end point or manage different source of cards...
+    private cardOperationsUrl = '/cards/cardOperations?clientId=clientIdPassword&test=true';
+    private cardsUrl = '/cards/cards';
 
-  constructor(private httpClient: HttpClient,
-              private authenticationService: AuthenticationService) {}
+    constructor(private httpClient: HttpClient,
+                private authenticationService: AuthenticationService) {
+    }
 
-  // TODO paginate
-  getCards(): Observable<Array<Card>> {
+    // TODO paginate
+    getLightCards(): Observable<Array<LightCard>> {
 
-    return this.httpClient.get <Card[]>(this.cardsUrl);
-  }
+        return this.httpClient.get <LightCard[]>(this.cardsUrl);
+    }
 
-  getCard(id: string): Observable<Card> {
-    return this.getCards().pipe(
-      map(cards => cards.find(
-        card => card.id === id))
-    );
-  }
+    getLightCard(id: string): Observable<LightCard> {
+        return this.getLightCards().pipe(
+            map(lightCards => lightCards.find(
+                lightCard => lightCard.id === id))
+        );
+    }
 
-  getCardOperations(): Observable<CardOperation[]> {
-    return Observable.create(observer => {
-      const eventSource = new EventSourcePolyfill(
-        this.cardOperationsUrl
-        , this.handleHeaders());
-      eventSource.onmessage = message =>{
-        const cardOperation =new CardOperation(message.data);
-        return observer.next(cardOperation)
-      };
-      eventSource.onerror = error => observer.error(error);
-      return () => {
-        eventSource.close();
-      };
-    });
-  }
+    getCardOperations(): Observable<CardOperation[]> {
+        return Observable.create(observer => {
+            const eventSource = new EventSourcePolyfill(
+                this.cardOperationsUrl
+                , this.handleHeaders());
+            eventSource.onmessage = message => {
+                const cardOperation = new CardOperation(message.data);
+                return observer.next(cardOperation);
+            };
+            eventSource.onerror = error => observer.error(error);
+            return () => {
+                eventSource.close();
+            };
+        });
+    }
 
-  testCardOperation():Observable<CardOperation>{
-    return Observable.create(observer => {
-      const eventSource = new EventSourcePolyfill(
-        this.cardOperationsUrl
-        , this.handleHeaders());
-      eventSource.onmessage = message => {
-        return observer.next(JSON.parse(message.data));
-      };
-      eventSource.onerror = error => observer.error(error);
-      return () => {
-        eventSource.close();
-      };
-    });
-  }
+    testCardOperation(): Observable<CardOperation> {
+        return Observable.create(observer => {
+            const eventSource = new EventSourcePolyfill(
+                this.cardOperationsUrl
+                , this.handleHeaders());
+            eventSource.onmessage = message => {
+                if (!message) {
+                    return observer.error(message);
+                }
+                return observer.next(JSON.parse(message.data));
+            };
+            eventSource.onerror = error => observer.error(error);
+            return () => {
+                eventSource.close();
+            };
+        });
+    }
 
-  private handleHeaders() {
-    return {
-      headers:
-        {'Authorization': `Bearer ${this.authenticationService.extractToken()}`}
-    };
-  }
+    private handleHeaders() {
+        return {
+            headers:
+                {'Authorization': `Bearer ${this.authenticationService.extractToken()}`}
+        };
+    }
 }

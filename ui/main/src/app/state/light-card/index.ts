@@ -3,10 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import * as fromCards from './card.reducer';
-import {State as CardsState} from './card.reducer';
+import * as fromCards from './light-card.reducer';
+import {State as CardsState} from './light-card.reducer';
 
-export const getCardsState = createFeatureSelector<CardsState>( 'card');
+export const getCardsState = createFeatureSelector<CardsState>( 'lightCard');
 
 export const {
   selectIds: getCardIds,

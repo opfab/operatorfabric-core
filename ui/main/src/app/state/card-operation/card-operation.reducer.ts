@@ -73,7 +73,7 @@ export function reducer(
       return {
         ...state,
         loading: false,
-        error :'error while loading card Operations'
+        error :'error while loading lightCard Operations'
       }
     }
 

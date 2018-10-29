@@ -6,21 +6,21 @@ import { TestBed, inject } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 
-import { CardEffects } from './card.effects';
+import { LightCardEffects } from './light-card.effects';
 
-describe('CardEffects', () => {
+describe('LightCardEffects', () => {
   let actions$: Observable<any>;
-  let effects: CardEffects;
+  let effects: LightCardEffects;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        CardEffects,
+        LightCardEffects,
         provideMockActions(() => actions$)
       ]
     });
 
-    effects = TestBed.get(CardEffects);
+    effects = TestBed.get(LightCardEffects);
   });
 
   it('should be created', () => {
