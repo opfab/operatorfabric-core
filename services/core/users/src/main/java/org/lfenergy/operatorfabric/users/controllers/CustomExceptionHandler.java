@@ -6,6 +6,8 @@ package org.lfenergy.operatorfabric.users.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,4 +30,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(exception.getError(), exception.getError().getStatus());
   }
 
+  @Override
+  protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    log.error("Uncaught internal serveur exception",ex);
+    return super.handleExceptionInternal(ex, body, headers, status, request);
+  }
 }

@@ -13,6 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Please use Builder to instantiate
+ */
 @Document(collection = "user")
 @Data
 @NoArgsConstructor
@@ -25,7 +28,7 @@ public class UserData implements User {
     private String firstName;
     private String lastName;
     @Singular("group")
-    private Set<String> groupSet = new HashSet<>();
+    private Set<String> groupSet;
 
     public UserData(SimpleUser simpleUser){
         this();
@@ -40,6 +43,8 @@ public class UserData implements User {
 
     @Override
     public List<String> getGroups() {
+        if(groupSet == null)
+            return null;
         return new ArrayList<>(groupSet);
     }
 
