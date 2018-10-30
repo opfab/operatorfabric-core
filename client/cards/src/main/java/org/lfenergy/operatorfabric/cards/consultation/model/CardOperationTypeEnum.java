@@ -5,7 +5,7 @@
 package org.lfenergy.operatorfabric.cards.model;
 
 /**
- * the severity of the card subject > * ADD - Operation lists cards object to add * UPDATE - Operation lists cards object to update * DELETE - Operation lists card ids to delete
+ * the severity of the card subject &gt; * ADD - Operation lists cards object to add * UPDATE - Operation lists cards object to update * DELETE - Operation lists card ids to delete
  */
 public enum CardOperationTypeEnum {
   

@@ -67,7 +67,6 @@ public class PathUtils {
   /**
    * Delete the file or directory targeted by source path. Logging exception instead of throwing them
    * @param source
-   * @throws IOException
    */
   public static boolean silentDelete(Path source) {
     try {

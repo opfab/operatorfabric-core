@@ -374,7 +374,7 @@ definitions:
         description: This action is hidden from card and is only available to details;
       contentStyle:
         type: string
-        description: css classes of action button content (a <i> tag)
+        description: css classes of action button content (a &lt;i&gt; tag)
       buttonStyle:
         type: string
         description: css classes of action button
@@ -482,7 +482,7 @@ definitions:
         $ref: '#/definitions/I18n'
       contentStyle:
         type: string
-        description: css classes of action button content (a <i> tag)
+        description: css classes of action button content (a &lt;i&gt; tag)
       buttonStyle:
         type: string
         description: css classes of action button

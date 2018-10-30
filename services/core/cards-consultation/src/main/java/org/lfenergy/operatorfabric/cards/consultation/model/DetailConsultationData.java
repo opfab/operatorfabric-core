@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Please use builder to instantiate outside delinearization
  *
- * @Author David Binder
+ * @author David Binder
  */
 @Data
 @AllArgsConstructor

@@ -70,7 +70,7 @@ subprojects {
             inputFile = file('src/main/modeling/swagger.yaml')
             code {
                 language = 'html'
-                outputDir = file("./build/doc/api")
+                outputDir = file("./build/docs/api")
             }
         }
     }
