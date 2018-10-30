@@ -8,10 +8,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Please use Builder to instantiate
@@ -41,10 +38,16 @@ public class UserData implements User {
         groupSet.add(group);
     }
 
+    public Set<String> getGroupSet(){
+        if(this.groupSet ==null)
+            return Collections.emptySet();
+        return groupSet;
+    }
+
     @Override
     public List<String> getGroups() {
         if(groupSet == null)
-            return null;
+            return Collections.emptyList();
         return new ArrayList<>(groupSet);
     }
 
