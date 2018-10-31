@@ -1,4 +1,4 @@
 dependencies{
     compile boot.starterMongoR, boot.starterValidation
-    compile project(':tools:utilities')
+    compile project(':tools:generic:utilities')
 }

@@ -6,10 +6,10 @@ plugins {
 ext {
     operatorfabric = [
             group: "org.lfenergy.operatorfabric",
-            version: "0.0.1-SNAPSHOT"
+            version: version = rootProject.file('VERSION').text.trim()
     ]
     //spring libs
-    bootVersion = '2.1.0.RC1'
+    bootVersion = '2.1.0.RELEASE'
     SpringCloudVersion = 'Greenwich.BUILD-SNAPSHOT'
 //    SpringCloudVersion = 'Greenwich.M1'
 //    SpringCloudVersion = 'Finchley.RELEASE'
@@ -23,8 +23,7 @@ ext {
     springOauth2Version = '2.3.3.RELEASE'
     springJwtVersion = '1.0.9.RELEASE'
     springVersion = "5.1.1.RELEASE"
-//    thymeleafSecurity
-    
+
     //utilities
     commonsCompressVersion = '1.17'
 
@@ -46,8 +45,6 @@ ext {
     swaggerVersion = '2.3.1'
     swaggerGeneratorPluginVersion = '2.12.0'
     springfoxVersion = '2.9.2'
-
-
 
     boot = [
             springBootPlugin: "org.springframework.boot:spring-boot-gradle-plugin:$bootVersion",
@@ -186,6 +183,13 @@ subprojects {
 
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
+
+        test {
+            testLogging {
+                events "passed", "skipped", "failed"
+                exceptionFormat "full"
+            }
+        }
     }
 }
 

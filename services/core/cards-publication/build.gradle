@@ -1,7 +1,7 @@
 dependencies {
     compile boot.starterWebflux
     compile project(':client:cards-client-data')
-    compile project(':tools:spring-amqp-time-utilities'), project(':tools:spring-mongo-utilities')
+    compile project(':tools:spring:spring-amqp-time-utilities'), project(':tools:spring:spring-mongo-utilities')
 
     testCompile testing.reactor
 }

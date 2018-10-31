@@ -47,7 +47,7 @@ subprojects {
 
             testRuntime testing.junit5Engine
             testCompile testing.junit5Api, boot.starterTest, testing.assertJ, misc.lombok
-            testCompile project(':tools:test-utilities')
+            testCompile project(':tools:generic:test-utilities')
             testCompile testing.awaitility
         }
 

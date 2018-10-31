@@ -37,6 +37,11 @@ public class PathUtils {
   }
 
 
+  /**
+   * Extract absolute path from file
+   * @param f source file
+   * @return an absolute Path
+   */
   public static Path getPath(File f) {
     return Paths.get(f.getAbsolutePath());
   }

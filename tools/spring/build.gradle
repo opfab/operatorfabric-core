@@ -1,0 +1,7 @@
+subprojects {
+    dependencyManagement {
+        imports {
+            mavenBom cloud.dependencies
+        }
+    }
+}

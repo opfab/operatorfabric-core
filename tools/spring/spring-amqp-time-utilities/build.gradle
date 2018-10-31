@@ -1,5 +1,5 @@
 dependencies{
     compile boot.starterRabbitmq, boot.starterWeb
-    compile project(':tools:utilities')
+    compile project(':tools:generic:utilities')
     compile project(':client:time-client-data')
 }

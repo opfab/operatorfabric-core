@@ -16,6 +16,18 @@ script:
   - docker network create opfabnet
   - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
   - ./gradlew copyDependencies build jacocoTestReport && sonar-scanner
+after_success:
+  - ./gradlew generateSwaggerCodeDoc javadoc
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: ./bin/travis/upload_doc.sh
+  on:
+    all_branches: true
+    condition: $TRAVIS_EVENT_TYPE = cron
+
+
+
 before_cache:
   # cleanup gradle caches
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

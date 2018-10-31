@@ -1,6 +1,6 @@
 dependencies{
     compile misc.compress
-    testCompile project(':tools:test-utilities')
+    testCompile project(':tools:generic:test-utilities')
 }
 
 task prepareTestData(type: Copy){

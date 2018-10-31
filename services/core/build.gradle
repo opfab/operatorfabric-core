@@ -31,7 +31,7 @@ subprojects {
         swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
 
         compile generator.springfoxSwagger2, generator.springfoxSwaggerUI
-        compile project(':tools:utilities'), project(':tools:spring-utilities')
+        compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
         compile  cloud.starterBus, cloud.eurekaClient
         compile boot.starterAop, spring.retry
 
