@@ -17,10 +17,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Slf4j
 @RefreshScope
 @ImportResource("classpath:/cors.xml")
-public class Application {
+public class ThirdsApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(ThirdsApplication.class, args);
         assert (ctx != null);
     }
 

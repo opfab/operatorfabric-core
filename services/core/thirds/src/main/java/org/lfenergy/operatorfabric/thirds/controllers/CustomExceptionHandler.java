@@ -18,7 +18,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * CustomExceptionHandler
+ * CustomExceptionHandler.
+ * <ul>
+ *     <li>Handle {@link IOException} and {@link FileNotFoundException} as 404 errors</li>
+ *     <li>Handle Api errors according to their configuration</li>
+ * </ul>
+ *
+ * @see ApiError
+ * @see ApiErrorException
+ *
+ * @author David Binder
  */
 @RestControllerAdvice
 @Slf4j
@@ -26,6 +35,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   public static final String GENERIC_MSG = "Caught exception at API level";
 
+  /**
+   * Handle {@link IOException} as 404 errors
+   * @param exception
+   * @param request
+   * @return
+   */
   @ExceptionHandler(IOException.class)
   public ResponseEntity<Object> handleIOException(IOException exception, final WebRequest request) {
     log.warn(GENERIC_MSG,exception);
@@ -37,6 +52,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(error, error.getStatus());
   }
 
+  /**
+   * Handle {@link FileNotFoundException} as 404 errors
+   * @param exception
+   * @param request
+   * @return
+   */
   @ExceptionHandler(FileNotFoundException.class)
   public ResponseEntity<Object> handleFileNotFoundException(FileNotFoundException exception, final WebRequest
      request) {
@@ -49,6 +70,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(error, error.getStatus());
   }
 
+  /**
+   * Handle {@link ApiErrorException}
+   * @param exception
+   * @param request
+   * @return
+   */
   @ExceptionHandler(ApiErrorException.class)
   public ResponseEntity<Object> handleApiError(ApiErrorException exception, final WebRequest
      request) {

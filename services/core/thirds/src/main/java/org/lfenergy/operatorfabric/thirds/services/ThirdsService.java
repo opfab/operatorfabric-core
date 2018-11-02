@@ -31,6 +31,8 @@ import java.util.stream.Stream;
 
 /**
  * ThirdService for managing Third properties and resources
+ *
+ * @author David Binder
  */
 @Service
 @Slf4j
@@ -53,12 +55,16 @@ public class ThirdsService implements ResourceLoaderAware {
 
     /**
      * List all registred thirds
+     * @return registred thirds
      */
     public List<Third> listThirds() {
         loadCacheIfNeeded();
         return new ArrayList<>(defaultCache.values());
     }
 
+    /**
+     * Loads third data cache if not already loaded
+     */
     private synchronized void loadCacheIfNeeded() {
         if (defaultCache == null) {
             loadCache();
@@ -66,7 +72,7 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Load third data to defaultCache
+     * Load third data to defaultCache (not thread safe {@link #loadCacheSafe()})
      */
     private void loadCache() {
         log.info("loading thirds from " + new File(storagePath).getAbsolutePath());
@@ -92,10 +98,10 @@ public class ThirdsService implements ResourceLoaderAware {
 
     /**
      * Loads a cache for Third resource bundle. Loops over a folder sub folders (depth 1) to find config.json files.
-     * These files contain Json serialized {@linkplain ThirdData} objects.
+     * These files contain Json serialized {@link ThirdData} objects.
      *
      * @param root         lookup folder
-     * @param keyExtractor key cache extractor from loaded {@linkplain ThirdData}
+     * @param keyExtractor key cache extractor from loaded {@link ThirdData}
      * @param onEachActor  do something on each subfolder. Optionnal.
      * @return loaded cache
      */
@@ -224,7 +230,7 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * fetch {@linkplain Third} for specified name and default version
+     * Fetch {@link Third} for specified name and default version
      *
      * @param name
      * @return
@@ -254,14 +260,21 @@ public class ThirdsService implements ResourceLoaderAware {
         this.resourceLoader = resourceLoader;
     }
 
+    /**
+     * Update or create third from a new bundle
+     * @param is bundle input stream
+     * @return the new or updated third data
+     * @throws IOException if error arise during stream reading
+     */
     public Third updateThird(InputStream is) throws IOException {
         Path rootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath()
         ).normalize();
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to unzip bundle");
+        // create a temporary output folder
         Path outPath = rootPath.resolve(UUID.randomUUID().toString());
         try {
-            //extract tar.gz
+            //extract tar.gz to output folder
             PathUtils.unTarGz(is, outPath);
             //load config
             return updateThird0(outPath);
@@ -270,6 +283,12 @@ public class ThirdsService implements ResourceLoaderAware {
         }
     }
 
+    /**
+     * Update or create third from disk saved bundle
+     * @param outPath path to the bundle
+     * @return he new or updated third data
+     * @throws IOException
+     */
     private Third updateThird0(Path outPath) throws IOException {
         // load Third from config
         Path outConfigPath = outPath.resolve(CONFIG_FILE_NAME);
@@ -291,13 +310,13 @@ public class ThirdsService implements ResourceLoaderAware {
         PathUtils.copy(existingVersionPath.resolve(CONFIG_FILE_NAME), existingConfigPath);
 
         //update caches
-        reloadCache();
-
+        loadCacheSafe();
+        //retieve newly loaded third from cache
         return fetch(third.getName(), third.getVersion());
     }
 
     /**
-     * fetch {@linkplain Third} for specified name and version
+     * Fetch {@link Third} for specified name and version
      *
      * @param name
      * @param apiVersion
@@ -310,17 +329,24 @@ public class ThirdsService implements ResourceLoaderAware {
         return this.completeCache.get(name).get(apiVersion);
     }
 
+    /**
+     * reset data (only used in tests)
+     * @throws IOException
+     */
     public void clear() throws IOException {
         Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath);
         File file = resource.getFile();
         try (Stream<Path> pathStream = Files.walk(PathUtils.getPath(file), 1)) {
             pathStream
                     .forEach(PathUtils::silentDelete);
-            reloadCache();
+            loadCacheSafe();
         }
     }
 
-    private synchronized void reloadCache() {
+    /**
+     * reload cache thread safe
+     */
+    private synchronized void loadCacheSafe() {
         loadCache();
     }
 

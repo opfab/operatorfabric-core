@@ -12,10 +12,11 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * <p></p>
- * Created on 14/06/18
+ * Third Media model, documented at {@link Third}
  *
- * @author davibind
+ * {@inheritDoc}
+ *
+ * @author David Binder
  */
 @Data
 @NoArgsConstructor

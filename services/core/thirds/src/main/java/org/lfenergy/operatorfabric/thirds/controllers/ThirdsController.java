@@ -26,7 +26,9 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * ThirdController
+ * ThirdController, documented at {@link ThirdsApi}
+ *
+ * @author David Binder
  */
 @RestController
 @Slf4j

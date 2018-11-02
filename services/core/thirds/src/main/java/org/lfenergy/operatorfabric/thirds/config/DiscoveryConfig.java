@@ -8,10 +8,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Profile;
 
 /**
- * <p></p>
- * Created on 07/09/18
+ * Discovery (Registry) configuration, simply enables it, deactivated if standalone spring profile is active
  *
- * @author davibind
+ * @author David Binder
  */
 @Profile("!standalone")
 @EnableDiscoveryClient

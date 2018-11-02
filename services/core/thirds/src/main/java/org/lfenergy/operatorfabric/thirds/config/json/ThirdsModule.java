@@ -9,14 +9,13 @@ import org.lfenergy.operatorfabric.thirds.model.ThirdMedias;
 import org.lfenergy.operatorfabric.thirds.model.ThirdMediasData;
 
 /**
- * <p></p>
- * Created on 14/06/18
+ * Jackson (JSON) Business Module configuration
  *
- * @author davibind
+ * @author David Binder
  */
 public class ThirdsModule extends SimpleModule {
 
-  public ThirdsModule(){
-    addAbstractTypeMapping(ThirdMedias.class,ThirdMediasData.class);
-  }
+    public ThirdsModule() {
+        addAbstractTypeMapping(ThirdMedias.class, ThirdMediasData.class);
+    }
 }

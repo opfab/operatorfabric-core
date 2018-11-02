@@ -11,7 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Third
+ * Third Model, documented at {@link Third}
+ *
+ * {@inheritDoc}
+ *
+ * @author David Binder
  */
 @Data
 @NoArgsConstructor

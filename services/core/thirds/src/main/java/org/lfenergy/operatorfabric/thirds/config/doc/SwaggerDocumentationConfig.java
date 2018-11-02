@@ -13,9 +13,18 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+/**
+ * Swagger documentation configuration
+ *
+ * @author David Binder
+ */
 @Configuration
 public class SwaggerDocumentationConfig {
 
+  /**
+   * Configure documentation rules
+   * @return
+   */
   @Bean
   public Docket customImplementation() {
     return new Docket(DocumentationType.SWAGGER_2)
@@ -27,6 +36,11 @@ public class SwaggerDocumentationConfig {
        .apiInfo(apiInfo());
   }
 
+  /**
+   * Api information
+   *
+   * @return
+   */
   ApiInfo apiInfo() {
     return new ApiInfoBuilder()
        .title("Thirds Management")

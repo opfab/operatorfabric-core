@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Home redirection to swagger api documentation
+ *
+ * @author David Binder
  */
 @Controller
 public class HomeController {

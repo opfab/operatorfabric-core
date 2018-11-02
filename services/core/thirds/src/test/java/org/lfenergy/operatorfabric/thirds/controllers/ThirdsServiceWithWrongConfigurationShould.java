@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.thirds.Application;
+import org.lfenergy.operatorfabric.thirds.ThirdsApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  * @author davibind
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = ThirdsApplication.class)
 @WebAppConfiguration
 @ActiveProfiles("service_error")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
