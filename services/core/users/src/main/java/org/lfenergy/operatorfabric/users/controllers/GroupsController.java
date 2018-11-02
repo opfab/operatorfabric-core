@@ -19,6 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * GroupsController, documented at {@link GroupsApi}
+ *
+ * @author David Binder
+ */
 @RestController
 @RequestMapping("/groups")
 public class GroupsController implements GroupsApi {

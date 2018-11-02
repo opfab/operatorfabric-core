@@ -15,10 +15,10 @@ import javax.annotation.PostConstruct;
 import java.util.Optional;
 
 /**
- * <p></p>
- * Created on 16/10/18
+ * This component solely serve as data intializer for users and groups, it loads users and group from properties
+ * configuration and insert or update them as needed
  *
- * @author davibind
+ * @author David Binder
  */
 @Component
 @Slf4j
@@ -50,6 +50,13 @@ public class DataInitComponent {
         }
     }
 
+    /**
+     * Insert users, if failure (users already exist), logs and carries on to next users
+     *
+     * If users exist adds missing groups (no delete)
+     *
+     * @param u
+     */
     private void safeInsertUsers(UserData u) {
         try {
             userRepository.insert(u);
@@ -73,6 +80,11 @@ public class DataInitComponent {
         }
     }
 
+    /**
+     * Insert groups, if failure (groups already exist), logs and carries on to next group
+     *
+     * @param g
+     */
     private void safeInsertGroup(GroupData g) {
         try {
             groupRepository.insert(g);

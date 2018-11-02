@@ -14,12 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p></p>
- * Created on 26/07/18
+ * <p>User and groups property definition.</p>
  *
- * @author davibind
+ * <p>The properties are prefixed by "operatorfabric.users.default"</p>
+ *
+ * <p>See {@link org.lfenergy.operatorfabric.users.model.User} and {@link org.lfenergy.operatorfabric.users.model.Group}
+ * for data structure details</p>
+ *
+ * @author David Binder
  */
-//@Configuration
 @ConfigurationProperties("operatorfabric.users.default")
 @Component
 @Data

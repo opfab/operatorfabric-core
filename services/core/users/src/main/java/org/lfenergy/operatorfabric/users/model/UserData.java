@@ -11,7 +11,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.*;
 
 /**
- * Please use Builder to instantiate
+ * !! Please use Builder to instantiate !!
+ *
+ * User Model, documented at {@link User}
+ *
+ * {@inheritDoc}
+ *
+ * @author David Binder
  */
 @Document(collection = "user")
 @Data

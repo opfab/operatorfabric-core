@@ -11,6 +11,13 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Group Model, documented at {@link Group}
+ *
+ * {@inheritDoc}
+ *
+ * @author David Binder
+ */
 @Document(collection = "group")
 @Data
 @AllArgsConstructor

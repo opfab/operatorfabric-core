@@ -13,10 +13,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * <p></p>
- * Created on 24/07/18
- *
- * @author davibind
+ * Mongo {@link UserData} repository
+ * @author David Binder
  */
 @Repository
 public interface UserRepository extends MongoRepository<UserData,String> {

@@ -23,7 +23,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 public class JacksonConfig {
 
   /**
-   * Builds bject mapper adding java 8 custom configuration and business module configuration ({@link ThirdsModule})
+   * Builds object mapper adding java 8 custom configuration and business module configuration ({@link ThirdsModule})
    * @param builder Spring internal {@link ObjectMapper} builder [injected]
    * @return
    */

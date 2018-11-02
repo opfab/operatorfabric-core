@@ -22,10 +22,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories(basePackageClasses = UserRepository.class)
 @EnableConfigurationProperties
 @EnableDiscoveryClient
-public class Application {
+public class UsersApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(UsersApplication.class, args);
         assert (ctx != null);
     }
 

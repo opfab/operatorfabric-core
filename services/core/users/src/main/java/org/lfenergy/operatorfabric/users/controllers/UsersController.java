@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * UsersController, documented at {@link UsersApi}
+ *
+ * @author David Binder
+ */
 @RestController
 @RequestMapping("/users")
 public class UsersController implements UsersApi {

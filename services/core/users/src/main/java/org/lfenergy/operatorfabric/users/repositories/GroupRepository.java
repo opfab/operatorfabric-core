@@ -11,10 +11,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * <p></p>
- * Created on 24/07/18
- *
- * @author davibind
+ * Mongo {@link GroupData} repository
+ * @author David Binder
  */
 @Repository
 public interface GroupRepository extends MongoRepository<GroupData,String> {

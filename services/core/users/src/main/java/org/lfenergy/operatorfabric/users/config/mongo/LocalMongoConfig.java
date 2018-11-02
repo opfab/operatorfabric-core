@@ -12,13 +12,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <p></p>
- * Created on 13/09/18
+ * Specific mongo converter declaration configuration
  *
- * @author davibind
+ * @author David Binder
  */
 @Component
 public class LocalMongoConfig extends AbstractLocalMongoConfiguration {
+    /**
+     * The mongo converter list (empty)
+     * @return
+     */
     @Override
     public List<Converter> converterList() {
         return Collections.emptyList();

@@ -15,7 +15,16 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * CustomExceptionHandler
+ * CustomExceptionHandler.
+ * <ul>
+ *     <li>Handle Api errors according to their configuration</li>
+ *     <li>Handle uncaught logging errro</li>
+ * </ul>
+ *
+ * @see org.lfenergy.operatorfabric.springtools.error.model.ApiError
+ * @see ApiErrorException
+ *
+ * @author David Binder
  */
 @RestControllerAdvice
 @Slf4j
