@@ -10,10 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * <p></p>
- * Created on 19/06/18
+ * Client time data
  *
- * @author davibind
+ * @author David Binder
  */
 @Data
 @AllArgsConstructor
