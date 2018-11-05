@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
+import org.lfenergy.operatorfabric.cards.publication.model.Card;
 import org.lfenergy.operatorfabric.cards.publication.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.publication.model.CardOperationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
@@ -29,15 +30,31 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * <p></p>
- * Created on 06/08/18
+ * <p>Aim of this service whose sole externally accessible method is
+ * {@link #notifyCards(Collection, CardOperationTypeEnum)} is to
+ * prepare data and notify AMQP exchange of it. Information about card
+ * publication and deletion is then accessible to other services or
+ * entities throught bindings to these exchanges.
+ * </p>
  *
- * @author davibind
+ * <p>Two exchanges are used, {@link #groupExchange} and {@link #userExchange}.
+ * See amqp.xml resource file ([project]/services/core/cards-publication/src/main/resources/amqp.xml)
+ * for their exact configuration</p>
+ *
+ * <p>In the meantime, Cards treatment is windowed (see {@link reactor.core.publisher.Flux#windowTimeout})
+ * and each window is treated in parallel (see {@link Schedulers#parallel()})</p>
+ * <p>Cards are then grouped in {@link CardOperation} by their type ({@link CardOperationTypeEnum#ADD} or
+ * {@link CardOperationTypeEnum#DELETE}) and their {@link Card#getPublishDate()}</p>
+ *
+ * <p>TODO document Spring properties</p>
+ *
+ * @author David Binder
  */
 @Service
 @Slf4j
 public class CardNotificationService {
 
+    //TODO change static variables for spring properties
     private static final int WINDOW_SIZE = 100;
     private static final long WINDOW_TIME_OUT = 2000;
 
@@ -62,13 +79,13 @@ public class CardNotificationService {
         this.sink = this.processor.sink();
         this.processor
                 //parallelizing card treatments
-                .flatMap(c -> Mono.just(c).subscribeOn(Schedulers.parallel()))
+                .flatMap(tupleCard -> Mono.just(tupleCard).subscribeOn(Schedulers.parallel()))
                 //batching cards
                 .windowTimeout(WINDOW_SIZE, Duration.ofMillis(WINDOW_TIME_OUT))
-                .subscribe(flux ->
-                    flux.map(t -> notifyCardsX(t.getT1(), t.getT2()))
+                .subscribe(windowCard ->
+                    windowCard.map(tupleCard -> arrangeUnitaryCardOperation(tupleCard.getT1(), tupleCard.getT2()))
                         .reduce(Tuples.of(new LinkedHashMap<String, List<CardOperation>>(), new LinkedHashMap<String, List<CardOperation>>()), (result, item) ->
-                            reduceCardOperation(result, item))
+                            reduceCardOperationBuilders(result, item))
                         //group card operation by types and publication/deletion date
                         .map(t->Tuples.of(fuseCardOperations(t.getT1()),fuseCardOperations(t.getT2())))
 
@@ -79,8 +96,14 @@ public class CardNotificationService {
                 );
     }
 
+    /**
+     * reduce unitary {@link CardOperationData.CardOperationDataBuilder} maps into maps of List of {@link CardOperation}
+     * @param result
+     * @param item
+     * @return
+     */
     private Tuple2<LinkedHashMap<String, List<CardOperation>>, LinkedHashMap<String, List<CardOperation>>>
-    reduceCardOperation(Tuple2<LinkedHashMap<String, List<CardOperation>>, LinkedHashMap<String, List<CardOperation>>> result, Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> item) {
+    reduceCardOperationBuilders(Tuple2<LinkedHashMap<String, List<CardOperation>>, LinkedHashMap<String, List<CardOperation>>> result, Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> item) {
         for (Map.Entry<String, CardOperationData.CardOperationDataBuilder> e : item.getT1().entrySet()) {
             List<CardOperation> opsList = result.getT1().get(e.getKey());
             if (opsList == null) {
@@ -131,12 +154,36 @@ public class CardNotificationService {
         return resultMap;
     }
 
+    /**
+     * <p>Let the service handle AMQP backend notification of operation on a list of cards</p>
+     * <p>The handling is asynchronous and is published to a backing {@link FluxSink}</p>
+     * @param cards
+     * @param type
+     */
     public void notifyCards(Collection<CardPublicationData> cards, CardOperationTypeEnum type) {
         cards.forEach(c -> sink.next(Tuples.of(c, type)));
     }
 
-
-    private Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> notifyCardsX(CardPublicationData card, CardOperationTypeEnum type) {
+    /**
+     * <p>Arrange {@link Card} into {@link CardOperationData.CardOperationDataBuilder}, that is to say
+     * CardOperationDataBuilder that only contain
+     * one</p>
+     * <p>For one card:
+     * <ul>
+     * <li>the first resulting map contains association from a concerned group string key to an unitary</li>
+     * <li>the second resulting map contains association from a concerned orphaned user (a user concerned by a card
+     * but not belonging to any concerned group) string key to an unitary</li>
+     * </ul>
+     * </p>
+     * {@link Card}
+     *
+     * @param card
+     *    the card to be afterward notified
+     * @param type
+     *    the type of notification
+     * @return a tuple of two maps
+     */
+    private Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> arrangeUnitaryCardOperation(CardPublicationData card, CardOperationTypeEnum type) {
         Map<String, CardOperationData.CardOperationDataBuilder> groupCardsDictionnay = new HashMap<>();
         Map<String, CardOperationData.CardOperationDataBuilder> userCardsDictionnary = new HashMap<>();
 
@@ -168,6 +215,11 @@ public class CardNotificationService {
         return Tuples.of(groupCardsDictionnay, userCardsDictionnary);
     }
 
+    /**
+     * Effective notification to the specified exchange, the map key is used as key binding
+     * @param operationDictionnary
+     * @param exchange
+     */
     private void sendOperation(Map<String, List<CardOperation>> operationDictionnary, Exchange
             exchange) {
         operationDictionnary.entrySet().stream().

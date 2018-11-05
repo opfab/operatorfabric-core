@@ -42,17 +42,17 @@ import java.util.function.Function;
  * <p>Responsible of Reactive Write of Cards in card mongo collection</p>
  * <p>this service also generate an ArchiveCard object persisted in archivedCard mongo collection</p>
  *
- * Created on 30/07/18
  *
- * @author davibind
+ * @author David Binder
  */
 @Service
 @Slf4j
 public class CardWriteService {
 
-    private final EmitterProcessor<CardPublicationData> processor;
+    //TODO change static variables for spring properties
     private static final int WINDOW_SIZE =1000;
     private static final long WINDOW_TIME_OUT =500;
+    private final EmitterProcessor<CardPublicationData> processor;
     private final FluxSink<CardPublicationData> sink;
 
     //to inject

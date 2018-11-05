@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 /**
- * <p></p>
- * Created on 24/07/18
+ * <p>Auto generated spring mongo reactive repository to access Archived Card collection</p>
  *
- * @author davibind
+ * @author David Binder
  */
 @Repository
 public interface ArchivedCardRepository extends ReactiveMongoRepository<ArchivedCardPublicationData,String> {
