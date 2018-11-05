@@ -11,7 +11,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * Please use builder to instantiate
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Input Model, documented at {@link Input}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

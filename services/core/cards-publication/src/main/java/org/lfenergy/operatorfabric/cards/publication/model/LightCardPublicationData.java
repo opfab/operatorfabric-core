@@ -13,7 +13,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * Please use builder to instantiate
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Light Card Model, documented at {@link LightCard}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

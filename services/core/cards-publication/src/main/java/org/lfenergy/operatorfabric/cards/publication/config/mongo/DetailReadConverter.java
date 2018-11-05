@@ -12,6 +12,13 @@ import org.springframework.core.convert.converter.Converter;
 
 import java.util.List;
 
+/**
+ *
+ * <p>Spring converter registered in mongo conversions</p>
+ * <p>Converts {@link Document} to {@link Detail} using {@link DetailPublicationData.DetailPublicationDataBuilder}</p>
+ *
+ * @author David Binder
+ */
 public class DetailReadConverter implements Converter<Document, Detail> {
 
     private I18nReadConverter i18nReadConverter = new I18nReadConverter();

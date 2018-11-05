@@ -12,14 +12,17 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.config.WebFluxConfigurerComposite;
 
 /**
- * <p></p>
- * Created on 22/05/18
+ * Configures webflux
  *
- * @author davibind
+ * @author David Binder
  */
 @Slf4j
 @Configuration
 public class WebFluxConfig {
+  /**
+   * Configures CORS
+   * @return
+   */
   @Bean
   public WebFluxConfigurer corsConfigurer() {
     return new WebFluxConfigurerComposite() {

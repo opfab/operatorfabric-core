@@ -8,10 +8,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.lfenergy.operatorfabric.cards.publication.model.*;
 
 /**
- * <p></p>
- * Created on 14/06/18
+ * Jackson (JSON) Business Module configuration
  *
- * @author davibind
+ * @author David Binder
  */
 public class CardsModule extends SimpleModule {
 

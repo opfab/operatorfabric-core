@@ -11,7 +11,11 @@ import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import java.util.List;
 
 /**
- * Please use builder to instantiate
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Card Operation Model, documented at {@link CardOperation}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

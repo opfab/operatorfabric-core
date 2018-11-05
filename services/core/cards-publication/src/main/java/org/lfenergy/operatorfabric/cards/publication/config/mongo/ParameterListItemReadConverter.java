@@ -9,6 +9,13 @@ import org.lfenergy.operatorfabric.cards.publication.model.ParameterListItem;
 import org.lfenergy.operatorfabric.cards.publication.model.ParameterListItemPublicationData;
 import org.springframework.core.convert.converter.Converter;
 
+/**
+ *
+ * <p>Spring converter registered in mongo conversions</p>
+ * <p>Converts {@link Document} to {@link ParameterListItem} using {@link ParameterListItemPublicationData.ParameterListItemPublicationDataBuilder}</p>
+ *
+ * @author David Binder
+ */
 public class ParameterListItemReadConverter implements Converter<Document,ParameterListItem> {
 
     private I18nReadConverter i18nReadConverter = new I18nReadConverter();

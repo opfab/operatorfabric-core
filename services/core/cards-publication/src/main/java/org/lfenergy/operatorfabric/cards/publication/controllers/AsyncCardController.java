@@ -15,10 +15,9 @@ import reactor.core.publisher.Flux;
 import javax.validation.Valid;
 
 /**
- * <p></p>
- * Created on 10/07/18
+ * Asynchronous controller
  *
- * @author davibind
+ * @author David Binder
  */
 @RestController
 @RequestMapping("/async/cards")
@@ -28,6 +27,12 @@ public class AsyncCardController {
     @Autowired
     private CardWriteService cardWriteService;
 
+    /**
+     * <p>POST cards to create/update new cards.</p>
+     * <p>Always returns {@link HttpStatus#ACCEPTED}</p>
+     *
+     * @param cards
+     */
     @PostMapping()
     @ResponseStatus(HttpStatus.ACCEPTED)
     public @Valid void createCards(@Valid @RequestBody Flux<CardPublicationData> cards){

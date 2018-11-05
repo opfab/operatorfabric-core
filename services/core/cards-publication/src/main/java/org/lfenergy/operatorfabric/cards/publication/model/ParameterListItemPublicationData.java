@@ -12,7 +12,11 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
 /**
- * Please use builder to instantiate
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Parameter List Item Model, documented at {@link ParameterListItem}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

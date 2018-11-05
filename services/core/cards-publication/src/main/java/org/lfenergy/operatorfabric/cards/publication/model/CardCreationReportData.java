@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
- * <p></p>
- * Created on 02/08/18
+ * <p>Card Creation Report Model, documented at {@link CardCreationReport}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

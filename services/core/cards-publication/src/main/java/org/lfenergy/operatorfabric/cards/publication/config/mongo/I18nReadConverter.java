@@ -12,10 +12,11 @@ import org.springframework.core.convert.converter.Converter;
 import java.util.Map;
 
 /**
- * <p></p>
- * Created on 31/07/18
  *
- * @author davibind
+ * <p>Spring converter registered in mongo conversions</p>
+ * <p>Converts {@link Document} to {@link I18n} using {@link I18nPublicationData.I18nPublicationDataBuilder}</p>
+ *
+ * @author David Binder
  */
 public class I18nReadConverter implements Converter<Document, I18n> {
     @Override

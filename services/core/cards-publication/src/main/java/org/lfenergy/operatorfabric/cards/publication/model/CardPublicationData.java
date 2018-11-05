@@ -20,7 +20,11 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Please use builder to instantiate
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Card Model, documented at {@link Card}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

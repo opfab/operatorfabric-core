@@ -11,7 +11,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * Please use builder os static methods to instantiate
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Recipient Model, documented at {@link Recipient}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

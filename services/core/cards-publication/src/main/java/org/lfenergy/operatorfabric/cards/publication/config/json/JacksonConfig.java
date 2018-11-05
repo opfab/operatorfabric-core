@@ -17,15 +17,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
- * <p></p>
- * Created on 14/06/18
+ * Json configuration
  *
- * @author davibind
+ * @author David Binder
  */
 @Configuration
 @Slf4j
 public class JacksonConfig {
 
+  /**
+   * Builds object mapper adding java 8 custom configuration and business module configuration ({@link CardsModule})
+   * @param builder Spring internal {@link ObjectMapper} builder [injected]
+   * @return
+   */
   @Bean
   @Autowired
   public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
@@ -43,9 +47,6 @@ public class JacksonConfig {
     objectMapper.registerModule(new Jdk8Module());
     objectMapper.registerModule(new JavaTimeModule());
     objectMapper.registerModule(new CardsModule());
-
-
-    log.info("Object Mapper configured for thirds");
     return objectMapper;
   }
 }

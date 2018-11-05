@@ -17,10 +17,9 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 /**
- * <p></p>
- * Created on 10/07/18
+ * Synchronous controller
  *
- * @author davibind
+ * @author David Binder
  */
 @RestController
 @RequestMapping("/cards")
@@ -30,6 +29,11 @@ public class CardController {
     @Autowired
     private CardWriteService cardWriteService;
 
+    /**
+     * POST cards to create/update new cards
+     * @param cards
+     * @return contains numlber of cards created and optional message
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public @Valid Mono<CardCreationReportData> createCards(@Valid @RequestBody Flux<CardPublicationData> cards){

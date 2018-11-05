@@ -12,6 +12,14 @@ import org.springframework.core.convert.converter.Converter;
 
 import java.util.List;
 
+/**
+ *
+ * <p>Spring converter registered in mongo conversions</p>
+ * <p>Converts {@link Document} to {@link Recipient} using
+ * {@link RecipientPublicationData.RecipientPublicationDataBuilder}</p>
+ *
+ * @author David Binder
+ */
 public class RecipientReadConverter implements Converter<Document,Recipient> {
     @Override
     public Recipient convert(Document source) {
