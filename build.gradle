@@ -190,6 +190,10 @@ subprojects {
                 exceptionFormat "full"
             }
         }
+
+        javadoc {
+            options.noTimestamp()
+        }
     }
 }
 
