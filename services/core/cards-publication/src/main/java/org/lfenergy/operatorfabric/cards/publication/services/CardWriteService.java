@@ -40,8 +40,9 @@ import java.util.function.Function;
 
 /**
  * <p>Responsible of Reactive Write of Cards in card mongo collection</p>
- * <p>this service also generate an ArchiveCard object persisted in archivedCard mongo collection</p>
- *
+ * <p>This service also generate an ArchiveCard object persisted in archivedCard mongo collection</p>
+ * <p>In the meantime, Cards treatment is windowed (see {@link reactor.core.publisher.Flux#windowTimeout})
+ *  * and each window is treated in parallel (see {@link Schedulers#parallel()})</p>
  *
  * @author David Binder
  */
@@ -55,7 +56,7 @@ public class CardWriteService {
     private final EmitterProcessor<CardPublicationData> processor;
     private final FluxSink<CardPublicationData> sink;
 
-    //to inject
+    //injected
     private RecipientProcessor recipientProcessor;
     private MongoTemplate template;
     private LocalValidatorFactoryBean localValidatorFactoryBean;
@@ -83,24 +84,30 @@ public class CardWriteService {
            //remembering startime for measurement
            .map(card->Tuples.of(card,System.nanoTime(),SimulatedTime.getInstance().computeNow().toEpochMilli()))
            //trigger batched treatment upon window readiness
-           .subscribe(cardAndTime -> handleWindowedCardFlux(cardAndTime));
+           .subscribe(cardAndTimeTuple -> handleWindowedCardFlux(cardAndTimeTuple));
     }
 
-    private void handleWindowedCardFlux(Tuple3<Flux<CardPublicationData>, Long, Long> cardAndTime) {
-        long windowStart = cardAndTime.getT2();
-        Flux<CardPublicationData> cards = registerRecipientProcess(cardAndTime.getT1());
-        cards = registerTolerantValidationProcess(cards,cardAndTime.getT3());
+    private void handleWindowedCardFlux(Tuple3<Flux<CardPublicationData>, Long, Long> cardAndTimeTuple) {
+        long windowStart = cardAndTimeTuple.getT2();
+        Flux<CardPublicationData> cards = registerRecipientProcess(cardAndTimeTuple.getT1());
+        cards = registerTolerantValidationProcess(cards,cardAndTimeTuple.getT3());
         registerPersistingProcess(cards, windowStart)
            .doOnError(t -> log.error("Unexpected Error arrose", t))
            .subscribe();
     }
 
-    /** process effective recipients **/
+    /** Process effective recipients. **/
     private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards){
         return cards
            .doOnNext(recipientProcessor::processAll);
     }
 
+    /**
+     * Register validation process in flux, still allowing proccess to carry on if error arise
+     * @param cards
+     * @param publishDate
+     * @return
+     */
     private Flux<CardPublicationData> registerTolerantValidationProcess(Flux<CardPublicationData> cards, Long publishDate){
         return cards
            // prepare card computed data (id, shardkey)
@@ -109,6 +116,12 @@ public class CardWriteService {
            .flatMap(doOnNextOnErrorContinue(this::validate));
     }
 
+    /**
+     * Register validation process in flux. If error arrise breaks the process.
+     * @param cards
+     * @param publishDate
+     * @return
+     */
     private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards, Long publishDate){
         return cards
            // prepare card computed data (id, shardkey)
@@ -117,6 +130,12 @@ public class CardWriteService {
            .doOnNext(this::validate);
     }
 
+    /**
+     * Res=gister mongo persisting part of the precess
+     * @param cards
+     * @param windowStart
+     * @return
+     */
     private Mono<Integer> registerPersistingProcess(Flux<CardPublicationData> cards, long windowStart){
         // this reduce function removes CardPublicationData "duplicates" (based on id) but leaves ArchivedCard as is
         BiFunction<Tuple3<HashMap<String,CardPublicationData>,ArrayList<ArchivedCardPublicationData>,HashSet<String>>,

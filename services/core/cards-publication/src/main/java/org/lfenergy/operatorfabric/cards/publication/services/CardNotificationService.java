@@ -240,6 +240,7 @@ public class CardNotificationService {
                 );
     }
 
+    //FIXME This piece of code seems useless, check it
     private void addCardToOperation(CardPublicationData c,
                                     CardOperationTypeEnum type, Map<String,CardOperationData.CardOperationDataBuilder> cardsDictionnay,
                                     String builderId) {

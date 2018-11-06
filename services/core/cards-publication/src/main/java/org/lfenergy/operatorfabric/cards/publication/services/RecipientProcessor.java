@@ -17,6 +17,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/**
+ * Computes groups and recipient
+ *
+ * TODO Load user cache
+ */
 @Component
 public class RecipientProcessor {
 
