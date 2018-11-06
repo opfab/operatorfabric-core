@@ -73,8 +73,6 @@ import java.util.function.Function;
 @Slf4j
 public class CardWriteService {
 
-    private int windowSize;
-    private long windowTimeOut;
     private final EmitterProcessor<CardPublicationData> processor;
     private final FluxSink<CardPublicationData> sink;
 
@@ -94,8 +92,6 @@ public class CardWriteService {
                             @Value("${opfab.write.timeout:500}") long windowTimeOut
                             ) {
 
-        this.windowSize = windowSize;
-        this.windowTimeOut = windowTimeOut;
         this.recipientProcessor = recipientProcessor;
         this.template = template;
         this.localValidatorFactoryBean = localValidatorFactoryBean;

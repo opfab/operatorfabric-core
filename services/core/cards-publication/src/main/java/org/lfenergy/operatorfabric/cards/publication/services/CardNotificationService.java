@@ -59,9 +59,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CardNotificationService {
 
-    private int windowSize;
-    private long windowTimeOut;
-
     private final RabbitTemplate rabbitTemplate;
     private final TopicExchange groupExchange;
     private final DirectExchange userExchange;
@@ -77,8 +74,6 @@ public class CardNotificationService {
                                    @Value("${opfab.notification.window:100}") int windowSize,
                                    @Value("${opfab.notification.timeout:1000}") long windowTimeOut
     ) {
-        this.windowSize = windowSize;
-        this.windowTimeOut = windowTimeOut;
         this.rabbitTemplate = rabbitTemplate;
         this.groupExchange = groupExchange;
         this.userExchange = userExchange;
