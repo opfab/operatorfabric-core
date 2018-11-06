@@ -17,6 +17,7 @@ import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.FluxSink;
@@ -46,7 +47,11 @@ import java.util.stream.Collectors;
  * <p>Cards are then grouped in {@link CardOperation} by their type ({@link CardOperationTypeEnum#ADD} or
  * {@link CardOperationTypeEnum#DELETE}) and their {@link Card#getPublishDate()}</p>
  *
- * <p>TODO document Spring properties</p>
+ * <p>Configuration properties available in spring configuration</p>
+ * <ul>
+ * <li>opfab.notification.window: treatment window maximum size</li>
+ * <li>opfab.notification.timeout: maximum wait time before treatment window creation</li>
+ * </ul>
  *
  * @author David Binder
  */
@@ -54,9 +59,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CardNotificationService {
 
-    //TODO change static variables for spring properties
-    private static final int WINDOW_SIZE = 100;
-    private static final long WINDOW_TIME_OUT = 2000;
+    private int windowSize;
+    private long windowTimeOut;
 
     private final RabbitTemplate rabbitTemplate;
     private final TopicExchange groupExchange;
@@ -69,7 +73,12 @@ public class CardNotificationService {
     public CardNotificationService(RabbitTemplate rabbitTemplate,
                                    TopicExchange groupExchange,
                                    DirectExchange userExchange,
-                                   ObjectMapper mapper) {
+                                   ObjectMapper mapper,
+                                   @Value("${opfab.notification.window:100}") int windowSize,
+                                   @Value("${opfab.notification.timeout:1000}") long windowTimeOut
+    ) {
+        this.windowSize = windowSize;
+        this.windowTimeOut = windowTimeOut;
         this.rabbitTemplate = rabbitTemplate;
         this.groupExchange = groupExchange;
         this.userExchange = userExchange;
@@ -81,23 +90,24 @@ public class CardNotificationService {
                 //parallelizing card treatments
                 .flatMap(tupleCard -> Mono.just(tupleCard).subscribeOn(Schedulers.parallel()))
                 //batching cards
-                .windowTimeout(WINDOW_SIZE, Duration.ofMillis(WINDOW_TIME_OUT))
+                .windowTimeout(windowSize, Duration.ofMillis(windowTimeOut))
                 .subscribe(windowCard ->
-                    windowCard.map(tupleCard -> arrangeUnitaryCardOperation(tupleCard.getT1(), tupleCard.getT2()))
-                        .reduce(Tuples.of(new LinkedHashMap<String, List<CardOperation>>(), new LinkedHashMap<String, List<CardOperation>>()), (result, item) ->
-                            reduceCardOperationBuilders(result, item))
-                        //group card operation by types and publication/deletion date
-                        .map(t->Tuples.of(fuseCardOperations(t.getT1()),fuseCardOperations(t.getT2())))
+                        windowCard.map(tupleCard -> arrangeUnitaryCardOperation(tupleCard.getT1(), tupleCard.getT2()))
+                                .reduce(Tuples.of(new LinkedHashMap<String, List<CardOperation>>(), new LinkedHashMap<String, List<CardOperation>>()), (result, item) ->
+                                        reduceCardOperationBuilders(result, item))
+                                //group card operation by types and publication/deletion date
+                                .map(t -> Tuples.of(fuseCardOperations(t.getT1()), fuseCardOperations(t.getT2())))
 
-                        .subscribe(t -> {
-                            sendOperation(t.getT1(), groupExchange);
-                            sendOperation(t.getT2(), userExchange);
-                        })
+                                .subscribe(t -> {
+                                    sendOperation(t.getT1(), groupExchange);
+                                    sendOperation(t.getT2(), userExchange);
+                                })
                 );
     }
 
     /**
      * reduce unitary {@link CardOperationData.CardOperationDataBuilder} maps into maps of List of {@link CardOperation}
+     *
      * @param result
      * @param item
      * @return
@@ -126,7 +136,7 @@ public class CardNotificationService {
 
     /**
      * group card operation by types and publication/deletion date
-     *
+     * <p>
      * TODO group at most by ten cards
      *
      * @param sourceMap
@@ -134,21 +144,21 @@ public class CardNotificationService {
      */
     private Map<String, List<CardOperation>> fuseCardOperations(LinkedHashMap<String, List<CardOperation>> sourceMap) {
         Map<String, List<CardOperation>> resultMap = new LinkedHashMap<>();
-        for(Map.Entry<String, List<CardOperation>> groupEntry: sourceMap.entrySet()){
-            Map<String,CardOperationData.CardOperationDataBuilder> sorted = new LinkedHashMap<>();
-            for(CardOperation op:groupEntry.getValue()){
-                String key = op.getPublicationDate()+op.getType().toString();
+        for (Map.Entry<String, List<CardOperation>> groupEntry : sourceMap.entrySet()) {
+            Map<String, CardOperationData.CardOperationDataBuilder> sorted = new LinkedHashMap<>();
+            for (CardOperation op : groupEntry.getValue()) {
+                String key = op.getPublicationDate() + op.getType().toString();
                 CardOperationData.CardOperationDataBuilder existing = sorted.get(key);
-                if(existing == null){
+                if (existing == null) {
                     existing = CardOperationData.builder()
                             .publicationDate(op.getPublicationDate())
                             .type(op.getType());
-                    sorted.put(key,existing);
+                    sorted.put(key, existing);
                 }
                 existing.cardIds(op.getCardIds());
                 existing.cards(op.getCards());
             }
-           resultMap.put(groupEntry.getKey(),sorted.entrySet().stream().map(e->e.getValue().build()).collect(Collectors.toList()));
+            resultMap.put(groupEntry.getKey(), sorted.entrySet().stream().map(e -> e.getValue().build()).collect(Collectors.toList()));
 
         }
         return resultMap;
@@ -157,6 +167,7 @@ public class CardNotificationService {
     /**
      * <p>Let the service handle AMQP backend notification of operation on a list of cards</p>
      * <p>The handling is asynchronous and is published to a backing {@link FluxSink}</p>
+     *
      * @param cards
      * @param type
      */
@@ -165,9 +176,9 @@ public class CardNotificationService {
     }
 
     /**
-     * <p>Arrange {@link Card} into {@link CardOperationData.CardOperationDataBuilder}, that is to say
+     * <p>Arrange {@link Card} into Unitary {@link CardOperationData.CardOperationDataBuilder}, that is to say
      * CardOperationDataBuilder that only contain
-     * one</p>
+     * one card</p>
      * <p>For one card:
      * <ul>
      * <li>the first resulting map contains association from a concerned group string key to an unitary</li>
@@ -175,12 +186,14 @@ public class CardNotificationService {
      * but not belonging to any concerned group) string key to an unitary</li>
      * </ul>
      * </p>
+     * <p>
+     * NB: At this point it may seems weird to "return" maps as these maps only contains one elemnt but it allows
+     * for simpler data manipulation during later reduce operation to fuse {@link CardOperationData.CardOperationDataBuilder}
+     * </p>
      * {@link Card}
      *
-     * @param card
-     *    the card to be afterward notified
-     * @param type
-     *    the type of notification
+     * @param card the card to be afterward notified
+     * @param type the type of notification
      * @return a tuple of two maps
      */
     private Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> arrangeUnitaryCardOperation(CardPublicationData card, CardOperationTypeEnum type) {
@@ -191,7 +204,7 @@ public class CardNotificationService {
         int currentSize = 0;
         for (String g : card.getGroupRecipients()) {
             if (currentSize + g.getBytes().length > 200) {
-                addCardToOperation(card, type,groupCardsDictionnay,groupSB.toString());
+                addCardToOperation(card, type, groupCardsDictionnay, groupSB.toString());
                 groupSB = new StringBuilder();
                 currentSize = 0;
             } else {
@@ -205,11 +218,11 @@ public class CardNotificationService {
         }
 
         if (currentSize > 0) {
-            addCardToOperation(card, type,groupCardsDictionnay,groupSB.toString());
+            addCardToOperation(card, type, groupCardsDictionnay, groupSB.toString());
         }
 
         for (String u : card.getOrphanedUsers()) {
-            addCardToOperation(card, type,userCardsDictionnary,u);
+            addCardToOperation(card, type, userCardsDictionnary, u);
         }
 
         return Tuples.of(groupCardsDictionnay, userCardsDictionnary);
@@ -217,6 +230,7 @@ public class CardNotificationService {
 
     /**
      * Effective notification to the specified exchange, the map key is used as key binding
+     *
      * @param operationDictionnary
      * @param exchange
      */
@@ -224,30 +238,38 @@ public class CardNotificationService {
             exchange) {
         operationDictionnary.entrySet().stream().
                 forEach(entry ->
-                    entry.getValue().forEach(op->{
-                        try {
-                            rabbitTemplate.convertAndSend(
-                                    exchange.getName(),
-                                    entry.getKey(),
-                                    mapper.writeValueAsString(op)
-                            );
-                            log.info("Operation sent to Exchange["+exchange.getName()+"] with routing key "+entry.getKey
-                               ());
-                        } catch (JsonProcessingException e) {
-                            log.error("Unnable to linearize card to json on amqp notification");
-                        }
-                    })
+                        entry.getValue().forEach(op -> {
+                            try {
+                                rabbitTemplate.convertAndSend(
+                                        exchange.getName(),
+                                        entry.getKey(),
+                                        mapper.writeValueAsString(op)
+                                );
+                                log.info("Operation sent to Exchange[" + exchange.getName() + "] with routing key " + entry.getKey
+                                        ());
+                            } catch (JsonProcessingException e) {
+                                log.error("Unnable to linearize card to json on amqp notification");
+                            }
+                        })
                 );
     }
 
-    //FIXME This piece of code seems useless, check it
+    /**
+     * turn {@link CardPublicationData} + type into a {@link CardOperationData.CardOperationDataBuilder} and associated
+     * it to a builder id (~= group name or user name)
+     *
+     * @param c
+     * @param type
+     * @param cardsDictionnay
+     * @param builderId
+     */
     private void addCardToOperation(CardPublicationData c,
-                                    CardOperationTypeEnum type, Map<String,CardOperationData.CardOperationDataBuilder> cardsDictionnay,
+                                    CardOperationTypeEnum type, Map<String, CardOperationData.CardOperationDataBuilder> cardsDictionnay,
                                     String builderId) {
         CardOperationData.CardOperationDataBuilder cardOperationBuilder = cardsDictionnay.get(builderId);
         if (cardOperationBuilder == null) {
             cardOperationBuilder = CardOperationData.builder().type(type).publicationDate(c.getPublishDate());
-            cardsDictionnay.put(builderId, cardOperationBuilder );
+            cardsDictionnay.put(builderId, cardOperationBuilder);
         }
         switch (type) {
             case ADD:

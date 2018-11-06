@@ -2,3 +2,10 @@ spring:
   data:
     mongodb:
       database: operator-fabric
+opfab:
+  write.window:
+    size: 1000
+    timeout: 500
+  notification.window:
+    size: 100
+    timeout: 1000

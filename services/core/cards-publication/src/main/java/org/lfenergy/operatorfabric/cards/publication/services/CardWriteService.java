@@ -13,6 +13,7 @@ import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -60,15 +61,20 @@ import java.util.function.Function;
  * </ul>
  * </p>
  *
+ * <p>Configuration properties available in spring configuration</p>
+ * <ul>
+ *     <li>opfab.write.window: treatment window maximum size</li>
+ *     <li>opfab.write.timeout: maximum wait time before treatment window creation</li>
+ * </ul>
+ *
  * @author David Binder
  */
 @Service
 @Slf4j
 public class CardWriteService {
 
-    //TODO change static variables for spring properties
-    private static final int WINDOW_SIZE = 1000;
-    private static final long WINDOW_TIME_OUT = 500;
+    private int windowSize;
+    private long windowTimeOut;
     private final EmitterProcessor<CardPublicationData> processor;
     private final FluxSink<CardPublicationData> sink;
 
@@ -83,8 +89,13 @@ public class CardWriteService {
     public CardWriteService(RecipientProcessor recipientProcessor,
                             MongoTemplate template,
                             LocalValidatorFactoryBean localValidatorFactoryBean,
-                            CardNotificationService cardNotificationService) {
+                            CardNotificationService cardNotificationService,
+                            @Value("${opfab.write.window:1000}") int windowSize,
+                            @Value("${opfab.write.timeout:500}") long windowTimeOut
+                            ) {
 
+        this.windowSize = windowSize;
+        this.windowTimeOut = windowTimeOut;
         this.recipientProcessor = recipientProcessor;
         this.template = template;
         this.localValidatorFactoryBean = localValidatorFactoryBean;
@@ -96,7 +107,7 @@ public class CardWriteService {
                 //parallelizing card treatments
                 .flatMap(c -> Mono.just(c).subscribeOn(Schedulers.parallel()))
                 //batching cards
-                .windowTimeout(WINDOW_SIZE, Duration.ofMillis(WINDOW_TIME_OUT))
+                .windowTimeout(windowSize, Duration.ofMillis(windowTimeOut))
                 //remembering startime for measurement
                 .map(card -> Tuples.of(card, System.nanoTime(), SimulatedTime.getInstance().computeNow().toEpochMilli()))
                 //trigger batched treatment upon window readiness
