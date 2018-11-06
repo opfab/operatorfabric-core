@@ -19,9 +19,7 @@ script:
 deploy:
 - provider: script
   skip_cleanup: true
-  script:
-  - ./gradlew generateSwaggerCodeDoc javadoc
-  - ./bin/travis/upload_doc.sh
+  script: ./bin/travis/upload_doc.sh
   on:
     all_branches: true
     condition: $TRAVIS_EVENT_TYPE = cron
