@@ -23,8 +23,6 @@ import java.util.Map;
 @Component
 public class GlobalErrorAttributes extends DefaultErrorAttributes {
 
-    private String message = "please provide a name";
-
     public GlobalErrorAttributes() {
         super(false);
     }
