@@ -41,8 +41,24 @@ import java.util.function.Function;
 /**
  * <p>Responsible of Reactive Write of Cards in card mongo collection</p>
  * <p>This service also generate an ArchiveCard object persisted in archivedCard mongo collection</p>
- * <p>In the meantime, Cards treatment is windowed (see {@link reactor.core.publisher.Flux#windowTimeout})
- *  * and each window is treated in parallel (see {@link Schedulers#parallel()})</p>
+ * <p>There is two way of pushing cards to this service:
+ * <ul>
+ * <li>Synchronous cards</li>
+ * <li>Asynchronous : Cards is pushed to an internal {@link FluxSink}, the cards treatment is windowed
+ * (see {@link reactor.core.publisher.Flux#windowTimeout})
+ * and each window is treated in parallel (see {@link Schedulers#parallel()})</li>
+ * </ul>
+ * </p>
+ * <p>
+ * Treatments includes :
+ * <ul>
+ * <li>Validate card data (Bean validation)</li>
+ * <li>Creating an {@link ArchivedCardPublicationData} along the {@link CardPublicationData} (passed has tuple)</li>
+ * <li>Removing {@link CardPublicationData} with duplicate id (keeping only the latest one) throught a reduce operation</li>
+ * <li>Fuse cards to add into mongo bulk operations to avoid multiple IOs</li>
+ * <li>Execute bulk operations</li>
+ * </ul>
+ * </p>
  *
  * @author David Binder
  */
@@ -51,8 +67,8 @@ import java.util.function.Function;
 public class CardWriteService {
 
     //TODO change static variables for spring properties
-    private static final int WINDOW_SIZE =1000;
-    private static final long WINDOW_TIME_OUT =500;
+    private static final int WINDOW_SIZE = 1000;
+    private static final long WINDOW_TIME_OUT = 500;
     private final EmitterProcessor<CardPublicationData> processor;
     private final FluxSink<CardPublicationData> sink;
 
@@ -67,7 +83,7 @@ public class CardWriteService {
     public CardWriteService(RecipientProcessor recipientProcessor,
                             MongoTemplate template,
                             LocalValidatorFactoryBean localValidatorFactoryBean,
-                            CardNotificationService cardNotificationService){
+                            CardNotificationService cardNotificationService) {
 
         this.recipientProcessor = recipientProcessor;
         this.template = template;
@@ -77,179 +93,240 @@ public class CardWriteService {
         this.processor = EmitterProcessor.create();
         this.sink = this.processor.sink();
         processor
-           //parallelizing card treatments
-           .flatMap(c-> Mono.just(c).subscribeOn(Schedulers.parallel()))
-           //batching cards
-           .windowTimeout(WINDOW_SIZE,Duration.ofMillis(WINDOW_TIME_OUT))
-           //remembering startime for measurement
-           .map(card->Tuples.of(card,System.nanoTime(),SimulatedTime.getInstance().computeNow().toEpochMilli()))
-           //trigger batched treatment upon window readiness
-           .subscribe(cardAndTimeTuple -> handleWindowedCardFlux(cardAndTimeTuple));
+                //parallelizing card treatments
+                .flatMap(c -> Mono.just(c).subscribeOn(Schedulers.parallel()))
+                //batching cards
+                .windowTimeout(WINDOW_SIZE, Duration.ofMillis(WINDOW_TIME_OUT))
+                //remembering startime for measurement
+                .map(card -> Tuples.of(card, System.nanoTime(), SimulatedTime.getInstance().computeNow().toEpochMilli()))
+                //trigger batched treatment upon window readiness
+                .subscribe(cardAndTimeTuple -> handleWindowedCardFlux(cardAndTimeTuple));
     }
 
     private void handleWindowedCardFlux(Tuple3<Flux<CardPublicationData>, Long, Long> cardAndTimeTuple) {
         long windowStart = cardAndTimeTuple.getT2();
         Flux<CardPublicationData> cards = registerRecipientProcess(cardAndTimeTuple.getT1());
-        cards = registerTolerantValidationProcess(cards,cardAndTimeTuple.getT3());
+        cards = registerTolerantValidationProcess(cards, cardAndTimeTuple.getT3());
         registerPersistingProcess(cards, windowStart)
-           .doOnError(t -> log.error("Unexpected Error arrose", t))
-           .subscribe();
+                .doOnError(t -> log.error("Unexpected Error arose", t))
+                .subscribe();
     }
 
-    /** Process effective recipients. **/
-    private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards){
+    /**
+     * Process effective recipients.
+     **/
+    private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards) {
         return cards
-           .doOnNext(recipientProcessor::processAll);
+                .doOnNext(recipientProcessor::processAll);
     }
 
     /**
      * Register validation process in flux, still allowing proccess to carry on if error arise
+     *
      * @param cards
      * @param publishDate
      * @return
      */
-    private Flux<CardPublicationData> registerTolerantValidationProcess(Flux<CardPublicationData> cards, Long publishDate){
+    private Flux<CardPublicationData> registerTolerantValidationProcess(Flux<CardPublicationData> cards, Long publishDate) {
         return cards
-           // prepare card computed data (id, shardkey)
-           .flatMap(doOnNextOnErrorContinue(c->c.prepare(publishDate)))
-           // JSR303 bean validation of card
-           .flatMap(doOnNextOnErrorContinue(this::validate));
+                // prepare card computed data (id, shardkey)
+                .flatMap(doOnNextOnErrorContinue(c -> c.prepare(publishDate)))
+                // JSR303 bean validation of card
+                .flatMap(doOnNextOnErrorContinue(this::validate));
     }
 
     /**
      * Register validation process in flux. If error arrise breaks the process.
+     *
      * @param cards
      * @param publishDate
      * @return
      */
-    private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards, Long publishDate){
+    private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards, Long publishDate) {
         return cards
-           // prepare card computed data (id, shardkey)
-           .doOnNext(c->c.prepare(Math.round(publishDate/1000d)*1000))
-           // JSR303 bean validation of card
-           .doOnNext(this::validate);
+                // prepare card computed data (id, shardkey)
+                .doOnNext(c -> c.prepare(Math.round(publishDate / 1000d) * 1000))
+                // JSR303 bean validation of card
+                .doOnNext(this::validate);
     }
 
     /**
-     * Res=gister mongo persisting part of the precess
+     * Resgister mongo persisting part of the precess
+     *
      * @param cards
      * @param windowStart
      * @return
      */
-    private Mono<Integer> registerPersistingProcess(Flux<CardPublicationData> cards, long windowStart){
+    private Mono<Integer> registerPersistingProcess(Flux<CardPublicationData> cards, long windowStart) {
         // this reduce function removes CardPublicationData "duplicates" (based on id) but leaves ArchivedCard as is
-        BiFunction<Tuple3<HashMap<String,CardPublicationData>,ArrayList<ArchivedCardPublicationData>,HashSet<String>>,
-           Tuple2<CardPublicationData, ArchivedCardPublicationData>,
-           Tuple3<HashMap<String,CardPublicationData>,ArrayList<ArchivedCardPublicationData>,HashSet<String>>>
-           fct = (tuple, item)->{
-            tuple.getT1().put(item.getT1().getId(),item.getT1());
+        BiFunction<Tuple2<LinkedList<CardPublicationData>, ArrayList<ArchivedCardPublicationData>>,
+                Tuple2<CardPublicationData, ArchivedCardPublicationData>,
+                Tuple2<LinkedList<CardPublicationData>, ArrayList<ArchivedCardPublicationData>>>
+                fct = (tuple, item) -> {
+            tuple.getT1().add(item.getT1());
             tuple.getT2().add(item.getT2());
-            tuple.getT3().add(item.getT1().getId());
             return tuple;
         };
 
         return cards
-           // creating archived card
-           .map(card -> Tuples.of(card, new ArchivedCardPublicationData(card)))
-           // removing duplicates and assembling card data in collections
-           .reduce(Tuples.of(new LinkedHashMap<>(), new ArrayList<>(), new HashSet<>()), fct)
-           // switch to blockable thread before sync treatments (mongo writes)
-           .publishOn(Schedulers.immediate())
-           .flatMap(tuple ->
-              Mono.defer(() -> {
-                  doIndexCards(tuple);
-                  doIndexArchivedCards(tuple);
-                  return Mono.just(true);
-              })
-                 .then(Mono.just(Tuples.of(tuple.getT1().values(),tuple.getT2().size())))
-           )
-           .doOnNext(t->notifyCards(t.getT1()))
-           .doOnNext(t -> {
-               if (t.getT2() > 0 && log.isDebugEnabled()) {
-                   logMeasures(windowStart, t.getT2());
-               }
-           })
-           .map(Tuple2::getT2);
+                // creating archived card
+                .map(card -> Tuples.of(card, new ArchivedCardPublicationData(card)))
+                // removing duplicates and assembling card data in collections
+                .reduce(Tuples.of(new LinkedList<>(), new ArrayList<>()), fct)
+                // switch to blockable thread before sync treatments (mongo writes)
+                .publishOn(Schedulers.immediate())
+                .flatMap(cardsAndArchivedCards ->
+                        Mono.defer(() -> {
+                            doIndexCards(cardsAndArchivedCards.getT1());
+                            doIndexArchivedCards(cardsAndArchivedCards.getT2());
+                            return Mono.just(true);
+                        })
+                                .then(Mono.just(Tuples.of(cardsAndArchivedCards.getT1(), cardsAndArchivedCards.getT2().size())))
+                )
+                .doOnNext(t -> notifyCards(t.getT1()))
+                .doOnNext(t -> {
+                    if (t.getT2() > 0 && log.isDebugEnabled()) {
+                        logMeasures(windowStart, t.getT2());
+                    }
+                })
+                .map(Tuple2::getT2);
     }
 
+    /**
+     * Delegates notification to any concerned party to {@link CardNotificationService}
+     *
+     * @param cards
+     */
     private void notifyCards(Collection<CardPublicationData> cards) {
-        cardNotificationService.notifyCards(cards,CardOperationTypeEnum.ADD);
+        cardNotificationService.notifyCards(cards, CardOperationTypeEnum.ADD);
     }
 
-    private static Function<CardPublicationData, Publisher<CardPublicationData>> doOnNextOnErrorContinue(Consumer<CardPublicationData> onNext){
-        return c->{
-            try{
+    /**
+     * Hacks a fault tolerant step in flux
+     *
+     * @param onNext
+     * @return
+     */
+    private static Function<CardPublicationData, Publisher<CardPublicationData>> doOnNextOnErrorContinue(Consumer<CardPublicationData> onNext) {
+        return c -> {
+            try {
                 onNext.accept(c);
                 return Mono.just(c);
-            }catch(Exception e){
-                log.warn("Error aaroseand will be ignored",e);
+            } catch (Exception e) {
+                log.warn("Error aaroseand will be ignored", e);
                 return Mono.empty();
             }
         };
     }
 
+    /**
+     * Apply bean validation to card
+     *
+     * @param c
+     * @throws ConstraintViolationException if there is an error during validation based on object annotation configuration
+     */
     private void validate(CardPublicationData c) throws ConstraintViolationException {
         Set<ConstraintViolation<CardPublicationData>> results = localValidatorFactoryBean.validate(c);
-        if(!results.isEmpty())
+        if (!results.isEmpty())
             throw new ConstraintViolationException(results);
     }
 
-    public void createCardsAsyncParallel(Flux<CardPublicationData> cards){
-        cards.subscribe(sink::next);
+    /**
+     * Asynchronous fire and forget card push in the persisting/notification process
+     *
+     * @param pushedCards
+     */
+    public void pushCardsAsyncParallel(Flux<CardPublicationData> pushedCards) {
+        pushedCards.subscribe(sink::next);
     }
 
-    public Mono<CardCreationReportData> createCardsWithResult(Flux<CardPublicationData> inputCards){
+    /**
+     * Synchronous card push in the persisting/notification process use the same treatment as thoses associated to
+     * the internal {@link FluxSink} but adds a last step to prepare {@link CardCreationReportData}
+     *
+     * @param pushedCards
+     */
+    public Mono<CardCreationReportData> createCardsWithResult(Flux<CardPublicationData> pushedCards) {
         long windowStart = Instant.now().toEpochMilli();
-        Flux<CardPublicationData> cards = registerRecipientProcess(inputCards);
-        cards = registerValidationProcess(cards,SimulatedTime.getInstance().computeNow().toEpochMilli());
+        Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
+        cards = registerValidationProcess(cards, SimulatedTime.getInstance().computeNow().toEpochMilli());
         return registerPersistingProcess(cards, windowStart)
-           .doOnNext(count->log.info(count+" cards persisted"))
-           .map(count->new CardCreationReportData(count,"All cards were succesfully handled"))
-           .onErrorResume(e-> {
-               log.error("Unexpected error during cards persistence",e);
-               return Mono.just(new CardCreationReportData(0,"Error, unnable to handle cards: "+e.getMessage
-                  ()));
-           });
+                .doOnNext(count -> log.info(count + " pushedCards persisted"))
+                .map(count -> new CardCreationReportData(count, "All pushedCards were succesfully handled"))
+                .onErrorResume(e -> {
+                    log.error("Unexpected error during pushedCards persistence", e);
+                    return Mono.just(new CardCreationReportData(0, "Error, unnable to handle pushedCards: " + e.getMessage
+                            ()));
+                });
 
     }
 
-    private void doIndexCards(Tuple3<HashMap<String, CardPublicationData>, ArrayList<ArchivedCardPublicationData>, HashSet<String>> tuple){
-        if(tuple.getT1().isEmpty())
+    /**
+     * prepare and runs batch persist operation for {@link CardPublicationData}
+     *
+     * @param cards
+     */
+    private void doIndexCards(List<CardPublicationData> cards) {
+        if (cards.isEmpty())
             return;
         BulkOperations bulkCard = template.bulkOps(BulkOperations.BulkMode.ORDERED, CardPublicationData.class);
-        tuple.getT1().values().forEach(c->log.info("preparing to write "+c.toString()));
-        tuple.getT1().values().forEach(c->addBulkCard(bulkCard,c));
+        cards.forEach(c -> {
+            log.info("preparing to write " + c.toString());
+            addBulkCard(bulkCard, c);
+        });
         bulkCard.execute();
 
     }
 
-    private void doIndexArchivedCards(Tuple3<HashMap<String, CardPublicationData>, ArrayList<ArchivedCardPublicationData>, HashSet<String>>  tuple){
-        if(tuple.getT2().isEmpty())
+    /**
+     * prepare and batch persist operation for {@link ArchivedCardPublicationData}
+     *
+     * @param archivedCards
+     */
+    private void doIndexArchivedCards(List<ArchivedCardPublicationData> archivedCards) {
+        if (archivedCards.isEmpty())
             return;
         BulkOperations bulkArchived = template.bulkOps(BulkOperations.BulkMode.ORDERED, ArchivedCardPublicationData.class);
-        tuple.getT2().forEach(c->addBulkArchivedCard(bulkArchived,c));
+        archivedCards.forEach(c -> addBulkArchivedCard(bulkArchived, c));
         bulkArchived.execute();
 
     }
 
 
-
+    /**
+     * Adds unitary upsert (update or insert) operation for {@link CardPublicationData}
+     *
+     * @param bulk
+     * @param c
+     */
     private void addBulkCard(BulkOperations bulk, CardPublicationData c) {
         Document objDocument = new Document();
-        template.getConverter().write(c,objDocument);
+        template.getConverter().write(c, objDocument);
         Update update = new Update();
-        objDocument.entrySet().forEach(e->update.set(e.getKey(), e.getValue()));
+        objDocument.entrySet().forEach(e -> update.set(e.getKey(), e.getValue()));
         bulk.upsert(Query.query(Criteria.where("_id").is(c.getId())), update);
     }
 
+    /**
+     * Adds unitary insert operation for {@link ArchivedCardPublicationData}
+     *
+     * @param bulkArchived
+     * @param c
+     */
     private void addBulkArchivedCard(BulkOperations bulkArchived, ArchivedCardPublicationData c) {
         bulkArchived.insert(c);
     }
 
+    /**
+     * Logs card count and elapsed time since window start
+     *
+     * @param windowStart
+     * @param count
+     */
     private void logMeasures(long windowStart, long count) {
-        long windowDuration = System.nanoTime()-windowStart;
-        double windowDurationMillis = windowDuration/1000000d;
-        double cardWindowDurationMillis = windowDurationMillis/count;
-        log.debug(count+" cards handled in "+cardWindowDurationMillis+" ms each (total: "+windowDurationMillis+")");
+        long windowDuration = System.nanoTime() - windowStart;
+        double windowDurationMillis = windowDuration / 1000000d;
+        double cardWindowDurationMillis = windowDurationMillis / count;
+        log.debug(count + " cards handled in " + cardWindowDurationMillis + " ms each (total: " + windowDurationMillis + ")");
     }
 }

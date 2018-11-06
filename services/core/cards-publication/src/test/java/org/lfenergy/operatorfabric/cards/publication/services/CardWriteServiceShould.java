@@ -150,7 +150,7 @@ class CardWriteServiceShould {
 
     @Test
     void createAsyncCards() {
-        cardWriteService.createCardsAsyncParallel(generateCards());
+        cardWriteService.pushCardsAsyncParallel(generateCards());
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(4));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(5));
     }
@@ -159,7 +159,7 @@ class CardWriteServiceShould {
     void createAsyncCardsWithError() {
         String publisher = "PUBLISHER_1";
         String process = "PROCESS_1";
-        cardWriteService.createCardsAsyncParallel(Flux.concat(Flux.just(generateWrongCardData(publisher, process)), generateCards()));
+        cardWriteService.pushCardsAsyncParallel(Flux.concat(Flux.just(generateWrongCardData(publisher, process)), generateCards()));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(4));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(5));
     }
@@ -263,7 +263,7 @@ class CardWriteServiceShould {
                                 )
                                 .build())
                 .build();
-        cardWriteService.createCardsAsyncParallel(Flux.just(newCard));
+        cardWriteService.pushCardsAsyncParallel(Flux.just(newCard));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(1));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(1));
         await().atMost(5, TimeUnit.SECONDS).until(() -> !newCard.getOrphanedUsers().isEmpty());

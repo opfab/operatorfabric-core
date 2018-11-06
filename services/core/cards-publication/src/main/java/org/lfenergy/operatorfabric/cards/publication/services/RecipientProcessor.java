@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
+import org.lfenergy.operatorfabric.cards.publication.model.Card;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.Recipient;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,13 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * Computes groups and recipient
- *
+ * Allows computation of the three following things for an input {@link Recipient} :
+ * <ul>
+ * <li>The list of concerned groups</li>
+ * <li>The list of concerned orphan users (concerned users not belonging to any concerned group)</li>
+ * <li>The main recipient if any. The main recipient is the responsible user for the associated card</li>
+ * </ul>
+ * <p>
  * TODO Load user cache
  */
 @Component
@@ -38,7 +44,9 @@ public class RecipientProcessor {
     }
 
     /**
-     * Process all users associated with recipient at the time of computation
+     * <p>Process all recipient data associated with {@link CardPublicationData#getRecipient()} at the time of computation.</p>
+     *
+     * <p>Updates the argument {@link CardPublicationData}</p>
      *
      * @param card
      * @return
@@ -53,14 +61,20 @@ public class RecipientProcessor {
         return computedRecipient;
     }
 
-    public ComputedRecipient processAll(Recipient recipient){
+    /**
+     * Process all recipient data associated with {{@link Recipient}} at the time of computation.
+     *
+     * @param recipient
+     * @return a structure containing results (groups, orphaned users, main user)
+     */
+    public ComputedRecipient processAll(Recipient recipient) {
         if (recipient == null)
             return empty();
         ComputedRecipient.ComputedRecipientBuilder builder;
-        List<ComputedRecipient> processed =Collections.emptyList();
-        if(recipient.getRecipients()!=null && ! recipient.getRecipients().isEmpty()) {
+        List<ComputedRecipient> processed = Collections.emptyList();
+        if (recipient.getRecipients() != null && !recipient.getRecipients().isEmpty()) {
             processed = recipient.getRecipients().stream()
-               .map(this::processAll).collect(Collectors.toList());
+                    .map(this::processAll).collect(Collectors.toList());
         }
         switch (recipient.getType()) {
             case USER:
@@ -89,31 +103,44 @@ public class RecipientProcessor {
                 break;
         }
         processed.stream()
-           .flatMap(pr -> pr.getGroups().stream()).forEach(builder::group);
+                .flatMap(pr -> pr.getGroups().stream()).forEach(builder::group);
         ComputedRecipient computedRecipient = builder.build();
         Set<String> orphanUsers = new HashSet<>(computedRecipient.getUsers());
         orphanUsers.removeAll(computedRecipient.getGroups().stream()
-           .flatMap(g -> {
-               List<String> users = userCache.get(g);
-               if (users == null)
-                   return Stream.empty();
-               else
-                   return users.stream();
-           })
-           .collect(Collectors.toSet()));
+                .flatMap(g -> {
+                    List<String> users = userCache.get(g);
+                    if (users == null)
+                        return Stream.empty();
+                    else
+                        return users.stream();
+                })
+                .collect(Collectors.toSet()));
         computedRecipient.setOrphanUsers(orphanUsers);
         return computedRecipient;
     }
 
+    /**
+     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using random rule
+     *
+     * @param processed
+     * @return
+     */
     private ComputedRecipient.ComputedRecipientBuilder processRandom(List<ComputedRecipient> processed) {
         Set<String> users = processed.stream().flatMap(pr -> pr.getUsers().stream()).collect(Collectors.toSet());
         return ComputedRecipient.builder()
-           .users(users)
-           .main(users.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
+                .users(users)
+                .main(users.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
     }
 
+    /**
+     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using random weighted rule
+     *
+     * @param  recipient
+     * @param processed
+     * @return
+     */
     private ComputedRecipient.ComputedRecipientBuilder processWeighted(Recipient recipient, List<ComputedRecipient>
-       processed) {
+            processed) {
         Set<String> users = processed.stream().flatMap(pr -> pr.getUsers().stream()).collect(Collectors.toSet());
         Set<String> randomSource = new HashSet<>(users);
 
@@ -121,15 +148,23 @@ public class RecipientProcessor {
             IntStream.range(1, users.size()).forEach(i -> randomSource.add(recipient.getIdentity()));
 
         return ComputedRecipient.builder()
-           .users(users)
-           .main(randomSource.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
+                .users(users)
+                .main(randomSource.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
     }
 
+    /**
+     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using the favorite rule
+     * (the favorite user is main if available)
+     *
+     * @param  recipient
+     * @param processed
+     * @return
+     */
     private ComputedRecipient.ComputedRecipientBuilder processFavorite(Recipient recipient, List<ComputedRecipient>
-       processed) {
+            processed) {
         Set<String> users = processed.stream().flatMap(pr -> pr.getUsers().stream()).collect(Collectors.toSet());
         ComputedRecipient.ComputedRecipientBuilder builder = ComputedRecipient.builder()
-           .users(users);
+                .users(users);
 
         if (users.contains(recipient.getIdentity()))
             builder.main(recipient.getIdentity());
@@ -138,30 +173,44 @@ public class RecipientProcessor {
         return builder;
     }
 
+    /**
+     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using intersection
+     *
+     * @param  recipient
+     * @param processed
+     * @return
+     */
     private ComputedRecipient.ComputedRecipientBuilder processIntersect(Recipient recipient, List<ComputedRecipient>
-       processed) {
+            processed) {
         ComputedRecipient.ComputedRecipientBuilder builder = ComputedRecipient.builder();
         Set<String> users = new HashSet<>();
         processed.stream().findFirst().ifPresent(r -> users.addAll(r.getUsers()));
         processed.stream().skip(1).forEach(r -> users.retainAll(r.getUsers()));
-        processed.stream().forEach(r->builder.groups(r.getGroups()));
+        processed.stream().forEach(r -> builder.groups(r.getGroups()));
         builder.users(users);
 
         if (recipient.getPreserveMain() != null && recipient.getPreserveMain()) {
             builder.main(
-               processed.stream()
-                  .filter(pr -> pr.getMain() != null)
-                  .map(ComputedRecipient::getMain)
-                  .filter(users::contains)
-                  .findFirst()
-                  .orElse(null)
+                    processed.stream()
+                            .filter(pr -> pr.getMain() != null)
+                            .map(ComputedRecipient::getMain)
+                            .filter(users::contains)
+                            .findFirst()
+                            .orElse(null)
             );
         }
         return builder;
     }
 
+    /**
+     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using union
+     *
+     * @param  recipient
+     * @param processed
+     * @return
+     */
     private ComputedRecipient.ComputedRecipientBuilder processUnion(Recipient recipient, List<ComputedRecipient>
-       processed) {
+            processed) {
         ComputedRecipient.ComputedRecipientBuilder builder = ComputedRecipient.builder();
         processed.forEach(r -> {
             builder.users(r.getUsers());
@@ -169,29 +218,41 @@ public class RecipientProcessor {
         });
         if (recipient.getPreserveMain() != null && recipient.getPreserveMain()) {
             builder.main(
-               processed.stream()
-                  .filter(pr -> pr.getMain() != null)
-                  .map(ComputedRecipient::getMain)
-                  .findFirst()
-                  .orElse(null)
+                    processed.stream()
+                            .filter(pr -> pr.getMain() != null)
+                            .map(ComputedRecipient::getMain)
+                            .findFirst()
+                            .orElse(null)
             );
         }
         return builder;
     }
 
+    /**
+     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a group recipient
+     *
+     * @param recipient
+     * @return
+     */
     private ComputedRecipient.ComputedRecipientBuilder processGroup(Recipient recipient) {
         List<String> users = getUserCache().get(recipient.getIdentity());
         if (users == null)
             users = Collections.emptyList();
         return ComputedRecipient.builder()
-           .users(users)
-           .group(recipient.getIdentity());
+                .users(users)
+                .group(recipient.getIdentity());
     }
 
+    /**
+     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a user recipient
+     *
+     * @param recipient
+     * @return
+     */
     private ComputedRecipient.ComputedRecipientBuilder processUser(Recipient recipient) {
         return ComputedRecipient.builder()
-           .user(recipient.getIdentity())
-           .main(recipient.getIdentity());
+                .user(recipient.getIdentity())
+                .main(recipient.getIdentity());
     }
 
     public static ComputedRecipient empty() {
@@ -199,6 +260,9 @@ public class RecipientProcessor {
     }
 }
 
+/**
+ * Recipient computation result data
+ */
 @Data
 @AllArgsConstructor
 @Builder

@@ -36,7 +36,7 @@ public class AsyncCardController {
     @PostMapping()
     @ResponseStatus(HttpStatus.ACCEPTED)
     public @Valid void createCards(@Valid @RequestBody Flux<CardPublicationData> cards){
-        cardWriteService.createCardsAsyncParallel(cards);
+        cardWriteService.pushCardsAsyncParallel(cards);
 
     }
 }
