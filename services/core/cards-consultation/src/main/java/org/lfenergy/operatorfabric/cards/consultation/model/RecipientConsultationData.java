@@ -10,7 +10,11 @@ import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import java.util.List;
 
 /**
- * Please use builder to instantiate outside delinearization
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Recipient Model, documented at {@link Recipient}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

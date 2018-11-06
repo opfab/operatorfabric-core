@@ -22,10 +22,13 @@ import reactor.util.function.Tuples;
 import java.util.Optional;
 
 /**
- * <p></p>
- * Created on 22/05/18
+ * Webflux configuration. configures:
+ * <ul>
+ *     <li>CORS</li>
+ *     <li>REST routes</li>
+ * </ul>
  *
- * @author davibind
+ * @author David Binder
  */
 @Slf4j
 @Configuration

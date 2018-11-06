@@ -10,7 +10,11 @@ import org.lfenergy.operatorfabric.cards.model.InputEnum;
 import java.util.List;
 
 /**
- * Please use builder to instantiate outside delinearization
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Input Model, documented at {@link Input}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

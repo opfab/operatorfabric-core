@@ -81,7 +81,7 @@ public class CardSubscriptionServiceShould {
         CardSubscription subscription = service.subscribe(user, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
-        service.scheduleEvict(subscription.getId());
+        service.scheduleEviction(subscription.getId());
         Assertions.assertThat(subscription.checkActive()).isTrue();
         Assertions.assertThat(subscription.isCleared()).isFalse();
         await().atMost(15, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
@@ -92,7 +92,7 @@ public class CardSubscriptionServiceShould {
         CardSubscription subscription = service.subscribe(user, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
-        service.scheduleEvict(subscription.getId());
+        service.scheduleEviction(subscription.getId());
         Assertions.assertThat(subscription.checkActive()).isTrue();
         try {
             await().atMost(6, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());

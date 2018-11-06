@@ -10,7 +10,11 @@ import org.lfenergy.operatorfabric.cards.model.ActionEnum;
 import java.util.List;
 
 /**
- * Please use builder to instantiate outside delinearization
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Action Model, documented at {@link Action}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

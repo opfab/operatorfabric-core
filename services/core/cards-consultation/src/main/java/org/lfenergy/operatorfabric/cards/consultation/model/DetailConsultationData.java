@@ -10,7 +10,11 @@ import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
 import java.util.List;
 
 /**
- * Please use builder to instantiate outside delinearization
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Detail Model, documented at {@link Detail}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

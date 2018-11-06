@@ -18,7 +18,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Please use builder to instantiate outside delinearization
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Archived Card Model, documented at {@link Card}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

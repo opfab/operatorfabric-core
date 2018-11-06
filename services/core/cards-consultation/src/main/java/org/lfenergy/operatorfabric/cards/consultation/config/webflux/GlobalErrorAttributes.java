@@ -4,23 +4,25 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.config.webflux;
 
+import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 
 import java.util.Map;
 
 /**
- * <p></p>
- * Created on 09/10/18
- *
- * @author davibind
+ * <p>Implementation of {@link ErrorAttributes}</p>
+ * <p>In addition to the attribute exposed bu {@link DefaultErrorAttributes}, sets status and message according
+ * to {@link org.lfenergy.operatorfabric.springtools.error.model.ApiError} if underlying exception is instance of
+ * {@link ApiErrorException}
+ * ></p>
+ * @author David Binder
  */
 @Component
 public class GlobalErrorAttributes extends DefaultErrorAttributes {
 
-    private HttpStatus status = HttpStatus.BAD_REQUEST;
     private String message = "please provide a name";
 
     public GlobalErrorAttributes() {
@@ -30,36 +32,12 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, boolean includeStackTrace) {
         Map<String, Object> map = super.getErrorAttributes(request, includeStackTrace);
-        map.put("status", getStatus());
-        map.put("message", getMessage());
+        Throwable error = (Throwable) map.get("error");
+        if(error instanceof ApiErrorException) {
+            map.put("status", ((ApiErrorException)error).getError().getStatus());
+            map.put("message", ((ApiErrorException)error).getError().getMessage());
+        }
         return map;
     }
 
-    /**
-     * @return the status
-     */
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    /**
-     * @param status the status to set
-     */
-    public void setStatus(HttpStatus status) {
-        this.status = status;
-    }
-
-    /**
-     * @return the message
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * @param message the message to set
-     */
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

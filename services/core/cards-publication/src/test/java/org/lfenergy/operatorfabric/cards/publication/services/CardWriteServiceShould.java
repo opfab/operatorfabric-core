@@ -14,7 +14,7 @@ import org.lfenergy.operatorfabric.cards.model.ActionEnum;
 import org.lfenergy.operatorfabric.cards.model.InputEnum;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.cards.publication.Application;
+import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.config.TestCardReceiver;
 import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepository;
@@ -41,7 +41,7 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
  * @author davibind
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = CardPublicationApplication.class)
 @ActiveProfiles(profiles = {"native", "test"})
 @Slf4j
 @Tag("end-to-end")

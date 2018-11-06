@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.cards.publication.Application;
+import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.config.TestCardReceiver;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
@@ -37,7 +37,7 @@ import static org.awaitility.Awaitility.await;
  * @author davibind
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = CardPublicationApplication.class)
 @ActiveProfiles(profiles = {"native","test"})
 @Slf4j
 @Tag("end-to-end")

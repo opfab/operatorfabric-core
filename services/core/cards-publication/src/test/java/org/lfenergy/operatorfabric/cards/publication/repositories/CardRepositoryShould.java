@@ -9,23 +9,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.cards.model.*;
 import org.lfenergy.operatorfabric.cards.model.ActionEnum;
 import org.lfenergy.operatorfabric.cards.model.InputEnum;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
-import org.lfenergy.operatorfabric.cards.publication.Application;
+import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Instant;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import static org.awaitility.Awaitility.await;
@@ -37,7 +34,7 @@ import static org.awaitility.Awaitility.await;
  * @author davibind
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = CardPublicationApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = {"native", "test"})
 //@Disabled
 @Tag("end-to-end")

@@ -5,12 +5,12 @@
 package org.lfenergy.operatorfabric.cards.consultation.config.webflux;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.stereotype.Component;
@@ -21,10 +21,12 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 /**
- * <p></p>
- * Created on 09/10/18
+ * <p>Configure error handling for routes which matche predicate "all"</p>
+ * <p>Add logs and forward error data in http response json body unless underlying exception is
+ * {@link ApiErrorException}. In this case froward its associated
+ * {@link org.lfenergy.operatorfabric.springtools.error.model.ApiError} object</p>
  *
- * @author davibind
+ * @author David Binder
  */
 @Component
 @Order(-2)
@@ -50,8 +52,14 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
         log.warn("Error during http request processing. Activate Debug for more details");
         log.debug(trace);
         errorPropertiesMap.remove("trace");
-        return ServerResponse.status(HttpStatus.BAD_REQUEST)
-           .contentType(MediaType.APPLICATION_JSON_UTF8)
+        ServerResponse.BodyBuilder bodyBuilder = ServerResponse.status((Integer) errorPropertiesMap.get("status"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8);
+        Throwable error = (Throwable) errorPropertiesMap.get("error");
+        if(error instanceof ApiErrorException){
+            return bodyBuilder
+                    .body(BodyInserters.fromObject(((ApiErrorException)error).getError()));
+        }
+        return bodyBuilder
            .body(BodyInserters.fromObject(errorPropertiesMap));
     }
 

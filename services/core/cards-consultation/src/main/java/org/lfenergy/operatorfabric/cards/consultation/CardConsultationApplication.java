@@ -15,7 +15,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
-//import org.lfenergy.operatorfabric.springtools.config.oauth.EnableOperatorFabricOauth2;
 
 @SpringBootApplication
 @Slf4j
@@ -25,10 +24,10 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories
 @ImportResource("classpath:/amqp.xml")
-public class Application {
+public class CardConsultationApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(CardConsultationApplication.class, args);
 
         assert (ctx != null);
     }

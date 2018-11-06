@@ -10,7 +10,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Please use builder to instantiate outside delinearization
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Parameter List Item Model, documented at {@link ParameterListItem}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

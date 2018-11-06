@@ -12,7 +12,11 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import java.util.List;
 
 /**
- * Please use builder to instantiate outside delinearization
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>Light Card Model, documented at {@link LightCard}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

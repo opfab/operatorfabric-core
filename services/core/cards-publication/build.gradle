@@ -10,7 +10,7 @@ jar {
     manifest {
         attributes("Created-By"         : "David Binder",
                 "Specification-Title": "Operator Fabric Card Manager Service",
-                "Main-Class"         : "org.lfenergy.operatorfabric.cards.publication.Application",
+                "Main-Class"         : "org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }
 }

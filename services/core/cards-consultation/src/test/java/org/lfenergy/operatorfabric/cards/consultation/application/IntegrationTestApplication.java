@@ -1,7 +1,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.application;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.consultation.Application;
+import org.lfenergy.operatorfabric.cards.consultation.CardConsultationApplication;
 import org.lfenergy.operatorfabric.cards.consultation.config.json.JacksonConfig;
 import org.lfenergy.operatorfabric.cards.consultation.config.mongo.LocalMongoConfiguration;
 import org.lfenergy.operatorfabric.springtools.config.mongo.EnableOperatorFabricMongo;
@@ -29,7 +29,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 public class IntegrationTestApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(CardConsultationApplication.class, args);
 
         assert (ctx != null);
     }

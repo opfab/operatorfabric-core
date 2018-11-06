@@ -28,10 +28,9 @@ import java.time.Duration;
 import java.util.Optional;
 
 /**
- * <p></p>
- * Created on 18/09/18
+ * <p>Handles cards access at the rest level. Depends on {@link CardSubscriptionService} for business logic</p>
  *
- * @author davibind
+ * @author David Binder
  */
 @Component
 @Slf4j
@@ -49,7 +48,12 @@ public class CardOperationsController {
     }
 
 
-
+    /**
+     * Register to {@link CardSubscriptionService} to get access to a {@link Flux} of String. Those strings are Json
+     * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
+     * @param input
+     * @return
+     */
     public Flux<String> registerSubscriptionAndPublish(Mono<Tuple2<User, Optional<String>>> input) {
         return input
            .flatMapMany(t -> {
@@ -69,6 +73,12 @@ public class CardOperationsController {
            });
     }
 
+    /**
+     * Generates a test {@link Flux} of String. Those strings are Json
+     * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
+     * @param input
+     * @return
+     */
     public Flux<String> publishTestData(Mono<Tuple2<User, Optional<String>>> input) {
         return input.flatMapMany(t -> Flux
                 .interval(Duration.ofSeconds(5))
@@ -96,11 +106,16 @@ public class CardOperationsController {
         );
     }
 
+    /**
+     * Converts an object to a JSON string. If conversion problems arise, logs and returns "null" string
+     * @param o
+     * @return Json object string representation or "null" if error.
+     */
     private String objectToJsonString(Object o) {
         try {
             return mapper.writeValueAsString(o);
         } catch (JsonProcessingException e) {
-            log.error("Unnable to convert object to Json string", e);
+            log.error("Unable to convert object to Json string", e);
             return "null";
         }
     }

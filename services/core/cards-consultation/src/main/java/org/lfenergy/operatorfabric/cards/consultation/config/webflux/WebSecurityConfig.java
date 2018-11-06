@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package org.lfenergy.operatorfabric.cards.consultation.config.oauth2;
+package org.lfenergy.operatorfabric.cards.consultation.config.webflux;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -14,16 +14,21 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 
 
 /**
- * <p></p>
- * Created on 09/08/18
+ * Configures web scurity
  *
- * @author davibind
+ * @author David Binder
  */
 @Configuration
 @Slf4j
 @EnableWebFluxSecurity
-public class OAuth2ResourceServerConfiguration  {
+public class WebSecurityConfig {
 
+    /**
+     * Secures access (all uris are secured)
+     * @param http
+     * @param opfabJwtReactiveAuthenticationManager
+     * @return
+     */
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,ReactiveAuthenticationManager opfabJwtReactiveAuthenticationManager) {
         http.headers().frameOptions().disable();

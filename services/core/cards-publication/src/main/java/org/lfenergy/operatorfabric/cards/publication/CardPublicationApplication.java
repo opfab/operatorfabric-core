@@ -23,10 +23,10 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories
 @ImportResource("classpath:/amqp.xml")
-public class Application {
+public class CardPublicationApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(CardPublicationApplication.class, args);
         assert (ctx != null);
         ObjectProvider<Jackson2ObjectMapperBuilder> beanProvider = ctx.getBeanProvider(Jackson2ObjectMapperBuilder
            .class);

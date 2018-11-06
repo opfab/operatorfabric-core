@@ -10,7 +10,9 @@ import lombok.*;
 import java.util.List;
 
 /**
- * Please use builder to instantiate outside delinearization
+ * <p>Please use builder to instantiate</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */

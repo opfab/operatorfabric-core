@@ -9,7 +9,11 @@ import lombok.*;
 import java.util.Map;
 
 /**
- * Please use builder to instantiate outside delinearization
+ * <p>Please use builder to instantiate</p>
+ *
+ * <p>I18n Model, documented at {@link I18n}</p>
+ *
+ * {@inheritDoc}
  *
  * @author David Binder
  */
