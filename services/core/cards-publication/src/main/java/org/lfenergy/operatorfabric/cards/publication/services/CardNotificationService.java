@@ -185,7 +185,7 @@ public class CardNotificationService {
      * NB: At this point it may seems weird to "return" maps as these maps only contains one elemnt but it allows
      * for simpler data manipulation during later reduce operation to fuse {@link CardOperationData.CardOperationDataBuilder}
      * </p>
-     * {@link Card}
+     * {@link Card}²
      *
      * @param card the card to be afterward notified
      * @param type the type of notification

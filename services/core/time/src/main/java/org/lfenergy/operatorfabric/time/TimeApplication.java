@@ -21,10 +21,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableDiscoveryClient
 @EnableOperatorFabricOauth2
 @ImportResource("classpath:/cors.xml")
-public class Application {
+public class TimeApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(TimeApplication.class, args);
 
         assert (ctx != null);
     }

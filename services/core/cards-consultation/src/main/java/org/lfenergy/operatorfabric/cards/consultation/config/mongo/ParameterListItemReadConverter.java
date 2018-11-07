@@ -12,7 +12,8 @@ import org.springframework.core.convert.converter.Converter;
 /**
  *
  * <p>Spring converter registered in mongo conversions</p>
- * <p>Converts {@link Document} to {@link ParameterListItem} using {@link ParameterListItemConsultationData.ParameterListItemConsultationDataBuilder}</p>
+ * <p>Converts {@link Document} to {@link ParameterListItem} using {@link ParameterListItemConsultationData} builder
+ * .</p>
  *
  * @author David Binder
  */

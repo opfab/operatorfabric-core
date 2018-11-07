@@ -42,16 +42,14 @@ import java.util.function.Function;
 /**
  * <p>Responsible of Reactive Write of Cards in card mongo collection</p>
  * <p>This service also generate an ArchiveCard object persisted in archivedCard mongo collection</p>
- * <p>There is two way of pushing cards to this service:
+ * <p>There is two way of pushing cards to this service:</p>
  * <ul>
  * <li>Synchronous cards</li>
  * <li>Asynchronous : Cards is pushed to an internal {@link FluxSink}, the cards treatment is windowed
  * (see {@link reactor.core.publisher.Flux#windowTimeout})
  * and each window is treated in parallel (see {@link Schedulers#parallel()})</li>
  * </ul>
- * </p>
- * <p>
- * Treatments includes :
+ * <p>Treatments includes :</p>
  * <ul>
  * <li>Validate card data (Bean validation)</li>
  * <li>Creating an {@link ArchivedCardPublicationData} along the {@link CardPublicationData} (passed has tuple)</li>
@@ -59,7 +57,6 @@ import java.util.function.Function;
  * <li>Fuse cards to add into mongo bulk operations to avoid multiple IOs</li>
  * <li>Execute bulk operations</li>
  * </ul>
- * </p>
  *
  * <p>Configuration properties available in spring configuration</p>
  * <ul>

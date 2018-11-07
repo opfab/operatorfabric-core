@@ -25,7 +25,7 @@ public class JacksonConfig {
   /**
    * Builds object mapper adding java 8 custom configuration and business module configuration ({@link CardsModule})
    * @param builder Spring internal {@link ObjectMapper} builder [injected]
-   * @return
+   * @return the configured object mapper
    */
   @Bean
   @Autowired
@@ -36,9 +36,6 @@ public class JacksonConfig {
     objectMapper.registerModule(new Jdk8Module());
     objectMapper.registerModule(new JavaTimeModule());
     objectMapper.registerModule(new CardsModule());
-
-
-    log.info("Object Mapper configured for cards");
     return objectMapper;
   }
 }

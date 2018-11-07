@@ -16,7 +16,7 @@ import java.util.List;
 /**
  *
  * <p>Spring converter registered in mongo conversions</p>
- * <p>Converts {@link Document} to {@link Input} using {@link InputConsultationData.InputConsultationDataBuilder}</p>
+ * <p>Converts {@link Document} to {@link Input} using {@link InputConsultationData} builder.</p>
  *
  * @author David Binder
  */

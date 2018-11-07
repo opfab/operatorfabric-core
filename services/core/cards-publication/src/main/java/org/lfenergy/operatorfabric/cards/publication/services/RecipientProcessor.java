@@ -119,8 +119,8 @@ public class RecipientProcessor {
         return computedRecipient;
     }
 
-    /**
-     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using random rule
+    /*
+     * Computes {@link ComputedRecipient} builder data for a list of recipient using random rule
      *
      * @param processed
      * @return
@@ -132,8 +132,8 @@ public class RecipientProcessor {
                 .main(users.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
     }
 
-    /**
-     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using random weighted rule
+    /*
+     * Computes {@link ComputedRecipient} builder data for a list of recipient using random weighted rule
      *
      * @param  recipient
      * @param processed
@@ -152,8 +152,8 @@ public class RecipientProcessor {
                 .main(randomSource.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
     }
 
-    /**
-     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using the favorite rule
+    /*
+     * Computes {@link ComputedRecipient} builder data for a list of recipient using the favorite rule
      * (the favorite user is main if available)
      *
      * @param  recipient
@@ -173,8 +173,8 @@ public class RecipientProcessor {
         return builder;
     }
 
-    /**
-     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using intersection
+    /*
+     * Computes {@link ComputedRecipient} builder data for a list of recipient using intersection
      *
      * @param  recipient
      * @param processed
@@ -202,8 +202,8 @@ public class RecipientProcessor {
         return builder;
     }
 
-    /**
-     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a list of recipient using union
+    /*
+     * Computes {@link ComputedRecipient} builder data for a list of recipient using union
      *
      * @param  recipient
      * @param processed
@@ -228,8 +228,8 @@ public class RecipientProcessor {
         return builder;
     }
 
-    /**
-     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a group recipient
+    /*
+     * Computes {@link ComputedRecipient} builder data for a group recipient
      *
      * @param recipient
      * @return
@@ -243,8 +243,8 @@ public class RecipientProcessor {
                 .group(recipient.getIdentity());
     }
 
-    /**
-     * Computes {@link ComputedRecipient.ComputedRecipientBuilder} data for a user recipient
+    /*
+     * Computes {@link ComputedRecipient} builder data for a user recipient
      *
      * @param recipient
      * @return
@@ -260,20 +260,3 @@ public class RecipientProcessor {
     }
 }
 
-/**
- * Recipient computation result data
- */
-@Data
-@AllArgsConstructor
-@Builder
-class ComputedRecipient {
-    private String main;
-    @Singular
-    private Set<String> groups;
-    @Singular
-    private Set<String> users;
-    @Singular
-    private Set<String> orphanUsers;
-
-
-}
