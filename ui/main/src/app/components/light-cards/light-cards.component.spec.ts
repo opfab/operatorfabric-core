@@ -8,7 +8,6 @@ import {LightCardsComponent} from './light-cards.component';
 import {MatButtonModule, MatCardModule} from '@angular/material';
 import {LightCardsListComponent} from './components/light-cards-list/light-cards-list.component';
 import {LightCardDetailsComponent} from './components/light-card-details/light-card-details.component';
-import {TestingModule} from '@testing/utils';
 import {AppState} from '@state/app.interface';
 import {Store, StoreModule} from '@ngrx/store';
 import {LoadLightCardsSuccess} from '@state/light-card/light-card.actions';
@@ -25,9 +24,8 @@ describe('LightCardsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                // from https://github.com/ngrx/platform/blob/master/docs/store/testing.md
                 StoreModule.forRoot(fromReducers.appReducer),
-                MatCardModule, MatButtonModule, TestingModule],
+                MatCardModule, MatButtonModule],
             declarations: [LightCardsListComponent, LightCardsComponent, LightCardDetailsComponent]
             , providers: [{provide: Store, useClass: Store}]
         })
