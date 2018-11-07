@@ -3,9 +3,9 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <h3>Light Cards</h3>
-<ul *ngFor="let lightCard of lightCards">
+<ul *ngFor="let currentLightCard of lightCards">
   <li>
-    <app-card-details [lightCard]="lightCard"></app-card-details>
+    <app-light-card-details [lightCard]="currentLightCard"></app-light-card-details>
   </li>
 </ul>
 

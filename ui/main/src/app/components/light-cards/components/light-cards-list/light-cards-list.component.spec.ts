@@ -5,6 +5,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LightCardsListComponent } from './light-cards-list.component';
+import {MatButtonModule, MatCardModule} from '@angular/material';
+import {LightCardsModule} from '../../light-cards.module';
+import {LightCardDetailsComponent} from '../light-card-details/light-card-details.component';
 
 describe('LightCardsListComponent', () => {
   let component: LightCardsListComponent;
@@ -12,7 +15,8 @@ describe('LightCardsListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LightCardsListComponent ]
+        imports: [MatCardModule, MatButtonModule],
+        declarations: [ LightCardsListComponent, LightCardDetailsComponent]
     })
     .compileComponents();
   }));

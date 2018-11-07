@@ -5,7 +5,8 @@
     "paths": {
       "@env/*": ["environments/*"],
       "@state/*": ["app/state/*"],
-      "@core/*": ["app/core/*"]
+      "@core/*": ["app/core/*"],
+      "@testing/*": ["testing/*"]
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

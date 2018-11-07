@@ -12,7 +12,7 @@ import {LightCard} from '../../../../state/light-card/light-card.model';
 })
 export class LightCardsListComponent  {
 
-  @Input() lightCards: LightCard[];
+  @Input() public lightCards: LightCard[];
 
   constructor() { }
 

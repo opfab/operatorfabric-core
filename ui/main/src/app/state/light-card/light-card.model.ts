@@ -3,37 +3,38 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 export interface LightCard {
-    uid: string;
-    id: string;
-    mainRecipient: string;
-    startDate: number;
-    endDate: number;
-    severity: string;
+    readonly uid: string;
+    readonly id: string;
+    readonly mainRecipient: string;
+    readonly startDate: number;
+    readonly endDate: number;
+    readonly severity: Severity;
+    readonly processId?: string;
+    readonly lttd?: number;
+    readonly title?: I18nData;
+    readonly summary?: I18nData;
     // media?: string;
     // tags?: string[];
-    processId?: string;
-    lttd?: number;
-    title?: I18nData;
-    summary?: I18nData;
+
 }
 
 export class LightCard implements LightCard {
 
     constructor(
-        uid: string
-        , id: string
-        , startDate: number
-        , endDate: number
-        , severity: Severity
-        , mainRecipient: string
+        readonly uid: string
+        , readonly id: string
+        , readonly startDate: number
+        , readonly endDate: number
+        , readonly severity: Severity
+        , readonly mainRecipient: string
+
+        , readonly processId?: string
+        , readonly lttd?: number
+        , readonly title?: I18nData
+        , readonly summary?: I18nData
         // , media?: string
         // , tags?: string[]
-        , processId?: string
-        , lttd?: number
-        , title?: I18nData
-        , summary?: I18nData
-    ) {
-    }
+    ) {}
 }
 
 export enum Severity {
@@ -46,12 +47,12 @@ export enum Sound {
 }
 
 export interface I18nData {
-    key: string;
-    parameters: string[];
+   readonly key: string;
+   readonly parameters: string[];
 }
 
-export class I18nData {
+export class I18nData implements I18nData{
 
-    constructor(key: string, parameters: string[]) {
+    constructor(readonly key: string, readonly parameters: string[]) {
     }
 }
