@@ -24,13 +24,13 @@ import java.util.Map;
 public class GlobalErrorAttributes extends DefaultErrorAttributes {
 
     public GlobalErrorAttributes() {
-        super(false);
+        super(true);
     }
 
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, boolean includeStackTrace) {
         Map<String, Object> map = super.getErrorAttributes(request, includeStackTrace);
-        Throwable error = (Throwable) map.get("error");
+        Throwable error = (Throwable) map.get("exception");
         if(error instanceof ApiErrorException) {
             map.put("status", ((ApiErrorException)error).getError().getStatus());
             map.put("message", ((ApiErrorException)error).getError().getMessage());

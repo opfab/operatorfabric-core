@@ -54,7 +54,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
         errorPropertiesMap.remove("trace");
         ServerResponse.BodyBuilder bodyBuilder = ServerResponse.status((Integer) errorPropertiesMap.get("status"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8);
-        Throwable error = (Throwable) errorPropertiesMap.get("error");
+        Throwable error = (Throwable) errorPropertiesMap.get("exception");
         if(error instanceof ApiErrorException){
             return bodyBuilder
                     .body(BodyInserters.fromObject(((ApiErrorException)error).getError()));
