@@ -17,7 +17,7 @@ import java.util.Map;
  * <p>In addition to the attribute exposed bu {@link DefaultErrorAttributes}, sets status and message according
  * to {@link org.lfenergy.operatorfabric.springtools.error.model.ApiError} if underlying exception is instance of
  * {@link ApiErrorException}
- * ></p>
+ * </p>
  * @author David Binder
  */
 @Component

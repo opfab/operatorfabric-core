@@ -61,7 +61,7 @@ public class WebFluxConfig {
            request -> {
                ServerResponse.BodyBuilder builder = ServerResponse.ok()
                   .contentType(MediaType.TEXT_EVENT_STREAM);
-               if (request.queryParam("publishTestData").orElse("false").equals("true")) {
+               if (request.queryParam("test").orElse("false").equals("true")) {
                    return builder.body(cardOperationsController.publishTestData(extractCardSubscriptionInfo(request)),
                       String.class);
                } else {
