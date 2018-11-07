@@ -13,6 +13,11 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+/**
+ * Swagger documentation configuration
+ *
+ * @author David Binder
+ */
 @Configuration
 public class SwaggerDocumentationConfig {
 

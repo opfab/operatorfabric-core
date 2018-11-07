@@ -10,16 +10,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * <p></p>
- * Created on 29/06/18
+ * AMQP exchange configuration
  *
- * @author davibind
+ * @author David Binder
  */
 @Configuration
 public class AmqpConfig {
 
     static final String EXCHANGE_NAME = "timeExchange";
 
+    /**
+     * Instantiate the exchange used to transfer time information
+     * @return
+     */
     @Bean
     public FanoutExchange timeExchange(){
         return (FanoutExchange) ExchangeBuilder.fanoutExchange(EXCHANGE_NAME).build();

@@ -15,14 +15,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.jwt.Jwt;
 
 /**
- * <p></p>
- * Created on 09/08/18
+ * OAuth 2 http authentication configuration and access rules
  *
- * @author davibind
+ * @author David Binder
  */
 @Configuration
 @Slf4j
-public class OAuth2ResourceServerConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;

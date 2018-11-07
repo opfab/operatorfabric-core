@@ -55,7 +55,7 @@ class TimeServiceShould {
     log.info("now is : " + now.toString());
     Instant lastYear = now.minus(365, ChronoUnit.DAYS);
     log.info("last year is : " + lastYear.toString());
-    timeModule.setTime(lastYear);
+    timeModule.updateTime(lastYear);
     Thread.sleep(1500);
     Instant computedNow = timeModule.computeNow();
     log.info("computed now is : " + computedNow.toString());
@@ -84,7 +84,7 @@ class TimeServiceShould {
     Instant lastYear = now.minus(365, ChronoUnit.DAYS);
     log.info("last year is : " + lastYear.toString());
     SpeedEnum speed = SpeedEnum.X10;
-    timeModule.setSpeedAndTime(speed, lastYear);
+    timeModule.updateSpeedAndTime(speed, lastYear);
     log.info("now is "+now.toString());
     Thread.sleep(2000);
     TimeData result = timeModule.fetchTimeData();
@@ -130,7 +130,7 @@ class TimeServiceShould {
       timeModule.computeNow();
 
       Instant nowBeforeSleep = Instant.now();
-      timeModule.setSpeed(speed);
+      timeModule.updateSpeed(speed);
       log.info("now is "+nowBeforeSleep.toString());
       Thread.sleep(2000);
       TimeData result = timeModule.fetchTimeData();

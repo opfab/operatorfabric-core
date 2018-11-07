@@ -7,10 +7,11 @@ package org.lfenergy.operatorfabric.time.model;
 import lombok.NoArgsConstructor;
 
 /**
- * <p></p>
- * Created on 19/06/18
+ * Time Model, documented at {@link TimeData}
  *
- * @author davibind
+ * {@inheritDoc}
+ *
+ * @author David Binder
  */
 @NoArgsConstructor
 public class ServerTimeData extends ClientTimeData implements TimeData {

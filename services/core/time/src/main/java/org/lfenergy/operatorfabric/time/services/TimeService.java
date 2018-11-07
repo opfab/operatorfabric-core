@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
+/**
+ * Business time management
+ */
 @Service
 @Slf4j
 public class TimeService {
@@ -31,6 +34,14 @@ public class TimeService {
     @Value("${time.default:#{null}}")
     private Long defaultStartTime;
 
+    /**
+     * Constructor by injection
+     *
+     * @param simulatedTime injected
+     * @param rabbitTemplate injected
+     * @param mapper injected
+     * @param timeExchange injected
+     */
     @Autowired
     public TimeService(SimulatedTime simulatedTime, RabbitTemplate rabbitTemplate, ObjectMapper mapper,
                        FanoutExchange timeExchange) {
@@ -40,18 +51,33 @@ public class TimeService {
         this.mapper = mapper;
         this.timeExchange = timeExchange;
         if(defaultStartTime!=null)
-            setTime(Instant.ofEpochMilli(defaultStartTime));
+            updateTime(Instant.ofEpochMilli(defaultStartTime));
     }
 
+    /**
+     *
+     * @return simuleted "now" time
+     */
     public Instant computeNow() {
         return simulatedTime.computeNow();
     }
 
-    public void setTime(Instant instant) {
-        setTime(instant, true);
+    /**
+     * <p>Sets current time to specified value computing a delta in real and vertual value for later computation</p>
+     * <p>Relies on {@link #updateTime(Instant, boolean)} with notify set to true</p>
+     *
+     * @param instant the new current time
+     */
+    public void updateTime(Instant instant) {
+        updateTime(instant, true);
     }
-
-    private void setTime(Instant instant, boolean notify) {
+    /**
+     * <p>Sets current time to specified value computing a delta in real and vertual value for later computation</p>
+     *
+     * @param instant the new current time
+     * @param notify if sets to true, an amqp message is sent
+     */
+    private void updateTime(Instant instant, boolean notify) {
         simulatedTime.setStartSimulatedTime(instant);
         simulatedTime.setReferenceSystemTime(Instant.now());
         if (notify) {
@@ -59,21 +85,37 @@ public class TimeService {
         }
     }
 
+    /**
+     * Resets {@link SimulatedTime instance to initial values}
+     */
     public void reset() {
         simulatedTime.reset();
-        notifyChanges();
+        if(defaultStartTime!=null)
+            updateTime(Instant.ofEpochMilli(defaultStartTime));
+        else
+            notifyChanges();
     }
 
-    public void setSpeed(SpeedEnum speed) {
-        setSpeed(speed, true);
+    /**
+     * <p>Updates speed value, used in later computation</p>
+     * <p>Relies on {@link #updateSpeed(SpeedEnum, boolean)} with notify set to true</p>
+     * @param speed
+     */
+    public void updateSpeed(SpeedEnum speed) {
+        updateSpeed(speed, true);
     }
 
-    private void setSpeed(SpeedEnum speed, boolean notify) {
+    /**
+     * <p>Updates speed value, used in later computation</p>
+     * @param speed the new speed value
+     * @param notify if sets to true, an amqp message is sent
+     */
+    private void updateSpeed(SpeedEnum speed, boolean notify) {
         if (simulatedTime.getStartSimulatedTime() == null) {
             simulatedTime.setReferenceSystemTime(Instant.now());
             simulatedTime.setStartSimulatedTime(simulatedTime.getReferenceSystemTime());
         } else {
-            setTime(computeNow(), false);
+            updateTime(computeNow(), false);
         }
         simulatedTime.setSpeed(speed.coef);
         if (notify) {
@@ -81,12 +123,20 @@ public class TimeService {
         }
     }
 
-    public void setSpeedAndTime(SpeedEnum speed, Instant instant) {
-        setTime(instant);
-        setSpeed(speed, false);
+    /**
+     * <p>Updates speed and time values, used in later computation</p>
+     * <p>Trigers AMQP message emission</p>
+     * @param speed
+     */
+    public void updateSpeedAndTime(SpeedEnum speed, Instant instant) {
+        updateSpeed(speed, false);
+        updateTime(instant);
     }
 
 
+    /**
+     * Send message containing current time configuration in JSON representation to timeExchange
+     */
     private void notifyChanges() {
         try {
             rabbitTemplate.convertAndSend(timeExchange.getName(),
@@ -101,15 +151,21 @@ public class TimeService {
         simulatedTime.notifyTimeWarp();
     }
 
-    public SpeedEnum getSpeed() {
+    /**
+     * @return current speed configuration
+     */
+    public SpeedEnum retrieveSpeed() {
         return SpeedEnum.fromCoef(simulatedTime.getSpeed());
     }
 
+    /**
+     * @return complete configuration data
+     */
     public TimeData fetchTimeData() {
         return new ServerTimeData(
            simulatedTime.getReferenceSystemTime()==null?null:simulatedTime.getReferenceSystemTime().toEpochMilli(),
            simulatedTime.getStartSimulatedTime()==null?null:simulatedTime.getStartSimulatedTime().toEpochMilli(),
            computeNow().toEpochMilli(),
-           getSpeed());
+           retrieveSpeed());
     }
 }
