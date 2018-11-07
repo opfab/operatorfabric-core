@@ -108,23 +108,23 @@ public class CardNotificationService {
      * @return
      */
     private Tuple2<LinkedHashMap<String, List<CardOperation>>, LinkedHashMap<String, List<CardOperation>>>
-    reduceCardOperationBuilders(Tuple2<LinkedHashMap<String, List<CardOperation>>, LinkedHashMap<String, List<CardOperation>>> result, Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> item) {
-        for (Map.Entry<String, CardOperationData.CardOperationDataBuilder> e : item.getT1().entrySet()) {
+    reduceCardOperationBuilders(Tuple2<LinkedHashMap<String, List<CardOperation>>, LinkedHashMap<String, List<CardOperation>>> result, Tuple2<Map<String, CardOperationData.BuilderEncapsulator>, Map<String, CardOperationData.BuilderEncapsulator>> item) {
+        for (Map.Entry<String, CardOperationData.BuilderEncapsulator> e : item.getT1().entrySet()) {
             List<CardOperation> opsList = result.getT1().get(e.getKey());
             if (opsList == null) {
                 opsList = new ArrayList<>();
                 result.getT1().put(e.getKey(), opsList);
             }
-            opsList.add(e.getValue().build());
+            opsList.add(e.getValue().builder().build());
         }
 
-        for (Map.Entry<String, CardOperationData.CardOperationDataBuilder> e : item.getT2().entrySet()) {
+        for (Map.Entry<String, CardOperationData.BuilderEncapsulator> e : item.getT2().entrySet()) {
             List<CardOperation> opsList = result.getT2().get(e.getKey());
             if (opsList == null) {
                 opsList = new ArrayList<>();
                 result.getT2().put(e.getKey(), opsList);
             }
-            opsList.add(e.getValue().build());
+            opsList.add(e.getValue().builder().build());
         }
         return result;
     }
@@ -171,7 +171,7 @@ public class CardNotificationService {
     }
 
     /**
-     * <p>Arrange {@link Card} into Unitary {@link CardOperationData.CardOperationDataBuilder}, that is to say
+     * <p>Arrange {@link Card} into Unitary {@link CardOperationData} builder, that is to say
      * CardOperationDataBuilder that only contain
      * one card</p>
      * <p>For one card:
@@ -183,7 +183,7 @@ public class CardNotificationService {
      * </p>
      * <p>
      * NB: At this point it may seems weird to "return" maps as these maps only contains one elemnt but it allows
-     * for simpler data manipulation during later reduce operation to fuse {@link CardOperationData.CardOperationDataBuilder}
+     * for simpler data manipulation during later reduce operation to fuse {@link CardOperationData} builder
      * </p>
      * {@link Card}²
      *
@@ -191,9 +191,9 @@ public class CardNotificationService {
      * @param type the type of notification
      * @return a tuple of two maps
      */
-    private Tuple2<Map<String, CardOperationData.CardOperationDataBuilder>, Map<String, CardOperationData.CardOperationDataBuilder>> arrangeUnitaryCardOperation(CardPublicationData card, CardOperationTypeEnum type) {
-        Map<String, CardOperationData.CardOperationDataBuilder> groupCardsDictionnay = new HashMap<>();
-        Map<String, CardOperationData.CardOperationDataBuilder> userCardsDictionnary = new HashMap<>();
+    private Tuple2<Map<String, CardOperationData.BuilderEncapsulator>, Map<String, CardOperationData.BuilderEncapsulator>> arrangeUnitaryCardOperation(CardPublicationData card, CardOperationTypeEnum type) {
+        Map<String, CardOperationData.BuilderEncapsulator> groupCardsDictionnay = new HashMap<>();
+        Map<String, CardOperationData.BuilderEncapsulator> userCardsDictionnary = new HashMap<>();
 
         StringBuilder groupSB = new StringBuilder();
         int currentSize = 0;
@@ -250,7 +250,7 @@ public class CardNotificationService {
     }
 
     /**
-     * turn {@link CardPublicationData} + type into a {@link CardOperationData.CardOperationDataBuilder} and associated
+     * turn {@link CardPublicationData} + type into a {@link CardOperationData.BuilderEncapsulator} and associated
      * it to a builder id (~= group name or user name)
      *
      * @param c
@@ -259,20 +259,21 @@ public class CardNotificationService {
      * @param builderId
      */
     private void addCardToOperation(CardPublicationData c,
-                                    CardOperationTypeEnum type, Map<String, CardOperationData.CardOperationDataBuilder> cardsDictionnay,
+                                    CardOperationTypeEnum type, Map<String, CardOperationData.BuilderEncapsulator> cardsDictionnay,
                                     String builderId) {
-        CardOperationData.CardOperationDataBuilder cardOperationBuilder = cardsDictionnay.get(builderId);
-        if (cardOperationBuilder == null) {
-            cardOperationBuilder = CardOperationData.builder().type(type).publicationDate(c.getPublishDate());
-            cardsDictionnay.put(builderId, cardOperationBuilder);
+        CardOperationData.BuilderEncapsulator builderEncapsulator = cardsDictionnay.get(builderId);
+        if (builderEncapsulator == null) {
+            builderEncapsulator = CardOperationData.encapsulatedBuilder();
+            builderEncapsulator.builder().type(type).publicationDate(c.getPublishDate());
+            cardsDictionnay.put(builderId, builderEncapsulator);
         }
         switch (type) {
             case ADD:
             case UPDATE:
-                cardOperationBuilder.card(c.toLightCard());
+                builderEncapsulator.builder().card(c.toLightCard());
                 break;
             case DELETE:
-                cardOperationBuilder.cardId(c.getId());
+                builderEncapsulator.builder().cardId(c.getId());
 
         }
     }
