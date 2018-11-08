@@ -18,6 +18,7 @@ function display_usage() {
 	echo -e "Usage:\n"
 	echo -e "\tadd_headers.sh [OPTIONS] [TYPE]\n"
 	echo -e "options:\n"
+	echo -e "\t-d, --delete deelte headers."
 	echo -e "\t-h, --help display this help message."
 	echo -e "types:\n"
 	echo -e "\tJAVA  : .java files"
@@ -25,7 +26,7 @@ function display_usage() {
 	echo -e "\tCSS  : .css files"
 	echo -e "\tHTML  : .htm, .html files"
 }
-
+delete=false
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -50,6 +51,10 @@ case $key in
     file_extensions=( htm html )
     shift # past argument
     ;;
+    -d|--delete)
+    delete=true
+    shift # past argument
+    ;;
     -h|--help)
     display_usage
     exit 0
@@ -61,8 +66,9 @@ case $key in
     ;;
 esac
 done
+
 # avoid weird behavior if no args given to this script
-if [ -z "$key" ] || [ -z "$file_extension" ] || [ -z "$header" ]; then
+if [ -z "$key" ] || [ -z "$file_extensions" ] || [ -z "$header" ]; then
 	display_usage
 	exit 0
 fi
@@ -90,7 +96,11 @@ for f in `eval $findCommand`
 do
   if [[ $f != *"build"* ]]; then
 #    echo $f
+    if [ "$delete"=true ]; then
+    head -$licenceLines $f | diff - <(echo "$licenceContent") && ( ( cat $f | sed -e "1,$((licenceLines+1))d" ) > /tmp/file; mv /tmp/file $f )
+    else
     head -$licenceLines $f | diff - <(echo "$licenceContent") || ( ( echo -e "$licenceContent\n"; cat $f) > /tmp/file; mv /tmp/file $f )
+    fi
   fi
 done
 
