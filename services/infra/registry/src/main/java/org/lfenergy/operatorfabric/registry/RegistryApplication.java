@@ -12,19 +12,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
+/**
+ * Sets up a Eureka registry server
+ */
 @EnableEurekaServer
 @SpringBootApplication
 @Slf4j
-public class Application {
-//    @Value("#{eureka.client.serviceUrl.defaultZone}")
-//    private String defaultZone;
+public class RegistryApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(RegistryApplication.class, args);
     }
 
-//    @PostConstruct
-//    public void display(){
-//        log.info("DEFAULT_ZONE: "+defaultZone);
-//    }
 }
