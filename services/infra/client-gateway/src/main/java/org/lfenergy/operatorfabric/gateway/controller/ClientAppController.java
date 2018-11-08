@@ -16,13 +16,18 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
- * <p></p>
- * Created on 11/09/18
+ * configures some forward to client pp
  *
  * @author davibind
  */
 @Controller
 public class ClientAppController {
+    /**
+     * Forward to home/index.html file
+     *
+     * @param exchange http request/response
+     * @return nothing asside from completion
+     */
     @RequestMapping(value = "/home")
     public Mono<Void> index(ServerWebExchange exchange) {
         ServerHttpResponse response = exchange.getResponse();
@@ -30,6 +35,13 @@ public class ClientAppController {
         response.getHeaders().add(HttpHeaders.LOCATION, "/home/index.html");
         return response.setComplete();
     }
+
+    /**
+     * Forward to login/index.html file
+     *
+     * @param exchange http request/response
+     * @return nothing asside from completion
+     */
     @RequestMapping(value = "/login")
     public Mono<Void> login(ServerWebExchange exchange) {
         ServerHttpResponse response = exchange.getResponse();

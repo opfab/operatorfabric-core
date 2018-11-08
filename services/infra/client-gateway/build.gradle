@@ -30,7 +30,7 @@ jar {
     manifest {
         attributes("Created-By"         : "David Binder",
                 "Specification-Title": "Operator Fabric Microservices Gateway",
-                "Main-Class"         : "org.lfenergy.operatorfabric.gateway.Application",
+                "Main-Class"         : "org.lfenergy.operatorfabric.gateway.GatewayApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }
 }

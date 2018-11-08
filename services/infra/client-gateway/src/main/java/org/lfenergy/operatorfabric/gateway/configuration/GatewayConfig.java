@@ -15,10 +15,9 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 /**
- * <p></p>
- * Created on 08/10/18
+ * TODO can't remember the reason of this code, explore and remove if not needed
  *
- * @author davibind
+ * @author David Binder
  */
 @Configuration
 public class GatewayConfig {
