@@ -14,12 +14,13 @@ import {LightCardDetailsComponent} from './components/light-card-details/light-c
 import {AppState} from '@state/app.interface';
 import {Store, StoreModule} from '@ngrx/store';
 import {LoadLightCardsSuccess} from '@state/light-card/light-card.actions';
-import {I18nData, LightCard, Severity} from '@state/light-card/light-card.model';
+import {LightCard} from '@state/light-card/light-card.model';
 import * as fromReducers from '@state/app.reducer';
 import * as fromStore from '@state/light-card';
 import {By} from '@angular/platform-browser';
+import {getRandomLigthCard} from '../../../tests/helpers';
 
-describe('LightCardsComponent', () => {
+fdescribe('LightCardsComponent', () => {
     let component: LightCardsComponent;
     let store: Store<AppState>;
     let fixture: ComponentFixture<LightCardsComponent>;
@@ -56,19 +57,7 @@ describe('LightCardsComponent', () => {
     it('should create a list with one element when there are ' +
         'only one card in the state', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const title = new I18nData('title-key', ['title-string-0']);
-        const summary = new I18nData('summary-key', ['summary-string-0']);
-        const oneCard = new LightCard('uid'
-            , 'id'
-            , 1
-            , 2
-            , Severity.QUESTION
-            , 'mainRecipient'
-            , 'processId'
-            , 3
-            , title
-            , summary
-        );
+        const oneCard = getRandomLigthCard();
 
         const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
         store.dispatch(action);
@@ -90,30 +79,8 @@ describe('LightCardsComponent', () => {
     it('should create a list with two elements when there are ' +
         'only two cards in the state', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const title = new I18nData('title-key', ['title-string-0']);
-        const summary = new I18nData('summary-key', ['summary-string-0']);
-        const oneCard = new LightCard('uid'
-            , 'id'
-            , 1
-            , 2
-            , Severity.QUESTION
-            , 'mainRecipient'
-            , 'processId'
-            , 3
-            , title
-            , summary
-        );
-        const anotherCard = new LightCard('uid0'
-            , 'id0'
-            , 2
-            , 3
-            , Severity.QUESTION
-            , 'mainRecipient'
-            , 'processId'
-            , 4
-            , title
-            , summary
-        );
+        const oneCard = getRandomLigthCard();
+        const anotherCard = getRandomLigthCard();
         const action = new LoadLightCardsSuccess({lightCards: [oneCard, anotherCard] as LightCard[]});
         store.dispatch(action);
         const lightCards$ = store.select(fromStore.getAllLightCards);
@@ -138,30 +105,8 @@ describe('LightCardsComponent', () => {
     it('should create a list with two cards when two arrays of one card are dispatched' +
         ' 1', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const title = new I18nData('title-key', ['title-string-0']);
-        const summary = new I18nData('summary-key', ['summary-string-0']);
-        const oneCard = new LightCard('uid'
-            , 'id'
-            , 1
-            , 2
-            , Severity.QUESTION
-            , 'mainRecipient'
-            , 'processId'
-            , 3
-            , title
-            , summary
-        );
-        const anotherCard = new LightCard('uid0'
-            , 'id0'
-            , 2
-            , 3
-            , Severity.QUESTION
-            , 'mainRecipient'
-            , 'processId'
-            , 4
-            , title
-            , summary
-        );
+        const oneCard = getRandomLigthCard();
+        const anotherCard = getRandomLigthCard();
         const action = new LoadLightCardsSuccess({lightCards: [oneCard]});
         store.dispatch(action);
         const action0 = new LoadLightCardsSuccess({lightCards: [anotherCard]});
@@ -185,4 +130,9 @@ describe('LightCardsComponent', () => {
         expect(listElements.length).toEqual(totalNumberOfLightCardsPassByActions);
 
     });
+
+    it('should create a list with the number' +
+        ' of cards equals to the sum of cards of the different arrays of each action dispatched', () =>
+    const actionNumber =
+    );
 });

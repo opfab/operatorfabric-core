@@ -28,8 +28,7 @@ import * as fromStore from '@state/light-card/index';
 export class LightCardEffects {
 
     constructor(private actions$: Actions,
-                private service: CardService,
-                private store: Store<AppState>
+                private service: CardService
     ) {
     }
 
@@ -37,8 +36,9 @@ export class LightCardEffects {
     load: Observable<Action> = this.actions$
         .ofType(LightCardActionTypes.LoadLightCards).pipe(
             switchMap(() => this.service.getLightCards()),
-            // switchMap(() => this.store.pipe(select(fromStore.getAllLightCards))),
-            map((lightCards: LightCard[]) => new LoadLightCardsSuccess({lightCards: lightCards})),
+            map((lightCards: LightCard[]) => {
+                return new LoadLightCardsSuccess({lightCards: lightCards});
+            }),
             catchError(err => of(new LoadLightCardsFail()))
         );
 
@@ -46,7 +46,9 @@ export class LightCardEffects {
     loadById: Observable<Action> = this.actions$
         .ofType<LoadLightCard>(LightCardActionTypes.LoadLightCard).pipe(
             switchMap(action => this.service.getLightCard(action.payload.id)),
-            map((lightCard: LightCard) => new LoadLightCardSuccess({lightCard: lightCard})),
+            map((lightCard: LightCard) => {
+                return new LoadLightCardSuccess({lightCard: lightCard});
+            }),
             catchError(err => of(new LoadLightCardFail()))
         );
 }
