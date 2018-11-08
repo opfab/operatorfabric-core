@@ -93,10 +93,10 @@ for f in `eval $findCommand`
 do
   if [[ $f != *"build"* ]]; then
 #    echo $f
-    if [ "$delete"=true ]; then
-    head -$licenceLines $f | diff - <(echo "$licenceContent") && ( ( cat $f | sed -e "1,$((licenceLines+1))d" ) > /tmp/file; mv /tmp/file $f )
+    if [ "$delete" = true ]; then
+    head -$licenceLines $f | diff - <(echo "$licenceContent") > /dev/null 2>&1 && ( ( cat $f | sed -e "1,$((licenceLines+1))d" ) > /tmp/file; mv /tmp/file $f )
     else
-    head -$licenceLines $f | diff - <(echo "$licenceContent") || ( ( echo -e "$licenceContent\n"; cat $f) > /tmp/file; mv /tmp/file $f )
+    head -$licenceLines $f | diff - <(echo "$licenceContent") > /dev/null 2>&1  || ( ( echo -e "$licenceContent\n"; cat $f) > /tmp/file; mv /tmp/file $f )
     fi
   fi
 done
