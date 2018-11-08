@@ -14,9 +14,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Configures :
+ * <ul>
+ *     <li>in memory users, password and roles</li>
+ *     <li>routing security for REST endpoints</li>
+ * </ul>
+ */
 @Configuration
 @Order(1)
-public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -43,15 +50,6 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//           .antMatchers("/login").permitAll()
-//           .antMatchers("/oauth/authorize").permitAll()
-////           .antMatchers("/oauth/token").permitAll()
-//           .antMatchers("/oauth/token/revokeById/**").permitAll()
-//           .antMatchers("/tokens/**").permitAll()
-//           .anyRequest().authenticated()
-//           .and()
-//           .formLogin().permitAll().and().csrf().disable();
         http.requestMatchers()
            .antMatchers("/login", "/oauth/authorize")
            .and()

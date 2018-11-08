@@ -24,6 +24,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.security.KeyPair;
 
+/**
+ * Configure OAuth authentication
+ */
 @Configuration
 public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter {
 
@@ -33,6 +36,10 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
     @Autowired
     KeyPair keyPair;
 
+    /**
+     *
+     * @return BCrypt password encoder
+     */
     @Bean
     @Primary
     public PasswordEncoder passwordEncoder() {
@@ -41,8 +48,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 
     @Override
     public void configure(
-       AuthorizationServerSecurityConfigurer oauthServer)
-       throws Exception {
+       AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer
            .tokenKeyAccess("permitAll()")
            .checkTokenAccess("isAuthenticated()");
@@ -85,11 +91,19 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 //        return new InMemoryTokenStore();
 //    }
 
+    /**
+     *
+     * @return Jwt Token Store
+     */
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
 
+    /**
+     * build jwt access token converter from configured key pair
+     * @return Jwt access token converter
+     */
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -102,6 +116,10 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
         return converter;
     }
 
+    /**
+     * Builds token service setting store, refresh token and validity duration
+     * @return token service
+     */
     @Bean
     @Primary
     public DefaultTokenServices tokenServices() {

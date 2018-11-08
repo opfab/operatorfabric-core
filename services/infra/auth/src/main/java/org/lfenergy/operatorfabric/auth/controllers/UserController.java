@@ -12,18 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 /**
- * <p></p>
- * Created on 10/08/18
+ * Endpoint to expose user info for an authorized user
  *
- * @author davibind
+ * @author David Binder
  */
 @RestController
 @Slf4j
 @RequestMapping("/user")
 public class UserController {
+    /**
+     * Return authenticated user info
+     * @param principal
+     * @return
+     */
     @GetMapping("/me")
     public Principal user(Principal principal) {
-//        Object principal = auth.getPrincipal();
         log.info("Accessing Data for "+principal);
         return principal;
     }

@@ -18,6 +18,7 @@ import java.security.spec.RSAPublicKeySpec;
  * be hard-coded into the application code.
  *
  * For simplicity, though, this sample doesn't demonstrate key rotation.
+ *
  */
 @Configuration
 class KeyConfig {

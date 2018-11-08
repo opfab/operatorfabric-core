@@ -16,10 +16,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
 /**
- * Legacy Authorization Server (spring-security-oauth2) does not support any
- * <a href target="_blank" href="https://tools.ietf.org/html/rfc7517#section-5">JWK Set</a> endpoint.
- *
- * This class adds ad-hoc support in order to better support the other samples in the repo.
+ * This endpoint exposes the JWK set public key to validate JWT token signature
  */
 @FrameworkEndpoint
 class JwkSetEndpoint {
@@ -29,6 +26,11 @@ class JwkSetEndpoint {
         this.keyPair = keyPair;
     }
 
+    /**
+     * Exposes public key
+     * @param principal connected user principal
+     * @return public key
+     */
     @GetMapping("/jwks.json")
     @ResponseBody
     public Map<String, Object> getKey(Principal principal) {

@@ -12,9 +12,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableAuthorizationServer
 @EnableResourceServer
 @SpringBootApplication
-public class Application {
+public class OAuth2Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(OAuth2Application.class, args);
     }
 }
