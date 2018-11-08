@@ -4,11 +4,6 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Singular;
-import org.lfenergy.operatorfabric.cards.publication.model.Card;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.Recipient;
 import org.springframework.stereotype.Component;

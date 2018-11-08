@@ -3,8 +3,6 @@ package org.lfenergy.operatorfabric.cards.publication.services;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Set;
 
 /**
