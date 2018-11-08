@@ -32,7 +32,7 @@ do
 key="$1"
 case $key in
     CSS)
-    header="CSS_LICENSE_HEADER.txt"
+    header="JAVA_LICENSE_HEADER.txt"
     file_extensions=( css )
     shift # past argument
     ;;
