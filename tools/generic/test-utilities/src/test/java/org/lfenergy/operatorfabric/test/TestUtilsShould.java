@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.lfenergy.operatorfabric.test.TestUtils.assertException;
+import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
 
 /**
  * <p></p>

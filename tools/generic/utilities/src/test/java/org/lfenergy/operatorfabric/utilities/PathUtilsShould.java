@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.lfenergy.operatorfabric.test.TestUtils.assertException;
+import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
 
 /**
  * <basePath></basePath>
