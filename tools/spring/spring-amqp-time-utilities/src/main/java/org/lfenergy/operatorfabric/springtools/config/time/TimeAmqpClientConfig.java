@@ -14,10 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * <p></p>
- * Created on 29/06/18
+ * Configures time client
  *
- * @author davibind
+ * @author David Binder
  */
 @Configuration
 @Slf4j
@@ -25,21 +24,40 @@ public class TimeAmqpClientConfig {
 
     final static String exchangeName = "timeExchange";
 
+    /**
+     * Durable auto delete queue
+     * @return Time queue
+     */
     @Bean
     Queue timeQueue(){
         return QueueBuilder.durable().autoDelete().build();
     }
 
+    /**
+     * Fanout exchange
+     * @return time exchange
+     */
     @Bean
     FanoutExchange timeExchange(){
         return (FanoutExchange) ExchangeBuilder.fanoutExchange(exchangeName).build();
     }
 
+    /**
+     * standard Fannout binding
+     * @param timeQueue configured time queue
+     * @param timeExchange configures time exchange
+     * @return exchange/queue binding
+     */
     @Bean
     Binding timeDataBinding(Queue timeQueue, FanoutExchange timeExchange){
         return BindingBuilder.bind(timeQueue).to(timeExchange);
     }
 
+    /**
+     * TimeReceiver instance configure with object mapper to read json time message
+     * @param objectMapper json object mapper
+     * @return time receiver
+     */
     @Bean
     TimeReceiver timeReceiver(ObjectMapper objectMapper){
         log.info("Now listening for time data");

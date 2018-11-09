@@ -17,10 +17,9 @@ import java.io.IOException;
 import java.time.Instant;
 
 /**
- * <p></p>
- * Created on 29/06/18
+ * Receives message from time queue and updates the local {@link SimulatedTime instance}
  *
- * @author davibind
+ * @author David Binder
  */
 public class TimeReceiver {
 
@@ -34,22 +33,40 @@ public class TimeReceiver {
         this.mapper = mapper;
     }
 
+    /**
+     * {@link RabbitListener}, receives messages and update local {@link SimulatedTime} instance
+     * @param stringMessage received string message
+     * @throws IOException error during json de linearization
+     */
     @RabbitListener(queues = "#{timeQueue.name}")
-    public void receive1(String in) throws InterruptedException, IOException {
-        ClientTimeData data = mapper.readValue(in,ClientTimeData.class);
+    public void receive(String stringMessage) throws IOException {
+        ClientTimeData data = mapper.readValue(stringMessage,ClientTimeData.class);
         setSpeedAndTime(data.getSpeed(),Instant.ofEpochMilli(data.getCurrentTime()));
     }
 
+    /**
+     * Update local {@link SimulatedTime} instance
+     * @param speed speed value
+     * @param instant current time
+     */
     private void setSpeedAndTime(SpeedEnum speed, Instant instant) {
         setTime(instant);
         setSpeed(speed);
     }
 
+    /**
+     * Update local {@link SimulatedTime} instance time
+     * @param instant current time
+     */
     private void setTime(Instant instant) {
         simulatedTime.setStartSimulatedTime(instant);
         simulatedTime.setReferenceSystemTime(Instant.now());
     }
 
+    /**
+     * Update local {@link SimulatedTime} instance speed
+     * @param speed speed value
+     */
     private void setSpeed(SpeedEnum speed) {
         if (simulatedTime.getStartSimulatedTime() == null) {
             simulatedTime.setReferenceSystemTime(Instant.now());

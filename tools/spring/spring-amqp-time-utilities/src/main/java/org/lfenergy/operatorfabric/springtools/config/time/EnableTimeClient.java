@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Import;
 import java.lang.annotation.*;
 
 /**
- * <p></p>
- * Created on 29/06/18
+ * <p>On configuration or application class enables configuration of time AMQP exchange and
+ * {@link TimeReceiver}, (see {@link TimeAmqpClientConfig})</p>
  *
- * @author davibind
+ * @author David Binder
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
