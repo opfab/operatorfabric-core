@@ -166,8 +166,8 @@ public class CardNotificationService {
      * <p>Let the service handle AMQP backend notification of operation on a list of cards</p>
      * <p>The handling is asynchronous and is published to a backing {@link FluxSink}</p>
      *
-     * @param cards
-     * @param type
+     * @param cards cards to notify
+     * @param type type of notification
      */
     public void notifyCards(Collection<CardPublicationData> cards, CardOperationTypeEnum type) {
         cards.forEach(c -> sink.next(Tuples.of(c, type)));

@@ -46,8 +46,8 @@ public class RecipientProcessor {
      *
      * <p>Updates the argument {@link CardPublicationData}</p>
      *
-     * @param card
-     * @return
+     * @param card card to compute recipient for
+     * @return computed recipient that were affected to card
      */
     public ComputedRecipient processAll(CardPublicationData card) {
         Recipient recipient = card.getRecipient();
@@ -62,7 +62,7 @@ public class RecipientProcessor {
     /**
      * Process all recipient data associated with {{@link Recipient}} at the time of computation.
      *
-     * @param recipient
+     * @param recipient recipient to compute
      * @return a structure containing results (groups, orphaned users, main user)
      */
     public ComputedRecipient processAll(Recipient recipient) {
@@ -76,7 +76,7 @@ public class RecipientProcessor {
         }
         switch (recipient.getType()) {
             case USER:
-                builder = processUser(recipient);
+                builder = processUser(recipient).builder();
                 break;
             case GROUP:
                 builder = processGroup(recipient).builder();
@@ -256,10 +256,12 @@ public class RecipientProcessor {
      * @param recipient
      * @return
      */
-    private ComputedRecipient.ComputedRecipientBuilder processUser(Recipient recipient) {
-        return ComputedRecipient.builder()
-                .user(recipient.getIdentity())
-                .main(recipient.getIdentity());
+    private ComputedRecipient.BuilderEncapsulator processUser(Recipient recipient) {
+        ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
+        result.builder()
+            .user(recipient.getIdentity())
+            .main(recipient.getIdentity());
+        return result;
     }
 
     public static ComputedRecipient empty() {

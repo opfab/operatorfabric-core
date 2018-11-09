@@ -34,7 +34,7 @@ public class CardController {
 
     /**
      * POST cards to create/update new cards
-     * @param cards
+     * @param cards cards to create publisher
      * @return contains numlber of cards created and optional message
      */
     @PostMapping

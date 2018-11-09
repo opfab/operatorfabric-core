@@ -42,7 +42,7 @@ import java.util.function.Predicate;
  * <p></p>
  * Created on 29/10/18
  *
- * @author davibind
+ * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardSubscriptionService.class, CardOperationsController

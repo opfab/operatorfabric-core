@@ -23,7 +23,7 @@ import java.util.Queue;
  * <p></p>
  * Created on 06/08/18
  *
- * @author davibind
+ * @author David Binder
  */
 @Component
 @Slf4j

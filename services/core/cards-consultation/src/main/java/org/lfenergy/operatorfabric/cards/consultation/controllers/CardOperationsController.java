@@ -54,8 +54,10 @@ public class CardOperationsController {
     /**
      * Register to {@link CardSubscriptionService} to get access to a {@link Flux} of String. Those strings are Json
      * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
+     *
      * @param input
-     * @return
+     *    o tuple containing 1) user data 2) client id
+     * @return mesage publisher
      */
     public Flux<String> registerSubscriptionAndPublish(Mono<Tuple2<User, Optional<String>>> input) {
         return input
@@ -79,39 +81,43 @@ public class CardOperationsController {
     /**
      * Generates a test {@link Flux} of String. Those strings are Json
      * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
+     *
      * @param input
-     * @return
+     *    o tuple containing 1) user data 2) client id
+     * @return mesage publisher
      */
     public Flux<String> publishTestData(Mono<Tuple2<User, Optional<String>>> input) {
         return input.flatMapMany(t -> Flux
-                .interval(Duration.ofSeconds(5))
-                .doOnEach(l -> log.info("message " + l + " to " + t.getT1().getLogin()))
-                .map(l -> CardOperationConsultationData.builder()
-                        .number(l)
-                        .publicationDate(SimulatedTime.getInstance().computeNow().toEpochMilli() - 600000)
-                        .type(CardOperationTypeEnum.ADD)
-                        .card(
-                                LightCardConsultationData.builder()
-                                        .id(l + "")
-                                        .uid(l + "")
-                                        .summary(I18nConsultationData.builder().key("summary").build())
-                                        .title(I18nConsultationData.builder().key("title").build())
-                                        .mainRecipient("rte-operator")
-                                        .severity(SeverityEnum.ALARM)
-                                        .startDate(SimulatedTime.getInstance().computeNow().toEpochMilli())
-                                        .endDate(SimulatedTime.getInstance().computeNow().toEpochMilli() + 3600000)
-                                        .build()
-                        )
-                        .build())
-                .map(this::objectToJsonString)
-                .doOnCancel(() -> log.info("cancelled"))
-                .log()
+           .interval(Duration.ofSeconds(5))
+           .doOnEach(l -> log.info("message " + l + " to " + t.getT1().getLogin()))
+           .map(l -> CardOperationConsultationData.builder()
+              .number(l)
+              .publicationDate(SimulatedTime.getInstance().computeNow().toEpochMilli() - 600000)
+              .type(CardOperationTypeEnum.ADD)
+              .card(
+                 LightCardConsultationData.builder()
+                    .id(l + "")
+                    .uid(l + "")
+                    .summary(I18nConsultationData.builder().key("summary").build())
+                    .title(I18nConsultationData.builder().key("title").build())
+                    .mainRecipient("rte-operator")
+                    .severity(SeverityEnum.ALARM)
+                    .startDate(SimulatedTime.getInstance().computeNow().toEpochMilli())
+                    .endDate(SimulatedTime.getInstance().computeNow().toEpochMilli() + 3600000)
+                    .build()
+              )
+              .build())
+           .map(this::objectToJsonString)
+           .doOnCancel(() -> log.info("cancelled"))
+           .log()
         );
     }
 
     /**
      * Converts an object to a JSON string. If conversion problems arise, logs and returns "null" string
+     *
      * @param o
+     *    an object
      * @return Json object string representation or "null" if error.
      */
     private String objectToJsonString(Object o) {

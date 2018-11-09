@@ -20,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * <p></p>
  * Created on 17/04/18
  *
- * @author davibind
+ * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

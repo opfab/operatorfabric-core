@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 /**
  * configures some forward to client pp
  *
- * @author davibind
+ * @author David Binder
  */
 @Controller
 public class ClientAppController {

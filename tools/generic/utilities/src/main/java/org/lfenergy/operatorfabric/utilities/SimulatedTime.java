@@ -44,7 +44,8 @@ public class SimulatedTime {
     }
 
     /**
-     * Singleton.
+     * Generates or retrieve singleton instance
+     * @return singleton instance
      */
     public static SimulatedTime getInstance() {
         if (singleton == null) {
@@ -145,7 +146,9 @@ public class SimulatedTime {
     }
 
     /**
-     * Waits for a simulated duration.
+     * Current thread waits for a simulated duration.
+     * @param durationMillis sleep duration
+     * @throws InterruptedException see {@link Thread#sleep(long)} exception
      */
     public void sleep(long durationMillis) throws InterruptedException {
         Thread.sleep(convertToSystemMillis(durationMillis));
@@ -160,6 +163,7 @@ public class SimulatedTime {
 
     /**
      * Listeners will be notified when the time is available.
+     * @param runnable thing to run after init
      */
     public void addInitialisationListener(Runnable runnable) {
         initialisationListeners.add(runnable);
@@ -167,6 +171,7 @@ public class SimulatedTime {
 
     /**
      * Add a listener for modification of the time flow
+     * @param listener notified after update
      */
     public void addTimeWarpListener(TimeWarpListener listener) {
         timeWarpListenerSet.add(listener);

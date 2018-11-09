@@ -40,7 +40,7 @@ import static org.hamcrest.Matchers.*;
  * <p></p>
  * Created on 26/10/18
  *
- * @author davibind
+ * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CardPublicationApplication.class)

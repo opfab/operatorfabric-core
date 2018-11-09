@@ -41,9 +41,9 @@ import java.util.List;
 //import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 /**
- * Common configuration (MVC & Webflux
+ * Common configuration (MVC and Webflux)
  *
- * @author davibind
+ * @author David Binder
  */
 @EnableFeignClients
 @EnableDiscoveryClient

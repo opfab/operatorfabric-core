@@ -28,18 +28,23 @@ public class WebSecurityConfiguration {
 
     /**
      * Secures access (all uris are secured)
-     * @param http
+     *
+     * @param httpSecurity
+     *    http security configuration
      * @param opfabJwtReactiveAuthenticationManager
-     * @return
+     *    operator fabric authentication manager
+     * @return http security filter chain
      */
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,ReactiveAuthenticationManager opfabJwtReactiveAuthenticationManager) {
-        http.headers().frameOptions().disable();
-        http
-                .authorizeExchange()
-                .anyExchange().authenticated().and()
-                .oauth2ResourceServer().jwt().authenticationManager(opfabJwtReactiveAuthenticationManager);
-                return http.build();
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity httpSecurity,
+                                                            ReactiveAuthenticationManager
+                                                               opfabJwtReactiveAuthenticationManager) {
+        httpSecurity.headers().frameOptions().disable();
+        httpSecurity
+           .authorizeExchange()
+           .anyExchange().authenticated().and()
+           .oauth2ResourceServer().jwt().authenticationManager(opfabJwtReactiveAuthenticationManager);
+        return httpSecurity.build();
     }
 
 

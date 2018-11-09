@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  * <p></p>
  * Created on 17/04/18
  *
- * @author davibind
+ * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = ThirdsApplication.class)

@@ -38,18 +38,23 @@ public class DateTimeUtil {
     /**
      * Compare 2 LocalDate (possibly null).
      *
-     * @param d1
-     * @param d2
-     * @return
+     * @param d1 date 1
+     * @param d2 date 2
+     * @return day comparison result
      */
     public static int compareDay(LocalDate d1, LocalDate d2) {
-        Integer comp = compareObject(d1, d2);
+        Integer comp = preCompareObject(d1, d2);
 
         return comp != null ? comp : d1.compareTo(d2);
     }
 
-
-    private static Integer compareObject(Object o1, Object o2){
+    /**
+     * Partial object comparison
+     * @param o1 object 1
+     * @param o2 object 2
+     * @return comparison result or null if test not concluding
+     */
+    private static Integer preCompareObject(Object o1, Object o2){
         if (o1 == o2) {
             return 0;
         } else if (o1 == null) {
@@ -63,9 +68,9 @@ public class DateTimeUtil {
     /**
      * Is it the same day? The LocalDate can be null.
      *
-     * @param d1
-     * @param d2
-     * @return
+     * @param d1 date 1
+     * @param d2 date 2
+     * @return true if same day, false otherwise
      */
 
     public static boolean isSameDay(LocalDate d1, LocalDate d2) {
@@ -76,12 +81,12 @@ public class DateTimeUtil {
     /**
      * Compare 2 LocalTime (possibly null) considering only hours and minutes.
      *
-     * @param lt1
-     * @param lt2
-     * @return
+     * @param lt1 local time 1
+     * @param lt2 local time 2
+     * @return comparison result
      */
     public static int compareTimeHM(LocalTime lt1, LocalTime lt2) {
-        Integer comp = compareObject(lt1, lt2);
+        Integer comp = preCompareObject(lt1, lt2);
 
         return comp != null ? comp : lt1.truncatedTo(ChronoUnit.MINUTES).compareTo(lt2.truncatedTo(ChronoUnit.MINUTES));
     }
@@ -90,9 +95,9 @@ public class DateTimeUtil {
     /**
      * Is it the same hour (HH:mm)? The LocalTime can be null.
      *
-     * @param lt1
-     * @param lt2
-     * @return
+     * @param lt1 local time 1
+     * @param lt2 local time 2
+     * @return true if time are equal, false otherwise
      */
     public static boolean isSameTimeHM(LocalTime lt1, LocalTime lt2) {
         return compareTimeHM(lt1, lt2) == 0;
@@ -103,12 +108,12 @@ public class DateTimeUtil {
     /**
      * Compare 2 LocalDateTime (possibly null) considering only date, hours and minutes.
      *
-     * @param ldt1
-     * @param ldt2
-     * @return
+     * @param ldt1 local date time 1
+     * @param ldt2 local date time 2
+     * @return comparison result
      */
     public static int compareDateTimeHM(LocalDateTime ldt1, LocalDateTime ldt2){
-        Integer comp = compareObject(ldt1, ldt2);
+        Integer comp = preCompareObject(ldt1, ldt2);
         if(comp != null)
             return comp;
 
@@ -374,8 +379,8 @@ public class DateTimeUtil {
      * converts instant to local date time of server
      * (in the default time-zone)
      *
-     * @param time
-     * @return
+     * @param time input value
+     * @return conversion result
      */
     public static LocalDateTime toLocalDateTime(Instant time) {
         return LocalDateTime.ofInstant(time, ZoneId.systemDefault());
@@ -435,8 +440,8 @@ public class DateTimeUtil {
     /**
      * converts local date time to instant
      *
-     * @param ldt
-     * @return
+     * @param ldt input value
+     * @return conversion result
      */
     public static Instant toInstant(LocalDateTime ldt) {
         return ldt.atZone(ZoneId.systemDefault()).toInstant();
@@ -445,8 +450,8 @@ public class DateTimeUtil {
     /**
      * converts local date time to instant
      *
-     * @param epochMillis
-     * @return
+     * @param epochMillis input value
+     * @return conversion result
      */
     public static Instant toInstant(Long epochMillis) {
         return Instant.ofEpochMilli(epochMillis);

@@ -241,7 +241,7 @@ public class CardWriteService {
     /**
      * Asynchronous fire and forget card push in the persisting/notification process
      *
-     * @param pushedCards
+     * @param pushedCards published cards to add
      */
     public void pushCardsAsyncParallel(Flux<CardPublicationData> pushedCards) {
         pushedCards.subscribe(sink::next);
@@ -251,7 +251,8 @@ public class CardWriteService {
      * Synchronous card push in the persisting/notification process use the same treatment as thoses associated to
      * the internal {@link FluxSink} but adds a last step to prepare {@link CardCreationReportData}
      *
-     * @param pushedCards
+     * @param pushedCards published cards to add
+     * @return publisher of operation result object
      */
     public Mono<CardCreationReportData> createCardsWithResult(Flux<CardPublicationData> pushedCards) {
         long windowStart = Instant.now().toEpochMilli();

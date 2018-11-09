@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p></p>
  * Created on 22/06/18
  *
- * @author davibind
+ * @author David Binder
  */
 public class SpeedEnumShould {
 

@@ -34,7 +34,7 @@ public class AsyncCardController {
      * <p>POST cards to create/update new cards.</p>
      * <p>Always returns {@link HttpStatus#ACCEPTED}</p>
      *
-     * @param cards
+     * @param cards cards to create publisher
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.ACCEPTED)

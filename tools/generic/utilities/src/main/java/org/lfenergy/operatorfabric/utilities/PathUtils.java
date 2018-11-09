@@ -52,7 +52,7 @@ public class PathUtils {
    * move directory targeted by path
    * @param source origin directory
    * @param target target directory
-   * @throws IOException
+   * @throws IOException if an I/O error occurs
    */
   public static void moveDir(Path source, Path target) throws IOException {
     copyDir(source, target);
@@ -63,7 +63,7 @@ public class PathUtils {
    * copy directory targeted by path
    * @param source origin directory
    * @param target target directory
-   * @throws IOException
+   * @throws IOException if an I/O error occurs
    */
   public static void copyDir(Path source, Path target) throws IOException {
     Files.walkFileTree(source, new CopyDir(source, target));
@@ -72,7 +72,7 @@ public class PathUtils {
   /**
    * delete directory targeted by path
    * @param source directoru to delete
-   * @throws IOException
+   * @throws IOException if an I/O error occurs
    */
   public static void deleteDir(Path source) throws IOException {
     if (source.toFile().exists())
@@ -85,7 +85,7 @@ public class PathUtils {
    * copy file targeted by path
    * @param source origin file
    * @param target target file
-   * @throws IOException
+   * @throws IOException if an I/O error occurs
    */
   public static void copy(Path source, Path target) throws IOException {
     if (source.toFile().isDirectory())
@@ -96,7 +96,8 @@ public class PathUtils {
 
   /**
    * Delete the file or directory targeted by source path. Logging exception instead of throwing them
-   * @param source
+   * @param source target path
+   * @return true if target was deleted, false otherwise
    */
   public static boolean silentDelete(Path source) {
     try {
@@ -110,8 +111,8 @@ public class PathUtils {
 
   /**
    * Delete the file or directory targeted by source path
-   * @param source
-   * @throws IOException
+   * @param source target path
+   * @throws IOException if an I/O error occurs
    */
   public static void delete(Path source) throws IOException {
     if (!source.toFile().exists())
@@ -128,7 +129,7 @@ public class PathUtils {
    * Unpack tar.gz file
    * @param is tar.gz inputstream
    * @param outPath output folder
-   * @throws IOException
+   * @throws IOException if an I/O error occurs
    */
   public static void unTarGz(InputStream is, Path outPath) throws IOException {
     createDirIfNeeded(outPath);
@@ -155,7 +156,7 @@ public class PathUtils {
   /**
    * create directory if it does not exist
    * @param dir directory to create
-   * @throws IOException
+   * @throws IOException if an I/O error occurs
    */
   private static void createDirIfNeeded(Path dir) throws IOException {
     if (!dir.toFile().exists()) {
