@@ -23,10 +23,9 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 /**
- * <p></p>
- * Created on 13/04/18
+ * Path manipulation utility
  *
- * @author davibind
+ * @author David Binder
  */
 @Slf4j
 public class PathUtils {
@@ -49,15 +48,32 @@ public class PathUtils {
     return Paths.get(f.getAbsolutePath());
   }
 
+  /**
+   * move directory targeted by path
+   * @param source origin directory
+   * @param target target directory
+   * @throws IOException
+   */
   public static void moveDir(Path source, Path target) throws IOException {
     copyDir(source, target);
     deleteDir(source);
   }
 
+  /**
+   * copy directory targeted by path
+   * @param source origin directory
+   * @param target target directory
+   * @throws IOException
+   */
   public static void copyDir(Path source, Path target) throws IOException {
     Files.walkFileTree(source, new CopyDir(source, target));
   }
 
+  /**
+   * delete directory targeted by path
+   * @param source directoru to delete
+   * @throws IOException
+   */
   public static void deleteDir(Path source) throws IOException {
     if (source.toFile().exists())
       Files.walkFileTree(source, new DeleteDir());
@@ -65,6 +81,12 @@ public class PathUtils {
       throw new FileNotFoundException("Specified path to delete not found in file system");
   }
 
+  /**
+   * copy file targeted by path
+   * @param source origin file
+   * @param target target file
+   * @throws IOException
+   */
   public static void copy(Path source, Path target) throws IOException {
     if (source.toFile().isDirectory())
       copyDir(source, target);
@@ -103,7 +125,7 @@ public class PathUtils {
   }
 
   /**
-   *
+   * Unpack tar.gz file
    * @param is tar.gz inputstream
    * @param outPath output folder
    * @throws IOException
@@ -130,6 +152,11 @@ public class PathUtils {
     }
   }
 
+  /**
+   * create directory if it does not exist
+   * @param dir directory to create
+   * @throws IOException
+   */
   private static void createDirIfNeeded(Path dir) throws IOException {
     if (!dir.toFile().exists()) {
       FileAttribute<Set<PosixFilePermission>> attr = openBarPerms();
@@ -137,12 +164,19 @@ public class PathUtils {
     }
   }
 
+  /**
+   * rwxrwxrwx posix permissions
+   * @return rwxrwxrwx posix permissions
+   */
   private static FileAttribute<Set<PosixFilePermission>> openBarPerms() {
     Set<PosixFilePermission> perms = PosixFilePermissions.fromString(OPEN_BAR);
     return PosixFilePermissions.asFileAttribute(perms);
   }
 }
 
+/**
+ * a visitor to copy all files of a directory recursively
+ */
 @AllArgsConstructor
 @Slf4j
 class CopyDir extends SimpleFileVisitor<Path> {
@@ -175,6 +209,9 @@ class CopyDir extends SimpleFileVisitor<Path> {
   }
 }
 
+/**
+ * a visitor to delete all files of a directory recursively
+ */
 @Slf4j
 class DeleteDir extends SimpleFileVisitor<Path> {
 

@@ -79,6 +79,10 @@ public class SimulatedTime {
         }
     }
 
+    /**
+     * Computes the simulated current time as an {@link Instant}
+     * @return now
+     */
     public Instant computeNow() {
         if (referenceSystemTime == null)
             return Instant.now();
@@ -87,6 +91,9 @@ public class SimulatedTime {
         return startSimulatedTime.plus(Math.round(coefDelta), ChronoUnit.MILLIS);
     }
 
+    /**
+     * resets internal configuration
+     */
     public void reset() {
         referenceSystemTime = null;
         speed = 1;
