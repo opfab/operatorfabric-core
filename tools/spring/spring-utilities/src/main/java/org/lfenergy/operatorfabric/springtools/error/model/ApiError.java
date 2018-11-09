@@ -7,13 +7,17 @@
 
 package org.lfenergy.operatorfabric.springtools.error.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+/**
+ * Api Error model used to return formated error in http response payload
+ *
+ * @author David Binder
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

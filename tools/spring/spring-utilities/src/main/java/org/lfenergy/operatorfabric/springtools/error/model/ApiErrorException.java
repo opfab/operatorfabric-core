@@ -10,34 +10,66 @@ package org.lfenergy.operatorfabric.springtools.error.model;
 import lombok.Getter;
 
 /**
- * <p></p>
- * Created on 13/04/18
+ * Exception used to to throw error during endpoint access. Encapsulate both an {@link ApiError} object and a cause
+ * exception from business layer
  *
- * @author davibind
+ * @author David Binder
  */
 @Getter()
 public class ApiErrorException extends Exception {
-  private final ApiError error;
+    private final ApiError error;
 
-  public ApiErrorException(ApiError error, String message, Throwable cause) {
-    super(message, cause);
-    this.error = error;
-  }
+    /**
+     * @param error
+     *    encapsulated error representation
+     * @param message
+     *    The detail message. The detail message is saved for
+     *    later retrieval by the {@link #getMessage()} method.
+     * @param cause
+     *    The cause (which is saved for later retrieval by the
+     *    {@link #getCause()} method).  (A <tt>null</tt> value is
+     *    permitted, and indicates that the cause is nonexistent or
+     *    unknown.)
+     */
+    public ApiErrorException(ApiError error, String message, Throwable cause) {
+        super(message, cause);
+        this.error = error;
+    }
 
-  public ApiErrorException(ApiError error, String message) {
-    super(message);
-    this.error = error;
-  }
+    /**
+     * @param error
+     *    encapsulated error representation
+     * @param message
+     *    The detail message. The detail message is saved for
+     *    later retrieval by the {@link #getMessage()} method.
+     */
+    public ApiErrorException(ApiError error, String message) {
+        super(message);
+        this.error = error;
+    }
 
-  public ApiErrorException(ApiError error, Throwable cause) {
-    super(error.getMessage(), cause);
-    this.error = error;
-  }
+    /**
+     * @param error
+     *    encapsulated error representation
+     * @param cause
+     *    The cause (which is saved for later retrieval by the
+     *    {@link #getCause()} method).  (A <tt>null</tt> value is
+     *    permitted, and indicates that the cause is nonexistent or
+     *    unknown.)
+     */
+    public ApiErrorException(ApiError error, Throwable cause) {
+        super(error.getMessage(), cause);
+        this.error = error;
+    }
 
-  public ApiErrorException(ApiError error) {
-    super(error.getMessage());
-    this.error = error;
-  }
+    /**
+     * @param error
+     *    encapsulated error representation
+     */
+    public ApiErrorException(ApiError error) {
+        super(error.getMessage());
+        this.error = error;
+    }
 
 
 }
