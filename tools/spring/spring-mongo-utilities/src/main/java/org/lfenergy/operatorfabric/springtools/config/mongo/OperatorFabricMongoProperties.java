@@ -14,10 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 /**
- * <p></p>
- * Created on 26/07/18
- *
- * @author davibind
+ * Property object to gather ioperator fabric specific mongo properties
+ * @author David Binder
  */
 @Configuration
 @ConfigurationProperties("spring.data.mongodb")

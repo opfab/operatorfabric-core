@@ -32,14 +32,19 @@ import java.util.concurrent.TimeUnit;
 //import com.mongodb.async.client.MongoClientSettings;
 
 /**
- * <p></p>
- * Created on 24/07/18
+ * Mongo configuration.
+ * <ul>
+ * <li>Standard cluster client configuration</li>
+ * <li>Reactive cluster client configuration</li>
+ * <li>Builds converter form {@link AbstractLocalMongoConfiguration#converterList()}</li>
+ * <li>Mongo bean validation</li>
+ * </ul>
  *
- * @author davibind
+ * @author David binder
  */
 @Slf4j
 @Configuration
-public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/{
+public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/ {
 
     @Autowired
     private OperatorFabricMongoProperties properties;
@@ -47,32 +52,40 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/{
     private AbstractLocalMongoConfiguration localConfiguration;
     private MongoClient client;
 
+    /**
+     * @return reative client
+     */
     @Bean
     public synchronized MongoClient reactiveMongoClient() {
-        if(client == null)
+        if (client == null)
             this.client = MongoClients.create(mongoSettings());
         return client;
     }
 
+    /**
+     * @return standard client
+     */
     @Bean
     public com.mongodb.MongoClient mongoClient() {
         MongoClientOptions.Builder optionsBuilder = new MongoClientOptions.Builder();
         optionsBuilder.maxConnectionIdleTime(60000);
         List<ServerAddress> addrs = new ArrayList<>();
         List<MongoCredential> credentials = new ArrayList<>();
-        for(String uriString:properties.getUris()) {
+        for (String uriString : properties.getUris()) {
             URI uri = URI.create(uriString);
             addrs.add(new ServerAddress(uri.getHost(), uri.getPort()));
             String[] userInfo = uri.getUserInfo().split(":");
-            credentials.add(MongoCredential.createCredential(userInfo[0],"admin",userInfo[1].toCharArray()));
+            credentials.add(MongoCredential.createCredential(userInfo[0], "admin", userInfo[1].toCharArray()));
         }
-        com.mongodb.MongoClient client = new com.mongodb.MongoClient(addrs,credentials,optionsBuilder.build());
+        com.mongodb.MongoClient client = new com.mongodb.MongoClient(addrs, credentials, optionsBuilder.build());
         return client;
     }
 
+    /**
+     * @return mapping converter with local conversions
+     */
     @Bean
-//    @Override
-    public MappingMongoConverter mappingMongoConverter() throws Exception {
+    public MappingMongoConverter mappingMongoConverter() {
 
         MappingMongoConverter converter = new MappingMongoConverter(ReactiveMongoTemplate.NO_OP_REF_RESOLVER,
            mongoMappingContext());
@@ -82,7 +95,9 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/{
         return converter;
     }
 
-//    @Override
+    /**
+     * @return database name from configuration
+     */
     protected String getDatabaseName() {
         return properties.getDatabase();
     }
@@ -98,6 +113,13 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/{
         return mappingContext;
     }
 
+    /**
+     * Called before entities are persisted to mong, trigers bean validation
+     *
+     * @param localValidatorFactoryBean
+     *    spring bean validation main component
+     * @return Mongo lifecycle listener that triggers validation
+     */
     @Bean
     public ValidatingMongoEventListener validatingMongoEventListener(@Autowired LocalValidatorFactoryBean
                                                                         localValidatorFactoryBean) {
@@ -105,46 +127,50 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/{
     }
 
 
+    /**
+     * client cluster configuration for reactive client
+     *
+     * @return reactive client configuration
+     */
     private MongoClientSettings mongoSettings() {
         List<String> dbUris = properties.getUris();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < dbUris.size(); i++) {
             sb.append(dbUris.get(i));
-            if (i < dbUris.size()-1)
+            if (i < dbUris.size() - 1)
                 sb.append(",");
         }
         ConnectionString connectionString = new ConnectionString(sb.toString());
         MongoClientSettings.Builder builder = MongoClientSettings.builder()
-           .applyToConnectionPoolSettings(b->
-                   b.applySettings(ConnectionPoolSettings.builder()
-              .applyConnectionString(connectionString)
-              .maxConnectionIdleTime(60, TimeUnit.SECONDS)
-              .build()))
-           .applyToServerSettings(b->
+           .applyToConnectionPoolSettings(b ->
+              b.applySettings(ConnectionPoolSettings.builder()
+                 .applyConnectionString(connectionString)
+                 .maxConnectionIdleTime(60, TimeUnit.SECONDS)
+                 .build()))
+           .applyToServerSettings(b ->
               b.applySettings(
                  ServerSettings.builder()
                     .applyConnectionString(connectionString)
                     .build()
               )
            )
-           .applyToSslSettings(b->
+           .applyToSslSettings(b ->
               b.applySettings(SslSettings.builder()
                  .applyConnectionString(connectionString)
                  .build())
            )
-           .applyToSocketSettings(b->
-           b.applySettings(SocketSettings.builder()
-              .applyConnectionString(connectionString)
-              .build()))
-           ;
+           .applyToSocketSettings(b ->
+              b.applySettings(SocketSettings.builder()
+                 .applyConnectionString(connectionString)
+                 .build()));
 
 //        if(dbUris.size()>1)
-        builder.applyToClusterSettings(b->
+        builder.applyToClusterSettings(b ->
            b.applySettings(
               ClusterSettings.builder()
-               .applyConnectionString(connectionString)
-               .mode(ClusterConnectionMode.MULTIPLE)
-               .build()));
+                 .applyConnectionString(connectionString)
+                 .mode(ClusterConnectionMode.MULTIPLE)
+                 .build()));
 
         if (connectionString.getCredential() != null) {
             builder.credential(connectionString.getCredential());

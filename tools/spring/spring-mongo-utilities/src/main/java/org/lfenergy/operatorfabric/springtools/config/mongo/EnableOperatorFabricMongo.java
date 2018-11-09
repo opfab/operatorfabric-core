@@ -12,10 +12,9 @@ import org.springframework.context.annotation.Import;
 import java.lang.annotation.*;
 
 /**
- * <p></p>
- * Created on 29/06/18
+ * <p>Enables Mongo generic configuration for Operator Fabric (see {@link MongoConfiguration})</p>
  *
- * @author davibind
+ * @author David Binder
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
