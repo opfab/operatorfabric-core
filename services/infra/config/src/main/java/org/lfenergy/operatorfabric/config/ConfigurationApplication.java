@@ -15,29 +15,17 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 
 import java.io.IOException;
 
+/**
+ * Sets up a configuration with AMQP notification and registration in Eureka
+ */
 @EnableConfigServer
 @EnableDiscoveryClient
 @SpringBootApplication
 @Slf4j
-public class Application {
+public class ConfigurationApplication {
 
     public static void main(String[] args) throws IOException {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(ConfigurationApplication.class, args);
     }
 
-//    @Value("${spring.cloud.config.server.native.search-locations}")
-//    String searchPath;
-//
-//    @PostConstruct
-//    public void costConstruct() throws IOException {
-//        log.info("CONFIG PATH is :"+searchPath);
-//        Path path = Paths.get(searchPath);
-//        if(Files.exists(path)) {
-//            log.info("CONFIG PATH CONTAINS:");
-//            Files.list(path).forEach(p -> log.info(p.toString()));
-//        }else{
-//            log.warn("CONFIG PATH DOES NOT EXIST");
-//        }
-//
-//    }
 }
