@@ -20,6 +20,14 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>specific client operator fabric generator derived from {@link SpringCodegen}</p>
+ * <ul>
+ *     <li>Adds x-operatorfabric-spring-subPath vendor extension, it contains subpath
+ *     to allow affecting a base path to class main mapping and subpath to method mapping</li>
+ *     <li>Changes generic parameter from X to ? extends X which allows to define interfaces only in generated code</li>
+ * </ul>
+ */
 public class OpfabSpringGenerator extends SpringCodegen {
 
     protected final Logger log = LoggerFactory.getLogger(OpfabSpringGenerator.class);
