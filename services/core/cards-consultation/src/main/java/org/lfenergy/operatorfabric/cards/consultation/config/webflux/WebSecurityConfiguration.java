@@ -24,7 +24,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @Configuration
 @Slf4j
 @EnableWebFluxSecurity
-public class WebSecurityConfig {
+public class WebSecurityConfiguration {
 
     /**
      * Secures access (all uris are secured)

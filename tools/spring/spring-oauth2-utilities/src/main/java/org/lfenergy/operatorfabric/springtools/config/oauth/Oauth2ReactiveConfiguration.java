@@ -16,27 +16,12 @@ import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 
-//import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
-//import org.springframework.boot.autoconfigure.security.oauth2.resource.JwtAccessTokenConverterConfigurer;
-//import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-//import org.springframework.security.oauth2.client.OAuth2ClientContext;
-//import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-//import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
-//import org.springframework.security.oauth2.common.OAuth2AccessToken;
-//import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-//import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-//import org.springframework.security.oauth2.provider.OAuth2Authentication;
-//import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
-//import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
-//import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
-//import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
-//import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-
 /**
- * <p></p>
- * Created on 09/08/18
+ * <p>Authentication configuration for webflux</p>
  *
- * @author davibind
+ * FIXME probably useless since Spring security 5.1.1. Check it.
+ *
+ * @author David Binder
  */
 @Configuration
 @Slf4j

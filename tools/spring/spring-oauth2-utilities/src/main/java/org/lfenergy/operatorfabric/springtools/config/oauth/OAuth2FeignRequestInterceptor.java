@@ -15,10 +15,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 //import org.springframework.security.oauth2.client.OAuth2ClientContext;
 
 /**
- * <p></p>
- * Created on 17/09/18
+ * <p>Feign interceptor used to add Oauth2  authentication to http headers :</p>
+ * {@code Authorization: Bearer [token]}
  *
- * @author davibind
+ * @author David Binder
  */
 @Slf4j
 public class OAuth2FeignRequestInterceptor implements RequestInterceptor {
@@ -26,13 +26,6 @@ public class OAuth2FeignRequestInterceptor implements RequestInterceptor {
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     private static final String BEARER_TOKEN_TYPE = "Bearer";
-
-//    private final OAuth2ClientContext oauth2ClientContext;
-
-    public OAuth2FeignRequestInterceptor() {
-//        Assert.notNull(oauth2ClientContext, "Context can not be null");
-//        this.oauth2ClientContext = oauth2ClientContext;
-    }
 
     @Override
     public void apply(RequestTemplate template) {

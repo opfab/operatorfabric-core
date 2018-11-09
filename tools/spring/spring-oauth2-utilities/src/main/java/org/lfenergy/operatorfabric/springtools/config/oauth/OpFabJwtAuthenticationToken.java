@@ -16,15 +16,22 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import java.util.Collection;
 
 /**
- * <p></p>
- * Created on 24/09/18
+ * Custom Operator Fabric Jwt Authentication Token whose custom principal is a {@link User} object
  *
- * @author davibind
+ * @author David Binder
  */
 public class OpFabJwtAuthenticationToken extends JwtAuthenticationToken {
     @Getter
     private final Object principal;
 
+    /**
+     * @param jwt
+     *    original Jwt object from http call
+     * @param principal
+     *    custom principal
+     * @param authorities
+     *    list of authority
+     */
     public OpFabJwtAuthenticationToken(Jwt jwt, User principal, Collection<? extends GrantedAuthority>
        authorities) {
         super(jwt, authorities);

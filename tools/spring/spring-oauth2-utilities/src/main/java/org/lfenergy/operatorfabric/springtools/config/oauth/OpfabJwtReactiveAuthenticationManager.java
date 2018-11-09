@@ -24,10 +24,7 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 /**
- * A {@link ReactiveAuthenticationManager} for Jwt tokens.
- *
- * @author Rob Winch
- * @since 5.1
+ * FIXME probably useless since Spring security 5.1.1. Check it.
  */
 public final class OpfabJwtReactiveAuthenticationManager implements ReactiveAuthenticationManager {
     private final Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter;

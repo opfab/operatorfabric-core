@@ -41,8 +41,7 @@ import java.util.List;
 //import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 /**
- * <p></p>
- * Created on 09/08/18
+ * Common configuration (MVC & Webflux
  *
  * @author davibind
  */
@@ -50,7 +49,7 @@ import java.util.List;
 @EnableDiscoveryClient
 @Configuration
 @Slf4j
-public class Oauth2GenericConfiguration  {
+public class Oauth2GenericConfiguration {
 
     public static ThreadLocal<Jwt> token = new ThreadLocal<>();
 
@@ -59,72 +58,43 @@ public class Oauth2GenericConfiguration  {
     @Autowired
     private ApplicationContext context;
 
+    /**
+     * Generates a converter that converts {@link Jwt} to {@link OpFabJwtAuthenticationToken} whose principal is  a
+     * {@link User} model object
+     *
+     * @return Converter from {@link Jwt} to {@link OpFabJwtAuthenticationToken}
+     */
     @Bean
-    public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter(){
-        return new Converter<Jwt, AbstractAuthenticationToken>(){
+    public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter() {
 
-            @Override
-            public AbstractAuthenticationToken convert(Jwt jwt) {
-                String principalId = jwt.getClaimAsString("sub");
-                token.set(jwt);
-                User user = proxy.fetchUser(principalId);
-                token.remove();
-                List<GrantedAuthority> authorities = computeAuthorities(user);
-                return new OpFabJwtAuthenticationToken(jwt,user,authorities);
-            }
+        return jwt -> {
+            String principalId = jwt.getClaimAsString("sub");
+            token.set(jwt);
+            User user = proxy.fetchUser(principalId);
+            token.remove();
+            List<GrantedAuthority> authorities = computeAuthorities(user);
+            return new OpFabJwtAuthenticationToken(jwt, user, authorities);
         };
     }
 
-//    @Bean
-//    public PrincipalExtractor principalExtractor() {
-//        return map -> {
-//            String principalId = (String) map.get("principal");
-//            UserData UserData = proxy.fetchUser(principalId);
-//            map.put("businessUser",UserData);
-//            return UserData;
-//
-//        };
-//    }
-//
-//    @Bean
-//    public AuthoritiesExtractor authoritiesExtractor() {
-//        return map -> {
-//            UserData UserData = (UserData) map.get("businessUser");
-//            return computeAuthorities(UserData);
-//        };
-//    }
-
-    private static List<GrantedAuthority> computeAuthorities(User UserData) {
-        return AuthorityUtils.createAuthorityList(UserData.getGroups().stream().map(g->"ROLE_"+g).toArray(size-> new
-           String[size]));
+    /**
+     * Creates Authority list from user's groups (ROLE_[group name])
+     * @param user user model data
+     * @return list of authority
+     */
+    private static List<GrantedAuthority> computeAuthorities(User user) {
+        return AuthorityUtils.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size ->
+           new
+              String[size]));
     }
 
+    /**
+     * Declares a Feign interceptor that adds oauth2 user authentication to headers
+     * @return oauth2 feign interceptor
+     */
     @Bean
     public RequestInterceptor oauth2FeignRequestInterceptor() {
         return new OAuth2FeignRequestInterceptor();
     }
 
-//    @Override
-//    public void configure(JwtAccessTokenConverter converter) {
-//        DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter(){
-//            @Override
-//            public OAuth2AccessToken extractAccessToken(String value, Map<String, ?> map) {
-//                OAuth2AccessToken oAuth2AccessToken = super.extractAccessToken(value, map);
-//                context.getBean(OAuth2ClientContext.class).setAccessToken(oAuth2AccessToken);
-//                return oAuth2AccessToken;
-//            }
-//        };
-//        tokenConverter.setUserTokenConverter(new DefaultUserAuthenticationConverter(){
-//            @Override
-//            public Authentication extractAuthentication(Map<String, ?> map) {
-//                if (map.containsKey(USERNAME)) {
-//                    UserData UserData = proxy.fetchUser((String) map.get(USERNAME));;
-//                    Collection<? extends GrantedAuthority> authorities = computeAuthorities(UserData);
-//                    return new UsernamePasswordAuthenticationToken(UserData, "N/A", authorities);
-//                }
-//                return null;
-//            }
-//        });
-//        converter.setAccessTokenConverter(tokenConverter);
-//    }
 }

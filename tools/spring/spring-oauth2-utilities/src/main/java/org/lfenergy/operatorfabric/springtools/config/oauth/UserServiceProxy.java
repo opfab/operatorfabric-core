@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * <p></p>
- * Created on 17/09/18
+ * Feign proxy for User wervice
  *
- * @author davibind
+ * @author David Binder
  */
 @FeignClient(value = "users")
 public interface UserServiceProxy {
