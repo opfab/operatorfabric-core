@@ -3,89 +3,45 @@ plugins {
     id "com.github.jk1.dependency-license-report" version "1.3"
 }
 
+ext.versions = new Properties()
+file("versions.properties").withReader { reader ->
+    versions.load(reader)
+}
+
 ext {
     operatorfabric = [
             group: "org.lfenergy.operatorfabric",
             version: version = rootProject.file('VERSION').text.trim()
     ]
-    //spring libs
-    bootVersion = '2.1.0.RELEASE'
-    SpringCloudVersion = 'Greenwich.BUILD-SNAPSHOT'
-//    SpringCloudVersion = 'Greenwich.M1'
-//    SpringCloudVersion = 'Finchley.RELEASE'
-
-    //logging libs
-    slf4jVersion = '1.7.25'
-    logbackVersion = '1.2.3'
-
-    //security
-    springOauth2BootVersion = '2.0.1.RELEASE'
-    springOauth2Version = '2.3.3.RELEASE'
-    springJwtVersion = '1.0.9.RELEASE'
-    springVersion = "5.1.1.RELEASE"
-
-    //utilities
-    commonsCompressVersion = '1.17'
-
-    //tools
-    guavaVersion = '18.0'
-    lombokVersion = '1.18.2' //!! some dependencies use older version
-    gradleDockerVersion ='0.19.2'
-
-    //testing libs
-    mockitoVersion = '2.22.0' //!! some dependencies us older version
-    junitVersion = '4.12'
-    hamcrestVersion = '1.3'
-    assertjVersion = '3.11.1'
-    junit5Version = '5.3.1'
-    junit5PlatformVersion = '1.2.0'
-    awaitilityVersion = '3.1.2'
-
-    //code generators
-    swaggerVersion = '2.3.1'
-    swaggerGeneratorPluginVersion = '2.12.0'
-    springfoxVersion = '2.9.2'
 
     boot = [
-            springBootPlugin: "org.springframework.boot:spring-boot-gradle-plugin:$bootVersion",
-            starter         : "org.springframework.boot:spring-boot-starter:$bootVersion",
-            starterWeb      : "org.springframework.boot:spring-boot-starter-web:$bootVersion",
-            actuator        : "org.springframework.boot:spring-boot-starter-actuator:$bootVersion",
-            starterTest     : "org.springframework.boot:spring-boot-starter-test:$bootVersion",
-            starterAop      : "org.springframework.boot:spring-boot-starter-aop:$bootVersion",
-            starterJdbc     : "org.springframework.boot:spring-boot-starter-jdbc:$bootVersion",
-            starterJetty    : "org.springframework.boot:spring-boot-starter-jetty:$bootVersion",
-            starterJpa      : "org.springframework.boot:spring-boot-starter-data-jpa:$bootVersion",
-            starterJta      : "org.springframework.boot:spring-boot-starter-jta-atomikos:$bootVersion",
-            starterJms      : "org.springframework.boot:spring-boot-starter-artemis:$bootVersion",
-            starterRabbitmq : "org.springframework.boot:spring-boot-starter-amqp:$bootVersion",
-            starterThyme    : "org.springframework.boot:spring-boot-starter-thymeleaf:$bootVersion",
-            starterSecurity : "org.springframework.boot:spring-boot-starter-security:$bootVersion",
-            starterOauth2    : "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:$springOauth2BootVersion",
-            starterBatch    : "org.springframework.boot:spring-boot-starter-batch:$bootVersion",
-            starterWebflux  : "org.springframework.boot:spring-boot-starter-webflux:$bootVersion",
-            starterMongoR   : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$bootVersion",
-            starterCassandraR   : "org.springframework.boot:spring-boot-starter-data-cassandra-reactive:$bootVersion",
-            starterUndertow : "org.springframework.boot:spring-boot-starter-undertow:$bootVersion",
-            starterElastic  : "org.springframework.boot:spring-boot-starter-data-elasticsearch:$bootVersion",
-            starterTest     : "org.springframework.boot:spring-boot-starter-test:$bootVersion",
-            starterValidation: "org.springframework.boot:spring-boot-starter-validation:$bootVersion",
-            annotationConfiguration: "org.springframework.boot:spring-boot-configuration-processor:$bootVersion",
-            devTools        : "org.springframework.boot:spring-boot-devtools:$bootVersion"
+            springBootPlugin: "org.springframework.boot:spring-boot-gradle-plugin:${versions['spring.boot']}",
+            starter         : "org.springframework.boot:spring-boot-starter:${versions['spring.boot']}",
+            starterWeb      : "org.springframework.boot:spring-boot-starter-web:${versions['spring.boot']}",
+            starterWebflux  : "org.springframework.boot:spring-boot-starter-webflux:${versions['spring.boot']}",
+            actuator        : "org.springframework.boot:spring-boot-starter-actuator:${versions['spring.boot']}",
+            starterAop      : "org.springframework.boot:spring-boot-starter-aop:${versions['spring.boot']}",
+            starterJetty    : "org.springframework.boot:spring-boot-starter-jetty:${versions['spring.boot']}",
+            starterRabbitmq : "org.springframework.boot:spring-boot-starter-amqp:${versions['spring.boot']}",
+            starterSecurity : "org.springframework.boot:spring-boot-starter-security:${versions['spring.boot']}",
+            starterOauth2    : "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${versions['spring.security.deprecated.oauth']}",
+            starterMongoR   : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${versions['spring.boot']}",
+            starterTest     : "org.springframework.boot:spring-boot-starter-test:${versions['spring.boot']}",
+            starterValidation: "org.springframework.boot:spring-boot-starter-validation:${versions['spring.boot']}",
+            annotationConfiguration: "org.springframework.boot:spring-boot-configuration-processor:${versions['spring.boot']}",
+            devTools        : "org.springframework.boot:spring-boot-devtools:${versions['spring.boot']}"
     ]
 
     spring = [
-            securityOauth2 : "org.springframework.security.oauth:spring-security-oauth2:$springOauth2Version",
-            securityJwt    : "org.springframework.security:spring-security-jwt:$springJwtVersion",
-            securityOauthClient: "org.springframework.security:spring-security-oauth2-client:$springVersion",
-            securityOauthResource: "org.springframework.security:spring-security-oauth2-resource-server:$springVersion",
-            securityOauthJose: "org.springframework.security:spring-security-oauth2-jose:$springVersion",
-            webflux: "org.springframework:spring-webflux:$springVersion",
+            securityJwt    : "org.springframework.security:spring-security-jwt:${versions['spring.security.jwt']}",
+            securityOauthResource: "org.springframework.security:spring-security-oauth2-resource-server:${versions['spring']}",
+            securityOauthJose: "org.springframework.security:spring-security-oauth2-jose:${versions['spring']}",
+            webflux: "org.springframework:spring-webflux:${versions['spring']}",
             retry: "org.springframework.retry:spring-retry:1.2.2.RELEASE"
     ]
 
     cloud = [
-            dependencies    : "org.springframework.cloud:spring-cloud-dependencies:$SpringCloudVersion",
+            dependencies    : "org.springframework.cloud:spring-cloud-dependencies:${versions['spring.cloud']}",
             configMonitor   : "org.springframework.cloud:spring-cloud-config-monitor",
             starterConfigServer   : "org.springframework.cloud:spring-cloud-config-server",
             starterConfigClient   : "org.springframework.cloud:spring-cloud-starter-config",
@@ -94,40 +50,31 @@ ext {
             starterFeign   : "org.springframework.cloud:spring-cloud-starter-openfeign",
             eurekaServer    : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server',
             eurekaClient    : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
-            zuul            : 'org.springframework.cloud:spring-cloud-starter-netflix-zuul',
             gateway         : 'org.springframework.cloud:spring-cloud-starter-gateway'
     ]
 
     testing = [
-            junit       : "junit:junit:$junitVersion",
-            junit5Api: "org.junit.jupiter:junit-jupiter-api:$junit5Version",
-            junit5Engine: "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
-            junit5Runner: "org.junit.platform:junit-platform-runner:$junit5PlatformVersion",
-            junit5Plugin: "org.junit.platform:junit-platform-gradle-plugin:$junit5PlatformVersion",
-            mockito     : "org.mockito:mockito-core:$mockitoVersion",
-            hamcrestCore: "org.hamcrest:hamcrest-core:$hamcrestVersion",
-            hamcrestLib : "org.hamcrest:hamcrest-library:$hamcrestVersion",
-            assertJ     : "org.assertj:assertj-core:$assertjVersion",
+            junit5Api: "org.junit.jupiter:junit-jupiter-api:${versions['junit5']}",
+            junit5Engine: "org.junit.jupiter:junit-jupiter-engine:${versions['junit5']}",
+            junit5Plugin: "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
+            assertJ     : "org.assertj:assertj-core:${versions['assertj']}",
             reactor     : "io.projectreactor:reactor-test",
-            awaitility  : "org.awaitility:awaitility-kotlin:$awaitilityVersion"
+            awaitility  : "org.awaitility:awaitility-kotlin:${versions['awaitility']}"
     ]
 
 
     misc = [
-            slf4j          : "org.slf4j:slf4j-api:$slf4jVersion",
-            slf4jJcl       : "org.slf4j:jcl-over-slf4j:$slf4jVersion",
-            logback        : "ch.qos.logback:logback-classic:$logbackVersion",
-            guava          : "com.google.guava:guava:$guavaVersion",
-            lombok         : "org.projectlombok:lombok:$lombokVersion",
-            palantir       : "gradle.plugin.com.palantir.gradle.docker:gradle-docker:$gradleDockerVersion",
-            compress       : "org.apache.commons:commons-compress:$commonsCompressVersion"
+            slf4j          : "org.slf4j:slf4j-api:${versions['log.sl4j']}",
+            lombok         : "org.projectlombok:lombok:${versions['lombok']}",
+            palantir       : "gradle.plugin.com.palantir.gradle.docker:gradle-docker:${versions['gradle.docker']}",
+            compress       : "org.apache.commons:commons-compress:${versions['apache.commons.compress']}"
     ]
 
     generator = [
-            swagger: "io.swagger:swagger-codegen-cli:$swaggerVersion",
-            swaggerGeneratorPlugin: "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:$swaggerGeneratorPluginVersion",
-            springfoxSwagger2: "io.springfox:springfox-swagger2:$springfoxVersion",
-            springfoxSwaggerUI: "io.springfox:springfox-swagger-ui:$springfoxVersion"
+            swagger: "io.swagger:swagger-codegen-cli:${versions['swagger']}",
+            swaggerGeneratorPlugin: "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:${versions['swagger.generator.plugin']}",
+            springfoxSwagger2: "io.springfox:springfox-swagger2:${versions['springfox']}",
+            springfoxSwaggerUI: "io.springfox:springfox-swagger-ui:${versions['springfox']}"
     ]
 
     plugin = [
@@ -143,12 +90,10 @@ ext {
             proxy : [uri:"",httpsuri:"",user:"",password:""]
     ]
 }
-//println "APK_PROXY_URY: $System.env.APK_PROXY_URI; APK_PROXY_USER: $System.env.APK_PROXY_USER; APK_PROXY_PASSWORD: $System.env.APK_PROXY_PASSWORD"
 ext.apk.proxy.uri = hasProperty('apk.proxy.uri') && property('apk.proxy.uri') != null && property('apk.proxy.uri') != ""? property('apk.proxy.uri') : System.env.APK_PROXY_URI != null ? "$System.env.APK_PROXY_URI" : ""
 ext.apk.proxy.httpsuri = hasProperty('apk.proxy.httpsuri') && property('apk.proxy.uri') != null && property('apk.proxy.uri') != "" ? property('apk.proxy.uri') : System.env.APK_PROXY_HTTPS_URI != null ? "$System.env.APK_PROXY_HTTPS_URI" : apk.proxy.uri
 ext.apk.proxy.user = hasProperty('apk.proxy.user') && property('apk.proxy.user') != null && property('apk.proxy.user') != "" ? property('apk.proxy.user') : System.env.APK_PROXY_USER != null ? "$System.env.APK_PROXY_USER" : ""
 ext.apk.proxy.password = hasProperty('apk.proxy.password') && property('apk.proxy.password') != null && property('apk.proxy.password') != "" ? property('apk.proxy.password') : System.env.APK_PROXY_PASSWORD != null ? "$System.env.APK_PROXY_PASSWORD" : ""
-//println "computed HTTP_PRY_AUTH: basic:*:$apk.proxy.user:$apk.proxy.password"
 
 licenseReport {
     renderers = [new InventoryHtmlReportRenderer()]
