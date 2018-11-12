@@ -7,7 +7,6 @@
 
 package org.lfenergy.operatorfabric.time.controllers;
 
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
@@ -15,10 +14,10 @@ import org.lfenergy.operatorfabric.time.services.TimeService;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.time.Instant;
 
 /**
@@ -29,7 +28,7 @@ import java.time.Instant;
 @RestController
 @RequestMapping("time")
 @Slf4j
-public class TimeController {
+public class TimeController implements TimeApi{
 
     private TimeService timeService;
 
@@ -42,37 +41,20 @@ public class TimeController {
         this.timeService = timeService;
     }
 
-    /**
-     * resets time to original values (no delta in tie computation and normal speed)
-     * @return nothing
-     */
-    @DeleteMapping
+    @Override
     public Void resetTime() {
         timeService.reset();
         return null;
     }
 
-    /**
-     * <p>fetch current time configuration</p>
-     * @return time data
-     */
-    @GetMapping(produces = {"application/json"})
-    @ResponseBody
+    @Override
     public TimeData fetchTime() {
         return timeService.fetchTimeData();
     }
 
-    /**
-     * <p>sets current time configuration</p>
-     * @param user authorized user business principal object
-     * @param time time data payload
-     * @return
-     */
-    @PostMapping(consumes = {"application/json"})
-    public TimeData setTime(@AuthenticationPrincipal User user, @ApiParam(value = "Time Data to update time " +
-            "service") @Valid
-    @RequestBody TimeData
-            time) {
+    @Override
+    public TimeData setTime( TimeData time) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user == null) {
             log.info("Time updated by unknown user");
         } else {
@@ -87,58 +69,30 @@ public class TimeController {
         return fetchTime();
     }
 
-    /**
-     * <p>sets current time configuration</p>
-     * @param user authorized user business principal object
-     * @param time time data payload
-     * @return
-     */
-    @PutMapping
-    public TimeData updateTime(@AuthenticationPrincipal User user, @ApiParam(value = "Time Data to update " +
-            "time service")
-    @Valid @RequestBody TimeData time) {
-        return setTime(user, time);
+    @Override
+    public TimeData updateTime(TimeData time) {
+        return setTime(time);
     }
 
-    /**
-     * Sets the virtual server speed
-     * @param currentSpeed one the speed preset
-     * @return
-     */
-    @PostMapping(value = "/speed")
-    public SpeedEnum setCurrentSpeed(@Valid @RequestBody SpeedEnum currentSpeed) {
+    @Override
+    public SpeedEnum setCurrentSpeed(SpeedEnum currentSpeed) {
         this.timeService.updateSpeed(currentSpeed);
         return this.timeService.retrieveSpeed();
     }
 
-    /**
-     * Sets the virtual server time (milliseconds since Epoch)
-     * @param currentTime current time in milliseconds
-     * @return
-     */
-    @PostMapping(value = "/current")
-    public Long setCurrentTime(@Valid @RequestBody java.lang.Long currentTime) {
+    @Override
+    public Long setCurrentTime(java.lang.Long currentTime) {
         this.timeService.updateTime(Instant.ofEpochMilli(currentTime));
         return this.timeService.computeNow().toEpochMilli();
     }
 
-    /**
-     * Sets the virtual server time (milliseconds since Epoch)
-     * @param currentTime current time in milliseconds
-     * @return
-     */
-    @PutMapping(value = "/current")
-    public Long updateCurrentTime(@Valid @RequestBody java.lang.Long currentTime) {
+    @Override
+    public Long updateCurrentTime(java.lang.Long currentTime) {
         return setCurrentTime(currentTime);
     }
 
-    /**
-     * Sets the virtual server speed
-     * @param currentSpeed one the speed preset
-     * @return
-     */
-    @PutMapping(value = "/speed")
-    public SpeedEnum updateCurrentspeed(@Valid @RequestBody SpeedEnum currentSpeed) {
+    @Override
+    public SpeedEnum updateCurrentspeed(SpeedEnum currentSpeed) {
         return setCurrentSpeed(currentSpeed);
     }
 }
