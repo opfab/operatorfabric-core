@@ -21,7 +21,7 @@ public class CoreConfig {
 
     /**
      * Instantiate the simulated time singleton
-     * @return
+     * @return simulated time singleton
      */
     @Bean
     public SimulatedTime simulatedTime(){

@@ -24,7 +24,7 @@ public class AmqpConfig {
 
     /**
      * Instantiate the exchange used to transfer time information
-     * @return
+     * @return time fanout exchange
      */
     @Bean
     public FanoutExchange timeExchange(){

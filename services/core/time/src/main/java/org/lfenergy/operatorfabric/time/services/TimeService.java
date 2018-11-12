@@ -40,10 +40,10 @@ public class TimeService {
     /**
      * Constructor by injection
      *
-     * @param simulatedTime injected
-     * @param rabbitTemplate injected
-     * @param mapper injected
-     * @param timeExchange injected
+     * @param simulatedTime injected simulated time singleton instance
+     * @param rabbitTemplate injected rabbit template for message sending
+     * @param mapper injected object mapper to linearize object into json string representation in AMQP message body
+     * @param timeExchange injected AMQP exchange to send time messages
      */
     @Autowired
     public TimeService(SimulatedTime simulatedTime, RabbitTemplate rabbitTemplate, ObjectMapper mapper,
@@ -59,7 +59,7 @@ public class TimeService {
 
     /**
      *
-     * @return simuleted "now" time
+     * @return simulated "now" time
      */
     public Instant computeNow() {
         return simulatedTime.computeNow();
@@ -102,7 +102,7 @@ public class TimeService {
     /**
      * <p>Updates speed value, used in later computation</p>
      * <p>Relies on {@link #updateSpeed(SpeedEnum, boolean)} with notify set to true</p>
-     * @param speed
+     * @param speed new speed value
      */
     public void updateSpeed(SpeedEnum speed) {
         updateSpeed(speed, true);
@@ -129,11 +129,12 @@ public class TimeService {
     /**
      * <p>Updates speed and time values, used in later computation</p>
      * <p>Trigers AMQP message emission</p>
-     * @param speed
+     * @param speed new speed value
+     * @param time new time value
      */
-    public void updateSpeedAndTime(SpeedEnum speed, Instant instant) {
+    public void updateSpeedAndTime(SpeedEnum speed, Instant time) {
         updateSpeed(speed, false);
-        updateTime(instant);
+        updateTime(time);
     }
 
 
