@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+. ${BASH_SOURCE%/*}/load_variables.sh
+
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
   DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
@@ -148,7 +150,7 @@ done
 
 
 debugPort=5005
-version=0.0.1
+version=$OF_VERSION
 
 startProject(){
 
