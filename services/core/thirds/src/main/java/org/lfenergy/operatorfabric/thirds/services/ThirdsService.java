@@ -133,13 +133,13 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * load resource
+     * compute resource handle
      *
      * @param thirdName Third name
      * @param type      rsource type
      * @param name      resource name
-     * @return
-     * @throws FileNotFoundException
+     * @return resource handle
+     * @throws FileNotFoundException if corresponding file does not exist
      */
     public Resource fetchResource(String thirdName, ResourceTypeEnum type, String name) throws
             FileNotFoundException {
@@ -147,15 +147,15 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * load resource
+     * compute resource handle
      *
      * @param thirdName Third name
      * @param type      resource type
      * @param version   third configuration version
      * @param locale    choosen locale use default if not set
      * @param name      resource name
-     * @return
-     * @throws FileNotFoundException
+     * @return resource handle
+     * @throws FileNotFoundException if corresponding file does not exist
      */
     public Resource fetchResource(String thirdName, ResourceTypeEnum type, String version, String locale,
                                   String name) throws FileNotFoundException {
@@ -235,8 +235,8 @@ public class ThirdsService implements ResourceLoaderAware {
     /**
      * Fetch {@link Third} for specified name and default version
      *
-     * @param name
-     * @return
+     * @param name third name
+     * @return fetch {@link Third} or null if it does not exist
      */
     public Third fetch(String name) {
         loadCacheIfNeeded();
@@ -244,14 +244,14 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * load resource
+     * compute resource handle
      *
      * @param thirdName Third name
      * @param type      resource type
      * @param version   third configuration version
      * @param name      resource name
-     * @return
-     * @throws FileNotFoundException
+     * @return resource handle
+     * @throws FileNotFoundException if corresponding resource does not exist
      */
     public Resource fetchResource(String thirdName, ResourceTypeEnum type, String version, String name) throws
             FileNotFoundException {
@@ -290,7 +290,8 @@ public class ThirdsService implements ResourceLoaderAware {
      * Update or create third from disk saved bundle
      * @param outPath path to the bundle
      * @return he new or updated third data
-     * @throws IOException
+     * @throws IOException multiple underlying case (Json read, file system access, file system manipulation - copy,
+     * move)
      */
     private Third updateThird0(Path outPath) throws IOException {
         // load Third from config
@@ -319,11 +320,11 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Fetch {@link Third} for specified name and version
+     * Fetch {@link Third} for specified name and default version
      *
-     * @param name
-     * @param apiVersion
-     * @return
+     * @param name third name
+     * @param apiVersion {@link Third} version, if null falls back to default version (latest upload)
+     * @return fetch {@link Third} or null if it does not exist
      */
     public Third fetch(String name, String apiVersion) {
         loadCacheIfNeeded();
@@ -334,7 +335,7 @@ public class ThirdsService implements ResourceLoaderAware {
 
     /**
      * reset data (only used in tests)
-     * @throws IOException
+     * @throws IOException multiple underlying case (file system access, file system manipulation - deletion)
      */
     public void clear() throws IOException {
         Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath);

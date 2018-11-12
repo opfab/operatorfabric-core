@@ -28,7 +28,7 @@ public class JacksonConfig {
   /**
    * Builds object mapper adding java 8 custom configuration and business module configuration ({@link ThirdsModule})
    * @param builder Spring internal {@link ObjectMapper} builder [injected]
-   * @return
+   * @return configured object mapper for json
    */
   @Bean
   @Autowired

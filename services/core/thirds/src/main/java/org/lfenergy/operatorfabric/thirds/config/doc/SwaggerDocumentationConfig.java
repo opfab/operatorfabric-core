@@ -26,7 +26,7 @@ public class SwaggerDocumentationConfig {
 
   /**
    * Configure documentation rules
-   * @return
+   * @return documentation configuration
    */
   @Bean
   public Docket customImplementation() {
@@ -42,7 +42,7 @@ public class SwaggerDocumentationConfig {
   /**
    * Api information
    *
-   * @return
+   * @return api info configuration
    */
   ApiInfo apiInfo() {
     return new ApiInfoBuilder()

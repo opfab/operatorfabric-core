@@ -40,9 +40,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   /**
    * Handle {@link IOException} as 404 errors
-   * @param exception
-   * @param request
-   * @return
+   * @param exception exception to handle
+   * @param request Corresponding resuqest of exchange
+   * @return Computed http response for specified exception
    */
   @ExceptionHandler(IOException.class)
   public ResponseEntity<Object> handleIOException(IOException exception, final WebRequest request) {
@@ -57,9 +57,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   /**
    * Handle {@link FileNotFoundException} as 404 errors
-   * @param exception
-   * @param request
-   * @return
+   * @param exception exception to handle
+   * @param request Corresponding resuqest of exchange
+   * @return Computed http response for specified exception
    */
   @ExceptionHandler(FileNotFoundException.class)
   public ResponseEntity<Object> handleFileNotFoundException(FileNotFoundException exception, final WebRequest
@@ -75,9 +75,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   /**
    * Handle {@link ApiErrorException}
-   * @param exception
-   * @param request
-   * @return
+   * @param exception exception to handle
+   * @param request Corresponding resuqest of exchange
+   * @return Computed http response for specified exception
    */
   @ExceptionHandler(ApiErrorException.class)
   public ResponseEntity<Object> handleApiError(ApiErrorException exception, final WebRequest

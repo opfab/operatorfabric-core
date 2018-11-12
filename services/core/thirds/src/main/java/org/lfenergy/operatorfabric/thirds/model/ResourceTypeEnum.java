@@ -13,10 +13,10 @@ import lombok.Getter;
 /**
  * Models Third resource type, used generalize {@link org.lfenergy.operatorfabric.thirds.services.ThirdsService} code
  * <dl>
- *     <dt>CSS</dt><dd></dd>
- *     <dt>MEDIA</dt><dd></dd>
- *     <dt>TEMPLATE</dt><dd></dd>
- *     <dt>I18N</dt><dd></dd>
+ *     <dt>CSS</dt><dd>cascading style sheet resource type</dd>
+ *     <dt>MEDIA</dt><dd>Media sound resource type</dd>
+ *     <dt>TEMPLATE</dt><dd>Card template resource type</dd>
+ *     <dt>I18N</dt><dd>i18n file resource type</dd>
  * </dl>
  *
  * @author David Binder
