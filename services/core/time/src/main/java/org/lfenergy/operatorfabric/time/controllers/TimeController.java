@@ -14,6 +14,7 @@ import org.lfenergy.operatorfabric.time.services.TimeService;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,7 +55,7 @@ public class TimeController implements TimeApi{
 
     @Override
     public TimeData setTime( TimeData time) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = extractPrincipalFromContext();
         if (user == null) {
             log.info("Time updated by unknown user");
         } else {
@@ -67,6 +68,13 @@ public class TimeController implements TimeApi{
         else if (time.getCurrentTime() != null)
             setCurrentTime(time.getCurrentTime());
         return fetchTime();
+    }
+
+    private User extractPrincipalFromContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null)
+            return null;
+        return (User) authentication.getPrincipal();
     }
 
     @Override

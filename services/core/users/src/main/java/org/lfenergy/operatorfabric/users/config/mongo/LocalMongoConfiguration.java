@@ -20,11 +20,8 @@ import java.util.List;
  * @author David Binder
  */
 @Component
-public class LocalMongoConfig extends AbstractLocalMongoConfiguration {
-    /**
-     * The mongo converter list (empty)
-     * @return
-     */
+public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
+
     @Override
     public List<Converter> converterList() {
         return Collections.emptyList();

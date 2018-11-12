@@ -10,7 +10,7 @@ package org.lfenergy.operatorfabric.users.application;
 import org.lfenergy.operatorfabric.springtools.config.mongo.EnableOperatorFabricMongo;
 import org.lfenergy.operatorfabric.users.config.DataInitComponent;
 import org.lfenergy.operatorfabric.users.config.json.JacksonConfig;
-import org.lfenergy.operatorfabric.users.config.mongo.LocalMongoConfig;
+import org.lfenergy.operatorfabric.users.config.mongo.LocalMongoConfiguration;
 import org.lfenergy.operatorfabric.users.config.users.UsersProperties;
 import org.lfenergy.operatorfabric.users.controllers.CustomExceptionHandler;
 import org.lfenergy.operatorfabric.users.controllers.GroupsController;
@@ -27,7 +27,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableOperatorFabricMongo
 @EnableConfigurationProperties
 @EnableMongoRepositories(basePackageClasses = UserRepository.class)
-@Import({JacksonConfig.class,LocalMongoConfig.class,UsersProperties.class,CustomExceptionHandler.class,GroupsController
+@Import({JacksonConfig.class, LocalMongoConfiguration.class,UsersProperties.class,CustomExceptionHandler.class,GroupsController
    .class,UsersController.class,DataInitComponent.class})
 public class UnitTestApplication {
 

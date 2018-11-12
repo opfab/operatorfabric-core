@@ -20,5 +20,9 @@ import java.util.List;
  */
 public abstract class AbstractLocalMongoConfiguration {
 
+    /**
+     * generate a specific local mongo converter list
+     * @return The mongo converter list (empty)
+     */
     public abstract List<Converter> converterList();
 }
