@@ -67,13 +67,16 @@ public class Oauth2GenericConfiguration {
     @Bean
     public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter() {
 
-        return jwt -> {
-            String principalId = jwt.getClaimAsString("sub");
-            token.set(jwt);
-            User user = proxy.fetchUser(principalId);
-            token.remove();
-            List<GrantedAuthority> authorities = computeAuthorities(user);
-            return new OpFabJwtAuthenticationToken(jwt, user, authorities);
+        return new Converter<Jwt, AbstractAuthenticationToken>(){
+            @Override
+            public AbstractAuthenticationToken convert(Jwt jwt) {
+                String principalId = jwt.getClaimAsString("sub");
+                token.set(jwt);
+                User user = proxy.fetchUser(principalId);
+                token.remove();
+                List<GrantedAuthority> authorities = computeAuthorities(user);
+                return new OpFabJwtAuthenticationToken(jwt, user, authorities);
+            }
         };
     }
 
