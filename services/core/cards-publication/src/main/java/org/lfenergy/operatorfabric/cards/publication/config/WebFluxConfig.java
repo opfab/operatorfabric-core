@@ -24,6 +24,7 @@ import org.springframework.web.reactive.config.WebFluxConfigurerComposite;
 public class WebFluxConfig {
   /**
    * Configures CORS
+   *
    * @return element of {@link WebFluxConfigurerComposite}
    */
   @Bean
