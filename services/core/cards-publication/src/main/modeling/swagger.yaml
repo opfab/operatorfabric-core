@@ -649,6 +649,7 @@ paths:
         type: string
         required: true
     delete:
+      operationId: deleteProcessCard
       tags:
         - cards
         - deletion
@@ -658,6 +659,7 @@ paths:
         '200':
           description: OK
     get:
+      operationId: fetchProcessCard
       tags:
         - cards
         - read
@@ -677,6 +679,7 @@ paths:
         type: string
         required: true
     get:
+      operationId: fetchProcessCardAction
       tags:
         - cards
         - actions
@@ -693,6 +696,7 @@ paths:
             items:
               $ref: '#/definitions/ActionStatus'
     put:
+      operationId: triggerProcessCardAction
       tags:
         - cards
         - actions
