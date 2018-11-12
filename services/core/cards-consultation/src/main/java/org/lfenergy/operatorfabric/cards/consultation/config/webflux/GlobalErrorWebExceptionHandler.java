@@ -52,15 +52,14 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, true);
         String trace = (String) errorPropertiesMap.get("trace");
-        log.warn("Error during http request processing. Activate Debug for more details");
-        log.debug(trace);
         errorPropertiesMap.remove("trace");
         ServerResponse.BodyBuilder bodyBuilder = ServerResponse.status((Integer) errorPropertiesMap.get("status"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8);
-        Throwable error = (Throwable) errorPropertiesMap.get("exception");
-        if(error instanceof ApiErrorException){
+        Throwable originThrowable = (Throwable) errorPropertiesMap.get("origin");
+        log.error("Error during http request processing.", originThrowable);
+        if(originThrowable instanceof ApiErrorException){
             return bodyBuilder
-                    .body(BodyInserters.fromObject(((ApiErrorException)error).getError()));
+                    .body(BodyInserters.fromObject(((ApiErrorException)originThrowable).getError()));
         }
         return bodyBuilder
            .body(BodyInserters.fromObject(errorPropertiesMap));

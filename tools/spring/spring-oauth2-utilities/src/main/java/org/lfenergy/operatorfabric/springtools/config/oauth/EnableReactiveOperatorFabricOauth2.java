@@ -18,7 +18,7 @@ import java.lang.annotation.*;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import({Oauth2GenericConfiguration.class,Oauth2ReactiveConfiguration.class})
+@Import({Oauth2ReactiveConfiguration.class})
 @Documented
 public @interface EnableReactiveOperatorFabricOauth2 {
 

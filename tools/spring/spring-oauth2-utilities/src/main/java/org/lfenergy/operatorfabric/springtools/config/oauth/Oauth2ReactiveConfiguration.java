@@ -8,13 +8,18 @@
 package org.lfenergy.operatorfabric.springtools.config.oauth;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * <p>Authentication configuration for webflux</p>
@@ -25,11 +30,27 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
  */
 @Configuration
 @Slf4j
-public class Oauth2ReactiveConfiguration {
+public class Oauth2ReactiveConfiguration extends Oauth2GenericConfiguration{
 
-
+    /**
+     * Generates a converter that converts {@link Jwt} to {@link OpFabJwtAuthenticationToken} whose principal is  a
+     * {@link User} model object
+     *
+     * @return Converter from {@link Jwt} to {@link OpFabJwtAuthenticationToken}
+     */
     @Bean
-    public ReactiveAuthenticationManager opfabJwtReactiveAuthenticationManager(ReactiveJwtDecoder jwtDecoder,Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter){
-        return new OpfabJwtReactiveAuthenticationManager(jwtDecoder,opfabJwtConverter);
+    public Converter<Jwt, Mono<AbstractAuthenticationToken>> opfabReactiveJwtConverter(UserServiceProxy proxy) {
+
+        return new Converter<Jwt, Mono<AbstractAuthenticationToken>>(){
+            @Override
+            public Mono<AbstractAuthenticationToken> convert(Jwt jwt) {
+                String principalId = jwt.getClaimAsString("sub");
+                Oauth2JwtProcessingUtilities.token.set(jwt);
+                User user = proxy.fetchUser(principalId);
+                Oauth2JwtProcessingUtilities.token.remove();
+                List<GrantedAuthority> authorities = Oauth2JwtProcessingUtilities.computeAuthorities(user);
+                return Mono.just(new OpFabJwtAuthenticationToken(jwt, user, authorities));
+            }
+        };
     }
 }

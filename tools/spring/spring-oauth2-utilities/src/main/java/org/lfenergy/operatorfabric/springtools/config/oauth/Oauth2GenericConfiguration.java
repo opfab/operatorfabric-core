@@ -51,7 +51,7 @@ import java.util.List;
 @Slf4j
 public class Oauth2GenericConfiguration {
 
-    public static ThreadLocal<Jwt> token = new ThreadLocal<>();
+
 
     @Autowired
     private UserServiceProxy proxy;
@@ -71,24 +71,13 @@ public class Oauth2GenericConfiguration {
             @Override
             public AbstractAuthenticationToken convert(Jwt jwt) {
                 String principalId = jwt.getClaimAsString("sub");
-                token.set(jwt);
+                Oauth2JwtProcessingUtilities.token.set(jwt);
                 User user = proxy.fetchUser(principalId);
-                token.remove();
-                List<GrantedAuthority> authorities = computeAuthorities(user);
+                Oauth2JwtProcessingUtilities.token.remove();
+                List<GrantedAuthority> authorities = Oauth2JwtProcessingUtilities.computeAuthorities(user);
                 return new OpFabJwtAuthenticationToken(jwt, user, authorities);
             }
         };
-    }
-
-    /**
-     * Creates Authority list from user's groups (ROLE_[group name])
-     * @param user user model data
-     * @return list of authority
-     */
-    private static List<GrantedAuthority> computeAuthorities(User user) {
-        return AuthorityUtils.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size ->
-           new
-              String[size]));
     }
 
     /**

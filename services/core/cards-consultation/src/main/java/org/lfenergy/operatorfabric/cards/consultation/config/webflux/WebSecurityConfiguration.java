@@ -10,10 +10,14 @@ package org.lfenergy.operatorfabric.cards.consultation.config.webflux;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import reactor.core.publisher.Mono;
 
 
 /**
@@ -31,19 +35,19 @@ public class WebSecurityConfiguration {
      *
      * @param httpSecurity
      *    http security configuration
-     * @param opfabJwtReactiveAuthenticationManager
-     *    operator fabric authentication manager
+     * @param opfabReactiveJwtConverter
+     *    operator fabric authentication converter
      * @return http security filter chain
      */
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity httpSecurity,
-                                                            ReactiveAuthenticationManager
-                                                               opfabJwtReactiveAuthenticationManager) {
+                                                            Converter<Jwt, Mono<AbstractAuthenticationToken>>
+                                                               opfabReactiveJwtConverter) {
         httpSecurity.headers().frameOptions().disable();
         httpSecurity
            .authorizeExchange()
            .anyExchange().authenticated().and()
-           .oauth2ResourceServer().jwt().authenticationManager(opfabJwtReactiveAuthenticationManager);
+           .oauth2ResourceServer().jwt().jwtAuthenticationConverter(opfabReactiveJwtConverter);
         return httpSecurity.build();
     }
 

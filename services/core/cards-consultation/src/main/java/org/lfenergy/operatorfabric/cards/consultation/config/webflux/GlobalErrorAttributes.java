@@ -33,10 +33,11 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, boolean includeStackTrace) {
         Map<String, Object> map = super.getErrorAttributes(request, includeStackTrace);
-        Throwable error = (Throwable) map.get("exception");
-        if(error instanceof ApiErrorException) {
-            map.put("status", ((ApiErrorException)error).getError().getStatus());
-            map.put("message", ((ApiErrorException)error).getError().getMessage());
+        Throwable originThrowable = getError(request);
+        map.put("origin",originThrowable);
+        if(originThrowable instanceof ApiErrorException) {
+            map.put("status", ((ApiErrorException)originThrowable).getError().getStatus());
+            map.put("message", ((ApiErrorException)originThrowable).getError().getMessage());
         }
         return map;
     }
