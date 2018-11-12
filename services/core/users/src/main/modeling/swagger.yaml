@@ -111,6 +111,7 @@ paths:
       parameters:
         - in: path
           name: login
+          description: user login
           type: string
           required: true
       responses:
@@ -133,6 +134,7 @@ paths:
       parameters:
         - in: path
           name: login
+          description: user login
           type: string
           required: true
         - in: body
@@ -206,6 +208,7 @@ paths:
       parameters:
         - in: path
           name: name
+          description: Group name
           type: string
           required: true
         - in: body
@@ -232,6 +235,7 @@ paths:
       parameters:
         - in: path
           name: name
+          description: Group name
           type: string
           required: true
       responses:
@@ -257,6 +261,7 @@ paths:
       parameters:
         - in: path
           name: name
+          description: Group name
           type: string
           required: true
         - in: body
@@ -286,6 +291,7 @@ paths:
       parameters:
         - in: path
           name: name
+          description: Group name
           type: string
           required: true
         - in: body
@@ -315,6 +321,7 @@ paths:
       parameters:
         - in: path
           name: name
+          description: Group name
           type: string
           required: true
         - in: body
