@@ -21,8 +21,6 @@ offline=false
 
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
-function split_by { local IFS="$1"; read -ra result <<< "$2"; }
-
 test_url() {
     # store the whole response with the status at the and
 #    echo "testing $1"
@@ -104,8 +102,8 @@ case $key in
     shift # past value
     ;;
     -s|--services)
-    split_by , "$2"
-    businessServices=$result
+    stringServices=$2
+    businessServices=(${stringServices//,/ })
     shift # past argument
     shift # past value
     ;;
@@ -165,7 +163,7 @@ startProject(){
       --spring.cloud.bootstrap.location=${bootstrapLocation} \
       ${projects[i+3]}"
 
-
+      echo "pid file: $projectBuildPath/PIDFILE"
       if [ -f $projectBuildPath/PIDFILE ] ; then
         pid=$(<$projectBuildPath/PIDFILE)
       fi
