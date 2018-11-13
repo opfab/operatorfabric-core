@@ -5,13 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Component, OnInit } from '@angular/core';
-import {AppState} from "../../state/app.interface";
+import {Component, OnInit} from '@angular/core';
+import {AppState} from '@state/app.interface';
 import {select, Store} from '@ngrx/store';
-import {Observable} from "rxjs";
-import {CardOperation} from "../../state/card-operation/card-operation.model";
-import {LoadCardOperations} from "../../state/card-operation/card-operation.actions";
-import * as fromStore from '../../state/card-operation/index';
+import {Observable} from 'rxjs';
+import {CardOperation} from '@state/card-operation/card-operation.model';
+import {LoadCardOperations} from '@state/card-operation/card-operation.actions';
+import * as fromStore from '@state/card-operation/index';
+
 @Component({
   selector: 'app-card-operations',
   templateUrl: './card.component.html',

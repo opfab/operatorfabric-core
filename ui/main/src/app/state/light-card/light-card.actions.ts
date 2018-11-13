@@ -26,7 +26,8 @@ export enum LightCardActionTypes {
     UpdateLightCards = '[Card] Update Light Cards',
     DeleteLightCard = '[Card] Delete Light Card',
     DeleteLightCards = '[Card] Delete Light Cards',
-    ClearLightCards = '[Card] Clear Light Cards'
+    ClearLightCards = '[Card] Clear Light Cards',
+    HandleUnexpectedError = '[Card] Handle unexpected error related to authentication issue'
 }
 
 export class LoadLightCards implements Action {
@@ -136,6 +137,10 @@ export class ClearLightCards implements Action {
     readonly type = LightCardActionTypes.ClearLightCards;
 }
 
+export class HandleUnexpectedError implements Action {
+    readonly type = LightCardActionTypes.HandleUnexpectedError;
+}
+
 export type LightCardActions =
     LoadLightCards
     | LoadLightCardsSuccess
@@ -153,4 +158,5 @@ export type LightCardActions =
     | UpdateLightCards
     | DeleteLightCard
     | DeleteLightCards
-    | ClearLightCards;
+    | ClearLightCards
+    | HandleUnexpectedError;

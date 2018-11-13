@@ -5,28 +5,46 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { TestBed, inject } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs';
+import {TestBed, inject, async} from '@angular/core/testing';
+import {provideMockActions} from '@ngrx/effects/testing';
+import {Observable} from 'rxjs';
 
-import { AuthenticationEffects } from './authentication.effects';
+import {AuthenticationEffects} from './authentication.effects';
+import {Actions} from '@ngrx/effects';
+import SpyObj = jasmine.SpyObj;
+import {AuthenticationService} from '@core/services/authentication.service';
+import createSpyObj = jasmine.createSpyObj;
 
 describe('AuthenticationEffects', () => {
-  let actions$: Observable<any>;
-  let effects: AuthenticationEffects;
+    let actions$: Observable<any>;
+    let effects: AuthenticationEffects;
+    let authenticationService: SpyObj<AuthenticationService>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        AuthenticationEffects,
-        provideMockActions(() => actions$)
-      ]
+    beforeEach(async(() => {
+        const authenticationServiceSpy = createSpyObj('authenticationService'
+            , ['extractToken'
+                , 'verifyExpirationDate'
+                , 'clearAuthenticationInformation'
+                , 'registerAuthenticationInformation'
+            ]);
+        TestBed.configureTestingModule({
+            providers: [
+                AuthenticationEffects,
+                provideMockActions(() => actions$),
+                {provide: AuthenticationService, useValue: authenticationServiceSpy}
+            ]
+        });
+
+        effects = TestBed.get(AuthenticationEffects);
+
+    }));
+
+    beforeEach(() => {
+        actions$ = TestBed.get(Actions);
+        authenticationService = TestBed.get(AuthenticationService);
     });
 
-    effects = TestBed.get(AuthenticationEffects);
-  });
-
-  it('should be created', () => {
-    expect(effects).toBeTruthy();
-  });
+    it('should be created', () => {
+        expect(effects).toBeTruthy();
+    });
 });

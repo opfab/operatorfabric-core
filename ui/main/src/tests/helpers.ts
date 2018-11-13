@@ -1,5 +1,5 @@
 import {I18nData, LightCard, Severity} from '@state/light-card/light-card.model';
-import {generate} from 'rxjs';
+import {CardOperation, CardOperationType} from '@state/card-operation/card-operation.model';
 //
 // export function getNewLightCardInstance(): LightCard{
 //     return new LightCard();
@@ -9,24 +9,49 @@ import {generate} from 'rxjs';
 //     return new I18nData();
 // }
 
+// completemet aléatoire sans control
+export function getOneRandomAddCardOperation(): CardOperation {
+    const numberOfCards = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(5);
+    const now = new Date().getTime();
+    return new CardOperation(
+        generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(768),
+        now,
+        CardOperationType.ADD,
+        getSeveralRandomLightCards(numberOfCards)
+    );
+}
 
+// export function pickARandomItemOfAnEnum<E>(enumeration: any): E {
+//     const keys = Object.keys(enumeration);
+//     const numberOfEnumItems = keys.length;
+//     const randomIndex = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(numberOfEnumItems);
+//     return <E>keys[randomIndex];
+// }
 
-export function    getRandomLigthCard(): LightCard {
-        const today = new Date().getTime();
-        const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
-        const oneCard = new LightCard(getRandomAlphanumericValue(3, 24)
-            , getRandomAlphanumericValue(3, 24)
-            , startTime
-            , startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455)
-            , Severity.QUESTION
-            , getRandomAlphanumericValue(3, 24)
-            , getRandomAlphanumericValue(3, 24)
-            , generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666)
-            , getRandomI18nData()
-            , getRandomI18nData()
-        );
-        return oneCard;
+export function getOneRandomLigthCard(): LightCard {
+    const today = new Date().getTime();
+    const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
+    const oneCard = new LightCard(getRandomAlphanumericValue(3, 24)
+        , getRandomAlphanumericValue(3, 24)
+        , startTime
+        , startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455)
+        , Severity.QUESTION
+        , getRandomAlphanumericValue(3, 24)
+        , getRandomAlphanumericValue(3, 24)
+        , generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666)
+        , getRandomI18nData()
+        , getRandomI18nData()
+    );
+    return oneCard;
+}
+
+export function getSeveralRandomLightCards(numberOfCards = 1): LightCard[] {
+    const finalNumberOfCards = forcePositiveAndOneMinimum(numberOfCards);
+    const lightCards: LightCard[] = new Array(finalNumberOfCards);
+    for (let i = 0; i < finalNumberOfCards; ++i) {
+        lightCards[i] = getOneRandomLigthCard();
     }
+    return lightCards;
 }
 
 
@@ -39,15 +64,16 @@ export function getRandomI18nData(): I18nData {
     return new I18nData(getRandomAlphanumericValue(4, 7), parameters);
 }
 
-export enum LightCardAttribute {
-    id, uid, startDate,
+export function getRandomAlphanumericValue(min = 1, max?: number): string {
+    const finalLength = getPositiveRandomNumberWithinRange(min, max);
+    return getFixedLengthAlphanumericValue(finalLength);
 }
 
-export function getRandomAlphanumericValue(min = 1, max?: number): string {
+export function getPositiveRandomNumberWithinRange(min = 1, max?: number): number {
     const minimum = forcePositiveAndOneMinimum(min);
     const maximum = handleMaxAgainstMin(minimum, max);
-    const finalLength = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(minimum, maximum);
-    return getFixedLengthAlphanumericValue(finalLength);
+    return generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(minimum, maximum);
+
 }
 
 export function generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min = 1, max = 1) {

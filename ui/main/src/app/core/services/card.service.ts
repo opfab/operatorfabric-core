@@ -39,19 +39,31 @@ export class CardService {
 
     testCardOperation(): Observable<CardOperation> {
         return Observable.create(observer => {
-            const eventSource = new EventSourcePolyfill(
-                this.cardOperationsUrl
-                , this.handleHeaders());
-            eventSource.onmessage = message => {
-                if (!message) {
-                    return observer.error(message);
-                }
-                return observer.next(JSON.parse(message.data));
-            };
-            eventSource.onerror = error => observer.error(error);
-            return () => {
-                eventSource.close();
-            };
+            let eventSource = null;
+            try {
+                eventSource = new EventSourcePolyfill(
+                    this.cardOperationsUrl
+                    , this.handleHeaders());
+                eventSource.onmessage = message => {
+                    if (!message) {
+                        return observer.error(message);
+                    }
+                    return observer.next(JSON.parse(message.data));
+                };
+                eventSource.onerror = error => observer.error(error);
+
+            } catch (error) {
+                console.log('unhandle error');
+                // mostely for authentication errors
+                observer.error(error);
+            } finally {
+                return () => {
+                    if (eventSource) {
+                        eventSource.close();
+                    }
+                };
+
+            }
         });
     }
 

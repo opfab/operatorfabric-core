@@ -12,7 +12,6 @@ import {AppState} from '@state/app.interface';
 import {Observable} from 'rxjs';
 import {getCurrentUrl, selectRouterState} from '@state/app.reducer';
 import {TempAutomticLogIn} from '@state/authentication/authentication.actions';
-import {LoadLightCards} from '@state/light-card/light-card.actions';
 
 @Component({
     selector: 'app-root',

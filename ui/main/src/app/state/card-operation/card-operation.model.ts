@@ -8,27 +8,26 @@
 import {LightCard} from '@state/light-card/light-card.model';
 
 export interface CardOperation {
-  number: number;
-  publicationDate: number;
-  type: CardOperationType;
-  cards?: LightCard[];
+    readonly number: number;
+    readonly publicationDate: number;
+    readonly type: CardOperationType;
+    readonly cards?: LightCard[];
 }
 
-export class CardOperation implements  CardOperation{
-  number: number;
-  publicationDate: number;
-  type: CardOperationType;
-  cards?: LightCard[];
+export class CardOperation implements CardOperation {
 
-  constructor(data?: string) {
-    if (data) {
-      const parsedData = JSON.parse(data);
-      Object.assign(this, parsedData);
+    constructor(
+        readonly number: number,
+        readonly publicationDate: number,
+        readonly type: CardOperationType,
+        readonly cards?: LightCard[],
+    ) {
     }
 
-  }
 }
 
 export enum CardOperationType {
-  ADD, UPDATE, DELETE
+    ADD = 'ADD'
+    , UPDATE = 'UPDATE'
+    , DELETE = 'DELETE'
 }

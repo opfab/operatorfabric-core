@@ -5,32 +5,23 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {TestBed, inject} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {provideMockActions} from '@ngrx/effects/testing';
 import {Observable, of} from 'rxjs';
 
 import {LightCardEffects} from './light-card.effects';
-import {I18nData, LightCard, Severity} from '@state/light-card/light-card.model';
-import {CardService} from '@core/services/card.service';
+import {getOneRandomLigthCard, getSeveralRandomLightCards} from '@tests/helpers';
+import {Actions} from '@ngrx/effects';
+import {LoadLightCardsSuccess} from '@state/light-card/light-card.actions';
+import {LightCard} from '@state/light-card/light-card.model';
 
-describe('LightCardEffects', () => {
+xdescribe('LightCardEffects', () => {
     let actions$: Observable<any>;
+    // let lightCards$: Observable<LightCard[]>;
 
     let effects: LightCardEffects;
 
-    const title = new I18nData('title-key', ['title-string-0']);
-    const summary = new I18nData('summary-key', ['summary-string-0']);
-    const oneCard = new LightCard('uid'
-        , 'id'
-        , 1
-        , 2
-        , Severity.QUESTION
-        , 'mainRecipient'
-        , 'processId'
-        , 3
-        , title
-        , summary
-    );
+    const oneCard = getOneRandomLigthCard();
 
     const mockCardService = {getLightCards: () => of([oneCard])};
 
@@ -39,14 +30,30 @@ describe('LightCardEffects', () => {
             providers: [
                 LightCardEffects,
                 provideMockActions(() => actions$),
-                {provide: CardService, useValue: mockCardService}
+                // provideMockActions(() => lightCards$)
             ]
         });
 
         effects = TestBed.get(LightCardEffects);
+        actions$ = TestBed.get(Actions);
+        // lightCards$ = TestBed.get(LightCard[]);
     });
 
     it('should be created', () => {
         expect(effects).toBeTruthy();
     });
+
+    it('should return a LoadLightCardsSuccess on success', () => {
+        const lightCards = getSeveralRandomLightCards( 2);
+        const fromCardService = lightCards;
+        const action = new LoadLightCardsSuccess({lightCards: lightCards});
+
+        expect(effects).toBeTruthy();
+    });
+
+    it('should return a LoadLightCardsFail when service throw an error', () => {
+        expect(effects).toBeTruthy();
+    });
+
+
 });

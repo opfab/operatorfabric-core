@@ -5,18 +5,37 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import {TestBed, inject} from '@angular/core/testing';
 
-import { CardService } from './card.service';
+import {CardService} from './card.service';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import SpyObj = jasmine.SpyObj;
+import {AuthenticationService} from '@core/services/authentication.service';
+import createSpyObj = jasmine.createSpyObj;
 
 describe('CardService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [CardService]
-    });
-  });
+    let httpMock: HttpTestingController;
+    let authenticationService: SpyObj<AuthenticationService>;
 
-  it('should be created', inject([CardService], (service: CardService) => {
-    expect(service).toBeTruthy();
-  }));
+    beforeEach(() => {
+        const authenticationServiceSpy = createSpyObj('authenticationService'
+            , ['extractToken'
+                , 'verifyExpirationDate'
+                , 'clearAuthenticationInformation'
+                , 'registerAuthenticationInformation'
+            ]);
+
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
+            providers: [CardService,
+                {provide: AuthenticationService, useValue: authenticationServiceSpy}
+            ]
+        });
+        httpMock = TestBed.get(HttpTestingController);
+        authenticationService = TestBed.get(AuthenticationService);
+    });
+
+    it('should be created', inject([CardService], (service: CardService) => {
+        expect(service).toBeTruthy();
+    }));
 });

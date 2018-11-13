@@ -5,15 +5,22 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { AuthenticationService } from './authentication.service';
+import {AuthenticationService} from './authentication.service';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 
 describe('AuthenticationService', () => {
+
+  let httpMock: HttpTestingController;
+
   beforeEach(() => {
+
     TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule],
       providers: [AuthenticationService]
     });
+    httpMock = TestBed.get(HttpTestingController);
   });
 
   it('should be created', inject([AuthenticationService], (service: AuthenticationService) => {

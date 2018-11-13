@@ -18,9 +18,9 @@ import {LightCard} from '@state/light-card/light-card.model';
 import * as fromReducers from '@state/app.reducer';
 import * as fromStore from '@state/light-card';
 import {By} from '@angular/platform-browser';
-import {getRandomLigthCard} from '../../../tests/helpers';
+import {getOneRandomLigthCard, getPositiveRandomNumberWithinRange, getSeveralRandomLightCards} from '@tests/helpers';
 
-fdescribe('LightCardsComponent', () => {
+describe('LightCardsComponent', () => {
     let component: LightCardsComponent;
     let store: Store<AppState>;
     let fixture: ComponentFixture<LightCardsComponent>;
@@ -57,7 +57,7 @@ fdescribe('LightCardsComponent', () => {
     it('should create a list with one element when there are ' +
         'only one card in the state', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const oneCard = getRandomLigthCard();
+        const oneCard = getOneRandomLigthCard();
 
         const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
         store.dispatch(action);
@@ -79,8 +79,8 @@ fdescribe('LightCardsComponent', () => {
     it('should create a list with two elements when there are ' +
         'only two cards in the state', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const oneCard = getRandomLigthCard();
-        const anotherCard = getRandomLigthCard();
+        const oneCard = getOneRandomLigthCard();
+        const anotherCard = getOneRandomLigthCard();
         const action = new LoadLightCardsSuccess({lightCards: [oneCard, anotherCard] as LightCard[]});
         store.dispatch(action);
         const lightCards$ = store.select(fromStore.getAllLightCards);
@@ -105,8 +105,8 @@ fdescribe('LightCardsComponent', () => {
     it('should create a list with two cards when two arrays of one card are dispatched' +
         ' 1', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const oneCard = getRandomLigthCard();
-        const anotherCard = getRandomLigthCard();
+        const oneCard = getOneRandomLigthCard();
+        const anotherCard = getOneRandomLigthCard();
         const action = new LoadLightCardsSuccess({lightCards: [oneCard]});
         store.dispatch(action);
         const action0 = new LoadLightCardsSuccess({lightCards: [anotherCard]});
@@ -132,7 +132,22 @@ fdescribe('LightCardsComponent', () => {
     });
 
     it('should create a list with the number' +
-        ' of cards equals to the sum of cards of the different arrays of each action dispatched', () =>
-    const actionNumber =
-    );
+        ' of cards equals to the sum of cards of the different arrays of each action dispatched', () => {
+        const actionNumber = getPositiveRandomNumberWithinRange(2, 5);
+        let totalNumberOfLightCards = 0;
+        for (let i = 0; i <= actionNumber; ++i) {
+            const currentNumberOfLightCards = getPositiveRandomNumberWithinRange(1, 4);
+            totalNumberOfLightCards += currentNumberOfLightCards;
+            const lightCards = getSeveralRandomLightCards(currentNumberOfLightCards);
+            const action = new LoadLightCardsSuccess({lightCards: lightCards});
+            store.dispatch(action);
+            fixture.detectChanges();
+        }
+        const compiled = fixture.debugElement;
+        expect(compiled.nativeElement.querySelector('ul')).toBeTruthy();
+        // counts list elements
+        const listElements = fixture.debugElement.queryAll(By.css('li'));
+        expect(listElements.length).toEqual(totalNumberOfLightCards);
+
+    });
 });
