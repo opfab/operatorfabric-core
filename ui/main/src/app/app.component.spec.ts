@@ -8,17 +8,28 @@
 import {async, TestBed} from '@angular/core/testing';
 import {AppComponent} from './app.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {MatTabsModule, MatToolbarModule} from '@angular/material';
+import {MatTabsModule, MatToolbar, MatToolbarModule} from '@angular/material';
 import {Store, StoreModule} from '@ngrx/store';
 import {AppState} from '@state/app.interface';
 import * as fromReducers from '@state/app.reducer';
+import {getCurrentUrl} from '@state/app.reducer';
+import {By} from '@angular/platform-browser';
+import {BrowserDynamicTestingModule, platformBrowserDynamicTesting} from '@angular/platform-browser-dynamic/testing';
+import {of} from 'rxjs';
 
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
 
     let store: Store<AppState>;
 
+    let fixture;
+
+    let component;
+
     beforeEach(async(() => {
+        TestBed.resetTestEnvironment();
+        TestBed.initTestEnvironment(BrowserDynamicTestingModule,
+            platformBrowserDynamicTesting());
         TestBed.configureTestingModule({
             imports: [
                 StoreModule.forRoot(fromReducers.appReducer),
@@ -28,32 +39,41 @@ fdescribe('AppComponent', () => {
                 MatToolbarModule
             ],
             declarations: [AppComponent],
-            providers: [{provide: store, useClass: Store}]
+            providers: [{provide: store, useClass: Store}
+            ]
         }).compileComponents();
-    }));
-    beforeEach(() => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
-    });
+        // avoid exceptions during construction and init of the component
+        spyOn(store, 'select').and.callFake((obj) => {
+            if (obj === getCurrentUrl) {
+                // called in ngOnInit and passed to mat-tab-link
+                return of('/test/url');
+            }
+            console.log('passed');
+            return of({});
+        }
+    );
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
+    }));
 
     it('should create the app', async(() => {
-        const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.debugElement.componentInstance;
         expect(app).toBeTruthy();
     }));
 
     it(`should have as title 'Operator Fabric'`, async(() => {
-      const fixture = TestBed.createComponent(AppComponent);
       const app = fixture.debugElement.componentInstance;
       expect(app.title).toEqual('Operator Fabric');
     }));
 
-    xit('should render title in a h1 tag', async(() => {
-      const fixture = TestBed.createComponent(AppComponent);
-      fixture.detectChanges();
-      const compiled = fixture.debugElement.nativeElement;
-        const h1 = compiled.querySelector('h1');
-        expect(h1).toBeTruthy();
-        expect(h1.textContent).toContain('Welcome to ng-base-annotation-test!');
+    it('should render title in the toolbar', async(() => {
+        expect(component).toBeDefined();
+        const toolBarText = fixture.debugElement.query(By.directive(MatToolbar)).nativeElement;
+        fixture.detectChanges();
+        expect(toolBarText).toBeDefined();
+        expect(toolBarText).toBeTruthy();
+        expect(toolBarText.textContent).toContain('Operator Fabric');
     }));
 });
