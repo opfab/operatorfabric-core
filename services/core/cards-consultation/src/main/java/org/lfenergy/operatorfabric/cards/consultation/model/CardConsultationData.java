@@ -9,10 +9,7 @@ package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -63,8 +60,10 @@ public class CardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> tags;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
     private Map<String,? extends Action> actions;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
     private List<? extends Detail> details;
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)

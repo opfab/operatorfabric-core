@@ -153,6 +153,9 @@ definitions:
         key: myservice.myprocess.title
     description: A Card gathers information about a process status
     properties:
+      id:
+        type: string
+        description: Unique card ID for associated process
       publisher:
         type: string
         description: Publishing service unique ID
@@ -242,6 +245,9 @@ definitions:
     description: A Card gathers information about a process status
     readOnly: true
     properties:
+      id:
+        type: string
+        description: Unique card ID for associated process
       processId:
         type: string
         description: Unique process ID for associated process
@@ -508,7 +514,7 @@ definitions:
     properties:
       number:
         $ref: '#/definitions/LongInteger'
-      publicationDate:
+      publishDate:
         $ref: '#/definitions/EpochDate'
       type:
         $ref: '#/definitions/CardOperationTypeEnum'

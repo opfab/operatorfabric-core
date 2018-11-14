@@ -92,7 +92,7 @@ public class CardOperationsController {
            .doOnEach(l -> log.info("message " + l + " to " + t.getT1().getLogin()))
            .map(l -> CardOperationConsultationData.builder()
               .number(l)
-              .publicationDate(SimulatedTime.getInstance().computeNow().toEpochMilli() - 600000)
+              .publishDate(SimulatedTime.getInstance().computeNow().toEpochMilli() - 600000)
               .type(CardOperationTypeEnum.ADD)
               .card(
                  LightCardConsultationData.builder()

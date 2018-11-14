@@ -29,7 +29,7 @@ import java.util.List;
 public class CardOperationConsultationData implements CardOperation {
 
     private Long number;
-    private Long publicationDate;
+    private Long publishDate;
     private CardOperationTypeEnum type;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

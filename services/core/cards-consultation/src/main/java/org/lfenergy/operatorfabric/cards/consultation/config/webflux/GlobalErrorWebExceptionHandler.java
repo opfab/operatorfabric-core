@@ -51,8 +51,6 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
     private Mono<ServerResponse> renderErrorResponse(final ServerRequest request) {
 
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, true);
-        String trace = (String) errorPropertiesMap.get("trace");
-        errorPropertiesMap.remove("trace");
         ServerResponse.BodyBuilder bodyBuilder = ServerResponse.status((Integer) errorPropertiesMap.get("status"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8);
         Throwable originThrowable = (Throwable) errorPropertiesMap.get("origin");

@@ -145,11 +145,11 @@ public class CardNotificationService {
         for (Map.Entry<String, List<CardOperation>> groupEntry : sourceMap.entrySet()) {
             Map<String, CardOperationData.CardOperationDataBuilder> sorted = new LinkedHashMap<>();
             for (CardOperation op : groupEntry.getValue()) {
-                String key = op.getPublicationDate() + op.getType().toString();
+                String key = op.getPublishDate() + op.getType().toString();
                 CardOperationData.CardOperationDataBuilder existing = sorted.get(key);
                 if (existing == null) {
                     existing = CardOperationData.builder()
-                            .publicationDate(op.getPublicationDate())
+                            .publishDate(op.getPublishDate())
                             .type(op.getType());
                     sorted.put(key, existing);
                 }
@@ -267,7 +267,7 @@ public class CardNotificationService {
         CardOperationData.BuilderEncapsulator builderEncapsulator = cardsDictionnay.get(builderId);
         if (builderEncapsulator == null) {
             builderEncapsulator = CardOperationData.encapsulatedBuilder();
-            builderEncapsulator.builder().type(type).publicationDate(c.getPublishDate());
+            builderEncapsulator.builder().type(type).publishDate(c.getPublishDate());
             cardsDictionnay.put(builderId, builderEncapsulator);
         }
         switch (type) {

@@ -8,10 +8,10 @@
 package org.lfenergy.operatorfabric.cards.consultation.config.mongo;
 
 import org.lfenergy.operatorfabric.springtools.config.mongo.AbstractLocalMongoConfiguration;
+import org.lfenergy.operatorfabric.utilities.CollectionUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,11 +23,13 @@ import java.util.List;
 public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
 
     public List<Converter> converterList() {
-        List<Converter> converterList = new ArrayList<>();
-        converterList.add(new I18nReadConverter());
-        converterList.add(new DetailReadConverter());
-        converterList.add(new RecipientReadConverter());
-        converterList.add(new ActionReadConverter());
-        return converterList;
+        return CollectionUtils.createArrayList(
+                new I18nReadConverter(),
+                new DetailReadConverter(),
+                new RecipientReadConverter(),
+                new ActionReadConverter(),
+                new LightCardReadConverter(),
+                new CardOperationReadConverter()
+        );
     }
 }
