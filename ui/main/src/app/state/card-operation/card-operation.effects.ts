@@ -29,7 +29,7 @@ export class CardOperationEffects {
                     map(operation => {
                         if (operation.type && operation.type.toString() === 'ADD') {
                             const opCards = operation.cards;
-                            return new LoadLightCardsSuccess({lightCards: opCards as LightCard[]});
+                            return new LoadLightCardsSuccess({lightCards: opCards});
                         }
                         return new AddLightCardFailure(
                             {

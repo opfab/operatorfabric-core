@@ -56,14 +56,13 @@ export class CardService {
                 console.log('unhandle error');
                 // mostely for authentication errors
                 observer.error(error);
-            } finally {
+            }
                 return () => {
                     if (eventSource) {
                         eventSource.close();
                     }
                 };
 
-            }
         });
     }
 
