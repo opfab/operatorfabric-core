@@ -12,7 +12,6 @@ import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AddLightCardFailure, HandleUnexpectedError, LightCardActions, LoadLightCardsSuccess} from '@state/light-card/light-card.actions';
 import {AuthenticationActionTypes} from '@state/authentication/authentication.actions';
-import {LightCard} from '@state/light-card/light-card.model';
 
 @Injectable()
 export class CardOperationEffects {
