@@ -31,19 +31,8 @@ export class AuthenticationEffects {
             this.handleTempAutomaticAuth()
         );
 
-    private handleTempAutomaticAuth() {
-        return map((authObj: AuthObjet) => {
-            const expirationDate = new Date().getTime() + ONE_SECOND * authObj.expires_in;
-            return new AcceptLogIn({
-                identifier: authObj.identifier
-                , token: authObj.access_token
-                , expirationDate: new Date(expirationDate)
-            });
-        });
-    }
-
 @Effect()
-    TempAutomaticReconnexion: Observable<AuthenticationActions> =
+    TempAutomaticReconnection: Observable<AuthenticationActions> =
         this.actions$
             .ofType(AuthenticationActionTypes.RejectLogIn).pipe(
             switchMap(() => this.authService.tempLogin()),
@@ -72,6 +61,17 @@ export class AuthenticationEffects {
                 })
             );
 
+    private handleTempAutomaticAuth() {
+        return map((authObj: AuthObjet) => {
+            const expirationDate = new Date().getTime() + ONE_SECOND * authObj.expires_in;
+            return new AcceptLogIn({
+                identifier: authObj.identifier
+                , token: authObj.access_token
+                , expirationDate: new Date(expirationDate)
+            });
+        });
+    }
+
     private handleExpirationDateOver(): AuthenticationActions {
         this.authService.clearAuthenticationInformation();
         return new RejectLogin({denialReason: 'expiration date exceeded'});
@@ -90,12 +90,4 @@ export class AuthenticationEffects {
         this.authService.clearAuthenticationInformation();
         return new RejectLogin({denialReason: 'invalid token'}) as AuthenticationActions;
     }
-
-
-// gérer le rejet du token et la demande de reconnexion
-//   @Effect()
-//   RejectLogin: Observable<AuthenticationActions>=
-//     this.actions$
-//       .ofType(AuthenticationActionTypes.RejectLogIn)
-//       .pipe();
 }

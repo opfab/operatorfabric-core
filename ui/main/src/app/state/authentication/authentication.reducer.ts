@@ -43,15 +43,6 @@ export function reducer(state = initialState, action: AuthenticationActions): St
         denialReason: action.payload.denialReason
       };
     }
-    case AuthenticationActionTypes.LogOut:{
-      return {
-        ...state,
-        identifier: null,
-        token: null,
-        expirationDate: null,
-        denialReason: null
-      };
-    }
     default:
       return state;
   }
