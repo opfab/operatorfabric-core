@@ -34,7 +34,7 @@ export class LoadLightCard implements Action {
     readonly type = LightCardActionTypes.LoadLightCard;
 
     constructor(public payload: { id: string }) {
-            }
+    }
 }
 export class LoadLightCardsFailure implements Action {
     readonly type = LightCardActionTypes.LoadLightCardsFailure;
