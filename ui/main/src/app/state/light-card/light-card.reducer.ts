@@ -27,46 +27,6 @@ export function reducer(
     action: LightCardActions
 ): State {
     switch (action.type) {
-        case LightCardActionTypes.AddLightCard: {
-            return adapter.addOne(action.payload.lightCard, state);
-        }
-
-        case LightCardActionTypes.UpsertLightCard: {
-            return adapter.upsertOne(action.payload.lightCard, state);
-        }
-
-        case LightCardActionTypes.AddLightCards: {
-            return adapter.addMany(action.payload.lightCards, state);
-        }
-
-        case LightCardActionTypes.UpsertLightCards: {
-            return adapter.upsertMany(action.payload.lightCards, state);
-        }
-
-        case LightCardActionTypes.UpdateLightCard: {
-            return adapter.updateOne(action.payload.lightCard, state);
-        }
-
-        case LightCardActionTypes.UpdateLightCards: {
-            return adapter.updateMany(action.payload.lightCards, state);
-        }
-
-        case LightCardActionTypes.DeleteLightCard: {
-            return adapter.removeOne(action.payload.id, state);
-        }
-
-        case LightCardActionTypes.DeleteLightCards: {
-            return adapter.removeMany(action.payload.ids, state);
-        }
-
-        case LightCardActionTypes.LoadLightCards: {
-            return {
-                ...adapter.removeAll(state),
-                loading: true,
-                error: ''
-            };
-        }
-
         case LightCardActionTypes.LoadLightCardsSuccess: {
             return {
                 ...adapter.upsertMany(action.payload.lightCards, state),
@@ -79,14 +39,6 @@ export function reducer(
                 ...state,
                 loading: false,
                 error: 'error while loading cards'
-            };
-        }
-
-        case LightCardActionTypes.LoadLightCard: {
-            return {
-                ...state,
-                loading: true,
-                error: ''
             };
         }
 
@@ -112,10 +64,6 @@ export function reducer(
                 error: 'error while adding a single lightCard'
             };
         }
-        case LightCardActionTypes.ClearLightCards: {
-            return adapter.removeAll(state);
-        }
-
         default: {
             return state;
         }
@@ -124,5 +72,3 @@ export function reducer(
 
 
 export const getSelectedId = (state: State) => state.selectedCardId;
-export const getLoading = (state: State) => state.loading;
-export const getError = (state: State) => state.error;
