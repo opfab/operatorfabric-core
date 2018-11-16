@@ -17,8 +17,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {CoreModule} from './core/core.module';
 import {MatSidenavModule, MatTabsModule, MatToolbarModule} from '@angular/material';
 import {ArchivesComponent} from './components/archives/archives.component';
-import {LogInComponent} from './components/log-in/log-in.component';
-import {CardModule} from './components/card/card.module';
 
 @NgModule({
 
@@ -32,10 +30,9 @@ import {CardModule} from './components/card/card.module';
     AppRoutingModule,
     HttpClientModule,
     StateModule.forRoot(),
-    CoreModule.forRoot(),
-    CardModule
+    CoreModule.forRoot()
   ],
-  declarations: [AppComponent, ArchivesComponent, LogInComponent],
+  declarations: [AppComponent, ArchivesComponent],
   providers: [],
   bootstrap: [AppComponent]
 })
