@@ -40,8 +40,8 @@ export class AuthenticationService {
     }
 
 
-    tempLogin(): Observable<any>{
-        const loginData = new LoginData('rte-operator','test','clientIdPassword');
+    tempLogin(): Observable<any> {
+        const loginData = new LoginData('rte-operator', 'test', 'clientIdPassword');
         return this.askForToken(loginData);
     }
 
@@ -57,7 +57,7 @@ export class AuthenticationService {
         return this.httpClient.post<AuthObjet>(this.askTokenUrl
             , params.toString()
             , {headers: headers}).pipe(
-            map(data=> {
+            map(data => {
                 const trackism = {...data};
                 trackism.identifier = loginData.username;
                 trackism.clientId = loginData.clientId;
@@ -65,12 +65,11 @@ export class AuthenticationService {
                 return trackism;
             }),
             catchError(this.handleError)
-    );
+        );
 
     }
 
     private handleError(error: any) {
-        // TODO verifications but seems useless
         console.error(error);
         return throwError(error);
     }
@@ -112,26 +111,17 @@ export class AuthenticationService {
 export class AuthObjet {
     identifier?: string;
     access_token: string;
-    token_type: string;
-    refresh_token: string;
     expires_in: number;
-    scope: string;
-    jti: string;
-    clientId:string;
+    clientId: string;
 }
 
 export class CheckTokenResponse {
     sub: string;
-    scope: string[];
-    active: boolean;
     exp: number;
-    authorities: string[];
-    jit: string;
     client_id: string;
 }
 
 export class LoginData {
-    constructor(public  username:string,
-    public password: string,
-    public clientId: string){}
+    constructor(public clientId: string) {
+    }
 }

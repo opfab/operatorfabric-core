@@ -11,7 +11,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@state/app.interface';
 import {Observable} from 'rxjs';
 import {getCurrentUrl, selectRouterState} from '@state/app.reducer';
-import {TempAutomticLogIn} from '@state/authentication/authentication.actions';
+import {TempAutomaticLogIn} from '@state/authentication/authentication.actions';
 
 @Component({
     selector: 'app-root',
@@ -30,7 +30,8 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.store.select(getCurrentUrl).subscribe(url => this.currentPath = url);
-        this.store.dispatch(new TempAutomticLogIn());
+        // First Action send by the application. Try to log in with a default user
+        this.store.dispatch(new TempAutomaticLogIn());
     }
 
 

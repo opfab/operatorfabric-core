@@ -11,7 +11,6 @@ export enum AuthenticationActionTypes {
     CheckAuthenticationStatus = '[Authentication] Check Authentication Status',
     AcceptLogIn = '[Authentication] Accept the user log in attempt',
     RejectLogIn = '[Authentication] Reject the user log in attempt',
-    LogOut = '[Authentication] Log the user Out',
     TempAutomaticLogIn = '[Authentication] Temp Automatic Log In'
 }
 
@@ -20,7 +19,7 @@ export class PayloadForSuccessfulAuthentication {
     }
 }
 
-export class TempAutomticLogIn {
+export class TempAutomaticLogIn {
     readonly type = AuthenticationActionTypes.TempAutomaticLogIn;
 }
 
@@ -42,5 +41,4 @@ export class RejectLogin implements Action {
 export type AuthenticationActions =
      AcceptLogIn
     | RejectLogin
-    | TempAutomticLogIn
-    ;
+    | TempAutomaticLogIn;

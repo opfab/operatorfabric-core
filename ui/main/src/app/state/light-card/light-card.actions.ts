@@ -18,7 +18,7 @@ export enum LightCardActionTypes {
     AddLightCardFailure = '[Card] Add Light Card Fail',
     HandleUnexpectedError = '[Card] Handle unexpected error related to authentication issue'
 }
-
+// needed by NGRX entities
 export class LoadLightCards implements Action {
     readonly type = LightCardActionTypes.LoadLightCards;
 }
@@ -29,6 +29,7 @@ export class LoadLightCardsSuccess implements Action {
     constructor(public payload: { lightCards: LightCard[] }) {
     }
 }
+// needed by NGRX entities
 export class LoadLightCard implements Action {
     readonly type = LightCardActionTypes.LoadLightCard;
 
@@ -59,6 +60,10 @@ export class AddLightCardFailure implements Action {
 
 export class HandleUnexpectedError implements Action {
     readonly type = LightCardActionTypes.HandleUnexpectedError;
+
+    constructor(public payload: {error: Error}) {
+
+    }
 }
 
 export type LightCardActions =

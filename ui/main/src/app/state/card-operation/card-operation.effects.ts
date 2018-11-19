@@ -39,7 +39,7 @@ export class CardOperationEffects {
                     catchError(error => of(new AddLightCardFailure({error: error})))
                 )
             ),
-            catchError(error => of(new HandleUnexpectedError()))
+            catchError(error => of(new HandleUnexpectedError({error: error})))
         );
 
 }

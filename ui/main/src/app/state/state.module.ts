@@ -63,14 +63,4 @@ export class StateModule {
       ]
     };
   }
-
-  // constructor(
-  //   @Optional()
-  //   @SkipSelf()
-  //     parentModule: StateModule
-  // ) {
-  //   if (parentModule) {
-  //     throw new Error('StateModule is already loaded. Import it in the AppModule only');
-  //   }
-  // }
 }

@@ -31,7 +31,7 @@ export class AuthenticationEffects {
             this.handleTempAutomaticAuth()
         );
 
-@Effect()
+    @Effect()
     TempAutomaticReconnection: Observable<AuthenticationActions> =
         this.actions$
             .ofType(AuthenticationActionTypes.RejectLogIn).pipe(
