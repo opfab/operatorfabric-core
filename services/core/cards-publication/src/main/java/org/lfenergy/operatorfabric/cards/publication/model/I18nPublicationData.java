@@ -31,9 +31,11 @@ public class I18nPublicationData implements I18n {
     @Singular private Map<String,String> parameters;
 
     public I18n copy(){
-        return I18nPublicationData.builder()
-           .key(this.getKey())
-           .parameters(this.getParameters())
-           .build();
+        I18nPublicationDataBuilder builder = I18nPublicationData.builder()
+                .key(this.getKey());
+        if(this.getParameters()!=null && !this.getParameters().isEmpty()) {
+           builder.parameters(this.getParameters());
+        }
+        return builder.build();
     }
 }
