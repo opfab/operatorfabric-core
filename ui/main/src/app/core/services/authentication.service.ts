@@ -41,6 +41,10 @@ export class AuthenticationService {
 
 
     tempLogin(): Observable<any> {
+        /*
+         * uses a default user defined in the class org/lfenergy.operatorfabric.auth.config.WebSecurityConfiguration.java
+         * in $OPERATOR_FABRIC_CORE_HOME/services/infra/auth/src/main/java/
+        */
         const loginData = new LoginData('rte-operator', 'test', 'clientIdPassword');
         return this.askForToken(loginData);
     }
@@ -122,6 +126,8 @@ export class CheckTokenResponse {
 }
 
 export class LoginData {
-    constructor(public clientId: string) {
+    constructor(public  username: string,
+                public password: string,
+                public clientId: string) {
     }
 }

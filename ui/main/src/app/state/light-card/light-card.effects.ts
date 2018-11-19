@@ -6,22 +6,20 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Action} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {
     LightCardActionTypes,
     LoadLightCard,
-    LoadLightCardFail,
-    LoadLightCardsFail,
+    LoadLightCardFailure,
+    LoadLightCardsFailure,
     LoadLightCardsSuccess,
     LoadLightCardSuccess
 } from '@state/light-card/light-card.actions';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {CardService} from '@core/services/card.service';
 import {LightCard} from '@state/light-card/light-card.model';
-import {AppState} from '@state/app.interface';
-import * as fromStore from '@state/light-card/index';
 
 
 @Injectable()
@@ -34,21 +32,23 @@ export class LightCardEffects {
 
     @Effect()
     load: Observable<Action> = this.actions$
-        .ofType(LightCardActionTypes.LoadLightCards).pipe(
+        .pipe(
+            ofType(LightCardActionTypes.LoadLightCards),
             switchMap(() => this.service.getLightCards()),
             map((lightCards: LightCard[]) => {
                 return new LoadLightCardsSuccess({lightCards: lightCards});
             }),
-            catchError(err => of(new LoadLightCardsFail()))
+            catchError(err => of(new LoadLightCardsFailure(err)))
         );
 
     @Effect()
     loadById: Observable<Action> = this.actions$
-        .ofType<LoadLightCard>(LightCardActionTypes.LoadLightCard).pipe(
+        .pipe(
+            ofType<LoadLightCard>(LightCardActionTypes.LoadLightCard),
             switchMap(action => this.service.getLightCard(action.payload.id)),
             map((lightCard: LightCard) => {
                 return new LoadLightCardSuccess({lightCard: lightCard});
             }),
-            catchError(err => of(new LoadLightCardFail()))
+            catchError(err => of(new LoadLightCardFailure(err)))
         );
 }

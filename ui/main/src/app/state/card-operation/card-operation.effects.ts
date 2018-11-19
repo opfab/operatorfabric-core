@@ -6,7 +6,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {CardService} from '@core/services/card.service';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
@@ -21,8 +21,9 @@ export class CardOperationEffects {
     }
 
     @Effect()
-    getCardOperations: Observable<LightCardActions> = this.actions$.ofType(AuthenticationActionTypes.AcceptLogIn)
+    getCardOperations: Observable<LightCardActions> = this.actions$
         .pipe(
+            ofType(AuthenticationActionTypes.AcceptLogIn),
             switchMap(() => this.service.testCardOperation()
                 .pipe(
                     map(operation => {

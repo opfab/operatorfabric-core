@@ -6,7 +6,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {
     AcceptLogIn,
@@ -26,15 +26,17 @@ export class AuthenticationEffects {
     @Effect()
     TempAutomaticLogin: Observable<AuthenticationActions> =
         this.actions$
-            .ofType(AuthenticationActionTypes.TempAutomaticLogIn).pipe(
-            switchMap(() => this.authService.tempLogin()),
-            this.handleTempAutomaticAuth()
-        );
+            .pipe(
+                ofType(AuthenticationActionTypes.TempAutomaticLogIn),
+                switchMap(() => this.authService.tempLogin()),
+                this.handleTempAutomaticAuth()
+            );
 
     @Effect()
     TempAutomaticReconnection: Observable<AuthenticationActions> =
         this.actions$
-            .ofType(AuthenticationActionTypes.RejectLogIn).pipe(
+            .pipe(
+            ofType(AuthenticationActionTypes.RejectLogIn),
             switchMap(() => this.authService.tempLogin()),
             this.handleTempAutomaticAuth()
         );
@@ -42,8 +44,8 @@ export class AuthenticationEffects {
     @Effect()
     CheckAuthentication: Observable<AuthenticationActions> =
         this.actions$
-            .ofType(AuthenticationActionTypes.CheckAuthenticationStatus)
             .pipe(
+                ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
                 switchMap(() => {
                     const token = this.authService.extractToken();
                     return this.authService.checkAuthentication(token);

@@ -11,10 +11,10 @@ import {LightCard} from './light-card.model';
 export enum LightCardActionTypes {
     LoadLightCards = '[Card] Load Light Cards',
     LoadLightCardsSuccess = '[Card] Load Light Cards Success',
-    LoadLightCardsFail = '[Card] Load Light Cards Fail',
+    LoadLightCardsFailure = '[Card] Load Light Cards Fail',
     LoadLightCard = '[Card] Load Light Card',
     LoadLightCardSuccess = '[Card] Load Light Card Success',
-    LoadLightCardFail = '[Card] Load Light Card Fail',
+    LoadLightCardFailure = '[Card] Load Light Card Fail',
     AddLightCardFailure = '[Card] Add Light Card Fail',
     HandleUnexpectedError = '[Card] Handle unexpected error related to authentication issue'
 }
@@ -36,8 +36,11 @@ export class LoadLightCard implements Action {
     constructor(public payload: { id: string }) {
             }
 }
-export class LoadLightCardsFail implements Action {
-    readonly type = LightCardActionTypes.LoadLightCardsFail;
+export class LoadLightCardsFailure implements Action {
+    readonly type = LightCardActionTypes.LoadLightCardsFailure;
+
+    constructor(public payload: { error: Error }) {
+    }
 }
 
 export class LoadLightCardSuccess implements Action {
@@ -47,8 +50,11 @@ export class LoadLightCardSuccess implements Action {
     }
 }
 
-export class LoadLightCardFail implements Action {
-    readonly type = LightCardActionTypes.LoadLightCardFail;
+export class LoadLightCardFailure implements Action {
+    readonly type = LightCardActionTypes.LoadLightCardFailure;
+
+    constructor(public payload: { error: Error }) {
+    }
 }
 
 export class AddLightCardFailure implements Action {
@@ -69,9 +75,9 @@ export class HandleUnexpectedError implements Action {
 export type LightCardActions =
     LoadLightCards
     |  LoadLightCardsSuccess
-    | LoadLightCardsFail
+    | LoadLightCardsFailure
     | LoadLightCard
     | LoadLightCardSuccess
-    | LoadLightCardFail
+    | LoadLightCardFailure
     | AddLightCardFailure
     | HandleUnexpectedError;

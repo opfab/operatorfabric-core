@@ -51,7 +51,7 @@ xdescribe('LightCardEffects', () => {
         expect(effects).toBeTruthy();
     });
 
-    it('should return a LoadLightCardsFail when service throw an error', () => {
+    it('should return a LoadLightCardsFailure when service throw an error', () => {
         expect(effects).toBeTruthy();
     });
 

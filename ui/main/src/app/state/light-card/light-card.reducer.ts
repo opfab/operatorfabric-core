@@ -34,11 +34,11 @@ export function reducer(
             };
         }
 
-        case LightCardActionTypes.LoadLightCardsFail: {
+        case LightCardActionTypes.LoadLightCardsFailure: {
             return {
                 ...state,
                 loading: false,
-                error: 'error while loading cards'
+                error: `error while loading cards: '${action.payload.error}'`
             };
         }
 
@@ -49,11 +49,11 @@ export function reducer(
             };
         }
 
-        case LightCardActionTypes.LoadLightCardFail: {
+        case LightCardActionTypes.LoadLightCardFailure: {
             return {
                 ...state,
                 loading: false,
-                error: 'error while loading a single lightCard'
+                error: `error while loading a single lightCard: '${action.payload.error}'`
             };
         }
 
@@ -61,7 +61,7 @@ export function reducer(
             return {
                 ...state,
                 loading: false,
-                error: 'error while adding a single lightCard'
+                error: `error while adding a single lightCard: '${action.payload.error}'`
             };
         }
         default: {
