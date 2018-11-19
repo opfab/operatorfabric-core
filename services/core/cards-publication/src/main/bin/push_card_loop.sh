@@ -25,7 +25,7 @@ display_usage() {
 while [[ $# -gt 0 ]]
 do
 key="$1"
-echo $key
+# echo $key
 case $key in
     -u|--url)
     url="$2"
@@ -55,7 +55,8 @@ case $key in
     -h|--help)
     interval="$2"
     shift # past argument
-
+display_usage
+    exit 0
     ;;
     *)    # unknown option
     POSITIONAL+=("$1") # save it in an array for later
