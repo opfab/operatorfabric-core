@@ -25,11 +25,13 @@ export class CardService {
     }
 
     // TODO paginate
+    // Never called yet
     getLightCards(): Observable<Array<LightCard>> {
 
         return this.httpClient.get <LightCard[]>(this.cardsUrl);
     }
 
+    // Never called yet
     getLightCard(id: string): Observable<LightCard> {
         return this.getLightCards().pipe(
             map(lightCards => lightCards.find(
@@ -37,7 +39,7 @@ export class CardService {
         );
     }
 
-    testCardOperation(): Observable<CardOperation> {
+    getCardOperation(): Observable<CardOperation> {
         return Observable.create(observer => {
             let eventSource = null;
             try {
@@ -65,7 +67,7 @@ export class CardService {
 
         });
     }
-
+// sse request not intercept by core/services/interceptors.services/TokenInjector
     private handleHeaders() {
         return {
             headers:

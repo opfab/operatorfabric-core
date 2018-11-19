@@ -23,8 +23,9 @@ export class CardOperationEffects {
     @Effect()
     getCardOperations: Observable<LightCardActions> = this.actions$
         .pipe(
+            // loads card operations only after authentication of a default user ok.
             ofType(AuthenticationActionTypes.AcceptLogIn),
-            switchMap(() => this.service.testCardOperation()
+            switchMap(() => this.service.getCardOperation()
                 .pipe(
                     map(operation => {
                         if (operation.type && operation.type.toString() === 'ADD') {

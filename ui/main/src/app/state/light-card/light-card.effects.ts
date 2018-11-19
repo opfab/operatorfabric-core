@@ -21,7 +21,7 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {CardService} from '@core/services/card.service';
 import {LightCard} from '@state/light-card/light-card.model';
 
-
+// those effects are unused for the moment
 @Injectable()
 export class LightCardEffects {
 
