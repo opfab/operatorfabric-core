@@ -7,12 +7,28 @@ addons:
             secure: ${SONAR_TOKEN}
 services:
   - docker
-language: java
-install: true
+matrix:
+  include:
+  - language: java
+    install: true
+
+  - language: node_js
+    node_js: v10.10.0
+    before_install:
+      - cd ui/main
+    install:
+      - npm install 
+      - npm install @angular/cli
+      - npm install @angular-devkit/build-angular
+    script:
+      - ng test --browsers ChromeHeadless --watch=false --code-coverage
+      - ng build
+
 before_install:
   - sudo apt-get install realpath
   # Load cached docker images
   - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
+
 script:
   - docker network create opfabnet
   - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
@@ -42,3 +58,5 @@ cache:
     - $HOME/.gradle/wrapper/
     # caches docker images
     - $HOME/docker
+    # cache ui dependences
+    - $HOME/ui/main/nodes_modules

@@ -30,7 +30,7 @@ describe('LightCardDetailsComponent', () => {
         lightCardDetailsComp = fixture.debugElement.componentInstance;
     });
 
-    it('should create', () => {
+    it('should create and display minimal light card information', () => {
         const lightCard = getOneRandomLigthCard();
 
         // extract expected data
@@ -47,11 +47,9 @@ describe('LightCardDetailsComponent', () => {
             .toEqual(id);
         expect(fixture.nativeElement.querySelector('mat-card-subtitle').innerText)
             .toEqual(`${title}
-${uid}`);
-        expect(fixture.nativeElement.querySelector('mat-card-content').innerText)
-            .toEqual(`${summaryValue}
-
-`);
+${uid}`, 'title and uid should be displayed on two different lines');
+        expect(fixture.nativeElement.querySelector('mat-card-content').innerText.trim())
+            .toEqual(`${summaryValue}`, 'summary should be followed with an empty line');
     });
 
 });
