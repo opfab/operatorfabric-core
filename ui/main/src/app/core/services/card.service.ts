@@ -16,8 +16,8 @@ import {AuthenticationService} from '@core/services/authentication.service';
 
 @Injectable()
 export class CardService {
-    // TODO other end point or manage different source of cards...
-    private cardOperationsUrl = '/cards/cardOperations?clientId=clientIdPassword&test=true';
+    // TODO create a unique clientId
+    private cardOperationsUrl = '/cards/cardOperations?clientId=toBeUniqueSoon';
     private cardsUrl = '/cards/cards';
 
     constructor(private httpClient: HttpClient,
@@ -56,7 +56,6 @@ export class CardService {
 
             } catch (error) {
                 console.log('unhandle error');
-                // mostely for authentication errors
                 observer.error(error);
             }
                 return () => {
