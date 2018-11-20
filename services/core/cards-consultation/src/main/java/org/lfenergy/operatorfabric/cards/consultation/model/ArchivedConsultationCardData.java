@@ -36,6 +36,7 @@ import java.util.Map;
 @Document(collection = "archivedCards")
 public class ArchivedConsultationCardData implements Card {
 
+    private String uid;
     @Id
     private String id;
     private String publisher;

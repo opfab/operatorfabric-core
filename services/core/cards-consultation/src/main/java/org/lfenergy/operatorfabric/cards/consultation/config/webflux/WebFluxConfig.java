@@ -9,6 +9,7 @@ package org.lfenergy.operatorfabric.cards.consultation.config.webflux;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsController;
+import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsGetParameters;
 import org.lfenergy.operatorfabric.springtools.config.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,6 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.config.WebFluxConfigurerComposite;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
-
-import java.util.Optional;
 
 /**
  * Webflux configuration. configures:
@@ -64,23 +61,35 @@ public class WebFluxConfig {
            request -> {
                ServerResponse.BodyBuilder builder = ServerResponse.ok()
                   .contentType(MediaType.TEXT_EVENT_STREAM);
+               Mono<CardOperationsGetParameters> input = extractCardSubscriptionInfo(request);
                if (request.queryParam("test").orElse("false").equals("true")) {
-                   return builder.body(cardOperationsController.publishTestData(extractCardSubscriptionInfo(request)),
+                   return builder.body(cardOperationsController.publishTestData(input),
                       String.class);
                } else {
                    return builder.body(cardOperationsController.registerSubscriptionAndPublish
-                         (extractCardSubscriptionInfo(request)),
+                         (input),
                       String.class);
                }
            }
         );
     }
 
-    private Mono<Tuple2<User, Optional<String>>> extractCardSubscriptionInfo(ServerRequest request){
+    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfo(ServerRequest request){
         return request.principal()
            .map(principal->{
                OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-               return Tuples.of((User) jwtPrincipal.getPrincipal(),request.queryParam("clientId"));
+               return CardOperationsGetParameters.builder()
+                       .user((User) jwtPrincipal.getPrincipal())
+                       .clientId(request.queryParam("clientId").orElse(null))
+                       .rangeStart(parseAsLong(request.queryParam("rangeStart").orElse(null)))
+                       .rangeEnd(parseAsLong(request.queryParam("rangeEnd").orElse(null)))
+                       .test(request.queryParam("test").orElse("false").equals("true"))
+                       .notification(request.queryParam("notification").orElse("false").equals("true"))
+                       .build();
            });
+    }
+
+    private Long parseAsLong(String rangeStart) {
+        return rangeStart==null?null:Long.parseLong(rangeStart);
     }
 }

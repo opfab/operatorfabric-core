@@ -33,6 +33,7 @@ import java.util.Map;
 @Document(collection = "archivedCards")
 public class ArchivedCardPublicationData implements Card {
 
+    private String uid;
     @Id
     private String id;
     @NotNull

@@ -28,4 +28,13 @@ public class I18nConsultationData implements I18n {
     private String key;
     @Singular
     private Map<String,String> parameters;
+
+    public static I18n copy(I18n other) {
+        if(other == null)
+            return null;
+        I18nConsultationDataBuilder builder = builder().key(other.getKey());
+        if(other.getParameters()!= null && !other.getParameters().isEmpty())
+            other.getParameters().forEach((k,v)->builder.parameter(k,v));
+        return builder.build();
+    }
 }

@@ -33,8 +33,9 @@ import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
-import static org.hamcrest.Matchers.*;
 
 /**
  * <p></p>

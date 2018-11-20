@@ -276,7 +276,7 @@ class CardWriteServiceShould {
 
         ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid()).block();
         assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(
-                newCard, "id", "deletionDate", "actions");
+                newCard, "uid","id", "deletionDate", "actions");
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
         assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
         assertThat(testCardReceiver.getAdminQueue().size()).isEqualTo(0);

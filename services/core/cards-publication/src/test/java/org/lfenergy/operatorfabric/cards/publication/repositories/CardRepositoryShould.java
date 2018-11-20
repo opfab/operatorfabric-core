@@ -12,11 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.cards.model.ActionEnum;
-import org.lfenergy.operatorfabric.cards.model.InputEnum;
-import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
+import org.lfenergy.operatorfabric.cards.model.*;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +23,6 @@ import reactor.test.StepVerifier;
 
 import java.time.Instant;
 import java.util.function.Predicate;
-
-import static org.awaitility.Awaitility.await;
 
 /**
  * <p></p>

@@ -13,22 +13,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.I18nConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
+import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.SimulatedTime;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import java.time.Duration;
-import java.util.Optional;
 
 /**
  * <p>Handles cards access at the rest level. Depends on {@link CardSubscriptionService} for business logic</p>
@@ -41,13 +41,15 @@ public class CardOperationsController {
 
     private final CardSubscriptionService cardSubscriptionService;
 
+    private final CardRepository cardRepository;
 
     private final ObjectMapper mapper;
 
     @Autowired
-    public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper) {
+    public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper, CardRepository cardRepository) {
         this.cardSubscriptionService = cardSubscriptionService;
         this.mapper = mapper;
+        this.cardRepository = cardRepository;
     }
 
 
@@ -59,12 +61,22 @@ public class CardOperationsController {
      *    o tuple containing 1) user data 2) client id
      * @return mesage publisher
      */
-    public Flux<String> registerSubscriptionAndPublish(Mono<Tuple2<User, Optional<String>>> input) {
+    public Flux<String> registerSubscriptionAndPublish(Mono<CardOperationsGetParameters> input) {
         return input
            .flatMapMany(t -> {
-               if (t.getT2().isPresent()) {
-                   String clientId = t.getT2().get();
-                   return cardSubscriptionService.subscribe(t.getT1(), clientId).getPublisher();
+               if (t.getClientId()!=null) {
+                   //init subscription if needed
+                   CardSubscription subscription = null;
+                   if(t.isNotification()) {
+                       subscription = cardSubscriptionService.subscribe(t.getUser(), t.getClientId());
+                   }
+                   // fetch old card (if needed, see {@]link #fetchOldCards} method)
+                   Flux<String> oldCards = fetchOldCards(t, subscription == null ? null : subscription.getStartingPublishDate());
+                   //merge subscription and old cards as needed
+                   if(subscription!=null)
+                       return ((Flux<String>) subscription.getPublisher()).mergeWith(oldCards);
+                   else
+                       return oldCards;
                } else {
                    log.warn("\"clientId\" is a mandatory request parameter");
                    ApiErrorException e = new ApiErrorException(ApiError.builder()
@@ -78,6 +90,17 @@ public class CardOperationsController {
            });
     }
 
+    private Flux<String> fetchOldCards(CardOperationsGetParameters t, Long referencePublishDate) {
+        Flux<String> oldCards;
+        if(t.getRangeEnd()!= null && t.getRangeStart()!=null) {
+            referencePublishDate = referencePublishDate == null ? SimulatedTime.getInstance().computeNow().toEpochMilli() : referencePublishDate;
+            oldCards = cardRepository.findUrgentJSON(referencePublishDate, t.getRangeStart(), t.getRangeEnd());
+        }else{
+            oldCards = Flux.empty();
+        }
+        return oldCards;
+    }
+
     /**
      * Generates a test {@link Flux} of String. Those strings are Json
      * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
@@ -86,10 +109,10 @@ public class CardOperationsController {
      *    o tuple containing 1) user data 2) client id
      * @return mesage publisher
      */
-    public Flux<String> publishTestData(Mono<Tuple2<User, Optional<String>>> input) {
+    public Flux<String> publishTestData(Mono<CardOperationsGetParameters> input) {
         return input.flatMapMany(t -> Flux
            .interval(Duration.ofSeconds(5))
-           .doOnEach(l -> log.info("message " + l + " to " + t.getT1().getLogin()))
+           .doOnEach(l -> log.info("message " + l + " to " + t.getUser().getLogin()))
            .map(l -> CardOperationConsultationData.builder()
               .number(l)
               .publishDate(SimulatedTime.getInstance().computeNow().toEpochMilli() - 600000)

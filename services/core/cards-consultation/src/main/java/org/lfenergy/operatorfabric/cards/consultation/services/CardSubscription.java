@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.utilities.SimulatedTime;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
@@ -50,6 +51,8 @@ public class CardSubscription {
     private ConnectionFactory connectionFactory;
     private MessageListenerContainer userMlc;
     private MessageListenerContainer groupMlc;
+    @Getter
+    private Long startingPublishDate;
     @Getter
     private boolean cleared = false;
     private final String clientId;
@@ -117,6 +120,7 @@ public class CardSubscription {
                 userMlc.start();
                 log.info(String.format("LISTENING to messages on Group[%sGroups] queue",this.login));
                 groupMlc.start();
+                startingPublishDate = SimulatedTime.getInstance().computeNow().toEpochMilli();
             });
             emitter.onDispose(doOnCancel::run);
         });

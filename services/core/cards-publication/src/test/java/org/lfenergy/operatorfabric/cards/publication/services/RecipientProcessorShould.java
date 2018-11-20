@@ -9,9 +9,6 @@ package org.lfenergy.operatorfabric.cards.publication.services;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.lfenergy.operatorfabric.cards.model.Recipient;
-import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
 
 import java.util.ArrayList;
 import java.util.HashMap;

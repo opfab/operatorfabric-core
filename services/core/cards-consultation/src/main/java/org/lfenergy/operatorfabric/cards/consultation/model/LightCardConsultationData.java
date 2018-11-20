@@ -18,7 +18,7 @@ import java.util.List;
  * <p>Please use builder to instantiate</p>
  *
  * <p>Light Card Model, documented at {@link LightCard}</p>
- *
+ * <p>
  * {@inheritDoc}
  *
  * @author David Binder
@@ -29,8 +29,8 @@ import java.util.List;
 @Builder
 public class LightCardConsultationData implements LightCard {
 
-    private String uid ;
-    private String id ;
+    private String uid;
+    private String id;
     private String processId;
     private Long lttd;
     @Indexed
@@ -47,4 +47,23 @@ public class LightCardConsultationData implements LightCard {
     private I18n title;
     private I18n summary;
     private String mainRecipient;
+
+    public static LightCardConsultationData copy(Card other) {
+        LightCardConsultationDataBuilder builder = builder()
+                .uid(other.getUid())
+                .id(other.getId())
+                .processId(other.getProcessId())
+                .lttd(other.getLttd())
+                .startDate(other.getStartDate())
+                .endDate(other.getEndDate())
+                .severity(other.getSeverity())
+                .media(other.getMedia())
+                .title(I18nConsultationData.copy(other.getTitle()))
+                .summary(I18nConsultationData.copy(other.getSummary()))
+                ;
+        if(other.getTags()!=null && ! other.getTags().isEmpty())
+            builder.tags(other.getTags());
+        return builder.build();
+
+    }
 }
