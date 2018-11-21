@@ -17,7 +17,7 @@ import {AuthenticationService} from '@core/services/authentication.service';
 @Injectable()
 export class CardService {
     // TODO create a unique clientId
-    private cardOperationsUrl = '/cards/cardOperations?clientId=toBeUniqueSoon';
+    private cardOperationsUrl = '/cards/cardOperations?clientId=toBeUniqueSoon&notification=true';
     private cardsUrl = '/cards/cards';
 
     constructor(private httpClient: HttpClient,
