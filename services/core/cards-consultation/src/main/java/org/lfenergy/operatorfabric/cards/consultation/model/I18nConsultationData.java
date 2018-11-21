@@ -34,7 +34,7 @@ public class I18nConsultationData implements I18n {
             return null;
         I18nConsultationDataBuilder builder = builder().key(other.getKey());
         if(other.getParameters()!= null && !other.getParameters().isEmpty())
-            other.getParameters().forEach((k,v)->builder.parameter(k,v));
+            other.getParameters().forEach(builder::parameter);
         return builder.build();
     }
 }

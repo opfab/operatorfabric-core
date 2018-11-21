@@ -91,12 +91,12 @@ public class CardOperationsControllerShould {
 
     public CardOperationsControllerShould(){
         user = new User();
-        user.setLogin("testuser");
+        user.setLogin("ret-operator");
         user.setFirstName("Test");
         user.setLastName("User");
         List<String> groups = new ArrayList<>();
-        groups.add("testgroup1");
-        groups.add("testgroup2");
+        groups.add("rte");
+        groups.add("operator");
         user.setGroups(groups);
     }
 
@@ -109,67 +109,67 @@ public class CardOperationsControllerShould {
     private void initCardData() {
         int processNo = 0;
 //create past cards
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
         //create future cards
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, now, nowPlusOne)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, now, nowPlusOne,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowPlusOne, nowPlusTwo)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowPlusOne, nowPlusTwo,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowPlusTwo, nowPlusThree)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowPlusTwo, nowPlusThree,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
 
         //card starts in past and ends in future
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, nowPlusThree)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, nowPlusThree,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
 
         //card starts in past and never ends
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, null)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, null,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
 
         //card starts in future and nerver ends
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowPlusThree, null)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowPlusThree, null,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
 
         //create later published cards in past
         //this one overides first
-        StepVerifier.create(repository.save(createSimpleCard(1, nowPlusOne, nowMinusTwo, nowMinusOne)))
+        StepVerifier.create(repository.save(createSimpleCard(1, nowPlusOne, nowMinusTwo, nowMinusOne,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowPlusOne, nowMinusTwo, nowMinusOne)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowPlusOne, nowMinusTwo, nowMinusOne,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
         //create later published cards in future
         // this one overrides third
-        StepVerifier.create(repository.save(createSimpleCard(3, nowPlusOne, nowPlusOne, nowPlusTwo)))
+        StepVerifier.create(repository.save(createSimpleCard(3, nowPlusOne, nowPlusOne, nowPlusTwo,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowPlusOne, nowPlusTwo, nowPlusThree)))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowPlusOne, nowPlusTwo, nowPlusThree,"rte-operator","rte","operator")))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -278,8 +278,8 @@ public class CardOperationsControllerShould {
                 log.info("execute send task");
                 CardOperationConsultationData.CardOperationConsultationDataBuilder builder = CardOperationConsultationData.builder();
                 builder.publishDate(nowPlusOne.toEpochMilli())
-                        .card(LightCardConsultationData.copy(TestUtilities.createSimpleCard("notif1", nowPlusOne, nowPlusTwo, nowPlusThree)))
-                        .card(LightCardConsultationData.copy(TestUtilities.createSimpleCard("notif2", nowPlusOne, nowPlusTwo, nowPlusThree)))
+                        .card(LightCardConsultationData.copy(TestUtilities.createSimpleCard("notif1", nowPlusOne, nowPlusTwo, nowPlusThree,"rte-operator","rte","operator")))
+                        .card(LightCardConsultationData.copy(TestUtilities.createSimpleCard("notif2", nowPlusOne, nowPlusTwo, nowPlusThree,"rte-operator","rte","operator")))
                 ;
 
                 rabbitTemplate.convertAndSend(userExchange.getName(), user.getLogin(), mapper.writeValueAsString(builder.build()));

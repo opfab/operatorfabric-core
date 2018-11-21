@@ -26,6 +26,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.prepareCard;
 
 /**
@@ -43,6 +44,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.prepa
 @Slf4j
 public class CardRepositoryShould {
 
+    public static final String LOGIN = "rte-operator";
     private static Instant now = Instant.now();
     private static Instant nowPlusOne = now.plus(1, ChronoUnit.HOURS);
     private static Instant nowPlusTwo = now.plus(2, ChronoUnit.HOURS);
@@ -66,67 +68,35 @@ public class CardRepositoryShould {
     private void initCardData() {
         int processNo = 0;
 //create past cards
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN,"rte","operator"));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN,"rte","operator"));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, LOGIN,"rte","operator"));
         //create future cards
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowMinusThree, now, nowPlusOne)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowMinusThree, nowPlusOne, nowPlusTwo)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowMinusThree, nowPlusTwo, nowPlusThree)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
+        persistCard(createSimpleCard(processNo++, nowMinusThree, now, nowPlusOne, LOGIN,"rte","operator"));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusOne, nowPlusTwo, LOGIN,"rte","operator"));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusTwo, nowPlusThree, LOGIN,"rte","operator"));
 
         //card starts in past and ends in future
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowMinusThree, nowMinusThree, nowPlusThree)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, nowPlusThree, LOGIN,"rte","operator"));
 
         //card starts in past and never ends
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowMinusThree, nowMinusThree, null)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, null, LOGIN,"rte","operator"));
 
         //card starts in future and nerver ends
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowMinusThree, nowPlusThree, null)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusThree, null, LOGIN,"rte","operator"));
 
         //create later published cards in past
         //this one overides first
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(1, nowPlusOne, nowMinusTwo, nowMinusOne)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowPlusOne, nowMinusTwo, nowMinusOne)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
+        persistCard(createSimpleCard(1, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN,"rte","operator"));
+        persistCard(createSimpleCard(processNo++, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN,"rte","operator"));
         //create later published cards in future
         // this one overrides third
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(3, nowPlusOne, nowPlusOne, nowPlusTwo)))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
-        StepVerifier.create(repository.save(TestUtilities.createSimpleCard(processNo++, nowPlusOne, nowPlusTwo, nowPlusThree)))
+        persistCard(createSimpleCard(3, nowPlusOne, nowPlusOne, nowPlusTwo, LOGIN,"rte","operator"));
+        persistCard(createSimpleCard(processNo++, nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN,"rte","operator"));
+    }
+
+    private void persistCard(CardConsultationData simpleCard) {
+        StepVerifier.create(repository.save(simpleCard))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -192,7 +162,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchPast() {
         log.info(String.format("Fetching past before now(%s), published after now(%s)", TestUtilities.format(now), TestUtilities.format(now)));
-        StepVerifier.create(repository.findPastOnly(now.toEpochMilli(),now.toEpochMilli())
+        StepVerifier.create(repository.findPastOnly(now.toEpochMilli(),now.toEpochMilli(),"rte-operator","rte","operator")
                 .doOnNext(TestUtilities::logCardOperation))
             .assertNext(op-> {
                     assertThat(op.getCards().size()).isEqualTo(1);
@@ -203,7 +173,7 @@ public class CardRepositoryShould {
             .verify();
 
         log.info(String.format("Fetching past before now plus three hours(%s), published after now(%s)", TestUtilities.format(nowPlusThree), TestUtilities.format(now)));
-        StepVerifier.create(repository.findPastOnly(now.toEpochMilli(),nowPlusThree.toEpochMilli())
+        StepVerifier.create(repository.findPastOnly(now.toEpochMilli(),nowPlusThree.toEpochMilli(),"rte-operator","rte","operator")
         .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op-> {
                     assertThat(op.getCards().size()).isEqualTo(3);
@@ -215,7 +185,7 @@ public class CardRepositoryShould {
                 .expectComplete()
                 .verify();
         log.info(String.format("Fetching past before now (%s), published after now plus three hours(%s)", TestUtilities.format(now), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.findPastOnly(nowPlusThree.toEpochMilli(),now.toEpochMilli())
+        StepVerifier.create(repository.findPastOnly(nowPlusThree.toEpochMilli(),now.toEpochMilli(),"rte-operator","rte","operator")
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op-> {
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
@@ -234,7 +204,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchPastJSON() {
         log.info(String.format("Fetching past before now (%s), published after now plus three hours(%s)", TestUtilities.format(now), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.findPastOnlyJSON(nowPlusThree.toEpochMilli(),now.toEpochMilli())
+        StepVerifier.create(repository.findPastOnlyJSON(nowPlusThree.toEpochMilli(),now.toEpochMilli(),"rte-operator","rte","operator")
                 .map(s-> TestUtilities.readCardOperation(mapper, s))
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op-> {
@@ -254,7 +224,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchFuture() {
         log.info(String.format("Fetching future from now(%s), published after now(%s)", TestUtilities.format(now), TestUtilities.format(now)));
-        StepVerifier.create(repository.findFutureOnly(now.toEpochMilli(),now.toEpochMilli())
+        StepVerifier.create(repository.findFutureOnly(now.toEpochMilli(),now.toEpochMilli(),"rte-operator","rte","operator")
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op-> {
                     assertThat(op.getCards().size()).isEqualTo(3);
@@ -266,7 +236,7 @@ public class CardRepositoryShould {
             .expectComplete()
             .verify();
         log.info(String.format("Fetching future from now minus two hours(%s), published after now(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(now)));
-        StepVerifier.create(repository.findFutureOnly(now.toEpochMilli(), nowMinusTwo.toEpochMilli())
+        StepVerifier.create(repository.findFutureOnly(now.toEpochMilli(), nowMinusTwo.toEpochMilli(),"rte-operator","rte","operator")
                 .doOnNext(TestUtilities::logCardOperation) )
                 .assertNext(op-> {
                     assertThat(op.getCards().size()).isEqualTo(4);
@@ -279,7 +249,7 @@ public class CardRepositoryShould {
             .expectComplete()
             .verify();
         log.info(String.format("Fetching future from now minus two hours(%s), published after now plus three hours(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.findFutureOnly(nowPlusThree.toEpochMilli(),nowMinusTwo.toEpochMilli())
+        StepVerifier.create(repository.findFutureOnly(nowPlusThree.toEpochMilli(),nowMinusTwo.toEpochMilli(),"rte-operator","rte","operator")
                 .doOnNext(TestUtilities::logCardOperation) )
                 .assertNext(op-> {
                     assertThat(op.getCards().size()).isEqualTo(4);
@@ -302,7 +272,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchFutureJSON() {
         log.info(String.format("Fetching future from now minus two hours(%s), published after now plus three hours(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.findFutureOnlyJSON(nowPlusThree.toEpochMilli(),nowMinusTwo.toEpochMilli())
+        StepVerifier.create(repository.findFutureOnlyJSON(nowPlusThree.toEpochMilli(),nowMinusTwo.toEpochMilli(),"rte-operator","rte","operator")
                 .map(s->TestUtilities.readCardOperation(mapper, s))
                 .doOnNext(TestUtilities::logCardOperation)
         )
@@ -327,7 +297,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchUrgent() {
         log.info(String.format("Fetching urgent from now minus one hours(%s) and now plus one hours(%s), published after now (%s)", TestUtilities.format(nowMinusOne), TestUtilities.format(nowPlusOne), TestUtilities.format(now)));
-        StepVerifier.create(repository.findUrgent(now.toEpochMilli(),nowMinusOne.toEpochMilli(),nowPlusOne.toEpochMilli())
+        StepVerifier.create(repository.findUrgent(now.toEpochMilli(),nowMinusOne.toEpochMilli(),nowPlusOne.toEpochMilli(),"rte-operator","rte","operator")
                 .doOnNext(TestUtilities::logCardOperation) )
                 .assertNext(op-> {
                     assertThat(op.getCards().size()).isEqualTo(5);
@@ -345,7 +315,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchUrgentJSON() {
         log.info(String.format("Fetching urgent from now minus one hours(%s) and now plus one hours(%s), published after now (%s)", TestUtilities.format(nowMinusOne), TestUtilities.format(nowPlusOne), TestUtilities.format(now)));
-        StepVerifier.create(repository.findUrgentJSON(now.toEpochMilli(),nowMinusOne.toEpochMilli(),nowPlusOne.toEpochMilli())
+        StepVerifier.create(repository.findUrgentJSON(now.toEpochMilli(),nowMinusOne.toEpochMilli(),nowPlusOne.toEpochMilli(),"rte-operator","rte","operator")
                 .map(s->TestUtilities.readCardOperation(mapper, s))
                 .doOnNext(TestUtilities::logCardOperation) )
                 .assertNext(op-> {

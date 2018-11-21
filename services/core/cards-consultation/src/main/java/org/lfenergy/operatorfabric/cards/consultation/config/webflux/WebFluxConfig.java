@@ -34,6 +34,8 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class WebFluxConfig {
 
+    public static final String FALSE = "false";
+    public static final String TRUE = "true";
     private final CardOperationsController cardOperationsController;
 
     @Autowired
@@ -62,7 +64,7 @@ public class WebFluxConfig {
                ServerResponse.BodyBuilder builder = ServerResponse.ok()
                   .contentType(MediaType.TEXT_EVENT_STREAM);
                Mono<CardOperationsGetParameters> input = extractCardSubscriptionInfo(request);
-               if (request.queryParam("test").orElse("false").equals("true")) {
+               if (request.queryParam("test").orElse(FALSE).equals(TRUE)) {
                    return builder.body(cardOperationsController.publishTestData(input),
                       String.class);
                } else {
@@ -83,8 +85,8 @@ public class WebFluxConfig {
                        .clientId(request.queryParam("clientId").orElse(null))
                        .rangeStart(parseAsLong(request.queryParam("rangeStart").orElse(null)))
                        .rangeEnd(parseAsLong(request.queryParam("rangeEnd").orElse(null)))
-                       .test(request.queryParam("test").orElse("false").equals("true"))
-                       .notification(request.queryParam("notification").orElse("false").equals("true"))
+                       .test(request.queryParam("test").orElse(FALSE).equals(TRUE))
+                       .notification(request.queryParam("notification").orElse(FALSE).equals(TRUE))
                        .build();
            });
     }

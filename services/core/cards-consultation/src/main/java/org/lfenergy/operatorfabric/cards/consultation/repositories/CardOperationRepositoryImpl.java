@@ -47,8 +47,8 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
     }
 
     @Override
-    public Flux<String> findUrgentJSON(long latestPublication, long rangeStart, long rangeEnd) {
-        return findUrgent( latestPublication, rangeStart, rangeEnd).map(this::writeValueAsString);
+    public Flux<String> findUrgentJSON(long latestPublication, long rangeStart, long rangeEnd, String login, String... groups) {
+        return findUrgent( latestPublication, rangeStart, rangeEnd,login, groups).map(this::writeValueAsString);
     }
 
     private String writeValueAsString(CardOperation cardOperation) {
@@ -61,35 +61,36 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
     }
 
     @Override
-    public Flux<String> findFutureOnlyJSON(long latestPublication, long rangeStart) {
-        return findFutureOnly(latestPublication, rangeStart)
+    public Flux<String> findFutureOnlyJSON(long latestPublication, long rangeStart, String login, String... groups) {
+        return findFutureOnly(latestPublication, rangeStart,login,groups)
                 .map(this::writeValueAsString);
     }
 
     @Override
-    public Flux<String> findPastOnlyJSON(long latestPublication, long rangeEnd) {
-        return findPastOnly(latestPublication, rangeEnd)
+    public Flux<String> findPastOnlyJSON(long latestPublication, long rangeEnd, String login, String... groups) {
+        return findPastOnly(latestPublication, rangeEnd,login,groups)
                 .map(this::writeValueAsString);
     }
 
     @Override
-    public Flux<CardOperation> findUrgent(long latestPublication, long rangeStart, long rangeEnd) {
-        return findUrgent0(CardOperation.class, latestPublication, rangeStart, rangeEnd);
+    public Flux<CardOperation> findUrgent(long latestPublication, long rangeStart, long rangeEnd, String login, String... groups) {
+        return findUrgent0(CardOperation.class, latestPublication, rangeStart, rangeEnd,login,groups);
     }
 
     @Override
-    public Flux<CardOperation> findFutureOnly(long latestPublication, long rangeStart) {
-        return findFutureOnly0(CardOperation.class, latestPublication, rangeStart);
+    public Flux<CardOperation> findFutureOnly(long latestPublication, long rangeStart, String login, String... groups) {
+        return findFutureOnly0(CardOperation.class, latestPublication, rangeStart,login,groups);
     }
 
     @Override
-    public Flux<CardOperation> findPastOnly(long latestPublication, long rangeEnd) {
-        return findPastOnly0(CardOperation.class, latestPublication, rangeEnd);
+    public Flux<CardOperation> findPastOnly(long latestPublication, long rangeEnd, String login, String... groups) {
+        return findPastOnly0(CardOperation.class, latestPublication, rangeEnd,login,groups);
     }
 
-    public <T> Flux<T> findUrgent0(Class<T> clazz, long latestPublication, long rangeStart, long rangeEnd) {
+    public <T> Flux<T> findUrgent0(Class<T> clazz, long latestPublication, long rangeStart, long rangeEnd, String login, String... groups) {
         MatchOperation queryStage = Aggregation.match(new Criteria().andOperator(
-                where(PUBLISH_DATE_FIELD).lte(latestPublication),
+                publishDateCriteria(latestPublication),
+                userCriteria(login,groups),
                 new Criteria().orOperator(
                         where(START_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
                         where(END_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
@@ -107,9 +108,20 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
         return template.aggregate(aggregation, clazz);
     }
 
-    public <T> Flux<T> findFutureOnly0(Class<T> clazz, long latestPublication, long rangeStart) {
+    private Criteria userCriteria(String login, String... groups) {
+        return  new Criteria().orOperator(
+                where("orphanUsers").in(login),
+                where("groupRecipients").in(groups));
+    }
+
+    private Criteria publishDateCriteria(long latestPublication) {
+        return where(PUBLISH_DATE_FIELD).lte(latestPublication);
+    }
+
+    public <T> Flux<T> findFutureOnly0(Class<T> clazz, long latestPublication, long rangeStart, String login, String... groups) {
         MatchOperation queryStage = Aggregation.match(new Criteria().andOperator(
-                where(PUBLISH_DATE_FIELD).lte(latestPublication),
+                publishDateCriteria(latestPublication),
+                userCriteria(login,groups),
                 where(START_DATE_FIELD).gt(rangeStart)));
 
         TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class, queryStage, sortStage1,groupStage, projectStage, sortStage2);
@@ -117,9 +129,10 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
         return template.aggregate(aggregation, clazz);
     }
 
-    public <T> Flux<T> findPastOnly0(Class<T> clazz, long latestPublication, long rangeEnd) {
+    public <T> Flux<T> findPastOnly0(Class<T> clazz, long latestPublication, long rangeEnd, String login, String... groups) {
         MatchOperation queryStage = Aggregation.match(new Criteria().andOperator(
-                where(PUBLISH_DATE_FIELD).lte(latestPublication),
+                publishDateCriteria(latestPublication),
+                userCriteria(login,groups),
                 where(END_DATE_FIELD).lt(rangeEnd)));
 
         TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class, queryStage, sortStage1, groupStage, projectStage, sortStage2);

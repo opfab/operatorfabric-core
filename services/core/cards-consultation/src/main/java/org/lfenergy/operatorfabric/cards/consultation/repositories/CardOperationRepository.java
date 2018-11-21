@@ -23,7 +23,7 @@ public interface CardOperationRepository {
 //            "$or: [{'startDate': { $gte: ?1, $lte: ?2}}, " +
 //            "{'endDate': { $gte: ?1, $lte: ?2}}, " +
 //            "{ 'startDate': { $lt: ?1 }, $or: [{'endDate': null}, {'endDate': { $gt: ?2}}]}]}")
-    Flux<String> findUrgentJSON(long latestPublication, long rangeStart, long rangeEnd);
+    Flux<String> findUrgentJSON(long latestPublication, long rangeStart, long rangeEnd, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and starting after <code>rangeStart</code>
@@ -34,7 +34,7 @@ public interface CardOperationRepository {
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +
 //            "'startDate': { $gt: ?1}}")
-    Flux<String> findFutureOnlyJSON(long latestPublication, long rangeStart);
+    Flux<String> findFutureOnlyJSON(long latestPublication, long rangeStart, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and ending before <code>rangeEnd</code>
@@ -45,7 +45,7 @@ public interface CardOperationRepository {
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +
 //            "'endDate': { $lt: ?1}}")
-    Flux<String> findPastOnlyJSON(long latestPublication, long rangeEnd);
+    Flux<String> findPastOnlyJSON(long latestPublication, long rangeEnd, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and either :
@@ -65,7 +65,7 @@ public interface CardOperationRepository {
 //            "$or: [{'startDate': { $gte: ?1, $lte: ?2}}, " +
 //            "{'endDate': { $gte: ?1, $lte: ?2}}, " +
 //            "{ 'startDate': { $lt: ?1 }, $or: [{'endDate': null}, {'endDate': { $gt: ?2}}]}]}")
-    Flux<CardOperation> findUrgent(long latestPublication, long rangeStart, long rangeEnd);
+    Flux<CardOperation> findUrgent(long latestPublication, long rangeStart, long rangeEnd, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and starting after <code>rangeStart</code>
@@ -76,7 +76,7 @@ public interface CardOperationRepository {
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +
 //            "'startDate': { $gt: ?1}}")
-    Flux<CardOperation> findFutureOnly(long latestPublication, long rangeStart);
+    Flux<CardOperation> findFutureOnly(long latestPublication, long rangeStart, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and ending before <code>rangeEnd</code>
@@ -87,5 +87,5 @@ public interface CardOperationRepository {
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +
 //            "'endDate': { $lt: ?1}}")
-    Flux<CardOperation> findPastOnly(long latestPublication, long rangeEnd);
+    Flux<CardOperation> findPastOnly(long latestPublication, long rangeEnd, String login, String... groups);
 }

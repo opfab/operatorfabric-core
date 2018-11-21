@@ -20,8 +20,8 @@ import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.SimulatedTime;
-import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -90,11 +90,16 @@ public class CardOperationsController {
            });
     }
 
-    private Flux<String> fetchOldCards(CardOperationsGetParameters t, Long referencePublishDate) {
+    private Flux<String> fetchOldCards(CardOperationsGetParameters parameters, Long referencePublishDate) {
         Flux<String> oldCards;
-        if(t.getRangeEnd()!= null && t.getRangeStart()!=null) {
+        Long start = parameters.getRangeStart();
+        Long end = parameters.getRangeEnd();
+        if(end != null && start !=null) {
             referencePublishDate = referencePublishDate == null ? SimulatedTime.getInstance().computeNow().toEpochMilli() : referencePublishDate;
-            oldCards = cardRepository.findUrgentJSON(referencePublishDate, t.getRangeStart(), t.getRangeEnd());
+            User user = parameters.getUser();
+            String login = user.getLogin();
+            String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
+            oldCards = cardRepository.findUrgentJSON(referencePublishDate, start, end, login, groups);
         }else{
             oldCards = Flux.empty();
         }

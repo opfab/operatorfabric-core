@@ -72,9 +72,12 @@ public class CardConsultationData implements Card {
     private int shardKey;
     private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
     private List<String> userRecipients;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
     private List<String> groupRecipients;
     @Transient @JsonIgnore
+    @Singular
     private List<String> orphanedUsers;
 }
