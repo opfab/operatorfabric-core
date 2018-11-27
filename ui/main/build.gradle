@@ -1,0 +1,16 @@
+node{
+    version = 'v10.10.0'
+
+    npmVersion = 'v6.4.1'
+
+    download = false
+
+    workDir = file("${project.buildDir}/nodejs")
+
+    npmWorkDir = file("${project.buildDir}/npm")
+
+    nodeModulesDir = file("${project.projectDir}")
+}
+
+npm_run_build.dependsOn(npm_install)
+build.dependsOn(npm_run_build)

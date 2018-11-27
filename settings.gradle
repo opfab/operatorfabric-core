@@ -13,6 +13,7 @@ include 'client:users'
 include 'services:infra:config'
 include 'services:infra:auth'
 include 'services:infra:registry'
+include 'ui:main'
 include 'services:infra:client-gateway'
 include 'services:core:thirds'
 include 'services:core:cards-publication'
@@ -33,6 +34,7 @@ project(':services:infra:auth').name = 'OAuth2-dev-server'
 project(':services:infra:config').name = 'configuration-cloud-service'
 project(':services:infra:registry').name = 'registry-cloud-service'
 project(':services:infra:client-gateway').name = 'client-gateway-cloud-service'
+project(':ui:main').name = 'main-user-interface'
 
 //we check if the modules have gradle configuration files
 rootProject.children.each { project ->
