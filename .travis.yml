@@ -22,7 +22,6 @@ install:
   - npm install -g @angular-devkit/build-angular
 script:
   - ng test --browsers ChromeHeadless --watch=false --code-coverage
-  - ng build
   - cd $TRAVIS_BUILD_DIR
   - docker network create opfabnet
   - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
