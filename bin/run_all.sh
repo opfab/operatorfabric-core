@@ -24,7 +24,7 @@ function join_by { local IFS="$1"; shift; echo "$*"; }
 test_url() {
     # store the whole response with the status at the and
 #    echo "testing $1"
-    HTTP_STATUS=$(curl -I "$1" 2>/dev/null|sed -n 1p|awk '{print $2}')
+HTTP_STATUS=$(curl --connect-timeout 10 -I "$1" 2>/dev/null|sed -n 1p|awk '{print $2}')
 #    echo "return status is $HTTP_STATUS"
     [ -n "$HTTP_STATUS" ] && [ "$HTTP_STATUS" = 200 ]
     return
