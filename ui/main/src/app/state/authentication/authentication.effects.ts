@@ -12,7 +12,7 @@ import {
     AcceptLogIn,
     AuthenticationActions,
     AuthenticationActionTypes,
-    RejectLogin
+    RejectLogIn
 } from '@state/authentication/authentication.actions';
 import {AuthenticationService, AuthObjet, CheckTokenResponse, ONE_SECOND} from '@core/services/authentication.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
@@ -59,7 +59,7 @@ export class AuthenticationEffects {
                 }),
                 catchError(err => {
                     console.error(err);
-                    return of(new RejectLogin({denialReason: err}));
+                    return of(new RejectLogIn({denialReason: err}));
                 })
             );
 
@@ -76,7 +76,7 @@ export class AuthenticationEffects {
 
     private handleExpirationDateOver(): AuthenticationActions {
         this.authService.clearAuthenticationInformation();
-        return new RejectLogin({denialReason: 'expiration date exceeded'});
+        return new RejectLogIn({denialReason: 'expiration date exceeded'});
 
     }
 
@@ -90,6 +90,6 @@ export class AuthenticationEffects {
 
         }
         this.authService.clearAuthenticationInformation();
-        return new RejectLogin({denialReason: 'invalid token'}) as AuthenticationActions;
+        return new RejectLogIn({denialReason: 'invalid token'}) as AuthenticationActions;
     }
 }
