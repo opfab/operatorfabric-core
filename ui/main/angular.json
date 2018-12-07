@@ -8,7 +8,11 @@
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -24,10 +28,10 @@
               "src/assets"
             ],
             "styles": [
-              {
-                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
-              },
-              "src/styles.css"
+//              {
+//                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+//              },
+              "src/assets/styles/styles.scss"
             ],
             "scripts": []
           },
@@ -76,10 +80,10 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              {
-                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
-              },
-              "src/styles.css"
+//              {
+//                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+//              },
+              "src/assets/styles/styles.css"
             ],
             "scripts": [],
             "assets": [

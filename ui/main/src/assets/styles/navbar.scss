@@ -5,7 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/* You can add global styles to this file, and also import other style files */
-
-html, body { height: 100%; }
-body { margin: 0; font-family: 'Roboto', sans-serif; }
+@each $color, $value in $theme-colors {
+  .brand-bg-#{$color} {
+    background-color: $value;
+    padding: 5px;
+    border-radius: 5px;
+  }
+}

@@ -6,17 +6,18 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {navigationRoutes} from './app-routing.module';
 import {Store} from '@ngrx/store';
-import {AppState} from '@state/app.interface';
 import {Observable} from 'rxjs';
+import {AppState} from '@state/app.interface';
 import {getCurrentUrl, selectRouterState} from '@state/app.reducer';
 import {TempAutomaticLogIn} from '@state/authentication/authentication.actions';
+import {navigationRoutes} from './app-routing.module';
+
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
     title = 'Operator Fabric';

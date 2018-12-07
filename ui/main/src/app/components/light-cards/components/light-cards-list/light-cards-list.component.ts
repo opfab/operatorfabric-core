@@ -11,7 +11,7 @@ import {LightCard} from '../../../../state/light-card/light-card.model';
 @Component({
   selector: 'app-cards-list',
   templateUrl: './light-cards-list.component.html',
-  styleUrls: ['./light-cards-list.component.css']
+  styleUrls: ['./light-cards-list.component.scss']
 })
 export class LightCardsListComponent  {
 

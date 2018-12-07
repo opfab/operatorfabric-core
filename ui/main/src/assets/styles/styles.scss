@@ -1,0 +1,30 @@
+/* Copyright (c) 2018, RTE (http://www.rte-france.com)
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+/* You can add global styles to this file, and also import other style files */
+
+@import "./bootstrap_sass/_variables.scss";
+/* import bootstrap*/
+@import '../../../node_modules/bootstrap/scss/bootstrap.scss';
+@import "navbar.scss";
+
+$top-padding: 80px ;
+$bottom-padding: 10px ;
+$body-padding: $top-padding 20px $bottom-padding 20px ;
+$total-vertical-padding: $top-padding + $bottom-padding ;
+
+body {
+  padding: $body-padding;
+  min-width: 500px;
+}
+
+
+.global-view{
+  height: -webkit-calc(100vh - #{$total-vertical-padding});
+  height: -moz-calc(100vh - #{$total-vertical-padding});
+  height: calc(100vh - #{$total-vertical-padding});
+}

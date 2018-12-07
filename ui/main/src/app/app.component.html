@@ -4,18 +4,5 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<mat-toolbar color="primary">
-    {{title}}
-    <nav mat-tab-nav-bar="" backgroundColor="primary">
-        <a mat-tab-link=""
-           *ngFor="let link of navigationRoutes, let i = index"
-           [routerLink]="link.path"
-           routerLinkActive #rla="routerLinkActive"
-           [active]="link.path === currentPath.substr(1)"
-           (click)="activeLinkIndex = i"
-        >{{link.path}}</a>
-    </nav>
-</mat-toolbar>
-<div>-----------------------------</div>
+<app-navbar></app-navbar>
 <router-outlet></router-outlet>
-<div>-----------------------------</div>

@@ -11,7 +11,7 @@ import {I18nData, LightCard} from '@state/light-card/light-card.model';
 @Component({
     selector: 'app-light-card-details',
     templateUrl: './light-card-details.component.html',
-    styleUrls: ['./light-card-details.component.css']
+    styleUrls: ['./light-card-details.component.scss']
 })
 export class LightCardDetailsComponent {
 

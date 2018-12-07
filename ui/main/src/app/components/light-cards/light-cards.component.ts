@@ -15,7 +15,7 @@ import * as fromStore from '@state/light-card/index';
 @Component({
     selector: 'app-cards',
     templateUrl: './light-cards.component.html',
-    styleUrls: ['./light-cards.component.css']
+    styleUrls: ['./light-cards.component.scss']
 })
 export class LightCardsComponent implements OnInit, AfterViewInit {
 
