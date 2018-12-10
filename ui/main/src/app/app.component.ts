@@ -6,12 +6,13 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {AppState} from '@state/app.interface';
 import {getCurrentUrl, selectRouterState} from '@state/app.reducer';
-import {TempAutomaticLogIn} from '@state/authentication/authentication.actions';
-import {navigationRoutes} from './app-routing.module';
+import {map} from "rxjs/operators";
+import {CheckAuthenticationStatus,TryToLogOut} from "@state/identification/identification.actions";
+import {isAuthenticated} from "@state/identification";
 
 @Component({
     selector: 'app-root',
@@ -20,7 +21,6 @@ import {navigationRoutes} from './app-routing.module';
 })
 export class AppComponent implements OnInit {
     title = 'Operator Fabric';
-    navigationRoutes = navigationRoutes;
     getRoutePE: Observable<any>;
     currentPath: any;
     isAuthenticated$: boolean;
@@ -31,7 +31,8 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.store.pipe(select(getCurrentUrl)).subscribe(url => this.currentPath = url);
-        this.store.pipe(select(isAuthenticated), map(expirationTime =>  expirationTime > Date.now())
+        this.store.pipe(select(isAuthenticated),
+            map(expirationTime =>  expirationTime > Date.now())
                         ).subscribe(isAUth => this.isAuthenticated$ = isAUth);
         // First Action send by the application, is the user currently authenticated ?
         this.store.dispatch(new CheckAuthenticationStatus());

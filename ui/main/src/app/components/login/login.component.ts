@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit{
       const username = this.userForm.get('identifier').value;
       const password = this.userForm.get('password').value;
         this.store.dispatch(new TryToLogIn( {username: username, password: password}));
+        // the following had to be done in an effect rather here
         this.router.navigateByUrl('/feed');
     }
   }

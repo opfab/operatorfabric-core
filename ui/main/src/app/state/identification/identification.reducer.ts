@@ -43,6 +43,16 @@ export function reducer(state = initialState, action: IdentificationActions): St
                 expirationDate: payload.expirationDate
             };
         }
+        case IdentificationActionTypes.AcceptLogOut:{
+            return {
+                ...state,
+                identifier: null,
+                clientId: null,
+                token:null,
+                expirationDate: new Date(0),
+                denialReason: null
+            };
+        }
         case IdentificationActionTypes.RejectLogIn: {
             return {
                 ...state,

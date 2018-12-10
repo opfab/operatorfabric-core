@@ -7,34 +7,30 @@
 
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import {StateModule} from '@state/state.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsModule} from './components/light-cards/light-cards.module';
 import {AppRoutingModule} from './app-routing.module';
 import {CoreModule} from './core/core.module';
-// import {MatSidenavModule, MatTabsModule, MatToolbarModule} from '@angular/material';
 import {AppComponent} from './app.component';
 import {ArchivesComponent} from './components/archives/archives.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
+import {NavbarComponent} from './components/navbar/navbar.component';
+import {LoginModule} from "./components/login/login.module";
 
 @NgModule({
 
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    // MatToolbarModule,
-    // MatSidenavModule,
-    // MatTabsModule,
     LightCardsModule,
     LoginModule,
     AppRoutingModule,
     HttpClientModule,
     StateModule.forRoot(),
     CoreModule.forRoot(),
-    NgbModule.forRoot(),
+    NgbModule.forRoot()
   ],
   declarations: [AppComponent, ArchivesComponent, NavbarComponent],
   providers: [],

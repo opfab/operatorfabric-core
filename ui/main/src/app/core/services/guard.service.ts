@@ -30,10 +30,11 @@ export class AuthenticationGuard implements CanActivate {
 @Injectable()
 export class UnAuthorizedGuard implements CanActivate {
 
-    constructor(private authGuard: AuthenticationGuard){
+    constructor(private  authGuard: AuthenticationGuard){
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        return ! this.authGuard.canActivate(route, state);
+        console.log('unauthorized called ');
+        return this.authGuard.canActivate(route, state);
     }
 }

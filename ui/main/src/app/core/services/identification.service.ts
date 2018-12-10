@@ -10,6 +10,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {Guid} from "guid-typescript";
+import {PayloadForSuccessfulAuthentication} from "@state/identification/identification.actions";
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -30,7 +31,7 @@ export class IdentificationService {
 
 
     constructor(private httpClient: HttpClient) {
-        this.guid=Guid.create();
+        this.guid = Guid.create();
     }
 
     checkAuthentication(token: string): Observable<CheckTokenResponse> {
@@ -53,10 +54,11 @@ export class IdentificationService {
         return this.askForToken(loginData);
     }
 
-    beg4Login(login:string,password:string): Observable<any>{
-        return this.askForToken({username:login,
-        password: password,
-        clientId: 'clientIdPassword'
+    beg4Login(login: string, password: string): Observable<any> {
+        return this.askForToken({
+            username: login,
+            password: password,
+            clientId: 'clientIdPassword'
         });
     }
 
@@ -70,17 +72,23 @@ export class IdentificationService {
         params.append('client_id', loginData.clientId);
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
-        return this.httpClient.post<AuthObjet>(this.askTokenUrl
+        return this.httpClient.post<AuthObject>(this.askTokenUrl
             , params.toString()
             , {headers: headers}).pipe(
             map(data => {
                 const trackism = {...data};
+
                 trackism.identifier = loginData.username;
                 // this clientId is used to identify unequivocally the session
                 trackism.clientId = this.guid;
-                this.saveTokenAndAuthenticationInformation(trackism);
                 return trackism;
             }),
+            map(authObjt => {
+                    let successfulAuth = this.convert(authObjt);
+                    this.saveIdentificationInformation(successfulAuth)
+                    return successfulAuth;
+                }
+            ),
             catchError(this.handleError)
         );
 
@@ -115,7 +123,7 @@ export class IdentificationService {
         return {identifier: identifier, expirationDate: expirationDate, clientId: this.guid};
     }
 
-    public saveTokenAndAuthenticationInformation(payload: AuthObjet) {
+    public saveTokenAndAuthenticationInformation(payload: AuthObject) {
         console.log(`received expiration date: '${payload.expires_in}' `)
         const expirationDate = Date.now() + ONE_SECOND * payload.expires_in;
         localStorage.setItem(LocalStorageAuthContent.identifier, payload.identifier);
@@ -124,9 +132,25 @@ export class IdentificationService {
         localStorage.setItem(LocalStorageAuthContent.clientId, payload.clientId.toString());
     }
 
+
+    public saveIdentificationInformation(payload: PayloadForSuccessfulAuthentication) {
+        localStorage.setItem(LocalStorageAuthContent.identifier, payload.identifier);
+        localStorage.setItem(LocalStorageAuthContent.token, payload.token);
+        localStorage.setItem(LocalStorageAuthContent.expirationDate, payload.expirationDate.getTime().toString());
+        localStorage.setItem(LocalStorageAuthContent.clientId, payload.clientId.toString());
+    }
+
+    public convert(payload: AuthObject): PayloadForSuccessfulAuthentication {
+        const expirationDate = Date.now() + ONE_SECOND * payload.expires_in;
+        return new PayloadForSuccessfulAuthentication(payload.identifier,
+            payload.clientId,
+            payload.access_token,
+            new Date(expirationDate)
+        );
+    }
 }
 
-export class AuthObjet {
+export class AuthObject {
     identifier?: string;
     access_token: string;
     expires_in: number;

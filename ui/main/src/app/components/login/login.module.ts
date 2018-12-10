@@ -16,7 +16,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         MatInputModule,
         BrowserAnimationsModule,
         MatIconModule,
-        MatButtonModule
+        MatButtonModule,
+
     ],
     providers: [IdentificationService],
     declarations: [LoginComponent],

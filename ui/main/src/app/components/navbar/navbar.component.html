@@ -19,6 +19,11 @@
                 (click)="activeLinkIndex = i"
         >{{link.path}}</a>
       </li>
+      <li>
+        <form>
+          <button type="button" class="btn btn-link btn-logout" (click)="logOut()">Logout</button>
+        </form>
+      </li>
     </ul>
   </div>
 </nav>

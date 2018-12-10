@@ -14,8 +14,10 @@ import {
     IdentificationActionTypes,
     RejectLogIn, TryToLogIn, TryToLogOut
 } from '@state/identification/identification.actions';
-import {IdentificationService, AuthObjet, CheckTokenResponse, ONE_SECOND} from '@core/services/identification.service';
+import {IdentificationService, AuthObject, CheckTokenResponse, ONE_SECOND} from '@core/services/identification.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
+import * from '@N'
+
 
 @Injectable()
 export class IdentificationEffects {
@@ -37,21 +39,36 @@ export class IdentificationEffects {
         this.actions$
             .pipe(
                 ofType(IdentificationActionTypes.TryToLogIn),
-                switchMap( (action:TryToLogIn) => {
+                switchMap((action: TryToLogIn) => {
                     const payload = action.payload;
+
                     return this.authService.beg4Login(payload.username, payload.password);
-                })
+                }),
+                map(authenticationInfo => {
+                    console.log(`auth.token: '${authenticationInfo.token}',
+                     auth.expirin:'${authenticationInfo.expirationDate}'
+                     clientId: '${authenticationInfo.clientId}'`);
+                    return new AcceptLogIn(authenticationInfo);
+                }),
+                catchError(error => of(error, new RejectLogIn(error)))
             );
 
-@Effect()
-TryToLogOut: Observable<IdentificationActions> =
-    this.actions$.pipe(
-        ofType(IdentificationActionTypes.TryToLogOut),
-        map( (action:TryToLogOut) => {
-            this.authService.clearAuthenticationInformation();
-            return new AcceptLogOut();
+    @Effect()
+    TryToLogOut: Observable<IdentificationActions> =
+        this.actions$.pipe(
+            ofType(IdentificationActionTypes.TryToLogOut),
+            map((action: TryToLogOut) => {
+                this.authService.clearAuthenticationInformation();
+                return new AcceptLogOut();
             })
-    );
+        );
+
+    @Effect()
+    AccetpLogOut: Observable<any> =
+        this.actions$.pipe(
+            ofType(IdentificationActionTypes.AcceptLogOut),
+            ofRout)
+        );
 
     // @Effect()
     // TempAutomaticReconnection: Observable<IdentificationActions> =
@@ -85,7 +102,7 @@ TryToLogOut: Observable<IdentificationActions> =
             );
 
     private handleTempAutomaticAuth() {
-        return map((authObj: AuthObjet) => {
+        return map((authObj: AuthObject) => {
             const expirationDate = new Date().getTime() + ONE_SECOND * authObj.expires_in;
             return new AcceptLogIn({
                 identifier: authObj.identifier
@@ -109,7 +126,7 @@ TryToLogOut: Observable<IdentificationActions> =
                 identifier: authInfo.identifier,
                 token: token,
                 expirationDate: authInfo.expirationDate,
-                clientId:authInfo.clientId
+                clientId: authInfo.clientId
             });
 
         }

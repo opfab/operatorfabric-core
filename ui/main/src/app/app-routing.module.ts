@@ -13,13 +13,15 @@ import {AuthenticationGuard, UnAuthorizedGuard} from "@core/services/guard.servi
 import {LoginComponent} from "./components/login/login.component";
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'feed', component: LightCardsComponent},
-  {path: 'archives', component: ArchivesComponent},
-  {path: '**', redirectTo: '/feed'  }
+  {path: 'login', component: LoginComponent },
+  {path: 'feed', component: LightCardsComponent
+    ,canActivate: [AuthenticationGuard]
+  },
+  {path: 'archives', component: ArchivesComponent,canActivate: [AuthenticationGuard]},
+  {path: '**', redirectTo: '/login'  }
   ];
 // TODO manage visible path more gently
-export const navigationRoutes: Routes = routes.slice(0, 3);
+export const navigationRoutes: Routes = routes.slice(1, 3);
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

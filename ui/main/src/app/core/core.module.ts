@@ -11,6 +11,7 @@ import {CardService} from '@core/services/card.service';
 import {IdentificationService} from '@core/services/identification.service';
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {TokenInjector} from "@core/services/interceptors.service";
+import {AuthenticationGuard, UnAuthorizedGuard} from "@core/services/guard.service";
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import {TokenInjector} from "@core/services/interceptors.service";
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInjector,
     multi: true
-  }]
+  },AuthenticationGuard, UnAuthorizedGuard]
 })
 export class CoreModule {
   static forRoot(): ModuleWithProviders {

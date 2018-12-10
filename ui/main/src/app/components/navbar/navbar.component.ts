@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {navigationRoutes} from "../../app-routing.module";
-import {Store} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import {AppState} from "@state/app.interface";
 import {getCurrentUrl} from "@state/app.reducer";
+import {TryToLogOut} from "@state/identification/identification.actions";
 
 @Component({
   selector: 'app-navbar',
@@ -21,7 +22,12 @@ export class NavbarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.store.select(getCurrentUrl).subscribe(url => this.currentPath = url);
+        this.store.pipe(select(getCurrentUrl)).subscribe(url => this.currentPath = url);
     }
 
+
+    logOut(){
+        console.log('LogOut called');
+        this.store.dispatch(new TryToLogOut());
+    }
 }
