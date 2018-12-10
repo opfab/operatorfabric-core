@@ -1,0 +1,41 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <mat-grid-list [cols]="9" rowHeight="75px">
+    <mat-grid-tile [colspan]="9">
+      <mat-error *ngIf="userForm.hasError('authenticationError')" i18n="Authentication error| Message displayed when the login is rejected@@AuthenticationErrorMessage">Invalid identifier or invalid password</mat-error>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="9">
+      <mat-form-field>
+        <input matInput
+               text="text"
+               required
+               formControlName="identifier"
+               i18n-placeholder="Identifier placeholder|Message displayed in the field destined to enter the user identifier@@IdentifierPlaceholder"
+               placeholder="Identifier">
+        <mat-icon matSuffix>lock</mat-icon>
+        <mat-error i18n="Identifier required error|Error message displayed when the identifier is left empty@@IdentifierErrorMessage">Identifier is mandatory</mat-error>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="9">
+      <mat-form-field>
+        <input matInput
+               formControlName="password"
+               i18n-placeholder="Password placeholder|Message displayed in the field destined to enter the user password@@PasswordPlaceholder"
+               placeholder="Password"
+               text="password"
+               [type]="hide ? 'password' : 'text'"
+               required
+               id="password"
+        >
+        <mat-icon matSuffix (click)="hide = !hide">{{hide? 'visibility_off' : 'visibility'}}</mat-icon>
+        <mat-error i18n="Password required error| Error message displayed when the password is left empty@@PasswordErrorMessage">Password is Mandtory</mat-error>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="9">
+      <div class="button-row">
+        <button mat-raised-button type="submit" [disabled]="userForm.invalid" i18n="Login button label|Label for login button@@LoginButtonLabel">Login</button>
+        <button mat-flat-button type="reset" (click)="resetForm()" [disabled]="userForm.untouched" i18n="Reset button label|Label for reset button@@ResetButtonLabel">Reset</button>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <br>
+</form>

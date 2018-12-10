@@ -10,12 +10,12 @@ import {TestBed, inject} from '@angular/core/testing';
 import {CardService} from './card.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import SpyObj = jasmine.SpyObj;
-import {AuthenticationService} from '@core/services/authentication.service';
+import {IdentificationService} from '@core/services/identification.service';
 import createSpyObj = jasmine.createSpyObj;
 
 describe('CardService', () => {
     let httpMock: HttpTestingController;
-    let authenticationService: SpyObj<AuthenticationService>;
+    let authenticationService: SpyObj<IdentificationService>;
 
     beforeEach(() => {
         const authenticationServiceSpy = createSpyObj('authenticationService'
@@ -28,11 +28,11 @@ describe('CardService', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: [CardService,
-                {provide: AuthenticationService, useValue: authenticationServiceSpy}
+                {provide: IdentificationService, useValue: authenticationServiceSpy}
             ]
         });
         httpMock = TestBed.get(HttpTestingController);
-        authenticationService = TestBed.get(AuthenticationService);
+        authenticationService = TestBed.get(IdentificationService);
     });
 
     it('should be created', inject([CardService], (service: CardService) => {

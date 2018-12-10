@@ -9,43 +9,64 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {
-    AcceptLogIn,
-    AuthenticationActions,
-    AuthenticationActionTypes,
-    RejectLogIn
-} from '@state/authentication/authentication.actions';
-import {AuthenticationService, AuthObjet, CheckTokenResponse, ONE_SECOND} from '@core/services/authentication.service';
+    AcceptLogIn, AcceptLogOut,
+    IdentificationActions,
+    IdentificationActionTypes,
+    RejectLogIn, TryToLogIn, TryToLogOut
+} from '@state/identification/identification.actions';
+import {IdentificationService, AuthObjet, CheckTokenResponse, ONE_SECOND} from '@core/services/identification.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
 
 @Injectable()
-export class AuthenticationEffects {
+export class IdentificationEffects {
 
-    constructor(private actions$: Actions, private authService: AuthenticationService) {
+    constructor(private actions$: Actions, private authService: IdentificationService) {
     }
 
     @Effect()
-    TempAutomaticLogin: Observable<AuthenticationActions> =
+    TempAutomaticLogin: Observable<IdentificationActions> =
         this.actions$
             .pipe(
-                ofType(AuthenticationActionTypes.TempAutomaticLogIn),
+                ofType(IdentificationActionTypes.TempAutomaticLogIn),
                 switchMap(() => this.authService.tempLogin()),
                 this.handleTempAutomaticAuth()
             );
 
     @Effect()
-    TempAutomaticReconnection: Observable<AuthenticationActions> =
+    TryToLogIn: Observable<IdentificationActions> =
         this.actions$
             .pipe(
-            ofType(AuthenticationActionTypes.RejectLogIn),
-            switchMap(() => this.authService.tempLogin()),
-            this.handleTempAutomaticAuth()
-        );
+                ofType(IdentificationActionTypes.TryToLogIn),
+                switchMap( (action:TryToLogIn) => {
+                    const payload = action.payload;
+                    return this.authService.beg4Login(payload.username, payload.password);
+                })
+            );
+
+@Effect()
+TryToLogOut: Observable<IdentificationActions> =
+    this.actions$.pipe(
+        ofType(IdentificationActionTypes.TryToLogOut),
+        map( (action:TryToLogOut) => {
+            this.authService.clearAuthenticationInformation();
+            return new AcceptLogOut();
+            })
+    );
+
+    // @Effect()
+    // TempAutomaticReconnection: Observable<IdentificationActions> =
+    //     this.actions$
+    //         .pipe(
+    //         ofType(IdentificationActionTypes.RejectLogIn),
+    //         switchMap(() => this.authService.tempLogin()),
+    //         this.handleTempAutomaticAuth()
+    //     );
 
     @Effect()
-    CheckAuthentication: Observable<AuthenticationActions> =
+    CheckAuthentication: Observable<IdentificationActions> =
         this.actions$
             .pipe(
-                ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
+                ofType(IdentificationActionTypes.CheckAuthenticationStatus),
                 switchMap(() => {
                     const token = this.authService.extractToken();
                     return this.authService.checkAuthentication(token);
@@ -70,26 +91,29 @@ export class AuthenticationEffects {
                 identifier: authObj.identifier
                 , token: authObj.access_token
                 , expirationDate: new Date(expirationDate)
+                , clientId: authObj.clientId
             });
         });
     }
 
-    private handleExpirationDateOver(): AuthenticationActions {
+    private handleExpirationDateOver(): IdentificationActions {
         this.authService.clearAuthenticationInformation();
         return new RejectLogIn({denialReason: 'expiration date exceeded'});
 
     }
 
-    private handleLogInAttempt(payload: CheckTokenResponse, token): AuthenticationActions {
+    private handleLogInAttempt(payload: CheckTokenResponse, token): IdentificationActions {
         if (payload) {
             const authInfo = this.authService.registerAuthenticationInformation(payload, token);
             return new AcceptLogIn({
                 identifier: authInfo.identifier,
-                token: token, expirationDate: authInfo.expirationDate
+                token: token,
+                expirationDate: authInfo.expirationDate,
+                clientId:authInfo.clientId
             });
 
         }
         this.authService.clearAuthenticationInformation();
-        return new RejectLogIn({denialReason: 'invalid token'}) as AuthenticationActions;
+        return new RejectLogIn({denialReason: 'invalid token'}) as IdentificationActions;
     }
 }

@@ -8,7 +8,7 @@
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardService} from '@core/services/card.service';
-import {AuthenticationService} from '@core/services/authentication.service';
+import {IdentificationService} from '@core/services/identification.service';
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {TokenInjector} from "@core/services/interceptors.service";
 
@@ -16,7 +16,7 @@ import {TokenInjector} from "@core/services/interceptors.service";
   imports: [
     CommonModule
   ],
-  providers: [CardService, AuthenticationService,{
+  providers: [CardService, IdentificationService,{
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInjector,
     multi: true

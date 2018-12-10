@@ -8,12 +8,12 @@
 import {RouterReducerState} from '@ngrx/router-store';
 import {RouterStateUrl} from './shared/utils';
 import {State as CardState} from './light-card/light-card.reducer';
-import {State as AuthenticationState} from './authentication/authentication.reducer';
+import {State as IdentificationState} from './identification/identification.reducer';
 
 export interface AppState {
   router: RouterReducerState<RouterStateUrl>;
   lightCard: CardState;
-  authentication: AuthenticationState;
+  identification: IdentificationState;
 }
 
 export type State = AppState;

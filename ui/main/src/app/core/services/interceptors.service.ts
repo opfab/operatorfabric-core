@@ -8,11 +8,11 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {AuthenticationService} from '@core/services/authentication.service';
+import {IdentificationService} from '@core/services/identification.service';
 
 @Injectable()
 export class TokenInjector implements HttpInterceptor {
-    constructor(private authenticationService: AuthenticationService) {
+    constructor(private authenticationService: IdentificationService) {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

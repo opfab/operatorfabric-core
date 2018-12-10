@@ -9,16 +9,16 @@ import {TestBed, inject, async} from '@angular/core/testing';
 import {provideMockActions} from '@ngrx/effects/testing';
 import {Observable} from 'rxjs';
 
-import {AuthenticationEffects} from './authentication.effects';
+import {IdentificationEffects} from './identification.effects';
 import {Actions} from '@ngrx/effects';
 import SpyObj = jasmine.SpyObj;
-import {AuthenticationService} from '@core/services/authentication.service';
+import {IdentificationService} from '@core/services/identification.service';
 import createSpyObj = jasmine.createSpyObj;
 
-describe('AuthenticationEffects', () => {
+describe('IdentificationEffects', () => {
     let actions$: Observable<any>;
-    let effects: AuthenticationEffects;
-    let authenticationService: SpyObj<AuthenticationService>;
+    let effects: IdentificationEffects;
+    let authenticationService: SpyObj<IdentificationService>;
 
     beforeEach(async(() => {
         const authenticationServiceSpy = createSpyObj('authenticationService'
@@ -29,19 +29,19 @@ describe('AuthenticationEffects', () => {
             ]);
         TestBed.configureTestingModule({
             providers: [
-                AuthenticationEffects,
+                IdentificationEffects,
                 provideMockActions(() => actions$),
-                {provide: AuthenticationService, useValue: authenticationServiceSpy}
+                {provide: IdentificationService, useValue: authenticationServiceSpy}
             ]
         });
 
-        effects = TestBed.get(AuthenticationEffects);
+        effects = TestBed.get(IdentificationEffects);
 
     }));
 
     beforeEach(() => {
         actions$ = TestBed.get(Actions);
-        authenticationService = TestBed.get(AuthenticationService);
+        authenticationService = TestBed.get(IdentificationService);
     });
 
     it('should be created', () => {

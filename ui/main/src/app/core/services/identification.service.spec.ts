@@ -7,10 +7,10 @@
 
 import {inject, TestBed} from '@angular/core/testing';
 
-import {AuthenticationService} from './authentication.service';
+import {IdentificationService} from './identification.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 
-describe('AuthenticationService', () => {
+describe('IdentificationService', () => {
 
   let httpMock: HttpTestingController;
 
@@ -18,12 +18,12 @@ describe('AuthenticationService', () => {
 
     TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
-      providers: [AuthenticationService]
+      providers: [IdentificationService]
     });
     httpMock = TestBed.get(HttpTestingController);
   });
 
-  it('should be created', inject([AuthenticationService], (service: AuthenticationService) => {
+  it('should be created', inject([IdentificationService], (service: IdentificationService) => {
     expect(service).toBeTruthy();
   }));
 });

@@ -12,7 +12,7 @@ import {map} from 'rxjs/operators';
 import {CardOperation} from '@state/card-operation/card-operation.model';
 import {LightCard} from '@state/light-card/light-card.model';
 import {EventSourcePolyfill} from 'ng-event-source';
-import {AuthenticationService} from '@core/services/authentication.service';
+import {IdentificationService} from '@core/services/identification.service';
 
 @Injectable()
 export class CardService {
@@ -21,7 +21,7 @@ export class CardService {
     private cardsUrl = '/cards/cards';
 
     constructor(private httpClient: HttpClient,
-                private authenticationService: AuthenticationService) {
+                private authenticationService: IdentificationService) {
     }
 
     // TODO paginate

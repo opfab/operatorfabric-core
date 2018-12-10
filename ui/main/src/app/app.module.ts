@@ -29,6 +29,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     // MatSidenavModule,
     // MatTabsModule,
     LightCardsModule,
+    LoginModule,
     AppRoutingModule,
     HttpClientModule,
     StateModule.forRoot(),

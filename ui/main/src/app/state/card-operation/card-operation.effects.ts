@@ -11,7 +11,7 @@ import {CardService} from '@core/services/card.service';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AddLightCardFailure, HandleUnexpectedError, LightCardActions, LoadLightCardsSuccess} from '@state/light-card/light-card.actions';
-import {AuthenticationActionTypes} from '@state/authentication/authentication.actions';
+import {IdentificationActionTypes} from '@state/identification/identification.actions';
 
 @Injectable()
 export class CardOperationEffects {
@@ -23,8 +23,8 @@ export class CardOperationEffects {
     @Effect()
     getCardOperations: Observable<LightCardActions> = this.actions$
         .pipe(
-            // loads card operations only after authentication of a default user ok.
-            ofType(AuthenticationActionTypes.AcceptLogIn),
+            // loads card operations only after identification of a default user ok.
+            ofType(IdentificationActionTypes.AcceptLogIn),
             switchMap(() => this.service.getCardOperation()
                 .pipe(
                     map(operation => {

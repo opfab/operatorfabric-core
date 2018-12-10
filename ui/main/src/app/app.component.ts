@@ -13,7 +13,6 @@ import {getCurrentUrl, selectRouterState} from '@state/app.reducer';
 import {TempAutomaticLogIn} from '@state/authentication/authentication.actions';
 import {navigationRoutes} from './app-routing.module';
 
-
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -24,16 +23,21 @@ export class AppComponent implements OnInit {
     navigationRoutes = navigationRoutes;
     getRoutePE: Observable<any>;
     currentPath: any;
+    isAuthenticated$: boolean;
 
     constructor(private store: Store<AppState>) {
-        this.getRoutePE = this.store.select(selectRouterState);
+        this.getRoutePE = this.store.pipe(select(selectRouterState));
     }
 
     ngOnInit() {
-        this.store.select(getCurrentUrl).subscribe(url => this.currentPath = url);
-        // First Action send by the application. Try to log in with a default user
-        this.store.dispatch(new TempAutomaticLogIn());
+        this.store.pipe(select(getCurrentUrl)).subscribe(url => this.currentPath = url);
+        this.store.pipe(select(isAuthenticated), map(expirationTime =>  expirationTime > Date.now())
+                        ).subscribe(isAUth => this.isAuthenticated$ = isAUth);
+        // First Action send by the application, is the user currently authenticated ?
+        this.store.dispatch(new CheckAuthenticationStatus());
     }
 
-
+    logOut(){
+        this.store.dispatch(new TryToLogOut());
+    }
 }

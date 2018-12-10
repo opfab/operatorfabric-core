@@ -9,6 +9,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
+import {Guid} from "guid-typescript";
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -20,13 +21,16 @@ export enum LocalStorageAuthContent {
 export const ONE_SECOND = 1000;
 
 @Injectable()
-export class AuthenticationService {
+export class IdentificationService {
 
 
     private checkTokenUrl = '/auth/check_token';
     private askTokenUrl = '/auth/token';
+    private guid: Guid;
+
 
     constructor(private httpClient: HttpClient) {
+        this.guid=Guid.create();
     }
 
     checkAuthentication(token: string): Observable<CheckTokenResponse> {
@@ -49,12 +53,20 @@ export class AuthenticationService {
         return this.askForToken(loginData);
     }
 
+    beg4Login(login:string,password:string): Observable<any>{
+        return this.askForToken({username:login,
+        password: password,
+        clientId: 'clientIdPassword'
+        });
+    }
+
     askForToken(loginData): Observable<any> {
 
         const params = new URLSearchParams();
         params.append('username', loginData.username);
         params.append('password', loginData.password);
         params.append('grant_type', 'password');
+        // beware clientId for token defines a type of identification
         params.append('client_id', loginData.clientId);
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
@@ -64,7 +76,8 @@ export class AuthenticationService {
             map(data => {
                 const trackism = {...data};
                 trackism.identifier = loginData.username;
-                trackism.clientId = loginData.clientId;
+                // this clientId is used to identify unequivocally the session
+                trackism.clientId = this.guid;
                 this.saveTokenAndAuthenticationInformation(trackism);
                 return trackism;
             }),
@@ -99,15 +112,16 @@ export class AuthenticationService {
         localStorage.setItem(LocalStorageAuthContent.identifier, identifier);
         localStorage.setItem(LocalStorageAuthContent.token, token);
         localStorage.setItem(LocalStorageAuthContent.expirationDate, expirationDate.toString());
-        return {identifier: identifier, expirationDate: expirationDate};
+        return {identifier: identifier, expirationDate: expirationDate, clientId: this.guid};
     }
 
     public saveTokenAndAuthenticationInformation(payload: AuthObjet) {
-        const expirationDate = new Date().getTime() + ONE_SECOND * payload.expires_in;
+        console.log(`received expiration date: '${payload.expires_in}' `)
+        const expirationDate = Date.now() + ONE_SECOND * payload.expires_in;
         localStorage.setItem(LocalStorageAuthContent.identifier, payload.identifier);
         localStorage.setItem(LocalStorageAuthContent.token, payload.access_token);
-        localStorage.setItem(LocalStorageAuthContent.expirationDate, new Date(expirationDate).toString());
-        localStorage.setItem(LocalStorageAuthContent.clientId, payload.clientId);
+        localStorage.setItem(LocalStorageAuthContent.expirationDate, expirationDate.toString());
+        localStorage.setItem(LocalStorageAuthContent.clientId, payload.clientId.toString());
     }
 
 }
@@ -116,7 +130,7 @@ export class AuthObjet {
     identifier?: string;
     access_token: string;
     expires_in: number;
-    clientId: string;
+    clientId: Guid;
 }
 
 export class CheckTokenResponse {
