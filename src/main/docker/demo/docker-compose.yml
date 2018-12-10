@@ -92,7 +92,7 @@ services:
   thirds:
     depends_on:
      - registry
-    image: "org.lfenergy.operatorfabric/third-party-business-service"
+    image: "org.lfenergy.operatorfabric/thirds-business-service"
     ports:
      - "2100:8080"
      - "4100:5005"
