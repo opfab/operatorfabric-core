@@ -73,15 +73,6 @@ export class IdentificationEffects {
             })
         );
 
-    // @Effect()
-    // TempAutomaticReconnection: Observable<IdentificationActions> =
-    //     this.actions$
-    //         .pipe(
-    //         ofType(IdentificationActionTypes.RejectLogIn),
-    //         switchMap(() => this.authService.tempLogin()),
-    //         this.handleTempAutomaticAuth()
-    //     );
-
     @Effect()
     CheckAuthentication: Observable<IdentificationActions> =
         this.actions$
@@ -103,6 +94,13 @@ export class IdentificationEffects {
                     return of(new RejectLogIn({denialReason: err}));
                 })
             );
+
+    @Effect()
+    AcceptLogIn: Observable<Action> =
+        this.actions$.pipe(
+            ofType(IdentificationActionTypes.AcceptLogIn),
+            map((action:AcceptLogIn) => new RouterGo({path:['/feed']}))
+        );
 
     private handleTempAutomaticAuth() {
         return map((authObj: AuthObject) => {
