@@ -16,7 +16,8 @@ import {
 } from '@state/identification/identification.actions';
 import {IdentificationService, AuthObject, CheckTokenResponse, ONE_SECOND} from '@core/services/identification.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import * from '@N'
+import {ofRoute, RouterGo} from "ngrx-router";
+import {Action} from "@ngrx/store";
 
 
 @Injectable()
@@ -64,10 +65,12 @@ export class IdentificationEffects {
         );
 
     @Effect()
-    AccetpLogOut: Observable<any> =
+    AcceptLogOut: Observable<Action> =
         this.actions$.pipe(
             ofType(IdentificationActionTypes.AcceptLogOut),
-            ofRout)
+            map((action: AcceptLogOut) => {
+                return new RouterGo({path:['/login']})
+            })
         );
 
     // @Effect()

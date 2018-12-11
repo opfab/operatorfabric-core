@@ -18,6 +18,7 @@ import {CustomRouterStateSerializer} from '@state/shared/utils';
 import * as fromAuthentication from './identification/identification.reducer';
 import {IdentificationEffects} from './identification/identification.effects';
 import {CardOperationEffects} from '@state/card-operation/card-operation.effects';
+import {RouterEffects} from "ngrx-router";
 
 @NgModule({
   imports: [
@@ -41,7 +42,7 @@ import {CardOperationEffects} from '@state/card-operation/card-operation.effects
 
       }
     }),
-    EffectsModule.forRoot([LightCardEffects, CardOperationEffects]),
+    EffectsModule.forRoot([LightCardEffects, CardOperationEffects, RouterEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     StoreModule.forFeature('identification', fromAuthentication.reducer),
     EffectsModule.forFeature([IdentificationEffects])
