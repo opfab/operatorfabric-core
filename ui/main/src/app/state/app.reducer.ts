@@ -9,21 +9,21 @@ import {ActionReducerMap, createFeatureSelector, createSelector, MetaReducer} fr
 import * as fromRouter from '@ngrx/router-store';
 import {AppState} from './app.interface';
 import {reducer as lightCardReducer} from './light-card/light-card.reducer';
-import {reducer as authenticationReducer} from './identification/identification.reducer';
+import {reducer as authenticationReducer} from './authentication/authentication.reducer';
 import {environment} from '@env/environment';
 import {storeFreeze} from 'ngrx-store-freeze';
 
 export const appReducer: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
   lightCard: lightCardReducer,
-  identification: authenticationReducer
+  authentication: authenticationReducer
 };
 
 export const selectRouterState = createFeatureSelector<fromRouter.RouterReducerState>('router');
 export const getCurrentUrl = createSelector(selectRouterState,
   (router) => router.state && router.state.url);
 
-export const getIdentification = (state:AppState)=> state.identification;
+export const authentification = (state:AppState)=> state.authentication;
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production
 ? [storeFreeze]

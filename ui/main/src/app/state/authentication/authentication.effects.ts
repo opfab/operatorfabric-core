@@ -11,29 +11,29 @@ import {Observable, of} from 'rxjs';
 import {
     AcceptLogIn,
     AcceptLogOut,
-    IdentificationActions,
-    IdentificationActionTypes,
+    AuthenticationActions,
+    AuthenticationActionTypes,
     RejectLogIn,
     TryToLogIn,
     TryToLogOut
-} from '@state/identification/identification.actions';
-import {CheckTokenResponse, IdentificationService} from '@core/services/identification.service';
+} from '@state/authentication/authentication.actions';
+import {CheckTokenResponse, AuthenticationService} from '@core/services/authentication.service';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {RouterGo} from "ngrx-router";
 import {Action} from "@ngrx/store";
 
 
 @Injectable()
-export class IdentificationEffects {
+export class AuthenticationEffects {
 
-    constructor(private actions$: Actions, private authService: IdentificationService) {
+    constructor(private actions$: Actions, private authService: AuthenticationService) {
     }
 
     @Effect()
-    TryToLogIn: Observable<IdentificationActions> =
+    TryToLogIn: Observable<AuthenticationActions> =
         this.actions$
             .pipe(
-                ofType(IdentificationActionTypes.TryToLogIn),
+                ofType(AuthenticationActionTypes.TryToLogIn),
                 switchMap((action: TryToLogIn) => {
                     const payload = action.payload;
 
@@ -46,9 +46,9 @@ export class IdentificationEffects {
             );
 
     @Effect()
-    TryToLogOut: Observable<IdentificationActions> =
+    TryToLogOut: Observable<AuthenticationActions> =
         this.actions$.pipe(
-            ofType(IdentificationActionTypes.TryToLogOut),
+            ofType(AuthenticationActionTypes.TryToLogOut),
             map((action: TryToLogOut) => {
                 this.authService.clearAuthenticationInformation();
                 return new AcceptLogOut();
@@ -58,7 +58,7 @@ export class IdentificationEffects {
     @Effect()
     AcceptLogOut: Observable<Action> =
         this.actions$.pipe(
-            ofType(IdentificationActionTypes.AcceptLogOut),
+            ofType(AuthenticationActionTypes.AcceptLogOut),
             map((action: AcceptLogOut) => {
                 return new RouterGo({path:['/login']})
             })
@@ -66,17 +66,17 @@ export class IdentificationEffects {
 
     @Effect()
     RejectLogInAttempt: Observable<Action> =
-        this.actions$.pipe(ofType(IdentificationActionTypes.RejectLogIn),
+        this.actions$.pipe(ofType(AuthenticationActionTypes.RejectLogIn),
             tap(() => {
                 this.authService.clearAuthenticationInformation();
             }),
             map(action => new AcceptLogOut()));
 
     @Effect()
-    CheckAuthentication: Observable<IdentificationActions> =
+    CheckAuthentication: Observable<AuthenticationActions> =
         this.actions$
             .pipe(
-                ofType(IdentificationActionTypes.CheckAuthenticationStatus),
+                ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
                 switchMap(() => {
                     const token = this.authService.extractToken();
                     return this.authService.checkAuthentication(token);
@@ -98,23 +98,23 @@ export class IdentificationEffects {
     @Effect()
     AcceptLogIn: Observable<Action> =
         this.actions$.pipe(
-            ofType(IdentificationActionTypes.AcceptLogIn),
+            ofType(AuthenticationActionTypes.AcceptLogIn),
             map((action:AcceptLogIn) => new RouterGo({path:['/feed']}))
         );
 
-    private handleExpirationDateOver(): IdentificationActions {
+    private handleExpirationDateOver(): AuthenticationActions {
         this.authService.clearAuthenticationInformation();
         return new RejectLogIn({denialReason: 'expiration date exceeded'});
 
     }
 
-    private handleLogInAttempt(payload: CheckTokenResponse, token): IdentificationActions {
+    private handleLogInAttempt(payload: CheckTokenResponse, token): AuthenticationActions {
         if (payload) {
             const authInfo = this.authService.extractIndentificationInformation();
             return new AcceptLogIn(authInfo);
 
         }
         this.authService.clearAuthenticationInformation();
-        return new RejectLogIn({denialReason: 'invalid token'}) as IdentificationActions;
+        return new RejectLogIn({denialReason: 'invalid token'}) as AuthenticationActions;
     }
 }

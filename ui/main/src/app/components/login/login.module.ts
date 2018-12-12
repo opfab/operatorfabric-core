@@ -1,6 +1,6 @@
 import {NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {IdentificationService} from "@core/services/identification.service";
+import {AuthenticationService} from "@core/services/authentication.service";
 import {LoginComponent} from "./login.component";
 import {MatButtonModule, MatFormFieldModule, MatGridListModule, MatIconModule, MatInputModule} from "@angular/material";
 import {CommonModule} from "@angular/common";
@@ -19,7 +19,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         MatButtonModule,
 
     ],
-    providers: [IdentificationService],
+    providers: [AuthenticationService],
     declarations: [LoginComponent],
     exports: [LoginComponent]})
 export class LoginModule{}

@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { reducer, initialState } from './identification.reducer';
+import { reducer, initialState } from './authentication.reducer';
 
 describe('Authentication Reducer', () => {
   describe('unknown action', () => {

@@ -3,7 +3,7 @@ import {Router} from "@angular/router";
 import {FormControl, FormGroup} from "@angular/forms";
 import {Store} from "@ngrx/store";
 import {AppState} from '@state/app.interface';
-import {TryToLogIn} from "@state/identification/identification.actions";
+import {TryToLogIn} from "@state/authentication/authentication.actions";
 
 @Component({
   selector: 'app-log-in-form',

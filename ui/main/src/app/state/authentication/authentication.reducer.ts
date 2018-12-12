@@ -7,9 +7,9 @@
 
 import {
     AcceptLogIn,
-    IdentificationActions,
-    IdentificationActionTypes
-} from '@state/identification/identification.actions';
+    AuthenticationActions,
+    AuthenticationActionTypes
+} from '@state/authentication/authentication.actions';
 import {Guid} from "guid-typescript";
 
 
@@ -29,10 +29,10 @@ export const initialState: State = {
     denialReason: null
 };
 
-export function reducer(state = initialState, action: IdentificationActions): State {
+export function reducer(state = initialState, action: AuthenticationActions): State {
     switch (action.type) {
 
-        case IdentificationActionTypes.AcceptLogIn: {
+        case AuthenticationActionTypes.AcceptLogIn: {
 
             const payload = (action as AcceptLogIn).payload;
             return {
@@ -43,7 +43,7 @@ export function reducer(state = initialState, action: IdentificationActions): St
                 expirationDate: payload.expirationDate
             };
         }
-        case IdentificationActionTypes.AcceptLogOut:{
+        case AuthenticationActionTypes.AcceptLogOut:{
             return {
                 ...state,
                 identifier: null,
@@ -53,7 +53,7 @@ export function reducer(state = initialState, action: IdentificationActions): St
                 denialReason: null
             };
         }
-        case IdentificationActionTypes.RejectLogIn: {
+        case AuthenticationActionTypes.RejectLogIn: {
             return {
                 ...state,
                 identifier: null,

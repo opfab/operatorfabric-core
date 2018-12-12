@@ -11,8 +11,8 @@ import {Observable} from 'rxjs';
 import {AppState} from '@state/app.interface';
 import {getCurrentUrl, selectRouterState} from '@state/app.reducer';
 import {map} from "rxjs/operators";
-import {CheckAuthenticationStatus,TryToLogOut} from "@state/identification/identification.actions";
-import {getExpirationTime} from "@state/identification";
+import {CheckAuthenticationStatus,TryToLogOut} from "@state/authentication/authentication.actions";
+import {getExpirationTime} from "@state/authentication";
 
 @Component({
     selector: 'app-root',

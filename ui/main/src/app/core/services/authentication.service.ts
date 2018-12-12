@@ -10,7 +10,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {Guid} from "guid-typescript";
-import {PayloadForSuccessfulAuthentication} from "@state/identification/identification.actions";
+import {PayloadForSuccessfulAuthentication} from "@state/authentication/authentication.actions";
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -22,12 +22,12 @@ export enum LocalStorageAuthContent {
 export const ONE_SECOND = 1000;
 
 @Injectable()
-export class IdentificationService {
+export class AuthenticationService {
 
 
     private checkTokenUrl = '/auth/check_token';
     private askTokenUrl = '/auth/token';
-    private guid: Guid;
+    readonly guid: Guid;
 
 
     constructor(private httpClient: HttpClient) {
@@ -67,7 +67,7 @@ export class IdentificationService {
         params.append('username', loginData.username);
         params.append('password', loginData.password);
         params.append('grant_type', 'password');
-        // beware clientId for token defines a type of identification
+        // beware clientId for token defines a type of authentication
         params.append('client_id', loginData.clientId);
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
@@ -84,7 +84,7 @@ export class IdentificationService {
             }),
             map(authObjt => {
                     let successfulAuth = this.convert(authObjt);
-                    this.saveIdentificationInformation(successfulAuth)
+                    this.saveAuthenticationInformation(successfulAuth)
                     return successfulAuth;
                 }
             ),
@@ -142,7 +142,7 @@ export class IdentificationService {
     }
 
 
-    public saveIdentificationInformation(payload: PayloadForSuccessfulAuthentication) {
+    public saveAuthenticationInformation(payload: PayloadForSuccessfulAuthentication) {
         localStorage.setItem(LocalStorageAuthContent.identifier, payload.identifier);
         localStorage.setItem(LocalStorageAuthContent.token, payload.token);
         localStorage.setItem(LocalStorageAuthContent.expirationDate, payload.expirationDate.getTime().toString());

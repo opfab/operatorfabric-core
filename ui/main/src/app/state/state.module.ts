@@ -15,8 +15,8 @@ import {environment} from '@env/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@state/shared/utils';
-import * as fromAuthentication from './identification/identification.reducer';
-import {IdentificationEffects} from './identification/identification.effects';
+import * as fromAuthentication from './authentication/authentication.reducer';
+import {AuthenticationEffects} from './authentication/authentication.effects';
 import {CardOperationEffects} from '@state/card-operation/card-operation.effects';
 import {RouterEffects} from "ngrx-router";
 
@@ -42,9 +42,9 @@ import {RouterEffects} from "ngrx-router";
 
       }
     }),
-    EffectsModule.forRoot([LightCardEffects, CardOperationEffects, RouterEffects,IdentificationEffects]),
+    EffectsModule.forRoot([LightCardEffects, CardOperationEffects, RouterEffects,AuthenticationEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    // StoreModule.forFeature('identification', fromAuthentication.reducer),
+    // StoreModule.forFeature('authentication', fromAuthentication.reducer),
   ],
   declarations: []
 })

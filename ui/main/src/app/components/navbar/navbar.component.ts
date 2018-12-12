@@ -3,7 +3,7 @@ import {navigationRoutes} from "../../app-routing.module";
 import {select, Store} from "@ngrx/store";
 import {AppState} from "@state/app.interface";
 import {getCurrentUrl} from "@state/app.reducer";
-import {TryToLogOut} from "@state/identification/identification.actions";
+import {TryToLogOut} from "@state/authentication/authentication.actions";
 
 @Component({
   selector: 'app-navbar',
