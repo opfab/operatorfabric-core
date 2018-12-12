@@ -16,7 +16,6 @@ export class TokenInjector implements HttpInterceptor {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        console.log(`url requested: ${request.url}`);
         const url = request.url;
         const notCheckTokenRequest = !(url.endsWith('/auth/check_token') || url.endsWith('/auth/token'));
         if (notCheckTokenRequest) {

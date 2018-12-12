@@ -9,14 +9,17 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {
-    AcceptLogIn, AcceptLogOut,
+    AcceptLogIn,
+    AcceptLogOut,
     IdentificationActions,
     IdentificationActionTypes,
-    RejectLogIn, TryToLogIn, TryToLogOut
+    RejectLogIn,
+    TryToLogIn,
+    TryToLogOut
 } from '@state/identification/identification.actions';
-import {IdentificationService, AuthObject, CheckTokenResponse, ONE_SECOND} from '@core/services/identification.service';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {ofRoute, RouterGo} from "ngrx-router";
+import {CheckTokenResponse, IdentificationService} from '@core/services/identification.service';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {RouterGo} from "ngrx-router";
 import {Action} from "@ngrx/store";
 
 
@@ -25,15 +28,6 @@ export class IdentificationEffects {
 
     constructor(private actions$: Actions, private authService: IdentificationService) {
     }
-
-    @Effect()
-    TempAutomaticLogin: Observable<IdentificationActions> =
-        this.actions$
-            .pipe(
-                ofType(IdentificationActionTypes.TempAutomaticLogIn),
-                switchMap(() => this.authService.tempLogin()),
-                this.handleTempAutomaticAuth()
-            );
 
     @Effect()
     TryToLogIn: Observable<IdentificationActions> =
@@ -46,9 +40,6 @@ export class IdentificationEffects {
                     return this.authService.beg4Login(payload.username, payload.password);
                 }),
                 map(authenticationInfo => {
-                    console.log(`auth.token: '${authenticationInfo.token}',
-                     auth.expirin:'${authenticationInfo.expirationDate}'
-                     clientId: '${authenticationInfo.clientId}'`);
                     return new AcceptLogIn(authenticationInfo);
                 }),
                 catchError(error => of(error, new RejectLogIn(error)))
@@ -74,6 +65,14 @@ export class IdentificationEffects {
         );
 
     @Effect()
+    RejectLogInAttempt: Observable<Action> =
+        this.actions$.pipe(ofType(IdentificationActionTypes.RejectLogIn),
+            tap(() => {
+                this.authService.clearAuthenticationInformation();
+            }),
+            map(action => new AcceptLogOut()));
+
+    @Effect()
     CheckAuthentication: Observable<IdentificationActions> =
         this.actions$
             .pipe(
@@ -83,9 +82,10 @@ export class IdentificationEffects {
                     return this.authService.checkAuthentication(token);
                 }),
                 map((payload: CheckTokenResponse) => {
-                    if (this.authService.verifyExpirationDate()) {
+                    if (this.authService.isExpirationDateOver()) {
                         return this.handleExpirationDateOver();
                     }
+
                     const token = this.authService.extractToken();
                     return this.handleLogInAttempt(payload, token);
                 }),
@@ -102,18 +102,6 @@ export class IdentificationEffects {
             map((action:AcceptLogIn) => new RouterGo({path:['/feed']}))
         );
 
-    private handleTempAutomaticAuth() {
-        return map((authObj: AuthObject) => {
-            const expirationDate = new Date().getTime() + ONE_SECOND * authObj.expires_in;
-            return new AcceptLogIn({
-                identifier: authObj.identifier
-                , token: authObj.access_token
-                , expirationDate: new Date(expirationDate)
-                , clientId: authObj.clientId
-            });
-        });
-    }
-
     private handleExpirationDateOver(): IdentificationActions {
         this.authService.clearAuthenticationInformation();
         return new RejectLogIn({denialReason: 'expiration date exceeded'});
@@ -122,13 +110,8 @@ export class IdentificationEffects {
 
     private handleLogInAttempt(payload: CheckTokenResponse, token): IdentificationActions {
         if (payload) {
-            const authInfo = this.authService.registerAuthenticationInformation(payload, token);
-            return new AcceptLogIn({
-                identifier: authInfo.identifier,
-                token: token,
-                expirationDate: authInfo.expirationDate,
-                clientId: authInfo.clientId
-            });
+            const authInfo = this.authService.extractIndentificationInformation();
+            return new AcceptLogIn(authInfo);
 
         }
         this.authService.clearAuthenticationInformation();

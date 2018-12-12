@@ -55,7 +55,6 @@ export class CardService {
                 eventSource.onerror = error => observer.error(error);
 
             } catch (error) {
-                console.log('unhandle error');
                 observer.error(error);
             }
                 return () => {

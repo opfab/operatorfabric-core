@@ -5,11 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {CardService} from '@core/services/card.service';
-import {Observable, of} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
 import {AddLightCardFailure, HandleUnexpectedError, LightCardActions, LoadLightCardsSuccess} from '@state/light-card/light-card.actions';
 import {IdentificationActionTypes} from '@state/identification/identification.actions';
 

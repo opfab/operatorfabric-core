@@ -38,14 +38,13 @@ import {RouterEffects} from "ngrx-router";
             queryParams: {}
           },
           navigationId: 0
-        }
+        },
 
       }
     }),
-    EffectsModule.forRoot([LightCardEffects, CardOperationEffects, RouterEffects]),
+    EffectsModule.forRoot([LightCardEffects, CardOperationEffects, RouterEffects,IdentificationEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    StoreModule.forFeature('identification', fromAuthentication.reducer),
-    EffectsModule.forFeature([IdentificationEffects])
+    // StoreModule.forFeature('identification', fromAuthentication.reducer),
   ],
   declarations: []
 })

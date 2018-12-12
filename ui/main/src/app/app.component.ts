@@ -12,7 +12,7 @@ import {AppState} from '@state/app.interface';
 import {getCurrentUrl, selectRouterState} from '@state/app.reducer';
 import {map} from "rxjs/operators";
 import {CheckAuthenticationStatus,TryToLogOut} from "@state/identification/identification.actions";
-import {isAuthenticated} from "@state/identification";
+import {getExpirationTime} from "@state/identification";
 
 @Component({
     selector: 'app-root',
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.store.pipe(select(getCurrentUrl)).subscribe(url => this.currentPath = url);
-        this.store.pipe(select(isAuthenticated),
+        this.store.pipe(select(getExpirationTime),
             map(expirationTime =>  expirationTime > Date.now())
                         ).subscribe(isAUth => this.isAuthenticated$ = isAUth);
         // First Action send by the application, is the user currently authenticated ?

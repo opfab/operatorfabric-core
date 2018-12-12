@@ -25,7 +25,7 @@ export const initialState: State = {
     identifier: null,
     clientId: null,
     token: null,
-    expirationDate: new Date(0),// always expired except for time travellers
+    expirationDate: new Date(0),
     denialReason: null
 };
 
@@ -72,10 +72,9 @@ export const getIdentifier = (state: State) => state.identifier;
 export const getToken = (state: State) => state.token;
 export const getExpirationDate = (state: State) => state.expirationDate;
 
-export const isAuthenticatedUntilTime = (state: State) => {
+export const getExpirationTime = (state: State) => {
     const expirationDate = getExpirationDate(state);
     const token = getToken(state);
-    console.log(`one again!  Token: '${token} and ExpirationDate: '${expirationDate}'`);
     if (token && expirationDate) {
         return expirationDate.getTime();
     } else {

@@ -9,22 +9,27 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ArchivesComponent} from './components/archives/archives.component';
 import {LightCardsComponent} from './components/light-cards/light-cards.component';
-import {AuthenticationGuard, UnAuthorizedGuard} from "@core/services/guard.service";
+import {AuthenticationGuard} from "@core/services/guard.service";
 import {LoginComponent} from "./components/login/login.component";
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent },
-  {path: 'feed', component: LightCardsComponent
-    ,canActivate: [AuthenticationGuard]
-  },
-  {path: 'archives', component: ArchivesComponent,canActivate: [AuthenticationGuard]},
-  {path: '**', redirectTo: '/login'  }
-  ];
+    {path: 'login', component: LoginComponent},
+    {
+        path: 'feed', component: LightCardsComponent
+        , canActivate: [AuthenticationGuard]
+    },
+    {
+        path: 'archives', component: ArchivesComponent
+        , canActivate: [AuthenticationGuard]
+    },
+    {path: '**', redirectTo: '/feed'}
+];
 // TODO manage visible path more gently
 export const navigationRoutes: Routes = routes.slice(1, 3);
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

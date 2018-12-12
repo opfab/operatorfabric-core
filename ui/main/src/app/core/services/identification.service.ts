@@ -35,7 +35,6 @@ export class IdentificationService {
     }
 
     checkAuthentication(token: string): Observable<CheckTokenResponse> {
-
         const postData = new FormData();
         postData.append('token', token);
         return this.httpClient.post<CheckTokenResponse>(this.checkTokenUrl, postData).pipe(
@@ -100,18 +99,29 @@ export class IdentificationService {
     }
 
     public extractToken() {
-        return localStorage.getItem('token');
+
+        const token = localStorage.getItem(LocalStorageAuthContent.token);
+        return token;
     }
 
     public verifyExpirationDate(): boolean {
-        const expirationDate = Date.parse(localStorage.getItem(LocalStorageAuthContent.expirationDate));
-        return (!expirationDate && Date.now() > expirationDate) || isNaN(expirationDate);
+        // + to convert the stored number as a string back to number
+        const expirationDate = +localStorage.getItem(LocalStorageAuthContent.expirationDate);
+        const isNotANumber = isNaN(expirationDate);
+        const stillValid = expirationDate > Date.now();
+        const finalResult = !isNotANumber && stillValid;
+        return finalResult ;
+    }
+
+    public isExpirationDateOver():boolean{
+        return ! this.verifyExpirationDate();
     }
 
     public clearAuthenticationInformation(): void {
         localStorage.removeItem(LocalStorageAuthContent.token);
         localStorage.removeItem(LocalStorageAuthContent.expirationDate);
         localStorage.removeItem(LocalStorageAuthContent.identifier);
+        localStorage.removeItem(LocalStorageAuthContent.clientId);
     }
 
     public registerAuthenticationInformation(payload: CheckTokenResponse, token: string) {
@@ -124,7 +134,6 @@ export class IdentificationService {
     }
 
     public saveTokenAndAuthenticationInformation(payload: AuthObject) {
-        console.log(`received expiration date: '${payload.expires_in}' `)
         const expirationDate = Date.now() + ONE_SECOND * payload.expires_in;
         localStorage.setItem(LocalStorageAuthContent.identifier, payload.identifier);
         localStorage.setItem(LocalStorageAuthContent.token, payload.access_token);
@@ -138,6 +147,17 @@ export class IdentificationService {
         localStorage.setItem(LocalStorageAuthContent.token, payload.token);
         localStorage.setItem(LocalStorageAuthContent.expirationDate, payload.expirationDate.getTime().toString());
         localStorage.setItem(LocalStorageAuthContent.clientId, payload.clientId.toString());
+    }
+
+    public extractIndentificationInformation(): PayloadForSuccessfulAuthentication{
+        return new PayloadForSuccessfulAuthentication(
+            localStorage.getItem(LocalStorageAuthContent.identifier),
+            Guid.parse(localStorage.getItem(LocalStorageAuthContent.clientId)),
+            localStorage.getItem(LocalStorageAuthContent.token),
+            // as getItem return a string, `+` isUsed
+            new Date(+localStorage.getItem(LocalStorageAuthContent.expirationDate)),
+
+        );
     }
 
     public convert(payload: AuthObject): PayloadForSuccessfulAuthentication {

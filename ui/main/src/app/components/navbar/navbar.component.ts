@@ -27,7 +27,6 @@ export class NavbarComponent implements OnInit {
 
 
     logOut(){
-        console.log('LogOut called');
         this.store.dispatch(new TryToLogOut());
     }
 }
