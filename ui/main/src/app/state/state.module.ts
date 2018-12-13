@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
@@ -15,7 +15,6 @@ import {environment} from '@env/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@state/shared/utils';
-import * as fromAuthentication from './authentication/authentication.reducer';
 import {AuthenticationEffects} from './authentication/authentication.effects';
 import {CardOperationEffects} from '@state/card-operation/card-operation.effects';
 import {RouterEffects} from "ngrx-router";
@@ -44,7 +43,6 @@ import {RouterEffects} from "ngrx-router";
     }),
     EffectsModule.forRoot([LightCardEffects, CardOperationEffects, RouterEffects,AuthenticationEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    // StoreModule.forFeature('authentication', fromAuthentication.reducer),
   ],
   declarations: []
 })

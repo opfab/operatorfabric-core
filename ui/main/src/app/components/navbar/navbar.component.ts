@@ -14,11 +14,9 @@ export class NavbarComponent implements OnInit {
 
     navbarCollapsed = true;
     navigationRoutes = navigationRoutes;
-    // getRoutePE: Observable<any>;
     currentPath: any;
 
     constructor(private store: Store<AppState>) {
-        // this.getRoutePE = this.store.select(selectRouterState);
     }
 
     ngOnInit() {
