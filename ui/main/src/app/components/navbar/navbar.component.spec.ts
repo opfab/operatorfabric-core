@@ -5,9 +5,8 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
 import {AppState} from "@state/app.interface";
-import {getCurrentUrl} from "@state/app.reducer";
-import {of} from "rxjs";
 import * as fromReducers from "@state/app.reducer";
+import {of} from "rxjs";
 
 describe('NavbarComponent', () => {
 
@@ -28,14 +27,7 @@ describe('NavbarComponent', () => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
-        spyOn(store, 'select').and.callFake((obj) => {
-            if (obj === getCurrentUrl) {
-                // called in ngOnInit and passed to mat-tab-link
-                return of('/test/url');
-            }
-            console.log('passed');
-            return of({});
-        });
+        spyOn(store, 'pipe').and.callFake(() => of('/test/url'));
     }));
 
     beforeEach(() => {
