@@ -17,7 +17,7 @@ import {
     TryToLogIn,
     TryToLogOut
 } from '@state/authentication/authentication.actions';
-import {CheckTokenResponse, AuthenticationService} from '@core/services/authentication.service';
+import {AuthenticationService, CheckTokenResponse} from '@core/services/authentication.service';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {RouterGo} from "ngrx-router";
 import {Action} from "@ngrx/store";
@@ -36,12 +36,9 @@ export class AuthenticationEffects {
                 ofType(AuthenticationActionTypes.TryToLogIn),
                 switchMap((action: TryToLogIn) => {
                     const payload = action.payload;
-
-                    return this.authService.beg4Login(payload.username, payload.password);
+                    return this.authService.askToken(payload.username, payload.password);
                 }),
-                map(authenticationInfo => {
-                    return new AcceptLogIn(authenticationInfo);
-                }),
+                map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
                 catchError(error => of(error, new RejectLogIn(error)))
             );
 
@@ -78,16 +75,14 @@ export class AuthenticationEffects {
             .pipe(
                 ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
                 switchMap(() => {
-                    const token = this.authService.extractToken();
-                    return this.authService.checkAuthentication(token);
+                    return this.authService.checkAuthentication(this.authService.extractToken());
                 }),
                 map((payload: CheckTokenResponse) => {
                     if (this.authService.isExpirationDateOver()) {
-                        return this.handleExpirationDateOver();
+                        return this.handleRejectedLogin('expiration date exceeded');
                     }
 
-                    const token = this.authService.extractToken();
-                    return this.handleLogInAttempt(payload, token);
+                    return this.handleLogInAttempt(payload);
                 }),
                 catchError(err => {
                     console.error(err);
@@ -102,19 +97,20 @@ export class AuthenticationEffects {
             map((action:AcceptLogIn) => new RouterGo({path:['/feed']}))
         );
 
-    private handleExpirationDateOver(): AuthenticationActions {
+    handleRejectedLogin(errorMsg: string): AuthenticationActions {
         this.authService.clearAuthenticationInformation();
-        return new RejectLogIn({denialReason: 'expiration date exceeded'});
+        return new RejectLogIn({denialReason: errorMsg});
 
     }
 
-    private handleLogInAttempt(payload: CheckTokenResponse, token): AuthenticationActions {
+    handleLogInAttempt(payload: CheckTokenResponse): AuthenticationActions {
         if (payload) {
-            const authInfo = this.authService.extractIndentificationInformation();
+            const authInfo = this.authService.extractIdentificationInformation();
             return new AcceptLogIn(authInfo);
 
         }
-        this.authService.clearAuthenticationInformation();
-        return new RejectLogIn({denialReason: 'invalid token'}) as AuthenticationActions;
+        return this.handleRejectedLogin('invalid token');
     }
+
+
 }

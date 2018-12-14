@@ -43,32 +43,13 @@ export class AuthenticationService {
         );
     }
 
-
-    tempLogin(): Observable<any> {
-        /*
-         * uses a default user defined in the class org/lfenergy.operatorfabric.auth.config.WebSecurityConfiguration.java
-         * in $OPERATOR_FABRIC_CORE_HOME/services/infra/auth/src/main/java/
-        */
-        const loginData = new LoginData('rte-operator', 'test', 'clientIdPassword');
-        return this.askForToken(loginData);
-    }
-
-    beg4Login(login: string, password: string): Observable<any> {
-        return this.askForToken({
-            username: login,
-            password: password,
-            clientId: 'clientIdPassword'
-        });
-    }
-
-    askForToken(loginData): Observable<any> {
-
+    askToken(login: string, password: string): Observable<any> {
         const params = new URLSearchParams();
-        params.append('username', loginData.username);
-        params.append('password', loginData.password);
+        params.append('username', login);
+        params.append('password', password);
         params.append('grant_type', 'password');
         // beware clientId for token defines a type of authentication
-        params.append('client_id', loginData.clientId);
+        params.append('client_id', 'clientIdPassword');
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
         return this.httpClient.post<AuthObject>(this.askTokenUrl
@@ -77,7 +58,7 @@ export class AuthenticationService {
             map(data => {
                 const trackism = {...data};
 
-                trackism.identifier = loginData.username;
+                trackism.identifier = login;
                 // this clientId is used to identify unequivocally the session
                 trackism.clientId = this.guid;
                 return trackism;
@@ -108,39 +89,20 @@ export class AuthenticationService {
         // + to convert the stored number as a string back to number
         const expirationDate = +localStorage.getItem(LocalStorageAuthContent.expirationDate);
         const isNotANumber = isNaN(expirationDate);
-        const stillValid = expirationDate > Date.now();
+        const stillValid = isInTheFuture(expirationDate);
         const finalResult = !isNotANumber && stillValid;
         return finalResult ;
     }
+
+
 
     public isExpirationDateOver():boolean{
         return ! this.verifyExpirationDate();
     }
 
     public clearAuthenticationInformation(): void {
-        localStorage.removeItem(LocalStorageAuthContent.token);
-        localStorage.removeItem(LocalStorageAuthContent.expirationDate);
-        localStorage.removeItem(LocalStorageAuthContent.identifier);
-        localStorage.removeItem(LocalStorageAuthContent.clientId);
+        localStorage.clear();
     }
-
-    public registerAuthenticationInformation(payload: CheckTokenResponse, token: string) {
-        const identifier = payload.sub;
-        const expirationDate = new Date(payload.exp);
-        localStorage.setItem(LocalStorageAuthContent.identifier, identifier);
-        localStorage.setItem(LocalStorageAuthContent.token, token);
-        localStorage.setItem(LocalStorageAuthContent.expirationDate, expirationDate.toString());
-        return {identifier: identifier, expirationDate: expirationDate, clientId: this.guid};
-    }
-
-    public saveTokenAndAuthenticationInformation(payload: AuthObject) {
-        const expirationDate = Date.now() + ONE_SECOND * payload.expires_in;
-        localStorage.setItem(LocalStorageAuthContent.identifier, payload.identifier);
-        localStorage.setItem(LocalStorageAuthContent.token, payload.access_token);
-        localStorage.setItem(LocalStorageAuthContent.expirationDate, expirationDate.toString());
-        localStorage.setItem(LocalStorageAuthContent.clientId, payload.clientId.toString());
-    }
-
 
     public saveAuthenticationInformation(payload: PayloadForSuccessfulAuthentication) {
         localStorage.setItem(LocalStorageAuthContent.identifier, payload.identifier);
@@ -149,7 +111,7 @@ export class AuthenticationService {
         localStorage.setItem(LocalStorageAuthContent.clientId, payload.clientId.toString());
     }
 
-    public extractIndentificationInformation(): PayloadForSuccessfulAuthentication{
+    public extractIdentificationInformation(): PayloadForSuccessfulAuthentication{
         return new PayloadForSuccessfulAuthentication(
             localStorage.getItem(LocalStorageAuthContent.identifier),
             Guid.parse(localStorage.getItem(LocalStorageAuthContent.clientId)),
@@ -183,9 +145,6 @@ export class CheckTokenResponse {
     client_id: string;
 }
 
-export class LoginData {
-    constructor(public  username: string,
-                public password: string,
-                public clientId: string) {
-    }
+export function isInTheFuture(time:number):boolean{
+    return time > Date.now();
 }

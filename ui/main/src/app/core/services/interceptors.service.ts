@@ -12,11 +12,19 @@ import {AuthenticationService} from '@core/services/authentication.service';
 
 @Injectable()
 export class TokenInjector implements HttpInterceptor {
+    /* istanbul ignore next */
     constructor(private authenticationService: AuthenticationService) {
     }
 
+    /* istanbul ignore next */
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        return next.handle(this.addAuthHeadersIfNecessary(request));
+    }
+
+
+    addAuthHeadersIfNecessary(request: HttpRequest<any>): HttpRequest<any> {
         const url = request.url;
+
         const notCheckTokenRequest = !(url.endsWith('/auth/check_token') || url.endsWith('/auth/token'));
         if (notCheckTokenRequest) {
             const update = {
@@ -27,6 +35,6 @@ export class TokenInjector implements HttpInterceptor {
             };
             request = request.clone(update);
         }
-        return next.handle(request);
+        return request;
     }
 }

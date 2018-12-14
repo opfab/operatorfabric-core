@@ -34,7 +34,7 @@ export function reducer(state = initialState, action: AuthenticationActions): St
 
         case AuthenticationActionTypes.AcceptLogIn: {
 
-            const payload = (action as AcceptLogIn).payload;
+            const payload = action.payload;
             return {
                 ...state,
                 identifier: payload.identifier,
