@@ -7,13 +7,14 @@
 
 import {inject, TestBed} from '@angular/core/testing';
 
-import {AuthenticationService, isInTheFuture, LocalStorageAuthContent} from './authentication.service';
+import {AuthenticationService, AuthObject, isInTheFuture, LocalStorageAuthContent} from './authentication.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import createSpyObj = jasmine.createSpyObj;
 import {PayloadForSuccessfulAuthentication} from "@state/authentication/authentication.actions";
 import {Guid} from "guid-typescript";
+import {getPositiveRandomNumberWithinRange, getRandomAlphanumericValue} from "@tests/helpers";
 
-describe('AuthenticationService', () => {
+fdescribe('AuthenticationService', () => {
 
   let httpMock: HttpTestingController;
 
@@ -33,26 +34,31 @@ describe('AuthenticationService', () => {
   it('should reject a stored date in the past', inject([AuthenticationService], (service: AuthenticationService) => {
     spyOn(localStorage, 'getItem').and.callFake( () => '10');
     expect(service.verifyExpirationDate()).toEqual(false);
+    expect(service.isExpirationDateOver()).toEqual(true);
   }));
 
   it('should reject a stored date in the past', inject([AuthenticationService], (service: AuthenticationService) => {
     spyOn(localStorage, 'getItem').and.callFake( () => '10');
     expect(service.verifyExpirationDate()).toEqual(false);
+    expect(service.isExpirationDateOver()).toEqual(true);
   }));
 
   it('should reject a stored date isNaN', inject([AuthenticationService], (service: AuthenticationService) => {
     spyOn(localStorage, 'getItem').and.callFake( () => 'abcd');
     expect(service.verifyExpirationDate()).toEqual(false);
+    expect(service.isExpirationDateOver()).toEqual(true);
   }));
 
   it('should reject a stored date if it\'s now', inject([AuthenticationService], (service: AuthenticationService) => {
     spyOn(localStorage, 'getItem').and.callFake( () => Date.now().toString());
     expect(service.verifyExpirationDate()).toEqual(false);
+    expect(service.isExpirationDateOver()).toEqual(true);
   }));
 
   it('should accept a stored date if it\'s in the future', inject([AuthenticationService], (service: AuthenticationService) => {
     spyOn(localStorage, 'getItem').and.callFake( () => (Date.now() + 10000).toString());
     expect(service.verifyExpirationDate()).toEqual(true);
+    expect(service.isExpirationDateOver()).toEqual(false);
   }));
 
 
@@ -69,6 +75,28 @@ describe('AuthenticationService', () => {
     service.saveAuthenticationInformation(mockPayload);
     expect(localStorage.setItem).toHaveBeenCalled();
   }));
+
+  it( 'should extract the token from the localstorage', inject([AuthenticationService]
+      , (service: AuthenticationService) => {
+    spyOn(localStorage, 'getItem').and.callThrough();
+    service.extractToken();
+    expect(localStorage.getItem).toHaveBeenCalled();
+      }));
+
+  it( 'should create a congruent payload object from AuthObject', inject([AuthenticationService]
+      , (service: AuthenticationService) => {
+        const identifier = getRandomAlphanumericValue(12);
+        const guid = Guid.create();
+        const token = getRandomAlphanumericValue(125);
+        const expirationTime = getPositiveRandomNumberWithinRange(12,2500);
+        const authObj= {identifier:identifier, access_token:token, expires_in: expirationTime, clientId: guid}as AuthObject;
+        const result = service.convert(authObj);
+        expect(result.token).toEqual(token);
+        expect(result.identifier).toEqual(identifier);
+        expect(result.clientId).toEqual(guid);
+        expect(result.expirationDate.getTime()).toBeGreaterThanOrEqual(Date.now()+expirationTime);
+
+      }));
 
 });
 

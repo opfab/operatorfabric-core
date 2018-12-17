@@ -79,10 +79,8 @@ export class AuthenticationService {
         return throwError(error);
     }
 
-    public extractToken() {
-
-        const token = localStorage.getItem(LocalStorageAuthContent.token);
-        return token;
+    public extractToken(): string {
+        return localStorage.getItem(LocalStorageAuthContent.token);
     }
 
     public verifyExpirationDate(): boolean {
