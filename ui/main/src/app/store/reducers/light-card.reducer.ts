@@ -8,28 +8,16 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
-
-export interface State extends EntityState<LightCard> {
-    selectedCardId: number | string;
-    loading: boolean;
-    error: string;
-}
-
-export const adapter: EntityAdapter<LightCard> = createEntityAdapter<LightCard>();
-
-export const initialState: State = adapter.getInitialState(
-    {
-        selectedCardId: null, loading: false, error: ''
-    });
+import {LightCardAdapter, lightCardInitialState, LightCardStateEntity} from "@ofStates/light-card.state";
 
 export function reducer(
-    state = initialState,
+    state = lightCardInitialState,
     action: LightCardActions
-): State {
+): LightCardStateEntity {
     switch (action.type) {
         case LightCardActionTypes.LoadLightCardsSuccess: {
             return {
-                ...adapter.upsertMany(action.payload.lightCards, state),
+                ...LightCardAdapter.upsertMany(action.payload.lightCards, state),
                 loading: false
             };
         }
@@ -44,7 +32,7 @@ export function reducer(
 
         case LightCardActionTypes.LoadLightCardSuccess: {
             return {
-                ...adapter.addOne(action.payload.lightCard, state),
+                ...LightCardAdapter.addOne(action.payload.lightCard, state),
                 loading: false
             };
         }
@@ -71,4 +59,4 @@ export function reducer(
 }
 
 
-export const getSelectedId = (state: State) => state.selectedCardId;
+export const getSelectedId = (state: LightCardStateEntity) => state.selectedCardId;

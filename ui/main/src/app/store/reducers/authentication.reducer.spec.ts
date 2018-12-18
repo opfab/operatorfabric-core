@@ -5,16 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { reducer, initialState } from './authentication.reducer';
+import { reducer } from './authentication.reducer';
+import {authInitialState} from "@ofStates/authentication.state";
 
 describe('Authentication Reducer', () => {
   describe('unknown action', () => {
     it('should return the initial state', () => {
       const action = {} as any;
 
-      const result = reducer(initialState, action);
+      const result = reducer(authInitialState, action);
 
-      expect(result).toBe(initialState);
+      expect(result).toBe(authInitialState);
     });
   });
 });

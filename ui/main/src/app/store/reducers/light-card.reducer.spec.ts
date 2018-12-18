@@ -5,16 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { reducer, initialState } from './light-card.reducer';
+import { reducer } from './light-card.reducer';
+import {lightCardInitialState} from "@ofStates/light-card.state";
 
 describe('LightCard Reducer', () => {
   describe('unknown action', () => {
     it('should return the initial state', () => {
       const action = {} as any;
 
-      const result = reducer(initialState, action);
+      const result = reducer(lightCardInitialState, action);
 
-      expect(result).toBe(initialState);
+      expect(result).toBe(lightCardInitialState);
     });
   });
 });

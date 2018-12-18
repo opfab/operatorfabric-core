@@ -1,10 +1,8 @@
 import * as fromRouter from '@ngrx/router-store';
 import {RouterReducerState} from '@ngrx/router-store';
 import {RouterStateUrl} from '@ofStore/shared/utils';
-import {reducer as lightCardReducer, State as CardState} from '@ofStore/reducers/light-card.reducer';
 import {
-    reducer as authenticationReducer,
-    State as AuthenticationState
+    reducer as authenticationReducer
 } from '@ofStore/reducers/authentication.reducer';
 import {ActionReducerMap, MetaReducer} from '@ngrx/store';
 import {environment} from '@env/environment';
@@ -13,12 +11,15 @@ import {LightCardEffects} from '@ofEffects/light-card.effects';
 import {CardOperationEffects} from '@ofEffects/card-operation.effects';
 import {AuthenticationEffects} from '@ofEffects/authentication.effects';
 import {RouterEffects} from 'ngrx-router';
-import {initialState as routerInitialState} from '@ofStore/index-router';
+import {initialState as routerInitialState} from '@ofStore/states/router.state';
+import {LightCardStateEntity} from "@ofStates/light-card.state";
+import {reducer as lightCardReducer} from "@ofStore/reducers/light-card.reducer";
+import {AuthState} from "@ofStates/authentication.state";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
-    lightCard: CardState;
-    authentication: AuthenticationState;
+    lightCard: LightCardStateEntity;
+    authentication: AuthState;
 }
 
 export const appEffects = [LightCardEffects, CardOperationEffects, RouterEffects,AuthenticationEffects];

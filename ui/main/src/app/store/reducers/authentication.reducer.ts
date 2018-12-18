@@ -6,26 +6,10 @@
  */
 
 import {AuthenticationActions, AuthenticationActionTypes} from '@ofActions/authentication.actions';
-import {Guid} from 'guid-typescript';
+import {authInitialState, AuthState} from "@ofStates/authentication.state";
 
 
-export interface State {
-    identifier: string;
-    clientId: Guid;
-    token: string;
-    expirationDate: Date;
-    denialReason: string;
-}
-
-export const initialState: State = {
-    identifier: null,
-    clientId: null,
-    token: null,
-    expirationDate: new Date(0),
-    denialReason: null
-};
-
-export function reducer(state = initialState, action: AuthenticationActions): State {
+export function reducer(state = authInitialState, action: AuthenticationActions): AuthState {
     switch (action.type) {
 
         case AuthenticationActionTypes.AcceptLogIn: {
@@ -64,11 +48,11 @@ export function reducer(state = initialState, action: AuthenticationActions): St
     }
 }
 
-export const getIdentifier = (state: State) => state.identifier;
-export const getToken = (state: State) => state.token;
-export const getExpirationDate = (state: State) => state.expirationDate;
+export const getIdentifier = (state: AuthState) => state.identifier;
+export const getToken = (state: AuthState) => state.token;
+export const getExpirationDate = (state: AuthState) => state.expirationDate;
 
-export const getExpirationTime = (state: State) => {
+export const getExpirationTime = (state: AuthState) => {
     const expirationDate = getExpirationDate(state);
     const token = getToken(state);
     if (token && expirationDate) {
