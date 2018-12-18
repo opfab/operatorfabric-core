@@ -1,5 +1,5 @@
-import {I18nData, LightCard, Severity} from '@state/light-card/light-card.model';
-import {CardOperation, CardOperationType} from '@state/card-operation/card-operation.model';
+import {I18nData, LightCard, Severity} from '@ofStore/light-card/light-card.model';
+import {CardOperation, CardOperationType} from '@ofStore/card-operation/card-operation.model';
 //
 // export function getNewLightCardInstance(): LightCard{
 //     return new LightCard();

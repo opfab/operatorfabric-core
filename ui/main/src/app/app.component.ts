@@ -8,11 +8,15 @@
 import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {AppState} from '@state/app.interface';
-import {getCurrentUrl, selectRouterState} from '@state/app.reducer';
 import {map} from "rxjs/operators";
-import {CheckAuthenticationStatus,TryToLogOut} from "@state/authentication/authentication.actions";
-import {getExpirationTime} from "@state/authentication";
+import {
+    CheckAuthenticationStatus,
+    TryToLogOut
+} from "@ofStore/authentication/authentication.actions";
+import {getExpirationTime} from "@ofStore/authentication";
+import {AppState} from '@ofStore/index';
+import {getCurrentUrl, selectRouterState} from '@ofStore/app.reducer';
+
 
 @Component({
     selector: 'app-root',

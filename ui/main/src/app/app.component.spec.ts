@@ -8,12 +8,10 @@
 import {async, TestBed} from '@angular/core/testing';
 import {AppComponent} from './app.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {MatTabsModule, MatToolbar, MatToolbarModule} from '@angular/material';
+import {MatTabsModule, MatToolbarModule} from '@angular/material';
 import {Store, StoreModule} from '@ngrx/store';
-import {AppState} from '@state/app.interface';
-import * as fromReducers from '@state/app.reducer';
-import {getCurrentUrl} from '@state/app.reducer';
-import {By} from '@angular/platform-browser';
+import {appReducer, AppState} from '@ofStore/index';
+import {getCurrentUrl} from '@ofStore/app.reducer';
 import {BrowserDynamicTestingModule, platformBrowserDynamicTesting} from '@angular/platform-browser-dynamic/testing';
 import {of} from 'rxjs';
 import {NavbarComponent} from "./components/navbar/navbar.component";
@@ -35,7 +33,7 @@ describe('AppComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 NgbModule.forRoot(),
-                StoreModule.forRoot(fromReducers.appReducer),
+                StoreModule.forRoot(appReducer),
                 // solution 4 RouterTestingModule: https://github.com/coreui/coreui-free-bootstrap-admin-template/issues/202
                 RouterTestingModule,
                 MatTabsModule,

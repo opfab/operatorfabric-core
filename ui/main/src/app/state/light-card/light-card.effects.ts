@@ -16,10 +16,10 @@ import {
     LoadLightCardsFailure,
     LoadLightCardsSuccess,
     LoadLightCardSuccess
-} from '@state/light-card/light-card.actions';
+} from '@ofStore/light-card/light-card.actions';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {CardService} from '@core/services/card.service';
-import {LightCard} from '@state/light-card/light-card.model';
+import {LightCard} from '@ofStore/light-card/light-card.model';
 
 // those effects are unused for the moment
 @Injectable()

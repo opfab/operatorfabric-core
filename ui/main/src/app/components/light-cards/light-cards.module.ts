@@ -11,7 +11,7 @@ import {LightCardsListComponent} from './components/light-cards-list/light-cards
 import {MatButtonModule, MatCardModule, MatListModule} from '@angular/material';
 import {LightCardsComponent} from './light-cards.component';
 import {FormsModule} from '@angular/forms';
-import {StateModule} from '@state/state.module';
+import {StateModule} from '@ofStore/state.module';
 import {LightCardDetailsComponent} from './components/light-card-details/light-card-details.component';
 
 

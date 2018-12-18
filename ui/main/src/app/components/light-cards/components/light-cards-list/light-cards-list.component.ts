@@ -6,7 +6,7 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {LightCard} from '../../../../state/light-card/light-card.model';
+import {LightCard} from '@ofStore/light-card/light-card.model';
 
 @Component({
   selector: 'app-cards-list',

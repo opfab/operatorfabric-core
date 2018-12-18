@@ -9,39 +9,18 @@ import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
-import {LightCardEffects} from './light-card/light-card.effects';
-import {appMetaReducers, appReducer} from './app.reducer';
+import {appEffects, appReducer, storeConfig} from './index';
 import {environment} from '@env/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
-import {CustomRouterStateSerializer} from '@state/shared/utils';
-import {AuthenticationEffects} from './authentication/authentication.effects';
-import {CardOperationEffects} from '@state/card-operation/card-operation.effects';
-import {RouterEffects} from "ngrx-router";
+import {CustomRouterStateSerializer} from '@ofStore/shared/utils';
 
 @NgModule({
   imports: [
     CommonModule,
     StoreRouterConnectingModule,
-    StoreModule.forRoot(appReducer, {
-      metaReducers: appMetaReducers,
-      /*
-      * following configuration initialize the state of router in order to enable the currentUrl in app.component.ts
-      * source: https://github.com/ngrx/platform/issues/835
-      */
-      initialState: {
-        router: {
-          state: {
-            url: window.location.pathname,
-            params: {},
-            queryParams: {}
-          },
-          navigationId: 0
-        },
-
-      }
-    }),
-    EffectsModule.forRoot([LightCardEffects, CardOperationEffects, RouterEffects,AuthenticationEffects]),
+    StoreModule.forRoot(appReducer, storeConfig),
+    EffectsModule.forRoot(appEffects),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
   ],
   declarations: []

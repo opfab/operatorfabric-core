@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {navigationRoutes} from "../../app-routing.module";
 import {select, Store} from "@ngrx/store";
-import {AppState} from "@state/app.interface";
-import {getCurrentUrl} from "@state/app.reducer";
-import {TryToLogOut} from "@state/authentication/authentication.actions";
+import {TryToLogOut} from "@ofStore/authentication/authentication.actions";
+import {AppState} from "@ofStore/index";
+import {getCurrentUrl} from "@ofStore/app.reducer";
 
 @Component({
   selector: 'app-navbar',

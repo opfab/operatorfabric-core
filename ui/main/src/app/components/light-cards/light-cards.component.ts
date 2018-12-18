@@ -7,10 +7,10 @@
 
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '@state/app.interface';
+import {AppState} from '@ofStore/index';
 import {Observable} from 'rxjs';
-import {LightCard} from '@state/light-card/light-card.model';
-import * as fromStore from '@state/light-card/index';
+import {LightCard} from '@ofStore/light-card/light-card.model';
+import * as fromStore from '@ofStore/light-card/index';
 
 @Component({
     selector: 'app-cards',

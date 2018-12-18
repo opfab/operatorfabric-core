@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {LightCard} from '@state/light-card/light-card.model';
+import {LightCard} from '@ofStore/light-card/light-card.model';
 
 export interface CardOperation {
     readonly number: number;

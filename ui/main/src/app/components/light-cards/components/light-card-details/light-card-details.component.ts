@@ -6,7 +6,7 @@
  */
 
 import {AfterContentInit, AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import {I18nData, LightCard} from '@state/light-card/light-card.model';
+import {I18nData, LightCard} from '@ofStore/light-card/light-card.model';
 
 @Component({
     selector: 'app-light-card-details',

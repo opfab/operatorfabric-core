@@ -10,7 +10,7 @@ import {inject, TestBed} from '@angular/core/testing';
 import {AuthenticationService, AuthObject, isInTheFuture, LocalStorageAuthContent} from './authentication.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import createSpyObj = jasmine.createSpyObj;
-import {PayloadForSuccessfulAuthentication} from "@state/authentication/authentication.actions";
+import {PayloadForSuccessfulAuthentication} from "@ofStore/authentication/authentication.actions";
 import {Guid} from "guid-typescript";
 import {getPositiveRandomNumberWithinRange, getRandomAlphanumericValue} from "@tests/helpers";
 

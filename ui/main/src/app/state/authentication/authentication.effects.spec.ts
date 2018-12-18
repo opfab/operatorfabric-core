@@ -8,7 +8,7 @@ import {
     AcceptLogIn,
     PayloadForSuccessfulAuthentication,
     RejectLogIn
-} from "@state/authentication/authentication.actions";
+} from "@ofStore/authentication/authentication.actions";
 
 import {TestBed, inject, async} from '@angular/core/testing';
 import {provideMockActions} from '@ngrx/effects/testing';

@@ -11,12 +11,11 @@ import {LightCardsComponent} from './light-cards.component';
 import {MatButtonModule, MatCardModule} from '@angular/material';
 import {LightCardsListComponent} from './components/light-cards-list/light-cards-list.component';
 import {LightCardDetailsComponent} from './components/light-card-details/light-card-details.component';
-import {AppState} from '@state/app.interface';
+import {appReducer, AppState} from '@ofStore/index';
 import {Store, StoreModule} from '@ngrx/store';
-import {LoadLightCardsSuccess} from '@state/light-card/light-card.actions';
-import {LightCard} from '@state/light-card/light-card.model';
-import * as fromReducers from '@state/app.reducer';
-import * as fromStore from '@state/light-card';
+import {LoadLightCardsSuccess} from '@ofStore/light-card/light-card.actions';
+import {LightCard} from '@ofStore/light-card/light-card.model';
+import * as fromStore from '@ofStore/light-card';
 import {By} from '@angular/platform-browser';
 import {getOneRandomLigthCard, getPositiveRandomNumberWithinRange, getSeveralRandomLightCards} from '@tests/helpers';
 
@@ -28,7 +27,7 @@ describe('LightCardsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                StoreModule.forRoot(fromReducers.appReducer),
+                StoreModule.forRoot(appReducer),
                 MatCardModule, MatButtonModule],
             declarations: [LightCardsListComponent, LightCardsComponent, LightCardDetailsComponent]
             , providers: [{provide: Store, useClass: Store}]

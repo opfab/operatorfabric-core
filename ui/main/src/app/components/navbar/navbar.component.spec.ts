@@ -4,8 +4,7 @@ import {NavbarComponent} from './navbar.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
-import {AppState} from "@state/app.interface";
-import * as fromReducers from "@state/app.reducer";
+import {appReducer, AppState} from "@ofStore/index";
 import {of} from "rxjs";
 
 describe('NavbarComponent', () => {
@@ -19,7 +18,7 @@ describe('NavbarComponent', () => {
         TestBed.configureTestingModule({
             imports: [NgbModule.forRoot(),
                 RouterTestingModule,
-                StoreModule.forRoot(fromReducers.appReducer),],
+                StoreModule.forRoot(appReducer),],
             declarations: [NavbarComponent],
             providers: [{provide: store, useClass: Store}]
         })

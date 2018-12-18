@@ -5,19 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {ActionReducerMap, createFeatureSelector, createSelector, MetaReducer} from '@ngrx/store';
+import {createFeatureSelector, createSelector, MetaReducer} from '@ngrx/store';
 import * as fromRouter from '@ngrx/router-store';
-import {AppState} from './app.interface';
-import {reducer as lightCardReducer} from './light-card/light-card.reducer';
-import {reducer as authenticationReducer} from './authentication/authentication.reducer';
-import {environment} from '@env/environment';
-import {storeFreeze} from 'ngrx-store-freeze';
-
-export const appReducer: ActionReducerMap<AppState> = {
-  router: fromRouter.routerReducer,
-  lightCard: lightCardReducer,
-  authentication: authenticationReducer
-};
+import {AppState} from "@ofStore/index";
+import {environment} from "@env/environment";
+import {storeFreeze} from "ngrx-store-freeze";
 
 export const selectRouterState = createFeatureSelector<fromRouter.RouterReducerState>('router');
 export const getCurrentUrl = createSelector(selectRouterState,
@@ -26,5 +18,4 @@ export const getCurrentUrl = createSelector(selectRouterState,
 export const authentification = (state:AppState)=> state.authentication;
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production
-? [storeFreeze]
-  : [];
+? [storeFreeze] : [];
