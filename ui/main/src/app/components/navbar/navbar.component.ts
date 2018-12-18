@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {navigationRoutes} from "../../app-routing.module";
-import {select, Store} from "@ngrx/store";
-import {TryToLogOut} from "@ofStore/actions/authentication.actions";
-import {AppState} from "@ofStore/index";
-import {selectCurrentUrl} from "@ofStore/selectors/router.selectors";
+import {navigationRoutes} from '../../app-routing.module';
+import {select, Store} from '@ngrx/store';
+import {TryToLogOut} from '@ofActions/authentication.actions';
+import {AppState} from '@ofStore/index';
+import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 
 @Component({
   selector: 'app-navbar',

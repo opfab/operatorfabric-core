@@ -8,8 +8,8 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
-import {RouterGo} from "ngrx-router";
-import {Action} from "@ngrx/store";
+import {RouterGo} from 'ngrx-router';
+import {Action} from '@ngrx/store';
 import {
     AcceptLogIn,
     AcceptLogOut,
@@ -17,7 +17,7 @@ import {
     AuthenticationActionTypes, RejectLogIn,
     TryToLogIn,
     TryToLogOut
-} from '../actions/authentication.actions';
+} from '@ofActions/authentication.actions';
 import {AuthenticationService, CheckTokenResponse} from '../../core/services/authentication.service';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 

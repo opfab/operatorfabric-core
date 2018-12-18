@@ -13,9 +13,9 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {BrowserDynamicTestingModule, platformBrowserDynamicTesting} from '@angular/platform-browser-dynamic/testing';
 import {of} from 'rxjs';
-import {NavbarComponent} from "./components/navbar/navbar.component";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {selectCurrentUrl} from "@ofStore/selectors/router.selectors";
+import {NavbarComponent} from './components/navbar/navbar.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 
 
 describe('AppComponent', () => {

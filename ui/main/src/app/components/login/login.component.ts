@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {FormControl, FormGroup} from "@angular/forms";
-import {Store} from "@ngrx/store";
-import {TryToLogIn} from "@ofStore/actions/authentication.actions";
-import {RouterGo} from "ngrx-router";
-import {AppState} from "@ofStore/index";
+import {Router} from '@angular/router';
+import {FormControl, FormGroup} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {TryToLogIn} from '@ofActions/authentication.actions';
+import {RouterGo} from 'ngrx-router';
+import {AppState} from '@ofStore/index';
 
 @Component({
     selector: 'app-log-in-form',

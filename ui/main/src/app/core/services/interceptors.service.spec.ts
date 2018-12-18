@@ -1,11 +1,11 @@
-import {inject, TestBed} from "@angular/core/testing";
-import {TokenInjector} from "@core/services/interceptors.service";
-import {HttpHandler, HttpHeaders, HttpRequest} from "@angular/common/http";
-import {AuthenticationService} from "@core/services/authentication.service";
+import {inject, TestBed} from '@angular/core/testing';
+import {TokenInjector} from '@core/services/interceptors.service';
+import {HttpHandler, HttpHeaders, HttpRequest} from '@angular/common/http';
+import {AuthenticationService} from '@core/services/authentication.service';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 import createSpy = jasmine.createSpy;
-import {getRandomAlphanumericValue} from "@tests/helpers";
+import {getRandomAlphanumericValue} from '@tests/helpers';
 
 describe('Interceptor', () => {
 

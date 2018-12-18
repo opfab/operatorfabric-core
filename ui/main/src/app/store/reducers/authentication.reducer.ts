@@ -5,8 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AuthenticationActions, AuthenticationActionTypes} from '../actions/authentication.actions';
-import {Guid} from "guid-typescript";
+import {AuthenticationActions, AuthenticationActionTypes} from '@ofActions/authentication.actions';
+import {Guid} from 'guid-typescript';
 
 
 export interface State {

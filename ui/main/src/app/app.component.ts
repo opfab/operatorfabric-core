@@ -8,14 +8,14 @@
 import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {map} from "rxjs/operators";
+import {map} from 'rxjs/operators';
 import {
     CheckAuthenticationStatus,
     TryToLogOut
-} from "@ofStore/actions/authentication.actions";
+} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
-import {selectCurrentUrl, selectRouterState} from "@ofStore/selectors/router.selectors";
-import {selectExpirationTime} from "@ofStore/selectors/authentication.selectors";
+import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors';
+import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
 
 
 @Component({

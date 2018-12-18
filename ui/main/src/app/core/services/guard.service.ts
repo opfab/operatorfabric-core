@@ -1,12 +1,12 @@
-import {Injectable} from "@angular/core";
-import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from "@angular/router";
-import {Observable} from "rxjs";
-import {select, Store} from "@ngrx/store";
-import {map, tap} from "rxjs/operators";
-import {RouterGo} from "ngrx-router";
-import {isInTheFuture} from "@core/services/authentication.service";
-import {AppState} from "@ofStore/index";
-import {selectExpirationTime} from "@ofStore/selectors/authentication.selectors";
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
+import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {map, tap} from 'rxjs/operators';
+import {RouterGo} from 'ngrx-router';
+import {isInTheFuture} from '@core/services/authentication.service';
+import {AppState} from '@ofStore/index';
+import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {

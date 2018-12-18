@@ -1,11 +1,11 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {NavbarComponent} from './navbar.component';
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {RouterTestingModule} from "@angular/router/testing";
-import {Store, StoreModule} from "@ngrx/store";
-import {appReducer, AppState} from "@ofStore/index";
-import {of} from "rxjs";
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {RouterTestingModule} from '@angular/router/testing';
+import {Store, StoreModule} from '@ngrx/store';
+import {appReducer, AppState} from '@ofStore/index';
+import {of} from 'rxjs';
 
 describe('NavbarComponent', () => {
 

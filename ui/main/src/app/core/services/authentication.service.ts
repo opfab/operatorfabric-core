@@ -9,8 +9,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {Guid} from "guid-typescript";
-import {PayloadForSuccessfulAuthentication} from "@ofStore/actions/authentication.actions";
+import {Guid} from 'guid-typescript';
+import {PayloadForSuccessfulAuthentication} from '@ofActions/authentication.actions';
 
 export enum LocalStorageAuthContent {
     token = 'token',

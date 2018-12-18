@@ -15,8 +15,8 @@ import {
     HandleUnexpectedError,
     LightCardActions,
     LoadLightCardsSuccess
-} from '../actions/light-card.actions';
-import {AuthenticationActionTypes} from '../actions/authentication.actions';
+} from '@ofActions/light-card.actions';
+import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
 
 @Injectable()
 export class CardOperationEffects {

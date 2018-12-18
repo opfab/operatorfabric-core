@@ -7,7 +7,7 @@
 
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {LightCard} from '@ofModel/light-card.model';
-import {LightCardActions, LightCardActionTypes} from '../actions/light-card.actions';
+import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
 
 export interface State extends EntityState<LightCard> {
     selectedCardId: number | string;

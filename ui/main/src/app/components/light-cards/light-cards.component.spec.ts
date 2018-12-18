@@ -13,9 +13,9 @@ import {LightCardsListComponent} from './components/light-cards-list/light-cards
 import {LightCardDetailsComponent} from './components/light-card-details/light-card-details.component';
 import {appReducer, AppState} from '@ofStore/index';
 import {Store, StoreModule} from '@ngrx/store';
-import {LoadLightCardsSuccess} from '@ofStore/actions/light-card.actions';
+import {LoadLightCardsSuccess} from '@ofActions/light-card.actions';
 import {LightCard} from '@ofModel/light-card.model';
-import * as fromStore from '@ofStore/selectors/light-card.selectors';
+import * as fromStore from '@ofSelectors/light-card.selectors';
 import {By} from '@angular/platform-browser';
 import {getOneRandomLigthCard, getPositiveRandomNumberWithinRange, getSeveralRandomLightCards} from '@tests/helpers';
 

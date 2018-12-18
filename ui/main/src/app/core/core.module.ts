@@ -9,9 +9,9 @@ import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardService} from '@core/services/card.service';
 import {AuthenticationService} from '@core/services/authentication.service';
-import {HTTP_INTERCEPTORS} from "@angular/common/http";
-import {TokenInjector} from "@core/services/interceptors.service";
-import {AuthenticationGuard} from "@core/services/guard.service";
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {TokenInjector} from '@core/services/interceptors.service';
+import {AuthenticationGuard} from '@core/services/guard.service';
 
 @NgModule({
   imports: [

@@ -6,7 +6,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Guid} from "guid-typescript";
+import {Guid} from 'guid-typescript';
 
 export enum AuthenticationActionTypes {
     CheckAuthenticationStatus = '[Authentication] Check Authentication Status',
