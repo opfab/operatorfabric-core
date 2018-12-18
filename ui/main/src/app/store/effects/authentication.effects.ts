@@ -17,8 +17,8 @@ import {
     AuthenticationActionTypes, RejectLogIn,
     TryToLogIn,
     TryToLogOut
-} from '@ofStore/authentication/authentication.actions';
-import {AuthenticationService, CheckTokenResponse} from '@core/services/authentication.service';
+} from '../actions/authentication.actions';
+import {AuthenticationService, CheckTokenResponse} from '../../core/services/authentication.service';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
 @Injectable()

@@ -18,10 +18,12 @@ import {AppComponent} from './app.component';
 import {ArchivesComponent} from './components/archives/archives.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {LoginModule} from "./components/login/login.module";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
 
   imports: [
+    CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     LightCardsModule,

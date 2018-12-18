@@ -16,7 +16,7 @@ import {
     LightCardActions,
     LoadLightCardsSuccess
 } from '@ofStore/light-card/light-card.actions';
-import {AuthenticationActionTypes} from '@ofStore/authentication/authentication.actions';
+import {AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
 
 @Injectable()
 export class CardOperationEffects {

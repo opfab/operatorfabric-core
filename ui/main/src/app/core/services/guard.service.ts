@@ -4,9 +4,9 @@ import {Observable} from "rxjs";
 import {select, Store} from "@ngrx/store";
 import {map, tap} from "rxjs/operators";
 import {RouterGo} from "ngrx-router";
-import {getExpirationTime} from "@ofStore/authentication";
 import {isInTheFuture} from "@core/services/authentication.service";
 import {AppState} from "@ofStore/index";
+import {selectExpirationTime} from "@ofStore/selectors/authentication.selectors";
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -15,7 +15,7 @@ export class AuthenticationGuard implements CanActivate {
 
     constructor(private store: Store<AppState>) {
         this.isSessionAuthenticated$ = this.store.pipe(
-            select(getExpirationTime),
+            select(selectExpirationTime),
             map(isInTheFuture)
         );
     }

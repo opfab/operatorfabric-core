@@ -11,11 +11,11 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {MatTabsModule, MatToolbarModule} from '@angular/material';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
-import {getCurrentUrl} from '@ofStore/app.reducer';
 import {BrowserDynamicTestingModule, platformBrowserDynamicTesting} from '@angular/platform-browser-dynamic/testing';
 import {of} from 'rxjs';
 import {NavbarComponent} from "./components/navbar/navbar.component";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {selectCurrentUrl} from "@ofStore/selectors/router.selectors";
 
 
 describe('AppComponent', () => {
@@ -47,7 +47,7 @@ describe('AppComponent', () => {
         spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
         spyOn(store, 'select').and.callFake((obj) => {
-            if (obj === getCurrentUrl) {
+            if (obj === selectCurrentUrl) {
                 // called in ngOnInit and passed to mat-tab-link
                 return of('/test/url');
             }

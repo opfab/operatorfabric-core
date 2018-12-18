@@ -8,7 +8,7 @@ import {
     AcceptLogIn,
     PayloadForSuccessfulAuthentication,
     RejectLogIn
-} from "@ofStore/authentication/authentication.actions";
+} from "../actions/authentication.actions";
 
 import {TestBed, inject, async} from '@angular/core/testing';
 import {provideMockActions} from '@ngrx/effects/testing';
@@ -17,7 +17,7 @@ import {Observable} from 'rxjs';
 import {AuthenticationEffects} from './authentication.effects';
 import {Actions} from '@ngrx/effects';
 import SpyObj = jasmine.SpyObj;
-import {AuthenticationService, CheckTokenResponse} from '@core/services/authentication.service';
+import {AuthenticationService, CheckTokenResponse} from '../../core/services/authentication.service';
 import createSpyObj = jasmine.createSpyObj;
 import {Guid} from "guid-typescript";
 
