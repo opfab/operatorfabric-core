@@ -14,7 +14,7 @@ import {PayloadForSuccessfulAuthentication} from '../store/actions/authenticatio
 import {Guid} from 'guid-typescript';
 import {getPositiveRandomNumberWithinRange, getRandomAlphanumericValue} from '../../tests/helpers';
 
-fdescribe('AuthenticationService', () => {
+describe('AuthenticationService', () => {
 
   let httpMock: HttpTestingController;
 
