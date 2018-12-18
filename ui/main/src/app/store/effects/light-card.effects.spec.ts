@@ -6,9 +6,9 @@
  */
 
 import {LightCardEffects} from './light-card.effects';
-import {getSeveralRandomLightCards} from '@tests/helpers';
+import {getSeveralRandomLightCards} from '../../../tests/helpers';
 import {Actions} from '@ngrx/effects';
-import {LoadLightCards, LoadLightCardsSuccess} from '@ofStore/light-card/light-card.actions';
+import {LoadLightCards, LoadLightCardsSuccess} from '../actions/light-card.actions';
 import {hot} from 'jasmine-marbles';
 
 describe('LightCardEffects', () => {

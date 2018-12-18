@@ -9,8 +9,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {CardOperation} from '@ofStore/card-operation/card-operation.model';
-import {LightCard} from '@ofStore/light-card/light-card.model';
+import {CardOperation} from '@ofModel/card-operation.model';
+import {LightCard} from '@ofModel/light-card.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from '@core/services/authentication.service';
 

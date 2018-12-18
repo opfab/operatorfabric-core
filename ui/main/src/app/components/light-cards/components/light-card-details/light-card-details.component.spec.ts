@@ -9,7 +9,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 
 import {LightCardDetailsComponent} from './light-card-details.component';
-import {I18nData, LightCard, Severity} from '@ofStore/light-card/light-card.model';
+import {I18nData, LightCard, Severity} from '@ofModel/light-card.model';
 import {MatButtonModule, MatCardModule} from '@angular/material';
 import {getOneRandomLigthCard} from '@tests/helpers';
 

@@ -7,7 +7,7 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {CardService} from '@core/services/card.service';
+import {CardService} from '../../core/services/card.service';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {
@@ -15,8 +15,8 @@ import {
     HandleUnexpectedError,
     LightCardActions,
     LoadLightCardsSuccess
-} from '@ofStore/light-card/light-card.actions';
-import {AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
+} from '../actions/light-card.actions';
+import {AuthenticationActionTypes} from '../actions/authentication.actions';
 
 @Injectable()
 export class CardOperationEffects {

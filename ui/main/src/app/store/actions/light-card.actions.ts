@@ -6,7 +6,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {LightCard} from './light-card.model';
+import {LightCard} from '@ofModel/light-card.model';
 
 export enum LightCardActionTypes {
     LoadLightCards = '[Card] Load Light Cards',

@@ -5,7 +5,12 @@
     "paths": {
       "@env/*": ["environments/*"],
       "@ofStore/*": ["app/store/*"],
+      "@ofActions/*": ["app/store/actions"],
+      "@ofEffects/*": ["app/store/effects"],
+      "@ofSelectors/*": ["app/store/selectors"],
+      "@ofStates/*": ["app/store/states"],
       "@core/*": ["app/core/*"],
+      "@ofModel/*": ["app/model/*"],
       "@tests/*": ["tests/*"]
     },
     "outDir": "./dist/out-tsc",

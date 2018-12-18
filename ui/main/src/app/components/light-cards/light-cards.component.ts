@@ -9,8 +9,8 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Observable} from 'rxjs';
-import {LightCard} from '@ofStore/light-card/light-card.model';
-import * as fromStore from '@ofStore/light-card/index';
+import {LightCard} from '@ofModel/light-card.model';
+import * as fromStore from '@ofStore/selectors/light-card.selectors';
 
 @Component({
     selector: 'app-cards',
@@ -25,7 +25,7 @@ export class LightCardsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.lightCards$ = this.store.pipe(select(fromStore.getAllLightCards));
+        this.lightCards$ = this.store.pipe(select(fromStore.selectAllLightCards));
     }
 
 
