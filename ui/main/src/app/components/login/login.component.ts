@@ -6,7 +6,6 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {TryToLogIn} from '@ofActions/authentication.actions';
@@ -17,14 +16,14 @@ import {AppState} from '@ofStore/index';
     selector: 'app-log-in-form',
     providers: [],
     templateUrl: './login.component.html',
-    styles: ['.button-row button {margin-right: 8px;}']
+    styles: ['.btn-primary {margin-right: 8px;}']
 })
 export class LoginComponent implements OnInit {
 
     hide: boolean;
     userForm: FormGroup;
     /* istanbul ignore next */
-    constructor(private router: Router, private store: Store<AppState>) {}
+    constructor( private store: Store<AppState>) {}
 
     ngOnInit() {
         this.hide = true;
