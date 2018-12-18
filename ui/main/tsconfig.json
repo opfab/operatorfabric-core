@@ -4,7 +4,7 @@
     "baseUrl": "./src",
     "paths": {
       "@env/*": ["environments/*"],
-      "@ofStore/*": ["app/state/*"],
+      "@ofStore/*": ["app/store/*"],
       "@core/*": ["app/core/*"],
       "@tests/*": ["tests/*"]
     },
