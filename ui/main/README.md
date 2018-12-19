@@ -96,7 +96,6 @@ gradle bootrun
 ### Login Page
 
 * no error message displayed on wrong identication;
-* after erronous identication, the `login page` need to be reloaded, otherwise connexion is impossible;
 
 ### Light Card flow
 
