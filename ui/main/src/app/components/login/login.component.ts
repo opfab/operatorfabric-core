@@ -9,7 +9,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {TryToLogIn} from '@ofActions/authentication.actions';
-import {RouterGo} from 'ngrx-router';
 import {AppState} from '@ofStore/index';
 
 @Component({
@@ -39,7 +38,6 @@ export class LoginComponent implements OnInit {
             const username = this.userForm.get('identifier').value;
             const password = this.userForm.get('password').value;
             this.store.dispatch(new TryToLogIn({username: username, password: password}));
-            this.store.dispatch(new RouterGo({path: ['/feed']}));
         }
     }
 
