@@ -9,7 +9,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {RouterGo} from 'ngrx-router';
-import {Action} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {
     AcceptLogIn,
     AcceptLogOut,
@@ -18,13 +18,15 @@ import {
     TryToLogIn,
     TryToLogOut
 } from '@ofActions/authentication.actions';
-import {AuthenticationService, CheckTokenResponse} from '@ofServices/authentication.service';
+import {AuthenticationService, CheckTokenResponse} from '../../core/services/authentication.service';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {AppState} from "@ofStore/index";
+
 
 @Injectable()
 export class AuthenticationEffects {
 
-    constructor(private actions$: Actions, private authService: AuthenticationService) {
+    constructor(private store: Store<AppState>,private actions$: Actions, private authService: AuthenticationService) {
     }
 
     @Effect()
@@ -37,7 +39,10 @@ export class AuthenticationEffects {
                     return this.authService.askToken(payload.username, payload.password);
                 }),
                 map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
-                catchError(error => of(error, new RejectLogIn(error)))
+                catchError((error, caught )=> {
+                    this.store.dispatch(new RejectLogIn({denialReason:'unable to authenticate the user'}));
+                    return caught;
+                })
             );
 
     @Effect()
