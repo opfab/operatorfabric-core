@@ -26,7 +26,7 @@ import {AppState} from "@ofStore/index";
 @Injectable()
 export class AuthenticationEffects {
 
-    constructor(private store: Store<AppState>,private actions$: Actions, private authService: AuthenticationService) {
+    constructor(private store: Store<AppState>, private actions$: Actions, private authService: AuthenticationService) {
     }
 
     @Effect()
@@ -39,8 +39,9 @@ export class AuthenticationEffects {
                     return this.authService.askToken(payload.username, payload.password);
                 }),
                 map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
-                catchError((error, caught )=> {
-                    this.store.dispatch(new RejectLogIn({denialReason:'unable to authenticate the user'}));
+                // using this catchError keep the observable alive even if an error occurs (https://github.com/ngrx/platform/issues/646#issuecomment-398640097)
+                catchError((error, caught) => {
+                    this.store.dispatch(new RejectLogIn({denialReason: 'unable to authenticate the user'}));
                     return caught;
                 })
             );
@@ -60,7 +61,7 @@ export class AuthenticationEffects {
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.AcceptLogOut),
             map((action: AcceptLogOut) => {
-                return new RouterGo({path:['/login']})
+                return new RouterGo({path: ['/login']})
             })
         );
 
@@ -97,7 +98,7 @@ export class AuthenticationEffects {
     AcceptLogIn: Observable<Action> =
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.AcceptLogIn),
-            map((action:AcceptLogIn) => new RouterGo({path:['/feed']}))
+            map((action: AcceptLogIn) => new RouterGo({path: ['/feed']}))
         );
 
     handleRejectedLogin(errorMsg: string): AuthenticationActions {
