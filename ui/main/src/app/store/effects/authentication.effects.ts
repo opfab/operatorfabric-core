@@ -18,7 +18,7 @@ import {
     TryToLogIn,
     TryToLogOut
 } from '@ofActions/authentication.actions';
-import {AuthenticationService, CheckTokenResponse} from '../../core/services/authentication.service';
+import {AuthenticationService, CheckTokenResponse} from '../../services/authentication.service';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
 
