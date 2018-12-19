@@ -23,6 +23,7 @@ import {AppState} from "@ofStore/index";
 @Injectable()
 export class CardOperationEffects {
 
+    /* istanbul ignore next */
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private service: CardService) {

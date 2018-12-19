@@ -26,6 +26,7 @@ import {AppState} from "@ofStore/index";
 @Injectable()
 export class AuthenticationEffects {
 
+    /* istanbul ignore next */
     constructor(private store: Store<AppState>, private actions$: Actions, private authService: AuthenticationService) {
     }
 
