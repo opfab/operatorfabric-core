@@ -7,7 +7,7 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {
     LightCardActionTypes,
@@ -20,12 +20,14 @@ import {
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
+import {AppState} from "@ofStore/index";
 
 // those effects are unused for the moment
 @Injectable()
 export class LightCardEffects {
 
     constructor(private actions$: Actions,
+                private store: Store<AppState>,
                 private service: CardService
     ) {
     }
@@ -38,8 +40,12 @@ export class LightCardEffects {
             map((lightCards: LightCard[]) => {
                 return new LoadLightCardsSuccess({lightCards: lightCards});
             }),
-            catchError(err => of(new LoadLightCardsFailure(err)))
-        );
+            catchError((err, caught) => {
+                    this.store.dispatch(new LoadLightCardsFailure(err));
+                    return caught;
+
+                }
+            ));
 
     @Effect()
     loadById: Observable<Action> = this.actions$
@@ -49,6 +55,9 @@ export class LightCardEffects {
             map((lightCard: LightCard) => {
                 return new LoadLightCardSuccess({lightCard: lightCard});
             }),
-            catchError(err => of(new LoadLightCardFailure(err)))
+            catchError((err, caught) => {
+                this.store.dispatch(new LoadLightCardFailure(err));
+                return caught;
+            })
         );
 }

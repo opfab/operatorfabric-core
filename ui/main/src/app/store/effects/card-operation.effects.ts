@@ -17,12 +17,15 @@ import {
     LoadLightCardsSuccess
 } from '@ofActions/light-card.actions';
 import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
+import {Store} from "@ngrx/store";
+import {AppState} from "@ofStore/index";
 
 @Injectable()
 export class CardOperationEffects {
 
-    constructor(private actions$: Actions
-        , private service: CardService) {
+    constructor(private store: Store<AppState>,
+                private actions$: Actions,
+                private service: CardService) {
     }
 
     @Effect()
@@ -43,10 +46,16 @@ export class CardOperationEffects {
                                     new Error(`unhandled action type '${operation.type}'`)
                             });
                     }),
-                    catchError(error => of(new AddLightCardFailure({error: error})))
+                    catchError((error, caught) => {
+                        this.store.dispatch(new AddLightCardFailure({error: error}));
+                        return caught;
+                    })
                 )
             ),
-            catchError(error => of(new HandleUnexpectedError({error: error})))
-        );
+
+            catchError((error,caught )=> {
+                this.store.dispatch(new HandleUnexpectedError({error: error}))
+                return caught;
+            }));
 
 }

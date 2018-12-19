@@ -88,9 +88,10 @@ export class AuthenticationEffects {
 
                     return this.handleLogInAttempt(payload);
                 }),
-                catchError(err => {
+                catchError((err, caught )=> {
                     console.error(err);
-                    return of(new RejectLogIn({denialReason: err}));
+                    this.store.dispatch(new RejectLogIn({denialReason: err}));
+                    return caught;
                 })
             );
 
