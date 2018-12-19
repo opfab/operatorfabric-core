@@ -7,20 +7,23 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {ArchivesComponent} from './components/archives/archives.component';
-import {FeedComponent} from './modules/feed/feed.component';
 import {AuthenticationGuard} from '@ofServices/guard.service';
 import {LoginComponent} from './components/login/login.component';
 
 const routes: Routes = [
-    {path: 'login', component: LoginComponent},
     {
-        path: 'feed', component: FeedComponent
-        , canActivate: [AuthenticationGuard]
+        path: 'login',
+        component: LoginComponent
     },
     {
-        path: 'archives', component: ArchivesComponent
-        , canActivate: [AuthenticationGuard]
+        path: 'feed',
+        loadChildren: './modules/feed/feed.module#FeedModule',
+        canActivate: [AuthenticationGuard]
+    },
+    {
+        path: 'archives',
+        loadChildren: './modules/archives/archives.module#ArchivesModule',
+        canActivate: [AuthenticationGuard]
     },
     {path: '**', redirectTo: '/feed'}
 ];

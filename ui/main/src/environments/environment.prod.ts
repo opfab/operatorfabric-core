@@ -6,5 +6,12 @@
  */
 
 export const environment = {
-  production: true
+  production: true,
+    urls: {
+        authentication: '',
+        auth: '/auth',
+        cards: '/cards',
+        archives : '',
+        thirds: '/thirds'
+    }
 };

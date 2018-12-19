@@ -5,21 +5,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {NgModule} from '@angular/core';
-import {FeedComponent} from "./feed.component";
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 import {AuthenticationGuard} from "@ofServices/guard.service";
-import {RouterModule, Routes} from "@angular/router";
+import {ArchivesComponent} from "./archives.component";
 
 const routes: Routes = [
     {
-        path: 'feed',
-        component: FeedComponent,
+        path: 'archives',
+        component: ArchivesComponent,
         canActivate: [AuthenticationGuard]
     },
-]
+];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
-export class FeedRoutingModule { }
+export class ArchivesRoutingModule { }

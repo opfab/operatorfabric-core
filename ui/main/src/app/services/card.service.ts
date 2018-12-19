@@ -13,12 +13,13 @@ import {CardOperation} from '@ofModel/card-operation.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication.service';
+import {environment} from "@env/environment";
 
 @Injectable()
 export class CardService {
     // TODO create a unique clientId
     private cardOperationsUrl = '/cards/cardOperations?clientId=toBeUniqueSoon&notification=true';
-    private cardsUrl = '/cards/cards';
+    private cardsUrl = `${environment.urls.cards}/cards`;
 
     constructor(private httpClient: HttpClient,
                 private authenticationService: AuthenticationService) {

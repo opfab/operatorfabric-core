@@ -15,10 +15,10 @@ import {FeedModule} from './modules/feed/feed.module';
 import {AppRoutingModule} from './app-routing.module';
 import {ServicesModule} from '@ofServices/services.module';
 import {AppComponent} from './app.component';
-import {ArchivesComponent} from './components/archives/archives.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {LoginModule} from './components/login/login.module';
 import {CommonModule} from '@angular/common';
+import {ArchivesModule} from "./modules/archives/archives.module";
 
 @NgModule({
 
@@ -27,6 +27,7 @@ import {CommonModule} from '@angular/common';
     BrowserModule,
     BrowserAnimationsModule,
     FeedModule,
+    ArchivesModule,
     LoginModule,
     AppRoutingModule,
     HttpClientModule,
@@ -34,7 +35,7 @@ import {CommonModule} from '@angular/common';
     ServicesModule.forRoot(),
     NgbModule.forRoot()
   ],
-  declarations: [AppComponent, ArchivesComponent, NavbarComponent],
+  declarations: [AppComponent, NavbarComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

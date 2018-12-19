@@ -10,7 +10,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {Guid} from 'guid-typescript';
-import {PayloadForSuccessfulAuthentication} from '../store/actions/authentication.actions';
+import {PayloadForSuccessfulAuthentication} from '@ofActions/authentication.actions';
+import {environment} from "@env/environment";
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -25,8 +26,8 @@ export const ONE_SECOND = 1000;
 export class AuthenticationService {
 
 
-    private checkTokenUrl = '/auth/check_token';
-    private askTokenUrl = '/auth/token';
+    private checkTokenUrl = `${environment.urls.auth}/check_token`;
+    private askTokenUrl = `${environment.urls.auth}/token`;
     readonly guid: Guid;
 
 

@@ -8,22 +8,23 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardListComponent} from './components/card-list/card-list.component';
-import {MatButtonModule, MatCardModule, MatListModule} from '@angular/material';
 import {FeedComponent} from './feed.component';
 import {FormsModule} from '@angular/forms';
 import {StateModule} from '../../store/state.module';
 import {CardComponent} from './components/card/card.component';
+import {FeedRoutingModule} from "./feed-routing.module";
+import {MatButtonModule, MatCardModule, MatListModule} from "@angular/material";
 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    MatListModule,
-    MatCardModule,
-    MatButtonModule,
-
-    StateModule
+    StateModule,
+    FeedRoutingModule,
+      MatListModule,
+      MatCardModule,
+      MatButtonModule,
   ],
   declarations: [CardListComponent, FeedComponent, CardComponent],
   exports: [FeedComponent]
