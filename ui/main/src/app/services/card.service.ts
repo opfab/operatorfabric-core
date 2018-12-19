@@ -18,7 +18,7 @@ import {environment} from "@env/environment";
 @Injectable()
 export class CardService {
     // TODO create a unique clientId
-    private cardOperationsUrl = '/cards/cardOperations?clientId=toBeUniqueSoon&notification=true';
+    private cardOperationsUrl = `${environment.urls.cards}/cards/cardOperations?clientId=toBeUniqueSoon&notification=true`;
     private cardsUrl = `${environment.urls.cards}/cards`;
 
     constructor(private httpClient: HttpClient,
