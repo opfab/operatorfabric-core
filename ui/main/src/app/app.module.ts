@@ -11,7 +11,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import {StateModule} from '@ofStore/state.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {LightCardsModule} from './components/light-cards/light-cards.module';
+import {FeedModule} from './modules/feed/feed.module';
 import {AppRoutingModule} from './app-routing.module';
 import {ServicesModule} from '@ofServices/services.module';
 import {AppComponent} from './app.component';
@@ -26,7 +26,7 @@ import {CommonModule} from '@angular/common';
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
-    LightCardsModule,
+    FeedModule,
     LoginModule,
     AppRoutingModule,
     HttpClientModule,

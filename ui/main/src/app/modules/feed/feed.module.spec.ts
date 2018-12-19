@@ -5,13 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { LightCardsModule } from './light-cards.module';
+import { FeedModule } from './feed.module';
 
-describe('LightCardsModule', () => {
-  let cardsModule: LightCardsModule;
+describe('FeedModule', () => {
+  let cardsModule: FeedModule;
 
   beforeEach(() => {
-    cardsModule = new LightCardsModule();
+    cardsModule = new FeedModule();
   });
 
   it('should create an instance', () => {

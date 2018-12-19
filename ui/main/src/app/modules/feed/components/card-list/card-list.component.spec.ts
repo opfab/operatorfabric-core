@@ -7,25 +7,25 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LightCardsListComponent } from './light-cards-list.component';
+import { CardListComponent } from './card-list.component';
 import {MatButtonModule, MatCardModule} from '@angular/material';
-import {LightCardsModule} from '../../light-cards.module';
-import {LightCardDetailsComponent} from '../light-card-details/light-card-details.component';
+import {FeedModule} from '../../feed.module';
+import {CardComponent} from '../card/card.component';
 
-describe('LightCardsListComponent', () => {
-  let component: LightCardsListComponent;
-  let fixture: ComponentFixture<LightCardsListComponent>;
+describe('CardListComponent', () => {
+  let component: CardListComponent;
+  let fixture: ComponentFixture<CardListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
         imports: [MatCardModule, MatButtonModule],
-        declarations: [ LightCardsListComponent, LightCardDetailsComponent]
+        declarations: [ CardListComponent, CardComponent]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LightCardsListComponent);
+    fixture = TestBed.createComponent(CardListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

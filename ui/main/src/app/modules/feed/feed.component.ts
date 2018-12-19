@@ -7,17 +7,17 @@
 
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
+import {AppState} from '../../store/index';
 import {Observable} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
-import * as fromStore from '@ofSelectors/light-card.selectors';
+import * as fromStore from '../../store/selectors/light-card.selectors';
 
 @Component({
     selector: 'app-cards',
-    templateUrl: './light-cards.component.html',
-    styleUrls: ['./light-cards.component.scss']
+    templateUrl: './feed.component.html',
+    styleUrls: ['./feed.component.scss']
 })
-export class LightCardsComponent implements OnInit, AfterViewInit {
+export class FeedComponent implements OnInit, AfterViewInit {
 
     lightCards$: Observable<LightCard[]>;
 

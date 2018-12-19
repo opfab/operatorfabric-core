@@ -7,29 +7,29 @@
 
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {LightCardsComponent} from './light-cards.component';
+import {FeedComponent} from './feed.component';
 import {MatButtonModule, MatCardModule} from '@angular/material';
-import {LightCardsListComponent} from './components/light-cards-list/light-cards-list.component';
-import {LightCardDetailsComponent} from './components/light-card-details/light-card-details.component';
-import {appReducer, AppState} from '@ofStore/index';
+import {CardListComponent} from './components/card-list/card-list.component';
+import {CardComponent} from './components/card/card.component';
+import {appReducer, AppState} from '../../store/index';
 import {Store, StoreModule} from '@ngrx/store';
-import {LoadLightCardsSuccess} from '@ofActions/light-card.actions';
+import {LoadLightCardsSuccess} from '../../store/actions/light-card.actions';
 import {LightCard} from '@ofModel/light-card.model';
-import * as fromStore from '@ofSelectors/light-card.selectors';
+import * as fromStore from '../../store/selectors/light-card.selectors';
 import {By} from '@angular/platform-browser';
-import {getOneRandomLigthCard, getPositiveRandomNumberWithinRange, getSeveralRandomLightCards} from '@tests/helpers';
+import {getOneRandomLigthCard, getPositiveRandomNumberWithinRange, getSeveralRandomLightCards} from '../../../tests/helpers';
 
-describe('LightCardsComponent', () => {
-    let component: LightCardsComponent;
+describe('FeedComponent', () => {
+    let component: FeedComponent;
     let store: Store<AppState>;
-    let fixture: ComponentFixture<LightCardsComponent>;
+    let fixture: ComponentFixture<FeedComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
                 StoreModule.forRoot(appReducer),
                 MatCardModule, MatButtonModule],
-            declarations: [LightCardsListComponent, LightCardsComponent, LightCardDetailsComponent]
+            declarations: [CardListComponent, FeedComponent, CardComponent]
             , providers: [{provide: Store, useClass: Store}]
         })
             .compileComponents();
@@ -37,7 +37,7 @@ describe('LightCardsComponent', () => {
     beforeEach(() => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
-        fixture = TestBed.createComponent(LightCardsComponent);
+        fixture = TestBed.createComponent(FeedComponent);
         component = fixture.componentInstance;
 
     });

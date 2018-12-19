@@ -10,10 +10,10 @@ import {I18nData, LightCard} from '@ofModel/light-card.model';
 
 @Component({
     selector: 'app-light-card-details',
-    templateUrl: './light-card-details.component.html',
-    styleUrls: ['./light-card-details.component.scss']
+    templateUrl: './card.component.html',
+    styleUrls: ['./card.component.scss']
 })
-export class LightCardDetailsComponent {
+export class CardComponent {
 
    @Input() public lightCard: LightCard;
     constructor() {}

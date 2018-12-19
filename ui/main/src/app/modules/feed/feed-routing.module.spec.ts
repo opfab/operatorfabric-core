@@ -5,13 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { LightCardsRoutingModule } from './light-cards-routing.module';
+import { FeedRoutingModule } from './feed-routing.module';
 
-describe('LightCardsRoutingModule', () => {
-  let cardsRoutingModule: LightCardsRoutingModule;
+describe('FeedRoutingModule', () => {
+  let cardsRoutingModule: FeedRoutingModule;
 
   beforeEach(() => {
-    cardsRoutingModule = new LightCardsRoutingModule();
+    cardsRoutingModule = new FeedRoutingModule();
   });
 
   it('should create an instance', () => {

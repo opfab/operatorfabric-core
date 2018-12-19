@@ -17,4 +17,4 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
 })
-export class LightCardsRoutingModule { }
+export class FeedRoutingModule { }

@@ -10,10 +10,10 @@ import {LightCard} from '@ofModel/light-card.model';
 
 @Component({
   selector: 'app-cards-list',
-  templateUrl: './light-cards-list.component.html',
-  styleUrls: ['./light-cards-list.component.scss']
+  templateUrl: './card-list.component.html',
+  styleUrls: ['./card-list.component.scss']
 })
-export class LightCardsListComponent  {
+export class CardListComponent  {
 
   @Input() public lightCards: LightCard[];
 

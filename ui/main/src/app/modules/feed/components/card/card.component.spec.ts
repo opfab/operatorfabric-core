@@ -8,25 +8,25 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 
-import {LightCardDetailsComponent} from './light-card-details.component';
+import {CardComponent} from './card.component';
 import {I18nData, LightCard, Severity} from '@ofModel/light-card.model';
 import {MatButtonModule, MatCardModule} from '@angular/material';
-import {getOneRandomLigthCard} from '@tests/helpers';
+import {getOneRandomLigthCard} from '../../../../../tests/helpers';
 
-describe('LightCardDetailsComponent', () => {
-    let lightCardDetailsComp: LightCardDetailsComponent;
-    let fixture: ComponentFixture<LightCardDetailsComponent>;
+describe('CardComponent', () => {
+    let lightCardDetailsComp: CardComponent;
+    let fixture: ComponentFixture<CardComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [MatCardModule, MatButtonModule],
-            declarations: [LightCardDetailsComponent]
+            declarations: [CardComponent]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(LightCardDetailsComponent);
+        fixture = TestBed.createComponent(CardComponent);
         lightCardDetailsComp = fixture.debugElement.componentInstance;
     });
 
