@@ -7,11 +7,11 @@
 
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CardService} from '@core/services/card.service';
-import {AuthenticationService} from '@core/services/authentication.service';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {TokenInjector} from '@core/services/interceptors.service';
-import {AuthenticationGuard} from '@core/services/guard.service';
+import {AuthenticationService} from './authentication.service';
+import {TokenInjector} from './interceptors.service';
+import {AuthenticationGuard} from './guard.service';
+import {CardService} from './card.service';
 
 @NgModule({
   imports: [
@@ -23,21 +23,21 @@ import {AuthenticationGuard} from '@core/services/guard.service';
     multi: true
   },AuthenticationGuard]
 })
-export class CoreModule {
+export class ServicesModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: CoreModule
+      ngModule: ServicesModule
     };
   }
 
   constructor(
     @Optional()
     @SkipSelf()
-      parentModule: CoreModule
+      parentModule: ServicesModule
   ) {
     if (parentModule) {
       throw new Error(
-        'CoreModule is already loaded. Import it in the AppModule only'
+        'ServicesModule is already loaded. Import it in the AppModule only'
       );
     }
   }

@@ -8,7 +8,7 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
-import {LightCardAdapter, lightCardInitialState, LightCardStateEntity} from "@ofStates/light-card.state";
+import {LightCardAdapter, lightCardInitialState, LightCardStateEntity} from '@ofStates/light-card.state';
 
 export function reducer(
     state = lightCardInitialState,

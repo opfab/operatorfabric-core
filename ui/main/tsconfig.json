@@ -9,7 +9,7 @@
       "@ofEffects/*": ["app/store/effects/*"],
       "@ofSelectors/*": ["app/store/selectors/*"],
       "@ofStates/*": ["app/store/states/*"],
-      "@core/*": ["app/core/*"],
+      "@ofServices/*": ["app/services/*"],
       "@ofModel/*": ["app/model/*"],
       "@tests/*": ["tests/*"]
     },

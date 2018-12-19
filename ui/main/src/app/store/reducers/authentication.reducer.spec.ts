@@ -6,7 +6,7 @@
  */
 
 import { reducer } from './authentication.reducer';
-import {authInitialState} from "@ofStates/authentication.state";
+import {authInitialState} from '@ofStates/authentication.state';
 
 describe('Authentication Reducer', () => {
   describe('unknown action', () => {

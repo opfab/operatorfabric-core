@@ -13,7 +13,7 @@ import {StateModule} from '@ofStore/state.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsModule} from './components/light-cards/light-cards.module';
 import {AppRoutingModule} from './app-routing.module';
-import {CoreModule} from './core/core.module';
+import {ServicesModule} from '@ofServices/services.module';
 import {AppComponent} from './app.component';
 import {ArchivesComponent} from './components/archives/archives.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
@@ -31,7 +31,7 @@ import {CommonModule} from '@angular/common';
     AppRoutingModule,
     HttpClientModule,
     StateModule.forRoot(),
-    CoreModule.forRoot(),
+    ServicesModule.forRoot(),
     NgbModule.forRoot()
   ],
   declarations: [AppComponent, ArchivesComponent, NavbarComponent],

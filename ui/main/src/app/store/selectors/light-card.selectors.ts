@@ -6,8 +6,8 @@
  */
 
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {LightCardAdapter, LightCardStateEntity} from "@ofStates/light-card.state";
-import {getSelectedId} from "@ofStore/reducers/light-card.reducer";
+import {LightCardAdapter, LightCardStateEntity} from '@ofStates/light-card.state';
+import {getSelectedId} from '@ofStore/reducers/light-card.reducer';
 
 export const selectLightCardsState = createFeatureSelector<LightCardStateEntity>( 'lightCard');
 

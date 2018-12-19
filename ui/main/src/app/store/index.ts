@@ -19,9 +19,9 @@ import {CardOperationEffects} from '@ofEffects/card-operation.effects';
 import {AuthenticationEffects} from '@ofEffects/authentication.effects';
 import {RouterEffects} from 'ngrx-router';
 import {initialState as routerInitialState} from '@ofStore/states/router.state';
-import {LightCardStateEntity} from "@ofStates/light-card.state";
-import {reducer as lightCardReducer} from "@ofStore/reducers/light-card.reducer";
-import {AuthState} from "@ofStates/authentication.state";
+import {LightCardStateEntity} from '@ofStates/light-card.state';
+import {reducer as lightCardReducer} from '@ofStore/reducers/light-card.reducer';
+import {AuthState} from '@ofStates/authentication.state';
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;

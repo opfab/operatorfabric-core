@@ -6,7 +6,7 @@
  */
 
 import {AuthenticationActions, AuthenticationActionTypes} from '@ofActions/authentication.actions';
-import {authInitialState, AuthState} from "@ofStates/authentication.state";
+import {authInitialState, AuthState} from '@ofStates/authentication.state';
 
 
 export function reducer(state = authInitialState, action: AuthenticationActions): AuthState {

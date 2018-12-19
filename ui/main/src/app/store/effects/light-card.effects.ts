@@ -18,7 +18,7 @@ import {
     LoadLightCardSuccess
 } from '@ofActions/light-card.actions';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {CardService} from '../../core/services/card.service';
+import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
 
 // those effects are unused for the moment

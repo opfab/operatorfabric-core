@@ -17,7 +17,7 @@ import {Observable} from 'rxjs';
 import {AuthenticationEffects} from './authentication.effects';
 import {Actions} from '@ngrx/effects';
 import SpyObj = jasmine.SpyObj;
-import {AuthenticationService, CheckTokenResponse} from '../../core/services/authentication.service';
+import {AuthenticationService, CheckTokenResponse} from '@ofServices/authentication.service';
 import createSpyObj = jasmine.createSpyObj;
 import {Guid} from 'guid-typescript';
 

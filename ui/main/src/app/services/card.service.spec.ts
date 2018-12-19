@@ -10,7 +10,7 @@ import {TestBed, inject} from '@angular/core/testing';
 import {CardService} from './card.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import SpyObj = jasmine.SpyObj;
-import {AuthenticationService} from '@core/services/authentication.service';
+import {AuthenticationService} from '@ofServices/authentication.service';
 import createSpyObj = jasmine.createSpyObj;
 
 describe('CardService', () => {

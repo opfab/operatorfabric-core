@@ -9,7 +9,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ArchivesComponent} from './components/archives/archives.component';
 import {LightCardsComponent} from './components/light-cards/light-cards.component';
-import {AuthenticationGuard} from '@core/services/guard.service';
+import {AuthenticationGuard} from '@ofServices/guard.service';
 import {LoginComponent} from './components/login/login.component';
 
 const routes: Routes = [

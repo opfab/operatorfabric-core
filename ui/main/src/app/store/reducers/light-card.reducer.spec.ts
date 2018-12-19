@@ -6,7 +6,7 @@
  */
 
 import { reducer } from './light-card.reducer';
-import {lightCardInitialState} from "@ofStates/light-card.state";
+import {lightCardInitialState} from '@ofStates/light-card.state';
 
 describe('LightCard Reducer', () => {
   describe('unknown action', () => {

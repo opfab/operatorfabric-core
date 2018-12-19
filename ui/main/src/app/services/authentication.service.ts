@@ -10,7 +10,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {Guid} from 'guid-typescript';
-import {PayloadForSuccessfulAuthentication} from '@ofActions/authentication.actions';
+import {PayloadForSuccessfulAuthentication} from '../store/actions/authentication.actions';
 
 export enum LocalStorageAuthContent {
     token = 'token',
