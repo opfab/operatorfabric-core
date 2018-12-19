@@ -20,10 +20,13 @@ import SpyObj = jasmine.SpyObj;
 import {AuthenticationService, CheckTokenResponse} from '@ofServices/authentication.service';
 import createSpyObj = jasmine.createSpyObj;
 import {Guid} from 'guid-typescript';
+import {Store} from "@ngrx/store";
+import {AppState} from "@ofStore/index";
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
     let effects: AuthenticationEffects;
+    let mockStore: Store<AppState>;
     let authenticationService: SpyObj<AuthenticationService>;
 
     beforeEach(async(() => {
@@ -33,11 +36,13 @@ describe('AuthenticationEffects', () => {
                 , 'clearAuthenticationInformation'
                 ,'extractIdentificationInformation'
             ]);
+        const storeSpy = createSpyObj('Store', ['dispatch']);
         TestBed.configureTestingModule({
             providers: [
                 AuthenticationEffects,
                 provideMockActions(() => actions$),
-                {provide: AuthenticationService, useValue: authenticationServiceSpy}
+                {provide: AuthenticationService, useValue: authenticationServiceSpy},
+                {provide: Store, useValue: storeSpy}
             ]
         });
 
@@ -48,6 +53,7 @@ describe('AuthenticationEffects', () => {
     beforeEach(() => {
         actions$ = TestBed.get(Actions);
         authenticationService = TestBed.get(AuthenticationService);
+        mockStore = TestBed.get(Store);
     });
 
     it('should be created', () => {

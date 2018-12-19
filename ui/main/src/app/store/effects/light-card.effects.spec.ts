@@ -21,11 +21,13 @@ describe('LightCardEffects', () => {
 
         const localMockCardService = jasmine.createSpyObj('CardService', ['getLightCards']);
 
+        const mockStore = jasmine.createSpyObj('Store',['dispatch']);
+
         localMockCardService.getLightCards.and.returnValue(hot('---b', {b: expectedArrayOfLightCards}));
         const expectedAction = new LoadLightCardsSuccess({lightCards: expectedArrayOfLightCards});
         const localExpected = hot('---c', {c: expectedAction});
 
-        effects = new LightCardEffects(localActions$, localMockCardService);
+        effects = new LightCardEffects(mockStore, localActions$, localMockCardService);
 
         expect(effects).toBeTruthy();
         expect(effects.load).toBeObservable(localExpected);

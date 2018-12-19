@@ -26,8 +26,8 @@ import {AppState} from "@ofStore/index";
 @Injectable()
 export class LightCardEffects {
 
-    constructor(private actions$: Actions,
-                private store: Store<AppState>,
+    constructor(private store: Store<AppState>,
+                private actions$: Actions,
                 private service: CardService
     ) {
     }
