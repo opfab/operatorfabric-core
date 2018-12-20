@@ -16,30 +16,27 @@ import {AppRoutingModule} from './app-routing.module';
 import {ServicesModule} from '@ofServices/services.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
-import {CommonModule} from '@angular/common';
 import {ArchivesModule} from "./modules/archives/archives.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {LoginComponent} from "./components/login/login.component";
 
 @NgModule({
+    imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        FeedModule,
+        ArchivesModule,
+        AppRoutingModule,
+        HttpClientModule,
+        StateModule.forRoot(),
+        ServicesModule.forRoot(),
+        NgbModule.forRoot()
+    ],
+    declarations: [AppComponent, NavbarComponent, LoginComponent],
+    bootstrap: [AppComponent]
 
-  imports: [
-    CommonModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FeedModule,
-    ArchivesModule,
-    AppRoutingModule,
-    HttpClientModule,
-    StateModule.forRoot(),
-    ServicesModule.forRoot(),
-    NgbModule.forRoot()
-  ],
-  declarations: [AppComponent, NavbarComponent, LoginComponent],
-  providers: [],
-  bootstrap: [AppComponent]
 })
 export class AppModule {
 }
