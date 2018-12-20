@@ -18,7 +18,7 @@ import {environment} from "@env/environment";
 @Injectable()
 export class CardService {
     // TODO create a unique clientId
-    private cardOperationsUrl = `${environment.urls.cards}/cards/cardOperations?clientId=toBeUniqueSoon&notification=true`;
+    private cardOperationsUrl = `${environment.urls.cards}/cardOperations?clientId=toBeUniqueSoon&notification=true`;
     private cardsUrl = `${environment.urls.cards}/cards`;
 
     constructor(private httpClient: HttpClient,
@@ -66,7 +66,7 @@ export class CardService {
 
         });
     }
-// sse request not intercept by core/services/interceptors.services/TokenInjector
+// sse request not intercepted by core/services/interceptors.services/TokenInjector
     private handleHeaders() {
         return {
             headers:

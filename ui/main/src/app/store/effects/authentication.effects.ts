@@ -37,13 +37,13 @@ export class AuthenticationEffects {
                 ofType(AuthenticationActionTypes.TryToLogIn),
                 switchMap((action: TryToLogIn) => {
                     const payload = action.payload;
-                    return this.authService.askToken(payload.username, payload.password);
-                }),
-                map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
-                // using this catchError keep the observable alive even if an error occurs (https://github.com/ngrx/platform/issues/646#issuecomment-398640097)
-                catchError((error, caught) => {
-                    this.store.dispatch(new RejectLogIn({denialReason: 'unable to authenticate the user'}));
-                    return caught;
+                    return this.authService.askToken(payload.username, payload.password).pipe(
+                        map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
+                        catchError(error => {
+                                console.error('error while trying log in', error);
+                                return of(new RejectLogIn({denialReason: 'unable to authenticate the user'}));
+                            }
+                        );
                 })
             );
 
@@ -89,7 +89,7 @@ export class AuthenticationEffects {
 
                     return this.handleLogInAttempt(payload);
                 }),
-                catchError((err, caught )=> {
+                catchError((err, caught) => {
                     console.error(err);
                     this.store.dispatch(new RejectLogIn({denialReason: err}));
                     return caught;
