@@ -50,30 +50,39 @@ public class WebFluxConfig {
             @Override
             public void addCorsMappings(org.springframework.web.reactive.config.CorsRegistry registry) {
                 registry
-                   .addMapping("/cards/**")
+                   .addMapping("/**")
                    .allowedOrigins("*")
-                   .allowedMethods("*");
+                   .allowedMethods("*")
+                   .allowedHeaders("*");
             }
         };
     }
 
     @Bean
     public RouterFunction<ServerResponse> cardOperationRoutes() {
-        return RouterFunctions.route(RequestPredicates.GET("/cardOperations"),
-           request -> {
-               ServerResponse.BodyBuilder builder = ServerResponse.ok()
-                  .contentType(MediaType.TEXT_EVENT_STREAM);
-               Mono<CardOperationsGetParameters> input = extractCardSubscriptionInfo(request);
-               if (request.queryParam("test").orElse(FALSE).equals(TRUE)) {
-                   return builder.body(cardOperationsController.publishTestData(input),
-                      String.class);
-               } else {
-                   return builder.body(cardOperationsController.registerSubscriptionAndPublish
-                         (input),
-                      String.class);
-               }
-           }
-        );
+        return RouterFunctions
+                .route(RequestPredicates.GET("/cardOperations"),cardOperationGetRoute())
+                .andRoute(RequestPredicates.OPTIONS("/cardOperations"),cardOperationOptionRoute());
+    }
+
+    private HandlerFunction<ServerResponse> cardOperationOptionRoute() {
+        return request ->ServerResponse.ok().build();
+    }
+
+    private HandlerFunction<ServerResponse> cardOperationGetRoute() {
+        return request -> {
+            ServerResponse.BodyBuilder builder = ServerResponse.ok()
+               .contentType(MediaType.TEXT_EVENT_STREAM);
+            Mono<CardOperationsGetParameters> input = extractCardSubscriptionInfo(request);
+            if (request.queryParam("test").orElse(FALSE).equals(TRUE)) {
+                return builder.body(cardOperationsController.publishTestData(input),
+                   String.class);
+            } else {
+                return builder.body(cardOperationsController.registerSubscriptionAndPublish
+                      (input),
+                   String.class);
+            }
+        };
     }
 
     private Mono<CardOperationsGetParameters> extractCardSubscriptionInfo(ServerRequest request){
