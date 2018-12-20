@@ -13,7 +13,6 @@ import {AppState} from '@ofStore/index';
 
 @Component({
     selector: 'app-log-in-form',
-    providers: [],
     templateUrl: './login.component.html',
     styles: ['.btn-primary {margin-right: 8px;}']
 })

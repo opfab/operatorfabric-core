@@ -43,7 +43,7 @@ export class AuthenticationEffects {
                                 console.error('error while trying log in', error);
                                 return of(new RejectLogIn({denialReason: 'unable to authenticate the user'}));
                             }
-                        );
+                        ));
                 })
             );
 
