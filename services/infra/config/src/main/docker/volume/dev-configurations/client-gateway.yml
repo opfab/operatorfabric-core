@@ -28,12 +28,13 @@ spring:
         predicates:
         - Path=/cards/**
         filters:
+#         - RemoveResponseHeader=Access-Control-Allow-Origin
 #        - AddResponseHeader=Access-Control-Allow-Origin, *
 #        - name: AddResponseHeader
 #          args:
 #            name: Allow
 #            value: GET, HEAD, POST, PUT
-        - RewritePath=/cards/(?<path>.*), /$\{path}
+         - RewritePath=/cards/(?<path>.*), /$\{path}
       globalcors:
         corsConfigurations:
           '[/**]':

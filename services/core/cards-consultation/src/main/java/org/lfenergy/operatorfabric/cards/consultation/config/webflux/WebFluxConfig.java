@@ -13,6 +13,7 @@ import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperations
 import org.lfenergy.operatorfabric.springtools.config.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -44,6 +45,7 @@ public class WebFluxConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "opfab", value = "cors.activate")
     public WebFluxConfigurer corsConfigurer() {
         return new WebFluxConfigurerComposite() {
 
