@@ -30,7 +30,7 @@ export class AuthenticationGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
         Observable<boolean> | Promise<boolean> | boolean {
-        return this.isSessionAuthenticated$.pipe(tap(this.dispatchRouterActionToLoginPageIfFalse ));
+        return this.isSessionAuthenticated$.pipe(tap(this.dispatchRouterActionToLoginPageIfFalse.bind(this) ));
     }
 
     dispatchRouterActionToLoginPageIfFalse(isAuthenticated: boolean){
