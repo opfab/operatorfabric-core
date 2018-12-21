@@ -129,8 +129,8 @@ export class AuthenticationService {
             new Date(expirationDate)
         );
     }
-    
-    public getSecurityHeadears(){
+
+    public getSecurityHeader(){
         return { 'Authorization': `Bearer ${this.extractToken()}` }
     }
 }
