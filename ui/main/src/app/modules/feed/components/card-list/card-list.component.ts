@@ -9,7 +9,7 @@ import {Component, Input} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 
 @Component({
-  selector: 'app-cards-list',
+  selector: 'of-card-list',
   templateUrl: './card-list.component.html',
   styleUrls: ['./card-list.component.scss']
 })

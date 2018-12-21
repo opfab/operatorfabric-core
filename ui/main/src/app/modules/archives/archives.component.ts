@@ -8,7 +8,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-archives',
+  selector: 'of-archives',
   templateUrl: './archives.component.html',
   styleUrls: ['./archives.component.scss']
 })

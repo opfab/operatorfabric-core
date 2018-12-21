@@ -13,7 +13,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '../../store/selectors/light-card.selectors';
 
 @Component({
-    selector: 'app-cards',
+    selector: 'of-cards',
     templateUrl: './feed.component.html',
     styleUrls: ['./feed.component.scss']
 })

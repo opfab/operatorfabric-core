@@ -13,6 +13,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {of} from 'rxjs';
+import {IconComponent} from "../icon/icon.component";
 
 describe('NavbarComponent', () => {
 
@@ -26,7 +27,7 @@ describe('NavbarComponent', () => {
             imports: [NgbModule.forRoot(),
                 RouterTestingModule,
                 StoreModule.forRoot(appReducer),],
-            declarations: [NavbarComponent],
+            declarations: [NavbarComponent, IconComponent],
             providers: [{provide: store, useClass: Store}]
         })
             .compileComponents();

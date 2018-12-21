@@ -13,9 +13,8 @@ import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'of-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
 

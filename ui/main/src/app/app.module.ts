@@ -19,9 +19,12 @@ import {NavbarComponent} from './components/navbar/navbar.component';
 import {ArchivesModule} from "./modules/archives/archives.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {LoginComponent} from "./components/login/login.component";
+import { IconComponent } from './components/icon/icon.component';
+import {CommonModule} from "@angular/common";
 
 @NgModule({
     imports: [
+        CommonModule,
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
@@ -32,11 +35,10 @@ import {LoginComponent} from "./components/login/login.component";
         HttpClientModule,
         StateModule.forRoot(),
         ServicesModule.forRoot(),
-        NgbModule.forRoot()
+        NgbModule.forRoot(),
     ],
-    declarations: [AppComponent, NavbarComponent, LoginComponent],
+    declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent],
     bootstrap: [AppComponent]
-
 })
 export class AppModule {
 }

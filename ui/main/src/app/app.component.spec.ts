@@ -16,6 +16,7 @@ import {of} from 'rxjs';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
+import {IconComponent} from "./components/icon/icon.component";
 
 
 
@@ -40,7 +41,7 @@ describe('AppComponent', () => {
                 MatTabsModule,
                 MatToolbarModule
             ],
-            declarations: [AppComponent,NavbarComponent],
+            declarations: [AppComponent,NavbarComponent, IconComponent],
             providers: [{provide: store, useClass: Store}
             ]
         }).compileComponents();

@@ -19,7 +19,7 @@ import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
 
 
 @Component({
-    selector: 'app-root',
+    selector: 'of-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })

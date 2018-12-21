@@ -9,7 +9,7 @@ import {AfterContentInit, AfterViewInit, Component, Input, OnInit} from '@angula
 import {I18nData, LightCard} from '@ofModel/light-card.model';
 
 @Component({
-    selector: 'app-light-card-details',
+    selector: 'of-card',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss']
 })

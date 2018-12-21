@@ -12,7 +12,7 @@ import {TryToLogIn} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 
 @Component({
-    selector: 'app-log-in-form',
+    selector: 'of-login',
     templateUrl: './login.component.html',
     styles: ['.btn-primary {margin-right: 8px;}']
 })

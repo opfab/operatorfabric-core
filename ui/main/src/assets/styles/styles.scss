@@ -7,7 +7,7 @@
 
 /* You can add global styles to this file, and also import other style files */
 
-@import "./bootstrap_sass/_variables.scss";
+@import "variables";
 /* import bootstrap*/
 @import '../../../node_modules/bootstrap/scss/bootstrap.scss';
 @import "navbar.scss";
@@ -17,9 +17,14 @@ $bottom-padding: 10px ;
 $body-padding: $top-padding 20px $bottom-padding 20px ;
 $total-vertical-padding: $top-padding + $bottom-padding ;
 
+* {
+  color: $light
+}
+
 body {
   padding: $body-padding;
   min-width: 500px;
+  background-color: $dark;
 }
 
 
