@@ -129,6 +129,10 @@ export class AuthenticationService {
             new Date(expirationDate)
         );
     }
+    
+    public getSecurityHeadears(){
+        return { 'Authorization': `Bearer ${this.extractToken()}` }
+    }
 }
 
 export class AuthObject {

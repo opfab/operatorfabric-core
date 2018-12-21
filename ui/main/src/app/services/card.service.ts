@@ -6,21 +6,16 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {CardOperation} from '@ofModel/card-operation.model';
-import {LightCard} from '@ofModel/light-card.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication.service';
-import {environment} from "@env/environment";
 import {Card} from "@ofModel/card.model";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable()
 export class CardService {
-    // TODO create a unique clientId
-    private cardOperationsUrl = `${environment.urls.cards}/cardOperations?clientId=toBeUniqueSoon&notification=true`;
-    private cardsUrl = `${environment.urls.cards}/cards`;
+    readonly cardOperationsUrl: string;
 
     constructor(private httpClient: HttpClient,
                 private authenticationService: AuthenticationService) {
@@ -50,19 +45,18 @@ export class CardService {
             } catch (error) {
                 observer.error(error);
             }
-                return () => {
-                    if (eventSource) {
-                        eventSource.close();
-                    }
-                };
+            return () => {
+                if (eventSource) {
+                    eventSource.close();
+                }
+            };
 
         });
     }
+
 // sse request not intercepted by core/services/interceptors.services/TokenInjector
     private handleHeaders() {
-        return {
-            headers:
-                {'Authorization': `Bearer ${this.authenticationService.extractToken()}`}
-        };
+        return { headers: this.authenticationService.getSecurityHeadears() }
+        ;
     }
 }
