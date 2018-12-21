@@ -12,5 +12,9 @@ node{
     nodeModulesDir = file("${project.projectDir}")
 }
 
+npm_run_build {
+    args = ['--', '--configuration=production']
+}
+
 npm_run_build.dependsOn(npm_install)
 build.dependsOn(npm_run_build)
