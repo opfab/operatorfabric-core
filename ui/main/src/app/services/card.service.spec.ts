@@ -12,6 +12,9 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import SpyObj = jasmine.SpyObj;
 import {AuthenticationService} from '@ofServices/authentication.service';
 import createSpyObj = jasmine.createSpyObj;
+import createSpy = jasmine.createSpy;
+import {Guid} from "guid-typescript";
+import {GuidService} from "@ofServices/guid.service";
 
 describe('CardService', () => {
     let httpMock: HttpTestingController;
@@ -27,8 +30,10 @@ describe('CardService', () => {
 
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [CardService,
-                {provide: AuthenticationService, useValue: authenticationServiceSpy}
+            providers: [CardService
+                // ,{provide: AuthenticationService, useValue: authenticationServiceSpy}
+                ,AuthenticationService
+                ,GuidService
             ]
         });
         httpMock = TestBed.get(HttpTestingController);
@@ -37,5 +42,6 @@ describe('CardService', () => {
 
     it('should be created', inject([CardService], (service: CardService) => {
         expect(service).toBeTruthy();
+
     }));
 });

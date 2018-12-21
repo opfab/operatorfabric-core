@@ -12,33 +12,41 @@ import {AuthenticationService} from './authentication.service';
 import {TokenInjector} from './interceptors.service';
 import {AuthenticationGuard} from './guard.service';
 import {CardService} from './card.service';
+import {Guid} from "guid-typescript";
+import {GuidService} from "@ofServices/guid.service";
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  providers: [CardService, AuthenticationService,{
-    provide: HTTP_INTERCEPTORS,
-    useClass: TokenInjector,
-    multi: true
-  },AuthenticationGuard]
+    imports: [
+        CommonModule
+    ],
+    providers: [CardService
+        , AuthenticationService
+        , {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInjector,
+            multi: true
+        }
+        , AuthenticationGuard
+        , GuidService
+
+    ]
 })
 export class ServicesModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: ServicesModule
-    };
-  }
-
-  constructor(
-    @Optional()
-    @SkipSelf()
-      parentModule: ServicesModule
-  ) {
-    if (parentModule) {
-      throw new Error(
-        'ServicesModule is already loaded. Import it in the AppModule only'
-      );
+    static forRoot(): ModuleWithProviders {
+        return {
+            ngModule: ServicesModule
+        };
     }
-  }
+
+    constructor(
+        @Optional()
+        @SkipSelf()
+            parentModule: ServicesModule
+    ) {
+        if (parentModule) {
+            throw new Error(
+                'ServicesModule is already loaded. Import it in the AppModule only'
+            );
+        }
+    }
 }

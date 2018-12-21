@@ -12,6 +12,7 @@ import {catchError, map} from 'rxjs/operators';
 import {Guid} from 'guid-typescript';
 import {PayloadForSuccessfulAuthentication} from '@ofActions/authentication.actions';
 import {environment} from "@env/environment";
+import {GuidService} from "@ofServices/guid.service";
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -28,11 +29,8 @@ export class AuthenticationService {
 
     private checkTokenUrl = `${environment.urls.auth}/check_token`;
     private askTokenUrl = `${environment.urls.auth}/token`;
-    readonly guid: Guid;
 
-
-    constructor(private httpClient: HttpClient) {
-        this.guid = Guid.create();
+    constructor(private httpClient: HttpClient,private guidService: GuidService) {
     }
 
     checkAuthentication(token: string): Observable<CheckTokenResponse> {
@@ -61,7 +59,7 @@ export class AuthenticationService {
 
                 trackism.identifier = login;
                 // this clientId is used to identify unequivocally the session
-                trackism.clientId = this.guid;
+                trackism.clientId = this.guidService.getCurrentGuid();
                 return trackism;
             }),
             map(authObjt => {
@@ -90,13 +88,12 @@ export class AuthenticationService {
         const isNotANumber = isNaN(expirationDate);
         const stillValid = isInTheFuture(expirationDate);
         const finalResult = !isNotANumber && stillValid;
-        return finalResult ;
+        return finalResult;
     }
 
 
-
-    public isExpirationDateOver():boolean{
-        return ! this.verifyExpirationDate();
+    public isExpirationDateOver(): boolean {
+        return !this.verifyExpirationDate();
     }
 
     public clearAuthenticationInformation(): void {
@@ -110,14 +107,13 @@ export class AuthenticationService {
         localStorage.setItem(LocalStorageAuthContent.clientId, payload.clientId.toString());
     }
 
-    public extractIdentificationInformation(): PayloadForSuccessfulAuthentication{
+    public extractIdentificationInformation(): PayloadForSuccessfulAuthentication {
         return new PayloadForSuccessfulAuthentication(
             localStorage.getItem(LocalStorageAuthContent.identifier),
             Guid.parse(localStorage.getItem(LocalStorageAuthContent.clientId)),
             localStorage.getItem(LocalStorageAuthContent.token),
             // as getItem return a string, `+` isUsed
             new Date(+localStorage.getItem(LocalStorageAuthContent.expirationDate)),
-
         );
     }
 
@@ -130,8 +126,10 @@ export class AuthenticationService {
         );
     }
 
-    public getSecurityHeader(){
-        return { 'Authorization': `Bearer ${this.extractToken()}` }
+    public getSecurityHeader() {
+        console.log('voyelle' +
+            '');
+        return {'Authorization': `Bearer ${this.extractToken()}`}
     }
 }
 
@@ -148,6 +146,6 @@ export class CheckTokenResponse {
     client_id: string;
 }
 
-export function isInTheFuture(time:number):boolean{
+export function isInTheFuture(time: number): boolean {
     return time > Date.now();
 }
