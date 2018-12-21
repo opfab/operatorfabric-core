@@ -23,10 +23,58 @@ describe('IconComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IconComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    component.icon = 'icon';
+    fixture.detectChanges();
     expect(component).toBeTruthy();
+      const htmlElement: HTMLElement = fixture.nativeElement;
+      expect(htmlElement.querySelector('svg').getAttribute('width')).toEqual('16px');
+      expect(htmlElement.querySelector('svg').getAttribute('height')).toEqual('16px');
+      expect(htmlElement.querySelector('svg use').getAttribute('xlink:href'))
+          .toEqual('assets/images/icons/sprites.svg#icon');
   });
+  it('should adjust attributes with big size', () => {
+      component.big = true;
+      fixture.detectChanges();
+      const htmlElement: HTMLElement = fixture.nativeElement;
+      expect(htmlElement.querySelector('svg').getAttribute('width')).toEqual('64px');
+      expect(htmlElement.querySelector('svg').getAttribute('height')).toEqual('64px');
+  });
+    it('should adjust attributes with medium size', () => {
+        component.medium = true;
+        fixture.detectChanges();
+        const htmlElement: HTMLElement = fixture.nativeElement;
+        expect(htmlElement.querySelector('svg').getAttribute('width')).toEqual('32px');
+        expect(htmlElement.querySelector('svg').getAttribute('height')).toEqual('32px');
+    });
+    it('should adjust attributes with small size', () => {
+        component.small = true;
+        fixture.detectChanges();
+        const htmlElement: HTMLElement = fixture.nativeElement;
+        expect(htmlElement.querySelector('svg').getAttribute('width')).toEqual('16px');
+        expect(htmlElement.querySelector('svg').getAttribute('height')).toEqual('16px');
+    });
+
+    it('should adjust attributes with mono light', () => {
+        component.light = true;
+        component.icon = 'icon';
+        fixture.detectChanges();
+        const htmlElement: HTMLElement = fixture.nativeElement;
+        expect(htmlElement.querySelector('svg use').getAttribute('xlink:href'))
+            .toEqual('assets/images/icons/sprites-mono.svg#icon');
+        expect(htmlElement.querySelector('svg').getAttribute('class')).toEqual('light');
+    });
+
+    it('should adjust attributes with mono dark', () => {
+        component.dark = true;
+        component.icon = 'icon';
+        fixture.detectChanges();
+        const htmlElement: HTMLElement = fixture.nativeElement;
+        expect(htmlElement.querySelector('svg use').getAttribute('xlink:href'))
+            .toEqual('assets/images/icons/sprites-mono.svg#icon');
+        expect(htmlElement.querySelector('svg').getAttribute('class')).toEqual('dark');
+    });
+
 });
