@@ -14,7 +14,18 @@ const routes: Routes = [
     {
         path: 'feed',
         component: FeedComponent,
-        canActivate: [AuthenticationGuard]
+        canActivate: [AuthenticationGuard],
+        children: [
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'no-selection'
+            },
+            {
+                path: 'no-selection',
+                component: 
+            },
+            ]
     },
 ]
 

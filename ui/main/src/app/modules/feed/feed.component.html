@@ -4,7 +4,16 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<div>
-<h2>Card deck</h2>
-  <of-card-list [lightCards]="lightCards$ | async"></of-card-list>
+<div class="container-fluid">
+  TimeLine Goes here
 </div>
+<div class="container-fluid">
+  <div class="col-2">
+  <of-card-list [lightCards]="lightCards$ | async"></of-card-list>
+  </div>
+  <div class="col-10">
+    Details Goes here
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
