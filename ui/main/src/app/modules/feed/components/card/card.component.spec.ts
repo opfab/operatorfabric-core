@@ -12,6 +12,8 @@ import {CardComponent} from './card.component';
 import {I18nData, LightCard, Severity} from '@ofModel/light-card.model';
 import {MatButtonModule, MatCardModule} from '@angular/material';
 import {getOneRandomLigthCard} from '../../../../../tests/helpers';
+import {RouterModule} from "@angular/router";
+import {RouterTestingModule} from "@angular/router/testing";
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
@@ -19,7 +21,7 @@ describe('CardComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [MatCardModule, MatButtonModule],
+            imports: [MatCardModule, MatButtonModule, RouterTestingModule],
             declarations: [CardComponent]
         })
             .compileComponents();
@@ -43,13 +45,10 @@ describe('CardComponent', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('mat-card-title').innerText)
-            .toEqual(id);
-        expect(fixture.nativeElement.querySelector('mat-card-subtitle').innerText)
-            .toEqual(`${title}
-${uid}`, 'title and uid should be displayed on two different lines');
-        expect(fixture.nativeElement.querySelector('mat-card-content').innerText.trim())
-            .toEqual(`${summaryValue}`, 'summary should be followed with an empty line');
+        expect(fixture.nativeElement.querySelector('.card-title').innerText)
+            .toEqual(title);
+        expect(fixture.nativeElement.querySelector('.card-body > p'))
+            .toBeFalsy();
     });
 
 });

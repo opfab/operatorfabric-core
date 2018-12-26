@@ -9,21 +9,38 @@ import {NgModule} from '@angular/core';
 import {FeedComponent} from "./feed.component";
 import {AuthenticationGuard} from "@ofServices/guard.service";
 import {RouterModule, Routes} from "@angular/router";
+import {NoSelectionComponent} from "./components/no-selection/no-selection.component";
+import {DetailsComponent} from "./components/details/details.component";
+import {DetailComponent} from "./components/detail/detail.component";
 
 const routes: Routes = [
     {
-        path: 'feed',
+        path: '',
         component: FeedComponent,
         canActivate: [AuthenticationGuard],
         children: [
             {
                 path: '',
                 pathMatch: 'full',
-                redirectTo: 'no-selection'
+                redirectTo: 'cards'
             },
             {
-                path: 'no-selection',
-                component: 
+                path: 'cards',
+                children : [
+                    {
+                        path: '',
+                        component: NoSelectionComponent,
+                    },
+                    {
+                        path: ':cid',
+                        component: DetailsComponent,
+                        children: [
+                            {
+                                path: 'details/:did',
+                                component: DetailComponent
+                            }
+                        ]
+                    }]
             },
             ]
     },

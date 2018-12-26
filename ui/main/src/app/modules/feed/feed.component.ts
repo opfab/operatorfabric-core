@@ -8,9 +8,11 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../store/index';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '../../store/selectors/light-card.selectors';
+import {catchError, tap} from "rxjs/operators";
+import {selectLightCardsState} from "../../store/selectors/light-card.selectors";
 
 @Component({
     selector: 'of-cards',
@@ -25,7 +27,10 @@ export class FeedComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.lightCards$ = this.store.pipe(select(fromStore.selectAllLightCards));
+        this.lightCards$ = this.store.pipe(
+            select(fromStore.selectAllLightCards),
+            catchError(err => of([]))
+        );
     }
 
 

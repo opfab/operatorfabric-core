@@ -14,19 +14,23 @@ import {StateModule} from '../../store/state.module';
 import {CardComponent} from './components/card/card.component';
 import {FeedRoutingModule} from "./feed-routing.module";
 import {MatButtonModule, MatCardModule, MatListModule} from "@angular/material";
+import { NoSelectionComponent } from './components/no-selection/no-selection.component';
+import { DetailsComponent } from './components/details/details.component';
+import { DetailComponent } from './components/detail/detail.component';
+import { TimeLineComponent } from './components/time-line/time-line.component';
 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    StateModule,
+    // StateModule,
     FeedRoutingModule,
       MatListModule,
       MatCardModule,
       MatButtonModule,
   ],
-  declarations: [CardListComponent, FeedComponent, CardComponent],
+  declarations: [CardListComponent, FeedComponent, CardComponent, NoSelectionComponent, DetailsComponent, DetailComponent, TimeLineComponent],
   exports: [FeedComponent]
 })
 export class FeedModule {

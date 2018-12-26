@@ -5,8 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AfterContentInit, AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import {I18nData, LightCard} from '@ofModel/light-card.model';
+import {Component, Input} from '@angular/core';
+import {LightCard} from '@ofModel/light-card.model';
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'of-card',
@@ -15,7 +16,15 @@ import {I18nData, LightCard} from '@ofModel/light-card.model';
 })
 export class CardComponent {
 
-   @Input() public lightCard: LightCard;
-    constructor() {}
+    open: boolean = false;
+
+    @Input() public lightCard: LightCard;
+
+    constructor(private router: Router) {
+    }
+
+    public select() {
+        this.router.navigate(['/feed','cards',this.lightCard.id]);
+    }
 
 }

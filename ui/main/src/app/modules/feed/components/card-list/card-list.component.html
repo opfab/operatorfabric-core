@@ -4,11 +4,12 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<h3>Light Cards</h3>
-<ul *ngFor="let currentLightCard of lightCards">
-  <li>
+<h3>Feed</h3>
+<div class="container-fluid feed-content">
+<div class="row" *ngFor="let currentLightCard of lightCards">
+  <div class="col-12">
     <of-card [lightCard]="currentLightCard"></of-card>
-  </li>
-</ul>
-
+  </div>
+</div>
+</div>
 

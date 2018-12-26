@@ -20,13 +20,17 @@ export class NavbarComponent implements OnInit {
 
     navbarCollapsed = true;
     navigationRoutes = navigationRoutes;
+    selCU = selectCurrentUrl;
     currentPath: any;
 
     constructor(private store: Store<AppState>) {
     }
 
     ngOnInit() {
-        this.store.pipe(select(selectCurrentUrl)).subscribe(url => this.currentPath = url);
+        this.store.select(selectCurrentUrl).subscribe(url=>{
+            if(url)
+                this.currentPath = url.split('/').slice(-1)[0];
+        })
     }
 
 

@@ -12,7 +12,7 @@ import {ArchivesComponent} from "./archives.component";
 
 const routes: Routes = [
     {
-        path: 'archives',
+        path: '',
         component: ArchivesComponent,
         canActivate: [AuthenticationGuard]
     },

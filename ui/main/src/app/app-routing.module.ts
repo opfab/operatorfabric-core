@@ -31,7 +31,7 @@ const routes: Routes = [
 export const navigationRoutes: Routes = routes.slice(1, 3);
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes,{ enableTracing: false })],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

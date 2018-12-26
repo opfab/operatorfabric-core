@@ -18,6 +18,8 @@ import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '../../store/selectors/light-card.selectors';
 import {By} from '@angular/platform-browser';
 import {getOneRandomLigthCard, getPositiveRandomNumberWithinRange, getSeveralRandomLightCards} from '../../../tests/helpers';
+import {RouterTestingModule} from "@angular/router/testing";
+import {TimeLineComponent} from "./components/time-line/time-line.component";
 
 describe('FeedComponent', () => {
     let component: FeedComponent;
@@ -28,8 +30,9 @@ describe('FeedComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 StoreModule.forRoot(appReducer),
+                RouterTestingModule,
                 MatCardModule, MatButtonModule],
-            declarations: [CardListComponent, FeedComponent, CardComponent]
+            declarations: [CardListComponent, FeedComponent, CardComponent, TimeLineComponent]
             , providers: [{provide: Store, useClass: Store}]
         })
             .compileComponents();
@@ -48,9 +51,9 @@ describe('FeedComponent', () => {
         const compiled = fixture.debugElement.nativeElement;
         expect(component).toBeTruthy();
         // title exists
-        expect(compiled.querySelector('h3').textContent).toContain('Light Cards');
+        expect(compiled.querySelector('h3').textContent).toContain('Feed');
         // no list in it
-        expect(compiled.querySelector('ul')).toBeFalsy();
+        expect(compiled.querySelector('.feed-content > div')).toBeFalsy();
     });
 
     it('should create a list with one element when there are ' +
@@ -70,9 +73,9 @@ describe('FeedComponent', () => {
         fixture.detectChanges();
 
         // title exists
-        expect(compiled.querySelector('h3').textContent).toContain('Light Cards');
+        expect(compiled.querySelector('h3').textContent).toContain('Feed');
         // a list exists
-        expect(compiled.querySelector('ul')).toBeTruthy();
+        expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
     });
 
     it('should create a list with two elements when there are ' +
@@ -92,11 +95,11 @@ describe('FeedComponent', () => {
         fixture.detectChanges();
 
         // title exists
-        expect(compiled.querySelector('h3').textContent).toContain('Light Cards');
+        expect(compiled.querySelector('h3').textContent).toContain('Feed');
         // a list exists
-        expect(compiled.querySelector('ul')).toBeTruthy();
+        expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
         // counts the list elements
-        const listElements = fixture.debugElement.queryAll(By.css('li'));
+        const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
         const numberOfCardsInTheActionPayload = 2;
         expect(listElements.length).toEqual(numberOfCardsInTheActionPayload);
     });
@@ -120,11 +123,11 @@ describe('FeedComponent', () => {
         fixture.detectChanges();
 
         // title exists
-        expect(compiled.nativeElement.querySelector('h3').textContent).toContain('Light Cards');
+        expect(compiled.nativeElement.querySelector('h3').textContent).toContain('Feed');
         // a list exists
-        expect(compiled.nativeElement.querySelector('ul')).toBeTruthy();
+        expect(compiled.nativeElement.querySelector('.feed-content > div')).toBeTruthy();
         // counts list elements
-        const listElements = fixture.debugElement.queryAll(By.css('li'));
+        const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
         const totalNumberOfLightCardsPassByActions = 2;
         expect(listElements.length).toEqual(totalNumberOfLightCardsPassByActions);
 
@@ -143,9 +146,9 @@ describe('FeedComponent', () => {
             fixture.detectChanges();
         }
         const compiled = fixture.debugElement;
-        expect(compiled.nativeElement.querySelector('ul')).toBeTruthy();
+        expect(compiled.nativeElement.querySelector('.feed-content > div')).toBeTruthy();
         // counts list elements
-        const listElements = fixture.debugElement.queryAll(By.css('li'));
+        const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
         expect(listElements.length).toEqual(totalNumberOfLightCards);
 
     });

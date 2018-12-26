@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
   <a class="navbar-brand">
     <div class="brand-bg-light">
-      <of-icon icon="operator-fabric" medium dark></of-icon>
+      <of-icon icon="operator-fabric" medium></of-icon>
     </div>
   </a>
   <button class="navbar-toggler" type="button" (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed"
@@ -11,7 +11,7 @@
   <div class="collapse navbar-collapse" id="navbarContent" [ngbCollapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto">
       <li class="nav" *ngFor="let link of navigationRoutes, let i = index"
-          [class.active]="link.path === currentPath.substr(1)">
+          [class.active]="link.path === currentPath">
         <a
                 class="nav-link"
                 [routerLink]="link.path"
