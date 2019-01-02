@@ -127,8 +127,6 @@ export class AuthenticationService {
     }
 
     public getSecurityHeader() {
-        console.log('voyelle' +
-            '');
         return {'Authorization': `Bearer ${this.extractToken()}`}
     }
 }

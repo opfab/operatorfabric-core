@@ -7,82 +7,53 @@
 
 import {inject, TestBed} from '@angular/core/testing';
 import {TokenInjector} from '@ofServices/interceptors.service';
-import {HttpClient, HttpHandler, HttpHeaders, HttpRequest} from '@angular/common/http';
+import {HttpRequest} from '@angular/common/http';
 import {AuthenticationService} from '@ofServices/authentication.service';
+import {getRandomAlphanumericValue} from '@tests/helpers';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
-import createSpy = jasmine.createSpy;
-import {getRandomAlphanumericValue} from '../../tests/helpers';
-import {GuidService} from "@ofServices/guid.service";
 
 describe('Interceptor', () => {
 
-    // let httpClient: SpyObj<HttpClient>;
     let authenticationService: SpyObj<AuthenticationService>;
+
     beforeEach(() => {
-        const authenticationServiceSpy = createSpyObj( [
-            'extractToken'
-                // {extractToken: createSpy('extractToken').and.callThrough()}
-                , 'verifyExpirationDate'
-                , 'clearAuthenticationInformation'
-                , 'registerAuthenticationInformation'
-                , 'getSecurityHeader'
-        //         , {getSecurityHeader:
-        //             spyOn( authenticationService,'getSecurityHeader').and.callThrough()
-        // }
-                // , spyOn(authenticationService,'getSecurityHeader').and.callThrough()
-            ]);
+        const authenticationServiceSpy = createSpyObj(['getSecurityHeader']);
         TestBed.configureTestingModule({
             providers: [TokenInjector,
                 {provide: AuthenticationService, useValue: authenticationServiceSpy},
-                // AuthenticationService,
-                // GuidService
             ]
         });
         authenticationService = TestBed.get(AuthenticationService);
-
-
-    });
-
-    it('should be created'), inject([TokenInjector], (service: TokenInjector) => {
-        expect(service).toBeTruthy();
     });
 
     it('should leave headers untouched for the "token checking" end-point'
         , inject([TokenInjector]
             , (service: TokenInjector) => {
-
                 const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/check_token');
                 expect(request).toBeTruthy();
-                const transformedRequest = service.addAuthHeadersIfNecessary(request);
-                expect(transformedRequest).toBeTruthy();
-                expect(transformedRequest).toEqual(request);
+                service.addAuthHeadersIfNecessary(request);
+                expect(authenticationService.getSecurityHeader).not.toHaveBeenCalled();
+
             }));
+
     it('should leave headers untouched for the "token asking" end-point'
         , inject([TokenInjector]
             , (service: TokenInjector) => {
-
                 const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/token');
                 expect(request).toBeTruthy();
-                const transformedRequest = service.addAuthHeadersIfNecessary(request);
-                expect(transformedRequest).toBeTruthy();
-                expect(transformedRequest).toEqual(request);
+                service.addAuthHeadersIfNecessary(request);
+                expect(authenticationService.getSecurityHeader).not.toHaveBeenCalled();
             }));
-    xit('should add authentication headers for random end-point'
+
+    it('should add authentication headers for random end-point'
         , inject([TokenInjector]
             , (service: TokenInjector) => {
-                authenticationService.extractToken.and.callFake(() => 'test');
-            authenticationService.getSecurityHeader.and.callThrough();
+                authenticationService.getSecurityHeader.and.callThrough();
                 const request = new HttpRequest<any>('GET',
-                    'http://www.test.com/'+getRandomAlphanumericValue(13));
-                request.headers.append('test','test');
+                    'http://www.test.com/' + getRandomAlphanumericValue(13));
                 expect(request).toBeTruthy();
-                const transformedRequest = service.addAuthHeadersIfNecessary(request);
-                expect(transformedRequest).toBeTruthy();
-                expect(transformedRequest).not.toEqual(request);
-                const headers = transformedRequest.headers;
-                expect(headers).toBeTruthy();
-                const authorization = headers.get('Authorization');
-                expect(authorization).toBeTruthy();
+                service.addAuthHeadersIfNecessary(request);
+                expect(authenticationService.getSecurityHeader).toHaveBeenCalled();
             }));
 });
