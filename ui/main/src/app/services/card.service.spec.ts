@@ -19,7 +19,7 @@ import {EventEmitter} from "@angular/core";
 import {EventSourcePolyfill, OnMessageEvent} from "ng-event-source";
 
 
-fdescribe('CardService', () => {
+describe('CardService', () => {
     let httpMock: HttpTestingController;
     let authenticationService: SpyObj<AuthenticationService>;
 
@@ -41,13 +41,13 @@ fdescribe('CardService', () => {
         });
         httpMock = TestBed.get(HttpTestingController);
         authenticationService = TestBed.get(AuthenticationService);
-        jasmine.sse().install();
+        // jasmine.sse().install();
     });
 
-    afterEach(() => {
-            jasmine.sse().uninstall();
-        }
-    );
+    // afterEach(() => {
+    //         jasmine.sse().uninstall();
+    //     }
+    // );
 
     it('should be created', inject([CardService], (service: CardService) => {
 
