@@ -51,7 +51,7 @@ describe('FeedComponent', () => {
         const compiled = fixture.debugElement.nativeElement;
         expect(component).toBeTruthy();
         // title exists
-        expect(compiled.querySelector('h3').textContent).toContain('Feed');
+        // expect(compiled.querySelector('h3').textContent).toContain('Feed');
         // no list in it
         expect(compiled.querySelector('.feed-content > div')).toBeFalsy();
     });
@@ -73,7 +73,7 @@ describe('FeedComponent', () => {
         fixture.detectChanges();
 
         // title exists
-        expect(compiled.querySelector('h3').textContent).toContain('Feed');
+        // expect(compiled.querySelector('h3').textContent).toContain('Feed');
         // a list exists
         expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
     });
@@ -95,7 +95,7 @@ describe('FeedComponent', () => {
         fixture.detectChanges();
 
         // title exists
-        expect(compiled.querySelector('h3').textContent).toContain('Feed');
+        // expect(compiled.querySelector('h3').textContent).toContain('Feed');
         // a list exists
         expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
         // counts the list elements
@@ -123,7 +123,7 @@ describe('FeedComponent', () => {
         fixture.detectChanges();
 
         // title exists
-        expect(compiled.nativeElement.querySelector('h3').textContent).toContain('Feed');
+        // expect(compiled.nativeElement.querySelector('h3').textContent).toContain('Feed');
         // a list exists
         expect(compiled.nativeElement.querySelector('.feed-content > div')).toBeTruthy();
         // counts list elements

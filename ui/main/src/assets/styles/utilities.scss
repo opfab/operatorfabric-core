@@ -1,0 +1,14 @@
+@import "variables";
+
+.rounded-top-left {
+  border-top-left-radius: $border-radius !important;
+}
+.rounded-top-right {
+  border-top-right-radius: $border-radius !important;
+}
+.rounded-bottom-left {
+  border-bottom-left-radius: $border-radius !important;
+}
+.rounded-left-right {
+  border-bottom-right-radius: $border-radius !important;
+}
