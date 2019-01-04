@@ -26,10 +26,15 @@ export class CardService {
     }
 
     getCardOperation(): Observable<CardOperation> {
+        return this.fetchCardOperation(new EventSourcePolyfill(
+            this.cardOperationsUrl
+            , this.handleHeaders()));
+    }
+
+    fetchCardOperation(eventSource: EventSourcePolyfill): Observable<CardOperation> {
         let now = new Date()
         let plusTwentyFourHour = new Date(now.valueOf()+24*60*60*1000);
         return Observable.create(observer => {
-            let eventSource = null;
             try {
                 eventSource = new EventSourcePolyfill(
                     `${this.cardOperationsUrl}&rangeStart=${now.valueOf()}&rangeEnd=${plusTwentyFourHour.valueOf()}`
@@ -43,20 +48,19 @@ export class CardService {
                 eventSource.onerror = error => observer.error(error);
 
             } catch (error) {
-                observer.error(error);
+                return observer.error(error);
             }
             return () => {
                 if (eventSource) {
                     eventSource.close();
                 }
             };
-
-        });
+        })
     }
 
 // sse request not intercepted by core/services/interceptors.services/TokenInjector
     private handleHeaders() {
-        return { headers: this.authenticationService.getSecurityHeader() }
-        ;
+        return {headers: this.authenticationService.getSecurityHeader()}
+            ;
     }
 }
