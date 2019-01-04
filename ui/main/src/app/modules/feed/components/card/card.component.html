@@ -7,8 +7,10 @@
 <div class="card light-card-detail bg-dark" (click)="select()">
     <div class="card-header" >
         <div class="card-title">{{lightCard.title.key}}</div>
+        <div class="card-subtitle">({{lightCard.startDate|date:'short'}} - {{lightCard.endDate|date:'short'}})</div>
     </div>
     <div class="card-body" *ngIf="open">
         <p>{{lightCard.summary.key}}</p>
+        <p>Published on {{lightCard.publishDate|date:'short'}}</p>
     </div>
 </div>

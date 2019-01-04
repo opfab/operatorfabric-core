@@ -9,7 +9,7 @@ import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {LightCard} from '@ofModel/light-card.model';
 
 export interface LightCardStateEntity extends EntityState<LightCard> {
-    selectedCardId: number | string;
+    selectedCardId: string;
     loading: boolean;
     error: string;
 }

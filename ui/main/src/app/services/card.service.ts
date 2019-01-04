@@ -14,6 +14,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication.service';
 import {environment} from "@env/environment";
+import {Card} from "@ofModel/card.model";
 
 @Injectable()
 export class CardService {
@@ -25,27 +26,18 @@ export class CardService {
                 private authenticationService: AuthenticationService) {
     }
 
-    // TODO paginate
-    // Never called yet
-    getLightCards(): Observable<Array<LightCard>> {
-
-        return this.httpClient.get <LightCard[]>(this.cardsUrl);
-    }
-
-    // Never called yet
-    getLightCard(id: string): Observable<LightCard> {
-        return this.getLightCards().pipe(
-            map(lightCards => lightCards.find(
-                lightCard => lightCard.id === id))
-        );
+    loadCard(id: string): Observable<Card> {
+        return this.httpClient.get<Card>(`${this.cardsUrl}/${id}`);
     }
 
     getCardOperation(): Observable<CardOperation> {
+        let now = new Date()
+        let plusTwentyFourHour = new Date(now.valueOf()+24*60*60*1000);
         return Observable.create(observer => {
             let eventSource = null;
             try {
                 eventSource = new EventSourcePolyfill(
-                    this.cardOperationsUrl
+                    `${this.cardOperationsUrl}&rangeStart=${now.valueOf()}&rangeEnd=${plusTwentyFourHour.valueOf()}`
                     , this.handleHeaders());
                 eventSource.onmessage = message => {
                     if (!message) {

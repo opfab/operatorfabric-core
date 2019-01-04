@@ -16,6 +16,7 @@ import {LightCard} from '@ofModel/light-card.model';
 export class CardListComponent  {
 
   @Input() public lightCards: LightCard[];
+  @Input() public selection: string;
 
   constructor() { }
 

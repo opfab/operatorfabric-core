@@ -13,7 +13,7 @@ import {appEffects, appReducer, storeConfig} from './index';
 import {environment} from '@env/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
-import {CustomRouterStateSerializer} from '@ofStore/shared/utils';
+import {CustomRouterStateSerializer} from '@ofStore/states/router.state';
 
 @NgModule({
   imports: [

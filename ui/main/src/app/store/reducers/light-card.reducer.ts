@@ -5,8 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {LightCard} from '@ofModel/light-card.model';
 import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
 import {LightCardAdapter, lightCardInitialState, LightCardStateEntity} from '@ofStates/light-card.state';
 
@@ -30,19 +28,11 @@ export function reducer(
             };
         }
 
-        case LightCardActionTypes.LoadLightCardSuccess: {
-            return {
-                ...LightCardAdapter.addOne(action.payload.lightCard, state),
-                loading: false
-            };
-        }
-
-        case LightCardActionTypes.LoadLightCardFailure: {
+        case LightCardActionTypes.SelectLightCard: {
             return {
                 ...state,
-                loading: false,
-                error: `error while loading a single lightCard: '${action.payload.error}'`
-            };
+                ...action.payload
+            }
         }
 
         case LightCardActionTypes.AddLightCardFailure: {
@@ -57,6 +47,3 @@ export function reducer(
         }
     }
 }
-
-
-export const getSelectedId = (state: LightCardStateEntity) => state.selectedCardId;

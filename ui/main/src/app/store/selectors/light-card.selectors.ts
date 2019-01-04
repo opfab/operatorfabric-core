@@ -5,9 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {LightCardAdapter, LightCardStateEntity} from '@ofStates/light-card.state';
-import {getSelectedId} from '@ofStore/reducers/light-card.reducer';
+import {createSelector} from '@ngrx/store';
+import {LightCardAdapter} from '@ofStates/light-card.state';
 import {AppState} from "@ofStore/index";
 
 export const selectLightCardsState = (state:AppState) => state.lightCard;
@@ -18,13 +17,7 @@ export const {
   selectEntities: selectLightCardEntities
 } = LightCardAdapter.getSelectors(selectLightCardsState);
 
-// export const selectSelectedLightCardId = createSelector(
-//   selectLightCardsState,
-//   getSelectedId
-// );
-//
-// export const selectSelectedLightCard = createSelector(
-//   selectSelectedLightCardId,
-//   selectLightCardEntities,
-//   (selectedLightCardId, entities) => selectedLightCardId && entities[selectedLightCardId]
-// );
+export const selectLightCardSelection = createSelector(
+    selectLightCardsState,
+    state => state.selectedCardId)
+

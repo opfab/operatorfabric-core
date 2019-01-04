@@ -16,8 +16,7 @@ import {Router} from "@angular/router";
 })
 export class CardComponent {
 
-    open: boolean = false;
-
+    @Input() public open: boolean = false;
     @Input() public lightCard: LightCard;
 
     constructor(private router: Router) {

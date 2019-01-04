@@ -9,14 +9,12 @@ import {Action} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
 
 export enum LightCardActionTypes {
-    LoadLightCards = '[Card] Load Light Cards',
-    LoadLightCardsSuccess = '[Card] Load Light Cards Success',
-    LoadLightCardsFailure = '[Card] Load Light Cards Fail',
-    LoadLightCard = '[Card] Load Light Card',
-    LoadLightCardSuccess = '[Card] Load Light Card Success',
-    LoadLightCardFailure = '[Card] Load Light Card Fail',
-    AddLightCardFailure = '[Card] Add Light Card Fail',
-    HandleUnexpectedError = '[Card] Handle unexpected error related to authentication issue'
+    LoadLightCards = '[LCard] Load',
+    LoadLightCardsSuccess = '[LCard] Load Success',
+    LoadLightCardsFailure = '[LCard] Load Fail',
+    SelectLightCard = '[LCard] Select One',
+    AddLightCardFailure = '[LCard] Add Light Card Fail',
+    HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue'
 }
 // needed by NGRX entities
 export class LoadLightCards implements Action {
@@ -29,13 +27,6 @@ export class LoadLightCardsSuccess implements Action {
     constructor(public payload: { lightCards: LightCard[] }) {
     }
 }
-// needed by NGRX entities
-export class LoadLightCard implements Action {
-    readonly type = LightCardActionTypes.LoadLightCard;
-
-    constructor(public payload: { id: string }) {
-    }
-}
 export class LoadLightCardsFailure implements Action {
     readonly type = LightCardActionTypes.LoadLightCardsFailure;
 
@@ -43,18 +34,11 @@ export class LoadLightCardsFailure implements Action {
     }
 }
 
-export class LoadLightCardSuccess implements Action {
-    readonly type = LightCardActionTypes.LoadLightCardSuccess;
+export class SelectLightCard implements Action {
+    readonly type = LightCardActionTypes.SelectLightCard;
 
-    constructor(public payload: { lightCard: LightCard }) {
-    }
-}
+    constructor(public payload: {selectedCardId:string}){}
 
-export class LoadLightCardFailure implements Action {
-    readonly type = LightCardActionTypes.LoadLightCardFailure;
-
-    constructor(public payload: { error: Error }) {
-    }
 }
 
 export class AddLightCardFailure implements Action {
@@ -74,10 +58,11 @@ export class HandleUnexpectedError implements Action {
 
 export type LightCardActions =
     LoadLightCards
-    |  LoadLightCardsSuccess
+    | LoadLightCardsSuccess
     | LoadLightCardsFailure
-    | LoadLightCard
-    | LoadLightCardSuccess
-    | LoadLightCardFailure
+    | SelectLightCard
+    // | LoadLightCard
+    // | LoadLightCardSuccess
+    // | LoadLightCardFailure
     | AddLightCardFailure
     | HandleUnexpectedError;

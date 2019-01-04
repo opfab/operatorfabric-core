@@ -7,6 +7,7 @@
 
 import {I18nData, LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
+import {Card} from "@ofModel/card.model";
 //
 // export function getNewLightCardInstance(): LightCard{
 //     return new LightCard();
@@ -40,6 +41,7 @@ export function getOneRandomLigthCard(): LightCard {
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     const oneCard = new LightCard(getRandomAlphanumericValue(3, 24)
         , getRandomAlphanumericValue(3, 24)
+        , today
         , startTime
         , startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455)
         , Severity.QUESTION
@@ -48,6 +50,25 @@ export function getOneRandomLigthCard(): LightCard {
         , generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666)
         , getRandomI18nData()
         , getRandomI18nData()
+    );
+    return oneCard;
+}
+
+export function getOneRandomCard(): Card {
+    const today = new Date().getTime();
+    const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
+    const oneCard = new Card(getRandomAlphanumericValue(3, 24)
+        , getRandomAlphanumericValue(3, 24)
+        , today
+        , startTime
+        , startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455)
+        , Severity.QUESTION
+        , getRandomAlphanumericValue(3, 24)
+        , getRandomAlphanumericValue(3, 24)
+        , generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666)
+        , getRandomI18nData()
+        , getRandomI18nData()
+        , {data:"data"}
     );
     return oneCard;
 }
