@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {getExpirationDate, getExpirationTime, reducer} from './authentication.reducer';
+import {getExpirationTime, reducer} from './authentication.reducer';
 import {authInitialState, AuthState} from '@ofStates/authentication.state';
 import {
     AcceptLogIn,
@@ -16,16 +16,18 @@ import {
 import {Guid} from "guid-typescript";
 import {getRandomAlphanumericValue} from "@tests/helpers";
 
+const previousGuid = Guid.create();
+const previousState: AuthState = {
+    identifier: getRandomAlphanumericValue(5,15),
+    clientId: previousGuid,
+    token: getRandomAlphanumericValue(100,150),
+    expirationDate: new Date(2000, 1, 1),
+    denialReason: null
+};
+
+
 describe('Authentication Reducer', () => {
 
-    const previousGuid = Guid.create();
-    const previousState: AuthState = {
-        identifier: 'test',
-        clientId: previousGuid,
-        token: 'test',
-        expirationDate: new Date(2000, 1, 1),
-        denialReason: null
-    };
 
 
     describe('unknown action', () => {
@@ -115,11 +117,33 @@ describe('Authentication Reducer', () => {
 
 });
 
-xdescribe('getExpirationTime', () => {
-    it('should return UTC zero date if no token or expirationDate are stored', () => {
-        expect( getExpirationTime(authInitialState)).toEqual(0);
+describe('getExpirationTime', () => {
+
+    it('should return UTC zero date if no token and expirationDate are stored', () => {
+        expect(getExpirationTime(authInitialState)).toEqual(0);
     });
+
+    it('should return UTC zero date if no token is stored', () => {
+       const nullTokenState: AuthState = {...previousState,
+           token: null,
+       };
+       expect(getExpirationTime(nullTokenState)).toEqual(0);
+    });
+
+    it('should return UTC zero date if no expiration date is stored', () => {
+        const nullExpirationDateState: AuthState = {...previousState,
+            expirationDate: null,
+        };
+        expect(getExpirationTime(nullExpirationDateState)).toEqual(0);
+    });
+
+    it('should return stored expiration time if token and expiration date are stored', () =>{
+        expect(getExpirationTime(previousState)).toEqual(previousState.expirationDate.getTime());
+    });
+
 });
+
+
 
 function produceMockPayLoadForSucessfulAuthintication(id?: string, clientId?: Guid, token?: string, expiration?: Date): PayloadForSuccessfulAuthentication {
     if (!id) {

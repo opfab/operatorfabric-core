@@ -23,12 +23,12 @@ export function reducer(state = authInitialState, action: AuthenticationActions)
                 expirationDate: payload.expirationDate
             };
         }
-        case AuthenticationActionTypes.AcceptLogOut:{
+        case AuthenticationActionTypes.AcceptLogOut: {
             return {
                 ...state,
                 identifier: null,
                 clientId: null,
-                token:null,
+                token: null,
                 expirationDate: new Date(0),
                 denialReason: null
             };
@@ -38,7 +38,7 @@ export function reducer(state = authInitialState, action: AuthenticationActions)
                 ...state,
                 identifier: null,
                 clientId: null,
-                token:null,
+                token: null,
                 expirationDate: new Date(0),
                 denialReason: action.payload.denialReason
             };
@@ -52,12 +52,14 @@ export const getIdentifier = (state: AuthState) => state.identifier;
 export const getToken = (state: AuthState) => state.token;
 export const getExpirationDate = (state: AuthState) => state.expirationDate;
 
+const UTC_beginning_time = 0;
+
 export const getExpirationTime = (state: AuthState) => {
     const expirationDate = getExpirationDate(state);
     const token = getToken(state);
     if (token && expirationDate) {
         return expirationDate.getTime();
     } else {
-        return new Date(0).getTime;
+        return UTC_beginning_time;
     }
 }

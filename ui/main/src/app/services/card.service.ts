@@ -12,17 +12,20 @@ import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication.service';
 import {Card} from "@ofModel/card.model";
 import {HttpClient} from "@angular/common/http";
+import {environment} from "@env/environment";
+import {GuidService} from "@ofServices/guid.service";
 
 @Injectable()
 export class CardService {
     readonly cardOperationsUrl: string;
 
-    constructor(private httpClient: HttpClient,
-                private authenticationService: AuthenticationService) {
+    constructor(private httpClient:HttpClient, private authenticationService: AuthenticationService,private guidService: GuidService) {
+        const clientId = this.guidService.getCurrentGuidString();
+        this.cardOperationsUrl = `${environment.urls.cards}/cardOperations?clientId=${clientId}&notification=true`;
     }
 
     loadCard(id: string): Observable<Card> {
-        return this.httpClient.get<Card>(`${this.cardsUrl}/${id}`);
+        return this.httpClient.get<Card>(`${this.cardOperationsUrl}/${id}`);
     }
 
     getCardOperation(): Observable<CardOperation> {
