@@ -17,6 +17,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -61,10 +62,10 @@ public class CardConsultationData implements Card {
     private List<String> tags;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private Map<String,? extends Action> actions;
+    private Map<String,? extends Action> actions = Collections.emptyMap();;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<? extends Detail> details;
+    private List<? extends Detail> details = Collections.emptyList();;
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
@@ -73,11 +74,11 @@ public class CardConsultationData implements Card {
     private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> userRecipients;
+    private List<String> userRecipients = Collections.emptyList();
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> groupRecipients;
+    private List<String> groupRecipients = Collections.emptyList();;
     @Transient @JsonIgnore
     @Singular
-    private List<String> orphanedUsers;
+    private List<String> orphanedUsers = Collections.emptyList();;
 }

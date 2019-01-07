@@ -37,7 +37,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 public class IntegrationTestApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(CardConsultationApplication.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(IntegrationTestApplication.class, args);
 
         assert (ctx != null);
     }
