@@ -18,14 +18,16 @@ import {GuidService} from "@ofServices/guid.service";
 @Injectable()
 export class CardService {
     readonly cardOperationsUrl: string;
+    readonly cardsUrl: string;
 
     constructor(private httpClient:HttpClient, private authenticationService: AuthenticationService,private guidService: GuidService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardOperations?clientId=${clientId}&notification=true`;
+        this.cardsUrl = `${environment.urls.cards}/cards`;
     }
 
     loadCard(id: string): Observable<Card> {
-        return this.httpClient.get<Card>(`${this.cardOperationsUrl}/${id}`);
+        return this.httpClient.get<Card>(`${this.cardsUrl}/${id}`);
     }
 
     getCardOperation(): Observable<CardOperation> {
