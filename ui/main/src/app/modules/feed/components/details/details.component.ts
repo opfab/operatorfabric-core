@@ -21,7 +21,16 @@ export class DetailsComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        setTimeout(()=> {
+        this.updateAsync();
+        this.details.changes.subscribe(
+            () => {
+                this.updateAsync();
+            }
+        );
+    }
+
+    private updateAsync() {
+        setTimeout(() => {
             let activeDetail = this.details.filter((tab) => tab.active)
             // if there is no active tab set, activate the first
             if (activeDetail.length === 0) {
@@ -35,7 +44,7 @@ export class DetailsComponent implements AfterViewInit {
         this.details.toArray().forEach(detail => detail.active = false);
 
         // activate the tab the user has clicked on.
-        if(detail)
+        if (detail)
             detail.active = true;
     }
 
