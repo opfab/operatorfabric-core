@@ -5,7 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Card, CardDetail} from "@ofModel/card.model";
 
 @Component({
   selector: 'of-detail',
@@ -13,6 +14,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./detail.component.css']
 })
 export class DetailComponent implements OnInit {
+  public active = false;
+  @Input() detail: CardDetail;
+  @Input() card: Card;
 
   constructor() { }
 

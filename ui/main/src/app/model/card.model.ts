@@ -5,25 +5,27 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {I18nData, Severity} from "@ofModel/light-card.model";
+import {Severity} from "@ofModel/light-card.model";
+import {I18n} from "@ofModel/i18n.model";
 
-export interface Card {
-    readonly uid: string;
-    readonly id: string;
-    readonly mainRecipient: string;
-    readonly publishDate: number;
-    readonly startDate: number;
-    readonly endDate: number;
-    readonly severity: Severity;
-    readonly processId?: string;
-    readonly lttd?: number;
-    readonly title?: I18nData;
-    readonly summary?: I18nData;
-    readonly data?: any;
+// export interface Card {
+//     readonly uid: string;
+//     readonly id: string;
+//     readonly mainRecipient: string;
+//     readonly publishDate: number;
+//     readonly startDate: number;
+//     readonly endDate: number;
+//     readonly severity: Severity;
+//     readonly processId?: string;
+//     readonly lttd?: number;
+//     readonly title?: I18n;
+//     readonly summary?: I18n;
+//     readonly data?: any;
+//     readonly details?:CardDetail[];
+//
+// }
 
-}
-
-export class Card implements Card {
+export class Card {
 
     constructor(
         readonly uid: string,
@@ -35,8 +37,23 @@ export class Card implements Card {
         readonly mainRecipient: string,
         readonly processId?: string,
         readonly lttd?: number,
-        readonly title?: I18nData,
-        readonly summary?: I18nData,
-        readonly  data?: any
+        readonly title?: I18n,
+        readonly summary?: I18n,
+        readonly  data?: any,
+        readonly  details?: CardDetail[]
     ) {}
+}
+
+export enum TitlePosition {
+    UP, DOWN, NONE
+
+}
+
+export class CardDetail {
+    constructor(
+        readonly titlePosition: TitlePosition,
+        readonly title: I18n,
+        readonly titleStyle:string,
+        readonly templateName:string,
+        readonly styles: string[]){}
 }

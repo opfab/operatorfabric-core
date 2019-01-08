@@ -5,9 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {I18nData, LightCard, Severity} from '@ofModel/light-card.model';
+import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Card} from "@ofModel/card.model";
+import {Card, CardDetail} from "@ofModel/card.model";
+import {I18n} from "@ofModel/i18n.model";
+import {Map} from "@ofModel/map";
 //
 // export function getNewLightCardInstance(): LightCard{
 //     return new LightCard();
@@ -57,18 +59,20 @@ export function getOneRandomLigthCard(): LightCard {
 export function getOneRandomCard(): Card {
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
-    const oneCard = new Card(getRandomAlphanumericValue(3, 24)
-        , getRandomAlphanumericValue(3, 24)
-        , today
-        , startTime
-        , startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455)
-        , Severity.QUESTION
-        , getRandomAlphanumericValue(3, 24)
-        , getRandomAlphanumericValue(3, 24)
-        , generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666)
-        , getRandomI18nData()
-        , getRandomI18nData()
-        , {data:"data"}
+    const oneCard = new Card(getRandomAlphanumericValue(3, 24),
+        getRandomAlphanumericValue(3, 24),
+        today,
+        startTime,
+        startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        Severity.QUESTION,
+        getRandomAlphanumericValue(3, 24),
+        getRandomAlphanumericValue(3, 24),
+        generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
+        getRandomI18nData(),
+        getRandomI18nData(),
+        {data: "data"},
+        [new CardDetail(null, getRandomI18nData(),null,"template1",null),
+            new CardDetail(null, getRandomI18nData(),null,"template2",null),]
     );
     return oneCard;
 }
@@ -83,13 +87,13 @@ export function getSeveralRandomLightCards(numberOfCards = 1): LightCard[] {
 }
 
 
-export function getRandomI18nData(): I18nData {
+export function getRandomI18nData(): I18n {
     const paramNumber = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4);
-    const parameters: string[] = new Array(paramNumber);
+    const parameters: Map<string> = new Map();
     for (let i = 0; i < paramNumber; ++i) {
-        parameters[i] = getRandomAlphanumericValue(4, 13);
+        parameters[`param${i}`] = getRandomAlphanumericValue(4, 13);
     }
-    return new I18nData(getRandomAlphanumericValue(4, 7), parameters);
+    return new I18n(getRandomAlphanumericValue(4, 7), parameters);
 }
 
 export function getRandomAlphanumericValue(min = 1, max?: number): string {

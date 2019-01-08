@@ -10,9 +10,8 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../store/index';
 import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
-import * as lightCardSelectors from '../../store/selectors/light-card.selectors';
+import * as lightCardSelectors from '@ofSelectors/light-card.selectors';
 import {catchError, tap} from "rxjs/operators";
-import {selectLightCardsState} from "../../store/selectors/light-card.selectors";
 
 @Component({
     selector: 'of-cards',

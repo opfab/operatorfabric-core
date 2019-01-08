@@ -5,6 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import {I18n} from "@ofModel/i18n.model";
+
 export interface LightCard {
     readonly uid: string;
     readonly id: string;
@@ -15,10 +17,8 @@ export interface LightCard {
     readonly severity: Severity;
     readonly processId?: string;
     readonly lttd?: number;
-    readonly title?: I18nData;
-    readonly summary?: I18nData;
-    // media?: string;
-    // tags?: string[];
+    readonly title?: I18n;
+    readonly summary?: I18n;
 
 }
 
@@ -34,10 +34,8 @@ export class LightCard implements LightCard {
         readonly mainRecipient: string,
         readonly processId?: string,
         readonly lttd?: number,
-        readonly title?: I18nData,
-        readonly summary?: I18nData,
-        // , media?: string
-        // , tags?: string[]
+        readonly title?: I18n,
+        readonly summary?: I18n,
     ) {}
 }
 
@@ -50,13 +48,3 @@ export enum Sound {
     NOTIFICATION, QUESTION
 }
 
-export interface I18nData {
-   readonly key: string;
-   readonly parameters: string[];
-}
-
-export class I18nData implements I18nData{
-
-    constructor(readonly key: string, readonly parameters: string[]) {
-    }
-}

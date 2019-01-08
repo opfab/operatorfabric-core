@@ -1,3 +1,6 @@
+<div [hidden]="!active">
+<h4>Card data ({{detail.templateName}})</h4>
 <p>
-  detail works!
+  {{card.data|json}}
 </p>
+</div>

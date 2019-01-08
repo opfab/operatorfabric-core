@@ -17,6 +17,7 @@ import {ROUTER_NAVIGATION, RouterNavigationAction} from "@ngrx/router-store";
 import {CardActionTypes, LoadCard, LoadCardFailure, LoadCardSuccess} from "@ofActions/card.actions";
 import {RouterStateUrl} from "@ofStore/states/router.state";
 import {SelectLightCard} from "@ofActions/light-card.actions";
+import {Card} from "@ofModel/card.model";
 
 // those effects are unused for the moment
 @Injectable()
@@ -34,8 +35,8 @@ export class CardEffects {
         .pipe(
             ofType<LoadCard>(CardActionTypes.LoadCard),
             switchMap(action => this.service.loadCard(action.payload.id)),
-            map((lightCard: LightCard) => {
-                return new LoadCardSuccess({card: lightCard});
+            map((card: Card) => {
+                return new LoadCardSuccess({card: card});
             }),
             catchError((err, caught) => {
                 this.store.dispatch(new LoadCardFailure(err));

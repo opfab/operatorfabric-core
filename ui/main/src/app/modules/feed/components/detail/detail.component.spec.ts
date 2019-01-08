@@ -8,6 +8,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DetailComponent } from './detail.component';
+import {getOneRandomCard} from "@tests/helpers";
 
 describe('DetailComponent', () => {
   let component: DetailComponent;
@@ -23,10 +24,12 @@ describe('DetailComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    component.card = getOneRandomCard();
+    component.detail = component.card.details[0];
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 });

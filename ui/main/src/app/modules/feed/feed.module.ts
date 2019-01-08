@@ -18,6 +18,7 @@ import { NoSelectionComponent } from './components/no-selection/no-selection.com
 import { DetailsComponent } from './components/details/details.component';
 import { DetailComponent } from './components/detail/detail.component';
 import { TimeLineComponent } from './components/time-line/time-line.component';
+import { CardDetailsComponent } from './components/card-details/card-details.component';
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import { TimeLineComponent } from './components/time-line/time-line.component';
       MatCardModule,
       MatButtonModule,
   ],
-  declarations: [CardListComponent, FeedComponent, CardComponent, NoSelectionComponent, DetailsComponent, DetailComponent, TimeLineComponent],
+  declarations: [CardListComponent, FeedComponent, CardComponent, NoSelectionComponent, DetailsComponent, DetailComponent, TimeLineComponent, CardDetailsComponent],
   exports: [FeedComponent]
 })
 export class FeedModule {

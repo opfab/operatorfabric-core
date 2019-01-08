@@ -9,10 +9,8 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 
 import {CardComponent} from './card.component';
-import {I18nData, LightCard, Severity} from '@ofModel/light-card.model';
 import {MatButtonModule, MatCardModule} from '@angular/material';
 import {getOneRandomLigthCard} from '../../../../../tests/helpers';
-import {RouterModule} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
 
 describe('CardComponent', () => {

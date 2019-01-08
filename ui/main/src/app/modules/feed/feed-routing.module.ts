@@ -12,6 +12,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {NoSelectionComponent} from "./components/no-selection/no-selection.component";
 import {DetailsComponent} from "./components/details/details.component";
 import {DetailComponent} from "./components/detail/detail.component";
+import {CardDetailsComponent} from "./components/card-details/card-details.component";
 
 const routes: Routes = [
     {
@@ -29,11 +30,11 @@ const routes: Routes = [
                 children : [
                     {
                         path: '',
-                        component: NoSelectionComponent,
+                        component: CardDetailsComponent,
                     },
                     {
                         path: ':cid',
-                        component: DetailsComponent,
+                        component: CardDetailsComponent,
                         children: [
                             {
                                 path: 'details/:did',
