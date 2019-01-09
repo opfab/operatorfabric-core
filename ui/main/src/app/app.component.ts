@@ -16,6 +16,7 @@ import {
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors';
 import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
+import {TranslateService} from "@ngx-translate/core";
 
 
 @Component({
@@ -29,8 +30,12 @@ export class AppComponent implements OnInit {
     currentPath: any;
     isAuthenticated$: boolean;
 
-    constructor(private store: Store<AppState>) {
+    constructor(private store: Store<AppState>,
+                private translate: TranslateService) {
         this.getRoutePE = this.store.pipe(select(selectRouterState));
+        this.translate.setDefaultLang('en');
+        console.log(navigator.language);
+        this.translate.use('fr');
     }
 
     ngOnInit() {

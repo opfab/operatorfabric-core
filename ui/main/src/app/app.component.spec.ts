@@ -16,6 +16,7 @@ import {NavbarComponent} from './components/navbar/navbar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {IconComponent} from "./components/icon/icon.component";
+import {TranslateModule} from "@ngx-translate/core";
 
 
 
@@ -35,6 +36,7 @@ describe('AppComponent', () => {
             imports: [
                 NgbModule.forRoot(),
                 StoreModule.forRoot(appReducer),
+                TranslateModule.forRoot(),
                 // solution 4 RouterTestingModule: https://github.com/coreui/coreui-free-bootstrap-admin-template/issues/202
                 RouterTestingModule
             ],

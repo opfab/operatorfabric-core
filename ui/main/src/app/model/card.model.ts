@@ -30,6 +30,7 @@ export class Card {
     constructor(
         readonly uid: string,
         readonly id: string,
+        readonly piblisher: string,
         readonly publishDate: number,
         readonly startDate: number,
         readonly endDate: number,

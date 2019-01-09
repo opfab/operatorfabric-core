@@ -41,17 +41,18 @@ export function getOneRandomAddCardOperation(): CardOperation {
 export function getOneRandomLigthCard(): LightCard {
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
-    const oneCard = new LightCard(getRandomAlphanumericValue(3, 24)
-        , getRandomAlphanumericValue(3, 24)
-        , today
-        , startTime
-        , startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455)
-        , Severity.QUESTION
-        , getRandomAlphanumericValue(3, 24)
-        , getRandomAlphanumericValue(3, 24)
-        , generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666)
-        , getRandomI18nData()
-        , getRandomI18nData()
+    const oneCard = new LightCard(getRandomAlphanumericValue(3, 24),
+        getRandomAlphanumericValue(3, 24),
+        'testPublisher',
+        today,
+        startTime,
+        startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        Severity.QUESTION,
+        getRandomAlphanumericValue(3, 24),
+        getRandomAlphanumericValue(3, 24),
+        generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
+        getRandomI18nData(),
+        getRandomI18nData(),
     );
     return oneCard;
 }
@@ -61,6 +62,7 @@ export function getOneRandomCard(): Card {
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     const oneCard = new Card(getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
+        'testPublisher',
         today,
         startTime,
         startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),

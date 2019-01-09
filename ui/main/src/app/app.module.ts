@@ -8,17 +8,20 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {CommonModule} from "@angular/common";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {StateModule} from '@ofStore/state.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {AppRoutingModule} from './app-routing.module';
 import {ServicesModule} from '@ofServices/services.module';
+import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {LoginComponent} from "./components/login/login.component";
 import {IconComponent} from './components/icon/icon.component';
-import {CommonModule} from "@angular/common";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import {translateConfig} from "./translate.config";
 
 @NgModule({
     imports: [
@@ -34,6 +37,7 @@ import {CommonModule} from "@angular/common";
         StateModule.forRoot(),
         ServicesModule.forRoot(),
         NgbModule.forRoot(),
+        TranslateModule.forRoot(translateConfig)
     ],
     declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent],
     bootstrap: [AppComponent]

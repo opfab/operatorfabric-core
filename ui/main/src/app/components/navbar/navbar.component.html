@@ -17,11 +17,12 @@
                 [routerLink]="link.path"
                 routerLinkActive #rla="routerLinkActive"
                 (click)="activeLinkIndex = i"
-        >{{link.path}}</a>
+                translate
+        >{{'menu.'+link.path}}</a>
       </li>
       <li>
         <form>
-          <button type="button" class="btn btn-link btn-logout" (click)="logOut()">Logout</button>
+          <button type="button" class="btn btn-link btn-logout" (click)="logOut()" translate>menu.logout</button>
         </form>
       </li>
     </ul>

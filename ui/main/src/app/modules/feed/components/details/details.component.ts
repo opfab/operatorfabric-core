@@ -5,8 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AfterViewInit, Component, ContentChildren, QueryList} from '@angular/core';
+import {AfterViewInit, Component, ContentChildren, Input, QueryList} from '@angular/core';
 import {DetailComponent} from "../detail/detail.component";
+import {Card} from "@ofModel/card.model";
 
 @Component({
     selector: 'of-details',
@@ -16,6 +17,7 @@ import {DetailComponent} from "../detail/detail.component";
 export class DetailsComponent implements AfterViewInit {
 
     @ContentChildren(DetailComponent) details: QueryList<DetailComponent>;
+    @Input() card: Card;
 
     constructor() {
     }

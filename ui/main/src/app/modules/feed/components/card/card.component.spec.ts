@@ -11,6 +11,9 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {CardComponent} from './card.component';
 import {getOneRandomLigthCard} from '../../../../../tests/helpers';
 import {RouterTestingModule} from "@angular/router/testing";
+import {TranslateModule} from "@ngx-translate/core";
+import {translateConfig} from "../../../../translate.config";
+import {HttpClientModule} from "@angular/common/http";
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
@@ -18,7 +21,9 @@ describe('CardComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule,
+                HttpClientModule,
+                TranslateModule.forRoot(translateConfig)],
             declarations: [CardComponent]
         })
             .compileComponents();
@@ -37,13 +42,14 @@ describe('CardComponent', () => {
         const uid = lightCard.uid;
         const title = lightCard.title.key;
         const summaryValue = lightCard.summary.key;
+        const publisher = lightCard.publisher;
 
         lightCardDetailsComp.lightCard = lightCard;
 
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('.card-title').innerText)
-            .toEqual(title);
+            .toEqual(publisher+'.'+title);
         expect(fixture.nativeElement.querySelector('.card-body > p'))
             .toBeFalsy();
     });

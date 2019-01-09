@@ -20,7 +20,6 @@ export class NavbarComponent implements OnInit {
 
     navbarCollapsed = true;
     navigationRoutes = navigationRoutes;
-    selCU = selectCurrentUrl;
     currentPath: any;
 
     constructor(private store: Store<AppState>) {
