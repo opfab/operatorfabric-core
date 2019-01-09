@@ -34,6 +34,8 @@ public class LightCardPublicationData implements LightCard {
     private String uid ;
     @NotNull
     private String id ;
+    private String publisher;
+    private String publisherVersion;
     @NotNull
     private String processId;
     private Long lttd;

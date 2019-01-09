@@ -254,6 +254,12 @@ definitions:
       id:
         type: string
         description: Unique card ID for associated process
+      publisher:
+        type: string
+        description: Publishing service unique ID
+      publisherVersion:
+        type: string
+        description: Publishing service version
       processId:
         type: string
         description: Unique process ID for associated process

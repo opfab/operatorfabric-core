@@ -29,6 +29,8 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
     public LightCard convert(Document source) {
         LightCardConsultationData.LightCardConsultationDataBuilder builder = LightCardConsultationData.builder();
         builder
+                .publisher(source.getString("publisher"))
+                .publisherVersion(source.getString("publisherVersion"))
                 .uid(source.getString("uid"))
                 .id(source.getString("_id"))
                 .processId(source.getString("processId"))

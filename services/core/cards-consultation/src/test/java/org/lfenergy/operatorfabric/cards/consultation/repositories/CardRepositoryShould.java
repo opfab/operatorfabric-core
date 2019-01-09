@@ -168,6 +168,8 @@ public class CardRepositoryShould {
                     assertThat(op.getCards().size()).isEqualTo(1);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
                     assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS0");
+                    assertThat(op.getCards().get(0).getPublisher()).isEqualTo("PUBLISHER");
+                    assertThat(op.getCards().get(0).getPublisherVersion()).isEqualTo("0");
             })
             .expectComplete()
             .verify();
@@ -336,6 +338,7 @@ public class CardRepositoryShould {
         Predicate<CardConsultationData> predicate = c -> card.getId().equals(c.getId());
         predicate = predicate.and(c -> c.getDetails().size() == 1);
         predicate = predicate.and(c -> c.getDetails().get(0).getTitlePosition() == TitlePositionEnum.UP);
+        predicate = predicate.and(c -> "PUBLISHER".equals(c.getPublisher()));
         return predicate;
     }
 

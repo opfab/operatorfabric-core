@@ -26,7 +26,7 @@ import java.util.UUID;
  * <p>Please use builder to instantiate</p>
  *
  * <p>Card Model, documented at {@link Card}</p>
- *
+ * <p>
  * {@inheritDoc}
  *
  * @author David Binder
@@ -38,7 +38,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CardPublicationData implements Card {
 
-    @Builder.Default private String uid = UUID.randomUUID().toString();
+    @Builder.Default
+    private String uid = UUID.randomUUID().toString();
     @Id
     private String id;
     @NotNull
@@ -71,7 +72,7 @@ public class CardPublicationData implements Card {
     private List<String> tags;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Map<String,? extends Action> actions;
+    private Map<String, ? extends Action> actions;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends Detail> details;
@@ -88,29 +89,33 @@ public class CardPublicationData implements Card {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groupRecipients;
-    @Singular @Transient @JsonIgnore
+    @Singular
+    @Transient
+    @JsonIgnore
     private List<String> orphanedUsers;
 
-    public void prepare(Long publishDate){
+    public void prepare(Long publishDate) {
         this.publishDate = publishDate;
-        this.id = publisher+"_"+processId;
-        this.setShardKey(Math.toIntExact(this.getStartDate()%24*1000));
+        this.id = publisher + "_" + processId;
+        this.setShardKey(Math.toIntExact(this.getStartDate() % 24 * 1000));
     }
 
-    public LightCardPublicationData toLightCard(){
+    public LightCardPublicationData toLightCard() {
         return LightCardPublicationData.builder()
-           .id(this.getId())
-           .uid(this.getUid())
-           .processId(this.getProcessId())
-           .lttd(this.getLttd())
-           .startDate(this.getStartDate())
-           .endDate(this.getEndDate())
-           .severity(this.getSeverity())
-           .media(this.getMedia())
-           .tags(this.getTags())
-           .mainRecipient(this.getMainRecipient())
-           .title(((I18nPublicationData)this.getTitle()).copy())
-           .summary(((I18nPublicationData)this.getSummary()).copy())
-           .build();
+            .id(this.getId())
+            .uid(this.getUid())
+            .publisher(this.getPublisher())
+            .publisherVersion(this.getPublisherVersion())
+            .processId(this.getProcessId())
+            .lttd(this.getLttd())
+            .startDate(this.getStartDate())
+            .endDate(this.getEndDate())
+            .severity(this.getSeverity())
+            .media(this.getMedia())
+            .tags(this.getTags())
+            .mainRecipient(this.getMainRecipient())
+            .title(((I18nPublicationData) this.getTitle()).copy())
+            .summary(((I18nPublicationData) this.getSummary()).copy())
+            .build();
     }
 }
