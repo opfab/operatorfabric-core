@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./src",
+    "importHelpers": true,
     "paths": {
       "@env/*": ["environments/*"],
       "@ofStore/*": ["app/store/*"],
