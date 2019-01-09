@@ -8,7 +8,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CardListComponent } from './card-list.component';
-import {MatButtonModule, MatCardModule} from '@angular/material';
 import {FeedModule} from '../../feed.module';
 import {CardComponent} from '../card/card.component';
 
@@ -18,7 +17,6 @@ describe('CardListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-        imports: [MatCardModule, MatButtonModule],
         declarations: [ CardListComponent, CardComponent]
     })
     .compileComponents();

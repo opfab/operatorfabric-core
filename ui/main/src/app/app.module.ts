@@ -11,15 +11,13 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import {StateModule} from '@ofStore/state.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {FeedModule} from './modules/feed/feed.module';
 import {AppRoutingModule} from './app-routing.module';
 import {ServicesModule} from '@ofServices/services.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
-import {ArchivesModule} from "./modules/archives/archives.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {LoginComponent} from "./components/login/login.component";
-import { IconComponent } from './components/icon/icon.component';
+import {IconComponent} from './components/icon/icon.component';
 import {CommonModule} from "@angular/common";
 
 @NgModule({

@@ -8,7 +8,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FeedComponent} from './feed.component';
-import {MatButtonModule, MatCardModule} from '@angular/material';
 import {CardListComponent} from './components/card-list/card-list.component';
 import {CardComponent} from './components/card/card.component';
 import {appReducer, AppState} from '../../store/index';
@@ -30,8 +29,7 @@ describe('FeedComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 StoreModule.forRoot(appReducer),
-                RouterTestingModule,
-                MatCardModule, MatButtonModule],
+                RouterTestingModule],
             declarations: [CardListComponent, FeedComponent, CardComponent, TimeLineComponent]
             , providers: [{provide: Store, useClass: Store}]
         })

@@ -8,7 +8,6 @@
 import {async, TestBed} from '@angular/core/testing';
 import {AppComponent} from './app.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {MatTabsModule, MatToolbarModule} from '@angular/material';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {BrowserDynamicTestingModule, platformBrowserDynamicTesting} from '@angular/platform-browser-dynamic/testing';
@@ -37,9 +36,7 @@ describe('AppComponent', () => {
                 NgbModule.forRoot(),
                 StoreModule.forRoot(appReducer),
                 // solution 4 RouterTestingModule: https://github.com/coreui/coreui-free-bootstrap-admin-template/issues/202
-                RouterTestingModule,
-                MatTabsModule,
-                MatToolbarModule
+                RouterTestingModule
             ],
             declarations: [AppComponent,NavbarComponent, IconComponent],
             providers: [{provide: store, useClass: Store}
