@@ -10,7 +10,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {FeedComponent} from './feed.component';
 import {CardListComponent} from './components/card-list/card-list.component';
 import {CardComponent} from '../cards/components/card/card.component';
-import {appReducer, AppState} from '../../store/index';
+import {appReducer, AppState, storeConfig} from '../../store/index';
 import {Store, StoreModule} from '@ngrx/store';
 import {LoadLightCardsSuccess} from '../../store/actions/light-card.actions';
 import {LightCard} from '@ofModel/light-card.model';
@@ -19,6 +19,11 @@ import {By} from '@angular/platform-browser';
 import {getOneRandomLigthCard, getPositiveRandomNumberWithinRange, getSeveralRandomLightCards} from '../../../tests/helpers';
 import {RouterTestingModule} from "@angular/router/testing";
 import {TimeLineComponent} from "./components/time-line/time-line.component";
+import {CardsModule} from "../cards/cards.module";
+import {of} from "rxjs";
+import {HttpClientModule} from "@angular/common/http";
+import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
+import {CustomRouterStateSerializer} from "@ofStates/router.state";
 
 describe('FeedComponent', () => {
     let component: FeedComponent;
@@ -28,16 +33,21 @@ describe('FeedComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                StoreModule.forRoot(appReducer),
-                RouterTestingModule],
-            declarations: [CardListComponent, FeedComponent, CardComponent, TimeLineComponent]
-            , providers: [{provide: Store, useClass: Store}]
+                StoreModule.forRoot(appReducer, storeConfig),
+                RouterTestingModule,
+                StoreRouterConnectingModule,
+                HttpClientModule,
+                CardsModule],
+            declarations: [CardListComponent, FeedComponent, TimeLineComponent]
+            , providers: [{provide: Store, useClass: Store},{provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}]
         })
             .compileComponents();
     }));
     beforeEach(() => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
+        // avoid exceptions during construction and init of the component
+        // spyOn(store, 'pipe').and.callFake(() => of('/test/url'));
         fixture = TestBed.createComponent(FeedComponent);
         component = fixture.componentInstance;
 

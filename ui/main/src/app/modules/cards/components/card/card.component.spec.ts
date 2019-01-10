@@ -14,19 +14,30 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "../../../../translate.config";
 import {HttpClientModule} from "@angular/common/http";
+import {Store, StoreModule} from "@ngrx/store";
+import {appReducer, AppState} from "@ofStore/index";
+import {of} from "rxjs";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
     let fixture: ComponentFixture<CardComponent>;
+    let store: Store<AppState>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule,
-                HttpClientModule,
+            imports: [StoreModule.forRoot(appReducer),
+                RouterTestingModule,
+                HttpClientTestingModule,
                 TranslateModule.forRoot(translateConfig)],
-            declarations: [CardComponent]
+            declarations: [CardComponent],
+            providers: [{provide: store, useClass: Store}]
         })
             .compileComponents();
+        store = TestBed.get(Store);
+        spyOn(store, 'dispatch').and.callThrough();
+        // avoid exceptions during construction and init of the component
+        spyOn(store, 'pipe').and.callFake(() => of('/test/url'));
     }));
 
     beforeEach(() => {
