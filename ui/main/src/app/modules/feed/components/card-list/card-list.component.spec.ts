@@ -9,7 +9,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CardListComponent } from './card-list.component';
 import {FeedModule} from '../../feed.module';
-import {CardComponent} from '../card/card.component';
+import {CardComponent} from '../../../cards/components/card/card.component';
 
 describe('CardListComponent', () => {
   let component: CardListComponent;

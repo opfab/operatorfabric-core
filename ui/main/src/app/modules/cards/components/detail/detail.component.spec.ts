@@ -8,7 +8,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DetailComponent } from './detail.component';
-import {getOneRandomCard} from "@tests/helpers";
+import {getOneRandomCard} from "../../../../../tests/helpers";
 
 describe('DetailComponent', () => {
   let component: DetailComponent;

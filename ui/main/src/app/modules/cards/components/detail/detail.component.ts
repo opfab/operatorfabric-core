@@ -6,7 +6,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {Card, CardDetail} from "@ofModel/card.model";
+import {Card, CardDetail} from "../../../../model/card.model";
 
 @Component({
   selector: 'of-detail',

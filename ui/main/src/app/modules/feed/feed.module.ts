@@ -11,13 +11,14 @@ import {CardListComponent} from './components/card-list/card-list.component';
 import {FeedComponent} from './feed.component';
 import {FormsModule} from '@angular/forms';
 import {StateModule} from '../../store/state.module';
-import {CardComponent} from './components/card/card.component';
+import {CardComponent} from '../cards/components/card/card.component';
 import {FeedRoutingModule} from "./feed-routing.module";
 import { NoSelectionComponent } from './components/no-selection/no-selection.component';
-import { DetailsComponent } from './components/details/details.component';
-import { DetailComponent } from './components/detail/detail.component';
+import { DetailsComponent } from '../cards/components/details/details.component';
+import { DetailComponent } from '../cards/components/detail/detail.component';
 import { TimeLineComponent } from './components/time-line/time-line.component';
-import { CardDetailsComponent } from './components/card-details/card-details.component';
+import { CardDetailsComponent } from '../cards/components/card-details/card-details.component';
+import {CardsModule} from "../cards/cards.module";
 
 
 @NgModule({
@@ -25,9 +26,10 @@ import { CardDetailsComponent } from './components/card-details/card-details.com
     CommonModule,
     FormsModule,
     // StateModule,
+      CardsModule,
     FeedRoutingModule,
   ],
-  declarations: [CardListComponent, FeedComponent, CardComponent, NoSelectionComponent, DetailsComponent, DetailComponent, TimeLineComponent, CardDetailsComponent],
+  declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent],
   exports: [FeedComponent]
 })
 export class FeedModule {

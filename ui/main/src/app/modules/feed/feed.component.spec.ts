@@ -9,7 +9,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FeedComponent} from './feed.component';
 import {CardListComponent} from './components/card-list/card-list.component';
-import {CardComponent} from './components/card/card.component';
+import {CardComponent} from '../cards/components/card/card.component';
 import {appReducer, AppState} from '../../store/index';
 import {Store, StoreModule} from '@ngrx/store';
 import {LoadLightCardsSuccess} from '../../store/actions/light-card.actions';

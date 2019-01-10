@@ -7,10 +7,10 @@
 
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {Card, CardDetail} from "@ofModel/card.model";
+import {Card, CardDetail} from "../../../../model/card.model";
 import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import * as cardSelectors from '@ofSelectors/card.selectors';
+import {AppState} from "../../../../store/index";
+import * as cardSelectors from '../../../../store/selectors/card.selectors';
 import {tap} from "rxjs/operators";
 
 @Component({

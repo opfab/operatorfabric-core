@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit {
     ngOnInit() {
         this.store.select(selectCurrentUrl).subscribe(url=>{
             if(url)
-                this.currentPath = url.split('/').slice(-1)[0];
+                this.currentPath = url.split('/')[1];
         })
     }
 
