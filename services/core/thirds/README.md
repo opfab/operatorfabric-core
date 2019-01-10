@@ -19,17 +19,33 @@ CSS 3 style sheet are supported, they allow custom styling of card template deta
 the ```.detail.template``` parent selector
 
 #### Internationalization
-Internationalization (i18n) files are properties file (key<->value association). One file must be defined by module 
+Internationalization (i18n) files are json file (JavaScript Object Notation). One file must be defined by module 
 supported language. See [swagger generated documentation model section](build/doc/api/index.html#model) for data layout.
 
-Sample properties file 
+Sample json i18n file 
 ```
-emergency.title=Emergency situation happened on {{date}}. Cause : {{cause}}.
-emergency.module.name=Emergency Module
-emergency.number.of.functionnality=3
+{ "emergency": 
+  {
+    "message": "Emergency situation happened on {{date}}. Cause : {{cause}}."
+    "module":
+      {
+        "name": "Emergency Module",
+        "description": "The emergency module managed ermergencies"
+      }
+  }
+}
 ```
 
-i18n messages may include parameters.
+i18n messages may include parameters, these parameters are framed with double curly braces.
+
+The bundled json files name must conform to the following pattern : [lang].json
+
+ex:
+```
+fr.json
+en.json
+de.json
+```
 
 #### Media (notification sounds)
 Supported media files type :
