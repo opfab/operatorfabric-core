@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -28,13 +29,14 @@ public class ClientAppController {
      * @param exchange http request/response
      * @return nothing asside from completion
      */
-    @RequestMapping(value = "/home")
-    public Mono<Void> index(ServerWebExchange exchange) {
-        ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(HttpStatus.SEE_OTHER);
-        response.getHeaders().add(HttpHeaders.LOCATION, "/home/index.html");
-        return response.setComplete();
-    }
+//    @GetMapping(value = "/home")
+//    public String index() {
+////        ServerHttpResponse response = exchange.getResponse();
+////        response.setStatusCode(HttpStatus.SEE_OTHER);
+////        response.getHeaders().add(HttpHeaders.LOCATION, "/home/index.html");
+////        return response.setComplete();
+//        return "forward:/index.html";
+//    }
 
     /**
      * Forward to login/index.html file

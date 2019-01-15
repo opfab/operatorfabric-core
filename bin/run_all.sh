@@ -146,6 +146,7 @@ for bservice in "${businessServices[@]}"; do
     dependentProjects[$i]="$bservice-business-service"; dependentProjects[$i+1]="services/core/$bservice"; dependentProjects[$i+2]=0; dependentProjects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
 done
 
+dependentProjects[$i]="web-ui"; dependentProjects[$i+1]="services/web/web-ui"; dependentProjects[$i+2]=0; dependentProjects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
 
 debugPort=5005
 version=$OF_VERSION
@@ -166,6 +167,8 @@ startProject(){
       echo "pid file: $projectBuildPath/PIDFILE"
       if [ -f $projectBuildPath/PIDFILE ] ; then
         pid=$(<$projectBuildPath/PIDFILE)
+      else
+        pid=""
       fi
       if [ -n "$pid" -a -e /proc/$pid ]; then
         echo "${projects[i]} already running (pid: $pid)"

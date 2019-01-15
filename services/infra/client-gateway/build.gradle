@@ -36,4 +36,4 @@ jar {
     }
 }
 
-tasks.build.dependsOn ':tools:swagger-spring-generators:assemble'
+tasks.bootJar.dependsOn ':ui:main-user-interface:build'

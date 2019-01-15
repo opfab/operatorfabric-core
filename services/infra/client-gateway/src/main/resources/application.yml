@@ -21,12 +21,12 @@ spring:
         - Path=/users/**
         filters:
         - RewritePath=/users/(?<path>.*), /$\{path}
-      - id: cards
-        uri: lb://CARDS-CONSULTATION
+      - id: web-ui
+        uri: lb://WEB-UI
         predicates:
-        - Path=/cards/**
+        - Path=/ui/**
         filters:
-        - RewritePath=/cards/(?<path>.*), /$\{path}
+        - RewritePath=/ui/(?<path>.*), /$\{path}
 #logging:
   level.root: debug
 #zuul:

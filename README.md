@@ -77,6 +77,8 @@ project
 |   |   └──client-gateway (client-gateway-cloud-service)
 |   |   └──config (configuration-cloud-service)
 |   |   └──registry (registry-cloud-service)
+|   └──web
+|       └──web-ui
 └──tools
     └──spring-amqp-utilities
     └──spring-mongo-utilities
@@ -101,6 +103,8 @@ project
         * [client-gateway (client-gateway-cloud-service)](services/infra/client-gateway/README.md): spring-gateway client side only gateway microservice, used to serve public apis and web ui. 
         * [config (configuration-cloud-service)](services/infra/config/README.md): spring-configuration centralized configuration microservice
         * [registry (registry-cloud-service)](services/registry/config/README.md): eureka microservice registry
+    * [web](services/web/README.md): contains web pages and applicatio services
+        * [web-ui](services/web/web-ui/README.md): Main operator-fabric SPA.
 * [tools](tools/README.md)
     * [spring-amqp-utilities](tools/spring-amqp-utilities/README.md) : Utility code with spring amqp specific dependencies, used to share common features across amqp dependent services
     * [spring-mongo-utilities](tools/spring-mongo-utilities/README.md) : Utility code  with spring specific dependencies, used to share common features across mongo dependent services
@@ -158,6 +162,7 @@ Port  | Forwards to         |     |                                             
 2102  | cards-publication   |8080 |card publication service http (REST)              |
 2103  | users               |8080 |Users management service http (REST)              |
 2104  | cards-consultation  |8080 |card consultation service http (REST)             |
+2200  | web-ui              |8080 |card consultation service http (REST)             |
 3000  | oauth               |8080 |Oauth development service http (REST)             |
 4000  | config              |5005 |java debug port                                   |
 4001  | registry            |5005 |java debug port                                   |
@@ -166,7 +171,8 @@ Port  | Forwards to         |     |                                             
 4101  | time                |5005 |java debug port                                   |
 4102  | cards-publication   |5005 |java debug port                                   |
 4103  | users               |5005 |java debug port                                   |
-4103  | cards-consultation  |5005 |java debug port                                   |
+4104  | cards-consultation  |5005 |java debug port                                   |
+4200  | web-ui              |5005 |java debug port                                   |
 5000  | oauth               |5005 |java debug port                                   |
 27017 | mongo               |27017|mongo api  port                                   |
 5672  | rabbitmq            |5672 |amqp api  port                                    |
