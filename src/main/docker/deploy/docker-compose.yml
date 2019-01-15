@@ -144,6 +144,19 @@ services:
     - DEPENDS_ON=CONFIG
     networks:
      - opfabnet
+  web-ui:
+    depends_on:
+    - registry
+    image: "org.lfenergy.operatorfabric/web-ui"
+    ports:
+    - "2200:8080"
+    - "4200:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    networks:
+    - opfabnet
 networks:
   opfabnet:
     external:

@@ -35,5 +35,3 @@ jar {
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }
 }
-
-tasks.bootJar.dependsOn ':ui:main-user-interface:build'
