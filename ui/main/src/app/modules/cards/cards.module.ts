@@ -5,18 +5,38 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { NgModule } from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CardComponent} from "./components/card/card.component";
 import {CardDetailsComponent} from "./components/card-details/card-details.component";
 import {DetailsComponent} from "./components/details/details.component";
 import {DetailComponent} from "./components/detail/detail.component";
+import {MissingTranslationHandler, TranslateModule} from "@ngx-translate/core";
+import {
+    ThirdsMissingTranslationHandlerFactory,
+    ThirdsService
+} from "./services/thirds.service";
 
 @NgModule({
   declarations: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
   imports: [
-    CommonModule
+    CommonModule,
+      TranslateModule.forChild({
+          missingTranslationHandler: {
+              provide: MissingTranslationHandler,
+              useFactory: ThirdsMissingTranslationHandlerFactory,
+              deps:[ThirdsService]},
+          useDefaultLang: false
+      })
   ],
-    exports: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent]
+    exports: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
+    providers: [ThirdsService]
 })
-export class CardsModule { }
+export class CardsModule {
+    static forRoot(): ModuleWithProviders{
+        return {
+            ngModule: CardsModule,
+            providers: [ThirdsService]
+        }
+    }
+}
