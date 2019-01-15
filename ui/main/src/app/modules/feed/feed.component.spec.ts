@@ -26,6 +26,8 @@ import {CardsModule} from "../cards/cards.module";
 import {HttpClientModule} from "@angular/common/http";
 import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
 import {CustomRouterStateSerializer} from "@ofStates/router.state";
+import {TranslateModule} from "@ngx-translate/core";
+import {translateConfig} from "../../translate.config";
 
 describe('FeedComponent', () => {
     let component: FeedComponent;
@@ -39,7 +41,8 @@ describe('FeedComponent', () => {
                 RouterTestingModule,
                 StoreRouterConnectingModule,
                 HttpClientModule,
-                CardsModule],
+                CardsModule,
+                TranslateModule.forRoot(translateConfig)],
             declarations: [CardListComponent, FeedComponent, TimeLineComponent]
             , providers: [{provide: Store, useClass: Store},{provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}]
         })

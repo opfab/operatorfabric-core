@@ -7,14 +7,14 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {AuthenticationGuard} from "@ofServices/guard.service";
+// import {AuthenticationGuard} from "@ofServices/guard.service";
 import {ArchivesComponent} from "./archives.component";
 
 const routes: Routes = [
     {
         path: '',
         component: ArchivesComponent,
-        canActivate: [AuthenticationGuard]
+        // canActivate: [AuthenticationGuard]
     },
 ];
 

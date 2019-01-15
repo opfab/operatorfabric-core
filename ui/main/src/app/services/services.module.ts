@@ -10,7 +10,7 @@ import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
 import {TokenInjector} from './interceptors.service';
-import {AuthenticationGuard} from './guard.service';
+// import {AuthenticationGuard} from './guard.service';
 import {CardService} from './card.service';
 import {GuidService} from "@ofServices/guid.service";
 
@@ -25,7 +25,7 @@ import {GuidService} from "@ofServices/guid.service";
             useClass: TokenInjector,
             multi: true
         }
-        , AuthenticationGuard
+        // , AuthenticationGuard
         , GuidService
 
     ]

@@ -13,7 +13,7 @@ node{
 }
 
 npm_run_build {
-    args = ['--', '--configuration=production']
+    args = ['--', '--configuration=production', '--baseHref=/ui/', '--deployUrl=/ui/']
 }
 
 npm_run_build.dependsOn(npm_install)

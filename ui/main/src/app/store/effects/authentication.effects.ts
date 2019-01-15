@@ -8,11 +8,11 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
-import {RouterGo} from 'ngrx-router';
+// import {RouterGo} from 'ngrx-router';
 import {Action, Store} from '@ngrx/store';
 import {
     AcceptLogIn,
-    AcceptLogOut,
+    AcceptLogOut, AcceptLogOutSuccess,
     AuthenticationActions,
     AuthenticationActionTypes, RejectLogIn,
     TryToLogIn,
@@ -21,13 +21,16 @@ import {
 import {AuthenticationService, CheckTokenResponse} from '../../services/authentication.service';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
+import {Router} from "@angular/router";
 
 
 @Injectable()
 export class AuthenticationEffects {
 
+    private count: number = 0;
+
     /* istanbul ignore next */
-    constructor(private store: Store<AppState>, private actions$: Actions, private authService: AuthenticationService) {
+    constructor(private store: Store<AppState>, private actions$: Actions, private authService: AuthenticationService, private router: Router) {
     }
 
     @Effect()
@@ -52,8 +55,9 @@ export class AuthenticationEffects {
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.TryToLogOut),
             map((action: TryToLogOut) => {
+                // console.log('try to log out')
                 this.authService.clearAuthenticationInformation();
-                return new AcceptLogOut();
+                return new AcceptLogOut({count: this.count++});
             })
         );
 
@@ -62,7 +66,9 @@ export class AuthenticationEffects {
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.AcceptLogOut),
             map((action: AcceptLogOut) => {
-                return new RouterGo({path: ['/login']})
+                // console.log("accept log out : "+action.payload.count);
+                this.router.navigate(['/login'])
+                return new  AcceptLogOutSuccess();
             })
         );
 
@@ -72,7 +78,8 @@ export class AuthenticationEffects {
             tap(() => {
                 this.authService.clearAuthenticationInformation();
             }),
-            map(action => new AcceptLogOut()));
+            // tap(()=>console.log("reject login")),
+            map(action => new AcceptLogOut({count: this.count++})));
 
     @Effect()
     CheckAuthentication: Observable<AuthenticationActions> =
@@ -96,12 +103,12 @@ export class AuthenticationEffects {
                 })
             );
 
-    @Effect()
-    AcceptLogIn: Observable<Action> =
-        this.actions$.pipe(
-            ofType(AuthenticationActionTypes.AcceptLogIn),
-            map((action: AcceptLogIn) => new RouterGo({path: ['/feed']}))
-        );
+    // @Effect()
+    // AcceptLogIn: Observable<Action> =
+    //     this.actions$.pipe(
+    //         ofType(AuthenticationActionTypes.AcceptLogIn),
+    //         map((action: AcceptLogIn) => new RouterGo({path: ['/feed']}))
+    //     );
 
     handleRejectedLogin(errorMsg: string): AuthenticationActions {
         this.authService.clearAuthenticationInformation();

@@ -14,6 +14,7 @@ import {AppState} from '@ofStore/index';
 import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors';
 import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
 import {TranslateService} from "@ngx-translate/core";
+import {isInTheFuture} from "@ofServices/authentication.service";
 
 
 @Component({
@@ -38,7 +39,7 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.store.pipe(select(selectCurrentUrl)).subscribe(url => this.currentPath = url);
         this.store.pipe(select(selectExpirationTime),
-            map(expirationTime =>  expirationTime > Date.now())
+            map(isInTheFuture)
                         ).subscribe(isAUth => this.isAuthenticated$ = isAUth);
         // First Action send by the application, is the user currently authenticated ?
         this.store.dispatch(new CheckAuthenticationStatus());

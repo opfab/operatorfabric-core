@@ -6,6 +6,8 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
+import {environment} from "@env/environment";
+import {PlatformLocation} from "@angular/common";
 
 @Component({
   selector: 'of-icon',
@@ -22,7 +24,10 @@ export class IconComponent implements OnInit {
   @Input() light:boolean;
   size:string;
   sprites:string;
-  constructor() { }
+  iconPath:string;
+  constructor(platformLocation:PlatformLocation) {
+    this.iconPath = platformLocation.getBaseHrefFromDOM()+'assets/images/icons/'
+  }
 
   ngOnInit() {
     this.big = this.big != undefined;

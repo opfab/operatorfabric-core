@@ -5,4 +5,5 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 <of-navbar *ngIf="isAuthenticated$"></of-navbar>
-<router-outlet></router-outlet>
+<router-outlet *ngIf="isAuthenticated$" ></router-outlet>
+<of-login *ngIf="!isAuthenticated$"></of-login>

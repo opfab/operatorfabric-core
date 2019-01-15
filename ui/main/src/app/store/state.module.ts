@@ -12,14 +12,17 @@ import {EffectsModule} from '@ngrx/effects';
 import {appEffects, appReducer, storeConfig} from './index';
 import {environment} from '@env/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
+import {NavigationActionTiming, RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@ofStore/states/router.state';
 
 @NgModule({
   imports: [
     CommonModule,
-    StoreRouterConnectingModule,
     StoreModule.forRoot(appReducer, storeConfig),
+    StoreRouterConnectingModule.forRoot({
+        navigationActionTiming: NavigationActionTiming.PostActivation,
+        serializer: CustomRouterStateSerializer
+    }),
     EffectsModule.forRoot(appEffects),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
   ],

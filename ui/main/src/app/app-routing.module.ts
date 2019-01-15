@@ -6,32 +6,38 @@
  */
 
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {AuthenticationGuard} from '@ofServices/guard.service';
+import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
+// import {AuthenticationGuard} from '@ofServices/guard.service';
 import {LoginComponent} from './components/login/login.component';
+import {NavbarComponent} from "./components/navbar/navbar.component";
+import {environment} from "@env/environment";
 
 const routes: Routes = [
-    {
-        path: 'login',
-        component: LoginComponent
-    },
+    // {
+    //     path: 'login',
+    //     component: LoginComponent
+    // },
     {
         path: 'feed',
         loadChildren: './modules/feed/feed.module#FeedModule',
-        canActivate: [AuthenticationGuard]
+        // canActivate: [AuthenticationGuard]
     },
     {
         path: 'archives',
         loadChildren: './modules/archives/archives.module#ArchivesModule',
-        canActivate: [AuthenticationGuard]
+        // canActivate: [AuthenticationGuard]
+    },
+    {
+        path: 'navbar',
+        component: LoginComponent
     },
     {path: '**', redirectTo: '/feed'}
 ];
 // TODO manage visible path more gently
-export const navigationRoutes: Routes = routes.slice(1, 3);
+export const navigationRoutes: Routes = routes.slice(0, 2);
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes,{ enableTracing: false })],
+    imports: [RouterModule.forRoot(routes,{ enableTracing: !environment.production, preloadingStrategy: PreloadAllModules })],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

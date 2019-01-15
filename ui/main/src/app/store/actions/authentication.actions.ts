@@ -15,6 +15,7 @@ export enum AuthenticationActionTypes {
     TryToLogIn = '[Authentication] Try to log the user in',
     TryToLogOut = '[Authentication] Try to log the user out',
     AcceptLogOut = '[Authentication] Accept the user log out attempt',
+    AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt',
 }
 
 export class PayloadForSuccessfulAuthentication {
@@ -54,6 +55,11 @@ export class CheckAuthenticationStatus implements Action {
 
 export class AcceptLogOut implements Action {
     readonly type = AuthenticationActionTypes.AcceptLogOut;
+    constructor(public payload: {count: number}){}
+}
+
+export class AcceptLogOutSuccess implements Action {
+    readonly type = AuthenticationActionTypes.AcceptLogOutSuccess;
 }
 
 export type AuthenticationActions =
@@ -62,4 +68,5 @@ export type AuthenticationActions =
     | TryToLogIn
     | TryToLogOut
     | CheckAuthenticationStatus
-    | AcceptLogOut;
+    | AcceptLogOut
+    | AcceptLogOutSuccess;

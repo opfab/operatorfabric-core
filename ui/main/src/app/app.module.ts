@@ -9,7 +9,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
-import {CommonModule} from "@angular/common";
+import {CommonModule, HashLocationStrategy, LocationStrategy} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {StateModule} from '@ofStore/state.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -37,6 +37,7 @@ import {translateConfig} from "./translate.config";
         TranslateModule.forRoot(translateConfig)
     ],
     declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent],
+    providers: [ { provide: LocationStrategy, useClass: HashLocationStrategy }],
     bootstrap: [AppComponent]
 })
 export class AppModule {
