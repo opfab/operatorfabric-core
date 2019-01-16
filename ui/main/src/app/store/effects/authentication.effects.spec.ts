@@ -4,24 +4,20 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import {
-    AcceptLogIn,
-    PayloadForSuccessfulAuthentication,
-    RejectLogIn
-} from '@ofActions/authentication.actions';
+import {AcceptLogIn, PayloadForSuccessfulAuthentication, RejectLogIn} from '@ofActions/authentication.actions';
 
-import {TestBed, inject, async} from '@angular/core/testing';
+import {async, TestBed} from '@angular/core/testing';
 import {provideMockActions} from '@ngrx/effects/testing';
 import {Observable} from 'rxjs';
 
 import {AuthenticationEffects} from './authentication.effects';
 import {Actions} from '@ngrx/effects';
-import SpyObj = jasmine.SpyObj;
 import {AuthenticationService, CheckTokenResponse} from '@ofServices/authentication.service';
-import createSpyObj = jasmine.createSpyObj;
 import {Guid} from 'guid-typescript';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
+import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;

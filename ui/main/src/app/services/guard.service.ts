@@ -12,8 +12,8 @@ import {select, Store} from '@ngrx/store';
 import {map, tap} from 'rxjs/operators';
 import {RouterGo} from 'ngrx-router';
 import {isInTheFuture} from './authentication.service';
-import {AppState} from '../store/index';
-import {selectExpirationTime} from '../store/selectors/authentication.selectors';
+import {AppState} from '@ofStore/index';
+import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {

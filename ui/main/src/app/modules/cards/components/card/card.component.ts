@@ -6,11 +6,11 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {LightCard} from '../../../../model/light-card.model';
-import {Router} from "@angular/router";
-import {selectCurrentUrl} from "../../../../store/selectors/router.selectors";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../../../store/index";
+import {LightCard} from '@ofModel/light-card.model';
+import {Router} from '@angular/router';
+import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
 
 @Component({
     selector: 'of-card',

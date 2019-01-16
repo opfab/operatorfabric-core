@@ -9,11 +9,11 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FeedComponent} from './feed.component';
 import {CardListComponent} from './components/card-list/card-list.component';
-import {appReducer, AppState, storeConfig} from '../../store/index';
+import {appReducer, AppState, storeConfig} from '@ofStore/index';
 import {Store, StoreModule} from '@ngrx/store';
-import {LoadLightCardsSuccess} from '../../store/actions/light-card.actions';
+import {LoadLightCardsSuccess} from '@ofStore/actions/light-card.actions';
 import {LightCard} from '@ofModel/light-card.model';
-import * as fromStore from '../../store/selectors/light-card.selectors';
+import * as fromStore from '@ofStore/selectors/light-card.selectors';
 import {By} from '@angular/platform-browser';
 import {
     getOneRandomLigthCard,

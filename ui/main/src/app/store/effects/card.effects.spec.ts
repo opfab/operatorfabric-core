@@ -6,7 +6,7 @@
  */
 
 import {CardEffects} from './card.effects';
-import {getOneRandomCard} from '../../../tests/helpers';
+import {getOneRandomCard} from '@tests/helpers';
 import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
 import {LoadCard, LoadCardSuccess} from "@ofActions/card.actions";

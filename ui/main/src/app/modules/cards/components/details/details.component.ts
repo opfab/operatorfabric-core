@@ -7,7 +7,7 @@
 
 import {AfterViewInit, Component, ContentChildren, Input, QueryList} from '@angular/core';
 import {DetailComponent} from "../detail/detail.component";
-import {Card} from "../../../../model/card.model";
+import {Card} from "@ofModel/card.model";
 
 @Component({
     selector: 'of-details',

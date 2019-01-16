@@ -5,13 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
-import {Card, CardDetail} from "../../../../model/card.model";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../../../store/index";
-import * as cardSelectors from '../../../../store/selectors/card.selectors';
-import {tap} from "rxjs/operators";
+import {Component, OnInit} from '@angular/core';
+import {Card, CardDetail} from '@ofModel/card.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import * as cardSelectors from '@ofStore/selectors/card.selectors';
+import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'of-card-details',

@@ -9,11 +9,10 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 
 import {CardComponent} from './card.component';
-import {getOneRandomLigthCard} from '../../../../../tests/helpers';
+import {getOneRandomLigthCard} from '@tests/helpers';
 import {RouterTestingModule} from "@angular/router/testing";
 import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "../../../../translate.config";
-import {HttpClientModule} from "@angular/common/http";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
 import {of} from "rxjs";
