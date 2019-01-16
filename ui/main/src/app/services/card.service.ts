@@ -8,7 +8,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {CardOperation} from '@ofModel/card-operation.model';
-import {EventSourcePolyfill, ReadyState} from 'ng-event-source';
+import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication.service';
 import {Card} from "@ofModel/card.model";
 import {HttpClient} from "@angular/common/http";

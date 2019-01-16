@@ -5,18 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import 'jasmine-sse/dist/jasmine-sse.js';
-import {TestBed, inject} from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
 import {CardService} from './card.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import SpyObj = jasmine.SpyObj;
 import {AuthenticationService} from '@ofServices/authentication.service';
-import createSpyObj = jasmine.createSpyObj;
-import createSpy = jasmine.createSpy;
-import {Guid} from "guid-typescript";
 import {GuidService} from "@ofServices/guid.service";
-import {EventEmitter} from "@angular/core";
-import {EventSourcePolyfill, OnMessageEvent} from "ng-event-source";
+import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
 
 
 describe('CardService', () => {
@@ -34,20 +30,13 @@ describe('CardService', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: [CardService
-                // ,{provide: AuthenticationService, useValue: authenticationServiceSpy}
                 ,AuthenticationService
                 ,GuidService
             ]
         });
         httpMock = TestBed.get(HttpTestingController);
         authenticationService = TestBed.get(AuthenticationService);
-        // jasmine.sse().install();
     });
-
-    // afterEach(() => {
-    //         jasmine.sse().uninstall();
-    //     }
-    // );
 
     it('should be created', inject([CardService], (service: CardService) => {
 

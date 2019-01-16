@@ -12,7 +12,6 @@ import {AuthenticationService} from './authentication.service';
 import {TokenInjector} from './interceptors.service';
 import {AuthenticationGuard} from './guard.service';
 import {CardService} from './card.service';
-import {Guid} from "guid-typescript";
 import {GuidService} from "@ofServices/guid.service";
 
 @NgModule({
