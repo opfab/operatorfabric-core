@@ -1,38 +1,18 @@
-buildscript {
-    repositories {
-        jcenter()
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://repo.spring.io/release" }
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/libs-snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://repo.spring.io/libs-milestone" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath testing.junit5Plugin
-        classpath boot.springBootPlugin
-        classpath generator.swaggerGeneratorPlugin
-        classpath misc.palantir
-        classpath "cz.malohlava:visteg:1.0.3"
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/resources'
+            srcDir 'build/src/generated/resources'
+        }
     }
 }
 
-subprojects {
-    dependencies {
-        compile cloud.eurekaClient
-        compile boot.starterAop, spring.retry
-    }
-
-    sourceSets {
-        main {
-            resources{
-                srcDir 'src/main/resources'
-                srcDir 'build/src/generated/resources'
-            }
-        }
+jar {
+    manifest {
+        attributes("Created-By"      : "David Binder",
+                "Specification-Title": "Operator Fabric main Web UI",
+                "Main-Class"         : "org.lfenergy.operatorfabric.webui.WebUiApplication",
+                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }
 }
 

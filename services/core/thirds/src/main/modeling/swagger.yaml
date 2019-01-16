@@ -79,13 +79,9 @@ paths:
 
         └──i18n
 
-        │   └──en
+        │   └──en.json
 
-        │   |  └──i18n.properties
-
-        │   └──fr
-
-        │   |  └──i18n.properties
+        │   └──fr.json
 
         │   └...
 
@@ -333,10 +329,10 @@ definitions:
       version:
         type: string
         description: Third party business module configuration version
-      defaultLocale:
-        type: string
-        description: default locale (ISO 639 alpha-2 code)
-        example: '"fr","en","de"'
+#      defaultLocale:
+#        type: string
+#        description: default locale (ISO 639 alpha-2 code)
+#        example: '"fr","en","de"'
       templates:
         type: array
         description: List of templates name (without extension)

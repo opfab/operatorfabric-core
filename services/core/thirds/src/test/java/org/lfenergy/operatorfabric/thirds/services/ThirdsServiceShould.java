@@ -69,7 +69,6 @@ class ThirdsServiceShould {
   void fetch() {
     Third firstThird = service.fetch("first");
     assertThat(firstThird).hasFieldOrPropertyWithValue("version", "v1");
-    assertThat(firstThird).hasFieldOrPropertyWithValue("defaultLocale", "fr");
     assertThat(firstThird.getLocales()).containsExactly("fr", "en");
   }
 
@@ -114,14 +113,14 @@ class ThirdsServiceShould {
 
   @Test
   void fetchTemplate() throws IOException {
-    File templateFile = service.fetchResource("first", TEMPLATE, "template1").getFile();
+    File templateFile = service.fetchResource("first", TEMPLATE, null,"fr","template1").getFile();
     assertThat(templateFile.getParentFile()).isDirectory().hasName("fr");
     assertThat(templateFile)
        .exists()
        .isFile()
        .hasName("template1.handlebars")
        .hasContent("{{service}} fr");
-    templateFile = service.fetchResource("first", TEMPLATE, "0.1", null, "template").getFile();
+    templateFile = service.fetchResource("first", TEMPLATE, "0.1", "fr", "template").getFile();
     assertThat(templateFile)
        .exists()
        .isFile()
@@ -137,14 +136,14 @@ class ThirdsServiceShould {
 
   @Test
   void fetchI18n() throws IOException {
-    File i18nFile = service.fetchResource("first", I18N, null).getFile();
+    File i18nFile = service.fetchResource("first", I18N,null,"fr", null).getFile();
     assertThat(i18nFile.getParentFile()).isDirectory().hasName("fr");
     assertThat(i18nFile)
        .exists()
        .isFile()
        .hasName("i18n.properties")
        .hasContent("card.title=\"Titre $1\"");
-    i18nFile = service.fetchResource("first", I18N, "0.1", null, null).getFile();
+    i18nFile = service.fetchResource("first", I18N, "0.1", "fr", null).getFile();
     assertThat(i18nFile)
        .exists()
        .isFile()
@@ -160,14 +159,14 @@ class ThirdsServiceShould {
 
   @Test
   void fetchMedia() throws IOException {
-    File mediaFile = service.fetchResource("first", MEDIA, "bidon.txt").getFile();
+    File mediaFile = service.fetchResource("first", MEDIA,null,"fr", "bidon.txt").getFile();
     assertThat(mediaFile.getParentFile()).isDirectory().hasName("fr");
     assertThat(mediaFile)
        .exists()
        .isFile()
        .hasName("bidon.txt")
        .hasContent("BIDON");
-    mediaFile = service.fetchResource("first", MEDIA, "0.1", null, "bidon.txt").getFile();
+    mediaFile = service.fetchResource("first", MEDIA, "0.1", "fr", "bidon.txt").getFile();
     assertThat(mediaFile)
        .exists()
        .isFile()
@@ -249,7 +248,6 @@ class ThirdsServiceShould {
         Third t = service.updateThird(is);
         assertThat(t).hasFieldOrPropertyWithValue("name", "second");
         assertThat(t).hasFieldOrPropertyWithValue("version", "2.0");
-        assertThat(t).hasFieldOrPropertyWithValue("defaultLocale", "en");
         assertThat(t.getLocales()).containsExactly("fr", "en");
         assertThat(service.listThirds()).hasSize(2);
       } catch (IOException e) {

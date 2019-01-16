@@ -22,7 +22,7 @@ buildscript {
 subprojects {
 
     /////// PLUGINS
-    if (!project.name.equals("infra")&&!project.name.equals("core")) {
+    if (!project.name.equals("infra")&&!project.name.equals("core")&&!project.name.equals("web")) {
         apply plugin: 'java'
         apply plugin: 'jacoco'
         apply plugin: plugin.bom

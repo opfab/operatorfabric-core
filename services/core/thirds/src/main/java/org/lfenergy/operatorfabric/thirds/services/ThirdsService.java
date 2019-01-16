@@ -167,8 +167,7 @@ public class ThirdsService implements ResourceLoaderAware {
         Third third = versions.get(finalVersion);
         if (third == null)
             throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + thirdName);
-        String finalLocale = locale != null ? locale : third.getDefaultLocale();
-        validateResourceParameters(thirdName, type, name, finalVersion, finalLocale);
+        validateResourceParameters(thirdName, type, name, finalVersion, locale);
         String finalName;
         if (type == ResourceTypeEnum.I18N) {
             finalName = "i18n";
@@ -184,7 +183,7 @@ public class ThirdsService implements ResourceLoaderAware {
                 File.separator +
                 type.getFolder() +
                 File.separator +
-                (type.isLocalized() ? (finalLocale + File.separator) : "") +
+                (type.isLocalized() ? (locale + File.separator) : "") +
                 finalName + type.getSuffix();
         log.info("loading resource: " + resourcePath);
         return this.resourceLoader.getResource(resourcePath);
@@ -203,6 +202,8 @@ public class ThirdsService implements ResourceLoaderAware {
     private void validateResourceParameters(String thirdName, ResourceTypeEnum type, String name, String version,
                                             String locale) throws FileNotFoundException {
         Third third = completeCache.get(thirdName).get(version);
+        if(type.isLocalized() && locale == null)
+            throw new FileNotFoundException("Unnable to determine resource for undefined locale");
         switch (type) {
             case CSS:
                 if (!third.getCsses().contains(name))

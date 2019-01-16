@@ -83,7 +83,6 @@ class ThirdControllerShould {
        .andExpect(status().isOk())
        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
        .andExpect(jsonPath("$.version", is("v1")))
-       .andExpect(jsonPath("$.defaultLocale", is("fr")))
        .andExpect(jsonPath("$.locales[0]", is("fr")))
        .andExpect(jsonPath("$.locales[1]", is("en")))
     ;
@@ -96,7 +95,6 @@ class ThirdControllerShould {
        .andExpect(status().isOk())
        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
        .andExpect(jsonPath("$.version", is("0.1")))
-       .andExpect(jsonPath("$.defaultLocale", is("fr")))
        .andExpect(jsonPath("$.locales[0]", is("fr")))
        .andExpect(jsonPath("$.locales[1]", is("en")));
   }
@@ -128,7 +126,7 @@ class ThirdControllerShould {
   @Test
   void fetchTemplateResource() throws Exception {
     ResultActions result = mockMvc.perform(
-       get("/thirds/first/templates/template1")
+       get("/thirds/first/templates/template1?locale=fr")
        .accept("application/handlebars")
     );
     result
@@ -137,7 +135,7 @@ class ThirdControllerShould {
        .andExpect(content().string(is("{{service}} fr")))
     ;
     result = mockMvc.perform(
-       get("/thirds/first/templates/template?version=0.1")
+       get("/thirds/first/templates/template?version=0.1&locale=fr")
           .accept("application/handlebars"));
     result
        .andExpect(status().isOk())
@@ -164,7 +162,7 @@ class ThirdControllerShould {
   @Test
   void fetchI18nResource() throws Exception {
     ResultActions result = mockMvc.perform(
-       get("/thirds/first/i18n")
+       get("/thirds/first/i18n?locale=fr")
         .accept("text/plain")
     );
     result
@@ -195,7 +193,7 @@ class ThirdControllerShould {
   @Test
   void fetchMediaResource() throws Exception {
     ResultActions result = mockMvc.perform(
-       get("/thirds/first/media/bidon.txt")
+       get("/thirds/first/media/bidon.txt?locale=fr")
           .accept("audio/_*")
     );
     result
@@ -235,7 +233,6 @@ class ThirdControllerShould {
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
          .andExpect(jsonPath("$.name", is("second")))
          .andExpect(jsonPath("$.version", is("2.1")))
-         .andExpect(jsonPath("$.defaultLocale", is("en")))
          .andExpect(jsonPath("$.locales[0]", is("fr")))
          .andExpect(jsonPath("$.locales[1]", is("en")))
       ;

@@ -1,6 +1,6 @@
 {
-  "name": "APOGEE",
-  "version": "0.12",
+  "name": "TEST",
+  "version": "1",
   "defaultLocale": "fr",
   "templates": [
     "security",

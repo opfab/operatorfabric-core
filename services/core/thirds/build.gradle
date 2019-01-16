@@ -10,10 +10,6 @@ jar {
                    "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }
 }
-//bootRun{
-//    systemProperty 'spring.profiles.active', findProperty('spring.profiles.active') ?: 'standalone,native'
-//    systemProperty 'spring.cloud.bootstrap.location', findProperty('spring.cloud.bootstrap.location') ?: ''
-//}
 
 
 /////// CUSTOM TASKS

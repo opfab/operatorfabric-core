@@ -1,7 +1,7 @@
 {
   "name": "APOGEE",
   "version": "0.12",
-  "defaultLocale": "fr",
+  "locales": ["en","fr"],
   "templates": [
     "security",
     "unschedulledPeriodicOp",

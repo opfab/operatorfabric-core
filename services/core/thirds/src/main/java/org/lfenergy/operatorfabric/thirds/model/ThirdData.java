@@ -28,7 +28,6 @@ public class ThirdData implements Third {
 
   private String name;
   private String version;
-  private String defaultLocale;
   @Singular
   private List<String> templates;
   @Singular
