@@ -32,8 +32,6 @@ export class CustomRouterEffects {
         }),
         switchMap(action=>{
             const routerState:any = action.payload.routerState;
-            // return new LoadCard({id: routerState.params['cid']});
-            // return new SelectLightCard({selectedCardId: routerState.params['cid']});
             return [
                 new LoadCard({id: routerState.params['cid']}),
                 new SelectLightCard({selectedCardId: routerState.params['cid']})

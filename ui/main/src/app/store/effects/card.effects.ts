@@ -9,14 +9,10 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {catchError, filter, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {CardService} from '@ofServices/card.service';
-import {LightCard} from '@ofModel/light-card.model';
 import {AppState} from "@ofStore/index";
-import {ROUTER_NAVIGATION, RouterNavigationAction} from "@ngrx/router-store";
 import {CardActionTypes, LoadCard, LoadCardFailure, LoadCardSuccess} from "@ofActions/card.actions";
-import {RouterStateUrl} from "@ofStore/states/router.state";
-import {SelectLightCard} from "@ofActions/light-card.actions";
 import {Card} from "@ofModel/card.model";
 
 // those effects are unused for the moment
