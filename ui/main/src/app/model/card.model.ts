@@ -8,23 +8,6 @@
 import {Severity} from "@ofModel/light-card.model";
 import {I18n} from "@ofModel/i18n.model";
 
-// export interface Card {
-//     readonly uid: string;
-//     readonly id: string;
-//     readonly mainRecipient: string;
-//     readonly publishDate: number;
-//     readonly startDate: number;
-//     readonly endDate: number;
-//     readonly severity: Severity;
-//     readonly processId?: string;
-//     readonly lttd?: number;
-//     readonly title?: I18n;
-//     readonly summary?: I18n;
-//     readonly data?: any;
-//     readonly details?:CardDetail[];
-//
-// }
-
 export class Card {
 
     constructor(
