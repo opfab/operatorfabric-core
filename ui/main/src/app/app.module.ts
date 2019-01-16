@@ -8,7 +8,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {StateModule} from '@ofStore/state.module';
@@ -19,8 +19,7 @@ import {AppComponent} from './app.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {LoginComponent} from "./components/login/login.component";
 import {IconComponent} from './components/icon/icon.component';
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "./translate.config";
 
 @NgModule({
@@ -30,13 +29,11 @@ import {translateConfig} from "./translate.config";
         FormsModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        // FeedModule,
-        // ArchivesModule,
         AppRoutingModule,
         HttpClientModule,
         StateModule.forRoot(),
         ServicesModule.forRoot(),
-        NgbModule.forRoot(),
+        NgbModule,
         TranslateModule.forRoot(translateConfig)
     ],
     declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent],
