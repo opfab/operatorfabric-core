@@ -53,7 +53,7 @@ The `SPA`, on a local machine, is available at the following Url: `http://localh
 
 To log in you need to use a valid user. Currently you need to use a connection pair define in `$OPERATOR_FABRIC_HOME/services/infra/auth/src/main/java/org/lfenergy/operatorfabric/auth/config/WebSecurityConfiguration.java`. It could be `admin` with `test`, for example.
 
-To test the reception of cards, you could use the following script to create fake ones:
+To test the reception of cards, you can use the following script to create fake ones:
 ```shell
 $OPERTAOR_FABRIC_HOME/services/core/cards-publication/src/main/bin/push_cards_loop.sh
 ```
@@ -80,16 +80,12 @@ Run in the `$OPERTAOR_FABRIC_HOME/ui/main` directory the command `ng test --watc
 
 ### Test during UI development
 
+0. if the RabittMQ and MongoDB docker containers are not not running, launch them;
 1. set your environment variables with `. $OPERTAOR_FABRIC_HOME/bin/load_environment_light.sh`;
-2. run the microservices without launching the `client-gateway` using the following command: `$OPERTAOR_FABRIC_HOME/bin/run_all.sh -g false start`;
-3. run aside the `client-gateway` by following those commands:
-```shell
-cd $OPERTAOR_FABRIC_HOME/services/infra/client-gateway
-gradle bootrun
-```
-4. If needed, enable a card-operation test flow using the script `$OPERTAOR_FABRIC_HOME/service/core/cards-publication/src/main/bin/push_cards_loop.sh`;
-5. once your code is ready to be tested in browser use the command: `ng build`;
-6. open or reload the page in your browser using this url: `http://localhost:2002/home`.
+2. run the micro services using the same command as earlier: `$OPERTAOR_FABRIC_HOME/bin/run_all.sh start`;
+3. if needed, enable a card-operation test flow using the script `$OPERTAOR_FABRIC_HOME/service/core/cards-publication/src/main/bin/push_cards_loop.sh`;
+4. launch an angular server with the command: `ng serve`;
+5. test your changes in your browser using this url: `http://localhost:4200/home`.
 
 ## Known Bugs
 
