@@ -10,8 +10,8 @@
 * following configuration initialize the state of router in order to enable the currentUrl in app.component.ts
 * source: https://github.com/ngrx/platform/issues/835
 */
-import {RouterStateSerializer, SerializedRouterStateSnapshot} from "@ngrx/router-store";
-import {ActivatedRouteSnapshot, Params, RouterStateSnapshot, UrlSegment} from "@angular/router";
+import {RouterStateSerializer} from "@ngrx/router-store";
+import {ActivatedRouteSnapshot, Params, RouterStateSnapshot} from "@angular/router";
 
 export const initialState = {
     state: {
