@@ -9,18 +9,20 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FeedComponent} from './feed.component';
 import {CardListComponent} from './components/card-list/card-list.component';
-import {CardComponent} from '../cards/components/card/card.component';
 import {appReducer, AppState, storeConfig} from '../../store/index';
 import {Store, StoreModule} from '@ngrx/store';
 import {LoadLightCardsSuccess} from '../../store/actions/light-card.actions';
 import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '../../store/selectors/light-card.selectors';
 import {By} from '@angular/platform-browser';
-import {getOneRandomLigthCard, getPositiveRandomNumberWithinRange, getSeveralRandomLightCards} from '../../../tests/helpers';
+import {
+    getOneRandomLigthCard,
+    getPositiveRandomNumberWithinRange,
+    getSeveralRandomLightCards
+} from '../../../tests/helpers';
 import {RouterTestingModule} from "@angular/router/testing";
 import {TimeLineComponent} from "./components/time-line/time-line.component";
 import {CardsModule} from "../cards/cards.module";
-import {of} from "rxjs";
 import {HttpClientModule} from "@angular/common/http";
 import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
 import {CustomRouterStateSerializer} from "@ofStates/router.state";

@@ -10,14 +10,9 @@ import {CommonModule} from '@angular/common';
 import {CardListComponent} from './components/card-list/card-list.component';
 import {FeedComponent} from './feed.component';
 import {FormsModule} from '@angular/forms';
-import {StateModule} from '../../store/state.module';
-import {CardComponent} from '../cards/components/card/card.component';
 import {FeedRoutingModule} from "./feed-routing.module";
-import { NoSelectionComponent } from './components/no-selection/no-selection.component';
-import { DetailsComponent } from '../cards/components/details/details.component';
-import { DetailComponent } from '../cards/components/detail/detail.component';
-import { TimeLineComponent } from './components/time-line/time-line.component';
-import { CardDetailsComponent } from '../cards/components/card-details/card-details.component';
+import {NoSelectionComponent} from './components/no-selection/no-selection.component';
+import {TimeLineComponent} from './components/time-line/time-line.component';
 import {CardsModule} from "../cards/cards.module";
 
 
@@ -25,8 +20,7 @@ import {CardsModule} from "../cards/cards.module";
   imports: [
     CommonModule,
     FormsModule,
-    // StateModule,
-      CardsModule,
+    CardsModule,
     FeedRoutingModule,
   ],
   declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent],

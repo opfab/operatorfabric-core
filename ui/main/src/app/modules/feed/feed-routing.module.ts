@@ -9,8 +9,6 @@ import {NgModule} from '@angular/core';
 import {FeedComponent} from "./feed.component";
 import {AuthenticationGuard} from "@ofServices/guard.service";
 import {RouterModule, Routes} from "@angular/router";
-import {NoSelectionComponent} from "./components/no-selection/no-selection.component";
-import {DetailsComponent} from "../cards/components/details/details.component";
 import {DetailComponent} from "../cards/components/detail/detail.component";
 import {CardDetailsComponent} from "../cards/components/card-details/card-details.component";
 
