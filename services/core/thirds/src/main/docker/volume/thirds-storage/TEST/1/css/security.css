@@ -1,0 +1,46 @@
+.detail.template .remedialSummary {
+     color: #00bb00;
+     font-weight: bold;
+ }
+
+.detail.template .tab-label.selected:after {
+    font-weight: bolder;
+    content: "**";
+}
+
+.detail.template .tab-label.selected:before {
+    font-weight: bolder;
+    content: "**";
+}
+
+.detail.template .tab-label.efficient {
+    background-color: #658f63;
+}
+
+.detail.template .tab-label.efficient:hover {
+      background-color: #00bb00;
+  }
+
+.detail.template .tab-label.efficient:active {
+      background-color: #00bb00;
+}
+
+.detail.template .tab-input:checked + .tab-label.efficient {
+    background-color: #00bb00;
+}
+
+.detail.template .tab-label.inefficient{
+    background-color: #aa0000;
+}
+
+.detail.template .tab-label.inefficient:hover{
+      background-color: #ee0000;
+}
+
+.detail.template .tab-label.inefficient:active{
+      background-color: #ee0000;
+}
+
+.detail.template .tab-input:checked + .tab-label.inefficient {
+    background-color: #ee0000;
+}
