@@ -15,7 +15,6 @@ buildscript {
         classpath testing.junit5Plugin
         classpath boot.springBootPlugin
         classpath misc.palantir
-        classpath "cz.malohlava:visteg:1.0.3"
     }
 }
 

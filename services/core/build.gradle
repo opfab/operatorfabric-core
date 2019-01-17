@@ -16,7 +16,6 @@ buildscript {
         classpath boot.springBootPlugin
         classpath generator.swaggerGeneratorPlugin
         classpath misc.palantir
-        classpath "cz.malohlava:visteg:1.0.3"
     }
 }
 

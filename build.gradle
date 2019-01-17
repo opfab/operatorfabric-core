@@ -85,7 +85,6 @@ ext {
             swagger: "org.hidetake.swagger.generator",
             dockerBuild: "com.palantir.docker",
             dockerRun: "com.palantir.docker-run",
-            visteg: "cz.malohlava"
     ]
     apk = [
             proxy : [uri:"",httpsuri:"",user:"",password:""]
@@ -147,6 +146,6 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-task wrapper(type: Wrapper) {
+ wrapper {
     gradleVersion = '4.7'
 }

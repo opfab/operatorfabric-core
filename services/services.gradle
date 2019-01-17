@@ -16,7 +16,6 @@ buildscript {
         classpath boot.springBootPlugin
         classpath generator.swaggerGeneratorPlugin
         classpath misc.palantir
-        classpath "cz.malohlava:visteg:1.0.3"
     }
 }
 
@@ -29,7 +28,6 @@ subprojects {
         apply plugin: plugin.bom
         apply plugin: plugin.boot
         apply plugin: plugin.dockerBuild
-        apply plugin: plugin.visteg
 
         /////// DEPENDENCIES
 
@@ -107,27 +105,7 @@ subprojects {
             dockerfile file("src/main/docker/Dockerfile")
         }
 
-        // visteg
-
-        visteg {
-            enabled        = true
-            colouredNodes  = true
-            colouredEdges  = true
-            destination    = 'build/reports/task-graph.dot'
-            exporter       = 'dot'
-            colorscheme    = 'set39'
-            nodeShape      = 'box'
-            startNodeShape = 'oval'
-            endNodeShape   = 'octagon'
-        }
-
         /////// CUSTOM TASKS
-
-        /* Task that generates images from visteg dot file */
-        task generateTaskGraph(type: Exec) {
-            executable "bash"
-            args "-c", "dot -Tpng $project.projectDir/build/reports/task-graph.dot -o $project.projectDir/build/reports/task-graph.png"
-        }
 
         /*Task that copies all the dependencies under build/libs */
         task copyDependencies(type: Copy) {
