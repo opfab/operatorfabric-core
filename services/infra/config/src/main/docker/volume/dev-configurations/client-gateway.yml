@@ -17,6 +17,12 @@ spring:
         - Path=/time/**
         filters:
         - RewritePath=/time/(?<path>.*), /$\{path}
+      - id: thirds
+        uri: lb://THIRDS
+        predicates:
+        - Path=/thirds/**
+        filters:
+        - RewritePath=/thirds/(?<path>.*), /thirds/$\{path}
       - id: users
         uri: lb://USERS
         predicates:

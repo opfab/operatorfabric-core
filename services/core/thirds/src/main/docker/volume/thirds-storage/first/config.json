@@ -1,7 +1,6 @@
 {
   "name": "first",
   "version": "v1",
-  "defaultLocale": "fr",
   "templates": [
     "template1"
   ],

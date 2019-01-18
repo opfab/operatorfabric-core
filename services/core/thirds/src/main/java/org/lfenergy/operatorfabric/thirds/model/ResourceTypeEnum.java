@@ -27,7 +27,7 @@ public enum ResourceTypeEnum {
   CSS("css", ".css", false),
   MEDIA("media", "", true),
   TEMPLATE("template", ".handlebars", true),
-  I18N("i18n", ".properties", true);
+  I18N("i18n", ".json", true);
 
   /**
    * containing files subfolder name

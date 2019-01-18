@@ -2,4 +2,4 @@ server:
   port: 2100
 thirds:
   storage:
-    path: "./build/dev-data/thirds-storage"
+    path: "./services/core/thirds/build/docker-volume/thirds-storage"

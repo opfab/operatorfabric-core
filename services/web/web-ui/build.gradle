@@ -1,7 +1,3 @@
-dependencies {
-	compile boot.starterWeb, boot.starterJetty
-}
-
 jar {
 	manifest {
 		attributes("Created-By"      : "David Binder",

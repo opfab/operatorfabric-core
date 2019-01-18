@@ -20,6 +20,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -170,7 +171,7 @@ public class ThirdsService implements ResourceLoaderAware {
         validateResourceParameters(thirdName, type, name, finalVersion, locale);
         String finalName;
         if (type == ResourceTypeEnum.I18N) {
-            finalName = "i18n";
+            finalName = locale;
         } else {
             finalName = name;
         }
@@ -183,7 +184,7 @@ public class ThirdsService implements ResourceLoaderAware {
                 File.separator +
                 type.getFolder() +
                 File.separator +
-                (type.isLocalized() ? (locale + File.separator) : "") +
+                (type.isLocalized() && ! type.equals(ResourceTypeEnum.I18N) ? (locale + File.separator) : "") +
                 finalName + type.getSuffix();
         log.info("loading resource: " + resourcePath);
         return this.resourceLoader.getResource(resourcePath);

@@ -81,7 +81,7 @@ plusOneHTen=$(($now + 4200000))
 piece_of_data(){
     piece=$'{\n'
     piece+="  \"publisher\": \"$1\", "$'\n'
-    piece+="  \"publisherVersion\": \"0.0.1\", "$'\n'
+    piece+="  \"publisherVersion\": \"1\", "$'\n'
     piece+="  \"processId\": \"$2$5\", "$'\n'
     piece+="  \"startDate\": $3, "$'\n'
     piece+="  \"lttd\": $4, "$'\n'

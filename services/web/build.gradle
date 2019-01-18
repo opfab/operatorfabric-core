@@ -1,12 +1,3 @@
-sourceSets {
-    main {
-        resources {
-            srcDir 'src/main/resources'
-            srcDir 'build/src/generated/resources'
-        }
-    }
-}
-
 jar {
     manifest {
         attributes("Created-By"      : "David Binder",
@@ -14,5 +5,23 @@ jar {
                 "Main-Class"         : "org.lfenergy.operatorfabric.webui.WebUiApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }
+}
+
+subprojects {
+    dependencies{
+        compile boot.starterWeb, boot.starterJetty
+        compile cloud.eurekaClient
+        compile boot.starterAop, spring.retry
+    }
+    
+    sourceSets {
+        main {
+            resources {
+                srcDir 'src/main/resources'
+                srcDir 'build/src/generated/resources'
+            }
+        }
+    }
+
 }
 
