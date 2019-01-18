@@ -16,7 +16,7 @@ build=false
 resetConfiguration=true
 gateway=true
 authentication=true
-businessServices=( "users" "time" "cards-consultation" "cards-publication" )
+businessServices=( "users" "time" "cards-consultation" "cards-publication" "thirds")
 offline=false
 
 function join_by { local IFS="$1"; shift; echo "$*"; }
