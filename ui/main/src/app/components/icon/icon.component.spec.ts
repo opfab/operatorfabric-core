@@ -33,7 +33,7 @@ describe('IconComponent', () => {
       expect(htmlElement.querySelector('svg').getAttribute('width')).toEqual('16px');
       expect(htmlElement.querySelector('svg').getAttribute('height')).toEqual('16px');
       expect(htmlElement.querySelector('svg use').getAttribute('xlink:href'))
-          .toEqual('assets/images/icons/sprites.svg#icon');
+          .toEqual('/assets/images/icons/sprites.svg#icon');
   });
   it('should adjust attributes with big size', () => {
       component.big = true;
@@ -63,7 +63,7 @@ describe('IconComponent', () => {
         fixture.detectChanges();
         const htmlElement: HTMLElement = fixture.nativeElement;
         expect(htmlElement.querySelector('svg use').getAttribute('xlink:href'))
-            .toEqual('assets/images/icons/sprites-mono.svg#icon');
+            .toEqual('/assets/images/icons/sprites-mono.svg#icon');
         expect(htmlElement.querySelector('svg').getAttribute('class')).toEqual('light');
     });
 
@@ -73,7 +73,7 @@ describe('IconComponent', () => {
         fixture.detectChanges();
         const htmlElement: HTMLElement = fixture.nativeElement;
         expect(htmlElement.querySelector('svg use').getAttribute('xlink:href'))
-            .toEqual('assets/images/icons/sprites-mono.svg#icon');
+            .toEqual('/assets/images/icons/sprites-mono.svg#icon');
         expect(htmlElement.querySelector('svg').getAttribute('class')).toEqual('dark');
     });
 

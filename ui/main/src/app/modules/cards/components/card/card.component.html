@@ -10,14 +10,14 @@
              [class.rounded-left]="!open">
         </div>
         <div class="p-1">
-            <p class="card-title" translate>{{lightCard.publisher+'.'+ lightCard.title.key}}</p>
+            <p class="card-title" translate>{{i18nPrefix+ lightCard.title.key}}</p>
             <p class="card-subtitle">({{lightCard.startDate|date:'short'}} - {{lightCard.endDate|date:'short'}})</p>
         </div>
     </div>
     <div class="d-flex card-body p-0 border-0" *ngIf="open">
         <div class="badge-border rounded-bottom-left bg-sev-{{lightCard.severity.toString()|lowercase}}"></div>
         <div class="card-text p-1" translate="">
-            {{lightCard.publisher+'.'+lightCard.summary.key}}
+            {{i18nPrefix+lightCard.summary.key}}
         </div>
     </div>
 </div>

@@ -16,6 +16,7 @@ import {AuthenticationService, CheckTokenResponse} from '@ofServices/authenticat
 import {Guid} from 'guid-typescript';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
+import {Router} from "@angular/router";
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 
@@ -26,6 +27,7 @@ describe('AuthenticationEffects', () => {
     let authenticationService: SpyObj<AuthenticationService>;
 
     beforeEach(async(() => {
+        const routerSpy = createSpyObj('Router',['navigate']);
         const authenticationServiceSpy = createSpyObj('authenticationService'
             , ['extractToken'
                 , 'verifyExpirationDate'
@@ -38,7 +40,8 @@ describe('AuthenticationEffects', () => {
                 AuthenticationEffects,
                 provideMockActions(() => actions$),
                 {provide: AuthenticationService, useValue: authenticationServiceSpy},
-                {provide: Store, useValue: storeSpy}
+                {provide: Store, useValue: storeSpy},
+                {provide: Router, useValue: routerSpy}
             ]
         });
 

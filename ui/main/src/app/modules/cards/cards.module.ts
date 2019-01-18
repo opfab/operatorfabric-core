@@ -11,9 +11,9 @@ import {CardComponent} from "./components/card/card.component";
 import {CardDetailsComponent} from "./components/card-details/card-details.component";
 import {DetailsComponent} from "./components/details/details.component";
 import {DetailComponent} from "./components/detail/detail.component";
-import {MissingTranslationHandler, TranslateModule} from "@ngx-translate/core";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {
-    ThirdsMissingTranslationHandlerFactory,
+    ThirdsI18nLoaderFactory,
     ThirdsService
 } from "./services/thirds.service";
 
@@ -22,9 +22,9 @@ import {
   imports: [
     CommonModule,
       TranslateModule.forChild({
-          missingTranslationHandler: {
-              provide: MissingTranslationHandler,
-              useFactory: ThirdsMissingTranslationHandlerFactory,
+          loader: {
+              provide: TranslateLoader,
+              useFactory: ThirdsI18nLoaderFactory,
               deps:[ThirdsService]},
           useDefaultLang: false
       })

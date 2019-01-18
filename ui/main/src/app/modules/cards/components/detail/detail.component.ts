@@ -7,6 +7,7 @@
 
 import {Component, Input, OnInit} from '@angular/core';
 import {Card, CardDetail} from '@ofModel/card.model';
+import {ThirdsService} from "../../services/thirds.service";
 
 @Component({
   selector: 'of-detail',
@@ -18,9 +19,10 @@ export class DetailComponent implements OnInit {
   @Input() detail: CardDetail;
   @Input() card: Card;
 
-  constructor() { }
+  constructor(private thirds: ThirdsService) { }
 
   ngOnInit() {
+    this.thirds.init();
   }
 
 }

@@ -11,6 +11,7 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
+import {ThirdsService} from "../../services/thirds.service";
 
 @Component({
     selector: 'of-card',
@@ -22,9 +23,11 @@ export class CardComponent implements OnInit{
     @Input() public open: boolean = false;
     @Input() public lightCard: LightCard;
     currentPath: any;
+    private _i18nPrefix: string;
 
     constructor(private router: Router,
-                private store: Store<AppState>) {
+                private store: Store<AppState>,
+                private thirds: ThirdsService) {
     }
 
     public select() {
@@ -32,10 +35,16 @@ export class CardComponent implements OnInit{
     }
 
     ngOnInit() {
+        this.thirds.init()
+        this._i18nPrefix = this.lightCard.publisher+'.'+this.lightCard.publisherVersion+'.'
         this.store.select(selectCurrentUrl).subscribe(url=>{
             if(url)
                 this.currentPath = url.split('/')[1];
         })
+    }
+
+    get i18nPrefix(): string {
+        return this._i18nPrefix;
     }
 
 }

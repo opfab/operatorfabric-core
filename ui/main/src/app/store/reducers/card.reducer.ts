@@ -17,14 +17,14 @@ export function reducer(
         case CardActionTypes.LoadCard: {
             return {
                 ...state,
-                loading: true,
+                loading: true
             };
         }
         case CardActionTypes.LoadCardSuccess: {
             return {
                 ...state,
                 selected: action.payload.card,
-                loading: false,
+                loading: false
             };
         }
 

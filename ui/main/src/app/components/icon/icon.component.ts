@@ -26,7 +26,8 @@ export class IconComponent implements OnInit {
   sprites:string;
   iconPath:string;
   constructor(platformLocation:PlatformLocation) {
-    this.iconPath = platformLocation.getBaseHrefFromDOM()+'assets/images/icons/'
+      let baseHref = platformLocation.getBaseHrefFromDOM();
+      this.iconPath = (baseHref?baseHref:'/')+'assets/images/icons/'
   }
 
   ngOnInit() {

@@ -11,6 +11,7 @@ export interface LightCard {
     readonly uid: string;
     readonly id: string;
     readonly publisher: string;
+    readonly publisherVersion: string;
     readonly mainRecipient: string;
     readonly publishDate: number;
     readonly startDate: number;
@@ -29,6 +30,7 @@ export class LightCard implements LightCard {
         readonly uid: string,
         readonly id: string,
         readonly publisher: string,
+        readonly publisherVersion: string,
         readonly publishDate: number,
         readonly startDate: number,
         readonly endDate: number,

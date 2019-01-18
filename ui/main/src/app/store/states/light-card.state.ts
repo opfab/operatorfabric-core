@@ -10,6 +10,7 @@ import {LightCard} from '@ofModel/light-card.model';
 
 export interface LightCardStateEntity extends EntityState<LightCard> {
     selectedCardId: string;
+    lastCards: LightCard[];
     loading: boolean;
     error: string;
 }
@@ -18,5 +19,8 @@ export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<Li
 
 export const lightCardInitialState: LightCardStateEntity = LightCardAdapter.getInitialState(
     {
-        selectedCardId: null, loading: false, error: ''
+        selectedCardId: null,
+        lastCards: [],
+        loading: false,
+        error: ''
     });

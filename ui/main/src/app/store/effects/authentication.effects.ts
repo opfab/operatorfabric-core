@@ -8,7 +8,6 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
-// import {RouterGo} from 'ngrx-router';
 import {Action, Store} from '@ngrx/store';
 import {
     AcceptLogIn,
@@ -57,7 +56,7 @@ export class AuthenticationEffects {
             map((action: TryToLogOut) => {
                 // console.log('try to log out')
                 this.authService.clearAuthenticationInformation();
-                return new AcceptLogOut({count: this.count++});
+                return new AcceptLogOut();
             })
         );
 
@@ -79,7 +78,7 @@ export class AuthenticationEffects {
                 this.authService.clearAuthenticationInformation();
             }),
             // tap(()=>console.log("reject login")),
-            map(action => new AcceptLogOut({count: this.count++})));
+            map(action => new AcceptLogOut()));
 
     @Effect()
     CheckAuthentication: Observable<AuthenticationActions> =

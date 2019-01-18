@@ -16,7 +16,8 @@ export function reducer(
         case LightCardActionTypes.LoadLightCardsSuccess: {
             return {
                 ...LightCardAdapter.upsertMany(action.payload.lightCards, state),
-                loading: false
+                loading: false,
+                lastCards: action.payload.lightCards
             };
         }
 
@@ -24,14 +25,16 @@ export function reducer(
             return {
                 ...state,
                 loading: false,
-                error: `error while loading cards: '${action.payload.error}'`
+                error: `error while loading cards: '${action.payload.error}'`,
+                lastCards: []
             };
         }
 
         case LightCardActionTypes.SelectLightCard: {
             return {
                 ...state,
-                ...action.payload
+                ...action.payload,
+                lastCards: []
             }
         }
 
@@ -39,7 +42,8 @@ export function reducer(
             return {
                 ...state,
                 loading: false,
-                error: `error while adding a single lightCard: '${action.payload.error}'`
+                error: `error while adding a single lightCard: '${action.payload.error}'`,
+                lastCards: []
             };
         }
         default: {

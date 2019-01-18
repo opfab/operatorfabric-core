@@ -16,6 +16,9 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {LoadCardSuccess} from "@ofActions/card.actions";
 import {getOneRandomCard} from "@tests/helpers";
 import {By} from "@angular/platform-browser";
+import {ThirdsService} from "../../services/thirds.service";
+import {ServicesModule} from "@ofServices/services.module";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('CardDetailsComponent', () => {
   let component: CardDetailsComponent;
@@ -24,9 +27,13 @@ describe('CardDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-        imports: [StoreModule.forRoot(appReducer),
+        imports: [
+            HttpClientTestingModule,
+            ServicesModule,
+            StoreModule.forRoot(appReducer),
             RouterTestingModule,],
-      declarations: [ CardDetailsComponent, DetailsComponent, DetailComponent ]
+      declarations: [ CardDetailsComponent, DetailsComponent, DetailComponent ],
+        providers:[ThirdsService]
     })
     .compileComponents();
   }));

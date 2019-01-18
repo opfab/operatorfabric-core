@@ -17,6 +17,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {IconComponent} from "./components/icon/icon.component";
 import {TranslateModule} from "@ngx-translate/core";
+import {LoginComponent} from "./components/login/login.component";
+import {NO_ERRORS_SCHEMA} from "@angular/core";
 
 
 
@@ -41,8 +43,8 @@ describe('AppComponent', () => {
                 RouterTestingModule
             ],
             declarations: [AppComponent,NavbarComponent, IconComponent],
-            providers: [{provide: store, useClass: Store}
-            ]
+            providers: [{provide: store, useClass: Store}],
+            schemas: [ NO_ERRORS_SCHEMA ]
         }).compileComponents();
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();

@@ -55,7 +55,7 @@ export class CheckAuthenticationStatus implements Action {
 
 export class AcceptLogOut implements Action {
     readonly type = AuthenticationActionTypes.AcceptLogOut;
-    constructor(public payload: {count: number}){}
+    constructor(){}
 }
 
 export class AcceptLogOutSuccess implements Action {

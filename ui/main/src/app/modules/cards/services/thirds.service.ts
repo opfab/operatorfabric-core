@@ -1,92 +1,137 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Injector, OnInit} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "@env/environment";
 import {AuthenticationService} from "@ofServices/authentication.service";
-import {merge, empty, Observable, of} from "rxjs";
-import {MissingTranslationHandler, MissingTranslationHandlerParams} from "@ngx-translate/core";
+import {empty, from, merge, Observable, of, throwError} from "rxjs";
+import {
+    MissingTranslationHandler,
+    MissingTranslationHandlerParams,
+    TranslateLoader,
+    TranslateService
+} from "@ngx-translate/core";
 import {Map} from "@ofModel/map";
-import {map, reduce, switchMap, tap} from "rxjs/operators";
+import {catchError, map, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
+import {Store} from "@ngrx/store";
+import {AppState} from "@ofStore/index";
+import {selectLastCards} from "@ofSelectors/light-card.selectors";
+import {LightCard} from "@ofModel/light-card.model";
 
 @Injectable()
 export class ThirdsService {
     private thirdsUrl: string;
+    private count = 0;
+    private loaded: string[] = [];
+    private loading: string[] = [];
+    private initiated = false;
 
-    constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) {
-        this.thirdsUrl = `${environment.urls.thirds}/thirds`;
+    constructor(private httpClient: HttpClient,
+                private authenticationService: AuthenticationService,
+                private store: Store<AppState>,
+                private $injector: Injector) {
+        this.thirdsUrl = `${environment.urls.thirds}`;
     }
 
     fetchI18nJson(publisher: string, version: string, locales: string[]): Observable<Map<any>> {
-        let previous:Observable<any>;
-        for(let locale of locales) {
+        let previous: Observable<any>;
+        for (let locale of locales) {
             const params = new HttpParams()
                 .set("locale", locale)
                 .set("version", version);
+            this.count++;
             const httpCall = this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {
                 params: params,
                 headers: this.authenticationService.getSecurityHeader()
             }).pipe(
-                map(r=> {
-                    const object = {};
-                    object[locale] = {};
-                    object[locale][publisher] = {};
-                    object[locale][publisher][version] = r;
-                    return object;
-                }
-            ));
-            if(previous){
-                previous = merge(previous,httpCall);
-            }else{
+                map(r => {
+                        const object = {};
+                        object[locale] = {};
+                        object[locale][publisher] = {};
+                        object[locale][publisher][version] = r;
+                        return object;
+                    }
+                ));
+            if (previous) {
+                previous = merge(previous, httpCall);
+            } else {
                 previous = httpCall;
             }
         }
-        if(previous == null){
+        if (previous == null) {
             return empty();
         }
-        return previous.pipe(
-            reduce((acc,val)=>{return {...acc, ...val};})
+        const result = previous.pipe(
+            reduce((acc, val) => {
+                return {...acc, ...val};
+            })
         );
+
+        return result;
+    }
+
+    init(): void {
+        if(this.initiated) return;
+        this.store.select(selectLastCards)
+            .pipe(
+                switchMap((cards:LightCard[])=>{
+                    return from(cards).pipe( // we pipe map/reduce here so that reduce scope
+                        map(card=> {  // is limited to the current card array
+                            return card.publisher + '###' + card.publisherVersion
+                        }),
+                        reduce((ids:string[],id:string)=>{
+                            ids.push(id);
+                            return ids;
+                        },[]),
+                    )
+                }),
+
+                map(ids=>_.uniq(ids)),
+                map(ids=>{
+                    return _.difference<string>(ids,this.loading)
+                }),
+                switchMap(ids => {
+                    return from(_.difference<string>(ids, this.loaded))
+                }),
+                tap(id=>this.loading.push(id)),
+                switchMap((id: string) => {
+                    const input = id.split('###');
+                    return this.fetchI18nJson(input[0], input[1], this.translate().getLangs())
+                        .pipe(map(trans=>{
+                            return {id:id,translation:trans};
+                        }),
+                            catchError(err=>{
+                                _.remove(this.loading,id);
+                                return throwError(err);
+                            })
+                        );
+                })
+            )
+            .subscribe(result=>{
+                for (let lang of this.translate().getLangs()) {
+                    if (result.translation[lang]) {
+                        this.translate().setTranslation(lang, result.translation[lang], true);
+                    }
+                }
+                this.loaded.push(result.id);
+            });
+        this.initiated = true;
+    }
+
+    private translate(): TranslateService {
+        return this.$injector.get(TranslateService);
     }
 }
 
-export class ThirdsMissingTranslationHandler implements MissingTranslationHandler {
+export class ThirdsI18nLoader implements TranslateLoader {
 
-    loaded: Map<boolean>;
+    constructor(thirdsService: ThirdsService) {}
 
-    constructor(private thirdsService: ThirdsService){}
-
-    handle(params: MissingTranslationHandlerParams) {
-        const keyElements = params.key.split(".");
-        const publisher = keyElements[0];
-        const version = keyElements[1];
-        const translateService = params.translateService;
-        const locale = translateService.getBrowserLang();
-        // if(this.loaded[`${publisher}.${version}`])
-            return of(params.key);
-        // return this.thirdsService.fetchI18nJson(publisher,version,translateService.getLangs()).pipe(
-        //     tap(data=>{
-        //         for(let lang of params.translateService.getLangs()) {
-        //             if(data[lang]) {
-        //                 translateService.setTranslation(lang, data[lang],true);
-        //             }
-        //         }
-        //         this.loaded[`${publisher}.${version}`]=true;
-        //     }),
-        //     switchMap(data=>{
-        //         if(data[locale] && _.get(data[locale], params.key,params.key)){
-        //             return translateService.get(params.key,params.interpolateParams)
-        //         }else{
-        //             return of(params.key);
-        //         }
-        //     })
-        // );
+    getTranslation(lang: string): Observable<any> {
+        return of({});
     }
+
 }
 
-function checkContains(data: any, path: string) {
-    return false;
-}
-
-export function ThirdsMissingTranslationHandlerFactory(thirdsService: ThirdsService){
-    return new ThirdsMissingTranslationHandler(thirdsService);
+export function ThirdsI18nLoaderFactory(thirdsService: ThirdsService): TranslateLoader {
+    return new ThirdsI18nLoader(thirdsService);
 }

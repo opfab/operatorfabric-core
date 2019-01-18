@@ -19,5 +19,7 @@ export const {
 
 export const selectLightCardSelection = createSelector(
     selectLightCardsState,
-    state => state.selectedCardId)
+    state => state.selectedCardId);
+export const selectLastCards = createSelector(selectLightCardsState,
+    state => state.lastCards);
 

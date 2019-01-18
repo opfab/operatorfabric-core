@@ -17,6 +17,8 @@ import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
 import {of} from "rxjs";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {ThirdsService} from "../../services/thirds.service";
+import {ServicesModule} from "@ofServices/services.module";
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
@@ -25,12 +27,15 @@ describe('CardComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [StoreModule.forRoot(appReducer),
+            imports: [
+                HttpClientTestingModule,
+                ServicesModule,
+                StoreModule.forRoot(appReducer),
                 RouterTestingModule,
                 HttpClientTestingModule,
                 TranslateModule.forRoot(translateConfig)],
             declarations: [CardComponent],
-            providers: [{provide: store, useClass: Store}]
+            providers: [{provide: store, useClass: Store},ThirdsService]
         })
             .compileComponents();
         store = TestBed.get(Store);
@@ -53,13 +58,14 @@ describe('CardComponent', () => {
         const title = lightCard.title.key;
         const summaryValue = lightCard.summary.key;
         const publisher = lightCard.publisher;
+        const version = lightCard.publisherVersion;
 
         lightCardDetailsComp.lightCard = lightCard;
 
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('.card-title').innerText)
-            .toEqual(publisher+'.'+title);
+            .toEqual(publisher+'.'+version+'.'+title);
         expect(fixture.nativeElement.querySelector('.card-body > p'))
             .toBeFalsy();
     });

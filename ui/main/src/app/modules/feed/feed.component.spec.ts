@@ -28,6 +28,8 @@ import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-s
 import {CustomRouterStateSerializer} from "@ofStates/router.state";
 import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "../../translate.config";
+import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {ServicesModule} from "@ofServices/services.module";
 
 describe('FeedComponent', () => {
     let component: FeedComponent;
@@ -37,14 +39,16 @@ describe('FeedComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
+                ServicesModule,
                 StoreModule.forRoot(appReducer, storeConfig),
                 RouterTestingModule,
                 StoreRouterConnectingModule,
                 HttpClientModule,
                 CardsModule,
                 TranslateModule.forRoot(translateConfig)],
-            declarations: [CardListComponent, FeedComponent, TimeLineComponent]
-            , providers: [{provide: Store, useClass: Store},{provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}]
+            declarations: [CardListComponent, FeedComponent, TimeLineComponent],
+            providers: [{provide: Store, useClass: Store},{provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
+            schemas: [ NO_ERRORS_SCHEMA ]
         })
             .compileComponents();
     }));
