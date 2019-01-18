@@ -137,23 +137,22 @@ class ThirdsServiceShould {
   @Test
   void fetchI18n() throws IOException {
     File i18nFile = service.fetchResource("first", I18N,null,"fr", null).getFile();
-    assertThat(i18nFile.getParentFile()).isDirectory().hasName("fr");
     assertThat(i18nFile)
        .exists()
        .isFile()
-       .hasName("i18n.properties")
+       .hasName("fr.json")
        .hasContent("card.title=\"Titre $1\"");
     i18nFile = service.fetchResource("first", I18N, "0.1", "fr", null).getFile();
     assertThat(i18nFile)
        .exists()
        .isFile()
-       .hasName("i18n.properties")
+       .hasName("fr.json")
        .hasContent("card.title=\"Titre $1 0.1\"");
     i18nFile = service.fetchResource("first", I18N, "0.1", "en", null).getFile();
     assertThat(i18nFile)
        .exists()
        .isFile()
-       .hasName("i18n.properties")
+       .hasName("en.json")
        .hasContent("card.title=\"Title $1 0.1\"");
   }
 

@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DetailConsultationData implements Detail {
+public class                        DetailConsultationData implements Detail {
     private TitlePositionEnum titlePosition;
     private I18n title;
     private String titleStyle;

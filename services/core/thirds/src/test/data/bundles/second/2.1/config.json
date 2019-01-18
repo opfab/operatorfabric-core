@@ -1,7 +1,6 @@
 {
   "name": "second",
   "version": "2.1",
-  "defaultLocale": "en",
   "templates": [
     "template"
   ],
