@@ -1,6 +1,12 @@
 {
   "process":{
     "title": "Test: Process",
-    "summary": "This sums up the content of the card"
+    "summary": "This sums up the content of the card",
+    "detail": {
+      "tab": {
+        "first": "First Tab",
+        "second": "Second Tab"
+      }
+    }
   }
 }

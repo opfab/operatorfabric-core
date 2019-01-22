@@ -6,16 +6,14 @@
  */
 
 import {ModuleWithProviders, NgModule} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {CardComponent} from "./components/card/card.component";
 import {CardDetailsComponent} from "./components/card-details/card-details.component";
 import {DetailsComponent} from "./components/details/details.component";
 import {DetailComponent} from "./components/detail/detail.component";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {
-    ThirdsI18nLoaderFactory,
-    ThirdsService
-} from "./services/thirds.service";
+import {ThirdsI18nLoaderFactory, ThirdsService} from "./services/thirds.service";
+import {HandlebarsService} from "./services/handlebars.service";
 
 @NgModule({
   declarations: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
@@ -30,7 +28,7 @@ import {
       })
   ],
     exports: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
-    providers: [ThirdsService]
+    providers: [ThirdsService, HandlebarsService]
 })
 export class CardsModule {
     static forRoot(): ModuleWithProviders{

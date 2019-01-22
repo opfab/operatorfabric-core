@@ -15,7 +15,7 @@ import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors
 import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
 import {TranslateService} from "@ngx-translate/core";
 import {isInTheFuture} from "@ofServices/authentication.service";
-
+// import Fs from 'fs';
 
 @Component({
     selector: 'of-root',
@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
 
     constructor(private store: Store<AppState>,
                 private translate: TranslateService) {
+
         this.getRoutePE = this.store.pipe(select(selectRouterState));
         this.translate.setDefaultLang('en');
         console.log(navigator.language);

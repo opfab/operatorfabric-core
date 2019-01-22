@@ -54,7 +54,7 @@ subprojects {
             testCompile.exclude module: "junit"
         }
 
-        /////// CONFIGURATION
+        /////// CONFIGURAdiscoveryTION
 
         // Boot
 

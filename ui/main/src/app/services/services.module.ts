@@ -13,20 +13,22 @@ import {TokenInjector} from './interceptors.service';
 // import {AuthenticationGuard} from './guard.service';
 import {CardService} from './card.service';
 import {GuidService} from "@ofServices/guid.service";
+import {TimeService} from "@ofServices/time.service";
 
 @NgModule({
     imports: [
         CommonModule
     ],
-    providers: [CardService
-        , AuthenticationService
-        , {
+    providers: [
+        CardService,
+        AuthenticationService,
+        TimeService,
+        {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInjector,
             multi: true
-        }
-        // , AuthenticationGuard
-        , GuidService
+        },
+        GuidService
 
     ]
 })

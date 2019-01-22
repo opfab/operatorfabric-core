@@ -8,6 +8,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Card, CardDetail} from '@ofModel/card.model';
 import {ThirdsService} from "../../services/thirds.service";
+import {HandlebarsService} from "../../services/handlebars.service";
 
 @Component({
   selector: 'of-detail',
@@ -18,11 +19,18 @@ export class DetailComponent implements OnInit {
   public active = false;
   @Input() detail: CardDetail;
   @Input() card: Card;
+  private _htmlContent: string;
 
-  constructor(private thirds: ThirdsService) { }
+  constructor(private thirds: ThirdsService,
+              private handlebars: HandlebarsService) { }
 
   ngOnInit() {
     this.thirds.init();
+    this.handlebars.compileTemplate(this.detail.templateName,this.card).subscribe(html=>this._htmlContent=html);
+  }
+
+  get htmlContent(){
+    return this._htmlContent;
   }
 
 }

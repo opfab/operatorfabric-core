@@ -32,6 +32,10 @@ export class ThirdsService {
         this.thirdsUrl = `${environment.urls.thirds}`;
     }
 
+    fetchHbsTemplate(publisher: string, version: string, name: string, locale: string): Observable<string> {
+        return of("<h1>{{data.rootProp}}</h1>");
+    }
+
     fetchI18nJson(publisher: string, version: string, locales: string[]): Observable<Map<any>> {
         let previous: Observable<any>;
         for (let locale of locales) {

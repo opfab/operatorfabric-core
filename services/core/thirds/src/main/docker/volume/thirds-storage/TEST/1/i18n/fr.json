@@ -1,6 +1,12 @@
 {
   "process":{
     "title": "Test: Processus",
-    "summary": "Cela résume la carte"
+    "summary": "Cela résume la carte",
+    "detail": {
+      "tab": {
+        "first": "Premier onglet",
+        "second": "Deuxième onglet"
+      }
+    }
   }
 }

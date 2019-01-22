@@ -5,7 +5,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AfterViewInit, Component, ContentChildren, Input, QueryList} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    Input,
+    OnChanges,
+    OnInit,
+    QueryList,
+    SimpleChanges
+} from '@angular/core';
 import {DetailComponent} from "../detail/detail.component";
 import {Card} from "@ofModel/card.model";
 
@@ -14,10 +23,11 @@ import {Card} from "@ofModel/card.model";
     templateUrl: './details.component.html',
     styleUrls: ['./details.component.css']
 })
-export class DetailsComponent implements AfterViewInit {
+export class DetailsComponent implements AfterViewInit, OnChanges {
 
     @ContentChildren(DetailComponent) details: QueryList<DetailComponent>;
     @Input() card: Card;
+    private _i18nPrefix: string;
 
     constructor() {
     }
@@ -50,4 +60,12 @@ export class DetailsComponent implements AfterViewInit {
             detail.active = true;
     }
 
+    public get i18nPrefix(){
+        return this._i18nPrefix;
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if(changes['card'].currentValue)
+            this._i18nPrefix = changes['card'].currentValue.publisher+'.'+changes['card'].currentValue.publisherVersion+'.';
+    }
 }
