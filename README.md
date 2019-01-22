@@ -148,8 +148,8 @@ Demoable global docker compose files are available at :
 * [root]/src/main/docker/demo : sets up all services, generate a dummy card every 5 seconds
 * [root]/src/main/docker/deploy : sets up all services, ready for card reception
 
-This demo setup exposes application at localhost:2002
-Card publication is exposed at localhost:2102
+This demo setup exposes application at localhost:2002/ui
+Card publication entry points are exposed at localhost:2102/cards
 For debugging purpose the following ports are also exposes :
 
 Port  | Forwards to         |     |                                                  |
@@ -360,7 +360,7 @@ gradle :services:core:third-party-service:composeUp
 ### Running subproject from jar file
 
  * gradle :[subprojectPath]:bootJar
- * java -jar [subprojectPath]/build/libs/[subproject].jar
+ * or java -jar [subprojectPath]/build/libs/[subproject].jar
 
 ### Overriding properties when running from jar file
 

@@ -95,6 +95,7 @@ if [ "$build" = true ] ; then
 fi
 cd $OF_HOME
 #cd services/core
+set -x
 gradle copyWorkingDir dockerTag -x test \
 -Papk.proxy.uri=$proxy_uri \
 -Papk.proxy.httpsuri=$https_proxy_uri \

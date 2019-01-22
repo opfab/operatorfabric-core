@@ -6,4 +6,4 @@ spring:
     uri: http://${CONFIG_HOST}:${CONFIG_PORT}
     failFast: true
     retry:
-      maxAttempts: 10
+      maxAttempts: 50

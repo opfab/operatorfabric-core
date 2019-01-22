@@ -13,7 +13,7 @@ test_url() {
     [ -n "$HTTP_STATUS" ] && [ "$HTTP_STATUS" = 200 ]
     return
 }
-maxRetry=20
+maxRetry=50
 retry=0
 # Testing registry access
 while ! test_url $URL && [ $retry -lt $maxRetry ]; do
