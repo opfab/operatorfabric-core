@@ -16,9 +16,12 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {LoadCardSuccess} from "@ofActions/card.actions";
 import {getOneRandomCard} from "@tests/helpers";
 import {By} from "@angular/platform-browser";
-import {ThirdsService} from "../../services/thirds.service";
+import {ThirdsI18nLoaderFactory, ThirdsService} from "../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {HandlebarsService} from "../../services/handlebars.service";
+import {TimeService} from "@ofServices/time.service";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 
 describe('CardDetailsComponent', () => {
   let component: CardDetailsComponent;
@@ -31,9 +34,18 @@ describe('CardDetailsComponent', () => {
             HttpClientTestingModule,
             ServicesModule,
             StoreModule.forRoot(appReducer),
-            RouterTestingModule,],
+            RouterTestingModule,
+            TranslateModule.forRoot({
+                loader: {
+                    provide: TranslateLoader,
+                    useFactory: ThirdsI18nLoaderFactory,
+                    deps: [ThirdsService]
+                },
+                useDefaultLang: false
+            })
+        ],
       declarations: [ CardDetailsComponent, DetailsComponent, DetailComponent ],
-        providers:[ThirdsService]
+        providers:[ThirdsService, HandlebarsService, TimeService]
     })
     .compileComponents();
   }));

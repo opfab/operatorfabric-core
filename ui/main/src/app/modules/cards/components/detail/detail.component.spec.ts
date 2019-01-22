@@ -9,11 +9,14 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import { DetailComponent } from './detail.component';
 import {getOneRandomCard} from '@tests/helpers';
-import {ThirdsService} from "../../services/thirds.service";
+import {ThirdsI18nLoaderFactory, ThirdsService} from "../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {StoreModule} from "@ngrx/store";
 import {appReducer} from "@ofStore/index";
+import {HandlebarsService} from "../../services/handlebars.service";
+import {TimeService} from "@ofServices/time.service";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 
 describe('DetailComponent', () => {
     let component: DetailComponent;
@@ -24,10 +27,18 @@ describe('DetailComponent', () => {
             imports: [
                 StoreModule.forRoot(appReducer),
                 ServicesModule,
-                HttpClientTestingModule
+                HttpClientTestingModule,
+                TranslateModule.forRoot({
+                    loader: {
+                        provide: TranslateLoader,
+                        useFactory: ThirdsI18nLoaderFactory,
+                        deps: [ThirdsService]
+                    },
+                    useDefaultLang: false
+                })
             ],
             declarations: [DetailComponent],
-            providers: [ThirdsService]
+            providers: [ThirdsService, HandlebarsService, TimeService]
         })
             .compileComponents();
     }));
