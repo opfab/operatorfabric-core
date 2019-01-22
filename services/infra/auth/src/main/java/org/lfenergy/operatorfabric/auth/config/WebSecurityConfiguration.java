@@ -36,11 +36,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
        throws Exception {
         auth.inMemoryAuthentication()
 //           .passwordEncoder(NoOpPasswordEncoder.getInstance())
-           .withUser("john").password(passwordEncoder.encode("123")).roles("USER").and()
            .withUser("admin").password(passwordEncoder.encode("test")).roles("USER","ADMIN").and()
            .withUser("rte-operator").password(passwordEncoder.encode("test")).roles("USER").and()
-           .withUser("elia-operator").password(passwordEncoder.encode("test")).roles("USER").and()
-           .withUser("coreso-operator").password(passwordEncoder.encode("test")).roles("USER").and()
+           .withUser("tso1-operator").password(passwordEncoder.encode("test")).roles("USER").and()
+           .withUser("tso2-operator").password(passwordEncoder.encode("test")).roles("USER").and()
         ;
     }
 
