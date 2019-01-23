@@ -65,7 +65,7 @@ export class CardService {
 // sse request not intercepted by core/services/interceptors.services/TokenInjector
     private handleHeaders() {
         return {headers: this.authenticationService.getSecurityHeader(),
-            heartbeatTimeout: 10000}
+            heartbeatTimeout: 30000}
             ;
     }
 }

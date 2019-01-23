@@ -36,8 +36,8 @@ describe('Thirds Services & Components', () => {
                 })],
             providers: [
                 {provide: store, useClass: Store},
-               ThirdsService,
-                ]
+                ThirdsService,
+            ]
         });
         injector = getTestBed();
         store = TestBed.get(Store);
@@ -58,6 +58,22 @@ describe('Thirds Services & Components', () => {
 
     it('should be created', () => {
         expect(thirdsService).toBeTruthy();
+    });
+    describe('#fetchHbsTemplate', () => {
+        const templates = {en:'English template {{card.data.name}}',
+        fr:'Template Français {{card.data.name}}'};
+       it('should return different files for each language',()=>{
+           thirdsService.fetchHbsTemplate('testPublisher','0','testTemplate','en')
+               .subscribe((result)=>expect(result).toEqual('English template {{card.data.name}}'))
+           thirdsService.fetchHbsTemplate('testPublisher','0','testTemplate','fr')
+               .subscribe((result)=>expect(result).toEqual('Template Français {{card.data.name}}'))
+           let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/templates/testTemplate`)
+           expect(calls.length).toEqual(2);
+           calls.forEach(call=>{
+               expect(call.request.method).toBe('GET');
+               call.flush(templates[call.request.params.get('locale')]);
+           })
+        })
     });
     describe('#fetchI18nJson', () => {
         it('should return json object with single en language', () => {
@@ -107,80 +123,81 @@ describe('Thirds Services & Components', () => {
                 }
             });
         });
-        it('should update translate service upon new card arrival',(done)=>{
-            let card = getOneRandomLigthCard();
-            let i18n={}
-            _.set(i18n,`en.${card.title.key}`,'en title');
-            _.set(i18n,`en.${card.summary.key}`,'en summary');
-            _.set(i18n,`fr.${card.title.key}`,'titre fr');
-            _.set(i18n,`fr.${card.summary.key}`,'résumé fr');
-            const setTranslationSpy = spyOn(translateService,"setTranslation").and.callThrough();
-            const getLangsSpy = spyOn(translateService,"getLangs").and.callThrough();
-            store.dispatch(new LoadLightCardsSuccess({lightCards:[card]}));
-            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/i18n`)
-            expect(calls.length).toEqual(2);
-
-            expect(calls[0].request.method).toBe('GET');
-            flushI18nJson(calls[0],i18n);
-            expect(calls[1].request.method).toBe('GET');
-            flushI18nJson(calls[1],i18n);
-            setTimeout(()=>{
-                expect(setTranslationSpy.calls.count()).toEqual(2);
-                translateService.use('fr')
-                translateService.get(prefix(card)+card.title.key)
-                    .subscribe(value=>expect(value).toEqual('titre fr'))
-                translateService.get(prefix(card)+card.summary.key)
-                    .subscribe(value=>expect(value).toEqual('résumé fr'))
-                translateService.use('en')
-                translateService.get(prefix(card)+card.title.key)
-                    .subscribe(value=> expect(value).toEqual('en title'))
-                translateService.get(prefix(card)+card.summary.key)
-                    .subscribe(value=> expect(value).toEqual('en summary'))
-                done();
-            },1000);
-        });
-        it('should update translate service upon new card arrival only if new publisher detected',(done)=>{
-            let card = getOneRandomLigthCard();
-            let i18n={}
-            _.set(i18n,`en.${card.title.key}`,'en title');
-            _.set(i18n,`en.${card.summary.key}`,'en summary');
-            _.set(i18n,`fr.${card.title.key}`,'titre fr');
-            _.set(i18n,`fr.${card.summary.key}`,'résumé fr');
-            const setTranslationSpy = spyOn(translateService,"setTranslation").and.callThrough();
-            const getLangsSpy = spyOn(translateService,"getLangs").and.callThrough();
-            store.dispatch(new LoadLightCardsSuccess({lightCards:[card]}));
-            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/i18n`);
-            expect(calls.length).toEqual(2);
-
-            expect(calls[0].request.method).toBe('GET');
-            flushI18nJson(calls[0],i18n);
-            expect(calls[1].request.method).toBe('GET');
-            flushI18nJson(calls[1],i18n);
-            store.dispatch(new LoadLightCardsSuccess({lightCards:[card]}));
-            httpMock.expectNone(`${environment.urls.thirds}/testPublisher/i18n`);
-            setTimeout(()=>{
-                expect(setTranslationSpy.calls.count()).toEqual(2);
-                translateService.use('fr')
-                translateService.get(prefix(card)+card.title.key)
-                    .subscribe(value=>expect(value).toEqual('titre fr'))
-                translateService.get(prefix(card)+card.summary.key)
-                    .subscribe(value=>expect(value).toEqual('résumé fr'))
-                translateService.use('en')
-                translateService.get(prefix(card)+card.title.key)
-                    .subscribe(value=> expect(value).toEqual('en title'))
-                translateService.get(prefix(card)+card.summary.key)
-                    .subscribe(value=> expect(value).toEqual('en summary'))
-                done();
-            },1000);
-        });
     });
+    it('should update translate service upon new card arrival', (done) => {
+        let card = getOneRandomLigthCard();
+        let i18n = {}
+        _.set(i18n, `en.${card.title.key}`, 'en title');
+        _.set(i18n, `en.${card.summary.key}`, 'en summary');
+        _.set(i18n, `fr.${card.title.key}`, 'titre fr');
+        _.set(i18n, `fr.${card.summary.key}`, 'résumé fr');
+        const setTranslationSpy = spyOn(translateService, "setTranslation").and.callThrough();
+        const getLangsSpy = spyOn(translateService, "getLangs").and.callThrough();
+        store.dispatch(new LoadLightCardsSuccess({lightCards: [card]}));
+        let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/i18n`)
+        expect(calls.length).toEqual(2);
+
+        expect(calls[0].request.method).toBe('GET');
+        flushI18nJson(calls[0], i18n);
+        expect(calls[1].request.method).toBe('GET');
+        flushI18nJson(calls[1], i18n);
+        setTimeout(() => {
+            expect(setTranslationSpy.calls.count()).toEqual(2);
+            translateService.use('fr')
+            translateService.get(prefix(card) + card.title.key)
+                .subscribe(value => expect(value).toEqual('titre fr'))
+            translateService.get(prefix(card) + card.summary.key)
+                .subscribe(value => expect(value).toEqual('résumé fr'))
+            translateService.use('en')
+            translateService.get(prefix(card) + card.title.key)
+                .subscribe(value => expect(value).toEqual('en title'))
+            translateService.get(prefix(card) + card.summary.key)
+                .subscribe(value => expect(value).toEqual('en summary'))
+            done();
+        }, 1000);
+    });
+    it('should update translate service upon new card arrival only if new publisher detected', (done) => {
+        let card = getOneRandomLigthCard();
+        let i18n = {}
+        _.set(i18n, `en.${card.title.key}`, 'en title');
+        _.set(i18n, `en.${card.summary.key}`, 'en summary');
+        _.set(i18n, `fr.${card.title.key}`, 'titre fr');
+        _.set(i18n, `fr.${card.summary.key}`, 'résumé fr');
+        const setTranslationSpy = spyOn(translateService, "setTranslation").and.callThrough();
+        const getLangsSpy = spyOn(translateService, "getLangs").and.callThrough();
+        store.dispatch(new LoadLightCardsSuccess({lightCards: [card]}));
+        let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/i18n`);
+        expect(calls.length).toEqual(2);
+
+        expect(calls[0].request.method).toBe('GET');
+        flushI18nJson(calls[0], i18n);
+        expect(calls[1].request.method).toBe('GET');
+        flushI18nJson(calls[1], i18n);
+        store.dispatch(new LoadLightCardsSuccess({lightCards: [card]}));
+        httpMock.expectNone(`${environment.urls.thirds}/testPublisher/i18n`);
+        setTimeout(() => {
+            expect(setTranslationSpy.calls.count()).toEqual(2);
+            translateService.use('fr')
+            translateService.get(prefix(card) + card.title.key)
+                .subscribe(value => expect(value).toEqual('titre fr'))
+            translateService.get(prefix(card) + card.summary.key)
+                .subscribe(value => expect(value).toEqual('résumé fr'))
+            translateService.use('en')
+            translateService.get(prefix(card) + card.title.key)
+                .subscribe(value => expect(value).toEqual('en title'))
+            translateService.get(prefix(card) + card.summary.key)
+                .subscribe(value => expect(value).toEqual('en summary'))
+            done();
+        }, 1000);
+    });
+
 });
 
-function flushI18nJson(request:TestRequest, json: any){
+function flushI18nJson(request: TestRequest, json: any) {
     const locale = request.request.params.get('locale');
     request.flush(json[locale]);
 }
 
-function prefix(card:LightCard){
-    return card.publisher+'.'+card.publisherVersion+'.';
+function prefix(card: LightCard) {
+    return card.publisher + '.' + card.publisherVersion + '.';
 }

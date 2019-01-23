@@ -5,7 +5,9 @@
   "templates": [
     "security",
     "unschedulledPeriodicOp",
-    "operation"
+    "operation",
+    "template1",
+    "template2"
   ],
   "csses": [
     "tabs",

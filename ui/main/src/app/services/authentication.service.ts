@@ -127,7 +127,7 @@ export class AuthenticationService {
     }
 
     public getSecurityHeader() {
-        return {'Authorization': `Bearer ${this.extractToken()}`}
+        return {'Authorization': `Bearer ${this.extractToken()}`};
     }
 }
 

@@ -20,7 +20,6 @@ import {LightCard} from "@ofModel/light-card.model";
 @Injectable()
 export class ThirdsService {
     private thirdsUrl: string;
-    private count = 0;
     private loaded: string[] = [];
     private loading: string[] = [];
     private initiated = false;
@@ -33,7 +32,14 @@ export class ThirdsService {
     }
 
     fetchHbsTemplate(publisher: string, version: string, name: string, locale: string): Observable<string> {
-        return of("<h1>{{data.rootProp}}</h1>");
+        const params = new HttpParams()
+                .set("locale", locale)
+                .set("version", version);
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/templates/${name}`,{
+            params,
+            headers: this.authenticationService.getSecurityHeader(),
+            responseType: 'text'
+        })
     }
 
     fetchI18nJson(publisher: string, version: string, locales: string[]): Observable<Map<any>> {
@@ -42,9 +48,8 @@ export class ThirdsService {
             const params = new HttpParams()
                 .set("locale", locale)
                 .set("version", version);
-            this.count++;
             const httpCall = this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {
-                params: params,
+                params,
                 headers: this.authenticationService.getSecurityHeader()
             }).pipe(
                 map(r => {

@@ -227,7 +227,7 @@ public class ThirdsService implements ResourceLoaderAware {
                 break;
             case TEMPLATE:
                 if (!third.getTemplates().contains(name))
-                    throw new FileNotFoundException("Unknown i18n resource for " + thirdName + ":" + version);
+                    throw new FileNotFoundException("Unknown template "+name+" for " + thirdName + ":" + version);
                 break;
             default:
                 throw new FileNotFoundException("Unable to find resource for unknown resource type");
