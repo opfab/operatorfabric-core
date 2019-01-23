@@ -58,23 +58,24 @@ export function getOneRandomLigthCard(): LightCard {
     return oneCard;
 }
 
-export function getOneRandomCard(): Card {
+export function getOneRandomCard(card?:any): Card {
+    card = card?card:{};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     const oneCard = new Card(getRandomAlphanumericValue(3, 24),
-        getRandomAlphanumericValue(3, 24),
-        'testPublisher',
-        getRandomAlphanumericValue(3, 24),
-        today,
-        startTime,
-        startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        Severity.QUESTION,
+        card.id?card.id:getRandomAlphanumericValue(3, 24),
+        card.publisher?card.publisher:'testPublisher',
+        card.publisherVersion?card.publisherVersion:getRandomAlphanumericValue(3, 24),
+        card.publishDate?card.publishDate:today,
+        card.startTime? card.startTime:startTime,
+        card.endDate?card.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        card.severity?card.severity:Severity.QUESTION,
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
-        {data: "data"},
+        card.data?card.data:{data: "data"},
         [new CardDetail(null, getRandomI18nData(),null,"template1",null),
             new CardDetail(null, getRandomI18nData(),null,"template2",null),]
     );

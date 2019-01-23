@@ -39,7 +39,7 @@ export class HandlebarsService {
         this.registerPolyIf();
     }
 
-    public compileTemplate(templateName: string, card: Card):Observable<string> {
+    public executeTemplate(templateName: string, card: Card):Observable<string> {
         return this.queryTemplate(card.publisher,card.publisherVersion,templateName).pipe(
             map(t=>t(card)));
     }

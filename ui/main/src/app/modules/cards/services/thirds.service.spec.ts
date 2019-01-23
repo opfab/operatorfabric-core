@@ -13,7 +13,7 @@ import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {LightCard} from "@ofModel/light-card.model";
 import {ServicesModule} from "@ofServices/services.module";
 
-describe('Thirds Services & Components', () => {
+describe('Thirds Services', () => {
     let injector: TestBed;
     let thirdsService: ThirdsService;
     let translateService: TranslateService;
