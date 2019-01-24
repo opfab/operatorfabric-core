@@ -225,7 +225,7 @@ users :
 
 <ul>
 {{#eachSorted users}}
-    <li>{{this.firstName}} {{this.lastName</li>
+    <li>{{this.firstName}} {{this.lastName}}</li>
 {{/eachSorted}}
 </ul>
 ```

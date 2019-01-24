@@ -18,25 +18,20 @@ export class HandlebarsService {
                 private translate: TranslateService,
                 private thirds: ThirdsService){
         this.registerPreserveSpace();
-        this.registerIfEquals();
-        this.registerIfGreater();
-        this.registerIfGreaterEq();
-        this.registerIfLower();
-        this.registerIfLowerEq();
-        this.registerIfLowerNow();
-        this.registerIfGreaterNow();
         this.registerNumberFormat();
         this.registerDateFormat();
         this.registerCardAction();
         this.registerSvg();
         this.registerI18n();
-        this.registerEachSorted();
-        this.registerFomIndex();
+        this.registerSort();
+        this.registerSlice();
+        this.registerSliceEnd();
         this.registerArrayAtIndex();
-        this.registerAdd();
+        this.registerMath();
         this.registerSplit();
         this.registerArrayAtIndexLength();
-        this.registerPolyIf();
+        this.registerBool();
+        this.registerNow();
     }
 
     public executeTemplate(templateName: string, card: Card):Observable<string> {
@@ -57,32 +52,31 @@ export class HandlebarsService {
         );
     }
 
-    private registerPolyIf() {
-        Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
-
+    private registerBool() {
+        Handlebars.registerHelper('bool', function (v1, operator, v2, options) {
             switch (operator) {
                 case '==':
-                    return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 == v2);
                 case '===':
-                    return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 === v2);
                 case '!=':
-                    return (v1 != v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 != v2);
                 case '!==':
-                    return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 !== v2);
                 case '<':
-                    return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 < v2);
                 case '<=':
-                    return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 <= v2);
                 case '>':
-                    return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 > v2);
                 case '>=':
-                    return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 >= v2);
                 case '&&':
-                    return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 && v2);
                 case '||':
-                    return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    return (v1 || v2);
                 default:
-                    return options.inverse(this);
+                    return true;
             }
         });
     }
@@ -99,9 +93,17 @@ export class HandlebarsService {
         });
     }
 
-    private registerAdd() {
-        Handlebars.registerHelper('add', function (value, nbToAdd, options) {
-            return value + nbToAdd;
+    private registerMath(){
+        Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
+            let result;
+            switch(operator) {
+                case "+": result = lvalue + rvalue; break;
+                case "-": result = lvalue - rvalue; break;
+                case "*": result = lvalue * rvalue; break;
+                case "/": result = lvalue / rvalue; break;
+                case "%": result = lvalue % rvalue; break;
+            };
+            return result;
         });
     }
 
@@ -111,51 +113,44 @@ export class HandlebarsService {
         });
     }
 
-    private registerFomIndex() {
-        Handlebars.registerHelper('fromIndex', function (value, from, options) {
+    private registerSlice() {
+        Handlebars.registerHelper('slice', function (value, from, to, options) {
+            return value.slice(from, to);
+        });
+    }
+
+    private registerSliceEnd() {
+        Handlebars.registerHelper('sliceEnd', function (value, from, options) {
             return value.slice(from, value.length);
         });
     }
 
-    private registerEachSorted() {
-        Handlebars.registerHelper('eachSorted', function () {
-
-
-            function appendContextPath(contextPath, id) {
-                return (contextPath ? contextPath + '.' : '') + id;
-            }
-
-            function blockParams(params, ids) {
-                params.path = ids;
-                return params;
-            }
-
-            var args = [],
+    private registerSort() {
+        Handlebars.registerHelper('sort', function () {
+            let args = [],
                 options = arguments[arguments.length - 1];
             for (var index = 0; index < arguments.length - 1; index++) {
                 args.push(arguments[index]);
             }
-            var context: any | any[] | Function = args[0];
-            if (typeof context === 'function') {
-                context = context.call(this);
-            }
-            var sortKey = args[1];
-            var arrayToSort: any[];
-            var isObject = false;
+            const context: any | any[] = args[0];
+            const sortKey = args[1];
+            let arrayToSort: any[];
+            let isObject:boolean;
             if (typeof context == 'object') {
                 if (context.length !== undefined && context.length !== null) {
                     arrayToSort = context;
+                    isObject = (typeof arrayToSort[0] == 'object')
                 } else {
                     isObject = true;
                     arrayToSort = [];
                     for (var property in context) {
                         if (context.hasOwnProperty(property)) {
                             if (typeof context[property] == 'object') {
-                                arrayToSort.push(Object.assign({templatedObjectkey: property}, context[property]));
+                                arrayToSort.push({templatedObjectkey: property, ...context[property]});
                             } else {
                                 arrayToSort.push({
                                     templatedObjectkey: property,
-                                    templatedObjectValue: context[property]
+                                    value: context[property]
                                 });
                             }
                         }
@@ -165,66 +160,11 @@ export class HandlebarsService {
                     arrayToSort.sort(sortOnKey(sortKey));
                 } else if (isObject) {
                     arrayToSort.sort(sortOnKey('templatedObjectkey'));
-                }
-            }
-            context = arrayToSort;
-
-            let fn = options.fn,
-                inverse = options.inverse,
-                i = 0,
-                ret = '',
-                data,
-                contextPath;
-
-            if (options.data && options.ids) {
-                contextPath = appendContextPath(options.data.contextPath, options.ids[0]) + '.';
-            }
-
-            if (options.data) {
-                data = {...options.data};
-            }
-
-            function execIteration(field, index, last) {
-                if (data) {
-                    data.key = field;
-                    data.index = index;
-                    data.first = index === 0;
-                    data.last = !!last;
-
-                    if (contextPath) {
-                        data.contextPath = contextPath + field;
-                    }
-                    if (context[field].templatedObjectkey) {
-                        data.key = context[field].templatedObjectkey;
-                    }
-                }
-                if (context[field].templatedObjectkey) {
-                    delete context[field].templatedObjectkey;
-                }
-                let subContext;
-                if (context[field].templatedObjectValue) {
-                    subContext = context[field].templatedObjectValue;
                 } else {
-                    subContext = context[field];
-                }
-                ret = ret + fn(subContext, {
-                    data: data,
-                    blockParams: blockParams([subContext, field], [contextPath + field, null])
-                });
-            }
-
-            for (let j = context.length; i < j; i++) {
-                if (i in context) {
-                    execIteration(i, i, i === context.length - 1);
+                    arrayToSort.sort();
                 }
             }
-
-            if (i === 0) {
-                ret = inverse(this);
-            }
-
-            return ret;
-
+            return arrayToSort;
         });
     }
 
@@ -250,7 +190,7 @@ export class HandlebarsService {
                 i18nParams = options.hash;
             }
 
-            return this.translate.get(i18nKey, i18nParams);
+            return this.translate.instant(i18nKey, i18nParams);
         });
     }
 
@@ -288,9 +228,9 @@ export class HandlebarsService {
 
     private registerDateFormat() {
         Handlebars.registerHelper('dateFormat', (value, options) => {
-            const time = moment(new Date(value));
-            time.locale(this.translate.getBrowserLang());
-            return time.format(options.hash.format);
+            const m = moment(new Date(value));
+            m.locale(this.translate.getBrowserLang());
+            return m.format(options.hash.format);
         });
     }
 
@@ -301,81 +241,16 @@ export class HandlebarsService {
         });
     }
 
-    private registerIfGreaterNow() {
+    private registerNow() {
         const that = this;
-        Handlebars.registerHelper('ifGreaterNow', function (value, options) {
-            if (value > that.time.currentTime()) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this)
-            }
+        Handlebars.registerHelper('now', function (options) {
+            return that.time.currentTime();
         })
-    }
-
-    private registerIfLowerNow() {
-        const that = this;
-        Handlebars.registerHelper('ifLowerNow', function (value, options) {
-            if (value < that.time.currentTime()) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this)
-            }
-        });
-    }
-
-    private registerIfLowerEq() {
-        Handlebars.registerHelper('ifLowerEq', function (value, limit, options) {
-            if (value <= limit) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this)
-            }
-        });
-    }
-
-    private registerIfLower() {
-        Handlebars.registerHelper('ifLower', function (value, limit, options) {
-            if (value < limit) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this)
-            }
-        });
-    }
-
-    private registerIfGreaterEq() {
-        Handlebars.registerHelper('ifGreaterEq', function (value, limit, options) {
-            if (value >= limit) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this)
-            }
-        });
-    }
-
-    private registerIfGreater() {
-        Handlebars.registerHelper('ifGreater', function (value, limit, options) {
-            if (value > limit) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this)
-            }
-        });
-    }
-
-    private registerIfEquals() {
-        Handlebars.registerHelper('ifEquals', function (value, test, options) {
-            if (value === test) {
-                return options.fn(this);
-            } else {
-                return options.inverse(this)
-            }
-        });
     }
 
     private registerPreserveSpace() {
         Handlebars.registerHelper("preserveSpace", function (value, options) {
-            return value.replace(/ /g, '&nbsp')
+            return value.replace(/ /g, '\u00A0')
         });
     }
 }
