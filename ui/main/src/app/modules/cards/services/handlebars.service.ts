@@ -8,6 +8,7 @@ import {Map} from "@ofModel/map";
 import {Observable, of} from "rxjs";
 import {map, tap} from "rxjs/operators";
 import {ThirdsService} from "./thirds.service";
+import {Guid} from "guid-typescript";
 
 @Injectable()
 export class HandlebarsService {
@@ -195,6 +196,7 @@ export class HandlebarsService {
     }
 
     private registerSvg() {
+        const svgUid = Guid.create().toString();
         Handlebars.registerHelper('svg', function () {
             var args = [],
                 options = arguments[arguments.length - 1];
@@ -205,8 +207,14 @@ export class HandlebarsService {
             for (var i = 0; i < args.length; i++) {
                 imageUrl += args[i];
             }
+            return `<embed type="image/svg+xml" src="${imageUrl}" id="${svgUid}" />
+                    <script>document.getElementById('${svgUid}').addEventListener('load', function(){
+                            svgPanZoom(document.getElementById('${svgUid}'));});
+                    </script>
+                    <script>console.log('loaded from handlebars')</script>
+            `
             // return '<ap-action action="card.actions[\'actionId\']" card="card"></ap-action>';
-            return '<ap-svg is-archived="false" url="\'' + imageUrl + '\'" pan-zoom="false"></ap-svg>';
+            // return '<ap-svg is-archived="false" url="\'' + imageUrl + '\'" pan-zoom="false"></ap-svg>';
         });
     }
 

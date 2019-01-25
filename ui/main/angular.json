@@ -31,7 +31,9 @@
             "styles": [
               "src/assets/styles/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js"
+            ]
           },
           "configurations": {
             "production": {
