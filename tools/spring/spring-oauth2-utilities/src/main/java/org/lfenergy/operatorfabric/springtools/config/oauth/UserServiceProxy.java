@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Feign proxy for User wervice
+ * Feign proxy for User service
  *
  * @author David Binder
  */
-@FeignClient(value = "users")
+@FeignClient(value = "users", primary = false)
 public interface UserServiceProxy {
     @RequestMapping(value = "/users/{login}",
        produces = { "application/json" },

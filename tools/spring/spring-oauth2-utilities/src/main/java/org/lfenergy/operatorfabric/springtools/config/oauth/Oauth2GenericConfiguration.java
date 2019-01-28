@@ -11,15 +11,16 @@ import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.List;
@@ -45,16 +46,17 @@ import java.util.List;
  *
  * @author David Binder
  */
-@EnableFeignClients
-@EnableDiscoveryClient
 @Configuration
+@EnableFeignClients
+@EnableCaching
+@EnableDiscoveryClient
 @Slf4j
+@Import({UserServiceCache.class})
 public class Oauth2GenericConfiguration {
 
 
-
     @Autowired
-    private UserServiceProxy proxy;
+    protected UserServiceCache userServiceCache;
     @Autowired
     private ApplicationContext context;
 
@@ -72,7 +74,8 @@ public class Oauth2GenericConfiguration {
             public AbstractAuthenticationToken convert(Jwt jwt) {
                 String principalId = jwt.getClaimAsString("sub");
                 Oauth2JwtProcessingUtilities.token.set(jwt);
-                User user = proxy.fetchUser(principalId);
+                log.info("TestCache : User info is needed from GenericConfig for principal : {}", principalId); //TODO Remove
+                User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
                 Oauth2JwtProcessingUtilities.token.remove();
                 List<GrantedAuthority> authorities = Oauth2JwtProcessingUtilities.computeAuthorities(user);
                 return new OpFabJwtAuthenticationToken(jwt, user, authorities);
@@ -88,5 +91,6 @@ public class Oauth2GenericConfiguration {
     public RequestInterceptor oauth2FeignRequestInterceptor() {
         return new OAuth2FeignRequestInterceptor();
     }
+
 
 }

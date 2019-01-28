@@ -68,7 +68,9 @@ ext {
             slf4j          : "org.slf4j:slf4j-api:${versions['log.sl4j']}",
             lombok         : "org.projectlombok:lombok:${versions['lombok']}",
             palantir       : "gradle.plugin.com.palantir.gradle.docker:gradle-docker:${versions['gradle.docker']}",
-            compress       : "org.apache.commons:commons-compress:${versions['apache.commons.compress']}"
+            compress       : "org.apache.commons:commons-compress:${versions['apache.commons.compress']}",
+            feignMock      : "io.github.openfeign:feign-mock:${versions['feign']}",
+            feignJackson   : "io.github.openfeign:feign-jackson:${versions['feign']}"
     ]
 
     generator = [
