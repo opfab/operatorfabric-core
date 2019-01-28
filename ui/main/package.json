@@ -31,6 +31,7 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "bootstrap": "^4.2.1",
     "core-js": "^2.6.3",
+    "font-awesome": "^4.7.0",
     "guid-typescript": "^1.0.9",
     "handlebars": "^4.0.12",
     "lodash": "^4.17.11",

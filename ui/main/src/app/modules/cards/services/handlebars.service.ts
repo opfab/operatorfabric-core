@@ -210,16 +210,12 @@ export class HandlebarsService {
             return `<embed type="image/svg+xml" src="${imageUrl}" id="${svgUid}" />
                     <script>document.getElementById('${svgUid}').addEventListener('load', function(){
                             svgPanZoom(document.getElementById('${svgUid}'));});
-                    </script>
-                    <script>console.log('loaded from handlebars')</script>
-            `
-            // return '<ap-action action="card.actions[\'actionId\']" card="card"></ap-action>';
-            // return '<ap-svg is-archived="false" url="\'' + imageUrl + '\'" pan-zoom="false"></ap-svg>';
+                    </script>`
         });
     }
 
     private registerCardAction() {
-        Handlebars.registerHelper('cardAction', function () {
+        Handlebars.registerHelper('action', function () {
             var args = [],
                 options = arguments[arguments.length - 1];
             for (var i = 0; i < arguments.length - 1; i++) {
@@ -230,7 +226,7 @@ export class HandlebarsService {
                 actionId += args[i];
             }
             // return '<ap-action action="card.actions[\'actionId\']" card="card"></ap-action>';
-            return '<ap-action action="\'' + actionId + '\'" card="card"></ap-action>';
+            return `<button action-id="${actionId}"><i></i></button>`
         });
     }
 

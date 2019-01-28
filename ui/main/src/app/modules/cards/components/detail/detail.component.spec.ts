@@ -53,6 +53,9 @@ describe('DetailComponent', () => {
         fixture = TestBed.createComponent(DetailComponent);
         component = fixture.componentInstance;
     });
+    // afterEach( ()=>{
+    //     httpMock.verify();
+    // })
 
     it('should create', () => {
         component.card = getOneRandomCard();
@@ -60,7 +63,7 @@ describe('DetailComponent', () => {
         fixture.detectChanges();
         expect(component).toBeTruthy();
     });
-    it('should load template', ()=>{
+    it('should load template with script', ()=>{
         component.card = getOneRandomCard();
         component.detail = component.card.details[0];
         component.ngOnInit();
@@ -68,11 +71,47 @@ describe('DetailComponent', () => {
         expect(calls.length).toEqual(1);
         calls.forEach(call=>{
           call.flush('<div>div</div><script type="text/javascript">console.log("log")</script>')
-        })
+        });
         fixture.detectChanges();
         expect(component).toBeTruthy();
         expect(fixture.nativeElement.children[0].localName).toEqual('div');
         expect(fixture.nativeElement.children[0].children[0].localName).toEqual('div');
         expect(fixture.nativeElement.children[0].children[1].localName).toEqual('script');
+    });
+    it('should load template with action', (done)=>{
+        component.card = getOneRandomCard();
+        component.detail = component.card.details[0];
+        // component.ngOnInit();
+        fixture.detectChanges();
+        let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/templates/template1`);
+        expect(calls.length).toEqual(1);
+        calls.forEach(call=>{
+            call.flush('{{{action "hidden1"}}}{{{action "hidden2"}}}')
+        });
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
+        setTimeout(()=>{
+            fixture.detectChanges();
+            expect(fixture.nativeElement.children[0].localName).toEqual('div');
+            expect(fixture.nativeElement.children[0].children[0].localName).toEqual('button');
+            expect(fixture.nativeElement.children[0].children[0].attributes[0].nodeName).toEqual('action-id');
+            expect(fixture.nativeElement.children[0].children[0].attributes[0].nodeValue).toEqual('hidden1');
+            expect(fixture.nativeElement.children[0].children[1].localName).toEqual('button');
+            expect(fixture.nativeElement.children[0].children[1].attributes[0].nodeName).toEqual('action-id');
+            expect(fixture.nativeElement.children[0].children[1].attributes[0].nodeValue).toEqual('hidden2');
+            fixture.detectChanges();
+            expect(fixture.nativeElement.children[0].children[0].classList[0]).toEqual('btn');
+            expect(fixture.nativeElement.children[0].children[0].classList[1]).toEqual('buttonStyle');
+            expect(fixture.nativeElement.children[0].children[0].children[0].classList[0]).toEqual('contentStyle');
+            expect(fixture.nativeElement.children[0].children[1].classList[0]).toEqual('btn');
+            expect(fixture.nativeElement.children[0].children[1].classList[1]).toEqual('btn-light');
+            expect(fixture.nativeElement.children[0].children[1].children[0].classList[0]).toEqual('fa');
+            expect(fixture.nativeElement.children[0].children[1].children[0].classList[1]).toEqual('fa-warning');
+            expect(fixture.nativeElement.children[0].children[1].children[0].classList[2]).toEqual('text-dark');
+            const alertSpy = spyOn(window, 'alert').and.callThrough();
+            fixture.nativeElement.children[0].children[0].click();
+            expect(alertSpy.calls.count()).toEqual(1);
+            done();
+        },1000);
     });
 });

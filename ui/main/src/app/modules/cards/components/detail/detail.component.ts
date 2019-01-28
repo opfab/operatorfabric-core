@@ -6,7 +6,7 @@
  */
 
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
-import {Card, CardDetail} from '@ofModel/card.model';
+import {Action, Card, CardDetail} from '@ofModel/card.model';
 import {ThirdsService} from "../../services/thirds.service";
 import {HandlebarsService} from "../../services/handlebars.service";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
@@ -35,6 +35,7 @@ export class DetailComponent implements OnInit {
                 this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                 setTimeout(() => { // wait for DOM rendering
                     this.reinsertScripts();
+                    this.bindActions()
                 });
             }
         )
@@ -57,6 +58,42 @@ export class DetailComponent implements OnInit {
             scriptCopy.async = false;
             script.parentNode.replaceChild(scriptCopy, script);
         }
+    }
+
+    bindActions(): void {
+        // lookup buttons
+        const buttons = <HTMLButtonElement[]>this.element.nativeElement.getElementsByTagName('button');
+
+        for (let button of buttons) {
+            if(button.attributes['action-id']) {
+                const actionId = button.attributes['action-id'].nodeValue;
+                if (actionId) {
+                    this.attachAction(button, this.card.actions[actionId],actionId);
+                }
+            }
+        }
+    }
+
+    attachAction(button: HTMLButtonElement, action: Action, actionId: string) {
+        button.classList.add('btn');
+        if (action.buttonStyle) {
+            for (let c of action.buttonStyle.split(' ')) {
+                button.classList.add(c);
+            }
+        }else{
+            button.classList.add('btn-light');
+        }
+        if (action.contentStyle) {
+            for (let c of action.contentStyle.split(' ')) {
+                button.children[0].classList.add(c);
+            }
+        }else{
+            button.children[0].classList.add('fa', 'fa-warning','text-dark');
+        }
+        console.log(`registering ${actionId} click event`);
+        button.addEventListener('click',(event: Event) =>{
+            alert(`${actionId} was triggered.\nAction handling is not yet implemented`);
+        });
     }
 
 }

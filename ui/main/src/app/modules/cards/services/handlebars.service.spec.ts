@@ -412,8 +412,6 @@ describe('Handlebars Services', () => {
             });
         });
         it('compile preserveSpace', ()=>{
-            const nowMoment = moment(new Date(now));
-            nowMoment.locale(translate.getBrowserLang())
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName,card)
                 .subscribe((result)=>{
@@ -424,6 +422,37 @@ describe('Handlebars Services', () => {
             calls.forEach(call=>{
                 expect(call.request.method).toBe('GET');
                 call.flush('{{preserveSpace "   "}}');
+            });
+        });
+        it('compile svg', ()=>{
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName,card)
+                .subscribe((result)=>{
+                    const lines = result.split('\n');
+                    expect(lines.length).toEqual(4);
+                    expect(lines[0]).toMatch(/<embed type="image\/svg\+xml" src="\/some\/where" id=".+" \/>/);
+                    expect(lines[1]).toMatch(/         <script>document\.getElementById\('.+'\).addEventListener\('load', function\(\){/);
+                    expect(lines[2]).toMatch(/                 svgPanZoom\(document\.getElementById\('.+'\)\);}\);/);
+                    expect(lines[3]).toMatch(/         <\/script>/);
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call=>{
+                expect(call.request.method).toBe('GET');
+                call.flush('{{{svg "/some" "/where"}}}');
+            });
+        });
+        it('compile action', ()=>{
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName,card)
+                .subscribe((result)=>{
+                    expect(result).toEqual('<button action-id="action-id"><i></i></button>');
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call=>{
+                expect(call.request.method).toBe('GET');
+                call.flush('{{{action "action-id"}}}');
             });
         });
     });

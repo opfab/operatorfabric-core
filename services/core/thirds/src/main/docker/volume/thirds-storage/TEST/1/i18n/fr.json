@@ -7,6 +7,9 @@
         "first": "Premier onglet",
         "second": "Deuxième onglet"
       }
+    },
+    "action":{
+      "first": "Première action"
     }
   }
 }

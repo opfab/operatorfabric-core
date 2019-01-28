@@ -7,7 +7,7 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Card, CardDetail} from "@ofModel/card.model";
+import {Action, ActionType, Card, CardDetail} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
 //
@@ -62,6 +62,11 @@ export function getOneRandomCard(card?:any): Card {
     card = card?card:{};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
+    let actions:Map<Action> = new Map();
+    actions['visible1']= new Action(ActionType.URI,getRandomI18nData());
+    actions['visible2']= new Action(ActionType.URI,getRandomI18nData());
+    actions['hidden1']= new Action(ActionType.URI,getRandomI18nData(),true,'buttonStyle', 'contentStyle');
+    actions['hidden2']= new Action(ActionType.URI,getRandomI18nData(),true);
     const oneCard = new Card(getRandomAlphanumericValue(3, 24),
         card.id?card.id:getRandomAlphanumericValue(3, 24),
         card.publisher?card.publisher:'testPublisher',
@@ -77,7 +82,8 @@ export function getOneRandomCard(card?:any): Card {
         getRandomI18nData(),
         card.data?card.data:{data: "data"},
         [new CardDetail(null, getRandomI18nData(),null,"template1",null),
-            new CardDetail(null, getRandomI18nData(),null,"template2",null),]
+            new CardDetail(null, getRandomI18nData(),null,"template2",null),],
+        actions
     );
     return oneCard;
 }
