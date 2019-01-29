@@ -11,7 +11,6 @@ import {LightCard} from '@ofModel/light-card.model';
 @Component({
   selector: 'of-card-list',
   templateUrl: './card-list.component.html',
-  styleUrls: ['./card-list.component.scss']
 })
 export class CardListComponent  {
 

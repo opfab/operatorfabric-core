@@ -8,25 +8,11 @@
 package org.lfenergy.operatorfabric.cards.consultation.config.webflux;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsController;
-import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsGetParameters;
-import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
-import org.lfenergy.operatorfabric.springtools.config.oauth.OpFabJwtAuthenticationToken;
-import org.lfenergy.operatorfabric.users.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.config.WebFluxConfigurerComposite;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.*;
-import reactor.core.publisher.Mono;
-
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
-import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 /**
  * Webflux configuration. configures:
@@ -40,16 +26,6 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @Slf4j
 @Configuration
 public class WebFluxConfig {
-
-    private final CardRepository cardRepository;
-
-    /**
-     * Controller injection
-     */
-    @Autowired
-    public WebFluxConfig(CardRepository cardRepository) {
-        this.cardRepository = cardRepository;
-    }
 
     /**
      * CORS configuration

@@ -14,7 +14,6 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 @Component({
     selector: 'of-detail',
     templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.css']
 })
 export class DetailComponent implements OnInit {
     public active = false;

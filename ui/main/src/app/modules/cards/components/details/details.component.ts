@@ -21,7 +21,6 @@ import {Card} from "@ofModel/card.model";
 @Component({
     selector: 'of-details',
     templateUrl: './details.component.html',
-    styleUrls: ['./details.component.css']
 })
 export class DetailsComponent implements AfterViewInit, OnChanges {
 

@@ -128,9 +128,8 @@ export class HandlebarsService {
 
     private registerSort() {
         Handlebars.registerHelper('sort', function () {
-            let args = [],
-                options = arguments[arguments.length - 1];
-            for (var index = 0; index < arguments.length - 1; index++) {
+            let args = [];
+            for (let index = 0; index < arguments.length - 1; index++) {
                 args.push(arguments[index]);
             }
             const context: any | any[] = args[0];
@@ -144,7 +143,7 @@ export class HandlebarsService {
                 } else {
                     isObject = true;
                     arrayToSort = [];
-                    for (var property in context) {
+                    for (let property in context) {
                         if (context.hasOwnProperty(property)) {
                             if (typeof context[property] == 'object') {
                                 arrayToSort.push({templatedObjectkey: property, ...context[property]});
@@ -171,9 +170,9 @@ export class HandlebarsService {
 
     private registerI18n() {
         Handlebars.registerHelper('i18n', (...fctArgs) => {
-            var args = [],
+            let args = [],
                 options = fctArgs[fctArgs.length - 1];
-            for (var i = 0; i < fctArgs.length - 1; i++) {
+            for (let i = 0; i < fctArgs.length - 1; i++) {
                 args.push(fctArgs[i]);
             }
 
@@ -183,7 +182,7 @@ export class HandlebarsService {
                 i18nParams = args[0].parameters;
             } else {
                 i18nKey = "";
-                for (var i = 0; i < args.length; i++) {
+                for (let i = 0; i < args.length; i++) {
                     if (i18nKey)
                         i18nKey += "."
                     i18nKey += args[i];
@@ -198,13 +197,12 @@ export class HandlebarsService {
     private registerSvg() {
         const svgUid = Guid.create().toString();
         Handlebars.registerHelper('svg', function () {
-            var args = [],
-                options = arguments[arguments.length - 1];
-            for (var i = 0; i < arguments.length - 1; i++) {
+            let args = [];
+            for (let i = 0; i < arguments.length - 1; i++) {
                 args.push(arguments[i]);
             }
-            var imageUrl = "";
-            for (var i = 0; i < args.length; i++) {
+            let imageUrl = "";
+            for (let i = 0; i < args.length; i++) {
                 imageUrl += args[i];
             }
             return `<embed type="image/svg+xml" src="${imageUrl}" id="${svgUid}" />
@@ -216,16 +214,14 @@ export class HandlebarsService {
 
     private registerCardAction() {
         Handlebars.registerHelper('action', function () {
-            var args = [],
-                options = arguments[arguments.length - 1];
-            for (var i = 0; i < arguments.length - 1; i++) {
+            let args = [];
+            for (let i = 0; i < arguments.length - 1; i++) {
                 args.push(arguments[i]);
             }
-            var actionId = "";
-            for (var i = 0; i < args.length; i++) {
+            let actionId = "";
+            for (let i = 0; i < args.length; i++) {
                 actionId += args[i];
             }
-            // return '<ap-action action="card.actions[\'actionId\']" card="card"></ap-action>';
             return `<button action-id="${actionId}"><i></i></button>`
         });
     }
