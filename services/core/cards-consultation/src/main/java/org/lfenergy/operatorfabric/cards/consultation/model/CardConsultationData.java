@@ -62,10 +62,10 @@ public class CardConsultationData implements Card {
     private List<String> tags;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private Map<String,? extends Action> actions = Collections.emptyMap();;
+    private Map<String,? extends Action> actions = Collections.emptyMap();
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<? extends Detail> details = Collections.emptyList();;
+    private List<? extends Detail> details = Collections.emptyList();
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
@@ -77,8 +77,8 @@ public class CardConsultationData implements Card {
     private List<String> userRecipients = Collections.emptyList();
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> groupRecipients = Collections.emptyList();;
+    private List<String> groupRecipients = Collections.emptyList();
     @Transient @JsonIgnore
     @Singular
-    private List<String> orphanedUsers = Collections.emptyList();;
+    private List<String> orphanedUsers = Collections.emptyList();
 }

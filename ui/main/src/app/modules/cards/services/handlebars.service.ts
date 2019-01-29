@@ -110,7 +110,7 @@ export class HandlebarsService {
                 case "*": result = lvalue * rvalue; break;
                 case "/": result = lvalue / rvalue; break;
                 case "%": result = lvalue % rvalue; break;
-            };
+            }
             return result;
         });
     }

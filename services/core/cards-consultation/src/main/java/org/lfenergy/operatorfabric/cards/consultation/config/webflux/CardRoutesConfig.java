@@ -43,11 +43,9 @@ public class CardRoutesConfig {
 
 
     private HandlerFunction<ServerResponse> cardGetRoute() {
-        return request ->{
-            return cardRepository.findById(request.pathVariable("id"))
+        return request -> cardRepository.findById(request.pathVariable("id"))
                     .flatMap(card-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
                     .switchIfEmpty(notFound().build());
-        };
     }
 
     private HandlerFunction<ServerResponse> cardOptionRoute() {

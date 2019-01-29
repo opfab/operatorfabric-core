@@ -49,7 +49,7 @@ export class DetailComponent implements OnInit {
         const scriptsInitialLength = scripts.length;
         for (let i = 0; i < scriptsInitialLength; i++) {
             const script = scripts[i];
-            const scriptCopy = <HTMLScriptElement>document.createElement('script');
+            const scriptCopy = document.createElement('script');
             scriptCopy.type = script.type ? script.type : 'text/javascript';
             if (script.innerHTML) {
                 scriptCopy.innerHTML = script.innerHTML;
