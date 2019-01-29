@@ -20,7 +20,7 @@ function display_usage() {
 	echo -e "types:\n"
 	echo -e "\tJAVA  : .java files"
 	echo -e "\tTS  : .ts (TypeScript) files"
-	echo -e "\tCSS  : .css files"
+	echo -e "\tCSS  : .css, .scss files"
 	echo -e "\tHTML  : .htm, .html files"
 }
 delete=false
@@ -30,7 +30,7 @@ key="$1"
 case $key in
     CSS)
     header="JAVA_LICENSE_HEADER.txt"
-    file_extensions=( css )
+    file_extensions=( css scss )
     shift # past argument
     ;;
     JAVA)
