@@ -8,6 +8,7 @@
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -61,93 +62,74 @@ class CardControllerShould {
 
     @AfterEach
     public void cleanAfter() {
-        cardRepository.deleteAll().subscribe();
+//        cardRepository.deleteAll().subscribe();
         archiveRepository.deleteAll().subscribe();
     }
 
     @Test
     void createSyncCards() {
         this.webTestClient.post().uri("/cards").accept(MediaType.APPLICATION_JSON)
-           .body(generateCards(), CardPublicationData.class)
-           .exchange()
-           .expectBody(CardCreationReportData.class)
-           .value(hasProperty("count",is(5)));
-        await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(4));
-        await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(5));
-    }
+                .body(generateCards(), CardPublicationData.class)
+                .exchange()
+                .expectBody(CardCreationReportData.class)
+                .value(hasProperty("count", is(5)));
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> Assertions.assertThat(cardRepository.count().block()).isEqualTo(4));
 
-    private boolean checkCardCount(long expectedCount) {
-        Long count = cardRepository.count().block();
-        if (count == expectedCount)
-            return true;
-        else {
-            log.warn("Expected card count " + expectedCount + " but was " + count);
-            return false;
-        }
-    }
-
-    private boolean checkArchiveCount(long expectedCount) {
-        Long count = archiveRepository.count().block();
-        if (count == expectedCount)
-            return true;
-        else {
-            log.warn("Expected card count " + expectedCount + " but was " + count);
-            return false;
-        }
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> Assertions.assertThat(archiveRepository.count().block()).isEqualTo(5));
     }
 
     private Flux<CardPublicationData> generateCards() {
         return Flux.just(
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_1")
-              .publisherVersion("O")
-              .processId("PROCESS_1")
-              .severity(SeverityEnum.ALARM)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .build(),
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_2")
-              .publisherVersion("O")
-              .processId("PROCESS_1")
-              .severity(SeverityEnum.NOTIFICATION)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .build(),
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_2")
-              .publisherVersion("O")
-              .processId("PROCESS_2")
-              .severity(SeverityEnum.QUESTION)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .build(),
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_1")
-              .publisherVersion("O")
-              .processId("PROCESS_2")
-              .severity(SeverityEnum.NOTIFICATION)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .build(),
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_1")
-              .publisherVersion("O")
-              .processId("PROCESS_1")
-              .severity(SeverityEnum.NOTIFICATION)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .build()
+                CardPublicationData.builder()
+                        .publisher("PUBLISHER_1")
+                        .publisherVersion("O")
+                        .processId("PROCESS_1")
+                        .severity(SeverityEnum.ALARM)
+                        .title(I18nPublicationData.builder().key("title").build())
+                        .summary(I18nPublicationData.builder().key("summary").build())
+                        .startDate(Instant.now().toEpochMilli())
+                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .build(),
+                CardPublicationData.builder()
+                        .publisher("PUBLISHER_2")
+                        .publisherVersion("O")
+                        .processId("PROCESS_1")
+                        .severity(SeverityEnum.NOTIFICATION)
+                        .title(I18nPublicationData.builder().key("title").build())
+                        .summary(I18nPublicationData.builder().key("summary").build())
+                        .startDate(Instant.now().toEpochMilli())
+                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .build(),
+                CardPublicationData.builder()
+                        .publisher("PUBLISHER_2")
+                        .publisherVersion("O")
+                        .processId("PROCESS_2")
+                        .severity(SeverityEnum.QUESTION)
+                        .title(I18nPublicationData.builder().key("title").build())
+                        .summary(I18nPublicationData.builder().key("summary").build())
+                        .startDate(Instant.now().toEpochMilli())
+                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .build(),
+                CardPublicationData.builder()
+                        .publisher("PUBLISHER_1")
+                        .publisherVersion("O")
+                        .processId("PROCESS_2")
+                        .severity(SeverityEnum.NOTIFICATION)
+                        .title(I18nPublicationData.builder().key("title").build())
+                        .summary(I18nPublicationData.builder().key("summary").build())
+                        .startDate(Instant.now().toEpochMilli())
+                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .build(),
+                CardPublicationData.builder()
+                        .publisher("PUBLISHER_1")
+                        .publisherVersion("O")
+                        .processId("PROCESS_1")
+                        .severity(SeverityEnum.NOTIFICATION)
+                        .title(I18nPublicationData.builder().key("title").build())
+                        .summary(I18nPublicationData.builder().key("summary").build())
+                        .startDate(Instant.now().toEpochMilli())
+                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .build()
         );
     }
 }

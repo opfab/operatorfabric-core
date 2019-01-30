@@ -76,5 +76,6 @@ public class CardRoutesShould {
         .expectBody(CardConsultationData.class).value(card->{
             assertThat(card).isEqualToComparingFieldByFieldRecursively(simpleCard);
         });
+        repository.deleteAll().subscribe();
     }
 }
