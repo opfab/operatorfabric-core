@@ -33,7 +33,6 @@ export class HandlebarsService {
         this.registerI18n();
         this.registerSort();
         this.registerSlice();
-        this.registerSliceEnd();
         this.registerArrayAtIndex();
         this.registerMath();
         this.registerSplit();
@@ -122,14 +121,19 @@ export class HandlebarsService {
     }
 
     private registerSlice() {
-        Handlebars.registerHelper('slice', function (value, from, to, options) {
-            return value.slice(from, to);
-        });
-    }
-
-    private registerSliceEnd() {
-        Handlebars.registerHelper('sliceEnd', function (value, from, options) {
-            return value.slice(from, value.length);
+        Handlebars.registerHelper('slice', function () {
+            let args = [];
+            for (let index = 0; index < arguments.length - 1; index++) {
+                args.push(arguments[index]);
+            }
+            const value = args[0]
+            const from = args[1];
+            let to = null;
+            if(args.length>=3) {
+                to = args[2];
+                return value.slice(from, to);
+            }
+            return value.slice(from);
         });
     }
 

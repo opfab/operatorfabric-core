@@ -285,7 +285,7 @@ describe('Handlebars Services', () => {
             });
         });
 
-        it('compile sliceEnd', ()=>{
+        it('compile slice to end', ()=>{
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName,card)
                 .subscribe((result)=>expect(result).toEqual('2 3 4 5 '));
@@ -293,7 +293,7 @@ describe('Handlebars Services', () => {
             expect(calls.length).toEqual(1);
             calls.forEach(call=>{
                 expect(call.request.method).toBe('GET');
-                call.flush('{{#each (sliceEnd data.numbers 2)}}{{this}} {{/each}}');
+                call.flush('{{#each (slice data.numbers 2)}}{{this}} {{/each}}');
             });
         });
 
