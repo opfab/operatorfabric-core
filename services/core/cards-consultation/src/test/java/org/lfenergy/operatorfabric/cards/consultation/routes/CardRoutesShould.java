@@ -9,6 +9,7 @@ package org.lfenergy.operatorfabric.cards.consultation.routes;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,8 +48,8 @@ public class CardRoutesShould {
     @Autowired
     private CardRepository repository;
 
-    @AfterAll
-    public void cleanCardRepository(){
+    @AfterEach
+    public  void cleanCardRepository(){
         repository.deleteAll().subscribe();
 
     }
