@@ -8,8 +8,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.routes;
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +35,6 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.creat
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardRoutesConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ActiveProfiles(profiles = {"native", "test"})
-//@Disabled
 @Tag("end-to-end")
 @Tag("mongo")
 @Slf4j
@@ -49,6 +47,11 @@ public class CardRoutesShould {
     @Autowired
     private CardRepository repository;
 
+    @AfterAll
+    public void cleanCardRepository(){
+        repository.deleteAll().subscribe();
+
+    }
     @Test
     public void respondOkIfOptions(){
         assertThat(cardRoutes).isNotNull();
@@ -76,6 +79,5 @@ public class CardRoutesShould {
         .expectBody(CardConsultationData.class).value(card->{
             assertThat(card).isEqualToComparingFieldByFieldRecursively(simpleCard);
         });
-        repository.deleteAll().subscribe();
     }
 }
