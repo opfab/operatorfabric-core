@@ -30,6 +30,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "../../translate.config";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {ServicesModule} from "@ofServices/services.module";
+import {sortByStartDate} from "@ofStates/light-card.state";
 
 describe('FeedComponent', () => {
     let component: FeedComponent;
@@ -124,15 +125,15 @@ describe('FeedComponent', () => {
     it('should create a list with two cards when two arrays of one card are dispatched' +
         ' 1', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const oneCard = getOneRandomLigthCard();
-        const anotherCard = getOneRandomLigthCard();
+        const oneCard = getOneRandomLigthCard({startDate:Date.now()});
+        const anotherCard = getOneRandomLigthCard({startDate:Date.now()-3600000});
         const action = new LoadLightCardsSuccess({lightCards: [oneCard]});
         store.dispatch(action);
         const action0 = new LoadLightCardsSuccess({lightCards: [anotherCard]});
         store.dispatch(action0);
         const lightCards$ = store.select(fromStore.selectAllLightCards);
         lightCards$.subscribe(lightCard => {
-            expect(lightCard).toEqual([oneCard, anotherCard]);
+            expect(lightCard).toEqual([anotherCard,oneCard]);
         });
         expect(store.dispatch).toHaveBeenCalledWith(action);
         expect(component).toBeTruthy();

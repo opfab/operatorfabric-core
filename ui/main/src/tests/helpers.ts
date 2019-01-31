@@ -38,17 +38,18 @@ export function getOneRandomAddCardOperation(): CardOperation {
 //     return <E>keys[randomIndex];
 // }
 
-export function getOneRandomLigthCard(): LightCard {
+export function getOneRandomLigthCard(card?:any): LightCard {
+    card = card?card:{};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     const oneCard = new LightCard(getRandomAlphanumericValue(3, 24),
-        getRandomAlphanumericValue(3, 24),
-        'testPublisher',
-        getRandomAlphanumericValue(3, 24),
-        today,
-        startTime,
-        startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        Severity.QUESTION,
+        card.id?card.id:getRandomAlphanumericValue(3, 24),
+        card.publisher?card.publisher:'testPublisher',
+        card.publisherVersion? card.publisherVersion:getRandomAlphanumericValue(3, 24),
+        card.publishDate?card.publishDate:today,
+        card.startDate? card.startDate:startTime,
+        card.endDate?card.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        card.severity?card.severity:Severity.QUESTION,
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
@@ -72,7 +73,7 @@ export function getOneRandomCard(card?:any): Card {
         card.publisher?card.publisher:'testPublisher',
         card.publisherVersion?card.publisherVersion:getRandomAlphanumericValue(3, 24),
         card.publishDate?card.publishDate:today,
-        card.startTime? card.startTime:startTime,
+        card.startDate? card.startDate:startTime,
         card.endDate?card.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         card.severity?card.severity:Severity.QUESTION,
         getRandomAlphanumericValue(3, 24),

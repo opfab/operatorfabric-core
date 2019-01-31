@@ -15,7 +15,13 @@ export interface LightCardStateEntity extends EntityState<LightCard> {
     error: string;
 }
 
-export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<LightCard>();
+export function sortByStartDate(card1: LightCard, card2: LightCard){
+    return card1.startDate - card2.startDate
+}
+
+export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<LightCard>({
+    sortComparer:sortByStartDate
+});
 
 export const lightCardInitialState: LightCardStateEntity = LightCardAdapter.getInitialState(
     {
