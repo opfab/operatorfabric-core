@@ -330,10 +330,8 @@ bundle
 │   └──tab.css
 │   └──emergency.css
 └──i18n
-│   └──en
-│       └──i18n.properties
-│   └──fr
-│       └──i18n.properties
+│   └──en.json
+│   └──fr.json
 └──media
 │   └──en
 │       └──sound.opus
