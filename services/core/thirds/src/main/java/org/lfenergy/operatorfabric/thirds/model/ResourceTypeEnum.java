@@ -17,6 +17,7 @@ import lombok.Getter;
  *     <dt>MEDIA</dt><dd>Media sound resource type</dd>
  *     <dt>TEMPLATE</dt><dd>Card template resource type</dd>
  *     <dt>I18N</dt><dd>i18n file resource type</dd>
+ *     <dt>MENU_ITEM</dt><dd>Menu item resource type</dd>
  * </dl>
  *
  * @author David Binder
@@ -27,7 +28,8 @@ public enum ResourceTypeEnum {
   CSS("css", ".css", false),
   MEDIA("media", "", true),
   TEMPLATE("template", ".handlebars", true),
-  I18N("i18n", ".json", true);
+  I18N("i18n", ".json", true),
+  MENU_ITEM("menu","",true);
 
   /**
    * containing files subfolder name

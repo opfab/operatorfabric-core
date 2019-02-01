@@ -8,8 +8,7 @@
 package org.lfenergy.operatorfabric.thirds.config.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.lfenergy.operatorfabric.thirds.model.ThirdMedias;
-import org.lfenergy.operatorfabric.thirds.model.ThirdMediasData;
+import org.lfenergy.operatorfabric.thirds.model.*;
 
 /**
  * Jackson (JSON) Business Module configuration
@@ -20,5 +19,6 @@ public class ThirdsModule extends SimpleModule {
 
     public ThirdsModule() {
         addAbstractTypeMapping(ThirdMedias.class, ThirdMediasData.class);
+        addAbstractTypeMapping(ThirdMenuEntry.class, ThirdMenuEntryData.class);
     }
 }

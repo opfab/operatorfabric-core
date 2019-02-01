@@ -37,7 +37,6 @@ import java.util.List;
 @Slf4j
 public class ThirdsController implements ThirdsApi {
 
-//  @Autowired
   private ThirdsService service;
 
   @Autowired

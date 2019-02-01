@@ -9,6 +9,7 @@ package org.lfenergy.operatorfabric.thirds.model;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,9 @@ public class ThirdData implements Third {
   private Map<String,ThirdMediasData> mediasData;
   @Singular
   private List<String> locales;
+  @Singular("menuEntryData")
+  private List<? extends ThirdMenuEntry> menuEntriesData;
+  private String i18nLabelKey;
 
   public Map<String, ? extends ThirdMedias> getMedias(){
     return mediasData;
@@ -43,6 +47,14 @@ public class ThirdData implements Third {
 
   public void setMedias(Map<String, ? extends ThirdMedias> mediasData){
     this.mediasData = new HashMap<>((Map<String,ThirdMediasData>) mediasData);
+  }
+
+  public List<? extends ThirdMenuEntry> getMenuEntries(){
+    return menuEntriesData;
+  }
+
+  public void setMenuEntries(List<? extends ThirdMenuEntry> menuEntries){
+    this.menuEntriesData = new ArrayList<>((List < ThirdMenuEntryData >) menuEntries);
   }
 
 }
