@@ -14,6 +14,7 @@ import {TokenInjector} from './interceptors.service';
 import {CardService} from './card.service';
 import {GuidService} from "@ofServices/guid.service";
 import {TimeService} from "@ofServices/time.service";
+import {ThirdsService} from "@ofServices/thirds.service";
 
 @NgModule({
     imports: [
@@ -23,6 +24,7 @@ import {TimeService} from "@ofServices/time.service";
         CardService,
         AuthenticationService,
         TimeService,
+        ThirdsService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInjector,

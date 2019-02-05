@@ -12,7 +12,7 @@ import {CardDetailsComponent} from "./components/card-details/card-details.compo
 import {DetailsComponent} from "./components/details/details.component";
 import {DetailComponent} from "./components/detail/detail.component";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {ThirdsI18nLoaderFactory, ThirdsService} from "./services/thirds.service";
+import {ThirdsI18nLoaderFactory, ThirdsService} from "../../services/thirds.service";
 import {HandlebarsService} from "./services/handlebars.service";
 
 @NgModule({
@@ -28,7 +28,7 @@ import {HandlebarsService} from "./services/handlebars.service";
       })
   ],
     exports: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
-    providers: [ThirdsService, HandlebarsService]
+    providers: [HandlebarsService]
 })
 export class CardsModule {
     static forRoot(): ModuleWithProviders{

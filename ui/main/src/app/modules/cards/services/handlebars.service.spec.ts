@@ -7,7 +7,7 @@
 
 import {getTestBed, TestBed} from '@angular/core/testing';
 
-import {ThirdsI18nLoaderFactory, ThirdsService} from './thirds.service';
+import {ThirdsI18nLoaderFactory, ThirdsService} from '../../../services/thirds.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";

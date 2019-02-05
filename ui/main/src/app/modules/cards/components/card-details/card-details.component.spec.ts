@@ -16,7 +16,7 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {LoadCardSuccess} from "@ofActions/card.actions";
 import {getOneRandomCard} from "@tests/helpers";
 import {By} from "@angular/platform-browser";
-import {ThirdsI18nLoaderFactory, ThirdsService} from "../../services/thirds.service";
+import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {HandlebarsService} from "../../services/handlebars.service";

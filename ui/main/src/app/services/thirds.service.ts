@@ -7,7 +7,7 @@
 
 import {Injectable, Injector, OnInit} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {environment} from "@env/environment";
+import {environment} from "../../environments/environment";
 import {AuthenticationService} from "@ofServices/authentication.service";
 import {empty, from, merge, Observable, of, throwError} from "rxjs";
 import {
@@ -16,13 +16,14 @@ import {
     TranslateLoader,
     TranslateService
 } from "@ngx-translate/core";
-import {Map} from "@ofModel/map";
+import {Map} from "../model/map";
 import {catchError, map, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {selectLastCards} from "@ofSelectors/light-card.selectors";
-import {LightCard} from "@ofModel/light-card.model";
+import {AppState} from "../store/index";
+import {selectLastCards} from "../store/selectors/light-card.selectors";
+import {LightCard} from "../model/light-card.model";
+import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 
 @Injectable()
 export class ThirdsService {
@@ -83,6 +84,28 @@ export class ThirdsService {
         );
 
         return result;
+    }
+
+    computeThirdsMenu(): Observable<ThirdMenu[]>{
+        // return of([new ThirdMenu('tLabel1','t1',[
+        //     new ThirdMenuEntry('id1','label1','link1'),
+        //     new ThirdMenuEntry('id2','label2','link2'),
+        // ]),
+        //     new ThirdMenu('tLabel2','t2',[
+        //         new ThirdMenuEntry('id3','label3','link3'),
+        //     ])])
+        return this.httpClient.get<Third[]>(`${this.thirdsUrl}/`, {
+            headers: this.authenticationService.getSecurityHeader()
+        }).pipe(
+            switchMap(ts=>from(ts)),
+            map(t=>
+                new ThirdMenu(t.label,t.name,t.entries)
+            ),
+            reduce((menus:ThirdMenu[],menu:ThirdMenu)=>{
+                menus.push(menu);
+                return menus;
+            },[])
+        );
     }
 
     init(): void {

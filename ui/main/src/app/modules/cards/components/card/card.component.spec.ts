@@ -17,7 +17,7 @@ import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
 import {of} from "rxjs";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {ThirdsService} from "../../services/thirds.service";
+import {ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 
 describe('CardComponent', () => {

@@ -9,16 +9,18 @@ import {getTestBed, TestBed} from '@angular/core/testing';
 
 import {ThirdsI18nLoaderFactory, ThirdsService} from './thirds.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
-import {environment} from '@env/environment';
+import {environment} from '../../environments/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
-import {appReducer, AppState} from "@ofStore/index";
-import {getOneRandomLigthCard} from "@tests/helpers";
+import {appReducer, AppState} from "../store/index";
+import {getOneRandomLigthCard} from "../../tests/helpers";
 import * as _ from 'lodash';
-import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
-import {LightCard} from "@ofModel/light-card.model";
-import {ServicesModule} from "@ofServices/services.module";
+import {LoadLightCardsSuccess} from "../store/actions/light-card.actions";
+import {LightCard} from "../model/light-card.model";
+import {AuthenticationService} from "@ofServices/authentication.service";
+import {GuidService} from "@ofServices/guid.service";
+import {Third, ThirdMenuEntry} from "@ofModel/thirds.model";
 
 describe('Thirds Services', () => {
     let injector: TestBed;
@@ -29,7 +31,6 @@ describe('Thirds Services', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                ServicesModule,
                 StoreModule.forRoot(appReducer),
                 HttpClientTestingModule,
                 RouterTestingModule,
@@ -44,6 +45,8 @@ describe('Thirds Services', () => {
             providers: [
                 {provide: store, useClass: Store},
                 ThirdsService,
+                AuthenticationService,
+                GuidService
             ]
         });
         injector = getTestBed();
@@ -66,20 +69,67 @@ describe('Thirds Services', () => {
     it('should be created', () => {
         expect(thirdsService).toBeTruthy();
     });
+    describe('#computeThirdsMenu', () => {
+        it('should return error on network problem', () => {
+            thirdsService.computeThirdsMenu().subscribe(
+                result => fail('expected error not raised'),
+                error => expect(error.status).toBe(0));
+            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/`);
+            expect(calls.length).toEqual(1);
+            calls[0].error(new ErrorEvent('Network error'))
+        });
+        it('should return error on network problem', () => {
+            thirdsService.computeThirdsMenu().subscribe(
+                result => {
+                    expect(result.length).toBe(2);
+                    expect(result[0].label).toBe('tLabel1');
+                    expect(result[0].id).toBe('t1');
+                    expect(result[1].label).toBe('tLabel2');
+                    expect(result[1].id).toBe('t2');
+                    expect(result[0].entries.length).toBe(2);
+                    expect(result[1].entries.length).toBe(1);
+                    expect(result[0].entries[0].label).toBe('label1');
+                    expect(result[0].entries[0].id).toBe('id1');
+                    expect(result[0].entries[0].link).toBe('link1');
+                    expect(result[0].entries[1].label).toBe('label2');
+                    expect(result[0].entries[1].id).toBe('id2');
+                    expect(result[0].entries[1].link).toBe('link2');
+                    expect(result[1].entries[0].label).toBe('label3');
+                    expect(result[1].entries[0].id).toBe('id3');
+                    expect(result[1].entries[0].link).toBe('link3');
+                });
+            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/`);
+            expect(calls.length).toEqual(1);
+            calls[0].flush([
+                new Third(
+                    't1', '', 'tLabel1', [], [], [],
+                    [new ThirdMenuEntry('id1', 'label1', 'link1'),
+                        new ThirdMenuEntry('id2', 'label2', 'link2')]
+                ),
+                new Third(
+                    't2', '', 'tLabel2', [], [], [],
+                    [new ThirdMenuEntry('id3', 'label3', 'link3')]
+                )
+            ])
+        });
+
+    });
     describe('#fetchHbsTemplate', () => {
-        const templates = {en:'English template {{card.data.name}}',
-        fr:'Template Français {{card.data.name}}'};
-       it('should return different files for each language',()=>{
-           thirdsService.fetchHbsTemplate('testPublisher','0','testTemplate','en')
-               .subscribe((result)=>expect(result).toEqual('English template {{card.data.name}}'))
-           thirdsService.fetchHbsTemplate('testPublisher','0','testTemplate','fr')
-               .subscribe((result)=>expect(result).toEqual('Template Français {{card.data.name}}'))
-           let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/templates/testTemplate`)
-           expect(calls.length).toEqual(2);
-           calls.forEach(call=>{
-               expect(call.request.method).toBe('GET');
-               call.flush(templates[call.request.params.get('locale')]);
-           })
+        const templates = {
+            en: 'English template {{card.data.name}}',
+            fr: 'Template Français {{card.data.name}}'
+        };
+        it('should return different files for each language', () => {
+            thirdsService.fetchHbsTemplate('testPublisher', '0', 'testTemplate', 'en')
+                .subscribe((result) => expect(result).toEqual('English template {{card.data.name}}'))
+            thirdsService.fetchHbsTemplate('testPublisher', '0', 'testTemplate', 'fr')
+                .subscribe((result) => expect(result).toEqual('Template Français {{card.data.name}}'))
+            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/templates/testTemplate`)
+            expect(calls.length).toEqual(2);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush(templates[call.request.params.get('locale')]);
+            })
         })
     });
     describe('#fetchI18nJson', () => {

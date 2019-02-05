@@ -9,7 +9,7 @@ import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testin
 
 import { DetailComponent } from './detail.component';
 import {getOneRandomCard} from '@tests/helpers';
-import {ThirdsI18nLoaderFactory, ThirdsService} from "../../services/thirds.service";
+import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {StoreModule} from "@ngrx/store";

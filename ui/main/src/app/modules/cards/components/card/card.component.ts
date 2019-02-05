@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ThirdsService} from "../../services/thirds.service";
+import {ThirdsService} from "../../../../services/thirds.service";
 
 @Component({
     selector: 'of-card',

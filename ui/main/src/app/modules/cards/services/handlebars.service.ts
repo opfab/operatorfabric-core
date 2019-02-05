@@ -14,7 +14,7 @@ import * as moment from 'moment';
 import {Map} from "@ofModel/map";
 import {Observable, of} from "rxjs";
 import {map, tap} from "rxjs/operators";
-import {ThirdsService} from "./thirds.service";
+import {ThirdsService} from "../../../services/thirds.service";
 import {Guid} from "guid-typescript";
 
 @Injectable()

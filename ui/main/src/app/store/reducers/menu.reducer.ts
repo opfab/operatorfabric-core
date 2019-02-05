@@ -6,33 +6,33 @@
  */
 
 import {LightCardStateEntity} from '@ofStates/light-card.state';
-import {cardInitialState, CardState} from "@ofStates/card.state";
-import {CardActions, CardActionTypes} from "@ofActions/card.actions";
+import {menuInitialState, MenuState} from "@ofStates/menu.state";
+import {MenuActions, MenuActionTypes} from "@ofActions/menu.actions";
 
 export function reducer(
-    state = cardInitialState,
-    action: CardActions
-): CardState {
+    state = menuInitialState,
+    action: MenuActions
+): MenuState {
     switch (action.type) {
-        case CardActionTypes.LoadCard: {
+        case MenuActionTypes.LoadMenu: {
             return {
                 ...state,
                 loading: true
             };
         }
-        case CardActionTypes.LoadCardSuccess: {
+        case MenuActionTypes.LoadMenuSuccess: {
             return {
                 ...state,
-                selected: action.payload.card,
+                menu: action.payload.menu,
                 loading: false
             };
         }
 
-        case CardActionTypes.LoadCardFailure: {
+        case MenuActionTypes.LoadMenuFailure: {
             return {
                 ...state,
                 loading: false,
-                error: `error while loading a Card: '${action.payload.error}'`
+                error: `error while loading a single lightCard: '${action.payload.error}'`
             };
         }
         default: {

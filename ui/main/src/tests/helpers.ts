@@ -10,6 +10,28 @@ import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {Action, ActionType, Card, CardDetail} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
+import {ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+
+export function getRandomMenu(): ThirdMenu[] {
+    let result: ThirdMenu[] = [];
+    let menuCount = getPositiveRandomNumberWithinRange(1,3);
+    for (let i=0;i<menuCount;i++){
+        let entries:ThirdMenuEntry[]=[];
+        let entryCount = getPositiveRandomNumberWithinRange(1,3);
+        for(let j=0;j<entryCount;j++){
+            entries.push(new ThirdMenuEntry(
+                getRandomAlphanumericValue(),
+                getRandomAlphanumericValue(),
+                getRandomAlphanumericValue()))
+        }
+        result.push(new ThirdMenu(
+            getRandomAlphanumericValue(),
+            getRandomAlphanumericValue(),
+            entries))
+    }
+    return result;
+}
+
 //
 // export function getNewLightCardInstance(): LightCard{
 //     return new LightCard();

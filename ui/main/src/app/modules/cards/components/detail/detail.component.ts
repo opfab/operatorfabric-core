@@ -7,7 +7,7 @@
 
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Action, Card, CardDetail} from '@ofModel/card.model';
-import {ThirdsService} from "../../services/thirds.service";
+import {ThirdsService} from "../../../../services/thirds.service";
 import {HandlebarsService} from "../../services/handlebars.service";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 
@@ -89,7 +89,6 @@ export class DetailComponent implements OnInit {
         }else{
             button.children[0].classList.add('fa', 'fa-warning','text-dark');
         }
-        console.log(`registering ${actionId} click event`);
         button.addEventListener('click',(event: Event) =>{
             alert(`${actionId} was triggered.\nAction handling is not yet implemented`);
         });
