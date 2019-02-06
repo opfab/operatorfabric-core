@@ -35,7 +35,6 @@ export class CardComponent implements OnInit{
     }
 
     ngOnInit() {
-        this.thirds.init()
         this._i18nPrefix = this.lightCard.publisher+'.'+this.lightCard.publisherVersion+'.'
         this.store.select(selectCurrentUrl).subscribe(url=>{
             if(url)

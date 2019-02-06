@@ -10,7 +10,7 @@ import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {Action, ActionType, Card, CardDetail} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
-import {ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 
 export function getRandomMenu(): ThirdMenu[] {
     let result: ThirdMenu[] = [];
@@ -20,13 +20,41 @@ export function getRandomMenu(): ThirdMenu[] {
         let entryCount = getPositiveRandomNumberWithinRange(1,3);
         for(let j=0;j<entryCount;j++){
             entries.push(new ThirdMenuEntry(
-                getRandomAlphanumericValue(),
-                getRandomAlphanumericValue(),
-                getRandomAlphanumericValue()))
+                getRandomAlphanumericValue(3,10),
+                getRandomAlphanumericValue(3,10),
+                getRandomAlphanumericValue(3,10)
+                )
+            )
         }
         result.push(new ThirdMenu(
-            getRandomAlphanumericValue(),
-            getRandomAlphanumericValue(),
+            getRandomAlphanumericValue(3,10),
+            getRandomAlphanumericValue(3,10),
+            getRandomAlphanumericValue(3,10),
+            entries))
+    }
+    return result;
+}
+
+export function getRandomThird(): Third[] {
+    let result: Third[] = [];
+    let thirdCount = getPositiveRandomNumberWithinRange(1,3);
+    for (let i=0;i<thirdCount;i++){
+        let entries:ThirdMenuEntry[]=[];
+        let entryCount = getPositiveRandomNumberWithinRange(1,3);
+        for(let j=0;j<entryCount;j++){
+            entries.push(new ThirdMenuEntry(
+                getRandomAlphanumericValue(3,10),
+                getRandomAlphanumericValue(3,10),
+                getRandomAlphanumericValue(3,10)
+            ))
+        }
+        result.push(new Third(
+            getRandomAlphanumericValue(3,10),
+            getRandomAlphanumericValue(3,10),
+            getRandomAlphanumericValue(3,10),
+            undefined,
+            undefined,
+            undefined,
             entries))
     }
     return result;

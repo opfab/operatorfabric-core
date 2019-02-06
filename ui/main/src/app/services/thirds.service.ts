@@ -5,25 +5,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Injectable, Injector, OnInit} from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {AuthenticationService} from "@ofServices/authentication.service";
 import {empty, from, merge, Observable, of, throwError} from "rxjs";
-import {
-    MissingTranslationHandler,
-    MissingTranslationHandlerParams,
-    TranslateLoader,
-    TranslateService
-} from "@ngx-translate/core";
+import {TranslateLoader, TranslateService} from "@ngx-translate/core";
 import {Map} from "../model/map";
 import {catchError, map, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
-import {selectLastCards} from "../store/selectors/light-card.selectors";
 import {LightCard} from "../model/light-card.model";
-import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import {Third, ThirdMenu} from "@ofModel/thirds.model";
 
 @Injectable()
 export class ThirdsService {
@@ -99,7 +93,7 @@ export class ThirdsService {
         }).pipe(
             switchMap(ts=>from(ts)),
             map(t=>
-                new ThirdMenu(t.label,t.name,t.entries)
+                new ThirdMenu(t.name, t.version, t.i18nLabelKey, t.menuEntries)
             ),
             reduce((menus:ThirdMenu[],menu:ThirdMenu)=>{
                 menus.push(menu);
@@ -108,52 +102,64 @@ export class ThirdsService {
         );
     }
 
-    init(): void {
-        if(this.initiated) return;
-        this.store.select(selectLastCards)
-            .pipe(
-                switchMap((cards:LightCard[])=>{
-                    return from(cards).pipe( // we pipe map/reduce here so that reduce scope
-                        map(card=> {  // is limited to the current card array
-                            return card.publisher + '###' + card.publisherVersion
-                        }),
-                        reduce((ids:string[],id:string)=>{
-                            ids.push(id);
-                            return ids;
-                        },[]),
-                    )
-                }),
+    loadI18nForLightCards(cards:LightCard[]){
+        let observable = from(cards).pipe(map(card=> card.publisher + '###' + card.publisherVersion));
+        return this.subscribeToLoadI18n(observable);
+    }
 
-                map(ids=>_.uniq(ids)),
-                map(ids=>{
-                    return _.difference<string>(ids,this.loading)
+    loadI18nForMenuEntries(menus:ThirdMenu[]){
+        const observable = from(menus).pipe(map(menu=> menu.id + '###' + menu.version));
+        return this.subscribeToLoadI18n(observable);
+    }
+
+    private subscribeToLoadI18n(observable) {
+        return observable
+            .pipe(
+                reduce((ids: string[], id: string) => {
+                    ids.push(id);
+                    return ids;
+                }, []),
+                map((ids:string[]) => _.uniq(ids)),
+                map((ids:string[]) => {
+                    return _.difference<string>(ids, this.loading)
                 }),
-                switchMap(ids => {
+                switchMap((ids:string[]) => {
                     return from(_.difference<string>(ids, this.loaded))
                 }),
-                tap(id=>this.loading.push(id)),
+                tap((id:string) => this.loading.push(id)),
+                tap((id:string) => console.log(`fetching i18n data for ${id}`)),
                 switchMap((id: string) => {
                     const input = id.split('###');
                     return this.fetchI18nJson(input[0], input[1], this.translate().getLangs())
-                        .pipe(map(trans=>{
-                            return {id:id,translation:trans};
-                        }),
-                            catchError(err=>{
-                                _.remove(this.loading,id);
+                        .pipe(map(trans => {
+                            console.log(`translation received for ${id}`);
+                                return {id: id, translation: trans};
+                            }),
+                            catchError(err => {
+                                console.log(`translation error for ${id}`);
+                                _.remove(this.loading, id);
                                 return throwError(err);
                             })
                         );
-                })
-            )
-            .subscribe(result=>{
-                for (let lang of this.translate().getLangs()) {
-                    if (result.translation[lang]) {
-                        this.translate().setTranslation(lang, result.translation[lang], true);
+                }),
+                catchError(error =>{
+                    console.log(error);
+                    return throwError(error);
+                }),
+                reduce((acc, val) => {return {...acc, ...val}}),
+                map(
+                    (result:any) => {
+                        console.log(`receiving i18n data`)
+                        for (let lang of this.translate().getLangs()) {
+                            if (result.translation[lang]) {
+                                this.translate().setTranslation(lang, result.translation[lang], true);
+                            }
+                        }
+                        this.loaded.push(result.id);
+                        return true;
                     }
-                }
-                this.loaded.push(result.id);
-            });
-        this.initiated = true;
+                )
+            )
     }
 
     private translate(): TranslateService {

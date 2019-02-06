@@ -8,17 +8,14 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {CardService} from '@ofServices/card.service';
+import {Observable, of, zip} from 'rxjs';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
-import {CardActionTypes, LoadCard, LoadCardFailure, LoadCardSuccess} from "@ofActions/card.actions";
-import {Card} from "@ofModel/card.model";
+import {LoadCard} from "@ofActions/card.actions";
 import {ThirdsService} from "@ofServices/thirds.service";
-import {LoadMenu, LoadMenuFailure, LoadMenuSuccess, MenuActions, MenuActionTypes} from "@ofActions/menu.actions";
+import {LoadMenuFailure, LoadMenuSuccess, MenuActionTypes} from "@ofActions/menu.actions";
 import {ThirdMenu} from "@ofModel/thirds.model";
 
-// those effects are unused for the moment
 @Injectable()
 export class MenuEffects {
 
@@ -34,9 +31,11 @@ export class MenuEffects {
         .pipe(
             ofType<LoadCard>(MenuActionTypes.LoadMenu),
             switchMap(action => this.service.computeThirdsMenu()),
-            map((menu: ThirdMenu[]) => {
-                return new LoadMenuSuccess({menu: menu});
-            }),
+            // tap(menus=>this.service.loadI18nForMenuEntries(menus)),
+            switchMap(menu=>zip(of(menu),this.service.loadI18nForMenuEntries(menu))),
+            map(array =>
+                new LoadMenuSuccess({menu: array[0]})
+            ),
             catchError((err, caught) => {
                 this.store.dispatch(new LoadMenuFailure(err));
                 return caught;

@@ -25,6 +25,7 @@ import {CardState} from "@ofStates/card.state";
 import {CustomRouterEffects} from "@ofEffects/custom-router.effects";
 import {MenuState} from "@ofStates/menu.state";
 import {MenuEffects} from "@ofEffects/menu.effects";
+import {LightCardEffects} from "@ofEffects/light-card.effects";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -40,7 +41,8 @@ export const appEffects = [
     RouterEffects,
     CustomRouterEffects,
     AuthenticationEffects,
-    MenuEffects];
+    MenuEffects,
+    LightCardEffects];
 
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,

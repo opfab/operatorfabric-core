@@ -11,6 +11,7 @@ import {LightCard} from '@ofModel/light-card.model';
 export enum LightCardActionTypes {
     LoadLightCards = '[LCard] Load',
     LoadLightCardsSuccess = '[LCard] Load Success',
+    LoadLightCardsExtendedData = '[LCard] Load Extended Data',
     LoadLightCardsFailure = '[LCard] Load Fail',
     SelectLightCard = '[LCard] Select One',
     AddLightCardFailure = '[LCard] Add Light Card Fail',
@@ -27,6 +28,14 @@ export class LoadLightCardsSuccess implements Action {
     constructor(public payload: { lightCards: LightCard[] }) {
     }
 }
+
+export class LoadLightCardsExtendedData implements Action {
+    readonly type = LightCardActionTypes.LoadLightCardsExtendedData;
+
+    constructor() {
+    }
+}
+
 export class LoadLightCardsFailure implements Action {
     readonly type = LightCardActionTypes.LoadLightCardsFailure;
 

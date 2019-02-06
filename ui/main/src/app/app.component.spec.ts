@@ -51,7 +51,7 @@ describe('AppComponent', () => {
         // avoid exceptions during construction and init of the component
         spyOn(store, 'select').and.callFake((obj) => {
             if (obj === selectCurrentUrl) {
-                // called in ngOnInit and passed to mat-tab-link
+                // called in ngOnInit and passed to mat-tab-url
                 return of('/test/url');
             }
             console.log('passed');

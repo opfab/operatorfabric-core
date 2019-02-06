@@ -11,17 +11,16 @@ import {NavbarComponent} from './navbar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
-import {appEffects, appReducer, AppState} from '@ofStore/index';
-import {from, Observable, of} from 'rxjs';
+import {appReducer, AppState} from '@ofStore/index';
+import {Observable, of} from 'rxjs';
 import {IconComponent} from "../icon/icon.component";
 import {EffectsModule} from "@ngrx/effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {ThirdsService} from "@ofServices/thirds.service";
-import {Injectable} from "@angular/core";
 import {ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
-import {root} from "rxjs/internal-compatibility";
 import {By} from "@angular/platform-browser";
 import clock = jasmine.clock;
+import {ThirdsServiceMock} from "@tests/mocks/thirds.service.mock";
 
 describe('NavbarComponent', () => {
 
@@ -39,7 +38,7 @@ describe('NavbarComponent', () => {
             ],
             declarations: [NavbarComponent, IconComponent],
             providers: [{provide: store, useClass: Store},
-                {provide: ThirdsService, useClass: MockThirdsService}]
+                {provide: ThirdsService, useClass: ThirdsServiceMock}]
         })
             .compileComponents();
         store = TestBed.get(Store);
@@ -87,15 +86,3 @@ describe('NavbarComponent', () => {
         done();
     });
 });
-
-class MockThirdsService {
-    computeThirdsMenu(): Observable<ThirdMenu[]>{
-        return of([new ThirdMenu('tLabel1','t1',[
-            new ThirdMenuEntry('id1','label1','link1'),
-            new ThirdMenuEntry('id2','label2','link2'),
-        ]),
-            new ThirdMenu('tLabel2','t2',[
-                new ThirdMenuEntry('id3','label3','link3'),
-            ])])
-    }
-}

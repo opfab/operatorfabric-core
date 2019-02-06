@@ -28,7 +28,6 @@ export class DetailComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.thirds.init();
         this.handlebars.executeTemplate(this.detail.templateName, this.card).subscribe(
             html => {
                 this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);

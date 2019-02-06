@@ -10,6 +10,7 @@ import {getRandomMenu} from '@tests/helpers';
 import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
 import {LoadMenu, LoadMenuSuccess} from "@ofActions/menu.actions";
+import {of} from "rxjs";
 
 describe('MenuEffects', () => {
     let effects: MenuEffects;
@@ -19,7 +20,8 @@ describe('MenuEffects', () => {
 
         const localActions$ = new Actions(hot('-a--', {a: new LoadMenu()}));
 
-        const localMockMenuService = jasmine.createSpyObj('ThirdsService', ['computeThirdsMenu']);
+        const localMockMenuService = jasmine.createSpyObj('ThirdsService', ['computeThirdsMenu','loadI18nForMenuEntries']);
+        localMockMenuService.loadI18nForMenuEntries.and.callFake(()=>of(true));
 
         const mockStore = jasmine.createSpyObj('Store',['dispatch']);
 
