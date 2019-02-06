@@ -11,5 +11,8 @@
     "action":{
       "first": "First action"
     }
+  },
+  "third":{
+    "label": "Test 3rd"
   }
 }

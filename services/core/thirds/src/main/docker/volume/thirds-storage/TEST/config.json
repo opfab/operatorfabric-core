@@ -20,5 +20,5 @@
     {"id": "uid test 0","url": "my url well defined 0","label": "my key label 0"},
     {"id": "uid test 1","url": "my url well defined 1","label": "my key label 1"}
   ],
-  "i18nLabelKey": "i18n key for apogee service label"
+  "i18nLabelKey": "third.label"
 }

@@ -11,5 +11,8 @@
     "action":{
       "first": "Première action"
     }
+  },
+  "third":{
+    "label": "Tier de test"
   }
 }
