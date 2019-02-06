@@ -35,10 +35,12 @@ export class AcceptLogIn implements Action {
 
 export class TryToLogIn implements Action {
     readonly type= AuthenticationActionTypes.TryToLogIn;
+
     constructor(public payload: {username: string, password: string}){}
 }
 
 export class TryToLogOut implements Action {
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.TryToLogOut;
 }
 
@@ -50,15 +52,18 @@ export class RejectLogIn implements Action {
 }
 
 export class CheckAuthenticationStatus implements Action {
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.CheckAuthenticationStatus;
 }
 
 export class AcceptLogOut implements Action {
     readonly type = AuthenticationActionTypes.AcceptLogOut;
+
     constructor(){}
 }
 
 export class AcceptLogOutSuccess implements Action {
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.AcceptLogOutSuccess;
 }
 

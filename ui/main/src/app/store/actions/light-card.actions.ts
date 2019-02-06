@@ -19,6 +19,7 @@ export enum LightCardActionTypes {
 }
 // needed by NGRX entities
 export class LoadLightCards implements Action {
+    /* istanbul ignore next */
     readonly type = LightCardActionTypes.LoadLightCards;
 }
 
@@ -44,8 +45,9 @@ export class LoadLightCardsFailure implements Action {
 }
 
 export class SelectLightCard implements Action {
+    /* istanbul ignore next */
     readonly type = LightCardActionTypes.SelectLightCard;
-
+    /* istanbul ignore next */
     constructor(public payload: {selectedCardId:string}){}
 
 }
@@ -58,8 +60,9 @@ export class AddLightCardFailure implements Action {
 }
 
 export class HandleUnexpectedError implements Action {
+    /* istanbul ignore next */
     readonly type = LightCardActionTypes.HandleUnexpectedError;
-
+    /* istanbul ignore next */
     constructor(public payload: {error: Error}) {
 
     }

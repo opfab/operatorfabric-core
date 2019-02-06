@@ -11,7 +11,6 @@ import {
     ContentChildren,
     Input,
     OnChanges,
-    OnInit,
     QueryList,
     SimpleChanges
 } from '@angular/core';

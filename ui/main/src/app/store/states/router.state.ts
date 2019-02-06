@@ -35,6 +35,7 @@ export const initialState = {
  */
 
 export class RouterStateUrl {
+    /* istanbul ignore next */
     constructor(
         readonly url: string,
         readonly params: Params,

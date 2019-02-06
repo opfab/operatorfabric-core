@@ -36,8 +36,9 @@ export class LoadCardSuccess implements Action {
 }
 
 export class HandleUnexpectedError implements Action {
+    /* istanbul ignore next */
     readonly type = CardActionTypes.HandleUnexpectedError;
-
+    /* istanbul ignore next */
     constructor(public payload: {error: Error}) {
 
     }

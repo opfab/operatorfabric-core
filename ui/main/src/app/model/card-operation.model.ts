@@ -15,7 +15,7 @@ export interface CardOperation {
 }
 
 export class CardOperation implements CardOperation {
-
+    /* istanbul ignore next */
     constructor(
         readonly number: number,
         readonly publicationDate: number,
