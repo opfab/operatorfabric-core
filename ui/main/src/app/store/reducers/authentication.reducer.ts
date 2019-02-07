@@ -54,6 +54,11 @@ export const getExpirationDate = (state: AuthState) => state.expirationDate;
 
 const UTC_beginning_time = 0;
 
+/**
+ * return the stored expiration time otherwise the beginning
+ * of the UTC time which should be always in the past.
+ * @param state
+ */
 export const getExpirationTime = (state: AuthState) => {
     const expirationDate = getExpirationDate(state);
     const token = getToken(state);

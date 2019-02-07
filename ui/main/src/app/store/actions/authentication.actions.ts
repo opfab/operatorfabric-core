@@ -25,7 +25,27 @@ export class PayloadForSuccessfulAuthentication {
                 public expirationDate: Date) {
     }
 }
+/**
+ * First action dispatch by the application.
+ * It aims to validate the current authentication if exists.
+ *
+ */
+export class CheckAuthenticationStatus implements Action {
+    /* istanbul ignore next */
+    readonly type = AuthenticationActionTypes.CheckAuthenticationStatus;
+}
 
+/**
+ * Action used to update the state with the authentication information
+ *
+ * Emitted by {AuthenticationEffects} in the following {Observable} @members:
+ *  * TryToLogIn
+ *  * CheckAuthentication via handleLogInAttempt @method
+ *
+ * Used in the {function} reducer of the {authentication.reducer.ts} file to create a new state
+ * containing the authentication information by filtering on the {AuthenticationActionTypes.AcceptLogIn} type.
+ *
+ */
 export class AcceptLogIn implements Action {
     readonly type = AuthenticationActionTypes.AcceptLogIn;
 
@@ -33,17 +53,42 @@ export class AcceptLogIn implements Action {
     }
 }
 
+/**
+ * Action used to push login/password pair to the authentication service
+ *
+ * Emitted by {LoginComponent} in the onSubmit @method which is called
+ * when the user click on the `Login` button of the login page form.
+ */
 export class TryToLogIn implements Action {
     readonly type= AuthenticationActionTypes.TryToLogIn;
 
     constructor(public payload: {username: string, password: string}){}
 }
 
+/**
+ * Action used when the user logout
+ *
+ * Emitted by {NavbarComponent} win the logOut @method which is called
+ * when the user click on the `logOut` button of the `navbar`
+ */
 export class TryToLogOut implements Action {
     /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.TryToLogOut;
 }
 
+/**
+ * Action used to notify the store that the authentication is not possible.
+ *
+ * Emmited by {AuthenticationEffect} in the following {Observable} @members:
+ *  * `TryToLogin`;
+ *  *  `CheckAuthentication`
+ *  and in the `handleRejectedLogin` @method called by the `ChecAuthentication` {Observable}
+ *
+ * Used in the {function} reducer of the {authentication.reducer.ts} file to create a new state
+ * without any authentication information and containing a message about login rejection
+ * by filtering on the {AuthenticationActionTypes.RejectLogIn} type.
+ *
+ */
 export class RejectLogIn implements Action {
     readonly type = AuthenticationActionTypes.RejectLogIn;
 
@@ -51,17 +96,30 @@ export class RejectLogIn implements Action {
     }
 }
 
-export class CheckAuthenticationStatus implements Action {
-    /* istanbul ignore next */
-    readonly type = AuthenticationActionTypes.CheckAuthenticationStatus;
-}
-
+/**
+ * Action used to removes authentication information of the system and thus logOut the user.
+ *
+ * Emitted by {AuthenticationEffect} in the following {Observable} @members:
+ *  * `TryToLogOut`
+ *  * `RejectLogInAttempt`
+ *
+ *  Consume by {AuthenticationEffect} in the `AcceptLogOut` {Observable} @member
+ *
+ */
 export class AcceptLogOut implements Action {
     readonly type = AuthenticationActionTypes.AcceptLogOut;
 
     constructor(){}
 }
 
+/**
+ * Action used to notify the store to remove authentication information
+ *
+ * Emitted by {AuthenticationEffect} in `AcceptLogOut` {Observable} @member.
+ *
+ * Used in the {function} reducer of the {authentication.reducer.ts} file to create a new state
+ * without any authentication information by filtering on the {AuthenticationActionTypes.AcceptLogOut} type.
+ */
 export class AcceptLogOutSuccess implements Action {
     /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.AcceptLogOutSuccess;

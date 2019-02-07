@@ -15,7 +15,6 @@ import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors
 import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
 import {TranslateService} from "@ngx-translate/core";
 import {isInTheFuture} from "@ofServices/authentication.service";
-// import Fs from 'fs';
 
 @Component({
     selector: 'of-root',
@@ -37,6 +36,10 @@ export class AppComponent implements OnInit {
         this.translate.use('fr');
     }
 
+    /**
+     * On Init the app take trace of the current url and of the authentication status
+     * Once the subscription done, send an Action to Check the current authentication status.
+     */
     ngOnInit() {
         this.store.pipe(select(selectCurrentUrl)).subscribe(url => this.currentPath = url);
         this.store.pipe(select(selectExpirationTime),
