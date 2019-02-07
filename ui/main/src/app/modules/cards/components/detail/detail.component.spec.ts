@@ -70,7 +70,7 @@ describe('DetailComponent', () => {
         let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/templates/template1`);
         expect(calls.length).toEqual(1);
         calls.forEach(call=>{
-          call.flush('<div>div</div><script type="text/javascript">console.log("log")</script>')
+          call.flush('<div>div</div><script type="text/javascript">console.debug("log")</script>')
         });
         fixture.detectChanges();
         expect(component).toBeTruthy();

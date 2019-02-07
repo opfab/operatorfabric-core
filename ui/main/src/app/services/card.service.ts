@@ -48,7 +48,7 @@ export class CardService {
                     return observer.next(JSON.parse(message.data));
                 };
                 eventSource.onerror = error => {
-                    console.log(`error occured from ES: ${error.toString()}`)
+                    console.error(`error occured from ES: ${error.toString()}`)
                 }
 
             } catch (error) {

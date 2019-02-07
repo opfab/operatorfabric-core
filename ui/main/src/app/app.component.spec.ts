@@ -54,7 +54,6 @@ describe('AppComponent', () => {
                 // called in ngOnInit and passed to mat-tab-url
                 return of('/test/url');
             }
-            console.log('passed');
             return of({});
         }
     );

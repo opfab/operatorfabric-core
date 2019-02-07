@@ -126,30 +126,29 @@ export class ThirdsService {
                 switchMap((ids:string[]) => {
                     return from(_.difference<string>(ids, this.loaded))
                 }),
-                tap((id:string) => this.loading.push(id)),
-                tap((id:string) => console.log(`fetching i18n data for ${id}`)),
                 switchMap((id: string) => {
+                    this.loading.push(id);
                     const input = id.split('###');
                     return this.fetchI18nJson(input[0], input[1], this.translate().getLangs())
                         .pipe(map(trans => {
-                            console.log(`translation received for ${id}`);
+                            console.debug(`translation received for ${id}`);
                                 return {id: id, translation: trans};
                             }),
                             catchError(err => {
-                                console.log(`translation error for ${id}`);
+                                console.error(`translation error for ${id}`);
                                 _.remove(this.loading, id);
                                 return throwError(err);
                             })
                         );
                 }),
                 catchError(error =>{
-                    console.log(error);
+                    console.error(error);
                     return throwError(error);
                 }),
                 reduce((acc, val) => {return {...acc, ...val}}),
                 map(
                     (result:any) => {
-                        console.log(`receiving i18n data`)
+                        console.debug(`receiving i18n data`)
                         for (let lang of this.translate().getLangs()) {
                             if (result.translation[lang]) {
                                 this.translate().setTranslation(lang, result.translation[lang], true);

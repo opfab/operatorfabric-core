@@ -37,12 +37,11 @@ export class NavbarComponent implements OnInit {
         this.store.select(selectCurrentUrl).subscribe(url=>{
             if(url)
                 this.currentPath = url.split('/')[1];
-        })
+        });
         this._thirdMenus=this.store.select(selectMenuStateMenu)
             .pipe(tap(menus=>{
                 this.expandedMenu=new Array<boolean>(menus.length);
                 _.fill(this.expandedMenu,false);
-                console.log("create expand menu of size "+menus.length);
             }));
         this.store.dispatch(new LoadMenu());
     }

@@ -118,7 +118,7 @@ describe('Handlebars Services', () => {
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, card)
                 .subscribe((result) => {
-                    // console.log(`testing [${v1} ${cond} ${v2}], result ${result}, expected ${expectedResult}`);
+                    console.debug(`testing [${v1} ${cond} ${v2}], result ${result}, expected ${expectedResult}`);
                     expect(result).toEqual(expectedResult,
                         `Expected result to be ${expectedResult} when testing [${v1} ${cond} ${v2}]`);
                 });

@@ -27,10 +27,7 @@ export class CardDetailsComponent implements OnInit {
 
   ngOnInit() {
       this.store.select(cardSelectors.selectCardStateSelection)
-          .pipe(tap(card=>{
-                  if(card!=null) console.log(card.id)
-              })
-          ).subscribe(card=>this.card = card);
+          .subscribe(card=>this.card = card);
       this.store.select(cardSelectors.selectCardStateSelectionDetails)
           .subscribe(details=>this.details = details);
   }

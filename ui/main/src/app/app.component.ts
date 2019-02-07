@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
 
         this.getRoutePE = this.store.pipe(select(selectRouterState));
         this.translate.setDefaultLang('en');
-        console.log(navigator.language);
+        console.debug(`current navigator language: ${navigator.language}`);
         this.translate.use('fr');
     }
 
