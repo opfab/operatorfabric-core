@@ -14,10 +14,10 @@ import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 
 export function getRandomMenu(): ThirdMenu[] {
     let result: ThirdMenu[] = [];
-    let menuCount = getPositiveRandomNumberWithinRange(1,3);
+    let menuCount = getPositiveRandomNumberWithinRange(2,4);
     for (let i=0;i<menuCount;i++){
         let entries:ThirdMenuEntry[]=[];
-        let entryCount = getPositiveRandomNumberWithinRange(1,3);
+        let entryCount = getPositiveRandomNumberWithinRange(2,5);
         for(let j=0;j<entryCount;j++){
             entries.push(new ThirdMenuEntry(
                 getRandomAlphanumericValue(3,10),

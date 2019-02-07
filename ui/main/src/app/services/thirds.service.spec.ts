@@ -26,7 +26,6 @@ import {LightCardEffects} from "@ofEffects/light-card.effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {empty, from, merge, Observable, of, zip} from "rxjs";
 import {switchMap} from "rxjs/operators";
-import clock = jasmine.clock;
 
 describe('Thirds Services', () => {
     let injector: TestBed;
@@ -188,10 +187,6 @@ describe('Thirds Services', () => {
         });
     });
     it('should update translate service upon menu update', (done) => {
-        clock().install()
-
-        let exp = new RegExp(`${environment.urls.thirds}/([0-9a-zA-Z]+)/i18n`);
-
         let menu: ThirdMenu[] = getRandomMenu();
 
         let i18n = {}
@@ -203,59 +198,50 @@ describe('Thirds Services', () => {
                 _.set(i18n, `fr.${menu[i].id}.${menu[i].version}.${menu[i].entries[j].label}`, `Tier ${i}, menu ${j}`);
             }
         }
-        const setTranslationSpy = spyOn(translateService, "setTranslation").and.callThrough();
-        const getLangsSpy = spyOn(translateService, "getLangs").and.callThrough();
+        const fetchI18nJsonSpy = spyOn(thirdsService, 'fetchI18nJson').and.callFake((publisher: string, version: string, locales: string[]) =>
+            of(_.pick(i18n, locales.map((item) => `${item}.${publisher}.${version}`)))
+        );
+        thirdsService.loadI18nForMenuEntries(menu)
+            .pipe(
+                switchMap(() => {
+                    function extractAllKeys(t: ThirdMenu) {
+                        let keys = [`${thirdPrefix(t)}${t.label}`];
+                        for (let e of t.entries)
+                            keys.push(`${thirdPrefix(t)}${e.label}`);
+                        return keys;
+                    }
 
-        thirdsService.loadI18nForMenuEntries(menu).subscribe(() => {
-            function extractAllKeys(t: ThirdMenu) {
-                let keys = [`${thirdPrefix(t)}${t.label}`];
-                for (let e of t.entries)
-                    keys.push(`${thirdPrefix(t)}${e.label}`);
-                return keys;
-            }
-
-            for (let m of menu) {
-                let previous = empty();
-                const keys = extractAllKeys(m);
-                const frObs: Observable<string[]> = from(keys)
-                    .pipe(
-                        switchMap(k => {
-                            translateService.use('fr');
-                            return zip(of('fr'), of(k), translateService.get(k));
-                        })
-                    );
-                const enObs: Observable<string[]> = from(keys)
-                    .pipe(
-                        switchMap(k => {
-                            translateService.use('en');
-                            return zip(of('en'), of(k), translateService.get(k));
-                        })
-                    );
-                merge(
-                    frObs,
-                    enObs
-                ).subscribe(array =>
-                        expect(array[2]).toBe(_.get(i18n, `${array[0]}.${array[1]}`)),
-                    undefined,
-                    () => done());
-            }
-        });
-        clock().tick(1000);
-        clock().tick(1000);
-        clock().tick(1000);
-        clock().tick(1000);
-        clock().tick(1000);
-        let i18nMenuCalls = httpMock.match(req => exp.test(req.url));
-        expect(i18nMenuCalls.length).toBe(2 * menu.length);
-        for (let i in i18nMenuCalls) {
-            let matchedRequest = i18nMenuCalls[i];
-            let name = exp.exec(matchedRequest.request.url)[1];
-            let version = matchedRequest.request.params.get('version');
-            flushI18nJson(matchedRequest, i18n, `${name}.${version}`);
-        }
-        clock().uninstall()
-        // setTimeout(() => {
-        // }, 4000);
+                    let previous:Observable<[string,string,string]> = empty();
+                    for (let m of menu) {
+                        const keys = extractAllKeys(m);
+                        previous = merge(previous, from(keys)
+                            .pipe(
+                                switchMap(k => {
+                                    translateService.use('fr');
+                                    return zip(of('fr'), of(k), translateService.get(k));
+                                })
+                            ));
+                        previous = merge(previous, from(keys)
+                            .pipe(
+                                switchMap(k => {
+                                    translateService.use('en');
+                                    return zip(of('en'), of(k), translateService.get(k));
+                                })
+                            ));
+                    }
+                    return previous;
+                })
+            )
+            .subscribe(array =>
+                    expect(array[2]).toBe(_.get(i18n, `${array[0]}.${array[1]}`)),
+                () => {
+                    fail();
+                    done();
+                },
+                () => {
+                    expect(fetchI18nJsonSpy.calls.count()).toBe(menu.length);
+                    done();
+                });
     });
     it('should update translate service upon new card arrival', (done) => {
         let card = getOneRandomLigthCard();
@@ -324,7 +310,8 @@ describe('Thirds Services', () => {
         }, 1000);
     });
 
-});
+})
+;
 
 function flushI18nJson(request: TestRequest, json: any, prefix?: string) {
     const locale = request.request.params.get('locale');

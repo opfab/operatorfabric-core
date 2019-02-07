@@ -72,9 +72,7 @@ export class ThirdsService {
             return empty();
         }
         const result = previous.pipe(
-            reduce((acc, val) => {
-                return {...acc, ...val};
-            })
+            reduce((acc, val) => _.merge(acc,val))
         );
 
         return result;
@@ -119,12 +117,10 @@ export class ThirdsService {
                     ids.push(id);
                     return ids;
                 }, []),
-                map((ids:string[]) => _.uniq(ids)),
-                map((ids:string[]) => {
-                    return _.difference<string>(ids, this.loading)
-                }),
                 switchMap((ids:string[]) => {
-                    return from(_.difference<string>(ids, this.loaded))
+                    let work = _.uniq(ids);
+                    work = _.difference<string>(work, this.loading)
+                    return from(_.difference<string>(work, this.loaded))
                 }),
                 switchMap((id: string) => {
                     this.loading.push(id);
@@ -145,7 +141,7 @@ export class ThirdsService {
                     console.error(error);
                     return throwError(error);
                 }),
-                reduce((acc, val) => {return {...acc, ...val}}),
+                reduce((acc, val) => _.merge(acc,val)),
                 map(
                     (result:any) => {
                         console.debug(`receiving i18n data`)
@@ -154,6 +150,7 @@ export class ThirdsService {
                                 this.translate().setTranslation(lang, result.translation[lang], true);
                             }
                         }
+                        _.remove(this.loading, result.id);
                         this.loaded.push(result.id);
                         return true;
                     }
