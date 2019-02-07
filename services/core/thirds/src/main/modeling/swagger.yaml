@@ -376,15 +376,6 @@ definitions:
         description: describes the menu items added to ui navbar
         items:
           $ref: '#/definitions/ThirdMenuEntry'
-      locales:
-        type: array
-        description: supported locale list (ISO 639 alpha-2 code)
-        example:
-          - fr
-          - en
-          - de
-        items:
-          type: string
     required:
       - name
       - version

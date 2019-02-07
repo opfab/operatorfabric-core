@@ -1,7 +1,7 @@
 {
   "name": "TEST",
   "version": "1",
-  "locales": ["en","fr"],
+  "defaultLocale": "fr",
   "templates": [
     "security",
     "unschedulledPeriodicOp",
@@ -15,5 +15,10 @@
     "filter",
     "operations",
     "security"
-  ]
+  ],
+  "menuEntries": [
+    {"id": "uid test 0","url": "https://opfab.github.io/operatorfabric.community.io/","label": "menu.first"},
+    {"id": "uid test 1","url": "https://www.la-rache.com","label": "menu.second"}
+  ],
+  "i18nLabelKey": "third.label"
 }

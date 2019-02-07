@@ -14,5 +14,9 @@
   },
   "third":{
     "label": "Tier de test"
+  },
+  "menu":{
+    "first":"Premier item",
+    "second":"Deuxieme item"
   }
 }

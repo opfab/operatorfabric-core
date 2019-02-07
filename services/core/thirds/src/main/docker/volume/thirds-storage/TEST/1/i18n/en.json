@@ -14,5 +14,9 @@
   },
   "third":{
     "label": "Test 3rd"
+  },
+  "menu":{
+    "first":"First Entry",
+    "second":"Second Entry"
   }
 }

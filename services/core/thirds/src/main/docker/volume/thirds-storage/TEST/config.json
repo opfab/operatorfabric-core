@@ -17,8 +17,8 @@
     "security"
   ],
   "menuEntries": [
-    {"id": "uid test 0","url": "my url well defined 0","label": "my key label 0"},
-    {"id": "uid test 1","url": "my url well defined 1","label": "my key label 1"}
+    {"id": "uid test 0","url": "https://opfab.github.io/operatorfabric.community.io/","label": "menu.first"},
+    {"id": "uid test 1","url": "https://www.la-rache.com","label": "menu.second"}
   ],
   "i18nLabelKey": "third.label"
 }

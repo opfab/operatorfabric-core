@@ -210,19 +210,8 @@ public class ThirdsService implements ResourceLoaderAware {
                     throw new FileNotFoundException("Unknown css resource for " + thirdName + ":" + version);
                 break;
             case MEDIA:
-                //remove extension
-                int dotIndex = name.lastIndexOf(EXTENSION_SEPARATOR);
-                String mediaName;
-                if (dotIndex > 0)
-                    mediaName = name.substring(0, dotIndex);
-                else
-                    mediaName = name;
-                if (!third.getMedias().containsKey(mediaName) || !third.getLocales().contains(locale))
-                    throw new FileNotFoundException("Unknown media resource for " + thirdName + "(" + locale + "):" + version);
                 break;
             case I18N:
-                if (!third.getLocales().contains(locale))
-                    throw new FileNotFoundException("Unknown i18n resource for " + thirdName + ":" + version);
                 break;
             case TEMPLATE:
                 if (!third.getTemplates().contains(name))

@@ -35,8 +35,6 @@ public class ThirdData implements Third {
   private List<String> csses;
   @Singular("mediasData")
   private Map<String,ThirdMediasData> mediasData;
-  @Singular
-  private List<String> locales;
   @Singular("menuEntryData")
   private List<? extends ThirdMenuEntry> menuEntriesData;
   private String i18nLabelKey;
