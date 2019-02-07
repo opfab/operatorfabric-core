@@ -8,7 +8,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {CardService} from '@ofServices/card.service';
 import {AppState} from "@ofStore/index";
@@ -33,7 +33,14 @@ export class LightCardEffects {
         .pipe(
             ofType<LoadLightCardsSuccess>(LightCardActionTypes.LoadLightCardsSuccess),
             switchMap((action:LoadLightCardsSuccess)=>
-                    this.thirdService.loadI18nForLightCards(action.payload.lightCards)),
+                    this.thirdService.loadI18nForLightCards(action.payload.lightCards)
+                        .pipe(
+                            catchError((err,caught)=>{
+                                console.error(`i18 loading failed for card publishers`);
+                                console.error(err);
+                                return of(false);
+                            })
+                        )),
             map(
                 ()=>{
                     return new LoadLightCardsExtendedData();

@@ -12,7 +12,7 @@ import {AuthenticationService} from "@ofServices/authentication.service";
 import {empty, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
 import {Map} from "../model/map";
-import {catchError, map, reduce, switchMap, tap} from "rxjs/operators";
+import {catchError, filter, map, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
@@ -79,17 +79,11 @@ export class ThirdsService {
     }
 
     computeThirdsMenu(): Observable<ThirdMenu[]>{
-        // return of([new ThirdMenu('tLabel1','t1',[
-        //     new ThirdMenuEntry('id1','label1','link1'),
-        //     new ThirdMenuEntry('id2','label2','link2'),
-        // ]),
-        //     new ThirdMenu('tLabel2','t2',[
-        //         new ThirdMenuEntry('id3','label3','link3'),
-        //     ])])
         return this.httpClient.get<Third[]>(`${this.thirdsUrl}/`, {
             headers: this.authenticationService.getSecurityHeader()
         }).pipe(
             switchMap(ts=>from(ts)),
+            filter((t:Third)=>!(!t.menuEntries)),
             map(t=>
                 new ThirdMenu(t.name, t.version, t.i18nLabelKey, t.menuEntries)
             ),

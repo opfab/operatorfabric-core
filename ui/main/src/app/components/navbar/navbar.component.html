@@ -26,7 +26,6 @@
           translate
         >{{'menu.'+link.path}}</a>
       </li>
-      <!--<li *ngIf="(thirdMenus|async)">|</li>-->
       <li *ngFor="let tMenu of (thirdMenus|async); let index = index;" class="nav-item" [class.dropdown]="tMenu.entries.length>1">
         <a
            href="#"
@@ -36,7 +35,7 @@
            (click)="toggleMenu(index)"
            *ngIf="tMenu.entries.length>1"
            translate
-        >{{tMenu.label}}</a>
+        >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.label}}</a>
         <a
             class="nav-link"
             [href]="tMenu.entries[0].link"
@@ -47,7 +46,7 @@
         <div class="dropdown-menu"
              *ngIf="tMenu.entries.length>1"
              [ngbCollapse]="!expandedMenu[index]">
-          <a class="dropdown-item" *ngFor="let entry of tMenu.entries" [href]="entry.link" translate>{{entry.label}}</a>
+          <a class="dropdown-item" *ngFor="let entry of tMenu.entries" [href]="entry.url" target="_blank" translate>{{tMenu.id}}.{{tMenu.version}}.{{entry.label}}</a>
         </div>
       </li>
       <li>

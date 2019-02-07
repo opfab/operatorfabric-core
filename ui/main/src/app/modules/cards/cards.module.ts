@@ -19,13 +19,14 @@ import {HandlebarsService} from "./services/handlebars.service";
   declarations: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
   imports: [
     CommonModule,
-      TranslateModule.forChild({
-          loader: {
-              provide: TranslateLoader,
-              useFactory: ThirdsI18nLoaderFactory,
-              deps:[ThirdsService]},
-          useDefaultLang: false
-      })
+      TranslateModule
+      // TranslateModule.forChild({
+      //     loader: {
+      //         provide: TranslateLoader,
+      //         useFactory: ThirdsI18nLoaderFactory,
+      //         deps:[ThirdsService]},
+      //     useDefaultLang: false
+      // })
   ],
     exports: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
     providers: [HandlebarsService]

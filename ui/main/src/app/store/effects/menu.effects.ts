@@ -32,11 +32,20 @@ export class MenuEffects {
             ofType<LoadCard>(MenuActionTypes.LoadMenu),
             switchMap(action => this.service.computeThirdsMenu()),
             // tap(menus=>this.service.loadI18nForMenuEntries(menus)),
-            switchMap(menu=>zip(of(menu),this.service.loadI18nForMenuEntries(menu))),
+            switchMap(menu=>zip(of(menu),this.service.loadI18nForMenuEntries(menu)
+                .pipe(
+                    catchError((err,caught)=>{
+                        console.error(`i18n loading failed for menu`);
+                        console.error(err);
+                        return of(false);
+                    })
+                ))),
             map(array =>
                 new LoadMenuSuccess({menu: array[0]})
             ),
             catchError((err, caught) => {
+                console.error(`menu loading failed`);
+                console.error(err);
                 this.store.dispatch(new LoadMenuFailure(err));
                 return caught;
             })

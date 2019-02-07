@@ -26,7 +26,7 @@ module.exports = function (config) {
         colors: true,
         logLevel: config.LOG_INFO,
         browserConsoleLogOptions: {
-            level: 'info',
+            level: 'debug',
             format: '%b %T: %m',
             terminal: true
         },
