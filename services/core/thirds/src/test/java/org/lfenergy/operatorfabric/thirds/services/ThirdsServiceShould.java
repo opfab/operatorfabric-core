@@ -69,7 +69,6 @@ class ThirdsServiceShould {
   void fetch() {
     Third firstThird = service.fetch("first");
     assertThat(firstThird).hasFieldOrPropertyWithValue("version", "v1");
-    assertThat(firstThird.getLocales()).containsExactly("fr", "en");
   }
 
   @Test
@@ -207,12 +206,6 @@ class ThirdsServiceShould {
           "sound"));
     assertException(FileNotFoundException.class).isThrownBy(() ->
        service.fetchResource("first",
-          I18N,
-          "0.1",
-          "de",
-          null));
-    assertException(FileNotFoundException.class).isThrownBy(() ->
-       service.fetchResource("first",
           TEMPLATE,
           "0.1",
           null,
@@ -220,14 +213,6 @@ class ThirdsServiceShould {
           .getInputStream()
     );
 
-    assertException(FileNotFoundException.class).isThrownBy(() -> {
-      Resource resource = service.fetchResource("first",
-         MEDIA,
-         "0.1",
-         "de",
-         "bidon.txt");
-      log.info(resource.toString());
-    });
     assertException(FileNotFoundException.class).isThrownBy(() ->
        service.fetchResource("first",
           TEMPLATE,
@@ -247,7 +232,6 @@ class ThirdsServiceShould {
         Third t = service.updateThird(is);
         assertThat(t).hasFieldOrPropertyWithValue("name", "second");
         assertThat(t).hasFieldOrPropertyWithValue("version", "2.0");
-        assertThat(t.getLocales()).containsExactly("fr", "en");
         assertThat(service.listThirds()).hasSize(2);
       } catch (IOException e) {
         log.trace("rethrowing exception");
