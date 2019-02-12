@@ -1,7 +1,5 @@
 package org.lfenergy.operatorfabric.springtools.config.oauth;
 
-
-import feign.Request;
 import feign.mock.HttpMethod;
 import feign.mock.MockClient;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +9,6 @@ import org.lfenergy.operatorfabric.springtools.config.oauth.application.UserServ
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,8 +47,8 @@ public class UserServiceCacheShould {
         assertThat(user).isInstanceOf(User.class);
         assertThat(user.getLogin()).isEqualTo(principalID);
         log.info("User : {}",user);
-        /* log.info("Groups retrieved : {}", user.getGroups().toString());
-        assertThat(user.getGroups()).containsExactlyInAnyOrder("good_guys","user");*/
+        log.info("Groups retrieved : {}", user.getGroups().toString());
+        assertThat(user.getGroups()).containsExactlyInAnyOrder("good_guys","user");
         assertThat(user.getFirstName()).isEqualTo("John");
         assertThat(user.getLastName()).isEqualTo("McClane");
     }
@@ -89,10 +85,30 @@ public class UserServiceCacheShould {
         //Second call
         userServiceCache.fetchUserFromCacheOrProxy(principalID);
 
-        List<Request> results = mockClient.verifyTimes(HttpMethod.GET, "/users/"+principalID, 1);
-        //TODO Understand why the expected number of times has to be checked twice (once in verify, once in results size)
-        assertThat(results).hasSize(1);
+        mockClient.verifyTimes(HttpMethod.GET, "/users/"+principalID, 1);
         //mockClient.verifyStatus(); //TODO find out what that's for
     }
+
+    @Test
+    public void shouldClearSelectedCache(){
+        String principalID1 = "jmcclane";
+        String principalID2 = "hgruber";
+
+        //First call
+        userServiceCache.fetchUserFromCacheOrProxy(principalID1);
+        userServiceCache.fetchUserFromCacheOrProxy(principalID2);
+
+        //Clear cache only for principalID1
+        userServiceCache.clearUserCache(principalID1);
+
+        //Second call
+        userServiceCache.fetchUserFromCacheOrProxy(principalID1);
+        userServiceCache.fetchUserFromCacheOrProxy(principalID2);
+
+        //Check number of calls
+        mockClient.verifyTimes(HttpMethod.GET, "/users/"+principalID1, 2);
+        mockClient.verifyTimes(HttpMethod.GET, "/users/"+principalID2, 1);
+    }
+
 
 }

@@ -45,7 +45,7 @@ public class UserServiceCacheTestApplication {
     }
 
 
-    //TODO Find out what the AssertionDecoder from the example is for (try leaving it out).
+    //TODO Find out what the AssertionDecoder (from the example) is for (try leaving it out).
     class AssertionDecoder implements Decoder {
 
         private final Decoder delegate;
@@ -101,7 +101,7 @@ public class UserServiceCacheTestApplication {
                 /* Got : java.lang.IllegalStateException: Method getServiceInfo not annotated with HTTP method type (ex. GET, POST)
                 Found : https://github.com/spring-cloud/spring-cloud-netflix/issues/760 *///TODO To be removed
                 .target(new MockTarget<>(UserServiceProxy.class));
-        //TODO Look at other examples in MockClientTest
+        //TODO Look at other examples in MockClientTest to flesh out tests
 
         return mockUserServiceProxy;
     }
