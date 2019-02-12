@@ -34,7 +34,14 @@ public class UserServiceCache {
 
     @CacheEvict(value = "user", allEntries = true)
     public void clearUserCache(){
-
+        log.info("TestCache : clearUserCache is called for all entries");
     }
+
+    @CacheEvict(value = "user", key = "{#principalId}")
+    public void clearUserCache(String principalId){
+        log.info("TestCache : clearUserCache is called for key {}", principalId);
+    }
+
+
 }
 

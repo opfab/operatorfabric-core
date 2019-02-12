@@ -7,6 +7,8 @@
 
 package org.lfenergy.operatorfabric.users.controllers;
 
+import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.springtools.config.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.Group;
@@ -15,6 +17,8 @@ import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.bus.ServiceMatcher;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +33,7 @@ import java.util.List;
  * @author David Binder
  */
 @RestController
+@Slf4j
 @RequestMapping("/groups")
 public class GroupsController implements GroupsApi {
 
@@ -37,11 +42,20 @@ public class GroupsController implements GroupsApi {
     @Autowired
     private UserRepository userRepository;
 
+    /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
+    *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
+    @Autowired
+    private ServiceMatcher busServiceMatcher;
+    @Autowired
+    private ApplicationEventPublisher publisher;
+
     @Override
     public Void addGroupUsers(String name, List<String> users) throws Exception {
         Iterable<UserData> foundUsers = userRepository.findAllById(users);
         for (UserData userData : foundUsers) {
             userData.addGroup(name);
+            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
+            log.info("TestCache : UpdateUserEvent was fired from addGroupUsers for {}",userData.getLogin());
         }
         userRepository.saveAll(foundUsers);
         return null;
@@ -57,6 +71,8 @@ public class GroupsController implements GroupsApi {
         Iterable<UserData> foundUsers = userRepository.findAllById(users);
         for (UserData userData : foundUsers) {
             userData.deleteGroup(name);
+            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
+            log.info("TestCache : UpdateUserEvent was fired from deleteGroupUsers for {}",userData.getLogin());
         }
         userRepository.saveAll(foundUsers);
         return null;
@@ -86,10 +102,10 @@ public class GroupsController implements GroupsApi {
 
     @Override
     public Void updateGroupUsers(String name, List<String> users) throws Exception {
-        List<UserData> formelyBelongs = userRepository.findByGroupSetContaining(name);
+        List<UserData> formerlyBelongs = userRepository.findByGroupSetContaining(name);
         List<String> newUsersInGroup = new ArrayList<>(users);
         List<UserData> toUpdate = new ArrayList<>();
-        formelyBelongs.stream()
+        formerlyBelongs.stream()
            .filter(u->!users.contains(u.getLogin()))
            .forEach(u-> {
                u.deleteGroup(name);
@@ -100,4 +116,5 @@ public class GroupsController implements GroupsApi {
         addGroupUsers(name,newUsersInGroup);
         return null;
     }
+    //TODO Find out what that method does and for which users (if any) a UpdatedUserEvent should be fired.
 }

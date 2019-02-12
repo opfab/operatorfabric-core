@@ -51,9 +51,8 @@ import java.util.List;
 @EnableCaching
 @EnableDiscoveryClient
 @Slf4j
-@Import({UserServiceCache.class})
+@Import({UserServiceCache.class,BusConfiguration.class,UpdateUserEventListener.class,UpdatedUserEvent.class})
 public class Oauth2GenericConfiguration {
-
 
     @Autowired
     protected UserServiceCache userServiceCache;

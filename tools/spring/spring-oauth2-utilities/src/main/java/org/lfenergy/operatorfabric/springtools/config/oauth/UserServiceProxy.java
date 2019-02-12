@@ -7,6 +7,7 @@
 
 package org.lfenergy.operatorfabric.springtools.config.oauth;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,5 +26,4 @@ public interface UserServiceProxy {
        method = RequestMethod.GET)
     //
     User fetchUser(@PathVariable("login") String login) ;
-
 }
