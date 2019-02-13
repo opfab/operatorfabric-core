@@ -33,6 +33,12 @@ import java.lang.reflect.Type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * <p></p>
+ * Created on 28/01/19
+ *
+ * @author Alexandra Guironnet
+ */
 @SpringBootApplication
 @Slf4j
 @Import({UserServiceCache.class})

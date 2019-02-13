@@ -14,6 +14,13 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Component;
 
+/**
+ * <p>This class is responsible for retrieving {@link User} information either from cache or from the {@link UserServiceProxy},
+ * as well as clearing the cache on request.</p>
+ * A dedicated class had to be created because caching annotations won't work if the cached method is called from its own class.
+ *
+ * @author Alexandra Guironnet
+ */
 @EnableCaching
 @Component
 public class UserServiceCache {
@@ -21,25 +28,24 @@ public class UserServiceCache {
     @Autowired
     private UserServiceProxy proxy;
 
-    /**
-     *
-     * @param principalId
-     * @return {@link User} object retrieved from cache or from Users service through proxy
+    /** Retrieve user data from cache or from Users service through proxy
+     * @param principalId of the user to be retrieved
+     * @return {@link User}
      */
     @Cacheable(value = "user", key = "{#principalId}")
     public User fetchUserFromCacheOrProxy(String principalId){
         return proxy.fetchUser(principalId);
     }
-    /* Creation of dedicated UserServiceCache class because cache won't work if cached method is called from its own class.
-    See : https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#cache-annotation-enable
-    "The default advice mode for processing caching annotations is proxy, which allows for interception of calls through the proxy only.
-    Local calls within the same class cannot get intercepted that way."
-    */
 
+    /** Clear all cached user data
+     */
     @CacheEvict(value = "user", allEntries = true)
     public void clearUserCache(){
     }
 
+    /** Clear cached user data for a given {@param principalId}
+     * @param principalId of the user for which cache should be cleared
+     */
     @CacheEvict(value = "user", key = "{#principalId}")
     public void clearUserCache(String principalId){
     }

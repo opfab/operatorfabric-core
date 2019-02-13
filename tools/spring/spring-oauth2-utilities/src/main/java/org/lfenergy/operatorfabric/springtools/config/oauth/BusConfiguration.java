@@ -10,9 +10,14 @@ package org.lfenergy.operatorfabric.springtools.config.oauth;
 import org.springframework.cloud.bus.jackson.RemoteApplicationEventScan;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * <p>This configuration class registers all custom events from specified basePackages with Spring Cloud Bus.</p>
+ * Created on 12/02/19
+ *
+ * @author Alexandra Guironnet
+ */
 @Configuration
-@RemoteApplicationEventScan(basePackages = "org.lfenergy.operatorfabric.springtools.config.oauth") //TODO See if needed since event is in the same package
+@RemoteApplicationEventScan(basePackages = "org.lfenergy.operatorfabric.springtools.config.oauth")
 public class BusConfiguration {
-    // According to documentation, this should register event with the deserializer
-    // Source : https://cloud.spring.io/spring-cloud-bus/single/spring-cloud-bus.html#_registering_events_in_custom_packages
+
 }

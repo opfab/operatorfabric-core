@@ -18,6 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * <p></p>
+ * Created on 28/01/19
+ *
+ * @author Alexandra Guironnet
+ */
 @SpringBootTest(classes = UserServiceCacheTestApplication.class)
 public class UserServiceCacheShould {
 
@@ -89,7 +95,6 @@ public class UserServiceCacheShould {
         userServiceCache.fetchUserFromCacheOrProxy(principalID);
 
         mockClient.verifyTimes(HttpMethod.GET, "/users/"+principalID, 1);
-        //mockClient.verifyStatus(); //TODO find out what that's for
     }
 
     @Test
