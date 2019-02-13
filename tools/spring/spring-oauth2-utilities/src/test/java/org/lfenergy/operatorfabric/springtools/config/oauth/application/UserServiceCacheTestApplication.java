@@ -50,34 +50,15 @@ public class UserServiceCacheTestApplication {
         assert (ctx != null);
     }
 
-
-    //TODO Find out what the AssertionDecoder (from the example) is for (try leaving it out).
-    class AssertionDecoder implements Decoder {
-
-        private final Decoder delegate;
-
-        public AssertionDecoder(Decoder delegate) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        public Object decode(Response response, Type type)
-                throws IOException, DecodeException, FeignException {
-            assertThat(response.request()).isNotNull();
-            return delegate.decode(response, type);
-        }
-
-    }
-
     @Bean
     public MockClient mockClient(){
-        //Create MockClient and set behaviour (which requests are accepted and with which response)
 
+        //Create MockClient and set behaviour
         String stringUser1 = "{" +
                 "\"login\": \"jmcclane\"," +
                 "\"firstName\": \"John\"," +
                 "\"lastName\": \"McClane\"," +
-                "\"groups\": [\"good_guys\",\"user\"]" + //TODO Was groupSet in ObjectMapper. How can we know what the user service returns?
+                "\"groups\": [\"good_guys\",\"user\"]" +
                 "}";
         String stringUser2 = "{" +
                 "\"login\": \"hgruber\"," +
@@ -90,7 +71,6 @@ public class UserServiceCacheTestApplication {
         mockClient = mockClient
                 .ok(HttpMethod.GET, "/users/jmcclane", stringUser1)
                 .ok(HttpMethod.GET, "/users/hgruber", stringUser2);
-        //TODO Move MockClient behaviour configuration to test setup ?
 
         return mockClient;
     }
@@ -101,13 +81,11 @@ public class UserServiceCacheTestApplication {
 
         //Build Feign with MockClient
         UserServiceProxy mockUserServiceProxy = Feign.builder()
-                .decoder(new AssertionDecoder(new JacksonDecoder()))
+                .decoder(new JacksonDecoder())
                 .client(mockClient)
-                .contract(new SpringMvcContract())
-                /* Got : java.lang.IllegalStateException: Method getServiceInfo not annotated with HTTP method type (ex. GET, POST)
-                Found : https://github.com/spring-cloud/spring-cloud-netflix/issues/760 *///TODO To be removed
+                .contract(new SpringMvcContract()) // Needed because spring-cloud-starter-feign implements a default Contract class "SpringMvcContract". See https://github.com/spring-cloud/spring-cloud-netflix/issues/760
                 .target(new MockTarget<>(UserServiceProxy.class));
-        //TODO Look at other examples in MockClientTest to flesh out tests
+
 
         return mockUserServiceProxy;
     }

@@ -108,9 +108,13 @@ public class GroupsController implements GroupsApi {
                newUsersInGroup.remove(u.getLogin());
                toUpdate.add(u);
            });
+        //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
+        for (UserData userData : toUpdate) {
+            userData.addGroup(name);
+            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
+        }
         userRepository.saveAll(toUpdate);
-        addGroupUsers(name,newUsersInGroup);
+        addGroupUsers(name,newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
         return null;
     }
-    //TODO Find out what that method does and for which users (if any) a UpdatedUserEvent should be fired.
 }
