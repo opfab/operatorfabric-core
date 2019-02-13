@@ -7,14 +7,9 @@
 
 package org.lfenergy.operatorfabric.springtools.config.oauth;
 
-import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +25,6 @@ import java.util.List;
  *
  * @author David Binder
  */
-@Slf4j
 @Configuration
 public class Oauth2ReactiveConfiguration extends Oauth2GenericConfiguration{
 
@@ -48,7 +42,6 @@ public class Oauth2ReactiveConfiguration extends Oauth2GenericConfiguration{
             public Mono<AbstractAuthenticationToken> convert(Jwt jwt) {
                 String principalId = jwt.getClaimAsString("sub");
                 Oauth2JwtProcessingUtilities.token.set(jwt);
-                log.info("TestCache : User info is needed from ReactiveConfig for principal : {}", principalId);
                 User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
                 Oauth2JwtProcessingUtilities.token.remove();
                 List<GrantedAuthority> authorities = Oauth2JwtProcessingUtilities.computeAuthorities(user);

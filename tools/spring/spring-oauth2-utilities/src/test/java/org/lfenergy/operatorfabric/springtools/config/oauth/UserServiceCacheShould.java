@@ -2,7 +2,6 @@ package org.lfenergy.operatorfabric.springtools.config.oauth;
 
 import feign.mock.HttpMethod;
 import feign.mock.MockClient;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.lfenergy.operatorfabric.springtools.config.oauth.application.UserServiceCacheTestApplication;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j
 @SpringBootTest(classes = UserServiceCacheTestApplication.class)
 public class UserServiceCacheShould {
 
@@ -46,8 +44,6 @@ public class UserServiceCacheShould {
         assertThat(user).isNotNull();
         assertThat(user).isInstanceOf(User.class);
         assertThat(user.getLogin()).isEqualTo(principalID);
-        log.info("User : {}",user);
-        log.info("Groups retrieved : {}", user.getGroups().toString());
         assertThat(user.getGroups()).containsExactlyInAnyOrder("good_guys","user");
         assertThat(user.getFirstName()).isEqualTo("John");
         assertThat(user.getLastName()).isEqualTo("McClane");

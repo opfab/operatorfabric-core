@@ -7,7 +7,6 @@
 
 package org.lfenergy.operatorfabric.users.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.config.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
@@ -33,7 +32,6 @@ import java.util.List;
  * @author David Binder
  */
 @RestController
-@Slf4j
 @RequestMapping("/groups")
 public class GroupsController implements GroupsApi {
 
@@ -55,7 +53,6 @@ public class GroupsController implements GroupsApi {
         for (UserData userData : foundUsers) {
             userData.addGroup(name);
             publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
-            log.info("TestCache : UpdateUserEvent was fired from addGroupUsers for {}",userData.getLogin());
         }
         userRepository.saveAll(foundUsers);
         return null;
@@ -72,7 +69,6 @@ public class GroupsController implements GroupsApi {
         for (UserData userData : foundUsers) {
             userData.deleteGroup(name);
             publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
-            log.info("TestCache : UpdateUserEvent was fired from deleteGroupUsers for {}",userData.getLogin());
         }
         userRepository.saveAll(foundUsers);
         return null;

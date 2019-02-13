@@ -7,7 +7,6 @@
 
 package org.lfenergy.operatorfabric.users.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.config.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
@@ -30,7 +29,6 @@ import java.util.List;
  * @author David Binder
  */
 @RestController
-@Slf4j
 @RequestMapping("/users")
 public class UsersController implements UsersApi {
 
@@ -53,7 +51,6 @@ public class UsersController implements UsersApi {
 
     @Override
     public User fetchUser(String login) throws Exception {
-        log.info("TestCache : Fetch user was called for {}",login);
         return userRepository.findById(login)
                 .orElseThrow(()-> new ApiErrorException(
                         ApiError.builder()
@@ -71,18 +68,7 @@ public class UsersController implements UsersApi {
     @Override
     public SimpleUser updateUser(String login, SimpleUser user) throws Exception {
         userRepository.save(new UserData(user));
-        //Check publishing stuff
-        log.info("TestCache : Check publishing stuff");
-        log.info("Login : {}",login);
-        log.info("User : {}", user);
-        log.info("User.getLogin {}", user.getLogin());
-        log.info("ServiceMatcher is not null : {}", !busServiceMatcher.equals(null));
-        log.info("ServiceMatcher is {}", busServiceMatcher.toString());
-        log.info("ServiceMatcher id {}", busServiceMatcher.getServiceId());
-        log.info("Publisher is not null : {}", !publisher.equals(null));
-        log.info("Publisher is {}", publisher.toString());
         publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),user.getLogin()));
-        log.info("TestCache : UpdateUserEvent was fired from updateUser for {}",user.getLogin());
         return user;
     }
 }
