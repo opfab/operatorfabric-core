@@ -22,6 +22,7 @@ This project and all its subproject is licensed under Mozilla Public License 2.0
 * maven 3.5.3 +
 * Docker
 * Docker Compose with 2.1+ file format support
+* Chrome (needed for UI tests in build)
 
 It is highly recommended to use sdkman ([sdkman.io](https://sdkman.io/)) and 
 [nvm](https://github.com/creationix/nvm) to manage tools versions.
