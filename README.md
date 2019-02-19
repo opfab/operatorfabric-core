@@ -3,7 +3,7 @@
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=coverage)](https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Coverage)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=code_smells)](https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability)
-[![Website opfab.github.io/operatorfabric.community.io](https://img.shields.io/website-up-down-green-red/http/opfab.github.io/operatorfabric.community.io.svg)](http://opfab.github.io/operatorfabric.community.io/)
+[![Website opfab.github.io](https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg)](http://opfab.github.io/)
 
 # Operator Fabric (OpFab)
 
