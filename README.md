@@ -7,11 +7,20 @@
 
 # Operator Fabric (OpFab)
 
-TODO What is OpFab
+Operator Fabric is a modular, extensible, industrial-strength and field-tested platform for use in electricity, water, and other utility operations.
+
+- System visualization and console integration
+- Precise alerting
+- Workflow scheduling
+- Remedial action manager
+- Historian
+- Scripting (ex: Python, JavaScript)
+
+It is an open source project initiated by [RTE](http://www.rte-france.com/) with [LF Energy](https://www.lfenergy.org/).
 
 ## 1. Licensing
 
-This project and all its subproject is licensed under Mozilla Public License 2.0. See [LICENSE.txt](LICENSE.txt)
+This project and all its subproject are licensed under [Mozilla Public License V2.0](https://www.mozilla.org/en-US/MPL/2.0/). See [LICENSE.txt](LICENSE.txt)
 
 ## 2. Requirements
 
