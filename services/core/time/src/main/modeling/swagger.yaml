@@ -1,14 +1,14 @@
 swagger: '2.0'
 info:
   description: Time Service a.k.a. Time management API for Operator Fabric
-  version: 0.0.1
+  version: 0.1.1.SNAPSHOT
   title: Time Management
   termsOfService: ''
   contact:
     email: benoit.jeanson@rte-france.com
   license:
-    name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    name: Mozilla Public License V2.0
+    url: 'http://mozilla.org/MPL/2.0/'
 host: localhost
 basePath: /apis
 tags:
