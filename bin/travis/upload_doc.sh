@@ -17,7 +17,7 @@ for prj in "${OF_REL_COMPONENTS[@]}"; do
 done
 mkdir -p -p $HOME/documentation/projects/ui/main/$version/
 rm -r $HOME/documentation/projects/ui/main/$version/*
-cp -r $prj/build/docs/* $HOME/documentation/projects/ui/main/$version/.
+cp -r $OF_HOME/ui/main/documentation/* $HOME/documentation/projects/ui/main/$version/.
 cd $HOME/documentation
 if [ -n "$(git status --porcelain)" ]; then
     echo "Changes to documentation detected, preparing commit"
