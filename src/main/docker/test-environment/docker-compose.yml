@@ -7,8 +7,6 @@ services:
       - "5672:5672"
       - "15672:15672"
       - "15674:15674"
-    networks:
-      - opfabnet
   mongodb:
     container_name: mongodb
     image: mongo:4.1.1-xenial
@@ -17,9 +15,3 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
-    networks:
-      - opfabnet
-networks:
-  opfabnet:
-    external:
-      name: opfabnet

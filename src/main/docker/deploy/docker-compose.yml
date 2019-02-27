@@ -8,8 +8,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
-    networks:
-      - opfabnet
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3-management
@@ -17,16 +15,12 @@ services:
       - "5672:5672"
       - "15672:15672"
 #      - "15674:15674"
-    networks:
-      - opfabnet
   oauth:
     container_name: oauth2
     image: "org.lfenergy.operatorfabric/oauth2-dev-server"
     ports:
      - "3000:8080"
      - "5000:5005"
-    networks:
-     - opfabnet
   config:
     depends_on:
      - rabbitmq
@@ -46,8 +40,6 @@ services:
      - REGISTRY_PORT=8080
     volumes:
      - "../../../../services/infra/config/build/docker-volume/docker-configurations:/service-config"
-    networks:
-     - opfabnet
   registry:
     depends_on:
      - config
@@ -61,8 +53,6 @@ services:
     environment:
      - CONFIG_HOST=config
      - CONFIG_PORT=8080
-    networks:
-     - opfabnet
   client_gateway:
     depends_on:
      - registry
@@ -74,8 +64,6 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-    networks:
-     - opfabnet
   users:
     depends_on:
      - registry
@@ -87,8 +75,6 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-    networks:
-     - opfabnet
   thirds:
     depends_on:
      - registry
@@ -102,8 +88,6 @@ services:
     - DEPENDS_ON=CONFIG
     volumes:
      - "../../../../services/core/thirds/build/docker-volume/thirds-storage:/thirds-storage"
-    networks:
-     - opfabnet
   time:
     depends_on:
      - registry
@@ -115,8 +99,6 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-    networks:
-     - opfabnet
   cards-publication:
     container_name: cards-publication
     depends_on:
@@ -129,8 +111,7 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-    networks:
-     - opfabnet
+    
   cards-consultation:
     depends_on:
      - registry
@@ -142,8 +123,6 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-    networks:
-     - opfabnet
   web-ui:
     depends_on:
     - registry
@@ -155,9 +134,5 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-    networks:
-    - opfabnet
-networks:
-  opfabnet:
-    external:
-      name: opfabnet
+
+
