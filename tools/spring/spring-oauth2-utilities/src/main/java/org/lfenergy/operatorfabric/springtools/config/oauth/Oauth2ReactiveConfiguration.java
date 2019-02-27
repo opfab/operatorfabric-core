@@ -31,11 +31,10 @@ public class Oauth2ReactiveConfiguration extends Oauth2GenericConfiguration{
     /**
      * Generates a converter that converts {@link Jwt} to {@link OpFabJwtAuthenticationToken} whose principal is  a
      * {@link User} model object
-     *
      * @return Converter from {@link Jwt} to {@link OpFabJwtAuthenticationToken}
      */
     @Bean
-    public Converter<Jwt, Mono<AbstractAuthenticationToken>> opfabReactiveJwtConverter(UserServiceProxy proxy) {
+    public Converter<Jwt, Mono<AbstractAuthenticationToken>> opfabReactiveJwtConverter() {
 
         return new Converter<Jwt, Mono<AbstractAuthenticationToken>>(){
             @Override
