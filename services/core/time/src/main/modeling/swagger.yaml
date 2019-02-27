@@ -6,6 +6,7 @@ info:
   termsOfService: ''
   contact:
     email: benoit.jeanson@rte-france.com
+    url: https://opfab.github.io/
   license:
     name: Mozilla Public License V2.0
     url: 'http://mozilla.org/MPL/2.0/'
