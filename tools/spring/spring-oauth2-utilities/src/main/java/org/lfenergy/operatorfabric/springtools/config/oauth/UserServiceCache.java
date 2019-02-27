@@ -43,7 +43,7 @@ public class UserServiceCache {
     public void clearUserCache(){
     }
 
-    /** Clear cached user data for a given {@param principalId}
+    /** Clear cached user data for a given principalId
      * @param principalId of the user for which cache should be cleared
      */
     @CacheEvict(value = "user", key = "{#principalId}")
