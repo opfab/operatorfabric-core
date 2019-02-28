@@ -48,14 +48,14 @@ definitions:
     description: >-
       the severity of the card subject >
 
-      * ALARM - The process behing the card is in critical condition
+      * ALARM - The process behind the card is in critical condition
 
-      * ACTION - The process behing the card needs an action from an operator
+      * ACTION - The process behind the card needs an action from an operator
 
-      * QUESTION - The process behing the card needs information from an
+      * QUESTION - The process behind the card needs information from an
       operator
 
-      * NOTIFICATION - Pure informationnal card
+      * NOTIFICATION - Pure informational card
     enum:
       - ALARM
       - ACTION
