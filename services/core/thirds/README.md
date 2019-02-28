@@ -184,9 +184,9 @@ arguments:
 - v2: right value operand
 
 arithmetical operator:
-- +
-- -
-- *
+- \+
+- \-
+- \*
 - /
 - %
 
@@ -254,8 +254,9 @@ Emergency situation happened on 2018-06-14. Cause : Broken Cofee Machine
 ##### sort
 Sorts an array or object's properties (first argument) using an optional field name (second argument) to sort the collection on this fields natural order
 if no field argument is provided :
-    * if the sorted structure is an array, the original order of the array is kept ;
-    * if the sorted structure is an object, the structure is sorted by objects field name.
+
+* if the sorted structure is an array, the original order of the array is kept ;
+* if the sorted structure is an object, the structure is sorted by objects field name.
 
 
 ```
