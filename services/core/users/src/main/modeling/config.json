@@ -2,6 +2,7 @@
   "library": "spring-boot",
   "java8": true,
   "modelPackage": "org.lfenergy.operatorfabric.users.model",
+  "hideGenerationTimestamp": true,
   "apiPackage": "org.lfenergy.operatorfabric.users.controllers",
   "configPackage": "org.lfenergy.operatorfabric.users.config",
   "invokerPackage": "org.lfenergy.operatorfabric.users.invokers",

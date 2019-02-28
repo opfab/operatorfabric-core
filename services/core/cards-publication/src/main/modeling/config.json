@@ -2,6 +2,7 @@
   "library": "spring-boot",
   "java8": true,
   "modelPackage": "org.lfenergy.operatorfabric.cards.publication.model",
+  "hideGenerationTimestamp": true,
   "apiPackage": "org.lfenergy.operatorfabric.cards.controllers",
   "configPackage": "org.lfenergy.operatorfabric.cards.config",
   "invokerPackage": "org.lfenergy.operatorfabric.cards.invokers",
