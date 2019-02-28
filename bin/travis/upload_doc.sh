@@ -15,8 +15,8 @@ for prj in "${OF_REL_COMPONENTS[@]}"; do
   rm -r $HOME/documentation/projects/$prj/$version/*
   cp -r $prj/build/docs/* $HOME/documentation/projects/$prj/$version/.
 done
-mkdir -p -p $HOME/documentation/projects/ui/main/$version/
-rm -r $HOME/documentation/projects/ui/main/$version/*
+mkdir -p -p $HOME/documentation/projects/ui/main/$version/compodoc/
+rm -r $HOME/documentation/projects/ui/main/$version/compodoc/*
 cp -r $OF_HOME/ui/main/documentation/* $HOME/documentation/projects/ui/main/$version/compodoc/.
 cd $HOME/documentation
 if [ -n "$(git status --porcelain)" ]; then
