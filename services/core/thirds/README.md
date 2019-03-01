@@ -134,14 +134,19 @@ NB: Due to Handlebars limitation you must provide at least one argument to helpe
 example:
 
 ```
-{{now ""}}
-
-{{dateFormat (now "") format="MMMM Do YYYY, h:mm:ss a"}}
+<div>{{now ""}}</div>
+<br>
+<div>{{dateFormat (now "") format="MMMM Do YYYY, h:mm:ss a"}}</div>
 ```
 
 outputs
+```
+<div>1551454795179</div>
+<br>
+<div>mars 1er 2019, 4:39:55 pm</div>
 
-
+```
+for a local set to `FR_fr`
 
 ##### preserveSpace
 
