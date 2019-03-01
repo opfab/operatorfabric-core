@@ -58,27 +58,30 @@ Due to web nature of Operator Fabric, we encourage business modules provider to 
 #### Templates
 
 Templates are [Handlebars](https://handlebarsjs.com/) template files. Templates are fuelled with a data structure 
-containing the card data (See [card data model](https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#__Models) for more information)
+contained in the card data (See [card data model](https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#__Models) for more information)
 
 In addition to Handlebars basic syntax and helpers, Operator Fabric defines the following helpers :
 
 ##### numberFormat
+
 formats a number parameter using [Intl.NumberFormat](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/NumberFormat).
-The locale used is current user selected one, and options are passed as hash parameters ([see Handlebars doc Literals section](https://handlebarsjs.com/)).
+The locale used is the current user selected one, and options are passed as hash parameters ([see Handlebars doc Literals section](https://handlebarsjs.com/)).
 
 ```
 {{numberFormat data.price style="currency" currency="EUR"}}
 ```
 
 ##### dateFormat
+
 formats the submitted parameters (millisecond since epoch) using [mement.format](https://momentjs.com/).
-The locale used is current user selected one, thr format is "format" hash parameter ([see Handlebars doc Literals section](https://handlebarsjs.com/)).
+The locale used is the current user selected one, the format is "format" hash parameter ([see Handlebars doc Literals section](https://handlebarsjs.com/)).
 
 ```
 {{dateFormat data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
 ```
 
 ##### slice
+
 extracts a sub array from ann array
 
 example:
@@ -123,7 +126,8 @@ outputs:
 ```
 
 ##### now
-Outputs current date as millisecond from epoch. the date is computed from application internal time service and thus may be different from the date that one can compute from javascript api which relies on the browsers' system time.
+
+outputs the current date in millisecond from epoch. The date is computed from application internal time service and thus may be different from the date that one can compute from javascript api which relies on the browsers' system time.
 
 NB: Due to Handlebars limitation you must provide at least one argument to helpers otherwise, Handlebars will confuse a helper and a variable. In the bellow example, we simply pass an empty string.
 
@@ -140,20 +144,23 @@ outputs
 
 
 ##### preserveSpace
-preserve space in parameter string to avoid html standard space trimming.
+
+preserves space in parameter string to avoid html standard space trimming.
 
 ```
 {{preserveSpace data.businessId}}
 ```
 
 ##### bool
+
 returns a boolean result value on an arithmetical operation (including object equality) or boolean operation.
-arguments:
+
+Arguments:
 - v1: left value operand
 - op: operator (string value)
 - v2: right value operand
 
-arithmetical operator:
+arithmetical operators:
 - ==
 - ===
 - \!=
@@ -163,7 +170,7 @@ arithmetical operator:
 - \>
 - \>=
 
-boolean operators
+boolean operators:
 - &&
 - ||
 
@@ -177,13 +184,15 @@ examples:
 ```
 
 ##### math
+
 returns the result of a mathematical operation.
+
 arguments:
 - v1: left value operand
 - op: operator (string value)
 - v2: right value operand
 
-arithmetical operator:
+arithmetical operators:
 - \+
 - \-
 - \*
@@ -195,8 +204,10 @@ example:
 ```
 {{math 1 '+' 2}}
 ```
+
 ##### split
-splits a string into an array based on a split string
+
+splits a string into an array based on a split string.
 
 example:
 
@@ -217,6 +228,7 @@ outputs
 ```
 
 ##### cardAction
+
 outputs a card action button whose card action id is the concatenation of an arbitrary number of helper arguments
 
 ```
@@ -224,6 +236,7 @@ outputs a card action button whose card action id is the concatenation of an arb
 ```
 
 ##### svg
+
 outputs a svg tag with lazy loading, and missing image replacement message. The image url is the concatenation of an arbitrary number of helper arguments
 
 ```
@@ -231,14 +244,15 @@ outputs a svg tag with lazy loading, and missing image replacement message. The 
 ```
 
 ##### i18n
-outputs a i18n result from a key and parameters. There are two way of configuring
 
-* Pass an object as its sole argument. The object contains a key field (string) and an optionnal parameters field (map of parameterKey => value)
+outputs a i18n result from a key and some parameters. There are two ways of configuration :
+
+* Pass an object as sole argument. The object must contain a key field (string) and an optional parameter field (map of parameterKey => value)
 ```
 {{i18n data.i18nTitle}}
 ```
 
-* Pass a string key as its sole argument and use hash parameters ([see Handlebars doc Literals section](https://handlebarsjs.com/)) for i18n string parameters.
+* Pass a string key as sole argument and use hash parameters ([see Handlebars doc Literals section](https://handlebarsjs.com/)) for i18n string parameters.
 
 ```
 <!--
@@ -252,11 +266,13 @@ Emergency situation happened on 2018-06-14. Cause : Broken Cofee Machine
 ```
 
 ##### sort
-Sorts an array or object's properties (first argument) using an optional field name (second argument) to sort the collection on this fields natural order
-if no field argument is provided :
 
-* if the sorted structure is an array, the original order of the array is kept ;
-* if the sorted structure is an object, the structure is sorted by objects field name.
+sorts an array or some object's properties (first argument) using an optional field name (second argument) to sort the collection on this fields natural order.
+
+If there is no field argument provided :
+
+* for an array, the original order of the array is kept ;
+* for an object, the structure is sorted by the object field name.
 
 
 ```
@@ -315,13 +331,14 @@ outputs :
 ```
 
 ### Third Party bundle
+
 Bundle files are uploaded to service to declare Third Party Business 
-Module resources. These bundle are tar.gz archives enclosing resource 
+Module resources. These bundle are `tar.gz` archives enclosing resource 
 files and a configuration file.
 
-Bundle is composed of one subdirectory per resources, when resource is 
-internationalized (template, i18n, media) , this subdirectory itself has 
-one subdirectory per supported languages
+Bundle is composed of one subdirectory per resource. When the resource is 
+internationalized (template, i18n, media) , those subdirectories themselves need to have 
+one subdirectory per supported language.
 
 #### layout
 
