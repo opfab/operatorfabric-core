@@ -25,8 +25,8 @@ public class AssertUtils {
 
   /**
    * More compact {@linkplain org.assertj.core.api.Assertions#assertThatExceptionOfType}
-   * @param exceptionType
-   * @return
+   * @param exceptionType the exception type class
+   * @return the created {@link ThrowableTypeAssert}
    */
   public static ThrowableTypeAssert<? extends Throwable> assertException(Class<? extends Throwable> exceptionType) {
     return assertThatExceptionOfType(exceptionType);

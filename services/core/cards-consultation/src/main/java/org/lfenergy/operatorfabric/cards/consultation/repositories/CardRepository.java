@@ -23,8 +23,8 @@ public interface CardRepository extends ReactiveMongoRepository<CardConsultation
     /**
      * Finds card by processID (i.e. process current state)
      *
-     * @param processId
-     * @return
+     * @param processId for which we want to find card
+     * @return card with given processId
      */
     public Mono<CardConsultationData> findByProcessId(String processId);
 

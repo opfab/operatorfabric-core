@@ -19,7 +19,7 @@ public class CollectionUtils {
      * Create an {@link ArrayList} from an array of elements
      * @param array the elements to add
      * @param <T> the elements' type
-     * @return
+     * @return the created {@link ArrayList}
      */
     public static <T> List<T> createArrayList(T... array){
         List<T> result = new ArrayList<>();

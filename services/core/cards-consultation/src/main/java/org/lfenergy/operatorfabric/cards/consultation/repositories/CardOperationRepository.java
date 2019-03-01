@@ -20,10 +20,13 @@ public interface CardOperationRepository {
      * <li>starting before <code>rangeStart</code> and ending after <code>rangeEnd</code></li>
      * <li>starting before <code>rangeStart</code> and never ending</li>
      * </ul>
+     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code>
      *
      * @param latestPublication only cards published earlier than this will be fetched
      * @param rangeStart        start of search range
      * @param rangeEnd          end of search range
+     * @param login             only cards received by this login (OR groups)
+     * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +
@@ -34,9 +37,12 @@ public interface CardOperationRepository {
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and starting after <code>rangeStart</code>
+     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code>
      *
      * @param latestPublication only cards published earlier than this will be fetched
      * @param rangeStart        start of future
+     * @param login             only cards received by this login (OR groups)
+     * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +
@@ -45,9 +51,12 @@ public interface CardOperationRepository {
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and ending before <code>rangeEnd</code>
+     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code>
      *
      * @param latestPublication only cards published earlier than this will be fetched
      * @param rangeEnd          end of past
+     * @param login             only cards received by this login (OR groups)
+     * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +
@@ -62,10 +71,13 @@ public interface CardOperationRepository {
      * <li>starting before <code>rangeStart</code> and ending after <code>rangeEnd</code></li>
      * <li>starting before <code>rangeStart</code> and never ending</li>
      * </ul>
+     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code>
      *
      * @param latestPublication only cards published earlier than this will be fetched
      * @param rangeStart        start of search range
      * @param rangeEnd          end of search range
+     * @param login             only cards received by this login (OR groups)
+     * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +
@@ -76,9 +88,12 @@ public interface CardOperationRepository {
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and starting after <code>rangeStart</code>
+     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code>
      *
      * @param latestPublication only cards published earlier than this will be fetched
      * @param rangeStart        start of future
+     * @param login             only cards received by this login (OR groups)
+     * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +
@@ -87,9 +102,12 @@ public interface CardOperationRepository {
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and ending before <code>rangeEnd</code>
+     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code>
      *
      * @param latestPublication only cards published earlier than this will be fetched
      * @param rangeEnd          end of past
+     * @param login             only cards received by this login (OR groups)
+     * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
 //    @Query("{'publishDate': { $lte: ?0 }, " +

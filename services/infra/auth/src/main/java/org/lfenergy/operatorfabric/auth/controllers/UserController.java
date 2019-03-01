@@ -25,8 +25,8 @@ import java.security.Principal;
 public class UserController {
     /**
      * Return authenticated user info
-     * @param principal
-     * @return
+     * @param principal for which to return the info
+     * @return authenticated user info
      */
     @GetMapping("/me")
     public Principal user(Principal principal) {
