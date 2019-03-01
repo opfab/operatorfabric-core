@@ -40,8 +40,8 @@ up a whole environment with gradle, java, maven and project variable set.
 
 #### Software
 
-* [RabbitMQ 3.7.6 +](RABBITMQ.md) : AMQP messaging layer allows inter service communication
-* [MongoDB 4.0 +](MONGO.md) : Card persistent storage
+* [RabbitMQ 3.7.6 +](RABBITMQ.md): AMQP messaging layer allows inter service communication
+* MongoDB 4.0 +: Card persistent storage
 
 RabbitMQ is required for :
 
@@ -70,75 +70,81 @@ You can also use the bin/setup_dockerized_environment which builds the services 
 
 ```
 project
-└──bin
-└──client
-│   └──cards (cards-client-data)
-│   └──time (time-client-data)
+├──bin
+├──client
+│   ├──cards (cards-client-data)
+│   ├──src  
+│   ├──time (time-client-data)
 │   └──users (users-client-data)
-└──services
-|   └──core
-|   |   └──cards-consultation (cards-consultation-business-service)
-|   |   └──cards-publication (cards-publication-business-service)
-|   |   └──thirds (third-party-business-service)
-|   |   └──time (time-business-service)
-|   |   └──users (users-business-service)
-|   └──infra
-|   |   └──auth 
-|   |   └──client-gateway (client-gateway-cloud-service)
-|   |   └──config (configuration-cloud-service)
-|   |   └──registry (registry-cloud-service)
-|   └──web
-|       └──web-ui
-└──tools
-    └──spring-amqp-utilities
-    └──spring-mongo-utilities
-    └──spring-oauth2-utilities
-    └──spring-utilities
-    └──swagger-spring-generators
-    └──test-utilities
-    └──utilities
+├──services
+│   ├──core
+│   │   ├──cards-consultation (cards-consultation-business-service)
+│   │   ├──cards-publication (cards-publication-business-service)
+│   │   ├──thirds (third-party-business-service)
+│   │   ├──time (time-business-service)
+│   │   └──users (users-business-service)
+│   ├──infra
+│   │   ├──auth 
+│   │   ├──client-gateway (client-gateway-cloud-service)
+│   │   ├──config (configuration-cloud-service)
+│   │   └──registry (registry-cloud-service)
+│   └──web
+│       └──web-ui
+└── tools
+    ├── generic
+    │   ├── test-utilities
+    │   └── utilities
+    ├── spring
+    │   ├── spring-amqp-time-utilities
+    │   ├── spring-mongo-utilities
+    │   ├── spring-oauth2-utilities
+    │   └── spring-utilities
+    └── swagger-spring-generators
+
 ```
 
 * bin : contains useful scripts
 * client : contains REST APIs simple beans definition, may be used by external projects
 * services: contains business microservices
     * [core](services/core/README.md) : contains core business micro services
-        * [cards-consultation (cards-consultation-business-service)](services/core/cards-consultation/README.md) : Card consultation service. 
-        * [cards-publication (cards-publication-business-service)](services/core/cards-publication/README.md) : Card publication service
+        * [cards-consultation (cards-consultation-business-service)](services/core/cards-consultation) : Card consultation service. 
+        * [cards-publication (cards-publication-business-service)](services/core/cards-publication) : Card publication service
         * [thirds (third-party-business-service)](services/core/thirds/README.md) : Thirdparty information service registry
         * [time (time-business-service)](services/core/time/README.md) : time management service
-        * [users (users-business-service)](services/core/users/README.md) : users management service
-    * [infra](services/infra/README.md): contains infrastructure microservices
+        * [users (users-business-service)](services/core/users) : users management service
+    * [infra](services/infra): contains infrastructure microservices
         * [auth](services/infra/auth/README.md): Auth is a dummy development spring-oauth2 server used for testing and debugging other services.
-        * [client-gateway (client-gateway-cloud-service)](services/infra/client-gateway/README.md): spring-gateway client side only gateway microservice, used to serve public apis and web ui. 
-        * [config (configuration-cloud-service)](services/infra/config/README.md): spring-configuration centralized configuration microservice
-        * [registry (registry-cloud-service)](services/registry/config/README.md): eureka microservice registry
-    * [web](services/web/README.md): contains web pages and applicatio services
-        * [web-ui](services/web/web-ui/README.md): Main operator-fabric SPA.
+        * [client-gateway (client-gateway-cloud-service)](services/infra/client-gateway): spring-gateway client side only gateway microservice, used to serve public apis and web ui. 
+        * [config (configuration-cloud-service)](services/infra/config): spring-configuration centralized configuration microservice
+        * [registry (registry-cloud-service)](services/infra/registry): eureka microservice registry
+    * [web](services/web): contains web pages and application services
+        * [web-ui](services/web/web-ui): Main operator-fabric SPA.
 * [tools](tools/README.md)
-    * [spring-amqp-utilities](tools/spring-amqp-utilities/README.md) : Utility code with spring amqp specific dependencies, used to share common features across amqp dependent services
-    * [spring-mongo-utilities](tools/spring-mongo-utilities/README.md) : Utility code  with spring specific dependencies, used to share common features across mongo dependent services
-    * [spring-oauth2-utilities](tools/spring-oauth2-utilities/README.md) : Utility code  with spring specific dependencies, used to share common features across oauth2 dependent services
-    * [spring-utilities](tools/spring-utilities/README.md) : Utility code  with spring specific dependencies
+    * [generic](tools/generic)
+        * [test-utilities](tools/generic/test-utilities/README.md) : Test specific utility code
+        * [utilities](tools/generic/utilities/README.md)
+     *[spring](tools/spring)
+        * [spring-amqp-time-utilities](tools/spring/spring-amqp-time-utilities/README.md) : Utility code with spring amqp specific dependencies, used to share common features across amqp dependent services
+        * [spring-mongo-utilities](tools/spring/spring-mongo-utilities) : Utility code  with spring specific dependencies, used to share common features across mongo dependent services
+        * [spring-oauth2-utilities](tools/spring/spring-oauth2-utilities) : Utility code  with spring specific dependencies, used to share common features across oauth2 dependent services
+        * [spring-utilities](tools/spring/spring-utilities/README.md) : Utility code  with spring specific dependencies
     * [swagger-spring-generators](tools/swagger-spring-generators/README.md) : Operator Fabric tailored spring boot generator for swagger
-    * [test-utilities](tools/test-utilities/README.md) : Test specific utility code
-    * [utilities](tools/utilities/README.md) : Utility code
 
 ### Projects structures and configurations
 Projects must conforms to a few rules in order for the configured tasks to work
 
 #### Java
 
-* [subproject]/src/main/java : contains java source code
-* [subproject]/src/test/java : contains java tests source code
-* [subproject]/src/main/resources : contains resource files
-* [subproject]/src/test/resources : contains test resource files
+* [sub-project]/src/main/java : contains java source code
+* [sub-project]/src/test/java : contains java tests source code
+* [sub-project]/src/main/resources : contains resource files
+* [sub-project]/src/test/resources : contains test resource files
 
 #### Modeling
 Core services projects declaring REST APIS uses swagger for their definition must declare txo files :
 
-* **[subproject]/src/main/modeling/swagger.yaml**: swagger api definition ;
-* **[subproject]/src/main/modeling/config.json**: swagger generator configuration.
+* **[sub-project]/src/main/modeling/swagger.yaml**: swagger api definition ;
+* **[sub-project]/src/main/modeling/config.json**: swagger generator configuration.
 
 #### Docker
 
@@ -146,10 +152,10 @@ Services project all have docker image generated in their build cycle (See gradl
 
 Per project configuration :
 
-* docker file : **[subproject]/src/main/docker/Dockerfile**
-* docker-compose file : **[subproject]/src/main/docker/docker-compose.yml**
-* runtime data : **[subproject]/src/main/docker/volume** is copied to
-**[subproject]/build/docker-volume/** by task **copyWorkingDir**. The latest
+* docker file : **[sub-project]/src/main/docker/Dockerfile**
+* docker-compose file : **[sub-project]/src/main/docker/docker-compose.yml**
+* runtime data : **[sub-project]/src/main/docker/volume** is copied to
+**[sub-project]/build/docker-volume/** by task **copyWorkingDir**. The latest
 can then be mounted as volume in docker containers.
 
 ## 4. Docker demo
@@ -294,7 +300,7 @@ and plugins official documentation
     * composeStop: runs docker-compose stop for docker file;
     * composeLogs: runs docker-compose logs -f for docker file;
 * Other:
-    * copyWorkingDir : copies [subproject]/src/main/docker/volume to [subproject]/build/
+    * copyWorkingDir : copies [sub-project]/src/main/docker/volume to [sub-project]/build/
     * copyDependencies : copy dependencies to build/libs
     * generateTaskGraph : Generate png from displaying current life cycle tasks 
 
@@ -319,7 +325,7 @@ and plugins official documentation
 ##### config
 
 * Test tasks
-    * createDevData : prepare data in build/test-data for running bootRun task during developpement
+    * createDevData : prepare data in build/test-data for running bootRun task during development
 
 ### Tools
 
@@ -369,12 +375,12 @@ gradle :services:core:third-party-service:composeUp
 
 ### Running subproject from jar file
 
- * gradle :[subprojectPath]:bootJar
- * or java -jar [subprojectPath]/build/libs/[subproject].jar
+ * gradle :[sub-projectPath]:bootJar
+ * or java -jar [sub-projectPath]/build/libs/[sub-project].jar
 
 ### Overriding properties when running from jar file
 
-* java -jar [subprojectPath]/build/libs/[subproject].jar --spring.config.additional-location=file:[filepath]
+* java -jar [sub-projectPath]/build/libs/[sub-project].jar --spring.config.additional-location=file:[filepath]
 NB : properties may be set using ".properties" file or ".yml" file. See [Spring Boot configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) for more info.
 * Generic property list extract :
     * server.port (defaults to 8080) : embedded server port

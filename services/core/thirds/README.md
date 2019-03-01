@@ -4,13 +4,13 @@ This sub project manages Third Partye Business Module registration
 
 ## 1. Set up and Build
 
-see [Operator Fabric main page](../../README.md)
+see [Operator Fabric main page](../../../README.md)
 
 ## 2. Features
 
 ### Thirdparty Service configuration
 
-See [swagger generated documentation model section](build/doc/api/index.html#__Models) for data layout
+See [swagger generated documentation model section](https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#__Models) for data layout
 
 ### Resource serving
 #### CSS
@@ -20,7 +20,7 @@ the ```.detail.template``` parent selector
 
 #### Internationalization
 Internationalization (i18n) files are json file (JavaScript Object Notation). One file must be defined by module 
-supported language. See [swagger generated documentation model section](build/doc/api/index.html#model) for data layout.
+supported language. See [swagger generated documentation model section](https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#__Models) for data layout.
 
 Sample json i18n file 
 ```
@@ -58,7 +58,7 @@ Due to web nature of Operator Fabric, we encourage business modules provider to 
 #### Templates
 
 Templates are [Handlebars](https://handlebarsjs.com/) template files. Templates are fuelled with a data structure 
-containing the card data (See [card data model](../publisher/build/doc/api/index.html#__Models) for more information)
+containing the card data (See [card data model](https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#__Models) for more information)
 
 In addition to Handlebars basic syntax and helpers, Operator Fabric defines the following helpers :
 
@@ -378,8 +378,8 @@ bundle
 }
 ```
 
-See [swagger generated documentation model section](build/doc/api/index.html#__Models) for data description
+See [swagger generated documentation model section](https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#__Models) for data description
 
 ## 3. Rest Endpoints and Data Model
 
-See [swagger generated documentation](build/doc/api/index.html)
+See [swagger generated documentation](https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api)

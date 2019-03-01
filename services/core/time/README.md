@@ -4,7 +4,7 @@ This sub project manages Third Party Business Module registration
 
 ## 1. Set up and Build
 
-see [Operator Fabric main page](../../README.md)
+see [Operator Fabric main page](../../../README.md)
 
 ## 2. Features
 
@@ -15,7 +15,7 @@ is the sole responsibility of the third party services
 
 ## 3. Rest Endpoints and Data Model
 
-See [swagger generated documentation](build/doc/api/index.html)
+See [swagger generated documentation](https://opfab.github.io/projects/services/core/time/0.1.1.SNAPSHOT/api/index.html)
 
 ## 4. Disclaimer
 
