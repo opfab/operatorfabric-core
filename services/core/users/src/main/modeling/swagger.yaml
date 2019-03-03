@@ -13,8 +13,6 @@ info:
 host: localhost
 basePath: /apis
 tags:
-  - name: time
-    description: Everything concerning time
   - name: users
     description: Everything concerning users
   - name: groups
@@ -22,34 +20,40 @@ tags:
 schemes:
   - http
 definitions:
-  EpochDate:
-    type: object
-    description: number of milliseconds since Epoch (long integer)
   SimpleUser:
     type: object
     description: User
     properties:
       login:
         type: string
+        example: "jlcurtis"
       firstName:
         type: string
+        example: "Jamie Lee"
       lastName:
         type: string
+        example: "Curtis"
   User:
     type: object
     description: User
     properties:
       login:
         type: string
+        example: "jcleese"
       firstName:
         type: string
+        example: "John"
       lastName:
         type: string
+        example: "Cleese"
       groups:
         type: array
         items:
           type: string
           uniqueItems: true
+        example:
+          - "Monty Python"
+          - "Wanda"
   Group:
     type: object
     properties:
@@ -57,13 +61,16 @@ definitions:
         type: string
       description:
         type: string
+    example:
+      name: "Wanda"
+      description: "They were not as successful in Fierce Creatures."
 paths:
   /users:
     get:
       tags:
         - users
-      summary: fetch list of existing users
-      description: 'fetch list of existing users, with pagination and filter options'
+      summary: Fetch a list of all existing users
+      description: 'Fetch a list of all existing users, with pagination and filter options'
       operationId: fetchUsers
       produces:
         - application/json
@@ -74,6 +81,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/User'
+          examples:
+            application/json: [{ "login": "jcleese", "firstName": "John", "lastName": "Cleese", "groups": ["Monty Python","Wanda"] }, { "login": "gchapman", "firstName": "Graham", "lastName": "Chapman", "groups": ["Monty Python"] }]
         '401':
           description: Authentication required
       security:
@@ -82,15 +91,17 @@ paths:
     post:
       tags:
         - users
-      summary: Create new user
+      summary: Create a new user
       description: Create a new user
       operationId: createUser
+      consumes:
+        - application/json
       produces:
         - application/json
       parameters:
         - in: body
           name: user
-          description: User  to be created
+          description: User to be created
           schema:
             $ref: '#/definitions/SimpleUser'
       responses:
@@ -98,14 +109,16 @@ paths:
           description: ok
           schema:
             $ref: '#/definitions/SimpleUser'
+          examples:
+            application/json: { "login": "jlcurtis", "firstName": "Jamie Lee", "lastName": "Curtis" }
         '401':
           description: Authentication required
   '/users/{login}':
     get:
       tags:
         - users
-      summary: fetch existing user
-      description: fetch existing user from its login
+      summary: Fetch an existing user
+      description: Fetch an existing user from their login
       operationId: fetchUser
       produces:
         - application/json
@@ -120,16 +133,22 @@ paths:
           description: ok
           schema:
             $ref: '#/definitions/User'
+          examples:
+            application/json: { "login": "gchapman", "firstName": "Graham", "lastName": "Chapman", "groups": ["Monty Python"] }
         '401':
           description: Authentication required
         '403':
           description: Authenticated users who are not admins can only access their own data
+        '404':
+          description: Required user not found
     put:
       tags:
         - users
-      summary: Update new user
-      description: updates existing user
+      summary: Update an existing user
+      description: Update an existing user
       operationId: updateUser
+      consumes:
+        - application/json
       produces:
         - application/json
       parameters:
@@ -140,7 +159,7 @@ paths:
           required: true
         - in: body
           name: user
-          description: User  to be created
+          description: User to be updated
           schema:
             $ref: '#/definitions/SimpleUser'
       responses:
@@ -148,14 +167,16 @@ paths:
           description: ok
           schema:
             $ref: '#/definitions/SimpleUser'
+          examples:
+            application/json: { "login": "jlcurtis", "firstName": "Jamie Lee", "lastName": "Curtis" }
         '401':
           description: Authentication required
   /groups:
     get:
       tags:
         - groups
-      summary: fetch list of existing groups
-      description: 'fetch list of existing users, with pagination and filter options'
+      summary: Fetch a list of all existing groups
+      description: 'Fetch a list of all existing groups, with pagination and filter options'
       operationId: fetchGroups
       produces:
         - application/json
@@ -166,8 +187,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Group'
+          examples:
+            application/json: [{ "name": "Wanda", "description": "They were not as successful in Fierce Creatures" } , { "name": "Marx Brothers", "description": "Chico, Groucho and Harpo, forget about Zeppo and Gummo" } ]
         '401':
-          description: unauthorized user
+          description: Unauthorized user
       security:
         - user_auth:
             - admin
@@ -177,14 +200,14 @@ paths:
       summary: Create a new group of users
       description: Create a new group of users
       operationId: createGroup
-      produces:
-        - application/json
       consumes:
+        - application/json
+      produces:
         - application/json
       parameters:
         - in: body
           name: group
-          description: Group  to be created
+          description: Group to be created
           schema:
             $ref: '#/definitions/Group'
       responses:
@@ -192,6 +215,10 @@ paths:
           description: created
           schema:
             $ref: '#/definitions/Group'
+          examples:
+            application/json: { "name": "Wanda", "description": "They were not as successful in Fierce Creatures." }
+        '401':
+          description: Unauthorized user
       security:
         - user_auth:
             - admin
@@ -199,12 +226,12 @@ paths:
     put:
       tags:
         - groups
-      summary: Updates an existing group of users
-      description: Updates an existing group of users
+      summary: Update an existing group of users
+      description: Update an existing group of users
       operationId: updateGroup
-      produces:
-        - application/json
       consumes:
+        - application/json
+      produces:
         - application/json
       parameters:
         - in: path
@@ -214,14 +241,16 @@ paths:
           required: true
         - in: body
           name: group
-          description: Group to be created
+          description: Group to be updated
           schema:
             $ref: '#/definitions/Group'
       responses:
-        '200':
+        '201':
           description: created
           schema:
             $ref: '#/definitions/Group'
+        '401':
+          description: Unauthorized user
       security:
         - user_auth:
             - admin
@@ -240,10 +269,14 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        '201':
           description: created
           schema:
             $ref: '#/definitions/Group'
+          examples:
+            application/json: { "name": "Wanda", "description": "They were not as successful in Fierce Creatures." }
+        '401':
+          description: Unauthorized user
       security:
         - user_auth:
             - admin
@@ -253,7 +286,7 @@ paths:
         - groups
         - users
       summary: Update list of group users
-      description: 'Update list of group users, users not included are removed from group'
+      description: 'Update list of group users, users not included in given list are removed from group'
       operationId: updateGroupUsers
       produces:
         - application/json
@@ -267,13 +300,13 @@ paths:
           required: true
         - in: body
           name: users
-          description: Array of user login to be added
+          description: Array of user logins to be added
           schema:
             type: array
             items:
               type: string
       responses:
-        '20':
+        '200':
           description: updated
       security:
         - user_auth:
@@ -304,7 +337,7 @@ paths:
               type: string
       responses:
         '200':
-          description: created
+          description: updated
       security:
         - user_auth:
             - admin
@@ -315,9 +348,9 @@ paths:
       summary: Deletes users from group
       description: ONLY deletes users from group
       operationId: deleteGroupUsers
-      produces:
-        - application/json
       consumes:
+        - application/json
+      produces:
         - application/json
       parameters:
         - in: path
@@ -327,14 +360,14 @@ paths:
           required: true
         - in: body
           name: users
-          description: Array of user login to be added
+          description: Array of user login to be deleted
           schema:
             type: array
             items:
               type: string
       responses:
         '200':
-          description: created
+          description: deleted
       security:
         - user_auth:
             - admin
