@@ -1,0 +1,3 @@
+==== Declare new 3rd Party Information Services
+
+image::Activity_UploadThirdActivity_ThirdActivityDiagram.JPEG[Upload a Third Party Data Bundle Activity]

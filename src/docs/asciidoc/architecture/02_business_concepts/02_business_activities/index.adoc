@@ -1,0 +1,7 @@
+ifndef::imagesdir[:imagesdir: ../../images]
+=== Business Activities
+
+include::01_handle_process.adoc[]
+include::02_declare_3rd.adoc[]
+include::03_browse_archive.adoc[]
+include::04_browse_feed.adoc[]

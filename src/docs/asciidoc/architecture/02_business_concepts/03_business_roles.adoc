@@ -1,0 +1,24 @@
+=== Business Roles
+
+We limit business roles to the high level business role, it is not the purpose of this document to delve into specific Business Process implementation defined during the lifetime of the system
+
+==== Operator
+Description:: Operates the systems, i.e. takes part in 3rd Party Information Service business process instances.
+Type:: Human
+Access:: Mobile, Intranet
+Triggers:: Archive Consultation Event; Operator Input Event;
+Location:: Operating room
+
+==== Administrator
+Description:: Administer the system
+Type:: Human
+Access:: Intranet
+Triggers::  3rd Party Service Add/Update Event
+Location:: &nbsp;
+
+==== 3rd Party Information Service
+Description:: Initiate Process instances and interacts with it
+Type:: Service
+Access:: Internal
+Triggers:: Business Process Start Event; 3rd Party Service input event;
+Location:: &nbsp;

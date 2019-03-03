@@ -1,0 +1,14 @@
+ifndef::imagesdir[:imagesdir: ../images]
+== Business Conceptual Layer
+
+We derive the business conceptual layer from the aforementioned business
+objectives, we’ll focus on one primary objective: "Provide a generic
+approach to operator and services interaction"
+
+include::01_business_goals.adoc[]
+
+include::02_business_activities/index.adoc[]
+
+include::03_business_roles.adoc[]
+
+include::04_business_services/index.adoc[]

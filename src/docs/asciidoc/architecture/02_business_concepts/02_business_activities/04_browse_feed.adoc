@@ -1,0 +1,3 @@
+==== Browse card feed
+
+image::Activity_Feed_Feed_Activity_Diagram.JPEG[Browse a Feed Activity]

@@ -1,0 +1,23 @@
+ifndef::imagesdir[:imagesdir: ../images]
+== Contextual background
+
+Contextual Background captures a picture of the reason of existence of the
+project by depicting the actual business context, objectives, risks and
+constraints. It also restrict the scope of the project by expressing
+assumptions on the business environment and principles of development.
+
+include::01_business_mission.adoc[]
+
+include::02_business_objectives.adoc[]
+
+include::03_objectives_hierarchie.adoc[]
+
+include::04_risks.adoc[]
+
+include::05_constraints.adoc[]
+
+include::06_scopes.adoc[]
+
+include::07_assumptions.adoc[]
+
+include::08_principles.adoc[]

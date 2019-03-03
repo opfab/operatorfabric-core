@@ -1,0 +1,8 @@
+==== Handle Business
+===== Handle Business Process instance
+
+image::Activity_Handle_Process_ProcessActivityDiagram.JPEG[Handle Business Process Instance Activity]
+
+===== Handle Card
+
+image::Activity_Handle_Card_CardActivityDiagram.JPEG[Handle Card Input Activity]

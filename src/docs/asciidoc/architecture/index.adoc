@@ -1,0 +1,10 @@
+= Architecture
+:imagesdir: images
+:sectnums:
+
+:toc:
+
+include::01_contextual/index.adoc[]
+
+include::02_business_concepts/index.adoc[]
+

@@ -1,0 +1,19 @@
+=== Risks
+
+==== Absence of finite target audience
+
+Operator-Fabric being a tool for other services and organization, it has no target audience. It means we cannot completely define the following things :
+
+* number of operators,
+* number of third party services,
+* target production technical architecture,
+* volume of produced data.
+
+Impact::
+Not being able to make good architecture choices and not being able to endure production scale data flows.
+
+Measures::
+. Make good architecture choices to allow for both vertical and horizontal scaling and allow these choices to be precisely tailored to specific parts of the final solution (for instance we may need to scale operator interactions with the solution when administering services would not need to scale).
+. Analyze the effective performance of the final solution to be able to advertise its performances and how it could be effectively scaled.
+. Isolate components so that eventual down time and lack of performance can be handled with back pressure management and degraded mode to avoid complete failure of system.
+. Work closely with other depending project to have examples of deployment scale intel.
