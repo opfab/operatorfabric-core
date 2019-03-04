@@ -43,7 +43,7 @@ public class ObjectMapperShould {
             "\"login\": \"jdoe\"," +
             "\"firstName\": \"john\"," +
             "\"lastName\": \"doe\"," +
-            "\"groupSet\": [\"user\",\"admin\"]" +
+            "\"groups\": [\"user\",\"admin\"]" +
            "}";
         User user = mapper.readValue(stringUser, User.class);
         assertThat(user).isNotNull();
