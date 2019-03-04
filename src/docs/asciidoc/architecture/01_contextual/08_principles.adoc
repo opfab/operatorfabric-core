@@ -8,6 +8,7 @@ Priority:: Medium
 Motivation:: Allow change of priority and adaptation as we must enforce a symbiotic relationship with other projects which depend on Operator-Fabric.
 Implication:: Develop feature during short runs, strong product owning and well defined use cases
 Assurance::
+//-
 
 ===== Provide continuous quality indicators
 Description::
@@ -15,6 +16,7 @@ Priority:: High
 Motivation:: Being an open source and publically available project, operator-fabric quality must be advertise to increase other organization trust.
 Implication:: Introduce continuous integration in the project including quality analysis tools and quality dashboard. Make produced code quality a priority for developers to avoid increasing technical debt.
 Assurance::
+//-
 
 ===== Provide continuously updated documentation
 Description::
@@ -22,6 +24,7 @@ Priority:: High
 Motivation:: Operator Fabric’s adoption will partly rely on its accessibility to others
 Implication:: Keep up to date both internal and API documentation. Keep up to date public architecture documents
 Assurance::
+//-
 
 ==== Business Principle
 
@@ -30,28 +33,32 @@ Description:: Operator fabric may be used to manage highly available process. Th
 Priority:: High
 Motivation:: Avoid data loss, avoid disrupting operator work.
 Implication:: Any developed service or component must ensure that in case of failure it can be restarted in a state that would avoid disruption of operators’ tasks. Not all service may be concerned.
-Assurance:: &nbsp;
+Assurance::
+//-
 
 ===== Allow degraded mode
 Description:: Not all components have the same “life at stake” requirement, if these components are disrupted we must ensure that components with higher importance are still available to users and or other services/components. Solution would depend on the concerned component and may range from producing default result, used previously cached result, deactivate functionality of lower importance.
 Priority:: Medium
 Motivation:: The failure of services or components of less importance must not disrupt the main process management of the solution functionalities.
 Implication:: The implication may be different for different components
-Assurance:: &nbsp;
+Assurance::
+//-
 
 ===== Relevant process information must be accessible in a holistic view
 Description:: The core process functionalities and indicators must be accessible in a single holistic view. This view must filter information so that the relevant information on currently running process are presented to the right person. Note that the system must still have safeguards to avoid sensitive information loss.
 Priority:: High
 Motivation:: Rationalize operator work by providing them relevant information about their tasks.
 Implication::
-Assurance:: &nbsp;
+Assurance::
+//-
 
 ===== Allow tradability of processes
 Description:: Process may be later studied and reviewed. Both the processes successive states and their associated data must be later accessed.
 Priority:: Medium
 Motivation:: Allow Post processing verification, allow monitoring
 Implication:: Data must be kept for an undefined or defined duration
-Assurance:: &nbsp;
+Assurance::
+//-
 
 ==== Information Principles
 
@@ -60,55 +67,77 @@ Description:: It is expected that the business data collected by the application
 Priority:: Low (High)
 Motivation:: This emanate from a then non proved assumptions which is why the priority is low but it may have global information architecture influence and delaying such consideration in the conception and development process may produce wide later impact. It is thus preferable to take this principle as a High priority principle.
 Implication:: Use a readable format for storage of business related data; Allow for discovery of business data structure
-Assurance:: &nbsp;
+Assurance::
+//-
 
 ===== Conforms to user privacy and other local laws
 Description:: Ensure that personal information kept in the system conforms to local laws and organization policy. Personal data are any data that can be used to identify a person.
 Priority:: High
 Motivation:: Law
 Implication::
-Assurance:: &nbsp;
+Assurance::
+//-
 
 ===== Trace errors
-Description:: In a critical system, it is highly important to trace errors. Special attention must be paid to exchanges with the outside world as well as configuration grade functionalities which are fed  with out of scope activities.
+Description:: In a critical system, it is highly important to trace errors.
+Special attention must be paid to exchanges with the outside world as well
+as configuration grade functionalities which are fed  with out of scope
+activities.
 Priority:: Medium
-Motivation:: Track responsibilities of error for better governance of solving actions.
-Implication:: Document error messages for both system administrators and monitoring systems
-Assurance:: &nbsp;
+Motivation:: Track responsibilities of error for better governance of
+solving actions.
+Implication:: Document error messages for both system administrators and
+monitoring systems
+Assurance::
+//-
 
 ===== Trace communication and exchanges
-Description:: for better auditing the activities between components must be traced. Theses audit information may be deactivated.
+Description:: for better auditing the activities between components must be
+traced. Theses audit information may be deactivated.
 Priority:: Low
 Motivation:: Trace activities for debugging and auditing
 Implication::
-Assurance:: &nbsp;
+Assurance::
+//-
 
 ==== Design Decision
 
 ===== Use recent tools
-Description:: Operator-Fabric being an open source project, it’s a technology showcase for RTE, it needs to exhibit the usage of recent trends in IT technology.
+Description:: Operator-Fabric being an open source project, it’s a technology
+showcase for RTE, it needs to exhibit the usage of recent trends in IT
+technology.
 Priority:: Low
 Motivation:: RTE reputation
-Implication:: This principle is one of the least important, thought it must be kept in mind if it conflicts with other decisions choices must be arbitrated in favor of other decisions.
-Assurance:: &nbsp;
+Implication:: This principle is one of the least important, thought it must be
+kept in mind if it conflicts with other decisions choices must be arbitrated
+in favor of other decisions.
+Assurance::
+//-
 
 ===== Use standards for communication
-Description:: The solution needs to inter connect with other third party services, these connections must enforce well recognized standards.
+Description:: The solution needs to inter connect with other third party
+services, these connections must enforce well recognized standards.
 Priority:: High
 Motivation:: Ease of adoption, robust and well documented solutions
 Implication::
-Assurance:: &nbsp;
+Assurance::
+//-
 
 ===== Use standards for out of scope interactions
-Description:: For out of scope interaction we will always prefer well know standard or protocol rather than ad-hoc developments
+Description:: For out of scope interaction we will always prefer well know
+standard or protocol rather than ad-hoc developments
 Priority:: High
 Motivation::
 Implication::
-Assurance:: &nbsp;
+Assurance::
+//-
 
 ===== Ensure scalability
-Description:: As a consequence of the lack of finite target audience, the solution must be scalable at heart. With this lack of forecast on the target production environments, the solution must especially be horizontally scalable.
+Description:: As a consequence of the lack of finite target audience, the
+solution must be scalable at heart. With this lack of forecast on the target
+production environments, the solution must especially be horizontally scalable.
 Priority:: High
 Motivation:: Uncertainties on target data volume and production infrastructures
 Implication::
-Assurance:: &nbsp;
+Assurance::
+//-

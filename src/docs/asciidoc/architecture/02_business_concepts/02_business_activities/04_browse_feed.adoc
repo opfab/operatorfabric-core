@@ -1,3 +1,27 @@
 ==== Browse card feed
 
-image::Activity_Feed_Feed_Activity_Diagram.JPEG[Browse a Feed Activity]
+Description:: Access a feed of cards. A feed of card is an updatable ensemble
+of cards, it consist of both the card previously published and the new incoming
+cards in the system. It is characterized by the following:
+* The connected user is a recipient of the cards;
+* The feed of cards is related to a time span or a collection of time span
+defined by a start and an end.
+A card feed displays cards. There are two interaction possible with cards:
+* Display a specific card details, which are formatted views on the card
+associated business data;
+* Submit a card action, actions are buttons available from the card itself or
+its details which triggers events in business process. These events may be
+attached with input data.
+Result control requirements::
+Importance::
+Quality Characteristics::
+Governance Characteristics::
+Security Characteristics::
+Behavior::
+Input:: User identification; Time span(s);
+Output:: A continuously updated feed;
+Business Goal:: BCL-G-03
+Parent Activity::
+//-
+
+image::02_02_business_activities/Activity_Feed_Feed_Activity_Diagram.JPEG[Browse a Feed Activity]

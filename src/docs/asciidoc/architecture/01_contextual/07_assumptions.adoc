@@ -4,4 +4,6 @@
 Priority:: High
 Source:: Product owner
 Owner:: Product owner
-Consequences:: It must be possible to let other entities (services, users, …) access data in readonly mode. The business data of process must be exposed in a readable form.
+Consequences:: It must be possible to let other entities (services, users, …)
+access data in readonly mode. The business data of process must be exposed in
+a readable form.

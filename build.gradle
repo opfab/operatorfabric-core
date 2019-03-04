@@ -108,7 +108,7 @@ asciidoctor {
     }
     resources {
         from('src/docs/asciidoc') {
-            include 'architecture/images/*'
+            include 'architecture/images/**/*'
         }
     }
 }
