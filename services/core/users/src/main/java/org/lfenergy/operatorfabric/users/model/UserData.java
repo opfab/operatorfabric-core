@@ -7,6 +7,7 @@
 
 package org.lfenergy.operatorfabric.users.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -33,6 +34,7 @@ public class UserData implements User {
     private String login;
     private String firstName;
     private String lastName;
+    @JsonIgnore
     @Singular("group")
     private Set<String> groupSet;
 
