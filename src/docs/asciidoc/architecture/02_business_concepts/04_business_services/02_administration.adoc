@@ -1,0 +1,30 @@
+ifndef::imagesdir[:imagesdir: ../../images]
+
+==== Administration
+
+===== To Register a new Service
+
+image::02_04_business_services/Package_third_ThirdUseCaseDiagram.JPEG[Third Management Use Case Diagram]
+
+Actors:: Administrator
+Description:: To Register a new or existing service with a new or updated
+version.
+Pre requisite:: Create service definition
+
+.Nominal Scenario
+ . Submit the new service definition
+ . Persist the new service data
+
+.Alternative Scenario
+ * If the service already exist but not its associated version:
+[start=2]
+    . Create a new version and set it as the default version
+ * If the service and its associated versions already exist:
+[start=2]
+    . Update the existing version
+
+.Error Scenario
+ * If the submitted Service definition is erroneous (format, file corruption …):
+   . Raise an error for the user
+
+===== To Manage Users
