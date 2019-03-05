@@ -12,7 +12,6 @@ Operator Fabric is a modular, extensible, industrial-strength and field-tested p
 - System visualization and console integration
 - Precise alerting
 - Workflow scheduling
-- Remedial action manager
 - Historian
 - Scripting (ex: Python, JavaScript)
 
