@@ -6,7 +6,7 @@ info:
   termsOfService: ''
   contact:
     email: benoit.jeanson@rte-france.com
-    url: https://opfab.github.io/
+    url: 'https://opfab.github.io/'
   license:
     name: Mozilla Public License V2.0
     url: 'http://mozilla.org/MPL/2.0/'
@@ -31,9 +31,9 @@ definitions:
       lastName:
         type: string
     example:
-      login: "jlcurtis"
-      firstName: "Jamie Lee"
-      lastName: "Curtis"
+      login: jlcurtis
+      firstName: Jamie Lee
+      lastName: Curtis
   User:
     type: object
     description: User
@@ -49,13 +49,13 @@ definitions:
         items:
           type: string
           uniqueItems: true
-    examples:
-      login: "jcleese"
-      firstName: "John"
-      lastName: "Cleese"
+    example:
+      login: jcleese
+      firstName: John
+      lastName: Cleese
       groups:
-        - "Monty Python"
-        - "Wanda"
+        - Monty Python
+        - Wanda
   Group:
     type: object
     properties:
@@ -64,8 +64,8 @@ definitions:
       description:
         type: string
     example:
-      name: "Wanda"
-      description: "They were not as successful in Fierce Creatures."
+      name: Wanda
+      description: They were not as successful in Fierce Creatures.
 paths:
   /users:
     get:
@@ -84,7 +84,18 @@ paths:
             items:
               $ref: '#/definitions/User'
           examples:
-            application/json: [{ "login": "jcleese", "firstName": "John", "lastName": "Cleese", "groups": ["Monty Python","Wanda"] }, { "login": "gchapman", "firstName": "Graham", "lastName": "Chapman", "groups": ["Monty Python"] }]
+            application/json:
+              - login: jcleese
+                firstName: John
+                lastName: Cleese
+                groups:
+                  - Monty Python
+                  - Wanda
+              - login: gchapman
+                firstName: Graham
+                lastName: Chapman
+                groups:
+                  - Monty Python
         '401':
           description: Authentication required
     post:
@@ -133,7 +144,9 @@ paths:
         '401':
           description: Authentication required
         '403':
-          description: Authenticated users who are not admins can only access their own data
+          description: >-
+            Authenticated users who are not admins can only access their own
+            data
         '404':
           description: Required user not found
     put:
@@ -181,7 +194,11 @@ paths:
             items:
               $ref: '#/definitions/Group'
           examples:
-            application/json: [{ "name": "Wanda", "description": "They were not as successful in Fierce Creatures" } , { "name": "Marx Brothers", "description": "Chico, Groucho and Harpo, forget about Zeppo and Gummo" } ]
+            application/json:
+              - name: Wanda
+                description: They were not as successful in Fierce Creatures
+              - name: Marx Brothers
+                description: 'Chico, Groucho and Harpo, forget about Zeppo and Gummo'
         '401':
           description: Authentication required
     post:
@@ -263,7 +280,9 @@ paths:
         - groups
         - users
       summary: Update list of group users
-      description: 'Update list of group users, users not included in given list are removed from group'
+      description: >-
+        Update list of group users, users not included in given list are removed
+        from group
       operationId: updateGroupUsers
       produces:
         - application/json
@@ -277,7 +296,9 @@ paths:
           required: true
         - in: body
           name: users
-          description: Array of user logins representing exactly the intended list of group users after update
+          description: >-
+            Array of user logins representing exactly the intended list of group
+            users after update
           schema:
             type: array
             items:
