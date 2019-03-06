@@ -66,7 +66,7 @@ public class TimeService {
     }
 
     /**
-     * <p>Sets current time to specified value computing a delta in real and vertual value for later computation</p>
+     * <p>Sets current time to specified value computing a delta in real and simulated value for later computation</p>
      * <p>Relies on {@link #updateTime(Instant, boolean)} with notify set to true</p>
      *
      * @param instant the new current time
@@ -75,7 +75,7 @@ public class TimeService {
         updateTime(instant, true);
     }
     /**
-     * <p>Sets current time to specified value computing a delta in real and vertual value for later computation</p>
+     * <p>Sets current time to specified value computing a delta in real and simulated value for later computation</p>
      *
      * @param instant the new current time
      * @param notify if sets to true, an amqp message is sent
@@ -148,7 +148,7 @@ public class TimeService {
                mapper.writeValueAsString(fetchTimeData()));
             log.info("Time update sent");
         } catch (JsonProcessingException e) {
-            log.error("Unable to send update time message due to linearisation process error", e);
+            log.error("Unable to send update time message due to Json processing error", e);
         } catch (AmqpException e){
             log.error("Unable to send update time message due to AMQP error", e);
         }

@@ -100,7 +100,7 @@ public class TimeController implements TimeApi{
     }
 
     @Override
-    public SpeedEnum updateCurrentspeed(SpeedEnum currentSpeed) {
+    public SpeedEnum updateCurrentSpeed(SpeedEnum currentSpeed) {
         return setCurrentSpeed(currentSpeed);
     }
 }

@@ -80,7 +80,7 @@ class TimeServiceShould {
 
   @Test
   public void setSpeedAndTime() throws InterruptedException {
-    // The following call is meant to be sure that the timeModule is already instance
+    // The following call is meant to be sure that the timeModule is already instanced
     // (its post-construct method can make us lose 1 millis which leads to a test failure)
     Instant now = Instant.now();
     log.info("now is : " + now.toString());
@@ -109,26 +109,26 @@ class TimeServiceShould {
 
 
   @Test
-  public void setSPeed10() throws Exception {
+  public void setSpeed10() throws Exception {
     SpeedEnum speed;
     speed = SpeedEnum.X10;
     setSpeed0(speed);
   }
 
   @Test
-  public void setSPeed2() throws Exception {
+  public void setSpeed2() throws Exception {
     SpeedEnum speed = SpeedEnum.X2;
     setSpeed0(speed);
   }
 
   @Test
-  public void setSPeedHalf() throws Exception {
+  public void setSpeedHalf() throws Exception {
     SpeedEnum speed = SpeedEnum.HALF;
     setSpeed0(speed);
   }
 
   public void setSpeed0(SpeedEnum speed) throws InterruptedException {
-      // The following call is meant to be sure that the timeModule is already instance
+      // The following call is meant to be sure that the timeModule is already instanced
       // (its post-construct method can make us lose 1 millis which leads to a test failure)
       timeModule.computeNow();
 
@@ -153,5 +153,5 @@ class TimeServiceShould {
       assertThat(!computedNow.isAfter(end)).describedAs(computedNow.toString() + " should be before " + end.toString
          ()).isTrue();
   }
-  
+
 }
