@@ -4,6 +4,7 @@
 :toc: left
 :toclevels: 2
 :toc-title: Architecture
+:icons: font
 
 include::01_contextual/index.adoc[]
 

@@ -31,7 +31,7 @@ Pre requisite:: User must be defined in provided authentication service
  * If user is not registred in authentication provider when an Administrator creates it, raise an error
  * If user already exist when an Administrator creates it, raise an error
 
-===== To create a Group
+===== To Create a Group
 
 Actors:: Administrator
 Description:: Create Group
@@ -43,7 +43,7 @@ Pre requisite:: none
 .Error scenario
  * If group already exist when an Administrator creates it, raise an error
 
-===== To create a user-group association
+===== To Create a User-Group Association
 
 Actors:: Administrator
 Description:: associate users to a group or associate groups a user

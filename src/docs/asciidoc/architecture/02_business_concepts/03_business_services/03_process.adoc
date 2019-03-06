@@ -4,10 +4,17 @@ ifndef::imagesdir[:imagesdir: ../../images]
 
 image::02_03_business_services/Package_process_ProcessUseCaseDiagram.JPEG[Process Use Case Diagram]
 
-===== To consult the card feed
+Business Goal:: <<BCL-G-01, BCL-G-01>> ; <<BCL-G-02, BCL-G-02>> ; <<BCL-G-03, BCL-G-03>> ;
+
+===== To Consult the Card Feed
 Actors:: Operator
-Description:: Access the feed of cards which display cards with a focus and the operator needs to accomplish its tasks
-Pre requisite:: Authenticated user (see To Authenticate)
+Description:: Access the feed of cards which display cards with a focus and the
+operator needs to accomplish its tasks. The feed of card is an interface that
+allows an Operator to consult a list of previously published cards that is
+continuously updated with new cards. Cards represent a state in a business
+process.
+
+Pre requisite:: Authenticated user (see <<To Authenticate>>)
 
 .Nominal Scenario
 . Access the main operator-fabric ui to display the feed of cards
@@ -19,7 +26,23 @@ Adjust the focus on the feed:
 * With recipient adjustment (defaults to only cards where the user is main recipient)
 * With type adjustment through the use of tag filters
 
-===== To consult a Card
+[NOTE]
+====
+The filters may impact the two complementary aspects of the feed:
+
+* previously published cards;
+* card updates;
+
+This interraction will be depicted later in the document
+====
+
+===== To Consult the Timeline
+
+Actors:: Operator
+Description::
+Pre requisite:: Authenticated user (see <<To Authenticate>>)
+
+===== To Consult a Card
 Actors:: Operator, 3rd Party IS (Secondary in extended scenario)
 Description:: Access a specific card associated business content called details
 Pre requisite:: Authenticated user (see To Authenticate)
@@ -33,7 +56,7 @@ Details can be of two types:
 * Templated details are a predefined rendering of the card associated business data;
 * Embedded frame details are embedded frames loading a 3rd Party IS defined web page.
 
-===== To start a process instance
+===== To Start a Process Instance
 Actors:: 3rd Party IS
 Description:: Start a process instance
 Pre requisite:: The process definition must exist.
@@ -52,35 +75,49 @@ Pre requisite:: The process definition must exist.
 [start=2]
   . &nbsp;
   .. Log an error
-   .. Issue an error card
+  .. Issue an error card
 * If an error occurs during card issuing:
 [start=3]
   . Log an error, notify administrator
 
+[IMPORTANT]
+====
+There are still ongoing discussion wether a business process is:
+
+ * an Operator Fabric internally defined concept
+ * an external concept managed by a Business Process Management tool
+ * an abstract concept defined by each 3rd Party Information Service
+
+This may induce changes in actors responsibility in the present use cases
+====
+
+===== To Handle a Process Instance State
+Actors:: &nbsp;
+Description:: Handle a process state. Depending on the process definition a
+card state may trigger some operation(s) at 3rd Part IS level
+(To Notify 3rd Party IS)
+Pre requisite:: Process instance must exist
+
+.Nominal Scenario
+ . Set the process current state to the specified state
+ . Create a card for the current process state
+//
+.Extended Scenario
+ * If needed notify one or more 3rd Party IS
 
 
-===== To handle a process state
-//Actors::
-//Description::
-//Pre requisite::
-////
-//
-//.Nominal Scenario
-////
-//
-//.Extended Scenario
-////
-//
-//.Error Scenario
+===== To Trigger an Event on a Process Instance
+Actors:: Business Actor
+Description:: Triggers an event on the business process instance that may lead
+to a transition from one state to another.
+Pre requisite:: Process instance must exist
 
+.Nominal Scenario
+ . Submit event to process management
+ . Process advances to next state (may be same state) : <<To Handle a Process Instance State>>
 
-===== To input data to process
-//Actors::
-//Description::
-//Pre requisite::
-////
-//.Nominal Scenario
-//
-//.Extended Scenario
-//
-//.Error Scenario
+.Extended Scenario
+ *  Events may be attached with data
+ ** 3rd Party attach raw data to event rigger
+ ** Operators are prompted with predefined forms
+

@@ -20,7 +20,7 @@ Input:
 * To start : Business process start event ; Business process definition;
 * During processing : Operator input event ; 3rd Party Service input event ;
 Output:: Business Process end event
-Business Goal:: BCL-G-02 ; BCL-G-03 ;
+Business Goal:: <<BCL-G-02, BCL-G-02>> ; <<BCL-G-03, BCL-G-03>> ;
 
 image::02_04_business_activities/Activity_Handle_Process_ProcessActivityDiagram.JPEG[Handle Business Process Instance Activity]
 

@@ -10,6 +10,7 @@ Actors:: Administrator
 Description:: To Register a new or existing service with a new or updated
 version.
 Pre requisite:: Create service definition
+Business Goal:: <<BCL-G-01, BCL-G-01>> ; <<BCL-G-02, BCL-G-02>> ;
 
 .Nominal Scenario
  . Submit the new service definition
@@ -26,7 +27,3 @@ Pre requisite:: Create service definition
 .Error Scenario
  * If the submitted Service definition is erroneous (format, file corruption …):
    . Raise an error for the user
-
-
-
-.
