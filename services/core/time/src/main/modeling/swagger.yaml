@@ -1,12 +1,12 @@
 swagger: '2.0'
 info:
-  description: Time Service a.k.a. Time management API for Operator Fabric
+  description: Time Management Service for Operator Fabric
   version: 0.1.1.SNAPSHOT
   title: Time Management
   termsOfService: ''
   contact:
     email: benoit.jeanson@rte-france.com
-    url: https://opfab.github.io/
+    url: 'https://opfab.github.io/'
   license:
     name: Mozilla Public License V2.0
     url: 'http://mozilla.org/MPL/2.0/'
@@ -20,10 +20,11 @@ schemes:
 definitions:
   EpochDate:
     type: object
-    description: number of milliseconds since Epoch (long integer)
+    description: Number of milliseconds since Epoch (long integer)
+    example: 1551732725193
   SpeedEnum:
     type: string
-    description: the speed of time flow
+    description: Speed of time flow in simulated time
     enum:
       - X1
       - X2
@@ -31,45 +32,54 @@ definitions:
       - X60
       - X3600
       - HALF
+    example: X2
   TimeData:
     type: object
-    description: Describe a time configuration
+    description: >-
+      Description of a time configuration, containing the current simulated time as
+      well as the references used for computation
     properties:
       referenceTime:
         $ref: '#/definitions/EpochDate'
-        description: The real server time at last time server change
+        description: Real server time at last time change
       currentTime:
         $ref: '#/definitions/EpochDate'
-        description: The virtual server time for last time server change
+        description: Chosen simulated time start at last time change
       computedNow:
         $ref: '#/definitions/EpochDate'
-        description: Current time computed by server
+        description: >-
+          Current simulated time computed by server as currentTime +
+          (referenceTime - now) * speed
       speed:
         $ref: '#/definitions/SpeedEnum'
-        description: The speed of time flow
+        description: Speed of simulated time flow
+    example:
+      referenceTime: 1551868290379
+      currentTime: 1520332290378
+      computedNow: 1520332310718
+      speed: X10
 paths:
   /time:
     get:
       tags:
         - time
-      summary: fetch current time configuration
-      description: fetch current time configuration
+      summary: Fetch current time configuration
+      description: Fetch current time configuration
       operationId: fetchTime
       produces:
         - application/json
       responses:
         '200':
-          description: ok
+          description: OK
           schema:
             $ref: '#/definitions/TimeData'
-      security:
-        - time_auth:
-            - 'read'
+        '401':
+          description: Authentication required
     post:
       tags:
         - time
-      summary: sets current time configuration
-      description: sets current time configuration
+      summary: Set current time configuration
+      description: Set current time configuration
       operationId: setTime
       parameters:
         - in: body
@@ -79,17 +89,16 @@ paths:
             $ref: '#/definitions/TimeData'
       responses:
         '200':
-          description: ok
+          description: OK
           schema:
             $ref: '#/definitions/TimeData'
-      security:
-        - time_auth:
-            - 'write'
+        '401':
+          description: Authentication required
     put:
       tags:
         - time
-      summary: updates current time configuration
-      description: updates current time configuration
+      summary: Update current time configuration (same as setTime)
+      description: Update current time configuration (same as setTime)
       operationId: updateTime
       parameters:
         - in: body
@@ -99,32 +108,33 @@ paths:
             $ref: '#/definitions/TimeData'
       responses:
         '200':
-          description: ok
+          description: OK
           schema:
             $ref: '#/definitions/TimeData'
-      security:
-        - time_auth:
-            - 'write'
+        '401':
+          description: Authentication required
     delete:
       tags:
         - time
-      summary: resets time configuration
-      description: resets time configuration
+      summary: Reset time configuration
+      description: Reset time configuration
       operationId: resetTime
       responses:
         '200':
           description: OK
+        '401':
+          description: Authentication required
   /time/current:
     post:
       tags:
         - time
-      summary: Sets current time
-      description: Sets the virtual server time (milliseconds since Epoch)
+      summary: Set start of simulated time
+      description: Set start of simulated time (milliseconds since Epoch)
       operationId: setCurrentTime
       parameters:
         - in: body
           name: currentTime
-          description: virtual server time (milliseconds since Epoch)
+          description: Start of simulated time (milliseconds since Epoch)
           schema:
             $ref: '#/definitions/EpochDate'
       responses:
@@ -132,16 +142,20 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/EpochDate'
+        '401':
+          description: Authentication required
     put:
       tags:
         - time
-      summary: Updates current time
-      description: Updates the virtual server time (milliseconds since Epoch)
+      summary: Update start of simulated time (same as setCurrentTime)
+      description: >-
+        Updates start of simulated time (milliseconds since Epoch) (same as
+        setCurrentTime)
       operationId: updateCurrentTime
       parameters:
         - in: body
           name: currentTime
-          description: virtual server time (milliseconds since Epoch)
+          description: Start of simulated time (milliseconds since Epoch)
           schema:
             $ref: '#/definitions/EpochDate'
       responses:
@@ -149,17 +163,19 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/EpochDate'
+        '401':
+          description: Authentication required
   /time/speed:
     post:
       tags:
         - time
-      summary: Sets current speed
-      description: Sets the virtual server speed
+      summary: Set simulated time speed
+      description: Set simulated time speed
       operationId: setCurrentSpeed
       parameters:
         - in: body
           name: currentspeed
-          description: virtual server speed
+          description: Simulated time speed
           schema:
             $ref: '#/definitions/SpeedEnum'
       responses:
@@ -167,16 +183,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/SpeedEnum'
+        '401':
+          description: Authentication required
     put:
       tags:
         - time
-      summary: Updates current speed
-      description: Updates the virtual server speed (milliseconds since Epoch)
-      operationId: updateCurrentspeed
+      summary: Update simulated time speed (same as setCurrentSpeed)
+      description: Update simulated time speed (same as setCurrentSpeed)
+      operationId: updateCurrentSpeed
       parameters:
         - in: body
-          name: currentspeed
-          description: virtual server speed (milliseconds since Epoch)
+          name: currentSpeed
+          description: Simulated time speed
           schema:
             $ref: '#/definitions/SpeedEnum'
       responses:
@@ -184,15 +202,5 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/SpeedEnum'
-securityDefinitions:
-  time_auth:
-    type: oauth2
-    authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
-    flow: implicit
-    scopes:
-      'read': access time data
-      'write': access time data
-  api_key:
-    type: apiKey
-    name: api_key
-    in: header
+        '401':
+          description: Authentication required
