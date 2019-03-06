@@ -7,8 +7,8 @@ approach to operator and services interaction"
 
 include::01_business_goals.adoc[]
 
-include::02_business_activities/index.adoc[]
+include::02_business_roles.adoc[]
 
-include::03_business_roles.adoc[]
+include::03_business_services/index.adoc[]
 
-include::04_business_services/index.adoc[]
+include::04_business_activities/index.adoc[]

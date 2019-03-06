@@ -1,3 +1,5 @@
+ifndef::imagesdir[:imagesdir: ../../images]
+
 ==== Handle Business
 ===== Handle Business Process instance
 
@@ -20,7 +22,7 @@ Input:
 Output:: Business Process end event
 Business Goal:: BCL-G-02 ; BCL-G-03 ;
 
-image::02_02_business_activities/Activity_Handle_Process_ProcessActivityDiagram.JPEG[Handle Business Process Instance Activity]
+image::02_04_business_activities/Activity_Handle_Process_ProcessActivityDiagram.JPEG[Handle Business Process Instance Activity]
 
 Notes::
 * Depending on future implementation decisions the above described process
@@ -46,4 +48,4 @@ Output:: Card and events
 Business Goal:: BCL-G-01
 Parent Activity:: Handle Business Process instance
 
-image::02_02_business_activities//Activity_Handle_Card_CardActivityDiagram.JPEG[Handle Card Input Activity]
+image::02_04_business_activities//Activity_Handle_Card_CardActivityDiagram.JPEG[Handle Card Input Activity]

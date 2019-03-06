@@ -1,10 +1,10 @@
 ifndef::imagesdir[:imagesdir: ../../images]
 
-==== Administration
+==== Third Party
+
+image::02_03_business_services/Package_third_ThirdUseCaseDiagram.JPEG[Third Management Use Case Diagram]
 
 ===== To Register a new Service
-
-image::02_04_business_services/Package_third_ThirdUseCaseDiagram.JPEG[Third Management Use Case Diagram]
 
 Actors:: Administrator
 Description:: To Register a new or existing service with a new or updated
@@ -27,4 +27,6 @@ Pre requisite:: Create service definition
  * If the submitted Service definition is erroneous (format, file corruption …):
    . Raise an error for the user
 
-===== To Manage Users
+
+
+.

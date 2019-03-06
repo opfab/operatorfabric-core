@@ -2,5 +2,5 @@ ifndef::imagesdir[:imagesdir: ../../images]
 === Business Services
 
 include::01_generic.adoc[]
-include::02_administration.adoc[]
+include::02_thirds.adoc[]
 include::03_process.adoc[]

@@ -24,4 +24,4 @@ Business Goal:: BCL-G-03
 Parent Activity::
 //-
 
-image::02_02_business_activities/Activity_Feed_Feed_Activity_Diagram.JPEG[Browse a Feed Activity]
+image::02_04_business_activities/Activity_Feed_Feed_Activity_Diagram.JPEG[Browse a Feed Activity]

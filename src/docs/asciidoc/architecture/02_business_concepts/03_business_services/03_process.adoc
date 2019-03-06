@@ -2,7 +2,7 @@ ifndef::imagesdir[:imagesdir: ../../images]
 
 ==== Process
 
-image::02_04_business_services/Package_process_ProcessUseCaseDiagram.JPEG[Process Use Case Diagram]
+image::02_03_business_services/Package_process_ProcessUseCaseDiagram.JPEG[Process Use Case Diagram]
 
 ===== To consult the card feed
 Actors:: Operator
@@ -60,27 +60,27 @@ Pre requisite:: The process definition must exist.
 
 
 ===== To handle a process state
-Actors::
-Description::
-Pre requisite::
+//Actors::
+//Description::
+//Pre requisite::
+////
 //
-
-.Nominal Scenario
+//.Nominal Scenario
+////
 //
-
-.Extended Scenario
+//.Extended Scenario
+////
 //
-
-.Error Scenario
+//.Error Scenario
 
 
 ===== To input data to process
-Actors::
-Description::
-Pre requisite::
+//Actors::
+//Description::
+//Pre requisite::
+////
+//.Nominal Scenario
 //
-.Nominal Scenario
-
-.Extended Scenario
-
-.Error Scenario
+//.Extended Scenario
+//
+//.Error Scenario

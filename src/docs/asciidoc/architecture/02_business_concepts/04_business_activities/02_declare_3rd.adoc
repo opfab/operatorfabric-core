@@ -14,4 +14,4 @@ Business Goal:: BCL-G-02 ; BCL-G-01 ;
 Parent Activity::
 //-
 
-image::02_02_business_activities/Activity_UploadThirdActivity_ThirdActivityDiagram.JPEG[Upload a Third Party Data Bundle Activity]
+image::02_04_business_activities/Activity_UploadThirdActivity_ThirdActivityDiagram.JPEG[Upload a Third Party Data Bundle Activity]

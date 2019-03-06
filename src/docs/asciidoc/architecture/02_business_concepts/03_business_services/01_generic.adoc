@@ -1,0 +1,60 @@
+ifndef::imagesdir[:imagesdir: ../../images]
+
+==== Generic
+
+image::02_03_business_services/Model_opfab_GenericUseCaseDiagram.JPEG[Generic Use Case Diagram]
+
+===== To Authenticate
+
+Actors:: User (Primary), 3rd Party IS (Primary)
+Description::  To authenticate. Human User and automated 3rd Party IS do not
+share the exact same authentication process, Human user are authenticate
+through user/password whereas 3rd Party IS do authenticate through use of
+certificates.
+Pre requisites:: User and 3rd Party IS must be already registered in their
+respective mechanisms
+
+===== To Create Users
+
+Actors:: Administrator(Primary), User(Primary)
+Description:: Create User
+Pre requisite:: User must be defined in provided authentication service
+
+.Nominal Scenario
+ . User succeed in connecting for the first time (See To Authenticate)
+ . A user is registred in the system
+
+.Alternative scenario
+ . Administrator creates a user directly
+
+.Error scenario
+ * If user is not registred in authentication provider when an Administrator creates it, raise an error
+ * If user already exist when an Administrator creates it, raise an error
+
+===== To create a Group
+
+Actors:: Administrator
+Description:: Create Group
+Pre requisite:: none
+
+.Nominal scenario
+ . create group
+
+.Error scenario
+ * If group already exist when an Administrator creates it, raise an error
+
+===== To create a user-group association
+
+Actors:: Administrator
+Description:: associate users to a group or associate groups a user
+Pre requisite:: none
+
+.Nominal scenario 1
+ . associate a list of existing users to an existing group
+
+.Nominal scenario 2
+ . associate a list of existing groups to an existing user
+
+.Error scenario
+ * If one or more group do not exist, raise an error
+ * If one or more user does not exist, raise an error
