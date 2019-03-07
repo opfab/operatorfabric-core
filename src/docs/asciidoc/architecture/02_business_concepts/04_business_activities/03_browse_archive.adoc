@@ -1,17 +1,15 @@
+ifndef::imagesdir[:imagesdir: ../../images]
 ==== Browse card archive
 
-Description:: Access by search the completed process instances for verification
-or feedback.
+Description:: Access the completed process instances for verification
+or feedback using a search form.
 Result control requirements:: Result control required for each search.
 Importance:: Must complete in short response time
-Quality Characteristics::
-Governance Characteristics::
-Security Characteristics::
-Behavior::
-Input::  User identification; Search criterias;
+Security Characteristics:: Operator can only access cards he was a recipient to
+Input::
+* User identification;
+* Search criterias.
 Output:: Archived process instances;
 Business Goal:: BCL-G-02; BCL-G-01;
-Parent Activity::
-//-
-
-//image::02_02_business_activities/Activity_Archive_Archive_Activity_Diagram.JPEG[Browse Archive Activity]
+Behavior:: &nbsp;
+image::02_02_business_activities/Activity_ArchivedCardConsultationActivity_ArchivedCardConsultationProcessActivityDiagram.JPEG[Browse Archive Activity]

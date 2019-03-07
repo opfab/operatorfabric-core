@@ -1,17 +1,13 @@
+ifndef::imagesdir[:imagesdir: ../../images]
+
 ==== Declare new 3rd Party Information Services
 Description:: Declare a new or updated 3rd Party Information Service to the
 system
 Result control requirements: Result control required for each declaration
 Importance:: Must complete in short response time
-Quality Characteristics::
-Governance Characteristics::
-Security Characteristics::
-Behavior::
-Input:: 3rd Party Service Add/Update Event; 3rd Party Information Service
-definition.
+Security Characteristics:: Only administrator can declare new 3rd Party
+Input:: 3rd Party Information Service definition.
 Output:: Registered 3rd Party Information Services definition
 Business Goal:: BCL-G-02 ; BCL-G-01 ;
-Parent Activity::
-//-
-
-image::02_04_business_activities/Activity_UploadThirdActivity_ThirdActivityDiagram.JPEG[Upload a Third Party Data Bundle Activity]
+Behavior:: &nbsp;
+image::02_04_business_activities/Activity_Upload_Third_ThirdActivityDiagram.JPEG[Upload a Third Party Data Bundle Activity]

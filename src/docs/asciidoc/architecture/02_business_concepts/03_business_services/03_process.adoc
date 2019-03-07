@@ -121,3 +121,16 @@ Pre requisite:: Process instance must exist
  ** 3rd Party attach raw data to event rigger
  ** Operators are prompted with predefined forms
 
+===== To Consult the Card Archive
+Actors:: Operator
+Description:: Access previously published cards
+Pre requisite:: Authenticated user (see To Authenticate)
+
+.Nominal Scenario
+. Input search criteria
+. Consult results
+
+.Extended Scenario
+[start=2]
+ . Consult result
+ . Navigate throught result pages
