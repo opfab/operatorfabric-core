@@ -22,6 +22,7 @@ function display_usage() {
 	echo -e "\tTS  : .ts (TypeScript) files"
 	echo -e "\tCSS  : .css, .scss files"
 	echo -e "\tHTML  : .htm, .html files"
+	echo -e "\tADOC  : .adocl files"
 }
 delete=false
 while [[ $# -gt 0 ]]
@@ -36,6 +37,11 @@ case $key in
     JAVA)
     header="JAVA_LICENSE_HEADER.txt"
     file_extensions=( java )
+    shift # past argument
+    ;;
+    ADOC)
+    header="ADOC_LICENSE_HEADER.txt"
+    file_extensions=( adoc )
     shift # past argument
     ;;
     TS)
