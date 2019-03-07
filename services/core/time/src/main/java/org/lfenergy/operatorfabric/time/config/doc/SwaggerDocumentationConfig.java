@@ -38,7 +38,7 @@ public class SwaggerDocumentationConfig {
   ApiInfo apiInfo() {
     return new ApiInfoBuilder()
        .title("Thirds Management")
-       .description("Third Party Service a.k.a. Thirds management API for Operator Fabric")
+       .description("Third Party Service a.k.a. Thirds management API for OperatorFabric")
        .license("Apache 2.0")
        .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
        .termsOfServiceUrl("")

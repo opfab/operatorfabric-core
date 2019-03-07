@@ -14,7 +14,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 /**
- * <p>specific client operator fabric generator derived from {@link SpringCodegen}</p>
+ * <p>specific client OperatorFabric generator derived from {@link SpringCodegen}</p>
  * <p>Remove non standard java references from generated files</p>
  */
 public class OpfabClientGenerator extends SpringCodegen {

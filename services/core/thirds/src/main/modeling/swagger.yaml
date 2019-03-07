@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  description: Third Party Service a.k.a. Thirds management API for Operator Fabric
+  description: Third Party Service a.k.a. Thirds management API for OperatorFabric
   version: 0.1.1.SNAPSHOT
   title: Thirds Management
   termsOfService: ''

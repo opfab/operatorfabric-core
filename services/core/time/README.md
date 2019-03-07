@@ -1,14 +1,14 @@
-# Operator Fabric - Core - Time Management Service
+# OperatorFabric - Core - Time Management Service
 
 This sub project manages Third Party Business Module registration
 
 ## 1. Set up and Build
 
-see [Operator Fabric main page](../../../README.md)
+see [OperatorFabric main page](../../../README.md)
 
 ## 2. Features
 
-This service allows to manage the reference time of Operator Fabird services along
+This service allows to manage the reference time of OperatorFabric services along
 with the speed of the time flow. This service don't allow translation of
 Third party services provided data. The (not mandatory) time synchronization
 is the sole responsibility of the third party services

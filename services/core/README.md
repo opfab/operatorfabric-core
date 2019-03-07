@@ -1,6 +1,6 @@
-# Operator Fabric - Core
+# OperatorFabric - Core
 
-The core sub project contains Operator Fabric business logic services
+The core sub project contains OperatorFabric business logic services
 
 ```
 core

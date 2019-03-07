@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  description: User Management Service for Operator Fabric
+  description: User Management Service for OperatorFabric
   version: 0.1.1.SNAPSHOT
   title: User Management
   termsOfService: ''

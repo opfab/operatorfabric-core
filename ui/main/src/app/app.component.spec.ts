@@ -66,9 +66,9 @@ describe('AppComponent', () => {
         expect(app).toBeTruthy();
     }));
 
-    it(`should have as title 'Operator Fabric'`, async(() => {
+    it(`should have as title 'OperatorFabric'`, async(() => {
       const app = fixture.debugElement.componentInstance;
-      expect(app.title).toEqual('Operator Fabric');
+      expect(app.title).toEqual('OperatorFabric');
     }));
 
     // it('should render title in the toolbar', async(() => {
@@ -77,6 +77,6 @@ describe('AppComponent', () => {
     //     fixture.detectChanges();
     //     expect(toolBarText).toBeDefined();
     //     expect(toolBarText).toBeTruthy();
-    //     expect(toolBarText.textContent).toContain('Operator Fabric');
+    //     expect(toolBarText.textContent).toContain('OperatorFabric');
     // }));
 });

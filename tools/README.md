@@ -1,6 +1,6 @@
-# Operator Fabric - Tools
+# OperatorFabric - Tools
 
-The tools sub project contains Operator Fabric common utilities for all other subprojects
+The tools sub project contains OperatorFabric common utilities for all other subprojects
 
 ```
  tools
@@ -21,4 +21,4 @@ The tools sub project contains Operator Fabric common utilities for all other su
 * [spring-mongo-utilities](spring/spring-mongo-utilities): Utility code  with spring specific dependencies
 * [spring-oauth2-utilities](spring/spring-oauth2-utilities): Utility code  with spring specific dependencies
 * [spring-utilities](spring/spring-utilities/README.md): Utility code  with spring specific dependencies
-* [swagger-spring-generators](swagger-spring-generators/README.md): Operator Fabric tailored spring boot generator for swagger
+* [swagger-spring-generators](swagger-spring-generators/README.md): OperatorFabric tailored spring boot generator for swagger

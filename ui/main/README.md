@@ -1,4 +1,4 @@
-# Operator Fabric Core User Interface
+# OperatorFabric Core User Interface
 
 This project was partially generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8. 
 

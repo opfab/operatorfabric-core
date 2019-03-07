@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  description: Operator Fabric Card Consumer Service
+  description: OperatorFabric Card Consumer Service
   version: 0.1.1.SNAPSHOT
   title: Card Management
   termsOfService: ''
@@ -84,7 +84,7 @@ definitions:
     type: string
     description: |-
       Action type >
-      * INTERNAL - Internal Operator fabric action
+      * INTERNAL - Internal OperatorFabric action
       * URI - Uri based action
       * JNLP - Uri based jnlp action
     enum:
@@ -549,7 +549,7 @@ paths:
         - cards
         - creation
       summary: publish cards
-      description: publish one or more card to Operator Fabric
+      description: publish one or more card to OperatorFabric
       operationId: publishCardsAsync
       consumes:
         - application/json
@@ -654,7 +654,7 @@ paths:
         - cards
         - creation
       summary: publish cards
-      description: publish one or more card to Operator Fabric
+      description: publish one or more card to OperatorFabric
       operationId: publishCards
       consumes:
         - application/json
@@ -734,7 +734,7 @@ paths:
         - actions
       summary: Trigger action
       description: >-
-        Trigger corresponding action in operator fabric, returns ActionStatus
+        Trigger corresponding action in OperatorFabric, returns ActionStatus
         upon action realization
       responses:
         '200':

@@ -65,7 +65,7 @@ waitRegistryAndConfig() {
 
 
 function display_usage() {
-	echo -e "This script runs operator fabric services.\n"
+	echo -e "This script runs OperatorFabric services.\n"
 	echo -e "Usage:\n"
 	echo -e "\trun_all.sh [OPTIONS] (start, stop, restart, status)\n"
 	echo -e "options:\n"

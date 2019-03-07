@@ -36,7 +36,7 @@ public class WebSecurityConfiguration {
      * @param httpSecurity
      *    http security configuration
      * @param opfabReactiveJwtConverter
-     *    operator fabric authentication converter
+     *    OperatorFabric authentication converter
      * @return http security filter chain
      */
     @Bean

@@ -1,7 +1,7 @@
 jar {
     manifest {
         attributes("Created-By"      : "David Binder",
-                "Specification-Title": "Operator Fabric main Web UI",
+                "Specification-Title": "OperatorFabric main Web UI",
                 "Main-Class"         : "org.lfenergy.operatorfabric.webui.WebUiApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }

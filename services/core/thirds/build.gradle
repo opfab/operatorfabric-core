@@ -5,7 +5,7 @@ dependencies {
 jar {
     manifest {
         attributes("Created-By"         : "David Binder",
-                   "Specification-Title": "Operator Fabric Third Parties Manager",
+                   "Specification-Title": "OperatorFabric Third Parties Manager",
                    "Main-Class"         : "org.lfenergy.operatorfabric.thirds.ThirdsApplication",
                    "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }

@@ -9,7 +9,7 @@ dependencies {
 jar {
     manifest {
         attributes("Created-By"         : "David Binder",
-                "Specification-Title": "Operator Fabric Card Read Service",
+                "Specification-Title": "OperatorFabric Card Read Service",
                 "Main-Class"         : "org.lfenergy.operatorfabric.cards.consultation.CardConsultationApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }

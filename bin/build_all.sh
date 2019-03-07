@@ -14,7 +14,7 @@ currentPath=$(pwd)
 offline=false
 
 function display_usage() {
-	echo -e "This script builds all operator fabric services.\n"
+	echo -e "This script builds all OperatorFabric services.\n"
 	echo -e "Usage:\n"
 	echo -e "\tbuild_all.sh [OPTIONS] \n"
 	echo -e "options:\n"

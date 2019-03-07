@@ -9,7 +9,7 @@ dependencies {
 jar {
     manifest {
         attributes("Created-By"         : "David Binder",
-                "Specification-Title": "Operator Fabric User Manager Service",
+                "Specification-Title": "OperatorFabric User Manager Service",
                 "Main-Class"         : "org.lfenergy.operatorfabric.users.UsersApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }

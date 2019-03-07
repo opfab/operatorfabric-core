@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import java.lang.annotation.*;
 
 /**
- * Enable Operator Fabric Oauth configuration for Spring Webflux
+ * Enable OperatorFabric Oauth configuration for Spring Webflux
  *
  * @author David Binder
  */

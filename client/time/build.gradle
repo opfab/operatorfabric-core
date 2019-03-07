@@ -1,6 +1,6 @@
 jar {
     manifest {
         attributes("Created-By"         : "David Binder",
-                "Specification-Title": "Operator Fabric Time Manager Client Data")
+                "Specification-Title": "OperatorFabric Time Manager Client Data")
     }
 }

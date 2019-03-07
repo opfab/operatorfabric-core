@@ -5,9 +5,9 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=code_smells)](https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability)
 [![Website opfab.github.io](https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg)](http://opfab.github.io/)
 
-# Operator Fabric (OpFab)
+# OperatorFabric (OpFab)
 
-Operator Fabric is a modular, extensible, industrial-strength and field-tested platform for use in electricity, water, and other utility operations.
+OperatorFabric is a modular, extensible, industrial-strength and field-tested platform for use in electricity, water, and other utility operations.
 
 - System visualization and console integration
 - Precise alerting
@@ -130,7 +130,7 @@ project
         * [spring-mongo-utilities](tools/spring/spring-mongo-utilities) : Utility code  with spring specific dependencies, used to share common features across mongo dependent services
         * [spring-oauth2-utilities](tools/spring/spring-oauth2-utilities) : Utility code  with spring specific dependencies, used to share common features across oauth2 dependent services
         * [spring-utilities](tools/spring/spring-utilities/README.md) : Utility code  with spring specific dependencies
-    * [swagger-spring-generators](tools/swagger-spring-generators/README.md) : Operator Fabric tailored spring boot generator for swagger
+    * [swagger-spring-generators](tools/swagger-spring-generators/README.md) : OperatorFabric tailored spring boot generator for swagger
 
 ### Projects structures and configurations
 Projects must conforms to a few rules in order for the configured tasks to work
@@ -258,11 +258,11 @@ Builds all projects, generate docker images and volumes for docker-compose, also
 
 These variables are loaded by bin/load_environment_light.sh bin/load_environment_ramdisk.sh
 
-* OF_HOME: Operator Fabric root dir
-* OF_CORE: Operator Fabric business services subroot dir
-* OF_INFRA: Operator Fabric infrastructure services subroot dir
-* OF_CLIENT: Operator Fabric client data definition subroot dir
-* OF_TOOLS: Operator Fabric tooling libraries subroot dir
+* OF_HOME: OperatorFabric root dir
+* OF_CORE: OperatorFabric business services subroot dir
+* OF_INFRA: OperatorFabric infrastructure services subroot dir
+* OF_CLIENT: OperatorFabric client data definition subroot dir
+* OF_TOOLS: OperatorFabric tooling libraries subroot dir
 
 Additionally, you may want to configure the following variables
 
@@ -387,7 +387,7 @@ NB : properties may be set using ".properties" file or ".yml" file. See [Spring 
 * Generic property list extract :
     * server.port (defaults to 8080) : embedded server port
 * :services:core:third-party-service properties list extract :
-    * thirds.storage.path (defaults to "") : where to save/load Operator Fabric Third Party data
+    * thirds.storage.path (defaults to "") : where to save/load OperatorFabric Third Party data
 
 ### Service port table
 

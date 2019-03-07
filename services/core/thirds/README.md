@@ -1,14 +1,14 @@
-# Operator Fabric - Core - Third Party Management Service
+# OperatorFabric - Core - Third Party Management Service
 
 This sub project manages Third Partye Business Module registration
 
 ## 1. Set up and Build
 
-see [Operator Fabric main page](../../../README.md)
+see [OperatorFabric main page](../../../README.md)
 
 ## 2. Features
 
-### Thirdparty Service configuration
+### ThirdParty Service configuration
 
 See [swagger generated documentation model section](https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#__Models) for data layout
 
@@ -53,14 +53,14 @@ Supported media files type :
 * wav
 * mp3
 
-Due to web nature of Operator Fabric, we encourage business modules provider to favor the lightest file formats (ogg,mp3, ...)
+Due to web nature of OperatorFabric, we encourage business modules provider to favor the lightest file formats (ogg,mp3, ...)
 
 #### Templates
 
 Templates are [Handlebars](https://handlebarsjs.com/) template files. Templates are fuelled with a data structure 
 contained in the card data (See [card data model](https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#__Models) for more information)
 
-In addition to Handlebars basic syntax and helpers, Operator Fabric defines the following helpers :
+In addition to Handlebars basic syntax and helpers, OperatorFabric defines the following helpers :
 
 ##### numberFormat
 

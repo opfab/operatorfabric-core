@@ -1,7 +1,7 @@
 jar {
     manifest {
         attributes("Created-By"         : "David Binder",
-                "Specification-Title": "Operator Fabric Card Client Data")
+                "Specification-Title": "OperatorFabric Card Client Data")
     }
 }
 swaggerSources {

@@ -6,7 +6,7 @@ dependencies {
 jar {
     manifest {
         attributes("Created-By"         : "David Binder",
-                "Specification-Title": "Operator Fabric Authenticator Service",
+                "Specification-Title": "OperatorFabric Authentication Service",
                 "Main-Class"         : "org.lfenergy.operatorfabric.auth.OAuth2Application",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }

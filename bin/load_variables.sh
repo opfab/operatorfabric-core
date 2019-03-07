@@ -26,7 +26,7 @@ OF_REL_COMPONENTS+=("services/core/thirds" "services/core/time" "services/core/c
 
 export OF_VERSION=$(cat "$OF_HOME/VERSION")
 
-echo "OPERATOR FABRIC ENVIRONMENT VARIABLES"
+echo "OPERATORFABRIC ENVIRONMENT VARIABLES"
 
 echo OF_HOME=$OF_HOME
 echo OF_CORE=$OF_CORE
@@ -34,7 +34,7 @@ echo OF_CLIENT=$OF_CLIENT
 echo OF_TOOLS=$OF_TOOLS
 echo OF_INFRA=$OF_INFRA
 echo
-echo "Operator fabric version is $OF_VERSION"
+echo "OperatorFabric version is $OF_VERSION"
 index=0
 for prj in "${OF_COMPONENTS[@]}"; do
     echo OF_COMPONENTS[$index]=$prj

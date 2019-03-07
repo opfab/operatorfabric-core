@@ -10,7 +10,7 @@ configurations {
 jar {
     manifest {
         attributes("Created-By"         : "David Binder",
-                "Specification-Title": "Operator Fabric Centralized configuration",
+                "Specification-Title": "OperatorFabric Centralized configuration",
                 "Main-Class"         : "org.lfenergy.operatorfabric.config.ConfigurationApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }

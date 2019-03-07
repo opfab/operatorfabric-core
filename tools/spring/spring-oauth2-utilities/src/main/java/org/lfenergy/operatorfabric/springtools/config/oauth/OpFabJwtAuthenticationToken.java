@@ -16,7 +16,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import java.util.Collection;
 
 /**
- * Custom Operator Fabric Jwt Authentication Token whose custom principal is a {@link User} object
+ * Custom OperatorFabric Jwt Authentication Token whose custom principal is a {@link User} object
  *
  * @author David Binder
  */

@@ -8,7 +8,7 @@ dependencies {
 jar {
     manifest {
         attributes("Created-By"         : "David Binder",
-                "Specification-Title": "Operator Fabric Time Manager Service",
+                "Specification-Title": "OperatorFabric Time Manager Service",
                 "Main-Class"         : "org.lfenergy.operatorfabric.time.TimeApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }

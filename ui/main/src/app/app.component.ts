@@ -22,7 +22,7 @@ import {isInTheFuture} from "@ofServices/authentication.service";
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    title = 'Operator Fabric';
+    title = 'OperatorFabric';
     getRoutePE: Observable<any>;
     currentPath: any;
     isAuthenticated$: boolean;
