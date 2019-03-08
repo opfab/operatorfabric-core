@@ -37,7 +37,7 @@ Location:: Operating room
 Number:: ?
 Parent Role:: <<Business Actor>>
 
-==== 3rd Party Information Service
+==== Thirrd Party Information Service
 Description:: Initiate Process instances and interacts with it. Performs
 computation for business processes
 Type:: Service

@@ -18,3 +18,5 @@ include::02_business_roles.adoc[]
 include::03_business_services/index.adoc[]
 
 include::04_business_activities/index.adoc[]
+
+include::05_business_objects.adoc[]

@@ -1,0 +1,30 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+ifndef::imagesdir[:imagesdir: ../images]
+=== Business Objects
+
+==== Business Process
+Description:: Defines a process. A process describes interractions between
+Operators(<<User>>) and <<ThirdParty Information Service>> using a business
+workflow. An effective process realization is called a <<Business Process Instance>>
+
+==== Business Process Instance
+Description:: A Business process Instance is the effective realization of a
+<<Business Process>> (Definition).
+
+==== Cards
+Description:: Cards are data object encapsulating the current state of a
+<<Business Process Instance>>
+
+==== User
+Description:: a User is the internal description of a human actor
+(<<Operator>>; <<Administrator>>; See <<Business Roles>>)
+
+==== ThirdParty Information Service
+Description:: a ThirdParty Information Service is the internal description
+of a ThirdParty actor (<<Thirrd Party Information Service>>; See
+<<Business Roles>>).
