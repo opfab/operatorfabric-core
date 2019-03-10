@@ -54,7 +54,7 @@ public class CardOperationsController {
 
 
     /**
-     * Register to {@link CardSubscriptionService} to get access to a {@link Flux} of String. Those strings are Json
+     * Registers to {@link CardSubscriptionService} to get access to a {@link Flux} of String. Those strings are Json
      * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
      *
      * @param input
@@ -112,7 +112,7 @@ public class CardOperationsController {
      *
      * @param input
      *    o tuple containing 1) user data 2) client id
-     * @return mesage publisher
+     * @return message publisher
      */
     public Flux<String> publishTestData(Mono<CardOperationsGetParameters> input) {
         return input.flatMapMany(t -> Flux

@@ -35,7 +35,7 @@ public class CardController {
     /**
      * POST cards to create/update new cards
      * @param cards cards to create publisher
-     * @return contains numlber of cards created and optional message
+     * @return contains number of cards created and optional message
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

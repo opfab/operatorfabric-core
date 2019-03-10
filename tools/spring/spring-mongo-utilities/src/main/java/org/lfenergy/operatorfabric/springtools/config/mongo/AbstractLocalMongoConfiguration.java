@@ -15,7 +15,7 @@ import java.util.List;
  * <p>Class to implement locally for specific mongo configuration</p>
  * <p>Includes</p>
  * <ul>
- *     <li>Define converter list throught {@link #converterList}</li>
+ *     <li>Define converter list through {@link #converterList}</li>
  * </ul>
  */
 public abstract class AbstractLocalMongoConfiguration {

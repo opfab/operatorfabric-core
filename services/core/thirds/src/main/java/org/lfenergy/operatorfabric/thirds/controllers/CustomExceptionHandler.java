@@ -39,9 +39,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   public static final String GENERIC_MSG = "Caught exception at API level";
 
   /**
-   * Handle {@link IOException} as 404 errors
+   * Handles {@link IOException} as 404 errors
    * @param exception exception to handle
-   * @param request Corresponding resuqest of exchange
+   * @param request Corresponding request of exchange
    * @return Computed http response for specified exception
    */
   @ExceptionHandler(IOException.class)
@@ -56,9 +56,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   /**
-   * Handle {@link FileNotFoundException} as 404 errors
+   * Handles {@link FileNotFoundException} as 404 errors
    * @param exception exception to handle
-   * @param request Corresponding resuqest of exchange
+   * @param request Corresponding request of exchange
    * @return Computed http response for specified exception
    */
   @ExceptionHandler(FileNotFoundException.class)
@@ -74,9 +74,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   /**
-   * Handle {@link ApiErrorException}
+   * Handles {@link ApiErrorException}
    * @param exception exception to handle
-   * @param request Corresponding resuqest of exchange
+   * @param request Corresponding request of exchange
    * @return Computed http response for specified exception
    */
   @ExceptionHandler(ApiErrorException.class)

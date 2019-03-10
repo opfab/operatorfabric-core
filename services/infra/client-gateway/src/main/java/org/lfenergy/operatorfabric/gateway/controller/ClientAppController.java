@@ -27,7 +27,7 @@ public class ClientAppController {
      * Forward to home/index.html file
      *
      * @param exchange http request/response
-     * @return nothing asside from completion
+     * @return nothing aside from completion
      */
 //    @GetMapping(value = "/home")
 //    public String index() {

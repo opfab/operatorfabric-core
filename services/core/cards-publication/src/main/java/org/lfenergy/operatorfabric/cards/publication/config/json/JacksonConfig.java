@@ -46,7 +46,7 @@ public class JacksonConfig {
         return new JsonPOJOBuilder.Value("build", "");
       }
     });
-    // Some other custom configuration for supporting Java 8 features
+    // Some other custom configuration to support Java 8 features
     objectMapper.registerModule(new Jdk8Module());
     objectMapper.registerModule(new JavaTimeModule());
     objectMapper.registerModule(new CardsModule());

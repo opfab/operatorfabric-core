@@ -62,7 +62,7 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
         try {
             return mapper.writeValueAsString(cardOperation);
         } catch (JsonProcessingException e) {
-            log.error(String.format("Unnable to linearize %s to Json",cardOperation.getClass().getSimpleName()),e);
+            log.error(String.format("Unable to linearize %s to Json",cardOperation.getClass().getSimpleName()),e);
             return null;
         }
     }

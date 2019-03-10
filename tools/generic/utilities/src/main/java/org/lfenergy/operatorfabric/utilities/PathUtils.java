@@ -104,7 +104,7 @@ public class PathUtils {
       delete(source);
       return true;
     } catch (IOException e) {
-      log.warn("Unnable to silent delete "+source.toString(),e);
+      log.warn("Unable to silent delete "+source.toString(),e);
       return false;
     }
   }

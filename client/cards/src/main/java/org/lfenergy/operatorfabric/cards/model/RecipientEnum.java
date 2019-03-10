@@ -12,9 +12,9 @@ package org.lfenergy.operatorfabric.cards.model;
  * 
  * <dl>
  *   <dt>BROADCAST</dt><dd>Card is sent to everyone</dd>
- *   <dt>DEADEND</dt><dd>Card is sent to no one (Mosty for testing purpose)</dd>
+ *   <dt>DEADEND</dt><dd>Card is sent to no one (Mostly for testing purposes)</dd>
  *   <dt>GROUP</dt><dd>Card is sent to a whole group</dd>
- *   <dt>TSO</dt><dd>Depracated Alias for group</dd>
+ *   <dt>TSO</dt><dd>Deprecated alias for GROUP</dd>
  *   <dt>UNION</dt><dd>Card is sent to the union of underlying recipients</dd>
  *   <dt>INTERSECT</dt><dd>Card is sent to the intersection of underlying recipients</dd>
  *   <dt>USER</dt><dd>Card is sent to a specified user</dd>

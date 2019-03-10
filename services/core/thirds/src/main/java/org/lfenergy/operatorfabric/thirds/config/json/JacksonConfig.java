@@ -35,7 +35,7 @@ public class JacksonConfig {
   public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
     ObjectMapper objectMapper = builder.createXmlMapper(false).build();
 
-    // Some other custom configuration for supporting Java 8 features
+    // Some other custom configuration to support Java 8 features
     objectMapper.registerModule(new Jdk8Module());
     objectMapper.registerModule(new JavaTimeModule());
     objectMapper.registerModule(new ThirdsModule());

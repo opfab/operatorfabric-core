@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * <p>This object manages subscription to AMQQ exchange</p>
+ * <p>This object manages subscription to AMQP exchange</p>
  *
  * <p>Two exchanges are used, {@link #groupExchange} and {@link #userExchange}.
  * See amqp.xml resource file ([project]/services/core/cards-publication/src/main/resources/amqp.xml)
@@ -129,7 +129,7 @@ public class CardSubscription {
     }
 
     /**
-     * creates a message listener which publishes messages to {@link FluxSink}
+     * Creates a message listener which publishes messages to {@link FluxSink}
      *
      * @param userMlc
      * @param emitter

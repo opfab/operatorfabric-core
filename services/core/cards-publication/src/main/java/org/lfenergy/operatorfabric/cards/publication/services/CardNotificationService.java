@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * {@link #notifyCards(Collection, CardOperationTypeEnum)} is to
  * prepare data and notify AMQP exchange of it. Information about card
  * publication and deletion is then accessible to other services or
- * entities throught bindings to these exchanges.
+ * entities through bindings to these exchanges.
  * </p>
  *
  * <p>Two exchanges are used, {@link #groupExchange} and {@link #userExchange}.
@@ -104,7 +104,7 @@ public class CardNotificationService {
     }
 
     /**
-     * reduce unitary {@link CardOperationData.CardOperationDataBuilder} maps into maps of List of {@link CardOperation}
+     * Reduces unitary {@link CardOperationData.CardOperationDataBuilder} maps into maps of List of {@link CardOperation}
      *
      * @param result
      * @param item
@@ -133,7 +133,7 @@ public class CardNotificationService {
     }
 
     /**
-     * group card operation by types and publication/deletion date
+     * Groups card operation by types and publication/deletion date
      * <p>
      * TODO group at most by ten cards
      *
@@ -163,7 +163,7 @@ public class CardNotificationService {
     }
 
     /**
-     * <p>Let the service handle AMQP backend notification of operation on a list of cards</p>
+     * <p>Lets the service handle AMQP backend notification of operation on a list of cards</p>
      * <p>The handling is asynchronous and is published to a backing {@link FluxSink}</p>
      *
      * @param cards cards to notify
@@ -174,7 +174,7 @@ public class CardNotificationService {
     }
 
     /**
-     * <p>Arrange {@link Card} into Unitary {@link CardOperationData} builder, that is to say
+     * <p>Arranges {@link Card} into Unitary {@link CardOperationData} builder, that is to say
      * CardOperationDataBuilder that only contain
      * one card</p>
      * <p>For one card:
@@ -253,7 +253,7 @@ public class CardNotificationService {
     }
 
     /**
-     * turn {@link CardPublicationData} + type into a {@link CardOperationData.BuilderEncapsulator} and associated
+     * Turns {@link CardPublicationData} + type into a {@link CardOperationData.BuilderEncapsulator} and associated
      * it to a builder id (~= group name or user name)
      *
      * @param c

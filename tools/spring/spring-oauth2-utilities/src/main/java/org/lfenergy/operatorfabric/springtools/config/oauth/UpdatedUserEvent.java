@@ -17,7 +17,9 @@ import org.springframework.cloud.bus.event.RemoteApplicationEvent;
  */
 public class UpdatedUserEvent extends RemoteApplicationEvent {
 
-    /* Updated user login */
+    /**
+     * Updated user login
+     * */
     private String login;
 
     protected UpdatedUserEvent() {

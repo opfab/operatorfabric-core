@@ -53,7 +53,7 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/ {
     private MongoClient client;
 
     /**
-     * @return reative client
+     * @return reactive client
      */
     @Bean
     public synchronized MongoClient reactiveMongoClient() {
@@ -114,7 +114,7 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/ {
     }
 
     /**
-     * Called before entities are persisted to mong, trigers bean validation
+     * Called before entities are persisted to mongo, triggers bean validation
      *
      * @param localValidatorFactoryBean
      *    spring bean validation main component

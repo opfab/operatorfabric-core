@@ -19,12 +19,12 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public class AssertUtils {
 
   /**
-   * Utility class don't need to be instantiated;
+   * Utility class doesn't need to be instantiated;
    */
   private AssertUtils(){};
 
   /**
-   * More compact {@linkplain org.assertj.core.api.Assertions#assertThatExceptionOfType}
+   * More compact than {@linkplain org.assertj.core.api.Assertions#assertThatExceptionOfType}
    * @param exceptionType the exception type class
    * @return the created {@link ThrowableTypeAssert}
    */

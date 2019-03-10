@@ -30,7 +30,7 @@ public class OpFabJwtAuthenticationToken extends JwtAuthenticationToken {
      * @param principal
      *    custom principal
      * @param authorities
-     *    list of authority
+     *    list of authorities
      */
     public OpFabJwtAuthenticationToken(Jwt jwt, User principal, Collection<? extends GrantedAuthority>
        authorities) {

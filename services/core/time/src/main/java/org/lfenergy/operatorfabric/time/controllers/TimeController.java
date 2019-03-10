@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 
 /**
- * The Time Api exposing method to manipulate time
+ * The Time Api exposing method to manipulate time, documented at {@link TimeApi}
  *
  * @author David Binder
  */

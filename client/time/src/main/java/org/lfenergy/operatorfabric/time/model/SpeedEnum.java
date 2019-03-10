@@ -8,9 +8,10 @@
 package org.lfenergy.operatorfabric.time.model;
 
 /**
+ * Speed of time flow in simulated time
  *
  * <dl>
- *     <dt>HALF</dt><dd>Half time as fast</dd>
+ *     <dt>HALF</dt><dd>Half as fast</dd>
  *     <dt>X1</dt><dd>Normal speed</dd>
  *     <dt>X2</dt><dd>Twice as fast</dd>
  *     <dt>X10</dt><dd>Ten time faster</dd>

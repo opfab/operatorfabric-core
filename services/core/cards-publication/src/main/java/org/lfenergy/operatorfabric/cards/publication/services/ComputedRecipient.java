@@ -28,15 +28,15 @@ public class ComputedRecipient {
     private Set<String> orphanUsers;
 
     /**
-     * Used to bypass javadoc inhability to handle annotation processor generated classes
-     * @return an encosulated builder
+     * Used to bypass javadoc inability to handle annotation processor generated classes
+     * @return an encapsulated builder
      */
     public static BuilderEncapsulator encapsulatedBuilder(){
         return new BuilderEncapsulator(builder());
     }
 
     /**
-     * Class used to encapsulate builder in order to bypass javadoc inhability to handle annotation processor generated classes
+     * Class used to encapsulate builder in order to bypass javadoc inability to handle annotation processor generated classes
      */
     @AllArgsConstructor
     public static class BuilderEncapsulator{

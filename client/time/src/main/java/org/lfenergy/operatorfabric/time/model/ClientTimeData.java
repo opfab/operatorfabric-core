@@ -15,6 +15,13 @@ import lombok.NoArgsConstructor;
 /**
  * Client time data
  *
+ * <dl>
+ *   <dt>referenceTime</dt><dd>Real server time at last time change</dd>
+ *   <dt>currentTime</dt><dd>Chosen simulated time start at last time change</dd>
+ *   <dt>computedNow</dt><dd>Current simulated time computed by server as currentTime + (referenceTime - now) * speed</dd>
+ *   <dt>speed</dt><dd>Speed of simulated time flow</dd>
+ * </dl>
+ *
  * @author David Binder
  */
 @Data

@@ -33,7 +33,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * ThirdService for managing Third properties and resources
+ * Thirds Service for managing Third properties and resources
  *
  * @author David Binder
  */
@@ -57,8 +57,8 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * List all registred thirds
-     * @return registred thirds
+     * Lists all registered thirds
+     * @return registered thirds
      */
     public List<Third> listThirds() {
         loadCacheIfNeeded();
@@ -75,14 +75,14 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Load third data to defaultCache (not thread safe {@link #loadCacheSafe()})
+     * Loads third data to defaultCache (not thread safe {@link #loadCacheSafe()})
      */
     private void loadCache() {
         log.info("loading thirds from " + new File(storagePath).getAbsolutePath());
         try {
             Map<String, Map<String, Third>> completeResult = new HashMap<>();
             Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath);
-            //load default Thirds and recursively loads versionned Thirds
+            //load default Thirds and recursively loads versioned Thirds
             Map<String, Third> result = loadCache0(root.getFile(),
                     Third::getName,
                     (f, t) -> completeResult.put(
@@ -105,7 +105,7 @@ public class ThirdsService implements ResourceLoaderAware {
      *
      * @param root         lookup folder
      * @param keyExtractor key cache extractor from loaded {@link ThirdData}
-     * @param onEachActor  do something on each subfolder. Optionnal.
+     * @param onEachActor  do something on each subfolder. Optional.
      * @return loaded cache
      */
     private Map<String, Third> loadCache0(File root,
@@ -133,10 +133,10 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * compute resource handle
+     * Computes resource handle
      *
      * @param thirdName Third name
-     * @param type      rsource type
+     * @param type      resource type
      * @param name      resource name
      * @return resource handle
      * @throws FileNotFoundException if corresponding file does not exist
@@ -147,12 +147,12 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * compute resource handle
+     * Computes resource handle
      *
      * @param thirdName Third name
      * @param type      resource type
      * @param version   third configuration version
-     * @param locale    choosen locale use default if not set
+     * @param locale    chosen locale use default if not set
      * @param name      resource name
      * @return resource handle
      * @throws FileNotFoundException if corresponding file does not exist
@@ -190,7 +190,7 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Validate resource existence
+     * Validates resource existence
      *
      * @param thirdName module name
      * @param type      resource type
@@ -203,7 +203,7 @@ public class ThirdsService implements ResourceLoaderAware {
                                             String locale) throws FileNotFoundException {
         Third third = completeCache.get(thirdName).get(version);
         if(type.isLocalized() && locale == null)
-            throw new FileNotFoundException("Unnable to determine resource for undefined locale");
+            throw new FileNotFoundException("Unable to determine resource for undefined locale");
         switch (type) {
             case CSS:
                 if (!third.getCsses().contains(name))
@@ -234,7 +234,7 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * compute resource handle
+     * Computes resource handle
      *
      * @param thirdName Third name
      * @param type      resource type
@@ -254,7 +254,7 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Update or create third from a new bundle
+     * Updates or creates third from a new bundle
      * @param is bundle input stream
      * @return the new or updated third data
      * @throws IOException if error arise during stream reading
@@ -277,7 +277,7 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Update or create third from disk saved bundle
+     * Updates or creates third from disk saved bundle
      * @param outPath path to the bundle
      * @return he new or updated third data
      * @throws IOException multiple underlying case (Json read, file system access, file system manipulation - copy,
@@ -294,9 +294,9 @@ public class ThirdsService implements ResourceLoaderAware {
                 .normalize();
         //third default config
         Path existingConfigPath = existingRootPath.resolve(CONFIG_FILE_NAME);
-        //third versionned root
+        //third versioned root
         Path existingVersionPath = existingRootPath.resolve(third.getVersion());
-        //move versionned dir
+        //move versioned dir
         PathUtils.silentDelete(existingVersionPath);
         PathUtils.moveDir(outPath, existingVersionPath);
         //copy config file to default
@@ -310,7 +310,7 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Fetch {@link Third} for specified name and default version
+     * Fetches {@link Third} for specified name and default version
      *
      * @param name third name
      * @param apiVersion {@link Third} version, if null falls back to default version (latest upload)
@@ -324,8 +324,8 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * reset data (only used in tests)
-     * @throws IOException multiple underlying case (file system access, file system manipulation - deletion)
+     * Resets data (only used in tests)
+     * @throws IOException multiple underlying cases (file system access, file system manipulation - deletion)
      */
     public void clear() throws IOException {
         Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath);
@@ -338,7 +338,7 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * reload cache thread safe
+     * Reloads cache thread safe
      */
     private synchronized void loadCacheSafe() {
         loadCache();

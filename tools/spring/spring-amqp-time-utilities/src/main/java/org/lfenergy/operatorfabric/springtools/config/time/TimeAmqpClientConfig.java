@@ -43,7 +43,7 @@ public class TimeAmqpClientConfig {
     }
 
     /**
-     * standard Fannout binding
+     * standard Fanout binding
      * @param timeQueue configured time queue
      * @param timeExchange configures time exchange
      * @return exchange/queue binding
@@ -54,7 +54,7 @@ public class TimeAmqpClientConfig {
     }
 
     /**
-     * TimeReceiver instance configure with object mapper to read json time message
+     * TimeReceiver instance configured with object mapper to read json time message
      * @param objectMapper json object mapper
      * @return time receiver
      */

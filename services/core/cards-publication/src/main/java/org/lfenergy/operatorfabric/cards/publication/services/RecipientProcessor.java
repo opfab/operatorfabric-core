@@ -31,6 +31,11 @@ public class RecipientProcessor {
 
     private Random random = new Random();
 
+    /**
+     * Users have a "groups" property listing the groups they belong to, but groups don't hold a list of their users
+     * The aim of this cache is to avoid going through all the users every time we need a list of the users in a given group
+     * Key: group name, value: list of users belonging to this group
+    */
     private Map<String, List<String>> userCache = new HashMap<>();
 
     public Map<String, List<String>> getUserCache() {
@@ -42,7 +47,7 @@ public class RecipientProcessor {
     }
 
     /**
-     * <p>Process all recipient data associated with {@link CardPublicationData#getRecipient()} at the time of computation.</p>
+     * <p>Processes all recipient data associated with {@link CardPublicationData#getRecipient()} at the time of computation.</p>
      *
      * <p>Updates the argument {@link CardPublicationData}</p>
      *
@@ -60,7 +65,7 @@ public class RecipientProcessor {
     }
 
     /**
-     * Process all recipient data associated with {{@link Recipient}} at the time of computation.
+     * Processes all recipient data associated with {{@link Recipient}} at the time of computation.
      *
      * @param recipient recipient to compute
      * @return a structure containing results (groups, orphaned users, main user)

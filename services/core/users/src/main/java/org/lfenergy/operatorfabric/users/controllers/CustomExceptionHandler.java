@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * CustomExceptionHandler.
  * <ul>
  *     <li>Handle Api errors according to their configuration</li>
- *     <li>Handle uncaught logging errro</li>
+ *     <li>Handle uncaught logging error</li>
  * </ul>
  *
  * @see org.lfenergy.operatorfabric.springtools.error.model.ApiError
@@ -44,7 +44,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-    log.error("Uncaught internal serveur exception",ex);
+    log.error("Uncaught internal server exception",ex);
     return super.handleExceptionInternal(ex, body, headers, status, request);
   }
 }

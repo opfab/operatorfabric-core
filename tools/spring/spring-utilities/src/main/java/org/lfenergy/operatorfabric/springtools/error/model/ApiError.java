@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 /**
- * Api Error model used to return formated error in http response payload
+ * Api Error model used to return formatted error in http response payload
  *
  * @author David Binder
  */

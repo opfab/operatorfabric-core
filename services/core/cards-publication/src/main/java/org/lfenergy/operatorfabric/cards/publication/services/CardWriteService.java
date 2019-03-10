@@ -56,7 +56,7 @@ import java.util.function.Function;
  * <ul>
  * <li>Validate card data (Bean validation)</li>
  * <li>Creating an {@link ArchivedCardPublicationData} along the {@link CardPublicationData} (passed has tuple)</li>
- * <li>Removing {@link CardPublicationData} with duplicate id (keeping only the latest one) throught a reduce operation</li>
+ * <li>Removing {@link CardPublicationData} with duplicate id (keeping only the latest one) through a reduce operation</li>
  * <li>Fuse cards to add into mongo bulk operations to avoid multiple IOs</li>
  * <li>Execute bulk operations</li>
  * </ul>
@@ -120,7 +120,7 @@ public class CardWriteService {
     }
 
     /**
-     * Process effective recipients.
+     * Processes effective recipients
      **/
     private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards) {
         return cards
@@ -128,7 +128,7 @@ public class CardWriteService {
     }
 
     /**
-     * Register validation process in flux, still allowing proccess to carry on if error arise
+     * Registers validation process in flux, still allowing process to carry on if an error arise
      *
      * @param cards
      * @param publishDate
@@ -143,7 +143,7 @@ public class CardWriteService {
     }
 
     /**
-     * Register validation process in flux. If error arrise breaks the process.
+     * Registers validation process in flux. If an error arise it breaks the process.
      *
      * @param cards
      * @param publishDate
@@ -158,7 +158,7 @@ public class CardWriteService {
     }
 
     /**
-     * Resgister mongo persisting part of the precess
+     * Registers mongo persisting part of the process
      *
      * @param cards
      * @param windowStart
@@ -248,7 +248,7 @@ public class CardWriteService {
     }
 
     /**
-     * Synchronous card push in the persisting/notification process use the same treatment as thoses associated to
+     * Synchronous card push in the persisting/notification process use the same treatment as those associated to
      * the internal {@link FluxSink} but adds a last step to prepare {@link CardCreationReportData}
      *
      * @param pushedCards published cards to add
@@ -260,17 +260,17 @@ public class CardWriteService {
         cards = registerValidationProcess(cards, SimulatedTime.getInstance().computeNow().toEpochMilli());
         return registerPersistingProcess(cards, windowStart)
                 .doOnNext(count -> log.info(count + " pushedCards persisted"))
-                .map(count -> new CardCreationReportData(count, "All pushedCards were succesfully handled"))
+                .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
                 .onErrorResume(e -> {
                     log.error("Unexpected error during pushedCards persistence", e);
-                    return Mono.just(new CardCreationReportData(0, "Error, unnable to handle pushedCards: " + e.getMessage
+                    return Mono.just(new CardCreationReportData(0, "Error, unable to handle pushedCards: " + e.getMessage
                             ()));
                 });
 
     }
 
     /**
-     * prepare and runs batch persist operation for {@link CardPublicationData}
+     * Prepares and runs batch persist operation for {@link CardPublicationData}
      *
      * @param cards
      */
@@ -287,7 +287,7 @@ public class CardWriteService {
     }
 
     /**
-     * prepare and batch persist operation for {@link ArchivedCardPublicationData}
+     * Prepares and runs batch persist operation for {@link ArchivedCardPublicationData}
      *
      * @param archivedCards
      */
