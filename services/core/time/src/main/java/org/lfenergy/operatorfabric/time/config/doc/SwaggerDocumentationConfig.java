@@ -43,7 +43,7 @@ public class SwaggerDocumentationConfig {
        .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
        .termsOfServiceUrl("")
        .version("0.0.1")
-       .contact(new Contact("", "", "benoit.jeanson@rte-france.com"))
+       .contact(new Contact("", "", "boris.dolley_AT_rte-france.com"))
        .build();
   }
 
