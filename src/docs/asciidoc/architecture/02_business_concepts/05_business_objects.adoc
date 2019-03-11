@@ -86,5 +86,5 @@ ThirdParty Information Service has the following characteristics
 |id|ThirdParty Information Services are uniquely defined
 |version| Multiple version of the same ThirdParty Information Service may coexist
 |Business Process|<<Business Process Definition, Business process Definitions>> are associated to a ThirdParty Information Service
-|authentication| Security means to ensure 
+|authentication| Security means to ensure
 |===
