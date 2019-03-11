@@ -24,7 +24,14 @@ definitions:
     example: 1551732725193
   SpeedEnum:
     type: string
-    description: Speed of time flow in simulated time
+    description: |-
+      Speed of time flow in simulated time >
+      * X1 - Normal speed
+      * X2 - Twice as fast
+      * X10 - Ten times faster
+      * X60 - 60 times faster (1s = 1min)
+      * X3600 - 3600 times faster (1s = 1hour)
+      * HALF - Half as fast
     enum:
       - X1
       - X2
