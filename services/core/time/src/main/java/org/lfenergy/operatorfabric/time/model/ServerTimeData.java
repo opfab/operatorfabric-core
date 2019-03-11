@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 public class ServerTimeData extends ClientTimeData implements TimeData {
-    public ServerTimeData(Long referenceTime, Long currentTime, Long computedNow, SpeedEnum speed) {
-        super(referenceTime, currentTime, computedNow, speed);
+    public ServerTimeData(Long referenceTime, Long virtualTime, Long computedNow, SpeedEnum speed) {
+        super(referenceTime, virtualTime, computedNow, speed);
     }
 }

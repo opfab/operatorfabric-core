@@ -13,7 +13,7 @@ import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.utilities.SimulatedTime;
+import org.lfenergy.operatorfabric.utilities.VirtualTime;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -105,7 +105,7 @@ public class CardWriteService {
                 //batching cards
                 .windowTimeout(windowSize, Duration.ofMillis(windowTimeOut))
                 //remembering startime for measurement
-                .map(card -> Tuples.of(card, System.nanoTime(), SimulatedTime.getInstance().computeNow().toEpochMilli()))
+                .map(card -> Tuples.of(card, System.nanoTime(), VirtualTime.getInstance().computeNow().toEpochMilli()))
                 //trigger batched treatment upon window readiness
                 .subscribe(cardAndTimeTuple -> handleWindowedCardFlux(cardAndTimeTuple));
     }
@@ -257,7 +257,7 @@ public class CardWriteService {
     public Mono<CardCreationReportData> createCardsWithResult(Flux<CardPublicationData> pushedCards) {
         long windowStart = Instant.now().toEpochMilli();
         Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
-        cards = registerValidationProcess(cards, SimulatedTime.getInstance().computeNow().toEpochMilli());
+        cards = registerValidationProcess(cards, VirtualTime.getInstance().computeNow().toEpochMilli());
         return registerPersistingProcess(cards, windowStart)
                 .doOnNext(count -> log.info(count + " pushedCards persisted"))
                 .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))

@@ -25,7 +25,7 @@ definitions:
   SpeedEnum:
     type: string
     description: |-
-      Speed of time flow in simulated time >
+      Speed of time flow in virtual time >
       * X1 - Normal speed
       * X2 - Twice as fast
       * X10 - Ten times faster
@@ -43,26 +43,26 @@ definitions:
   TimeData:
     type: object
     description: >-
-      Description of a time configuration, containing the current simulated time as
+      Description of a time configuration, containing the current virtual time as
       well as the references used for computation
     properties:
       referenceTime:
         $ref: '#/definitions/EpochDate'
         description: Real server time at last time change
-      currentTime:
+      virtualTime:
         $ref: '#/definitions/EpochDate'
-        description: Chosen simulated time start at last time change
+        description: Chosen virtual time start at last time change
       computedNow:
         $ref: '#/definitions/EpochDate'
         description: >-
-          Current simulated time computed by server as currentTime +
+          Current virtual time computed by server as virtualTime +
           (referenceTime - now) * speed
       speed:
         $ref: '#/definitions/SpeedEnum'
-        description: Speed of simulated time flow
+        description: Speed of virtual time flow
     example:
       referenceTime: 1551868290379
-      currentTime: 1520332290378
+      virtualTime: 1520332290378
       computedNow: 1520332310718
       speed: X10
 paths:
@@ -135,13 +135,13 @@ paths:
     post:
       tags:
         - time
-      summary: Set start of simulated time
-      description: Set start of simulated time (milliseconds since Epoch)
-      operationId: setCurrentTime
+      summary: Set start of virtual time
+      description: Set start of virtual time (milliseconds since Epoch)
+      operationId: setVirtualTime
       parameters:
         - in: body
-          name: currentTime
-          description: Start of simulated time (milliseconds since Epoch)
+          name: virtualTime
+          description: Start of virtual time (milliseconds since Epoch)
           schema:
             $ref: '#/definitions/EpochDate'
       responses:
@@ -154,15 +154,15 @@ paths:
     put:
       tags:
         - time
-      summary: Update start of simulated time (same as setCurrentTime)
+      summary: Update start of virtual time (same as setVirtualTime)
       description: >-
-        Updates start of simulated time (milliseconds since Epoch) (same as
-        setCurrentTime)
-      operationId: updateCurrentTime
+        Updates start of virtual time (milliseconds since Epoch) (same as
+        setVirtualTime)
+      operationId: updateVirtualTime
       parameters:
         - in: body
-          name: currentTime
-          description: Start of simulated time (milliseconds since Epoch)
+          name: virtualTime
+          description: Start of virtual time (milliseconds since Epoch)
           schema:
             $ref: '#/definitions/EpochDate'
       responses:
@@ -176,13 +176,13 @@ paths:
     post:
       tags:
         - time
-      summary: Set simulated time speed
-      description: Set simulated time speed
+      summary: Set virtual time speed
+      description: Set virtual time speed
       operationId: setCurrentSpeed
       parameters:
         - in: body
           name: currentspeed
-          description: Simulated time speed
+          description: Virtual time speed
           schema:
             $ref: '#/definitions/SpeedEnum'
       responses:
@@ -195,13 +195,13 @@ paths:
     put:
       tags:
         - time
-      summary: Update simulated time speed (same as setCurrentSpeed)
-      description: Update simulated time speed (same as setCurrentSpeed)
+      summary: Update virtual time speed (same as setCurrentSpeed)
+      description: Update virtual time speed (same as setCurrentSpeed)
       operationId: updateCurrentSpeed
       parameters:
         - in: body
           name: currentSpeed
-          description: Simulated time speed
+          description: Virtual time speed
           schema:
             $ref: '#/definitions/SpeedEnum'
       responses:

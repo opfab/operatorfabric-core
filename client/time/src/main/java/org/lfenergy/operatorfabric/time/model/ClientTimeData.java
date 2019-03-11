@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
  *
  * <dl>
  *   <dt>referenceTime</dt><dd>Real server time at last time change</dd>
- *   <dt>currentTime</dt><dd>Chosen simulated time start at last time change</dd>
- *   <dt>computedNow</dt><dd>Current simulated time computed by server as currentTime + (referenceTime - now) * speed</dd>
- *   <dt>speed</dt><dd>Speed of simulated time flow</dd>
+ *   <dt>virtualTime</dt><dd>Chosen virtual time start at last time change</dd>
+ *   <dt>computedNow</dt><dd>Current virtual time computed by server as virtualTime + (referenceTime - now) * speed</dd>
+ *   <dt>speed</dt><dd>Speed of virtual time flow</dd>
  * </dl>
  *
  * @author David Binder
@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 public class ClientTimeData {
 
   private Long referenceTime;
-  private Long currentTime;
+  private Long virtualTime;
   private Long computedNow;
   private SpeedEnum speed;
 }

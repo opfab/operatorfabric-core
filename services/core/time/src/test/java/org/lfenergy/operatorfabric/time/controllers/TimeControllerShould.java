@@ -76,7 +76,7 @@ class TimeControllerShould {
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.referenceTime", nullValue()))
-           .andExpect(jsonPath("$.currentTime", nullValue()))
+           .andExpect(jsonPath("$.virtualTime", nullValue()))
            .andExpect(jsonPath("$.computedNow", notNullValue()))
            .andExpect(jsonPath("$.speed", is("X1")))
            .andReturn();
@@ -105,12 +105,12 @@ class TimeControllerShould {
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.referenceTime", notNullValue()))
-           .andExpect(jsonPath("$.currentTime", notNullValue()))
+           .andExpect(jsonPath("$.virtualTime", notNullValue()))
            .andExpect(jsonPath("$.computedNow", notNullValue()))
            .andExpect(jsonPath("$.speed", is("X2")))
            .andReturn();
         TimeData timeData = objectMapper.readValue(result.getResponse().getContentAsString(), TimeData.class);
-        assertThat(timeData.getCurrentTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
+        assertThat(timeData.getVirtualTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
         setAndResetTimeData0(lastYear);
     }
 
@@ -128,12 +128,12 @@ class TimeControllerShould {
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.referenceTime", notNullValue()))
-           .andExpect(jsonPath("$.currentTime", notNullValue()))
+           .andExpect(jsonPath("$.virtualTime", notNullValue()))
            .andExpect(jsonPath("$.computedNow", notNullValue()))
            .andExpect(jsonPath("$.speed", is("X2")))
            .andReturn();
         TimeData timeData = objectMapper.readValue(result.getResponse().getContentAsString(), TimeData.class);
-        assertThat(timeData.getCurrentTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
+        assertThat(timeData.getVirtualTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
         setAndResetTimeData0(lastYear);
     }
 
@@ -143,12 +143,12 @@ class TimeControllerShould {
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.referenceTime", notNullValue()))
-           .andExpect(jsonPath("$.currentTime", notNullValue()))
+           .andExpect(jsonPath("$.virtualTime", notNullValue()))
            .andExpect(jsonPath("$.computedNow", notNullValue()))
            .andExpect(jsonPath("$.speed", is("X2")))
            .andReturn();
         TimeData timeData = objectMapper.readValue(result.getResponse().getContentAsString(), TimeData.class);
-        assertThat(timeData.getCurrentTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
+        assertThat(timeData.getVirtualTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
         Instant computedNow = DateTimeUtil.toInstant(timeData.getComputedNow());
         log.info("computed now is : " + computedNow.toString());
         assertThat(lastYear.isBefore(computedNow)).describedAs(lastYear.toString() + " should be before " + computedNow
@@ -166,7 +166,7 @@ class TimeControllerShould {
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.referenceTime", nullValue()))
-           .andExpect(jsonPath("$.currentTime", nullValue()))
+           .andExpect(jsonPath("$.virtualTime", nullValue()))
            .andExpect(jsonPath("$.computedNow", notNullValue()))
            .andExpect(jsonPath("$.speed", is("X1")));
     }
@@ -235,7 +235,7 @@ class TimeControllerShould {
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.referenceTime", notNullValue()))
-           .andExpect(jsonPath("$.currentTime", notNullValue()))
+           .andExpect(jsonPath("$.virtualTime", notNullValue()))
            .andExpect(jsonPath("$.computedNow", notNullValue()))
            .andExpect(jsonPath("$.speed", is("X2")))
            .andReturn();
@@ -257,7 +257,7 @@ class TimeControllerShould {
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.referenceTime", nullValue()))
-           .andExpect(jsonPath("$.currentTime", nullValue()))
+           .andExpect(jsonPath("$.virtualTime", nullValue()))
            .andExpect(jsonPath("$.computedNow", notNullValue()))
            .andExpect(jsonPath("$.speed", is("X1")));
     }

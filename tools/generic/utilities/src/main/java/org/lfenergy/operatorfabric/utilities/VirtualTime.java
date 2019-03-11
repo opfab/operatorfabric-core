@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Allows to simulate a clock.
  */
-public class SimulatedTime {
+public class VirtualTime {
     /**
      * Interface to define classes listening for the modifications of the time flow.
      */
@@ -28,9 +28,9 @@ public class SimulatedTime {
         void timeWarpOccurred();
     }
 
-    private static SimulatedTime singleton;
+    private static VirtualTime singleton;
     private Instant referenceSystemTime;
-    private Instant startSimulatedTime;
+    private Instant startVirtualTime;
     private float speed;
     private List<Runnable> initialisationListeners;
     private Set<TimeWarpListener> timeWarpListenerSet = new HashSet<>();
@@ -38,7 +38,7 @@ public class SimulatedTime {
     /**
      * Constructor.
      */
-    private SimulatedTime() {
+    private VirtualTime() {
         speed = 1.0f;
         initialisationListeners = new ArrayList<>();
     }
@@ -47,9 +47,9 @@ public class SimulatedTime {
      * Generates or retrieve singleton instance
      * @return singleton instance
      */
-    public static SimulatedTime getInstance() {
+    public static VirtualTime getInstance() {
         if (singleton == null) {
-            singleton = new SimulatedTime();
+            singleton = new VirtualTime();
         }
         return singleton;
     }
@@ -62,12 +62,12 @@ public class SimulatedTime {
         this.referenceSystemTime = referenceSystemTime;
     }
 
-    public Instant getStartSimulatedTime() {
-        return startSimulatedTime;
+    public Instant getStartVirtualTime() {
+        return startVirtualTime;
     }
 
-    public void setStartSimulatedTime(Instant startSimulatedTime) {
-        this.startSimulatedTime = startSimulatedTime;
+    public void setStartVirtualTime(Instant startVirtualTime) {
+        this.startVirtualTime = startVirtualTime;
     }
 
     public float getSpeed() {
@@ -81,7 +81,7 @@ public class SimulatedTime {
     }
 
     /**
-     * Computes the simulated current time as an {@link Instant}
+     * Computes the virtual current time as an {@link Instant}
      * @return now
      */
     public Instant computeNow() {
@@ -89,7 +89,7 @@ public class SimulatedTime {
             return Instant.now();
         long delta = referenceSystemTime.until(Instant.now(), ChronoUnit.MILLIS);
         double coefDelta = delta * speed;
-        return startSimulatedTime.plus(Math.round(coefDelta), ChronoUnit.MILLIS);
+        return startVirtualTime.plus(Math.round(coefDelta), ChronoUnit.MILLIS);
     }
 
     /**
@@ -98,14 +98,14 @@ public class SimulatedTime {
     public void reset() {
         referenceSystemTime = null;
         speed = 1;
-        startSimulatedTime = null;
+        startVirtualTime = null;
     }
 
 
     /**
-     * Return the "real" instant corresponding to the given simulated instant
+     * Return the "real" instant corresponding to the given virtual instant
      * @param instant an instant to convert
-     * @return the system instant corresponding to the given instant in the simulated referential
+     * @return the system instant corresponding to the given instant in the virtual referential
      */
     public Instant convertToSystemInstant(Instant instant) {
         if (referenceSystemTime == null) {
@@ -115,30 +115,30 @@ public class SimulatedTime {
             return instant;
         }
 
-        double delta = startSimulatedTime.until(instant, ChronoUnit.MILLIS);
+        double delta = startVirtualTime.until(instant, ChronoUnit.MILLIS);
         double coefDelta = delta / speed;
         return referenceSystemTime.plus(Math.round(coefDelta), ChronoUnit.MILLIS);
     }
 
 
     /**
-     * Return the "simulated" instant corresponding to the given system instant
+     * Return the "virtual" instant corresponding to the given system instant
      * @param systemInstant an instant to convert
-     * @return the simulated instant corresponding to the given instant in the system referential
+     * @return the virtual instant corresponding to the given instant in the system referential
      */
-    public Instant convertToSimulatedInstant(Instant systemInstant) {
+    public Instant convertToVirtualInstant(Instant systemInstant) {
         if (referenceSystemTime == null)
             return systemInstant;
         long delta = referenceSystemTime.until(systemInstant, ChronoUnit.MILLIS);
         double coefDelta = delta * speed;
-        return startSimulatedTime.plus(Math.round(coefDelta), ChronoUnit.MILLIS);
+        return startVirtualTime.plus(Math.round(coefDelta), ChronoUnit.MILLIS);
     }
 
 
     /**
      * Return the number of milliseconds in the system time referential
-     * corresponding to the given number of milliseconds in the simulated time referential.
-     * @param nbMillis a number of milliseconds in the simulated time referential
+     * corresponding to the given number of milliseconds in the virtual time referential.
+     * @param nbMillis a number of milliseconds in the virtual time referential
      * @return its correspondence in the "real" time referential (i.e. the system one)
      */
     public long convertToSystemMillis(long nbMillis) {
@@ -146,7 +146,7 @@ public class SimulatedTime {
     }
 
     /**
-     * Current thread waits for a simulated duration.
+     * Current thread waits for a given duration in virtual time
      * @param durationMillis sleep duration
      * @throws InterruptedException see {@link Thread#sleep(long)} exception
      */

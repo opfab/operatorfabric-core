@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.time.model.ServerTimeData;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
-import org.lfenergy.operatorfabric.utilities.SimulatedTime;
+import org.lfenergy.operatorfabric.utilities.VirtualTime;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -31,7 +31,7 @@ import java.time.Instant;
 public class TimeService {
 
     private final RabbitTemplate rabbitTemplate;
-    private final SimulatedTime simulatedTime;
+    private final VirtualTime virtualTime;
     private final ObjectMapper mapper;
     private final FanoutExchange timeExchange;
     @Value("${time.default:#{null}}")
@@ -40,16 +40,16 @@ public class TimeService {
     /**
      * Constructor by injection
      *
-     * @param simulatedTime injected simulated time singleton instance
+     * @param virtualTime injected virtual time singleton instance
      * @param rabbitTemplate injected rabbit template for message sending
      * @param mapper injected object mapper to linearize object into json string representation in AMQP message body
      * @param timeExchange injected AMQP exchange to send time messages
      */
     @Autowired
-    public TimeService(SimulatedTime simulatedTime, RabbitTemplate rabbitTemplate, ObjectMapper mapper,
+    public TimeService(VirtualTime virtualTime, RabbitTemplate rabbitTemplate, ObjectMapper mapper,
                        FanoutExchange timeExchange) {
 
-        this.simulatedTime = simulatedTime;
+        this.virtualTime = virtualTime;
         this.rabbitTemplate = rabbitTemplate;
         this.mapper = mapper;
         this.timeExchange = timeExchange;
@@ -59,14 +59,14 @@ public class TimeService {
 
     /**
      *
-     * @return simulated "now" time
+     * @return virtual "now" time
      */
     public Instant computeNow() {
-        return simulatedTime.computeNow();
+        return virtualTime.computeNow();
     }
 
     /**
-     * <p>Sets current time to specified value computing a delta in real and simulated value for later computation</p>
+     * <p>Sets current time to specified value computing a delta in real and virtual value for later computation</p>
      * <p>Relies on {@link #updateTime(Instant, boolean)} with notify set to true</p>
      *
      * @param instant the new current time
@@ -75,24 +75,24 @@ public class TimeService {
         updateTime(instant, true);
     }
     /**
-     * <p>Sets current time to specified value computing a delta in real and simulated value for later computation</p>
+     * <p>Sets current time to specified value computing a delta in real and virtual value for later computation</p>
      *
      * @param instant the new current time
      * @param notify if sets to true, an amqp message is sent
      */
     private void updateTime(Instant instant, boolean notify) {
-        simulatedTime.setStartSimulatedTime(instant);
-        simulatedTime.setReferenceSystemTime(Instant.now());
+        virtualTime.setStartVirtualTime(instant);
+        virtualTime.setReferenceSystemTime(Instant.now());
         if (notify) {
             notifyChanges();
         }
     }
 
     /**
-     * Resets {@link SimulatedTime instance to initial values}
+     * Resets {@link VirtualTime instance to initial values}
      */
     public void reset() {
-        simulatedTime.reset();
+        virtualTime.reset();
         if(defaultStartTime!=null)
             updateTime(Instant.ofEpochMilli(defaultStartTime));
         else
@@ -114,13 +114,13 @@ public class TimeService {
      * @param notify if sets to true, an amqp message is sent
      */
     private void updateSpeed(SpeedEnum speed, boolean notify) {
-        if (simulatedTime.getStartSimulatedTime() == null) {
-            simulatedTime.setReferenceSystemTime(Instant.now());
-            simulatedTime.setStartSimulatedTime(simulatedTime.getReferenceSystemTime());
+        if (virtualTime.getStartVirtualTime() == null) {
+            virtualTime.setReferenceSystemTime(Instant.now());
+            virtualTime.setStartVirtualTime(virtualTime.getReferenceSystemTime());
         } else {
             updateTime(computeNow(), false);
         }
-        simulatedTime.setSpeed(speed.coef);
+        virtualTime.setSpeed(speed.coef);
         if (notify) {
             notifyChanges();
         }
@@ -152,14 +152,14 @@ public class TimeService {
         } catch (AmqpException e){
             log.error("Unable to send update time message due to AMQP error", e);
         }
-        simulatedTime.notifyTimeWarp();
+        virtualTime.notifyTimeWarp();
     }
 
     /**
      * @return current speed configuration
      */
     public SpeedEnum retrieveSpeed() {
-        return SpeedEnum.fromCoef(simulatedTime.getSpeed());
+        return SpeedEnum.fromCoef(virtualTime.getSpeed());
     }
 
     /**
@@ -167,8 +167,8 @@ public class TimeService {
      */
     public TimeData fetchTimeData() {
         return new ServerTimeData(
-           simulatedTime.getReferenceSystemTime()==null?null:simulatedTime.getReferenceSystemTime().toEpochMilli(),
-           simulatedTime.getStartSimulatedTime()==null?null:simulatedTime.getStartSimulatedTime().toEpochMilli(),
+           virtualTime.getReferenceSystemTime()==null?null: virtualTime.getReferenceSystemTime().toEpochMilli(),
+           virtualTime.getStartVirtualTime()==null?null: virtualTime.getStartVirtualTime().toEpochMilli(),
            computeNow().toEpochMilli(),
            retrieveSpeed());
     }

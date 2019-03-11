@@ -44,7 +44,7 @@ public class ObjectMapperShould {
     public void readTime() throws IOException {
         String stringTime = "{" +
           "\"referenceTime\": 123," +
-          "\"currentTime\": 456," +
+          "\"virtualTime\": 456," +
           "\"computedNow\": 789," +
           "\"speed\": \"X2\"" +
            "}";
@@ -52,7 +52,7 @@ public class ObjectMapperShould {
         assertThat(time).isNotNull();
         assertThat(time).isInstanceOf(ServerTimeData.class);
         assertThat(time.getReferenceTime()).isEqualTo(123);
-        assertThat(time.getCurrentTime()).isEqualTo(456);
+        assertThat(time.getVirtualTime()).isEqualTo(456);
         assertThat(time.getComputedNow()).isEqualTo(789);
         assertThat(time.getSpeed()).isEqualTo(SpeedEnum.X2);
     }

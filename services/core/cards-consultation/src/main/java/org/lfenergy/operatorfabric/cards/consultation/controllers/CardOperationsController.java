@@ -21,7 +21,7 @@ import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.User;
-import org.lfenergy.operatorfabric.utilities.SimulatedTime;
+import org.lfenergy.operatorfabric.utilities.VirtualTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -95,7 +95,7 @@ public class CardOperationsController {
         Long start = parameters.getRangeStart();
         Long end = parameters.getRangeEnd();
         if(end != null && start !=null) {
-            referencePublishDate = referencePublishDate == null ? SimulatedTime.getInstance().computeNow().toEpochMilli() : referencePublishDate;
+            referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow().toEpochMilli() : referencePublishDate;
             User user = parameters.getUser();
             String login = user.getLogin();
             String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
@@ -120,7 +120,7 @@ public class CardOperationsController {
            .doOnEach(l -> log.info("message " + l + " to " + t.getUser().getLogin()))
            .map(l -> CardOperationConsultationData.builder()
               .number(l)
-              .publishDate(SimulatedTime.getInstance().computeNow().toEpochMilli() - 600000)
+              .publishDate(VirtualTime.getInstance().computeNow().toEpochMilli() - 600000)
               .type(CardOperationTypeEnum.ADD)
               .card(
                  LightCardConsultationData.builder()
@@ -130,8 +130,8 @@ public class CardOperationsController {
                     .title(I18nConsultationData.builder().key("title").build())
                     .mainRecipient("rte-operator")
                     .severity(SeverityEnum.ALARM)
-                    .startDate(SimulatedTime.getInstance().computeNow().toEpochMilli())
-                    .endDate(SimulatedTime.getInstance().computeNow().toEpochMilli() + 3600000)
+                    .startDate(VirtualTime.getInstance().computeNow().toEpochMilli())
+                    .endDate(VirtualTime.getInstance().computeNow().toEpochMilli() + 3600000)
                     .build()
               )
               .build())

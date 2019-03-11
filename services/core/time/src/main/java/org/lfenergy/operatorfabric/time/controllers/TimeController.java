@@ -61,12 +61,12 @@ public class TimeController implements TimeApi{
         } else {
             log.info("Time updated by " + user.getLogin());
         }
-        if (time.getSpeed() != null && time.getCurrentTime() != null)
-            timeService.updateSpeedAndTime(time.getSpeed(), DateTimeUtil.toInstant(time.getCurrentTime()));
+        if (time.getSpeed() != null && time.getVirtualTime() != null)
+            timeService.updateSpeedAndTime(time.getSpeed(), DateTimeUtil.toInstant(time.getVirtualTime()));
         else if (time.getSpeed() != null)
             setCurrentSpeed(time.getSpeed());
-        else if (time.getCurrentTime() != null)
-            setCurrentTime(time.getCurrentTime());
+        else if (time.getVirtualTime() != null)
+            setVirtualTime(time.getVirtualTime());
         return fetchTime();
     }
 
@@ -89,14 +89,14 @@ public class TimeController implements TimeApi{
     }
 
     @Override
-    public Long setCurrentTime(java.lang.Long currentTime) {
-        this.timeService.updateTime(Instant.ofEpochMilli(currentTime));
+    public Long setVirtualTime(java.lang.Long virtualTime) {
+        this.timeService.updateTime(Instant.ofEpochMilli(virtualTime));
         return this.timeService.computeNow().toEpochMilli();
     }
 
     @Override
-    public Long updateCurrentTime(java.lang.Long currentTime) {
-        return setCurrentTime(currentTime);
+    public Long updateVirtualTime(java.lang.Long virtualTime) {
+        return setVirtualTime(virtualTime);
     }
 
     @Override

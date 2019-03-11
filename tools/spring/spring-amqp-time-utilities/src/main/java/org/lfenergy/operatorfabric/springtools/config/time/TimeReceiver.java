@@ -10,14 +10,14 @@ package org.lfenergy.operatorfabric.springtools.config.time;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.lfenergy.operatorfabric.time.model.ClientTimeData;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
-import org.lfenergy.operatorfabric.utilities.SimulatedTime;
+import org.lfenergy.operatorfabric.utilities.VirtualTime;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
 import java.io.IOException;
 import java.time.Instant;
 
 /**
- * Receives message from time queue and updates the local {@link SimulatedTime instance}
+ * Receives message from time queue and updates the local {@link VirtualTime instance}
  *
  * @author David Binder
  */
@@ -26,7 +26,7 @@ public class TimeReceiver {
 
     private final ObjectMapper mapper;
 
-    SimulatedTime simulatedTime = SimulatedTime.getInstance();
+    VirtualTime virtualTime = VirtualTime.getInstance();
 
 
     public TimeReceiver(ObjectMapper mapper){
@@ -34,18 +34,18 @@ public class TimeReceiver {
     }
 
     /**
-     * {@link RabbitListener}, receives messages and update local {@link SimulatedTime} instance
+     * {@link RabbitListener}, receives messages and update local {@link VirtualTime} instance
      * @param stringMessage received string message
      * @throws IOException error during json de linearization
      */
     @RabbitListener(queues = "#{timeQueue.name}")
     public void receive(String stringMessage) throws IOException {
         ClientTimeData data = mapper.readValue(stringMessage,ClientTimeData.class);
-        setSpeedAndTime(data.getSpeed(),Instant.ofEpochMilli(data.getCurrentTime()));
+        setSpeedAndTime(data.getSpeed(),Instant.ofEpochMilli(data.getVirtualTime()));
     }
 
     /**
-     * Update local {@link SimulatedTime} instance
+     * Update local {@link VirtualTime} instance
      * @param speed speed value
      * @param instant current time
      */
@@ -55,26 +55,26 @@ public class TimeReceiver {
     }
 
     /**
-     * Update local {@link SimulatedTime} instance time
+     * Update local {@link VirtualTime} instance time
      * @param instant current time
      */
     private void setTime(Instant instant) {
-        simulatedTime.setStartSimulatedTime(instant);
-        simulatedTime.setReferenceSystemTime(Instant.now());
+        virtualTime.setStartVirtualTime(instant);
+        virtualTime.setReferenceSystemTime(Instant.now());
     }
 
     /**
-     * Update local {@link SimulatedTime} instance speed
+     * Update local {@link VirtualTime} instance speed
      * @param speed speed value
      */
     private void setSpeed(SpeedEnum speed) {
-        if (simulatedTime.getStartSimulatedTime() == null) {
-            simulatedTime.setReferenceSystemTime(Instant.now());
-            simulatedTime.setStartSimulatedTime(simulatedTime.getReferenceSystemTime());
+        if (virtualTime.getStartVirtualTime() == null) {
+            virtualTime.setReferenceSystemTime(Instant.now());
+            virtualTime.setStartVirtualTime(virtualTime.getReferenceSystemTime());
         } else {
-            setTime(simulatedTime.computeNow());
+            setTime(virtualTime.computeNow());
         }
-        simulatedTime.setSpeed(speed.coef);
+        virtualTime.setSpeed(speed.coef);
     }
 
 }

@@ -62,7 +62,7 @@ class TimeServiceShould {
     Thread.sleep(1500);
     Instant computedNow = timeModule.computeNow();
     log.info("computed now is : " + computedNow.toString());
-    assertThat(timeModule.fetchTimeData().getCurrentTime()).isEqualTo(lastYear.toEpochMilli());
+    assertThat(timeModule.fetchTimeData().getVirtualTime()).isEqualTo(lastYear.toEpochMilli());
     assertThat(lastYear.isBefore(computedNow)).describedAs(lastYear.toString() + " should be before " + computedNow
        .toString()).isTrue();
 
@@ -73,7 +73,7 @@ class TimeServiceShould {
           ()).isTrue();
     timeModule.reset();
   TimeData resetedTimeData = timeModule.fetchTimeData();
-  assertThat(resetedTimeData.getCurrentTime()).isNull();
+  assertThat(resetedTimeData.getVirtualTime()).isNull();
   assertThat(resetedTimeData.getReferenceTime()).isNull();
   assertThat(resetedTimeData.getSpeed()).isEqualTo(SpeedEnum.X1);
   }
@@ -142,7 +142,7 @@ class TimeServiceShould {
       Instant nowAfterSleep = Instant.now();
 
       log.info("computed now is "+computedNow.toString());
-      assertThat(result.getCurrentTime()).isEqualTo(result.getReferenceTime());
+      assertThat(result.getVirtualTime()).isEqualTo(result.getReferenceTime());
       assertThat(nowBeforeSleep.isBefore(computedNow)).describedAs(nowBeforeSleep.toString() + " should be before " +
          computedNow.toString()).isTrue();
 
