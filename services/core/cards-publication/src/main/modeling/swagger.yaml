@@ -65,9 +65,9 @@ definitions:
     type: string
     description: |-
       the type of the input >
-      * TEXT - A simple text input
-      * LONGTEXT - A multilinne text input
-      * BOOLEAN - A checkbox input
+      * TEXT - A simple text input (size not limited)
+      * LONGTEXT - A long text input (size not limited)
+      * BOOLEAN - A boolean input
       * LIST - A list with one value selectable
       * MULTILIST - A list with multiple value selectable
       * SWITCH_LIST - Two list with exchangeable values
@@ -77,7 +77,7 @@ definitions:
       - LONGTEXT
       - BOOLEAN
       - LIST
-      - MULTILIST
+      - MULTI_LIST
       - SWITCH_LIST
       - STATIC
   ActionEnum:

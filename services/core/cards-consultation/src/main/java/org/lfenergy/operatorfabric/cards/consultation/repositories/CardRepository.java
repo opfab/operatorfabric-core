@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 /**
- * <p>Custom spring mongo reactive repository to access Card collection</p>
+ * <p>Custom spring mongo reactive repository to access {@link org.lfenergy.operatorfabric.cards.consultation.model.Card} mongodb collection</p>
  *
  * @author David Binder
  */

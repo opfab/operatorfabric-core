@@ -12,7 +12,7 @@ package org.lfenergy.operatorfabric.cards.model;
  * <dl>
  *     <dt>TEXT</dt><dd>This input will be displayed as an input text</dd>
  *     <dt>LIST</dt><dd>This input will be displayed as a dropbox</dd>
- *     <dt>LIST_RADIO</dt><dd>This input will be displayed as a radio button group</dd>
+ *     <dt>MULTI_LIST</dt><dd>This input will be displayed as multivalued list input</dd>
  *     <dt>SWITCH_LIST</dt><dd>This input is displayed as two list whose values may be exchanged</dd>
  *     <dt>LONG_TEXT</dt><dd>This input will be displayed as a multi line input text</dd>
  *     <dt>BOOLEAN</dt><dd>This input will be displayed as a boolean</dd>
@@ -25,7 +25,7 @@ public enum InputEnum {
   
   TEXT,
   LIST,
-  LIST_RADIO,
+  MULTI_LIST,
   SWITCH_LIST,
   LONGTEXT,
   BOOLEAN,
