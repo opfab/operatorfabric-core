@@ -1,0 +1,33 @@
+:hide-uri-scheme:
+
+= Contributing
+
+Thank you for your interest !
+
+We can't stress enough that feedback, discussions, questions and contributions on OperatorFabric are very much appreciated.
+However, because the project is still in its early stages, we're not fully equipped for any of it yet, so please bear with us while the contribution process and tooling are sorted out.
+
+In the meantime, check out what we *do* have:
+
+== Website http://opfab.org
+
+It contains all the documentation and resources we're currently working on. Here is what we aim to provide:
+
+* Architecture documentation
+* REST API documentation
+* Reference documentation for each component
+* Javadoc/Compodoc for each component
+* Tutorials and QuickStart guides and videos
+
+*This documentation is our priority* right now so future contributors can quickly find their way around the project.
+Needless to say, it's a work in progress so feel free to tell us what you feel is missing or what type of documentation you would be interested in as a contributor.
+
+TIP: We also use this website to broadcast any news we have about the project so don't hesitate to subscribe to the RSS feed on the home page to be informed of any update.
+
+== Collaboration platform: https://team.opfab.org
+
+Our collaboration platform is based on Mattermost. If you would like to join the discussions regarding OperatorFabric, please send us an email at boris.dolley_AT_rte-france.com .
+
+
+We're also thinking about setting up a Jira platform for issue tracking and agile project management.
+
