@@ -29,7 +29,7 @@ public class WebFluxConfig {
 
     /**
      * CORS configuration
-     * @return
+     * @return CORS Webflux configurer
      */
     @Bean
     @ConditionalOnProperty(prefix = "opfab", value = "cors.activate")

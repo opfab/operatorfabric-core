@@ -37,7 +37,7 @@ public class CardOperationRoutesConfig {
 
     /**
      * Card operation route configuration
-     * @return
+     * @return route
      */
     @Bean
     public RouterFunction<ServerResponse> cardOperationRoutes() {
@@ -77,7 +77,7 @@ public class CardOperationRoutesConfig {
     /**
      * Extracts card operation parameters from Authentication and Query parameters
      * @param request the http request
-     * @return a parameter agregation DTO
+     * @return a parameter aggregation DTO
      */
     private Mono<CardOperationsGetParameters> extractCardSubscriptionInfo(ServerRequest request){
         return request.principal()

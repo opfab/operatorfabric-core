@@ -32,7 +32,7 @@ public class CardRoutesConfig {
 
     /**
      * Card route configuration
-     * @return
+     * @return route
      */
     @Bean
     public RouterFunction<ServerResponse> cardRoutes() {
