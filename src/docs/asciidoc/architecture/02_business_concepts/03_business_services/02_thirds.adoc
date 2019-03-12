@@ -11,7 +11,7 @@ ifndef::imagesdir[:imagesdir: ../../images]
 Third Party Business Service is Responsible for Third Party Definition Management
 which consist of Third Party specific resources and processes (See <<Business Objects>>
 
-image::02_03_business_services/Package_third_ThirdUseCaseDiagram.JPEG[Third Management Use Case Diagram]
+image::02_03_business_services/ThirdPartyService_UCD.jpg[Third Management Use Case Diagram]
 
 ===== To Register a new Service
 

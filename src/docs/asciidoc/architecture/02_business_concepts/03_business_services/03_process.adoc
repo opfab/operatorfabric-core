@@ -10,7 +10,7 @@ ifndef::imagesdir[:imagesdir: ../../images]
 
 ==== Process
 
-image::02_03_business_services/Package_process_ProcessUseCaseDiagram.JPEG[Process Use Case Diagram]
+image::02_03_business_services/ProcessService_UCD.jpg[Process Use Case Diagram]
 
 Business Goal:: <<BCL-G-01, BCL-G-01>> ; <<BCL-G-02, BCL-G-02>> ; <<BCL-G-03, BCL-G-03>> ;
 

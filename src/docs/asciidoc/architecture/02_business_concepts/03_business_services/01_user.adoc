@@ -10,7 +10,7 @@ ifndef::imagesdir[:imagesdir: ../../images]
 
 User Business Service is responsible for user authentication, user management and group management.
 
-image::02_03_business_services/Model_opfab_GenericUseCaseDiagram.JPEG[Generic Use Case Diagram]
+image::02_03_business_services/UserService_UCD.jpg[Generic Use Case Diagram]
 
 ===== To Authenticate
 

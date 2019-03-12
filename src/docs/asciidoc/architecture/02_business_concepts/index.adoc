@@ -20,3 +20,7 @@ include::03_business_services/index.adoc[]
 include::04_business_activities/index.adoc[]
 
 include::05_business_objects.adoc[]
+
+include::06_information_services.adoc[]
+
+include::07_services_interraction.adoc[]

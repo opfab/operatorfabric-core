@@ -8,6 +8,8 @@ ifndef::imagesdir[:imagesdir: ../../images]
 
 ==== Card Business Service
 
+image::02_03_business_services/CardService_UCD.jpg[Process Use Case Diagram]
+
 ===== To Consult the Card Feed
 Actors:: Operator
 Description:: Access the feed of cards which display cards with a focus and the
