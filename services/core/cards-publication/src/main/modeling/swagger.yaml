@@ -28,14 +28,16 @@ schemes:
 definitions:
   EpochDate:
     type: object
-    description: number of milliseconds since Epoch (long integer)
+    description: Number of milliseconds since Epoch (long integer)
+    example: 1551868290379
   LongInteger:
     type: object
-    description: number of milliseconds since Epoch (long integer)
+    description: Number of items
+    example: 10
   CardOperationTypeEnum:
     type: string
     description: |-
-      the severity of the card subject >
+      Type of operation >
       * ADD - Operation lists cards object to add
       * UPDATE - Operation lists cards object to update
       * DELETE - Operation lists card ids to delete
@@ -43,43 +45,45 @@ definitions:
       - ADD
       - UPDATE
       - DELETE
+    example: ADD
   SeverityEnum:
     type: string
     description: >-
-      the severity of the card subject >
+      Severity of the card subject >
 
-      * ALARM - The process behind the card is in critical condition
+      * ALARM - The process instance behind the card is in critical condition
 
-      * ACTION - The process behind the card needs an action from an operator
+      * ACTION - The process instance behind the card is expecting an action from the user
 
-      * QUESTION - The process behind the card needs information from an
-      operator
+      * QUESTION - The process instance behind the card needs information from the user
 
-      * NOTIFICATION - Pure informational card
+      * NOTIFICATION - Purely informational card
     enum:
       - ALARM
       - ACTION
       - QUESTION
       - NOTIFICATION
+    example: NOTIFICATION
   InputEnum:
     type: string
     description: |-
-      the type of the input >
+      Input type >
       * TEXT - A simple text input (size not limited)
       * LONGTEXT - A long text input (size not limited)
       * BOOLEAN - A boolean input
-      * LIST - A list with one value selectable
-      * MULTILIST - A list with multiple value selectable
-      * SWITCH_LIST - Two list with exchangeable values
+      * LIST - A list with one selectable value
+      * MULTILIST - A list with multiple selectable values
+      * SWITCH_LIST - Two lists with exchangeable values
       * STATIC - A static non editable parameter
     enum:
       - TEXT
       - LONGTEXT
       - BOOLEAN
       - LIST
-      - MULTI_LIST
+      - MULTILIST
       - SWITCH_LIST
       - STATIC
+    example: TEXT
   ActionEnum:
     type: string
     description: |-
@@ -91,12 +95,19 @@ definitions:
       - INTERNAL
       - URI
       - JNLP
+    example: URI
   TitlePositionEnum:
     type: string
+    description: |-
+      Possible title positions >
+      * UP - At the top of the detail
+      * DOWN - At the bottom of the detail
+      * NONE - Not displayed
     enum:
       - UP
       - DOWN
       - NONE
+    example: UP
   RecipientEnum:
     type: string
     description: >-
@@ -104,7 +115,7 @@ definitions:
 
       * BROADCAST - Card is sent to everybody
 
-      * DEADEND - Card is sent to no one
+      * DEADEND - Card is sent to no one (mostly for testing purposes)
 
       * GROUP - Card is sent to every user belonging to a group (identity)
 
@@ -119,12 +130,12 @@ definitions:
       * RANDOM - Card is sent to user as defined by underlying recipient
       (recipient) a random user is picked as the main recipient
 
-      * WEIGHTED - Card is sent to user as defined by underlying recipient
+      * WEIGHTED - Card is sent to users as defined by underlying recipient
       (recipient) a random user is picked as the main recipient. A favorite user
-      (favorite) may be specified and is favored in the random choosinr process.
+      (favorite) may be specified and is favored in the random choosing process.
 
       * FAVORITE - Card is sent to user as defined by underlying recipient
-      (recipient), if favorite user (favorite) is in the computed users it will
+      (recipient), if favorite user (favorite) is in the computed users list it will
       be set as main recipient
     enum:
       - BROADCAST
@@ -136,23 +147,10 @@ definitions:
       - RANDOM
       - WEIGHTED
       - FAVORITE
+    example: GROUP
   Card:
     type: object
-    example:
-      publisher: MyService
-      publisherVersion: 0.0.1
-      processId: MyProcess
-      startDate: 1546387200000
-      lttd: 1546387200000
-      publishDate: 1546300800000
-      severity: ACTION
-      tags:
-        - MyService
-        - MyProcess
-        - ACTION
-      title:
-        key: myservice.myprocess.title
-    description: A Card gathers information about a process status
+    description: A Card sums up information about the status of a given process instance of the publishing service
     properties:
       uid:
         type: string
@@ -160,7 +158,7 @@ definitions:
         readOnly: true
       id:
         type: string
-        description: Unique card ID for associated process
+        description: Unique card ID (as defined in the associated process)
         readOnly: true
       publisher:
         type: string
@@ -170,10 +168,10 @@ definitions:
         description: Publishing service version
       processId:
         type: string
-        description: Unique process ID for associated process
+        description: Unique process ID of the associated process instance
       publishDate:
         $ref: '#/definitions/EpochDate'
-        description: The date the card was published (created by the card service )
+        description: The date the card was published (meaning created by the card service)
         readOnly: true
       deletionDate:
         $ref: '#/definitions/EpochDate'
@@ -182,7 +180,7 @@ definitions:
       lttd:
         $ref: '#/definitions/EpochDate'
         description: >-
-          Last time to decide, once this time is past no action can be triggered
+          Last time to decide, after this date no action can be triggered
           on the card
       startDate:
         $ref: '#/definitions/EpochDate'
@@ -200,7 +198,7 @@ definitions:
         type: array
         items:
           type: string
-        description: Card associated tags
+        description: Tags associated with the card
       actions:
         type: object
         description: 'Map of actions, identifying an action by its unique card related id'
@@ -218,20 +216,20 @@ definitions:
         description: Card i18n summary
         $ref: '#/definitions/I18n'
       recipient:
-        description: recipient computation rule
+        description: Recipient computation rule
         $ref: '#/definitions/Recipient'
       mainRecipient:
-        description: main user recipient id if any
+        description: Main user recipient id (if any)
         type: string
         readOnly: true
       userRecipients:
-        description: complete list of user recipient at computation time
+        description: Complete list of user recipients at computation time
         readOnly: true
         type: array
         items:
           type: string
       groupRecipients:
-        description: complete list of group recipient
+        description: Complete list of group recipients at computation time
         readOnly: true
         type: array
         items:
@@ -247,6 +245,21 @@ definitions:
       - startDate
       - title
       - summary
+    example:
+      uid: 12345
+      publisher: MyService
+      publisherVersion: 0.0.1
+      processId: MyProcess
+      startDate: 1546387200000
+      lttd: 1546387200000
+      publishDate: 1546300800000
+      severity: ACTION
+      tags:
+        - MyService
+        - MyProcess
+        - ACTION
+      title:
+        key: myservice.myprocess.title
   LightCard:
     type: object
     description: A Card gathers information about a process status
@@ -310,7 +323,7 @@ definitions:
         description: css classes applied to title
         type: string
       titlePosition:
-        description: title position
+        description: Title position
         $ref: '#/definitions/TitlePositionEnum'
       templateName:
         description: >-
@@ -324,20 +337,14 @@ definitions:
         type: array
         items:
           type: string
-  LightRecipient:
-    description: Recipient object defines rules for recipient computation
-    type: object
-    properties:
-      mainRecipient:
-        type: string
   Recipient:
     description: Recipient object defines rules for recipient computation
     type: object
     properties:
       type:
         $ref: '#/definitions/RecipientEnum'
-        description: >
-          specifies the recipient type. Please note that BROADCAST and DEADEND
+        description: >-
+          Specifies the recipient type. Please note that BROADCAST and DEADEND
           do not expose any other properties
       recipients:
         type: array
@@ -351,7 +358,7 @@ definitions:
         description: 'Used by USER, GROUP, FAVORITE'
       preserveMain:
         description: >-
-          if underlying recipients main users are to be propagated. Used by
+          If main users from the underlying recipients are to be propagated. Used by
           INTERSECT and UNION recipients.
         type: boolean
   Action:
@@ -377,12 +384,12 @@ definitions:
         type: boolean
         default: false
         readOnly: true
-        description: true if action has already been called at least once
+        description: True if action has already been called at least once
       updateState:
         type: boolean
         default: false
         description: >-
-          if true, client will attempt an update of ActionStatus before
+          If true, client will attempt an update of ActionStatus before
           rendering
       updateStateBeforeAction:
         type: boolean
@@ -414,7 +421,7 @@ definitions:
       - type
       - label
   Input:
-    description: describe an input parameter for an Action
+    description: Describe an input parameter for an Action
     type: object
     properties:
       type:
@@ -485,7 +492,7 @@ definitions:
         description: i18n client side key
       parameters:
         type: object
-        description: Optionnal parameters
+        description: Optional parameters
         additionalProperties:
           type: string
   ActionStatus:
@@ -549,7 +556,7 @@ paths:
         - cards
         - creation
       summary: publish cards
-      description: publish one or more card to OperatorFabric
+      description: Publish one or more cards to OperatorFabric
       operationId: publishCardsAsync
       consumes:
         - application/json
@@ -589,13 +596,13 @@ paths:
           in: query
           default: false
           description: >-
-            if true, connection is kept for notification of new cards (not
+            If true, connection is kept for notification of new cards (not
             related to the specified range)
         - name: clientId
           type: string
           in: query
           description: >-
-            a unique id to identify client to allow for reconnection (an
+            A unique id to identify client to allow for reconnection (an
             autogenerated UUID is the best solution)
       responses:
         '200':
@@ -604,9 +611,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CardOperation'
-      security:
-        - time_auth:
-            - 'read:card'
   /cards:
     get:
       tags:
@@ -646,9 +650,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LightCard'
-      security:
-        - time_auth:
-            - 'read:card'
     post:
       tags:
         - cards
@@ -743,15 +744,3 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActionStatus'
-securityDefinitions:
-  time_auth:
-    type: oauth2
-    authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
-    flow: implicit
-    scopes:
-      'read:card': access card data
-      'write:card': access card data
-  api_key:
-    type: apiKey
-    name: api_key
-    in: header
