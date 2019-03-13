@@ -1,0 +1,28 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+= OperatorFabric Third service
+David Binder; Boris Dolley; Alexandra Guirronet; Ronan Le Gall
+v0.1.1, April 15, 2019
+:imagesdir: images
+:sectnums:
+:toc: left
+:toclevels: 2
+:toc-title: Architecture
+:icons: font
+:hide-uri-scheme:
+
+Third service is used by third parties to customize some parts of OperatorFabric to fit their needs. There are two possibilities of customization:
+
+- add to OperatorFabric some entries in the main menu to access external services provided by third parties;
+- the way card details are displayed.
+
+include::00_customization_example.adoc[]
+
+include::01_technical_overview.adoc[]
+
+include::02_troubleshooting.adoc[]
+

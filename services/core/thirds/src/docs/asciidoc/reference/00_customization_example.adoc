@@ -1,0 +1,423 @@
+== Customization Example
+
+In the section, are explained main menu customization as well as Cards details customization.
+
+The third customizations are configured using a bundle which is described below. Once this bundle fully created, it's uploaded to the server which applies this customizations into current instance of OperatorFabric UI.
+
+The way customization is done is explained throughout examples before more technical details. The following instructions describe tests to perform on OperatorFabric to understand how customization is working in it. The card data used here are send automatically using a script as describe here <<CardSendingScript,Cards sending script>>.
+
+=== Requirements 
+
+Those tests are played in an environment where an OperatorFabric instance (all micro-services) is running along a MongoDB Database and a RabbitMQ instances.
+
+== Bundle
+
+Third bundles customize the way third card details are displayed. Those `tar.gz` archives contain a describing file named `config.json`, eventually some `css files`, `i18n files` and `handlebars templates` to do so.
+
+For didactic purposes, in this section, the third name is `BUNDLE_TEST` (to match the parameters used by the script). This bundle is localized for `en` and `fr`.
+
+=== Create
+
+As detailed in the `Third core service README` the bundle contains at least a metadata file called `config.json`, a `css` folder, an `media` folder(not create in this example), an `i18n` folder and a `template` folder. All, but `config.json file`, elements are optional.
+
+The files of this example are organized as below:
+
+....
+bundle
+├── config.json
+├── css
+│   └── bundleTest.css
+├── i18n
+│   ├── en.json
+│   └── fr.json
+└── template
+    ├── en
+    │   ├── template1.handlebars
+    │   └── template2.handlebars
+    └── fr
+        ├── template1.handlebars
+        └── template2.handlebars
+....
+
+To summarize, there are 5 directories and 8 files.
+
+==== config.json file
+
+It's a description file in `json` format. It lists the content of the bundle.
+
+===== Declaration content
+
+- third name as `name`;
+- format version as `version`: enable the correct display even the old ones as all version are stored by the server;
+- handlebars template list as `template`: the application serves only the templates declared in this array;
+- css file template list as `csses`;
+- third name in the main bar menu as `i18nLabelKey`: optional, used if the third service add one or several entry in the OperatorFabric main menu bar,cf <<MenuEntries, menu entries section for details>>;
+- extra menu entries as `menuEntries`: optional, see below for the declaration format of objects of this array, cf <<MenuEntries, menu entries section for details>>.
+
+The mandatory declaration are `name` and `version` attributes.
+
+link:https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#Third[related api details]
+
+*example*
+
+....
+{
+  "name": "BUNDLE_TEST",
+  "version": "1",
+  "templates": [
+    "template1",
+    "template2"
+  ],
+  "csses": [
+    "bundleTest"
+  ],
+  "i18nLabelKey": "third-name-in-menu-bar",
+  "menuEntries": [
+    {
+      "id": "uid test 0",
+      "url": "https://opfab.github.io/whatisopfab/",
+      "label": "first-menu-entry"
+    },
+    {
+      "id": "uid test 0",
+      "url": "https://www.lfenergy.org/",
+      "label": "b-menu-entry"
+    },
+    {
+      "id": "uid test 1",
+      "url": "https://github.com/opfab/opfab.github.io",
+      "label": "the-other-menu-entry"
+    }
+  ]
+}
+....
+===== i18n
+
+There are two mecanism of i18n. The first one is done using l10n files which are located in the `i18n` folder, the second one throuhougt l10n name folder nested in the `template` folder or in the `media` folder.
+
+The `i18n` folder contains one json file per l10n.
+
+These localisation is used for integration of the third service into OperatorFabric, i.e. the label displayed for the third service, the label displayed for each tab of the details of the third card, the label of the actions in cards if any or the additionnal third entries in OperatorFabric(more on that at the chapter ????).
+
+====  Template and Media folders
+
+The `template` and the `media` folder must contain localized folder for the i18n of the card details. This is why in our example, as the bundle is localized for `en` and `fr` language, the `template` folder contains a `en` and a `fr` folder.
+
+===== i18n file
+
+If there is no i18n file or key is missing, the i18n key is desplayed in OperatorFabric. 
+
+The choice of i18n keys is leaved to the Third service maintainer. The keys are referenced in the following places:
+
+* `config.json` file:
+	** `i18nLabelKey`: key used for the label for the third service displayed in the main menu bar of OperatorFabric;
+	** `label` of `menu entry declaration`: key used to l10n the `menu entries` declared by the Third party in the bundle;
+* `card data`: values of `card title` and `card summary` refer to `i18n keys` as well as `key attribute` in the `carde detail` section of the card data.
+
+*example*
+
+So in this example the third service is named `Bundle Test` with `BUNDLE_TEST` technical name. The bundle provide an english and a french l10n.
+
+The example bundle defined an new menu entry given acces to 3 entries. The title and the summary have to be l10n, so needs to be the 2 tabs titles.
+
+The name of the third service as displayed in the main menu bar of OperatorFabric. It will have the key `"third-name-in-menu-bar"`. The english l10n will be `Bundle Test` and the french one will be `Bundle de test`.
+
+A name for the three entries in the third entry menu. Their keys will be in order `"first-menu-entry"`, `"b-menu-entry"` and `"the-other-menu-entry"` for an english l10n as `Entry One`, `Entry Two` and `Entry Three` and in french as `Entrée une`, `Entrée deux` and `Entrée trois`.
+
+The title for the card and its summary. As the card used here are generated by the script of the `cards-publication` project we have to used the key declared there. So they are respectively `process.title` and `process.summary` with the following l10ns for english: `Card Title` and `Card short description`, and for french l10ns: `Titre de la carte` and `Courte description de la carte`.
+
+A title for earch (two of them) tab of the detail cards. As for card title and card summary, those key are already define by the test script. There are `"process.detail.tab.first"` and `"process.detail.tab.second"`. For english l10n the values are `First Detail List` and `Second Detail List` and for the french l10n, the values are `Première liste de détails` and `Seconde liste de détails`.
+
+Here is the content of `en.json`
+....
+{
+	"third-name-in-menu-bar":"Bundle Test",
+		"first-menu-entry":"Entry One",
+		"b-menu-entry":"Entry Two",
+		"the-other-menu-entry":"Entry Three",
+		"process":{
+			"title":"Card Title",
+			"summary":"Card short description",
+			"detail":{
+				"tab":{
+					"first":"First Detail List",
+					"second":"Second Detail List"
+				}
+			}
+		}
+}
+....
+Here the content of `fr.json`
+....
+{
+	"third-name-in-menu-bar":"Bundle de test",
+		"first-menu-entry":"Entrée une",
+		"b-menu-entry":"Entrée deux",
+		"the-other-menu-entry":"Entrée trois",
+		"process":{
+			"title":"Titre de la carte",
+			"summary":"Courte déscription de la carte",
+			"detail":{
+				"tab":{
+					"first":"Première liste de détails",
+					"second":"Deuxième liste de détails"
+				}
+			}
+		}
+}
+....
+
+Once the bundle correctly upload, the way to verify if the i18n have been correctly uploaded it's to used the GET method of third api for i18n file.
+
+The service is describe link:https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#getI18n[here] and can be used directly in the browser usinge the link:http://localhost:2100/swagger-ui.html#/thirds/getI18n[Swagger UI - Third get i18n]. The `locale` language, the `version` of the bundle and the `technical name` of the third party are needed to get json in the response.
+
+To verify if the french l10n data of the version 1 of the BUNDLE_TEST third party we could use the following command line `curl -X GET "http://localhost:2100/thirds/BUNDLE_TEST/i18n?locale=fr&version=1" -H  "accept: application/json"`.
+The service response with a 200 status and with the json correpsonding to the defined fr.json file show below.
+
+....
+{
+"third-name-in-menu-bar":"Bundle de test",
+"first-menu-entry":"Entrée une",
+"b-menu-entry":"Entrée deux",
+"the-other-menu-entry":"Entrée trois",
+"tests":{
+	"title":"Titre de la carte",
+	"summary":"Courte déscription de la carte",
+	"detail":{
+		"tab":{
+			"first":"Première liste de détails",
+			"second":"Deuxième liste de détails"
+			}
+		}
+}
+}
+....
+
+[#MenuEntries]
+== Menu Entries
+
+Those elements are declared  in the `config.json` file of the bundle. 
+
+If there are several items to declare for a third service, a title for the third menu section need to be declared within the `i18nLabelKey` attribut, otherwise the first and only `menu entry` item is used to create an entry in the menu nav bar of OperatorFabric.
+
+=== config.json declaration
+
+This kind of objects contains the following attributes :
+
+- `id`: identifier of the entry menu in the UI;
+- `url`: url openning a new page in a tab in the browser;
+- `label`: it's an i18n key used to l10n the entry in the UI.
+
+==== Examples
+
+In the following examples, only the part relative to menu entries in the `config.json` file is detailed, the other parts are omitted and represent with a '…'.
+
+===== Single menu entry
+
+....
+{
+	…
+	"menuEntries":[{
+			"id": "identifer-single-menu-entry",
+			"url": "https://opfab.github.io",
+			"label": "single-menu-entry-i18n-key"	
+		}],
+}
+....
+
+===== Several menu entries
+
+Here a sample with 3 menu entries.
+
+....
+{
+	…
+	"i18nLabelKey":"third-name-in-menu-navbar",
+	"menuEntries": [{
+			"id": "firstEntryIdentifier",
+			"url": "https://opfab.github.io/whatisopfab/",
+			"label": "first-menu-entry"
+		},
+		{
+			"id": "secondEntryIdentifier",
+			"url": "https://www.lfenergy.org/",
+			"label": "second-menu-entry"
+		} ,
+		{
+			"id": "thirdEntryIdentifier",
+			"url": "https://opfab.github.io",
+			"label": "third-menu-entry"
+		}]
+}
+....
+
+== Card details
+
+The purpose of this section is to display elements of third card data in a custom format.
+
+Regarding the card detail customization, all the examples in this section will be based on the cards generated by the script existing in the `Cards-Publication` project. For the examples given here, this script is run with arguments detail in the following command line:
+[#CardSendingScript]
+....
+$OPERATOR_FABRIC_HOME/services/core/cards-publication/src/main/bin/push_card_loop.sh --publisher BUNDLE_TEST --process tests
+....
+
+where:
+
+- `$OPERATOR_FABRIC_HOME` is the root folder of OperatorFabric where tests are performed;
+- `BUNDLE_TEST` is the name of the Third party;
+- `tests` is the name of the process refered by published cards.
+
+=== templates
+
+For demonstration purposes, there will be two simple templates. For more advance feature go to the section detailing the handlebars templates in general and helpers available in OperatorFabric.
+As the card used in this example are created <<CardSendingScript,above>>, the bundle template folder needs to contain 2 templates: `template1.handlebars` and `template2.handlebars`.
+
+examples of template (i18n versions)
+
+`/template/en/template1.handlers`
+....
+
+<h2>Template Number One</h2>
+<div class="bundle-test">'{{data.level1.level1Prop}}'</div>
+....
+
+`/template/fr/template1.handlers`
+....
+<h2>Patron numéro Un</h2>
+<div class="bundle-test">'{{data.level1.level1Prop}}'</div>
+....
+Those templates display a l10n title and an line containing the value of the card property `level1.level1Prop` which is `This is a root property`.
+
+`/template/en/template2.handelbars`
+....
+<h2>Second Template</h2>
+<ul class="bundle-test-list">
+	{{#each data.level1.level1Array}}
+		<li class="bunle-test-list-item">{{this.level1ArrayProp}}</li>
+	{{/each}}
+</ul>
+....
+`/template/fr/template2.handelbars`
+....
+<h2>Second patron</h2>
+<ul class="bundle-test-list">
+	{{#each data.level1.level1Array}}
+		<li class="bunle-test-list-item">{{this.level1ArrayProp}}</li>
+	{{/each}}
+</ul>
+....
+
+Those templates display also a l10n title and a list of numeric values from 1 to 3.
+
+=== CSS
+
+This folder contains regular css files.
+The file name must be declared in the `config.json` file in order to be used in the templates and applyed to them.
+
+==== Examples
+
+As above, all parts of files unreleavant for our example are symbolise by a `…` character.
+
+*Declaration of css files in `config.json` file*
+
+....
+{
+	…
+	"csses":["bundleTest"]
+	…
+}
+....
+
+*CSS Class used in `./template/en/template1.handlebars`*
+
+....
+	…
+	<div class="bundle-test">'{{data.level1.level1Prop}}'</div>
+	…
+....
+As seen abow, the value of `{{data.level1.level1Prop}}` of a test card is `This is a level1 property`
+
+*Style declaration in `./css/bundleTest.css`*
+
+....
+.detail.template.bundle-test{
+	color:#fd9312;
+	font-weight: bold;
+}
+....
+
+*Expected result*
+
+image::images/expected-result.png[Formatted root property]
+
+=== Upload
+
+For this, the bundle is submitted to the OperatorFabric server using a POST http method as describe inlink:https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#uploadBundle[the Third Service API documentation].
+It's possible for test purposes to use the swagger documentation of the OperatorFabric using the folling url `https//:$OPERATOR_FABRIC_ROOT_URL:2100/swagger-ui.html#/thirds/uploadBundle`
+
+ where `$OPERATOR_FABRIC_ROOT_URL` is the url of the running OperatorFabric tested.
+
+Example :
+....
+cd $BUNDLE_FOLDER
+curl -X POST "http://localhost:2100/thirds/TEST" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "file=@bundle-test.tar.gz;type=application/gzip"
+....
+
+Where:
+
+- `$BUNDLE_FOLDER` is the folder containing the bundle archive to be uploaded.
+- `bundle-test.tar.g` is the name of the uploaded bundle.
+
+These command line should return a `200 http status` response with the details of the content of the bundle in the response body such as :
+....
+{
+  "mediasData": null,
+  "menuEntriesData": [
+    {
+      "id": "uid test 0",
+      "url": "https://opfab.github.io/whatisopfab/",
+      "label": "first-menu-entry"
+    },
+    {
+      "id": "uid test 0",
+      "url": "https://www.lfenergy.org/",
+      "label": "b-menu-entry"
+    },
+    {
+      "id": "uid test 1",
+      "url": "https://github.com/opfab/opfab.github.io",
+      "label": "the-other-menu-entry"
+    }
+  ],
+  "name": "BUNDLE_TEST",
+  "version": "1",
+  "templates": [
+    "template1",
+    "template2"
+  ],
+  "csses": [
+    "bundleTest"
+  ],
+  "i18nLabelKey": "third-name-in-menu-bar",
+  "medias": null,
+  "menuEntries": [
+    {
+      "id": "uid test 0",
+      "url": "https://opfab.github.io/whatisopfab/",
+      "label": "first-menu-entry"
+    },
+    {
+      "id": "uid test 0",
+      "url": "https://www.lfenergy.org/",
+      "label": "b-menu-entry"
+    },
+    {
+      "id": "uid test 1",
+      "url": "https://github.com/opfab/opfab.github.io",
+      "label": "the-other-menu-entry"
+    }
+  ]
+}
+....
+
+Otherwise please refer to the <<TroubleShooting,trouble shooting>> section to resolve the problem.
