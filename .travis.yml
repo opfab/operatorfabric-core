@@ -25,7 +25,7 @@ deploy:
   script: ./bin/travis/upload_doc.sh
   on:
     all_branches: true
-    condition: $TRAVIS_EVENT_TYPE = cron
+   # condition: $TRAVIS_EVENT_TYPE = cron  # Commented out while in documentation phase to trigger doc upload for all builds
 before_cache:
   # cleanup gradle caches
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -41,5 +41,5 @@ cache:
     - $HOME/.gradle/wrapper/
     # caches docker images
     - $HOME/docker
-    # cache ui dependences
+    # cache ui dependencies
     - ui/main/nodes_modules
