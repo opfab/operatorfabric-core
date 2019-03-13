@@ -11,7 +11,7 @@ v0.1.1, April 15, 2019
 :sectnums:
 :toc: left
 :toclevels: 2
-:toc-title: Architecture
+:toc-title: Third Service
 :icons: font
 :hide-uri-scheme:
 
