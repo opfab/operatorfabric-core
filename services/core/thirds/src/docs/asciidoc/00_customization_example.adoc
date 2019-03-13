@@ -1,4 +1,4 @@
-== Customization Example
+= Customization Example
 
 In the section, are explained main menu customization as well as Cards details customization.
 
@@ -6,7 +6,7 @@ The third customizations are configured using a bundle which is described below.
 
 The way customization is done is explained throughout examples before more technical details. The following instructions describe tests to perform on OperatorFabric to understand how customization is working in it. The card data used here are send automatically using a script as describe here <<CardSendingScript,Cards sending script>>.
 
-=== Requirements 
+== Requirements
 
 Those tests are played in an environment where an OperatorFabric instance (all micro-services) is running along a MongoDB Database and a RabbitMQ instances.
 
@@ -91,9 +91,9 @@ link:https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#T
   ]
 }
 ....
-===== i18n
+=== i18n
 
-There are two mecanism of i18n. The first one is done using l10n files which are located in the `i18n` folder, the second one throuhougt l10n name folder nested in the `template` folder or in the `media` folder.
+There are two ways of i18n for third service. The first one is done using l10n files which are located in the `i18n` folder, the second one throuhougt l10n name folder nested in the `template` folder or in the `media` folder.
 
 The `i18n` folder contains one json file per l10n.
 
@@ -103,7 +103,7 @@ These localisation is used for integration of the third service into OperatorFab
 
 The `template` and the `media` folder must contain localized folder for the i18n of the card details. This is why in our example, as the bundle is localized for `en` and `fr` language, the `template` folder contains a `en` and a `fr` folder.
 
-===== i18n file
+==== i18n file
 
 If there is no i18n file or key is missing, the i18n key is desplayed in OperatorFabric. 
 
@@ -194,13 +194,13 @@ The service response with a 200 status and with the json correpsonding to the d
 ....
 
 [#MenuEntries]
-== Menu Entries
+=== Menu Entries
 
 Those elements are declared  in the `config.json` file of the bundle. 
 
 If there are several items to declare for a third service, a title for the third menu section need to be declared within the `i18nLabelKey` attribut, otherwise the first and only `menu entry` item is used to create an entry in the menu nav bar of OperatorFabric.
 
-=== config.json declaration
+==== config.json declaration
 
 This kind of objects contains the following attributes :
 
@@ -208,11 +208,11 @@ This kind of objects contains the following attributes :
 - `url`: url openning a new page in a tab in the browser;
 - `label`: it's an i18n key used to l10n the entry in the UI.
 
-==== Examples
+===== Examples
 
 In the following examples, only the part relative to menu entries in the `config.json` file is detailed, the other parts are omitted and represent with a '…'.
 
-===== Single menu entry
+====== Single menu entry
 
 ....
 {
@@ -225,7 +225,7 @@ In the following examples, only the part relative to menu entries in the `config
 }
 ....
 
-===== Several menu entries
+====== Several menu entries
 
 Here a sample with 3 menu entries.
 
@@ -251,7 +251,7 @@ Here a sample with 3 menu entries.
 }
 ....
 
-== Card details
+=== Card details
 
 The purpose of this section is to display elements of third card data in a custom format.
 
@@ -267,7 +267,7 @@ where:
 - `BUNDLE_TEST` is the name of the Third party;
 - `tests` is the name of the process refered by published cards.
 
-=== templates
+==== templates
 
 For demonstration purposes, there will be two simple templates. For more advance feature go to the section detailing the handlebars templates in general and helpers available in OperatorFabric.
 As the card used in this example are created <<CardSendingScript,above>>, the bundle template folder needs to contain 2 templates: `template1.handlebars` and `template2.handlebars`.
@@ -309,12 +309,12 @@ Those templates display a l10n title and an line containing the value of the car
 
 Those templates display also a l10n title and a list of numeric values from 1 to 3.
 
-=== CSS
+==== CSS
 
 This folder contains regular css files.
 The file name must be declared in the `config.json` file in order to be used in the templates and applyed to them.
 
-==== Examples
+===== Examples
 
 As above, all parts of files unreleavant for our example are symbolise by a `…` character.
 
