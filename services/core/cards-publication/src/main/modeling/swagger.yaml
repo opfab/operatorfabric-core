@@ -247,19 +247,97 @@ definitions:
       - summary
     example:
       uid: 12345
+      id: cardIdFromMyProcess
       publisher: MyService
       publisherVersion: 0.0.1
       processId: MyProcess
-      startDate: 1546387200000
-      lttd: 1546387200000
       publishDate: 1546300800000
+      deletionDate: 1546388200000
+      lttd: 1546387230000
+      startDate: 1546387200000
+      endDate: 1546387250000
       severity: ACTION
+      media: sound1.wav
       tags:
         - MyService
         - MyProcess
         - ACTION
+      actions:
+        - type: URI
+          lockAction: true
+          lockCard: true
+          needsConfirm: false
+          called: false
+          updateState: false
+          updateStateBeforeAction: false
+          hidden: true
+          contentStyle: buttonContent.css
+          buttonStyle: button.css
+          label:
+            key: myCard.myAction.label
+            parameters:
+              EN: My action label
+              FR: Mon intitule d'action
+          inputs:
+            - type: LIST
+              label:
+                key: myCard.myAction.myInput1.label
+                parameters:
+                  EN: Available options
+                  FR: Options disponibles
+              mandatory: true
+              name: selectedOption
+              value: plan B
+              values:
+                - plan A
+                - plan B
+                - plan C
+            - type: LONGTEXT
+              label:
+                key: myCard.myAction.myInput2.label
+                parameters:
+                  EN: Comment
+                  FR: Commentaire
+              mandatory: false
+              name: comment
+              value: ''
+              maxLength: 250
+              rows: 10
+      details:
+        title:
+          key: card.title
+          parameters:
+            EN: My card title
+            FR: Mon titre de carte
+        titlePosition: UP
+        titleStyle: myTitleStyle.css
+        templateName: template1
+        styles:
+          - bundleTest.css
+          - otherStyle.css
       title:
         key: myservice.myprocess.title
+        parameters:
+          EN: My process name
+          FR: Mon nom de processus
+      summary:
+        key: myservice.myprocess.title.summary
+        parameters:
+          EN: Summary of card content
+          FR: Resume du contenu de la carte
+      recipient:
+        type: UNION
+        recipients:
+          - type: INTERSECT
+            recipients:
+              - type: GROUP
+                identity: myGroupA
+              - type: GROUP
+                identity: myGroupB
+            preserveMain: true
+          - type: USER
+            identity: aGivenUser
+        preserveMain: true
   LightCard:
     type: object
     description: A Card gathers information about a process status
@@ -312,6 +390,32 @@ definitions:
         description: main user recipient id if any
         type: string
         readOnly: true
+    example:
+      uid: 12345
+      id: cardIdFromMyProcess
+      publisher: MyService
+      publisherVersion: 0.0.1
+      processId: MyProcess
+      lttd: 1546387230000
+      startDate: 1546387200000
+      endDate: 1546387250000
+      severity: ACTION
+      media: sound1.wav
+      tags:
+        - MyService
+        - MyProcess
+        - ACTION
+      title:
+        key: myservice.myprocess.title
+        parameters:
+          EN: My process name
+          FR: Mon nom de processus
+      summary:
+        key: myservice.myprocess.title.summary
+        parameters:
+          EN: Summary of card content
+          FR: Resume du contenu de la carte
+      mainRecipient: givenUser
   Detail:
     description: detail defines html data rendering
     type: object
@@ -337,6 +441,8 @@ definitions:
         type: array
         items:
           type: string
+    example:
+      title:
   Recipient:
     description: Recipient object defines rules for recipient computation
     type: object
@@ -361,6 +467,19 @@ definitions:
           If main users from the underlying recipients are to be propagated. Used by
           INTERSECT and UNION recipients.
         type: boolean
+    example:
+      type: UNION
+      recipients:
+        - type: INTERSECT
+          recipients:
+            - type: GROUP
+              identity: myGroupA
+            - type: GROUP
+              identity: myGroupB
+          preserveMain: true
+        - type: USER
+          identity: aGivenUser
+      preserveMain: true
   Action:
     description: defines an action on card associated business process
     type: object
@@ -371,15 +490,15 @@ definitions:
       lockAction:
         type: boolean
         default: false
-        description: 'if true, action will be locked after clicked clientside'
+        description: 'if true, action will be locked after clicked client-side'
       lockCard:
         type: boolean
         default: false
-        description: 'if true, all card actions will be locked after clicked clientside'
+        description: 'if true, all card actions will be locked after clicked client-side'
       needsConfirm:
         type: boolean
         default: false
-        description: 'if true, a confirmation will be asked before execution clientside'
+        description: 'if true, a confirmation will be asked before execution client-side'
       called:
         type: boolean
         default: false
@@ -495,6 +614,11 @@ definitions:
         description: Optional parameters
         additionalProperties:
           type: string
+    example:
+      key: title
+      parameters:
+        EN: MyTitle
+        FR: MonTitre
   ActionStatus:
     type: object
     properties:
