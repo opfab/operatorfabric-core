@@ -49,7 +49,7 @@ pid file: $OPERTAOR_FABRIC_HOME/services/core/cards-publication/build/PIDFILE
 ```
 Wait a few moments before trying to connect to the `SPA`, leaving time for the `client-gateway` to boot up completely. 
 
-The `SPA`, on a local machine, is available at the following Url: `http://localhost:2002/home`.
+The `SPA`, on a local machine, is available at the following Url: `http://localhost:2002/ui/`.
 
 To log in you need to use a valid user. Currently you need to use a connection pair define in `$OPERATOR_FABRIC_HOME/services/infra/auth/src/main/java/org/lfenergy/operatorfabric/auth/config/WebSecurityConfiguration.java`. It could be `admin` with `test`, for example.
 
@@ -58,7 +58,7 @@ To test the reception of cards, you can use the following script to create fake 
 $OPERTAOR_FABRIC_HOME/services/core/cards-publication/src/main/bin/push_cards_loop.sh
 ```
 
-Once, logged in, with that script running in background, you should be able to see some cards displayed in `http://localhost:2002/home/feed`.
+Once, logged in, with that script running in background, you should be able to see some cards displayed in `http://localhost:2002/ui/feed`.
 
 ### Windows
 
@@ -69,7 +69,7 @@ No script helpers provided for this OS.
 Run `ng build` to build the project. The build artifacts will be stored in :
 
 ```shell
-$OPERATOR_FABRIC_CORE_HOME/services/infra/client-gateway/build/src/generated/resources/static/home`
+$OPERATOR_FABRIC_CORE_HOME/services/web/web-ui/build/src/generated/resources/static
 ``` 
 
 ## Test
@@ -85,7 +85,7 @@ Run in the `$OPERTAOR_FABRIC_HOME/ui/main` directory the command `ng test --watc
 2. run the micro services using the same command as earlier: `$OPERTAOR_FABRIC_HOME/bin/run_all.sh start`;
 3. if needed, enable a card-operation test flow using the script `$OPERTAOR_FABRIC_HOME/service/core/cards-publication/src/main/bin/push_cards_loop.sh`;
 4. launch an angular server with the command: `ng serve`;
-5. test your changes in your browser using this url: `http://localhost:4200/home`.
+5. test your changes in your browser using this url: `http://localhost:4200` which leads to `http://localhost:4200/#/feed`.
 
 ## Known Bugs
 
