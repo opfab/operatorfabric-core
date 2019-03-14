@@ -38,9 +38,9 @@ definitions:
     type: string
     description: |-
       Type of operation >
-      * ADD - Operation lists cards object to add
-      * UPDATE - Operation lists cards object to update
-      * DELETE - Operation lists card ids to delete
+      * ADD - Operation lists cards object to be added
+      * UPDATE - Operation lists cards object to be updated
+      * DELETE - Operation lists card ids to be deleted
     enum:
       - ADD
       - UPDATE
@@ -163,8 +163,8 @@ definitions:
     example:
       key: title
       parameters:
-        EN: MyTitle
-        FR: MonTitre
+        EN: My Title
+        FR: Mon Titre
   ParameterListItem:
     description: An item of list input parameter
     type: object
@@ -180,7 +180,7 @@ definitions:
     example:
       value: 42
       label:
-        key: value1
+        key: theAnswer
         parameters:
           EN: the Answer to the Ultimate Question of Life, the Universe, and Everything
           FR: la Réponse à la Grande Question sur la vie, l'Univers et le Reste
@@ -200,7 +200,7 @@ definitions:
         description: Is the parameter required
       name:
         type: string
-        description: Parameter unique name for action
+        description: Parameter name (unique in action scope)
       value:
         type: string
         description: Parameter default value
@@ -243,21 +243,21 @@ definitions:
           EN: Colours
           FR: Couleurs
       mandatory: true
-      name: selectedOption
+      name: selectedColour
       value:
         value: '#000000'
         label:
           key: black
           parameters:
             EN: Paint It Black
-            FR: Peindre en noir
+            FR: Broyer du noir
       values:
         - value: '#000000'
           label:
             key: black
             parameters:
               EN: Paint It Black
-              FR: Peindre en noir
+              FR: Broyer du noir
         - value: '#51CE1E'
           label:
             key: green
@@ -265,7 +265,7 @@ definitions:
               EN: Go Green
               FR: Se mettre au vert
   Action:
-    description: defines an action on card associated business process
+    description: defines an action on the business process associated to the card
     type: object
     properties:
       type:
@@ -337,31 +337,31 @@ definitions:
       label:
         key: myCard.myAction.label
         parameters:
-          EN: My action label
-          FR: Mon intitule d'action
+          EN: Choose colour
+          FR: Choisir une couleur
       inputs:
         - type: LIST
           label:
-            key: myCard.myAction.myInput.label
+            key: myCard.myAction.myInput1.label
             parameters:
               EN: Colours
               FR: Couleurs
           mandatory: true
-          name: selectedOption
+          name: selectedColour
           value:
             value: '#000000'
             label:
               key: black
               parameters:
                 EN: Paint It Black
-                FR: Peindre en noir
+                FR: Broyer du noir
           values:
             - value: '#000000'
               label:
                 key: black
                 parameters:
                   EN: Paint It Black
-                  FR: Peindre en noir
+                  FR: Broyer du noir
             - value: '#51CE1E'
               label:
                 key: green
@@ -406,16 +406,70 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Input'
+    example:
+      unlock: true
+      disabled: false
+      label:
+        key: myCard.myAction.label
+        parameters:
+          EN: Update colour
+          FR: Choisir une nouvelle couleur
+      contentStyle: buttonContent.css
+      buttonStyle: button.css
+      inputs:
+        - type: LIST
+          label:
+            key: myCard.myAction.myInput1.label
+            parameters:
+              EN: Colours
+              FR: Couleurs
+          mandatory: true
+          name: selectedColour
+          value:
+            value: '#000000'
+            label:
+              key: black
+              parameters:
+                EN: Paint It Black
+                FR: Broyer du noir
+          values:
+            - value: '#000000'
+              label:
+                key: black
+                parameters:
+                  EN: Paint It Black
+                  FR: Broyer du noir
+            - value: '#51CE1E'
+              label:
+                key: green
+                parameters:
+                  EN: Go Green
+                  FR: Se mettre au vert
+        - type: LONGTEXT
+          label:
+            key: myCard.myAction.myInput2.label
+            parameters:
+              EN: Comment
+              FR: Commentaire
+          mandatory: false
+          name: comment
+          value: ''
+          maxLength: 250
+          rows: 10
   CardCreationReport:
     type: object
     properties:
       count:
         type: integer
+        description: Number of created cards
       message:
         type: string
     required:
       - count
       - message
+    example:
+      count: 10
+      message: Cards successfully created.
   CardOperation:
     type: object
     properties:
@@ -429,10 +483,20 @@ definitions:
         type: array
         items:
           type: string
+        description: IDs of cards to be deleted. Only used for CardOperations of DELETE type.
       cards:
         type: array
         items:
           $ref: '#/definitions/LightCard'
+        description: Card objects to be added or updated. Only used for CardOperations of ADD or UPDATE type.
+    example:
+      number: 3
+      publishDate: 1546300800000
+      type: DELETE
+      cardIds:
+        - 12345
+        - 12346
+        - 12347
   Detail:
     description: detail defines html data rendering
     type: object
@@ -609,7 +673,7 @@ definitions:
       id: cardIdFromMyProcess
       publisher: MyService
       publisherVersion: 0.0.1
-      processId: MyProcess
+      processId: MyProcess_001
       publishDate: 1546300800000
       deletionDate: 1546388200000
       lttd: 1546387230000
@@ -699,7 +763,7 @@ definitions:
         preserveMain: true
   LightCard:
     type: object
-    description: A Card gathers information about a process status
+    description: LightCard bears the essential information of a Card, to be aggregated in CardOperations.
     readOnly: true
     properties:
       uid:
@@ -716,11 +780,11 @@ definitions:
         description: Publishing service version
       processId:
         type: string
-        description: Unique process ID for associated process
+        description: Unique process ID for associated process instance
       lttd:
         $ref: '#/definitions/EpochDate'
         description: >-
-          Last time to decide, once this date is passed no action can be triggered
+          Last time to decide, after this date no action can be triggered
           on the card
       startDate:
         $ref: '#/definitions/EpochDate'
@@ -738,7 +802,7 @@ definitions:
         type: array
         items:
           type: string
-        description: Card associated tags
+        description: Tags associated with the card
       title:
         description: Card i18n title
         $ref: '#/definitions/I18n'
@@ -746,7 +810,7 @@ definitions:
         description: Card i18n summary
         $ref: '#/definitions/I18n'
       mainRecipient:
-        description: main user recipient id if any
+        description: Main user recipient ID (if any)
         type: string
         readOnly: true
     example:
@@ -754,7 +818,7 @@ definitions:
       id: cardIdFromMyProcess
       publisher: MyService
       publisherVersion: 0.0.1
-      processId: MyProcess
+      processId: MyProcess_001
       lttd: 1546387230000
       startDate: 1546387200000
       endDate: 1546387250000
@@ -802,8 +866,7 @@ paths:
         - read
       summary: fetch card operations
       description: >-
-        fetch cards restricted to calling user. Fetched cards all comes with
-        empty
+        fetch cards restricted to calling user. Fetched cards all come with empty
       operationId: fetchCardOperations
       produces:
         - application/json
@@ -843,7 +906,7 @@ paths:
         - read
       summary: fetch cards
       description: >-
-        fetch cards restricted to calling user. Fetched cards all comes with
+        Fetch cards for which calling user is a recipient. Fetched cards all comes with
         empty
       operationId: fetchCards
       produces:
