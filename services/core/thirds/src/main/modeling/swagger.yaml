@@ -1,12 +1,12 @@
 swagger: '2.0'
 info:
-  description: Third Party Service a.k.a. Thirds management API for OperatorFabric
+  description: OperatorFabric ThirdParty Management Service
   version: 0.1.1.SNAPSHOT
   title: Thirds Management
   termsOfService: ''
   contact:
     email: boris.dolley_AT_rte-france.com
-    url: https://opfab.github.io/
+    url: 'https://opfab.github.io/'
   license:
     name: Mozilla Public License V2.0
     url: 'http://mozilla.org/MPL/2.0/'
@@ -14,7 +14,7 @@ host: localhost
 basePath: /apis
 tags:
   - name: thirds
-    description: Everithing concerning specified Third
+    description: Everything concerning specified Third
 schemes:
   - http
 paths:
@@ -29,14 +29,11 @@ paths:
         - application/json
       responses:
         '200':
-          description: ok
+          description: OK
           schema:
             type: array
             items:
               $ref: '#/definitions/Third'
-      security:
-        - thirds_auth:
-            - 'read:thirds'
   '/thirds/{thirdName}':
     get:
       tags:
@@ -59,12 +56,9 @@ paths:
           type: string
       responses:
         '200':
-          description: ok
+          description: OK
           schema:
             $ref: '#/definitions/Third'
-      security:
-        - thirds_auth:
-            - 'read:thirds'
     post:
       tags:
         - thirds
@@ -122,7 +116,7 @@ paths:
       parameters:
         - name: thirdName
           in: path
-          description: Name of Third to retrieve
+          description: Name of Third to update
           required: true
           type: string
         - name: file
@@ -132,17 +126,14 @@ paths:
           type: file
       responses:
         '200':
-          description: successful operation
+          description: Successful operation
           schema:
             $ref: '#/definitions/Third'
-      security:
-        - thirds_auth:
-            - 'write:thirds'
   '/thirds/{thirdName}/templates/{templateName}':
     get:
       tags:
         - thirds
-      summary: Get template associated with Third
+      summary: Get existing template associated with Third
       description: >-
         Get template associated with Third, if file exists return file
         (application/handlebars) otherwise return error message
@@ -164,7 +155,7 @@ paths:
           type: string
         - name: templateName
           in: path
-          description: Name of template to retrieve (w.o. suffix)
+          description: Name of template to retrieve (w.o. extension)
           required: true
           type: string
         - name: version
@@ -174,15 +165,12 @@ paths:
           type: string
       responses:
         '200':
-          description: ok
+          description: OK
           schema:
             type: string
             format: binary
         '404':
-          description: no such template
-      security:
-        - thirds_auth:
-            - 'read:thirds'
+          description: No such template
   '/thirds/{thirdName}/css/{cssFileName}':
     get:
       tags:
@@ -203,7 +191,7 @@ paths:
           type: string
         - name: cssFileName
           in: path
-          description: Name of stylesheet file to retrieve (w.o. suffix)
+          description: Name of stylesheet file to retrieve (w.o. extension)
           required: true
           type: string
         - name: version
@@ -213,15 +201,12 @@ paths:
           type: string
       responses:
         '200':
-          description: ok
+          description: OK
           schema:
             type: string
             format: binary
         '404':
-          description: no such template
-      security:
-        - thirds_auth:
-            - 'read:thirds'
+          description: No such template
   '/thirds/{thirdName}/media/{mediaFileName}':
     get:
       tags:
@@ -242,7 +227,7 @@ paths:
           type: string
         - name: mediaFileName
           in: path
-          description: Name of media file to retrieve  (w. suffix)
+          description: Name of media file to retrieve  (w.o. extension)
           required: true
           type: string
         - name: locale
@@ -257,15 +242,12 @@ paths:
           type: string
       responses:
         '200':
-          description: ok
+          description: OK
           schema:
             type: string
             format: binary
         '404':
-          description: no such template
-      security:
-        - thirds_auth:
-            - 'read:thirds'
+          description: No such template
   '/thirds/{thirdName}/i18n':
     get:
       tags:
@@ -287,7 +269,7 @@ paths:
         - name: locale
           in: query
           description: Locale iso code
-          required: false
+          required: true
           type: string
         - name: version
           in: query
@@ -296,40 +278,27 @@ paths:
           type: string
       responses:
         '200':
-          description: ok
+          description: OK
           schema:
             type: string
             format: binary
         '404':
-          description: no such template
-      security:
-        - thirds_auth:
-            - 'read:thirds'
-securityDefinitions:
-  thirds_auth:
-    type: oauth2
-    authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
-    flow: implicit
-    scopes:
-      'read:thirds': access thirds data
-      'write:thirds': access thirds data
-  api_key:
-    type: apiKey
-    name: api_key
-    in: header
+          description: No such template
 definitions:
   ThirdMenuEntry:
     type: object
     properties:
       id:
         type: string
-        description: unique identifier oft this menu item for the current third service
+        description: unique identifier of this menu item for the current third service
       url:
         type: string
         description: url of the endpoint for this menu item
       label:
         type: string
-        description: i18n key for the label of this menu item.
+        description: >-
+          i18n key for the label of this menu item.
+          The value attached to this key should be defined in each XX.json file in the i18n folder of the bundle (where XX stands for the locale iso code, for example 'EN')
   Third:
     type: object
     description: >-
@@ -355,7 +324,9 @@ definitions:
         items:
           type: string
       i18nLabelKey:
-        description: label reference key for internationalisation
+        description: >-
+          i18n key for the label of this Third
+          The value attached to this key should be defined in each XX.json file in the i18n folder of the bundle (where XX stands for the locale iso code, for example 'EN')
         type: string
       medias:
         type: object
@@ -374,9 +345,38 @@ definitions:
                 type: string
       menuEntries:
         type: array
-        description: describes the menu items added to ui navbar
+        description: describes the menu items to add to UI navbar
         items:
           $ref: '#/definitions/ThirdMenuEntry'
     required:
       - name
       - version
+    example:
+      name: My ThirdParty Application
+      version: v1.0
+      templates:
+        - "emergency"
+        - "info"
+      csses:
+        - "tab-style"
+        - "content-style"
+      i18nLabelKey: myThirdPartyApp.label
+      medias:
+        JingleBells:
+          name: Jingle Bells
+          files:
+            - jingle-bells.ogg
+            - vive-le-vent.ogg
+        Alarm:
+          name: Alarm sound
+          files:
+            - smallProblem.ogg
+            - biggerProblem.ogg
+            - abandonShip.ogg
+      menuEntries:
+        - id: website
+          url: http://www.mythirdpartyapp.com
+          label: menu.website
+        - id: status
+          url: http://www.mythirdpartyapp.com/status
+          label: menu.status
