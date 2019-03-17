@@ -14,6 +14,7 @@ package org.lfenergy.operatorfabric.cards.model;
  *     <dt>JNLP</dt><dd>The actions triggers a JNLP link</dd>
  *     <dt>URI</dt><dd>The actions is tied to a uri which must conform the specification of 3rd Party action (see reference manual)</dd>
  * </dl>
+ * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
  *
  * @author David Binder
  */

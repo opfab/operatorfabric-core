@@ -22,6 +22,7 @@ package org.lfenergy.operatorfabric.cards.model;
  *   <dt>RANDOM</dt><dd>Card is sent to underlying recipient, a main recipient is randomly set</dd>
  *   <dt>WEIGHTED</dt><dd>Card is sent to underlying recipient, a main recipient is randomly set but a specified user is favored</dd>
  * </dl>
+ * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
  * 
  * @author David Binder
  */

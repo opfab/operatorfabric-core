@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Models Third resource type, used generalize {@link org.lfenergy.operatorfabric.thirds.services.ThirdsService} code
+ * Models Third resource type, used to generalize {@link org.lfenergy.operatorfabric.thirds.services.ThirdsService} code
  * <dl>
  *     <dt>CSS</dt><dd>cascading style sheet resource type</dd>
  *     <dt>MEDIA</dt><dd>Media sound resource type</dd>

@@ -18,6 +18,7 @@ package org.lfenergy.operatorfabric.cards.model;
  *     <dt>BOOLEAN</dt><dd>This input will be displayed as a boolean</dd>
  *     <dt>STATIC</dt><dd>This input won't be displayed, it may serve as a constant parameter</dd>
  * </dl>
+ * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
  *
  * @author David Binder
  */

@@ -16,6 +16,7 @@ package org.lfenergy.operatorfabric.cards.model;
  *     <dt>NOTIFICATION</dt><dd>Card content is informational only</dd>
  *     <dt>QUESTION</dt><dd>Some information is required from card recipient</dd>
  * </dl>
+ * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
  *
  * Created on 10/07/18
  *

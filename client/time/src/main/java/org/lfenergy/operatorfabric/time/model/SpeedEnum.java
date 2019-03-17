@@ -18,6 +18,8 @@ package org.lfenergy.operatorfabric.time.model;
  *     <dt>X60</dt><dd>60 times faster (1s = 1min)</dd>
  *     <dt>X3600</dt><dd>3600 times faster (1s = 1hour)</dd>
  * </dl>
+ * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Time API.
+ *
  * @author David Binder
  */
 public enum SpeedEnum {
