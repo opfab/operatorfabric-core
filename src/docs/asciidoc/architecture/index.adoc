@@ -5,7 +5,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 = OperatorFabric Architecture
-David Binder; Boris Dolley; Alexandra Guirronet; Ronan Le Gall
+David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
 v0.1.1, April 15, 2019
 :imagesdir: images
 :sectnums:

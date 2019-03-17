@@ -4,7 +4,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Client Card Data Model Reference Documentation
+= Card Publication Service Reference Documentation
 David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
 v0.1.1, April 15, 2019
 :imagesdir: images
