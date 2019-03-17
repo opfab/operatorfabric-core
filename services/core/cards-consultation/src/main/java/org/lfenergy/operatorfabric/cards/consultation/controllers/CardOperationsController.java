@@ -59,7 +59,7 @@ public class CardOperationsController {
      *
      * @param input
      *    o tuple containing 1) user data 2) client id
-     * @return mesage publisher
+     * @return message publisher
      */
     public Flux<String> registerSubscriptionAndPublish(Mono<CardOperationsGetParameters> input) {
         return input

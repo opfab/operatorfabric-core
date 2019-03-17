@@ -29,10 +29,6 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-//    @Query("{'publishDate': { $lte: ?0 }, " +
-//            "$or: [{'startDate': { $gte: ?1, $lte: ?2}}, " +
-//            "{'endDate': { $gte: ?1, $lte: ?2}}, " +
-//            "{ 'startDate': { $lt: ?1 }, $or: [{'endDate': null}, {'endDate': { $gt: ?2}}]}]}")
     Flux<String> findUrgentJSON(long latestPublication, long rangeStart, long rangeEnd, String login, String... groups);
 
     /**
@@ -45,8 +41,6 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-//    @Query("{'publishDate': { $lte: ?0 }, " +
-//            "'startDate': { $gt: ?1}}")
     Flux<String> findFutureOnlyJSON(long latestPublication, long rangeStart, String login, String... groups);
 
     /**
@@ -59,8 +53,6 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-//    @Query("{'publishDate': { $lte: ?0 }, " +
-//            "'endDate': { $lt: ?1}}")
     Flux<String> findPastOnlyJSON(long latestPublication, long rangeEnd, String login, String... groups);
 
     /**
@@ -80,10 +72,6 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-//    @Query("{'publishDate': { $lte: ?0 }, " +
-//            "$or: [{'startDate': { $gte: ?1, $lte: ?2}}, " +
-//            "{'endDate': { $gte: ?1, $lte: ?2}}, " +
-//            "{ 'startDate': { $lt: ?1 }, $or: [{'endDate': null}, {'endDate': { $gt: ?2}}]}]}")
     Flux<CardOperation> findUrgent(long latestPublication, long rangeStart, long rangeEnd, String login, String... groups);
 
     /**
@@ -96,8 +84,6 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-//    @Query("{'publishDate': { $lte: ?0 }, " +
-//            "'startDate': { $gt: ?1}}")
     Flux<CardOperation> findFutureOnly(long latestPublication, long rangeStart, String login, String... groups);
 
     /**
@@ -110,7 +96,5 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-//    @Query("{'publishDate': { $lte: ?0 }, " +
-//            "'endDate': { $lt: ?1}}")
     Flux<CardOperation> findPastOnly(long latestPublication, long rangeEnd, String login, String... groups);
 }
