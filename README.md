@@ -26,11 +26,13 @@ This project and all its subproject are licensed under [Mozilla Public License V
 ### Tools and libraries
 
 * Gradle 5 +
-* Java 8.0.163-zulu +
+* Java 8.0.163-zulu + 
 * maven 3.5.3 +
 * Docker
 * Docker Compose with 2.1+ file format support
 * Chrome (needed for UI tests in build)
+
+Note: Java 8.0.163-zulu is no longer available for security reasons, the next version is Java 8.0.192-zulu.
 
 ### Browser support
 [Todo]
