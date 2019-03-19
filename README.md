@@ -166,9 +166,13 @@ Demoable global docker compose files are available at :
 * [root]/src/main/docker/demo : sets up all services, generate a dummy card every 5 seconds
 * [root]/src/main/docker/deploy : sets up all services, ready for card reception
 
-This demo setup exposes application at localhost:2002/ui
+**This demo setup exposes the application UI at localhost:2002/ui/**
+
+**NOTE:** Don't forget the **final slash** in the URL or you will get an error.
+
 Card publication entry points are exposed at localhost:2102/cards
-For debugging purpose the following ports are also exposes :
+
+For debugging purpose the following ports are also exposed :
 
 Port  | Forwards to         |     |                                                  |
 ------|---------------------|-----|--------------------------------------------------|
