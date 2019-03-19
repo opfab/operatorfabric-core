@@ -26,8 +26,7 @@ TIP: We also use this website to broadcast any news we have about the project so
 
 == Collaboration platform: https://team.opfab.org
 
-Our collaboration platform is based on Mattermost. If you would like to join the discussions regarding OperatorFabric, please send us an email at boris.dolley_AT_rte-france.com .
-
+If you would like to join the discussions regarding OperatorFabric, please https://team.opfab.org/signup_user_complete/?id=7nhtz5psobgpud6yqzrbibmdtw[join our collaboration platform on Mattermost]!
 
 We're also thinking about setting up a Jira platform for issue tracking and agile project management.
 
