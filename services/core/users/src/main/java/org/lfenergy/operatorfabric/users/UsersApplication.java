@@ -8,7 +8,7 @@
 package org.lfenergy.operatorfabric.users;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.springtools.config.mongo.EnableOperatorFabricMongo;
+import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

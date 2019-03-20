@@ -8,13 +8,12 @@
 package org.lfenergy.operatorfabric.cards.consultation.routes;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
-import org.lfenergy.operatorfabric.cards.consultation.config.webflux.CardRoutesConfig;
+import org.lfenergy.operatorfabric.cards.consultation.configuration.webflux.CardRoutesConfig;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,7 +7,7 @@
 
 package org.lfenergy.operatorfabric.users.controllers;
 
-import org.lfenergy.operatorfabric.springtools.config.oauth.UpdatedUserEvent;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.SimpleUser;

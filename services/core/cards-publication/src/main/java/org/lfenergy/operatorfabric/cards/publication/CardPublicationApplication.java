@@ -8,8 +8,8 @@
 package org.lfenergy.operatorfabric.cards.publication;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.springtools.config.mongo.EnableOperatorFabricMongo;
-import org.lfenergy.operatorfabric.springtools.config.time.EnableTimeClient;
+import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperatorFabricMongo;
+import org.lfenergy.operatorfabric.springtools.configuration.time.EnableTimeClient;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

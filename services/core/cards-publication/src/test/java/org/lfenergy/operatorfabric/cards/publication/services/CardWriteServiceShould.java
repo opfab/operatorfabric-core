@@ -18,7 +18,7 @@ import org.lfenergy.operatorfabric.cards.model.InputEnum;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
-import org.lfenergy.operatorfabric.cards.publication.config.TestCardReceiver;
+import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardReceiver;
 import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepository;
 import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepository;
