@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 //import org.springframework.security.oauth2.client.OAuth2ClientContext;
 
 /**
- * <p>Feign interceptor used to add Oauth2  authentication to http headers :</p>
+ * <p>Feign interceptor used to add OAuth2  authentication to http headers :</p>
  * {@code Authorization: Bearer [token]}
  *
  * @author David Binder
@@ -40,7 +40,7 @@ public class OAuth2FeignRequestInterceptor implements RequestInterceptor {
         }
         else if (authentication == null) {
             log.info("Cannot obtain token data from security context, checking ThreadLocal");
-            jwt = Oauth2JwtProcessingUtilities.token.get();
+            jwt = OAuth2JwtProcessingUtilities.token.get();
             if(jwt == null)
                 log.warn("Can not obtain existing token for request, if it is a non secured request, ignore.");
         }

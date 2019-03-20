@@ -12,14 +12,14 @@ import org.springframework.context.annotation.Import;
 import java.lang.annotation.*;
 
 /**
- * Enable OperatorFabric Oauth configuration for Spring MVC
+ * Enable OperatorFabric Oauth configuration for Spring Webflux
  *
  * @author David Binder
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(Oauth2GenericConfiguration.class)
+@Import({OAuth2ReactiveConfiguration.class})
 @Documented
-public @interface EnableOperatorFabricOauth2 {
+public @interface EnableReactiveOperatorFabricOAuth2 {
 
 }

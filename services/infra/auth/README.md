@@ -1,6 +1,6 @@
-# Oauth2 Dev Server
+# OAuth2 Dev Server
 
-This sub project is intendend for developpement and demoing only. It provides a simple Oauth2 server with in memory 
+This sub project is intendend for developpement and demoing only. It provides a simple OAuth2 server with in memory 
 statically defined users
 
 # Define users

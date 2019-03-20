@@ -26,7 +26,7 @@ import java.util.List;
  * @author David Binder
  */
 @Configuration
-public class Oauth2ReactiveConfiguration extends Oauth2GenericConfiguration{
+public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{
 
     /**
      * Generates a converter that converts {@link Jwt} to {@link OpFabJwtAuthenticationToken} whose principal is  a
@@ -40,10 +40,10 @@ public class Oauth2ReactiveConfiguration extends Oauth2GenericConfiguration{
             @Override
             public Mono<AbstractAuthenticationToken> convert(Jwt jwt) {
                 String principalId = jwt.getClaimAsString("sub");
-                Oauth2JwtProcessingUtilities.token.set(jwt);
+                OAuth2JwtProcessingUtilities.token.set(jwt);
                 User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
-                Oauth2JwtProcessingUtilities.token.remove();
-                List<GrantedAuthority> authorities = Oauth2JwtProcessingUtilities.computeAuthorities(user);
+                OAuth2JwtProcessingUtilities.token.remove();
+                List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
                 return Mono.just(new OpFabJwtAuthenticationToken(jwt, user, authorities));
             }
         };

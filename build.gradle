@@ -26,7 +26,7 @@ ext {
             starterJetty    : "org.springframework.boot:spring-boot-starter-jetty:${versions['spring.boot']}",
             starterRabbitmq : "org.springframework.boot:spring-boot-starter-amqp:${versions['spring.boot']}",
             starterSecurity : "org.springframework.boot:spring-boot-starter-security:${versions['spring.boot']}",
-            starterOauth2    : "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${versions['spring.security.deprecated.oauth']}",
+            starterOAuth2    : "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${versions['spring.security.deprecated.oauth']}",
             starterMongoR   : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${versions['spring.boot']}",
             starterTest     : "org.springframework.boot:spring-boot-starter-test:${versions['spring.boot']}",
             starterValidation: "org.springframework.boot:spring-boot-starter-validation:${versions['spring.boot']}",

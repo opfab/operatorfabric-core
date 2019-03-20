@@ -9,7 +9,7 @@ package org.lfenergy.operatorfabric.cards.consultation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperatorFabricMongo;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.EnableReactiveOperatorFabricOauth2;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.EnableReactiveOperatorFabricOAuth2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -23,7 +23,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @Slf4j
 @RefreshScope
 @EnableDiscoveryClient
-@EnableReactiveOperatorFabricOauth2
+@EnableReactiveOperatorFabricOAuth2
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories
 @ImportResource("classpath:/amqp.xml")

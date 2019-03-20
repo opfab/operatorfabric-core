@@ -8,7 +8,7 @@
 package org.lfenergy.operatorfabric.time;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.EnableOperatorFabricOauth2;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.EnableOperatorFabricOAuth2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -22,7 +22,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Slf4j
 @RefreshScope
 @EnableDiscoveryClient
-@EnableOperatorFabricOauth2
+@EnableOperatorFabricOAuth2
 @ImportResource("classpath:/cors.xml")
 public class TimeApplication {
 

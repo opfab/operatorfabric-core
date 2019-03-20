@@ -1,5 +1,5 @@
 dependencies {
-    compile boot.starterWeb, boot.starterOauth2, spring.securityJwt
+    compile boot.starterWeb, boot.starterOAuth2, spring.securityJwt
     compile 'com.nimbusds:nimbus-jose-jwt:6.0'
 }
 

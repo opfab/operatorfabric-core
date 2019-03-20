@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author David Binder
  */
-public class Oauth2JwtProcessingUtilities {
+public class OAuth2JwtProcessingUtilities {
 
     /**
      * Store Jwt token in local thread to allow passing token through non communicating APIs (spring / feign)

@@ -50,7 +50,7 @@ import java.util.List;
 @EnableCaching
 @EnableDiscoveryClient
 @Import({UserServiceCache.class,BusConfiguration.class,UpdateUserEventListener.class,UpdatedUserEvent.class})
-public class Oauth2GenericConfiguration {
+public class OAuth2GenericConfiguration {
 
     @Autowired
     protected UserServiceCache userServiceCache;
@@ -70,10 +70,10 @@ public class Oauth2GenericConfiguration {
             @Override
             public AbstractAuthenticationToken convert(Jwt jwt) {
                 String principalId = jwt.getClaimAsString("sub");
-                Oauth2JwtProcessingUtilities.token.set(jwt);
+                OAuth2JwtProcessingUtilities.token.set(jwt);
                 User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
-                Oauth2JwtProcessingUtilities.token.remove();
-                List<GrantedAuthority> authorities = Oauth2JwtProcessingUtilities.computeAuthorities(user);
+                OAuth2JwtProcessingUtilities.token.remove();
+                List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
                 return new OpFabJwtAuthenticationToken(jwt, user, authorities);
             }
         };
