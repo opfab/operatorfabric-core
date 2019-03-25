@@ -1,0 +1,62 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+== Concepts
+
+=== Definitions
+
+First of all, let us define the different "times" we will be discussing:
+
+[horizontal]
+Real time:: Time set by the server
+Virtual time:: Time computed by the Time Service
+
+Each date handled by the Time Service belongs either to real time or to virtual time.
+
+[horizontal]
+`EpochDate`:: Dates are stored as a long integer representing the number of milliseconds since Epoch.
+`SpeedEnum`:: Speed of virtual time flow relatively to real time flow, represented by an enum value (e.g. `X2`, meaning virtual time flows twice as fast as real time).
+
+=== Virtual Time Computation
+
+The `TimeData` object stores the description of a time configuration,
+containing the current virtual time as well as the references used for computation. All requests made to the Time service API use this format.
+It is made up of the following properties:
+
+[horizontal]
+`referenceTime`:: Real server time at last time change
+`virtualTime`:: Chosen virtual time start at last time change
+`computedNow`:: Current virtual time computed by server as virtualTime + (now - referenceTime) * speed
+`speed`:: Speed of virtual time flow
+
+The Time service computes current virtual time (stored in computedNow) by
+
+. computing how much (real) time elapsed since we last "reset the clock"
+. multiplying this duration by the virtual time speed
+. adding it on top of the start time we had chosen for virtual time (virtualTime)
+
+To make things less abstract, let's say we want virtual time
+
+* to start one day ahead of real time
+* to flow 60 times as fast (meaning one elapsed second in real time will be one minute in virtual time)
+
+We will send a request (more on that later) to the Time service API with the following `TimeData` object:
+
+* referenceTime = current real time (as retrieved from the server), let's say 10 000 000
+* virtualTime = current real time + one day, 96 400 000 (that's 10 000 000 + 86 400 000)
+* computedNow = empty
+* speed = `X60`
+
+We then wait two minutes (server time is now 10 000 000 + 2 * 60 000 = 10 060 000) and ask the Time service for the current time (using an API request).
+ The Time service will return the following `TimeData`:
+
+* referenceTime = 10 000 000
+* virtualTime = 86 400 000
+* computedNow = 86 400 000 + (10 060 000 - 10 000 000) * 60 = 90 000 000
+* speed = `X60`
+
+//TODO Make that into tables instead of lists? With explanation in one column and example value in another. And server time in a column.
+//TODO Change example to one hour ahead and twice as fast, smaller numbers

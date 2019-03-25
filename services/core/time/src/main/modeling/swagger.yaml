@@ -28,9 +28,9 @@ definitions:
       Speed of time flow in virtual time >
       * X1 - Normal speed
       * X2 - Twice as fast
-      * X10 - Ten times faster
-      * X60 - 60 times faster (1s = 1min)
-      * X3600 - 3600 times faster (1s = 1hour)
+      * X10 - Ten times as fast
+      * X60 - 60 times as fast (1s = 1min)
+      * X3600 - 3600 times as fast (1s = 1hour)
       * HALF - Half as fast
     enum:
       - X1
@@ -56,7 +56,7 @@ definitions:
         $ref: '#/definitions/EpochDate'
         description: >-
           Current virtual time computed by server as virtualTime +
-          (referenceTime - now) * speed
+          (now - referenceTime) * speed
       speed:
         $ref: '#/definitions/SpeedEnum'
         description: Speed of virtual time flow

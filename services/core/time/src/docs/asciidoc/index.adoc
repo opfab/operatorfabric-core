@@ -11,8 +11,17 @@ v0.1.1, April 15, 2019
 :sectnums:
 :toc: left
 :toclevels: 2
-:toc-title: Architecture
+:toc-title: Time Service
 :icons: font
 :hide-uri-scheme:
 
-Work in progress
+include::01_introduction.adoc[]
+
+include::02_concepts.adoc[]
+
+include::03_API_endpoints.adoc[]
+
+include::04_examples.adoc[]
+
+//TODO Code folders ? Utilities?
+//TODO Relies on AMQP to notify other services of time changes

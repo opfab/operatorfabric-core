@@ -14,8 +14,8 @@ package org.lfenergy.operatorfabric.time.model;
  *     <dt>HALF</dt><dd>Half as fast</dd>
  *     <dt>X1</dt><dd>Normal speed</dd>
  *     <dt>X2</dt><dd>Twice as fast</dd>
- *     <dt>X10</dt><dd>Ten times faster</dd>
- *     <dt>X60</dt><dd>60 times faster (1s = 1min)</dd>
+ *     <dt>X10</dt><dd>Ten times as fast</dd>
+ *     <dt>X60</dt><dd>60 times as fast(1s = 1min)</dd>
  *     <dt>X3600</dt><dd>3600 times faster (1s = 1hour)</dd>
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Time API.
