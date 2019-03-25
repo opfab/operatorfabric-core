@@ -16,6 +16,7 @@ import java.util.Set;
 
 /**
  * Allows to simulate a clock.
+ * This class belongs to the utilities package because it's meant to be usable on its own if needed (as a library).
  */
 public class VirtualTime {
     /**
