@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
   version: 0.1.1.SNAPSHOT
-  title: Card Management
+  title: Card Management API
   termsOfService: ''
   contact:
     email: boris.dolley_AT_rte-france.com
