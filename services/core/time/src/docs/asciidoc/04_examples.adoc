@@ -4,8 +4,67 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-== Examples
+== Demonstration
 
-Work in progress
+This section demonstrates how to interact with the Time service through its API by following a simple scenario.
+
+=== Prerequisites
+
+For these examples to work, you need to have a running Time service.
+The requests below assume that the Time service is running on localhost on port 2101 (see demo setup).
+//TODO Add link to README
+
+You can choose from several ways to send requests to the API, among which:
+
+* Using curl (command line)
+* Using API development tools such as link:https://www.getpostman.com/[Postman]
+* Using the Swagger generated UI
+
+We will focus on this third option as it doesn't require you to install anything
+and it displays the documentation next to each request interface, which in our opinion
+makes it easier to use.
+
+Provided that you have the Time service running on localhost on port 2101, the Swagger UI for the Time API is available at http://localhost:2101/ .
+
+=== Scenario 1: Getting the current virtual time
+
+Let's say we want to get the current virtual time, which we expect to be equal
+to real server time so far.
+
+* Go to the link:http://localhost:2101/swagger-ui.html#/time/fetchTime[Swagger UI for the Time API and unfold the "time" category click on the GET /time request]
+* Click on the "Try it out" button on the right
+* This request doesn't require any parameters so just click "Execute"
+
+This gives you:
+
+.The equivalent curl command
+----
+curl -X GET "http://localhost:2101/time" -H  "accept: application/json"
+----
+
+.The response:
+
+.Response code
+----
+200 OK
+----
+
+.Response body
+[source,JSON]
+----
+{
+    "referenceTime": null, // <1>
+    "virtualTime": null, // <1>
+    "computedNow": 1553617695195, // <2>
+    "speed": "X1" // <3>
+}
+----
+<1> Since the time hasn't been changed yet, referenceTime and virtualTime haven't been set.
+<2> The current virtual time (number of milliseconds since Epoch), for example this converts to Tuesday, March 26, 2019 4:28:15.195 PM GMT
+<3> Speed of the virtual time flow relatively to real time flow. X1 means they're the same.
+
+
+
+
 
 //TODO API call examples (full scenarios)

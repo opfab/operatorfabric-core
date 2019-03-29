@@ -6,6 +6,5 @@
 
 == API Endpoints
 
-Work in progress
+Please see the link:../api/index.html[Time API documentation] for full details and examples of the Time data model and associated API endpoints.
 
-//TODO Point to API doc (dynamically)

@@ -60,3 +60,4 @@ We then wait two minutes (server time is now 10 000 000 + 2 * 60 000 = 10 060 00
 
 //TODO Make that into tables instead of lists? With explanation in one column and example value in another. And server time in a column.
 //TODO Change example to one hour ahead and twice as fast, smaller numbers
+//TODO Check whether referenceTime is taken from the TimeData in the request body (POST/PUT) or from the server. Potential issue in case of delay ?
