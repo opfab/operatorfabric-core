@@ -110,12 +110,14 @@ The response contains the current virtual time (computedNow) as well as the refe
 
 .Response body
 [source,JSON]
+----
 {
     "referenceTime": 1554111014449, // <1>
     "virtualTime": 1554111652000, // <2>
     "computedNow": 1554111652009, // <3>
     "speed": "X1" // <4>
 }
+----
 <1> Real time at the time
 <2> Chosen start of virtual time
 <3> Current virtual time = chosen start of virtual time
@@ -123,7 +125,7 @@ The response contains the current virtual time (computedNow) as well as the refe
 
 TIP: PUT /time does the exact same thing as POST /time as there was no need for a different behaviour.
 
-Let's ask again (using the GET request) a little while later:
+Let's ask for the current time again (using the GET request) a little while later:
 
 .The equivalent curl command
 ----
@@ -137,12 +139,14 @@ curl -X GET "http://localhost:2101/time" -H  "accept: application/json"
 
 .Response body
 [source,JSON]
+----
 {
     "referenceTime": 1554111014449,
     "virtualTime": 1554111652000,
     "computedNow": 1554119300367,
     "speed": "X1"
 }
+----
 
 //TODO Finish API call examples
 //TODO Sort out authentication through Swagger UI or adapt instructions to use Postman to get token
