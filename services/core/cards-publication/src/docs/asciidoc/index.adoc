@@ -4,15 +4,34 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Card Publication Service Reference Documentation
-David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
+= OperatorFabric Card Publication Service
+David Binder; Boris Dolley; Alexandra Guirronet; Ronan Le Gall
 v0.1.1, April 15, 2019
 :imagesdir: images
 :sectnums:
 :toc: left
 :toclevels: 2
-:toc-title: Architecture
+:toc-title: Card Publication Service 
 :icons: font
 :hide-uri-scheme:
 
-Work in progress
+The Card Publication Service is the entry point in OpeartorFabric to send information to Operators. The cards are the bearer of this information in OperatorFabric system. They are composed of 3 differents parts. The technical one is destined to the internal mecanism of card managing of Operator Fabric, the second one is the data itself destined to the Operator and the third and last one is the formatting information, which indicates OperatorFabric how to display the card data to the operator.
+
+To have an overview of the card publication you could go through the 101 document. If it's ok for you, let's dive more deeply in the cards anatomy and then we will explore the subtilities of the Card publication API.
+
+But mainly, before everything else, posting a card in OperatorFabric is done by using a POST request sending the card as Json object in the request body.
+
+[#_publish_card]
+For a card stored in a file named `card.json`, with an OperatorFabric running on the localhost the `cURL` command could be:
+
+....
+curl -X POST http://localhost:2103/cards -H "Content-Type:application/type" --data @card.json
+....
+
+For more details about possibilities about the Card Publication REST API please refere to the <<_publication_rest_api_overview>> chapter or to the swagger documentation.
+
+include::01_Card_Examples.adoc[]
+
+include::02_Card_Anatomy.adoc[]
+
+include::03_REST_API_Overview.adoc[]

@@ -1,0 +1,132 @@
+== Card Anatomy
+
+Cards are modelized as `Json` objects. The technical design of card is describe in link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#Card[the swagger api descripiton of Card Publication Service]. A card correspond to the state of a Processus in OperatorFabric.
+
+=== Technical Information of the card
+
+Those attributes are used by OperatorFabric to manage how cards are stored, to whom and when they're sended.
+
+==== Mandotory information
+
+Below, the `json` technical key is in the '()' following the title.
+
+[#_card_publisher]
+===== Publisher (`publisher`)
+
+Quite obviously it's the Third party which publish the card. This information is used to look up for Presentation resources of the card.
+
+[#_card_publisher_version]
+===== Publisher Version (`publisherVersion`)
+
+Refers the `version` of `publisher third` to use to render this card (i18n, title, summary, media and details).
+As through time, the presentation of a publisher card data changes, this changes are managed through `publisherVersion` in OperatorFabric. Each version is keep in the system in order to be able to display correctely old cards.
+
+===== Process Identifier (`processId`)
+
+It's the way to identify the process to which the card is associated. A card represent a state of a process.
+
+[#startDate]
+===== Start Date (`startDate`)
+
+This attribute is a part of the card life management system. It's indicate OperatorFabric the moment since the card can be diplay to the opertors or main receipients, <<_displaying_rules, see Displaying rules>>.
+
+===== Severity (`severity`)
+
+The severity is a core principe of the OperatorFabric Card system. There are 4 serverities available(link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#SeverityEnum[Technical definition of OperatorFabric Card Severity]). A color is associated in the GUI to each severity. Here the details about severity and their meaning for OperatorFabric:
+
+1. ALARM: representes a critical state of the associated process, need an action from the operator. In the Gui, the card is red;
+2. ACTION: the associated process need an action form operators in order to evolve correctly. In the Gui, an action is orange;
+3. QUESTION: an operator need to give specific information to the associated process in order to evolve correctly. In the UI, an action is blue.;
+4. NOTIFICATION: give information to the operator. In the GUI, a notification is green.
+
+[#cardTitle]
+===== Title (`title`)
+
+This attribute is display as header of a card in the feed of the GUI. It's the main User destined Information of a card. The value refer to an `i18n` value used to localized this information.
+
+[#cardSummary]
+===== Summary (`summary`)
+
+This attribute is display as a description of a card in the feed of the GUI, when the card is selected by the operator. It's completing the information of the card title. The value refer to an `i18n` value used to localized this information.
+
+==== Recipient (`recipient`)
+
+Declares to whom the card is send. For more details about way recipient works <<_displaying_rules, see Displaying rules>>. Without recipient declaration a card is useless in `OperatorFabric` system.
+
+==== Store information
+
+===== Tags (`tag`)
+
+Tags are intended to enable filter of cards in the feed of the GUI.
+
+===== uid (`uid`)
+
+Unique identifier of the card in the OperatorFabric system. This attribute can be send with card, but normally it's manage by `OperatorFabric` system.
+
+===== id (`id`)
+
+State id of the associated process, determines by `OperatorFabric` can be set abritrarly by the `publisher`.
+
+==== Card Life Management Configuration
+
+With this attributes OperatorFabric know when to display or hide cards, but also if an action is still available for a given card.
+
+===== Start Date (`startDate`)
+
+<<startDate, see Start Date in Technical Information of the Card>> and <<_displaying_rules, for more examples>>.
+
+===== End Date (`endDate`)
+
+Fixes the moment until when `OperatorFabric` displays the card. After the card is remove from the GUI feed, <<_display_rules, see Display Rules for some examples>>.
+
+==== Last Time to Decide (`lttd`)
+
+Fixes the moment until when a `actions` associated to the card are available. After then, the associated actions won't be displayed or actionnable.
+
+==== Other technical attributes
+
+==== Publish Date (`publishDate`)
+
+Indicates when the card has been registred in `OperatorFabric` sytsem. This is a technical information exclusively managed by `OperatorFabric`.
+
+==== Deletion Date (`deletionDate°)
+
+Indicates when the card has been removes from `OperatorFabric` system. Technical inforation manage by `OperatorFabric`.
+
+=== User destined Information of the card
+
+There are two kind of User destined information in a card. Some are restricted to the card format, others are defined by the publisher as long as there are encoded in `json` format. 
+
+==== in Card Format
+
+===== Title (`title`)
+
+<<cardTitle, see Title in Technical Information of the Card>>
+
+===== Summary (`summary`)
+
+<<cardSummary, see Summary in Technical Information of the Card>>
+
+==== Custome part
+
+===== Data (`data`)
+
+Determines where custome information is store. The content in this attribute, is purely `publisher` choice. This content, as long as it's in `json` format can be used to display details. For the way the details are displayed <<_presentation_information_of_the_card,see below>>.
+
+=== Presentation Information of the card
+
+==== Media (`media`)
+
+In this attribute are indicates the id of audio notification.
+
+==== details (`details`)
+
+This attribute is a string of objects containing a `title` attribute whichi is `i18n` key and a `template` attribute which referes to a template name contained in the publisher bundle. The bundle in which those resources will be looked for is the one corresponding of the <<_card_publisher_version, version>> declared in the card for the current <<_card_publisher, publisher>>. If no resource is found, either because there is no bundle for the given version or there is no resource for the given key, then the corresponding key is displayed in the details section of the GUI.
+
+link:https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/reference/#_bundle[See the documentation about third bundle in the Third service documentation].
+
+*example:*
+
+The `TEST` publisher has only a `0.1` version uploaded in the current `OperatorFabric` system. The `details` value is `[{"title":{"key":"first.tab.title"},"template":"template0"}]`.
+
+If the `publisherVersion` of the card is `2` then only the `title` key declared in the `details` array will be displays without any translation, i.e. the tab will contains `TEST.2.first.tab.title` and will be empty. If the `l10n` for the title is not available, then the tab title will be still `TEST.2.first.tab.title` but the template will be compute and the details section will display the template content.

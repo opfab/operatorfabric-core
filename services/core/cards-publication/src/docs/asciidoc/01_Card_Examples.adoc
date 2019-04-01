@@ -1,0 +1,201 @@
+== Cards Examples
+
+Before detailing the content of cards, let's show you what cards look like through few examples of json.
+
+=== Minimal Card
+
+The OperatorFabric Card specification defines 7 mandatory attributes, but some optional attributes are needed for cards to be useful in OperatorFabric. Let's clarify those point through few examples of minimal cards and what happens when they're used as if.
+
+==== Send to One User
+The following card contains only the mandatory attributes.
+
+....
+{
+	"publisher":"TSO1",
+	"publisherVersion":"0.1",
+	"processId":"process-000",
+	"startDate":"1546297200000",
+	"severity":"NOTIFICATION",
+	"title":{"key":"card.title.key"},
+	"summary":{"key":"card.summary.key"},
+	"recipient":{
+		"type":"USER",
+		"identity":"tso1-operator"
+	}
+
+}
+....
+
+This an information about the process `process-000`, send by the `TSO1`. The title and the summary refere to `i18n` keys defined in the associated `i18n` files of the pulbisher. This card is displayable since the first januray of 2019 and should only be received by the user using the `tso1-operator` login.
+
+==== Send to several users
+
+===== Simple case
+
+The following example is nearly the same as the previous one except for the recipient.
+
+....
+{
+	"publisher":"TSO1",
+	"publisherVersion":"0.1",
+	"processId":"process-000",
+	"startDate":"1546297200000",
+	"severity":"NOTIFICATION",
+	"title":{"key":"card.title.key"},
+	"summary":{"key":"card.summary.key"},
+	"recipient":{
+		"type":"GROUP",
+		"identity":"TSO1"
+	}
+
+}
+....
+
+The recipient is here a group, the `TSO1`. So all users whoa are member of this group will receive the card.
+
+===== Complexe case
+
+If this card need to be view by a user who is not in the `TSO1` group, it's possible to tune more precisely the definition of the recipient. If the `tso2-operator` needs to see also this card, the recipient definition could be(the following code details only the recipient part):
+
+....
+"recipient":{ 
+	"type":"UNION",
+	"recipients":[
+		{ "type": "GROUP", "identity":"TSO1"},
+		{ "type": "USER", "identity":"tso2-operator"}
+		]
+	}
+....
+
+So here, all the users of the `TSO1` group will received the `NOTIFICATION` as should the `tos2-operator` user.
+
+=== Regular Card
+
+The previous cards were nearly empty regarding information carrying. In fact, cards are intented to contains more information than a title and a summary. The optional attribute `data` is here for that. This attribute is destined to contains any `json` object. The creator of the card is free to put any information needed as long as it's in a `json` format.
+
+==== Full of Hidden data
+
+For this example we will use our previous example for the `TSO1` group with a `data` attribute containing the definition of a `json` object containing two attributes: `stringExample` and `numberExample`.
+
+....
+{
+	"publisher":"TSO1",
+	"publisherVersion":"0.1",
+	"processId":"process-000",
+	"startDate":"1546297200000",
+	"severity":"NOTIFICATION",
+	"title":{"key":"card.title.key"},
+	"summary":{"key":"card.summary.key"},
+	"recipient":{
+		"type":"USER",
+		"identity":"tso1-operator"
+	},
+	"data":{
+		"stringExample":"This is a not so random string of characters.",
+		"numberExample":123
+		}
+
+}
+....
+
+This card contains some data but when selected in the feed nothing more than the previous example of card happen because there is no rendering configuration.
+
+==== Fully useful
+
+When a card is selected in the feed (of the GUI), the data is display in the detail panel. The way details are formatted depends on template uploaded by Third parties as link:https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/reference/#_bundle[describe here]. To have an effective example without to many actions to performed, the following example will use an alerady existing configuration.The one presents in the developpement version of OperatorFabric, for test purpose(`TEST` bundle).
+
+At the card level, the attribtues in the card telling OperatorFabric which template to use is the `details` attributes.
+
+....
+{
+	"publisher":"TEST",
+	"pulisherVersion":"1",
+	"processId":"process-000",
+	"startDate":"1546297200000",
+	"severity":"NOTIFICATION",
+	"title":{"key":"process.title"},
+	"summary":{"key":"process.summary"},
+	"recipient":{
+		"type":"USER",
+		"identity":"tso1-operator"
+	},
+	"data":{"rootProp":"Data displayed in the detail panel"},
+	"details":[{"title":{"key":"process.detail.tab.first"}, "templateName":"template1"}]
+
+}
+....
+
+So here a single custome data is defined and it's `rootProp`. This attribute is used by the template called by the `details` attribute. This attribute contains an array of `json` object containing an `i18n` key and a `template` reference. Each of those object is a tab in the detail panel of the GUI. The template to used are defined and configured in the `Third` bundle upload into the server by the publisher.
+
+=== Displaying Rules
+
+==== Dates
+
+===== Start Date (`startDate`)
+
+The card is only display after this date is reach by the current time. It's a mandatory attributes for OperatorFabric cards.
+
+example:
+
+The current day is the 29 january of 2019.
+
+A card with the following configuration `"startDate":"1548758040000"`, has a start date equals to the iso date: "2019-01-29T10:34:00Z". So the operator will see it appearing in it's feed at 10h34 AM universal time. And if there is no `endDate` defines for it, it will stay in the feed indefinitely, so this card should be still visible the 30th january of 2019. Before "10h34 AM universal time", this card was not visible in the feed.
+
+===== End Date (`endDate`)
+
+This optional attribute, corresponds to the moment afterwhich the card will be remove from the feed of the GUI.
+
+example: 
+
+Imagine that the current day is still the 29 january of 2019. 
+
+The card we are looking after, has the same value for the startDate than in the previous example but has the following configuration for the `endDate`: `"endDate":"1548765240000"`. It's correpsonding to "2019-01-29T12:34:00Z" universal time.
+
+So our card is present in the feed between "11h34" and "13h34". Before and after those hours, the card is not available.
+
+==== Recipients
+
+The attribute `recepient` of a card tells to whom it's sent. It's value format is an link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#Recipient[`object named recipient`] that describe the rule for recipient computation.
+
+The available types are:
+
+- `GROUP`
+- `USER`
+- `UNION`
+- `INTERSECT`
+- `RANDOM`
+- `WEIGHTED`
+- `FAVORITE`
+- `BROADCAST`
+- `DEADEND`
+
+The simplest way to determine the recipient is to assign the card to a `user` or a `group` as seen <<_minimal_card, previously in  "Minimal Card">>.
+
+But it's possible to combine groups and potentially users using `UNION` and `INTERSECT` type to have a better control on whom should receive the card.
+
+===== UNION
+
+For example, if a card is destined to the operators of `TSO1` and `TSO2` and need to be alos view by the `admin` the recipient configuration looks like:
+
+....
+"recipient":{"type":"UNION",
+	"recipients":[
+		{"type":"GROUP","identity":"TSO1"},
+		{"type":"GROUP","identity":"TSO2"},
+		{"type":"USER","identity":"admin"}
+		]
+	}
+....
+
+===== INTERSECT
+
+To target all users member of the `admin` group in the `TSO2` group, the recipient rule could be:
+
+....
+"recipient":{"type":"INTERSECT",
+	"recipients":[
+		{"type":"GROUP","identity":"TSO1"},
+		{"type":"GROUP","identity":"ADMIN"}
+		]
+	}
+....
