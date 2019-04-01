@@ -117,7 +117,7 @@ Determines where custome information is store. The content in this attribute, is
 
 ==== Media (`media`)
 
-In this attribute are indicates the id of audio notification.
+Some cards can emit a sound when displayed in the feed of the GUI, the id of audio notification is indicated in this attribute.
 
 ==== details (`details`)
 

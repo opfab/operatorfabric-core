@@ -153,6 +153,7 @@ The card we are looking after, has the same value for the startDate than in the 
 
 So our card is present in the feed between "11h34" and "13h34". Before and after those hours, the card is not available.
 
+[#_card_recipients]
 ==== Recipients
 
 The attribute `recepient` of a card tells to whom it's sent. It's value format is an link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#Recipient[`object named recipient`] that describe the rule for recipient computation.
