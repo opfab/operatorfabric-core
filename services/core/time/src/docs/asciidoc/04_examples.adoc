@@ -6,11 +6,11 @@
 
 == Demonstration
 
-This section demonstrates how to interact with the Time service through its API by following a simple scenario.
+This section demonstrates how to interact with the Time service through its API by following a few simple scenarios.
 
 === Prerequisites
 
-For these examples to work, you need to have a running Time service.
+IMPORTANT: For these examples to work, you need to have a running Time service.
 The requests below assume that the Time service is running on localhost on port 2101 (see demo setup).
 //TODO Add link to README
 
@@ -31,9 +31,10 @@ Provided that you have the Time service running on localhost on port 2101, the S
 Let's say we want to get the current virtual time, which we expect to be equal
 to real server time so far.
 
-* Go to the link:http://localhost:2101/swagger-ui.html#/time/fetchTime[Swagger UI for the Time API and unfold the "time" category click on the GET /time request]
-* Click on the "Try it out" button on the right
-* This request doesn't require any parameters so just click "Execute"
+
+. Go to the link:http://localhost:2101/swagger-ui.html#/time/fetchTime[Swagger UI for the Time API and unfold the "time" category click on the GET /time request]
+. Click on the "Try it out" button on the right
+. This request doesn't require any parameters so just click "Execute"
 
 This gives you:
 
@@ -60,11 +61,88 @@ curl -X GET "http://localhost:2101/time" -H  "accept: application/json"
 }
 ----
 <1> Since the time hasn't been changed yet, referenceTime and virtualTime haven't been set.
-<2> The current virtual time (number of milliseconds since Epoch), for example this converts to Tuesday, March 26, 2019 4:28:15.195 PM GMT
+<2> The current virtual time (number of milliseconds since Epoch), for example this value converts to _Tuesday, March 26, 2019 4:28:15.195 PM GMT_
 <3> Speed of the virtual time flow relatively to real time flow. X1 means they're the same.
 
+TIP: You can use an link:https://www.epochconverter.com/[online converter] to switch between epochDate and human readable date.
 
+=== Scenario 2: Setting virtual time to be 10 minutes ahead of real time
 
+. Click on the link:http://localhost:2101/swagger-ui.html#/time/setTime[POST /time request]
+. Click on the "Try it out" button on the right
+. The Example Value block for the body parameter becomes editable (the background goes from dark to white)
+. Edit the values as follows:
 
+.Example body
+[source,JSON]
+----
+{
+    "referenceTime": null, // <1>
+    "virtualTime": 1554111652000, // <2>
+    "computedNow": null, // <1>
+    "speed": null // <1>
+}
+----
+<1> These can be left blank as they won't be used
+<2> This should be the intended start of virtual time, about 10 minutes ahead from now
 
-//TODO API call examples (full scenarios)
+TIP: Watch out for the order of the parameters in the JSON, the initial example JSON sorts them by alphabetical order rather than definition order.
+
+.The equivalent curl command
+----
+curl -X POST \
+  http://localhost:2101/time \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "referenceTime": null,
+    "virtualTime": 1554111652000,
+    "computedNow": null,
+    "speed": null
+}'
+----
+
+The response contains the current virtual time (computedNow) as well as the references used for the computation.
+
+.Response code
+----
+200 OK
+----
+
+.Response body
+[source,JSON]
+{
+    "referenceTime": 1554111014449, // <1>
+    "virtualTime": 1554111652000, // <2>
+    "computedNow": 1554111652009, // <3>
+    "speed": "X1" // <4>
+}
+<1> Real time at the time
+<2> Chosen start of virtual time
+<3> Current virtual time = chosen start of virtual time
+<4> Speed hasn't been changed.
+
+TIP: PUT /time does the exact same thing as POST /time as there was no need for a different behaviour.
+
+Let's ask again (using the GET request) a little while later:
+
+.The equivalent curl command
+----
+curl -X GET "http://localhost:2101/time" -H  "accept: application/json"
+----
+
+.Response code
+----
+200 OK
+----
+
+.Response body
+[source,JSON]
+{
+    "referenceTime": 1554111014449,
+    "virtualTime": 1554111652000,
+    "computedNow": 1554119300367,
+    "speed": "X1"
+}
+
+//TODO Finish API call examples
+//TODO Sort out authentication through Swagger UI or adapt instructions to use Postman to get token
