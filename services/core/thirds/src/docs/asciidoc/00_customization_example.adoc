@@ -156,7 +156,7 @@ Here the content of `fr.json`
 		"the-other-menu-entry":"Entrée trois",
 		"process":{
 			"title":"Titre de la carte",
-			"summary":"Courte déscription de la carte",
+			"summary":"Courte description de la carte",
 			"detail":{
 				"tab":{
 					"first":"Première liste de détails",
@@ -182,7 +182,7 @@ The service response with a 200 status and with the json correpsonding to the d
 "the-other-menu-entry":"Entrée trois",
 "tests":{
 	"title":"Titre de la carte",
-	"summary":"Courte déscription de la carte",
+	"summary":"Courte description de la carte",
 	"detail":{
 		"tab":{
 			"first":"Première liste de détails",
