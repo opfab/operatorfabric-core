@@ -6,7 +6,7 @@
 
 ifndef::imagesdir[:imagesdir: ../../images]
 
-==== Handle Business
+==== Handle Business Processes
 ===== Handle Business Process instance
 
 Description::
@@ -34,7 +34,7 @@ During processing:::
 Output:: Business Process end event
 Business Goal:: <<BCL-G-02, BCL-G-02>> ; <<BCL-G-03, BCL-G-03>> ;
 Behavior:: &nbsp;
-image::02_04_business_activities/Activity_Handle_Process_ProcessActivityDiagram.JPEG[Handle Business Process Instance Activity]
+image::02_04_business_activities/Activity_Process.jpg[Handle Business Process Instance Activity]
 
 Notes::
 * Depending on future implementation decisions the above described process
@@ -63,7 +63,7 @@ Output:: Card and events
 Business Goal:: <<BCL-G-01, BCL-G-01>>
 Parent Activity:: <<Handle Business Process instance>>
 Behavior:: &nbsp;
-image::02_04_business_activities/Activity_Handle_Card_CardActivityDiagram.JPEG[Handle Card Input Activity]
+image::02_04_business_activities/Activity_Card_Publication.jpg[Handle Card Input Activity]
 
 ===== Handle Feed Activity
 Description:: Handles card routing from server to user. Routing is based on Feed
@@ -89,7 +89,7 @@ Output:: Continuously updated Card Feed
 Business Goals:: <<BCL-G-01, BCL-G-01>> ; <<BCL-G-02, BCL-G-02>> ; <<BCL-G-03, BCL-G-03>>
 Parent Activity:: <<Handle Feed Activity>>
 Behavior:: &nbsp;
-image::02_04_business_activities/Activity_Feed_Feed_Activity_Diagram.JPEG[Handle Card Feed Activity]
+image::02_04_business_activities/Activity_Feed.jpg[Handle Card Feed Activity]
 
 ===== Handle Card Consultation Activity
 
@@ -119,5 +119,5 @@ Input::
 Business Goal:: <<BCL-G-03, BCL-G-03>>
 Parent Activity:: <<Handle Feed Activity>>
 Behavior:: &nbsp;
-image::02_04_business_activities/Activity_CardConsultationActivity_CardConsultationProcessActivityDiagram.JPEG[Handle Card Consultation Activity]
+image::02_04_business_activities/Activity_Card_Consultation.jpg[Handle Card Consultation Activity]
 //-

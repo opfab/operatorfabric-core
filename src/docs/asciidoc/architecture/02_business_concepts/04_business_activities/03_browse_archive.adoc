@@ -18,4 +18,4 @@ Input::
 Output:: Archived process instances;
 Business Goal:: BCL-G-02; BCL-G-01;
 Behavior:: &nbsp;
-image::02_02_business_activities/Activity_ArchivedCardConsultationActivity_ArchivedCardConsultationProcessActivityDiagram.JPEG[Browse Archive Activity]
+image::02_04_business_activities/Activity_Archive.jpg[Browse Archive Activity]

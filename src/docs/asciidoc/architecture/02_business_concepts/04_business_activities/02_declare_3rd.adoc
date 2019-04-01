@@ -16,4 +16,4 @@ Input:: 3rd Party Information Service definition.
 Output:: Registered 3rd Party Information Services definition
 Business Goal:: BCL-G-02 ; BCL-G-01 ;
 Behavior:: &nbsp;
-image::02_04_business_activities/Activity_Upload_Third_ThirdActivityDiagram.JPEG[Upload a Third Party Data Bundle Activity]
+image::02_04_business_activities/Activity_Third_Upload.jpg[Upload a Third Party Data Bundle Activity]
