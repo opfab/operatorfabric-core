@@ -1,0 +1,13 @@
+== Users and Groups
+
+User service manager users and groups.
+
+=== Users
+
+Users are the individuals and mainly physical person who can log in OperatorFabric.
+
+The access to this service as to be authorized, in the `OAuth2` service use by the current `OperatorFabric` instance, at least to access User informations and to manage Users. The membership of groups is stored in the user information.
+
+=== Groups
+
+The notion of group is loose and can be used to simulate role in `OpertaroFabric`. Groups are used to send cards to several users without name them specifically. The information about membership to a group is stored in the user information. The rules used to send cards are describe in the link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/reference/#_card_recipients[Card Publication Service].
