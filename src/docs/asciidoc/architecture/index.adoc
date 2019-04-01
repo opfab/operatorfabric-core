@@ -21,3 +21,5 @@ include::01_contextual/index.adoc[]
 
 include::02_business_concepts/index.adoc[]
 
+include::03_logical_architecture/index.adoc[]
+

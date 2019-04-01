@@ -5,14 +5,22 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 ifndef::imagesdir[:imagesdir: ../images]
-=== Information Services
+=== Technical Services
 
-Information services are non business automated services that intervene into business functionnalities
+Technical services are non business automated services that intervene into business functionnalities
 
-==== Persistence Services
+==== Persistence Service
 
-Responsible for data persistence / data retrieval
+Responsible for data persistence / data retrieval.
 
-==== Authentication Services
+==== Authentication Service
 
-Responsible for user authentication and authorization
+Responsible for user authentication and authorization.
+
+==== Monitoring Service
+
+Responsible for global system monitoring.
+
+==== Backup Restore Service
+
+Responsible for backups and restore of system persisted data.
