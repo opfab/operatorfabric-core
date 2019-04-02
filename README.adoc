@@ -7,6 +7,7 @@
 = OperatorFabric (OpFab)
 
 //TODO check task list
+//TODO Collapse port tables by default?
 
 image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0 License,link=https://www.mozilla.org/en-US/MPL/2.0/]
 image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master[Build Status,link=https://travis-ci.org/opfab/operatorfabric-core]
@@ -39,16 +40,16 @@ To perform their duties, an operator has to interact with multiple applications 
 
 The idea is to aggregate all the notifications from all these applications into a single screen, and to allow the operator to act on them if needed.
 
+image:feed_details_1.png[Feed screen layout,450,300,float="right"]
+
 These notifications are materialized by *cards* sorted in a *feed* according to their period of relevance and their severity.
 When a card is selected in the feed, the right-hand pane displays the *details* of the card: information about the state of the parent process instance in the third-party application that published it, available actions, etc.
 
 In addition, the cards will also translate as events displayed on a *timeline* (its design is still under discussion) at the top of the screen.
 This view will be complimentary to the card feed in that it will allow the operator to see at a glance the status of processes for a given period, when the feed is more like a "To Do" list.
 
-image:feed_details_1.png[Feed screen layout, align="center"]
-
 Part of the value of OperatorFabric is that it makes the integration very simple on the part of the third-party applications.
-To start publishing cards to users in an OperatorFabric instance, all they have to do is:
+To start publishing cards to users in an Opera,torFabric instance, all they have to do is:
 
 * Register as a publisher through the "Thirds" service and provide a "bundle" containing handlebars templates defining how cards should be rendered, i18n info etc.
 * Publish cards as json containing card data through the card publication API
