@@ -1,3 +1,13 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+= OperatorFabric (OpFab)
+
+//TODO check task list
+
 image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0 License,link=https://www.mozilla.org/en-US/MPL/2.0/]
 image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master[Build Status,link=https://travis-ci.org/opfab/operatorfabric-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status[Quality Gate,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
@@ -5,7 +15,13 @@ image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.oper
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=code_smells[Code Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
 image:https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg[Website opfab.github.io,link=http://opfab.github.io/]
 
-= OperatorFabric (OpFab)
+:imagesdir: _README
+:sectnums:
+:toc: left
+:toclevels: 2
+:toc-title: OperatorFabric README
+:icons: font
+:hide-uri-scheme:
 
 OperatorFabric is a modular, extensible, industrial-strength and field-tested platform for use in electricity, water, and other utility operations.
 
@@ -21,27 +37,30 @@ It is an open source project initiated by http://www.rte-france.com/[RTE] with h
 
 To perform their duties, an operator has to interact with multiple applications (perform actions, watch for alerts, etc.), which can prove difficult if there are too many of them.
 
-The idea is to aggregate all the notifications from all these applications into a single screen, and to allow the operator to act on them if needed. 
+The idea is to aggregate all the notifications from all these applications into a single screen, and to allow the operator to act on them if needed.
 
 These notifications are materialized by *cards* sorted in a *feed* according to their period of relevance and their severity.
-When a card is selected in the feed, the right-hand pane displays the *details* of the card: information about the state of the parent process instance in the third-party application that published it, available actions, etc. 
+When a card is selected in the feed, the right-hand pane displays the *details* of the card: information about the state of the parent process instance in the third-party application that published it, available actions, etc.
 
 In addition, the cards will also translate as events displayed on a *timeline* (its design is still under discussion) at the top of the screen.
 This view will be complimentary to the card feed in that it will allow the operator to see at a glance the status of processes for a given period, when the feed is more like a "To Do" list.
 
-image:./README/feed_details_1.png[Feed screen layout]
+image:feed_details_1.png[Feed screen layout, align="center"]
 
 Part of the value of OperatorFabric is that it makes the integration very simple on the part of the third-party applications.
 To start publishing cards to users in an OperatorFabric instance, all they have to do is:
+
 * Register as a publisher through the "Thirds" service and provide a "bundle" containing handlebars templates defining how cards should be rendered, i18n info etc.
 * Publish cards as json containing card data through the card publication API
 
 OperatorFabric will then:
+
 * Dispatch the cards to the appropriate users (by computing the actual users who should receive the card from the recipients rules defined in the card)
 * Take care of the rendering of the cards, displaying details, actions, inputs etc.
 * Display relevant information from the cards in the timeline
 
 Another aim of OperatorFabric is to make cooperation easier by letting operators forward or send cards to other operators, for example:
+
 * If they need an input from another operator
 * If they can't handle a given card for lack of time or because the necessary action is out of their scope
 
@@ -51,39 +70,43 @@ For instance, operators might be interested in knowing why a given decision was 
 the cards detailing the decision process steps will be accessible through the Archives screen, showing how the
 operators reached this agreement.
 
-== 1. Licensing
+== Licensing
 
-This project and all its subproject are licensed under https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2.0]. See link:LICENSE.txt[LICENSE.txt]
+This project and all its sub-projects are licensed under https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2.0]. See link:LICENSE.txt[LICENSE.txt]
 
-== 2. Requirements
+== Requirements
+
+IMPORTANT: This section describes the projects requirements regardless of installation options.
+Please see "Getting Started" below for details on:
+* setting up a development environment with these prerequisites
+* building and running OperatorFabric
+
+//TODO Add link
 
 === Tools and libraries
 
 * Gradle 5 +
 * Java 8.0.163-zulu +
-* maven 3.5.3 +
+* Maven 3.5.3 +
 * Docker
 * Docker Compose with 2.1+ file format support
 * Chrome (needed for UI tests in build)
 
 Note: Java 8.0.163-zulu is no longer available for security reasons, the next version is Java 8.0.192-zulu.
 
-=== Browser support
 
-[Todo]
-
-It is highly recommended to use sdkman (https://sdkman.io/[sdkman.io]) and
+IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
 https://github.com/creationix/nvm[nvm] to manage tools versions.
 
-By *sourcing* bin/load_environment_light.sh which uses sdkman and nvm you can set
-up a whole environment with gradle, java, maven and project variable set.
+Once you have installed sdkman and nvm, you can **source** the following script to set up your development environment (appropriate versions of gradle, java, maven and project variables set):
 
+.Set up development environment (using sdkman and nvm)
 [source]
 ----
 source bin/load_environment_light.sh
 ----
 
-==== Software
+=== Software
 
 * link:RABBITMQ.md[RabbitMQ 3.7.6 +]: AMQP messaging layer allows inter service communication
 * MongoDB 4.0 +: Card persistent storage
@@ -100,8 +123,13 @@ MongoDB is required for :
 * Archived Card storage
 * User Storage
 
-preconfigured mongo and rabbitmq are available in the form of docker-compose configuration file at
+IMPORTANT: Installing MongoDB and RabbitMQ is not necessary as preconfigured MongoDB and RabbitMQ are available in the form of docker-compose configuration files at
 link:src/main/docker[src/main/docker]
+
+=== Browser support
+
+TODO
+//Todo add browser support info
 
 === Prerequisites
 
@@ -109,9 +137,9 @@ Before running containers with docker-compose, it is required to configure a doc
 `
 docker network create opfabnet
 `
-You can also use the bin/setup_dockerized_environment which builds the services images ant sets up the opfabnet ntework
+You can also use the bin/setup_dockerized_environment which builds the services images ant sets up the opfabnet network.
 
-== 3. Project Structure
+== Project Structure
 
 [source]
 ----
@@ -119,7 +147,7 @@ project
 ├──bin
 ├──client
 │   ├──cards (cards-client-data)
-│   ├──src  
+│   ├──src
 │   ├──time (time-client-data)
 │   └──users (users-client-data)
 ├──services
@@ -130,7 +158,7 @@ project
 │   │   ├──time (time-business-service)
 │   │   └──users (users-business-service)
 │   ├──infra
-│   │   ├──auth 
+│   │   ├──auth
 │   │   ├──client-gateway (client-gateway-cloud-service)
 │   │   ├──config (configuration-cloud-service)
 │   │   └──registry (registry-cloud-service)
@@ -177,9 +205,9 @@ project
 *** link:tools/spring/spring-utilities/README.md[spring-utilities] : Utility code with spring specific dependencies
 ** link:tools/swagger-spring-generators/README.md[swagger-spring-generators] : OperatorFabric tailored spring boot generator for swagger
 
-=== Projects structures and configurations
+=== Project structure and configurations
 
-Projects must conforms to a few rules in order for the configured tasks to work
+Sub-projects must conform to a few rules in order for the configured Gradle tasks to work:
 
 ==== Java
 
