@@ -133,7 +133,19 @@ TODO
 
 == Getting Started
 
-//TODO Explain build or demo docker.
+//TODO Add git clone?
+
+**WORK IN PROGRESS**
+
+There are several ways to get started with OperatorFabric. Please look into the section that best fits your needs.
+//TODO Explain build or demo docker (x2)
+- Build & run using script
+- Build & run using jar
+- Demo (full)
+- Demo + card loop or rest api
+
+When you feel ready to experiment with the project, or if the steps above don't quite cover what you're planning to do, please look into the Recipes section.
+//TODO Add link
 
 === Prerequisites
 
@@ -389,7 +401,7 @@ and plugins official documentation
 
 === Tools
 
-==== Common tasks for all subprojects
+==== Common tasks for all sub-projects
 
 * Standard java gradle tasks
 
@@ -464,7 +476,7 @@ Alternatively, you may configure the following environment variables :
 
 === Managing a service with docker-compose
 
-Prerequisites : images must be registred
+Prerequisites : images must be registered
 
 * To deploy a service run `gradle :[subprojectPath]:composeUp`
 example for the third-party-service service :
