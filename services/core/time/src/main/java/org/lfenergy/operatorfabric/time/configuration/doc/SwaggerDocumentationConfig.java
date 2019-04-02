@@ -37,12 +37,12 @@ public class SwaggerDocumentationConfig {
 
   ApiInfo apiInfo() {
     return new ApiInfoBuilder()
-       .title("Thirds Management")
-       .description("Third Party Service a.k.a. Thirds management API for OperatorFabric")
-       .license("Apache 2.0")
-       .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+       .title("Time Management")
+       .description("OperatorFabric Time Management API")
+       .license("Mozilla Public License V2.0")
+       .licenseUrl("http://mozilla.org/MPL/2.0/")
        .termsOfServiceUrl("")
-       .version("0.0.1")
+       .version("0.1.1")
        .contact(new Contact("", "", "boris.dolley_AT_rte-france.com"))
        .build();
   }
