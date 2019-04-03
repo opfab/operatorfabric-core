@@ -8,6 +8,7 @@
 
 //TODO check task list
 //TODO Collapse port tables by default?
+//TODO Add links to other sections
 
 image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0 License,link=https://www.mozilla.org/en-US/MPL/2.0/]
 image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master[Build Status,link=https://travis-ci.org/opfab/operatorfabric-core]
@@ -134,16 +135,101 @@ TODO
 
 == Getting Started
 
-//TODO Add git clone?
+WARNING: The steps below assume that you are using https://sdkman.io/[sdkman] and
+https://github.com/creationix/nvm[nvm] to manage tools versions and that you have already installed them.
 
-**WORK IN PROGRESS**
+TIP: If you encounter any issue, see troubleshooting below. In particular, a command that hangs then fails is often a proxy issue.
+//TODO Add link
 
 There are several ways to get started with OperatorFabric. Please look into the section that best fits your needs.
 //TODO Explain build or demo docker (x2)
-- Build & run using script
-- Build & run using jar
-- Demo (full)
-- Demo + card loop or rest api
+
+//+++ <details><summary> +++
+//**Error summary**
+//+++ </summary><div> +++
+//
+//.Error message
+//[source]
+//----
+//Paste error message
+//----
+//
+//.Possible causes & resolution
+//Describe possible causes and resolutions
+//
+//+++ </div></details> +++
++++ <details><summary> +++
+**Build & run using script**
++++ </summary><div> +++
+
+These steps describe how to use dockerized Mongo, RabbitMQ and SonarQube and build and run OperatorFabric using the `run_all.sh` script.
+
+.Clone repository
+----
+git clone https://github.com/opfab/operatorfabric-core.git
+cd operatorfabric-core
+----
+
+.Set up your environment (environment variables & appropriate versions of gradle, maven, etc.)
+----
+source ./bin/load_environment_light.sh
+----
+
+TIP: From now on, you can use environment variable $OF_HOME to get back to the repository home.
+
+.Deploy dockerized MongoDB, RabbitMQ and SonarQube
+MongoDB, RabbitMQ and SonarQube are needed for the build so tests can be run.
+
+A docker-compose file with properly configured containers is available link:src/main/docker/test-quality-environment/[there].
+
+If you haven't done so before, you will need to configure a docker network for the containers:
+----
+docker network create opfabnet
+----
+
+Then run the docker-compose in detached mode:
+----
+cd src/main/docker/test-quality-environment/
+docker-compose up -d
+----
+
+.Build and run OperatorFabric Services using the `run_all.sh` script
+----
+cd $OF_HOME
+./bin/run_all.sh -s users,time,cards-publication,cards-consultation,thirds -b true start
+----
+
+TIP: See `run_all.sh -h` for details.
+
+.Check services status
+----
+./bin/run_all.sh -s users,time,cards-publication,cards-consultation,thirds status
+----
+
+.Log into the UI
+
+URL: localhost:2002/ui/
+login: admin
+password: test
+
+WARNING: It might take a little while for the UI to load even after all services are running.
+
+WARNING: Don't forget the *final slash* in the URL or you will get an error.
+
+.Push cards to the feed
+
+You can check that you see cards into the feed by running the `push_card_loop.sh` script.
+----
+./services/core/cards-publication/src/main/bin/push_card_loop.sh
+----
+
++++ </div></details> +++
+
+**WORK IN PROGRESS**
+
+- Build & run using jar //TODO
+- Demo (full) //TODO
+- Demo + card loop or rest api //TODO
 
 When you feel ready to experiment with the project, or if the steps above don't quite cover what you're planning to do, please look into the Recipes section.
 //TODO Add link
@@ -281,7 +367,7 @@ There are prerequisites before sourcing load_environment_ramdisk.sh:
 * Logged user needs sudo rights for mount
 * System needs to have enough free ram
 
-CAUTION: Never ever run a `gradle clean` to avoid those links being deleted.
+CAUTION: Never ever run a `gradle clean` to avoid deleting those links.
 
 ==== run_all.sh
 
@@ -323,7 +409,7 @@ Ports configuration
 
 Please see `setup_dockerized_environment.sh -h` usage before running.
 
-Builds all projects, generate docker images and volumes for docker-compose, also sets up docker network "opfabnet" if needed.
+Builds all sub-projects, generate docker images and volumes for docker-compose, also sets up docker network "opfabnet" if needed.
 
 == Environment variables
 
@@ -532,3 +618,68 @@ If you run the services using `bootRun` gradle task or the provided docker-compo
 |oauth |5000 |5000 |5000 
 |oauth |5000 |5000 |5000 
 |===
+
+== Troubleshooting
+
++++ <details><summary> +++
+**Error using SDKMAN : Internet not reachable**
++++ </summary><div> +++
+
+.Error message
+[source]
+----
+==== INTERNET NOT REACHABLE! ===================================================
+
+ Some functionality is disabled or only partially available.
+ If this persists, please enable the offline mode:
+
+   $ sdk offline
+
+================================================================================
+----
+
+.Possible causes & resolution
+If network issues have been ruled out, it's most likely a proxy issue.
+See setting up proxy -> TODO
+//TODO Create section & add link
++++ </div></details> +++
+
++++ <details><summary> +++
+**Proxy error when running third-party docker-compose**
++++ </summary><div> +++
+
+.Error message
+[source]
+----
+Pulling rabbitmq (rabbitmq:3-management)...
+ERROR: Get https://registry-1.docker.io/v2/: Proxy Authentication Required
+----
+
+.Possible causes & resolution
+When running docker-compose files using third-party images(such as rabbitmq, mongodb etc.) the first time, docker will need to pull these images from their repositories.
+If the docker proxy isn't set properly, you will see the above message.
+
+To set the proxy, follow https://docs.docker.com/config/daemon/systemd/[these steps from the docker documentation].
+
+If your proxy needs authentication, add your user and password as follows:
+----
+HTTP_PROXY=http://user:password@proxy.example.com:80/
+----
+
+IMPORTANT: The password should be URL-encoded.
++++ </div></details> +++
+
+//+++ <details><summary> +++
+//**Error summary**
+//+++ </summary><div> +++
+//
+//.Error message
+//[source]
+//----
+//Paste error message
+//----
+//
+//.Possible causes & resolution
+//Describe possible causes and resolutions
+//
+//+++ </div></details> +++
