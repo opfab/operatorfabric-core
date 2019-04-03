@@ -4,15 +4,28 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Users Service Reference Documentation
-David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
+= OperatorFabric User Service
+David Binder; Boris Dolley; Alexandra Guirronet; Ronan Le Gall
 v0.1.1, April 15, 2019
 :imagesdir: images
 :sectnums:
 :toc: left
 :toclevels: 2
-:toc-title: Architecture
+:toc-title: User Service 
 :icons: font
 :hide-uri-scheme:
 
-Work in progress
+The User service manage users and groups.
+
+Users:: represent account information for person destined to receive cards in the OperatorFabric instance.
+Groups::
+- represent set of users destined to receive collectivelly some cards.
+- can be used in a way to handle rights on card reception in OperatorFabric.
+
+WARNING: The user define here is an internal representation of the individual card recipient in `OperatorFabric` the authentication is leave to specific OAuth2 extrernal service.
+
+NOTE: In the following commands the `$token` is an authentication token currently valid for the `OAuth2` service used by the current `OperatorFabric` system.
+
+include::00_cookbook.adoc[]
+
+include::01_users_and_groups.adoc[]
