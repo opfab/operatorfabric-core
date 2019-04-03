@@ -25,7 +25,7 @@ But mainly, before everything else, posting a card in OperatorFabric is done by 
 For a card stored in a file named `card.json`, with an OperatorFabric running on the localhost the `cURL` command could be:
 
 ....
-curl -X POST http://localhost:2103/cards -H "Content-Type:application/type" --data @card.json
+curl -X POST http://localhost:2102/cards -H "Content-Type:application/type" --data @card.json
 ....
 
 For more details about possibilities about the Card Publication REST API please refere to the <<_publication_rest_api_overview>> chapter or to the link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/[swagger documentation].
