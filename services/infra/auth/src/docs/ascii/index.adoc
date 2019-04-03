@@ -1,0 +1,22 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+= OperatorFabric Authentication Service
+David Binder; Boris Dolley; Alexandra Guirronet; Ronan Le Gall
+v0.1.1, April 15, 2019
+:imagesdir: images
+:sectnums:
+:toc: left
+:toclevels: 2
+:toc-title: Authentication Service 
+:icons: font
+:hide-uri-scheme:
+
+The Authentication service manage the authentication of user into OperatorFabric. It can be easaly replace by a external 0Auth2 authentication service.
+
+include::00_cookbook.adoc[]
+
+include::01_OAuth2.adoc[]
