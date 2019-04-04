@@ -17,8 +17,8 @@ export abstract class Filter {
 
     constructor(
         readonly funktion: (LightCard,any) => boolean,
-        readonly active:boolean,
-        readonly status: any
+        public active:boolean,
+        public status: any
     ) {
     }
 
