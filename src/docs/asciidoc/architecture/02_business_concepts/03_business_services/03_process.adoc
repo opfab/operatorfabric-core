@@ -40,7 +40,7 @@ Pre requisite:: The process definition must exist.
 
 [IMPORTANT]
 ====
-There are still ongoing discussion wether a business process is:
+There is still an ongoing discussion whether a business process is:
 
  * an Operator Fabric internally defined concept
  * an external concept managed by a Business Process Management tool

@@ -6,12 +6,12 @@
  */
 
 import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
-import {LightCardAdapter, lightCardInitialState, LightCardStateEntity} from '@ofStates/light-card.state';
+import {LightCardAdapter, lightCardInitialState, CardFeedState} from '@ofStates/feed.state';
 
 export function reducer(
     state = lightCardInitialState,
     action: LightCardActions
-): LightCardStateEntity {
+): CardFeedState {
     switch (action.type) {
         case LightCardActionTypes.LoadLightCardsSuccess: {
             return {

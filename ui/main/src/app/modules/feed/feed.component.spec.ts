@@ -13,7 +13,7 @@ import {appReducer, AppState, storeConfig} from '@ofStore/index';
 import {Store, StoreModule} from '@ngrx/store';
 import {LoadLightCardsSuccess} from '@ofStore/actions/light-card.actions';
 import {LightCard} from '@ofModel/light-card.model';
-import * as fromStore from '@ofStore/selectors/light-card.selectors';
+import * as fromStore from '@ofStore/selectors/feed.selectors';
 import {By} from '@angular/platform-browser';
 import {
     getOneRandomLigthCard,
@@ -30,7 +30,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "../../translate.config";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {ServicesModule} from "@ofServices/services.module";
-import {sortByStartDate} from "@ofStates/light-card.state";
+import {sortByStartDate} from "@ofStates/feed.state";
 
 describe('FeedComponent', () => {
     let component: FeedComponent;
@@ -81,7 +81,7 @@ describe('FeedComponent', () => {
 
         const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
         store.dispatch(action);
-        const lightCards$ = store.select(fromStore.selectAllLightCards);
+        const lightCards$ = store.select(fromStore.selectFeed);
         lightCards$.subscribe(lightCard => {
             expect(lightCard).toEqual([oneCard]);
         });
@@ -103,7 +103,7 @@ describe('FeedComponent', () => {
         const anotherCard = getOneRandomLigthCard();
         const action = new LoadLightCardsSuccess({lightCards: [oneCard, anotherCard] as LightCard[]});
         store.dispatch(action);
-        const lightCards$ = store.select(fromStore.selectAllLightCards);
+        const lightCards$ = store.select(fromStore.selectFeed);
         lightCards$.subscribe(lightCard => {
             expect(lightCard).toEqual([oneCard, anotherCard]);
         });
@@ -131,7 +131,7 @@ describe('FeedComponent', () => {
         store.dispatch(action);
         const action0 = new LoadLightCardsSuccess({lightCards: [anotherCard]});
         store.dispatch(action0);
-        const lightCards$ = store.select(fromStore.selectAllLightCards);
+        const lightCards$ = store.select(fromStore.selectFeed);
         lightCards$.subscribe(lightCard => {
             expect(lightCard).toEqual([anotherCard,oneCard]);
         });

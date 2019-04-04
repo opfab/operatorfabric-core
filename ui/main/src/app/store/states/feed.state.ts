@@ -7,12 +7,23 @@
 
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {LightCard} from '@ofModel/light-card.model';
+import {Filter} from "@ofModel/feed-filter.model";
 
-export interface LightCardStateEntity extends EntityState<LightCard> {
+/**
+ * The Feed State consist of:
+ *  * EntityState of LightCard
+ *  * selectedCardId: the currently selected card id
+ *  * lastCards the last cards added / updated to the feed
+ *  * loading: weather there is an ongoing state modification
+ *  * error: last error during state processing
+ *  * filters: a collection of filter to apply to the rendered feed
+ */
+export interface CardFeedState extends EntityState<LightCard> {
     selectedCardId: string;
     lastCards: LightCard[];
     loading: boolean;
     error: string;
+    filters: Map<String,Filter>;
 }
 
 export function sortByStartDate(card1: LightCard, card2: LightCard){
@@ -23,10 +34,11 @@ export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<Li
     sortComparer:sortByStartDate
 });
 
-export const lightCardInitialState: LightCardStateEntity = LightCardAdapter.getInitialState(
+export const lightCardInitialState: CardFeedState = LightCardAdapter.getInitialState(
     {
         selectedCardId: null,
         lastCards: [],
         loading: false,
-        error: ''
+        error: '',
+        filters: new Map()
     });

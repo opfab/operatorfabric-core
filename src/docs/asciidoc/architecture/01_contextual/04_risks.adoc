@@ -23,12 +23,11 @@ production scale data flows.
 Measures::
 . Make good architecture choices to allow for both vertical and horizontal
 scaling and allow these choices to be precisely tailored to specific parts of
-the final solution (for instance we may need to scale operator interactions
+the target solution (for instance we may need to scale operator interactions
 with the solution when administering services would not need to scale).
-. Analyze the effective performance of the final solution to be able to
+. Analyze the effective performance of the target solution to be able to
 advertise its performances and how it could be effectively scaled.
 . Isolate components so that eventual down time and lack of performance can be
-handled with back pressure management and degraded mode to avoid complete
+handled with back pressure management and downgraded mode to avoid complete
 failure of system.
-. Work closely with other depending project to have examples of deployment
-scale intel.
+. work closely with dependent projects to get relevant information on deployment scaling.

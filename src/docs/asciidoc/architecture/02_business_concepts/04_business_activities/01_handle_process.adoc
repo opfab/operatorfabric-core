@@ -10,10 +10,9 @@ ifndef::imagesdir[:imagesdir: ../../images]
 ===== Handle Business Process instance
 
 Description::
-Handles defined business process instances from start event to end event. The
-handling of business process instance instantiate a business process instance
-upon predefined business start event and rules the interaction between
-operators and 3rd Party Information Services.
+Handles defined business process instances from start event to end event.
+It instantiate a business process instance upon business start event and
+manages the interaction between operators and 3rd Party Information Services.
 Result control requirements::
 Result control required for each business process instance and each state of
 the instance
@@ -94,7 +93,7 @@ image::02_04_business_activities/Activity_Feed.jpg[Handle Card Feed Activity]
 ===== Handle Card Consultation Activity
 
 Description:: Handles card consultation from the main user interface. The
-Cards are accessible throught a Card Feed which displays associated cards
+Cards are accessible through a Card Feed which displays associated cards
 ( See <<Handle Feed Activity>> above).
 A card feed displays cards. There are two interaction possible with cards:
 * Display a specific card details, which are formatted views on the card

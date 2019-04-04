@@ -45,7 +45,7 @@ All cards have the following characteristics:
 [cols=2*,options="header"]
 |===
 |Characteristic|Description
-|publishing date|The date when the card was introduced in the information system
+|publishing date|The date when the card was introduced into the information system
 |process instance|A card is tied to a specific business process instance
 |Time
 a|A card must be associated to time information. There are different time indication.
@@ -61,8 +61,8 @@ a|A card must be associated to time information. There are different time indica
 |===
 
 ==== Feed Subscription
-Description:: Gathers characteristics of which <<Card>> ensemble an <<Operator>>
-is currently following. It relies on the <<Operator>> Characteristics and a
+Description:: Gathers characteristics of  <<Card, cards>> an <<Operator>>
+is currently following. It relies on the <<Operator>> characteristics and a
 time frame.
 +
 User is following the <<Card, cards>> he is a recipient for in a specific time frame.

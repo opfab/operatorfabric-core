@@ -12,7 +12,8 @@ image::02_03_business_services/CardService_UCD.jpg[Process Use Case Diagram]
 
 ===== To Consult the Card Feed
 Actors:: Operator
-Description:: Access the feed of cards which display cards with a focus and the
+Description:: Access the feed of cards which display cards with a focus on what
+the
 operator needs to accomplish its tasks. The feed of card is an interface that
 allows an Operator to consult a list of previously published cards that is
 continuously updated with new cards. Cards represent a state in a business

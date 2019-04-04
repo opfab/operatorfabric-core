@@ -6,7 +6,7 @@
  */
 
 import {reducer} from './light-card.reducer';
-import {lightCardInitialState} from '@ofStates/light-card.state';
+import {lightCardInitialState} from '@ofStates/feed.state';
 import {createEntityAdapter} from "@ngrx/entity";
 import {LightCard} from "@ofModel/light-card.model";
 import {getOneRandomLigthCard, getRandomAlphanumericValue, getSeveralRandomLightCards} from "@tests/helpers";

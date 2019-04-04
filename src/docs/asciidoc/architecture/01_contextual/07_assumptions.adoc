@@ -6,10 +6,11 @@
 
 === Assumptions
 
-==== Usage may be expanded by consolidating existing data
+==== Functionnalities and adoption may be expanded by consolidating existing data
 Priority:: High
 Source:: Product owner
 Owner:: Product owner
 Consequences:: It must be possible to let other entities (services, users, …)
 access data in readonly mode. The business data of process must be exposed in
-a readable form.
+a readable form. The idea is to allow data mining, machine learning process and
+other massive data processing treatments.

@@ -8,7 +8,7 @@
 
 ==== Reduce cost integration of new Service (BCL-G-01)[[BCL-G-01, Reduce cost integration of new Service]]
 To offer a mean to integrate new 3rd Party Information Systems to the operating
-station in an uniform and integrated way to reduce the future cost of
+station in a uniform and integrated way to reduce the future cost of
 integrating new services.
 
 ==== Reduce cost integration of new Business Process (BCL-G-02)[[BCL-G-02, Reduce cost integration of new Business Process]]
@@ -18,5 +18,5 @@ in a uniform and centralized way to the operator tasks.
 
 ==== Unify user experience (BCL-G-03)[[BCL-G-03, Unify user experience]]
 To offer a complete and centralized user experience around a holistic view of
-running processes with a focus on what is specifically necessary to the user
+running processes with a focus on what is really necessary to the user
 accessing the view.

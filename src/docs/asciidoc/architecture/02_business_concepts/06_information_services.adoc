@@ -23,4 +23,4 @@ Responsible for global system monitoring.
 
 ==== Backup Restore Service
 
-Responsible for backups and restore of system persisted data.
+Responsible for backup and restore of system persisted data.

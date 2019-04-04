@@ -7,7 +7,7 @@
 ifndef::imagesdir[:imagesdir: ../images]
 == Logical Architecture
 
-The logical architecture, descroibes how the preiously exposed Business
+The logical architecture, describes how the preiously exposed Business
 concepts are to be implemented.
 
 This chapter describes:

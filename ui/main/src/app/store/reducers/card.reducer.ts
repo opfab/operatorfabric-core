@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {LightCardStateEntity} from '@ofStates/light-card.state';
+import {CardFeedState} from '@ofStates/feed.state';
 import {cardInitialState, CardState} from "@ofStates/card.state";
 import {CardActions, CardActionTypes} from "@ofActions/card.actions";
 
@@ -42,4 +42,4 @@ export function reducer(
 }
 
 
-export const getSelectedId = (state: LightCardStateEntity) => state.selectedCardId;
+export const getSelectedId = (state: CardFeedState) => state.selectedCardId;
