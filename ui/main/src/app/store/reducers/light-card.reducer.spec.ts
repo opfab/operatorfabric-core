@@ -6,7 +6,7 @@
  */
 
 import {reducer} from './light-card.reducer';
-import {lightCardInitialState} from '@ofStates/feed.state';
+import {feedInitialState} from '@ofStates/feed.state';
 import {createEntityAdapter} from "@ngrx/entity";
 import {LightCard} from "@ofModel/light-card.model";
 import {getOneRandomLigthCard, getRandomAlphanumericValue, getSeveralRandomLightCards} from "@tests/helpers";
@@ -21,15 +21,15 @@ describe('LightCard Reducer', () => {
     it('should return the initial state on initial state', () => {
       const action = {} as any;
 
-      const result = reducer(lightCardInitialState, action);
+      const result = reducer(feedInitialState, action);
 
-      expect(result).toBe(lightCardInitialState);
+      expect(result).toBe(feedInitialState);
     });
 
     it('should return the previous state on living state', () => {
       const action = {} as any;
 
-      const previousState = lightCardEntityAdapter.addOne(getOneRandomLigthCard(),lightCardInitialState);
+      const previousState = lightCardEntityAdapter.addOne(getOneRandomLigthCard(),feedInitialState);
       const result = reducer(previousState,action);
       expect(result).toBe(previousState);
     });
@@ -42,7 +42,7 @@ describe('LightCard Reducer', () => {
 
       const severalRandomLightCards = getSeveralRandomLightCards(5);
 
-      const previousState = lightCardEntityAdapter.addAll(severalRandomLightCards,lightCardInitialState);
+      const previousState = lightCardEntityAdapter.addAll(severalRandomLightCards,feedInitialState);
 
       const currentError = new Error(getRandomAlphanumericValue(5,12));
       const loadLightCardsFailureAction = new LoadLightCardsFailure({error: currentError});
@@ -61,7 +61,7 @@ describe('LightCard Reducer', () => {
   describe('AddLightCardFailure', () => {
     it('should leave state unchanged with an additional error message', () => {
       const severalRandomLightCards = getSeveralRandomLightCards(5);
-      const previousState = lightCardEntityAdapter.addAll(severalRandomLightCards,lightCardInitialState);
+      const previousState = lightCardEntityAdapter.addAll(severalRandomLightCards,feedInitialState);
 
       const currentError = new Error(getRandomAlphanumericValue(5,12));
       const addLightCardFailureAction= new AddLightCardFailure({error:currentError});

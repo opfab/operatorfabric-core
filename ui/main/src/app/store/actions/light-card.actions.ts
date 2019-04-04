@@ -15,7 +15,7 @@ export enum LightCardActionTypes {
     LoadLightCardsFailure = '[LCard] Load Fail',
     SelectLightCard = '[LCard] Select One',
     AddLightCardFailure = '[LCard] Add Light Card Fail',
-    HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue'
+    HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
 }
 // needed by NGRX entities
 export class LoadLightCards implements Action {

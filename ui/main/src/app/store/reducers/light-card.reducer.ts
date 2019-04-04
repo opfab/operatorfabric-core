@@ -6,10 +6,10 @@
  */
 
 import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
-import {LightCardAdapter, lightCardInitialState, CardFeedState} from '@ofStates/feed.state';
+import {LightCardAdapter, feedInitialState, CardFeedState} from '@ofStates/feed.state';
 
 export function reducer(
-    state = lightCardInitialState,
+    state = feedInitialState,
     action: LightCardActions
 ): CardFeedState {
     switch (action.type) {

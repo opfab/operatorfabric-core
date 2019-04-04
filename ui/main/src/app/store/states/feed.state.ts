@@ -34,7 +34,7 @@ export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<Li
     sortComparer:sortByStartDate
 });
 
-export const lightCardInitialState: CardFeedState = LightCardAdapter.getInitialState(
+export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(
     {
         selectedCardId: null,
         lastCards: [],
