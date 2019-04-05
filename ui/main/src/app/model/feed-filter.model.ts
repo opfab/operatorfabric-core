@@ -56,7 +56,7 @@ export class Filter {
      */
     chainFilter(card: LightCard, next: Filter[]){
         if(this.applyFilter(card))
-            return !next || next[0].chainFilter(card,next.slice(1));
+            return !next || next.length == 0 || next[0].chainFilter(card,next.slice(1));
         return false
     }
 
@@ -66,6 +66,6 @@ export class Filter {
      * @param next
      */
     static chainFilter(card: LightCard, next: Filter[]){
-        return !next || next[0].chainFilter(card,next.slice(1));
+        return !next||next.length == 0 || next[0].chainFilter(card,next.slice(1));
     }
 }

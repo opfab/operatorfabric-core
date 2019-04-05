@@ -38,6 +38,8 @@ const selectActiveFiltersArray = createSelector(selectFilter,
 
 export const selectFilteredFeed = createSelector(selectFeed,selectActiveFiltersArray,
     (feed:LightCard[],filters:Filter[])=>{
+    if(filters)
       return feed.filter(card=>Filter.chainFilter(card,filters));
+    else return feed;
     })
 
