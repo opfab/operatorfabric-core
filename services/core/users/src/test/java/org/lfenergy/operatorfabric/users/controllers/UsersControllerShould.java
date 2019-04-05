@@ -72,13 +72,13 @@ class UsersControllerShould {
            .login("jcleese")
            .firstName("John")
            .lastName("Cleese")
-           .group("Monthy Pythons").group("Wanda")
+           .group("Monty Pythons").group("Wanda")
            .build();
         u2 = UserData.builder()
            .login("gchapman")
            .firstName("Graham")
            .lastName("Chapman")
-           .group("Monthy Pythons")
+           .group("Monty Pythons")
            .build();
         u3 = UserData.builder()
            .login("kkline")
@@ -115,7 +115,7 @@ class UsersControllerShould {
            .andExpect(jsonPath("$.login", is("gchapman")))
            .andExpect(jsonPath("$.firstName", is("Graham")))
            .andExpect(jsonPath("$.lastName", is("Chapman")))
-           .andExpect(jsonPath("$.groups", contains("Monthy Pythons")))
+           .andExpect(jsonPath("$.groups", contains("Monty Pythons")))
         ;
     }
 
@@ -163,6 +163,8 @@ class UsersControllerShould {
 
     }
 
+    //TODO CreateWithDuplicateError
+
     @Test
     void update() throws Exception {
         mockMvc.perform(put("/users/kkline")
@@ -194,5 +196,113 @@ class UsersControllerShould {
         ;
 
     }
+
+    @Test
+    void updateWithNotFoundError() throws Exception {
+
+        mockMvc.perform(get("/users/unknownSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(put("/users/unknownSoFar")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{" +
+                        "\"login\": \"unknownSoFar\","+
+                        "\"firstName\": \"John\","+
+                        "\"lastName\": \"Doe\""+
+                        "}")
+        )
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(get("/users/unknownSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+    }
+
+    @Test
+    void updateWithMismatchedError() throws Exception {
+
+        mockMvc.perform(get("/users/kkline"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.login", is("kkline")))
+                .andExpect(jsonPath("$.firstName", is("Kevin")))
+                .andExpect(jsonPath("$.lastName", is("Kline")))
+        ;
+
+        mockMvc.perform(put("/users/kkline")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{" +
+                        "\"login\": \"mpalin\","+
+                        "\"firstName\": \"Kevin\","+
+                        "\"lastName\": \"Palin\""+
+                        "}")
+                )
+                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(jsonPath("$.message", is("Data from the request body doesn't match login parameter")))
+                .andExpect(jsonPath("$.errors").doesNotExist());
+
+        mockMvc.perform(get("/users/kkline"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.login", is("kkline")))
+                .andExpect(jsonPath("$.firstName", is("Kevin")))
+                .andExpect(jsonPath("$.lastName", is("Kline")))
+        ;
+
+    }
+
+    @Test
+    void updateWithMismatchedAndNotFoundError() throws Exception {
+
+        mockMvc.perform(get("/users/unknownSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(put("/users/unknownSoFar")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{" +
+                        "\"login\": \"someOtherLogin\","+
+                        "\"firstName\": \"John\","+
+                        "\"lastName\": \"Doe\""+
+                        "}")
+        )
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(get("/users/unknownSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+    }
+
+    //TODO updateMisMatched, updateMisMatched & not found, + same for set (POST)
 
 }

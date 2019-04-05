@@ -48,13 +48,13 @@ public class UserRepositoryShould {
            .login("jcleese")
            .firstName("John")
            .lastName("Cleese")
-           .group("Monthy Pythons").group("Wanda")
+           .group("Monty Pythons").group("Wanda")
            .build();
         u2 = UserData.builder()
            .login("gchapman")
            .firstName("Graham")
            .lastName("Chapman")
-           .group("Monthy Pythons")
+           .group("Monty Pythons")
            .build();
         u3 = UserData.builder()
            .login("kkline")
@@ -78,7 +78,7 @@ public class UserRepositoryShould {
            .login("mpalin")
            .firstName("Michael")
            .lastName("Palin")
-           .group("Monthy Pythons").group("Wanda")
+           .group("Monty Pythons").group("Wanda")
            .build();
         repository.insert(user);
         assertThat(repository.count()).isEqualTo(4);
@@ -87,14 +87,14 @@ public class UserRepositoryShould {
         assertThat(mpalin.getLogin()).isEqualTo("mpalin");
         assertThat(mpalin.getFirstName()).isEqualTo("Michael");
         assertThat(mpalin.getLastName()).isEqualTo("Palin");
-        assertThat(mpalin.getGroups()).contains("Monthy Pythons", "Wanda");
+        assertThat(mpalin.getGroups()).contains("Monty Pythons", "Wanda");
     }
 
     @Test
     public void findByGroup(){
         List<UserData> results = repository.findByGroupSetContaining("Wanda");
         assertThat(results).hasSize(2);
-        results = repository.findByGroupSetContaining("Monthy Pythons");
+        results = repository.findByGroupSetContaining("Monty Pythons");
         assertThat(results).hasSize(2);
         results = repository.findByGroupSetContaining("Marx Brothers");
         assertThat(results).hasSize(0);

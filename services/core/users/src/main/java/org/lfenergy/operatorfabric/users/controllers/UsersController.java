@@ -67,8 +67,28 @@ public class UsersController implements UsersApi {
 
     @Override
     public SimpleUser updateUser(String login, SimpleUser user) throws Exception {
-        userRepository.save(new UserData(user));
-        publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),user.getLogin()));
-        return user;
+
+        //Only existing users can be updated
+        userRepository.findById(login)
+                .orElseThrow(()-> new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.NOT_FOUND)
+                                .message("User "+login+" not found")
+                                .build()
+                ));
+
+        //login from user body parameter should match login path parameter
+        if(!user.getLogin().equals(login)){
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message("Data from the request body doesn't match login parameter")
+                            .build());
+        } else {
+            userRepository.save(new UserData(user)); //TODO Shouldn't save (as opposed to insert) throw an exception anyway if login not found ?
+            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),user.getLogin()));
+            return user;
+        }
+
     }
 }

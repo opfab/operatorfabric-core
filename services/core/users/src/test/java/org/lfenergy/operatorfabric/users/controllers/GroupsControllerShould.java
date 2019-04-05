@@ -79,13 +79,13 @@ class GroupsControllerShould {
            .login("jcleese")
            .firstName("John")
            .lastName("Cleese")
-           .group("Monthy Pythons").group("Wanda")
+           .group("Monty Pythons").group("Wanda")
            .build();
         u2 = UserData.builder()
            .login("gchapman")
            .firstName("Graham")
            .lastName("Chapman")
-           .group("Monthy Pythons")
+           .group("Monty Pythons")
            .build();
         u3 = UserData.builder()
            .login("kkline")
@@ -98,12 +98,12 @@ class GroupsControllerShould {
         userRepository.insert(u3);
         GroupData g1, g2;
         g1 = GroupData.builder()
-           .name("Monthy Pythons")
+           .name("Monty Pythons")
            .description("A bunch of humorous fellows")
            .build();
         g2 = GroupData.builder()
            .name("Wanda")
-           .description("The cast of a really succesful comedy")
+           .description("The cast of a really successful comedy")
            .build();
         groupRepository.insert(g1);
         groupRepository.insert(g2);
@@ -127,11 +127,11 @@ class GroupsControllerShould {
 
     @Test
     void fetch() throws Exception {
-        ResultActions result = mockMvc.perform(get("/groups/Monthy Pythons"));
+        ResultActions result = mockMvc.perform(get("/groups/Monty Pythons"));
         result
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-           .andExpect(jsonPath("$.name", is("Monthy Pythons")))
+           .andExpect(jsonPath("$.name", is("Monty Pythons")))
            .andExpect(jsonPath("$.description", is("A bunch of humorous fellows")))
         ;
     }
@@ -206,6 +206,107 @@ class GroupsControllerShould {
     }
 
     @Test
+    void updateWithNotFoundError() throws Exception {
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(put("/groups/unknownGroupSoFar")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{" +
+                        "\"name\": \"unknownGroupSoFar\","+
+                        "\"description\": \"New description for group\""+
+                        "}")
+        )
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+    }
+
+    @Test
+    void updateWithMismatchedError() throws Exception {
+
+        mockMvc.perform(get("/groups/Wanda"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.name", is("Wanda")))
+                .andExpect(jsonPath("$.description", is("The cast of a really successful comedy")))
+        ;
+
+        mockMvc.perform(put("/groups/Wanda")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{" +
+                        "\"name\": \"Monty Pythons\","+
+                        "\"description\": \"They were not as successful in Fierce Creatures\""+
+                        "}")
+        )
+                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(jsonPath("$.message", is("Data from the request body doesn't match name parameter")))
+                .andExpect(jsonPath("$.errors").doesNotExist());
+        ;
+
+        mockMvc.perform(get("/groups/Wanda"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.name", is("Wanda")))
+                .andExpect(jsonPath("$.description", is("The cast of a really successful comedy")))
+        ;
+    }
+
+    @Test
+    void updateWithMismatchedAndNotFoundError() throws Exception {
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(put("/groups/unknownGroupSoFar")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{" +
+                        "\"name\": \"someOtherGroupName\","+
+                        "\"description\": \"New description for group\""+
+                        "}")
+        )
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+    }
+
+    @Test
     void addGroupToUsers() throws Exception {
         mockMvc.perform(post("/groups/Wanda/users")
            .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -216,15 +317,15 @@ class GroupsControllerShould {
 
         UserData gchapman = userRepository.findById("gchapman").get();
         assertThat(gchapman).isNotNull();
-        assertThat(gchapman.getGroups()).contains("Monthy Pythons","Wanda");
+        assertThat(gchapman.getGroups()).contains("Monty Pythons","Wanda");
         UserData jcleese = userRepository.findById("jcleese").get();
         assertThat(jcleese).isNotNull();
-        assertThat(jcleese.getGroups()).contains("Monthy Pythons","Wanda");
+        assertThat(jcleese.getGroups()).contains("Monty Pythons","Wanda");
     }
 
     @Test
     void deleteGroupsFromUsers() throws Exception {
-        mockMvc.perform(delete("/groups/Monthy Pythons/users")
+        mockMvc.perform(delete("/groups/Monty Pythons/users")
            .contentType(MediaType.APPLICATION_JSON_UTF8)
            .content("[\"gchapman\"]")
         )
@@ -247,10 +348,10 @@ class GroupsControllerShould {
 
         UserData gchapman = userRepository.findById("gchapman").get();
         assertThat(gchapman).isNotNull();
-        assertThat(gchapman.getGroups()).contains("Monthy Pythons","Wanda");
+        assertThat(gchapman.getGroups()).contains("Monty Pythons","Wanda");
         UserData jcleese = userRepository.findById("jcleese").get();
         assertThat(jcleese).isNotNull();
-        assertThat(jcleese.getGroups()).contains("Monthy Pythons");
+        assertThat(jcleese.getGroups()).contains("Monty Pythons");
     }
 
 }

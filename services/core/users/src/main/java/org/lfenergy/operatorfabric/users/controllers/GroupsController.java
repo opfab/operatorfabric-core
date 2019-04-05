@@ -93,7 +93,27 @@ public class GroupsController implements GroupsApi {
 
     @Override
     public Group updateGroup(String name, Group group) throws Exception {
-        return groupRepository.save((GroupData)group);
+
+        //Only existing groups can be updated
+        groupRepository.findById(name).orElseThrow(
+                ()-> new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.NOT_FOUND)
+                                .message("Group "+name+" not found")
+                                .build()
+                ));
+
+        //name from group body parameter should match name path parameter
+        if(!group.getName().equals(name)){
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message("Data from the request body doesn't match name parameter")
+                            .build());
+        } else {
+            return groupRepository.save((GroupData)group);
+        }
+
     }
 
     @Override

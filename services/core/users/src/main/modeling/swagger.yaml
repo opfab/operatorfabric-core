@@ -152,8 +152,8 @@ paths:
     put:
       tags:
         - users
-      summary: Update user if existing or create it
-      description: Update user if existing or create it
+      summary: Update existing user
+      description: Update existing user
       operationId: updateUser
       consumes:
         - application/json
@@ -162,12 +162,12 @@ paths:
       parameters:
         - in: path
           name: login
-          description: user login
+          description: user login (should match login in request body)
           type: string
           required: true
         - in: body
           name: user
-          description: User to be updated
+          description: User to be updated (login should match path parameter)
           schema:
             $ref: '#/definitions/SimpleUser'
       responses:
@@ -177,6 +177,10 @@ paths:
             $ref: '#/definitions/SimpleUser'
         '401':
           description: Authentication required
+        '403':
+          description: Bad request (body doesn't match login path parameter)
+        '404':
+          description: User not found
   /groups:
     get:
       tags:
@@ -228,8 +232,8 @@ paths:
     put:
       tags:
         - groups
-      summary: Update group if existing or create it
-      description: Update group if existing or create it
+      summary: Update existing group
+      description: Update existing group
       operationId: updateGroup
       consumes:
         - application/json
@@ -238,12 +242,12 @@ paths:
       parameters:
         - in: path
           name: name
-          description: Name of group to be updated
+          description: Name of group to be updated (should match name in request body)
           type: string
           required: true
         - in: body
           name: group
-          description: Updated group data
+          description: Updated group data (should match name path parameter)
           schema:
             $ref: '#/definitions/Group'
       responses:
@@ -253,6 +257,10 @@ paths:
             $ref: '#/definitions/Group'
         '401':
           description: Authentication required
+        '403':
+          description: Bad request (body doesn't match login path parameter)
+        '404':
+          description: Group not found
     get:
       tags:
         - groups
