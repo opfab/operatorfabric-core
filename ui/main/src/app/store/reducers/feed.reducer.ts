@@ -15,11 +15,24 @@ export function reducer(
 ): CardFeedState {
     switch (action.type) {
         case FeedActionTypes.ApplyFilter: {
+            if(state.filters.get(action.payload.name)) {
+                const filters = new Map(state.filters);
+                const filter = filters.get(action.payload.name).clone();
+                filter.active = action.payload.active;
+                filter.status = action.payload.status;
+                filters.set(action.payload.name, filter);
+                return {
+                    ...state,
+                    loading: false,
+                    filters: filters
+                };
+            }
+            return {...state}
+        }
+
+        case FeedActionTypes.InitFilter: {
             const filters = new Map(state.filters);
-            const filter = {...filters.get(action.payload.name)}
-            filter.active = action.payload.active;
-            filter.status = action.payload.status
-            filters.set(action.payload.name,filter);
+            filters.set(action.payload.name,action.payload.filter);
             return {
                 ...state,
                 loading: false,

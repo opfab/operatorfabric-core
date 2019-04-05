@@ -12,14 +12,29 @@ import {Map} from "@ofModel/map";
 /**
  * A Filter gather both the feed filtering behaviour and the filter status for
  * filtering parametrization and component state
+ *
+ * The function property funktion takes two arguments :
+ *  * card: the card for which to evaluate filter
+ *  * status: the status of the current filter
+ *
+ * Beware: we use a copy constructor for replication of filters as a store state so take care of funktion scope
+ * in Filter implementation (Instanciation and Inheritance). This is the reason why we pass the filter status upon
+ * funktion
  */
-export abstract class Filter {
+export class Filter {
 
     constructor(
         readonly funktion: (LightCard,any) => boolean,
         public active:boolean,
         public status: any
     ) {
+    }
+
+    clone():Filter {
+        return new Filter(
+            this.funktion,
+            this.active,
+            this.status);
     }
 
     /**
