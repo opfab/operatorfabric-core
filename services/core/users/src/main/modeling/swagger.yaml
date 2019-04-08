@@ -119,6 +119,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/SimpleUser'
+        '400':
+          description: Bad request (duplicate key)
         '401':
           description: Authentication required
   '/users/{login}':
@@ -175,10 +177,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/SimpleUser'
+        '400':
+          description: Bad request (body doesn't match login path parameter)
         '401':
           description: Authentication required
-        '403':
-          description: Bad request (body doesn't match login path parameter)
         '404':
           description: User not found
   /groups:
@@ -226,8 +228,12 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/Group'
+        '400':
+          description: Bad request (duplicate key)
         '401':
           description: Authentication required
+        '404':
+          description: Required group not found
   '/groups/{name}':
     put:
       tags:
@@ -255,10 +261,10 @@ paths:
           description: Updated
           schema:
             $ref: '#/definitions/Group'
+        '400':
+          description: Bad request (body doesn't match name path parameter)
         '401':
           description: Authentication required
-        '403':
-          description: Bad request (body doesn't match login path parameter)
         '404':
           description: Group not found
     get:
@@ -282,6 +288,9 @@ paths:
             $ref: '#/definitions/Group'
         '401':
           description: Authentication required
+        '404':
+          description: Required group not found
+
   '/groups/{name}/users':
     put:
       tags:
@@ -316,6 +325,8 @@ paths:
           description: Updated
         '401':
           description: Authentication required
+        '404':
+          description: Required group not found
     post:
       tags:
         - groups
@@ -345,6 +356,8 @@ paths:
           description: Updated
         '401':
           description: Authentication required
+        '404':
+          description: Required group not found
     delete:
       tags:
         - groups
@@ -374,3 +387,5 @@ paths:
           description: Deleted
         '401':
           description: Authentication required
+        '404':
+          description: Required group not found
