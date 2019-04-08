@@ -1,0 +1,284 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+= OperatorFabric Get Started
+David Binder; Boris Dolley; Alexandra Guirronet; Ronan Le Gall
+v0.1.1, April 15, 2019
+:imagesdir: images
+:sectnums:
+:toc: left
+:toclevels: 2
+:toc-title: Get Started
+:icons: font
+:hide-uri-scheme:
+
+Once an operatorFabric instance is fully running (link:https://github.com/opfab/operatorfabric-core#4-getting-started[cf getting started in the README]), the main goal here is to send cards to a user of OperatorFabric and to display their details in a neat way.
+
+The user used here, is one of the existing users of OperatorFabric (developper version): `tso1-operator`. To manage users and groups please to refere to link:https://opfab.github.io/projects/services/core/users/0.1.1.SNAPSHOT/reference[the reference documentation of the User services].
+
+WARNING: Throughout this document, the instance of OperatorFabric is considered to be deploy on `locahost`, the end points need to be adapted if it's not the case for you.
+
+== Connection to the GUI
+
+To connect to OperatorFabric, open in a browser the following page: link:http://localhost:2002/ui/[`http://localhost:2002/ui/`] and use `tso1-operator` as login and `test` as password.
+
+The login page should look like this screenshot.
+
+image::login-screenshot.png[login page screenshot]
+
+Once logged, the site should look like this (if there is no card in the system for `tso1-operator`):
+
+image::empty-opfab-page.png[empty operatorFabric page screenshot]
+
+== Card : creation and sending
+
+OperatorFabric receive cards as json object(link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#Card[specified in the cards publication service API]) in the body of an http POST request to this `URL`:link:http://localhost:2102[`http://localhost:2102/cards`]
+
+=== Create a card
+
+As an example, let's send an `Hello World` card to `tso1-operator`.
+
+The card content is :
+....
+{
+	"groupRecipients" : [
+		"TSO1"
+	],
+	"processId" : "hello-world-process-id",
+	"publisher" : "defaultPublisher",
+	"publisherVersion" : "1",
+	"recipient" : {
+		"type" : "UNION",
+		"recipients" : [
+			{
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+			{
+				"type" : "USER",
+				"identity" : "admin"
+			}
+		]
+	},
+	"severity" : "ACTION",
+	"startDate" : 1553186770681,
+	"summary" : {
+		"key" : "defaultProcess.summary"
+	},
+	"tags" : [
+		"helloWorld",
+		"greetings"
+	],
+	"title" : {
+		"key" : "defaultProcess.title"
+	},
+	"userRecipients" : [
+		"tso1-operator"
+	],
+	"data" : {
+		"greetings-from":"TSO-1"
+	},
+	"details" : [
+		{
+			"title" : {
+				"key" : "defaultProcess.detail.tab.first"
+			},
+			"templateName" : "template"
+		}
+	]
+}
+....
+As you can see there is a `startDate` in the card. It's the number of millisecond since EPOCH when the card is beginning to be active. This value must be adapted to fit your needs in the card you will send to `tso1-operator`.
+
+In a linux environment, if we want such a value for two minutes from now, using the command `date -d "+ 2 minutes" +%s%N | cut -b1-13` can be useful.
+
+=== Send a Card
+
+Now this freshly updated card need to be send to our operator to see it in the browser. As write down earlier this json representing a card has to be send with a POST method to the running OperatorFabric instance. This request need to carry this header: "Content-Type:application/json". Use your perfered tool to achive this. If you're using linux you can use the following set of instruction, given the fact that our card is saved in a file name `card.json` in the present working directory:
+....
+curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @card.json
+....
+The result should be a 200 Http status and a json object such as:
+....
+{"count":1,"message":"All pushedCards were successfully handled"}
+....
+The opertor should have the following result in the page:
+
+image::raw-light-card-without-details.png[light card without details and without l10]
+
+This result is not pretty. There are several missing things such a s a correct title for the summary card in the feed and details in the right zone. When the operator clics on the card in the feed (card on the left side of the page, called here **DEFAULTPUBLISHER.1.DEFAULTPROCESS.TITLE**), there is no details shows on the right side of the page. In order to prettify all of this, as card provider we need to upload a bundle containing the configuration required by OperatorFabric to beautify the rendering of our card.
+
+== Card: formatting
+
+To format the card rendering, such as details, details and so on, the third party, which is here `TSO1`, create a specific configuration file named in OperatorFabric as bundle. If you're only insterested result you could use this bundle and go directly to this section where it's uploaded to the server.
+
+=== Configure a card formatting
+
+The formatting of cards is configured inside a bundle.  A bundle is an archive uploaded by a Third party into the OperatorFabric server. The server will use the configuration provided by the bundle to localize card item or to format details for example.
+This archive is a `tar.gz` file often called a `tarball`. For our needs we will defined some `i18n` resources, some `css` and a template to render details. There are more possibilities describe in details by link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/thirds[the Third service README] and in link:https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/reference/#_customization_example[the Third Service Referenc Documentation]. OperatorFabric use link:https://handlebarsjs.com/[Handlebars templates] to format and render cards details.
+All bundle resources are contain in subfolders and a metadata file named `config.json` declares what resources are available and need to be used in the bundle.
+
+==== create a workspace
+
+The easiest way to create our bundle is to create somewhere a directory where will be created all needed files.
+
+We will create a folder named `bundle` in which we will create our `i18n` resources, our `css` files and our `handlebars` templates. Each of these are contain in subdirectories properly named.
+
+In linux we could do so by using the CLI:
+....
+# create our working directory
+mkdir bundle
+# move into our newly created directory
+cd bundle
+# create the directory for i18n
+ mkdir i18n
+# create the directory for style
+mkdir css
+# create the template directory
+mkdir template
+....
+
+result
+....
+bundle
+├── css
+├── i18n
+└── template
+....
+
+
+==== i18n
+
+First of all, the title needs to be meaningful, in English and in French (for example). In the `i18n` folder, create two files: a `en.json` and a `fr.json`. In those files, translate the title key with a meaningful value such as:
+
+- `en.json`
+
+....
+{
+	"defaultProcess":{
+		"title":"Greetings",
+		"summary":"This is a test card"
+	}
+}
+....
+
+- `fr.json`
+
+....
+{
+	"defaultProcess":{
+		"title":"Salutations",
+		"summary":"Ceci est une carte de test"
+	}
+}
+....
+
+As in the card, we define several keys, one for the title: `defaultProcess.title` and one for the summary `defaultProcess.summary` and give them an expected value.
+
+==== Template
+
+In the `template` folder, as we have two `i18n` we need to create two folders, `en` and `fr`. 
+In each folder we create a file named `template.handlebars` containing:
+
+- `en/template.handlebars`
+
+....
+<h2>Hello World from {{data.greetings}}!</h2>
+....
+
+- `fr/template.handlebars`
+
+....
+<h2>Bonjour à tous de la part de {{data.greetings}} !</h2>
+....
+
+==== Style
+
+In the `css` directory we create a file containing our style definition for the `h2` html tag:
+
+- `style.css`
+
+....
+.detail.template.h2{
+	color:#fd9312;
+	font-weight: bold;
+}
+....
+
+==== Metadata
+
+In a file name `config.json` we write the following information:
+
+....
+{
+	"name":"TSO1",
+	"version":"1",
+	"templates":["template"],
+	"csses":["style"]
+}
+....
+
+Here we will endorse the role of the `TSO1` party, and we have to declare the `template` name and the `style` file name to used. Here there are *template* and *style*.
+
+==== Packaging
+
+So far we have this file structure:
+
+....
+bundle/
+├── config.json
+├── css
+│   └── style.css
+├── i18n
+│   ├── en.json
+│   └── fr.json
+└── template
+    ├── en
+    │   └── template.handlebars
+    └── fr
+        └── template.handlebars
+....
+
+All we need to do is to create an archive from this structure. This archive can be called `bundle.tar.gz` by example and can be created with the following command as long as we are in the `bundle` folder:
+
+....
+tar -czvf bundle-test.tar.gz config.json css/ template/ i18n/
+....
+
+=== Load a card format configuration
+
+Now we can upload our bundle to the OperatorFabric server using link:http://localhost:2100/swagger-ui.html#/thirds/uploadBundle[the `tryout` of the Swagger API description of the bundle upload action], our preferd REST client or using cURL.
+In summary, the upload method is a POST request to `http://localhost:2100/thirds/TSO1` with an attached file (our bundle). As you can see we are using the name of the `TSO1` to upload our bundle on the local operatorFabric.
+we could use the following command:
+....
+curl -X POST "http://localhost:2100/thirds/TSO1" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "file=@bundle.tar.gz;type=application/gzip"
+....
+
+The server should send us a 200 http status along with a summary of our `config.json file` such as:
+
+....
+{
+  "mediasData": null,
+  "menuEntriesData": null,
+  "name": "TSO1",
+  "version": "1",
+  "templates": [
+    "template"
+  ],
+  "csses": [
+    "style"
+  ],
+  "i18nLabelKey": null,
+  "medias": null,
+  "menuEntries": null
+}
+....
+
+== Card: view
+
+Now when our operator clicks on the card the page should look like the following screenshot(here localized in french):
+
+image::formated-card-details.png[formated card detail in french l10n]

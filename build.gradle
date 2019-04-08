@@ -104,11 +104,11 @@ licenseReport {
 
 asciidoctor {
     sources {
-        include 'architecture/index.adoc'
+        include 'architecture/index.adoc','start/index.adoc'
     }
     resources {
         from('src/docs/asciidoc') {
-            include 'architecture/images/**/*'
+            include 'architecture/images/**/*', 'start/images/*'
         }
     }
     attributes nofooter : ''
