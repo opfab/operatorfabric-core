@@ -85,7 +85,7 @@ public class UsersController implements UsersApi {
                             .message("Data from the request body doesn't match login parameter")
                             .build());
         } else {
-            userRepository.save(new UserData(user)); //TODO Shouldn't save (as opposed to insert) throw an exception anyway if login not found ?
+            userRepository.save(new UserData(user));
             publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),user.getLogin()));
             return user;
         }

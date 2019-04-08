@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -163,7 +165,47 @@ class UsersControllerShould {
 
     }
 
-    //TODO CreateWithDuplicateError
+    @Test
+    void createWithDuplicateError() throws Exception {
+
+        mockMvc.perform(get("/users/kkline"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.login", is("kkline")))
+                .andExpect(jsonPath("$.firstName", is("Kevin")))
+                .andExpect(jsonPath("$.lastName", is("Kline")))
+        ;
+
+        ResultActions result = mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{" +
+                        "\"login\": \"kkline\","+
+                        "\"firstName\": \"KEVIN\","+
+                        "\"lastName\": \"KLINE\""+
+                        "}")
+        )
+                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(jsonPath("$.message", is("Resource creation failed because a resource with the same key already exists.")))
+                .andExpect(jsonPath("$.errors",hasSize(1)))
+                .andExpect(jsonPath("$.errors[0]",stringContainsInOrder(Arrays.asList("duplicate key","\"kkline\""))))
+                ;
+
+        mockMvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        mockMvc.perform(get("/users/kkline"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.login", is("kkline")))
+                .andExpect(jsonPath("$.firstName", is("Kevin")))
+                .andExpect(jsonPath("$.lastName", is("Kline")))
+        ;
+
+    }
 
     @Test
     void update() throws Exception {
