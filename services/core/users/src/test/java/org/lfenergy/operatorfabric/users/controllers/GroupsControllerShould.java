@@ -364,6 +364,68 @@ class GroupsControllerShould {
     }
 
     @Test
+    void addGroupToUsersWithNotFoundError() throws Exception {
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(post("/groups/unknownGroupSoFar/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("[\"gchapman\"]")
+        )
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        UserData gchapman = userRepository.findById("gchapman").get();
+        assertThat(gchapman).isNotNull();
+        assertThat(gchapman.getGroups()).doesNotContain("unknownGroupSoFar");
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+    }
+
+    @Test
+    void addGroupToUsersWithBadRequest() throws Exception {
+        mockMvc.perform(post("/groups/Wanda/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("[\"gchapman\",\"unknownUserSoFar\"]")
+        )
+                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(jsonPath("$.message", is("Bad user list : user unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist());
+
+        //If the user list isn't correct, no user should be updated
+        UserData gchapman = userRepository.findById("gchapman").get();
+        assertThat(gchapman).isNotNull();
+        assertThat(gchapman.getGroups()).contains("Monty Pythons");
+
+        mockMvc.perform(get("/users/unknownUserSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("User unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist());
+
+    }
+
+    @Test
     void deleteGroupsFromUsers() throws Exception {
         mockMvc.perform(delete("/groups/Monty Pythons/users")
            .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -376,6 +438,65 @@ class GroupsControllerShould {
         assertThat(gchapman).isNotNull();
         assertThat(gchapman.getGroups()).isEmpty();
     }
+
+    @Test
+    void deleteGroupFromUsersWithNotFoundError() throws Exception {
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(delete("/groups/unknownGroupSoFar/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("[\"gchapman\"]")
+        )
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+    }
+
+    @Test
+    void deleteGroupFromUsersWithBadRequest() throws Exception {
+        mockMvc.perform(delete("/groups/Wanda/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("[\"kkline\",\"unknownUserSoFar\"]")
+        )
+                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(jsonPath("$.message", is("Bad user list : user unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist());
+
+        //If the user list isn't correct, no user should be updated
+        UserData kkline = userRepository.findById("kkline").get();
+        assertThat(kkline).isNotNull();
+        assertThat(kkline.getGroups()).contains("Wanda");
+
+        mockMvc.perform(get("/users/unknownUserSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("User unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist());
+
+    }
+
 
     @Test
     void updateGroupsFromUsers() throws Exception {
@@ -392,6 +513,73 @@ class GroupsControllerShould {
         UserData jcleese = userRepository.findById("jcleese").get();
         assertThat(jcleese).isNotNull();
         assertThat(jcleese.getGroups()).contains("Monty Pythons");
+    }
+
+    @Test
+    void updateGroupFromUsersWithNotFoundError() throws Exception {
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        mockMvc.perform(put("/groups/unknownGroupSoFar/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("[\"gchapman\"]")
+        )
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+        UserData gchapman = userRepository.findById("gchapman").get();
+        assertThat(gchapman).isNotNull();
+        assertThat(gchapman.getGroups()).doesNotContain("unknownGroupSoFar");
+
+        mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist())
+        ;
+
+    }
+
+    @Test
+    void updateGroupFromUsersWithBadRequest() throws Exception {
+
+        mockMvc.perform(put("/groups/Wanda/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("[\"gchapman\",\"unknownUserSoFar\"]")
+        )
+                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(jsonPath("$.message", is("Bad user list : user unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist());
+
+        //If the user list isn't correct, no user should be updated
+        UserData kkline = userRepository.findById("kkline").get();
+        assertThat(kkline).isNotNull();
+        assertThat(kkline.getGroups()).contains("Wanda");
+
+        UserData gchapman = userRepository.findById("gchapman").get();
+        assertThat(gchapman).isNotNull();
+        assertThat(gchapman.getGroups()).doesNotContain("Wanda");
+
+        mockMvc.perform(get("/users/unknownUserSoFar"))
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                .andExpect(jsonPath("$.message", is("User unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.errors").doesNotExist());
+
     }
 
 }

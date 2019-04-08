@@ -323,6 +323,8 @@ paths:
       responses:
         '200':
           description: Updated
+        '400':
+          description: Bad request
         '401':
           description: Authentication required
         '404':
@@ -354,6 +356,8 @@ paths:
       responses:
         '200':
           description: Updated
+        '400':
+          description: Bad request
         '401':
           description: Authentication required
         '404':
@@ -385,6 +389,8 @@ paths:
       responses:
         '200':
           description: Deleted
+        '400':
+          description: Bad request
         '401':
           description: Authentication required
         '404':

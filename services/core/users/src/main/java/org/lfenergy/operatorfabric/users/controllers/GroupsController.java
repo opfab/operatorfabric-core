@@ -12,6 +12,7 @@ import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.Group;
 import org.lfenergy.operatorfabric.users.model.GroupData;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
@@ -23,7 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Handler;
 
 
 /**
@@ -49,13 +53,20 @@ public class GroupsController implements GroupsApi {
 
     @Override
     public Void addGroupUsers(String name, List<String> users) throws Exception {
-        Iterable<UserData> foundUsers = userRepository.findAllById(users);
+
+        //Only existing groups can be updated
+        checkGroupExists(name);
+
+        //Retrieve users from repository for users list, throwing an error if a login is not found
+        List<UserData> foundUsers = retrieveUsers(users);
+
         for (UserData userData : foundUsers) {
             userData.addGroup(name);
-            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
+            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
         }
         userRepository.saveAll(foundUsers);
         return null;
+
     }
 
     @Override
@@ -65,7 +76,13 @@ public class GroupsController implements GroupsApi {
 
     @Override
     public Void deleteGroupUsers(String name, List<String> users) throws Exception {
-        Iterable<UserData> foundUsers = userRepository.findAllById(users);
+
+        //Only existing groups can be updated
+        checkGroupExists(name);
+
+        //Retrieve users from repository for users list, throwing an error if a login is not found
+        List<UserData> foundUsers = retrieveUsers(users);
+
         for (UserData userData : foundUsers) {
             userData.deleteGroup(name);
             publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
@@ -95,13 +112,7 @@ public class GroupsController implements GroupsApi {
     public Group updateGroup(String name, Group group) throws Exception {
 
         //Only existing groups can be updated
-        groupRepository.findById(name).orElseThrow(
-                ()-> new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message("Group "+name+" not found")
-                                .build()
-                ));
+        checkGroupExists(name);
 
         //name from group body parameter should match name path parameter
         if(!group.getName().equals(name)){
@@ -118,8 +129,16 @@ public class GroupsController implements GroupsApi {
 
     @Override
     public Void updateGroupUsers(String name, List<String> users) throws Exception {
+
+        //Only existing groups can be updated
+        checkGroupExists(name);
+
         List<UserData> formerlyBelongs = userRepository.findByGroupSetContaining(name);
         List<String> newUsersInGroup = new ArrayList<>(users);
+
+        //Make sure the intended updated users list only contains logins existing in the repository, throwing an error if this is not the case
+        retrieveUsers(users);
+
         List<UserData> toUpdate = new ArrayList<>();
         formerlyBelongs.stream()
            .filter(u->!users.contains(u.getLogin()))
@@ -128,6 +147,7 @@ public class GroupsController implements GroupsApi {
                newUsersInGroup.remove(u.getLogin());
                toUpdate.add(u);
            });
+
         //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
         for (UserData userData : toUpdate) {
             userData.addGroup(name);
@@ -136,5 +156,34 @@ public class GroupsController implements GroupsApi {
         userRepository.saveAll(toUpdate);
         addGroupUsers(name,newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
         return null;
+    }
+
+    private void checkGroupExists(String name) throws ApiErrorException {
+        groupRepository.findById(name).orElseThrow(
+                ()-> new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.NOT_FOUND)
+                                .message("Group "+name+" not found")
+                                .build()
+                ));
+    }
+
+/** Retrieve users from repository for logins list, throwing an error if a login is not found
+ * */
+    private List<UserData> retrieveUsers(List<String> logins) throws ApiErrorException{
+
+        List<UserData> foundUsers = new ArrayList<>();
+        for(String login : logins){
+            UserData foundUser = userRepository.findById(login).orElseThrow(
+                    () -> new ApiErrorException(
+                            ApiError.builder()
+                                    .status(HttpStatus.BAD_REQUEST)
+                                    .message("Bad user list : user "+login+" not found")
+                                    .build()
+                    ));
+            foundUsers.add(foundUser);
+        }
+
+        return foundUsers;
     }
 }
