@@ -8,10 +8,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'of-filters',
-  templateUrl: './filters.component.html',
+  selector: 'of-type-filter',
+  templateUrl: './type-filter.component.html',
+  styleUrls: ['./type-filter.component.scss']
 })
-export class FiltersComponent implements OnInit {
+export class TypeFilterComponent implements OnInit {
 
   constructor() { }
 

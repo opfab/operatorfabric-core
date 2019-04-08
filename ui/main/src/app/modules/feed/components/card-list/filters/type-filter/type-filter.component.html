@@ -1,0 +1,23 @@
+<!-- Copyright (c) 2018, RTE (http://www.rte-france.com)                 -->
+<!--                                                                     -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+
+<p>
+    <ng-template #filterTypeContent>Configuration goes here</ng-template>
+    <ng-template #filterTypeTitle><span translate>feed.filters.type.title</span></ng-template>
+    <button type="button" class="btn btn-outline-secondary p-1 mr-2" placement="right"
+            [ngbPopover]="filterTypeContent" [popoverTitle]="filterTypeTitle">
+        <div class="type-selections">
+            <div class="type-row">
+                <div class="type-cell bg-sev-alarm"></div>
+                <div class="type-cell bg-sev-action"></div>
+            </div>
+            <div class="type-row">
+                <div class="type-cell bg-sev-question"></div>
+                <div class="type-cell bg-sev-notification"></div>
+            </div>
+        </div>
+    </button>
+</p>

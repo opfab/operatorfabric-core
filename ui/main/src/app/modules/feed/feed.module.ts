@@ -14,18 +14,23 @@ import {FeedRoutingModule} from "./feed-routing.module";
 import {NoSelectionComponent} from './components/no-selection/no-selection.component';
 import {TimeLineComponent} from './components/time-line/time-line.component';
 import {CardsModule} from "../cards/cards.module";
-import { FiltersComponent } from './components/card-list/filters/filters.component';
+import {FiltersComponent} from './components/card-list/filters/filters.component';
+import {TypeFilterComponent} from './components/card-list/filters/type-filter/type-filter.component';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {TranslateModule} from "@ngx-translate/core";
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    CardsModule,
-    FeedRoutingModule,
-  ],
-  declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent],
-  exports: [FeedComponent]
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        NgbModule.forRoot(),
+        CardsModule,
+        FeedRoutingModule,
+    ],
+    declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent],
+    exports: [FeedComponent]
 })
 export class FeedModule {
 }

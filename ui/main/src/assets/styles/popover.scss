@@ -5,17 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Component, OnInit } from '@angular/core';
+@import "variables";
 
-@Component({
-  selector: 'of-filters',
-  templateUrl: './filters.component.html',
-})
-export class FiltersComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+/deep/ .popover{
+  background-color: $dark;
+  color: $light;
 }

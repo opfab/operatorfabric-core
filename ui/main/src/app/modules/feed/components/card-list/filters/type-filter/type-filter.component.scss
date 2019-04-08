@@ -1,0 +1,37 @@
+/* Copyright (c) 2018, RTE (http://www.rte-france.com)
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+@import "~assets/styles/_variables.scss";
+
+$cell-width: 10;
+
+.type-selections {
+  display: table;
+  width: $cell-width * 2px;
+  height: $cell-width * 2px;
+}
+
+.type-row {
+  display: table-row;
+}
+
+.type-cell {
+  display: table-cell;
+}
+
+/deep/ .popover {
+  background-color: $dark;
+  .popover-header {
+    color: $light;
+    background-color: $dark;
+  }
+  .popover-body {
+    color: $light;
+  }
+  .arrow::after{
+    border-right-color: $dark;
+  }
+}

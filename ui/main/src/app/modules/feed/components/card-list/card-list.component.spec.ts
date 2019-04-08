@@ -10,6 +10,8 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {CardListComponent} from './card-list.component';
 import {CardComponent} from '../../../cards/components/card/card.component';
 import {FiltersComponent} from "./filters/filters.component";
+import {TypeFilterComponent} from "./filters/type-filter/type-filter.component";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 describe('CardListComponent', () => {
   let component: CardListComponent;
@@ -17,7 +19,8 @@ describe('CardListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-        declarations: [ CardListComponent, CardComponent, FiltersComponent]
+        imports: [NgbModule.forRoot()],
+        declarations: [ CardListComponent, CardComponent, FiltersComponent, TypeFilterComponent]
     })
     .compileComponents();
   }));

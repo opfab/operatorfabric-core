@@ -3,5 +3,13 @@
     "feed": "Card Feed",
     "archives": "Archives",
     "logout": "Logout"
+  },
+  "feed": {
+    "filters": {
+      "title": "Filters",
+      "type": {
+        "title": "Type",
+      }
+    }
   }
 }

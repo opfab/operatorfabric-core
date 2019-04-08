@@ -3,5 +3,13 @@
     "feed": "Flux de cartes",
     "archives": "Archives",
     "logout": "Déconnexion"
+  },
+  "feed": {
+    "filters": {
+      "title": "Filtres",
+      "type": {
+        "title": "Type"
+      }
+    }
   }
 }

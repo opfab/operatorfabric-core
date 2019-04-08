@@ -7,24 +7,23 @@
 
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {FiltersComponent} from './filters.component';
-import {TypeFilterComponent} from "./type-filter/type-filter.component";
+import {TypeFilterComponent} from './type-filter.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
-describe('FiltersComponent', () => {
-    let component: FiltersComponent;
-    let fixture: ComponentFixture<FiltersComponent>;
+describe('TypeFilterComponent', () => {
+    let component: TypeFilterComponent;
+    let fixture: ComponentFixture<TypeFilterComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [NgbModule.forRoot()],
-            declarations: [FiltersComponent, TypeFilterComponent]
+            declarations: [TypeFilterComponent]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(FiltersComponent);
+        fixture = TestBed.createComponent(TypeFilterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
