@@ -18,13 +18,15 @@ $sev-alarm:        #EE0000 !default;
 $sev-action:       #FD9312 !default;
 $sev-notification: #1074AC !default;
 $sev-question:     #00BB00 !default;
+$less-dark:        #525854 !default;
 
 $theme-colors: map-merge(
     (
             "sev-alarm":    $sev-alarm,
             "sev-action":  $sev-action,
             "sev-notification":    $sev-notification,
-            "sev-question":       $sev-question
+            "sev-question":       $sev-question,
+            "less-dark": $less-dark
     ),
     $theme-colors
 );

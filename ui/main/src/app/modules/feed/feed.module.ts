@@ -14,6 +14,7 @@ import {FeedRoutingModule} from "./feed-routing.module";
 import {NoSelectionComponent} from './components/no-selection/no-selection.component';
 import {TimeLineComponent} from './components/time-line/time-line.component';
 import {CardsModule} from "../cards/cards.module";
+import { FiltersComponent } from './components/card-list/filters/filters.component';
 
 
 @NgModule({
@@ -23,7 +24,7 @@ import {CardsModule} from "../cards/cards.module";
     CardsModule,
     FeedRoutingModule,
   ],
-  declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent],
+  declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent],
   exports: [FeedComponent]
 })
 export class FeedModule {

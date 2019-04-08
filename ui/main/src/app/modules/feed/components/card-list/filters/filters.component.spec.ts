@@ -5,25 +5,23 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {CardListComponent} from './card-list.component';
-import {CardComponent} from '../../../cards/components/card/card.component';
-import {FiltersComponent} from "./filters/filters.component";
+import { FiltersComponent } from './filters.component';
 
-describe('CardListComponent', () => {
-  let component: CardListComponent;
-  let fixture: ComponentFixture<CardListComponent>;
+describe('FiltersComponent', () => {
+  let component: FiltersComponent;
+  let fixture: ComponentFixture<FiltersComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-        declarations: [ CardListComponent, CardComponent, FiltersComponent]
+      declarations: [ FiltersComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CardListComponent);
+    fixture = TestBed.createComponent(FiltersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
