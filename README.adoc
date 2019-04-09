@@ -8,7 +8,7 @@
 :imagesdir: _README
 :sectnums:
 :toc: macro
-:toc-title:
+:toclevels: 1
 :icons: font
 :hide-uri-scheme:
 
