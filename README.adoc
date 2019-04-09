@@ -7,14 +7,10 @@
 = OperatorFabric README
 :imagesdir: _README
 :sectnums:
-:toc:
+:toc: macro
 :toc-title:
 :icons: font
 :hide-uri-scheme:
-
-//TODO check task list
-//TODO Collapse port tables by default?
-//TODO Add links to other sections
 
 image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0 License,link=https://www.mozilla.org/en-US/MPL/2.0/]
 image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master[Build Status,link=https://travis-ci.org/opfab/operatorfabric-core]
@@ -33,6 +29,12 @@ OperatorFabric is a modular, extensible, industrial-strength and field-tested pl
 * Scripting (ex: Python, JavaScript)
 
 It is an open source project initiated by http://www.rte-france.com/[RTE] with https://www.lfenergy.org/[LF Energy].
+
+toc::[]
+
+//TODO check task list
+//TODO Collapse port tables by default?
+//TODO Add links to other sections
 
 == What does OperatorFabric do in practice?
 
