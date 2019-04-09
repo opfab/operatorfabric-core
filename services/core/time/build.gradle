@@ -2,7 +2,7 @@ dependencies {
     compile boot.starterWeb, boot.starterJetty
     compile project(':client:time-client-data')
     compile project(':tools:spring:spring-oauth2-utilities')
-
+    testCompile spring.securityTest
 }
 
 jar {

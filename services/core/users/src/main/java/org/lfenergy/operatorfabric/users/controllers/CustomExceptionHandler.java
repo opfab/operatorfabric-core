@@ -57,7 +57,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
    * @return Computed http response for specified exception
    */
   @ExceptionHandler(DuplicateKeyException.class)
-  public ResponseEntity<Object> handleDuplicateKey(DuplicateKeyException exception) {
+  public ResponseEntity<Object> handleDuplicateKey(DuplicateKeyException exception, final WebRequest
+          request) {
     log.error(GENERIC_MSG,exception);
     ApiError error = ApiError.builder()
             .status(HttpStatus.BAD_REQUEST)

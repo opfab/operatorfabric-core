@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.time.application.IntegrationTestApplication;
+import org.lfenergy.operatorfabric.time.application.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.time.model.ClientTimeData;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
@@ -37,6 +38,7 @@ import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -56,6 +58,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("end-to-end")
 @Tag("amqp")
+@WithMockOpFabUser(login="testAdminUser", roles = { "ADMIN" })
 class TimeControllerShould {
     private MockMvc mockMvc;
 
@@ -66,7 +69,9 @@ class TimeControllerShould {
 
     @BeforeAll
     void setup() throws Exception {
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        this.mockMvc = webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
     }
 
     @Test
