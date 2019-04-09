@@ -4,7 +4,13 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= OperatorFabric (OpFab)
+= OperatorFabric README
+:imagesdir: _README
+:sectnums:
+:toc:
+:toc-title:
+:icons: font
+:hide-uri-scheme:
 
 //TODO check task list
 //TODO Collapse port tables by default?
@@ -16,14 +22,6 @@ image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.oper
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=coverage[Coverage,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Coverage]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=code_smells[Code Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
 image:https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg[Website opfab.github.io,link=http://opfab.github.io/]
-
-:imagesdir: _README
-:sectnums:
-:toc: left
-:toclevels: 2
-:toc-title: OperatorFabric README
-:icons: font
-:hide-uri-scheme:
 
 OperatorFabric is a modular, extensible, industrial-strength and field-tested platform for use in electricity, water, and other utility operations.
 
@@ -41,7 +39,7 @@ To perform their duties, an operator has to interact with multiple applications 
 
 The idea is to aggregate all the notifications from all these applications into a single screen, and to allow the operator to act on them if needed.
 
-image:feed_details_1.png[Feed screen layout,450,300,float="right"]
+image:feed_details_1.png[Feed screen layout,450,300,align="center"]
 
 These notifications are materialized by *cards* sorted in a *feed* according to their period of relevance and their severity.
 When a card is selected in the feed, the right-hand pane displays the *details* of the card: information about the state of the parent process instance in the third-party application that published it, available actions, etc.
@@ -209,7 +207,9 @@ TIP: See `run_all.sh -h` for details.
 .Log into the UI
 
 URL: localhost:2002/ui/
+
 login: admin
+
 password: test
 
 WARNING: It might take a little while for the UI to load even after all services are running.
