@@ -44,7 +44,7 @@ export class LightCard implements LightCard {
 }
 
 export enum Severity {
-    ALARM, ACTION, NOTIFICATION, QUESTION
+    ALARM = "ALARM", ACTION = "ACTION", NOTIFICATION = "NOTIFICATION", QUESTION = "QUESTION"
 
 }
 

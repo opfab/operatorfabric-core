@@ -8,7 +8,19 @@
     "filters": {
       "title": "Filtres",
       "type": {
-        "title": "Type"
+        "title": "Type",
+        "alarm": {
+          "label": "Alarme"
+        },
+        "action": {
+          "label": "Action"
+        },
+        "question": {
+          "label": "Question"
+        },
+        "notification": {
+          "label": "Notification"
+        }
       }
     }
   }

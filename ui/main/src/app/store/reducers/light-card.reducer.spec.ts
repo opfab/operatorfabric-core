@@ -11,7 +11,7 @@ import {createEntityAdapter} from "@ngrx/entity";
 import {LightCard} from "@ofModel/light-card.model";
 import {getOneRandomLigthCard, getRandomAlphanumericValue, getSeveralRandomLightCards} from "@tests/helpers";
 import {AddLightCardFailure, LoadLightCardsFailure} from "@ofActions/light-card.actions";
-import {ApplyFilter, InitFilter} from "@ofActions/feed.actions";
+import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
 import {Filter} from "@ofModel/feed-filter.model";
 
 describe('LightCard Reducer', () => {
@@ -82,20 +82,20 @@ describe('LightCard Reducer', () => {
 
     describe('init filter action', () => {
         it('should return initial state with an additionnal filter', () => {
-            const action = new InitFilter({
-                name: 'testFilter',
-                filter: new Filter(
-                    (card,status)=>true,
-                    false,
-                    {}
-                )});
+            const filters = new Map();
+            const testFilter = new Filter(
+                (card,status)=>true,
+                false,
+                {}
+            );
+            filters.set('testFilter',testFilter);
 
             expect(feedInitialState.filters.size).toBe(0);
-            const result = reducer(feedInitialState, action);
+            const result = reducer(feedInitialState, new InitFilters({filters:filters}));
 
             expect(result.filters.size).toBe(1);
-            expect(result.filters.get('testFilter')).toBe(action.payload.filter);
-            expect(result.filters.get('testFilter').funktion).toBe(action.payload.filter.funktion);
+            expect(result.filters.get('testFilter')).toBe(testFilter);
+            expect(result.filters.get('testFilter').funktion).toBe(testFilter.funktion);
         });
 
     });

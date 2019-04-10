@@ -9,6 +9,18 @@
       "title": "Filters",
       "type": {
         "title": "Type",
+        "alarm": {
+          "label": "Alarm"
+        },
+        "action": {
+          "label": "Action"
+        },
+        "question": {
+          "label": "Question"
+        },
+        "notification": {
+          "label": "Notification"
+        }
       }
     }
   }

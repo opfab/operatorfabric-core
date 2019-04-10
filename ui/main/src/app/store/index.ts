@@ -26,6 +26,7 @@ import {CustomRouterEffects} from "@ofEffects/custom-router.effects";
 import {MenuState} from "@ofStates/menu.state";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {LightCardEffects} from "@ofEffects/light-card.effects";
+import {FeedFiltersEffects} from "@ofEffects/feed-filters.effects";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -42,7 +43,8 @@ export const appEffects = [
     CustomRouterEffects,
     AuthenticationEffects,
     MenuEffects,
-    LightCardEffects];
+    LightCardEffects,
+    FeedFiltersEffects];
 
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,

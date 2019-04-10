@@ -64,12 +64,10 @@ export function reducer(
         }
 
         case FeedActionTypes.InitFilter: {
-            const filters = new Map(state.filters);
-            filters.set(action.payload.name,action.payload.filter);
             return {
                 ...state,
                 loading: false,
-                filters: filters
+                filters: action.payload.filters
             };
         }
 

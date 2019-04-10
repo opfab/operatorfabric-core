@@ -28,7 +28,7 @@ export class FeedComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.lightCards$ = this.store.pipe(
-            select(feedSelectors.selectFeed),
+            select(feedSelectors.selectFilteredFeed),
             catchError(err => of([]))
         );
         this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);

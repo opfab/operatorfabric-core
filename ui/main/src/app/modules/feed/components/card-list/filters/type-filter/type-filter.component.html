@@ -5,19 +5,40 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 <p>
-    <ng-template #filterTypeContent>Configuration goes here</ng-template>
+    <ng-template #filterTypeContent>
+        <form [formGroup]="typeFilterForm" id="type-filter-form">
+            <div class="form-group form-check">
+                <input type="checkbox" id="type-alarm" class="form-check-input" formControlName="alarm">
+                <label for="type-alarm" class="form-check-label" translate>feed.filters.type.alarm.label</label>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" id="type-action" class="form-check-input" formControlName="action">
+                <label for="type-action" class="form-check-label" translate>feed.filters.type.action.label</label>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" id="type-question" class="form-check-input" formControlName="question">
+                <label for="type-question" class="form-check-label" translate>feed.filters.type.question.label</label>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" id="type-notification" class="form-check-input" formControlName="notification">
+                <label for="type-notification" class="form-check-label" translate>feed.filters.type.notification.label</label>
+            </div>
+        </form>
+    </ng-template>
     <ng-template #filterTypeTitle><span translate>feed.filters.type.title</span></ng-template>
     <button type="button" class="btn btn-outline-secondary p-1 mr-2" placement="right"
-            [ngbPopover]="filterTypeContent" [popoverTitle]="filterTypeTitle">
+            [ngbPopover]="filterTypeContent" [popoverTitle]="filterTypeTitle"
+            [autoClose]="false">
         <div class="type-selections">
             <div class="type-row">
-                <div class="type-cell bg-sev-alarm"></div>
-                <div class="type-cell bg-sev-action"></div>
+                <div class="type-cell" [class.bg-sev-alarm]="!(filter$|async).active || (filter$|async).status.alarm"></div>
+                <div class="type-cell" [class.bg-sev-action]="!(filter$|async).active || (filter$|async).status.action"></div>
             </div>
             <div class="type-row">
-                <div class="type-cell bg-sev-question"></div>
-                <div class="type-cell bg-sev-notification"></div>
+                <div class="type-cell" [class.bg-sev-question]="!(filter$|async).active || (filter$|async).status.question"></div>
+                <div class="type-cell" [class.bg-sev-notification]="!(filter$|async).active || (filter$|async).status.notification"></div>
             </div>
         </div>
     </button>
 </p>
+

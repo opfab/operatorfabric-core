@@ -19,11 +19,11 @@ export class ApplyFilter implements Action {
     constructor(public payload:{name: String, active: boolean, status: any}){}
 }
 
-export class InitFilter implements Action {
+export class InitFilters implements Action {
     readonly type = FeedActionTypes.InitFilter
-    constructor(public payload:{name: String, filter: Filter}){}
+    constructor(public payload:{filters: Map<string,Filter>}){}
 }
 
 export type FeedActions =
-    InitFilter
+    InitFilters
     | ApplyFilter;

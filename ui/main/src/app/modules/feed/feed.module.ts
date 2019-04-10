@@ -9,7 +9,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardListComponent} from './components/card-list/card-list.component';
 import {FeedComponent} from './feed.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FeedRoutingModule} from "./feed-routing.module";
 import {NoSelectionComponent} from './components/no-selection/no-selection.component';
 import {TimeLineComponent} from './components/time-line/time-line.component';
@@ -24,6 +24,7 @@ import {TranslateModule} from "@ngx-translate/core";
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         TranslateModule,
         NgbModule.forRoot(),
         CardsModule,
