@@ -18,6 +18,7 @@ import {FiltersComponent} from './components/card-list/filters/filters.component
 import {TypeFilterComponent} from './components/card-list/filters/type-filter/type-filter.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {TranslateModule} from "@ngx-translate/core";
+import { TimeFilterComponent } from './components/card-list/filters/time-filter/time-filter.component';
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import {TranslateModule} from "@ngx-translate/core";
         CardsModule,
         FeedRoutingModule,
     ],
-    declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent],
+    declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent, TimeFilterComponent],
     exports: [FeedComponent]
 })
 export class FeedModule {
