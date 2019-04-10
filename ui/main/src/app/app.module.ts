@@ -21,6 +21,7 @@ import {LoginComponent} from "./components/login/login.component";
 import {IconComponent} from './components/icon/icon.component';
 import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "./translate.config";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import {translateConfig} from "./translate.config";
         StateModule.forRoot(),
         ServicesModule.forRoot(),
         NgbModule,
-        TranslateModule.forRoot(translateConfig)
+        TranslateModule.forRoot(translateConfig),
+        FontAwesomeModule
     ],
     declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent],
     providers: [ { provide: LocationStrategy, useClass: HashLocationStrategy }],
