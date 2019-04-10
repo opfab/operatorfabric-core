@@ -247,13 +247,15 @@ stopCommand(){
 }
 
 projectStatus() {
+#set -x
     projectBuildPath=$2/build
     pid=$(<$projectBuildPath/PIDFILE)
-    if [ -n "$pid" -a -e /proc/$pid ]; then
+    if [ -n "$pid" ] && [ -e /proc/$pid ]; then
       echo -e "$1 (pid: $pid) : \033[0;32mRUNNING\033[0m"
     else
       echo -e "$1 (pid: $pid) : \033[0;31mSTOPPED\033[0m"
     fi
+#    set +x
 }
 
 statusCommand(){
