@@ -12,9 +12,12 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
-import {FilterService} from "@ofServices/filter.service";
+import {FilterService, TYPE_FILTER} from "@ofServices/filter.service";
 import {InitFilters} from "@ofActions/feed.actions";
-import {filter} from "rxjs/operators";
+import {map} from "rxjs/operators";
+import {By} from "@angular/platform-browser";
+import {buildFilterSelector} from "@ofSelectors/feed.selectors";
+import {hot} from "jasmine-marbles";
 
 describe('TypeFilterComponent', () => {
     let component: TypeFilterComponent;
@@ -29,7 +32,7 @@ describe('TypeFilterComponent', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 StoreModule.forRoot(appReducer, storeConfig)],
-            providers: [{provide: Store, useClass: Store},FilterService],
+            providers: [{provide: Store, useClass: Store}, FilterService],
             declarations: [TypeFilterComponent]
         })
             .compileComponents();
@@ -39,13 +42,60 @@ describe('TypeFilterComponent', () => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
         filterService = TestBed.get(FilterService);
-        store.dispatch(new InitFilters({filters:filterService.defaultFilters}));
+        store.dispatch(new InitFilters({filters: filterService.defaultFilters}));
         fixture = TestBed.createComponent(TypeFilterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
     it('should create', () => {
+        //componenet state
         expect(component).toBeTruthy();
+        expect(component.typeFilterForm.get('alarm').value).toBe(true);
+        expect(component.typeFilterForm.get('action').value).toBe(true);
+        expect(component.typeFilterForm.get('question').value).toBe(true);
+        expect(component.typeFilterForm.get('notification').value).toBe(false);
+        //dom structure
+        let debugElement = fixture.debugElement;
+        expect(debugElement.queryAll(By.css('.btn'))).toBeTruthy();
+        expect(debugElement.queryAll(By.css('.btn')).length).toBe(1);
+    });
+    it('should display popover', () => {
+        //componenet state
+        expect(component).toBeTruthy();
+        //dom structure
+        let debugElement = fixture.debugElement;
+        //dom interraction
+        debugElement.queryAll(By.css('.btn'))[0].triggerEventHandler('click', null);
+        fixture.detectChanges();
+        let formQuery = [...new Set(debugElement.queryAll(By.css('#type-filter-form')))];
+        let formDivQuery = [...new Set(debugElement.queryAll(By.css('#type-filter-form > div')))];
+        let checkedQuery = [...new Set(debugElement.queryAll(By.css("input[type=checkbox]:checked")))];
+        let uncheckedQuery = [...new Set(debugElement.queryAll(By.css("input[type=checkbox]:not(:checked)")))];
+        expect(formQuery).toBeTruthy();
+        expect(formQuery.length).toBe(1);
+        expect(formDivQuery).toBeTruthy();
+        expect(formDivQuery.length).toBe(4);
+        expect(checkedQuery.length).toBe(3);
+        expect(uncheckedQuery.length).toBe(1);
+    });
+    it('shouldupdate filter', () => {
+        //componenet state
+        expect(component).toBeTruthy();
+        //dom structure
+        let debugElement = fixture.debugElement;
+        //dom interraction
+        debugElement.queryAll(By.css('.btn'))[0].triggerEventHandler('click', null);
+        fixture.detectChanges();
+        const notificationCheckboxQuery = debugElement.queryAll(By.css('#type-notification'));
+        // notificationCheckboxQuery[0].triggerEventHandler('click',null);
+        notificationCheckboxQuery[0].nativeElement.click();
+        fixture.detectChanges();
+        expect(component.typeFilterForm.get('notification').value).toBe(true);
+        fixture.whenStable().then(() => {
+            expect(store.select(buildFilterSelector(TYPE_FILTER)).pipe(map((filter => filter.status))))
+                .toBeObservable(hot('---a', {a: {alarm: true, action: true, question: true, notification: true}}));
+        });
+
     });
 });
