@@ -7,6 +7,12 @@
   "feed": {
     "filters": {
       "title": "Filtres",
+      "time":{
+        "title":"Temps",
+        "start.label": "Début",
+        "end.label": "Fin",
+        "active.label": "Actif"
+      },
       "type": {
         "title": "Type",
         "alarm": {

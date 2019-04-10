@@ -5,28 +5,48 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TimeFilterComponent } from './time-filter.component';
+import {TimeFilterComponent} from './time-filter.component';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Store, StoreModule} from "@ngrx/store";
+import {appReducer, AppState, storeConfig} from "@ofStore/index";
+import {FilterService} from "@ofServices/filter.service";
+import {InitFilters} from "@ofActions/feed.actions";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 describe('TimeFilterComponent', () => {
-  let component: TimeFilterComponent;
-  let fixture: ComponentFixture<TimeFilterComponent>;
+    let component: TimeFilterComponent;
+    let fixture: ComponentFixture<TimeFilterComponent>;
+    let store: Store<AppState>;
+    let filterService: FilterService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TimeFilterComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NgbModule.forRoot(),
+                FormsModule,
+                ReactiveFormsModule,
+                StoreModule.forRoot(appReducer, storeConfig),
+                FontAwesomeModule
+            ],
+            declarations: [TimeFilterComponent]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TimeFilterComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        store = TestBed.get(Store);
+        spyOn(store, 'dispatch').and.callThrough();
+        filterService = TestBed.get(FilterService);
+        store.dispatch(new InitFilters({filters: filterService.defaultFilters}));
+        fixture = TestBed.createComponent(TimeFilterComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

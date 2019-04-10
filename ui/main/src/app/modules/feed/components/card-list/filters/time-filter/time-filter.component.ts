@@ -6,6 +6,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'of-time-filter',
@@ -13,10 +14,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./time-filter.component.css']
 })
 export class TimeFilterComponent implements OnInit {
+    timeFilterForm: FormGroup;
 
-  constructor() { }
+  constructor() {
+    this.timeFilterForm = this.createFormGroup();
+  }
 
   ngOnInit() {
   }
+
+    private createFormGroup() {
+        return new FormGroup({
+            start: new FormControl(),
+            end: new FormControl()
+        },{updateOn: 'change'});
+    }
 
 }

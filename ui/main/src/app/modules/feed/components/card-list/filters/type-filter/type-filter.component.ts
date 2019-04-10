@@ -26,7 +26,15 @@ import * as _ from 'lodash';
 export class TypeFilterComponent implements OnInit {
     typeFilterForm: FormGroup;
 
-    private filter$: Observable<Filter>;
+    private _filter$: Observable<Filter>;
+
+    get filter$(): Observable<Filter>{
+        return this._filter$;
+    }
+
+    // set filter$(filter: Observable<Filter>) {
+    //     this._filter$ = filter;
+    // }
 
     constructor(private store: Store<AppState>) {
         this.typeFilterForm = this.createFormGroup();
@@ -56,8 +64,8 @@ export class TypeFilterComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.filter$ = this.store.select(buildFilterSelector(TYPE_FILTER));
-        this.filter$.subscribe((next: Filter) => {
+        this._filter$ = this.store.select(buildFilterSelector(TYPE_FILTER));
+        this._filter$.subscribe((next: Filter) => {
             if (next) {
                 this.typeFilterForm.get('alarm').setValue(!next.active || next.status.alarm);
                 this.typeFilterForm.get('action').setValue(!next.active || next.status.action);

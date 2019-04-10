@@ -4,7 +4,6 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<p>
     <ng-template #filterTypeContent>
         <form [formGroup]="typeFilterForm" id="type-filter-form">
             <div class="form-group form-check">
@@ -26,9 +25,9 @@
         </form>
     </ng-template>
     <ng-template #filterTypeTitle><span translate>feed.filters.type.title</span></ng-template>
-    <button type="button" class="btn btn-outline-secondary p-1 mr-2" placement="right"
+    <button type="button" class="btn btn-outline-secondary p-1 mr-2 border-0" placement="right"
             [ngbPopover]="filterTypeContent" [popoverTitle]="filterTypeTitle"
-            [autoClose]="false">
+            [autoClose]="'outside'">
         <div class="type-selections">
             <div class="type-row">
                 <div class="type-cell" [class.bg-sev-alarm]="!(filter$|async).active || (filter$|async).status.alarm"></div>
@@ -40,5 +39,4 @@
             </div>
         </div>
     </button>
-</p>
 

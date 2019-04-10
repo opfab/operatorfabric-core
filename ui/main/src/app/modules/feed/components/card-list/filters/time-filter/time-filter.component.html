@@ -4,6 +4,21 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<p>
-  time-filter works!
-</p>
+  <ng-template #filterTimeContent>
+    <form [formGroup]="timeFilterForm" id="type-filter-form">
+      <div class="form-group">
+        <label for="time-start" translate>feed.filters.time.start.label</label>
+        <input type="datetime-local" class="form-control" id="time-start" formControlName="start">
+      </div>
+      <div class="form-group">
+        <label for="time-end" translate>feed.filters.time.end.label</label>
+        <input type="datetime-local" class="form-control" id="time-end" formControlName="end">
+      </div>
+    </form>
+  </ng-template>
+  <ng-template #filterTimeTitle><span translate>feed.filters.time.title</span></ng-template>
+  <button type="button" class="btn btn-outline-secondary p-1 mr-2 border-0" placement="right"
+          [ngbPopover]="filterTimeContent" [popoverTitle]="filterTimeTitle"
+          [autoClose]="'outside'">
+    <fa-icon icon="clock"></fa-icon>
+  </button>

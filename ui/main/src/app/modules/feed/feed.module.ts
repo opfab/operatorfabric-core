@@ -19,7 +19,11 @@ import {TypeFilterComponent} from './components/card-list/filters/type-filter/ty
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {TranslateModule} from "@ngx-translate/core";
 import { TimeFilterComponent } from './components/card-list/filters/time-filter/time-filter.component';
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {faClock} from "@fortawesome/free-solid-svg-icons";
 
+library.add(faClock);
 
 @NgModule({
     imports: [
@@ -30,6 +34,7 @@ import { TimeFilterComponent } from './components/card-list/filters/time-filter/
         NgbModule.forRoot(),
         CardsModule,
         FeedRoutingModule,
+        FontAwesomeModule
     ],
     declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent, TimeFilterComponent],
     exports: [FeedComponent]

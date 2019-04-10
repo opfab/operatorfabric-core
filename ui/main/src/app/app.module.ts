@@ -35,8 +35,7 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
         StateModule.forRoot(),
         ServicesModule.forRoot(),
         NgbModule,
-        TranslateModule.forRoot(translateConfig),
-        FontAwesomeModule
+        TranslateModule.forRoot(translateConfig)
     ],
     declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent],
     providers: [ { provide: LocationStrategy, useClass: HashLocationStrategy }],
