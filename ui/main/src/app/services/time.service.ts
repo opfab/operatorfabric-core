@@ -20,7 +20,7 @@ export class TimeService {
     return Date.parse(value);
   }
 
-  public toString(value:number):string{
+  public asString(value:number):string{
     return new Date(value).toISOString();
   }
 }

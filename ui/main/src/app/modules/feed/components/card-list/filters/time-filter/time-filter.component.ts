@@ -49,13 +49,13 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
             if (next) {
                 if (this.timeService.parseString(this.timeFilterForm.get('start').value) != next.status.start) {
                     if(!!next.status.start)
-                        this.timeFilterForm.get('start').setValue(this.timeService.toString(next.status.start));
+                        this.timeFilterForm.get('start').setValue(this.timeService.asString(next.status.start));
                     else
                         this.timeFilterForm.get('start').setValue(null);
                 }
                 if (this.timeService.parseString(this.timeFilterForm.get('end').value) != next.status.end) {
                     if(!!next.status.end)
-                        this.timeFilterForm.get('end').setValue(this.timeService.toString(next.status.end));
+                        this.timeFilterForm.get('end').setValue(this.timeService.asString(next.status.end));
                     else
                         this.timeFilterForm.get('end').setValue(null);
                 }

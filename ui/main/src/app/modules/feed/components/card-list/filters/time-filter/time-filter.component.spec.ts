@@ -15,6 +15,7 @@ import {appReducer, AppState, storeConfig} from "@ofStore/index";
 import {FilterService} from "@ofServices/filter.service";
 import {InitFilters} from "@ofActions/feed.actions";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {ServicesModule} from "@ofServices/services.module";
 
 describe('TimeFilterComponent', () => {
     let component: TimeFilterComponent;
@@ -29,7 +30,8 @@ describe('TimeFilterComponent', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 StoreModule.forRoot(appReducer, storeConfig),
-                FontAwesomeModule
+                FontAwesomeModule,
+                ServicesModule
             ],
             declarations: [TimeFilterComponent]
         })
