@@ -1,0 +1,5 @@
+dependencies{
+    compile spring.securityTest
+    compile project(':tools:spring:spring-oauth2-utilities')
+    compile project(":client:users-client-data")
+}
