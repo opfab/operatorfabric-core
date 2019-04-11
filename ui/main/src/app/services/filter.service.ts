@@ -7,7 +7,7 @@
 
 import {Injectable} from '@angular/core';
 import {Filter} from "@ofModel/feed-filter.model";
-import {Severity} from "@ofModel/light-card.model";
+import {LightCard, Severity} from "@ofModel/light-card.model";
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +20,7 @@ export class FilterService {
         this._defaultFilters = this.initFilters();
     }
 
-    get defaultFilters(): Map<string, Filter> {
+    get defaultFilters(): Map<FilterType, Filter> {
         return this._defaultFilters;
     }
 
@@ -57,13 +57,40 @@ export class FilterService {
         );
     }
 
+    private initTimeFilter() {
+        return new Filter(
+            (card:LightCard, status) => {
+                if (!!status.start && !!status.end) {
+                    if (!card.endDate)
+                        return card.startDate <= status.end;
+                    return status.start <= card.startDate && card.startDate <= status.end
+                        || status.start <= card.endDate && card.endDate <= status.start
+                        || card.startDate <= status.start && status.end <= card.endDate;
+                } else if (!!status.start) {
+                    return !card.endDate || status.start <= card.endDate;
+                } else if (!!status.end) {
+                    return card.startDate <= status.end;
+                }
+                console.warn("Unexpected time filter situation");
+                return false;
+            },
+            false,
+            {start: null, end: null})
+    }
+
+
     private initFilters(): Map<string, Filter> {
         const filters = new Map();
-        filters.set(TYPE_FILTER, this.initTypeFilter());
-        filters.set(RECIPIENT_FILTER, this.initRecipientFilter());
+        filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
+        filters.set(FilterType.RECIPIENT_FILTER, this.initRecipientFilter());
+        filters.set(FilterType.TIME_FILTER, this.initTimeFilter());
         return filters;
     }
 }
 
-export const TYPE_FILTER = 'type';
-export const RECIPIENT_FILTER = 'recipient';
+export enum FilterType {
+    TYPE_FILTER,
+    RECIPIENT_FILTER,
+    TIME_FILTER,
+    TEST_FILTER
+}

@@ -15,6 +15,7 @@ import {CardService} from './card.service';
 import {GuidService} from "@ofServices/guid.service";
 import {TimeService} from "@ofServices/time.service";
 import {ThirdsService} from "@ofServices/thirds.service";
+import {FilterService} from "@ofServices/filter.service";
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import {ThirdsService} from "@ofServices/thirds.service";
             useClass: TokenInjector,
             multi: true
         },
-        GuidService
+        GuidService,
+        FilterService
 
     ]
 })

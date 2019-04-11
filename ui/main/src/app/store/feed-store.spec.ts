@@ -18,6 +18,7 @@ import {cold} from "jasmine-marbles";
 import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
 import {Filter} from "@ofModel/feed-filter.model";
 import {tap} from "rxjs/operators";
+import {FilterType} from "@ofServices/filter.service";
 
 describe('Feed store', () => {
     let store: Store<AppState>;
@@ -34,7 +35,7 @@ describe('Feed store', () => {
         spyOn(store, 'dispatch').and.callThrough();
     }));
 
-    it('should be filter when an all or nothing filter is activated', () => {
+    it('should be filtered when an all or nothing filter is activated', () => {
         const lightCards: LightCard[] = getSeveralRandomLightCards(3);
         const loadCardAction = new LoadLightCardsSuccess({lightCards: lightCards});
         const filters = new Map();
@@ -43,9 +44,9 @@ describe('Feed store', () => {
             true,
             {}
         );
-        filters.set('testFilter', testFilter);
+        filters.set(FilterType.TEST_FILTER, testFilter);
         const initFilterAction = new InitFilters({filters: filters});
-        const applyFilterAction = new ApplyFilter({name: 'testFilter', active: false, status: {}});
+        const applyFilterAction = new ApplyFilter({name: FilterType.TEST_FILTER, active: false, status: {}});
 
         const feed = store.select(selectFilteredFeed).pipe(tap(feed => {
             console.debug(feed)
@@ -62,7 +63,7 @@ describe('Feed store', () => {
 
     });
 
-    it('should be filter when an evict odd filter is activated', () => {
+    it('should be filtered when an evict odd filter is activated', () => {
         const lightCards: LightCard[] = getSeveralRandomLightCards(3);
         const loadCardAction = new LoadLightCardsSuccess({lightCards: lightCards});
         let count = -1;
@@ -75,9 +76,9 @@ describe('Feed store', () => {
             true,
             {}
         );
-        filters.set('testFilter', testFilter);
+        filters.set(FilterType.TEST_FILTER, testFilter);
         const initFilterAction = new InitFilters({filters:filters});
-        const applyFilterAction = new ApplyFilter({name: 'testFilter', active: false, status: {}});
+        const applyFilterAction = new ApplyFilter({name: FilterType.TEST_FILTER, active: false, status: {}});
 
         const feed = store.select(selectFilteredFeed).pipe(tap(feed => {
             console.debug(feed)

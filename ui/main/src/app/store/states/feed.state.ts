@@ -8,6 +8,7 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {LightCard} from '@ofModel/light-card.model';
 import {Filter} from "@ofModel/feed-filter.model";
+import {FilterType} from "@ofServices/filter.service";
 
 /**
  * The Feed State consist of:
@@ -23,7 +24,7 @@ export interface CardFeedState extends EntityState<LightCard> {
     lastCards: LightCard[];
     loading: boolean;
     error: string;
-    filters: Map<String,Filter>;
+    filters: Map<FilterType,Filter>;
 }
 
 export function sortByStartDate(card1: LightCard, card2: LightCard){

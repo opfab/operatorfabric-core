@@ -13,6 +13,7 @@ import {getOneRandomLigthCard, getRandomAlphanumericValue, getSeveralRandomLight
 import {AddLightCardFailure, LoadLightCardsFailure} from "@ofActions/light-card.actions";
 import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
 import {Filter} from "@ofModel/feed-filter.model";
+import {FilterType} from "@ofServices/filter.service";
 
 describe('LightCard Reducer', () => {
 
@@ -88,14 +89,14 @@ describe('LightCard Reducer', () => {
                 false,
                 {}
             );
-            filters.set('testFilter',testFilter);
+            filters.set(FilterType.TEST_FILTER,testFilter);
 
             expect(feedInitialState.filters.size).toBe(0);
             const result = reducer(feedInitialState, new InitFilters({filters:filters}));
 
             expect(result.filters.size).toBe(1);
-            expect(result.filters.get('testFilter')).toBe(testFilter);
-            expect(result.filters.get('testFilter').funktion).toBe(testFilter.funktion);
+            expect(result.filters.get(FilterType.TEST_FILTER)).toBe(testFilter);
+            expect(result.filters.get(FilterType.TEST_FILTER).funktion).toBe(testFilter.funktion);
         });
 
     });
@@ -103,7 +104,7 @@ describe('LightCard Reducer', () => {
     describe('apply filter action', () => {
         it('should return initial state if the filter is not in state', () => {
             const action = new ApplyFilter({
-                name: 'testFilter',
+                name: FilterType.TEST_FILTER,
                 active: true,
                 status: {}
             });
@@ -120,23 +121,23 @@ describe('LightCard Reducer', () => {
                 false,
                 {})
             const previousState = {...feedInitialState, filters: new Map()}
-            previousState.filters.set('testFilter', filter);
+            previousState.filters.set(FilterType.TEST_FILTER, filter);
 
             const action = new ApplyFilter({
-                name: 'testFilter',
+                name: FilterType.TEST_FILTER,
                 active: true,
                 status: {prop: 'value'}
             });
 
             expect(previousState.filters.size).toBe(1);
-            expect(previousState.filters.get('testFilter')).not.toBeNull();
-            expect(previousState.filters.get('testFilter').active).toBeFalsy();
+            expect(previousState.filters.get(FilterType.TEST_FILTER)).not.toBeNull();
+            expect(previousState.filters.get(FilterType.TEST_FILTER).active).toBeFalsy();
             const result = reducer(previousState, action);
 
             expect(result.filters.size).toBe(1);
-            expect(result.filters.get('testFilter')).not.toBeNull();
-            expect(result.filters.get('testFilter').active).toBeTruthy();
-            expect(result.filters.get('testFilter').status.prop).toBe('value');
+            expect(result.filters.get(FilterType.TEST_FILTER)).not.toBeNull();
+            expect(result.filters.get(FilterType.TEST_FILTER).active).toBeTruthy();
+            expect(result.filters.get(FilterType.TEST_FILTER).status.prop).toBe('value');
         });
 
     });

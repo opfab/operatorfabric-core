@@ -5,17 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Observable, timer} from "rxjs";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Observable, Subject, timer} from "rxjs";
 import {Filter} from "@ofModel/feed-filter.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
 import {FormControl, FormGroup} from "@angular/forms";
-import {TYPE_FILTER} from "@ofServices/filter.service";
-import {debounce, distinctUntilChanged} from "rxjs/operators";
+import {debounce, distinctUntilChanged, first, takeUntil} from "rxjs/operators";
 import {ApplyFilter} from "@ofActions/feed.actions";
 import * as _ from 'lodash';
+import {FilterType} from "@ofServices/filter.service";
 
 
 @Component({
@@ -23,7 +23,8 @@ import * as _ from 'lodash';
     templateUrl: './type-filter.component.html',
     styleUrls: ['./type-filter.component.scss']
 })
-export class TypeFilterComponent implements OnInit {
+export class TypeFilterComponent implements OnInit, OnDestroy {
+    private ngUnsubscribe$ = new Subject<void>();
     typeFilterForm: FormGroup;
 
     private _filter$: Observable<Filter>;
@@ -38,20 +39,6 @@ export class TypeFilterComponent implements OnInit {
 
     constructor(private store: Store<AppState>) {
         this.typeFilterForm = this.createFormGroup();
-        this.typeFilterForm
-            .valueChanges
-            .pipe(
-                distinctUntilChanged((formA, formB)=>{
-                    return _.isEqual(formA,formB);
-                }),
-                debounce(() => timer(500)))
-            .subscribe(form => store.dispatch(
-                new ApplyFilter({
-                    name: TYPE_FILTER,
-                    active: !(form.alarm && form.action && form.question && form.notification),
-                    status: form
-                }))
-            )
     }
 
     private createFormGroup() {
@@ -63,9 +50,15 @@ export class TypeFilterComponent implements OnInit {
         },{updateOn: 'change'});
     }
 
+    ngOnDestroy() {
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
+    }
+
+
     ngOnInit() {
-        this._filter$ = this.store.select(buildFilterSelector(TYPE_FILTER));
-        this._filter$.subscribe((next: Filter) => {
+        this._filter$ = this.store.select(buildFilterSelector(FilterType.TYPE_FILTER));
+        this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
             if (next) {
                 this.typeFilterForm.get('alarm').setValue(!next.active || next.status.alarm);
                 this.typeFilterForm.get('action').setValue(!next.active || next.status.action);
@@ -77,7 +70,24 @@ export class TypeFilterComponent implements OnInit {
                 this.typeFilterForm.get('question').setValue(true);
                 this.typeFilterForm.get('notification').setValue(true);
             }
-        })
+        });
+        this._filter$.pipe(first(),takeUntil(this.ngUnsubscribe$)).subscribe(()=>{
+            this.typeFilterForm
+                .valueChanges
+                .pipe(
+                    takeUntil(this.ngUnsubscribe$),
+                    distinctUntilChanged((formA, formB)=>{
+                        return _.isEqual(formA,formB);
+                    }),
+                    debounce(() => timer(500)))
+                .subscribe(form => this.store.dispatch(
+                    new ApplyFilter({
+                        name: FilterType.TYPE_FILTER,
+                        active: !(form.alarm && form.action && form.question && form.notification),
+                        status: form
+                    }))
+                );
+        });
     }
 
 

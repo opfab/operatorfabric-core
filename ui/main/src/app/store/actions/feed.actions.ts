@@ -8,6 +8,7 @@
 import {Action} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
 import {Filter} from "@ofModel/feed-filter.model";
+import {FilterType} from "@ofServices/filter.service";
 
 export enum FeedActionTypes {
     ApplyFilter = '[Feed] Change filter Status',
@@ -16,12 +17,12 @@ export enum FeedActionTypes {
 
 export class ApplyFilter implements Action {
     readonly type = FeedActionTypes.ApplyFilter
-    constructor(public payload:{name: String, active: boolean, status: any}){}
+    constructor(public payload:{name: FilterType, active: boolean, status: any}){}
 }
 
 export class InitFilters implements Action {
     readonly type = FeedActionTypes.InitFilter
-    constructor(public payload:{filters: Map<string,Filter>}){}
+    constructor(public payload:{filters: Map<FilterType,Filter>}){}
 }
 
 export type FeedActions =

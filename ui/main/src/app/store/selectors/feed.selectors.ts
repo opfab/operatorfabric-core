@@ -10,6 +10,7 @@ import {LightCardAdapter} from '@ofStates/feed.state';
 import {AppState} from "@ofStore/index";
 import {Filter} from "@ofModel/feed-filter.model";
 import {LightCard} from "@ofModel/light-card.model";
+import {FilterType} from "@ofServices/filter.service";
 
 export const selectLightCardsState = (state:AppState) => state.feed;
 
@@ -42,7 +43,7 @@ export const selectFilteredFeed = createSelector(selectFeed,selectActiveFiltersA
       return feed.filter(card=>Filter.chainFilter(card,filters));
     else return feed;
     })
-export function buildFilterSelector(name:string){
+export function buildFilterSelector(name:FilterType){
     return createSelector(selectFilter,(filters)=>{
         return filters.get(name);
     });

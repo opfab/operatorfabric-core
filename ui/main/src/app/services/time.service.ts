@@ -15,4 +15,12 @@ export class TimeService {
   public currentTime():number{
     return Date.now();
   }
+
+  public parseString(value:string):number{
+    return Date.parse(value);
+  }
+
+  public toString(value:number):string{
+    return new Date(value).toISOString();
+  }
 }

@@ -12,7 +12,7 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
-import {FilterService, TYPE_FILTER} from "@ofServices/filter.service";
+import {FilterService, FilterType} from "@ofServices/filter.service";
 import {InitFilters} from "@ofActions/feed.actions";
 import {map} from "rxjs/operators";
 import {By} from "@angular/platform-browser";
@@ -93,7 +93,7 @@ describe('TypeFilterComponent', () => {
         fixture.detectChanges();
         expect(component.typeFilterForm.get('notification').value).toBe(true);
         fixture.whenStable().then(() => {
-            expect(store.select(buildFilterSelector(TYPE_FILTER)).pipe(map((filter => filter.status))))
+            expect(store.select(buildFilterSelector(FilterType.TYPE_FILTER)).pipe(map((filter => filter.status))))
                 .toBeObservable(hot('---a', {a: {alarm: true, action: true, question: true, notification: true}}));
         });
 
