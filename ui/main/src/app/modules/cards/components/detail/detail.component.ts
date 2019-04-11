@@ -9,7 +9,7 @@ import {Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Action, Card, CardDetail} from '@ofModel/card.model';
 import {ThirdsService} from "../../../../services/thirds.service";
 import {HandlebarsService} from "../../services/handlebars.service";
-import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {DomSanitizer, SafeHtml, SafeResourceUrl} from "@angular/platform-browser";
 
 @Component({
     selector: 'of-detail',
@@ -19,6 +19,7 @@ export class DetailComponent implements OnInit {
     public active = false;
     @Input() detail: CardDetail;
     @Input() card: Card;
+    readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _htmlContent: SafeHtml;
 
     constructor(private element: ElementRef,
@@ -28,6 +29,26 @@ export class DetailComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.initializeHrefsOfCssLink();
+        this.initializeHandlebarsTemplates();
+    }
+
+    private initializeHrefsOfCssLink() {
+        if (this.detail && this.detail.styles) {
+            const publisher = this.card.publisher;
+            const publisherVersion = this.card.publisherVersion;
+            this.detail.styles.forEach(style => {
+                const cssUrl = this.thirds.computeThirdCssUrl(publisher, style, publisherVersion);
+                //needed to instantiate href of link for css in component rendering
+                const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
+                this.hrefsOfCssLink.push(safeCssUrl);
+
+                console.log(`this is the safe resource Url for css '${safeCssUrl.toString()}' and with local version '${safeCssUrl.toLocaleString()}'`)
+            });
+        }
+    }
+
+    private initializeHandlebarsTemplates() {
         this.handlebars.executeTemplate(this.detail.templateName, this.card).subscribe(
             html => {
                 this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
@@ -36,8 +57,9 @@ export class DetailComponent implements OnInit {
                     this.bindActions()
                 });
             }
-        )
+        );
     }
+
 
     get htmlContent() {
         return this._htmlContent;
@@ -63,10 +85,10 @@ export class DetailComponent implements OnInit {
         const buttons = <HTMLButtonElement[]>this.element.nativeElement.getElementsByTagName('button');
 
         for (let button of buttons) {
-            if(button.attributes['action-id']) {
+            if (button.attributes['action-id']) {
                 const actionId = button.attributes['action-id'].nodeValue;
                 if (actionId) {
-                    this.attachAction(button, this.card.actions[actionId],actionId);
+                    this.attachAction(button, this.card.actions[actionId], actionId);
                 }
             }
         }
@@ -78,17 +100,17 @@ export class DetailComponent implements OnInit {
             for (let c of action.buttonStyle.split(' ')) {
                 button.classList.add(c);
             }
-        }else{
+        } else {
             button.classList.add('btn-light');
         }
         if (action.contentStyle) {
             for (let c of action.contentStyle.split(' ')) {
                 button.children[0].classList.add(c);
             }
-        }else{
-            button.children[0].classList.add('fa', 'fa-warning','text-dark');
+        } else {
+            button.children[0].classList.add('fa', 'fa-warning', 'text-dark');
         }
-        button.addEventListener('click',(event: Event) =>{
+        button.addEventListener('click', (event: Event) => {
             alert(`${actionId} was triggered.\nAction handling is not yet implemented`);
         });
     }

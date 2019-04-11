@@ -7,8 +7,8 @@
 
 import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 
-import { DetailComponent } from './detail.component';
-import {getOneRandomCard} from '@tests/helpers';
+import {DetailComponent} from './detail.component';
+import {getOneRandomCard, getOneRandomCardWithRandomDetails, getRandomIndex} from '@tests/helpers';
 import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
@@ -114,4 +114,29 @@ describe('DetailComponent', () => {
             done();
         },1000);
     });
+    it('should create css link when styles are set in the details', (done)=>{
+        component.card = getOneRandomCardWithRandomDetails();
+        const details = component.card.details
+        component.detail = details[getRandomIndex(details)];
+        const styles = component.detail.styles;
+        expect(component.card).toBeTruthy();
+        setTimeout( ()=>{
+            fixture.detectChanges();
+            const linkChildren = fixture.debugElement.queryAll(By.css('link'));
+            //there are as many link tags as style in component.detail
+            expect(linkChildren.length).toEqual(styles.length);
+
+            let hrefs = '';
+            linkChildren.forEach(link => {
+                const native = link.nativeElement;
+                const url = native.getAttribute('href');
+               hrefs+=url;
+            });
+            // all styles are present in the link href urls
+            styles.forEach(style =>{
+                expect(hrefs.includes(style)).toEqual(true);
+            });
+            done();
+        }, 1000);
+    })
 });

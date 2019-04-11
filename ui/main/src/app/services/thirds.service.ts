@@ -6,13 +6,13 @@
  */
 
 import {Injectable, Injector} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams, HttpUrlEncodingCodec} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {AuthenticationService} from "@ofServices/authentication.service";
 import {empty, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
 import {Map} from "../model/map";
-import {catchError, filter, map, reduce, switchMap, tap} from "rxjs/operators";
+import {catchError, filter, map, reduce, switchMap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
@@ -21,15 +21,17 @@ import {Third, ThirdMenu} from "@ofModel/thirds.model";
 
 @Injectable()
 export class ThirdsService {
-    private thirdsUrl: string;
+    readonly thirdsUrl: string;
     private loaded: string[] = [];
     private loading: string[] = [];
-    private initiated = false;
+    private urlCleaner: HttpUrlEncodingCodec;
 
     constructor(private httpClient: HttpClient,
                 private authenticationService: AuthenticationService,
                 private store: Store<AppState>,
-                private $injector: Injector) {
+                private $injector: Injector,
+    ) {
+        this.urlCleaner = new HttpUrlEncodingCodec();
         this.thirdsUrl = `${environment.urls.thirds}`;
     }
 
@@ -42,6 +44,13 @@ export class ThirdsService {
             headers: this.authenticationService.getSecurityHeader(),
             responseType: 'text'
         })
+    }
+
+    computeThirdCssUrl(publisher: string, styleName: string, version: string){
+        //manage url character encoding
+        const resourceUrl = this.urlCleaner.encodeValue(`${this.thirdsUrl}/${publisher}/css/${styleName}`);
+        const versionParam = new HttpParams().set('version',version);
+        return `${resourceUrl}?${versionParam.toString()}`;
     }
 
     fetchI18nJson(publisher: string, version: string, locales: string[]): Observable<Map<any>> {

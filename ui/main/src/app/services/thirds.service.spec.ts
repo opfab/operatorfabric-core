@@ -14,7 +14,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "../store/index";
-import {getOneRandomLigthCard, getRandomMenu} from "../../tests/helpers";
+import {getOneRandomLigthCard, getRandomAlphanumericValue, getRandomMenu} from "../../tests/helpers";
 import * as _ from 'lodash';
 import {LoadLightCardsSuccess} from "../store/actions/light-card.actions";
 import {LightCard} from "../model/light-card.model";
@@ -26,6 +26,7 @@ import {LightCardEffects} from "@ofEffects/light-card.effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {empty, from, merge, Observable, of, zip} from "rxjs";
 import {switchMap} from "rxjs/operators";
+import {HttpUrlEncodingCodec} from "@angular/common/http";
 
 describe('Thirds Services', () => {
     let injector: TestBed;
@@ -309,6 +310,51 @@ describe('Thirds Services', () => {
             done();
         }, 1000);
     });
+    it('should compute url with encoding special characters', () => {
+        const urlFromPublishWithSpaces = thirdsService.computeThirdCssUrl('publisher with spaces'
+            , getRandomAlphanumericValue(3,12)
+            ,getRandomAlphanumericValue(2.5));
+        expect(urlFromPublishWithSpaces.includes(' ')).toEqual(false);
+        let dico = new Map();
+        dico.set('À','%C3%80');
+        dico.set('à','%C3%A0');
+        dico.set('É','%C3%89');
+        dico.set('é','%C3%A9');
+        dico.set('È','%C3%88');
+        dico.set('è','%C3%A8');
+        dico.set('Â','%C3%82');
+        dico.set('â','%C3%A2');
+        dico.set('Ô','%C3%94');
+        dico.set('ô','%C3%B4');
+        dico.set('Ù','%C3%99');
+        dico.set('ù','%C3%B9');
+        dico.set('Ï','%C3%8F');
+        dico.set('ï','%C3%AF');
+        let stringToTest="";
+        for(let char of dico.keys()){
+            stringToTest +=char;
+        }
+        const urlFromPublishWithAccentuatedChar = thirdsService.computeThirdCssUrl(`publisherWith${stringToTest}`
+            , getRandomAlphanumericValue(3,12)
+            ,getRandomAlphanumericValue(3,4));
+        dico.forEach((value,key)=>{
+                expect(urlFromPublishWithAccentuatedChar.includes(key)).toEqual(false);
+                //`should normally contain '${value}'`
+                expect(urlFromPublishWithAccentuatedChar.includes(value)).toEqual(true);
+        });
+        const urlWithSpacesInVersion=thirdsService.computeThirdCssUrl(getRandomAlphanumericValue(5,12),getRandomAlphanumericValue(5.12),
+            'some spaces in version');
+        expect(urlWithSpacesInVersion.includes(' ')).toEqual(false);
+
+        const urlWithAccentuatedCharsInVersion=thirdsService.computeThirdCssUrl(getRandomAlphanumericValue(5,12),getRandomAlphanumericValue(5.12)
+            ,`${stringToTest}InVersion`);
+        dico.forEach((value,key)=>{
+            expect(urlWithAccentuatedCharsInVersion.includes(key)).toEqual(false);
+            //`should normally contain '${value}'`
+            expect(urlWithAccentuatedCharsInVersion.includes(value)).toEqual(true);
+        });
+
+    })
 
 })
 ;

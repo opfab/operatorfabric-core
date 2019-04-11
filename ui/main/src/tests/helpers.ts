@@ -7,7 +7,7 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Action, ActionType, Card, CardDetail} from "@ofModel/card.model";
+import {Action, ActionType, Card, CardDetail, TitlePosition} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
 import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
@@ -69,7 +69,7 @@ export function getRandomThird(): Third[] {
 //     return new I18nData();
 // }
 
-// completemet aléatoire sans control
+// fully random without any control
 export function getOneRandomAddCardOperation(): CardOperation {
     const numberOfCards = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(5);
     const now = new Date().getTime();
@@ -80,13 +80,26 @@ export function getOneRandomAddCardOperation(): CardOperation {
         getSeveralRandomLightCards(numberOfCards)
     );
 }
+//heavily based on enum implementation
+export function  pickARandomItemOfAnEnum<E>(currentEnum:E):E {
+    const keys = Object.keys(currentEnum).filter(k=>{
+        let parsedInt = parseInt(k)
+        let isNum = !isNaN(parsedInt);
+        return isNum;
+    });
+    const randomIndex = getRandomIndex(keys);
+    let key = keys[randomIndex];
+    return currentEnum[key];
+}
 
-// export function pickARandomItemOfAnEnum<E>(enumeration: any): E {
-//     const keys = Object.keys(enumeration);
-//     const numberOfEnumItems = keys.length;
-//     const randomIndex = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(numberOfEnumItems);
-//     return <E>keys[randomIndex];
-// }
+
+export function getRandomIndex<E>(array: E[]){
+    if(array && array.length >0){
+    return generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(0,array.length);
+    }else{
+        return 0;
+    }
+}
 
 export function getOneRandomLigthCard(card?:any): LightCard {
     card = card?card:{};
@@ -132,11 +145,42 @@ export function getOneRandomCard(card?:any): Card {
         getRandomI18nData(),
         getRandomI18nData(),
         card.data?card.data:{data: "data"},
+        card.details?card.details:
         [new CardDetail(null, getRandomI18nData(),null,"template1",null),
             new CardDetail(null, getRandomI18nData(),null,"template2",null),],
         actions
     );
     return oneCard;
+}
+
+export function getOneRandomCardWithRandomDetails(min=2,max=5,card?:any):Card{
+    const randomDetails = generateRandomArray(min,max,getOneRandomCardDetail);
+    card = card?card:{};
+    card.details=card.details?card.details:randomDetails;
+    return getOneRandomCard(card);
+}
+
+export function getOneRandomCardDetail(cardDetail?:any):CardDetail{
+    cardDetail = cardDetail?cardDetail:{};
+    const titlePosition = cardDetail.titlePosition ? cardDetail.titlePosition : pickARandomItemOfAnEnum(TitlePosition);
+    const titleKey = cardDetail.title?cardDetail.title:getRandomI18nData();
+    const titleStyle = cardDetail.titleStyle?cardDetail.titleStyle:getRandomAlphanumericValue(5,12);
+    // const templateName = cardDetail.templateName?cardDetail.templateName:getRandomAlphanumericValue(4,12);
+    const templateName = 'template1';
+    const genString = () => getRandomAlphanumericValue(5,13);
+
+    const styles=generateRandomArray(1,5,genString);
+    return new CardDetail(titlePosition, titleKey,titleStyle,templateName,styles);
+}
+
+export function generateRandomArray<T>(min =1, max = 2, func:()=>T):Array<T>{
+    let size = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min,max);
+    const array = [];
+    for(let i = 0; i<size;++i){
+        array[i]=func();
+    }
+
+    return array;
 }
 
 export function getSeveralRandomLightCards(numberOfCards = 1): LightCard[] {
