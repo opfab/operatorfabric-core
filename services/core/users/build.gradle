@@ -2,6 +2,7 @@ dependencies {
     compile boot.starterWeb, boot.starterJetty
     compile project(':tools:spring:spring-mongo-utilities')
     compile project(':tools:spring:spring-oauth2-utilities')
+    testCompile spring.securityTest
 //    compile project(':client:users-client-data')
 //    compile project(':tools:spring:spring-amqp-time-utilities')
 }

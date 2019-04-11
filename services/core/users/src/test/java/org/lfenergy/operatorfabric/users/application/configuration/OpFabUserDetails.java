@@ -5,31 +5,46 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.lfenergy.operatorfabric.springtools.configuration.test;
+package org.lfenergy.operatorfabric.users.application.configuration;
 
+import lombok.AllArgsConstructor;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-import static org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities.computeAuthorities;
-
 /**
- * This class extends the OperatorFabric custom {@link User} and implements Spring Security's {@link UserDetails} to serve as a mock in tests (see {@link WithMockOpFabUser})
- * A separate class had to be created in the users-business-service module for the same purpose (see details there) so any changes made in this class should be reflected there.
+ * This class implements the OperatorFabric custom {@link User} and implements Spring Security's {@link UserDetails} to serve as a mock in tests (see {@link WithMockOpFabUser})
+ * The behaviour is similar to the OpFabUserDetails class defined in the tools/spring/spring-test-utilities module used by the other services, which extends the User class from the client-data module.
+ * This clashed with the User interface already present in the users-business-service module (same qualified name), so a separate class had to be created for the Users service, this time implementing the User interface.
  *
  * @author Alexandra Guironnet
  */
-public class OpFabUserDetails extends User implements UserDetails {
+@AllArgsConstructor
+public class OpFabUserDetails implements UserDetails, User {
 
-    public OpFabUserDetails(String login, String firstName, String lastName, List<String> roles){
-        login(login);
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setGroups(roles);
+    private String login = null;
+    private String firstName = null;
+    private String lastName = null;
+    private List<String> groups = null;
+
+    /**
+     * Creates Authority list from user's groups (ROLE_[group name])
+     * Similar to the method of the same name defined in org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities,
+     * but using the User interface from the users-business-service module rather than the User class from client-data.
+     * @param user user model data
+     * @return list of authority
+     */
+    private static List<GrantedAuthority> computeAuthorities(User user) {
+        return AuthorityUtils.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size ->
+                new
+                        String[size]));
     }
+
+    //Methods from the UserDetails interface
 
     /**
      * Returns the authorities granted to the user. Cannot return <code>null</code>.
@@ -105,5 +120,47 @@ public class OpFabUserDetails extends User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    //Methods from the User interface
+
+    @Override
+    public String getLogin() {
+        return login;
+    }
+
+    @Override
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    @Override
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @Override
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    @Override
+    public String getLastName() {
+        return lastName;
+    }
+
+    @Override
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    @Override
+    public List<String> getGroups() {
+        return groups;
+    }
+
+    @Override
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
     }
 }

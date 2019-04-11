@@ -10,6 +10,8 @@ package org.lfenergy.operatorfabric.users.controllers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
+import org.lfenergy.operatorfabric.users.application.configuration.WithMockOpFabUser;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -29,6 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -46,6 +51,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("end-to-end")
 @Tag("mongo")
+@WithMockOpFabUser(login="testAdminUser", roles = { "ADMIN" })
 class UsersControllerShould {
 
     private MockMvc mockMvc;
@@ -64,7 +70,9 @@ class UsersControllerShould {
 
     @BeforeAll
     void setup() throws Exception {
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        this.mockMvc = webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
     }
 
     @BeforeEach
@@ -119,6 +127,14 @@ class UsersControllerShould {
            .andExpect(jsonPath("$.lastName", is("Chapman")))
            .andExpect(jsonPath("$.groups", contains("Monty Pythons")))
         ;
+    }
+
+
+    private User extractPrincipalFromContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null)
+            return null;
+        return (User) authentication.getPrincipal();
     }
 
     @Test
