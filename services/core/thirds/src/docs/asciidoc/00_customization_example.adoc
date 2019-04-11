@@ -340,7 +340,7 @@ As seen abow, the value of `{{data.level1.level1Prop}}` of a test card is `This 
 *Style declaration in `./css/bundleTest.css`*
 
 ....
-.detail.template.bundle-test{
+.h2{
 	color:#fd9312;
 	font-weight: bold;
 }

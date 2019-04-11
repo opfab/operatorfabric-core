@@ -91,8 +91,3 @@ There are several possibilities:
 - number of pair of `{` and `}` has to follow those rules: 
 	** with no helper the good number is only 2 pairs;
 	** with OperatorFabric helpers it's 3 pairs of them.
-
-=== The style is not applyed. 
-
-It's a known issue cf link:https://github.com/opfab/operatorfabric-core/issues/58#issue-406340217[[UI\]Include 3rd Party CSS from Third service #58].
-
