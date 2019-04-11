@@ -12,10 +12,14 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
-import {FilterService} from "@ofServices/filter.service";
+import {FilterService, FilterType} from "@ofServices/filter.service";
 import {InitFilters} from "@ofActions/feed.actions";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {ServicesModule} from "@ofServices/services.module";
+import {By} from "@angular/platform-browser";
+import {buildFilterSelector} from "@ofSelectors/feed.selectors";
+import {map} from "rxjs/operators";
+import {hot} from "jasmine-marbles";
 
 describe('TimeFilterComponent', () => {
     let component: TimeFilterComponent;
@@ -49,6 +53,50 @@ describe('TimeFilterComponent', () => {
     });
 
     it('should create', () => {
+        //component state
         expect(component).toBeTruthy();
+        expect(component.timeFilterForm.get('start').value).toBeNull();
+        expect(component.timeFilterForm.get('end').value).toBeNull();
+        //dom structure
+        let debugElement = fixture.debugElement;
+        expect(debugElement.queryAll(By.css('.btn'))).toBeTruthy();
+        expect(debugElement.queryAll(By.css('.btn')).length).toBe(1);
+    });
+    it('should display popover', () => {
+        //componenet state
+        expect(component).toBeTruthy();
+        //dom structure
+        let debugElement = fixture.debugElement;
+        //dom interraction
+        debugElement.queryAll(By.css('.btn'))[0].triggerEventHandler('click', null);
+        fixture.detectChanges();
+        let formQuery = [...new Set(debugElement.queryAll(By.css('#time-filter-form')))];
+        let formDivQuery = [...new Set(debugElement.queryAll(By.css('#time-filter-form > div')))];
+        let checkedQuery = [...new Set(debugElement.queryAll(By.css("input[type=datetime-local]")))];
+        expect(formQuery).toBeTruthy();
+        expect(formQuery.length).toBe(1);
+        expect(formDivQuery).toBeTruthy();
+        expect(formDivQuery.length).toBe(2);
+        expect(checkedQuery.length).toBe(2);
+    });
+    it('shouldupdate filter', () => {
+        //componenet state
+        expect(component).toBeTruthy();
+        //dom structure
+        let debugElement = fixture.debugElement;
+        //dom interraction
+        debugElement.queryAll(By.css('.btn'))[0].triggerEventHandler('click', null);
+        fixture.detectChanges();
+        const startInput = debugElement.queryAll(By.css('#time-start'));
+        const dateStringValue = "2019-04-10T00:00";
+        startInput[0].nativeElement.value = dateStringValue;
+        startInput[0].nativeElement.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(component.timeFilterForm.get('start').value).toBe(dateStringValue);
+        fixture.whenStable().then(() => {
+            expect(store.select(buildFilterSelector(FilterType.TYPE_FILTER)).pipe(map((filter => filter.status))))
+                .toBeObservable(hot('---a', {a: {start: Date.parse(dateStringValue), end: null}}));
+        });
+
     });
 });
