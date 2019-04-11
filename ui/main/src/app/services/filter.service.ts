@@ -64,7 +64,7 @@ export class FilterService {
                     if (!card.endDate)
                         return card.startDate <= status.end;
                     return status.start <= card.startDate && card.startDate <= status.end
-                        || status.start <= card.endDate && card.endDate <= status.start
+                        || status.start <= card.endDate && card.endDate <= status.end
                         || card.startDate <= status.start && status.end <= card.endDate;
                 } else if (!!status.start) {
                     return !card.endDate || status.start <= card.endDate;

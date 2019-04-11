@@ -5,15 +5,85 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { FilterService } from './filter.service';
+import {FilterService, FilterType} from './filter.service';
+import {getSeveralRandomLightCards} from "@tests/helpers";
+
+function buildTestCards() {
+    let testCards = [];
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {
+        startDate: Date.parse("2019-04-10T00:00"),
+        endDate: Date.parse("2019-04-10T23:59")
+    }));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {
+        startDate: Date.parse("2019-04-10T00:00"),
+        endDate: Date.parse("2019-04-10T06:00")
+    }));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {
+        startDate: Date.parse("2019-04-10T00:00"),
+        endDate: Date.parse("2019-04-10T09:00")
+    }));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {
+        startDate: Date.parse("2019-04-10T15:00"),
+        endDate: Date.parse("2019-04-10T23:59")
+    }));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {
+        startDate: Date.parse("2019-04-10T17:00"),
+        endDate: Date.parse("2019-04-10T23:59")
+    }));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {startDate: Date.parse("2019-04-10T00:00")}));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {startDate: Date.parse("2019-04-10T15:00")}));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {startDate: Date.parse("2019-04-10T17:00")}));
+    return testCards;
+}
 
 describe('FilterService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+    let service: FilterService;
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+        service = TestBed.get(FilterService);
 
-  it('should be created', () => {
-    const service: FilterService = TestBed.get(FilterService);
-    expect(service).toBeTruthy();
-  });
+    });
+
+    it('should be created', () => {
+        expect(service).toBeTruthy();
+    });
+    describe('time filter', () => {
+        it('should not filter if inactive', () => {
+            const timeFilter = service.defaultFilters.get(FilterType.TIME_FILTER);
+            let testCards = buildTestCards();
+            timeFilter.status.start = Date.parse("2019-04-10T08:00");
+            timeFilter.status.end = Date.parse("2019-04-10T16:00");
+            timeFilter.active = false;
+
+            const filteredCards = testCards.filter((card) => timeFilter.applyFilter(card));
+            expect(filteredCards.length).toBe(16)
+        });
+        it('should filter whith start and end', () => {
+            let testCards = buildTestCards();
+            const timeFilter = service.defaultFilters.get(FilterType.TIME_FILTER);
+            timeFilter.status.start = Date.parse("2019-04-10T08:00");
+            timeFilter.status.end = Date.parse("2019-04-10T16:00");
+            timeFilter.active = true;
+            const filteredCards = testCards.filter((card)=>timeFilter.applyFilter(card));
+            expect(filteredCards.length).toBe(10);
+        });
+        it('should filter whith start', () => {
+            let testCards = buildTestCards();
+            const timeFilter = service.defaultFilters.get(FilterType.TIME_FILTER);
+            timeFilter.status.start = Date.parse("2019-04-10T08:00");
+            timeFilter.active = true;
+            const filteredCards = testCards.filter((card)=>timeFilter.applyFilter(card));
+            expect(filteredCards.length).toBe(14);
+        });
+        it('should filter whith end', () => {
+            let testCards = buildTestCards();
+            const timeFilter = service.defaultFilters.get(FilterType.TIME_FILTER);
+            timeFilter.status.end = Date.parse("2019-04-10T16:00");
+            timeFilter.active = true;
+            const filteredCards = testCards.filter((card)=>timeFilter.applyFilter(card));
+            expect(filteredCards.length).toBe(12);
+        });
+    });
 });

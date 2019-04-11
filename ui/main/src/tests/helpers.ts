@@ -183,11 +183,11 @@ export function generateRandomArray<T>(min =1, max = 2, func:()=>T):Array<T>{
     return array;
 }
 
-export function getSeveralRandomLightCards(numberOfCards = 1): LightCard[] {
+export function getSeveralRandomLightCards(numberOfCards = 1, cardTemplate?:any): LightCard[] {
     const finalNumberOfCards = forcePositiveAndOneMinimum(numberOfCards);
     const lightCards: LightCard[] = new Array(finalNumberOfCards);
     for (let i = 0; i < finalNumberOfCards; ++i) {
-        lightCards[i] = getOneRandomLigthCard();
+        lightCards[i] = getOneRandomLigthCard(cardTemplate);
     }
     return lightCards;
 }
