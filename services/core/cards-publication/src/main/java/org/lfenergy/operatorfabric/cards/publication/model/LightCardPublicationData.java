@@ -49,7 +49,7 @@ public class LightCardPublicationData implements LightCard {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String media;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Singular
+    //@Singular not used because lead to a NPE when built from Card
     private List<String> tags;
     private I18n title;
     private I18n summary;
