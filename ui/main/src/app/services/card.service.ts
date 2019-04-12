@@ -22,7 +22,7 @@ export class CardService {
 
     constructor(private httpClient:HttpClient, private authenticationService: AuthenticationService,private guidService: GuidService) {
         const clientId = this.guidService.getCurrentGuidString();
-        this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}&notification=true`;
+        this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
     }
 
@@ -31,10 +31,10 @@ export class CardService {
     }
 
     getCardOperation(): Observable<CardOperation> {
-        let now = new Date()
-        let plusTwentyFourHour = new Date(now.valueOf()+24*60*60*1000);
+        let minus2Hour = new Date(new Date().valueOf()-2*60*60*1000);
+        let plus48Hours = new Date(minus2Hour.valueOf()+48*60*60*1000);
         return this.fetchCardOperation(new EventSourcePolyfill(
-            `${this.cardOperationsUrl}&rangeStart=${now.valueOf()}&rangeEnd=${plusTwentyFourHour.valueOf()}`
+            `${this.cardOperationsUrl}&notification=true&rangeStart=${minus2Hour.valueOf()}&rangeEnd=${plus48Hours.valueOf()}`
             , this.handleHeaders()));
     }
 
@@ -60,6 +60,13 @@ export class CardService {
                 }
             };
         })
+    }
+
+    public updateCardSubscriptionWithDates(rangeStart:number,rangeEnd:number):Observable<any>{
+        return this.httpClient.post<any>(
+            `${this.cardOperationsUrl}`,
+            {rangeStart:rangeStart,rangeEnd: rangeEnd},
+            {headers: this.authenticationService.getSecurityHeader()});
     }
 
 // sse request not intercepted by core/services/interceptors.services/TokenInjector

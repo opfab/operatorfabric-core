@@ -9,16 +9,18 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {CardService} from '@ofServices/card.service';
 import {Observable} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, filter, map, switchMap} from 'rxjs/operators';
 import {
     AddLightCardFailure,
     HandleUnexpectedError,
     LightCardActions,
-    LoadLightCardsSuccess
+    LoadLightCardsSuccess, UpdatedSubscription
 } from '@ofActions/light-card.actions';
 import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
+import {ApplyFilter, FeedActionTypes} from "@ofActions/feed.actions";
+import {FilterType} from "@ofServices/filter.service";
 
 @Injectable()
 export class CardOperationEffects {
@@ -30,7 +32,7 @@ export class CardOperationEffects {
     }
 
     @Effect()
-    getCardOperations: Observable<LightCardActions> = this.actions$
+    subscribe: Observable<LightCardActions> = this.actions$
         .pipe(
             // loads card operations only after authentication of a default user ok.
             ofType(AuthenticationActionTypes.AcceptLogIn),
@@ -55,8 +57,27 @@ export class CardOperationEffects {
             ),
 
             catchError((error,caught )=> {
-                this.store.dispatch(new HandleUnexpectedError({error: error}))
+                this.store.dispatch(new HandleUnexpectedError({error: error}));
                 return caught;
             }));
+
+    @Effect()
+    updateSubscription: Observable<LightCardActions> = this.actions$
+        .pipe(
+            // loads card operations only after authentication of a default user ok.
+            ofType(FeedActionTypes.ApplyFilter),
+            filter((af:ApplyFilter)=>af.payload.name == FilterType.TIME_FILTER),
+            switchMap((af:ApplyFilter) => this.service.updateCardSubscriptionWithDates(af.payload.status.start,af.payload.status.end)
+                .pipe(
+                    map(()=> {
+                        return new UpdatedSubscription();
+                    })
+                )
+            ),
+            catchError((error,caught )=> {
+                this.store.dispatch(new HandleUnexpectedError({error: error}))
+                return caught;
+            })
+        );
 
 }

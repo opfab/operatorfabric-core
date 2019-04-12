@@ -46,7 +46,10 @@ describe('TimeFilterComponent', () => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
         filterService = TestBed.get(FilterService);
-        store.dispatch(new InitFilters({filters: filterService.defaultFilters}));
+        const defaultFilters = filterService.defaultFilters;
+        defaultFilters.get(FilterType.TIME_FILTER).status.start = null;
+        defaultFilters.get(FilterType.TIME_FILTER).status.end = null;
+        store.dispatch(new InitFilters({filters: defaultFilters}));
         fixture = TestBed.createComponent(TimeFilterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

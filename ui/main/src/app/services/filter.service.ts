@@ -75,7 +75,7 @@ export class FilterService {
                 return false;
             },
             false,
-            {start: null, end: null})
+            {start: new Date().valueOf()-2*60*60*1000, end: new Date().valueOf()+48*60*60*1000})
     }
 
 

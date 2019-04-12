@@ -5,22 +5,27 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class TimeService {
 
-  constructor() { }
+    constructor() {
+    }
 
-  public currentTime():number{
-    return Date.now();
-  }
+    public currentTime(): number {
+        return Date.now();
+    }
 
-  public parseString(value:string):number{
-    return Date.parse(value);
-  }
+    public parseString(value: string): number {
+        return Date.parse(value);
+    }
 
-  public asString(value:number):string{
-    return new Date(value).toISOString();
-  }
+    public asString(value: number): string {
+        return new Date(value).toISOString();
+    }
+
+    public asLocalString(value: number): string {
+        return new Date(value).toISOString().slice(0, -8);
+    }
 }
