@@ -22,6 +22,7 @@ import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
+import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.users.model.User;
@@ -81,6 +82,8 @@ public class CardOperationsControllerShould {
     @Autowired
     private CardOperationsController controller;
     @Autowired
+    private CardSubscriptionService service;
+    @Autowired
     private ObjectMapper mapper;
     @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
@@ -100,13 +103,15 @@ public class CardOperationsControllerShould {
         user.setGroups(groups);
     }
 
-    @AfterEach
-    public void clean() {
-        repository.deleteAll().subscribe();
-    }
+//    @AfterEach
+//    public void clean() {
+//        repository.deleteAll().subscribe();
+//    }
 
     @BeforeEach
     private void initCardData() {
+        service.clearSubscriptions();
+        StepVerifier.create(repository.deleteAll()).expectComplete().verify();
         int processNo = 0;
 //create past cards
         StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne,"rte-operator","rte","operator")))
@@ -253,8 +258,35 @@ public class CardOperationsControllerShould {
                     assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESSnotif1");
                     assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESSnotif2");
                 })
+                .then(createUpdateSubscriptionTask())
+                .assertNext(op->{
+                    assertThat(op.getCards().size()).isEqualTo(3);
+                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS6");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS7");
+                    assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS0");
+//                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS9");
+                })
                 .thenCancel()
                 .verify();
+    }
+
+    private Runnable createUpdateSubscriptionTask() {
+        return () -> {
+            log.info("execute update subscription task");
+            CardSubscription subscription = CardSubscription.builder().rangeStart(nowMinusThree.toEpochMilli()).rangeEnd(nowMinusTwo.toEpochMilli()).build();
+            Mono<CardOperationsGetParameters> parameters = Mono.just(CardOperationsGetParameters.builder()
+                    .user(user)
+                    .clientId(TEST_ID)
+                    .test(false)
+                    .rangeStart(nowMinusThree.toEpochMilli())
+                    .rangeEnd(nowMinusTwo.toEpochMilli())
+                    .notification(true).build());
+            StepVerifier.create(controller.updateSubscriptionAndPublish(parameters))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+        };
     }
 
     @Test

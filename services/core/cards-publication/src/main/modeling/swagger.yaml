@@ -53,9 +53,11 @@ definitions:
 
       * ALARM - The process instance behind the card is in critical condition
 
-      * ACTION - The process instance behind the card is expecting an action from the user
+      * ACTION - The process instance behind the card is expecting an action
+      from the user
 
-      * QUESTION - The process instance behind the card needs information from the user
+      * QUESTION - The process instance behind the card needs information from
+      the user
 
       * NOTIFICATION - Purely informational card
     enum:
@@ -135,8 +137,8 @@ definitions:
       (favorite) may be specified and is favored in the random choosing process.
 
       * FAVORITE - Card is sent to user as defined by underlying recipient
-      (recipient), if favorite user (favorite) is in the computed users list it will
-      be set as main recipient
+      (recipient), if favorite user (favorite) is in the computed users list it
+      will be set as main recipient
     enum:
       - BROADCAST
       - DEADEND
@@ -182,8 +184,10 @@ definitions:
       label:
         key: theAnswer
         parameters:
-          EN: the Answer to the Ultimate Question of Life, the Universe, and Everything
-          FR: la Réponse à la Grande Question sur la vie, l'Univers et le Reste
+          EN: >-
+            the Answer to the Ultimate Question of Life, the Universe, and
+            Everything
+          FR: 'la Réponse à la Grande Question sur la vie, l''Univers et le Reste'
   Input:
     description: Describe an input parameter for an Action
     type: object
@@ -228,7 +232,9 @@ definitions:
           type: string
       unSelectedValues:
         type: array
-        description: Only for SWITCH_LIST parameters. List unselected values. Order matters.
+        description: >-
+          Only for SWITCH_LIST parameters. List unselected values. Order
+          matters.
         items:
           type: string
     required:
@@ -473,8 +479,9 @@ definitions:
   CardOperation:
     type: object
     description: >-
-      This object holds an operation to be performed as well as a collection of cards (published in the same second)
-      so as to be able to perform the operation on a batch of cards rather than on a single card.
+      This object holds an operation to be performed as well as a collection of
+      cards (published in the same second) so as to be able to perform the
+      operation on a batch of cards rather than on a single card.
     properties:
       number:
         $ref: '#/definitions/LongInteger'
@@ -486,12 +493,16 @@ definitions:
         type: array
         items:
           type: string
-        description: IDs of cards to be deleted. Only used for CardOperations of DELETE type.
+        description: >-
+          IDs of cards to be deleted. Only used for CardOperations of DELETE
+          type.
       cards:
         type: array
         items:
           $ref: '#/definitions/LightCard'
-        description: Card objects to be added or updated. Only used for CardOperations of ADD or UPDATE type.
+        description: >-
+          Card objects to be added or updated. Only used for CardOperations of
+          ADD or UPDATE type.
     example:
       number: 3
       publishDate: 1546300800000
@@ -558,8 +569,8 @@ definitions:
         description: 'Used by USER, GROUP, FAVORITE'
       preserveMain:
         description: >-
-          If main users from the underlying recipients are to be propagated. Used by
-          INTERSECT and UNION recipients.
+          If main users from the underlying recipients are to be propagated.
+          Used by INTERSECT and UNION recipients.
         type: boolean
     example:
       type: UNION
@@ -576,7 +587,9 @@ definitions:
       preserveMain: true
   Card:
     type: object
-    description: A Card sums up information about the status of a given process instance of the publishing service
+    description: >-
+      A Card sums up information about the status of a given process instance of
+      the publishing service
     properties:
       uid:
         type: string
@@ -606,8 +619,8 @@ definitions:
       lttd:
         $ref: '#/definitions/EpochDate'
         description: >-
-          Last time to decide, after this date no action can be triggered
-          on the card
+          Last time to decide, after this date no action can be triggered on the
+          card
       startDate:
         $ref: '#/definitions/EpochDate'
         description: Card validity start time
@@ -764,9 +777,27 @@ definitions:
           - type: USER
             identity: aGivenUser
         preserveMain: true
+  Subscription:
+    type: object
+    description: >-
+      LightCard Subscription object
+    properties:
+      rangeStart:
+        $ref: '#/definitions/EpochDate'
+        description: subscription range start time
+      rangeEnd:
+        $ref: '#/definitions/EpochDate'
+        description: subscription range end time
+      loadedCards:
+        type: array
+        items: 
+          type: string
+        
   LightCard:
     type: object
-    description: LightCard bears the essential information of a Card, to be aggregated in CardOperations.
+    description: >-
+      LightCard bears the essential information of a Card, to be aggregated in
+      CardOperations.
     readOnly: true
     properties:
       uid:
@@ -787,8 +818,8 @@ definitions:
       lttd:
         $ref: '#/definitions/EpochDate'
         description: >-
-          Last time to decide, after this date no action can be triggered
-          on the card
+          Last time to decide, after this date no action can be triggered on the
+          card
       startDate:
         $ref: '#/definitions/EpochDate'
         description: Card validity start time
@@ -862,15 +893,17 @@ paths:
       responses:
         '201':
           description: accepted
-  /cardOperations:
+  /cardSubscription:
     get:
       tags:
         - cards
         - read
+        - subscription
       summary: fetch card operations
       description: >-
-        fetch cards restricted to calling user. Fetched cards all come with empty
-      operationId: fetchCardOperations
+        fetch cards restricted to calling user. Fetched cards all come with
+        empty data and details. requesting this end point opens an SSE connection
+      operationId: getCardSubscription
       produces:
         - application/json
       parameters:
@@ -902,6 +935,40 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CardOperation'
+  /cardSubscription/{uiId}:
+    put:
+      tags:
+        - cards
+        - subscription
+      summary: Update existing subscription
+      description: Update existing subscription
+      operationId: updateCardSubscription
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: uiId
+          description: unique ui client id associated to subscription
+          type: string
+          required: true
+        - in: body
+          name: subscription
+          description: updated subscription
+          schema:
+            $ref: '#/definitions/Subscription'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Subscription'
+        '400':
+          description: Bad request (body doesn't match login path parameter)
+        '401':
+          description: Authentication required
+        '404':
+          description: Subscription not found
   /cards:
     get:
       tags:
@@ -909,8 +976,8 @@ paths:
         - read
       summary: fetch cards
       description: >-
-        Fetch cards for which calling user is a recipient. Fetched cards all comes with
-        empty
+        Fetch cards for which calling user is a recipient. Fetched cards all
+        comes with empty
       operationId: fetchCards
       produces:
         - application/json

@@ -74,7 +74,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void createAndDeleteSubscription(){
-        CardSubscription subscription = service.subscribe(user, TEST_ID);
+        CardSubscription subscription = service.subscribe(user, TEST_ID, null, null, false);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.evict(subscription.getId());
@@ -85,7 +85,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void deleteSubscriptionWithDelay(){
-        CardSubscription subscription = service.subscribe(user, TEST_ID);
+        CardSubscription subscription = service.subscribe(user, TEST_ID, null,null, false);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.scheduleEviction(subscription.getId());
@@ -96,7 +96,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void reviveSubscription(){
-        CardSubscription subscription = service.subscribe(user, TEST_ID);
+        CardSubscription subscription = service.subscribe(user, TEST_ID, null, null, false);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.scheduleEviction(subscription.getId());
@@ -107,7 +107,7 @@ public class CardSubscriptionServiceShould {
         }catch (ConditionTimeoutException e){
             //nothing, everything is alright
         }
-        CardSubscription subscription2 = service.subscribe(user, TEST_ID);
+        CardSubscription subscription2 = service.subscribe(user, TEST_ID, null, null, false);
         Assertions.assertThat(subscription2).isSameAs(subscription);
         try {
             await().atMost(6, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
@@ -122,7 +122,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void receiveCards(){
-        CardSubscription subscription = service.subscribe(user, TEST_ID);
+        CardSubscription subscription = service.subscribe(user, TEST_ID, null, null, false);
         StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher());
         taskScheduler.schedule(createSendMessageTask(),new Date(System.currentTimeMillis() + 1000));
         verifier

@@ -10,6 +10,8 @@ package org.lfenergy.operatorfabric.cards.consultation.configuration.webflux;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsController;
 import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsGetParameters;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardSubscriptionDto;
+import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 
 @Slf4j
 @Configuration
-public class CardOperationRoutesConfig {
+public class CardSubscriptionRoutesConfig {
 
     public static final String FALSE = "false";
     public static final String TRUE = "true";
@@ -31,7 +33,7 @@ public class CardOperationRoutesConfig {
     private final CardOperationsController cardOperationsController;
 
     @Autowired
-    public CardOperationRoutesConfig(CardOperationsController cardOperationsController){
+    public CardSubscriptionRoutesConfig(CardOperationsController cardOperationsController){
         this.cardOperationsController = cardOperationsController;
     }
 
@@ -42,19 +44,36 @@ public class CardOperationRoutesConfig {
     @Bean
     public RouterFunction<ServerResponse> cardOperationRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/cardOperations"),cardOperationGetRoute())
-                .andRoute(RequestPredicates.OPTIONS("/cardOperations"), cardOperationOptionsRoute());
+                .route(RequestPredicates.GET("/cardSubscription"), cardSubscriptionGetRoute())
+                .andRoute(RequestPredicates.POST("/cardSubscription"),cardSubscriptionPostRoute())
+                .andRoute(RequestPredicates.OPTIONS("/cardSubscription"), cardSubscriptionOptionsRoute());
+    }
+
+    /**
+     * Card Operation POST route
+     * @return
+     */
+    private HandlerFunction<ServerResponse> cardSubscriptionPostRoute() {
+        return request -> {
+            ServerResponse.BodyBuilder builder = ok()
+                    .contentType(MediaType.APPLICATION_JSON);
+            Mono<CardSubscription> inputSubscription = request.bodyToMono(CardSubscription.class);
+            request.pathVariable("uiId");
+                return builder.body(cardOperationsController.updateSubscriptionAndPublish
+                                (extractCardSubscriptionInfoOnPost(request)),
+                        CardSubscription.class);
+        };
     }
 
     /**
      * Card Operation OPTIONS route
      * @return
      */
-    private HandlerFunction<ServerResponse> cardOperationGetRoute() {
+    private HandlerFunction<ServerResponse> cardSubscriptionGetRoute() {
         return request -> {
             ServerResponse.BodyBuilder builder = ok()
                     .contentType(MediaType.TEXT_EVENT_STREAM);
-            Mono<CardOperationsGetParameters> params = extractCardSubscriptionInfo(request);
+            Mono<CardOperationsGetParameters> params = extractCardSubscriptionInfoOnGet(request);
             if (request.queryParam("test").orElse(FALSE).equals(TRUE)) {
                 return builder.body(cardOperationsController.publishTestData(params),
                         String.class);
@@ -70,16 +89,16 @@ public class CardOperationRoutesConfig {
      * CardOperation GET route
      * @return
      */
-    private HandlerFunction<ServerResponse> cardOperationOptionsRoute() {
+    private HandlerFunction<ServerResponse> cardSubscriptionOptionsRoute() {
         return request -> ok().build();
     }
 
     /**
-     * Extracts card operation parameters from Authentication and Query parameters
+     * Extracts card operation parameters from Authentication and Query parameters GET context
      * @param request the http request
      * @return a parameter aggregation DTO
      */
-    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfo(ServerRequest request){
+    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfoOnGet(ServerRequest request){
         return request.principal()
                 .map(principal->{
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
@@ -90,6 +109,28 @@ public class CardOperationRoutesConfig {
                             .rangeEnd(parseAsLong(request.queryParam("rangeEnd").orElse(null)))
                             .test(request.queryParam("test").orElse(FALSE).equals(TRUE))
                             .notification(request.queryParam("notification").orElse(FALSE).equals(TRUE))
+                            .build();
+                });
+    }
+
+    /**
+     * Extracts card operation parameters from Authentication and Query parameters in POST context
+     * @param request the http request
+     * @return a parameter aggregation DTO
+     */
+    private Mono<CardOperationsGetParameters> extractCardSubscriptionInfoOnPost(ServerRequest request){
+        Mono<CardSubscriptionDto> inputSubscription = request.bodyToMono(CardSubscriptionDto.class);
+        return request.principal().zipWith(inputSubscription)
+                .map(t->{
+                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) t.getT1();
+                    return CardOperationsGetParameters.builder()
+                            .user((User) jwtPrincipal.getPrincipal())
+                            .clientId(request.pathVariable("uiId"))
+                            .rangeStart(t.getT2().getRangeStart())
+                            .rangeEnd(t.getT2().getRangeEnd())
+                            .test(false)
+                            .notification(true)
+                            .loadedCards(t.getT2().getLoadedCards())
                             .build();
                 });
     }

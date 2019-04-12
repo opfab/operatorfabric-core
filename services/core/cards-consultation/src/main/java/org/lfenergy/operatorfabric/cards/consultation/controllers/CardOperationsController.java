@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuples;
 
 import java.time.Duration;
 
@@ -57,50 +58,89 @@ public class CardOperationsController {
      * Registers to {@link CardSubscriptionService} to get access to a {@link Flux} of String. Those strings are Json
      * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
      *
-     * @param input
-     *    o tuple containing 1) user data 2) client id
+     * @param input o tuple containing 1) user data 2) client id
      * @return message publisher
      */
     public Flux<String> registerSubscriptionAndPublish(Mono<CardOperationsGetParameters> input) {
         return input
-           .flatMapMany(t -> {
-               if (t.getClientId()!=null) {
-                   //init subscription if needed
-                   CardSubscription subscription = null;
-                   if(t.isNotification()) {
-                       subscription = cardSubscriptionService.subscribe(t.getUser(), t.getClientId());
-                   }
-                   // fetch old card (if needed, see {@]link #fetchOldCards} method)
-                   Flux<String> oldCards = fetchOldCards(t, subscription == null ? null : subscription.getStartingPublishDate());
-                   //merge subscription and old cards as needed
-                   if(subscription!=null)
-                       return ((Flux<String>) subscription.getPublisher()).mergeWith(oldCards);
-                   else
-                       return oldCards;
-               } else {
-                   log.warn("\"clientId\" is a mandatory request parameter");
-                   ApiErrorException e = new ApiErrorException(ApiError.builder()
-                      .status(HttpStatus.BAD_REQUEST)
-                      .message("\"clientId\" is a mandatory request parameter")
-                      .build()
-                   );
-                   log.debug("4xx error underlying exception", e);
-                   return Mono.just(objectToJsonString(e.getError()));
-               }
-           });
+                .flatMapMany(t -> {
+                    if (t.getClientId() != null) {
+                        //init subscription if needed
+                        CardSubscription subscription = null;
+                        Flux<String> oldCards;
+                        if (t.isNotification()) {
+                            subscription = cardSubscriptionService.subscribe(t.getUser(), t.getClientId(), t.getRangeStart(), t.getRangeEnd(), false);
+                            subscription.publishInto(fetchOldCards(subscription));
+                            return subscription.getPublisher();
+                        } else {
+                            return fetchOldCards(t);
+                        }
+//                        // fetch old card (if needed, see {@]link #fetchOldCards} method)
+//                        //merge subscription and old cards as needed
+//                        if (subscription != null)
+//                            return subscription.getPublisher();
+////                            return ((Flux<String>) subscription.getPublisher()).mergeWith(oldCards);
+//                        else
+//                            return oldCards;
+                    } else {
+                        log.warn("\"clientId\" is a mandatory request parameter");
+                        ApiErrorException e = new ApiErrorException(ApiError.builder()
+                                .status(HttpStatus.BAD_REQUEST)
+                                .message("\"clientId\" is a mandatory request parameter")
+                                .build()
+                        );
+                        log.debug("4xx error underlying exception", e);
+                        return Mono.just(objectToJsonString(e.getError()));
+                    }
+                });
     }
 
-    private Flux<String> fetchOldCards(CardOperationsGetParameters parameters, Long referencePublishDate) {
+    public Mono<CardSubscription> updateSubscriptionAndPublish(Mono<CardOperationsGetParameters> parameters) {
+        return parameters
+                .map(p -> {
+                    try {
+                        CardSubscription oldSubscription = cardSubscriptionService.findSubscription(p.getUser(), p.getClientId());
+                        return Tuples.of(p,oldSubscription);
+                    } catch (IllegalArgumentException e) {
+                        throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_REQUEST).message(e.getMessage()).build());
+                    }
+                })
+                .doOnNext((t)->{
+                    t.getT2().updateRange(t.getT1().getRangeStart(),t.getT1().getRangeEnd());
+                    t.getT2().publishInto(fetchOldCards(t.getT2()));
+                })
+                .map(t->t.getT2())
+                ;
+    }
+
+    /**
+     * Fetching oldcard for subcription (with possible update)
+     *
+     * @param subscription
+     * @return
+     */
+    private Flux<String> fetchOldCards(CardSubscription subscription) {
+        Flux<String> oldCards;
+        Long start = subscription.getRangeStart();
+        Long end = subscription.getRangeEnd();
+        return fetchOldCards0(subscription.getStartingPublishDate(), start, end, subscription.getUser());
+    }
+
+    private Flux<String> fetchOldCards(CardOperationsGetParameters parameters) {
         Flux<String> oldCards;
         Long start = parameters.getRangeStart();
         Long end = parameters.getRangeEnd();
-        if(end != null && start !=null) {
+        return fetchOldCards0(null, start, end, parameters.getUser());
+    }
+
+    private Flux<String> fetchOldCards0(Long referencePublishDate, Long start, Long end, User user) {
+        Flux<String> oldCards;
+        if (end != null && start != null) {
             referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow().toEpochMilli() : referencePublishDate;
-            User user = parameters.getUser();
             String login = user.getLogin();
             String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
             oldCards = cardRepository.findUrgentJSON(referencePublishDate, start, end, login, groups);
-        }else{
+        } else {
             oldCards = Flux.empty();
         }
         return oldCards;
@@ -110,42 +150,40 @@ public class CardOperationsController {
      * Generates a test {@link Flux} of String. Those strings are Json
      * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
      *
-     * @param input
-     *    o tuple containing 1) user data 2) client id
+     * @param input o tuple containing 1) user data 2) client id
      * @return message publisher
      */
     public Flux<String> publishTestData(Mono<CardOperationsGetParameters> input) {
         return input.flatMapMany(t -> Flux
-           .interval(Duration.ofSeconds(5))
-           .doOnEach(l -> log.info("message " + l + " to " + t.getUser().getLogin()))
-           .map(l -> CardOperationConsultationData.builder()
-              .number(l)
-              .publishDate(VirtualTime.getInstance().computeNow().toEpochMilli() - 600000)
-              .type(CardOperationTypeEnum.ADD)
-              .card(
-                 LightCardConsultationData.builder()
-                    .id(l + "")
-                    .uid(l + "")
-                    .summary(I18nConsultationData.builder().key("summary").build())
-                    .title(I18nConsultationData.builder().key("title").build())
-                    .mainRecipient("rte-operator")
-                    .severity(SeverityEnum.ALARM)
-                    .startDate(VirtualTime.getInstance().computeNow().toEpochMilli())
-                    .endDate(VirtualTime.getInstance().computeNow().toEpochMilli() + 3600000)
-                    .build()
-              )
-              .build())
-           .map(this::objectToJsonString)
-           .doOnCancel(() -> log.info("cancelled"))
-           .log()
+                .interval(Duration.ofSeconds(5))
+                .doOnEach(l -> log.info("message " + l + " to " + t.getUser().getLogin()))
+                .map(l -> CardOperationConsultationData.builder()
+                        .number(l)
+                        .publishDate(VirtualTime.getInstance().computeNow().toEpochMilli() - 600000)
+                        .type(CardOperationTypeEnum.ADD)
+                        .card(
+                                LightCardConsultationData.builder()
+                                        .id(l + "")
+                                        .uid(l + "")
+                                        .summary(I18nConsultationData.builder().key("summary").build())
+                                        .title(I18nConsultationData.builder().key("title").build())
+                                        .mainRecipient("rte-operator")
+                                        .severity(SeverityEnum.ALARM)
+                                        .startDate(VirtualTime.getInstance().computeNow().toEpochMilli())
+                                        .endDate(VirtualTime.getInstance().computeNow().toEpochMilli() + 3600000)
+                                        .build()
+                        )
+                        .build())
+                .map(this::objectToJsonString)
+                .doOnCancel(() -> log.info("cancelled"))
+                .log()
         );
     }
 
     /**
      * Converts an object to a JSON string. If conversion problems arise, logs and returns "null" string
      *
-     * @param o
-     *    an object
+     * @param o an object
      * @return Json object string representation or "null" if error.
      */
     private String objectToJsonString(Object o) {
@@ -156,6 +194,4 @@ public class CardOperationsController {
             return "null";
         }
     }
-
-
 }

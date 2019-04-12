@@ -9,8 +9,11 @@ package org.lfenergy.operatorfabric.cards.consultation.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Singular;
 import lombok.Value;
 import org.lfenergy.operatorfabric.users.model.User;
+
+import java.util.List;
 
 /** This class contains all the information necessary to define a feed
  */
@@ -43,5 +46,11 @@ public class CardOperationsGetParameters {
      * Filter only cards for which this user is a recipient
      * */
     private User user;
+
+    /**
+     * List of cards that should not be loaded
+     */
+    @Singular
+    private List<String> loadedCards;
 
 }

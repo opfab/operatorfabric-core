@@ -7,6 +7,7 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.services;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,11 +18,9 @@ import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * <p>This object manages subscription to AMQP exchange</p>
@@ -36,21 +35,31 @@ import java.util.Set;
 @EqualsAndHashCode
 public class CardSubscription {
     public static final String GROUPS_SUFFIX = "Groups";
-    private final String userQueueName;
-    private final String groupQueueName;
+    private String userQueueName;
+    private String groupQueueName;
     private long current = 0;
-    private String login;
+    @Getter
+    private User user;
     @Getter
     private String id;
-    private Set<String> groups;
     @Getter
     private Flux<String> publisher;
+    private Flux<String> amqpPublisher;
+    private EmitterProcessor<String> externalPublisher;
+    private FluxSink<String> externalSink;
     private AmqpAdmin amqpAdmin;
     private DirectExchange userExchange;
     private TopicExchange groupExchange;
     private ConnectionFactory connectionFactory;
     private MessageListenerContainer userMlc;
     private MessageListenerContainer groupMlc;
+    @Getter
+    @JsonInclude
+    private Long rangeStart;
+    @Getter
+    @JsonInclude
+    private Long rangeEnd;
+    private boolean filterNotification;
     @Getter
     private Long startingPublishDate;
     @Getter
@@ -74,18 +83,25 @@ public class CardSubscription {
                             AmqpAdmin amqpAdmin,
                             DirectExchange userExchange,
                             TopicExchange groupExchange,
-                            ConnectionFactory connectionFactory) {
-        this.id = computeSubscriptionId(user.getLogin(), clientId);
-        this.login = user.getLogin();
-        this.groups = new HashSet<>(user.getGroups());
+                            ConnectionFactory connectionFactory,
+                            Long rangeStart,
+                            Long rangeEnd,
+                            Boolean filterNotification) {
+        if(user!=null)
+            this.id = computeSubscriptionId(user.getLogin(), clientId);
+        this.user = user;
         this.amqpAdmin = amqpAdmin;
         this.userExchange = userExchange;
         this.groupExchange = groupExchange;
         this.connectionFactory = connectionFactory;
         this.clientId = clientId;
-        this.userQueueName = computeSubscriptionId(this.login,this.clientId);
-        this.groupQueueName = computeSubscriptionId(this.login+ GROUPS_SUFFIX,this.clientId);
-        initSubscription(doOnCancel);
+        if(user!=null) {
+            this.userQueueName = computeSubscriptionId(user.getLogin(), this.clientId);
+            this.groupQueueName = computeSubscriptionId(user.getLogin() + GROUPS_SUFFIX, this.clientId);
+        }
+        this.rangeStart = rangeStart;
+        this.rangeEnd = rangeEnd;
+        this.filterNotification = filterNotification!=null?filterNotification:false;
     }
 
     public static String computeSubscriptionId(String prefix, String clientId) {
@@ -97,7 +113,7 @@ public class CardSubscription {
      * <ul>
      * <li>Create a user queue and a group topic queue</li>
      * <li>Associate queues to message {@link MessageListenerContainer}.</li>
-     * <li>Creates a publisher {@link Flux} to publish AMQP messages to</li>
+     * <li>Creates a amqpPublisher {@link Flux} to publish AMQP messages to</li>
      * </ul>
      * </p>
      * <p>
@@ -106,26 +122,28 @@ public class CardSubscription {
      * <p>On subscription cancellation triggers doOnCancel</p>
      * @param doOnCancel
      */
-    private void initSubscription(Runnable doOnCancel) {
+    public void initSubscription(Runnable doOnCancel) {
         createUserQueue();
         createTopicQueue();
         this.userMlc = createMessageListenerContainer(this.userQueueName);
         this.groupMlc = createMessageListenerContainer(groupQueueName);
-        publisher = Flux.create(emitter -> {
-            registerListener(userMlc, emitter,this.login);
-            registerListener(groupMlc, emitter,this.login+ GROUPS_SUFFIX);
+        amqpPublisher = Flux.create(emitter -> {
+            registerListener(userMlc, emitter,this.user.getLogin());
+            registerListener(groupMlc, emitter,this.user.getLogin()+ GROUPS_SUFFIX);
             emitter.onRequest(v -> {
                 log.info("STARTING subscription");
-                log.info(String.format("LISTENING to messages on User[%s] queue",this.login));
+                log.info(String.format("LISTENING to messages on User[%s] queue",this.user.getLogin()));
                 userMlc.start();
-                log.info(String.format("LISTENING to messages on Group[%sGroups] queue",this.login));
+                log.info(String.format("LISTENING to messages on Group[%sGroups] queue",this.user.getLogin()));
                 groupMlc.start();
                 startingPublishDate = VirtualTime.getInstance().computeNow().toEpochMilli();
             });
             emitter.onDispose(doOnCancel::run);
         });
-        publisher = publisher.doOnError(t->log.error("Unexpected error",t));
-
+        this.externalPublisher = EmitterProcessor.create();
+        this.externalSink = this.externalPublisher.sink();
+        this.amqpPublisher = amqpPublisher.doOnError(t->log.error("Unexpected error",t));
+        this.publisher = amqpPublisher.mergeWith(externalPublisher);
     }
 
     /**
@@ -149,13 +167,13 @@ public class CardSubscription {
      * @return
      */
     private Queue createUserQueue() {
-        log.info(String.format("CREATE User[%s] queue",this.login));
+        log.info(String.format("CREATE User[%s] queue",this.user.getLogin()));
         Queue queue = QueueBuilder.nonDurable(this.userQueueName).build();
         amqpAdmin.declareQueue(queue);
         Binding binding = BindingBuilder
            .bind(queue)
            .to(this.userExchange)
-           .with(this.login);
+           .with(this.user.getLogin());
         amqpAdmin.declareBinding(binding);
         log.info(String.format("CREATED User[%s] queue",this.userQueueName));
         return queue;
@@ -168,15 +186,15 @@ public class CardSubscription {
      * @return
      */
     private Queue createTopicQueue() {
-        log.info(String.format("CREATE Group[%sGroups] queue",this.login));
+        log.info(String.format("CREATE Group[%sGroups] queue",this.user.getLogin()));
         Queue queue = QueueBuilder.nonDurable(this.groupQueueName).build();
         amqpAdmin.declareQueue(queue);
-        groups.stream().map(g -> "#." + g + ".#").forEach(g -> {
+        this.user.getGroups().stream().map(g -> "#." + g + ".#").forEach(g -> {
             Binding binding = BindingBuilder.bind(queue).to(groupExchange).with(g);
             amqpAdmin.declareBinding(binding);
         });
         log.info(String.format("CREATED Group[%sGroups] queue with bindings :",this.groupQueueName));
-        groups.stream().map(g -> "#." + g + ".#").forEach(g -> log.info("\t* "+g));
+        this.user.getGroups().stream().map(g -> "#." + g + ".#").forEach(g -> log.info("\t* "+g));
         return queue;
     }
 
@@ -218,4 +236,12 @@ public class CardSubscription {
         return mlc;
     }
 
+    public void updateRange(Long rangeStart, Long rangeEnd) {
+        this.rangeStart = rangeStart;
+        this.rangeEnd = rangeEnd;
+    }
+
+    public void publishInto(Flux<String> fetchOldCards) {
+        fetchOldCards.subscribe(next->this.externalSink.next(next));
+    }
 }

@@ -22,7 +22,7 @@ export class CardService {
 
     constructor(private httpClient:HttpClient, private authenticationService: AuthenticationService,private guidService: GuidService) {
         const clientId = this.guidService.getCurrentGuidString();
-        this.cardOperationsUrl = `${environment.urls.cards}/cardOperations?clientId=${clientId}&notification=true`;
+        this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}&notification=true`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
     }
 
