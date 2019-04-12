@@ -32,8 +32,6 @@ It is an open source project initiated by http://www.rte-france.com/[RTE] with h
 
 toc::[]
 
-//TODO check task list
-//TODO Collapse port tables by default?
 //TODO Add links to other sections
 
 == What does OperatorFabric do in practice?
@@ -84,12 +82,10 @@ Read our link:https://github.com/opfab/.github/blob/master/CONTRIBUTING.adoc[CON
 == Requirements
 
 IMPORTANT: This section describes the projects requirements regardless of installation options.
-Please see "Getting Started" below for details on:
+Please see <<Getting Started>> below for details on:
 
 * setting up a development environment with these prerequisites
 * building and running OperatorFabric
-
-//TODO Add link
 
 === Tools and libraries
 
@@ -135,6 +131,7 @@ link:src/main/docker[src/main/docker]
 
 === Browser support
 
+OperatorFabric
 TODO
 //Todo add browser support info
 
@@ -143,11 +140,9 @@ TODO
 WARNING: The steps below assume that you are using https://sdkman.io/[sdkman] and
 https://github.com/creationix/nvm[nvm] to manage tools versions and that you have already installed them.
 
-TIP: If you encounter any issue, see troubleshooting below. In particular, a command that hangs then fails is often a proxy issue.
-//TODO Add link
+TIP: If you encounter any issue, see <<Troubleshooting>> below. In particular, a command that hangs then fails is often a proxy issue.
 
 There are several ways to get started with OperatorFabric. Please look into the section that best fits your needs.
-//TODO Explain build or demo docker (x2)
 
 //+++ <details><summary> +++
 //**Error summary**
@@ -163,8 +158,11 @@ There are several ways to get started with OperatorFabric. Please look into the 
 //Describe possible causes and resolutions
 //
 //+++ </div></details> +++
+
+=== Build and run using script
+
 +++ <details><summary> +++
-**Build & run using script**
+**See detailed steps**
 +++ </summary><div> +++
 
 These steps describe how to use dockerized Mongo, RabbitMQ and SonarQube and build and run OperatorFabric using the `run_all.sh` script.
@@ -232,14 +230,40 @@ You can check that you see cards into the feed by running the `push_card_loop.sh
 
 +++ </div></details> +++
 
+=== Build & run using jar
+
++++ <details><summary> +++
+**See detailed steps**
++++ </summary><div> +++
+
 **WORK IN PROGRESS**
+//TODO
 
-- Build & run using jar //TODO
-- Demo (full) //TODO
-- Demo + card loop or rest api //TODO
++++ </div></details> +++
 
-When you feel ready to experiment with the project, or if the steps above don't quite cover what you're planning to do, please look into the Recipes section.
-//TODO Add link
+=== Demo (full)
+
++++ <details><summary> +++
+**See detailed steps**
++++ </summary><div> +++
+
+**WORK IN PROGRESS**
+//TODO
+
++++ </div></details> +++
+
+=== Demo + card loop or rest api
+
++++ <details><summary> +++
+**See detailed steps**
++++ </summary><div> +++
+
+**WORK IN PROGRESS**
+//TODO
+
++++ </div></details> +++
+
+When you feel ready to experiment with the project, or if the steps above don't quite cover what you're planning to do, please look into the <<Recipes>> section.
 
 === Prerequisites
 
@@ -346,8 +370,7 @@ Core services projects declaring REST APIS that use Swagger for their definition
 
 ==== Docker
 
-Services project all have docker image generated in their build cycle (See gradle tasks).
-//TODO Add Link
+Services project all have docker image generated in their build cycle (See <<Gradle Tasks>>).
 
 Per project configuration :
 
@@ -387,7 +410,9 @@ Prerequisites
 * rabbitmq running on port 5672 with user "guest" and password "guest"
 (See src/main/docker/rabbitmq/docker-compose.yml for a pre configured instance).
 
-Ports configuration
++++ <details><summary> +++
+**Ports configuration**
++++ </summary><div> +++
 
 |===
 |Port | | 
@@ -411,6 +436,8 @@ Ports configuration
 |4103 |cards-consultation |java debug port 
 |5000 |oauth |java debug port 
 |===
+
++++ </div></details> +++
 
 ==== setup_dockerized_environment.sh
 
@@ -438,6 +465,8 @@ Additionally, you may want to configure the following variables
 
 == Gradle Tasks
 
+//TODO check task list
+
 In this section only the most useful tasks are described for more
 information on tasks, refer to "tasks" gradle task output and to gradle
 and plugins official documentation
@@ -448,23 +477,23 @@ and plugins official documentation
 
 * Standard java gradle tasks
 * SpringBoot tasks
-** bootJar : Generate project executable jar - assemble depends on this task;
-** bootRun : Runs the application;
+** bootJar : Generate project executable jar - assemble depends on this task
+** bootRun : Runs the application
 * Palantir Docker tasks
-** docker - Builds Docker image.
-** dockerClean - Cleans Docker build directory.
+** docker - Builds Docker image
+** dockerClean - Cleans Docker build directory
 ** dockerfileZip - Bundles the configured Dockerfile in a zip file
-** dockerPrepare - Prepares Docker build directory.
-** dockerPush - Pushes named Docker image to configured Docker Hub.
+** dockerPrepare - Prepares Docker build directory
+** dockerPush - Pushes named Docker image to configured Docker Hub
 ** dockerPush[tag] - Pushes the Docker image with tag [tag] to configured Docker Hub
 ** dockerTag - Applies all tags to the Docker image.
 ** dockerTag[tag] - Tags Docker image with tag [tag]
 * Docker Compose tasks:
-** composeUp: runs docker-compose up for docker file;
-** composeUp: runs docker-compose down for docker file;
-** composeStart: runs docker-compose start for docker file;
-** composeStop: runs docker-compose stop for docker file;
-** composeLogs: runs docker-compose logs -f for docker file;
+** composeUp: runs docker-compose up for docker file
+** composeDown: runs docker-compose down for docker file
+** composeStart: runs docker-compose start for docker file
+** composeStop: runs docker-compose stop for docker file
+** composeLogs: runs docker-compose logs -f for docker file
 * Other:
 ** copyWorkingDir : copies [sub-project]/src/main/docker/volume to [sub-project]/build/
 ** copyDependencies : copy dependencies to build/libs
@@ -516,7 +545,11 @@ WARNING: Don't forget the *final slash* in the URL or you will get an error.
 
 Card publication entry points are exposed at localhost:2102/cards
 
-For debugging purpose the following ports are also exposed :
+For debugging purpose the following ports are also exposed:
+
++++ <details><summary> +++
+**Complete port table**
++++ </summary><div> +++
 
 |===
 |Port |Forwards to | |
@@ -545,6 +578,8 @@ For debugging purpose the following ports are also exposed :
 |5672 |rabbitmq |5672 |amqp api port
 |15672 |rabbitmq |15672 |rabbitmq api port
 |===
+
++++ </div></details> +++
 
 == Recipes
 
