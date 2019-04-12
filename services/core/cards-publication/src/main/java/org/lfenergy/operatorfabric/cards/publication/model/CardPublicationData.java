@@ -90,7 +90,6 @@ public class CardPublicationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groupRecipients;
     @Singular
-    @Transient
     @JsonIgnore
     private List<String> orphanedUsers;
 

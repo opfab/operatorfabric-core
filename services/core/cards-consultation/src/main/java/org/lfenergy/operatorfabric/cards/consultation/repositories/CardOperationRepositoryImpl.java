@@ -117,7 +117,7 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
 
     private Criteria userCriteria(String login, String... groups) {
         return  new Criteria().orOperator(
-                where("orphanUsers").in(login),
+                where("orphanedUsers").in(login),
                 where("groupRecipients").in(groups));
     }
 

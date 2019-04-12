@@ -18,8 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.TestUtilities;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.cards.consultation.model.*;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.model.*;
-import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,8 +27,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.test.StepVerifier;
 
 import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Predicate;
 
@@ -51,7 +49,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.prepa
 @Slf4j
 public class CardRepositoryShould {
 
-    public static final String LOGIN = "rte-operator";
+    public static final String LOGIN = "admin";
     private static Instant now = Instant.now();
     private static Instant nowPlusOne = now.plus(1, ChronoUnit.HOURS);
     private static Instant nowPlusTwo = now.plus(2, ChronoUnit.HOURS);
@@ -168,18 +166,28 @@ public class CardRepositoryShould {
 
     @Test
     public void fetchPast() {
+        //matches rte group
         log.info(String.format("Fetching past before now(%s), published after now(%s)", TestUtilities.format(now), TestUtilities.format(now)));
         StepVerifier.create(repository.findPastOnly(now.toEpochMilli(),now.toEpochMilli(),"rte-operator","rte","operator")
                 .doOnNext(TestUtilities::logCardOperation))
             .assertNext(op-> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS0");
-                    assertThat(op.getCards().get(0).getPublisher()).isEqualTo("PUBLISHER");
-                    assertThat(op.getCards().get(0).getPublisherVersion()).isEqualTo("0");
+                assertThat(op.getCards().size()).isEqualTo(1);
+                assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
+                assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
             })
             .expectComplete()
             .verify();
+
+        //matches admin orphaned user
+        StepVerifier.create(repository.findPastOnly(now.toEpochMilli(),now.toEpochMilli(),"admin")
+                .doOnNext(TestUtilities::logCardOperation))
+                .assertNext(op-> {
+                    assertThat(op.getCards().size()).isEqualTo(1);
+                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
+                    assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
+                })
+                .expectComplete()
+                .verify();
 
         log.info(String.format("Fetching past before now plus three hours(%s), published after now(%s)", TestUtilities.format(nowPlusThree), TestUtilities.format(now)));
         StepVerifier.create(repository.findPastOnly(now.toEpochMilli(),nowPlusThree.toEpochMilli(),"rte-operator","rte","operator")
@@ -187,9 +195,9 @@ public class CardRepositoryShould {
                 .assertNext(op-> {
                     assertThat(op.getCards().size()).isEqualTo(3);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS0");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS2");
-                    assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS4");
+                    assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
+                    assertCard(op, 1, "PUBLISHER_PROCESS2", "PUBLISHER", "0");
+                    assertCard(op, 2, "PUBLISHER_PROCESS4", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();
@@ -198,16 +206,22 @@ public class CardRepositoryShould {
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op-> {
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS0");
+                    assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
                 })
                 .assertNext(op-> {
                     assertThat(op.getCards().size()).isEqualTo(2);
                     assertThat(op.getPublishDate()).isEqualTo(nowPlusOne.toEpochMilli());
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS1");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS9");
+                    assertCard(op, 0, "PUBLISHER_PROCESS1", "PUBLISHER", "0");
+                    assertCard(op, 1, "PUBLISHER_PROCESS9", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();
+    }
+
+    private void assertCard(CardOperation op, int cardIndex, Object processName, Object publisher, Object publisherVersion) {
+        assertThat(op.getCards().get(cardIndex).getId()).isEqualTo(processName);
+        assertThat(op.getCards().get(cardIndex).getPublisher()).isEqualTo(publisher);
+        assertThat(op.getCards().get(cardIndex).getPublisherVersion()).isEqualTo(publisherVersion);
     }
 
     @Test
@@ -218,13 +232,29 @@ public class CardRepositoryShould {
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op-> {
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS0");
+                    assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
                 })
                 .assertNext(op-> {
                     assertThat(op.getCards().size()).isEqualTo(2);
                     assertThat(op.getPublishDate()).isEqualTo(nowPlusOne.toEpochMilli());
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS1");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS9");
+                    assertCard(op, 0, "PUBLISHER_PROCESS1", "PUBLISHER", "0");
+                    assertCard(op, 1, "PUBLISHER_PROCESS9", "PUBLISHER", "0");
+                })
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(repository.findPastOnlyJSON(nowPlusThree.toEpochMilli(),now.toEpochMilli(),"admin")
+                .map(s-> TestUtilities.readCardOperation(mapper, s))
+                .doOnNext(TestUtilities::logCardOperation))
+                .assertNext(op-> {
+                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
+                    assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
+                })
+                .assertNext(op-> {
+                    assertThat(op.getCards().size()).isEqualTo(2);
+                    assertThat(op.getPublishDate()).isEqualTo(nowPlusOne.toEpochMilli());
+                    assertCard(op, 0, "PUBLISHER_PROCESS1", "PUBLISHER", "0");
+                    assertCard(op, 1, "PUBLISHER_PROCESS9", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();

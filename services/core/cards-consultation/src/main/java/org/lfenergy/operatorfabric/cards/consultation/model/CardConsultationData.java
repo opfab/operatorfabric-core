@@ -78,7 +78,7 @@ public class CardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> groupRecipients = Collections.emptyList();
-    @Transient @JsonIgnore
+    @JsonIgnore
     @Singular
     private List<String> orphanedUsers = Collections.emptyList();
 }
