@@ -46,6 +46,7 @@ public class CardSubscription {
     private Flux<String> publisher;
     private Flux<String> amqpPublisher;
     private EmitterProcessor<String> externalPublisher;
+    private Flux<String> externalFlux;
     private FluxSink<String> externalSink;
     private AmqpAdmin amqpAdmin;
     private DirectExchange userExchange;
@@ -138,12 +139,25 @@ public class CardSubscription {
                 groupMlc.start();
                 startingPublishDate = VirtualTime.getInstance().computeNow().toEpochMilli();
             });
-            emitter.onDispose(doOnCancel::run);
+            emitter.onDispose(()->{
+                log.info("DISPOSING amqp publisher");
+                doOnCancel.run();
+            });
         });
         this.externalPublisher = EmitterProcessor.create();
         this.externalSink = this.externalPublisher.sink();
-        this.amqpPublisher = amqpPublisher.doOnError(t->log.error("Unexpected error",t));
-        this.publisher = amqpPublisher.mergeWith(externalPublisher);
+        this.amqpPublisher = amqpPublisher
+                .doOnError(t->log.error("ERROR on amqp publisher",t))
+                .doOnComplete(()->log.info("COMPLETE amqp Publisher"))
+                .doOnCancel(()->log.info("CANCELED amqp publisher"));
+        this.externalFlux = this.externalPublisher
+                .doOnError(t->log.error("ERROR on external publisher",t))
+                .doOnComplete(()->log.info("COMPLETE external Publisher"))
+                .doOnCancel(()->log.info("CANCELED external publisher"));
+        this.publisher = amqpPublisher.mergeWith(externalFlux)
+                .doOnError(t->log.error("ERROR on merged publisher",t))
+                .doOnComplete(()->log.info("COMPLETE merged publisher"))
+                .doOnCancel(()->log.info("CANCELED merged publisher"));
     }
 
     /**
@@ -239,6 +253,7 @@ public class CardSubscription {
     public void updateRange(Long rangeStart, Long rangeEnd) {
         this.rangeStart = rangeStart;
         this.rangeEnd = rangeEnd;
+        startingPublishDate = VirtualTime.getInstance().computeNow().toEpochMilli();
     }
 
     public void publishInto(Flux<String> fetchOldCards) {

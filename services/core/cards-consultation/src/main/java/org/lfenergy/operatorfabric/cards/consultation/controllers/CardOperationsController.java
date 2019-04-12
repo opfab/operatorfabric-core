@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardSubscriptionDto;
 import org.lfenergy.operatorfabric.cards.consultation.model.I18nConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
@@ -95,21 +96,34 @@ public class CardOperationsController {
                 });
     }
 
-    public Mono<CardSubscription> updateSubscriptionAndPublish(Mono<CardOperationsGetParameters> parameters) {
+    public Mono<CardSubscriptionDto> updateSubscriptionAndPublish(Mono<CardOperationsGetParameters> parameters) {
         return parameters
                 .map(p -> {
                     try {
                         CardSubscription oldSubscription = cardSubscriptionService.findSubscription(p.getUser(), p.getClientId());
-                        return Tuples.of(p,oldSubscription);
+                        if (oldSubscription != null) {
+                            log.info(String.format("Found subscription: %s", oldSubscription.getId()));
+                        } else {
+                            log.info(String.format("No subscription found for %s#%s", p.getUser().getLogin(), p.getClientId()));
+                        }
+                        return Tuples.of(p, oldSubscription);
                     } catch (IllegalArgumentException e) {
+                        log.error("Error searching for old subscription", e);
                         throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_REQUEST).message(e.getMessage()).build());
                     }
                 })
-                .doOnNext((t)->{
-                    t.getT2().updateRange(t.getT1().getRangeStart(),t.getT1().getRangeEnd());
+                .doOnNext((t) -> {
+                    log.info(String.format("UPDATING Subscription %s updated with rangeStart: %s, rangeEnd: %s",
+                            t.getT2().getId(),
+                            t.getT1().getRangeStart(),
+                            t.getT1().getRangeEnd()));
+                    t.getT2().updateRange(t.getT1().getRangeStart(), t.getT1().getRangeEnd());
                     t.getT2().publishInto(fetchOldCards(t.getT2()));
                 })
-                .map(t->t.getT2())
+                .map(t -> CardSubscriptionDto.builder()
+                        .rangeStart(t.getT2().getRangeStart())
+                        .rangeEnd(t.getT2().getRangeEnd())
+                        .build())
                 ;
     }
 
@@ -120,7 +134,6 @@ public class CardOperationsController {
      * @return
      */
     private Flux<String> fetchOldCards(CardSubscription subscription) {
-        Flux<String> oldCards;
         Long start = subscription.getRangeStart();
         Long end = subscription.getRangeEnd();
         return fetchOldCards0(subscription.getStartingPublishDate(), start, end, subscription.getUser());
@@ -135,12 +148,17 @@ public class CardOperationsController {
 
     private Flux<String> fetchOldCards0(Long referencePublishDate, Long start, Long end, User user) {
         Flux<String> oldCards;
+        referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow().toEpochMilli() : referencePublishDate;
+        String login = user.getLogin();
+        String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
         if (end != null && start != null) {
-            referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow().toEpochMilli() : referencePublishDate;
-            String login = user.getLogin();
-            String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
             oldCards = cardRepository.findUrgentJSON(referencePublishDate, start, end, login, groups);
+        } else if (end != null) {
+            oldCards = cardRepository.findPastOnlyJSON(referencePublishDate, end, login, groups);
+        } else if (start != null) {
+            oldCards = cardRepository.findFutureOnlyJSON(referencePublishDate, start, login, groups);
         } else {
+            log.info("Not loading published cards as no range is provided");
             oldCards = Flux.empty();
         }
         return oldCards;

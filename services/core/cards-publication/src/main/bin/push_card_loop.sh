@@ -9,6 +9,7 @@ content=empty
 interval=5
 url=http://localhost:2102/cards
 processNumber=5
+dateShift=0
 
 display_usage() {
 	echo "This script sends card periodically to a card publication server to groups RTE, CORESO and user admin.\n"
@@ -19,7 +20,8 @@ display_usage() {
 	echo -e "\t-i, --interval  : number. interval in seconds between card sendings. Defaults to $interval"
 	echo -e "\t-p, --publisher  : string. Publisher service name. Defaults to $publisher"
 	echo -e "\t-r, --process  : string. Process id suffix. Defaults to $defaultProcess"
-	echo -e "\t-c, --processCount  : number. Number of different process. Defaults to $processNumber"
+	echo -e "\t-c, --process-count  : number. Number of different process. Defaults to $processNumber"
+	echo -e "\t-d, --dtae-shift  : number. millisecond date shift. Defaults to $dateShift"
 }
 
 while [[ $# -gt 0 ]]
@@ -29,6 +31,11 @@ key="$1"
 case $key in
     -u|--url)
     url="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -d|--date-shift)
+    dateShift="$2"
     shift # past argument
     shift # past value
     ;;
@@ -42,7 +49,7 @@ case $key in
     shift # past argument
     shift # past value
     ;;
-    -c|--content)
+    -c|--process-count)
     content="$2"
     shift # past argument
     shift # past value
@@ -69,21 +76,25 @@ echo process = "${process}"
 echo content   = "${content}"
 echo interval  = "${interval}"
 
-now=$(($(date +%s%N)/1000000))
+now=$(($(date +%s%N)/1000000 + dateShift))
 plusOneH=$(($now + 3600000))
 plusOneHTen=$(($now + 4200000))
+plusTwoH=$(($now + 7200000))
 
 #$1 publisher
 #$2 processId
 #$3 startDate
 #$4 lttd
-#$5 processNum
+#$5 endDate
+#$6 processNum
+
 piece_of_data(){
     piece=$'{\n'
     piece+="  \"publisher\": \"$1\", "$'\n'
     piece+="  \"publisherVersion\": \"1\", "$'\n'
-    piece+="  \"processId\": \"$2$5\", "$'\n'
+    piece+="  \"processId\": \"$2$6\", "$'\n'
     piece+="  \"startDate\": $3, "$'\n'
+    piece+="  \"endDate\": $5, "$'\n'
     piece+="  \"lttd\": $4, "$'\n'
     piece+="  \"severity\": \"ACTION\", "$'\n'
     piece+="  \"tags\": [ "$'\n'
@@ -154,7 +165,7 @@ card_data(){
     data="["
     for((i=0;i<$processNumber;i=$((i+1))));
     do
-        data+="$(piece_of_data $1 $2 $3 $4 $i)"
+        data+="$(piece_of_data $1 $2 $3 $4 $5 $i)"
         if((i<$((processNumber - 1)))); then
             data+=","
         fi
@@ -165,7 +176,7 @@ card_data(){
 
 while true
 do
-    cardData=$(card_data $publisher $process $plusOneHTen $plusOneH)
+    cardData=$(card_data $publisher $process $plusOneHTen $plusOneH $plusTwoH)
 #    echo "sending $cardData"
     curl --header "Content-Type: application/json" \
       --request POST \
@@ -174,6 +185,7 @@ do
 
     plusOneH=$((plusOneH+1000*interval))
     plusOneHTen=$((plusOneHTen+1000*interval))
+    plusTwoH=$((plusTwoH+1000*interval))
     echo -e "\nWaiting..."
     sleep $interval
 done

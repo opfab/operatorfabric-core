@@ -57,11 +57,9 @@ public class CardSubscriptionRoutesConfig {
         return request -> {
             ServerResponse.BodyBuilder builder = ok()
                     .contentType(MediaType.APPLICATION_JSON);
-            Mono<CardSubscription> inputSubscription = request.bodyToMono(CardSubscription.class);
-            request.pathVariable("uiId");
                 return builder.body(cardOperationsController.updateSubscriptionAndPublish
                                 (extractCardSubscriptionInfoOnPost(request)),
-                        CardSubscription.class);
+                        CardSubscriptionDto.class);
         };
     }
 
@@ -123,15 +121,16 @@ public class CardSubscriptionRoutesConfig {
         return request.principal().zipWith(inputSubscription)
                 .map(t->{
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) t.getT1();
-                    return CardOperationsGetParameters.builder()
+                    CardOperationsGetParameters.CardOperationsGetParametersBuilder builder = CardOperationsGetParameters.builder()
                             .user((User) jwtPrincipal.getPrincipal())
-                            .clientId(request.pathVariable("uiId"))
+                            .clientId(request.queryParam("clientId").orElse(null))
                             .rangeStart(t.getT2().getRangeStart())
                             .rangeEnd(t.getT2().getRangeEnd())
                             .test(false)
-                            .notification(true)
-                            .loadedCards(t.getT2().getLoadedCards())
-                            .build();
+                            .notification(true);
+                    if(t.getT2().getLoadedCards()!=null)
+                        builder.loadedCards(t.getT2().getLoadedCards());
+                    return builder.build();
                 });
     }
 
