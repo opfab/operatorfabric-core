@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,8 +47,26 @@ public class UsersController implements UsersApi {
 
     @Override
     public SimpleUser createUser(SimpleUser user) throws Exception {
-        userRepository.insert(new UserData(user));
-        return user;
+        //TODO Find out if there is a way to handle this in WebSecurityConfiguration (like Fetch & Update)
+        User callingUser = extractPrincipalFromContext();
+        if(callingUser.getGroups().contains("ADMIN")||callingUser.getLogin().equals(user.getLogin())){
+            userRepository.insert(new UserData(user));
+            return user;
+        } else {
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.FORBIDDEN)
+                            .message("User doesn't have the necessary privileges.")
+                            .build());
+        }
+    }
+
+
+    private User extractPrincipalFromContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null)
+            return null;
+        return (User) authentication.getPrincipal();
     }
 
     @Override

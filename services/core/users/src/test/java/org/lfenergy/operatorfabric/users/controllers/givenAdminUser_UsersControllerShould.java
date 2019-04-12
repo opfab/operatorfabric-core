@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @Tag("end-to-end")
 @Tag("mongo")
 @WithMockOpFabUser(login="testAdminUser", roles = { "ADMIN" })
-class UsersControllerShould {
+class givenAdminUser_UsersControllerShould {
 
     private MockMvc mockMvc;
 
@@ -127,14 +127,6 @@ class UsersControllerShould {
            .andExpect(jsonPath("$.lastName", is("Chapman")))
            .andExpect(jsonPath("$.groups", contains("Monty Pythons")))
         ;
-    }
-
-
-    private User extractPrincipalFromContext() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null)
-            return null;
-        return (User) authentication.getPrincipal();
     }
 
     @Test
@@ -360,7 +352,5 @@ class UsersControllerShould {
         ;
 
     }
-
-    //TODO updateMisMatched, updateMisMatched & not found, + same for set (POST)
 
 }
