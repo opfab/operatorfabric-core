@@ -46,6 +46,9 @@ public class UserData implements User {
     }
 
     public void addGroup(String group){
+        if(null== groupSet){
+            this.groupSet=new HashSet<>();
+        }
         groupSet.add(group);
     }
 

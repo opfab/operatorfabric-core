@@ -426,6 +426,32 @@ class GroupsControllerShould {
     }
 
     @Test
+    void addGroupToFreshlyNewUser() throws Exception{
+
+        String newUserName= "freshly-new-user";
+
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{" +
+                        "\"login\": \""+newUserName+"\","+
+                        "\"firstName\": \"Freshly \","+
+                        "\"lastName\": \"New User\""+
+                        "}")
+        ).andExpect(status().isOk());
+
+        mockMvc.perform(put("/groups/Wanda/users")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("[\""+newUserName+"\"]")
+        )
+                .andExpect(status().isOk());
+
+        UserData jcleese = userRepository.findById(newUserName).get();
+        assertThat(jcleese).isNotNull();
+        assertThat(jcleese.getGroups()).contains("Wanda");
+
+    }
+
+    @Test
     void deleteGroupsFromUsers() throws Exception {
         mockMvc.perform(delete("/groups/Monty Pythons/users")
            .contentType(MediaType.APPLICATION_JSON_UTF8)
