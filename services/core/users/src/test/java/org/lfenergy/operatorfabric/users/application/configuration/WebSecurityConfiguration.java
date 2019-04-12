@@ -28,7 +28,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    WebSecurity webSecurity;
+    WebSecurityChecks webSecurityChecks;
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
@@ -36,8 +36,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/users/{login}").access("hasRole('ADMIN') or @webSecurity.checkUserLogin(authentication,#login)")
-                .antMatchers(HttpMethod.PUT,"/users/{login}").access("hasRole('ADMIN') or @webSecurity.checkUserLogin(authentication,#login)")
+                .antMatchers(HttpMethod.GET,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
+                .antMatchers(HttpMethod.PUT,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
                 .antMatchers(HttpMethod.POST,"/users").authenticated()
                 .antMatchers("/users/**").hasRole("ADMIN")
                 .antMatchers("/groups/**").hasRole("ADMIN")

@@ -98,6 +98,9 @@ paths:
                   - Monty Python
         '401':
           description: Authentication required
+        '403':
+          description: Authenticated users who are not admins can only access their own
+            data
     post:
       tags:
         - users
@@ -123,6 +126,9 @@ paths:
           description: Bad request (duplicate key)
         '401':
           description: Authentication required
+        '403':
+          description: Authenticated users who are not admins can only create their own
+            data
   '/users/{login}':
     get:
       tags:
@@ -181,6 +187,8 @@ paths:
           description: Bad request (body doesn't match login path parameter)
         '401':
           description: Authentication required
+        '403':
+          description: Authenticated users who are not admins can only update their own data
         '404':
           description: User not found
   /groups:
@@ -207,6 +215,8 @@ paths:
                 description: 'Chico, Groucho and Harpo, forget about Zeppo and Gummo'
         '401':
           description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
     post:
       tags:
         - groups
@@ -232,6 +242,8 @@ paths:
           description: Bad request (duplicate key)
         '401':
           description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
   '/groups/{name}':
@@ -265,6 +277,8 @@ paths:
           description: Bad request (body doesn't match name path parameter)
         '401':
           description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
         '404':
           description: Group not found
     get:
@@ -288,6 +302,8 @@ paths:
             $ref: '#/definitions/Group'
         '401':
           description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
 
@@ -327,6 +343,8 @@ paths:
           description: Bad request
         '401':
           description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
     post:
@@ -360,6 +378,8 @@ paths:
           description: Bad request
         '401':
           description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
     delete:
@@ -393,5 +413,7 @@ paths:
           description: Bad request
         '401':
           description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
