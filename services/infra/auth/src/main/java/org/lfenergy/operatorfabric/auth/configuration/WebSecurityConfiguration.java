@@ -40,6 +40,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
            .withUser("rte-operator").password(passwordEncoder.encode("test")).roles("USER").and()
            .withUser("tso1-operator").password(passwordEncoder.encode("test")).roles("USER").and()
            .withUser("tso2-operator").password(passwordEncoder.encode("test")).roles("USER").and()
+                .withUser("myBrandNewUser").password(passwordEncoder.encode("test")).roles("USER").and()
         ;
     }
 
