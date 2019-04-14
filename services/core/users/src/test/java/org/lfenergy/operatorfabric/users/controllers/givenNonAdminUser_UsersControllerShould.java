@@ -152,39 +152,6 @@ class givenNonAdminUser_UsersControllerShould {
     }
 
     @Test
-    @WithMockOpFabUser(login="unknownSoFar", roles = { "" })
-    void createOwnData() throws Exception {
-        mockMvc.perform(post("/users")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content("{" +
-                        "\"login\": \"unknownSoFar\","+
-                        "\"firstName\": \"John\","+
-                        "\"lastName\": \"Doe\""+
-                        "}")
-        )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.login", is("unknownSoFar")))
-                .andExpect(jsonPath("$.firstName", is("John")))
-                .andExpect(jsonPath("$.lastName", is("Doe")))
-        ;
-
-    }
-
-    @Test
-    void createOwnDataWithDuplicateError() throws Exception {
-
-        mockMvc.perform(get("/users/gchapman"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.login", is("gchapman")))
-                .andExpect(jsonPath("$.firstName", is("Graham")))
-                .andExpect(jsonPath("$.lastName", is("Chapman")))
-        ;
-
-    }
-
-    @Test
     void update() throws Exception {
         mockMvc.perform(put("/users/kkline")
            .contentType(MediaType.APPLICATION_JSON_UTF8)

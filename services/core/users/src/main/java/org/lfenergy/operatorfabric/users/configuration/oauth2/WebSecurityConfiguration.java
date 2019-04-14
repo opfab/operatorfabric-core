@@ -9,12 +9,14 @@ package org.lfenergy.operatorfabric.users.configuration.oauth2;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -28,6 +30,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     WebSecurityChecks webSecurityChecks;
 
+    @Autowired
+    private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
+
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -35,13 +40,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
                 .antMatchers(HttpMethod.PUT,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
-                .antMatchers(HttpMethod.POST,"/users").authenticated()
                 .antMatchers("/users/**").hasRole("ADMIN")
                 .antMatchers("/groups/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .oauth2ResourceServer()
                 .jwt()
+                .jwtAuthenticationConverter(opfabJwtConverter)
         ;
     }
 

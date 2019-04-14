@@ -7,6 +7,7 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
+import feign.FeignException;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -33,7 +34,7 @@ public class UserServiceCache {
      * @return {@link User}
      */
     @Cacheable(value = "user", key = "{#principalId}")
-    public User fetchUserFromCacheOrProxy(String principalId){
+    public User fetchUserFromCacheOrProxy(String principalId) throws FeignException {
         return proxy.fetchUser(principalId);
     }
 

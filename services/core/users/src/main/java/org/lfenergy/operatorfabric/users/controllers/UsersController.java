@@ -47,26 +47,8 @@ public class UsersController implements UsersApi {
 
     @Override
     public SimpleUser createUser(SimpleUser user) throws Exception {
-        //TODO Find out if there is a way to handle this in WebSecurityConfiguration (like Fetch & Update)
-        User callingUser = extractPrincipalFromContext();
-        if(callingUser.getGroups().contains("ADMIN")||callingUser.getLogin().equals(user.getLogin())){
-            userRepository.insert(new UserData(user));
-            return user;
-        } else {
-            throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.FORBIDDEN)
-                            .message("User doesn't have the necessary privileges.")
-                            .build());
-        }
-    }
-
-
-    private User extractPrincipalFromContext() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null)
-            return null;
-        return (User) authentication.getPrincipal();
+        userRepository.insert(new UserData(user));
+        return user;
     }
 
     @Override

@@ -7,6 +7,7 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
+import feign.FeignException;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +39,7 @@ public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{
 
         return new Converter<Jwt, Mono<AbstractAuthenticationToken>>(){
             @Override
-            public Mono<AbstractAuthenticationToken> convert(Jwt jwt) {
+            public Mono<AbstractAuthenticationToken> convert(Jwt jwt) throws FeignException {
                 String principalId = jwt.getClaimAsString("sub");
                 OAuth2JwtProcessingUtilities.token.set(jwt);
                 User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
