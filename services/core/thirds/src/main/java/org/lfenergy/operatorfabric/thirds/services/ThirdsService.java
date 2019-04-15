@@ -43,7 +43,6 @@ public class ThirdsService implements ResourceLoaderAware {
 
     private static final String PATH_PREFIX = "file:";
     private static final String CONFIG_FILE_NAME = "config.json";
-    private static final String EXTENSION_SEPARATOR = ".";
     @Value("${thirds.storage.path}")
     private String storagePath;
     private ObjectMapper objectMapper;

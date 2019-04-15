@@ -76,13 +76,6 @@ public class CardOperationsController {
                         } else {
                             return fetchOldCards(t);
                         }
-//                        // fetch old card (if needed, see {@]link #fetchOldCards} method)
-//                        //merge subscription and old cards as needed
-//                        if (subscription != null)
-//                            return subscription.getPublisher();
-////                            return ((Flux<String>) subscription.getPublisher()).mergeWith(oldCards);
-//                        else
-//                            return oldCards;
                     } else {
                         log.warn("\"clientId\" is a mandatory request parameter");
                         ApiErrorException e = new ApiErrorException(ApiError.builder()

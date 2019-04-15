@@ -20,8 +20,7 @@ import {TimeService} from "@ofServices/time.service";
 
 @Component({
     selector: 'of-time-filter',
-    templateUrl: './time-filter.component.html',
-    styleUrls: ['./time-filter.component.css']
+    templateUrl: './time-filter.component.html'
 })
 export class TimeFilterComponent implements OnInit, OnDestroy {
     private ngUnsubscribe$ = new Subject<void>();
