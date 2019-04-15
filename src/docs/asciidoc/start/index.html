@@ -446,49 +446,343 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Get Started</div>
 <ul class="sectlevel1">
-<li><a href="#_connection_to_the_gui">1. Connection to the GUI</a></li>
-<li><a href="#_card_creation_and_sending">2. Card : creation and sending</a>
+<li><a href="#_requirements">1. Requirements</a></li>
+<li><a href="#_cloning_the_project">2. Cloning the project</a></li>
+<li><a href="#_building_the_project">3. Building the project</a>
 <ul class="sectlevel2">
-<li><a href="#_create_a_card">2.1. Create a card</a></li>
-<li><a href="#_send_a_card">2.2. Send a Card</a></li>
+<li><a href="#_set_up_your_building_environment">3.1. Set up your building environment</a></li>
+<li><a href="#_assemble_the_project">3.2. Assemble the project</a></li>
 </ul>
 </li>
-<li><a href="#_card_formatting">3. Card: formatting</a>
+<li><a href="#_run_the_project">4. Run the project</a>
 <ul class="sectlevel2">
-<li><a href="#_configure_a_card_formatting">3.1. Configure a card formatting</a></li>
-<li><a href="#_load_a_card_format_configuration">3.2. Load a card format configuration</a></li>
+<li><a href="#_set_up_your_running_environment">4.1. Set up your running environment</a></li>
+<li><a href="#_run_the_micro_services">4.2. Run the micro-services</a></li>
 </ul>
 </li>
-<li><a href="#_card_view">4. Card: view</a></li>
+<li><a href="#_using_operatorfabric">5. Using OperatorFabric</a>
+<ul class="sectlevel2">
+<li><a href="#_connection_to_the_gui">5.1. Connection to the GUI</a></li>
+<li><a href="#_card_creation_and_sending">5.2. Card : creation and sending</a></li>
+</ul>
+</li>
+<li><a href="#_card_formatting">6. Card: formatting</a>
+<ul class="sectlevel2">
+<li><a href="#_configure_a_card_formatting">6.1. Configure a card formatting</a></li>
+<li><a href="#_card_view">6.2. Card: view</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_requirements">1. Requirements</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Once an operatorFabric instance is fully running (<a href="https://github.com/opfab/operatorfabric-core#4-getting-started">cf getting started in the README</a>), the main goal here is to send cards to a user of OperatorFabric and to display their details in a neat way.</p>
+<p>All steps above describe how to install, build and test <code>OperatorFabric</code> into a Linux environment.</p>
 </div>
 <div class="paragraph">
-<p>The user used here, is one of the existing users of OperatorFabric (developper version): <code>tso1-operator</code>. To manage users and groups please to refere to <a href="https://opfab.github.io/projects/services/core/users/0.1.1.SNAPSHOT/reference">the reference documentation of the User services</a>.</p>
+<p>The following software are needed to perform those steps(<a href="https://github.com/opfab/operatorfabric-core#4-requirements">see Requirement in the <code>OperatorFabric</code> README for more details</a>):</p>
 </div>
-<div class="admonitionblock warning">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://git-scm.com/">git</a> (to clone the source code);</p>
+</li>
+<li>
+<p><a href="https://sdkman.io/">sdkman</a> (to manage the correct version of <a href="https://www.azul.com/products/zulu-enterprise/">zulu JVM</a> and <a href="https://gradle.org/">Gradle</a>);</p>
+</li>
+<li>
+<p><a href="https://github.com/creationix/nvm">nvm</a> (to manage the correct version of <a href="https://nodejs.org">node</a> and <a href="https://www.npmjs.com/">npm</a>);</p>
+</li>
+<li>
+<p><a href="https://www.docker.com/">docker</a>;</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cloning_the_project">2. Cloning the project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The simplest way is to use git to get all source code of OperatorFabric by using the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>git clone https://github.com/opfab/operatorfabric-core.git
+cd operatorfabric-core</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_building_the_project">3. Building the project</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_set_up_your_building_environment">3.1. Set up your building environment</h3>
+<div class="paragraph">
+<p>For a linux shell session, the following command set environment variables &amp; appropriate versions of gradle, maven, etc.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>source ./bin/load_environment_light.sh</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Throughout this document, the instance of OperatorFabric is considered to be deploy on <code>locahost</code>, the end points need to be adapted if it&#8217;s not the case for you.
+From now on, you can use environment variable $OF_HOME to get back to the repository home.
 </td>
 </tr>
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_assemble_the_project">3.2. Assemble the project</h3>
+<div class="listingblock">
+<div class="content">
+<pre>gradle assemble</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first run of this command download <code>operatorfabric</code> dependencies and can take a while.</p>
+</div>
+</div>
+</div>
 </div>
 <div class="sect1">
-<h2 id="_connection_to_the_gui">1. Connection to the GUI</h2>
+<h2 id="_run_the_project">4. Run the project</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_set_up_your_running_environment">4.1. Set up your running environment</h3>
+<div class="paragraph">
+<p>Deploy dockerized MongoDB, RabbitMQ and SonarQube
+MongoDB, RabbitMQ and SonarQube are needed for the build so tests can be run.</p>
+</div>
+<div class="paragraph">
+<p>A docker-compose file with properly configured containers is available <a href="src/main/docker/test-quality-environment/">there</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you haven&#8217;t done so before, you will need to configure a docker network for the containers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>docker network create opfabnet</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then run the docker-compose in detached mode:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cd src/main/docker/test-quality-environment/
+docker-compose up -d</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_the_micro_services">4.2. Run the micro-services</h3>
+<div class="paragraph">
+<p>There is a script to launch the different micro-services of <code>OperatorFabric</code> in the right order. It&#8217;s used with the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>bin/run_all.sh start</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the terminal, the script should display some alike messages:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>OPERATORFABRIC ENVIRONMENT VARIABLES
+OF_HOME=/home/developper/projects/operatorfabric-core
+OF_CORE=/home/developper/projects/operatorfabric-core/services/core
+OF_CLIENT=/home/developper/projects/operatorfabric-core/client
+OF_TOOLS=/home/developper/projects/operatorfabric-core/tools
+OF_INFRA=/home/developper/projects/operatorfabric-core/services/infra
+
+OperatorFabric version is 0.1.1.SNAPSHOT
+OF_COMPONENTS[0]=/home/developper/projects/operatorfabric-core/tools/swagger-spring-generators
+OF_COMPONENTS[1]=/home/developper/projects/operatorfabric-core/tools/generic/utilities
+OF_COMPONENTS[2]=/home/developper/projects/operatorfabric-core/tools/generic/test-utilities
+OF_COMPONENTS[3]=/home/developper/projects/operatorfabric-core/tools/spring/spring-utilities
+OF_COMPONENTS[4]=/home/developper/projects/operatorfabric-core/tools/spring/spring-amqp-time-utilities
+OF_COMPONENTS[5]=/home/developper/projects/operatorfabric-core/tools/spring/spring-mongo-utilities
+OF_COMPONENTS[6]=/home/developper/projects/operatorfabric-core/tools/spring/spring-oauth2-utilities
+OF_COMPONENTS[7]=/home/developper/projects/operatorfabric-core/services/infra/config
+OF_COMPONENTS[8]=/home/developper/projects/operatorfabric-core/services/infra/auth
+OF_COMPONENTS[9]=/home/developper/projects/operatorfabric-core/services/infra/registry
+OF_COMPONENTS[10]=/home/developper/projects/operatorfabric-core/services/infra/client-gateway
+OF_COMPONENTS[11]=/home/developper/projects/operatorfabric-core/client/time
+OF_COMPONENTS[12]=/home/developper/projects/operatorfabric-core/client/cards
+OF_COMPONENTS[13]=/home/developper/projects/operatorfabric-core/client/users
+OF_COMPONENTS[14]=/home/developper/projects/operatorfabric-core/services/core/thirds
+OF_COMPONENTS[15]=/home/developper/projects/operatorfabric-core/services/core/time
+OF_COMPONENTS[16]=/home/developper/projects/operatorfabric-core/services/core/cards-publication
+OF_COMPONENTS[17]=/home/developper/projects/operatorfabric-core/services/core/cards-consultation
+OF_COMPONENTS[18]=/home/developper/projects/operatorfabric-core/services/core/users
+#### Preparing runtime data ####
+## Preparing business runtime data
+Starting a Gradle Daemon (subsequent builds will be faster)
+
+BUILD SUCCESSFUL in 18s
+3 actionable tasks: 3 up-to-date
+## Preparing infrastucture runtime data
+
+BUILD SUCCESSFUL in 10s
+2 actionable tasks: 2 up-to-date
+##########################################################
+Starting configuration-cloud-service, debug port: 5005
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/infra/config/build/PIDFILE
+Started with pid: 20616
+
+##########################################################
+Starting OAuth2-dev-server, debug port: 5006
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/infra/auth/build/PIDFILE
+Started with pid: 20620
+
+##########################################################
+Starting registry-cloud-service, debug port: 5007
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/infra/registry/build/PIDFILE
+Started with pid: 20625
+
+Registry is not available at http://localhost:2001, retry in 5s (0)
+Registry is not available at http://localhost:2001, retry in 5s (1)
+Registry is not available at http://localhost:2001, retry in 5s (3)
+Registry is ready, now waiting for CONFIG to be ready
+Config is declared in Registry, now Starting other services
+##########################################################
+Starting client-gateway-cloud-service, debug port: 5008
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/infra/client-gateway/build/PIDFILE
+Started with pid: 20866
+
+##########################################################
+Starting users-business-service, debug port: 5009
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/core/users/build/PIDFILE
+Started with pid: 20870
+
+##########################################################
+Starting time-business-service, debug port: 5010
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/core/time/build/PIDFILE
+Started with pid: 20875
+
+##########################################################
+Starting cards-consultation-business-service, debug port: 5011
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/core/cards-consultation/build/PIDFILE
+Started with pid: 20880
+
+##########################################################
+Starting cards-publication-business-service, debug port: 5012
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/core/cards-publication/build/PIDFILE
+Started with pid: 20894
+
+##########################################################
+Starting thirds-business-service, debug port: 5013
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/core/thirds/build/PIDFILE
+Started with pid: 20899
+
+##########################################################
+Starting web-ui, debug port: 5014
+##########################################################
+pid file: /home/developper/projects/operatorfabric-core/services/web/web-ui/build/PIDFILE
+Started with pid: 20913</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>pids</code> and the path beginning with <code>/home/developper</code> will vary from machine to machine and from time to time.</p>
+</div>
+<div class="paragraph">
+<p>Once the micro-services launched, to verify if all services are running  the following command is used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>bin/run_all.sh status</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With following prompts:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>OPERATORFABRIC ENVIRONMENT VARIABLES
+OF_HOME=/home/developper/projects/operatorfabric-core
+OF_CORE=/home/developper/projects/operatorfabric-core/services/core
+OF_CLIENT=/home/developper/projects/operatorfabric-core/client
+OF_TOOLS=/home/developper/projects/operatorfabric-core/tools
+OF_INFRA=/home/developper/projects/operatorfabric-core/services/infra
+
+OperatorFabric version is 0.1.1.SNAPSHOT
+OF_COMPONENTS[0]=/home/developper/projects/operatorfabric-core/tools/swagger-spring-generators
+OF_COMPONENTS[1]=/home/developper/projects/operatorfabric-core/tools/generic/utilities
+OF_COMPONENTS[2]=/home/developper/projects/operatorfabric-core/tools/generic/test-utilities
+OF_COMPONENTS[3]=/home/developper/projects/operatorfabric-core/tools/spring/spring-utilities
+OF_COMPONENTS[4]=/home/developper/projects/operatorfabric-core/tools/spring/spring-amqp-time-utilities
+OF_COMPONENTS[5]=/home/developper/projects/operatorfabric-core/tools/spring/spring-mongo-utilities
+OF_COMPONENTS[6]=/home/developper/projects/operatorfabric-core/tools/spring/spring-oauth2-utilities
+OF_COMPONENTS[7]=/home/developper/projects/operatorfabric-core/services/infra/config
+OF_COMPONENTS[8]=/home/developper/projects/operatorfabric-core/services/infra/auth
+OF_COMPONENTS[9]=/home/developper/projects/operatorfabric-core/services/infra/registry
+OF_COMPONENTS[10]=/home/developper/projects/operatorfabric-core/services/infra/client-gateway
+OF_COMPONENTS[11]=/home/developper/projects/operatorfabric-core/client/time
+OF_COMPONENTS[12]=/home/developper/projects/operatorfabric-core/client/cards
+OF_COMPONENTS[13]=/home/developper/projects/operatorfabric-core/client/users
+OF_COMPONENTS[14]=/home/developper/projects/operatorfabric-core/services/core/thirds
+OF_COMPONENTS[15]=/home/developper/projects/operatorfabric-core/services/core/time
+OF_COMPONENTS[16]=/home/developper/projects/operatorfabric-core/services/core/cards-publication
+OF_COMPONENTS[17]=/home/developper/projects/operatorfabric-core/services/core/cards-consultation
+OF_COMPONENTS[18]=/home/developper/projects/operatorfabric-core/services/core/users
+##########################################################
+configuration-cloud-service (pid: 20616) : RUNNING
+OAuth2-dev-server (pid: 20620) : RUNNING
+registry-cloud-service (pid: 20625) : RUNNING
+client-gateway-cloud-service (pid: 20866) : RUNNING
+users-business-service (pid: 20870) : RUNNING
+time-business-service (pid: 20875) : RUNNING
+cards-consultation-business-service (pid: 20880) : RUNNING
+cards-publication-business-service (pid: 20894) : RUNNING
+thirds-business-service (pid: 20899) : RUNNING
+web-ui (pid: 20913) : RUNNING
+##########################################################</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To stop all the micro services, if needed, the command is simply:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>bin/run_all.sh stop</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_operatorfabric">5. Using OperatorFabric</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once an operatorFabric instance is fully running, the main goal here is to send cards to a user of OperatorFabric and to display their details in a neat way.</p>
+</div>
+<div class="paragraph">
+<p>The user used here, is one of the existing users of OperatorFabric (developper version): <code>tso1-operator</code>. To manage users and groups please to refere to <a href="https://opfab.github.io/projects/services/core/users/0.1.1.SNAPSHOT/reference">the reference documentation of the User services</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_connection_to_the_gui">5.1. Connection to the GUI</h3>
 <div class="paragraph">
 <p>To connect to OperatorFabric, open in a browser the following page: <a href="http://localhost:2002/ui/"><code>http://localhost:2002/ui/</code></a> and use <code>tso1-operator</code> as login and <code>test</code> as password.</p>
 </div>
@@ -509,15 +803,13 @@ Throughout this document, the instance of OperatorFabric is considered to be dep
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_card_creation_and_sending">2. Card : creation and sending</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_card_creation_and_sending">5.2. Card : creation and sending</h3>
 <div class="paragraph">
 <p>OperatorFabric receive cards as json object(<a href="https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#Card">specified in the cards publication service API</a>) in the body of an http POST request to this <code>URL</code>:<a href="http://localhost:2102"><code>http://localhost:2102/cards</code></a></p>
 </div>
-<div class="sect2">
-<h3 id="_create_a_card">2.1. Create a card</h3>
+<div class="sect3">
+<h4 id="_create_a_card">5.2.1. Create a card</h4>
 <div class="paragraph">
 <p>As an example, let&#8217;s send an <code>Hello World</code> card to <code>tso1-operator</code>.</p>
 </div>
@@ -582,8 +874,8 @@ Throughout this document, the instance of OperatorFabric is considered to be dep
 <p>In a linux environment, if we want such a value for two minutes from now, using the command <code>date -d "+ 2 minutes" +%s%N | cut -b1-13</code> can be useful.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_send_a_card">2.2. Send a Card</h3>
+<div class="sect3">
+<h4 id="_send_a_card">5.2.2. Send a Card</h4>
 <div class="paragraph">
 <p>Now this freshly updated card need to be send to our operator to see it in the browser. As write down earlier this json representing a card has to be send with a POST method to the running OperatorFabric instance. This request need to carry this header: "Content-Type:application/json". Use your perfered tool to achive this. If you&#8217;re using linux you can use the following set of instruction, given the fact that our card is saved in a file name <code>card.json</code> in the present working directory:</p>
 </div>
@@ -614,21 +906,22 @@ Throughout this document, the instance of OperatorFabric is considered to be dep
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="_card_formatting">3. Card: formatting</h2>
+<h2 id="_card_formatting">6. Card: formatting</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>To format the card rendering, such as details, details and so on, the third party, which is here <code>TSO1</code>, create a specific configuration file named in OperatorFabric as bundle. If you&#8217;re only insterested result you could use this bundle and go directly to this section where it&#8217;s uploaded to the server.</p>
 </div>
 <div class="sect2">
-<h3 id="_configure_a_card_formatting">3.1. Configure a card formatting</h3>
+<h3 id="_configure_a_card_formatting">6.1. Configure a card formatting</h3>
 <div class="paragraph">
 <p>The formatting of cards is configured inside a bundle.  A bundle is an archive uploaded by a Third party into the OperatorFabric server. The server will use the configuration provided by the bundle to localize card item or to format details for example.
 This archive is a <code>tar.gz</code> file often called a <code>tarball</code>. For our needs we will defined some <code>i18n</code> resources, some <code>css</code> and a template to render details. There are more possibilities describe in details by <a href="https://github.com/opfab/operatorfabric-core/tree/master/services/core/thirds">the Third service README</a> and in <a href="https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/reference/#_customization_example">the Third Service Referenc Documentation</a>. OperatorFabric use <a href="https://handlebarsjs.com/">Handlebars templates</a> to format and render cards details.
 All bundle resources are contain in subfolders and a metadata file named <code>config.json</code> declares what resources are available and need to be used in the bundle.</p>
 </div>
 <div class="sect3">
-<h4 id="_create_a_workspace">3.1.1. create a workspace</h4>
+<h4 id="_create_a_workspace">6.1.1. create a workspace</h4>
 <div class="paragraph">
 <p>The easiest way to create our bundle is to create somewhere a directory where will be created all needed files.</p>
 </div>
@@ -663,9 +956,8 @@ mkdir template</pre>
 └── template</pre>
 </div>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_i18n">3.1.2. i18n</h4>
+<div class="sect4">
+<h5 id="_i18n">i18n</h5>
 <div class="paragraph">
 <p>First of all, the title needs to be meaningful, in English and in French (for example). In the <code>i18n</code> folder, create two files: a <code>en.json</code> and a <code>fr.json</code>. In those files, translate the title key with a meaningful value such as:</p>
 </div>
@@ -707,8 +999,9 @@ mkdir template</pre>
 <p>As in the card, we define several keys, one for the title: <code>defaultProcess.title</code> and one for the summary <code>defaultProcess.summary</code> and give them an expected value.</p>
 </div>
 </div>
+</div>
 <div class="sect3">
-<h4 id="_template">3.1.3. Template</h4>
+<h4 id="_template">6.1.2. Template</h4>
 <div class="paragraph">
 <p>In the <code>template</code> folder, as we have two <code>i18n</code> we need to create two folders, <code>en</code> and <code>fr</code>.
 In each folder we create a file named <code>template.handlebars</code> containing:</p>
@@ -737,9 +1030,8 @@ In each folder we create a file named <code>template.handlebars</code> containin
 <pre>&lt;h2&gt;Bonjour à tous de la part de {{data.greetings}} !&lt;/h2&gt;</pre>
 </div>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_style">3.1.4. Style</h4>
+<div class="sect4">
+<h5 id="_style">Style</h5>
 <div class="paragraph">
 <p>In the <code>css</code> directory we create a file containing our style definition for the <code>h2</code> html tag:</p>
 </div>
@@ -752,15 +1044,15 @@ In each folder we create a file named <code>template.handlebars</code> containin
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>.detail.template.h2{
+<pre>.h2{
 	color:#fd9312;
 	font-weight: bold;
 }</pre>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_metadata">3.1.5. Metadata</h4>
+<div class="sect4">
+<h5 id="_metadata">Metadata</h5>
 <div class="paragraph">
 <p>In a file name <code>config.json</code> we write the following information:</p>
 </div>
@@ -778,8 +1070,9 @@ In each folder we create a file named <code>template.handlebars</code> containin
 <p>Here we will endorse the role of the <code>TSO1</code> party, and we have to declare the <code>template</code> name and the <code>style</code> file name to used. Here there are <strong>template</strong> and <strong>style</strong>.</p>
 </div>
 </div>
+</div>
 <div class="sect3">
-<h4 id="_packaging">3.1.6. Packaging</h4>
+<h4 id="_packaging">6.1.3. Packaging</h4>
 <div class="paragraph">
 <p>So far we have this file structure:</p>
 </div>
@@ -808,9 +1101,8 @@ In each folder we create a file named <code>template.handlebars</code> containin
 </div>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_load_a_card_format_configuration">3.2. Load a card format configuration</h3>
+<div class="sect3">
+<h4 id="_load_a_card_format_configuration">6.1.4. Load a card format configuration</h4>
 <div class="paragraph">
 <p>Now we can upload our bundle to the OperatorFabric server using <a href="http://localhost:2100/swagger-ui.html#/thirds/uploadBundle">the <code>tryout</code> of the Swagger API description of the bundle upload action</a>, our preferd REST client or using cURL.
 In summary, the upload method is a POST request to <code><a href="http://localhost:2100/thirds/TSO1" class="bare">localhost:2100/thirds/TSO1</a></code> with an attached file (our bundle). As you can see we are using the name of the <code>TSO1</code> to upload our bundle on the local operatorFabric.
@@ -845,10 +1137,8 @@ we could use the following command:</p>
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_card_view">4. Card: view</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_card_view">6.2. Card: view</h3>
 <div class="paragraph">
 <p>Now when our operator clicks on the card the page should look like the following screenshot(here localized in french):</p>
 </div>
@@ -860,10 +1150,11 @@ we could use the following command:</p>
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.1.1<br>
-Last updated 2019-04-08 14:32:59 +0200
+Last updated 2019-04-15 15:50:15 +0200
 </div>
 </div>
 </body>
