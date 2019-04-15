@@ -101,18 +101,18 @@ export function getRandomIndex<E>(array: E[]){
     }
 }
 
-export function getOneRandomLigthCard(card?:any): LightCard {
-    card = card?card:{};
+export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
+    lightCardTemplate = lightCardTemplate?lightCardTemplate:{};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     const oneCard = new LightCard(getRandomAlphanumericValue(3, 24),
-        card.id?card.id:getRandomAlphanumericValue(3, 24),
-        card.publisher?card.publisher:'testPublisher',
-        card.publisherVersion? card.publisherVersion:getRandomAlphanumericValue(3, 24),
-        card.publishDate?card.publishDate:today,
-        card.startDate? card.startDate:startTime,
-        card.endDate?card.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        card.severity?card.severity:Severity.QUESTION,
+        lightCardTemplate.id?lightCardTemplate.id:getRandomAlphanumericValue(3, 24),
+        lightCardTemplate.publisher?lightCardTemplate.publisher:'testPublisher',
+        lightCardTemplate.publisherVersion? lightCardTemplate.publisherVersion:getRandomAlphanumericValue(3, 24),
+        lightCardTemplate.publishDate?lightCardTemplate.publishDate:today,
+        lightCardTemplate.startDate? lightCardTemplate.startDate:startTime,
+        lightCardTemplate.endDate?lightCardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        lightCardTemplate.severity?lightCardTemplate.severity:Severity.QUESTION,
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
@@ -122,8 +122,8 @@ export function getOneRandomLigthCard(card?:any): LightCard {
     return oneCard;
 }
 
-export function getOneRandomCard(card?:any): Card {
-    card = card?card:{};
+export function getOneRandomCard(cardTemplate?:any): Card {
+    cardTemplate = cardTemplate?cardTemplate:{};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     let actions:Map<Action> = new Map();
@@ -132,20 +132,20 @@ export function getOneRandomCard(card?:any): Card {
     actions['hidden1']= new Action(ActionType.URI,getRandomI18nData(),true,'buttonStyle', 'contentStyle');
     actions['hidden2']= new Action(ActionType.URI,getRandomI18nData(),true);
     const oneCard = new Card(getRandomAlphanumericValue(3, 24),
-        card.id?card.id:getRandomAlphanumericValue(3, 24),
-        card.publisher?card.publisher:'testPublisher',
-        card.publisherVersion?card.publisherVersion:getRandomAlphanumericValue(3, 24),
-        card.publishDate?card.publishDate:today,
-        card.startDate? card.startDate:startTime,
-        card.endDate?card.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        card.severity?card.severity:Severity.QUESTION,
+        cardTemplate.id?cardTemplate.id:getRandomAlphanumericValue(3, 24),
+        cardTemplate.publisher?cardTemplate.publisher:'testPublisher',
+        cardTemplate.publisherVersion?cardTemplate.publisherVersion:getRandomAlphanumericValue(3, 24),
+        cardTemplate.publishDate?cardTemplate.publishDate:today,
+        cardTemplate.startDate? cardTemplate.startDate:startTime,
+        cardTemplate.endDate?cardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        cardTemplate.severity?cardTemplate.severity:Severity.QUESTION,
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
-        card.data?card.data:{data: "data"},
-        card.details?card.details:
+        cardTemplate.data?cardTemplate.data:{data: "data"},
+        cardTemplate.details?cardTemplate.details:
         [new CardDetail(null, getRandomI18nData(),null,"template1",null),
             new CardDetail(null, getRandomI18nData(),null,"template2",null),],
         actions
@@ -160,11 +160,11 @@ export function getOneRandomCardWithRandomDetails(min=2,max=5,card?:any):Card{
     return getOneRandomCard(card);
 }
 
-export function getOneRandomCardDetail(cardDetail?:any):CardDetail{
-    cardDetail = cardDetail?cardDetail:{};
-    const titlePosition = cardDetail.titlePosition ? cardDetail.titlePosition : pickARandomItemOfAnEnum(TitlePosition);
-    const titleKey = cardDetail.title?cardDetail.title:getRandomI18nData();
-    const titleStyle = cardDetail.titleStyle?cardDetail.titleStyle:getRandomAlphanumericValue(5,12);
+export function getOneRandomCardDetail(cardDetailTemplate?:any):CardDetail{
+    cardDetailTemplate = cardDetailTemplate?cardDetailTemplate:{};
+    const titlePosition = cardDetailTemplate.titlePosition ? cardDetailTemplate.titlePosition : pickARandomItemOfAnEnum(TitlePosition);
+    const titleKey = cardDetailTemplate.title?cardDetailTemplate.title:getRandomI18nData();
+    const titleStyle = cardDetailTemplate.titleStyle?cardDetailTemplate.titleStyle:getRandomAlphanumericValue(5,12);
     // const templateName = cardDetail.templateName?cardDetail.templateName:getRandomAlphanumericValue(4,12);
     const templateName = 'template1';
     const genString = () => getRandomAlphanumericValue(5,13);
