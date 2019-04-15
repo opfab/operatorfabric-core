@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { StateModule } from './state.module';
+import {StateModule} from './state.module';
 
 describe('StateModule', () => {
   let stateModule: StateModule;

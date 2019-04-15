@@ -8,7 +8,10 @@
 package org.lfenergy.operatorfabric.thirds.configuration.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.lfenergy.operatorfabric.thirds.model.*;
+import org.lfenergy.operatorfabric.thirds.model.ThirdMedias;
+import org.lfenergy.operatorfabric.thirds.model.ThirdMediasData;
+import org.lfenergy.operatorfabric.thirds.model.ThirdMenuEntry;
+import org.lfenergy.operatorfabric.thirds.model.ThirdMenuEntryData;
 
 /**
  * Jackson (JSON) Business Module configuration

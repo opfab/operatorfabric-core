@@ -21,7 +21,6 @@ import {LoginComponent} from "./components/login/login.component";
 import {IconComponent} from './components/icon/icon.component';
 import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "./translate.config";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 @NgModule({
     imports: [

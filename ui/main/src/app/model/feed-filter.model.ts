@@ -5,9 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {LightCard, Severity} from "@ofModel/light-card.model";
-import {I18n} from "@ofModel/i18n.model";
-import {Map} from "@ofModel/map";
+import {LightCard} from "@ofModel/light-card.model";
 
 /**
  * A Filter gather both the feed filtering behaviour and the filter status for

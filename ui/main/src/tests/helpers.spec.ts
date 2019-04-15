@@ -7,11 +7,13 @@
 
 import {
     appendFixedLengthAlphanumericValue,
-    generateRandomPositiveIntegerWithinRangeWithOneAsMinimum, getOneRandomCardDetail, getOneRandomCardWithRandomDetails,
-    getRandomAlphanumericValue, pickARandomItemOfAnEnum
+    generateRandomPositiveIntegerWithinRangeWithOneAsMinimum,
+    getOneRandomCardDetail,
+    getOneRandomCardWithRandomDetails,
+    getRandomAlphanumericValue,
+    pickARandomItemOfAnEnum
 } from './helpers';
 import {TitlePosition} from "@ofModel/card.model";
-import {Title} from "@angular/platform-browser";
 
 // most of max and min value used here have been chosen arbitrarily
 

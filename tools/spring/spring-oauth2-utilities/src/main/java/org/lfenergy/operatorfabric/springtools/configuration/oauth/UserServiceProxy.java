@@ -7,7 +7,6 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
-import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;

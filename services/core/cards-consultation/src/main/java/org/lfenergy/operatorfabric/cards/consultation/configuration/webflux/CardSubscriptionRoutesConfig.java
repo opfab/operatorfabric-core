@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsController;
 import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsGetParameters;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardSubscriptionDto;
-import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;

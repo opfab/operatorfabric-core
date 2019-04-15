@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.lfenergy.operatorfabric.cards.consultation.model.*;
-import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepositoryShould;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
@@ -23,9 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.UUID;
 
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.GROUP;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.UNION;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.USER;
+import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
 
 @Slf4j
 public class TestUtilities {
