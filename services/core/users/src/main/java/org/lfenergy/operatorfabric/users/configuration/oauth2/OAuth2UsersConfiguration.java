@@ -53,7 +53,7 @@ public class OAuth2UsersConfiguration {
         return new Converter<Jwt, AbstractAuthenticationToken>(){
 
             @Override
-            public AbstractAuthenticationToken convert(Jwt jwt) throws ApiErrorException {
+            public AbstractAuthenticationToken convert(Jwt jwt) {
                 String principalId = jwt.getClaimAsString("sub");
                 OAuth2JwtProcessingUtilities.token.set(jwt);
                 UserData user = userRepository.findById(principalId).orElseThrow(() -> new ApiErrorException(
@@ -64,8 +64,7 @@ public class OAuth2UsersConfiguration {
                         ;
                 OAuth2JwtProcessingUtilities.token.remove();
                 List<GrantedAuthority> authorities = computeAuthorities(user);
-                JwtAuthenticationToken token = new OpFabJwtAuthenticationToken(jwt, user, authorities);
-                return token;
+                return new OpFabJwtAuthenticationToken(jwt, user, authorities);
             }
         };
     }

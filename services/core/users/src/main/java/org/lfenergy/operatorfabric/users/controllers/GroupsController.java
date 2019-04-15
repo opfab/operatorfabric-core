@@ -157,7 +157,7 @@ public class GroupsController implements GroupsApi {
         return null;
     }
 
-    private void checkGroupExists(String name) throws ApiErrorException {
+    private void checkGroupExists(String name) {
         groupRepository.findById(name).orElseThrow(
                 ()-> new ApiErrorException(
                         ApiError.builder()
@@ -169,7 +169,7 @@ public class GroupsController implements GroupsApi {
 
 /** Retrieve users from repository for logins list, throwing an error if a login is not found
  * */
-    private List<UserData> retrieveUsers(List<String> logins) throws ApiErrorException{
+    private List<UserData> retrieveUsers(List<String> logins) {
 
         List<UserData> foundUsers = new ArrayList<>();
         for(String login : logins){

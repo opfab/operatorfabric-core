@@ -102,7 +102,7 @@ public class CardSubscription {
         }
         this.rangeStart = rangeStart;
         this.rangeEnd = rangeEnd;
-        this.filterNotification = filterNotification!=null?filterNotification:false;
+        this.filterNotification = filterNotification!=null && filterNotification;
     }
 
     public static String computeSubscriptionId(String prefix, String clientId) {

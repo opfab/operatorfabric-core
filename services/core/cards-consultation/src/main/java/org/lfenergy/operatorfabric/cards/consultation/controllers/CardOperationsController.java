@@ -68,7 +68,6 @@ public class CardOperationsController {
                     if (t.getClientId() != null) {
                         //init subscription if needed
                         CardSubscription subscription = null;
-                        Flux<String> oldCards;
                         if (t.isNotification()) {
                             subscription = cardSubscriptionService.subscribe(t.getUser(), t.getClientId(), t.getRangeStart(), t.getRangeEnd(), false);
                             subscription.publishInto(fetchOldCards(subscription));
@@ -105,7 +104,7 @@ public class CardOperationsController {
                         throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_REQUEST).message(e.getMessage()).build());
                     }
                 })
-                .doOnNext((t) -> {
+                .doOnNext(t -> {
                     log.info(String.format("UPDATING Subscription %s updated with rangeStart: %s, rangeEnd: %s",
                             t.getT2().getId(),
                             t.getT1().getRangeStart(),
@@ -133,7 +132,6 @@ public class CardOperationsController {
     }
 
     private Flux<String> fetchOldCards(CardOperationsGetParameters parameters) {
-        Flux<String> oldCards;
         Long start = parameters.getRangeStart();
         Long end = parameters.getRangeEnd();
         return fetchOldCards0(null, start, end, parameters.getUser());
