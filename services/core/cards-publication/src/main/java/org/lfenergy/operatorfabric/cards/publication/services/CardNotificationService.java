@@ -246,7 +246,7 @@ public class CardNotificationService {
                                 log.info("Operation sent to Exchange[" + exchange.getName() + "] with routing key " + entry.getKey
                                         ());
                             } catch (JsonProcessingException e) {
-                                log.error("Unnable to linearize card to json on amqp notification");
+                                log.error("Unable to linearize card to json on amqp notification");
                             }
                         })
                 );
@@ -258,17 +258,17 @@ public class CardNotificationService {
      *
      * @param c
      * @param type
-     * @param cardsDictionnay
+     * @param cardsDictionnary
      * @param builderId
      */
     private void addCardToOperation(CardPublicationData c,
-                                    CardOperationTypeEnum type, Map<String, CardOperationData.BuilderEncapsulator> cardsDictionnay,
+                                    CardOperationTypeEnum type, Map<String, CardOperationData.BuilderEncapsulator> cardsDictionnary,
                                     String builderId) {
-        CardOperationData.BuilderEncapsulator builderEncapsulator = cardsDictionnay.get(builderId);
+        CardOperationData.BuilderEncapsulator builderEncapsulator = cardsDictionnary.get(builderId);
         if (builderEncapsulator == null) {
             builderEncapsulator = CardOperationData.encapsulatedBuilder();
             builderEncapsulator.builder().type(type).publishDate(c.getPublishDate());
-            cardsDictionnay.put(builderId, builderEncapsulator);
+            cardsDictionnary.put(builderId, builderEncapsulator);
         }
         switch (type) {
             case ADD:

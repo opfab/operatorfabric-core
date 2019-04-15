@@ -83,33 +83,35 @@ public class CardSubscriptionService {
             boolean filterNotification) {
         String subId = CardSubscription.computeSubscriptionId(user.getLogin(), clientId);
         CardSubscription cardSubscription = cache.get(subId);
-        // The builder may seem declare a bit to early but it allows usage in both branch of the later condition
-        CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
-           .user(user)
-           .clientId(clientId)
-           .amqpAdmin(amqpAdmin)
-           .userExchange(this.userExchange)
-           .groupExchange(this.groupExchange)
-           .connectionFactory(this.connectionFactory)
-           .rangeStart(rangeStart)
-           .rangeEnd(rangeEnd)
-           .filterNotification(filterNotification);
+        // The builder may seem to be declared a bit to early but it allows usage in both branch of the later condition
+
+        CardSubscription.BuilderEncapsulator builderEncapsulator = CardSubscription.encapsulatedBuilder();
+        builderEncapsulator.builder()
+                .user(user)
+                .clientId(clientId)
+                .amqpAdmin(amqpAdmin)
+                .userExchange(this.userExchange)
+                .groupExchange(this.groupExchange)
+                .connectionFactory(this.connectionFactory)
+                .rangeStart(rangeStart)
+                .rangeEnd(rangeEnd)
+                .filterNotification(filterNotification);
         if (cardSubscription == null) {
-            cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);
+            cardSubscription = buildSubscription(subId, builderEncapsulator);
         } else {
             if (!cancelEviction(subId)) {
                 cardSubscription = cache.get(subId);
                 if (cardSubscription == null) {
-                    cardSubscription = buildSubscription(subId, cardSubscriptionBuilder);
+                    cardSubscription = buildSubscription(subId, builderEncapsulator);
                 }
             }
         }
         return cardSubscription;
     }
 
-    private CardSubscription buildSubscription(String subId, CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder) {
+    private CardSubscription buildSubscription(String subId, CardSubscription.BuilderEncapsulator builderEncapsulator) {
         CardSubscription cardSubscription;
-        cardSubscription = cardSubscriptionBuilder.build();
+        cardSubscription = builderEncapsulator.builder().build();
         cardSubscription.initSubscription(() -> scheduleEviction(subId));
         cache.put(subId, cardSubscription);
         log.info("Subscription created for " + cardSubscription.getId());
