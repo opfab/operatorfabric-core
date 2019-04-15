@@ -1,8 +1,6 @@
 == Technical overview
 
-See
-https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#__Models[swagger
-generated documentation model section] for data layout
+See link:../api/#__Models[the model section of the swagger generated documentation] for data layout
 
 [[resource-serving]]
 === Resource serving
@@ -18,9 +16,8 @@ selector
 ==== Internationalization
 
 Internationalization (i18n) files are json file (JavaScript Object Notation).
-One file must be defined by module supported language. See
-https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#__Models[swagger
-generated documentation model section] for data layout.
+One file must be defined by module supported language. See link:../api/#__Models[the model section of the swagger
+generated documentation] for data layout.
 
 Sample json i18n file
 
@@ -63,7 +60,7 @@ favor the lightest file formats (ogg,mp3, ...)
 
 Templates are https://handlebarsjs.com/[Handlebars] template files. Templates
 are fuelled with a data structure contained in the card data (See
-https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#__Models[card
+link:../api/#__Models[card
 data model] for more information)
 
 In addition to Handlebars basic syntax and helpers, Operator Fabric defines the

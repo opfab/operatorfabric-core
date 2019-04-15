@@ -12,6 +12,6 @@ For a given `process id` it's possible to delete the current card (not the archi
 
 === Other methods 
 
-The other methods declared in the link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/[Card Management] are used by the GUI and are parts of the `Card Consultation API`.
+The other methods declared in the link:../api/[Card Management] are used by the GUI and are parts of the `Card Consultation API`.
 
 

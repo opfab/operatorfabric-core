@@ -1,6 +1,6 @@
 == Card Anatomy
 
-Cards are modelized as `Json` objects. The technical design of card is describe in link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#Card[the swagger api descripiton of Card Publication Service]. A card correspond to the state of a Processus in OperatorFabric.
+Cards are modelized as `Json` objects. The technical design of card is describe in link:../api/#Card[the swagger api description of Card Publication Service]. A card correspond to the state of a Processus in OperatorFabric.
 
 === Technical Information of the card
 
@@ -32,7 +32,7 @@ This attribute is a part of the card life management system. It's indicate Opera
 
 ===== Severity (`severity`)
 
-The severity is a core principe of the OperatorFabric Card system. There are 4 serverities available(link:https://opfab.github.io/projects/services/core/cards-publication/0.1.1.SNAPSHOT/api/#SeverityEnum[Technical definition of OperatorFabric Card Severity]). A color is associated in the GUI to each severity. Here the details about severity and their meaning for OperatorFabric:
+The severity is a core principe of the OperatorFabric Card system. There are 4 serverities available(link:../api/#SeverityEnum[Technical definition of OperatorFabric Card Severity]). A color is associated in the GUI to each severity. Here the details about severity and their meaning for OperatorFabric:
 
 1. ALARM: representes a critical state of the associated process, need an action from the operator. In the Gui, the card is red;
 2. ACTION: the associated process need an action form operators in order to evolve correctly. In the Gui, an action is orange;
@@ -123,7 +123,7 @@ Some cards can emit a sound when displayed in the feed of the GUI, the id of aud
 
 This attribute is a string of objects containing a `title` attribute whichi is `i18n` key and a `template` attribute which referes to a template name contained in the publisher bundle. The bundle in which those resources will be looked for is the one corresponding of the <<_card_publisher_version, version>> declared in the card for the current <<_card_publisher, publisher>>. If no resource is found, either because there is no bundle for the given version or there is no resource for the given key, then the corresponding key is displayed in the details section of the GUI.
 
-link:https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/reference/#_bundle[See the documentation about third bundle in the Third service documentation].
+link:../../../thirds/0.1.1.SNAPSHOT/reference/#_bundle[See the documentation about third bundle in the Third service documentation].
 
 *example:*
 
