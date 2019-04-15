@@ -14,7 +14,8 @@ import {
     AddLightCardFailure,
     HandleUnexpectedError,
     LightCardActions,
-    LoadLightCardsSuccess, UpdatedSubscription
+    LoadLightCardsSuccess,
+    UpdatedSubscription
 } from '@ofActions/light-card.actions';
 import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
 import {Store} from "@ngrx/store";

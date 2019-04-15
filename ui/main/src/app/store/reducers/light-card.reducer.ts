@@ -6,7 +6,7 @@
  */
 
 import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
-import {LightCardAdapter, feedInitialState, CardFeedState} from '@ofStates/feed.state';
+import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
 import {FeedActions, FeedActionTypes} from "@ofActions/feed.actions";
 
 export function reducer(

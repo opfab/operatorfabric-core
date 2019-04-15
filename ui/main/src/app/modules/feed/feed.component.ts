@@ -11,7 +11,7 @@ import {AppState} from '@ofStore/index';
 import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
-import {catchError, tap} from "rxjs/operators";
+import {catchError} from "rxjs/operators";
 
 @Component({
     selector: 'of-cards',

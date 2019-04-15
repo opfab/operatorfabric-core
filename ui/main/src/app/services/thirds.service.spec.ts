@@ -26,7 +26,6 @@ import {LightCardEffects} from "@ofEffects/light-card.effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {empty, from, merge, Observable, of, zip} from "rxjs";
 import {switchMap} from "rxjs/operators";
-import {HttpUrlEncodingCodec} from "@angular/common/http";
 
 describe('Thirds Services', () => {
     let injector: TestBed;

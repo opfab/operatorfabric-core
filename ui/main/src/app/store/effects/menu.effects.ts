@@ -9,12 +9,11 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable, of, zip} from 'rxjs';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
 import {LoadCard} from "@ofActions/card.actions";
 import {ThirdsService} from "@ofServices/thirds.service";
 import {LoadMenuFailure, LoadMenuSuccess, MenuActionTypes} from "@ofActions/menu.actions";
-import {ThirdMenu} from "@ofModel/thirds.model";
 
 @Injectable()
 export class MenuEffects {

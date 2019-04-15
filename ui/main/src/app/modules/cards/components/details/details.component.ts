@@ -5,15 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {
-    AfterViewInit,
-    Component,
-    ContentChildren,
-    Input,
-    OnChanges,
-    QueryList,
-    SimpleChanges
-} from '@angular/core';
+import {AfterViewInit, Component, ContentChildren, Input, OnChanges, QueryList, SimpleChanges} from '@angular/core';
 import {DetailComponent} from "../detail/detail.component";
 import {Card} from "@ofModel/card.model";
 

@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { ArchivesRoutingModule } from './archives-routing.module';
+import {ArchivesRoutingModule} from './archives-routing.module';
 import {ArchivesComponent} from "./archives.component";
 
 @NgModule({

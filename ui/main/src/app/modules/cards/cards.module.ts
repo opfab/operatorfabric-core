@@ -11,8 +11,8 @@ import {CardComponent} from "./components/card/card.component";
 import {CardDetailsComponent} from "./components/card-details/card-details.component";
 import {DetailsComponent} from "./components/details/details.component";
 import {DetailComponent} from "./components/detail/detail.component";
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {ThirdsI18nLoaderFactory, ThirdsService} from "../../services/thirds.service";
+import {TranslateModule} from "@ngx-translate/core";
+import {ThirdsService} from "../../services/thirds.service";
 import {HandlebarsService} from "./services/handlebars.service";
 
 @NgModule({

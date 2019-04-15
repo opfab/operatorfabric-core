@@ -14,9 +14,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
-import {getOneRandomCard, getOneRandomLigthCard} from "@tests/helpers";
-import * as _ from 'lodash';
-import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
+import {getOneRandomCard} from "@tests/helpers";
 import {LightCard} from "@ofModel/light-card.model";
 import {ServicesModule} from "@ofServices/services.module";
 import {HandlebarsService} from "./handlebars.service";

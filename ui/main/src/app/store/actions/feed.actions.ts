@@ -6,7 +6,6 @@
  */
 
 import {Action} from '@ngrx/store';
-import {LightCard} from '@ofModel/light-card.model';
 import {Filter} from "@ofModel/feed-filter.model";
 import {FilterType} from "@ofServices/filter.service";
 

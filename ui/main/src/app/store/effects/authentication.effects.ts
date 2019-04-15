@@ -8,12 +8,14 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
-import {Action, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {
     AcceptLogIn,
-    AcceptLogOut, AcceptLogOutSuccess,
+    AcceptLogOut,
+    AcceptLogOutSuccess,
     AuthenticationActions,
-    AuthenticationActionTypes, RejectLogIn,
+    AuthenticationActionTypes,
+    RejectLogIn,
     TryToLogIn,
     TryToLogOut
 } from '@ofActions/authentication.actions';

@@ -18,7 +18,7 @@ import {FiltersComponent} from './components/card-list/filters/filters.component
 import {TypeFilterComponent} from './components/card-list/filters/type-filter/type-filter.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {TranslateModule} from "@ngx-translate/core";
-import { TimeFilterComponent } from './components/card-list/filters/time-filter/time-filter.component';
+import {TimeFilterComponent} from './components/card-list/filters/time-filter/time-filter.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faClock} from "@fortawesome/free-solid-svg-icons";

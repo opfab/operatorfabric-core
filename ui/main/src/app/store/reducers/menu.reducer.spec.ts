@@ -7,7 +7,7 @@
 
 import {reducer} from "@ofStore/reducers/menu.reducer";
 import {menuInitialState, MenuState} from "@ofStates/menu.state";
-import {getRandomMenu, getRandomAlphanumericValue} from "@tests/helpers";
+import {getRandomAlphanumericValue, getRandomMenu} from "@tests/helpers";
 import {LoadMenu, LoadMenuFailure, LoadMenuSuccess} from "@ofActions/menu.actions";
 
 describe('Menu Reducer', () => {

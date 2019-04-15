@@ -30,7 +30,6 @@ import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "../../translate.config";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {ServicesModule} from "@ofServices/services.module";
-import {sortByStartDate} from "@ofStates/feed.state";
 
 describe('FeedComponent', () => {
     let component: FeedComponent;

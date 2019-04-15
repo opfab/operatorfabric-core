@@ -9,11 +9,8 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {CardService} from '@ofServices/card.service';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
-import {CardActionTypes, LoadCard, LoadCardFailure, LoadCardSuccess} from "@ofActions/card.actions";
-import {Card} from "@ofModel/card.model";
 import {LightCardActionTypes, LoadLightCardsExtendedData, LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {ThirdsService} from "@ofServices/thirds.service";
 

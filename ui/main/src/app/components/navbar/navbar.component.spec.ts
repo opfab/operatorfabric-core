@@ -12,15 +12,13 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
-import {Observable, of} from 'rxjs';
 import {IconComponent} from "../icon/icon.component";
 import {EffectsModule} from "@ngrx/effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {ThirdsService} from "@ofServices/thirds.service";
-import {ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import {By} from "@angular/platform-browser";
-import clock = jasmine.clock;
 import {ThirdsServiceMock} from "@tests/mocks/thirds.service.mock";
+import clock = jasmine.clock;
 
 describe('NavbarComponent', () => {
 

@@ -5,9 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NoSelectionComponent } from './no-selection.component';
+import {NoSelectionComponent} from './no-selection.component';
 
 describe('NoSelectionComponent', () => {
   let component: NoSelectionComponent;

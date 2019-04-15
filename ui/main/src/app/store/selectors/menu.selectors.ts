@@ -7,8 +7,6 @@
 
 import {AppState} from "@ofStore/index";
 import {createSelector} from "@ngrx/store";
-import {CardState} from "@ofStates/card.state";
-import {Card} from "@ofModel/card.model";
 import {MenuState} from "@ofStates/menu.state";
 
 export const selectMenuState = (state:AppState) => state.menu;

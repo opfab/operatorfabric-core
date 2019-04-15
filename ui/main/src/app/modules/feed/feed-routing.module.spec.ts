@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { FeedRoutingModule } from './feed-routing.module';
+import {FeedRoutingModule} from './feed-routing.module';
 
 describe('FeedRoutingModule', () => {
   let cardsRoutingModule: FeedRoutingModule;

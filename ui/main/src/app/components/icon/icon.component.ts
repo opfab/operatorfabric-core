@@ -6,7 +6,6 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {environment} from "@env/environment";
 import {PlatformLocation} from "@angular/common";
 
 @Component({

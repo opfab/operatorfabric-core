@@ -7,15 +7,8 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {CardService} from '@ofServices/card.service';
 import {Observable} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {
-    AddLightCardFailure,
-    HandleUnexpectedError,
-    LightCardActions,
-    LoadLightCardsSuccess
-} from '@ofActions/light-card.actions';
+import {map} from 'rxjs/operators';
 import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";

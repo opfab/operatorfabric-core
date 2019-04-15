@@ -17,7 +17,6 @@ import {Observable} from "rxjs";
 import {ThirdMenu} from "@ofModel/thirds.model";
 import {tap} from "rxjs/operators";
 import * as _ from 'lodash';
-import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'of-navbar',

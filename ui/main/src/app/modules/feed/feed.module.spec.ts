@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { FeedModule } from './feed.module';
+import {FeedModule} from './feed.module';
 
 describe('FeedModule', () => {
   let cardsModule: FeedModule;

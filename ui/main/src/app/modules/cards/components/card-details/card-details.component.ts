@@ -10,7 +10,6 @@ import {Card, CardDetail} from '@ofModel/card.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
-import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'of-card-details',
