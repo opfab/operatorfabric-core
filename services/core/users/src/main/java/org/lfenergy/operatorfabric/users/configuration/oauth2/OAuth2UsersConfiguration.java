@@ -76,7 +76,6 @@ public class OAuth2UsersConfiguration {
      */
     public static List<GrantedAuthority> computeAuthorities(User user) {
         return AuthorityUtils.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size ->
-                new
-                        String[size]));
+                new String[size]));
     }
 }

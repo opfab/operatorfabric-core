@@ -18,22 +18,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-#          jwk-set-uri: http://10.159.82.193:2080/api/auth/jwks.json
           jwk-set-uri: http://localhost:3000/auth/jwks.json
-#      client:
-#        registration:
-#          opfabDev:
-#            clientId: clientIdPassword
-#            clientSecret: secret
-#            tokenUri: http://localhost:3000/auth/token
-#            userInfoUri: http://localhost:3000/auth/user/me
-#        provider:
-#          opfabDev:
-#            authorizationUri: http://localhost:3000/auth/authorize
-#            tokenUri: http://localhost:3000/auth/token
-#            userInfoUri: http://localhost:3000/auth/user/me
-#            userNameAttribute: name
-#            jwkSetUri: http://localhost:3000/auth/token_key
   data:
     mongodb:
       uris:
@@ -48,12 +33,3 @@ eureka:
 security:
   basic:
     enabled: false
-#  oauth2:
-#    client:
-#      clientId: clientIdPassword
-#      clientSecret: secret
-#      accessTokenUri: http://localhost:3000/auth/token
-#      userAuthorizationUri: http://localhost:3000/auth/authorize
-#    resource:
-##      userInfoUri: http://localhost:3000/auth/user/me
-#      jwt.key-value: 123
