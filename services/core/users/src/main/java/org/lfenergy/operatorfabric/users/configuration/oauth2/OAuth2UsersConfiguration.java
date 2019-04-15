@@ -41,9 +41,6 @@ import java.util.List;
 @Slf4j
 public class OAuth2UsersConfiguration {
 
-    @Autowired
-    private UserRepository userRepository;
-
     /**
      * Generates a converter that converts {@link Jwt} to {@link OpFabJwtAuthenticationToken} whose principal is  a
      * {@link User} model object
@@ -51,7 +48,7 @@ public class OAuth2UsersConfiguration {
      * @return Converter from {@link Jwt} to {@link OpFabJwtAuthenticationToken}
      */
     @Bean
-    public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter() {
+    public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter(@Autowired UserRepository userRepository) {
 
         return new Converter<Jwt, AbstractAuthenticationToken>(){
 

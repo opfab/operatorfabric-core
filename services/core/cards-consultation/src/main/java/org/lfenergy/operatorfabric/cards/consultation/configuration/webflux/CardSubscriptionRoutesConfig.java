@@ -28,6 +28,7 @@ public class CardSubscriptionRoutesConfig {
 
     public static final String FALSE = "false";
     public static final String TRUE = "true";
+    public static final String CARD_SUBSCRIPTION_PATH = "/cardSubscription";
 
     private final CardOperationsController cardOperationsController;
 
@@ -43,9 +44,9 @@ public class CardSubscriptionRoutesConfig {
     @Bean
     public RouterFunction<ServerResponse> cardOperationRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/cardSubscription"), cardSubscriptionGetRoute())
-                .andRoute(RequestPredicates.POST("/cardSubscription"),cardSubscriptionPostRoute())
-                .andRoute(RequestPredicates.OPTIONS("/cardSubscription"), cardSubscriptionOptionsRoute());
+                .route(RequestPredicates.GET(CARD_SUBSCRIPTION_PATH), cardSubscriptionGetRoute())
+                .andRoute(RequestPredicates.POST(CARD_SUBSCRIPTION_PATH),cardSubscriptionPostRoute())
+                .andRoute(RequestPredicates.OPTIONS(CARD_SUBSCRIPTION_PATH), cardSubscriptionOptionsRoute());
     }
 
     /**

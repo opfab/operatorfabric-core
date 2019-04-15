@@ -35,6 +35,9 @@ import java.util.List;
 @RequestMapping("/groups")
 public class GroupsController implements GroupsApi {
 
+    public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
+    public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
+    public static final String NO_MATCHING_GROUP_NAME_MSG = "Payload Group name does not match URL Group name";
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
@@ -98,7 +101,7 @@ public class GroupsController implements GroupsApi {
            ()-> new ApiErrorException(
               ApiError.builder()
                  .status(HttpStatus.NOT_FOUND)
-                 .message("Group "+name+" not found")
+                 .message(String.format(GROUP_NOT_FOUND_MSG,name))
                  .build()
            )
         );
@@ -115,7 +118,7 @@ public class GroupsController implements GroupsApi {
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
-                            .message("Data from the request body doesn't match name parameter")
+                            .message(NO_MATCHING_GROUP_NAME_MSG)
                             .build());
         } else {
             return groupRepository.save((GroupData)group);
@@ -159,7 +162,7 @@ public class GroupsController implements GroupsApi {
                 ()-> new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)
-                                .message("Group "+name+" not found")
+                                .message(String.format(GROUP_NOT_FOUND_MSG,name))
                                 .build()
                 ));
     }
@@ -174,7 +177,7 @@ public class GroupsController implements GroupsApi {
                     () -> new ApiErrorException(
                             ApiError.builder()
                                     .status(HttpStatus.BAD_REQUEST)
-                                    .message("Bad user list : user "+login+" not found")
+                                    .message(String.format(BAD_USER_LIST_MSG,login))
                                     .build()
                     ));
             foundUsers.add(foundUser);

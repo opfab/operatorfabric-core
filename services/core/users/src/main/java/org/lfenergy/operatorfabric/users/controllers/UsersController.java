@@ -32,6 +32,8 @@ import java.util.List;
 @RequestMapping("/users")
 public class UsersController implements UsersApi {
 
+    public static final String USER_NOT_FOUND_MSG = "User %s not found";
+    public static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
     @Autowired
     private UserRepository userRepository;
 
@@ -55,7 +57,7 @@ public class UsersController implements UsersApi {
                 .orElseThrow(()-> new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)
-                                .message("User "+login+" not found")
+                                .message(String.format(USER_NOT_FOUND_MSG,login))
                                 .build()
                 ));
     }
@@ -73,7 +75,7 @@ public class UsersController implements UsersApi {
                 .orElseThrow(()-> new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)
-                                .message("User "+login+" not found")
+                                .message(String.format(USER_NOT_FOUND_MSG,login))
                                 .build()
                 ));
 
@@ -82,7 +84,7 @@ public class UsersController implements UsersApi {
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
-                            .message("Data from the request body doesn't match login parameter")
+                            .message(NO_MATCHING_USER_NAME_MSG)
                             .build());
         } else {
             userRepository.save(new UserData(user));
