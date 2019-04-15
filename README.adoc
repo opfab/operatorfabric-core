@@ -32,8 +32,6 @@ It is an open source project initiated by http://www.rte-france.com/[RTE] with h
 
 toc::[]
 
-//TODO Add links to other sections
-
 == What does OperatorFabric do in practice?
 
 To perform their duties, an operator has to interact with multiple applications (perform actions, watch for alerts, etc.), which can prove difficult if there are too many of them.
@@ -131,9 +129,7 @@ link:src/main/docker[src/main/docker]
 
 === Browser support
 
-OperatorFabric
-TODO
-//Todo add browser support info
+We currently use Firefox (63.0.3). Automatic tests for the UI rely on Chrome (73.0.3683.86).
 
 == Getting Started
 
@@ -279,74 +275,99 @@ You can also use the bin/setup_dockerized_environment which builds the services 
 
 === Project Structure
 
-//TODO Check project structure is up-to-date
-//TODO Should we keep both the tree and the text below? Use callouts?
+==== Tree View
 
 [source]
 ----
 project
 ├──bin
+│   └─ travis
 ├──client
 │   ├──cards (cards-client-data)
 │   ├──src
 │   ├──time (time-client-data)
 │   └──users (users-client-data)
+├──docker-standalone-images
 ├──services
 │   ├──core
 │   │   ├──cards-consultation (cards-consultation-business-service)
 │   │   ├──cards-publication (cards-publication-business-service)
+│   │   ├──src
 │   │   ├──thirds (third-party-business-service)
 │   │   ├──time (time-business-service)
 │   │   └──users (users-business-service)
 │   ├──infra
-│   │   ├──auth
+│   │   ├──auth (OAuth2-dev-server)
 │   │   ├──client-gateway (client-gateway-cloud-service)
 │   │   ├──config (configuration-cloud-service)
 │   │   └──registry (registry-cloud-service)
 │   └──web
 │       └──web-ui
-└── tools
-    ├── generic
-    │   ├── test-utilities
-    │   └── utilities
-    ├── spring
-    │   ├── spring-amqp-time-utilities
-    │   ├── spring-mongo-utilities
-    │   ├── spring-oauth2-utilities
-    │   └── spring-utilities
-    └── swagger-spring-generators
-
+├──src
+|   ├──docs
+|   │   ├──asciidoc
+|   │   └──modelio
+|   └──main
+|       ├──docker
+|       └──headers
+├──tools
+│   ├──generic
+│   │   ├──test-utilities
+│   │   └──utilities
+│   ├── spring
+│   │   ├──spring-amqp-time-utilities
+│   │   ├──spring-mongo-utilities
+│   │   ├──spring-oauth2-utilities
+│   │   ├──spring-test-utilities
+│   │   └──spring-utilities
+│   └──swagger-spring-generators
+└─ui
 ----
 
-* bin : contains useful scripts
-* client : contains REST APIs simple beans definition, may be used by external projects
-* services: contains business microservices
-** link:services/core/README.md[core] : contains core business micro services
-*** link:services/core/cards-consultation[cards-consultation (cards-consultation-business-service)] : Card consultation service.
-*** link:services/core/cards-publication[cards-publication (cards-publication-business-service)] : Card publication service
-*** link:services/core/thirds/README.md[thirds (third-party-business-service)] : Thirdparty information service registry
-*** link:services/core/time/README.md[time (time-business-service)] : time management service
-*** link:services/core/users[users (users-business-service)] : users management service
+==== Content Details
+
+* link:bin[bin]: contains useful scripts
+** link:bin/travis[travis]: travis script for documentation generation and upload to opfab.github.io repository
+* link:client[client]: contains REST APIs simple beans definition, may be used by external projects
+** link: client/cards[cards (cards-client-data)]: simple beans regarding cards
+** link: client/src[src]: contains swagger templates for client[client] code generation
+** link: client/time[time (time-client-data)]: simple beans regarding time
+** link: client/users[users (users-client-data)]: simple beans regarding users
+* link: docker-standalone-images[docker-standalone-images]: contains a standalone docker image for demonstration purposes
+* link:service[services]: contains the microservices that make up OperatorFabric
+** link:services/core[core]: contains core business microservices
+*** link:services/core/cards-consultation[cards-consultation (cards-consultation-business-service)]: Card consultation service
+*** link:services/core/cards-publication[cards-publication (cards-publication-business-service)]: Card publication service
+*** link:services/core/src[src]: contains swagger templates for core business microservices
+*** link:services/core/thirds[thirds (third-party-business-service)]: Third-party information management service
+*** link:services/core/time[time (time-business-service)]: Time management service
+*** link:services/core/users[users (users-business-service)]: Users management service
 ** link:services/infra[infra]: contains infrastructure microservices
-*** link:services/infra/auth/README.md[auth]: Auth is a dummy development spring-oauth2 server used for testing and debugging other services.
-*** link:services/infra/client-gateway[client-gateway (client-gateway-cloud-service)]: spring-gateway client side only gateway microservice, used to serve public apis and web ui.
+*** link:services/infra/auth[auth (OAuth2-dev-server)]: Auth is a dummy development spring-oauth2 server used for testing and debugging other services
+*** link:services/infra/client-gateway[client-gateway (client-gateway-cloud-service)]: spring-gateway client side only gateway microservice, used to serve public apis and web ui
 *** link:services/infra/config[config (configuration-cloud-service)]: spring-configuration centralized configuration microservice
 *** link:services/infra/registry[registry (registry-cloud-service)]: eureka microservice registry
 ** link:services/web[web]: contains web pages and application services
-*** link:services/web/web-ui[web-ui]: Main operator-fabric SPA.
-* link:tools/README.md[tools]
-** link:tools/generic[generic]
-*** link:tools/generic/test-utilities/README.md[test-utilities] : Test specific utility code
-*** link:tools/generic/utilities/README.md[utilities]
- *link:tools/spring[spring]
-
-*** link:tools/spring/spring-amqp-time-utilities/README.md[spring-amqp-time-utilities] : Utility code with spring amqp specific dependencies, used to share common features across amqp dependent services
-*** link:tools/spring/spring-mongo-utilities[spring-mongo-utilities] : Utility code with spring specific dependencies, used to share common features across mongo dependent services
-*** link:tools/spring/spring-oauth2-utilities[spring-oauth2-utilities] : Utility code with spring specific dependencies, used to share common features across oauth2 dependent services
-*** link:tools/spring/spring-utilities/README.md[spring-utilities] : Utility code with spring specific dependencies
-** link:tools/swagger-spring-generators/README.md[swagger-spring-generators] : OperatorFabric tailored spring boot generator for swagger
-
-//TODO Should we keep the links to components README?
+*** link:services/web/web-ui[web-ui]: Main OperatorFabric SPA
+* link:src[src]
+** link:src/docs[docs]
+*** link:src/docs/asciidoc[asciidoc]: General documentation (Architecture, Getting Started Guide, etc.)
+*** link:src/docs/modelio[modelio]: Archive containing documentation diagrams
+** link:src/main[main]
+*** link:src/main/docker[docker]: contains docker-compose files to help with tests and demonstrations
+*** link:src/main/headers[headers]: contains license header files
+* link:tools[tools]
+** link:tools/generic[generic]: Generic (as opposed to Spring-related) utility code
+*** link:tools/generic/test-utilities[test-utilities]: Test-specific utility code
+*** link:tools/generic/utilities[utilities]: Utility code
+** link:tools/spring[spring]: Spring-related utility code
+*** link:tools/spring/spring-amqp-time-utilities[spring-amqp-time-utilities] : Utility code with Spring-AMQP-specific dependencies, used to share common features across AMQP-dependent services
+*** link:tools/spring/spring-mongo-utilities[spring-mongo-utilities] : Utility code with Spring-specific dependencies, used to share common features across MongoDB-dependent services
+*** link:tools/spring/spring-oauth2-utilities[spring-oauth2-utilities] : Utility code with Spring-specific dependencies, used to share common features across OAuth2-dependent services
+*** link:tools/spring/spring-test-utilities[spring-test-utilities] : Utility code with Spring-specific dependencies for testing purposes
+*** link:tools/spring/spring-utilities[spring-utilities] : Utility code with Spring-specific dependencies
+** link:tools/swagger-spring-generators[swagger-spring-generators] : Spring Boot generator for swagger, tailored for OperatorFabric needs
+* link:ui[ui]: Angular sources for the UI
 
 === Conventions regarding project structure and configuration
 
