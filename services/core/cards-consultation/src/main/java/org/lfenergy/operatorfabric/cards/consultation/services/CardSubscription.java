@@ -8,11 +8,9 @@
 package org.lfenergy.operatorfabric.cards.consultation.services;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.VirtualTime;
@@ -258,22 +256,5 @@ public class CardSubscription {
 
     public void publishInto(Flux<String> fetchOldCards) {
         fetchOldCards.subscribe(next->this.externalSink.next(next));
-    }
-
-    /**
-     * Class used to encapsulate builder in order to bypass javadoc inability to handle annotation processor generated classes
-     */
-    @AllArgsConstructor
-    public static class BuilderEncapsulator{
-        @Accessors(fluent = true) @Getter
-        private CardSubscription.CardSubscriptionBuilder builder;
-    }
-
-    /**
-     * Used to bypass javadoc inability to handle annotation processor generated classes
-     * @return an encapsulated builder
-     */
-    public static BuilderEncapsulator encapsulatedBuilder(){
-        return new BuilderEncapsulator(builder());
     }
 }
