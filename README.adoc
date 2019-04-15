@@ -329,12 +329,12 @@ project
 * link:bin[bin]: contains useful scripts
 ** link:bin/travis[travis]: travis script for documentation generation and upload to opfab.github.io repository
 * link:client[client]: contains REST APIs simple beans definition, may be used by external projects
-** link: client/cards[cards (cards-client-data)]: simple beans regarding cards
-** link: client/src[src]: contains swagger templates for client[client] code generation
-** link: client/time[time (time-client-data)]: simple beans regarding time
-** link: client/users[users (users-client-data)]: simple beans regarding users
-* link: docker-standalone-images[docker-standalone-images]: contains a standalone docker image for demonstration purposes
-* link:service[services]: contains the microservices that make up OperatorFabric
+** link:client/cards[cards (cards-client-data)]: simple beans regarding cards
+** link:client/src[src]: contains swagger templates for client[client] code generation
+** link:client/time[time (time-client-data)]: simple beans regarding time
+** link:client/users[users (users-client-data)]: simple beans regarding users
+* link:docker-standalone-images[docker-standalone-images]: contains a standalone docker image for demonstration purposes
+* link:services[services]: contains the microservices that make up OperatorFabric
 ** link:services/core[core]: contains core business microservices
 *** link:services/core/cards-consultation[cards-consultation (cards-consultation-business-service)]: Card consultation service
 *** link:services/core/cards-publication[cards-publication (cards-publication-business-service)]: Card publication service
