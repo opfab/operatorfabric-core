@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @Tag("end-to-end")
 @Tag("mongo")
 @WithMockOpFabUser(login="testAdminUser", roles = { "ADMIN" })
-class givenAdminUser_GroupsControllerShould {
+class GivenAdminUserGroupsControllerShould {
 
     private MockMvc mockMvc;
 
@@ -149,7 +149,7 @@ class givenAdminUser_GroupsControllerShould {
            .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-           .andExpect(jsonPath("$.message", is("Group Marx Brothers not found")))
+           .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"Marx Brothers"))))
            .andExpect(jsonPath("$.errors").doesNotExist())
         ;
     }
@@ -160,13 +160,13 @@ class givenAdminUser_GroupsControllerShould {
                .contentType(MediaType.APPLICATION_JSON_UTF8)
                .content("{" +
                     "\"name\": \"Marx Brothers\","+
-                    "\"description\": \"Chico, Groucho and Harpo, forget about Zeppo an Gummo\""+
+                    "\"description\": \"Chico, Groucho and Harpo, forget about Zeppo and Gummo\""+
                   "}")
             )
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.name", is("Marx Brothers")))
-           .andExpect(jsonPath("$.description", is("Chico, Groucho and Harpo, forget about Zeppo an Gummo")))
+           .andExpect(jsonPath("$.description", is("Chico, Groucho and Harpo, forget about Zeppo and Gummo")))
         ;
 
         mockMvc.perform(get("/groups"))
@@ -178,7 +178,7 @@ class givenAdminUser_GroupsControllerShould {
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.name", is("Marx Brothers")))
-           .andExpect(jsonPath("$.description", is("Chico, Groucho and Harpo, forget about Zeppo an Gummo")))
+           .andExpect(jsonPath("$.description", is("Chico, Groucho and Harpo, forget about Zeppo and Gummo")))
         ;
 
     }
@@ -257,7 +257,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -271,7 +271,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -279,7 +279,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -305,7 +305,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                .andExpect(jsonPath("$.message", is("Data from the request body doesn't match name parameter")))
+                .andExpect(jsonPath("$.message", is(GroupsController.NO_MATCHING_GROUP_NAME_MSG)))
                 .andExpect(jsonPath("$.errors").doesNotExist());
         ;
 
@@ -324,7 +324,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -338,7 +338,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -346,7 +346,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
     }
@@ -375,7 +375,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -386,7 +386,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -398,7 +398,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -413,7 +413,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                .andExpect(jsonPath("$.message", is("Bad user list : user unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.BAD_USER_LIST_MSG, "unknownUserSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist());
 
         //If the user list isn't correct, no user should be updated
@@ -425,7 +425,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("User unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"unknownUserSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist());
 
     }
@@ -477,7 +477,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -488,7 +488,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -496,7 +496,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -511,7 +511,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                .andExpect(jsonPath("$.message", is("Bad user list : user unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.BAD_USER_LIST_MSG, "unknownUserSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist());
 
         //If the user list isn't correct, no user should be updated
@@ -523,7 +523,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("User unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"unknownUserSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist());
 
     }
@@ -553,7 +553,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -564,7 +564,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -576,7 +576,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("Group unknownGroupSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG,"unknownGroupSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -592,7 +592,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                .andExpect(jsonPath("$.message", is("Bad user list : user unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(GroupsController.BAD_USER_LIST_MSG, "unknownUserSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist());
 
         //If the user list isn't correct, no user should be updated
@@ -608,7 +608,7 @@ class givenAdminUser_GroupsControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("User unknownUserSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"unknownUserSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist());
 
     }

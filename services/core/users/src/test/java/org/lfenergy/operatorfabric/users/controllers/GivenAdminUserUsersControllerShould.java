@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @Tag("end-to-end")
 @Tag("mongo")
 @WithMockOpFabUser(login="testAdminUser", roles = { "ADMIN" })
-class givenAdminUser_UsersControllerShould {
+class GivenAdminUserUsersControllerShould {
 
     private MockMvc mockMvc;
 
@@ -133,7 +133,7 @@ class givenAdminUser_UsersControllerShould {
            .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
            .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-           .andExpect(jsonPath("$.message", is("User tgillian not found")))
+           .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"tgillian"))))
            .andExpect(jsonPath("$.errors").doesNotExist())
         ;
     }
@@ -251,7 +251,7 @@ class givenAdminUser_UsersControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"unknownSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -266,7 +266,7 @@ class givenAdminUser_UsersControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"unknownSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -274,7 +274,7 @@ class givenAdminUser_UsersControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"unknownSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
     }
@@ -301,7 +301,7 @@ class givenAdminUser_UsersControllerShould {
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                .andExpect(jsonPath("$.message", is("Data from the request body doesn't match login parameter")))
+                .andExpect(jsonPath("$.message", is(UsersController.NO_MATCHING_USER_NAME_MSG)))
                 .andExpect(jsonPath("$.errors").doesNotExist());
 
         mockMvc.perform(get("/users/kkline"))
@@ -321,7 +321,7 @@ class givenAdminUser_UsersControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"unknownSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -336,7 +336,7 @@ class givenAdminUser_UsersControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"unknownSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 
@@ -344,7 +344,7 @@ class givenAdminUser_UsersControllerShould {
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                .andExpect(jsonPath("$.message", is("User unknownSoFar not found")))
+                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG,"unknownSoFar"))))
                 .andExpect(jsonPath("$.errors").doesNotExist())
         ;
 

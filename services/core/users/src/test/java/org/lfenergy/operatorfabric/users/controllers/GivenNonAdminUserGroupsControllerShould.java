@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("end-to-end")
 @Tag("mongo")
-class givenNonAdminUser_GroupsControllerShould {
+class GivenNonAdminUserGroupsControllerShould {
 
     private MockMvc mockMvc;
 
