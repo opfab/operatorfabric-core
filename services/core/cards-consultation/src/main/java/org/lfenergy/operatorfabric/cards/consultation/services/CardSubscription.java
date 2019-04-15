@@ -112,13 +112,11 @@ public class CardSubscription {
     }
 
     /**
-     * <p>
      * <ul>
      * <li>Create a user queue and a group topic queue</li>
      * <li>Associate queues to message {@link MessageListenerContainer}.</li>
      * <li>Creates a amqpPublisher {@link Flux} to publish AMQP messages to</li>
      * </ul>
-     * </p>
      * <p>
      * Listeners starts on {@link Flux} subscription.
      * </p>
