@@ -15,17 +15,20 @@ jar {
 /////// CUSTOM TASKS
 // Test data tasks >>>>>
 task compressBundle1Data(type: Exec){
+    description 'generate tar.gz third party configuration data for tests in build/test-data'
     workingDir "$project.projectDir/src/test/data/bundles/second/2.0/"
     executable "bash"
     args "-c", "tar -czf $project.projectDir/build/test-data/bundles/second-2.0.tar.gz *"
 }
 task compressBundle2Data(type: Exec){
+    description 'generate tar.gz third party configuration data for tests in build/test-data'
     workingDir "$project.projectDir/src/test/data/bundles/second/2.1/"
     executable "bash"
     args "-c", "tar -czf $project.projectDir/build/test-data/bundles/second-2.1.tar.gz *"
 }
 
 task createDevData(type: Copy){
+    description 'prepare data in build/test-data for running bootRun task during development'
     from 'src/main/docker/volume/thirds-storage'
     into 'build/dev-data/thirds-storage'
     doFirst{
@@ -34,6 +37,7 @@ task createDevData(type: Copy){
 }
 
 task prepareTestDataDir {
+    description 'prepare directory (build/test-data) for test data'
     doFirst {
         logger.info "creating $project.projectDir/build/test-data/"
         new File("$project.projectDir/build/test-data/bundles/").mkdirs()
@@ -41,6 +45,7 @@ task prepareTestDataDir {
 }
 
 task prepareDevDataDir {
+    description 'prepare directory (build/dev-data) for bootRun task'
     doFirst {
         logger.info "creating $project.projectDir/build/dev-data/"
         new File("$project.projectDir/build/dev-data/bundles/").mkdirs()
@@ -49,7 +54,7 @@ task prepareDevDataDir {
 
 task copyCompileClasspathDependencies(type: Copy) {
    // unlike copyDependencies, this one will catch lombok that must be sent to sonarqube
-   description 'copy compile classpath dependencies'
+   description 'copy compile classpath dependencies, catching lombok that must be sent for sonarqube'
    from configurations.compileClasspath
    into "$project.buildDir/libs_compile"
    doFirst{

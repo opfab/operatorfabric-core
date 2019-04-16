@@ -75,6 +75,7 @@ subprojects {
         }
 
         task unitTest(type: Test) {
+            description 'runs unit tests'
             useJUnitPlatform {
                 excludeTags "end-to-end"
             }
@@ -111,12 +112,14 @@ subprojects {
 
         /*Task that copies all the dependencies under build/libs */
         task copyDependencies(type: Copy) {
+            description 'copy dependencies to build/libs'
             from configurations.compile
             into 'build/libs'
         }
 
         /* convenient copy for generating modifiable configuration from template*/
         task copyWorkingDir(type: Copy) {
+            description 'copies [sub-project]/src/main/docker/volume to [sub-project]/build/'
             from "$project.projectDir/src/main/docker/volume/"
             into "$project.projectDir/build/docker-volume/"
             doFirst {

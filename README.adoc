@@ -454,70 +454,46 @@ Additionally, you may want to configure the following variables
 
 == Gradle Tasks
 
-In this section only the most useful tasks are described for more
-information on tasks, refer to "tasks" gradle task output and to gradle
-and plugins official documentation
+In this section only custom tasks are described. For more
+information on tasks, refer to the output of the "tasks" gradle task and to gradle
+and plugins official documentation.
 
 === Services
 
 ==== Common tasks for all sub-projects
 
-* Standard java gradle tasks
-* SpringBoot tasks
-** bootJar : Generate project executable jar - assemble depends on this task
-** bootRun : Runs the application
-* Palantir Docker tasks
-** docker - Builds Docker image
-** dockerClean - Cleans Docker build directory
-** dockerfileZip - Bundles the configured Dockerfile in a zip file
-** dockerPrepare - Prepares Docker build directory
-** dockerPush - Pushes named Docker image to configured Docker Hub
-** dockerPush[tag] - Pushes the Docker image with tag [tag] to configured Docker Hub
-** dockerTag - Applies all tags to the Docker image.
-** dockerTag[tag] - Tags Docker image with tag [tag]
-* Docker Compose tasks:
-** composeUp: runs docker-compose up for docker file
-** composeDown: runs docker-compose down for docker file
-** composeStart: runs docker-compose start for docker file
-** composeStop: runs docker-compose stop for docker file
-** composeLogs: runs docker-compose logs -f for docker file
+* Test tasks
+** unitTest: runs unit tests
 * Other:
-** copyWorkingDir : copies [sub-project]/src/main/docker/volume to [sub-project]/build/
-** copyDependencies : copy dependencies to build/libs
-** generateTaskGraph : Generate png from displaying current life cycle tasks
+** copyWorkingDir: copies [sub-project]/src/main/docker/volume to [sub-project]/build/
+** copyDependencies: copy dependencies to build/libs ###
 
 ==== Core
 
 * Swagger Generator tasks
-** generateSwaggerCode : generate swagger code for all configured swagger source
-** generateSwaggerCodeDoc : generate swagger static documentation as html. Outputs to build/doc/api.
-** generateSwaggerCodeEndpoints : generate swagger code for subproject. Outputs to build/swagger.
-** debugSwaggerOperations : generate swagger code from /src/main/modeling/config.json to build/swagger-analyse
+** debugSwaggerOperations: generate swagger code from /src/main/modeling/config.json to build/swagger-analyse
+** swaggerHelp: display help regarding swagger configuration options for java
 
 ==== Third Party Service
 
 * Test tasks
-** prepareTestDataDir : prepare directory (build/test-data) for test data
-** compressBundle1Data, compressBundle2Data : generate tar.gz third party configuration data for tests in build/test-data
-** prepareDevDataDir : prepare directory (build/dev-data) for bootRun task
-** createDevData : prepare data in build/test-data for running bootRun task during development
+** prepareTestDataDir: prepare directory (build/test-data) for test data
+** compressBundle1Data, compressBundle2Data: generate tar.gz third party configuration data for tests in build/test-data
+** prepareDevDataDir: prepare directory (build/dev-data) for bootRun task
+** createDevData: prepare data in build/test-data for running bootRun task during development
+* Other tasks
+** copyCompileClasspathDependencies: copy compile classpath dependencies, catching lombok that must be sent for sonarqube
 
-==== infra
-
-===== config
+==== infra/config
 
 * Test tasks
-** createDevData : prepare data in build/test-data for running bootRun task during development
+** createDevData: prepare data in build/test-data for running bootRun task during development
 
-=== Tools
+==== tools/generic
 
-==== Common tasks for all sub-projects
-
-* Standard java gradle tasks
-
-==== swagger-spring-generators
-
-Nope
+* Test tasks
+** prepareTestData: copy test data from src/test/data/simple to build/test-data/
+** compressTestArchive: compress the contents of /src/test/data/archive to /build/test-data/archive.tar.gz
 
 == Docker demo
 

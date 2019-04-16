@@ -4,6 +4,7 @@ dependencies{
 }
 
 task prepareTestData(type: Copy){
+    description 'copy test data to build/test-data/'
     from 'src/test/data/simple'
     into 'build/test-data'
     doFirst{
@@ -12,6 +13,7 @@ task prepareTestData(type: Copy){
 }
 
 task compressTestArchive(type: Exec){
+    description 'compress the contents of /src/test/data/archive to /build/test-data/archive.tar.gz'
     workingDir "$project.projectDir/src/test/data/archive"
     executable "bash"
     args "-c", "tar -czf $project.projectDir/build/test-data/archive.tar.gz *"
