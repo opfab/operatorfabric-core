@@ -454,8 +454,6 @@ Additionally, you may want to configure the following variables
 
 == Gradle Tasks
 
-//TODO check task list
-
 In this section only the most useful tasks are described for more
 information on tasks, refer to "tasks" gradle task output and to gradle
 and plugins official documentation
@@ -493,8 +491,8 @@ and plugins official documentation
 * Swagger Generator tasks
 ** generateSwaggerCode : generate swagger code for all configured swagger source
 ** generateSwaggerCodeDoc : generate swagger static documentation as html. Outputs to build/doc/api.
-** generateSwaggerCodeEndpoints : ggenerate swagger code for subproject. Outputs to build/swagger.
-** debugSwaggerOperations : generate swager code from /src/main/modeling/config.json to build/swagger-analyse
+** generateSwaggerCodeEndpoints : generate swagger code for subproject. Outputs to build/swagger.
+** debugSwaggerOperations : generate swagger code from /src/main/modeling/config.json to build/swagger-analyse
 
 ==== Third Party Service
 
@@ -502,7 +500,7 @@ and plugins official documentation
 ** prepareTestDataDir : prepare directory (build/test-data) for test data
 ** compressBundle1Data, compressBundle2Data : generate tar.gz third party configuration data for tests in build/test-data
 ** prepareDevDataDir : prepare directory (build/dev-data) for bootRun task
-** createDevData : prepare data in build/test-data for running bootRun task during developpement
+** createDevData : prepare data in build/test-data for running bootRun task during development
 
 ==== infra
 
@@ -692,6 +690,58 @@ Metaspace
 
 .Possible causes & resolution
 Issue with the Gradle daemon. Stopping the daemon using `gradle --stop` and re-launching the build should solve this issue.
+
++++ </div></details> +++
+
++++ <details><summary> +++
+**Java version not available when setting up environment**
++++ </summary><div> +++
+When sourcing the link:bin/load_environment_light.sh[load_environment_light] script to set up your environment, you might get the following error message:
+
+.Error message
+[source]
+----
+Stop! java 8.0.192-zulu is not available. Possible causes:
+ * 8.0.192-zulu is an invalid version
+ * java binaries are incompatible with Linux64
+ * java has not been released yet
+----
+
+Select the next available version and update link:bin/load_environment_light.sh[load_environment_light] accordingly before sourcing it again.
+
+.Possible causes & resolution
+The java version currently listed in the script might have been deprecated (for security reasons) or might not be available for your operating system (for example, 8.0.192-zulu wasn't available for Ubuntu).
+
+Run `sdk list java` to find out which versions are available. You will get this kind of output:
+
+[source]
+----
+================================================================================
+Available Java Versions
+================================================================================
+     13.ea.16-open       9.0.4-open          1.0.0-rc-11-grl
+     12.0.0-zulu         8.0.202-zulu        1.0.0-rc-10-grl
+     12.0.0-open         8.0.202-amzn        1.0.0-rc-9-grl
+     12.0.0-librca       8.0.202.j9-adpt     1.0.0-rc-8-grl
+     11.0.2-zulu         8.0.202.hs-adpt
+     11.0.2-open         8.0.202-zulufx
+     11.0.2-amzn         8.0.202-librca
+     11.0.2.j9-adpt      8.0.201-oracle
+     11.0.2.hs-adpt  > + 8.0.192-zulu
+     11.0.2-zulufx       7.0.211-zulu
+     11.0.2-librca       6.0.119-zulu
+     11.0.2-sapmchn      1.0.0-rc-15-grl
+     10.0.2-zulu         1.0.0-rc-14-grl
+     10.0.2-open         1.0.0-rc-13-grl
+     9.0.7-zulu          1.0.0-rc-12-grl
+
+================================================================================
++ - local version
+* - installed
+> - currently in use
+================================================================================
+----
+
 
 +++ </div></details> +++
 
