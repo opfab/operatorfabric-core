@@ -3,14 +3,13 @@
 == Docker container
 
 In development mode, the simplest way to deploy a RabbitMQ server is to
-create a RabbitMQ docker container. A docker compose file is provided
-(src/main/docker/rabbitmq) to allow quick setup of a convenient RabbitMQ
+create a RabbitMQ docker container. A link:src/main/docker/rabbitmq[docker-compose file] is provided to allow quick setup of a convenient RabbitMQ
  server.
 
 == Server installation
 
-This section is dedicated to in production deployment of RabbitMQ. It is
- not complete and needs to be taillored to any specific production
+This section is dedicated to production deployment of RabbitMQ. It is
+ not complete and needs to be tailored to any specific production
  environment.
 
 === Download &amp; Installation

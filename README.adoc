@@ -330,7 +330,7 @@ project
 ** link:bin/travis[travis]: travis script for documentation generation and upload to opfab.github.io repository
 * link:client[client]: contains REST APIs simple beans definition, may be used by external projects
 ** link:client/cards[cards (cards-client-data)]: simple beans regarding cards
-** link:client/src[src]: contains swagger templates for client[client] code generation
+** link:client/src[src]: contains swagger templates for link:client[client] code generation
 ** link:client/time[time (time-client-data)]: simple beans regarding time
 ** link:client/users[users (users-client-data)]: simple beans regarding users
 * link:docker-standalone-images[docker-standalone-images]: contains a standalone docker image for demonstration purposes

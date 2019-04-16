@@ -3,8 +3,7 @@
 This sub project is intended for development and demonstration purposes only. It provides a simple OAuth2 server with in memory
 statically defined users.
 
-= Defined users
-
+.Defined users
 |===
 |User |Password
 

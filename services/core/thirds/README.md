@@ -8,7 +8,7 @@ see [OperatorFabric main page](../../../README.md)
 
 ## 2. Features
 
-see [reference documentation : Technical overview ](https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/reference/#_techincal_overview)
+see [reference documentation : Technical overview ](https://opfab.github.io/projects/services/core/thirds/0.1.1.RELEASE/reference/#_techincal_overview)
 
 
 ### Third Party bundle
@@ -76,8 +76,8 @@ bundle
 }
 ```
 
-See [swagger generated documentation model section](https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api/#__Models) for data description
+See [swagger generated documentation model section](https://opfab.github.io/projects/services/core/thirds/0.1.1.RELEASE/api/#__Models) for data description
 
 ## 3. Rest Endpoints and Data Model
 
-See [swagger generated documentation](https://opfab.github.io/projects/services/core/thirds/0.1.1.SNAPSHOT/api)
+See [swagger generated documentation](https://opfab.github.io/projects/services/core/thirds/0.1.1.RELEASE/api)
