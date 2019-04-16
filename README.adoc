@@ -136,9 +136,11 @@ We currently use Firefox (63.0.3). Automatic tests for the UI rely on Chrome (73
 WARNING: The steps below assume that you are using https://sdkman.io/[sdkman] and
 https://github.com/creationix/nvm[nvm] to manage tools versions and that you have already installed them.
 
-TIP: If you encounter any issue, see <<Troubleshooting>> below. In particular, a command that hangs then fails is often a proxy issue.
+WARNING: Before running containers with docker-compose, it is required to configure a docker network for them using `docker network create opfabnet`. You can also use the bin/setup_dockerized_environment which builds the services images ant sets up the `opfabnet` network.
 
 There are several ways to get started with OperatorFabric. Please look into the section that best fits your needs.
+
+TIP: If you encounter any issue, see <<Troubleshooting>> below. In particular, a command that hangs then fails is often a proxy issue.
 
 //+++ <details><summary> +++
 //**Error summary**
@@ -226,50 +228,16 @@ You can check that you see cards into the feed by running the `push_card_loop.sh
 
 +++ </div></details> +++
 
-=== Build & run using jar
+=== Demonstration mode
 
-+++ <details><summary> +++
-**See detailed steps**
-+++ </summary><div> +++
+If you only want a quick demonstration of what OperatorFabric looks like and what it can do, use our standalone docker demo.
+See <<Docker Demo>> for details.
 
-**WORK IN PROGRESS**
-//TODO
-
-+++ </div></details> +++
-
-=== Demo (full)
-
-+++ <details><summary> +++
-**See detailed steps**
-+++ </summary><div> +++
-
-**WORK IN PROGRESS**
-//TODO
-
-+++ </div></details> +++
-
-=== Demo + card loop or rest api
-
-+++ <details><summary> +++
-**See detailed steps**
-+++ </summary><div> +++
-
-**WORK IN PROGRESS**
-//TODO
-
-+++ </div></details> +++
+=== Going Further
 
 When you feel ready to experiment with the project, or if the steps above don't quite cover what you're planning to do, please look into the <<Recipes>> section.
 
-=== Prerequisites
-
-//TODO Move this section
-
-Before running containers with docker-compose, it is required to configure a docker network for them
-----
-docker network create opfabnet
-----
-You can also use the bin/setup_dockerized_environment which builds the services images ant sets up the `opfabnet` network.
+TIP: In addition, we now have a link:https://opfab.github.io/documentation/0.1.1.RELEASE/start/[Getting Started guide on our website], check it out.
 
 == Project Contents
 
@@ -555,12 +523,12 @@ Nope
 
 == Docker demo
 
-Demoable global docker compose files are available at :
+Global docker compose files for demonstration purposes are available at :
 
-* [root]/src/main/docker/demo : sets up all services, generate a dummy card every 5 seconds
-* [root]/src/main/docker/deploy : sets up all services, ready for card reception
+* link:src/main/docker/demo[src/main/docker/demo] : sets up all services, generate a dummy card every 5 seconds
+* link:src/main/docker/deploy[src/main/docker/deploy] : sets up all services, ready for card reception
 
-*This demo setup exposes the application UI at localhost:2002/ui/*
+*These demo setups expose the application UI at localhost:2002/ui/*
 
 WARNING: Don't forget the *final slash* in the URL or you will get an error.
 
@@ -685,29 +653,6 @@ If you run the services using `bootRun` gradle task or the provided docker-compo
 == Troubleshooting
 
 +++ <details><summary> +++
-**Error using SDKMAN : Internet not reachable**
-+++ </summary><div> +++
-
-.Error message
-[source]
-----
-==== INTERNET NOT REACHABLE! ===================================================
-
- Some functionality is disabled or only partially available.
- If this persists, please enable the offline mode:
-
-   $ sdk offline
-
-================================================================================
-----
-
-.Possible causes & resolution
-If network issues have been ruled out, it's most likely a proxy issue.
-See setting up proxy -> TODO
-//TODO Create section & add link
-+++ </div></details> +++
-
-+++ <details><summary> +++
 **Proxy error when running third-party docker-compose**
 +++ </summary><div> +++
 
@@ -730,6 +675,24 @@ HTTP_PROXY=http://user:password@proxy.example.com:80/
 ----
 
 IMPORTANT: The password should be URL-encoded.
++++ </div></details> +++
+
++++ <details><summary> +++
+**Gradle Metaspace error**
++++ </summary><div> +++
+
+Gradle task (for example gradle build) fails with the following error:
+
+.Error message
+[source]
+----
+* What went wrong:
+Metaspace
+----
+
+.Possible causes & resolution
+Issue with the Gradle daemon. Stopping the daemon using `gradle --stop` and re-launching the build should solve this issue.
+
 +++ </div></details> +++
 
 //+++ <details><summary> +++
