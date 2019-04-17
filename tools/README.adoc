@@ -4,23 +4,27 @@ The tools sub project contains OperatorFabric common utilities for all other sub
 
 [source]
 ----
- tools
- ├── generic
- │   ├── test-utilities
- │   └── utilities
- ├── spring
- │   ├── spring-amqp-time-utilities
- │   ├── spring-mongo-utilities
- │   ├── spring-oauth2-utilities
- │   └── spring-utilities
- └── swagger-spring-generators
-
+├──tools
+│   ├──generic
+│   │   ├──test-utilities
+│   │   └──utilities
+│   ├── spring
+│   │   ├──spring-amqp-time-utilities
+│   │   ├──spring-mongo-utilities
+│   │   ├──spring-oauth2-utilities
+│   │   ├──spring-test-utilities
+│   │   └──spring-utilities
+│   └──swagger-spring-generators
 ----
 
-* link:generic/test-utilities[test-utilities]: Test specific utility code
-* link:generic/utilities[utilities]: Utility code
-* link:spring/spring-amqp-time-utilities[spring-amqp-time-utilities]: Utility code with spring specific dependencies
-* link:spring/spring-mongo-utilities[spring-mongo-utilities]: Utility code with spring specific dependencies
-* link:spring/spring-oauth2-utilities[spring-oauth2-utilities]: Utility code with spring specific dependencies
-* link:spring/spring-utilities[spring-utilities]: Utility code with spring specific dependencies
-* link:swagger-spring-generators[swagger-spring-generators]: OperatorFabric tailored spring boot generator for swagger
+* link:tools[tools]
+** link:tools/generic[generic]: Generic (as opposed to Spring-related) utility code
+*** link:tools/generic/test-utilities[test-utilities]: Test-specific utility code
+*** link:tools/generic/utilities[utilities]: Utility code
+** link:tools/spring[spring]: Spring-related utility code
+*** link:tools/spring/spring-amqp-time-utilities[spring-amqp-time-utilities] : Utility code with Spring-AMQP-specific dependencies, used to share common features across AMQP-dependent services
+*** link:tools/spring/spring-mongo-utilities[spring-mongo-utilities] : Utility code with Spring-specific dependencies, used to share common features across MongoDB-dependent services
+*** link:tools/spring/spring-oauth2-utilities[spring-oauth2-utilities] : Utility code with Spring-specific dependencies, used to share common features across OAuth2-dependent services
+*** link:tools/spring/spring-test-utilities[spring-test-utilities] : Utility code with Spring-specific dependencies for testing purposes
+*** link:tools/spring/spring-utilities[spring-utilities] : Utility code with Spring-specific dependencies
+** link:tools/swagger-spring-generators[swagger-spring-generators] : Spring Boot generator for swagger, tailored for OperatorFabric needs

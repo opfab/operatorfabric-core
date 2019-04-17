@@ -1,12 +1,14 @@
+:sectnums:
+
 = OperatorFabric - Core - Third Party Management Service
 
-This sub project manages Third Partye Business Module registration
+This sub project manages Third Party Business Module registration
 
-== 1. Set up and Build
+== Set up and Build
 
 see link:../../../[OperatorFabric main page]
 
-== 2. Features
+== Features
 
 see https://opfab.github.io/projects/services/core/thirds/0.1.1.RELEASE/reference/#_techincal_overview[reference documentation : Technical overview ]
 
@@ -20,7 +22,7 @@ Bundle is composed of one subdirectory per resource. When the resource is
 internationalized (template, i18n, media) , those subdirectories themselves need to have
 one subdirectory per supported language.
 
-==== layout
+==== Layout
 
 [source]
 ----
@@ -46,7 +48,7 @@ bundle
 └──config.json
 ----
 
-==== configuration
+==== Configuration
 
 [source]
 ----
