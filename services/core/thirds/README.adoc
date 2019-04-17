@@ -1,0 +1,84 @@
+= OperatorFabric - Core - Third Party Management Service
+
+This sub project manages Third Partye Business Module registration
+
+== 1. Set up and Build
+
+see link:../../../[OperatorFabric main page]
+
+== 2. Features
+
+see https://opfab.github.io/projects/services/core/thirds/0.1.1.RELEASE/reference/#_techincal_overview[reference documentation : Technical overview ]
+
+=== Third Party bundle
+
+Bundle files are uploaded to service to declare Third Party Business
+Module resources. These bundle are `tar.gz` archives enclosing resource
+files and a configuration file.
+
+Bundle is composed of one subdirectory per resource. When the resource is
+internationalized (template, i18n, media) , those subdirectories themselves need to have
+one subdirectory per supported language.
+
+==== layout
+
+[source]
+----
+bundle
+└──css
+│   └──tab.css
+│   └──emergency.css
+└──i18n
+│   └──en.json
+│   └──fr.json
+└──media
+│   └──en
+│       └──sound.opus
+│       └──sound.mp3
+│   └──fr
+│       └──sound.opus
+│       └──sound.mp3
+└──template
+│   └──en
+│       └──emergency.handlebars
+│   └──fr
+│       └──emergency.handlebars
+└──config.json
+----
+
+==== configuration
+
+[source]
+----
+{
+  "name": "sample",
+  "version": "0.1",
+  "defaultLocale": "fr",
+  "templates": [
+    "emergency"
+  ],
+  "csses": [
+    "tab",
+    "emergency"
+  ],
+  "medias": {
+    "sound": {
+      "name": "sound",
+      "files": [
+        "sound.opus",
+        "sound.mp3"
+      ]
+    }
+  },
+  "locales": [
+    "fr",
+    "en"
+  ]
+}
+----
+
+See https://opfab.github.io/projects/services/core/thirds/0.1.1.RELEASE/api/#__Models[swagger generated documentation model section] for data description
+
+== 3. Rest Endpoints and Data Model
+
+See https://opfab.github.io/projects/services/core/thirds/0.1.1.RELEASE/api[swagger generated documentation]
