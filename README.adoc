@@ -99,7 +99,7 @@ NOTE: Java 8.0.163-zulu is no longer available for security reasons, the next ve
 IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
 https://github.com/creationix/nvm[nvm] to manage tools versions.
 
-Once you have installed sdkman and nvm, you can **source** the following script to set up your development environment (appropriate versions of gradle, java, maven and project variables set):
+Once you have installed sdkman and nvm, you can **source** the following script to set up your development environment (appropriate versions of Gradle, Java, Maven and project variables set):
 
 .Set up development environment (using sdkman and nvm)
 [source]
@@ -454,13 +454,15 @@ Additionally, you may want to configure the following variables
 
 == Gradle Tasks
 
+== Custom tasks
+
 In this section only custom tasks are described. For more
 information on tasks, refer to the output of the "tasks" gradle task and to gradle
 and plugins official documentation.
 
-=== Services
+==== Services
 
-==== Common tasks for all sub-projects
+===== Common tasks for all sub-projects
 
 * Test tasks
 ** unitTest: runs unit tests
@@ -468,13 +470,13 @@ and plugins official documentation.
 ** copyWorkingDir: copies [sub-project]/src/main/docker/volume to [sub-project]/build/
 ** copyDependencies: copy dependencies to build/libs ###
 
-==== Core
+===== Core
 
 * Swagger Generator tasks
 ** debugSwaggerOperations: generate swagger code from /src/main/modeling/config.json to build/swagger-analyse
 ** swaggerHelp: display help regarding swagger configuration options for java
 
-==== Third Party Service
+===== Third Party Service
 
 * Test tasks
 ** prepareTestDataDir: prepare directory (build/test-data) for test data
@@ -484,16 +486,26 @@ and plugins official documentation.
 * Other tasks
 ** copyCompileClasspathDependencies: copy compile classpath dependencies, catching lombok that must be sent for sonarqube
 
-==== infra/config
+===== infra/config
 
 * Test tasks
 ** createDevData: prepare data in build/test-data for running bootRun task during development
 
-==== tools/generic
+===== tools/generic
 
 * Test tasks
 ** prepareTestData: copy test data from src/test/data/simple to build/test-data/
 ** compressTestArchive: compress the contents of /src/test/data/archive to /build/test-data/archive.tar.gz
+
+==== Gradle Plugins
+
+In addition to these custom tasks and standard Gradle tasks, OperatorFabric uses several Gradle plugins, among which:
+
+* link:https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/[Spring Boot Gradle Plugin]
+* link:https://github.com/palantir/gradle-docker[Palantir Docker Gradle Plugin]
+* link:https://github.com/avast/gradle-docker-compose-plugin/[Docker Compose Plugin]
+* link:https://github.com/int128/gradle-swagger-generator-plugin[Gradle Swagger Generator Plugin]
+* link:https://github.com/asciidoctor/asciidoctor-gradle-plugin[Gradle Asciidoctor Plugin]
 
 == Docker demo
 
@@ -598,7 +610,7 @@ NB : properties may be set using ".properties" file or ".yml" file. See https://
 
 By default all service built artifacts are configured with server.port set to 8080
 
-If you run the services using `bootRun` gradle task or the provided docker-compose files (see [prj]/src/main/docker) the ports used are
+If you run the services using `bootRun` Gradle task or the provided docker-compose files (see [prj]/src/main/docker) the ports used are
 
 [cols="<,>,>,>"]
 |===
