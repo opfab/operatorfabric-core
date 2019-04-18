@@ -32,13 +32,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         http
-           .authorizeRequests()
-           .antMatchers(HttpMethod.POST,"/time/**").hasRole("ADMIN")
-           .antMatchers(HttpMethod.PUT,"/time/**").hasRole("ADMIN")
-           .anyRequest().permitAll()
-           .and()
-           .oauth2ResourceServer()
-           .jwt().jwtAuthenticationConverter(opfabJwtConverter);
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST,"/time/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT,"/time/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE,"/time/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+                .and()
+                .oauth2ResourceServer()
+                .jwt().jwtAuthenticationConverter(opfabJwtConverter);
     }
 
 

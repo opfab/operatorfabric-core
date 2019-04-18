@@ -101,6 +101,10 @@ paths:
             $ref: '#/definitions/TimeData'
         '401':
           description: Authentication required
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden - ADMIN role necessary
     put:
       tags:
         - time
@@ -120,6 +124,10 @@ paths:
             $ref: '#/definitions/TimeData'
         '401':
           description: Authentication required
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden - ADMIN role necessary
     delete:
       tags:
         - time
@@ -131,6 +139,8 @@ paths:
           description: OK
         '401':
           description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
   /time/current:
     post:
       tags:
@@ -151,6 +161,10 @@ paths:
             $ref: '#/definitions/EpochDate'
         '401':
           description: Authentication required
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden - ADMIN role necessary
     put:
       tags:
         - time
@@ -172,6 +186,10 @@ paths:
             $ref: '#/definitions/EpochDate'
         '401':
           description: Authentication required
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden - ADMIN role necessary
   /time/speed:
     post:
       tags:
@@ -192,6 +210,10 @@ paths:
             $ref: '#/definitions/SpeedEnum'
         '401':
           description: Authentication required
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden - ADMIN role necessary
     put:
       tags:
         - time
@@ -211,3 +233,7 @@ paths:
             $ref: '#/definitions/SpeedEnum'
         '401':
           description: Authentication required
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden - ADMIN role necessary
