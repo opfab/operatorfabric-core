@@ -10,6 +10,7 @@ package org.lfenergy.operatorfabric.users.controllers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
+import org.lfenergy.operatorfabric.users.application.configuration.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.users.model.GroupData;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
@@ -45,6 +46,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("end-to-end")
 @Tag("mongo")
+@WithMockOpFabUser(login="gchapman", roles = { "Monty Pythons" })
 class GivenNonAdminUserGroupsControllerShould {
 
     private MockMvc mockMvc;
