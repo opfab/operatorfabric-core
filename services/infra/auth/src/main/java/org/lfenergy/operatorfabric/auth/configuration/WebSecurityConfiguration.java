@@ -36,11 +36,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
        throws Exception {
         auth.inMemoryAuthentication()
 //           .passwordEncoder(NoOpPasswordEncoder.getInstance())
-           .withUser("admin").password(passwordEncoder.encode("test")).roles("USER","ADMIN").and()
-           .withUser("rte-operator").password(passwordEncoder.encode("test")).roles("USER").and()
-           .withUser("tso1-operator").password(passwordEncoder.encode("test")).roles("USER").and()
-           .withUser("tso2-operator").password(passwordEncoder.encode("test")).roles("USER").and()
-                .withUser("myBrandNewUser").password(passwordEncoder.encode("test")).roles("USER").and()
+            .withUser("admin").password(passwordEncoder.encode("test")).roles("USER","ADMIN").and()
+            .withUser("rte-operator").password(passwordEncoder.encode("test")).roles("USER").and()
+            .withUser("tso1-operator").password(passwordEncoder.encode("test")).roles("USER").and()
+            .withUser("tso2-operator").password(passwordEncoder.encode("test")).roles("USER").and()
+            .withUser("myBrandNewUser").password(passwordEncoder.encode("test")).roles("USER").and()
+                .withUser("tso0-operator").password(passwordEncoder.encode("test")).roles("USER").and()
+                .withUser("i18n00").password(passwordEncoder.encode("test")).roles("USER").and()
+
         ;
     }
 

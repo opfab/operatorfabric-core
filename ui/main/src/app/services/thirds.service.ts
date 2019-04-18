@@ -12,12 +12,13 @@ import {AuthenticationService} from "@ofServices/authentication.service";
 import {empty, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
 import {Map} from "../model/map";
-import {catchError, filter, map, reduce, switchMap} from "rxjs/operators";
+import {catchError, concatMap, filter, map, reduce, switchMap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
 import {Third, ThirdMenu} from "@ofModel/thirds.model";
+import {tap} from "rxjs/internal/operators/tap";
 
 @Injectable()
 export class ThirdsService {
@@ -104,12 +105,15 @@ export class ThirdsService {
     }
 
     loadI18nForLightCards(cards:LightCard[]){
-        let observable = from(cards).pipe(map(card=> card.publisher + '###' + card.publisherVersion));
+        let observable = from(cards).pipe(
+            map(card=> card.publisher + '###' + card.publisherVersion));
         return this.subscribeToLoadI18n(observable);
     }
 
     loadI18nForMenuEntries(menus:ThirdMenu[]){
-        const observable = from(menus).pipe(map(menu=> menu.id + '###' + menu.version));
+        const observable = from(menus).pipe(
+            map(menu=> menu.id + '###' + menu.version)
+        );
         return this.subscribeToLoadI18n(observable);
     }
 
@@ -125,39 +129,45 @@ export class ThirdsService {
                     work = _.difference<string>(work, this.loading)
                     return from(_.difference<string>(work, this.loaded))
                 }),
-                switchMap((id: string) => {
+                concatMap((id: string) => {
                     this.loading.push(id);
                     const input = id.split('###');
-                    return this.fetchI18nJson(input[0], input[1], this.translate().getLangs())
+
+                    let publisher = input[0];
+                    let version = input[1];
+                    return this.fetchI18nJson(publisher, version, this.translate().getLangs())
                         .pipe(map(trans => {
-                            console.debug(`translation received for ${id}`);
                                 return {id: id, translation: trans};
                             }),
                             catchError(err => {
-                                console.error(`translation error for ${id}`);
                                 _.remove(this.loading, id);
                                 return throwError(err);
                             })
                         );
                 }),
-                catchError(error =>{
-                    console.error(error);
-                    return throwError(error);
-                }),
                 reduce((acc, val) => _.merge(acc,val)),
                 map(
                     (result:any) => {
-                        console.debug(`receiving i18n data`)
-                        for (let lang of this.translate().getLangs()) {
-                            if (result.translation[lang]) {
-                                this.translate().setTranslation(lang, result.translation[lang], true);
+                        let langs = this.translate().getLangs();
+                        for (let lang of langs) {
+                            let translationElement = result.translation[lang];
+                            if (translationElement) {
+                                this.translate().setTranslation(lang, translationElement, true);
+                                // needed otherwise only one translation apply
+                                this.translate().use(lang);
                             }
                         }
                         _.remove(this.loading, result.id);
                         this.loaded.push(result.id);
                         return true;
                     }
-                )
+                ),
+                catchError((error,caught )=>{
+                    console.error('something went wrong during translation',error);
+                    return caught;
+                })
+                // needed otherwise some translation break
+               // , tap(()=> console.log('translate'))
             )
     }
 

@@ -11,7 +11,6 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ThirdsService} from "../../../../services/thirds.service";
 
 @Component({
     selector: 'of-card',
@@ -20,18 +19,19 @@ import {ThirdsService} from "../../../../services/thirds.service";
 })
 export class CardComponent implements OnInit{
 
-    @Input() public open: boolean = false;
+    @Input() public open: boolean = true;
     @Input() public lightCard: LightCard;
     currentPath: any;
     private _i18nPrefix: string;
 
     constructor(private router: Router,
-                private store: Store<AppState>,
-                private thirds: ThirdsService) {
+                private store: Store<AppState>) {
+
     }
 
     public select() {
         this.router.navigate(['/'+this.currentPath,'cards',this.lightCard.id]);
+        this.open=true;
     }
 
     ngOnInit() {
@@ -40,6 +40,7 @@ export class CardComponent implements OnInit{
             if(url)
                 this.currentPath = url.split('/')[1];
         })
+        this.open=true;
     }
 
     get i18nPrefix(): string {
