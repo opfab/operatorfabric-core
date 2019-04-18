@@ -10,16 +10,14 @@ package org.lfenergy.operatorfabric.time.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.data.Offset;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.time.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.time.model.ClientTimeData;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
+import org.lfenergy.operatorfabric.time.services.TimeService;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -58,20 +56,27 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("end-to-end")
 @Tag("amqp")
-@WithMockOpFabUser(login="testAdminUser", roles = { "ADMIN" })
-class TimeControllerShould {
+@WithMockOpFabUser(login="adminUser", roles = { "ADMIN" })
+class GivenAdminUserTimeControllerShould {
     private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private TimeService timeService;
 
     @BeforeAll
     void setup() throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
+    }
+
+    @BeforeEach
+    void resetTimeService() {
+        timeService.reset();
     }
 
     @Test
@@ -95,6 +100,9 @@ class TimeControllerShould {
         assertThat(computedNow.getSecond()).isCloseTo(now.getSecond(),Offset.offset(1));
 
     }
+
+
+    //Tests on the "/time" endpoint
 
     @Test
     public void updateAndResetTimeData() throws Exception {
@@ -142,8 +150,14 @@ class TimeControllerShould {
         setAndResetTimeData0(lastYear);
     }
 
+    /**This method describes the part of the test which is common between setAndResetTimeData and updateAndResetTimeData
+     * @param lastYear {@link Instant} representing last year, the chosen start for virtual time in our test
+     * */
     private void setAndResetTimeData0(Instant lastYear) throws Exception {
+
         Thread.sleep(1500);
+
+        //Get current time configuration and store it in timeData
         MvcResult result = mockMvc.perform(get("/time"))
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -153,20 +167,30 @@ class TimeControllerShould {
            .andExpect(jsonPath("$.speed", is("X2")))
            .andReturn();
         TimeData timeData = objectMapper.readValue(result.getResponse().getContentAsString(), TimeData.class);
+
+        //Check that virtualTime for the current configuration is the intended start for virtual time: lastYear
         assertThat(timeData.getVirtualTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
+
         Instant computedNow = DateTimeUtil.toInstant(timeData.getComputedNow());
         log.info("computed now is : " + computedNow.toString());
+
+        //Check that the current virtual time (computedNow) is later than the chosen virtual time start (lastYear)
         assertThat(lastYear.isBefore(computedNow)).describedAs(lastYear.toString() + " should be before " + computedNow
            .toString()).isTrue();
 
+        // ?
         Instant lastYear2 = Instant.now().minus(365, ChronoUnit.DAYS);
         log.info("last year 2 is : " + lastYear2.toString());
+
         assertThat(lastYear2.isBefore(computedNow)).describedAs(lastYear2.toString() + " should be before " +
            computedNow.toString
               ()).isTrue();
+
+        //Reset the time configuration
         mockMvc.perform(delete("/time"))
            .andExpect(status().isOk());
 
+        //Check that time configuration is correctly reset
         mockMvc.perform(get("/time"))
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -175,6 +199,30 @@ class TimeControllerShould {
            .andExpect(jsonPath("$.computedNow", notNullValue()))
            .andExpect(jsonPath("$.speed", is("X1")));
     }
+
+    @Test void updateTimeWithError() throws Exception {
+
+        String invalidBody = "NotAProperClientTimeData json";
+
+        mockMvc.perform(put("/time")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(invalidBody))
+                .andExpect(status().isBadRequest())
+                ;
+    }
+
+    @Test void setTimeWithError() throws Exception {
+
+        String invalidBody = "NotAProperClientTimeData json";
+
+        mockMvc.perform(post("/time")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(invalidBody))
+                .andExpect(status().isBadRequest())
+        ;
+    }
+
+    // Tests on the "/time/current" and "time/speed" endpoints (+ reset via /time)
 
     @Test
     public void updateAndResetTimeAndSpeed() throws Exception {
@@ -266,4 +314,41 @@ class TimeControllerShould {
            .andExpect(jsonPath("$.computedNow", notNullValue()))
            .andExpect(jsonPath("$.speed", is("X1")));
     }
+    @Test
+
+    public void updateTimeAndSpeedWithError() throws Exception {
+
+        String invalidBody = "ABC12345678";
+        mockMvc.perform(put("/time/current")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(invalidBody))
+                .andExpect(status().isBadRequest())
+                ;
+
+        invalidBody = "X22";
+        mockMvc.perform(put("/time/speed")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(invalidBody))
+                .andExpect(status().isBadRequest())
+                ;
+    }
+
+    @Test
+    public void setTimeAndSpeedWithError() throws Exception {
+
+        String invalidBody = "ABC12345678";
+        mockMvc.perform(post("/time/current")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(invalidBody))
+                .andExpect(status().isBadRequest())
+        ;
+
+        invalidBody = "X22";
+        mockMvc.perform(post("/time/speed")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(invalidBody))
+                .andExpect(status().isBadRequest())
+        ;
+    }
+
 }
