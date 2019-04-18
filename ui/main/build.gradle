@@ -16,11 +16,20 @@ npm_run_build {
     args = ['--', '--configuration=production', '--baseHref=/ui/', '--deployUrl=/ui/']
 }
 
+task npmBuildDebug(type: NpmTask) {
+//    args = ['run', 'build','--', '--configuration=production', '--baseHref=/ui/', '--deployUrl=/ui/', '--optimization=false', '--outputHashing=none',
+//            '--sourceMap=true', '--extractCss=false', '--aot=false', '--vendorChunk=true', '--buildOptimizer=false']
+    args = ['run', 'build','--', '--configuration=productionDebug', '--baseHref=/ui/', '--deployUrl=/ui/']
+}
+
 npm_run_test {
     args = ['--', '--browsers', 'ChromeHeadless', '--watch=false', '--code-coverage']
 }
 
 npm_run_headless.dependsOn(npm_install)
-npm_run_build.dependsOn(npm_run_headless)
+//npm_run_build.dependsOn(npm_run_headless)
 test.dependsOn(npm_run_headless)
-build.dependsOn(npm_run_build)
+if(project.hasProperty('uiDebug'))
+    build.dependsOn(npmBuildDebug)
+else
+    build.dependsOn(npm_run_build)

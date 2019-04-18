@@ -56,6 +56,15 @@ gradle assemble
 
 The first run of this command download `operatorfabric` dependencies and can take a while.
 
+
+.Assembly options
+|===
+|Option |Default value |Description
+
+|--PuiDebug|false|Force debug mode for web client
+|===
+
+
 == Run the project
 
 === Set up your running environment
