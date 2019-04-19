@@ -1007,7 +1007,7 @@ paths:
       summary: fetch cards
       description: >-
         Fetch cards for which calling user is a recipient. Fetched cards all
-        comes with empty
+        comes with empty data and details.
       operationId: fetchCards
       produces:
         - application/json
