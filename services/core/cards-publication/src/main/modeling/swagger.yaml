@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
-  version: 0.1.1.RELEASE
+  version: 0.1.1.SNAPSHOT
   title: Card Management API
   termsOfService: ''
   contact:
@@ -34,6 +34,15 @@ definitions:
     type: object
     description: Number of items
     example: 10
+  TimeSpanDisplayModeEnum:
+    type: string
+    description: |-
+      Time span disply mode >
+      * BUBBLE: Only displays Time span start
+      * LINE: displays start and end with a junction line
+    enum:
+      - BUBBLE
+      - LINE
   CardOperationTypeEnum:
     type: string
     description: |-
@@ -585,6 +594,23 @@ definitions:
         - type: USER
           identity: aGivenUser
       preserveMain: true
+      
+  TimeSpan:
+    type: object
+    description: >- 
+      An object to define a business time span
+    properties:
+      start:
+        $ref: '#/definitions/EpochDate'
+        description: Span start
+      end:
+        $ref: '#/definitions/EpochDate'
+        description: Span start
+      display:
+        $ref: '#/definitions/TimeSpanDisplayModeEnum'
+        description: defaults to BUBBLE if only start is set and to LINE if start and end are set 
+    required:
+      - start
   Card:
     type: object
     description: >-
@@ -643,6 +669,11 @@ definitions:
         description: 'Map of actions, identifying an action by its unique card related id'
         additionalProperties:
           $ref: '#/definitions/Action'
+      timeSpans:
+        type: array
+        description: List of business time span associated to card
+        items:
+          $ref: '#/definitions/TimeSpan'
       details:
         type: array
         description: List of card associated details
@@ -779,8 +810,7 @@ definitions:
         preserveMain: true
   Subscription:
     type: object
-    description: >-
-      LightCard Subscription object
+    description: LightCard Subscription object
     properties:
       rangeStart:
         $ref: '#/definitions/EpochDate'
@@ -790,9 +820,8 @@ definitions:
         description: subscription range end time
       loadedCards:
         type: array
-        items: 
+        items:
           type: string
-        
   LightCard:
     type: object
     description: >-
@@ -902,7 +931,8 @@ paths:
       summary: fetch card operations
       description: >-
         fetch cards restricted to calling user. Fetched cards all come with
-        empty data and details. requesting this end point opens an SSE connection
+        empty data and details. requesting this end point opens an SSE
+        connection
       operationId: getCardSubscription
       produces:
         - application/json
@@ -935,7 +965,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CardOperation'
-  /cardSubscription/{uiId}:
+  '/cardSubscription/{uiId}':
     put:
       tags:
         - cards

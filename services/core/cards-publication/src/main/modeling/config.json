@@ -18,6 +18,7 @@
     "InputEnum": "org.lfenergy.operatorfabric.cards.model.InputEnum",
     "TitlePositionEnum": "org.lfenergy.operatorfabric.cards.model.TitlePositionEnum",
     "RecipientEnum": "org.lfenergy.operatorfabric.cards.model.RecipientEnum",
+    "TimeSpanDisplayModeEnum": "org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum",
     "EpochDate": "java.lang.Long",
     "LongInteger": "java.lang.Long"
   },
