@@ -329,6 +329,20 @@ The card content is :
 			},
 			"templateName" : "template"
 		}
+	],
+	"timeSpans" : [
+	    {
+	        "start" : 1553186770681
+        },
+        {
+            "start" : 1553186780681
+            "end" : 1553186790681
+        },
+        {
+            "start" : 1553186800681
+            "end" : 1553186810681
+            "display" : "BUBBLE"
+        }
 	]
 }
 ....
