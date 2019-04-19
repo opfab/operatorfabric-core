@@ -80,4 +80,6 @@ public class CardConsultationData implements Card {
     @JsonIgnore
     @Singular
     private List<String> orphanedUsers = Collections.emptyList();
+    @Singular
+    private List<? extends TimeSpan> timeSpans;
 }

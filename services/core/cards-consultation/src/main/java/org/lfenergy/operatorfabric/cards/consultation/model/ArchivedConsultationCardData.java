@@ -81,6 +81,9 @@ public class ArchivedConsultationCardData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> groupRecipients;
+    @Transient
+    @JsonIgnore
+    private List<? extends TimeSpan> timeSpans;
 
 
 }
