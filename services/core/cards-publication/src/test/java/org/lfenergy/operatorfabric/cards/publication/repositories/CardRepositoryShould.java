@@ -7,6 +7,7 @@
 
 package org.lfenergy.operatorfabric.cards.publication.repositories;
 
+import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
@@ -22,7 +23,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.test.StepVerifier;
 
 import java.time.Instant;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * <p></p>
@@ -90,15 +94,35 @@ public class CardRepositoryShould {
                         .unSelectedValue("v2")
                         .build())
                     .build())
+                    .timeSpan(
+                            TimeSpanPublicationData.builder()
+                            .start(123l)
+                            .build())
+                    .timeSpan(
+                            TimeSpanPublicationData.builder()
+                            .start(123l)
+                            .end(456l)
+                            .build())
+                    .timeSpan(
+                            TimeSpanPublicationData.builder()
+                            .start(123l)
+                            .end(456l)
+                            .display(TimeSpanDisplayModeEnum.BUBBLE)
+                            .build())
                 .build();
         card.prepare(Instant.now().toEpochMilli());
         StepVerifier.create(repository.save(card))
-                .expectNextMatches(computeCardPredicate(card))
+                .assertNext(computeCardAssertion(card))
                 .expectComplete()
                 .verify();
 
         StepVerifier.create(repository.findById("PUBLISHER_PROCESS"))
-                .expectNextMatches(computeCardPredicate(card))
+                .assertNext(c->{
+                    computeCardAssertion(card).accept(c);
+                    assertThat(c.getTimeSpans().get(0).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.BUBBLE);
+                    assertThat(c.getTimeSpans().get(1).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.LINE);
+                    assertThat(c.getTimeSpans().get(2).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.BUBBLE);
+                })
                 .expectComplete()
                 .verify();
     }
@@ -108,7 +132,18 @@ public class CardRepositoryShould {
         Predicate<CardPublicationData> predicate = c -> card.getId().equals(c.getId());
         predicate = predicate.and(c -> c.getDetails().size() == 1);
         predicate = predicate.and(c -> c.getDetails().get(0).getTitlePosition() == TitlePositionEnum.UP);
+
         return predicate;
+    }
+
+    @NotNull
+    private Consumer<CardPublicationData> computeCardAssertion(CardPublicationData card) {
+        return c->{
+            assertThat(c.getId()).isEqualTo(card.getId());
+            assertThat(c.getDetails().size()).isEqualTo(1);
+            assertThat(c.getDetails().get(0).getTitlePosition()).isEqualTo(TitlePositionEnum.UP);
+
+        };
     }
 
 }

@@ -28,6 +28,7 @@ public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
         converterList.add(new DetailReadConverter());
         converterList.add(new RecipientReadConverter());
         converterList.add(new ActionReadConverter());
+        converterList.add(new TimeSpanReadConverter());
         return converterList;
     }
 }

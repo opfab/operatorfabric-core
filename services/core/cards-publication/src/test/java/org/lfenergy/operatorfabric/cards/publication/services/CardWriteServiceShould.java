@@ -265,6 +265,10 @@ class CardWriteServiceShould {
                                                 .build()
                                 )
                                 .build())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(123l)
+                        .build()
+                )
                 .build();
         cardWriteService.pushCardsAsyncParallel(Flux.just(newCard));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(1));
@@ -276,7 +280,7 @@ class CardWriteServiceShould {
 
         ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid()).block();
         assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(
-                newCard, "uid","id", "deletionDate", "actions");
+                newCard, "uid","id", "deletionDate", "actions", "timeSpans");
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
         assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
         assertThat(testCardReceiver.getAdminQueue().size()).isEqualTo(0);

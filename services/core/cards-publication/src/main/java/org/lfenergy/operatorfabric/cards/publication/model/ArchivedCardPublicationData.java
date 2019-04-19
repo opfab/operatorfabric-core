@@ -66,6 +66,8 @@ public class ArchivedCardPublicationData implements Card {
     private String mainRecipient;
     private List<String> userRecipients;
     private List<String> groupRecipients;
+    @Transient
+    private List<? extends TimeSpan> timeSpans;
 
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();

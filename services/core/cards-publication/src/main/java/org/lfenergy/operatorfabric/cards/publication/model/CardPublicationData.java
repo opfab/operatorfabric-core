@@ -71,6 +71,9 @@ public class CardPublicationData implements Card {
     private List<String> tags;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<? extends TimeSpan> timeSpans;
+    @Singular
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, ? extends Action> actions;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
