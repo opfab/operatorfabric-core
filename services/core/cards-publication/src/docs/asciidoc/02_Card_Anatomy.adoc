@@ -130,3 +130,54 @@ link:../../../thirds/0.1.1.RELEASE/reference/#_bundle[See the documentation abou
 The `TEST` publisher has only a `0.1` version uploaded in the current `OperatorFabric` system. The `details` value is `[{"title":{"key":"first.tab.title"},"template":"template0"}]`.
 
 If the `publisherVersion` of the card is `2` then only the `title` key declared in the `details` array will be displays without any translation, i.e. the tab will contains `TEST.2.first.tab.title` and will be empty. If the `l10n` for the title is not available, then the tab title will be still `TEST.2.first.tab.title` but the template will be compute and the details section will display the template content.
+
+==== TimeSpans (`timeSpans`)
+
+When the simple startDate and endDate are not enough to characterize your
+process business times, you can add a list of TimeSpan to your card. TimeSpans
+are rendered in the timeline component as cluster bubbles are as lines
+depending on your parametrization of the span. This as no effect on the feed
+content
+
+*example 1:*
+
+to display the card two times in the timeline you can add two TimeSpan to your
+card:
+
+....
+{
+	"publisher":"TSO1",
+	"publisherVersion":"0.1",
+	"processId":"process-000",
+	"startDate":"1546297200000",
+	"severity":"NOTIFICATION",
+	...
+	"timeSpans" : [
+        {"start" : 1546297200000},
+        {"start" : 1546297500000},
+    ]
+
+}
+....
+In this sample, the card will be displayed twice in the time line. The card
+start date will be ignored.
+
+*example 2:*
+
+Instead of the default clustered view, you may want your card to be displayed
+as a line in the time line.
+
+....
+{
+	"publisher":"TSO1",
+	"publisherVersion":"0.1",
+	"processId":"process-000",
+	"startDate":"1546297200000",
+	"severity":"NOTIFICATION",
+	...
+	"timeSpans" : [
+        {"start" : 1546297200000, "end" : 1546297500000},
+    ]
+
+}
+....

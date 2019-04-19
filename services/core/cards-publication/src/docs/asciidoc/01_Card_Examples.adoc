@@ -131,6 +131,16 @@ So here a single custome data is defined and it's `rootProp`. This attribute is 
 
 ==== Dates
 
+Dates impact both the feed rendering and the timeline rendering.
+
+In the feed cards are visible based on a collection of filters among which a
+time filter.
+
+In the time line cards are visible based on a similar filter plus the time line
+renders the "position" in time of said cards. By default it groups cards at
+close time in bubbles whom color indicates severity and inner number indicates
+number of cards.
+
 ===== Start Date (`startDate`)
 
 The card is only display after this date is reach by the current time. It's a mandatory attributes for OperatorFabric cards.
