@@ -13,15 +13,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authorization.AuthorityReactiveAuthorizationManager;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authorization.AuthorizationContext;
 import reactor.core.publisher.Mono;
 
 
 /**
- * Configures web scurity
+ * Configures web security
  *
  * @author David Binder
  */
@@ -42,14 +46,33 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity httpSecurity,
                                                             Converter<Jwt, Mono<AbstractAuthenticationToken>>
-                                                               opfabReactiveJwtConverter) {
-        httpSecurity.headers().frameOptions().disable();
+                                                                    opfabReactiveJwtConverter) {
         httpSecurity
-           .authorizeExchange()
+                .headers()
+                .frameOptions()
+                .disable();
+        httpSecurity
+                .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
-           .anyExchange().authenticated().and()
-           .oauth2ResourceServer().jwt().jwtAuthenticationConverter(opfabReactiveJwtConverter);
+                .pathMatchers("/cards/**").access(this::currentUserHasAnyRole)
+                .pathMatchers("/cardSubscription/**").access(this::currentUserHasAnyRole)
+                .anyExchange().authenticated()
+                .and()
+                .oauth2ResourceServer()
+                .jwt()
+                .jwtAuthenticationConverter(opfabReactiveJwtConverter);
+
         return httpSecurity.build();
+    }
+
+    private Mono<AuthorizationDecision> currentUserHasAnyRole(Mono<Authentication> authentication, AuthorizationContext context) {
+        return authentication
+                .filter(a -> a.isAuthenticated())
+                .flatMapIterable( a -> a.getAuthorities())
+                .hasElements()
+                .map(hasAuthorities -> new AuthorizationDecision(hasAuthorities))
+                .defaultIfEmpty(new AuthorizationDecision(false))
+                ;
     }
 
 

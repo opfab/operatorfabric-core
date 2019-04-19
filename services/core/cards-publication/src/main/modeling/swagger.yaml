@@ -965,6 +965,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/CardOperation'
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - User doesn't have any group
   '/cardSubscription/{uiId}':
     put:
       tags:
@@ -1038,6 +1042,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LightCard'
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - User doesn't have any group
     post:
       tags:
         - cards
@@ -1133,6 +1141,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Card'
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - User doesn't have any group
   '/cards/{processId}/actions/{actionKey}':
     parameters:
       - in: path
@@ -1160,6 +1172,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/ActionStatus'
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - User doesn't have any group
     put:
       operationId: triggerProcessCardAction
       tags:
