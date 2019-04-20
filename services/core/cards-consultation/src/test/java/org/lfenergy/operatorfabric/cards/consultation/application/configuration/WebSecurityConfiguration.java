@@ -10,13 +10,22 @@ package org.lfenergy.operatorfabric.cards.consultation.application.configuration
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authorization.AuthorizationContext;
+import reactor.core.publisher.Mono;
 
 
 /**
- * Configures web scurity
+ * Configures web security
+
+ * This should match the main WebSecurity configuration for the service, with the following changes:
+ *  - Disable csrf
+ *  - Remove configuration of OAuth2ResourceServer
  *
  * @author David Binder
  */
@@ -35,10 +44,26 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity httpSecurity) {
         httpSecurity.headers().frameOptions().disable();
+        httpSecurity.csrf().disable();
         httpSecurity
-           .authorizeExchange().anyExchange().permitAll();
+                .authorizeExchange()
+                .pathMatchers(HttpMethod.OPTIONS).permitAll()
+                .pathMatchers("/cards/**").access(this::currentUserHasAnyRole)
+                .pathMatchers("/cardSubscription/**").access(this::currentUserHasAnyRole)
+                .anyExchange().authenticated();
         return httpSecurity.build();
     }
 
+    private Mono<AuthorizationDecision> currentUserHasAnyRole(Mono<Authentication> authentication, AuthorizationContext context) {
+        log.info("currentUserHasAnyRole was called");
+        return authentication
+                .filter(a -> a.isAuthenticated())
+                .flatMapIterable( a -> a.getAuthorities())
+                .hasElements()
+                .map(hasAuthorities -> new AuthorizationDecision(hasAuthorities))
+                .defaultIfEmpty(new AuthorizationDecision(false))
+                .log()
+                ;
+    }
 
 }

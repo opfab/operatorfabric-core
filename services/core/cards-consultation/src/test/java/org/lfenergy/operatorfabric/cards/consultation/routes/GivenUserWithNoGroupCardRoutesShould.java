@@ -16,6 +16,7 @@ import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTes
 import org.lfenergy.operatorfabric.cards.consultation.configuration.webflux.CardRoutesConfig;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
+import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +39,8 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.creat
 @Tag("end-to-end")
 @Tag("mongo")
 @Slf4j
-public class CardRoutesShould {
+@WithMockOpFabUser(login="userWithNoGroup", roles = {})
+public class GivenUserWithNoGroupCardRoutesShould {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -60,13 +62,6 @@ public class CardRoutesShould {
     }
 
     @Test
-    public void respondNotFound(){
-        assertThat(cardRoutes).isNotNull();
-        webTestClient.get().uri("/cards/id").exchange()
-                .expectStatus().isNotFound();
-    }
-
-    @Test
     public void findOutCard(){
         CardConsultationData simpleCard = createSimpleCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
         StepVerifier.create(repository.save(simpleCard))
@@ -75,9 +70,7 @@ public class CardRoutesShould {
                 .verify();
         assertThat(cardRoutes).isNotNull();
         webTestClient.get().uri("/cards/{id}",simpleCard.getId()).exchange()
-                .expectStatus().isOk()
-        .expectBody(CardConsultationData.class).value(card->{
-            assertThat(card).isEqualToComparingFieldByFieldRecursively(simpleCard);
-        });
+                .expectStatus().isForbidden()
+        ;
     }
 }
