@@ -8,8 +8,10 @@
 package org.lfenergy.operatorfabric.time.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.cards.model.Card;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
+import org.lfenergy.operatorfabric.time.services.CardConsultationServiceProxy;
 import org.lfenergy.operatorfabric.time.services.TimeService;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
@@ -19,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 /**
@@ -31,20 +34,38 @@ import java.time.Instant;
 @Slf4j
 public class TimeController implements TimeApi{
 
-    private TimeService timeService;
+    public static final int TIME_TO_SUBSTRACT_IN_FWD_BWD = 300000;
+    private final CardConsultationServiceProxy cardConsultationServiceProxy;
+    private final TimeService timeService;
 
     /**
      * Controller expects {@link TimeService} bean injection through Spring
      * @param timeService the business time service
      */
     @Autowired
-    public TimeController(TimeService timeService) {
+    public TimeController(TimeService timeService,
+                          CardConsultationServiceProxy cardConsultationServiceProxy) {
         this.timeService = timeService;
+        this.cardConsultationServiceProxy = cardConsultationServiceProxy;
     }
 
     @Override
     public Void resetTime() {
         timeService.reset();
+        return null;
+    }
+
+    @Override
+    public Void fetchNextTime(BigDecimal millisTime) throws Exception {
+        Card card = this.cardConsultationServiceProxy.fetchNextCard(millisTime.longValue());
+        timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
+        return null;
+    }
+
+    @Override
+    public Void fetchPreviousTime(BigDecimal millisTime) throws Exception {
+        Card card = this.cardConsultationServiceProxy.fetchPreviousCard(millisTime.longValue());
+        timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
         return null;
     }
 
@@ -103,4 +124,6 @@ public class TimeController implements TimeApi{
     public SpeedEnum updateCurrentSpeed(SpeedEnum currentSpeed) {
         return setCurrentSpeed(currentSpeed);
     }
+
+
 }

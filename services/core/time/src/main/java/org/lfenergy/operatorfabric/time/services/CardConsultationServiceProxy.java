@@ -24,11 +24,11 @@ public interface CardConsultationServiceProxy {
        produces = { "application/json" },
        method = RequestMethod.GET)
     //
-    Card fetchNextCard(@PathVariable("millisTime") String login) ;
+    Card fetchNextCard(@PathVariable("millisTime") Long millisTime) ;
 
     @RequestMapping(value = "/{millisTime}/previous",
             produces = { "application/json" },
             method = RequestMethod.GET)
         //
-    Card fetchPreviousCard(@PathVariable("millisTime") String login) ;
+    Card fetchPreviousCard(@PathVariable("millisTime") Long millisTime) ;
 }
