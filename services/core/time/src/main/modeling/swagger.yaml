@@ -43,8 +43,8 @@ definitions:
   TimeData:
     type: object
     description: >-
-      Description of a time configuration, containing the current virtual time as
-      well as the references used for computation
+      Description of a time configuration, containing the current virtual time
+      as well as the references used for computation
     properties:
       referenceTime:
         $ref: '#/definitions/EpochDate'
@@ -55,8 +55,8 @@ definitions:
       computedNow:
         $ref: '#/definitions/EpochDate'
         description: >-
-          Current virtual time computed by server as virtualTime +
-          (now - referenceTime) * speed
+          Current virtual time computed by server as virtualTime + (now -
+          referenceTime) * speed
       speed:
         $ref: '#/definitions/SpeedEnum'
         description: Speed of virtual time flow
@@ -66,6 +66,40 @@ definitions:
       computedNow: 1520332310718
       speed: X10
 paths:
+  '/time/{millisTime}/next/card':
+    post:
+      tags:
+        - time
+      summary: Force currentime to next card start time minus 5 minutes
+      operationId: fetchNextTime
+      parameters:
+        - in: path
+          name: millisTime
+          type: number
+          required: true
+          description: time in milliseconds from epoch
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: no Card found
+  '/time/{millisTime}/previous/card':
+    post:
+      tags:
+        - time
+      summary: Force currentime to previous card start time minus 5 minutes
+      operationId: fetchPreviousTime
+      parameters:
+        - in: path
+          name: millisTime
+          type: number
+          required: true
+          description: time in milliseconds from epoch
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: no Card found
   /time:
     get:
       tags:
@@ -99,10 +133,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/TimeData'
-        '401':
-          description: Authentication required
         '400':
           description: Bad request
+        '401':
+          description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
     put:
@@ -122,10 +156,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/TimeData'
-        '401':
-          description: Authentication required
         '400':
           description: Bad request
+        '401':
+          description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
     delete:
@@ -159,10 +193,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/EpochDate'
-        '401':
-          description: Authentication required
         '400':
           description: Bad request
+        '401':
+          description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
     put:
@@ -184,10 +218,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/EpochDate'
-        '401':
-          description: Authentication required
         '400':
           description: Bad request
+        '401':
+          description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
   /time/speed:
@@ -208,10 +242,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/SpeedEnum'
-        '401':
-          description: Authentication required
         '400':
           description: Bad request
+        '401':
+          description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
     put:
@@ -231,9 +265,9 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/SpeedEnum'
-        '401':
-          description: Authentication required
         '400':
           description: Bad request
+        '401':
+          description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
