@@ -1067,7 +1067,7 @@ paths:
     parameters:
       - in: path
         name: millisTime
-        type: string
+        type: number
         required: true
         description: time in milliseconds from epoch
     get:
@@ -1088,7 +1088,7 @@ paths:
     parameters:
       - in: path
         name: millisTime
-        type: string
+        type: number
         required: true
         description: time in milliseconds from epoch
     get:
