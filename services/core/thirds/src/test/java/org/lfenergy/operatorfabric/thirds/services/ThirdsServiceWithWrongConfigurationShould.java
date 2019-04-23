@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,7 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@SpringBootTest(classes = {IntegrationTestApplication.class})
 @Slf4j
 @ActiveProfiles("service_error")
 public class ThirdsServiceWithWrongConfigurationShould {

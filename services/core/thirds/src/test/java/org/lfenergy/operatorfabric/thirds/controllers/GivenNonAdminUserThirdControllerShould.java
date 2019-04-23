@@ -9,7 +9,8 @@ package org.lfenergy.operatorfabric.thirds.controllers;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.thirds.ThirdsApplication;
+import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
+import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -32,6 +33,7 @@ import static org.hamcrest.Matchers.is;
 import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
 import static org.lfenergy.operatorfabric.utilities.PathUtils.copy;
 import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -44,11 +46,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {ThirdsApplication.class, CustomExceptionHandler.class})
+@SpringBootTest(classes = {IntegrationTestApplication.class})
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ThirdControllerShould {
+@WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
+class GivenNonAdminUserThirdControllerShould {
 
     private static Path testDataDir = Paths.get("./build/test-data/thirds-storage");
 
@@ -60,7 +63,9 @@ class ThirdControllerShould {
     @BeforeAll
     void setup() throws Exception {
         copy(Paths.get("./src/test/docker/volume/thirds-storage"), testDataDir);
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        this.mockMvc = webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
     }
 
     @AfterAll
@@ -226,6 +231,7 @@ class ThirdControllerShould {
     }
 
     @Nested
+    @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
     class CreateContent {
         @Test
         void create() throws Exception {
@@ -233,33 +239,28 @@ class ThirdControllerShould {
             MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz", "application/gzip", Files
                     .readAllBytes(pathToBundle));
             mockMvc.perform(multipart("/thirds/second").file(bundle))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.name", is("second")))
-                    .andExpect(jsonPath("$.version", is("2.1")))
+                    .andExpect(status().isForbidden())
             ;
 
             mockMvc.perform(get("/thirds"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$", hasSize(2)));
+                    .andExpect(jsonPath("$", hasSize(1)));
 
-            mockMvc.perform(get("/thirds/second/css/nostyle"))
-                    .andExpect(status().isNotFound())
-            ;
 
         }
 
         @Nested
+        @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
         class DeleteContent {
             @Test
             void clean() throws Exception {
                 mockMvc.perform(delete("/thirds"))
-                        .andExpect(status().isOk());
+                        .andExpect(status().isForbidden());
                 mockMvc.perform(get("/thirds"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                        .andExpect(jsonPath("$", hasSize(0)));
+                        .andExpect(jsonPath("$", hasSize(1)));
             }
         }
     }

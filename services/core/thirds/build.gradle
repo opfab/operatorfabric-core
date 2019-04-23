@@ -1,6 +1,7 @@
 dependencies {
     compile boot.starterWeb, boot.starterJetty
     compile project(':tools:spring:spring-oauth2-utilities')
+    testCompile project(':tools:spring:spring-test-utilities')
 }
 
 jar {

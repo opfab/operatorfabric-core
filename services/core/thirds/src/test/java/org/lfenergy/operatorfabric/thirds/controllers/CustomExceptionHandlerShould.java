@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
+import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
  * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@SpringBootTest(classes = {IntegrationTestApplication.class})
 @Slf4j
 @ActiveProfiles("test")
 class CustomExceptionHandlerShould {

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.thirds.model.Third;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,7 +40,7 @@ import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
  * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@SpringBootTest(classes = {IntegrationTestApplication.class})
 @Slf4j
 @ActiveProfiles("test")
 class ThirdsServiceShould {
