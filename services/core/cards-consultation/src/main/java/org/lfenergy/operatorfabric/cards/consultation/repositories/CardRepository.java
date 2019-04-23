@@ -28,4 +28,18 @@ public interface CardRepository extends ReactiveMongoRepository<CardConsultation
      */
     public Mono<CardConsultationData> findByProcessId(String processId);
 
+    /**
+     * Finds next card if any whose startDate is before a specified date
+     * @param pivotalDateMillis specified reference date
+     * @return Card result or empty Mono
+     */
+    public Mono<CardConsultationData> findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(long pivotalDateMillis);
+
+    /**
+     * Finds next card if any whose startDate is after a specified date
+     * @param pivotalDateMillis specified reference date
+     * @return Card result or empty Mono
+     */
+    public Mono<CardConsultationData> findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(long pivotalDateMillis);
+
 }
