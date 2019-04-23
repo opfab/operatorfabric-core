@@ -594,11 +594,9 @@ definitions:
         - type: USER
           identity: aGivenUser
       preserveMain: true
-      
   TimeSpan:
     type: object
-    description: >- 
-      An object to define a business time span
+    description: An object to define a business time span
     properties:
       start:
         $ref: '#/definitions/EpochDate'
@@ -608,7 +606,9 @@ definitions:
         description: Span start
       display:
         $ref: '#/definitions/TimeSpanDisplayModeEnum'
-        description: defaults to BUBBLE if only start is set and to LINE if start and end are set 
+        description: >-
+          defaults to BUBBLE if only start is set and to LINE if start and end
+          are set
     required:
       - start
   Card:
@@ -1063,6 +1063,48 @@ paths:
           description: erroneous payload
           schema:
             $ref: '#/definitions/CardCreationReport'
+  '/{millisTime}/next':
+    parameters:
+      - in: path
+        name: millisTime
+        type: string
+        required: true
+        description: time in milliseconds from epoch
+    get:
+      operationId: fetchNextCard
+      tags:
+        - cards
+        - read
+      summary: fetch next card after specified time if any
+      description: fetch current card for process id
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Card'
+        '404':
+          description: no card found
+  '/{millisTime}/previous':
+    parameters:
+      - in: path
+        name: millisTime
+        type: string
+        required: true
+        description: time in milliseconds from epoch
+    get:
+      operationId: fetchPreviousCard
+      tags:
+        - cards
+        - read
+      summary: fetch previous card before specified time if any
+      description: fetch current card for process id
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Card'
+        '404':
+          description: no card found
   '/cards/{processId}':
     parameters:
       - in: path
@@ -1089,6 +1131,8 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Card'
   '/cards/{processId}/actions/{actionKey}':
     parameters:
       - in: path
