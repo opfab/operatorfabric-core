@@ -34,6 +34,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Third'
+        '401':
+          description: Authentication required
   '/thirds/{thirdName}':
     get:
       tags:
@@ -59,6 +61,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Third'
+        '401':
+          description: Authentication required
     post:
       tags:
         - thirds
@@ -129,6 +133,10 @@ paths:
           description: Successful operation
           schema:
             $ref: '#/definitions/Third'
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
   '/thirds/{thirdName}/templates/{templateName}':
     get:
       tags:
@@ -171,6 +179,8 @@ paths:
             format: binary
         '404':
           description: No such template
+        '401':
+          description: Authentication required
   '/thirds/{thirdName}/css/{cssFileName}':
     get:
       tags:
@@ -207,6 +217,10 @@ paths:
             format: binary
         '404':
           description: No such template
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
   '/thirds/{thirdName}/media/{mediaFileName}':
     get:
       tags:
@@ -248,6 +262,8 @@ paths:
             format: binary
         '404':
           description: No such template
+        '401':
+          description: Authentication required
   '/thirds/{thirdName}/i18n':
     get:
       tags:
@@ -284,6 +300,8 @@ paths:
             format: binary
         '404':
           description: No such template
+        '401':
+          description: Authentication required
 definitions:
   ThirdMenuEntry:
     type: object

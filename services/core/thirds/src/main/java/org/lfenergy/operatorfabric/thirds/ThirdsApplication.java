@@ -8,6 +8,7 @@
 package org.lfenergy.operatorfabric.thirds;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.EnableOperatorFabricOAuth2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -20,6 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Slf4j
 @RefreshScope
 @ImportResource("classpath:/cors.xml")
+@EnableOperatorFabricOAuth2
 public class ThirdsApplication {
 
     public static void main(String[] args) {
