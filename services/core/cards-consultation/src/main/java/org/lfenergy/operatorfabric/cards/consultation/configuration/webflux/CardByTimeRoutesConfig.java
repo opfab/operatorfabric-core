@@ -35,7 +35,7 @@ public class CardByTimeRoutesConfig {
      * @return route
      */
     @Bean
-    public RouterFunction<ServerResponse> cardRoutes() {
+    public RouterFunction<ServerResponse> cardTimeRoutes() {
         return RouterFunctions
                 .route(RequestPredicates.GET("/{millisTime}/next"), cardByNextTimeGetRoute())
                 .andRoute(RequestPredicates.OPTIONS("/{millisTime}/next"), cardByNextTimeOptionRoute())
