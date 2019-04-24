@@ -7,8 +7,12 @@
 
 package org.lfenergy.operatorfabric.time.controllers;
 
+import feign.FeignException;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.model.Card;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
 import org.lfenergy.operatorfabric.time.services.CardConsultationServiceProxy;
@@ -16,6 +20,7 @@ import org.lfenergy.operatorfabric.time.services.TimeService;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +40,10 @@ import java.time.Instant;
 public class TimeController implements TimeApi{
 
     public static final int TIME_TO_SUBSTRACT_IN_FWD_BWD = 300000;
+    public static final String CARD_RESPONSE_MSG = "Card service responded %d: %s";
+    public static final String NO_CARD = "No card found";
+    public static final String CARD_UNEXPECTED_ERROR_MSG = "Unexpected error from card service";
+    public static final String CARD_UNAVAILABLE_MSG = "Unnable to reach card service";
     private final CardConsultationServiceProxy cardConsultationServiceProxy;
     private final TimeService timeService;
 
@@ -57,16 +66,42 @@ public class TimeController implements TimeApi{
 
     @Override
     public Void fetchNextTime(BigDecimal millisTime) throws Exception {
-        Card card = this.cardConsultationServiceProxy.fetchNextCard(millisTime.longValue());
-        timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
+        try {
+            Card card = this.cardConsultationServiceProxy.fetchNextCard(millisTime.longValue());
+            timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
+        }catch (FeignException fex){
+            handleCardServiceErrors(fex);
+        }
         return null;
     }
 
     @Override
     public Void fetchPreviousTime(BigDecimal millisTime) throws Exception {
-        Card card = this.cardConsultationServiceProxy.fetchPreviousCard(millisTime.longValue());
-        timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
+        try {
+            Card card = this.cardConsultationServiceProxy.fetchPreviousCard(millisTime.longValue());
+            timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
+        }catch (FeignException fex){
+            return handleCardServiceErrors(fex);
+        }
         return null;
+    }
+
+    private Void handleCardServiceErrors(FeignException fex) {
+        switch (fex.status()) {
+            case 404:
+                log.info(String.format(CARD_RESPONSE_MSG,
+                        404,
+                        NO_CARD)
+                    , fex);
+                throw new ApiErrorException(ApiError.builder()
+                        .status(HttpStatus.GONE)
+                        .message(NO_CARD).build());
+            default:
+                log.error(CARD_UNEXPECTED_ERROR_MSG, fex);
+                throw new ApiErrorException(ApiError.builder()
+                        .status(HttpStatus.SERVICE_UNAVAILABLE)
+                        .message(CARD_UNAVAILABLE_MSG).build());
+        }
     }
 
     @Override
