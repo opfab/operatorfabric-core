@@ -1004,48 +1004,6 @@ paths:
         '404':
           description: Subscription not found
   /cards:
-    get:
-      tags:
-        - cards
-        - read
-      summary: fetch cards
-      description: >-
-        Fetch cards for which calling user is a recipient. Fetched cards all
-        comes with empty data and details.
-      operationId: fetchCards
-      produces:
-        - application/json
-      parameters:
-        - name: from
-          type: integer
-          in: query
-        - name: to
-          type: integer
-          in: query
-        - name: startingPage
-          type: integer
-          in: query
-        - name: pageSize
-          type: integer
-          in: query
-        - name: published
-          type: integer
-          in: query
-        - name: deleted
-          type: boolean
-          default: false
-          in: query
-      responses:
-        '200':
-          description: ok
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/LightCard'
-        '401':
-          description: Authentication required
-        '403':
-          description: Forbidden - User doesn't have any group
     post:
       tags:
         - cards
