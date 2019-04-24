@@ -8,14 +8,13 @@
 package org.lfenergy.operatorfabric.time.controllers;
 
 import feign.FeignException;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.model.Card;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
-import org.lfenergy.operatorfabric.time.services.CardConsultationServiceProxy;
+import org.lfenergy.operatorfabric.time.services.feign.CardConsultationServiceProxy;
 import org.lfenergy.operatorfabric.time.services.TimeService;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;

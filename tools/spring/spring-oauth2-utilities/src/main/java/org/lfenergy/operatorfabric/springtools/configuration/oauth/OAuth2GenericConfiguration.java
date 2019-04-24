@@ -7,17 +7,22 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
-import feign.FeignException;
-import feign.RequestInterceptor;
+import feign.*;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -89,5 +94,16 @@ public class OAuth2GenericConfiguration {
         return new OAuth2FeignRequestInterceptor();
     }
 
+    @Bean
+    public UserServiceProxy userServiceProxy(Client client /*Encoder encoder, Decoder decoder, Contract contract,*/){
+        return Feign.builder()
+                .client(client)
+                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .contract(new SpringMvcContract())
+                .requestInterceptor(new OAuth2FeignRequestInterceptor())
+                .target(UserServiceProxy.class,"http://USERS");
+
+    }
 
 }

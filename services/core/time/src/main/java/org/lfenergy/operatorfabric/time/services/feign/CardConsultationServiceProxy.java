@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.lfenergy.operatorfabric.time.services;
+package org.lfenergy.operatorfabric.time.services.feign;
 
 import org.lfenergy.operatorfabric.cards.model.Card;
 import org.springframework.cloud.openfeign.FeignClient;

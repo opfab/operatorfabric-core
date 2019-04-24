@@ -8,7 +8,7 @@ import feign.mock.HttpMethod;
 import feign.mock.MockClient;
 import feign.mock.MockTarget;
 import org.lfenergy.operatorfabric.cards.model.Card;
-import org.lfenergy.operatorfabric.time.services.CardConsultationServiceProxy;
+import org.lfenergy.operatorfabric.time.services.feign.CardConsultationServiceProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
