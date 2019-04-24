@@ -119,6 +119,19 @@ class GivenNonAdminUserTimeControllerShould {
                 .andReturn()
                 ;
     }
+    @Test
+    public void forward() throws Exception {
+        MvcResult result = mockMvc.perform(post("/time/{millisTime}/next/card", 1000000))
+                .andExpect(status().isForbidden())
+                .andReturn();
+    }
+
+    @Test
+    public void backward() throws Exception {
+        MvcResult result = mockMvc.perform(post("/time/{millisTime}/previous/card", 1000000))
+                .andExpect(status().isForbidden())
+                .andReturn();
+    }
 
     @Test
     public void setTimeData() throws Exception {
