@@ -25,11 +25,22 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Slf4j
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private static final String[] AUTH_WHITELIST = {
+
+            // -- swagger ui
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/swagger.json",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
+
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.POST,"/thirds/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,"/thirds/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/thirds/**").hasRole("ADMIN")

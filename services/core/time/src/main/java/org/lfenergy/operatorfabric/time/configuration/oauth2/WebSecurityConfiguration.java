@@ -29,10 +29,22 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
 
+    private static final String[] AUTH_WHITELIST = {
+
+            // -- swagger ui
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/swagger.json",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
+
+
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.POST,"/time/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,"/time/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/time/**").hasRole("ADMIN")
