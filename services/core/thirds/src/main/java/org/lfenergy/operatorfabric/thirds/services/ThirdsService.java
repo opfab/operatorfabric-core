@@ -57,6 +57,7 @@ public class ThirdsService implements ResourceLoaderAware {
 
     /**
      * Lists all registered thirds
+     *
      * @return registered thirds
      */
     public List<Third> listThirds() {
@@ -182,7 +183,7 @@ public class ThirdsService implements ResourceLoaderAware {
                 File.separator +
                 type.getFolder() +
                 File.separator +
-                (type.isLocalized() && ! type.equals(ResourceTypeEnum.I18N) ? (locale + File.separator) : "") +
+                (type.isLocalized() && !type.equals(ResourceTypeEnum.I18N) ? (locale + File.separator) : "") +
                 finalName + type.getSuffix();
         log.info("loading resource: " + resourcePath);
         return this.resourceLoader.getResource(resourcePath);
@@ -201,7 +202,7 @@ public class ThirdsService implements ResourceLoaderAware {
     private void validateResourceParameters(String thirdName, ResourceTypeEnum type, String name, String version,
                                             String locale) throws FileNotFoundException {
         Third third = completeCache.get(thirdName).get(version);
-        if(type.isLocalized() && locale == null)
+        if (type.isLocalized() && locale == null)
             throw new FileNotFoundException("Unable to determine resource for undefined locale");
         switch (type) {
             case CSS:
@@ -214,7 +215,7 @@ public class ThirdsService implements ResourceLoaderAware {
                 break;
             case TEMPLATE:
                 if (!third.getTemplates().contains(name))
-                    throw new FileNotFoundException("Unknown template "+name+" for " + thirdName + ":" + version);
+                    throw new FileNotFoundException("Unknown template " + name + " for " + thirdName + ":" + version);
                 break;
             default:
                 throw new FileNotFoundException("Unable to find resource for unknown resource type");
@@ -254,6 +255,7 @@ public class ThirdsService implements ResourceLoaderAware {
 
     /**
      * Updates or creates third from a new bundle
+     *
      * @param is bundle input stream
      * @return the new or updated third data
      * @throws IOException if error arise during stream reading
@@ -277,10 +279,11 @@ public class ThirdsService implements ResourceLoaderAware {
 
     /**
      * Updates or creates third from disk saved bundle
+     *
      * @param outPath path to the bundle
      * @return he new or updated third data
      * @throws IOException multiple underlying case (Json read, file system access, file system manipulation - copy,
-     * move)
+     *                     move)
      */
     private Third updateThird0(Path outPath) throws IOException {
         // load Third from config
@@ -311,7 +314,7 @@ public class ThirdsService implements ResourceLoaderAware {
     /**
      * Fetches {@link Third} for specified name and default version
      *
-     * @param name third name
+     * @param name       third name
      * @param apiVersion {@link Third} version, if null falls back to default version (latest upload)
      * @return fetch {@link Third} or null if it does not exist
      */
@@ -319,20 +322,31 @@ public class ThirdsService implements ResourceLoaderAware {
         loadCacheIfNeeded();
         if (apiVersion == null)
             return this.defaultCache.get(name);
-        return this.completeCache.get(name).get(apiVersion);
+        if (this.completeCache.containsKey(name))
+            return this.completeCache.get(name).get(apiVersion);
+        else return null;
     }
 
     /**
      * Resets data (only used in tests)
+     *
      * @throws IOException multiple underlying cases (file system access, file system manipulation - deletion)
      */
     public void clear() throws IOException {
         Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath);
         File file = resource.getFile();
-        try (Stream<Path> pathStream = Files.walk(PathUtils.getPath(file), 1)) {
-            pathStream
-                    .forEach(PathUtils::silentDelete);
-            loadCacheSafe();
+        if(file.exists()) {
+            try (Stream<Path> pathStream = Files.walk(PathUtils.getPath(file), 1)) {
+                pathStream
+                        .forEach(PathUtils::silentDelete);
+//            loadCacheSafe();
+            }finally {
+                this.completeCache = null;
+                this.defaultCache = null;
+            }
+        }else{
+            this.completeCache = null;
+            this.defaultCache = null;
         }
     }
 

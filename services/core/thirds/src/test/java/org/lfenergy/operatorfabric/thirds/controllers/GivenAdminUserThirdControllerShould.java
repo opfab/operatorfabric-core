@@ -7,10 +7,12 @@
 
 package org.lfenergy.operatorfabric.thirds.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
+import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,6 +54,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
+@Slf4j
 class GivenAdminUserThirdControllerShould {
 
     private static Path testDataDir = Paths.get("./build/test-data/thirds-storage");
@@ -60,6 +63,9 @@ class GivenAdminUserThirdControllerShould {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private ThirdsService service;
 
     @BeforeAll
     void setup() throws Exception {
@@ -71,6 +77,7 @@ class GivenAdminUserThirdControllerShould {
 
     @AfterAll
     void dispose() throws IOException {
+        service.clear();
         if (Files.exists(testDataDir))
             Files.walk(testDataDir, 1).forEach(p -> silentDelete(p));
     }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
+import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -59,6 +60,8 @@ class GivenNonAdminUserThirdControllerShould {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+    @Autowired
+    private ThirdsService service;
 
     @BeforeAll
     void setup() throws Exception {
@@ -70,6 +73,7 @@ class GivenNonAdminUserThirdControllerShould {
 
     @AfterAll
     void dispose() throws IOException {
+        service.clear();
         if (Files.exists(testDataDir))
             Files.walk(testDataDir, 1).forEach(p -> silentDelete(p));
     }
