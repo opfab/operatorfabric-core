@@ -27,6 +27,11 @@ const routes: Routes = [
         // canActivate: [AuthenticationGuard]
     },
     {
+        path: 'thirdparty',
+        loadChildren: './modules/thirdparty/thirdparty.module#ThirdpartyModule',
+        // canActivate: [AuthenticationGuard]
+    },
+    {
         path: 'navbar',
         component: LoginComponent
     },
