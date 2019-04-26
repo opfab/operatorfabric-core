@@ -10,22 +10,45 @@ services:
 env:
   - NODE_VERSION="v10.10.0"
 language: java
-install: true
 before_install:
   - sudo apt-get install realpath
   # Load cached docker images
   - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
-script:
-  - docker network create opfabnet
-  - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
-  - ./gradlew copyDependencies build jacocoTestReport && sonar-scanner
-deploy:
-- provider: script
-  skip_cleanup: true
-  script: ./bin/travis/upload_doc.sh
-  on:
-    all_branches: true
-   # condition: $TRAVIS_EVENT_TYPE = cron  # Commented out while in documentation phase to trigger doc upload for all builds
+install: true
+jobs:
+  include:
+  - stage: test
+    script:
+      - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+      - ./gradlew copyDependencies test jacocoTestReport && sonar-scanner
+      - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
+  - stage: assemble
+    script:
+      - ./gradlew assemble -x test
+  - stage: docker-images
+    script:
+      - copyWorkingDir dockerTag -x test
+  - stage: doc
+    script:
+      - ./gradlew generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
+  - stage: deploy
+    script: ./bin/travis/upload_doc.sh
+stages:
+  - test
+  - assemble
+  - docker-images
+  - doc
+  - deploy
+#script:
+#  - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+#  - ./gradlew copyDependencies build jacocoTestReport && sonar-scanner
+#deploy:
+#- provider: script
+#  skip_cleanup: true
+#  script: ./bin/travis/upload_doc.sh
+#  on:
+#    all_branches: true
+#   # condition: $TRAVIS_EVENT_TYPE = cron  # Commented out while in documentation phase to trigger doc upload for all builds
 before_cache:
   # cleanup gradle caches
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

@@ -8,7 +8,7 @@ HTTP_REPO="https://davidbinderRTE:${GH_DOC_TOKEN}@${GH_REPO}"
 git clone $HTTP_REPO $HOME/documentation
 version=$(echo "$OF_VERSION"| sed s/-SNAPSHOT//)
 cd $OF_HOME
-./gradlew generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
+#./gradlew generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
 for prj in "${OF_REL_COMPONENTS[@]}"; do
   echo "copying $prj documentation"
   mkdir -p $HOME/documentation/projects/$prj/$version/
