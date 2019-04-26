@@ -47,7 +47,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/thirds/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,"/thirds/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/thirds/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll() //Needed to allow styles to be loaded without auth
                 .and()
                 .oauth2ResourceServer()
                 .jwt().jwtAuthenticationConverter(opfabJwtConverter);
