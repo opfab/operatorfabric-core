@@ -33,6 +33,12 @@ jobs:
     script:
       - ./gradlew --build-cache copyWorkingDir dockerTag -x test
       - ./bin/travis/upload_doc.sh
+      - echo "DOKERHUB UPLOAD NOT YET IMPLEMENTED"
+      - docker image prune -f -a
+  - stage: doc
+    script:
+      - ./gradlew --build-cache generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
+      - ./bin/travis/upload_doc.sh
 stages:
   - clean
   - test
