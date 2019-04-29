@@ -17,17 +17,13 @@ before_install:
 install: true
 jobs:
   include:
-  - stage: clean
+  - stage: test-assemble
     script:
       - rm -rf  $HOME/.gradle/caches/build-cache-*
       - ./gradlew --build-cache clean
-  - stage: test
-    script:
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
       - ./gradlew --build-cache copyDependencies test jacocoTestReport && sonar-scanner
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
-  - stage: assemble
-    script:
       - ./gradlew --build-cache assemble -x test
   - stage: docker-images
     script:
@@ -38,9 +34,7 @@ jobs:
       - ./gradlew --build-cache generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
       - ./bin/travis/upload_doc.sh
 stages:
-  - clean
-  - test
-  - assemble
+  - test-assemble
   - docker-images
   - doc
 #script:
