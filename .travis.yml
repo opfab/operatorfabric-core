@@ -32,9 +32,7 @@ jobs:
   - stage: docker-images
     script:
       - ./gradlew --build-cache copyWorkingDir dockerTag -x test
-      - ./bin/travis/upload_doc.sh
       - echo "DOKERHUB UPLOAD NOT YET IMPLEMENTED"
-      - docker image prune -f -a
   - stage: doc
     script:
       - ./gradlew --build-cache generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
@@ -59,6 +57,7 @@ before_cache:
   # cleanup gradle caches
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - docker image prune -f -a --filter="label=project=org.lfenergy.operatorfabric"
   - >
     mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
     | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'

@@ -23,6 +23,7 @@ subprojects {
     docker {
         name "${project.group}/${project.name}"
         tags 'latest', "${project.version}"
+        labels (['project':"${project.group}"])
         files 'src/main/docker/script.sh', '../../src/main/docker/bash-config-dependent-docker-entrypoint.sh'
         buildArgs([
                    'http_proxy': apk.proxy.uri,
