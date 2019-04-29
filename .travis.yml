@@ -27,7 +27,7 @@ jobs:
       - ./gradlew assemble -x test
   - stage: docker-images
     script:
-      - copyWorkingDir dockerTag -x test
+      - ./gradlew copyWorkingDir dockerTag -x test
   - stage: doc
     script:
       - ./gradlew generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
