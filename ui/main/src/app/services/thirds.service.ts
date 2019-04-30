@@ -18,7 +18,6 @@ import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
 import {Third, ThirdMenu} from "@ofModel/thirds.model";
-import {tap} from "rxjs/internal/operators/tap";
 
 @Injectable()
 export class ThirdsService {
@@ -166,8 +165,6 @@ export class ThirdsService {
                     console.error('something went wrong during translation',error);
                     return caught;
                 })
-                // needed otherwise some translation break
-               // , tap(()=> console.log('translate'))
             )
     }
 
