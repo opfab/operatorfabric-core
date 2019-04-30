@@ -13,7 +13,7 @@ language: java
 before_install:
   - sudo apt-get install realpath
   # Load cached docker images
-  - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
+  # - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
 install: true
 jobs:
   include:
@@ -27,8 +27,8 @@ jobs:
       - ./gradlew --build-cache assemble -x test
   - stage: docker-images
     script:
-      - ./gradlew --build-cache copyWorkingDir dockerTag -x test
-      - echo "DOKERHUB UPLOAD NOT YET IMPLEMENTED"
+      - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
+      - ./gradlew --build-cache copyWorkingDir dockerPush -x test
   - stage: doc
     script:
       - ./gradlew --build-cache generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
@@ -51,10 +51,10 @@ before_cache:
   # cleanup gradle caches
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-  - docker image prune -f -a --filter="label=project=org.lfenergy.operatorfabric"
-  - >
-    mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
-    | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
+#  - docker image prune -f -a --filter="label=project=org.lfenergy.operatorfabric"
+#  - >
+#    mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
+#    | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
 cache:
   bundler: true
   directories:
@@ -62,6 +62,6 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     # caches docker images
-    - $HOME/docker
+    #- $HOME/docker
     # cache ui dependencies
     - ui/main/nodes_modules
