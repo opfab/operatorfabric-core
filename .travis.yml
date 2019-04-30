@@ -28,7 +28,7 @@ jobs:
   - stage: docker-images
     script:
       - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
-      - ./gradlew --build-cache copyWorkingDir dockerPush -x test -x :docker-standalone-images
+      - ./gradlew --build-cache copyWorkingDir dockerPush -x test -x :docker-standalone-images:dummy-card-daemon:dockerPush
       - docker image ls -a|grep lfeoperatorfabric
   - stage: doc
     script:

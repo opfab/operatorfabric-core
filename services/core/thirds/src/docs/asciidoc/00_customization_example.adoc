@@ -1,4 +1,4 @@
-= Customization Example
+== Customization Example
 
 In the section, are explained main menu customization as well as Cards details customization.
 

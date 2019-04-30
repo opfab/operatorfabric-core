@@ -1,0 +1,16 @@
+== Deploy Operator Fabric With Docker
+
+All our services are build as images. They are deployed on the public
+link:https://hub.docker.com/[docker hub]
+Service images are all based on
+link:https://hub.docker.com/_/openjdk[openjdk:8-jdk-alpine]
+
+=== One container per service deployment
+
+For simple one instance per service deployment, you can find a sample
+deployment as a docker-compose file
+link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker/deploy[here]
+
+=== All-in-one try me out deployment
+
+In Progress

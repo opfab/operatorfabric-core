@@ -1,0 +1,26 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+= OperatorFabric User Guide
+:author: David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
+:revnumber: v0.1.1
+:revdate: April 15, 2019
+:imagesdir: images
+:sectnums:
+:toc: left
+:toclevels: 2
+:toc-title: User Guide
+:icons: font
+:hide-uri-scheme:
+
+include::01_docker.adoc
+
+== Reference Guide Per Business Service
+include::../../../../services/core/cards-publication/src/docs/asciidoc/index.adoc[leveloffset=+2]
+include::../../../../services/core/cards-consultation/src/docs/asciidoc/index.adoc[leveloffset=+2]
+include::../../../../services/core/thirds/src/docs/asciidoc/index.adoc[leveloffset=+2]
+include::../../../../services/core/users/src/docs/asciidoc/index.adoc[leveloffset=+2]
+include::../../../../services/core/time/src/docs/asciidoc/index.adoc[leveloffset=+2]
