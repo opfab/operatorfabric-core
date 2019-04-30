@@ -1,5 +1,0 @@
-== OAuth2
-
-This part details the way OAuth2 is implemented in OperatorFabric to authenticate the users.
-
-=== Resource Owner Password Credentials Grant
