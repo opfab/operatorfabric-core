@@ -14,8 +14,8 @@ import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
-import org.lfenergy.operatorfabric.time.services.feign.CardConsultationServiceProxy;
 import org.lfenergy.operatorfabric.time.services.TimeService;
+import org.lfenergy.operatorfabric.time.services.feign.CardConsultationServiceProxy;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ import java.time.Instant;
 @RestController
 @RequestMapping("time")
 @Slf4j
-public class TimeController implements TimeApi{
+public class TimeController implements TimeApi {
 
     public static final int TIME_TO_SUBSTRACT_IN_FWD_BWD = 300000;
     public static final String CARD_RESPONSE_MSG = "Card service responded %d: %s";
@@ -48,6 +48,7 @@ public class TimeController implements TimeApi{
 
     /**
      * Controller expects {@link TimeService} bean injection through Spring
+     *
      * @param timeService the business time service
      */
     @Autowired
@@ -65,10 +66,15 @@ public class TimeController implements TimeApi{
 
     @Override
     public Void fetchNextTime(BigDecimal millisTime) throws Exception {
+        long longMillisTime = millisTime.longValue();
+        return fetchNextTime0(longMillisTime);
+    }
+
+    private Void fetchNextTime0(long longMillisTime) {
         try {
-            Card card = this.cardConsultationServiceProxy.fetchNextCard(millisTime.longValue());
+            Card card = this.cardConsultationServiceProxy.fetchNextCard(longMillisTime);
             timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
-        }catch (FeignException fex){
+        } catch (FeignException fex) {
             handleCardServiceErrors(fex);
         }
         return null;
@@ -76,13 +82,28 @@ public class TimeController implements TimeApi{
 
     @Override
     public Void fetchPreviousTime(BigDecimal millisTime) throws Exception {
+        long longMillisTime = millisTime.longValue();
+        return fetchPreviousTime0(longMillisTime);
+    }
+
+    private Void fetchPreviousTime0(long longMillisTime) {
         try {
-            Card card = this.cardConsultationServiceProxy.fetchPreviousCard(millisTime.longValue());
+            Card card = this.cardConsultationServiceProxy.fetchPreviousCard(longMillisTime);
             timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
-        }catch (FeignException fex){
+        } catch (FeignException fex) {
             return handleCardServiceErrors(fex);
         }
         return null;
+    }
+
+    @Override
+    public Void fetchNextTimeFromNow() throws Exception {
+        return fetchNextTime0(timeService.computeNow().toEpochMilli());
+    }
+
+    @Override
+    public Void fetchPreviousTimeFromNow() throws Exception {
+        return fetchPreviousTime0(timeService.computeNow().toEpochMilli());
     }
 
     private Void handleCardServiceErrors(FeignException fex) {
@@ -91,7 +112,7 @@ public class TimeController implements TimeApi{
                 log.info(String.format(CARD_RESPONSE_MSG,
                         404,
                         NO_CARD)
-                    , fex);
+                        , fex);
                 throw new ApiErrorException(ApiError.builder()
                         .status(HttpStatus.GONE)
                         .message(NO_CARD).build());
@@ -109,7 +130,7 @@ public class TimeController implements TimeApi{
     }
 
     @Override
-    public TimeData setTime( TimeData time) {
+    public TimeData setTime(TimeData time) {
         User user = extractPrincipalFromContext();
         if (user == null) {
             log.info("Time updated by unknown user");
@@ -127,7 +148,7 @@ public class TimeController implements TimeApi{
 
     private User extractPrincipalFromContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null)
+        if (authentication == null)
             return null;
         return (User) authentication.getPrincipal();
     }

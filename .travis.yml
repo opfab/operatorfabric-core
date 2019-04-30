@@ -38,7 +38,7 @@ stages:
   - name: docker-images
     if: type = cron OR commit_message =~ ci_docker
   - name: doc
-    if: type = cron OR commit_message =~ ci_doc
+    if: type = cron OR commit_message =~ ci_documentation
 #script:
 #  - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
 #  - ./gradlew copyDependencies build jacocoTestReport && sonar-scanner

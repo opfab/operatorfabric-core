@@ -70,7 +70,7 @@ paths:
     post:
       tags:
         - time
-      summary: Force currentime to next card start time minus 5 minutes
+      summary: Force currentime to next card start time from specified millisTime minus 5 minutes
       operationId: fetchNextTime
       parameters:
         - in: path
@@ -87,7 +87,7 @@ paths:
     post:
       tags:
         - time
-      summary: Force currentime to previous card start time minus 5 minutes
+      summary: Force currentime to previous card start time from specified millisTime minus 5 minutes
       operationId: fetchPreviousTime
       parameters:
         - in: path
@@ -95,6 +95,28 @@ paths:
           type: number
           required: true
           description: time in milliseconds from epoch
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: no Card found
+  '/time/next/card':
+    post:
+      tags:
+      - time
+      summary: Force currentime to next card start time minus 5 minutes
+      operationId: fetchNextTimeFromNow
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: no Card found
+  '/time/previous/card':
+    post:
+      tags:
+      - time
+      summary: Force currentime to previous card start time minus 5 minutes
+      operationId: fetchPreviousTimeFromNow
       responses:
         '200':
           description: OK
