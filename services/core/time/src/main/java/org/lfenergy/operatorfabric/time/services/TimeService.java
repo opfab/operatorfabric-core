@@ -93,10 +93,7 @@ public class TimeService {
      */
     public void reset() {
         virtualTime.reset();
-        if(defaultStartTime!=null)
-            updateTime(Instant.ofEpochMilli(defaultStartTime));
-        else
-            notifyChanges();
+        notifyChanges();
     }
 
     /**
