@@ -6,12 +6,16 @@
 
 == Demonstration
 
-This section demonstrates how to interact with the Time service through its API by following a few simple scenarios.
+This section demonstrates how to interact with the Time service through its API 
+by following a few simple scenarios.
 
 === Prerequisites
 
 IMPORTANT: For these examples to work, you need to have a running Time service.
-The requests below assume that the Time service is running on localhost on port 2101 (see link:https://github.com/opfab/operatorfabric-core/blob/master/README.md[demo setup]).
+The requests below assume that the Time service is running on localhost on port 
+2101 (see 
+link:https://github.com/opfab/operatorfabric-core/blob/master/README.md[demo 
+setup]).
 
 You can choose from several ways to send requests to the API, among which:
 
@@ -20,12 +24,15 @@ You can choose from several ways to send requests to the API, among which:
 
 We will use curl for our examples.
 
-IMPORTANT: In the following commands the `$token` is a valid authentication token from the `OAuth2` server used by the current `OperatorFabric` instance.
+IMPORTANT: In the following commands the `$token` is a valid authentication 
+token from the `OAuth2` server used by the current `OperatorFabric` instance.
 
 //TODO Add detail or link explaining how to get token
 
-NOTE: Another option would be to use the Swagger UI. Provided that you have the Time service running on localhost on port 2101,
-the Swagger UI for the Time API is available at http://localhost:2101/ . It also displays documentation and examples next to each request.
+NOTE: Another option would be to use the Swagger UI. Provided that you have the 
+Time service running on localhost on port 2101,
+the Swagger UI for the Time API is available at http://localhost:2101/ . It 
+also displays documentation and examples next to each request.
 However, requests requiring authentication won't work as it isn't set up yet.
 
 === Scenario 1: Getting the current virtual time
@@ -37,7 +44,9 @@ NOTE: No authentication is required for this request.
 
 .Curl command
 ----
-curl -X GET "http://localhost:2101/time" -H  "accept: application/json"
+curl -X GET "http://localhost:2101/time" \
+    -H "Authorization:Bearer $token" \
+    -H "accept: application/json"
 ----
 
 .Response code
@@ -55,15 +64,20 @@ curl -X GET "http://localhost:2101/time" -H  "accept: application/json"
     "speed": "X1" // <3>
 }
 ----
-<1> Since the time hasn't been changed yet, referenceTime and virtualTime haven't been set.
-<2> The current virtual time (number of milliseconds since Epoch), for example this value converts to _March 26, 2019 4:28:15.195 PM GMT_
-<3> Speed of the virtual time flow relatively to real time flow. X1 means they're the same.
+<1> Since the time hasn't been changed yet, referenceTime and virtualTime 
+haven't been set.
+<2> The current virtual time (number of milliseconds since Epoch), for example 
+this value converts to _March 26, 2019 4:28:15.195 PM GMT_
+<3> Speed of the virtual time flow relatively to real time flow. X1 means 
+they're the same.
 
-TIP: You can use an link:https://www.epochconverter.com/[online converter] to switch between epochDate and human readable date.
+TIP: You can use an link:https://www.epochconverter.com/[online converter] to 
+switch between epochDate and human readable date.
 
 === Scenario 2: Setting virtual time to be 10 minutes ahead of real time
 
-To set virtual time to be 10 minutes ahead of time, we use the POST request and set the intended virtual time start (10 minutes from now) in the body:
+To set virtual time to be 10 minutes ahead of time, we use the POST request and 
+set the intended virtual time start (10 minutes from now) in the body:
 
 .Example body
 [source,JSON]
@@ -76,7 +90,8 @@ To set virtual time to be 10 minutes ahead of time, we use the POST request and 
 }
 ----
 <1> These can be left blank as they won't be used
-<2> This should be the intended start of virtual time, about 10 minutes ahead from now
+<2> This should be the intended start of virtual time, about 10 minutes ahead 
+from now
 
 .Curl command
 ----
@@ -92,7 +107,8 @@ curl -X POST \
 }'
 ----
 
-The response contains the current virtual time (computedNow) as well as the references used for the computation.
+The response contains the current virtual time (computedNow) as well as the 
+references used for the computation.
 
 .Response code
 ----
@@ -109,18 +125,24 @@ The response contains the current virtual time (computedNow) as well as the refe
     "speed": "X1" // <4>
 }
 ----
-<1> Real time at the time of the time change = _April 1, 2019 9:30:14.449 AM GMT_
+<1> Real time at the time of the time change = _April 1, 2019 9:30:14.449 AM 
+GMT_
 <2> Chosen start of virtual time = _April 1, 2019 9:40:52 AM GMT_
-<3> Current virtual time = _April 1, 2019 9:40:52.009 AM_ -> 9 milliseconds have elapsed since server time change
+<3> Current virtual time = _April 1, 2019 9:40:52.009 AM_ -> 9 milliseconds 
+have elapsed since server time change
 <4> Speed hasn't been changed.
 
-TIP: PUT /time does the exact same thing as POST /time as there was no need for a different behaviour.
+TIP: PUT /time does the exact same thing as POST /time as there was no need for 
+a different behaviour.
 
-Let's ask for the current time again (using the GET request) a little while later (real time is _April 1, 2019 11:37:43 AM GMT_)
+Let's ask for the current time again (using the GET request) a little while 
+later (real time is _April 1, 2019 11:37:43 AM GMT_)
 
 .curl command
 ----
-curl -X GET "http://localhost:2101/time" -H  "accept: application/json"
+curl -X GET "http://localhost:2101/time" \
+    -H "Authorization:Bearer $token" \
+    -H "accept: application/json"
 ----
 
 .Response code
@@ -138,13 +160,18 @@ curl -X GET "http://localhost:2101/time" -H  "accept: application/json"
     "speed": "X1" <4>
 }
 ----
-<1> Real time at the time of the time change = _April 1, 2019 9:30:14.449 AM GMT_
+<1> Real time at the time of the time change = _April 1, 2019 9:30:14.449 AM 
+GMT_
 <2> Chosen start of virtual time = _April 1, 2019 9:40:52 AM GMT_
-<3> Current virtual time = _April 1, 2019 11:48:20.367_ -> virtual time is about 10 minutes ahead from real time as expected
+<3> Current virtual time = _April 1, 2019 11:48:20.367_ -> virtual time is 
+about 10 minutes ahead from real time as expected
 <4> Speed hasn't been changed.
 
-IMPORTANT: Notice how referenceTime, virtualTime and speed haven't changed from the response to the POST request to set the virtual time. They will only change the next time is set or reset.
+IMPORTANT: Notice how referenceTime, virtualTime and speed haven't changed from 
+the response to the POST request to set the virtual time. They will only change 
+the next time is set or reset.
 
 
 //TODO Finish API call examples: change speed, reset
-//TODO Sort out authentication through Swagger UI or adapt instructions to use Postman to get token
+//TODO Sort out authentication through Swagger UI or adapt instructions to use 
+Postman to get token
