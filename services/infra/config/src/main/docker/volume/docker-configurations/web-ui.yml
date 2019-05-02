@@ -1,5 +1,3 @@
-server:
-  port: 2200
 operatorfabric:
   auth.mode: OAUTH2
   feed.subscription.timeout: 600000

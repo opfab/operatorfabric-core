@@ -41,6 +41,12 @@ spring:
         - Path=/ui/**
         filters:
         - RewritePath=/ui/(?<path>.*), /$\{path}
+#      - id: config
+#        uri: lb://CONFIG
+#        predicates:
+#        - Path=/config
+#        filters:
+#        - RewritePath=/config, /webui.json
       globalcors:
         corsConfigurations:
           '[/**]':
