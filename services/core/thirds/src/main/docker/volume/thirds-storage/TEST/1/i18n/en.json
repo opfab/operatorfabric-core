@@ -1,7 +1,7 @@
 {
   "process":{
-    "title": "Test: Process",
-    "summary": "This sums up the content of the card",
+    "title": "Test: Process {{value}}",
+    "summary": "This sums up the content of the card: {{value}}",
     "detail": {
       "tab": {
         "first": "First Tab",

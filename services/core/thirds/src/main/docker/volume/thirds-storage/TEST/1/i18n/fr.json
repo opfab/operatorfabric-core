@@ -1,7 +1,7 @@
 {
   "process":{
-    "title": "Test: Processus",
-    "summary": "Cela résume la carte",
+    "title": "Test: Processus {{value}}",
+    "summary": "Cela résume la carte: {{value}}",
     "detail": {
       "tab": {
         "first": "Premier onglet",

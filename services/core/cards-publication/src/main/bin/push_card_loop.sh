@@ -19,7 +19,7 @@ display_usage() {
 	echo -e "\t-u, --url  : string. POST url. Default to $url"
 	echo -e "\t-i, --interval  : number. interval in seconds between card sendings. Defaults to $interval"
 	echo -e "\t-p, --publisher  : string. Publisher service name. Defaults to $publisher"
-	echo -e "\t-r, --process  : string. Process id suffix. Defaults to $defaultProcess"
+	echo -e "\t-r, --process  : string. Process id suffix. Defaults to $process"
 	echo -e "\t-c, --process-count  : number. Number of different process. Defaults to $processNumber"
 	echo -e "\t-d, --dtae-shift  : number. millisecond date shift. Defaults to $dateShift"
 }
@@ -102,10 +102,12 @@ piece_of_data(){
     piece+="    \"$2\" "$'\n'
     piece+="  ], "$'\n'
     piece+="  \"title\": { "$'\n'
-    piece+="    \"key\": \"$2.title\" "$'\n'
+    piece+="    \"key\": \"$2.title\", "$'\n'
+    piece+="    \"parameters\": { \"value\": \"title value\" } "$'\n'
     piece+="    }, "$'\n'
     piece+="  \"summary\": { "$'\n'
-    piece+="    \"key\": \"$2.summary\" "$'\n'
+    piece+="    \"key\": \"$2.summary\", "$'\n'
+    piece+="    \"parameters\": { \"value\": \"summary value\" } "$'\n'
     piece+="    }, "$'\n'
     piece+="  \"data\": { "$'\n'
     piece+="    \"rootProp\": \"This is a root property\", "$'\n'
