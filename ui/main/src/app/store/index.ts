@@ -19,6 +19,7 @@ import {RouterEffects} from 'ngrx-router';
 import {CardFeedState} from '@ofStates/feed.state';
 import {reducer as lightCardReducer} from '@ofStore/reducers/light-card.reducer';
 import {reducer as cardReducer} from '@ofStore/reducers/card.reducer';
+import {reducer as configReducer} from '@ofStore/reducers/config.reducer';
 import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 import {CardState} from "@ofStates/card.state";
@@ -27,6 +28,7 @@ import {MenuState} from "@ofStates/menu.state";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {LightCardEffects} from "@ofEffects/light-card.effects";
 import {FeedFiltersEffects} from "@ofEffects/feed-filters.effects";
+import {ConfigState} from "@ofStates/config.state";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -34,6 +36,7 @@ export interface AppState {
     authentication: AuthState;
     card: CardState;
     menu: MenuState;
+    config: ConfigState
 }
 
 export const appEffects = [
@@ -51,7 +54,8 @@ export const appReducer: ActionReducerMap<AppState> = {
     feed: lightCardReducer,
     authentication: authenticationReducer,
     card: cardReducer,
-    menu: menuReducer
+    menu: menuReducer,
+    config: configReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production

@@ -12,7 +12,7 @@ export enum CardActionTypes {
     LoadCard = '[Card] Load Card',
     LoadCardSuccess = '[Card] Load Card Success',
     LoadCardFailure = '[Card] Load Card Fail',
-    HandleUnexpectedError = '[Card] Handle unexpected error related to authentication issue'
+    HandleUnexpectedError = '[Card] Handle unexpected error related to card issue'
 }
 // needed by NGRX entities
 export class LoadCard implements Action {
