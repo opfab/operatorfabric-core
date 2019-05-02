@@ -12,6 +12,7 @@ export const environment = {
         auth: '/auth',
         cards: '/cards',
         archives : '',
-        thirds: '/thirds'
+        thirds: '/thirds',
+        config: '/config'
     }
 };
