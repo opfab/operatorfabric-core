@@ -16,12 +16,14 @@ import {GuidService} from "@ofServices/guid.service";
 import {TimeService} from "@ofServices/time.service";
 import {ThirdsService} from "@ofServices/thirds.service";
 import {FilterService} from "@ofServices/filter.service";
+import {ConfigService} from "@ofServices/config.service";
 
 @NgModule({
     imports: [
         CommonModule
     ],
     providers: [
+        ConfigService,
         CardService,
         AuthenticationService,
         TimeService,

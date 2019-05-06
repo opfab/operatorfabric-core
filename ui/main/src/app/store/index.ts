@@ -29,6 +29,7 @@ import {MenuEffects} from "@ofEffects/menu.effects";
 import {LightCardEffects} from "@ofEffects/light-card.effects";
 import {FeedFiltersEffects} from "@ofEffects/feed-filters.effects";
 import {ConfigState} from "@ofStates/config.state";
+import {ConfigEffects} from "@ofEffects/config.effects";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -41,6 +42,7 @@ export interface AppState {
 
 export const appEffects = [
     CardEffects,
+    ConfigEffects,
     CardOperationEffects,
     RouterEffects,
     CustomRouterEffects,

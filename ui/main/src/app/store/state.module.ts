@@ -26,7 +26,8 @@ import {CustomRouterStateSerializer} from '@ofStore/states/router.state';
     EffectsModule.forRoot(appEffects),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
   ],
-  declarations: []
+  declarations: [],
+    providers:[{provide:'configRetryDelay',useValue:5000}]
 })
 export class StateModule {
   static forRoot(): ModuleWithProviders {
