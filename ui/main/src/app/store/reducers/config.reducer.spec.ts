@@ -23,7 +23,9 @@ describe('Config Reducer', () => {
             const previousState: ConfigState = {
                 config:{test:'config'},
                 loading: false,
-                error: getRandomAlphanumericValue(5, 12)
+                error: getRandomAlphanumericValue(5, 12),
+                loaded:false,
+                retry:0
             }
             const actualState = reducer(previousState, unknowAction);
             expect(actualState).toBe(previousState);
@@ -41,7 +43,9 @@ describe('Config Reducer', () => {
             const previousState: ConfigState = {
                 config: null,
                 loading: true,
-                error: null
+                error: null,
+                loaded:false,
+                retry:0
             }
             const actualState = reducer(previousState,
                 new LoadConfig());
@@ -55,7 +59,9 @@ describe('Config Reducer', () => {
             const previousState: ConfigState = {
                 config: actualConfig,
                 loading: true,
-                error: null
+                error: null,
+                loaded:false,
+                retry:0
             };
             const actualState = reducer(previousState,
                 new LoadConfigFailure({error: new Error(getRandomAlphanumericValue(5, 12))}));
@@ -63,6 +69,8 @@ describe('Config Reducer', () => {
             expect(actualState).not.toEqual(previousState);
             expect(actualState.loading).toEqual(false);
             expect(actualState.error).not.toBeNull();
+            expect(actualState.loaded).toEqual(false);
+            expect(actualState.retry).toEqual(1);
 
         });
     });
@@ -72,7 +80,9 @@ describe('Config Reducer', () => {
             const previousState: ConfigState = {
                 config: previousConfig,
                 loading: true,
-                error: getRandomAlphanumericValue(5, 12)
+                error: getRandomAlphanumericValue(5, 12),
+                loaded:false,
+                retry:0
             };
 
             const actualConfig = {test:'config2'};
@@ -82,6 +92,8 @@ describe('Config Reducer', () => {
             expect(actualState.error).toEqual(previousState.error);
             expect(actualState.loading).toEqual(false);
             expect(actualState.config).toEqual(actualConfig);
+            expect(actualState.retry).toEqual(0);
+            expect(actualState.loaded).toEqual(true);
         });
     });
 });

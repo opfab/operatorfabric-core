@@ -23,7 +23,8 @@ export function reducer(
             return {
                 ...state,
                 config: action.payload.config,
-                loading: false
+                loading: false,
+                loaded:true
             };
         }
 
@@ -31,7 +32,8 @@ export function reducer(
             return {
                 ...state,
                 loading: false,
-                error: `error while loading a Config: '${action.payload.error}'`
+                error: `error while loading a Config: '${action.payload.error}'`,
+                retry: state.retry+1
             };
         }
         default: {
