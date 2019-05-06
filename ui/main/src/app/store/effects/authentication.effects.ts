@@ -14,7 +14,7 @@ import {
     AcceptLogOut,
     AcceptLogOutSuccess,
     AuthenticationActions,
-    AuthenticationActionTypes,
+    AuthenticationActionTypes, CheckAuthenticationStatus,
     RejectLogIn,
     TryToLogIn,
     TryToLogOut
@@ -23,6 +23,7 @@ import {AuthenticationService, CheckTokenResponse} from '../../services/authenti
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
 import {Router} from "@angular/router";
+import {ConfigActions, ConfigActionTypes} from "@ofActions/config.actions";
 
 /**
  * Management of the authentication of the current user
@@ -43,6 +44,17 @@ export class AuthenticationEffects {
                 private authService: AuthenticationService,
                 private router: Router) {
     }
+
+    /**
+     * Triggers Authentication Check when the application is ready
+     */
+    @Effect()
+    checkAuthenticationWhenReady: Observable<AuthenticationActions> =
+        this.actions$
+            .pipe(
+                ofType(ConfigActionTypes.LoadConfigSuccess),
+                map(()=> new CheckAuthenticationStatus())
+            );
 
     /**
      * This {Observable} of {AuthenticationActions} listen {AuthenticationActionTypes.TryToLogIn} type and uses

@@ -4,7 +4,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import {AcceptLogIn, PayloadForSuccessfulAuthentication, RejectLogIn} from '@ofActions/authentication.actions';
+import {
+    AcceptLogIn, AuthenticationActions, AuthenticationActionTypes,
+    CheckAuthenticationStatus,
+    PayloadForSuccessfulAuthentication,
+    RejectLogIn
+} from '@ofActions/authentication.actions';
 
 import {async, TestBed} from '@angular/core/testing';
 import {provideMockActions} from '@ngrx/effects/testing';
@@ -19,6 +24,9 @@ import {AppState} from "@ofStore/index";
 import {Router} from "@angular/router";
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
+import {hot} from "jasmine-marbles";
+import {ConfigActions, ConfigActionTypes, LoadConfig, LoadConfigSuccess} from "@ofActions/config.actions";
+import {ConfigEffects} from "@ofEffects/config.effects";
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -57,6 +65,14 @@ describe('AuthenticationEffects', () => {
 
     it('should be created', () => {
         expect(effects).toBeTruthy();
+    });
+
+    it('returns CheckAuthenticationStatus on LoadConfigSuccess', () => {
+        const localActions$ = new Actions(hot('-a--', {a: new LoadConfigSuccess({config:{}})}));
+        effects = new AuthenticationEffects(mockStore, localActions$, null,null);
+        expect(effects).toBeTruthy();
+        effects.checkAuthenticationWhenReady.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.CheckAuthenticationStatus));
+
     });
 
     it('should send accept loginAction when handling successful login attempt', () => {
