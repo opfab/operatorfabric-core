@@ -5,5 +5,13 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 <of-navbar *ngIf="isAuthenticated$"></of-navbar>
-<router-outlet *ngIf="isAuthenticated$" ></router-outlet>
-<of-login *ngIf="!isAuthenticated$"></of-login>
+<router-outlet *ngIf="isAuthenticated$ && configLoaded" ></router-outlet>
+<of-login *ngIf="!isAuthenticated$ && configLoaded"></of-login>
+<div *ngIf="!configLoaded">
+    <span *ngIf="!maxedRetries">
+        Application is loading ...
+    </span>
+    <span *ngIf="maxedRetries">
+        Application is not available yet, please reload later (F5)
+    </span>
+</div>

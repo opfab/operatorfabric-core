@@ -15,6 +15,8 @@ import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors
 import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
 import {TranslateService} from "@ngx-translate/core";
 import {isInTheFuture} from "@ofServices/authentication.service";
+import {LoadConfig} from "@ofActions/config.actions";
+import {selectConfigLoaded, selectMaxedRetries} from "@ofSelectors/config.selectors";
 
 @Component({
     selector: 'of-root',
@@ -25,7 +27,9 @@ export class AppComponent implements OnInit {
     title = 'OperatorFabric';
     getRoutePE: Observable<any>;
     currentPath: any;
-    isAuthenticated$: boolean;
+    isAuthenticated$: boolean = false;
+    configLoaded: boolean = false ;
+    private maxedRetries: boolean = false;
 
     constructor(private store: Store<AppState>,
                 private translate: TranslateService) {
@@ -43,7 +47,13 @@ export class AppComponent implements OnInit {
         this.store.pipe(select(selectExpirationTime),
             map(isInTheFuture)
                         ).subscribe(isAUth => this.isAuthenticated$ = isAUth);
+        this.store
+            .select(selectConfigLoaded)
+            .subscribe(loaded => this.configLoaded = loaded);
+        this.store
+            .select(selectMaxedRetries)
+            .subscribe((maxedRetries=>this.maxedRetries=maxedRetries));
         // First Action send by the application, is the user currently authenticated ?
-        this.store.dispatch(new CheckAuthenticationStatus());
+        this.store.dispatch(new LoadConfig());
     }
 }
