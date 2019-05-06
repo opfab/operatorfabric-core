@@ -102,7 +102,7 @@ OF_CLIENT=/home/developer/projects/operatorfabric-core/client
 OF_TOOLS=/home/developer/projects/operatorfabric-core/tools
 OF_INFRA=/home/developer/projects/operatorfabric-core/services/infra
 
-OperatorFabric version is 0.1.1.SNAPSHOT
+OperatorFabric version is XXXXXXX
 OF_COMPONENTS[0]=/home/developer/projects/operatorfabric-core/tools/swagger-spring-generators
 OF_COMPONENTS[1]=/home/developer/projects/operatorfabric-core/tools/generic/utilities
 OF_COMPONENTS[2]=/home/developer/projects/operatorfabric-core/tools/generic/test-utilities
@@ -216,7 +216,7 @@ OF_CLIENT=/home/developer/projects/operatorfabric-core/client
 OF_TOOLS=/home/developer/projects/operatorfabric-core/tools
 OF_INFRA=/home/developer/projects/operatorfabric-core/services/infra
 
-OperatorFabric version is 0.1.1.SNAPSHOT
+OperatorFabric version is XXXXXXXX
 OF_COMPONENTS[0]=/home/developer/projects/operatorfabric-core/tools/swagger-spring-generators
 OF_COMPONENTS[1]=/home/developer/projects/operatorfabric-core/tools/generic/utilities
 OF_COMPONENTS[2]=/home/developer/projects/operatorfabric-core/tools/generic/test-utilities
