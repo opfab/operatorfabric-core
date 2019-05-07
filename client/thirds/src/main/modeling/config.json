@@ -7,8 +7,8 @@
   "configPackage": "org.lfenergy.operatorfabric.thirds.config",
   "invokerPackage": "org.lfenergy.operatorfabric.thirds.invokers",
   "dateLibrary": "java8",
-  "useBeanValidation": true,
-  "interfaceOnly": true,
+  "useBeanValidation": false,
+  "interfaceOnly": false,
   "delegatePattern": true,
   "singleContentTypes": false,
   "importMappings" : {

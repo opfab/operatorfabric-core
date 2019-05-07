@@ -35,9 +35,19 @@ public class ThirdData implements Third {
   private List<String> csses;
   @Singular("mediasData")
   private Map<String,ThirdMediasData> mediasData;
+  @Singular("processesData")
+  private Map<String,ThirdProcessesData> processesData;
   @Singular("menuEntryData")
   private List<? extends ThirdMenuEntry> menuEntriesData;
   private String i18nLabelKey;
+
+  public Map<String, ? extends ThirdProcesses> getProcesses(){
+    return processesData;
+  }
+
+  public void setProcesses(Map<String, ? extends ThirdProcesses> processesData){
+    this.processesData = new HashMap<>((Map<String,ThirdProcessesData>) processesData);
+  }
 
   public Map<String, ? extends ThirdMedias> getMedias(){
     return mediasData;

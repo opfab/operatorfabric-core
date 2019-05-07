@@ -1,0 +1,18 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+= Client Thirds Data Model Reference Documentation
+David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
+v0.3.1, April 15, 2019
+:imagesdir: images
+:sectnums:
+:toc: left
+:toclevels: 2
+:toc-title: Architecture
+:icons: font
+:hide-uri-scheme:
+
+Work in progress
