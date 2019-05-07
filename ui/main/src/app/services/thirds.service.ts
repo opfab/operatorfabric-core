@@ -9,10 +9,10 @@ import {Injectable, Injector} from '@angular/core';
 import {HttpClient, HttpParams, HttpUrlEncodingCodec} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {AuthenticationService} from "@ofServices/authentication.service";
-import {empty, from, merge, Observable, of, throwError} from "rxjs";
+import {EMPTY, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
 import {Map} from "../model/map";
-import {catchError, concatMap, filter, map, reduce, switchMap} from "rxjs/operators";
+import {catchError, filter, map, mergeMap, reduce, switchMap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
@@ -78,7 +78,7 @@ export class ThirdsService {
             }
         }
         if (previous == null) {
-            return empty();
+            return EMPTY;
         }
         const result = previous.pipe(
             reduce((acc, val) => _.merge(acc,val))
@@ -128,7 +128,7 @@ export class ThirdsService {
                     work = _.difference<string>(work, this.loading)
                     return from(_.difference<string>(work, this.loaded))
                 }),
-                concatMap((id: string) => {
+                mergeMap((id: string) => {
                     this.loading.push(id);
                     const input = id.split('###');
 
