@@ -24,8 +24,21 @@ import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import {EffectsModule} from "@ngrx/effects";
 import {LightCardEffects} from "@ofEffects/light-card.effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
-import {empty, from, merge, Observable, of, zip} from "rxjs";
+import {EMPTY, empty, from, merge, Observable, of, zip} from "rxjs";
 import {switchMap} from "rxjs/operators";
+
+function createTranslationMap(menu: ThirdMenu[]) {
+    let i18n = {}
+    for (let i in menu) {
+        _.set(i18n, `en.${menu[i].id}.${menu[i].version}.${menu[i].label}`, `${i} Third`);
+        _.set(i18n, `fr.${menu[i].id}.${menu[i].version}.${menu[i].label}`, `Tier ${i}`);
+        for (let j in menu[i].entries) {
+            _.set(i18n, `en.${menu[i].id}.${menu[i].version}.${menu[i].entries[j].label}`, `${i} Third, ${j} menu`);
+            _.set(i18n, `fr.${menu[i].id}.${menu[i].version}.${menu[i].entries[j].label}`, `Tier ${i}, menu ${j}`);
+        }
+    }
+    return i18n;
+}
 
 describe('Thirds Services', () => {
     let injector: TestBed;
@@ -186,18 +199,11 @@ describe('Thirds Services', () => {
             });
         });
     });
+
     it('should update translate service upon menu update', (done) => {
         let menu: ThirdMenu[] = getRandomMenu();
 
-        let i18n = {}
-        for (let i in menu) {
-            _.set(i18n, `en.${menu[i].id}.${menu[i].version}.${menu[i].label}`, `${i} Third`);
-            _.set(i18n, `fr.${menu[i].id}.${menu[i].version}.${menu[i].label}`, `Tier ${i}`);
-            for (let j in menu[i].entries) {
-                _.set(i18n, `en.${menu[i].id}.${menu[i].version}.${menu[i].entries[j].label}`, `${i} Third, ${j} menu`);
-                _.set(i18n, `fr.${menu[i].id}.${menu[i].version}.${menu[i].entries[j].label}`, `Tier ${i}, menu ${j}`);
-            }
-        }
+        const i18n = createTranslationMap(menu);
         const fetchI18nJsonSpy = spyOn(thirdsService, 'fetchI18nJson').and.callFake((publisher: string, version: string, locales: string[]) =>
             of(_.pick(i18n, locales.map((item) => `${item}.${publisher}.${version}`)))
         );
@@ -211,7 +217,7 @@ describe('Thirds Services', () => {
                         return keys;
                     }
 
-                    let previous:Observable<[string,string,string]> = empty();
+                    let previous:Observable<[string,string,string]> = EMPTY;
                     for (let m of menu) {
                         const keys = extractAllKeys(m);
                         previous = merge(previous, from(keys)
@@ -232,8 +238,13 @@ describe('Thirds Services', () => {
                     return previous;
                 })
             )
-            .subscribe(array =>
-                    expect(array[2]).toBe(_.get(i18n, `${array[0]}.${array[1]}`)),
+            .subscribe(array =>{
+                    const resultingTranslation = array[2];
+                    const locale = array[0];
+                    const i18nKey = array[1];
+                    const expectedTranslation = _.get(i18n, `${locale}.${i18nKey}`);
+                    return expect(resultingTranslation).toBe(expectedTranslation)
+                },
                 () => {
                     fail();
                     done();
