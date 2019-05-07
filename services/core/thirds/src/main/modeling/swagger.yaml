@@ -328,7 +328,7 @@ paths:
           description: Name of state
           required: true
           type: string
-        - name: version
+        - name: apiVersion
           in: query
           required: false
           description: Expected version of third
@@ -370,7 +370,7 @@ paths:
           description: Name of state
           required: true
           type: string
-        - name: version
+        - name: apiVersion
           in: query
           required: false
           description: Expected version of third
@@ -379,8 +379,8 @@ paths:
         '200':
           description: OK
           schema:
-            type: array
-            items:
+            type: object
+            additionalProperties:
               $ref: '#/definitions/Action'
         '404':
           description: No such third
@@ -536,6 +536,101 @@ definitions:
         - id: status
           url: http://www.mythirdpartyapp.com/status
           label: menu.status
+      processes:
+        process1:
+          state1:
+            details:
+              - title:
+                  key: template.title
+                  parameters:
+                    param: value
+                titleStyle: titleClass
+                templateName: template1
+            actions:
+              action1:
+                type: URI
+                lockAction: true
+                lockCard: true
+                needsConfirm: false
+                called: false
+                updateState: false
+                updateStateBeforeAction: false
+                hidden: true
+                contentStyle: buttonContentClass
+                buttonStyle: buttonClass
+                label:
+                  key: my.card.my.action.label
+                inputs:
+                  - type: LIST
+                    label:
+                      key: myCard.myAction.myInput1.label
+                      parameters:
+                        EN: Colours
+                        FR: Couleurs
+                    mandatory: true
+                    name: selectedColour
+                    value:
+                      value: '#000000'
+                      label:
+                        key: black
+                        parameters:
+                          EN: Paint It Black
+                          FR: Broyer du noir
+                    values:
+                      - value: '#000000'
+                        label:
+                          key: black
+                          parameters:
+                            EN: Paint It Black
+                            FR: Broyer du noir
+                      - value: '#51CE1E'
+                        label:
+                          key: green
+                          parameters:
+                            EN: Go Green
+                            FR: Se mettre au vert
+                  - type: LONGTEXT
+                    label:
+                      key: myCard.myAction.myInput2.label
+                      parameters:
+                        EN: Comment
+                        FR: Commentaire
+                    mandatory: false
+                    name: comment
+                    value: ''
+                    maxLength: 250
+                    rows: 10
+          state2:
+            details:
+              - title:
+                  key: template2.title
+                  parameters:
+                    param: value
+                titleStyle: titleClass2
+                templateName: template2
+                styles:
+                  - my-template.css
+        process2:
+          state1:
+            details:
+              - title:
+                  key: template.title
+                  parameters:
+                    param: value
+                titleStyle: titleClass
+                templateName: template3
+                styles:
+                  - my-template.css
+          state2:
+            details:
+              - title:
+                  key: template2.title
+                  parameters:
+                    param: value
+                titleStyle: titleClass2
+                templateName: template4
+                styles:
+        
   I18n:
     type: object
     description: describes an i18n label
@@ -578,15 +673,14 @@ definitions:
           type: string
     example:
       title:
-        key: myCard.title
+        key: template.title
         parameters:
-          EN: My card title
-          FR: Mon titre de carte
-        titleStyle: myTitleStyle.css
-        templateName: template1
-        styles:
-          - bundleTest.css
-          - otherStyle.css
+          param: value
+      titleStyle: titleClass
+      templateName: template1
+      styles:
+        - bundleTest.css
+        - otherStyle.css
           
   Action:
     description: defines an action on the business process associated to the card
@@ -656,8 +750,8 @@ definitions:
       updateState: false
       updateStateBeforeAction: false
       hidden: true
-      contentStyle: buttonContent.css
-      buttonStyle: button.css
+      contentStyle: buttonContentClass
+      buttonStyle: buttonClass
       label:
         key: myCard.myAction.label
         parameters:

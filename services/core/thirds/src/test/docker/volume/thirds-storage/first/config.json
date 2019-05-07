@@ -19,5 +19,29 @@
   "locales": [
     "fr",
     "en"
-  ]
+  ],
+  "processes": {
+    "testProcess": {
+      "states": {
+        "testState": {
+          "details": [
+            {
+              "title": {
+                "key": "template.title"
+              },
+              "templateName": "template"
+            }
+          ],
+          "actions": {
+            "testAction": {
+              "type": "URI",
+              "label": {
+                "key": "my.card.my.action.label"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

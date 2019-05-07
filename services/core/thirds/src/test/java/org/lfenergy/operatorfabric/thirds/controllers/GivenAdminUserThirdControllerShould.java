@@ -135,6 +135,31 @@ class GivenAdminUserThirdControllerShould {
     }
 
     @Test
+    void fetchDetails() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/testProcess/testState/details")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].templateName", is("template")))
+        ;
+    }
+
+    @Test
+    void fetchActions() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/testProcess/testState/actions")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.testAction.type", is("URI")))
+        ;
+    }
+
+    @Test
     void fetchTemplateResource() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/thirds/first/templates/template1?locale=fr")

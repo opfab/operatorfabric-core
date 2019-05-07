@@ -10,10 +10,7 @@ package org.lfenergy.operatorfabric.thirds.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.thirds.model.Action;
-import org.lfenergy.operatorfabric.thirds.model.Detail;
-import org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum;
-import org.lfenergy.operatorfabric.thirds.model.Third;
+import org.lfenergy.operatorfabric.thirds.model.*;
 import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -29,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ThirdController, documented at {@link ThirdsApi}
@@ -129,12 +127,30 @@ public class ThirdsController implements ThirdsApi {
   }
 
   @Override
-  public List<? extends Action> getActions(String thirdName, String process, String state, String version) {
+  public Map<String, ? extends Action> getActions(String thirdName, String processName, String stateName, String apiVersion) {
+    ThirdStates state = getState(thirdName, processName, stateName, apiVersion);
+    if(state!=null)
+      return state.getActions();
     return null;
   }
 
+  private ThirdStates getState(String thirdName, String processName, String stateName, String apiVersion) {
+    ThirdStates state=null;
+    Third third = getThird(thirdName, apiVersion);
+    if(third != null){
+      ThirdProcesses process = third.getProcesses().get(processName);
+      if(process != null){
+        state = process.getStates().get(stateName);
+      }
+    }
+    return state;
+  }
+
   @Override
-  public List<? extends Detail> getDetails(String thirdName, String process, String state, String version) {
+  public List<? extends Detail> getDetails(String thirdName, String processName, String stateName, String apiVersion) {
+    ThirdStates state = getState(thirdName, processName, stateName, apiVersion);
+    if(state!=null)
+      return state.getDetails();
     return null;
   }
 }
