@@ -41,7 +41,9 @@ public class ArchivedConsultationCardData implements Card {
     private String id;
     private String publisher;
     private String publisherVersion;
+    private String process;
     private String processId;
+    private String state;
     private I18n title;
     private I18n summary;
     @CreatedDate
@@ -61,10 +63,6 @@ public class ArchivedConsultationCardData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> tags;
-    @Transient
-    @JsonIgnore
-    @Singular
-    private Map<String, ? extends Action> actions;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<? extends Detail> details;

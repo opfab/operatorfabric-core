@@ -13,8 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.cards.model.ActionEnum;
-import org.lfenergy.operatorfabric.cards.model.InputEnum;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
@@ -231,40 +229,41 @@ class CardWriteServiceShould {
                                                 .build()
                                 )
                                 .build())
-                .action("act1",
-                        ActionPublicationData.builder()
-                                .type(ActionEnum.URI)
-                                .label(I18nPublicationData.builder().key("action.one").build())
-                                .build())
-                .action("act2",
-                        ActionPublicationData.builder()
-                                .type(ActionEnum.URI)
-                                .label(I18nPublicationData.builder().key("action.two").build())
-                                .input(
-                                        InputPublicationData.builder()
-                                                .type(InputEnum.BOOLEAN)
-                                                .label(I18nPublicationData.builder().key("action.two.input.one").build())
-                                                .name("input1")
-                                                .build()
-                                )
-                                .input(
-                                        InputPublicationData.builder()
-                                                .type(InputEnum.LIST)
-                                                .label(I18nPublicationData.builder().key("action.two.input.two").build())
-                                                .name("input2")
-                                                .value(
-                                                        ParameterListItemPublicationData.builder()
-                                                                .label(I18nPublicationData.builder().key("value.one").build())
-                                                                .value("one")
-                                                                .build())
-                                                .value(
-                                                        ParameterListItemPublicationData.builder()
-                                                                .label(I18nPublicationData.builder().key("value.two").build())
-                                                                .value("two")
-                                                                .build())
-                                                .build()
-                                )
-                                .build())
+                // FIXME move this to thirds
+//                .action("act1",
+//                        ActionPublicationData.builder()
+//                                .type(ActionEnum.URI)
+//                                .label(I18nPublicationData.builder().key("action.one").build())
+//                                .build())
+//                .action("act2",
+//                        ActionPublicationData.builder()
+//                                .type(ActionEnum.URI)
+//                                .label(I18nPublicationData.builder().key("action.two").build())
+//                                .input(
+//                                        InputPublicationData.builder()
+//                                                .type(InputEnum.BOOLEAN)
+//                                                .label(I18nPublicationData.builder().key("action.two.input.one").build())
+//                                                .name("input1")
+//                                                .build()
+//                                )
+//                                .input(
+//                                        InputPublicationData.builder()
+//                                                .type(InputEnum.LIST)
+//                                                .label(I18nPublicationData.builder().key("action.two.input.two").build())
+//                                                .name("input2")
+//                                                .value(
+//                                                        ParameterListItemPublicationData.builder()
+//                                                                .label(I18nPublicationData.builder().key("value.one").build())
+//                                                                .value("one")
+//                                                                .build())
+//                                                .value(
+//                                                        ParameterListItemPublicationData.builder()
+//                                                                .label(I18nPublicationData.builder().key("value.two").build())
+//                                                                .value("two")
+//                                                                .build())
+//                                                .build()
+//                                )
+//                                .build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(123l)
                         .build()

@@ -279,121 +279,6 @@ definitions:
             parameters:
               EN: Go Green
               FR: Se mettre au vert
-  Action:
-    description: defines an action on the business process associated to the card
-    type: object
-    properties:
-      type:
-        description: Action type
-        $ref: '#/definitions/ActionEnum'
-      lockAction:
-        type: boolean
-        default: false
-        description: 'if true, action will be locked after clicked client-side'
-      lockCard:
-        type: boolean
-        default: false
-        description: 'if true, all card actions will be locked after clicked client-side'
-      needsConfirm:
-        type: boolean
-        default: false
-        description: 'if true, a confirmation will be asked before execution client-side'
-      called:
-        type: boolean
-        default: false
-        readOnly: true
-        description: True if action has already been called at least once
-      updateState:
-        type: boolean
-        default: false
-        description: >-
-          If true, client will attempt an update of ActionStatus before
-          rendering
-      updateStateBeforeAction:
-        type: boolean
-        default: false
-        description: >-
-          if true, client will attempt an update of ActionStatus before
-          execution
-      hidden:
-        type: boolean
-        default: false
-        description: This action is hidden from card and is only available to details;
-      contentStyle:
-        type: string
-        description: css classes of action button content (a &lt;i&gt; tag)
-      buttonStyle:
-        type: string
-        description: css classes of action button
-      label:
-        description: 'button default label, appears as a tooltip'
-        $ref: '#/definitions/I18n'
-      inputs:
-        description: >-
-          list of action input parameters, generate a popup form upon action
-          call
-        type: array
-        items:
-          $ref: '#/definitions/Input'
-    required:
-      - type
-      - label
-    example:
-      type: URI
-      lockAction: true
-      lockCard: true
-      needsConfirm: false
-      called: false
-      updateState: false
-      updateStateBeforeAction: false
-      hidden: true
-      contentStyle: buttonContent.css
-      buttonStyle: button.css
-      label:
-        key: myCard.myAction.label
-        parameters:
-          EN: Choose colour
-          FR: Choisir une couleur
-      inputs:
-        - type: LIST
-          label:
-            key: myCard.myAction.myInput1.label
-            parameters:
-              EN: Colours
-              FR: Couleurs
-          mandatory: true
-          name: selectedColour
-          value:
-            value: '#000000'
-            label:
-              key: black
-              parameters:
-                EN: Paint It Black
-                FR: Broyer du noir
-          values:
-            - value: '#000000'
-              label:
-                key: black
-                parameters:
-                  EN: Paint It Black
-                  FR: Broyer du noir
-            - value: '#51CE1E'
-              label:
-                key: green
-                parameters:
-                  EN: Go Green
-                  FR: Se mettre au vert
-        - type: LONGTEXT
-          label:
-            key: myCard.myAction.myInput2.label
-            parameters:
-              EN: Comment
-              FR: Commentaire
-          mandatory: false
-          name: comment
-          value: ''
-          maxLength: 250
-          rows: 10
   ActionStatus:
     type: object
     properties:
@@ -631,9 +516,15 @@ definitions:
       publisherVersion:
         type: string
         description: Publishing service version
+      process:
+        type: string
+        description: associated process name
       processId:
         type: string
         description: Unique process ID of the associated process instance
+      state:
+        type: string
+        description: associated process state name
       publishDate:
         $ref: '#/definitions/EpochDate'
         description: The date the card was published (meaning created by the card service)
@@ -664,11 +555,6 @@ definitions:
         items:
           type: string
         description: Tags associated with the card
-      actions:
-        type: object
-        description: 'Map of actions, identifying an action by its unique card related id'
-        additionalProperties:
-          $ref: '#/definitions/Action'
       timeSpans:
         type: array
         description: List of business time span associated to card
@@ -720,7 +606,9 @@ definitions:
       id: cardIdFromMyProcess
       publisher: MyService
       publisherVersion: 0.0.1
+      process: MyProcess
       processId: MyProcess_001
+      state: started
       publishDate: 1546300800000
       deletionDate: 1546388200000
       lttd: 1546387230000
@@ -841,9 +729,15 @@ definitions:
       publisherVersion:
         type: string
         description: Publishing service version
+      process:
+        type: string
+        description: associated process name
       processId:
         type: string
-        description: Unique process ID for associated process instance
+        description: Unique process ID of the associated process instance
+      state:
+        type: string
+        description: associated process state name
       lttd:
         $ref: '#/definitions/EpochDate'
         description: >-

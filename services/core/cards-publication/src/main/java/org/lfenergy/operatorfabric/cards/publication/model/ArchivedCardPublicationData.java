@@ -39,8 +39,10 @@ public class ArchivedCardPublicationData implements Card {
     @NotNull
     private String publisher;
     private String publisherVersion;
+    private String process;
     @NotNull
     private String processId;
+    private String state;
     private I18n title;
     private I18n summary;
     @CreatedDate
@@ -56,8 +58,6 @@ public class ArchivedCardPublicationData implements Card {
     private String media;
     private SeverityEnum severity;
     private List<String> tags;
-    @Transient
-    private Map<String,? extends Action> actions;
     private List<? extends Detail> details;
     private Recipient recipient;
     private Object data;
@@ -74,7 +74,9 @@ public class ArchivedCardPublicationData implements Card {
         this.publisher = card.getPublisher();
         this.publisherVersion = card.getPublisherVersion();
         this.publishDate = card.getPublishDate();
+        this.process = card.getProcess();
         this.processId = card.getProcessId();
+        this.state = card.getState();
         this.startDate = card.getStartDate();
         this.shardKey = card.getShardKey();
         this.endDate = card.getEndDate();

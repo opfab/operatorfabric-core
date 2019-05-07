@@ -45,8 +45,10 @@ public class CardPublicationData implements Card {
     private String publisher;
     @NotNull
     private String publisherVersion;
+    private String process;
     @NotNull
     private String processId;
+    private String state;
     @NotNull
     private I18n title;
     @NotNull
@@ -72,9 +74,6 @@ public class CardPublicationData implements Card {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends TimeSpan> timeSpans;
-    @Singular
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Map<String, ? extends Action> actions;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends Detail> details;
@@ -107,7 +106,9 @@ public class CardPublicationData implements Card {
             .uid(this.getUid())
             .publisher(this.getPublisher())
             .publisherVersion(this.getPublisherVersion())
+            .process(this.getProcess())
             .processId(this.getProcessId())
+            .state(this.getState())
             .lttd(this.getLttd())
             .startDate(this.getStartDate())
             .endDate(this.getEndDate())

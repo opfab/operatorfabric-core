@@ -41,7 +41,9 @@ public class CardConsultationData implements Card {
     private String id;
     private String publisher;
     private String publisherVersion;
+    private String process;
     private String processId;
+    private String state;
     private I18n title;
     private I18n summary;
     @CreatedDate
@@ -59,9 +61,6 @@ public class CardConsultationData implements Card {
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> tags;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Singular
-    private Map<String,? extends Action> actions = Collections.emptyMap();
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<? extends Detail> details = Collections.emptyList();

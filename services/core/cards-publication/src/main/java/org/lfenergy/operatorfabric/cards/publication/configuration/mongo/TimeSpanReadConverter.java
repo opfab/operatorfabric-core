@@ -8,15 +8,10 @@
 package org.lfenergy.operatorfabric.cards.publication.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.model.ActionEnum;
 import org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.Action;
-import org.lfenergy.operatorfabric.cards.publication.model.ActionPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.TimeSpan;
 import org.lfenergy.operatorfabric.cards.publication.model.TimeSpanPublicationData;
 import org.springframework.core.convert.converter.Converter;
-
-import java.util.List;
 
 /**
  *
