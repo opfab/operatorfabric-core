@@ -10,6 +10,8 @@ package org.lfenergy.operatorfabric.thirds.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
+import org.lfenergy.operatorfabric.thirds.model.Action;
+import org.lfenergy.operatorfabric.thirds.model.Detail;
 import org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum;
 import org.lfenergy.operatorfabric.thirds.model.Third;
 import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
@@ -126,5 +128,13 @@ public class ThirdsController implements ThirdsApi {
     service.clear();
   }
 
+  @Override
+  public List<? extends Action> getActions(String thirdName, String process, String state, String version) {
+    return null;
+  }
 
+  @Override
+  public List<? extends Detail> getDetails(String thirdName, String process, String state, String version) {
+    return null;
+  }
 }

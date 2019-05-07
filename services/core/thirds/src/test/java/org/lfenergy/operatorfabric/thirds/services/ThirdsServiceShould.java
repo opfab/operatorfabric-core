@@ -232,6 +232,10 @@ class ThirdsServiceShould {
         Third t = service.updateThird(is);
         assertThat(t).hasFieldOrPropertyWithValue("name", "second");
         assertThat(t).hasFieldOrPropertyWithValue("version", "2.0");
+        assertThat(t.getProcesses().size()).isEqualTo(1);
+        assertThat(t.getProcesses().get("testProcess").getStates().size()).isEqualTo(1);
+        assertThat(t.getProcesses().get("testProcess").getStates().get("firstState").getDetails().size()).isEqualTo(1);
+        assertThat(t.getProcesses().get("testProcess").getStates().get("firstState").getActions().size()).isEqualTo(1);
         assertThat(service.listThirds()).hasSize(2);
       } catch (IOException e) {
         log.trace("rethrowing exception");

@@ -302,6 +302,90 @@ paths:
           description: No such template
         '401':
           description: Authentication required
+  '/thirds/{thirdName}/{process}/{state}/details':
+    get:
+      tags:
+        - thirds
+      summary: Get details associated to thirds
+      description: >-
+        Get details associated with Third+process+state, returns an array of details (application/json)
+      operationId: getDetails
+      produces:
+        - application/json
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: process
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: state
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: version
+          in: query
+          required: false
+          description: Expected version of third
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Detail'
+        '404':
+          description: No such third
+        '401':
+          description: Authentication required
+  '/thirds/{thirdName}/{process}/{state}/actions':
+    get:
+      tags:
+        - thirds
+      summary: Get actions associated to thirds
+      description: >-
+        Get actions associated with Third+process+state, returns an array of actions (application/json)
+      operationId: getActions
+      produces:
+        - application/json
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: process
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: state
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: version
+          in: query
+          required: false
+          description: Expected version of third
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Action'
+        '404':
+          description: No such third
+        '401':
+          description: Authentication required
 definitions:
 
   ActionEnum:
