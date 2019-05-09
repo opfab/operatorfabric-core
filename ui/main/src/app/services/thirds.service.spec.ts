@@ -364,7 +364,37 @@ describe('Thirds Services', () => {
             expect(urlWithAccentuatedCharsInVersion.includes(value)).toEqual(true);
         });
 
-    })
+    });
+    describe('#queryThird', () => {
+        const third = new Third('testPublisher','0','third.label');
+        it('should load third from remote server', () => {
+            thirdsService.queryThird('testPublisher', '0',)
+                .subscribe((result) => expect(result).toEqual(third))
+            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/`)
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush(third);
+            })
+        })
+    });
+    describe('#queryThird', () => {
+        const third = new Third('testPublisher','0','third.label');
+        it('should load and cache third from remote server', () => {
+            thirdsService.queryThird('testPublisher', '0',)
+                .subscribe((result) => {
+                    expect(result).toEqual(third);
+                    thirdsService.queryThird('testPublisher', '0',)
+                        .subscribe((result) => expect(result).toEqual(third));
+                })
+            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/`)
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush(third);
+            })
+        })
+    });
 
 })
 ;
