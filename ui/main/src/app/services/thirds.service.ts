@@ -12,7 +12,7 @@ import {AuthenticationService} from "@ofServices/authentication.service";
 import {EMPTY, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
 import {Map} from "../model/map";
-import {catchError, filter, map, mergeMap, reduce, switchMap} from "rxjs/operators";
+import {catchError, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
@@ -22,9 +22,10 @@ import {Third, ThirdMenu} from "@ofModel/thirds.model";
 @Injectable()
 export class ThirdsService {
     readonly thirdsUrl: string;
-    private loaded: string[] = [];
-    private loading: string[] = [];
+    private loadedI18n: string[] = [];
+    private loadingI18n: string[] = [];
     private urlCleaner: HttpUrlEncodingCodec;
+    private thirdCache = {};
 
     constructor(private httpClient: HttpClient,
                 private authenticationService: AuthenticationService,
@@ -35,6 +36,27 @@ export class ThirdsService {
         this.thirdsUrl = `${environment.urls.thirds}`;
     }
 
+    queryThird(thirdName:string, version:string):Observable<Third> {
+        const key = `${thirdName}.${version}`;
+        let third = this.thirdCache[key];
+        if(third){
+            return of(third);
+        }
+        return this.fetchThird(thirdName,version)
+            .pipe(
+                tap(t=>this.thirdCache[key]=t)
+            );
+    }
+
+    private fetchThird(publisher: string, version: string): Observable<Third> {
+        const params = new HttpParams()
+            .set("version", version);
+        return this.httpClient.get<Third>(`${this.thirdsUrl}/${publisher}/`,{
+            params,
+            headers: this.authenticationService.getSecurityHeader()
+        });
+    }
+
     fetchHbsTemplate(publisher: string, version: string, name: string, locale: string): Observable<string> {
         const params = new HttpParams()
                 .set("locale", locale)
@@ -43,7 +65,7 @@ export class ThirdsService {
             params,
             headers: this.authenticationService.getSecurityHeader(),
             responseType: 'text'
-        })
+        });
     }
 
     computeThirdCssUrl(publisher: string, styleName: string, version: string){
@@ -125,11 +147,11 @@ export class ThirdsService {
                 }, []),
                 switchMap((ids:string[]) => {
                     let work = _.uniq(ids);
-                    work = _.difference<string>(work, this.loading)
-                    return from(_.difference<string>(work, this.loaded))
+                    work = _.difference<string>(work, this.loadingI18n)
+                    return from(_.difference<string>(work, this.loadedI18n))
                 }),
                 mergeMap((id: string) => {
-                    this.loading.push(id);
+                    this.loadingI18n.push(id);
                     const input = id.split('###');
 
                     let publisher = input[0];
@@ -139,7 +161,7 @@ export class ThirdsService {
                                 return {id: id, translation: trans};
                             }),
                             catchError(err => {
-                                _.remove(this.loading, id);
+                                _.remove(this.loadingI18n, id);
                                 return throwError(err);
                             })
                         );
@@ -156,8 +178,8 @@ export class ThirdsService {
                                 this.translate().use(lang);
                             }
                         }
-                        _.remove(this.loading, result.id);
-                        this.loaded.push(result.id);
+                        _.remove(this.loadingI18n, result.id);
+                        this.loadedI18n.push(result.id);
                         return true;
                     }
                 ),

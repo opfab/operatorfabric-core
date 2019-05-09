@@ -6,30 +6,40 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Card, CardDetail} from '@ofModel/card.model';
+import {Card, Detail} from '@ofModel/card.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
+import {ThirdsService} from "@ofServices/thirds.service";
 
 @Component({
-  selector: 'of-card-details',
-  templateUrl: './card-details.component.html',
+    selector: 'of-card-details',
+    templateUrl: './card-details.component.html',
 })
 export class CardDetailsComponent implements OnInit {
 
-  card:Card;
-  details:CardDetail[];
+    card: Card;
+    details: Detail[];
 
-  constructor(private store: Store<AppState>) {
+    constructor(private store: Store<AppState>, private thirdsService: ThirdsService) {
 
-  }
+    }
 
-  ngOnInit() {
-      this.store.select(cardSelectors.selectCardStateSelection)
-          .subscribe(card=>this.card = card);
-      this.store.select(cardSelectors.selectCardStateSelectionDetails)
-          .subscribe(details=>this.details = details);
-  }
+    ngOnInit() {
+        this.store.select(cardSelectors.selectCardStateSelection)
+            .subscribe(card => {
+                this.card = card;
+                if(card) {
+                    this.details = [...<Detail[]>card.details];
+                    this.thirdsService.queryThird(this.card.publisher, this.card.publisherVersion)
+                        .subscribe(third => {
+                            const state = third.extractState(this.card)
+                            if (state != null)
+                                this.details.push(...state.details);
+                        });
+                }
+            });
+    }
 
 
 }

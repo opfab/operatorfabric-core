@@ -7,10 +7,10 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Action, ActionType, Card, CardDetail, TitlePosition} from "@ofModel/card.model";
+import {Card, Detail, TitlePosition} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
-import {Map} from "@ofModel/map";
-import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import {Map as OfMap} from "@ofModel/map";
+import {Action, ActionType, Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 
 export function getRandomMenu(): ThirdMenu[] {
     let result: ThirdMenu[] = [];
@@ -39,25 +39,47 @@ export function getRandomThird(): Third[] {
     let result: Third[] = [];
     let thirdCount = getPositiveRandomNumberWithinRange(1,3);
     for (let i=0;i<thirdCount;i++){
-        let entries:ThirdMenuEntry[]=[];
-        let entryCount = getPositiveRandomNumberWithinRange(1,3);
-        for(let j=0;j<entryCount;j++){
-            entries.push(new ThirdMenuEntry(
-                getRandomAlphanumericValue(3,10),
-                getRandomAlphanumericValue(3,10),
-                getRandomAlphanumericValue(3,10)
-            ))
-        }
-        result.push(new Third(
-            getRandomAlphanumericValue(3,10),
-            getRandomAlphanumericValue(3,10),
-            getRandomAlphanumericValue(3,10),
-            undefined,
-            undefined,
-            undefined,
-            entries))
+        result.push(getOneRandomThird());
     }
     return result;
+}
+
+export function getOneRandomThird(thirdTemplate?:any): Third {
+    thirdTemplate=thirdTemplate?thirdTemplate:{};
+    let entries:ThirdMenuEntry[]=[];
+    let entryCount = getPositiveRandomNumberWithinRange(1,3);
+    for(let i=0;i<entryCount;i++){
+        entries.push(new ThirdMenuEntry(
+            getRandomAlphanumericValue(3,10),
+            getRandomAlphanumericValue(3,10),
+            getRandomAlphanumericValue(3,10)
+        ))
+    }
+    let processes= new Map();
+    let processCount = getPositiveRandomNumberWithinRange(1,3);
+    for(let i = 0; i< processCount;i++){
+        let states = new Map();
+        let stateCount = getPositiveRandomNumberWithinRange(1,3);
+        for(let j=0; j<stateCount;j++){
+            states.set(
+                getRandomAlphanumericValue(3,10),
+                new State(
+                    getRandomCardDetails(),
+                    getRandomActions()));
+        }
+        processes.set(getRandomAlphanumericValue(3,10), new Process(states))
+    }
+
+   return new Third(
+        thirdTemplate.name?thirdTemplate.name:getRandomAlphanumericValue(3,10),
+        thirdTemplate.version?thirdTemplate.version:getRandomAlphanumericValue(3,10),
+        thirdTemplate.i18nLabelKey?thirdTemplate.i18nLabelKey:getRandomAlphanumericValue(3,10),
+        thirdTemplate.templates?thirdTemplate.templates:undefined,
+       thirdTemplate.csses?thirdTemplate.csses:undefined,
+       thirdTemplate.locales?thirdTemplate.locales:undefined,
+       thirdTemplate.menuEntries?thirdTemplate.menuEntries:entries,
+       thirdTemplate.processes?thirdTemplate.processes:processes);
+
 }
 
 //
@@ -122,15 +144,19 @@ export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
     return oneCard;
 }
 
+export function getRandomActions() {
+    let actions = new Map();
+    actions.set('visible1',new Action(ActionType.URI, getRandomI18nData()));
+    actions.set('visible2',new Action(ActionType.URI, getRandomI18nData()));
+    actions.set('hidden1', new Action(ActionType.URI, getRandomI18nData(), true, 'buttonStyle', 'contentStyle'));
+    actions.set('hidden2', new Action(ActionType.URI, getRandomI18nData(), true));
+    return actions;
+}
+
 export function getOneRandomCard(cardTemplate?:any): Card {
     cardTemplate = cardTemplate?cardTemplate:{};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
-    let actions:Map<Action> = new Map();
-    actions['visible1']= new Action(ActionType.URI,getRandomI18nData());
-    actions['visible2']= new Action(ActionType.URI,getRandomI18nData());
-    actions['hidden1']= new Action(ActionType.URI,getRandomI18nData(),true,'buttonStyle', 'contentStyle');
-    actions['hidden2']= new Action(ActionType.URI,getRandomI18nData(),true);
     const oneCard = new Card(getRandomAlphanumericValue(3, 24),
         cardTemplate.id?cardTemplate.id:getRandomAlphanumericValue(3, 24),
         cardTemplate.publisher?cardTemplate.publisher:'testPublisher',
@@ -140,15 +166,16 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.endDate?cardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.severity?cardTemplate.severity:Severity.QUESTION,
         getRandomAlphanumericValue(3, 24),
-        getRandomAlphanumericValue(3, 24),
+        cardTemplate.process?cardTemplate.process:getRandomAlphanumericValue(3, 24),
+        cardTemplate.processId?cardTemplate.processId:getRandomAlphanumericValue(3, 24),
+        cardTemplate.state?cardTemplate.state:getRandomAlphanumericValue(3, 24),
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
         cardTemplate.data?cardTemplate.data:{data: "data"},
         cardTemplate.details?cardTemplate.details:
-        [new CardDetail(null, getRandomI18nData(),null,"template1",null),
-            new CardDetail(null, getRandomI18nData(),null,"template2",null),],
-        actions
+        [new Detail(null, getRandomI18nData(),null,"template1",null),
+            new Detail(null, getRandomI18nData(),null,"template2",null),]
     );
     return oneCard;
 }
@@ -160,7 +187,21 @@ export function getOneRandomCardWithRandomDetails(min=2,max=5,card?:any):Card{
     return getOneRandomCard(card);
 }
 
-export function getOneRandomCardDetail(cardDetailTemplate?:any):CardDetail{
+export function getRandomCardDetails(...cardDetailTemplates:any[]){
+    let detailCount;
+    if(cardDetailTemplates){
+        detailCount = cardDetailTemplates.length;
+    }else{
+        detailCount = getPositiveRandomNumberWithinRange(1,3);
+    }
+    let result = [];
+    for(let i = 0; i<detailCount;i++) {
+        result.push(getOneRandomCardDetail(cardDetailTemplates ? cardDetailTemplates[i] : null));
+    }
+    return result;
+}
+
+export function getOneRandomCardDetail(cardDetailTemplate?:any):Detail{
     cardDetailTemplate = cardDetailTemplate?cardDetailTemplate:{};
     const titlePosition = cardDetailTemplate.titlePosition ? cardDetailTemplate.titlePosition : pickARandomItemOfAnEnum(TitlePosition);
     const titleKey = cardDetailTemplate.title?cardDetailTemplate.title:getRandomI18nData();
@@ -170,7 +211,7 @@ export function getOneRandomCardDetail(cardDetailTemplate?:any):CardDetail{
     const genString = () => getRandomAlphanumericValue(5,13);
 
     const styles=generateRandomArray(1,5,genString);
-    return new CardDetail(titlePosition, titleKey,titleStyle,templateName,styles);
+    return new Detail(titlePosition, titleKey,titleStyle,templateName,styles);
 }
 
 export function generateRandomArray<T>(min =1, max = 2, func:()=>T):Array<T>{
@@ -195,7 +236,7 @@ export function getSeveralRandomLightCards(numberOfCards = 1, cardTemplate?:any)
 
 export function getRandomI18nData(): I18n {
     const paramNumber = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4);
-    const parameters: Map<string> = new Map();
+    const parameters: OfMap<string> = new OfMap();
     for (let i = 0; i < paramNumber; ++i) {
         parameters[`param${i}`] = getRandomAlphanumericValue(4, 13);
     }

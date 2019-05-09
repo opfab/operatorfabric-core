@@ -6,10 +6,12 @@
  */
 
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
-import {Action, Card, CardDetail} from '@ofModel/card.model';
+import {Card, Detail} from '@ofModel/card.model';
 import {ThirdsService} from "../../../../services/thirds.service";
 import {HandlebarsService} from "../../services/handlebars.service";
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from "@angular/platform-browser";
+import {Action, Third} from "@ofModel/thirds.model";
+import {zip} from "rxjs";
 
 @Component({
     selector: 'of-detail',
@@ -17,7 +19,7 @@ import {DomSanitizer, SafeHtml, SafeResourceUrl} from "@angular/platform-browser
 })
 export class DetailComponent implements OnInit {
     public active = false;
-    @Input() detail: CardDetail;
+    @Input() detail: Detail;
     @Input() card: Card;
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _htmlContent: SafeHtml;
@@ -49,12 +51,15 @@ export class DetailComponent implements OnInit {
     }
 
     private initializeHandlebarsTemplates() {
-        this.handlebars.executeTemplate(this.detail.templateName, this.card).subscribe(
-            html => {
+
+        zip(this.thirds.queryThird(this.card.publisher,this.card.publisherVersion),
+        this.handlebars.executeTemplate(this.detail.templateName, this.card))
+            .subscribe(
+                ([third,html]) => {
                 this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                 setTimeout(() => { // wait for DOM rendering
                     this.reinsertScripts();
-                    this.bindActions()
+                    this.bindActions(third);
                 });
             }
         );
@@ -80,7 +85,7 @@ export class DetailComponent implements OnInit {
         }
     }
 
-    bindActions(): void {
+    bindActions(third: Third): void {
         // lookup buttons
         const buttons = <HTMLButtonElement[]>this.element.nativeElement.getElementsByTagName('button');
 
@@ -88,7 +93,9 @@ export class DetailComponent implements OnInit {
             if (button.attributes['action-id']) {
                 const actionId = button.attributes['action-id'].nodeValue;
                 if (actionId) {
-                    this.attachAction(button, this.card.actions[actionId], actionId);
+                    const state = third.extractState(this.card);
+                    if(state!=null)
+                        this.attachAction(button, state.actions.get(actionId), actionId);
                 }
             }
         }

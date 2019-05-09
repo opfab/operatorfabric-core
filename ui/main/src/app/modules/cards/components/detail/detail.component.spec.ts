@@ -8,7 +8,13 @@
 import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 
 import {DetailComponent} from './detail.component';
-import {getOneRandomCard, getOneRandomCardWithRandomDetails, getRandomIndex} from '@tests/helpers';
+import {
+    getOneRandomCard,
+    getOneRandomCardWithRandomDetails,
+    getOneRandomThird, getRandomI18nData,
+    getRandomIndex,
+    getRandomThird
+} from '@tests/helpers';
 import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
@@ -19,12 +25,15 @@ import {TimeService} from "@ofServices/time.service";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {environment} from "@env/environment";
 import {By} from "@angular/platform-browser";
+import {of} from "rxjs";
+import {Action, ActionType, Process, State, Third} from "@ofModel/thirds.model";
 
 describe('DetailComponent', () => {
     let component: DetailComponent;
     let fixture: ComponentFixture<DetailComponent>;
     let injector: TestBed;
     let httpMock: HttpTestingController;
+    let thirdsService: ThirdsService;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -47,6 +56,7 @@ describe('DetailComponent', () => {
             .compileComponents();
         injector = getTestBed();
         httpMock = injector.get(HttpTestingController);
+        thirdsService = TestBed.get(ThirdsService);
     }));
 
     beforeEach(() => {
@@ -64,6 +74,7 @@ describe('DetailComponent', () => {
         expect(component).toBeTruthy();
     });
     it('should load template with script', ()=>{
+        spyOn(thirdsService, 'queryThird').and.returnValue(of(getOneRandomThird()));
         component.card = getOneRandomCard();
         component.detail = component.card.details[0];
         component.ngOnInit();
@@ -79,7 +90,25 @@ describe('DetailComponent', () => {
         expect(fixture.nativeElement.children[0].children[1].localName).toEqual('script');
     });
     it('should load template with action', (done)=>{
-        component.card = getOneRandomCard();
+        const processesMap= new Map();
+        const statesMap = new  Map();
+        const actionMap = new Map();
+        actionMap.set('hidden1',new Action(ActionType.URI, getRandomI18nData(), true,'buttonStyle','contentStyle'));
+        actionMap.set('hidden2',new Action(ActionType.URI, getRandomI18nData(), true,'btn-light','fa fa-warning text-dark'));
+        statesMap.set('state01',new State(null,actionMap));
+        processesMap.set('process01',new Process(statesMap));
+        const third = getOneRandomThird({
+            processes:processesMap
+        });
+        const processName = third.processes.keys().next().value;
+        const stateName = third.processes.get(processName).states.keys().next().value;
+
+        spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
+        component.card = getOneRandomCard({
+            process: processName,
+            processId: third.processes.keys().next().value+'01',
+            state: stateName,
+        });
         component.detail = component.card.details[0];
         // component.ngOnInit();
         fixture.detectChanges();
