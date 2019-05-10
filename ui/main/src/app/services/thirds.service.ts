@@ -11,7 +11,6 @@ import {environment} from "../../environments/environment";
 import {AuthenticationService} from "@ofServices/authentication.service";
 import {EMPTY, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
-import {Map} from "../model/map";
 import {catchError, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
@@ -25,7 +24,7 @@ export class ThirdsService {
     private loadedI18n: string[] = [];
     private loadingI18n: string[] = [];
     private urlCleaner: HttpUrlEncodingCodec;
-    private thirdCache = {};
+    private thirdCache = new Map();
 
     constructor(private httpClient: HttpClient,
                 private authenticationService: AuthenticationService,
@@ -38,13 +37,14 @@ export class ThirdsService {
 
     queryThird(thirdName:string, version:string):Observable<Third> {
         const key = `${thirdName}.${version}`;
-        let third = this.thirdCache[key];
+        let third = this.thirdCache.get(key);
         if(third){
             return of(third);
         }
         return this.fetchThird(thirdName,version)
             .pipe(
-                tap(t=>this.thirdCache[key]=t)
+                tap(t=>Object.setPrototypeOf(t,Third.prototype)),
+                tap(t=>this.thirdCache.set(key,t))
             );
     }
 
@@ -75,7 +75,7 @@ export class ThirdsService {
         return `${resourceUrl}?${versionParam.toString()}`;
     }
 
-    fetchI18nJson(publisher: string, version: string, locales: string[]): Observable<Map<any>> {
+    fetchI18nJson(publisher: string, version: string, locales: string[]): Observable<any> {
         let previous: Observable<any>;
         for (let locale of locales) {
             const params = new HttpParams()

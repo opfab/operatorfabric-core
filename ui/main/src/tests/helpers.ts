@@ -55,19 +55,18 @@ export function getOneRandomThird(thirdTemplate?:any): Third {
             getRandomAlphanumericValue(3,10)
         ))
     }
-    let processes= new Map();
+    let processes= new OfMap();
     let processCount = getPositiveRandomNumberWithinRange(1,3);
     for(let i = 0; i< processCount;i++){
-        let states = new Map();
+        let states = new OfMap();
         let stateCount = getPositiveRandomNumberWithinRange(1,3);
         for(let j=0; j<stateCount;j++){
-            states.set(
-                getRandomAlphanumericValue(3,10),
+            states[getRandomAlphanumericValue(3,10)]=
                 new State(
                     getRandomCardDetails(),
-                    getRandomActions()));
+                    getRandomActions());
         }
-        processes.set(getRandomAlphanumericValue(3,10), new Process(states))
+        processes[getRandomAlphanumericValue(3,10)]=new Process(states);
     }
 
    return new Third(
@@ -145,11 +144,11 @@ export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
 }
 
 export function getRandomActions() {
-    let actions = new Map();
-    actions.set('visible1',new Action(ActionType.URI, getRandomI18nData()));
-    actions.set('visible2',new Action(ActionType.URI, getRandomI18nData()));
-    actions.set('hidden1', new Action(ActionType.URI, getRandomI18nData(), true, 'buttonStyle', 'contentStyle'));
-    actions.set('hidden2', new Action(ActionType.URI, getRandomI18nData(), true));
+    let actions:OfMap<Action> = new OfMap();
+    actions['visible1']=new Action(ActionType.URI, getRandomI18nData());
+    actions['visible2']=new Action(ActionType.URI, getRandomI18nData());
+    actions['hidden1']= new Action(ActionType.URI, getRandomI18nData(), true, 'buttonStyle', 'contentStyle');
+    actions['hidden2']= new Action(ActionType.URI, getRandomI18nData(), true);
     return actions;
 }
 

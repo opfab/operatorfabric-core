@@ -1,5 +1,6 @@
 import {Card, Detail} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
+import {Map as OfMap} from "@ofModel/map";
 
 export class Third{
     constructor(
@@ -10,14 +11,14 @@ export class Third{
         readonly csses?:string[],
         readonly locales?:string[],
         readonly menuEntries?:ThirdMenuEntry[],
-        readonly processes?:Map<string,Process>
+        readonly processes?:OfMap<Process>
     ){}
 
-    extractState(card:Card):State{
-        if(card.process && this.processes.has(card.process)) {
-            const process = this.processes.get(card.process);
-            if(card.state && process.states.has(card.state)) {
-               return process.states.get(card.state);
+    public extractState(card:Card):State{
+        if(card.process && this.processes[card.process]) {
+            const process = this.processes[card.process];
+            if(card.state && process.states[card.state]) {
+               return process.states[card.state];
             }
         }
         return null;
@@ -42,14 +43,14 @@ export class ThirdMenu{
 
 export class Process{
     constructor(
-        readonly states?:Map<string,State>
+        readonly states?:OfMap<State>
     ){}
 }
 
 export class State{
     constructor(
         readonly details?:Detail[],
-        readonly actions?:Map<string,Action>
+        readonly actions?:OfMap<Action>
     ){}
 }
 
