@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: config
+  name: config
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: config
+    spec:
+      containers:
+      - env:
+        - name : EUREKA_INSTANCE_HOSTNAME
+          value: config
+        - name: RABBITMQ_HOST
+          value: rabbitmq
+        - name: RABBITMQ_PASSWORD
+          value: guest
+        - name: RABBITMQ_PORT
+          value: "5672"
+        - name: RABBITMQ_USER
+          value: guest
+        - name: REGISTRY_HOST
+          value: registry
+        - name: REGISTRY_PORT
+          value: "8080"
+        image: lfeoperatorfabric/of-configuration-cloud-service:0.2.1.RELEASE
+        name: config
+        ports:
+        - containerPort: 8080
+        - containerPort: 5005
+        resources: {}
+        volumeMounts:
+        - mountPath: /service-config
+          name: config-volume
+      restartPolicy: Always
+      volumes:
+      - name: config-volume
+        configMap: # Ref to the configMap creates before deployment
+          name: service-config
+

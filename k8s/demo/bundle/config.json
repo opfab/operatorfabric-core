@@ -1,0 +1,6 @@
+{
+	"name":"TSO1",
+	"version":"1",
+	"templates":["template"],
+	"csses":["style"]
+}

@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: users
+  name: users
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: users
+    spec:
+      containers:
+      - env:
+        - name: EUREKA_INSTANCE_HOSTNAME
+          value: users
+        - name: DEPENDS_ON
+          value: CONFIG
+        - name: REGISTRY_HOST
+          value: registry
+        - name: REGISTRY_PORT
+          value: "8080"
+        image: lfeoperatorfabric/of-users-business-service:0.2.1.RELEASE
+        name: users
+        ports:
+        - containerPort: 8080
+        - containerPort: 5005
+        resources: {}
+      restartPolicy: Always
+

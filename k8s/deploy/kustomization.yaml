@@ -1,0 +1,56 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Adds namespace to all resources.
+namespace: default
+
+# Value of this field is prepended to the
+# names of all resources, e.g. a deployment named
+# "wordpress" becomes "alices-wordpress".
+# namePrefix: opfab-
+
+# Labels to add to all resources and selectors.
+commonLabels:
+  app: lfeoperatorfabric
+
+# Each entry in this list must resolve to an existing
+# resource definition in YAML.  These are the resource
+# files that kustomize reads, modifies and emits as a
+# YAML string, with resources separated by document
+# markers ("---").
+resources:
+  - cards-consultation-deployment.yaml
+  - cards-consultation-service.yaml
+  - cards-publication-deployment.yaml
+  - cards-publication-service.yaml
+  - client-gateway-deployment.yaml
+  - client-gateway-service.yaml
+  - client-gateway-ingress.yaml
+  - config-deployment.yaml
+  - config-service.yaml
+  - oauth-deployment.yaml
+  - oauth-service.yaml
+  - registry-deployment.yaml
+  - registry-service.yaml
+  - thirds-deployment.yaml
+  - thirds-persistentvolumeclaim.yaml
+  - thirds-service.yaml
+  - time-deployment.yaml
+  - time-service.yaml
+  - users-deployment.yaml
+  - users-service.yaml
+  - web-ui-deployment.yaml
+  - web-ui-service.yaml
+
+# Configuration files use for the application
+configMapGenerator:
+- name: service-config
+  files:
+  - ./docker-configurations/application.yml
+  - ./docker-configurations/cards-consultation.yml
+  - ./docker-configurations/cards-publication.yml
+  - ./docker-configurations/client-gateway.yml
+  - ./docker-configurations/registry.yml
+  - ./docker-configurations/thirds.yml
+  - ./docker-configurations/time.yml
+  - ./docker-configurations/users.yml

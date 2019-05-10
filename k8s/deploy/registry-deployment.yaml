@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: registry
+  name: registry
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: registry
+    spec:
+      containers:
+      - env:
+        - name: CONFIG_HOST
+          value: config
+        - name: CONFIG_PORT
+          value: "8080"
+        image: lfeoperatorfabric/of-registry-cloud-service:0.2.1.RELEASE
+        name: registry
+        ports:
+        - containerPort: 8080
+        - containerPort: 5005
+        resources: {}
+      restartPolicy: Always
+

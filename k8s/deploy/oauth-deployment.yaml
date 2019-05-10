@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: oauth2
+  name: oauth2
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: oauth2
+    spec:
+      containers:
+      - image: lfeoperatorfabric/of-oauth2-dev-server:0.2.1.RELEASE
+        name: oauth2
+        ports:
+        - containerPort: 8080
+        - containerPort: 5005
+        resources: {}
+      restartPolicy: Always
+

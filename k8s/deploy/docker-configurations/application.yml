@@ -1,0 +1,31 @@
+message: common message
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+spring:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    config:
+      discovery:
+        enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://oauth2:8080/auth/jwks.json
+  data:
+    mongodb:
+      uris:
+        - mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+eureka:
+  client:
+    service-url:
+      defaultZone: http://registry:8080/eureka
+    region: default
+  registryFetchIntervalSeconds: 5

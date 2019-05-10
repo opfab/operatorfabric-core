@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: web-ui
+  name: web-ui
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: web-ui
+    spec:
+      containers:
+      - env:
+        - name: EUREKA_INSTANCE_HOSTNAME
+          value: web-ui
+        - name: DEPENDS_ON
+          value: CONFIG
+        - name: REGISTRY_HOST
+          value: registry
+        - name: REGISTRY_PORT
+          value: "8080"
+        image: lfeoperatorfabric/of-web-ui:0.2.1.RELEASE
+        name: web-ui
+        ports:
+        - containerPort: 8080
+        - containerPort: 5005
+        resources: {}
+      restartPolicy: Always
+

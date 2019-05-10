@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: time
+  name: time
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: time
+    spec:
+      containers:
+      - env:
+        - name: EUREKA_INSTANCE_HOSTNAME
+          value: time
+        - name: DEPENDS_ON
+          value: CONFIG
+        - name: REGISTRY_HOST
+          value: registry
+        - name: REGISTRY_PORT
+          value: "8080"
+        image: lfeoperatorfabric/of-time-business-service:0.2.1.RELEASE
+        name: time
+        ports:
+        - containerPort: 8080
+        - containerPort: 5005
+        resources: {}
+      restartPolicy: Always

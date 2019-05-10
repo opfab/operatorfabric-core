@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: client-gateway
+  name: client-gateway
+spec:
+  type: NodePort
+  ports:
+  - name: "http"
+    port: 8080
+    targetPort: 8080
+  - name: "4002"
+    port: 4002
+    targetPort: 5005
+  selector:
+    service: client-gateway

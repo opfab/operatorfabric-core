@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: users
+  name: users
+spec:
+  ports:
+  - name: "http"
+    port: 8080
+    targetPort: 8080
+  - name: "4103"
+    port: 4103
+    targetPort: 5005
+  selector:
+    service: users

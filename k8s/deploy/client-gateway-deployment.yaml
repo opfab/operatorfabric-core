@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: client-gateway
+  name: client-gateway
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: client-gateway
+    spec:
+      containers:
+      - env:
+        - name: EUREKA_INSTANCE_HOSTNAME
+          value: client-gateway
+        - name: DEPENDS_ON
+          value: CONFIG
+        - name: REGISTRY_HOST
+          value: registry
+        - name: REGISTRY_PORT
+          value: "8080"
+        image: lfeoperatorfabric/of-client-gateway-cloud-service:0.2.1.RELEASE
+        name: client-gateway
+        ports:
+        - containerPort: 8080
+        - containerPort: 5005
+        resources: {}
+      restartPolicy: Always
+

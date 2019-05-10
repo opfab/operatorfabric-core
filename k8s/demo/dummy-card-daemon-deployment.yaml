@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    service: dummy-card-daemon
+  name: dummy-card-daemon
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: dummy-card-daemon
+    spec:
+      containers:
+      - env:
+        - name: DEPENDS_ON
+          value: CARDS-PUBLICATION
+        - name: REGISTRY_HOST
+          value: registry
+        - name: REGISTRY_PORT
+          value: "8080"
+        image: lfeoperatorfabric/of-dummy-card-daemon:latest
+        name: dummy-card-daemon
+        resources: {}
+      restartPolicy: Always
+
+

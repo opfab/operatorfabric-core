@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: lfeoperatorfabric
+    service: thirds
+  name: thirds
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: thirds
+    spec:
+      containers:
+      - env:
+        - name: EUREKA_INSTANCE_HOSTNAME
+          value: thirds
+        - name: DEPENDS_ON
+          value: CONFIG
+        - name: REGISTRY_HOST
+          value: registry
+        - name: REGISTRY_PORT
+          value: "8080"
+        image: lfeoperatorfabric/of-thirds-business-service:0.2.1.RELEASE
+        name: thirds
+        ports:
+        - containerPort: 8080
+        - containerPort: 5005
+        resources: {}
+        volumeMounts:
+        - mountPath: /thirds-storage
+          name: thirds-volume
+      restartPolicy: Always
+      volumes:
+      - name: thirds-volume
+        persistentVolumeClaim:
+          claimName: thirds-volume-claim

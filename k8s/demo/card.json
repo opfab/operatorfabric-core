@@ -1,0 +1,61 @@
+{
+	"groupRecipients" : [
+		"TSO1"
+	],
+	"processId" : "hello-world-process-id",
+	"publisher" : "defaultPublisher",
+	"publisherVersion" : "1",
+	"recipient" : {
+		"type" : "UNION",
+		"recipients" : [
+			{
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+			{
+				"type" : "USER",
+				"identity" : "admin"
+			}
+		]
+	},
+	"severity" : "ACTION",
+	"startDate" : 1553186770681,
+	"summary" : {
+		"key" : "defaultProcess.summary"
+	},
+	"tags" : [
+		"helloWorld",
+		"greetings"
+	],
+	"title" : {
+		"key" : "defaultProcess.title"
+	},
+	"userRecipients" : [
+		"tso1-operator"
+	],
+	"data" : {
+		"greetings-from":"TSO-1"
+	},
+	"details" : [
+		{
+			"title" : {
+				"key" : "defaultProcess.detail.tab.first"
+			},
+			"templateName" : "template"
+		}
+	],
+	"timeSpans" : [
+	    {
+	        "start" : 1553186770681
+        },
+        {
+            "start" : 1553186780681,
+            "end" : 1553186790681
+        },
+        {
+            "start" : 1553186800681,
+            "end" : 1553186810681,
+            "display" : "BUBBLE"
+        }
+	]
+}

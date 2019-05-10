@@ -1,0 +1,42 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: auth
+        uri: http://oauth2:8080
+        predicates:
+        - Path=/auth/**
+        filters:
+        - RewritePath=/auth/(?<path>.*), /auth/oauth/$\{path}
+        - AddRequestHeader=Authorization, Basic Y2xpZW50SWRQYXNzd29yZDpzZWNyZXQ=
+      - id: time
+        uri: lb://TIME
+        predicates:
+        - Path=/time/**
+        filters:
+        - RewritePath=/time/(?<path>.*), /$\{path}
+      - id: thirds
+        uri: lb://THIRDS
+        predicates:
+        - Path=/thirds/**
+        filters:
+        - RewritePath=/thirds/(?<path>.*), /thirds/$\{path}
+      - id: users
+        uri: lb://USERS
+        predicates:
+        - Path=/users/**
+        filters:
+        - RewritePath=/users/(?<path>.*), /$\{path}
+      - id: cards
+        uri: lb://CARDS-CONSULTATION
+        predicates:
+        - Path=/cards/**
+        filters:
+        - RewritePath=/cards/(?<path>.*), /$\{path}
+      - id: web-ui
+        uri: lb://WEB-UI
+        predicates:
+        - Path=/ui/**
+        filters:
+        - RewritePath=/ui/(?<path>.*), /$\{path}
+  level.root: debug
