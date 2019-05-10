@@ -7,6 +7,7 @@
 
 package org.lfenergy.operatorfabric.thirds.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -34,10 +35,13 @@ public class ThirdData implements Third {
   @Singular
   private List<String> csses;
   @Singular("mediasData")
+  @JsonIgnore
   private Map<String,ThirdMediasData> mediasData;
   @Singular("processesData")
+  @JsonIgnore
   private Map<String,ThirdProcessesData> processesData;
   @Singular("menuEntryData")
+  @JsonIgnore
   private List<? extends ThirdMenuEntry> menuEntriesData;
   private String i18nLabelKey;
 

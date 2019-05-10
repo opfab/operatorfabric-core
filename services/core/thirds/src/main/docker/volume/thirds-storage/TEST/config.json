@@ -20,5 +20,29 @@
     {"id": "uid test 0","url": "https://opfab.github.io/operatorfabric.community.io/","label": "menu.first"},
     {"id": "uid test 1","url": "https://www.la-rache.com","label": "menu.second"}
   ],
-  "i18nLabelKey": "third.label"
+  "i18nLabelKey": "third.label",
+  "processes": {
+    "process": {
+      "states": {
+        "firstState": {
+          "details": [
+            {
+              "title": {
+                "key": "template.title"
+              },
+              "templateName": "operation"
+            }
+          ],
+          "actions": {
+            "action1": {
+              "type": "URI",
+              "label": {
+                "key": "my.card.my.action.label"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
