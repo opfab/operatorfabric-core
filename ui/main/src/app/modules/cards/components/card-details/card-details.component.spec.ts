@@ -25,6 +25,7 @@ import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {of} from "rxjs";
 import {Action, ActionType, Process, State} from "@ofModel/thirds.model";
 import {Detail} from "@ofModel/card.model";
+import {Map as OfMap} from "@ofModel/map";
 
 describe('CardDetailsComponent', () => {
     let component: CardDetailsComponent;
@@ -81,27 +82,24 @@ describe('CardDetailsComponent', () => {
         expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(2);
     });
     it('should create with card selected without details and third with details', () => {
-        const processesMap= new Map();
-        const statesMap = new  Map();
+        const processesMap= new OfMap();
+        const statesMap = new OfMap();
         const details = [new Detail(null, getRandomI18nData(),null,"template3",null),
             new Detail(null, getRandomI18nData(),null,"template4",null),];
-        statesMap.set('state01',new State(details));
-        processesMap.set('process01',new Process(statesMap));
+        statesMap['state01']=new State(details);
+        processesMap['process01']=new Process(statesMap);
         const third = getOneRandomThird({
             processes:processesMap
         });
-        const processName = third.processes.keys().next().value;
-        const stateName = third.processes.get(processName).states.keys().next().value;
-
         spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
         fixture.detectChanges();
         expect(component).toBeTruthy();
         expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(0);
         const testCard = getOneRandomCard(
             {
-                process: processName,
-                processId: processName+'01',
-                state: stateName,
+                process: 'process01',
+                processId: 'process01_01',
+                state: 'state01',
                 details:[]
             });
         store.dispatch(new LoadCardSuccess({card: testCard}));
@@ -111,17 +109,15 @@ describe('CardDetailsComponent', () => {
         expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(2);
     });
     it('should create with card selected with details and third with details', () => {
-        const processesMap= new Map();
-        const statesMap = new  Map();
+        const processesMap= new OfMap();
+        const statesMap = new OfMap();
         const details = [new Detail(null, getRandomI18nData(),null,"template3",null),
             new Detail(null, getRandomI18nData(),null,"template4",null),];
-        statesMap.set('state01',new State(details));
-        processesMap.set('process01',new Process(statesMap));
+        statesMap['state01']=new State(details);
+        processesMap['process01']=new Process(statesMap);
         const third = getOneRandomThird({
             processes:processesMap
         });
-        const processName = third.processes.keys().next().value;
-        const stateName = third.processes.get(processName).states.keys().next().value;
 
         spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
         fixture.detectChanges();
@@ -129,9 +125,9 @@ describe('CardDetailsComponent', () => {
         expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(0);
         const testCard = getOneRandomCard(
             {
-                process: processName,
-                processId: processName+'01',
-                state: stateName,
+                process: 'process01',
+                processId: 'process01_01',
+                state: 'state01',
             });
         store.dispatch(new LoadCardSuccess({card: testCard}));
         fixture.detectChanges();

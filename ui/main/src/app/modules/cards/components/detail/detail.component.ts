@@ -95,7 +95,7 @@ export class DetailComponent implements OnInit {
                 if (actionId) {
                     const state = third.extractState(this.card);
                     if(state!=null)
-                        this.attachAction(button, state.actions.get(actionId), actionId);
+                        this.attachAction(button, state.actions[actionId], actionId);
                 }
             }
         }

@@ -27,6 +27,7 @@ import {environment} from "@env/environment";
 import {By} from "@angular/platform-browser";
 import {of} from "rxjs";
 import {Action, ActionType, Process, State, Third} from "@ofModel/thirds.model";
+import {Map as OfMap} from "@ofModel/map";
 
 describe('DetailComponent', () => {
     let component: DetailComponent;
@@ -90,24 +91,22 @@ describe('DetailComponent', () => {
         expect(fixture.nativeElement.children[0].children[1].localName).toEqual('script');
     });
     it('should load template with action', (done)=>{
-        const processesMap= new Map();
-        const statesMap = new  Map();
-        const actionMap = new Map();
-        actionMap.set('hidden1',new Action(ActionType.URI, getRandomI18nData(), true,'buttonStyle','contentStyle'));
-        actionMap.set('hidden2',new Action(ActionType.URI, getRandomI18nData(), true,'btn-light','fa fa-warning text-dark'));
-        statesMap.set('state01',new State(null,actionMap));
-        processesMap.set('process01',new Process(statesMap));
+        const processesMap:OfMap<Process> = new OfMap();
+        const statesMap:OfMap<State> = new OfMap();
+        const actionMap:OfMap<Action> = new OfMap();
+        actionMap['hidden2']=new Action(ActionType.URI, getRandomI18nData(), true,'btn-light','fa fa-warning text-dark');
+        actionMap['hidden1']=new Action(ActionType.URI, getRandomI18nData(), true,'buttonStyle','contentStyle');
+        statesMap['state01']=new State(null,actionMap);
+        processesMap['process01']=new Process(statesMap);
         const third = getOneRandomThird({
             processes:processesMap
         });
-        const processName = third.processes.keys().next().value;
-        const stateName = third.processes.get(processName).states.keys().next().value;
 
         spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
         component.card = getOneRandomCard({
-            process: processName,
-            processId: third.processes.keys().next().value+'01',
-            state: stateName,
+            process: 'process01',
+            processId: 'process01_1',
+            state: 'state01',
         });
         component.detail = component.card.details[0];
         // component.ngOnInit();
