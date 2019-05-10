@@ -32,7 +32,7 @@ public class WebFluxConfig {
      * @return CORS Webflux configurer
      */
     @Bean
-    @ConditionalOnProperty(prefix = "opfab", value = "cors.activate")
+    @ConditionalOnProperty(prefix = "operatorfabric", value = "cors.activate")
     public WebFluxConfigurer corsConfigurer() {
         return new WebFluxConfigurerComposite() {
 

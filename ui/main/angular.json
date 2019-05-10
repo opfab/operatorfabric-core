@@ -71,6 +71,9 @@
           "configurations": {
             "production": {
               "browserTarget": "ui-home:build:production"
+            },
+            "productionDebug": {
+              "browserTarget": "ui-home:build:productionDebug"
             }
           }
         },

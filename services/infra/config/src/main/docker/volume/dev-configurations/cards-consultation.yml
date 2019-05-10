@@ -1,4 +1,4 @@
 server:
   port: 2104
-opfab.cors.activate: false
+operatorfabric.cors.activate: false
 #logging.level.root: DEBUG

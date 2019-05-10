@@ -33,3 +33,8 @@ eureka:
 security:
   basic:
     enabled: false
+
+operatorfabric:
+  security:
+    oauth2:
+      clientId: opfab-client
