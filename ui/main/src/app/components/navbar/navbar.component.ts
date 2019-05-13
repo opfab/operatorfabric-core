@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {navigationRoutes} from '../../app-routing.module';
 import {Store} from '@ngrx/store';
 import {TryToLogOut} from '@ofActions/authentication.actions';
@@ -17,6 +17,7 @@ import {Observable} from "rxjs";
 import {ThirdMenu} from "@ofModel/thirds.model";
 import {tap} from "rxjs/operators";
 import * as _ from 'lodash';
+import {IframeService} from "../../modules/thirdparty/iframe.service";
 
 @Component({
   selector: 'of-navbar',
@@ -30,7 +31,8 @@ export class NavbarComponent implements OnInit {
     private _thirdMenus: Observable<ThirdMenu[]>;
     expandedMenu:boolean[]=[];
 
-    constructor(private store: Store<AppState>) {
+    constructor(private store: Store<AppState>,
+                private iframeService : IframeService) {
     }
 
     ngOnInit() {
@@ -59,5 +61,9 @@ export class NavbarComponent implements OnInit {
         this.expandedMenu[index]=!this.expandedMenu[index];
         if(this.expandedMenu[index])
             setTimeout(()=>this.expandedMenu[index]=false,5000);
+    }
+
+    setIframeURL(url){
+        this.iframeService.selectURL(url);
     }
 }

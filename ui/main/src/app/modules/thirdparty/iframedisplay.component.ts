@@ -6,6 +6,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import {IframeService} from "./iframe.service";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'of-iframedisplay',
@@ -14,9 +16,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IframeDisplayComponent implements OnInit {
 
-  constructor() { }
+  iframeURL : SafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl("");
+
+  constructor(
+      private iframeService : IframeService,
+      private sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit() {
+
+    this.iframeService.urlUpdate.subscribe(
+        iframeURL => {
+          this.iframeURL = this.sanitizer.bypassSecurityTrustResourceUrl(iframeURL);
+        }
+    )
   }
 
 }

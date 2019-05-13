@@ -47,7 +47,9 @@
         <div class="dropdown-menu"
              *ngIf="tMenu.entries.length>1"
              [ngbCollapse]="!expandedMenu[index]">
-          <a class="dropdown-item" *ngFor="let entry of tMenu.entries" [href]="entry.url" target="_blank" translate>{{tMenu.id}}.{{tMenu.version}}.{{entry.label}}</a>
+          <!-- //TODO Find a better way than hardcoding thirdparty path-->
+          <!-- //TODO Check whether the login page is still briefly displayed when testing the real thing-->
+          <a class="dropdown-item" *ngFor="let entry of tMenu.entries" routerLink="/thirdparty" (click)=setIframeURL(entry.url) translate>{{tMenu.id}}.{{tMenu.version}}.{{entry.label}}</a>
         </div>
       </li>
       <li>
@@ -58,3 +60,4 @@
     </ul>
   </div>
 </nav>
+
