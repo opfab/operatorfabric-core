@@ -19,3 +19,9 @@ Deploy Opfab using [kustomize](https://github.com/kubernetes-sigs/kustomize)
 ```sh
 kubectl apply -k deploy/
 ```
+
+For specific env, use specific folder
+
+```sh
+kubectl apply -k env/dev/
+```

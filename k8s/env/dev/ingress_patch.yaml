@@ -1,0 +1,4 @@
+# Deploy only on nodes with roles "app"
+- op: replace
+  path: /spec/rules/0/host
+  value: www.opfab.io
