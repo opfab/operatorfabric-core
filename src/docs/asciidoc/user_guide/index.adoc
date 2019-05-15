@@ -16,7 +16,7 @@
 :icons: font
 :hide-uri-scheme:
 
-include::01_docker.adoc
+include::01_docker.adoc[]
 
 == Reference Guide Per Business Service
 include::../../../../services/core/cards-publication/src/docs/asciidoc/index.adoc[leveloffset=+2]
