@@ -10,7 +10,7 @@ spring:
       discovery:
         service-id: config
         enabled: true
-  level.root: debug
+#  level.root: debug
 eureka:
   client:
     service-url:

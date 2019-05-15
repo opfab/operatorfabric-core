@@ -1,7 +1,7 @@
 server:
   port: 2000
 spring:
-  level.root: debug
+#  level.root: debug
   profiles:
     active: [native,dev]
   cloud:

@@ -28,7 +28,7 @@ spring:
         filters:
         - RewritePath=/ui/(?<path>.*), /$\{path}
 #logging:
-  level.root: debug
+#  level.root: debug
 #zuul:
 #  ignored-services: '*'
 #  routes:
