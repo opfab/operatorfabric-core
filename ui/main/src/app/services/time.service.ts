@@ -6,6 +6,7 @@
  */
 
 import {Injectable} from '@angular/core';
+import * as moment from 'moment';
 
 @Injectable()
 export class TimeService {
@@ -13,19 +14,19 @@ export class TimeService {
     constructor() {
     }
 
-    public currentTime(): number {
-        return Date.now();
+    public currentTime(): moment.Moment {
+        return moment();
     }
 
-    public parseString(value: string): number {
-        return Date.parse(value);
+    public parseString(value: string): moment.Moment {
+        return moment(value,'YYYY-MM-DDTHH:mm');
     }
 
     public asString(value: number): string {
         return new Date(value).toISOString();
     }
 
-    public asLocalString(value: number): string {
-        return new Date(value).toISOString().slice(0, -8);
+    public asInputString(value: number): string {
+        return moment(value).format('YYYY-MM-DDTHH:mm:ss.SSS');
     }
 }

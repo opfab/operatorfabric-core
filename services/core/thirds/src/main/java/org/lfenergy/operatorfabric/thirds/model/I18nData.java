@@ -29,13 +29,4 @@ public class I18nData implements I18n {
     @NotNull
     private String key;
     @Singular private Map<String,String> parameters;
-
-    public I18n copy(){
-        I18nDataBuilder builder = I18nData.builder()
-                .key(this.getKey());
-        if(this.getParameters()!=null && !this.getParameters().isEmpty()) {
-           builder.parameters(this.getParameters());
-        }
-        return builder.build();
-    }
 }

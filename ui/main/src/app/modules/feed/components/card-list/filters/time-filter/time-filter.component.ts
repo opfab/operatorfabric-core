@@ -46,15 +46,15 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         this._filter$ = this.store.select(buildFilterSelector(FilterType.TIME_FILTER));
         this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
             if (next) {
-                if (this.timeService.parseString(this.timeFilterForm.get('start').value) != next.status.start) {
+                if (this.timeService.parseString(this.timeFilterForm.get('start').value).valueOf() != next.status.start) {
                     if(!!next.status.start)
-                        this.timeFilterForm.get('start').setValue(this.timeService.asLocalString(next.status.start));
+                        this.timeFilterForm.get('start').setValue(this.timeService.asInputString(next.status.start));
                     else
                         this.timeFilterForm.get('start').setValue(null);
                 }
-                if (this.timeService.parseString(this.timeFilterForm.get('end').value) != next.status.end) {
+                if (this.timeService.parseString(this.timeFilterForm.get('end').value).valueOf() != next.status.end) {
                     if(!!next.status.end)
-                        this.timeFilterForm.get('end').setValue(this.timeService.asLocalString(next.status.end));
+                        this.timeFilterForm.get('end').setValue(this.timeService.asInputString(next.status.end));
                     else
                         this.timeFilterForm.get('end').setValue(null);
                 }
@@ -79,8 +79,8 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
                         name: FilterType.TIME_FILTER,
                         active: !!form.start || !!form.end,
                         status: {
-                            start: form.start ? this.timeService.parseString(form.start) : null,
-                            end: form.end ? this.timeService.parseString(form.end) : null
+                            start: form.start ? this.timeService.parseString(form.start).valueOf() : null,
+                            end: form.end ? this.timeService.parseString(form.end).valueOf() : null
                         }
                     }))
                 );

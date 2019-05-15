@@ -13,19 +13,21 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
 import {FilterService, FilterType} from "@ofServices/filter.service";
-import {InitFilters} from "@ofActions/feed.actions";
+import {InitFilters, ApplyFilter} from "@ofActions/feed.actions";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {ServicesModule} from "@ofServices/services.module";
 import {By} from "@angular/platform-browser";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
 import {map} from "rxjs/operators";
 import {hot} from "jasmine-marbles";
+import {TimeService} from "@ofServices/time.service";
 
 describe('TimeFilterComponent', () => {
     let component: TimeFilterComponent;
     let fixture: ComponentFixture<TimeFilterComponent>;
     let store: Store<AppState>;
     let filterService: FilterService;
+    let timeService: TimeService;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -37,13 +39,15 @@ describe('TimeFilterComponent', () => {
                 FontAwesomeModule,
                 ServicesModule
             ],
-            declarations: [TimeFilterComponent]
+            declarations: [TimeFilterComponent],
+            providers:[TimeService]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
         store = TestBed.get(Store);
+        timeService = TestBed.get(TimeService);
         spyOn(store, 'dispatch').and.callThrough();
         filterService = TestBed.get(FilterService);
         const defaultFilters = filterService.defaultFilters;
@@ -65,6 +69,22 @@ describe('TimeFilterComponent', () => {
         expect(debugElement.queryAll(By.css('.btn'))).toBeTruthy();
         expect(debugElement.queryAll(By.css('.btn')).length).toBe(1);
     });
+
+    it('should update filter on state change', () => {
+        //componenet state
+        store.dispatch(new ApplyFilter({
+            name: FilterType.TIME_FILTER,
+            active: true,
+            status: {
+                start: 1557878400000,
+                end: 1557964800000
+            }}));
+        fixture.detectChanges();
+        expect(timeService.parseString(component.timeFilterForm.get('start').value).valueOf()).toEqual(1557878400000);
+        expect(timeService.parseString(component.timeFilterForm.get('end').value).valueOf()).toEqual(1557964800000);
+
+    });
+
     it('should display popover', () => {
         //componenet state
         expect(component).toBeTruthy();
@@ -82,7 +102,7 @@ describe('TimeFilterComponent', () => {
         expect(formDivQuery.length).toBe(2);
         expect(checkedQuery.length).toBe(2);
     });
-    it('shouldupdate filter', () => {
+    it('should update filter on input', () => {
         //componenet state
         expect(component).toBeTruthy();
         //dom structure

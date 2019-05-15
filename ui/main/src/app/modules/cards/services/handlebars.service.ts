@@ -255,7 +255,7 @@ export class HandlebarsService {
     private registerNow() {
         const that = this;
         Handlebars.registerHelper('now', function (options) {
-            return that.time.currentTime();
+            return that.time.currentTime().valueOf();
         })
     }
 
