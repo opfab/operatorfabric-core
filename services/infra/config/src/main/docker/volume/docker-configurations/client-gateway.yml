@@ -3,12 +3,15 @@ spring:
     gateway:
       routes:
       - id: auth
-        uri: http://oauth2:8080
+        uri: http://keycloak:8080
         predicates:
         - Path=/auth/**
         filters:
-        - RewritePath=/auth/(?<path>.*), /auth/oauth/$\{path}
-        - AddRequestHeader=Authorization, Basic Y2xpZW50SWRQYXNzd29yZDpzZWNyZXQ=
+        - RewritePath=/auth/token, /auth/realms/dev/protocol/openid-connect/token
+        - RewritePath=/auth/check_token, /auth/realms/dev/protocol/openid-connect/token/introspect
+        - AddRequestHeader=Authorization, Basic b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==
+#        - RewritePath=/auth/(?<path>.*), /auth/oauth/$\{path}
+#        - AddRequestHeader=Authorization, Basic Y2xpZW50SWRQYXNzd29yZDpzZWNyZXQ=
       - id: time
         uri: lb://TIME
         predicates:
@@ -39,4 +42,16 @@ spring:
         - Path=/ui/**
         filters:
         - RewritePath=/ui/(?<path>.*), /$\{path}
+#      - id: config
+#        uri: lb://CONFIG
+#        predicates:
+#        - Path=/config
+#        filters:
+#        - RewritePath=/config, /webui.json
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "Authorization, Content-Type"
   level.root: debug

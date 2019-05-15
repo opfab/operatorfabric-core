@@ -18,7 +18,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://oauth2:8080/auth/jwks.json
+          jwk-set-uri: http://keycloak:8080/auth/realms/dev/protocol/openid-connect/certs
+#          jwk-set-uri: http://oauth2:8080/auth/jwks.json
   data:
     mongodb:
       uris:
@@ -29,3 +30,9 @@ eureka:
       defaultZone: http://registry:8080/eureka
     region: default
   registryFetchIntervalSeconds: 5
+
+operatorfabric:
+  security:
+    oauth2:
+      client-id: opfab-client
+      client-secret: opfab-keycloak-secret

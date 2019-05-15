@@ -5,12 +5,15 @@ spring:
     gateway:
       routes:
       - id: auth
-        uri: http://localhost:3000
+        uri: http://localhost:89
         predicates:
         - Path=/auth/**
         filters:
-        - RewritePath=/auth/(?<path>.*), /auth/oauth/$\{path}
-        - AddRequestHeader=Authorization, Basic Y2xpZW50SWRQYXNzd29yZDpzZWNyZXQ=
+        - RewritePath=/auth/token, /auth/realms/dev/protocol/openid-connect/token
+        - RewritePath=/auth/check_token, /auth/realms/dev/protocol/openid-connect/token/introspect
+        - AddRequestHeader=Authorization, Basic b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==
+#        - RewritePath=/auth/(?<path>.*), /auth/oauth/$\{path}
+#        - AddRequestHeader=Authorization, Basic Y2xpZW50SWRQYXNzd29yZDpzZWNyZXQ=
       - id: time
         uri: lb://TIME
         predicates:
@@ -34,7 +37,7 @@ spring:
         predicates:
         - Path=/cards/**
         filters:
-         - RewritePath=/cards/(?<path>.*), /$\{path}
+        - RewritePath=/cards/(?<path>.*), /$\{path}
       - id: web-ui
         uri: lb://WEB-UI
         predicates:
@@ -52,5 +55,5 @@ spring:
           '[/**]':
             allowedOrigins: "*"
             allowedMethods: "*"
-            allowedHeaders: "authorization, content-type"
+            allowedHeaders: "Authorization, Content-Type"
   level.root: debug

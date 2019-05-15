@@ -18,7 +18,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:3000/auth/jwks.json
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
+#          jwk-set-uri: http://localhost:3000/auth/jwks.json
   data:
     mongodb:
       uris:
@@ -37,4 +38,5 @@ security:
 operatorfabric:
   security:
     oauth2:
-      clientId: opfab-client
+      client-id: opfab-client
+      client-secret: opfab-keycloak-secret
