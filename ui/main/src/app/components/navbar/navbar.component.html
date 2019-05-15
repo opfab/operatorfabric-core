@@ -43,13 +43,13 @@
             routerLinkActive #rla="routerLinkActive"
             *ngIf="tMenu.entries.length==1"
             translate
-        >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.entries[0].label}}</a>
+        >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.entries[0].label}} <fa-icon icon="external-link-alt" target="_blank"></fa-icon></a>
         <div class="dropdown-menu"
              *ngIf="tMenu.entries.length>1"
              [ngbCollapse]="!expandedMenu[index]">
           <!-- //TODO Find a better way than hardcoding thirdparty path-->
           <!-- //TODO Check whether the login page is still briefly displayed when testing the real thing-->
-          <a class="dropdown-item" *ngFor="let entry of tMenu.entries" routerLink="/thirdparty" (click)=setIframeURL(entry.url) translate>{{tMenu.id}}.{{tMenu.version}}.{{entry.label}}</a>
+          <a class="dropdown-item" *ngFor="let entry of tMenu.entries" routerLink="/thirdparty" (click)=setIframeURL(entry.url) translate>{{tMenu.id}}.{{tMenu.version}}.{{entry.label}} <fa-icon icon="external-link-alt" target="_blank"></fa-icon></a>
         </div>
       </li>
       <li>
