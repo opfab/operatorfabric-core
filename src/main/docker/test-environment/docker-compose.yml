@@ -23,7 +23,6 @@ services:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
       - DB_VENDOR=H2
-#      - KEYCLOAK_IMPORT=/realms/export
     volumes:
       - ./realms:/realms
     ports:
