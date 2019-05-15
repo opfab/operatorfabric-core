@@ -22,6 +22,8 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
     apply plugin: plugin.swagger
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
     /////// COMPILATION
 
@@ -105,4 +107,48 @@ subprojects {
     tasks.compileJava.dependsOn generateSwaggerCode
     tasks.compileTestJava.dependsOn generateSwaggerCode
     tasks.generateSwaggerCodeModel.dependsOn ':tools:swagger-spring-generators:assemble'
+
+    task sourcesJar(type: Jar){
+           archiveClassifier='sources'
+           from sourceSets.main.allJava
+       }
+
+       task javadocJar(type: Jar){
+           archiveClassifier = 'javadoc'
+           from javadoc.destinationDir
+       }
+
+       publishing{
+               publications{
+                   mavenJava(MavenPublication){
+                       from components.java
+                       artifact sourcesJar
+                       artifact javadocJar
+       pom{
+		licenses{
+			license{
+			name = 'Mozilla Public License Version 2.0'
+			url = 'https://www.mozilla.org/en-US/MPL/'
+		}
+		}
+		scm {
+		url = 'https://github.com/opfab/operatorfabric-core'
+		connection = 'scm:git@github.com:opfab/operatorfabric-core.git'
+		developerConnection = 'scm:git@github.com:opfab/operatorfabric-core.git'
+       }
+                   }
+               }
+	       }
+           repositories{
+               maven{
+                   name='testRepo'
+                   url='build/repo'
+               }
+           }
+       }
+    apply plugin: 'signing'
+    signing {
+		useGpgCmd()
+        	sign publishing.publications.mavenJava
+	    }
 }

@@ -3,6 +3,8 @@ plugins {
     id "com.github.jk1.dependency-license-report" version "1.6"
     id "com.moowork.node" version "1.2.0"
     id "org.asciidoctor.convert" version "1.5.9.2"
+    id "maven-publish"
+    id "signing"
 }
 
 ext.versions = new Properties()
@@ -89,6 +91,7 @@ ext {
             swagger: "org.hidetake.swagger.generator",
             dockerBuild: "com.palantir.docker",
             dockerRun: "com.palantir.docker-run",
+
     ]
     apk = [
             proxy : [uri:"",httpsuri:"",user:"",password:""]
@@ -166,6 +169,7 @@ subprojects {
         javadoc {
             options.noTimestamp()
         }
+
         asciidoctor {
             sources {
                 include 'index.adoc'

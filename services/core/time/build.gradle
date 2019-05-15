@@ -14,3 +14,10 @@ jar {
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
     }
 }
+
+/*
+apply plugin: 'signing'
+signing {
+	sign publishing.publications.mavenJava
+	}
+	*/
