@@ -13,6 +13,9 @@ import {Guid} from 'guid-typescript';
 import {PayloadForSuccessfulAuthentication} from '@ofActions/authentication.actions';
 import {environment} from "@env/environment";
 import {GuidService} from "@ofServices/guid.service";
+import {AppState} from "@ofStore/index";
+import {Store} from "@ngrx/store";
+import {buildConfigSelector} from "@ofSelectors/config.selectors";
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -30,13 +33,20 @@ export class AuthenticationService {
     private checkTokenUrl = `${environment.urls.auth}/check_token`;
     /** url to ask for an authentication token (jwt) */
     private askTokenUrl = `${environment.urls.auth}/token`;
+    private clientId: string;
+    private clientSecret: string;
 
     /**
      * @constructor
      * @param httpClient - Angular build-in
      * @param guidService - create and store the unique id for this application and user
      */
-    constructor(private httpClient: HttpClient,private guidService: GuidService) {
+    constructor(private httpClient: HttpClient,private guidService: GuidService, private store: Store<AppState>) {
+        store.select(buildConfigSelector('security.oauth2'))
+            .subscribe(oauth2Conf=>{
+               this.clientId= oauth2Conf['client-id'];
+               this.clientSecret= oauth2Conf['client-secret'];
+            });
     }
 
     /**
@@ -63,12 +73,15 @@ export class AuthenticationService {
      * @param password
      */
     askToken(login: string, password: string): Observable<any> {
+        if(!this.clientId||!this.clientSecret)
+            return throwError('The authentication service is no correctly iniitialized');
         const params = new URLSearchParams();
         params.append('username', login);
         params.append('password', password);
         params.append('grant_type', 'password');
         // beware clientId for token defines a type of authentication
-        params.append('client_id', 'clientIdPassword');
+        params.append('client_id', this.clientId);
+        params.append('client_secret', this.clientSecret);
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
         return this.httpClient.post<AuthObject>(this.askTokenUrl

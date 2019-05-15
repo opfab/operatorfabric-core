@@ -13,6 +13,8 @@ import {PayloadForSuccessfulAuthentication} from '@ofActions/authentication.acti
 import {Guid} from 'guid-typescript';
 import {getPositiveRandomNumberWithinRange, getRandomAlphanumericValue} from '@tests/helpers';
 import {GuidService} from "@ofServices/guid.service";
+import {StoreModule} from "@ngrx/store";
+import {appReducer} from "@ofStore/index";
 
 describe('AuthenticationService', () => {
 
@@ -21,7 +23,8 @@ describe('AuthenticationService', () => {
     beforeEach(() => {
 
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
+            imports: [HttpClientTestingModule,
+                StoreModule.forRoot(appReducer)],
             providers: [AuthenticationService,GuidService]
         });
         httpMock = TestBed.get(HttpTestingController);

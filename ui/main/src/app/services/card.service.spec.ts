@@ -13,6 +13,8 @@ import {AuthenticationService} from '@ofServices/authentication.service';
 import {GuidService} from "@ofServices/guid.service";
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
+import {StoreModule} from "@ngrx/store";
+import {appReducer} from "@ofStore/index";
 
 
 describe('CardService', () => {
@@ -28,7 +30,8 @@ describe('CardService', () => {
             ]);
 
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
+            imports: [HttpClientTestingModule,
+                StoreModule.forRoot(appReducer)],
             providers: [CardService
                 ,AuthenticationService
                 ,GuidService
