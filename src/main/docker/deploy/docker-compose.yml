@@ -15,12 +15,19 @@ services:
       - "5672:5672"
       - "15672:15672"
 #      - "15674:15674"
-  oauth:
-    container_name: oauth2
-    image: "lfeoperatorfabric/of-oauth2-dev-server:0.3.1.SNAPSHOT"
+  keycloak:
+    container_name: keycloak
+    image: jboss/keycloak
+    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/realms/export
+    environment:
+    - KEYCLOAK_USER=admin
+    - KEYCLOAK_PASSWORD=admin
+    - DB_VENDOR=H2
+    volumes:
+    - ./realms:/realms
     ports:
-     - "3000:8080"
-     - "5000:5005"
+    - "89:8080"
+    - "90:9990"
   config:
     depends_on:
      - rabbitmq
