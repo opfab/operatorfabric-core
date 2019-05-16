@@ -19,11 +19,8 @@ $bottom-padding: 10px ;
 $body-padding: $top-padding 20px $bottom-padding 20px ;
 $total-vertical-padding: $top-padding + $bottom-padding ;
 
-* {
-  color: $light
-}
-
 body {
+  color: $light;
   padding: $body-padding;
   min-width: 500px;
   background-color: $dark;
