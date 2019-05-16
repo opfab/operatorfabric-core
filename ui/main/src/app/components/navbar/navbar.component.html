@@ -38,11 +38,12 @@
         >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.label}}</a>
         <a
             class="nav-link"
-            [href]="tMenu.entries[0].link"
+            [href]="tMenu.entries[0].url"
+            target="_blank"
             routerLinkActive #rla="routerLinkActive"
             *ngIf="tMenu.entries.length==1"
             translate
-        >{{tMenu.entries[0].label}}</a>
+        >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.entries[0].label}}</a>
         <div class="dropdown-menu"
              *ngIf="tMenu.entries.length>1"
              [ngbCollapse]="!expandedMenu[index]">
