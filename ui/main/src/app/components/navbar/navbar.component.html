@@ -40,7 +40,7 @@
             class="nav-link"
             [href]="tMenu.entries[0].link"
             routerLinkActive #rla="routerLinkActive"
-            *ngIf="tMenu.entries.length<=1"
+            *ngIf="tMenu.entries.length==1"
             translate
         >{{tMenu.entries[0].label}}</a>
         <div class="dropdown-menu"
