@@ -18,6 +18,7 @@ import {MenuEffects} from "@ofEffects/menu.effects";
 import {ThirdsService} from "@ofServices/thirds.service";
 import {By} from "@angular/platform-browser";
 import {ThirdsServiceMock} from "@tests/mocks/thirds.service.mock";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import clock = jasmine.clock;
 
 describe('NavbarComponent', () => {
@@ -32,7 +33,8 @@ describe('NavbarComponent', () => {
             imports: [NgbModule.forRoot(),
                 RouterTestingModule,
                 StoreModule.forRoot(appReducer),
-                EffectsModule.forRoot([MenuEffects])
+                EffectsModule.forRoot([MenuEffects]),
+                FontAwesomeModule
             ],
             declarations: [NavbarComponent, IconComponent],
             providers: [{provide: store, useClass: Store},
