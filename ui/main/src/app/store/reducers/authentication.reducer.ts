@@ -9,8 +9,15 @@ import {AuthenticationActions, AuthenticationActionTypes} from '@ofActions/authe
 import {authInitialState, AuthState} from '@ofStates/authentication.state';
 
 
-export function reducer(state = authInitialState, action: AuthenticationActions): AuthState {
+export function reducer(state: AuthState = authInitialState, action: AuthenticationActions): AuthState {
     switch (action.type) {
+
+        case AuthenticationActionTypes.InitAuthStatus: {
+            return {
+                ...state,
+                code: action.payload.code
+            }
+        }
 
         case AuthenticationActionTypes.AcceptLogIn: {
 

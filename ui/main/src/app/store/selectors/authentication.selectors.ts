@@ -12,3 +12,4 @@ import {AuthState} from '@ofStates/authentication.state';
 export const selectAuthenticationState = createFeatureSelector<AuthState>('authentication');
 
 export const selectExpirationTime = createSelector(selectAuthenticationState, fromAuthentication.getExpirationTime);
+export const selectCode = createSelector(selectAuthenticationState, (authState)=>authState.code);

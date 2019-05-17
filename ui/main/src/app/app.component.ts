@@ -9,7 +9,7 @@ import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {CheckAuthenticationStatus} from '@ofActions/authentication.actions';
+import {CheckAuthenticationStatus, InitAuthStatus} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors';
 import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
@@ -43,6 +43,11 @@ export class AppComponent implements OnInit {
      * Once the subscription done, send an Action to Check the current authentication status.
      */
     ngOnInit() {
+        console.log(`location: ${location.href}`)
+        let i = window.location.href.indexOf('code');
+        if(i != -1){
+            this.store.dispatch(new InitAuthStatus({code:window.location.href.substring(i + 5)}))
+        }
         this.store.pipe(select(selectCurrentUrl)).subscribe(url => this.currentPath = url);
         this.store.pipe(select(selectExpirationTime),
             map(isInTheFuture)

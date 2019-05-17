@@ -33,7 +33,7 @@ describe('Interceptor', () => {
                 const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/check_token');
                 expect(request).toBeTruthy();
                 service.addAuthHeadersIfNecessary(request);
-                expect(authenticationService.getSecurityHeader).not.toHaveBeenCalled();
+                expect(AuthenticationService.getSecurityHeader).not.toHaveBeenCalled();
 
             }));
 
@@ -43,17 +43,17 @@ describe('Interceptor', () => {
                 const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/token');
                 expect(request).toBeTruthy();
                 service.addAuthHeadersIfNecessary(request);
-                expect(authenticationService.getSecurityHeader).not.toHaveBeenCalled();
+                expect(AuthenticationService.getSecurityHeader).not.toHaveBeenCalled();
             }));
 
     it('should add authentication headers for random end-point'
         , inject([TokenInjector]
             , (service: TokenInjector) => {
-                authenticationService.getSecurityHeader.and.callThrough();
+                AuthenticationService.getSecurityHeader.and.callThrough();
                 const request = new HttpRequest<any>('GET',
                     'http://www.test.com/' + getRandomAlphanumericValue(13));
                 expect(request).toBeTruthy();
                 service.addAuthHeadersIfNecessary(request);
-                expect(authenticationService.getSecurityHeader).toHaveBeenCalled();
+                expect(AuthenticationService.getSecurityHeader).toHaveBeenCalled();
             }));
 });

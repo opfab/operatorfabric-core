@@ -14,16 +14,18 @@ import {
     AcceptLogOut,
     AcceptLogOutSuccess,
     AuthenticationActions,
-    AuthenticationActionTypes, CheckAuthenticationStatus,
+    AuthenticationActionTypes,
+    CheckAuthenticationStatus,
     RejectLogIn,
     TryToLogIn,
     TryToLogOut
 } from '@ofActions/authentication.actions';
-import {AuthenticationService, CheckTokenResponse} from '../../services/authentication.service';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {AuthenticationService} from '../../services/authentication.service';
+import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
 import {Router} from "@angular/router";
-import {ConfigActions, ConfigActionTypes} from "@ofActions/config.actions";
+import {ConfigActionTypes} from "@ofActions/config.actions";
+import {selectCode} from "@ofSelectors/authentication.selectors";
 
 /**
  * Management of the authentication of the current user
@@ -53,7 +55,7 @@ export class AuthenticationEffects {
         this.actions$
             .pipe(
                 ofType(ConfigActionTypes.LoadConfigSuccess),
-                map(()=> new CheckAuthenticationStatus())
+                map(() => new CheckAuthenticationStatus())
             );
 
     /**
@@ -77,7 +79,7 @@ export class AuthenticationEffects {
                 ofType(AuthenticationActionTypes.TryToLogIn),
                 switchMap((action: TryToLogIn) => {
                     const payload = action.payload;
-                    return this.authService.askToken(payload.username, payload.password).pipe(
+                    return this.authService.askTokenFromPassword(payload.username, payload.password).pipe(
                         map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
                         catchError(error => {
                                 console.error('error while trying log in', error);
@@ -103,7 +105,7 @@ export class AuthenticationEffects {
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.TryToLogOut),
             map((action: TryToLogOut) => {
-                this.authService.clearAuthenticationInformation();
+                AuthenticationService.clearAuthenticationInformation();
                 return new AcceptLogOut();
             })
         );
@@ -125,7 +127,7 @@ export class AuthenticationEffects {
             ofType(AuthenticationActionTypes.AcceptLogOut),
             map((action: AcceptLogOut) => {
                 this.router.navigate(['/login'])
-                return new  AcceptLogOutSuccess();
+                return new AcceptLogOutSuccess();
             })
         );
     /**
@@ -142,7 +144,7 @@ export class AuthenticationEffects {
     RejectLogInAttempt: Observable<AuthenticationActions> =
         this.actions$.pipe(ofType(AuthenticationActionTypes.RejectLogIn),
             tap(() => {
-                this.authService.clearAuthenticationInformation();
+                AuthenticationService.clearAuthenticationInformation();
             }),
             map(action => new AcceptLogOut()));
 
@@ -168,36 +170,52 @@ export class AuthenticationEffects {
             .pipe(
                 ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
                 switchMap(() => {
-                    return this.authService.checkAuthentication(this.authService.extractToken());
-                }),
-                map((payload: CheckTokenResponse) => {
-                    if (this.authService.isExpirationDateOver()) {
-                        return this.handleRejectedLogin('expiration date exceeded');
-                    }
+                        return this.authService.checkAuthentication(AuthenticationService.extractToken())
+                            .pipe(catchError(()=>of(null)));
 
-                    return this.handleLogInAttempt(payload);
                 }),
+                withLatestFrom(this.store.select(selectCode)),
+                switchMap(([payload, code]) => {
+                        //no token stored or token invalid
+                        if (!payload) {
+                            if (!!code)
+                                return this.authService.askTokenFromCode(code).pipe(
+                                    map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
+                                    catchError(error => {
+                                            console.error('error while trying log in', error);
+                                            return of(this.handleRejectedLogin( 'unable to authenticate the user'));
+                                        }
+                                    ));
+                            return of(this.handleRejectedLogin('invalid token'));
+                        } else {
+                            if (!AuthenticationService.isExpirationDateOver()) {
+                                const authInfo = AuthenticationService.extractIdentificationInformation();
+                                return of(new AcceptLogIn(authInfo));
+                            }
+                            return of(this.handleRejectedLogin('expiration date exceeded'));
+                        }
+                    }
+                ),
                 catchError((err, caught) => {
                     console.error(err);
-                    this.store.dispatch(new RejectLogIn({denialReason: err}));
-                    return caught;
+                    return of(this.handleRejectedLogin(err));
                 })
             );
 
     handleRejectedLogin(errorMsg: string): AuthenticationActions {
-        this.authService.clearAuthenticationInformation();
+        AuthenticationService.clearAuthenticationInformation();
         return new RejectLogIn({denialReason: errorMsg});
 
     }
 
-    handleLogInAttempt(payload: CheckTokenResponse): AuthenticationActions {
-        if (payload) {
-            const authInfo = this.authService.extractIdentificationInformation();
-            return new AcceptLogIn(authInfo);
-
-        }
-        return this.handleRejectedLogin('invalid token');
-    }
+    // handleLogInAttempt(payload: CheckTokenResponse): AuthenticationActions {
+    //     if (payload) {
+    //         const authInfo = this.authService.extractIdentificationInformation();
+    //         return new AcceptLogIn(authInfo);
+    //
+    //     }
+    //     return this.handleRejectedLogin('invalid token');
+    // }
 
 
 }

@@ -10,6 +10,10 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {TryToLogIn} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
+import {buildConfigSelector} from "@ofSelectors/config.selectors";
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
+import {AuthenticationService} from "@ofServices/authentication.service";
 
 @Component({
     selector: 'of-login',
@@ -20,10 +24,16 @@ export class LoginComponent implements OnInit {
 
     hide: boolean;
     userForm: FormGroup;
+    useCodeFlow$: Observable<boolean>;
+    codeProvider$: Observable<any>;
     /* istanbul ignore next */
-    constructor( private store: Store<AppState>) {}
+    constructor( private store: Store<AppState>, private service: AuthenticationService) {}
 
     ngOnInit() {
+        this.useCodeFlow$ = this.store.select(buildConfigSelector('security.oauth2.flow.mode'))
+            .pipe(map(flowMode=>flowMode === 'CODE'));
+        this.codeProvider$ = this.store.select(buildConfigSelector('security.oauth2.flow.provider'))
+            .pipe(map(provider=>{name:provider}));
         this.hide = true;
         this.userForm = new FormGroup({
                 identifier: new FormControl(''),
@@ -42,6 +52,10 @@ export class LoginComponent implements OnInit {
 
     resetForm(): void {
         this.userForm.reset();
+    }
+
+    codeFlow(): void{
+        this.service.moveToCodeFlowLoginPage();
     }
 
 }

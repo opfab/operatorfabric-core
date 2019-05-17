@@ -66,12 +66,12 @@ export class CardService {
         return this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
             {rangeStart:rangeStart,rangeEnd: rangeEnd},
-            {headers: this.authenticationService.getSecurityHeader()});
+            {headers: AuthenticationService.getSecurityHeader()});
     }
 
 // sse request not intercepted by core/services/interceptors.services/TokenInjector
     private handleHeaders() {
-        return {headers: this.authenticationService.getSecurityHeader(),
+        return {headers: AuthenticationService.getSecurityHeader(),
             heartbeatTimeout: 600000}
             ;
     }

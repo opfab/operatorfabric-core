@@ -1,6 +1,10 @@
 server:
   port: 2200
 operatorfabric:
-  auth.mode: CODE
+  security:
+    oauth2:
+      flow:
+        mode: CODE
+        provider: Opfab Keycloak
   #auth.mode: PASSWORD
   feed.subscription.timeout: 600000

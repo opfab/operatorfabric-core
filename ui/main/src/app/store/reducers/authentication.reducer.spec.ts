@@ -22,7 +22,8 @@ const previousState: AuthState = {
     clientId: previousGuid,
     token: getRandomAlphanumericValue(100,150),
     expirationDate: new Date(2000, 1, 1),
-    denialReason: null
+    denialReason: null,
+    code: null
 };
 
 

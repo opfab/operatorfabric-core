@@ -9,7 +9,8 @@ spring:
         predicates:
         - Path=/auth/**
         filters:
-        - RewritePath=/auth/token, /auth/realms/dev/protocol/openid-connect/token
+        - RewritePath=/auth/token(?<path>.*), /auth/realms/dev/protocol/openid-connect/token$\{path}
+        - RewritePath=/auth/code/(?<params>.*), /auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&$\{params}
         - RewritePath=/auth/check_token, /auth/realms/dev/protocol/openid-connect/token/introspect
         - AddRequestHeader=Authorization, Basic b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==
 #        - RewritePath=/auth/(?<path>.*), /auth/oauth/$\{path}
@@ -56,4 +57,4 @@ spring:
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "Authorization, Content-Type"
-#  level.root: debug
+#logging.level.root: debug

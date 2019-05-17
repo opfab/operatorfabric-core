@@ -8,6 +8,7 @@
 import {Guid} from 'guid-typescript';
 
 export interface AuthState {
+    code: string;
     identifier: string;
     clientId: Guid;
     token: string;
@@ -16,6 +17,7 @@ export interface AuthState {
 }
 
 export const authInitialState: AuthState = {
+    code: null,
     identifier: null,
     clientId: null,
     token: null,

@@ -7,7 +7,8 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <form [formGroup]="userForm" (ngSubmit)="onSubmit()" [ngClass]="{'is-invalid': userForm.hasError('authentication.error')}" >
+            <form [formGroup]="userForm" (ngSubmit)="onSubmit()" [ngClass]="{'is-invalid': userForm.hasError('authentication.error')}"
+              *ngIf="!(useCodeFlow$|async)">
                 <div class="form-group login-form">
                     <label for="identifier">Identifier</label>
                     <input type="text" formControlName="identifier" class="form-control"/>
@@ -17,15 +18,14 @@
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" [disabled]="userForm.invalid"
-                                i18n="Login button label|Label for login button@@LoginButtonLabel">Login
-                        </button>
+                                translate>login.login.password</button>
                         <button type="reset" class="btn btn-primary" (click)="resetForm()"
                                 [disabled]="userForm.untouched"
-                                i18n="Reset button label|Label for reset button@@ResetButtonLabel">Reset
-                        </button>
+                                translate>login.reset</button>
                     </div>
                 </div>
             </form>
+            <button class="btn btn-primary" (click)="codeFlow()" translate [translateParams]>login.login.code</button>
         </div>
     </div>
 </div>

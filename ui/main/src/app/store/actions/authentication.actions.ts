@@ -9,6 +9,7 @@ import {Action} from '@ngrx/store';
 import {Guid} from 'guid-typescript';
 
 export enum AuthenticationActionTypes {
+    InitAuthStatus = '[Authentication] Init Authentication Status',
     CheckAuthenticationStatus = '[Authentication] Check Authentication Status',
     AcceptLogIn = '[Authentication] Accept the user log in attempt',
     RejectLogIn = '[Authentication] Reject the user log in attempt',
@@ -18,6 +19,9 @@ export enum AuthenticationActionTypes {
     AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt',
 }
 
+/**
+ * Authentication success payload
+ */
 export class PayloadForSuccessfulAuthentication {
     constructor(public identifier: string,
                 public clientId: Guid,
@@ -25,8 +29,18 @@ export class PayloadForSuccessfulAuthentication {
                 public expirationDate: Date) {
     }
 }
+
 /**
- * First action dispatch by the application.
+ * It aims to validate the current authentication if exists.
+ *
+ */
+export class InitAuthStatus implements Action {
+    /* istanbul ignore next */
+    readonly type = AuthenticationActionTypes.InitAuthStatus;
+    constructor(public payload:{code: string}){}
+}
+
+/**
  * It aims to validate the current authentication if exists.
  *
  */
@@ -126,7 +140,8 @@ export class AcceptLogOutSuccess implements Action {
 }
 
 export type AuthenticationActions =
-     AcceptLogIn
+    InitAuthStatus
+    | AcceptLogIn
     | RejectLogIn
     | TryToLogIn
     | TryToLogOut
