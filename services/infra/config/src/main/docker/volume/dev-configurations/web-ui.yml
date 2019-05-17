@@ -6,5 +6,4 @@ operatorfabric:
       flow:
         mode: CODE
         provider: Opfab Keycloak
-  #auth.mode: PASSWORD
   feed.subscription.timeout: 600000

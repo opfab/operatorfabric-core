@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </form>
-            <button class="btn btn-primary" (click)="codeFlow()" translate [translateParams]>login.login.code</button>
+            <button class="btn btn-primary" (click)="codeFlow()" translate [translateParams]="codeProvider" *ngIf="(useCodeFlow$|async)">login.login.code</button>
         </div>
     </div>
 </div>

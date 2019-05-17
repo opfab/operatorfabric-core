@@ -29,5 +29,12 @@
         }
       }
     }
+  },
+  "login":{
+    "reset": "RaZ",
+    "login":{
+      "password":"Se connecter",
+      "code": "Se connecter avec {{name}}"
+    }
   }
 }

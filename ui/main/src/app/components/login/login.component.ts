@@ -25,15 +25,18 @@ export class LoginComponent implements OnInit {
     hide: boolean;
     userForm: FormGroup;
     useCodeFlow$: Observable<boolean>;
-    codeProvider$: Observable<any>;
+    // codeProvider$: Observable<any>;
+    codeProvider: any;
     /* istanbul ignore next */
     constructor( private store: Store<AppState>, private service: AuthenticationService) {}
 
     ngOnInit() {
         this.useCodeFlow$ = this.store.select(buildConfigSelector('security.oauth2.flow.mode'))
             .pipe(map(flowMode=>flowMode === 'CODE'));
-        this.codeProvider$ = this.store.select(buildConfigSelector('security.oauth2.flow.provider'))
-            .pipe(map(provider=>{name:provider}));
+        // this.codeProvider$ = this.store.select(buildConfigSelector('security.oauth2.flow.provider'))
+        //     .pipe(map(provider=>{name:provider}));
+        this.store.select(buildConfigSelector('security.oauth2.flow.provider'))
+            .subscribe(provider=>this.codeProvider={name:provider});
         this.hide = true;
         this.userForm = new FormGroup({
                 identifier: new FormControl(''),
