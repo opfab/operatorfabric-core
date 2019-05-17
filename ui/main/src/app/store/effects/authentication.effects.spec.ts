@@ -17,7 +17,7 @@ import {Observable} from 'rxjs';
 
 import {AuthenticationEffects} from './authentication.effects';
 import {Actions} from '@ngrx/effects';
-import {AuthenticationService, CheckTokenResponse} from '@ofServices/authentication.service';
+import {AuthenticationService, CheckTokenResponse, LocalStorageAuthContent} from '@ofServices/authentication.service';
 import {Guid} from 'guid-typescript';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
@@ -93,7 +93,10 @@ describe('AuthenticationEffects', () => {
     it('should clear local storage of auth information when sending RejectLogIn Action', () => {
         const errorMsg = 'test';
         expect(effects.handleRejectedLogin(errorMsg)).toEqual(new RejectLogIn( { denialReason: errorMsg}));
-        expect(AuthenticationService.clearAuthenticationInformation).toHaveBeenCalled()
+        expect(localStorage.getItem(LocalStorageAuthContent.identifier)).toBeNull();
+        expect(localStorage.getItem(LocalStorageAuthContent.token)).toBeNull();
+        expect(localStorage.getItem(LocalStorageAuthContent.expirationDate)).toBeNull();
+        expect(localStorage.getItem(LocalStorageAuthContent.clientId)).toBeNull();
     })
 
 });

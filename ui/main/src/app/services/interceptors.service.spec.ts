@@ -33,7 +33,8 @@ describe('Interceptor', () => {
                 const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/check_token');
                 expect(request).toBeTruthy();
                 service.addAuthHeadersIfNecessary(request);
-                expect(AuthenticationService.getSecurityHeader).not.toHaveBeenCalled();
+                expect(request.headers.get('Authorization')).toBeNull();
+                // expect(AuthenticationService.getSecurityHeader).not.toHaveBeenCalled();
 
             }));
 
@@ -43,17 +44,20 @@ describe('Interceptor', () => {
                 const request = new HttpRequest<any>('GET', 'http://www.test.com/auth/token');
                 expect(request).toBeTruthy();
                 service.addAuthHeadersIfNecessary(request);
-                expect(AuthenticationService.getSecurityHeader).not.toHaveBeenCalled();
+                expect(request.headers.get('Authorization')).toBeNull();
+                // expect(AuthenticationService.getSecurityHeader).not.toHaveBeenCalled();
             }));
 
     it('should add authentication headers for random end-point'
         , inject([TokenInjector]
             , (service: TokenInjector) => {
-                AuthenticationService.getSecurityHeader.and.callThrough();
+                // AuthenticationService.getSecurityHeader.and.callThrough();
                 const request = new HttpRequest<any>('GET',
                     'http://www.test.com/' + getRandomAlphanumericValue(13));
                 expect(request).toBeTruthy();
-                service.addAuthHeadersIfNecessary(request);
-                expect(AuthenticationService.getSecurityHeader).toHaveBeenCalled();
+                const nuRequest = service.addAuthHeadersIfNecessary(request);
+                expect(nuRequest.headers.get('Authorization')).not.toBeNull();
+                expect(nuRequest.headers.get('Authorization')).not.toBe('');
+                // expect(AuthenticationService.getSecurityHeader).toHaveBeenCalled();
             }));
 });
