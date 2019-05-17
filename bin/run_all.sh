@@ -71,7 +71,7 @@ function display_usage() {
 	echo -e "options:\n"
 	echo -e "\t-a, --auth  : true or false. Run developpement authentication service. Default to $authentication"
 	echo -e "\t-b, --build  : true or false. Include project build. Defaults to $build"
-	echo -e "\t-g, --gateway  : true or false. Run service gateway. Defaults to $gateway"
+#	echo -e "\t-g, --gateway  : true or false. Run service gateway. Defaults to $gateway"
 	echo -e "\t-s, --services  : list of comma separated services. Business services to run along with infrastructure services. Defaults to " $(join_by , ${businessServices[@]})
 	echo -e "\t-r, --reset  : true or false. Resets service data. Defaults to $resetConfiguration."
 	echo -e "\t-o, --offline  : true or false. When gradle is invoked, it will be invoked offline. Defaults to $offline."
@@ -86,11 +86,11 @@ case $key in
     shift # past argument
     shift # past value
     ;;
-    -g|--gateway)
-    gateway="$2"
-    shift # past argument
-    shift # past value
-    ;;
+#    -g|--gateway)
+#    gateway="$2"
+#    shift # past argument
+#    shift # past value
+#    ;;
     -a|--auth)
     authentication="$2"
     shift # past argument
@@ -136,12 +136,12 @@ declare -a projects
 declare -a dependentProjects
 i=0
 projects[$i]="configuration-cloud-service"; projects[$i+1]="services/infra/config"; projects[$i+2]=0; projects[$i+3]="--spring.cloud.config.server.native.search-locations=$DIR/../services/infra/config/build/docker-volume/dev-configurations/"; i=$((i+$PRJ_STRC_FIELDS))
-projects[$i]="OAuth2-dev-server"; projects[$i+1]="services/infra/auth"; projects[$i+2]=0; projects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
+#projects[$i]="OAuth2-dev-server"; projects[$i+1]="services/infra/auth"; projects[$i+2]=0; projects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
 projects[$i]="registry-cloud-service"; projects[$i+1]="services/infra/registry"; projects[$i+2]=10; projects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
 i=0
-if [ "$gateway" = true ] ; then
+#if [ "$gateway" = true ] ; then
     dependentProjects[$i]="client-gateway-cloud-service"; dependentProjects[$i+1]="services/infra/client-gateway"; dependentProjects[$i+2]=0; dependentProjects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
-fi
+#fi
 for bservice in "${businessServices[@]}"; do
     dependentProjects[$i]="$bservice-business-service"; dependentProjects[$i+1]="services/core/$bservice"; dependentProjects[$i+2]=0; dependentProjects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
 done
