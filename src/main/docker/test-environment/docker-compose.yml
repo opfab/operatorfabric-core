@@ -24,7 +24,7 @@ services:
       - KEYCLOAK_PASSWORD=admin
       - DB_VENDOR=H2
     volumes:
-      - ./realms:/realms
+      - ../realms:/realms
     ports:
       - "89:8080"
       - "90:9990"
