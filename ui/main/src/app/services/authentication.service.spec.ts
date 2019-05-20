@@ -159,6 +159,13 @@ describe('AuthenticationService', () => {
             calls[0].error(new ErrorEvent('invalid token'));
 
         });
+        it('should emit null token empty', () => {
+            const response = new CheckTokenResponse('johndoe', 123, 'opfab-client');
+            service.checkAuthentication(null).subscribe(next => expect(next).toBeNull());
+            let calls = httpMock.match(req => req.url == `${environment.urls.auth}/check_token`);
+            expect(calls.length).toEqual(0);
+
+        });
     });
     describe('#askTokenFromCode',()=> {
         beforeEach(()=>{
@@ -234,6 +241,27 @@ describe('AuthenticationService', () => {
             let calls = httpMock.match(req => req.url == `${environment.urls.auth}/token`);
             expect(calls.length).toEqual(0);
 
+        });
+    });
+    describe('convert',()=>{
+        beforeEach(()=>{
+            service.assignConfigurationProperties(securityConf);
+        });
+       it('convert using expiration payload', ()=>{
+           const authObj = new AuthObject(token,123, Guid.create(),'johndoe');
+            const conversion = service.convert(authObj);
+            expect(conversion.identifier).toEqual('rte-operator');
+            expect(conversion.token).toEqual(token);
+            expect(conversion.clientId).toEqual(authObj.clientId);
+            expect(conversion.expirationDate.valueOf()).toBeCloseTo(Date.now()+123000);
+       });
+        it('convert using expiration payload', ()=>{
+            const authObj = new AuthObject(token,null, Guid.create(),'johndoe');
+            const conversion = service.convert(authObj);
+            expect(conversion.identifier).toEqual('rte-operator');
+            expect(conversion.token).toEqual(token);
+            expect(conversion.clientId).toEqual(authObj.clientId);
+            expect(conversion.expirationDate.valueOf()).toEqual(1558015086);
         });
     });
 
