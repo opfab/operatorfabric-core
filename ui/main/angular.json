@@ -83,7 +83,7 @@
             "productionDebug": {
               "browserTarget": "ui-home:build:productionDebug"
             },
-            "productionDebug": {
+            "vps": {
               "browserTarget": "ui-home:build:vps"
             }
           }

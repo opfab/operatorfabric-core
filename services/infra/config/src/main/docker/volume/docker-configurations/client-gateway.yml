@@ -54,4 +54,4 @@ spring:
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "Authorization, Content-Type"
-#  level.root: debug
+#logging.level.root: debug

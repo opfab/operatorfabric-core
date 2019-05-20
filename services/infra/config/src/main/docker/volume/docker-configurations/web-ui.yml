@@ -1,3 +1,7 @@
 operatorfabric:
-  auth.mode: OAUTH2
+  security:
+    oauth2:
+      flow:
+        mode: CODE
+        provider: Opfab Keycloak
   feed.subscription.timeout: 600000
