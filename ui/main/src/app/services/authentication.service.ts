@@ -90,10 +90,8 @@ export class AuthenticationService {
      */
     askTokenFromCode(code: string):
         Observable<PayloadForSuccessfulAuthentication> {
-        if (!
-            this.clientId || !this.clientSecret || !this.loginClaim
-        )
-            return throwError('The authentication service is no correctly iniitialized');
+        if (!this.clientId || !this.clientSecret || !this.loginClaim)
+            return throwError('The authentication service is no correctly initialized');
         const params = new URLSearchParams();
         params.append('code', code);
         params.append('grant_type', 'authorization_code');
@@ -121,7 +119,7 @@ export class AuthenticationService {
         if (!
             this.clientId || !this.clientSecret
         )
-            return throwError('The authentication service is no correctly iniitialized');
+            return throwError('The authentication service is no correctly initialized');
         const params = new URLSearchParams();
         params.append('username', login);
         params.append('password', password);

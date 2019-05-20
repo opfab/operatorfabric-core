@@ -164,7 +164,7 @@ describe('AuthenticationService', () => {
         beforeEach(()=>{
             service.assignConfigurationProperties(securityConf);
         });
-        it('should check token succesfully', () => {
+        it('should ask token succesfully', () => {
             const response = new AuthObject(token,123, Guid.create(),'johndoe');
             service.askTokenFromCode('fake-code').subscribe((next: PayloadForSuccessfulAuthentication) => {
                 expect(next.token).toEqual(token);
@@ -175,7 +175,7 @@ describe('AuthenticationService', () => {
 
         });
 
-        it('should fail if check token unsuccesfully', () => {
+        it('should fail if ask token unsuccesfully', () => {
             service.askTokenFromCode('fake-code').subscribe((next) => {
                 fail(`unexpected value:${next}`)
             }, (err) => {
@@ -184,6 +184,55 @@ describe('AuthenticationService', () => {
             let calls = httpMock.match(req => req.url == `${environment.urls.auth}/token`);
             expect(calls.length).toEqual(1);
             calls[0].error(new ErrorEvent('invalid code'));
+
+        });
+        it('should fail if not properly configured', () => {
+            service.assignConfigurationProperties({...securityConf,oauth2:{}});
+            service.askTokenFromCode('fake-code').subscribe((next) => {
+                fail(`unexpected value:${next}`)
+            }, (err) => {
+                expect(err).not.toBeNull();
+            });
+            let calls = httpMock.match(req => req.url == `${environment.urls.auth}/token`);
+            expect(calls.length).toEqual(0);
+
+        });
+    });
+    describe('#askTokenFromPassword',()=> {
+        beforeEach(()=>{
+            service.assignConfigurationProperties(securityConf);
+        });
+        it('should ask token succesfully', () => {
+            const response = new AuthObject(token,123, Guid.create(),'johndoe');
+            service.askTokenFromPassword('fake-login','fake-pwd').subscribe((next: PayloadForSuccessfulAuthentication) => {
+                expect(next.token).toEqual(token);
+            });
+            let calls = httpMock.match(req => req.url == `${environment.urls.auth}/token`);
+            expect(calls.length).toEqual(1);
+            calls[0].flush(response);
+
+        });
+
+        it('should fail if ask token unsuccesfully', () => {
+            service.askTokenFromPassword('fake-login','fake-pwd').subscribe((next) => {
+                fail(`unexpected value:${next}`)
+            }, (err) => {
+                expect(err).not.toBeNull();
+            });
+            let calls = httpMock.match(req => req.url == `${environment.urls.auth}/token`);
+            expect(calls.length).toEqual(1);
+            calls[0].error(new ErrorEvent('invalid code'));
+
+        });
+        it('should fail if not properly configured', () => {
+            service.assignConfigurationProperties({...securityConf, oauth2:{}});
+            service.askTokenFromPassword('fake-login','fake-pwd').subscribe((next) => {
+                fail(`unexpected value:${next}`)
+            }, (err) => {
+                expect(err).not.toBeNull();
+            });
+            let calls = httpMock.match(req => req.url == `${environment.urls.auth}/token`);
+            expect(calls.length).toEqual(0);
 
         });
     });
