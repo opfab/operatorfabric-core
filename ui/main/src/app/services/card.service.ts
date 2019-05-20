@@ -33,9 +33,11 @@ export class CardService {
     getCardOperation(): Observable<CardOperation> {
         let minus2Hour = new Date(new Date().valueOf()-2*60*60*1000);
         let plus48Hours = new Date(minus2Hour.valueOf()+48*60*60*1000);
+        //security header needed here as SSE request are not intercepted by our header interceptor
         return this.fetchCardOperation(new EventSourcePolyfill(
             `${this.cardOperationsUrl}&notification=true&rangeStart=${minus2Hour.valueOf()}&rangeEnd=${plus48Hours.valueOf()}`
-            , this.handleHeaders()));
+            , {headers: AuthenticationService.getSecurityHeader(),
+                heartbeatTimeout: 600000}));
     }
 
     fetchCardOperation(eventSource: EventSourcePolyfill): Observable<CardOperation> {
@@ -65,14 +67,6 @@ export class CardService {
     public updateCardSubscriptionWithDates(rangeStart:number,rangeEnd:number):Observable<any>{
         return this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
-            {rangeStart:rangeStart,rangeEnd: rangeEnd},
-            {headers: AuthenticationService.getSecurityHeader()});
-    }
-
-// sse request not intercepted by core/services/interceptors.services/TokenInjector
-    private handleHeaders() {
-        return {headers: AuthenticationService.getSecurityHeader(),
-            heartbeatTimeout: 600000}
-            ;
+            {rangeStart:rangeStart,rangeEnd: rangeEnd});
     }
 }
