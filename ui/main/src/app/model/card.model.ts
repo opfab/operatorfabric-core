@@ -10,7 +10,7 @@ import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
 
 export class Card {
-
+    /* istanbul ignore next */
     constructor(
         readonly uid: string,
         readonly id: string,
@@ -39,6 +39,7 @@ export enum TitlePosition {
 }
 
 export class Detail {
+    /* istanbul ignore next */
     constructor(
         readonly titlePosition: TitlePosition,
         readonly title: I18n,

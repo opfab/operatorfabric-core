@@ -21,6 +21,7 @@ import {LightCard} from "@ofModel/light-card.model";
  */
 export class Filter {
 
+    /* istanbul ignore next */
     constructor(
         readonly funktion: (LightCard,any) => boolean,
         public active:boolean,

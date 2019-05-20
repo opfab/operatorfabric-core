@@ -25,7 +25,7 @@ export interface LightCard {
 }
 
 export class LightCard implements LightCard {
-
+    /* istanbul ignore next */
     constructor(
         readonly uid: string,
         readonly id: string,

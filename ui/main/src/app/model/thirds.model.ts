@@ -3,6 +3,7 @@ import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap} from "@ofModel/map";
 
 export class Third{
+    /* istanbul ignore next */
     constructor(
         readonly name:string,
         readonly version:string,
@@ -26,6 +27,7 @@ export class Third{
 }
 
 export class ThirdMenuEntry{
+    /* istanbul ignore next */
     constructor(
         readonly id:string,
         readonly label: string,
@@ -34,6 +36,7 @@ export class ThirdMenuEntry{
 }
 
 export class ThirdMenu{
+    /* istanbul ignore next */
     constructor(
         readonly id: string,
         readonly version: string,
@@ -42,12 +45,14 @@ export class ThirdMenu{
 }
 
 export class Process{
+    /* istanbul ignore next */
     constructor(
         readonly states?:OfMap<State>
     ){}
 }
 
 export class State{
+    /* istanbul ignore next */
     constructor(
         readonly details?:Detail[],
         readonly actions?:OfMap<Action>
@@ -62,6 +67,7 @@ export enum ActionType {
 }
 
 export class Action {
+    /* istanbul ignore next */
     constructor(
         readonly type: ActionType,
         readonly label: I18n,
@@ -90,6 +96,7 @@ export enum InputType {
 }
 
 export class Input {
+    /* istanbul ignore next */
     constructor(
         readonly type: InputType,
         readonly name: string,
@@ -106,6 +113,7 @@ export class Input {
 }
 
 export class ParameterListItem {
+    /* istanbul ignore next */
     constructor(
         readonly label: I18n,
         readonly value: string,
