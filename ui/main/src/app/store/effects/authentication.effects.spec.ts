@@ -201,7 +201,7 @@ describe('AuthenticationEffects', () => {
 
 
     // it('should send accept loginAction when handling successful login attempt', () => {
-    //     const mockCheckTokenResponse = {sub:"",exp:0,client_id:""} as CheckTokenResponse;
+    //     const mockCheckTokenResponse = {sub:"",exp:0,clientId:""} as CheckTokenResponse;
     //     const mockIdInfo = new PayloadForSuccessfulAuthentication("",Guid.create(),"",new Date());
     //     authenticationService.extractIdentificationInformation.and.callFake(() => mockIdInfo);
     //     const expectedAction = new AcceptLogIn(mockIdInfo);

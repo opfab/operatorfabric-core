@@ -72,10 +72,10 @@ export class AuthenticationService {
     checkAuthentication(token: string): Observable<CheckTokenResponse> {
         if (!!token) {
             // const postData = new FormData();
-            const postData =  new URLSearchParams();
+            const postData = new URLSearchParams();
             postData.append('token', token);
             const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
-            return this.httpClient.post<CheckTokenResponse>(this.checkTokenUrl, postData.toString(),{headers:headers}).pipe(
+            return this.httpClient.post<CheckTokenResponse>(this.checkTokenUrl, postData.toString(), {headers: headers}).pipe(
                 map(check => check),
                 catchError(AuthenticationService.handleError)
             );
@@ -88,7 +88,7 @@ export class AuthenticationService {
      * a registered one.
      * @param code OIDC code from code flow
      */
-    askTokenFromCode(code:string):
+    askTokenFromCode(code: string):
         Observable<PayloadForSuccessfulAuthentication> {
         if (!
             this.clientId || !this.clientSecret || !this.loginClaim
@@ -98,7 +98,7 @@ export class AuthenticationService {
         params.append('code', code);
         params.append('grant_type', 'authorization_code');
 // beware clientId for token defines a type of authentication
-        params.append('client_id', this.clientId);
+        params.append('clientId', this.clientId);
         params.append('redirect_uri', window.location.origin);
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
@@ -127,7 +127,7 @@ export class AuthenticationService {
         params.append('password', password);
         params.append('grant_type', 'password');
 // beware clientId for token defines a type of authentication
-        params.append('client_id', this.clientId);
+        params.append('clientId', this.clientId);
         params.append('client_secret', this.clientSecret);
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
@@ -139,7 +139,7 @@ export class AuthenticationService {
             map(data => {
                 return {...data, clientId: this.guidService.getCurrentGuid()}
             }),
-            map((auth:AuthObject)=>this.convert(auth)),
+            map((auth: AuthObject) => this.convert(auth)),
             tap(AuthenticationService.saveAuthenticationInformation),
             catchError(AuthenticationService.handleError)
         );
@@ -160,7 +160,7 @@ export class AuthenticationService {
     /**
      * @return true if the expiration date stored in the `localestorage` is still running, false otherwise.
      */
-    static verifyExpirationDate():boolean {
+    static verifyExpirationDate(): boolean {
         // + to convert the stored number as a string back to number
         const expirationDate = +localStorage.getItem(LocalStorageAuthContent.expirationDate);
         const isNotANumber = isNaN(expirationDate);
@@ -258,10 +258,15 @@ export class AuthenticationService {
  * class used to try to login using the authentication web service.
  */
 export class AuthObject {
-    identifier?: string;
-    access_token: string;
-    expires_in: number;
-    clientId: Guid;
+
+    constructor(
+        public access_token: string,
+        public expires_in: number,
+        public clientId: Guid,
+        public identifier?: string
+    ) {
+    }
+
 }
 
 /**
@@ -269,10 +274,11 @@ export class AuthObject {
  */
 export class CheckTokenResponse {
     constructor(
-    sub?: string,
-    exp?: number,
-    client_id?: string,
-    ){}
+        public sub?: string,
+        public exp?: number,
+        public clientId?: string,
+    ) {
+    }
 }
 
 /**
