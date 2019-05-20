@@ -89,7 +89,7 @@ export class AuthenticationService {
      * @param code OIDC code from code flow
      */
     askTokenFromCode(code:string):
-        Observable<any> {
+        Observable<PayloadForSuccessfulAuthentication> {
         if (!
             this.clientId || !this.clientSecret || !this.loginClaim
         )
@@ -268,9 +268,11 @@ export class AuthObject {
  * class corresponding to the response of the web service checking jwt token when this token is a valid one.
  */
 export class CheckTokenResponse {
-    sub: string;
-    exp: number;
-    client_id: string;
+    constructor(
+    sub?: string,
+    exp?: number,
+    client_id?: string,
+    ){}
 }
 
 /**
