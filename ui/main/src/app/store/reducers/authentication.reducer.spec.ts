@@ -9,7 +9,7 @@ import {getExpirationTime, reducer} from './authentication.reducer';
 import {authInitialState, AuthState} from '@ofStates/authentication.state';
 import {
     AcceptLogIn,
-    AcceptLogOut,
+    AcceptLogOut, InitAuthStatus,
     PayloadForSuccessfulAuthentication,
     RejectLogIn
 } from "@ofActions/authentication.actions";
@@ -48,6 +48,21 @@ describe('Authentication Reducer', () => {
             expect(result).not.toBe(authInitialState);
         })
 
+    });
+
+    describe('InitAuthStatus Action', () => {
+
+        it('should return a new state with information corresponding to used payload on an Initial State', () => {
+            const myPayload = produceMockPayLoadForSucessfulAuthintication();
+            const initAction = new InitAuthStatus({code:'123'});
+            const result = reducer(authInitialState, initAction);
+            expect(result).not.toBe(authInitialState);
+            expect(result.code).toEqual('123');
+            expect(result.denialReason).toEqual(authInitialState.denialReason);
+            expect(result.expirationDate).toBe(authInitialState.expirationDate);
+            expect(result.identifier).toBe(authInitialState.identifier);
+            expect(result.token).toBe(authInitialState.token);
+        });
     });
 
     describe('AcceptLogin Action', () => {
