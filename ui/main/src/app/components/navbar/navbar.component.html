@@ -16,40 +16,48 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarContent" [ngbCollapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto">
+      <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
       <li class="nav-item" *ngFor="let link of navigationRoutes, let i = index"
           [class.active]="link.path === currentPath">
         <a
-          class="nav-link"
-          [routerLink]="link.path"
-          routerLinkActive #rla="routerLinkActive"
-          (click)="activeLinkIndex = i"
-          translate
+                class="nav-link"
+                [routerLink]="link.path"
+                routerLinkActive #rla="routerLinkActive"
+                (click)="activeLinkIndex = i"
+                translate
         >{{'menu.'+link.path}}</a>
       </li>
+      <!-- Links from menus declared in third-party bundles-->
       <li *ngFor="let tMenu of (thirdMenus|async); let index = index;" class="nav-item" [class.dropdown]="tMenu.entries.length>1">
+        <!-- Dropdown menu if at least 2 entries-->
         <a
-           href="#"
-           class="nav-link dropdown-toggle"
-           [id]="'drop_'+tMenu.id"
-           [attr.aria-expanded]="expandedMenu[index]"
-           (click)="toggleMenu(index)"
-           *ngIf="tMenu.entries.length>1"
-           translate
+                class="nav-link dropdown-toggle"
+                [id]="'drop_'+tMenu.id"
+                [attr.aria-expanded]="expandedMenu[index]"
+                (click)="toggleMenu(index)"
+                *ngIf="tMenu.entries.length>1"
+                translate
         >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.label}}</a>
-        <a
-            class="nav-link"
-            [href]="tMenu.entries[0].url"
-            target="_blank"
-            routerLinkActive #rla="routerLinkActive"
-            *ngIf="tMenu.entries.length==1"
-            translate
-        >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.entries[0].label}} <fa-icon icon="external-link-alt" target="_blank"></fa-icon></a>
         <div class="dropdown-menu"
              *ngIf="tMenu.entries.length>1"
              [ngbCollapse]="!expandedMenu[index]">
-          <!-- //TODO Find a better way than hardcoding thirdparty path-->
-          <!-- //TODO Check whether the login page is still briefly displayed when testing the real thing-->
-          <a class="dropdown-item" *ngFor="let entry of tMenu.entries" routerLink="/thirdparty" (click)=setIframeURL(entry.url) translate>{{tMenu.id}}.{{tMenu.version}}.{{entry.label}} <fa-icon class="text-dark" icon="external-link-alt" target="_blank"></fa-icon></a>
+          <div class="dropdown-item" *ngFor="let entry of tMenu.entries">
+            <a class="text-dark text-decoration-none" routerLink="/thirdparty" (click)=setIframeURL(entry.url) translate>
+              {{tMenu.id}}.{{tMenu.version}}.{{entry.label}}</a>
+            <a style="color:inherit; padding-left: 0.5rem;" [href]="entry.url" target="_blank">
+              <fa-icon icon="external-link-alt"></fa-icon>
+            </a>
+          </div>
+        </div>
+        <!-- Navbar link if only one entry -->
+        <div class="nav-link" style="display: flex" *ngIf="tMenu.entries.length==1">
+          <a style="color: inherit; text-decoration: none;" routerLink="/thirdparty" (click)=setIframeURL(tMenu.entries[0].url)
+                routerLinkActive #rla="routerLinkActive"
+                translate
+          >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.entries[0].label}}</a>
+          <a style="color: inherit; text-decoration: none; padding-left: 0.5rem;" [href]="tMenu.entries[0].url" target="_blank">
+            <fa-icon icon="external-link-alt"></fa-icon>
+          </a>
         </div>
       </li>
       <li>
@@ -60,4 +68,3 @@
     </ul>
   </div>
 </nav>
-
