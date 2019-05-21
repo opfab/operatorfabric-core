@@ -18,30 +18,29 @@ export enum CardActionTypes {
 export class LoadCard implements Action {
     readonly type = CardActionTypes.LoadCard;
 
-    constructor(public payload: { id: string }) {
-    }
+    /* istanbul ignore next */
+    constructor(public payload: { id: string }) {}
 }
 export class LoadCardFailure implements Action {
     readonly type = CardActionTypes.LoadCardFailure;
 
-    constructor(public payload: { error: Error }) {
-    }
+    /* istanbul ignore next */
+    constructor(public payload: { error: Error }) {}
 }
 
 export class LoadCardSuccess implements Action {
     readonly type = CardActionTypes.LoadCardSuccess;
 
-    constructor(public payload: { card: Card }) {
-    }
+    /* istanbul ignore next */
+    constructor(public payload: { card: Card }) {}
 }
 
 export class HandleUnexpectedError implements Action {
     /* istanbul ignore next */
     readonly type = CardActionTypes.HandleUnexpectedError;
-    /* istanbul ignore next */
-    constructor(public payload: {error: Error}) {
 
-    }
+    /* istanbul ignore next */
+    constructor(public payload: {error: Error}) {}
 }
 
 export type CardActions =

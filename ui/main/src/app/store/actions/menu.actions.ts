@@ -18,12 +18,14 @@ export enum MenuActionTypes {
 export class LoadMenu implements Action {
     readonly type = MenuActionTypes.LoadMenu;
 
+    /* istanbul ignore next */
     constructor() {
     }
 }
 export class LoadMenuFailure implements Action {
     readonly type = MenuActionTypes.LoadMenuFailure;
 
+    /* istanbul ignore next */
     constructor(public payload: { error: Error }) {
     }
 }
@@ -31,6 +33,7 @@ export class LoadMenuFailure implements Action {
 export class LoadMenuSuccess implements Action {
     readonly type = MenuActionTypes.LoadMenuSuccess;
 
+    /* istanbul ignore next */
     constructor(public payload: { menu: ThirdMenu[] }) {
     }
 }
@@ -38,6 +41,7 @@ export class LoadMenuSuccess implements Action {
 export class HandleUnexpectedError implements Action {
     readonly type = MenuActionTypes.HandleUnexpectedError;
 
+    /* istanbul ignore next */
     constructor(public payload: {error: Error}) {
 
     }

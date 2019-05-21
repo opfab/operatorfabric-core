@@ -15,12 +15,15 @@ export enum FeedActionTypes {
 }
 
 export class ApplyFilter implements Action {
-    readonly type = FeedActionTypes.ApplyFilter
+    readonly type = FeedActionTypes.ApplyFilter;
+    /* istanbul ignore next */
     constructor(public payload:{name: FilterType, active: boolean, status: any}){}
 }
 
 export class InitFilters implements Action {
-    readonly type = FeedActionTypes.InitFilter
+    readonly type = FeedActionTypes.InitFilter;
+
+    /* istanbul ignore next */
     constructor(public payload:{filters: Map<FilterType,Filter>}){}
 }
 

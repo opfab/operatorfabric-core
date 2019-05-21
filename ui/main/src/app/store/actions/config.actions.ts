@@ -20,6 +20,7 @@ export class LoadConfig implements Action {
 export class LoadConfigFailure implements Action {
     readonly type = ConfigActionTypes.LoadConfigFailure;
 
+    /* istanbul ignore next */
     constructor(public payload: { error: Error }) {
     }
 }
@@ -27,6 +28,7 @@ export class LoadConfigFailure implements Action {
 export class LoadConfigSuccess implements Action {
     readonly type = ConfigActionTypes.LoadConfigSuccess;
 
+    /* istanbul ignore next */
     constructor(public payload: { config: any }) {
     }
 }

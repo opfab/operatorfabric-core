@@ -69,12 +69,11 @@ describe('AppComponent', () => {
       expect(app.title).toEqual('OperatorFabric');
     }));
 
-    // it('should render title in the toolbar', async(() => {
-    //     expect(component).toBeDefined();
-    //     const toolBarText = fixture.debugElement.query(By.directive(MatToolbar)).nativeElement;
-    //     fixture.detectChanges();
-    //     expect(toolBarText).toBeDefined();
-    //     expect(toolBarText).toBeTruthy();
-    //     expect(toolBarText.textContent).toContain('OperatorFabric');
-    // }));
+    it('should init the app', async(() => {
+        const app = fixture.debugElement.componentInstance;
+        app.ngOnInit()
+        fixture.detectChanges();
+        expect(app).toBeTruthy();
+    }));
+
 });

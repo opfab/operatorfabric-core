@@ -35,8 +35,8 @@ export class PayloadForSuccessfulAuthentication {
  *
  */
 export class InitAuthStatus implements Action {
-    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.InitAuthStatus;
+    /* istanbul ignore next */
     constructor(public payload:{code: string}){}
 }
 
@@ -63,8 +63,8 @@ export class CheckAuthenticationStatus implements Action {
 export class AcceptLogIn implements Action {
     readonly type = AuthenticationActionTypes.AcceptLogIn;
 
-    constructor(public payload: PayloadForSuccessfulAuthentication) {
-    }
+    /* istanbul ignore next */
+    constructor(public payload: PayloadForSuccessfulAuthentication) {}
 }
 
 /**
@@ -76,6 +76,7 @@ export class AcceptLogIn implements Action {
 export class TryToLogIn implements Action {
     readonly type= AuthenticationActionTypes.TryToLogIn;
 
+    /* istanbul ignore next */
     constructor(public payload: {username: string, password: string}){}
 }
 
@@ -106,8 +107,8 @@ export class TryToLogOut implements Action {
 export class RejectLogIn implements Action {
     readonly type = AuthenticationActionTypes.RejectLogIn;
 
-    constructor(public payload: { denialReason: string }) {
-    }
+    /* istanbul ignore next */
+    constructor(public payload: { denialReason: string }) {}
 }
 
 /**
@@ -123,6 +124,7 @@ export class RejectLogIn implements Action {
 export class AcceptLogOut implements Action {
     readonly type = AuthenticationActionTypes.AcceptLogOut;
 
+    /* istanbul ignore next */
     constructor(){}
 }
 

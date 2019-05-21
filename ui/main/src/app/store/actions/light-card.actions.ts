@@ -27,6 +27,7 @@ export class LoadLightCards implements Action {
 export class LoadLightCardsSuccess implements Action {
     readonly type = LightCardActionTypes.LoadLightCardsSuccess;
 
+    /* istanbul ignore next */
     constructor(public payload: { lightCards: LightCard[] }) {
     }
 }
@@ -34,6 +35,7 @@ export class LoadLightCardsSuccess implements Action {
 export class LoadLightCardsExtendedData implements Action {
     readonly type = LightCardActionTypes.LoadLightCardsExtendedData;
 
+    /* istanbul ignore next */
     constructor() {
     }
 }
@@ -41,6 +43,7 @@ export class LoadLightCardsExtendedData implements Action {
 export class LoadLightCardsFailure implements Action {
     readonly type = LightCardActionTypes.LoadLightCardsFailure;
 
+    /* istanbul ignore next */
     constructor(public payload: { error: Error }) {
     }
 }
@@ -56,6 +59,7 @@ export class SelectLightCard implements Action {
 export class AddLightCardFailure implements Action {
     readonly type = LightCardActionTypes.AddLightCardFailure;
 
+    /* istanbul ignore next */
     constructor(public payload: { error: Error }) {
     }
 }
@@ -63,6 +67,7 @@ export class AddLightCardFailure implements Action {
 export class UpdatedSubscription implements Action {
     readonly type = LightCardActionTypes.UpdatedSubscription;
 
+    /* istanbul ignore next */
     constructor() {
     }
 }
