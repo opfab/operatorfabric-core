@@ -1,0 +1,4 @@
+# Replace "your.public.domain" by the public FQDN used to access opfab services
+- op: replace
+  path: /spec/rules/0/host
+  value: your.public.domain
