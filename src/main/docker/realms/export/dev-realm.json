@@ -382,7 +382,7 @@
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "opfab-keycloak-secret",
-    "redirectUris" : [ "http://localhost:2002/ui","http://localhost:4200" ],
+    "redirectUris" : [ "http://localhost:2002/ui/","http://localhost:4200" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
