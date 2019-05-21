@@ -97,7 +97,7 @@ export class AuthenticationService {
         params.append('grant_type', 'authorization_code');
 // beware clientId for token defines a type of authentication
         params.append('clientId', this.clientId);
-        params.append('redirect_uri', window.location.origin);
+        params.append('redirect_uri', AuthenticationService.computeRedirectUri());
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
         return this.handleNewToken(this.httpClient.post<AuthObject>(this.askTokenUrl, params.toString(), {headers: headers}));
@@ -207,6 +207,8 @@ export class AuthenticationService {
         );
     }
 
+
+
     /**
      * helper method to convert an {AuthObject} instance into a {PayloadForSuccessfulAuthentication} instance.
      * @param payload
@@ -239,7 +241,13 @@ export class AuthenticationService {
     public moveToCodeFlowLoginPage() {
         if (!this.clientId || !this.clientSecret)
             return throwError('The authentication service is no correctly iniitialized');
-        window.location.href = `${environment.urls.auth}/code/redirect_uri=${location.origin}`;
+        window.location.href = `${environment.urls.auth}/code/redirect_uri=${AuthenticationService.computeRedirectUri()}`;
+    }
+
+    static computeRedirectUri(){
+        const uriBase = location.origin;
+        const pathEnd = (location.pathname.length > 1)?location.pathname:'';
+        return `${uriBase}${pathEnd}`
     }
 
     static decodeToken(token: string): any {
