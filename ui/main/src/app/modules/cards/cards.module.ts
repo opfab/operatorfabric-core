@@ -20,13 +20,6 @@ import {HandlebarsService} from "./services/handlebars.service";
   imports: [
     CommonModule,
       TranslateModule
-      // TranslateModule.forChild({
-      //     loader: {
-      //         provide: TranslateLoader,
-      //         useFactory: ThirdsI18nLoaderFactory,
-      //         deps:[ThirdsService]},
-      //     useDefaultLang: false
-      // })
   ],
     exports: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
     providers: [HandlebarsService]
