@@ -6,7 +6,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="col-12">
             <form [formGroup]="userForm" (ngSubmit)="onSubmit()" [ngClass]="{'is-invalid': userForm.hasError('authentication.error')}"
               *ngIf="!(useCodeFlow$|async)">
                 <div class="form-group login-form">
@@ -26,6 +26,7 @@
                 </div>
             </form>
             <button class="btn btn-primary" (click)="codeFlow()" translate [translateParams]="codeProvider" *ngIf="(useCodeFlow$|async)">login.login.code</button>
+            <div class="alert alert-danger" *ngIf="loginMessage">{{loginMessage.i18n.key|translate:loginMessage.i18n.parameters}}</div>
         </div>
     </div>
 </div>

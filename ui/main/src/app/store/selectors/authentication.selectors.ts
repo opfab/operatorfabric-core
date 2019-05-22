@@ -13,3 +13,4 @@ export const selectAuthenticationState = createFeatureSelector<AuthState>('authe
 
 export const selectExpirationTime = createSelector(selectAuthenticationState, fromAuthentication.getExpirationTime);
 export const selectCode = createSelector(selectAuthenticationState, (authState)=>authState.code);
+export const selectMessage = createSelector(selectAuthenticationState, (authState)=>authState.message);

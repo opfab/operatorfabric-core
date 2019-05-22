@@ -35,6 +35,16 @@
     "login":{
       "password":"Sign In",
       "code": "Sign in using {{name}}"
+    },
+    "error":{
+      "authenticate":"Wrong login or password",
+      "code":"Wrong authentication code",
+      "unavailable":"Authentication service is currently unavailable",
+      "unexpected":"An unexpected error was detected during login: {{error}}",
+      "token": {
+        "invalid": "Invalid token stored",
+        "expiration": "The stored token has expired"
+      }
     }
   }
 }

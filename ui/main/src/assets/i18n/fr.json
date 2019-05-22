@@ -35,6 +35,16 @@
     "login":{
       "password":"Se connecter",
       "code": "Se connecter avec {{name}}"
+    },
+    "error":{
+      "authenticate":"Identifiant ou mot de passe incorrect",
+      "code":"Mauvais code d'authentification",
+      "unavailable":"ALe service d'authentification n'est pas disponnible",
+      "unexpected":"Une erreur inattendue a été détectée : {{error}}",
+      "token": {
+        "invalid": "Le jeton conservé est invalide",
+        "expiration": "Le jeton conservé a expiré"
+      }
     }
   }
 }

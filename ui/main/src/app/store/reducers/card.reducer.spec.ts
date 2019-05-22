@@ -50,7 +50,7 @@ describe('Card Reducer', () => {
         });
     });
     describe('LoadCardFailure', () => {
-        it('should set loading to false and error to specific message', () => {
+        it('should set loading to false and message to specific message', () => {
             const actualCard = getOneRandomCard();
             const previousState: CardState = {
                 selected: actualCard,

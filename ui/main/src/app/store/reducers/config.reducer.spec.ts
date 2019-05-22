@@ -54,7 +54,7 @@ describe('Config Reducer', () => {
         });
     });
     describe('LoadConfigFailure', () => {
-        it('should set loading to false and error to specific message', () => {
+        it('should set loading to false and message to specific message', () => {
             const actualConfig = {test:'config'};
             const previousState: ConfigState = {
                 config: actualConfig,

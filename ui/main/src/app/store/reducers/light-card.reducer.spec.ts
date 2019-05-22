@@ -40,7 +40,7 @@ describe('LightCard Reducer', () => {
   });
 
   describe('LoadLightCardsFailure', () => {
-    it('should leave state unchanged with an additional error message', () =>{
+    it('should leave state unchanged with an additional message message', () =>{
 
 
       const severalRandomLightCards = getSeveralRandomLightCards(5);
@@ -62,7 +62,7 @@ describe('LightCard Reducer', () => {
   });
 
   describe('AddLightCardFailure', () => {
-    it('should leave state unchanged with an additional error message', () => {
+    it('should leave state unchanged with an additional message message', () => {
       const severalRandomLightCards = getSeveralRandomLightCards(5);
       const previousState = lightCardEntityAdapter.addAll(severalRandomLightCards,feedInitialState);
 

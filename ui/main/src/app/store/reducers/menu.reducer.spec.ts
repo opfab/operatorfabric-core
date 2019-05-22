@@ -50,7 +50,7 @@ describe('Menu Reducer', () => {
         });
     });
     describe('LoadMenuFailure', () => {
-        it('should set loading to false and error to specific message', () => {
+        it('should set loading to false and message to specific message', () => {
             const actualMenu = getRandomMenu();
             const previousState: MenuState = {
                 menu: actualMenu,

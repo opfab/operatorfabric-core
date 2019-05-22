@@ -26,6 +26,9 @@ import {AppState} from "@ofStore/index";
 import {Router} from "@angular/router";
 import {ConfigActionTypes} from "@ofActions/config.actions";
 import {selectCode} from "@ofSelectors/authentication.selectors";
+import {Message, MessageLevel} from "@ofModel/message.model";
+import {I18n} from "@ofModel/i18n.model";
+import {Map} from "@ofModel/map";
 
 /**
  * Management of the authentication of the current user
@@ -81,9 +84,26 @@ export class AuthenticationEffects {
                     const payload = action.payload;
                     return this.authService.askTokenFromPassword(payload.username, payload.password).pipe(
                         map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
-                        catchError(error => {
-                                console.error('error while trying log in', error);
-                                return of(new RejectLogIn({denialReason: 'unable to authenticate the user'}));
+                        catchError(errorResponse => {
+                                let message, key;
+                                let params = new Map<string>()
+                                switch (errorResponse.status) {
+                                    case 401:
+                                        message = 'Unable to authenticate the user';
+                                        key = 'login.error.authenticate';
+                                        break;
+                                    case 0:
+                                    case 500:
+                                        message = 'Authentication service currently unavailable';
+                                        key = 'login.error.unavailable';
+                                        break;
+                                    default:
+                                        message = 'Unexpected error';
+                                        key = 'login.error.unexpected';
+                                        params['error'] = errorResponse.message;
+                                }
+                                console.error(message, errorResponse);
+                                return of(new RejectLogIn({error: new Message(message, MessageLevel.ERROR, new I18n(key, params))}));
                             }
                         ));
                 })
@@ -170,8 +190,8 @@ export class AuthenticationEffects {
             .pipe(
                 ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
                 switchMap(() => {
-                        return this.authService.checkAuthentication(AuthenticationService.extractToken())
-                            .pipe(catchError(()=>of(null)));
+                    return this.authService.checkAuthentication(AuthenticationService.extractToken())
+                        .pipe(catchError(() => of(null)));
 
                 }),
                 withLatestFrom(this.store.select(selectCode)),
@@ -181,30 +201,56 @@ export class AuthenticationEffects {
                             if (!!code)
                                 return this.authService.askTokenFromCode(code).pipe(
                                     map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
-                                    catchError(error => {
-                                            console.error('error while trying log in', error);
-                                            return of(this.handleRejectedLogin( 'unable to authenticate the user'));
+                                    catchError(errorResponse => {
+                                        let message, key;
+                                        let params = new Map<string>()
+                                        switch (errorResponse.status) {
+                                            case 401:
+                                                message = 'Unable to authenticate the user';
+                                                key = 'login.error.code';
+                                                break;
+                                            case 0:
+                                            case 500:
+                                                message = 'Authentication service currently unavailable';
+                                                key = 'login.error.unavailable';
+                                                break;
+                                            default:
+                                                message = 'Unexpected error';
+                                                key = 'login.error.unexpected';
+                                                params['error'] = errorResponse.message;
+                                        }
+                                        console.error(message, errorResponse);
+                                        return of(new RejectLogIn({error: new Message(message, MessageLevel.ERROR, new I18n(key, params))}));
                                         }
                                     ));
-                            return of(this.handleRejectedLogin('invalid token'));
+                            return of(this.handleRejectedLogin(new Message('The stored token is invalid',
+                                MessageLevel.ERROR,
+                                new I18n('login.error.token.invalid'))));
                         } else {
                             if (!AuthenticationService.isExpirationDateOver()) {
                                 const authInfo = AuthenticationService.extractIdentificationInformation();
                                 return of(new AcceptLogIn(authInfo));
                             }
-                            return of(this.handleRejectedLogin('expiration date exceeded'));
+                            return of(this.handleRejectedLogin(new Message('The stored token has expired',
+                                MessageLevel.ERROR,
+                                new I18n('login.error.token.expiration'))));
                         }
                     }
                 ),
                 catchError((err, caught) => {
                     console.error(err);
-                    return of(this.handleRejectedLogin(err));
+                    const parameters = new Map<string>();
+                    parameters['message'] = err;
+                    return of(this.handleRejectedLogin(new Message(err,
+                        MessageLevel.ERROR,
+                        new I18n('login.error.unexpected', parameters)
+                    )));
                 })
             );
 
-    handleRejectedLogin(errorMsg: string): AuthenticationActions {
+    handleRejectedLogin(errorMsg: Message): AuthenticationActions {
         AuthenticationService.clearAuthenticationInformation();
-        return new RejectLogIn({denialReason: errorMsg});
+        return new RejectLogIn({error: errorMsg});
 
     }
 

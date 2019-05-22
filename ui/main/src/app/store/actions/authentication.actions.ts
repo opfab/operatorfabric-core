@@ -7,6 +7,7 @@
 
 import {Action} from '@ngrx/store';
 import {Guid} from 'guid-typescript';
+import {Message} from "@ofModel/message.model";
 
 export enum AuthenticationActionTypes {
     InitAuthStatus = '[Authentication] Init Authentication Status',
@@ -108,7 +109,7 @@ export class RejectLogIn implements Action {
     readonly type = AuthenticationActionTypes.RejectLogIn;
 
     /* istanbul ignore next */
-    constructor(public payload: { denialReason: string }) {}
+    constructor(public payload: { error: Message }) {}
 }
 
 /**

@@ -15,6 +15,7 @@ import {
 } from "@ofActions/authentication.actions";
 import {Guid} from "guid-typescript";
 import {getRandomAlphanumericValue} from "@tests/helpers";
+import {Message} from "@ofModel/message.model";
 
 const previousGuid = Guid.create();
 const previousState: AuthState = {
@@ -22,7 +23,7 @@ const previousState: AuthState = {
     clientId: previousGuid,
     token: getRandomAlphanumericValue(100,150),
     expirationDate: new Date(2000, 1, 1),
-    denialReason: null,
+    message: null,
     code: null
 };
 
@@ -58,7 +59,7 @@ describe('Authentication Reducer', () => {
             const result = reducer(authInitialState, initAction);
             expect(result).not.toBe(authInitialState);
             expect(result.code).toEqual('123');
-            expect(result.denialReason).toEqual(authInitialState.denialReason);
+            expect(result.message).toEqual(authInitialState.message);
             expect(result.expirationDate).toBe(authInitialState.expirationDate);
             expect(result.identifier).toBe(authInitialState.identifier);
             expect(result.token).toBe(authInitialState.token);
@@ -73,7 +74,7 @@ describe('Authentication Reducer', () => {
             const result = reducer(authInitialState, acceptLoginAction);
             expect(result).not.toBe(authInitialState);
             expect(result.clientId).toBe(myPayload.clientId);
-            expect(result.denialReason).toBeNull();
+            expect(result.message).toBeNull();
             expect(result.expirationDate).toBe(myPayload.expirationDate);
             expect(result.identifier).toBe(myPayload.identifier);
             expect(result.token).toBe(myPayload.token);
@@ -89,7 +90,7 @@ describe('Authentication Reducer', () => {
             expect(result.token).toBeNull();
             expect(result.identifier).toBeNull();
             expect(result.expirationDate).toEqual(new Date(0));
-            expect(result.denialReason).toBeNull();
+            expect(result.message).toBeNull();
         });
 
         it('shuold leave an empty state on a logged state', () => {
@@ -104,11 +105,11 @@ describe('Authentication Reducer', () => {
 
     describe('RejectLogIn Action', () => {
 
-        it('should leave an empty state but with denialReason on an initial state', () => {
-            const denialReason = getRandomAlphanumericValue(5, 15);
-            const result = reducer(authInitialState, new RejectLogIn({denialReason: denialReason}));
+        it('should leave an empty state but with message on an initial state', () => {
+            const denialReason = new Message(getRandomAlphanumericValue(5, 15));
+            const result = reducer(authInitialState, new RejectLogIn({error: denialReason}));
             expect(result).not.toBe(authInitialState);
-            expect(result.denialReason).toBe(denialReason);
+            expect(result.message).toBe(denialReason);
             expect(result.clientId).toBeNull();
             expect(result.token).toBeNull();
             expect(result.identifier).toBeNull();
@@ -116,12 +117,12 @@ describe('Authentication Reducer', () => {
 
         });
 
-        it('should leave an empty state but with denialReason on a living state', () => {
-            const denialReason = getRandomAlphanumericValue(5, 15);
-            const result = reducer(previousState, new RejectLogIn({denialReason: denialReason}));
+        it('should leave an empty state but with message on a living state', () => {
+            const denialReason = new Message(getRandomAlphanumericValue(5, 15));
+            const result = reducer(previousState, new RejectLogIn({error: denialReason}));
             expect(result).not.toBe(authInitialState);
             expect(result).not.toBe(previousState);
-            expect(result.denialReason).toBe(denialReason);
+            expect(result.message).toBe(denialReason);
             expect(result.clientId).toBeNull();
             expect(result.token).toBeNull();
             expect(result.identifier).toBeNull();

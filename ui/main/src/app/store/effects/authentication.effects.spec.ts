@@ -28,6 +28,7 @@ import {hot} from "jasmine-marbles";
 import {ConfigActions, ConfigActionTypes, LoadConfig, LoadConfigSuccess} from "@ofActions/config.actions";
 import {ConfigEffects} from "@ofEffects/config.effects";
 import * as moment from 'moment';
+import {Message} from "@ofModel/message.model";
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -211,14 +212,14 @@ describe('AuthenticationEffects', () => {
     // })
 
     // it('should clear local storage of auth information when handling a failing login attempt', () => {
-    //     expect(effects.handleLogInAttempt(null)).toEqual(new RejectLogIn( { denialReason: 'invalid token'}));
+    //     expect(effects.handleLogInAttempt(null)).toEqual(new RejectLogIn( { message: 'invalid token'}));
     //     expect(authenticationService.clearAuthenticationInformation).toHaveBeenCalled();
     // })
 
     it('should clear local storage of auth information when sending RejectLogIn Action', () => {
-        const errorMsg = 'test';
+        const errorMsg = new Message('test');
         setStorageWithUserData();
-        expect(effects.handleRejectedLogin(errorMsg)).toEqual(new RejectLogIn( { denialReason: errorMsg}));
+        expect(effects.handleRejectedLogin(errorMsg)).toEqual(new RejectLogIn( { error: errorMsg}));
         expect(localStorage.getItem(LocalStorageAuthContent.identifier)).toBeNull();
         expect(localStorage.getItem(LocalStorageAuthContent.token)).toBeNull();
         expect(localStorage.getItem(LocalStorageAuthContent.expirationDate)).toBeNull();

@@ -6,6 +6,7 @@
  */
 
 import {Guid} from 'guid-typescript';
+import {Message} from "@ofModel/message.model";
 
 export interface AuthState {
     code: string;
@@ -13,7 +14,7 @@ export interface AuthState {
     clientId: Guid;
     token: string;
     expirationDate: Date;
-    denialReason: string;
+    message: Message;
 }
 
 export const authInitialState: AuthState = {
@@ -22,5 +23,5 @@ export const authInitialState: AuthState = {
     clientId: null,
     token: null,
     expirationDate: new Date(0),
-    denialReason: null
+    message: null
 };

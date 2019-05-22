@@ -63,11 +63,11 @@ export class AuthenticationService {
 
     /**
      * Call the web service which checks the authentication token. A valid token gives back the authentication information
-     * and an invalid one an error.
+     * and an invalid one an message.
      *
      * @param token - jwt token
      * @return an {Observable<CheckTokenResponse>} which contains the deserializable content of the token
-     * an error is thrown otherwise
+     * an message is thrown otherwise
      */
     checkAuthentication(token: string): Observable<CheckTokenResponse> {
         if (!!token) {

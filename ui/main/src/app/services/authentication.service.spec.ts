@@ -253,7 +253,7 @@ describe('AuthenticationService', () => {
             expect(conversion.identifier).toEqual('rte-operator');
             expect(conversion.token).toEqual(token);
             expect(conversion.clientId).toEqual(authObj.clientId);
-            expect(conversion.expirationDate.valueOf()).toBeCloseTo(Date.now()+123000);
+            expect(conversion.expirationDate.valueOf()/100).toBeCloseTo((Date.now()+123000)/100,1);
        });
         it('convert using expiration payload', ()=>{
             const authObj = new AuthObject(token,null, Guid.create(),'johndoe');

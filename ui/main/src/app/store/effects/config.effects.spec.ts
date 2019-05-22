@@ -63,7 +63,7 @@ describe('ConfigEffects', () => {
     describe('retry', () => {
         it('should return a LoadConfig if not much retry', () => {
             mockStore.select.withArgs(selectConfigRetry).and.returnValue(of(1));
-            const localActions$ = new Actions(hot('-a--', {a: new LoadConfigFailure({error: new Error('test error')})}));
+            const localActions$ = new Actions(hot('-a--', {a: new LoadConfigFailure({error: new Error('test message')})}));
 
             const expectedAction = new LoadConfig();
             const localExpected = hot('-c', {c: expectedAction});

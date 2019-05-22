@@ -88,13 +88,13 @@ describe('Thirds Services', () => {
         expect(thirdsService).toBeTruthy();
     });
     describe('#computeThirdsMenu', () => {
-        it('should return error on network problem', () => {
+        it('should return message on network problem', () => {
             thirdsService.computeThirdsMenu().subscribe(
-                result => fail('expected error not raised'),
+                result => fail('expected message not raised'),
                 error => expect(error.status).toBe(0));
             let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/`);
             expect(calls.length).toEqual(1);
-            calls[0].error(new ErrorEvent('Network error'))
+            calls[0].error(new ErrorEvent('Network message'))
         });
         it('should compute menu from thirds data', () => {
             thirdsService.computeThirdsMenu().subscribe(

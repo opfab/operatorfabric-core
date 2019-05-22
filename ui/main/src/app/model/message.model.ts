@@ -5,12 +5,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Map} from "@ofModel/map";
+import {I18n} from "@ofModel/i18n.model";
 
-export class I18n {
+export class Message {
+
     /* istanbul ignore next */
     constructor(
-        readonly key: string,
-        readonly parameters?: Map<string>) {
-    }
+        readonly message: string,
+        readonly level = MessageLevel.DEBUG,
+        readonly i18n?: I18n,
+    ){}
+}
+
+export enum MessageLevel {
+    ERROR, INFO, DEBUG
 }

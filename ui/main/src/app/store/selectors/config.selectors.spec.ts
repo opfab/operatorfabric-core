@@ -54,7 +54,7 @@ describe('ConfigSelectors', () => {
         expect(buildConfigSelector('test.path')(testAppState)).toEqual({});
     });
 
-    it('manage error config', () => {
+    it('manage message config', () => {
         let testAppState = {...emptyAppState, config: errorConfigState};
         expect(selectConfig(testAppState)).toEqual(errorConfigState);
         expect(selectConfigLoaded(testAppState)).toEqual(false);

@@ -16,7 +16,7 @@ import {FilterType} from "@ofServices/filter.service";
  *  * selectedCardId: the currently selected card id
  *  * lastCards the last cards added / updated to the feed
  *  * loading: weather there is an ongoing state modification
- *  * error: last error during state processing
+ *  * message: last message during state processing
  *  * filters: a collection of filter to apply to the rendered feed
  */
 export interface CardFeedState extends EntityState<LightCard> {

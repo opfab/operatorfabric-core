@@ -48,7 +48,7 @@ export class ConfigEffects {
     }
 
     /**
-     * Manages load -> service request -> success/error
+     * Manages load -> service request -> success/message
      */
     @Effect()
     loadById: Observable<Action> = this.actions$
@@ -65,7 +65,7 @@ export class ConfigEffects {
         );
 
     /**
-     * Manages load retry upon error
+     * Manages load retry upon message
      */
     @Effect()
     retry: Observable<Action>;
