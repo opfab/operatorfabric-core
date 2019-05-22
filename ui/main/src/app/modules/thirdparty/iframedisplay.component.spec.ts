@@ -60,8 +60,8 @@ describe('IframeDisplayComponent', () => {
 
     expect(component.iframeURL).toEqual(safeNewUrl);
     expect(rootElement.children.length).toBe(1);
-    expect(rootElement.children[0].localName).toEqual('iframe');
-    expect(rootElement.children[0].attributes['src'].value).toEqual('myURL');
+    expect(rootElement.children[0].children[0].localName).toEqual('iframe');
+    expect(rootElement.children[0].children[0].attributes['src'].value).toEqual('myURL');
   });
 
   it('should update selected url', () => {
@@ -80,8 +80,8 @@ describe('IframeDisplayComponent', () => {
 
     expect(component.iframeURL).toEqual(safeNewUrl1);
     expect(rootElement.children.length).toBe(1);
-    expect(rootElement.children[0].localName).toEqual('iframe');
-    expect(rootElement.children[0].attributes['src'].value).toEqual('myURL1');
+    expect(rootElement.children[0].children[0].localName).toEqual('iframe');
+    expect(rootElement.children[0].children[0].attributes['src'].value).toEqual('myURL1');
 
     //Update URL
     const newUrl2 = "myURL2";
@@ -91,8 +91,8 @@ describe('IframeDisplayComponent', () => {
 
     expect(component.iframeURL).toEqual(safeNewUrl2);
     expect(rootElement.children.length).toBe(1);
-    expect(rootElement.children[0].localName).toEqual('iframe');
-    expect(rootElement.children[0].attributes['src'].value).toEqual('myURL2');
+    expect(rootElement.children[0].children[0].localName).toEqual('iframe');
+    expect(rootElement.children[0].children[0].attributes['src'].value).toEqual('myURL2');
   });
 
 });

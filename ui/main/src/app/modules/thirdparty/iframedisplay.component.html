@@ -4,7 +4,9 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<iframe *ngIf="iframeURL; else noURL" [src]="iframeURL" frameborder="0" style="width: 100%" height="750"></iframe>
+<div *ngIf="iframeURL; else noURL" class="embed-responsive embed-responsive-16by9">
+<iframe class="embed-responsive-item" [src]="iframeURL" style="border:none" title="Third-party iframe"></iframe>
+</div>
 
 <ng-template #noURL>
 <p>
