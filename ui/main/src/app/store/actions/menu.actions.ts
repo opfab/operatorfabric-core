@@ -12,7 +12,8 @@ export enum MenuActionTypes {
     LoadMenu = '[Menu] Load Menu',
     LoadMenuSuccess = '[Menu] Load Menu Success',
     LoadMenuFailure = '[Menu] Load Menu Fail',
-    HandleUnexpectedError = '[Menu] Handle unexpected error'
+    HandleUnexpectedError = '[Menu] Handle unexpected error',
+    UpdateSelectedMenu = '[Menu] Update Selected Menu',
 }
 // needed by NGRX entities
 export class LoadMenu implements Action {
@@ -47,8 +48,20 @@ export class HandleUnexpectedError implements Action {
     }
 }
 
+/**
+ * Action used to update the state with the selected menu
+ */
+//TODO Describe usage (cf authentication example)
+export class UpdateSelectedMenu implements Action {
+    readonly type = MenuActionTypes.UpdateSelectedMenu;
+
+    /* istanbul ignore next */
+    constructor(public payload: {menu_id: string, menu_entry_id: string}) {}
+}
+
 export type MenuActions =
     LoadMenu
     | LoadMenuSuccess
     | LoadMenuFailure
-    | HandleUnexpectedError;
+    | HandleUnexpectedError
+    | UpdateSelectedMenu;

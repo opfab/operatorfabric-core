@@ -42,7 +42,7 @@
              *ngIf="tMenu.entries.length>1"
              [ngbCollapse]="!expandedMenu[index]">
           <div class="dropdown-item" *ngFor="let entry of tMenu.entries">
-            <a class="text-dark text-decoration-none" routerLink="/thirdparty" (click)=setIframeURL(entry.url) translate>
+            <a class="text-dark text-decoration-none" [routerLink]="['/thirdparty',tMenu.id,entry.id]" translate>
               {{tMenu.id}}.{{tMenu.version}}.{{entry.label}}</a>
             <a style="color:inherit; padding-left: 0.5rem;" [href]="entry.url" target="_blank">
               <fa-icon icon="external-link-alt"></fa-icon>
@@ -51,7 +51,7 @@
         </div>
         <!-- Navbar link if only one entry -->
         <div class="nav-link" style="display: flex" *ngIf="tMenu.entries.length==1">
-          <a style="color: inherit; text-decoration: none;" routerLink="/thirdparty" (click)=setIframeURL(tMenu.entries[0].url)
+          <a style="color: inherit; text-decoration: none;" [routerLink]="['/thirdparty',tMenu.id,tMenu.entries[0].id]"
                 routerLinkActive #rla="routerLinkActive"
                 translate
           >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.entries[0].label}}</a>

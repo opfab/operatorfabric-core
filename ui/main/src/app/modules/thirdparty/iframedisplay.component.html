@@ -4,12 +4,33 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<div *ngIf="iframeURL; else noURL" class="embed-responsive embed-responsive-16by9">
-<iframe class="embed-responsive-item" [src]="iframeURL" style="border:none" title="Third-party iframe"></iframe>
+<div *ngIf="selectedThirdMenu|async; else noMenu">
+
+  <div *ngIf="selectedThirdMenuEntry|async; else noMenuEntry">
+
+    <div *ngIf="iframeURL|async; else noURL" class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item" [src]="safeIframeURL|async" style="border:none" title="Third-party iframe"></iframe>
+    </div>
+
+    <ng-template #noURL>
+      <p>
+        No iframe URL to display.
+      </p>
+    </ng-template>
+
+  </div>
+
+  <ng-template #noMenuEntry>
+    <p>
+      There is no third-party menu entry with the id <em>{{(menu_entry_id|async)}}</em> in third-party menu <em>{{(menu_id|async)}}</em>.
+    </p>
+  </ng-template>
+
 </div>
 
-<ng-template #noURL>
-<p>
-  No iframe URL to display.
-</p>
+<ng-template #noMenu>
+  <p>
+    There is no third-party menu with the id <em>{{(menu_id|async)}}</em>.
+  </p>
 </ng-template>
+

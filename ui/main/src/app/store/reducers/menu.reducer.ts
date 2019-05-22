@@ -35,6 +35,14 @@ export function reducer(
                 error: `error while loading a single lightCard: '${action.payload.error}'`
             };
         }
+        case MenuActionTypes.UpdateSelectedMenu: {
+            return {
+                ...state,
+                selected_menu_id: action.payload.menu_id,
+                selected_menu_entry_id: action.payload.menu_entry_id
+            }
+        }
+
         default: {
             return state;
         }

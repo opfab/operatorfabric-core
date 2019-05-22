@@ -10,11 +10,15 @@ import {ThirdMenu} from "@ofModel/thirds.model";
 export interface MenuState{
     menu: ThirdMenu[],
     loading: boolean,
-    error:string
+    error:string,
+    selected_menu_id: string,
+    selected_menu_entry_id: string
 }
 
 export const menuInitialState: MenuState = {
     menu:[],
     loading: false,
-    error:null
+    error:null,
+    selected_menu_id: null,
+    selected_menu_entry_id: null
 }

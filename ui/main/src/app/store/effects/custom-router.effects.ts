@@ -15,6 +15,7 @@ import {ROUTER_NAVIGATION, RouterNavigationAction} from "@ngrx/router-store";
 import {filter, switchMap} from "rxjs/operators";
 import {LoadCard} from "@ofActions/card.actions";
 import {SelectLightCard} from "@ofActions/light-card.actions";
+import {UpdateSelectedMenu} from "@ofActions/menu.actions";
 
 @Injectable()
 export class CustomRouterEffects {
@@ -35,6 +36,20 @@ export class CustomRouterEffects {
             return [
                 new LoadCard({id: routerState.params['cid']}),
                 new SelectLightCard({selectedCardId: routerState.params['cid']})
+            ];
+        })
+    );
+
+    @Effect()
+    navigateToMenuURL: Observable<Action> = this.actions$.pipe(
+        ofType(ROUTER_NAVIGATION),
+        filter((action: RouterNavigationAction, index)=> {
+            return action.payload.event.url.indexOf("/thirdparty/")>=0;
+        }),
+        switchMap(action=>{
+            const routerState:any = action.payload.routerState;
+            return [
+                new UpdateSelectedMenu({menu_id: routerState.params['menu_id'],menu_entry_id: routerState.params['menu_entry_id']})
             ];
         })
     );
