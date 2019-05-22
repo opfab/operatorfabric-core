@@ -5,11 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 
 import {NavbarComponent} from './navbar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {RouterTestingModule} from '@angular/router/testing';
+import {Location} from "@angular/common";
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {IconComponent} from "../icon/icon.component";
@@ -20,6 +21,14 @@ import {By} from "@angular/platform-browser";
 import {ThirdsServiceMock} from "@tests/mocks/thirds.service.mock";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import clock = jasmine.clock;
+import {Router} from "@angular/router";
+import {Component} from "@angular/core";
+
+@Component({
+    template: ''
+})
+class DummyComponent {
+}
 
 describe('NavbarComponent', () => {
 
@@ -31,12 +40,20 @@ describe('NavbarComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [NgbModule.forRoot(),
-                RouterTestingModule,
+                RouterTestingModule.withRoutes([
+                    {
+                        path: 'feed', component: DummyComponent
+                    },
+                    {
+                        path: 'thirdparty', component: DummyComponent,
+                    },
+                    {path: '**', redirectTo: '/feed'}
+                ]),
                 StoreModule.forRoot(appReducer),
                 EffectsModule.forRoot([MenuEffects]),
                 FontAwesomeModule
             ],
-            declarations: [NavbarComponent, IconComponent],
+            declarations: [NavbarComponent, IconComponent, DummyComponent],
             providers: [{provide: store, useClass: Store},
                 {provide: ThirdsService, useClass: ThirdsServiceMock}]
         })
@@ -56,11 +73,20 @@ describe('NavbarComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should create plain link for single-entry third-party menu', () => {
+        const rootElement = fixture.debugElement;
+        expect(component).toBeTruthy();
+        expect(rootElement.queryAll(By.css('li > div.nav-link')).length).toBe(1)
+        expect(rootElement.queryAll(By.css('li > div.nav-link > a')).length).toBe(2) //Because there is two <a> for each menu entry: text link and icon
+        expect(rootElement.queryAll(By.css('li > div.nav-link > a > fa-icon')).length).toBe(1)
+    });
     it('should create toggles', () => {
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
         expect( rootElement.queryAll(By.css('li.dropdown')).length).toBe(1)
-        expect( rootElement.queryAll(By.css('li.dropdown > div a')).length).toBe(2)
+        expect( rootElement.queryAll(By.css('li.dropdown > div a')).length).toBe(4) //Because there is now two <a> for each menu entry: text link and icon
+        expect( rootElement.queryAll(By.css('li.dropdown > div a > fa-icon')).length).toBe(2)
         expect( rootElement.queryAll(By.css('li.nav-item')).length).toBe(4)
     });
     it('should toggle', (done) => {
@@ -85,4 +111,23 @@ describe('NavbarComponent', () => {
         ).toBe('true');
         done();
     });
+
+    it('should navigate to thirdparty route when text link is clicked (single link)',
+        async(inject([Router, Location], (router: Router, location: Location) => {
+        const rootElement = fixture.debugElement;
+        expect(component).toBeTruthy();
+        rootElement.queryAll(By.css('li > div.nav-link > a'))[0].nativeElement.click();
+        fixture.whenStable().then(() => {
+            expect(location.path()).toEqual('/thirdparty');
+        });
+    })));
+
+    it('should navigate to thirdparty route when text link is clicked (dropdown)',
+        async(inject([Router, Location], (router: Router, location: Location) => {const rootElement = fixture.debugElement;
+        expect(component).toBeTruthy();
+        rootElement.queryAll(By.css('li.dropdown > div a'))[0].nativeElement.click();
+        fixture.whenStable().then(() => {
+            expect(location.path()).toEqual('/thirdparty');
+        });
+    })));
 });

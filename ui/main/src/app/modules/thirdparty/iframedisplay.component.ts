@@ -25,10 +25,12 @@ export class IframeDisplayComponent implements OnInit {
   ngOnInit() {
 
     this.iframeService.urlUpdate.subscribe(
-        iframeURL => {
-          this.iframeURL = iframeURL;
-        }
+        iframeURL => this.setUrl(iframeURL)
     )
+  }
+
+  setUrl(iframeURL : SafeUrl){
+    this.iframeURL = iframeURL;
   }
 
 }
