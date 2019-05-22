@@ -19,6 +19,10 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "../../translate.config";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {RejectLogIn, TryToLogIn} from "@ofActions/authentication.actions";
+import {Message, MessageLevel} from "@ofModel/message.model";
+import {I18n} from "@ofModel/i18n.model";
+import {By} from "@angular/platform-browser";
 
 describe('LoginComponent', () => {
 
@@ -69,5 +73,30 @@ describe('LoginComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+    it('should display error message', () => {
+        store.dispatch(new RejectLogIn({error: new Message('message', MessageLevel.ERROR, new I18n("message.key"))}));
+        component.ngOnInit();
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
+        expect( fixture.debugElement.queryAll(By.css('.alert')).length).toBe(1);
+        expect( fixture.nativeElement.querySelector('.alert').innerText).toEqual("message.key");
+    });
+    it('should submit', () => {
+        spyOn(store, 'dispatch').and.callThrough();
+        component.ngOnInit();
+        component.userForm.get('identifier').setValue('id');
+        component.userForm.get('password').setValue('pwd');
+        component.onSubmit();
+        expect( store.dispatch).toHaveBeenCalledWith(new TryToLogIn({username: 'id', password: 'pwd'}));
+    });
+    it('should reset', () => {
+        spyOn(store, 'dispatch').and.callThrough();
+        component.ngOnInit();
+        component.userForm.get('identifier').setValue('id');
+        component.userForm.get('password').setValue('pwd');
+        component.resetForm();
+        expect(component.userForm.get('identifier').value).toBeNull();
+        expect(component.userForm.get('password').value).toBeNull();
     });
 });

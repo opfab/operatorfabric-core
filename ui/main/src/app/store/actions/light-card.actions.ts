@@ -86,9 +86,6 @@ export type LightCardActions =
     | LoadLightCardsSuccess
     | LoadLightCardsFailure
     | SelectLightCard
-    // | LoadLightCard
-    // | LoadLightCardSuccess
-    // | LoadLightCardFailure
     | AddLightCardFailure
     | UpdatedSubscription
     | HandleUnexpectedError;

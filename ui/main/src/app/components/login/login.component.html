@@ -17,9 +17,9 @@
                         <input type="password" formControlName="password" class="form-control"/>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-primary" [disabled]="userForm.invalid"
+                        <button id="login" class="btn btn-primary" [disabled]="userForm.invalid"
                                 translate>login.login.password</button>
-                        <button type="reset" class="btn btn-primary" (click)="resetForm()"
+                        <button id="reset" type="reset" class="btn btn-primary" (click)="resetForm()"
                                 [disabled]="userForm.untouched"
                                 translate>login.reset</button>
                     </div>
