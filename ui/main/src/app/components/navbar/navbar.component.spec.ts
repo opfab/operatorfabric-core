@@ -73,7 +73,6 @@ describe('NavbarComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-
     it('should create plain link for single-entry third-party menu', () => {
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
@@ -81,7 +80,7 @@ describe('NavbarComponent', () => {
         expect(rootElement.queryAll(By.css('li > div.nav-link > a')).length).toBe(2) //Because there is two <a> for each menu entry: text link and icon
         expect(rootElement.queryAll(By.css('li > div.nav-link > a > fa-icon')).length).toBe(1)
     });
-    it('should create toggles', () => {
+    it('should create menu', () => {
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
         expect( rootElement.queryAll(By.css('li.dropdown')).length).toBe(1)
@@ -89,7 +88,7 @@ describe('NavbarComponent', () => {
         expect( rootElement.queryAll(By.css('li.dropdown > div a > fa-icon')).length).toBe(2)
         expect( rootElement.queryAll(By.css('li.nav-item')).length).toBe(4)
     });
-    it('should toggle', (done) => {
+    it('should toggle menu ', (done) => {
         clock().install();
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();

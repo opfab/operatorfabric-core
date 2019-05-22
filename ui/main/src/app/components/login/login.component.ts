@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     hide: boolean;
     userForm: FormGroup;
     useCodeFlow$: Observable<boolean>;
-    loginMessage: Message
+    loginMessage: Message;
     // codeProvider$: Observable<any>;
     codeProvider: any;
     /* istanbul ignore next */
