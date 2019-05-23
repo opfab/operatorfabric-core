@@ -17,6 +17,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {isInTheFuture} from "@ofServices/authentication.service";
 import {LoadConfig} from "@ofActions/config.actions";
 import {selectConfigLoaded, selectMaxedRetries} from "@ofSelectors/config.selectors";
+import * as _ from "lodash";
 
 @Component({
     selector: 'of-root',
@@ -33,9 +34,10 @@ export class AppComponent implements OnInit {
 
     constructor(private store: Store<AppState>,
                 private translate: TranslateService) {
-
         this.getRoutePE = this.store.pipe(select(selectRouterState));
         this.translate.setDefaultLang('en');
+        const browserLang=this.translate.getBrowserLang();
+        this.translate.use(browserLang);
     }
 
     /**
