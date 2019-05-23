@@ -131,14 +131,6 @@ subprojects {
 			url = 'https://www.mozilla.org/en-US/MPL/'
 		}
 		}
-        developers{
-            delevoper{id='one'
-            name='dev one'
-            email='dev.one@rte-france.com'}
-            developer{id='two'
-            name='dev two'
-            email='dev.two@rte-france.com'}
-        }
 		scm {
 		url = 'https://github.com/opfab/operatorfabric-core'
 		connection = 'scm:git@github.com:opfab/operatorfabric-core.git'
