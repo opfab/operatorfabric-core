@@ -9,7 +9,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {CardService} from '@ofServices/card.service';
 import {Observable} from 'rxjs';
-import {catchError, filter, map, switchMap} from 'rxjs/operators';
+import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {
     AddLightCardFailure,
     HandleUnexpectedError,
@@ -39,6 +39,7 @@ export class CardOperationEffects {
             ofType(AuthenticationActionTypes.AcceptLogIn),
             switchMap(() => this.service.getCardOperation()
                 .pipe(
+                    takeUntil(this.service.unsubscribe$),
                     map(operation => {
                         if (operation.type && operation.type.toString() === 'ADD') {
                             const opCards = operation.cards;

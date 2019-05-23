@@ -21,6 +21,13 @@ export function reducer(
                 lastCards: action.payload.lightCards
             };
         }
+        case LightCardActionTypes.EmptyLightCards: {
+            return {
+                ...LightCardAdapter.removeAll(state),
+                loading: false,
+                lastCards:[]
+            };
+        }
 
         case LightCardActionTypes.LoadLightCardsFailure: {
             return {

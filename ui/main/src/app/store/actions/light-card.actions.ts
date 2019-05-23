@@ -10,6 +10,7 @@ import {LightCard} from '@ofModel/light-card.model';
 
 export enum LightCardActionTypes {
     LoadLightCards = '[LCard] Load',
+    EmptyLightCards = '[LCard] Empty',
     LoadLightCardsSuccess = '[LCard] Load Success',
     LoadLightCardsExtendedData = '[LCard] Load Extended Data',
     LoadLightCardsFailure = '[LCard] Load Fail',
@@ -22,6 +23,11 @@ export enum LightCardActionTypes {
 export class LoadLightCards implements Action {
     /* istanbul ignore next */
     readonly type = LightCardActionTypes.LoadLightCards;
+}
+
+export class EmptyLightCards implements Action {
+    /* istanbul ignore next */
+    readonly type = LightCardActionTypes.EmptyLightCards;
 }
 
 export class LoadLightCardsSuccess implements Action {
@@ -88,4 +94,5 @@ export type LightCardActions =
     | SelectLightCard
     | AddLightCardFailure
     | UpdatedSubscription
-    | HandleUnexpectedError;
+    | HandleUnexpectedError
+    | EmptyLightCards;

@@ -8,7 +8,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
-import {Store} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {
     AcceptLogIn,
     AcceptLogOut,
@@ -29,6 +29,8 @@ import {selectCode} from "@ofSelectors/authentication.selectors";
 import {Message, MessageLevel} from "@ofModel/message.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
+import {CardService} from "@ofServices/card.service";
+import {EmptyLightCards} from "@ofActions/light-card.actions";
 
 /**
  * Management of the authentication of the current user
@@ -47,6 +49,7 @@ export class AuthenticationEffects {
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private authService: AuthenticationService,
+                private cardService: CardService,
                 private router: Router) {
     }
 
@@ -121,14 +124,19 @@ export class AuthenticationEffects {
      * @typedef {Observable<AuthenticationActions>}
      */
     @Effect()
-    TryToLogOut: Observable<AuthenticationActions> =
+    TryToLogOut: Observable<Action> =
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.TryToLogOut),
-            map((action: TryToLogOut) => {
-                AuthenticationService.clearAuthenticationInformation();
-                return new AcceptLogOut();
+            switchMap((action: TryToLogOut) => {
+                this.resetState();
+                return of(new EmptyLightCards(),new AcceptLogOut());
             })
         );
+
+    private resetState() {
+        AuthenticationService.clearAuthenticationInformation();
+        this.cardService.unsubscribeCardOperation();
+    }
 
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.AcceptLogOut} type.

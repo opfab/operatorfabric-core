@@ -5,10 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import {
-    AcceptLogIn, AcceptLogOut, AuthenticationActions, AuthenticationActionTypes,
+    AcceptLogOut,
+    AuthenticationActions,
+    AuthenticationActionTypes,
     CheckAuthenticationStatus,
     PayloadForSuccessfulAuthentication,
-    RejectLogIn, TryToLogIn, TryToLogOut
+    RejectLogIn,
+    TryToLogIn,
+    TryToLogOut
 } from '@ofActions/authentication.actions';
 
 import {async, TestBed} from '@angular/core/testing';
@@ -22,23 +26,26 @@ import {Guid} from 'guid-typescript';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {Router} from "@angular/router";
-import SpyObj = jasmine.SpyObj;
-import createSpyObj = jasmine.createSpyObj;
-import {hot} from "jasmine-marbles";
-import {ConfigActions, ConfigActionTypes, LoadConfig, LoadConfigSuccess} from "@ofActions/config.actions";
-import {ConfigEffects} from "@ofEffects/config.effects";
+import {cold, hot} from "jasmine-marbles";
+import {LoadConfigSuccess} from "@ofActions/config.actions";
 import * as moment from 'moment';
 import {Message} from "@ofModel/message.model";
+import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
+import {CardService} from "@ofServices/card.service";
+import {skip} from "rxjs/operators";
+import {EmptyLightCards, LightCardActionTypes} from "@ofActions/light-card.actions";
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
     let effects: AuthenticationEffects;
     let mockStore: SpyObj<Store<AppState>>;
     let authenticationService: SpyObj<AuthenticationService>;
+    let cardService: SpyObj<CardService>;
     let router: SpyObj<Router>;
 
     beforeEach(async(() => {
-        const routerSpy = createSpyObj('Router',['navigate']);
+        const routerSpy = createSpyObj('Router', ['navigate']);
         const authenticationServiceSpy = createSpyObj('authenticationService'
             , ['extractToken',
                 'verifyExpirationDate',
@@ -48,12 +55,15 @@ describe('AuthenticationEffects', () => {
                 'checkAuthentication',
                 'askTokenFromCode'
             ]);
-        const storeSpy = createSpyObj('Store', ['dispatch','select']);
+        const cardServiceSpy = createSpyObj('CardService'
+            , ['unsubscribeCardOperation']);
+        const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
         TestBed.configureTestingModule({
             providers: [
                 AuthenticationEffects,
                 provideMockActions(() => actions$),
                 {provide: AuthenticationService, useValue: authenticationServiceSpy},
+                {provide: CardService, useValue: cardServiceSpy},
                 {provide: Store, useValue: storeSpy},
                 {provide: Router, useValue: routerSpy}
             ]
@@ -66,6 +76,7 @@ describe('AuthenticationEffects', () => {
     beforeEach(() => {
         actions$ = TestBed.get(Actions);
         authenticationService = TestBed.get(AuthenticationService);
+        cardService = TestBed.get(CardService);
         router = TestBed.get(Router);
         mockStore = TestBed.get(Store);
     });
@@ -75,54 +86,56 @@ describe('AuthenticationEffects', () => {
     });
 
     it('returns CheckAuthenticationStatus on LoadConfigSuccess', () => {
-        const localActions$ = new Actions(hot('-a--', {a: new LoadConfigSuccess({config:{}})}));
-        effects = new AuthenticationEffects(mockStore, localActions$, null,null);
+        const localActions$ = new Actions(hot('-a--', {a: new LoadConfigSuccess({config: {}})}));
+        effects = new AuthenticationEffects(mockStore, localActions$, null, null, null);
         expect(effects).toBeTruthy();
         effects.checkAuthenticationWhenReady.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.CheckAuthenticationStatus));
 
     });
 
-    describe('TryToLogIn',()=>{
-        it('should success if JWT is generated from backend',()=>{
-            const localAction$ = new Actions(hot('-a--',{a:new TryToLogIn({username:'johndoe',password:'pwd'})}));
+    describe('TryToLogIn', () => {
+        it('should success if JWT is generated from backend', () => {
+            const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
             authenticationService.askTokenFromPassword.and.returnValue(of(
-                new PayloadForSuccessfulAuthentication('johndoe',Guid.create(),'fake-token',new Date())
+                new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', new Date())
             ));
-            effects = new AuthenticationEffects(mockStore, localAction$,authenticationService,null);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null);
             expect(effects).toBeTruthy();
-            effects.TryToLogIn.subscribe((action: AuthenticationActions) =>expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn))
+            effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn))
         });
-        it('should fail if JWT is not generated from backend',()=>{
-            const localAction$ = new Actions(hot('-a--',{a:new TryToLogIn({username:'johndoe',password:'pwd'})}));
+        it('should fail if JWT is not generated from backend', () => {
+            const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
             authenticationService.askTokenFromPassword.and.returnValue(throwError('Something went wrong'));
-            effects = new AuthenticationEffects(mockStore, localAction$,authenticationService,null);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null);
             expect(effects).toBeTruthy();
-            effects.TryToLogIn.subscribe((action: AuthenticationActions) =>expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn))
+            effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn))
         });
     });
 
-    describe('TryToLogOut',()=>{
-        it('should success and clear localstorage',()=>{
-            const localAction$ = new Actions(hot('-a--',{a:new TryToLogOut()}));
+    describe('TryToLogOut', () => {
+        it('should success and clear localstorage', () => {
+            const localAction$ = new Actions(hot('-a--', {a: new TryToLogOut()}));
             setStorageWithUserData();
-            effects = new AuthenticationEffects(mockStore, localAction$,null,null);
+            cardService.unsubscribeCardOperation.and.callFake(()=>{})
+            effects = new AuthenticationEffects(mockStore, localAction$, null, cardService, null);
             expect(effects).toBeTruthy();
-            effects.TryToLogOut.subscribe((action: AuthenticationActions) =>{
-                expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogOut);
-                expect(localStorage.getItem(LocalStorageAuthContent.identifier)).toBeNull();
-                expect(localStorage.getItem(LocalStorageAuthContent.token)).toBeNull();
-                expect(localStorage.getItem(LocalStorageAuthContent.expirationDate)).toBeNull();
-                expect(localStorage.getItem(LocalStorageAuthContent.clientId)).toBeNull();
-            });
+            const localExpected = hot('-(ab)', {a: new EmptyLightCards(), b:new AcceptLogOut()});
+            expect(effects.TryToLogOut).toBeObservable(localExpected);
+            // effects.TryToLogOut.subscribe(() => {
+            //     expect(localStorage.getItem(LocalStorageAuthContent.identifier)).toBeNull();
+            //     expect(localStorage.getItem(LocalStorageAuthContent.token)).toBeNull();
+            //     expect(localStorage.getItem(LocalStorageAuthContent.expirationDate)).toBeNull();
+            //     expect(localStorage.getItem(LocalStorageAuthContent.clientId)).toBeNull();
+            // });
         });
     });
-    describe('AcceptLogout',()=>{
-        it('should success and navigate',()=>{
-            const localAction$ = new Actions(hot('-a--',{a:new AcceptLogOut()}));
+    describe('AcceptLogout', () => {
+        it('should success and navigate', () => {
+            const localAction$ = new Actions(hot('-a--', {a: new AcceptLogOut()}));
             router.navigate.and.callThrough();
-            effects = new AuthenticationEffects(mockStore, localAction$, null,router);
+            effects = new AuthenticationEffects(mockStore, localAction$, null, null, router);
             expect(effects).toBeTruthy();
-            effects.AcceptLogOut.subscribe((action: AuthenticationActions) =>{
+            effects.AcceptLogOut.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogOutSuccess);
                 expect(router.navigate).toHaveBeenCalledWith(['/login']);
 
@@ -130,43 +143,43 @@ describe('AuthenticationEffects', () => {
         });
     });
 
-    describe('CheckAuthentication',()=>{
-        it('should success if has valid token',()=>{
-            const localAction$ = new Actions(hot('-a--',{a:new CheckAuthenticationStatus()}));
-            setStorageWithUserData(moment().add(1,'days').valueOf());
+    describe('CheckAuthentication', () => {
+        it('should success if has valid token', () => {
+            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
+            setStorageWithUserData(moment().add(1, 'days').valueOf());
             authenticationService.checkAuthentication.and.returnValue(of(
-                new CheckTokenResponse('johndoe',123,Guid.create().toString())
+                new CheckTokenResponse('johndoe', 123, Guid.create().toString())
             ));
             mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService,router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
             expect(effects).toBeTruthy();
-            effects.CheckAuthentication.subscribe((action: AuthenticationActions) =>{
+            effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn);
 
             });
         });
-        it('should fail if has valid expired token',()=>{
-            const localAction$ = new Actions(hot('-a--',{a:new CheckAuthenticationStatus()}));
-            setStorageWithUserData(moment().subtract(1,'days').valueOf());
+        it('should fail if has valid expired token', () => {
+            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
+            setStorageWithUserData(moment().subtract(1, 'days').valueOf());
             authenticationService.checkAuthentication.and.returnValue(of(
-                new CheckTokenResponse('johndoe',123,Guid.create().toString())
+                new CheckTokenResponse('johndoe', 123, Guid.create().toString())
             ));
             mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService,router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
             expect(effects).toBeTruthy();
-            effects.CheckAuthentication.subscribe((action: AuthenticationActions) =>{
+            effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
 
             });
         });
-        it('should fail if has no valid token and no code',()=>{
-            const localAction$ = new Actions(hot('-a--',{a:new CheckAuthenticationStatus()}));
-            setStorageWithUserData(moment().add(1,'days').valueOf());
+        it('should fail if has no valid token and no code', () => {
+            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
+            setStorageWithUserData(moment().add(1, 'days').valueOf());
             authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
             mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService,router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
             expect(effects).toBeTruthy();
-            effects.CheckAuthentication.subscribe((action: AuthenticationActions) =>{
+            effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
                 expect(localStorage.getItem(LocalStorageAuthContent.identifier)).toBeNull();
                 expect(localStorage.getItem(LocalStorageAuthContent.token)).toBeNull();
@@ -174,27 +187,27 @@ describe('AuthenticationEffects', () => {
                 expect(localStorage.getItem(LocalStorageAuthContent.clientId)).toBeNull();
             });
         });
-        it('should success if has no valid token and a valid code',()=>{
-            const localAction$ = new Actions(hot('-a--',{a:new CheckAuthenticationStatus()}));
+        it('should success if has no valid token and a valid code', () => {
+            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
             authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
             authenticationService.askTokenFromCode.and.returnValue(of(
-                new PayloadForSuccessfulAuthentication('johndoe',Guid.create(),'fake-token',moment().add(1,'days').toDate())
+                new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', moment().add(1, 'days').toDate())
             ));
             mockStore.select.and.returnValue(of('code'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService,router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
             expect(effects).toBeTruthy();
-            effects.CheckAuthentication.subscribe((action: AuthenticationActions) =>{
+            effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn);
             });
         });
-        it('should fail if has no valid token and an invalid code',()=>{
-            const localAction$ = new Actions(hot('-a--',{a:new CheckAuthenticationStatus()}));
+        it('should fail if has no valid token and an invalid code', () => {
+            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
             authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
             authenticationService.askTokenFromCode.and.returnValue(throwError('no valid code'));
             mockStore.select.and.returnValue(of('code'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService,router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
             expect(effects).toBeTruthy();
-            effects.CheckAuthentication.subscribe((action: AuthenticationActions) =>{
+            effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
             });
         });
@@ -219,7 +232,7 @@ describe('AuthenticationEffects', () => {
     it('should clear local storage of auth information when sending RejectLogIn Action', () => {
         const errorMsg = new Message('test');
         setStorageWithUserData();
-        expect(effects.handleRejectedLogin(errorMsg)).toEqual(new RejectLogIn( { error: errorMsg}));
+        expect(effects.handleRejectedLogin(errorMsg)).toEqual(new RejectLogIn({error: errorMsg}));
         expect(localStorage.getItem(LocalStorageAuthContent.identifier)).toBeNull();
         expect(localStorage.getItem(LocalStorageAuthContent.token)).toBeNull();
         expect(localStorage.getItem(LocalStorageAuthContent.expirationDate)).toBeNull();
@@ -228,7 +241,7 @@ describe('AuthenticationEffects', () => {
 
 });
 
-function setStorageWithUserData(expiration?){
+function setStorageWithUserData(expiration?) {
     localStorage.setItem(LocalStorageAuthContent.identifier, 'johndoe');
     localStorage.setItem(LocalStorageAuthContent.token, 'fake-token');
     localStorage.setItem(LocalStorageAuthContent.expirationDate, expiration);

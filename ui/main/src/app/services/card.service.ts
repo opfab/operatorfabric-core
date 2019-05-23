@@ -6,7 +6,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {CardOperation} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication.service';
@@ -17,6 +17,7 @@ import {GuidService} from "@ofServices/guid.service";
 
 @Injectable()
 export class CardService {
+    readonly unsubscribe$ = new Subject<void>();
     readonly cardOperationsUrl: string;
     readonly cardsUrl: string;
 
@@ -38,6 +39,10 @@ export class CardService {
             `${this.cardOperationsUrl}&notification=true&rangeStart=${minus2Hour.valueOf()}&rangeEnd=${plus48Hours.valueOf()}`
             , {headers: AuthenticationService.getSecurityHeader(),
                 heartbeatTimeout: 600000}));
+    }
+
+    unsubscribeCardOperation(){
+        this.unsubscribe$.next();
     }
 
     fetchCardOperation(eventSource: EventSourcePolyfill): Observable<CardOperation> {
