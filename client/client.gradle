@@ -134,7 +134,7 @@ subprojects {
 		scm {
 		url = 'https://github.com/opfab/operatorfabric-core'
 		connection = 'scm:git@github.com:opfab/operatorfabric-core.git'
-		developerConnection = 'scm:git@github.com:opfab/operatorfabric-core.git'
+		developerConnection = 'scm:git:ssh://git@github.com:opfab/operatorfabric-core.git'
        }
                    }
                }
@@ -142,7 +142,7 @@ subprojects {
            repositories{
                maven{
                    name='testRepo'
-                   url='build/repo'
+                   url='https://repo.maven.apache.org/maven2/'
                }
            }
        }
