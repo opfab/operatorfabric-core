@@ -141,10 +141,14 @@ subprojects {
 	       }
            repositories{
                maven{
-                   name='testRepo'
-                   url='https://repo.maven.apache.org/maven2/'
+                   url='https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+                   credentials {
+                       username = ossrhUsername
+                       password = ossrhPassword
+                   }
                }
-           }
+               }
+
        }
     apply plugin: 'signing'
     signing {
