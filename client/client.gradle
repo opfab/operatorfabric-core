@@ -124,6 +124,7 @@ subprojects {
                        from components.java
                        artifact sourcesJar
                        artifact javadocJar
+                       version='0.3.3'
        pom{
 		licenses{
 			license{
@@ -142,6 +143,13 @@ subprojects {
            repositories{
                maven{
                    url='https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    // CI doesn't need ossrh configuration
+                   if(! hasProperty("ossrhUsername")){
+                       ext.ossrhUsername=""
+                   }
+                   if(! hasProperty("ossrhPassword")){
+                       ext.ossrhPassword=""
+                   }
                    credentials {
                        username = ossrhUsername
                        password = ossrhPassword
