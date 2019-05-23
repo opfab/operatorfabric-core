@@ -9,7 +9,7 @@ import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {CheckAuthenticationStatus, InitAuthStatus} from '@ofActions/authentication.actions';
+import {InitAuthStatus} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors';
 import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
@@ -17,7 +17,6 @@ import {TranslateService} from "@ngx-translate/core";
 import {isInTheFuture} from "@ofServices/authentication.service";
 import {LoadConfig} from "@ofActions/config.actions";
 import {selectConfigLoaded, selectMaxedRetries} from "@ofSelectors/config.selectors";
-import * as _ from "lodash";
 
 @Component({
     selector: 'of-root',
@@ -35,8 +34,12 @@ export class AppComponent implements OnInit {
     constructor(private store: Store<AppState>,
                 private translate: TranslateService) {
         this.getRoutePE = this.store.pipe(select(selectRouterState));
+        this.configureL10nWithEnglishAsDefault();
+    }
+
+    private configureL10nWithEnglishAsDefault() {
         this.translate.setDefaultLang('en');
-        const browserLang=this.translate.getBrowserLang();
+        const browserLang = this.translate.getBrowserLang();
         this.translate.use(browserLang);
     }
 
