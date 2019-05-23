@@ -88,25 +88,7 @@ export class AuthenticationEffects {
                     return this.authService.askTokenFromPassword(payload.username, payload.password).pipe(
                         map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
                         catchError(errorResponse => {
-                                let message, key;
-                                let params = new Map<string>()
-                                switch (errorResponse.status) {
-                                    case 401:
-                                        message = 'Unable to authenticate the user';
-                                        key = 'login.error.authenticate';
-                                        break;
-                                    case 0:
-                                    case 500:
-                                        message = 'Authentication service currently unavailable';
-                                        key = 'login.error.unavailable';
-                                        break;
-                                    default:
-                                        message = 'Unexpected error';
-                                        key = 'login.error.unexpected';
-                                        params['error'] = errorResponse.message;
-                                }
-                                console.error(message, errorResponse);
-                                return of(new RejectLogIn({error: new Message(message, MessageLevel.ERROR, new I18n(key, params))}));
+                            return this.handleErrorOnTokenGeneration(errorResponse,'authenticate');
                             }
                         ));
                 })
@@ -210,25 +192,7 @@ export class AuthenticationEffects {
                                 return this.authService.askTokenFromCode(code).pipe(
                                     map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
                                     catchError(errorResponse => {
-                                        let message, key;
-                                        let params = new Map<string>()
-                                        switch (errorResponse.status) {
-                                            case 401:
-                                                message = 'Unable to authenticate the user';
-                                                key = 'login.error.code';
-                                                break;
-                                            case 0:
-                                            case 500:
-                                                message = 'Authentication service currently unavailable';
-                                                key = 'login.error.unavailable';
-                                                break;
-                                            default:
-                                                message = 'Unexpected error';
-                                                key = 'login.error.unexpected';
-                                                params['error'] = errorResponse.message;
-                                        }
-                                        console.error(message, errorResponse);
-                                        return of(new RejectLogIn({error: new Message(message, MessageLevel.ERROR, new I18n(key, params))}));
+                                            return this.handleErrorOnTokenGeneration(errorResponse,'code');
                                         }
                                     ));
                             return of(this.handleRejectedLogin(new Message('The stored token is invalid',
@@ -255,6 +219,28 @@ export class AuthenticationEffects {
                     )));
                 })
             );
+
+    handleErrorOnTokenGeneration(errorResponse,category:string) {
+        let message, key;
+        let params = new Map<string>()
+        switch (errorResponse.status) {
+            case 401:
+                message = 'Unable to authenticate the user';
+                key = `login.error.${category}`;
+                break;
+            case 0:
+            case 500:
+                message = 'Authentication service currently unavailable';
+                key = 'login.error.unavailable';
+                break;
+            default:
+                message = 'Unexpected error';
+                key = 'login.error.unexpected';
+                params['error'] = errorResponse.message;
+        }
+        console.error(message, errorResponse);
+        return of(new RejectLogIn({error: new Message(message, MessageLevel.ERROR, new I18n(key, params))}));
+    }
 
     handleRejectedLogin(errorMsg: Message): AuthenticationActions {
         AuthenticationService.clearAuthenticationInformation();

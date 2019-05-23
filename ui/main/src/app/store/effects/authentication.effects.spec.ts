@@ -121,12 +121,12 @@ describe('AuthenticationEffects', () => {
             expect(effects).toBeTruthy();
             const localExpected = hot('-(ab)', {a: new EmptyLightCards(), b:new AcceptLogOut()});
             expect(effects.TryToLogOut).toBeObservable(localExpected);
-            // effects.TryToLogOut.subscribe(() => {
-            //     expect(localStorage.getItem(LocalStorageAuthContent.identifier)).toBeNull();
-            //     expect(localStorage.getItem(LocalStorageAuthContent.token)).toBeNull();
-            //     expect(localStorage.getItem(LocalStorageAuthContent.expirationDate)).toBeNull();
-            //     expect(localStorage.getItem(LocalStorageAuthContent.clientId)).toBeNull();
-            // });
+            effects.TryToLogOut.subscribe(() => {
+                expect(localStorage.getItem(LocalStorageAuthContent.identifier)).toBeNull();
+                expect(localStorage.getItem(LocalStorageAuthContent.token)).toBeNull();
+                expect(localStorage.getItem(LocalStorageAuthContent.expirationDate)).toBeNull();
+                expect(localStorage.getItem(LocalStorageAuthContent.clientId)).toBeNull();
+            });
         });
     });
     describe('AcceptLogout', () => {
@@ -238,6 +238,33 @@ describe('AuthenticationEffects', () => {
         expect(localStorage.getItem(LocalStorageAuthContent.expirationDate)).toBeNull();
         expect(localStorage.getItem(LocalStorageAuthContent.clientId)).toBeNull();
     })
+
+    describe('handleErrorOnTokenGeneration',()=>{
+       it('should manage 401',()=>{
+           effects.handleErrorOnTokenGeneration({status:401, message: 'this a 401 error'},'code').subscribe((reject)=>{
+               expect(reject.payload.error.message).toEqual('Unable to authenticate the user');
+               expect(reject.payload.error.i18n.key).toEqual('login.error.code');
+           });
+       });
+        it('should manage 500',()=>{
+            effects.handleErrorOnTokenGeneration({status:500, message: 'this a 500 error'},'code').subscribe((reject)=>{
+                expect(reject.payload.error.message).toEqual('Authentication service currently unavailable');
+                expect(reject.payload.error.i18n.key).toEqual('login.error.unavailable');
+            });
+        });
+        it('should manage unreachable',()=>{
+            effects.handleErrorOnTokenGeneration({status:0, message: 'this a unreachable error'},'code').subscribe((reject)=>{
+                expect(reject.payload.error.message).toEqual('Authentication service currently unavailable');
+                expect(reject.payload.error.i18n.key).toEqual('login.error.unavailable');
+            });
+        });
+        it('should manage unexpected',()=>{
+            effects.handleErrorOnTokenGeneration({message: 'this a unexpected error'},'code').subscribe((reject)=>{
+                expect(reject.payload.error.message).toEqual('Unexpected error');
+                expect(reject.payload.error.i18n.key).toEqual('login.error.unexpected');
+            });
+        });
+    });
 
 });
 
