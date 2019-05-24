@@ -10,7 +10,12 @@ import {feedInitialState} from '@ofStates/feed.state';
 import {createEntityAdapter} from "@ngrx/entity";
 import {LightCard} from "@ofModel/light-card.model";
 import {getOneRandomLigthCard, getRandomAlphanumericValue, getSeveralRandomLightCards} from "@tests/helpers";
-import {AddLightCardFailure, LoadLightCardsFailure} from "@ofActions/light-card.actions";
+import {
+    AddLightCardFailure,
+    EmptyLightCards,
+    LoadLightCardsFailure,
+    LoadLightCardsSuccess
+} from "@ofActions/light-card.actions";
 import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
 import {Filter} from "@ofModel/feed-filter.model";
 import {FilterType} from "@ofServices/filter.service";
@@ -60,6 +65,29 @@ describe('LightCard Reducer', () => {
 
     });
   });
+    describe('EmptyLightCards', () => {
+        it('should empty entities', () =>{
+            const severalRandomLightCards = getSeveralRandomLightCards(5);
+            const previousState = lightCardEntityAdapter.addAll(severalRandomLightCards,feedInitialState);
+            const actualState = reducer(previousState,new EmptyLightCards());
+            expect(actualState).toBeTruthy();
+            expect(actualState.loading).toEqual(false);
+            expect(lightCardEntityAdapter.getSelectors().selectTotal(actualState)).toEqual(0);
+            expect(actualState.lastCards).toEqual([]);
+        });
+    });
+
+    describe('LoadLightCardsSuccess', () => {
+        it('should add cards to state', () =>{
+            const severalRandomLightCards = getSeveralRandomLightCards(5);
+            const actualState = reducer(feedInitialState,new LoadLightCardsSuccess({lightCards:severalRandomLightCards}));
+            expect(actualState).toBeTruthy();
+            expect(actualState.loading).toEqual(false);
+            expect(lightCardEntityAdapter.getSelectors().selectAll(actualState).map(c=>c.id).sort())
+                .toEqual(severalRandomLightCards.map(c=>c.id).sort());
+            expect(actualState.lastCards.map(c=>c.id).sort()).toEqual(severalRandomLightCards.map(c=>c.id).sort());
+        });
+    });
 
   describe('AddLightCardFailure', () => {
     it('should leave state unchanged with an additional message message', () => {
