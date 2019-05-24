@@ -26,7 +26,7 @@ export class CardDetailsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.store.select(cardSelectors.selectCardStateSelection)
+        this.store.select(cardSelectors.selectCardStateSelected)
             .subscribe(card => {
                 this.card = card;
                 if(card) {

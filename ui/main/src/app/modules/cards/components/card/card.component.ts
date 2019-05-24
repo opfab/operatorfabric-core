@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {selectCardStateIdSelection} from "@ofSelectors/card.selectors";
+import {selectCardStateSelectedId} from "@ofSelectors/card.selectors";
 import {map} from "rxjs/operators";
 
 @Component({
@@ -43,7 +43,7 @@ export class CardComponent implements OnInit{
             if(url)
                 this.currentPath = url.split('/')[1];
         });
-        this.store.select(selectCardStateIdSelection)
+        this.store.select(selectCardStateSelectedId)
             .pipe(
                 map(id=>this.lightCard.id == id)
             ).subscribe(open=>this.open = open)
