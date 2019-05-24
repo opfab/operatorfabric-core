@@ -148,6 +148,33 @@ class GivenAdminUserThirdControllerShould {
     }
 
     @Test
+    void fetchNoDetailsOfUnknownThird() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/unknown/testProcess/testState/details")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void fetchNoDetailsOfUnknownProcess() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/unknown/testState/details")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void fetchNoDetailsOfUnknownState() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/testProcess/unknown/details")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void fetchActions() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/thirds/first/testProcess/testState/actions")

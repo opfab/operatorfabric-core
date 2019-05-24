@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +132,7 @@ public class ThirdsController implements ThirdsApi {
     ThirdStates state = getState(thirdName, processName, stateName, apiVersion);
     if(state!=null)
       return state.getActions();
-    return null;
+    return Collections.emptyMap();
   }
 
   private ThirdStates getState(String thirdName, String processName, String stateName, String apiVersion) {
@@ -141,7 +142,32 @@ public class ThirdsController implements ThirdsApi {
       ThirdProcesses process = third.getProcesses().get(processName);
       if(process != null){
         state = process.getStates().get(stateName);
+        if(state == null){
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.NOT_FOUND)
+                            .message("Unknown state for third party service process")
+                            .build(),
+                    "Unable to load submitted file"
+            );
+        }
+      }else{
+          throw new ApiErrorException(
+                  ApiError.builder()
+                          .status(HttpStatus.NOT_FOUND)
+                          .message("Unknown process for third party service")
+                          .build(),
+                  "Unable to load submitted file"
+          );
       }
+    }else{
+      throw new ApiErrorException(
+              ApiError.builder()
+                      .status(HttpStatus.NOT_FOUND)
+                      .message("Unknown third party service")
+                      .build(),
+              "Unable to load submitted file"
+              );
     }
     return state;
   }
@@ -151,6 +177,6 @@ public class ThirdsController implements ThirdsApi {
     ThirdStates state = getState(thirdName, processName, stateName, apiVersion);
     if(state!=null)
       return state.getDetails();
-    return null;
+    return Collections.emptyList();
   }
 }
