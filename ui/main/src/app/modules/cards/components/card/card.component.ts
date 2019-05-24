@@ -24,6 +24,7 @@ export class CardComponent implements OnInit{
     currentPath: any;
     private _i18nPrefix: string;
 
+    /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>) {
 
@@ -40,7 +41,7 @@ export class CardComponent implements OnInit{
             if(url)
                 this.currentPath = url.split('/')[1];
         })
-        this.open=true;
+        this.open=false;
     }
 
     get i18nPrefix(): string {

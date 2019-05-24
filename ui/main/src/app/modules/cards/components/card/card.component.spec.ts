@@ -19,13 +19,18 @@ import {of} from "rxjs";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
+import {Router} from "@angular/router";
+import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
     let fixture: ComponentFixture<CardComponent>;
     let store: Store<AppState>;
+    let router: SpyObj<Router>;
 
     beforeEach(async(() => {
+        const routerSpy = createSpyObj('Router', ['navigate']);
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
@@ -35,7 +40,7 @@ describe('CardComponent', () => {
                 HttpClientTestingModule,
                 TranslateModule.forRoot(translateConfig)],
             declarations: [CardComponent],
-            providers: [{provide: store, useClass: Store},ThirdsService]
+            providers: [{provide: store, useClass: Store},{provide: Router, useValue: routerSpy},ThirdsService]
         })
             .compileComponents();
         store = TestBed.get(Store);
@@ -47,6 +52,7 @@ describe('CardComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(CardComponent);
         lightCardDetailsComp = fixture.debugElement.componentInstance;
+        router = TestBed.get(Router);
     });
 
     it('should create and display minimal light card information', () => {
@@ -68,6 +74,20 @@ describe('CardComponent', () => {
             .toEqual(publisher+'.'+version+'.'+title);
         expect(fixture.nativeElement.querySelector('.card-body > p'))
             .toBeFalsy();
+    });
+    it('should select card', () => {
+        const lightCard = getOneRandomLigthCard();
+
+        router.navigate.and.callThrough();
+
+        lightCardDetailsComp.lightCard = lightCard;
+        lightCardDetailsComp.ngOnInit()
+        fixture.detectChanges();
+
+        expect(lightCardDetailsComp.open).toBeFalsy();
+        lightCardDetailsComp.select();
+        expect(lightCardDetailsComp.open).toBeTruthy();
+        expect(router.navigate).toHaveBeenCalledWith(['/'+lightCardDetailsComp.currentPath,'cards',lightCard.id]);
     });
 
 });
