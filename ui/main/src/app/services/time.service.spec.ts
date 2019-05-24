@@ -9,16 +9,36 @@ import {TestBed} from '@angular/core/testing';
 
 import {TimeService} from './time.service';
 
-describe('TimeService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+import * as moment from 'moment';
 
-  it('should be created', () => {
-    TestBed.configureTestingModule({
-        providers: [
-            TimeService
-        ]
-    })
-    const service: TimeService = TestBed.get(TimeService);
-    expect(service).toBeTruthy();
-  });
+describe('TimeService', () => {
+
+    let service: TimeService;
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                TimeService
+            ]
+        });
+        service = TestBed.get(TimeService);
+    });
+
+    it('should be created', () => {
+
+        expect(service).toBeTruthy();
+    });
+
+    it('should return now', () => {
+        expect(service).toBeTruthy();
+        expect(service.currentTime().valueOf() / 100).toBeCloseTo(moment().valueOf() / 100, 1);
+    });
+
+    it('should parse', () => {
+        expect(service).toBeTruthy();
+        expect(service.parseString('2019-05-24T10:25').valueOf()).toEqual(1558686300000);
+    });
+    it('should format html input value string', () => {
+        expect(service).toBeTruthy();
+        expect(service.asInputString(1558686353000)).toEqual('2019-05-24T10:25:53.000');
+    });
 });

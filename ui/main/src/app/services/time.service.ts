@@ -22,10 +22,6 @@ export class TimeService {
         return moment(value,'YYYY-MM-DDTHH:mm');
     }
 
-    public asString(value: number): string {
-        return new Date(value).toISOString();
-    }
-
     public asInputString(value: number): string {
         return moment(value).format('YYYY-MM-DDTHH:mm:ss.SSS');
     }
