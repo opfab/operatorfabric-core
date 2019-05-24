@@ -30,7 +30,11 @@ export class CardDetailsComponent implements OnInit {
             .subscribe(card => {
                 this.card = card;
                 if(card) {
-                    this.details = [...<Detail[]>card.details];
+                    if(card.details) {
+                        this.details = [...<Detail[]>card.details];
+                    }else{
+                        this.details = [];
+                    }
                     this.thirdsService.queryThird(this.card.publisher, this.card.publisherVersion)
                         .subscribe(third => {
                             const state = third.extractState(this.card)
