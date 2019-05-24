@@ -95,7 +95,7 @@ describe('CardDetailsComponent', () => {
         fixture.detectChanges();
         expect(component).toBeTruthy();
         expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(0);
-        const testCard = getOneRandomCard(
+        let testCard = getOneRandomCard(
             {
                 process: 'process01',
                 processId: 'process01_01',
@@ -104,7 +104,13 @@ describe('CardDetailsComponent', () => {
             });
         store.dispatch(new LoadCardSuccess({card: testCard}));
         fixture.detectChanges();
-        const child = fixture.debugElement.children[0];
+        let child = fixture.debugElement.children[0];
+        expect(child.name).toEqual("of-details")
+        expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(2);
+        testCard ={...testCard, details: null};
+        store.dispatch(new LoadCardSuccess({card: testCard}));
+        fixture.detectChanges();
+        child = fixture.debugElement.children[0];
         expect(child.name).toEqual("of-details")
         expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(2);
     });
