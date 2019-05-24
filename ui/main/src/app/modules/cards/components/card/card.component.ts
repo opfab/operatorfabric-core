@@ -11,6 +11,8 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
+import {selectCardStateIdSelection} from "@ofSelectors/card.selectors";
+import {map} from "rxjs/operators";
 
 @Component({
     selector: 'of-card',
@@ -19,7 +21,7 @@ import {AppState} from '@ofStore/index';
 })
 export class CardComponent implements OnInit{
 
-    @Input() public open: boolean = true;
+    @Input() public open: boolean = false;
     @Input() public lightCard: LightCard;
     currentPath: any;
     private _i18nPrefix: string;
@@ -40,8 +42,12 @@ export class CardComponent implements OnInit{
         this.store.select(selectCurrentUrl).subscribe(url=>{
             if(url)
                 this.currentPath = url.split('/')[1];
-        })
-        this.open=false;
+        });
+        this.store.select(selectCardStateIdSelection)
+            .pipe(
+                map(id=>this.lightCard.id == id)
+            ).subscribe(open=>this.open = open)
+        ;
     }
 
     get i18nPrefix(): string {

@@ -15,3 +15,6 @@ export const selectCardStateSelection =  createSelector(selectCardState, (cardSt
 export const selectCardStateSelectionDetails =  createSelector(selectCardStateSelection, (card:Card)=> {
     return card==null?null:card.details;
 })
+export const selectCardStateIdSelection =  createSelector(selectCardStateSelection, (card:Card)=> {
+    return card==null?null:card.id;
+})
