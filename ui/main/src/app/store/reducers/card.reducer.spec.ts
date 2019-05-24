@@ -8,7 +8,7 @@
 import {reducer} from "@ofStore/reducers/card.reducer";
 import {cardInitialState, CardState} from "@ofStates/card.state";
 import {getOneRandomCard, getRandomAlphanumericValue} from "@tests/helpers";
-import {LoadCard, LoadCardFailure, LoadCardSuccess} from "@ofActions/card.actions";
+import {ClearCard, LoadCard, LoadCardFailure, LoadCardSuccess} from "@ofActions/card.actions";
 
 describe('Card Reducer', () => {
     describe('unknown action', () => {
@@ -82,6 +82,24 @@ describe('Card Reducer', () => {
             expect(actualState.error).toEqual(previousState.error);
             expect(actualState.loading).toEqual(false);
             expect(actualState.selected).toEqual(actualCard);
+        });
+    });
+
+    describe('ClearCard', () => {
+        it('should clear state', () => {
+            const previousCard = getOneRandomCard();
+            const previousState: CardState = {
+                selected: previousCard,
+                loading: true,
+                error: getRandomAlphanumericValue(5, 12)
+            };
+
+            const actualState = reducer(previousState, new ClearCard());
+            expect(actualState).not.toBe(previousState);
+            expect(actualState).not.toEqual(previousState);
+            expect(actualState.error).toBeNull();
+            expect(actualState.loading).toBeFalsy();
+            expect(actualState.selected).toBeNull();
         });
     });
 });

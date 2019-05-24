@@ -24,6 +24,7 @@ export function reducer(
         case LightCardActionTypes.EmptyLightCards: {
             return {
                 ...LightCardAdapter.removeAll(state),
+                selectedCardId: null,
                 loading: false,
                 lastCards:[]
             };

@@ -7,25 +7,28 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <form [formGroup]="userForm" (ngSubmit)="onSubmit()" [ngClass]="{'is-invalid': userForm.hasError('authentication.error')}"
-              *ngIf="!(useCodeFlow$|async)">
-                <div class="form-group login-form">
-                    <label for="identifier">Identifier</label>
+            <form [formGroup]="userForm" (ngSubmit)="onSubmit()" [ngClass]="{'is-invalid': userForm.hasError('authentication.error')}">
+                <div class="form-group login-form" *ngIf="!(useCodeFlow$|async)">
+                    <label for="identifier" translate="">login.login</label>
                     <input type="text" formControlName="identifier" class="form-control"/>
                     <div class="form-group">
-                        <label for="password">Password</label>
+                        <label for="password" translate="">login.password</label>
                         <input type="password" formControlName="password" class="form-control"/>
                     </div>
                     <div class="form-group">
                         <button id="login" class="btn btn-primary" [disabled]="userForm.invalid"
-                                translate>login.login.password</button>
+                                translate>login.submit.password</button>
                         <button id="reset" type="reset" class="btn btn-primary" (click)="resetForm()"
                                 [disabled]="userForm.untouched"
                                 translate>login.reset</button>
                     </div>
                 </div>
+                <div class="form-group login-form" *ngIf="(useCodeFlow$|async)">
+                    <div class="form-group">
+                    <button type="button" class="btn btn-primary" (click)="codeFlow()" translate [translateParams]="codeProvider">login.submit.code</button>
+                    </div>
+                </div>
             </form>
-            <button class="btn btn-primary" (click)="codeFlow()" translate [translateParams]="codeProvider" *ngIf="(useCodeFlow$|async)">login.login.code</button>
             <div class="alert alert-danger" *ngIf="loginMessage">{{loginMessage.i18n.key|translate:loginMessage.i18n.parameters}}</div>
         </div>
     </div>

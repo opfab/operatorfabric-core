@@ -32,9 +32,11 @@
   },
   "login":{
     "reset": "RaZ",
-    "login":{
+    "login": "Identifiant",
+    "password": "Mot de passe",
+    "submit":{
       "password":"Se connecter",
-      "code": "Se connecter avec {{name}}"
+      "code": "Se connecter avec{{name}}"
     },
     "error":{
       "authenticate":"Identifiant ou mot de passe incorrect",

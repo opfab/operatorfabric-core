@@ -14,6 +14,9 @@ export function reducer(
     action: CardActions
 ): CardState {
     switch (action.type) {
+        case CardActionTypes.ClearCard: {
+            return cardInitialState;
+        }
         case CardActionTypes.LoadCard: {
             return {
                 ...state,

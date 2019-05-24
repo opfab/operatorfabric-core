@@ -9,12 +9,16 @@ import {Action} from '@ngrx/store';
 import {Card} from '@ofModel/card.model';
 
 export enum CardActionTypes {
+    ClearCard = '[Card] Clear',
     LoadCard = '[Card] Load Card',
     LoadCardSuccess = '[Card] Load Card Success',
     LoadCardFailure = '[Card] Load Card Fail',
     HandleUnexpectedError = '[Card] Handle unexpected error related to card issue'
 }
 // needed by NGRX entities
+export class ClearCard implements Action {
+    readonly type = CardActionTypes.ClearCard;
+}
 export class LoadCard implements Action {
     readonly type = CardActionTypes.LoadCard;
 
@@ -44,7 +48,8 @@ export class HandleUnexpectedError implements Action {
 }
 
 export type CardActions =
-    LoadCard
+    ClearCard
+    | LoadCard
     | LoadCardSuccess
     | LoadCardFailure
     | HandleUnexpectedError;

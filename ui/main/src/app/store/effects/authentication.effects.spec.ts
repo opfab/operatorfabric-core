@@ -35,6 +35,7 @@ import createSpyObj = jasmine.createSpyObj;
 import {CardService} from "@ofServices/card.service";
 import {skip} from "rxjs/operators";
 import {EmptyLightCards, LightCardActionTypes} from "@ofActions/light-card.actions";
+import {ClearCard} from "@ofActions/card.actions";
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -119,7 +120,7 @@ describe('AuthenticationEffects', () => {
             cardService.unsubscribeCardOperation.and.callFake(()=>{})
             effects = new AuthenticationEffects(mockStore, localAction$, null, cardService, null);
             expect(effects).toBeTruthy();
-            const localExpected = hot('-(ab)', {a: new EmptyLightCards(), b:new AcceptLogOut()});
+            const localExpected = hot('-(abc)', {a: new EmptyLightCards(), b: new ClearCard(), c:new AcceptLogOut()});
             expect(effects.TryToLogOut).toBeObservable(localExpected);
             effects.TryToLogOut.subscribe(() => {
                 expect(localStorage.getItem(LocalStorageAuthContent.identifier)).toBeNull();

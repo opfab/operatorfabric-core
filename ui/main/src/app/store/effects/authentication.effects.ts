@@ -31,6 +31,7 @@ import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
 import {CardService} from "@ofServices/card.service";
 import {EmptyLightCards} from "@ofActions/light-card.actions";
+import {ClearCard} from "@ofActions/card.actions";
 
 /**
  * Management of the authentication of the current user
@@ -111,7 +112,7 @@ export class AuthenticationEffects {
             ofType(AuthenticationActionTypes.TryToLogOut),
             switchMap((action: TryToLogOut) => {
                 this.resetState();
-                return of(new EmptyLightCards(),new AcceptLogOut());
+                return of(new EmptyLightCards(),new ClearCard(), new AcceptLogOut());
             })
         );
 

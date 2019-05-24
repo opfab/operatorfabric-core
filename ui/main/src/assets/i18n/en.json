@@ -32,7 +32,9 @@
   },
   "login":{
     "reset": "Reset",
-    "login":{
+    "login": "Login",
+    "password": "Password",
+    "submit":{
       "password":"Sign In",
       "code": "Sign in using {{name}}"
     },
