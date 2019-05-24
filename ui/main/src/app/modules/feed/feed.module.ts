@@ -23,6 +23,11 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faClock} from "@fortawesome/free-solid-svg-icons";
 import {ChartCommonModule, NgxChartsModule} from "@swimlane/ngx-charts";
+import {CustomTimelineChartComponent} from "./components/custom-timeline-chart/custom-timeline-chart.component";
+import {XAxisTickFormatPipe} from "./components/time-line/x-axis-tick-format.pipe";
+import {MouseWheelDirective} from "./components/time-line/mouse-wheel.directive";
+import {DraggableDirective} from "./components/time-line/app-draggable";
+import {InitChartComponent} from "./components/init-chart/init-chart.component";
 
 library.add(faClock);
 
@@ -37,9 +42,14 @@ library.add(faClock);
         NgbModule.forRoot(),
         CardsModule,
         FeedRoutingModule,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
-    declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent, TimeFilterComponent],
+    declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent, TimeFilterComponent,
+        InitChartComponent,
+        CustomTimelineChartComponent,
+        DraggableDirective,
+        MouseWheelDirective,
+        XAxisTickFormatPipe],
     exports: [FeedComponent]
 })
 export class FeedModule {

@@ -1,0 +1,25 @@
+.ngx-charts {
+    /*
+      Block text selection
+      Usefull for drag only scaleTime
+    */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    float: left;
+    overflow: visible;
+
+    .gridline-path {
+        stroke: #ddd;
+        stroke-width: 1;
+        fill: none;
+    }
+
+/*
+:: ng-deep .gridline-path-horizontal {      display: inline; }
+*/
+}

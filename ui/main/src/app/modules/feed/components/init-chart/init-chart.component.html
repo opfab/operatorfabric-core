@@ -1,0 +1,51 @@
+<div class="timeline">
+  <!--
+   [autoScale] make the yScale start at 0 ( and end at 5 if the value is not higher)
+   [results] is the basic input for data on ngx-charts, we don't use it but we must set it
+   [myData] is the data pass to our timeline
+   [xAxis] allow to show xAxis (xAxis show the vertical line of the grid)
+   [yAxis] allow to show yAxis (yAxis show the horizontal line of the grid)
+   [valueDomain] preDefine the Domain of timeline
+   [showGridLines] allow to show grid and ticks Label automatic
+   [showXAxisLabel] allow to show X axis label under the label Tick show by the grid
+  -->
+  <div class="menu-timeline">
+    <button class="home-btn" *ngIf="checkButtonHomeDisplay()" (click)="homeClick(buttonHome[0], buttonHome[1])">
+      <i class="fas fa-home"></i>
+    </button>
+    <div id="btn-menu-timeline">
+      <ul *ngIf="zoomButtonsActive">
+        <li style="margin-right: 1rem;">
+          <button class="circle-btn" (click)="moveDomain(false)">
+            <i class="fas fa-angle-double-left"></i>
+          </button>
+        </li>
+        <li *ngFor="let button of buttonList">
+          <button (click)="changeGraphConf(button)">
+            {{button.forwardLevel}}
+          </button>
+        </li>
+        <li style="margin-left: 1rem">
+          <button class="circle-btn" (click)="moveDomain(true)">
+            <i class="fas fa-angle-double-right"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <of-custom-timeline-chart *ngIf="arrayChartData"
+                             [animations]="animations"
+                             [autoScale]="autoScale"
+                             [enableZoom]="enableZoom"
+                             [enableDrag]="enableDrag"
+                             [realTimeBar]="realTimeBar"
+                             [myData]="arrayChartData"
+                             [showGridLines]="showGridLines"
+                             [valueDomain]="myDomain"
+                             [xAxis]="true"
+                             [yAxis]="true"
+                             [clusterLevel]="forwardButtonType"
+                             [centeredOnTicks]="centeredOnTicks"
+                             (zoomChange)="applyNewZoom($event)">
+  </of-custom-timeline-chart>
+</div>

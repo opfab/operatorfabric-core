@@ -1,0 +1,52 @@
+.timeline {
+  height: 501px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+
+  .menu-timeline {
+    position: relative;
+
+    .home-btn {
+      position: absolute;
+      width: 45px;
+      height: 45px;
+      margin-top: 24px;
+      margin-left: 50px;
+      border-radius: 50%;
+      border: none;
+      opacity:0.7;
+
+      color: black !important;
+    }
+
+    #btn-menu-timeline {
+      position: absolute;
+      right: 30px;
+      margin-top: 8px;
+
+      ul {
+        padding: 0;
+        list-style: none;
+        display: flex;
+        opacity:0.7;
+
+
+        li {
+          button {
+            list-style: none;
+            width: 45px;
+            height: 45px;
+            color: black;
+          }
+
+          .circle-btn {
+            border-radius: 50%;
+            border: none;
+            color: black !important;
+          }
+        }
+      }
+    }
+  }
+}
