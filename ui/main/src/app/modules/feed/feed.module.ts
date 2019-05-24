@@ -22,6 +22,7 @@ import {TimeFilterComponent} from './components/card-list/filters/time-filter/ti
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faClock} from "@fortawesome/free-solid-svg-icons";
+import {ChartCommonModule, NgxChartsModule} from "@swimlane/ngx-charts";
 
 library.add(faClock);
 
@@ -29,6 +30,8 @@ library.add(faClock);
     imports: [
         CommonModule,
         FormsModule,
+        NgxChartsModule,
+        ChartCommonModule,
         ReactiveFormsModule,
         TranslateModule,
         NgbModule.forRoot(),

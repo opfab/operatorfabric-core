@@ -5,7 +5,21 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 <p class="bg-light text-dark container-fluid">
-  Time Line goes here
+  Time Line goes here hh
+  <ngx-charts-bar-vertical
+          [view]="view"
+          [scheme]="colorScheme"
+          [results]="single"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          (select)="onSelect($event)">
+  </ngx-charts-bar-vertical>
   <br>
   <br>
   <br>

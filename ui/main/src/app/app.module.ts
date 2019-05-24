@@ -31,9 +31,9 @@ library.add(faExternalLinkAlt);
     imports: [
         CommonModule,
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule,
         AppRoutingModule,
         HttpClientModule,
         StateModule.forRoot(),

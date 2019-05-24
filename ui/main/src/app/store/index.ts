@@ -17,6 +17,7 @@ import {CardOperationEffects} from '@ofEffects/card-operation.effects';
 import {AuthenticationEffects} from '@ofEffects/authentication.effects';
 import {RouterEffects} from 'ngrx-router';
 import {CardFeedState} from '@ofStates/feed.state';
+import {reducer as timelineReducer} from '@ofStore/reducers/timeline.reducer';
 import {reducer as lightCardReducer} from '@ofStore/reducers/light-card.reducer';
 import {reducer as cardReducer} from '@ofStore/reducers/card.reducer';
 import {reducer as configReducer} from '@ofStore/reducers/config.reducer';
@@ -30,10 +31,12 @@ import {LightCardEffects} from "@ofEffects/light-card.effects";
 import {FeedFiltersEffects} from "@ofEffects/feed-filters.effects";
 import {ConfigState} from "@ofStates/config.state";
 import {ConfigEffects} from "@ofEffects/config.effects";
+import {TimelineState} from "@ofStates/timeline.state";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
     feed: CardFeedState;
+    timeline: TimelineState;
     authentication: AuthState;
     card: CardState;
     menu: MenuState;
@@ -54,6 +57,7 @@ export const appEffects = [
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
     feed: lightCardReducer,
+    timeline: timelineReducer,
     authentication: authenticationReducer,
     card: cardReducer,
     menu: menuReducer,

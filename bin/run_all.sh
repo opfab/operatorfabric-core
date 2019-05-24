@@ -175,7 +175,7 @@ startProject(){
       else
         mkdir -p $projectBuildPath/logs
 #        set -x
-        java $debugOptions -jar $projectBuildPath/libs/$1-$version.jar $applicationOptions 2>&1 > $projectBuildPath/logs/$(date '+%Y-%m-%d').log &
+        java -Xms64m -Xmx128m -jar $projectBuildPath/libs/$1-$version.jar $applicationOptions 2>&1 > $projectBuildPath/logs/$(date '+%Y-%m-%d').log &
 #        set +x
         echo $! > $projectBuildPath/PIDFILE
 
