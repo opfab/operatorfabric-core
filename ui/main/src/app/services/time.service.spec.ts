@@ -14,6 +14,9 @@ import * as moment from 'moment';
 describe('TimeService', () => {
 
     let service: TimeService;
+    beforeAll(()=>{
+       moment.locale('fr-FR');
+    });
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
