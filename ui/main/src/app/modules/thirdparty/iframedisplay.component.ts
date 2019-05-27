@@ -16,10 +16,9 @@ import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {filter, map, pluck, switchMap} from "rxjs/operators";
+import {map, pluck} from "rxjs/operators";
 import {combineLatest} from "rxjs/internal/observable/combineLatest";
 import {withLatestFrom} from "rxjs/internal/operators/withLatestFrom";
-import {tap} from "rxjs/internal/operators/tap";
 
 @Component({
   selector: 'of-iframedisplay',
@@ -40,7 +39,7 @@ export class IframeDisplayComponent implements OnInit {
     this._menu_id=this.store.select(selectMenuStateSelectedMenuId);
     this._menu_entry_id=this.store.select(selectMenuStateSelectedMenuEntryId);
 
-    //TODO Init currentSelection in separate function, handle undefined better
+    //TODO Init currentSelection in separate function, handle undefined / not found better
     this._currentSelection=combineLatest(this.menu_id,this.menu_entry_id) //Emit a [menu_entry_id,menu_entry_id] array every time any of them is updated
         .pipe(
             withLatestFrom(this.store.select(selectMenuStateMenu)), //Add latest emitted value from selectMenuStateMenu to emission [menu_entry_id, menu_entry_id, thirdMenus]
@@ -104,6 +103,5 @@ export class IframeDisplayComponent implements OnInit {
       return menuEntry.id === menu_entry_id;
     })
   }
-  //TODO Error if corresponding URL not found
-  //TODO Is it ok that it's in the getter ?
+
 }

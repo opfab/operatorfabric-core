@@ -10,7 +10,6 @@ import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {NavbarComponent} from './navbar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {RouterTestingModule} from '@angular/router/testing';
-import {Location} from "@angular/common";
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {IconComponent} from "../icon/icon.component";
@@ -21,14 +20,8 @@ import {By} from "@angular/platform-browser";
 import {ThirdsServiceMock} from "@tests/mocks/thirds.service.mock";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import clock = jasmine.clock;
-import {Router} from "@angular/router";
-import {Component} from "@angular/core";
 
-@Component({
-    template: ''
-})
-class DummyComponent {
-}
+
 
 describe('NavbarComponent', () => {
 
@@ -40,20 +33,12 @@ describe('NavbarComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [NgbModule.forRoot(),
-                RouterTestingModule.withRoutes([
-                    {
-                        path: 'feed', component: DummyComponent
-                    },
-                    {
-                        path: 'thirdparty', component: DummyComponent,
-                    },
-                    {path: '**', redirectTo: '/feed'}
-                ]),
+                RouterTestingModule,
                 StoreModule.forRoot(appReducer),
                 EffectsModule.forRoot([MenuEffects]),
                 FontAwesomeModule
             ],
-            declarations: [NavbarComponent, IconComponent, DummyComponent],
+            declarations: [NavbarComponent, IconComponent],
             providers: [{provide: store, useClass: Store},
                 {provide: ThirdsService, useClass: ThirdsServiceMock}]
         })
@@ -111,22 +96,4 @@ describe('NavbarComponent', () => {
         done();
     });
 
-    it('should navigate to thirdparty route when text link is clicked (single link)',
-        async(inject([Router, Location], (router: Router, location: Location) => {
-        const rootElement = fixture.debugElement;
-        expect(component).toBeTruthy();
-        rootElement.queryAll(By.css('li > div.nav-link > a'))[0].nativeElement.click();
-        fixture.whenStable().then(() => {
-            expect(location.path()).toEqual('/thirdparty');
-        });
-    })));
-
-    it('should navigate to thirdparty route when text link is clicked (dropdown)',
-        async(inject([Router, Location], (router: Router, location: Location) => {const rootElement = fixture.debugElement;
-        expect(component).toBeTruthy();
-        rootElement.queryAll(By.css('li.dropdown > div a'))[0].nativeElement.click();
-        fixture.whenStable().then(() => {
-            expect(location.path()).toEqual('/thirdparty');
-        });
-    })));
 });
