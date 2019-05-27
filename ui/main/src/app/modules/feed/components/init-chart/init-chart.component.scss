@@ -1,3 +1,7 @@
+* {
+  color: black;
+}
+
 .timeline {
   height: 501px;
   width: 90%;
@@ -16,8 +20,6 @@
       border-radius: 50%;
       border: none;
       opacity:0.7;
-
-      color: black !important;
     }
 
     #btn-menu-timeline {
@@ -43,7 +45,6 @@
           .circle-btn {
             border-radius: 50%;
             border: none;
-            color: black !important;
           }
         }
       }
