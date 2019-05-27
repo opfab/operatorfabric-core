@@ -1,6 +1,11 @@
 import { Component, Input, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import {Observable, of} from "rxjs";
+import {select, Store} from "@ngrx/store";
+import {AppState} from "@ofStore/index";
+import * as timelineSelectors from '@ofSelectors/timeline.selectors';
+import {catchError} from "rxjs/operators";
 
 @Component({
   selector: 'of-init-chart',
@@ -13,6 +18,7 @@ export class InitChartComponent implements OnInit {
   arrayChartData: any[];
   chartData: any[];
   myDomain: number[];
+  data$: Observable<any[]>;
 
   private realCaseActivate: boolean;
 
@@ -35,7 +41,7 @@ export class InitChartComponent implements OnInit {
   forwardButtonType: string;
   zoomButtonsActive: boolean;
 
-  constructor() {
+  constructor(private store: Store<AppState>) {
     this.buttonHome = undefined;
     this.buttonHomeActive = false;
     this.buttonList = undefined;
@@ -61,10 +67,17 @@ export class InitChartComponent implements OnInit {
   }
 
   ngOnInit() {
+    // init data selector
+    this.data$ = this.store.pipe(
+        select(timelineSelectors.selectTimelineSelection),
+        catchError(err => of([]))
+    );
+
     this.confContextGraph();
-    this.setChartData();
-    this.setCustomDate();
-    this.setArrayChartData();
+   // this.setChartData(); // example de test
+   // this.setCustomDate(); // example de test
+   // this.setArrayChartData(); // example de test
+    this.setChartData2();
 
     /* setTimeout(() => {
        this.chartData[2].r = 30;
@@ -293,6 +306,75 @@ export class InitChartComponent implements OnInit {
     this.chartData[16].date.date(1);
     this.chartData[13].date.month(8);
     console.log('Les dates pr lexemples :', this.chartData[14].date, this.chartData[15].date, this.chartData[16].date, this.chartData[13].date)
+  }
+
+  setChartData2() {
+    this.data$.subscribe(value => {
+      // this.chartData = value.map(d => d);
+      this.setArrayChartData2(value);
+    });
+  }
+
+  /**
+   * set a array with arrays for each severity of Cards
+   * sort by date
+   */
+  setArrayChartData2(array: any[]) {
+    array.sort((val1, val2) => { return val1.date - val2.date; });
+
+    const arraySeverity = [];
+    this.arrayChartData = [];
+
+    for (const value of array) {
+      const obj = _.cloneDeep(value);
+      obj.date = obj.startDate;
+      obj.r = 20;
+      obj.stroke = 'stroke';
+      obj.count = 1;
+      obj.value = 1;
+
+      obj.color = this.setColorSeverity(obj.severity);
+
+      // Set this.arrayChartData and arraySeverity
+      if (this.arrayChartData === []) {
+        this.arrayChartData = [];
+        this.arrayChartData.push([]);
+        this.arrayChartData[0].push(obj);
+        arraySeverity.push({color: obj.color, id: 0});
+      } else {
+        let idx = -1;
+        for (let i = 0; i < arraySeverity.length; i++) {
+          if (arraySeverity[i].color === obj.color) {
+            idx = i;
+            break;
+          }
+        }
+        if (idx === -1) {
+          const last = this.arrayChartData.length;
+          this.arrayChartData.push([]);
+          this.arrayChartData[last].push(obj);
+          arraySeverity.push({color: obj.color, id: last});
+        } else {
+          this.arrayChartData[idx].push(obj);
+        }
+      }
+    }
+    console.log('setArrayChartData this.arrayChartData =', this.arrayChartData);
+  }
+
+  setColorSeverity(color: string) {
+    if (color) {
+     switch (color) {
+       case 'ACTION': {
+         return 'red';
+       }
+       case 'A Définir....': {
+         return 'green/blue/orange';
+       }
+     }
+    } else {
+      return 'noColor';
+    }
   }
 
   /**

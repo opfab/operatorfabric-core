@@ -12,9 +12,18 @@ import {CommonModule} from "@angular/common";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FormsModule} from "@angular/forms";
 import {NgxChartsModule} from "@swimlane/ngx-charts";
+import {Store, StoreModule} from "@ngrx/store";
+import {appReducer, AppState, storeConfig} from "@ofStore/index";
+import {RouterTestingModule} from "@angular/router/testing";
+import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
+import {CustomTimelineChartComponent} from "../custom-timeline-chart/custom-timeline-chart.component";
+import {InitChartComponent} from "../init-chart/init-chart.component";
+import {CustomRouterStateSerializer} from "@ofStates/router.state";
+import {NO_ERRORS_SCHEMA} from "@angular/core";
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
+  let store: Store<AppState>;
   let fixture: ComponentFixture<TimeLineComponent>;
 
   beforeEach(async(() => {
@@ -22,13 +31,20 @@ describe('TimeLineComponent', () => {
       imports: [CommonModule,
         BrowserAnimationsModule,
         FormsModule,
+        StoreModule.forRoot(appReducer, storeConfig),
+        RouterTestingModule,
+        StoreRouterConnectingModule,
         NgxChartsModule ],
-      declarations: [ TimeLineComponent ]
+      declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent ],
+      providers: [{provide: Store, useClass: Store},{provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
+    store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
     fixture = TestBed.createComponent(TimeLineComponent);
     component = fixture.componentInstance;
   });
