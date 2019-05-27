@@ -11,13 +11,13 @@
   -->
   <div class="menu-timeline">
     <button class="home-btn" *ngIf="checkButtonHomeDisplay()" (click)="homeClick(buttonHome[0], buttonHome[1])">
-      <i class="fas fa-home"></i>
+      <em class="fas fa-home"></em>
     </button>
     <div id="btn-menu-timeline">
       <ul *ngIf="zoomButtonsActive">
         <li style="margin-right: 1rem;">
           <button class="circle-btn" (click)="moveDomain(false)">
-            <i class="fas fa-angle-double-left"></i>
+            <em class="fas fa-angle-double-left"></em>
           </button>
         </li>
         <li *ngFor="let button of buttonList">
@@ -27,7 +27,7 @@
         </li>
         <li style="margin-left: 1rem">
           <button class="circle-btn" (click)="moveDomain(true)">
-            <i class="fas fa-angle-double-right"></i>
+            <em class="fas fa-angle-double-right"></em>
           </button>
         </li>
       </ul>
