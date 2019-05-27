@@ -15,6 +15,7 @@ describe('TimeService', () => {
 
     let service: TimeService;
     beforeAll(()=>{
+       moment.tz.setDefault("Europe/Paris");
        moment.locale('fr-FR');
     });
     beforeEach(() => {
