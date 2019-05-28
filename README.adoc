@@ -75,7 +75,7 @@ This project and all its sub-projects are licensed under https://www.mozilla.org
 
 == Contributing
 
-Read our link:https://github.com/opfab/.github/blob/master/CONTRIBUTING.adoc[CONTRIBUTING] file for more information on how to contribute to the project.
+Read our link:CONTRIBUTING.adoc[CONTRIBUTING] file for more information on how to contribute to the project.
 
 == Requirements
 

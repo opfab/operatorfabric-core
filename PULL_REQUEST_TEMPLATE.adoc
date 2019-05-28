@@ -1,0 +1,20 @@
+*Please check if the PR fulfills these requirements* _(please use `&#39;[x]&#39;` to check the boxes, or submit the PR and then click the checkboxes)_
+
+* [ ] The commit message follows our guidelines
+* [ ] Tests for the changes have been added (for bug fixes / features)
+* [ ] Docs have been added / updated (for bug fixes / features)
+
+*Does this PR already have an issue describing the problem ?* _If so, link to this issue using `#XXX` or `[OC-XXX]` and skip the rest_
+
+*What kind of change does this PR introduce?* _(Bug fix, feature, docs update, …)_
+
+*What is the current behavior?* _(You can also link to an open issue here)_
+
+*What is the new behavior (if this is a feature change)?*
+
+*Does this PR introduce a breaking change?* _(What changes might users need to make in their application due to this PR?)_
+
+*Other information*:
+
+
+TIP: If any of the questions/checkboxes don't apply, please delete them.
