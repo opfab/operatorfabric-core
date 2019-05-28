@@ -7,8 +7,6 @@ spring:
         native:
           search-locations:
            - file:/service-config
-      discovery:
-        enabled: true
   rabbitmq:
     host: ${RABBITMQ_HOST}
     port: ${RABBITMQ_PORT}

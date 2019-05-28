@@ -1,8 +1,3 @@
-spring:
-  cloud:
-    config:
-      discovery:
-        enabled: true
 management:
   endpoints:
     web:

@@ -10,8 +10,6 @@ spring:
         native:
           search-locations:
            - file:./build/dev-data/dev-configurations
-      discovery:
-        enabled: true
   rabbitmq:
     host: localhost
     port: 5672

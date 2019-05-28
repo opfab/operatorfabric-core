@@ -3,8 +3,10 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+:springboot_doc: https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE
+:spring_cloud_config_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.1.0.RELEASE/
 
-== Configuration Guides
+== Configuration
 
 As a microservice architectured solution, Operator Fabric as multiple services
 to configure. These configuration are gathered by a Configuration Service that
@@ -16,16 +18,23 @@ All services are springboot application and share some common configuration and
 uses jetty as an embedded servlet container. The following documentation
 references describes Springboot configuration.
 
- * https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/reference/htmlsingle/[Springboot documentation]
- * https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/reference/htmlsingle/#boot-features-external-config[Springboot external configuration]
- * https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/reference/htmlsingle/#common-application-properties[Common application properties from Springboot documentation]
+ * {springboot_doc}/reference/htmlsingle/[Springboot documentation]
+ * {springboot_doc}/reference/htmlsingle/#boot-features-external-config[Springboot external configuration]
+ * {springboot_doc}/reference/htmlsingle/#common-application-properties[Common application properties from Springboot documentation]
 
-include::../../../../services/infra/configuration/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-include::../../../../services/infra/registry/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-include::../../../../services/client-gateway/cards-publication/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-include::../../../../services/core/cards-publication/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-include::../../../../services/core/cards-consultation/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-include::../../../../services/core/thirds/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-include::../../../../services/core/users/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-include::../../../../services/core/time/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-include::../../../../services/web/web-ui/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+=== Global configuration
+
+Aside from the configuration service, all configurations are gathered in the
+configuration service environment backend (see <<Cloud Configuration service>>)
+
+=== Per service Configuration Guides
+
+include::../../../../services/infra/config/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
+include::../../../../services/infra/registry/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
+//include::../../../../services/client-gateway/cards-publication/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+//include::../../../../services/core/cards-publication/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+//include::../../../../services/core/cards-consultation/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+//include::../../../../services/core/thirds/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+//include::../../../../services/core/users/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+//include::../../../../services/core/time/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+//include::../../../../services/web/web-ui/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
