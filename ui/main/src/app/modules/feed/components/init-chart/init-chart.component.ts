@@ -78,8 +78,8 @@ export class InitChartComponent implements OnInit {
 
   setChartData2() {
     this.data$.subscribe(value => {
-      // this.chartData = value.map(d => d);
-      this.setArrayChartData2(value);
+      const chartData = value.map(d => d);
+      this.setArrayChartData2(chartData);
     });
   }
 
