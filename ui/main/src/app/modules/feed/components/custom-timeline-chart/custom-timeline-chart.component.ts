@@ -698,9 +698,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
             let endLimit: number;
             // Group Algo 1
             if (this.centeredOnTicks) {
-              /* Make special case for begin
-                 actually we dont take care of the first half interval of ticks*/
               startLimit = this.myTicks[i] - ((this.myTicks[i] - this.myTicks[i - 1]) / 2);
+              /* !!!! Make special case for begin
+                 actually first circle are from first tick to half of next interval ticks
+                  0 to 1.5 */
+              if (i === 1) {
+                startLimit = this.myTicks[i - 1];
+              }
               // Last tick has is own value for endLimit;
               if (i + 1 === this.myTicks.length) {
                 endLimit = this.myTicks[i].valueOf();
