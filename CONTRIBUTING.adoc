@@ -98,7 +98,10 @@ OperatorFabric TSC voting members are:
 * link:https://github.com/0x62646f727465[Boris Dolley]
 * link:https://github.com/francoisjolain[François Jolain]
 * link:https://github.com/AlexGuironnetRTE[Alexandra Guironnet]
+* link:https://github.com/HanaeSafiRTE[Hanae Safi]
 * Guillaume Trimbach
+
+Boris Dolley will chair the TSC, with Hanae Safi as his deputy.
 
 === Contributors
 
