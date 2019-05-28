@@ -73,6 +73,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.4",
     "karma-jasmine": "^2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "karma-junit-reporter": "^1.2.0",
     "karma-mocha-reporter": "^2.2.5",
     "ngrx-store-freeze": "^0.2.4",
     "ts-node": "~7.0.0",

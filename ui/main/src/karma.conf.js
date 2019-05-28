@@ -11,17 +11,23 @@ module.exports = function (config) {
             require('karma-jasmine-html-reporter'),
             require('karma-coverage-istanbul-reporter'),
             require('karma-mocha-reporter'),
-            require('@angular-devkit/build-angular/plugins/karma')
+            require('@angular-devkit/build-angular/plugins/karma'),
+            require('karma-junit-reporter')
         ],
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
         coverageIstanbulReporter: {
-            dir: require('path').join(__dirname, '../coverage'),
+            dir: require('path').join(__dirname, '../reports/coverage'),
             reports: ['html', 'lcovonly'],
             fixWebpackSourcePaths: true
         },
-        reporters: ['mocha', 'kjhtml'],
+        junitReporter: {
+            outputDir: '../reports/test', // results will be saved as $outputDir/$browserName.xml
+            outputFile: 'junit.xml', // if included, results will be saved as $outputDir/$browserName/$outputFile
+            useBrowserName: false // add browser name to report and classes names
+        },
+        reporters: ['mocha', 'kjhtml', 'junit'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
