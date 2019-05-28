@@ -11,16 +11,16 @@
 :imagesdir: images
 :sectnums:
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :toc-title: User Guide
 :icons: font
 :hide-uri-scheme:
 
-include::01_docker.adoc[]
+include::01_deployment.adoc[]
 
-== Reference Guide Per Business Service
-include::../../../../services/core/cards-publication/src/docs/asciidoc/index.adoc[leveloffset=+2]
-include::../../../../services/core/cards-consultation/src/docs/asciidoc/index.adoc[leveloffset=+2]
-include::../../../../services/core/thirds/src/docs/asciidoc/index.adoc[leveloffset=+2]
-include::../../../../services/core/users/src/docs/asciidoc/index.adoc[leveloffset=+2]
-include::../../../../services/core/time/src/docs/asciidoc/index.adoc[leveloffset=+2]
+include::02_configuration.adoc[]
+
+include::03_references.adoc[]
+
+
+

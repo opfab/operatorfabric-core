@@ -1,0 +1,92 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+= Configuration service
+
+Operator Fabric Configuration service is a Spring Cloud Config application
+bootstraped using SpringBoot.
+
+In our spring microservice architecture Configuration instances are the first
+services to bootstrap, thus thay are configured in a specific way contrary to
+other services.
+
+== Profiles and default properties
+
+bootstrap.yml
+```
+spring:
+  application:
+    name: config
+```
+
+application.yml
+```
+spring:
+  cloud:
+    config:
+      discovery:
+        enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+```
+
+=== dev profile
+dev is the profile we use internally for developpement we make it available for
+external developpers so that they don't need extensive configuration to get a
+jar working in the developpement environment
+
+```
+server:
+  port: 2000
+spring:
+#  level.root: debug
+  profiles:
+    active: [native,dev]
+  cloud:
+    config:
+      server:
+        native:
+          search-locations:
+           - file:./build/dev-data/dev-configurations
+      discovery:
+        enabled: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client:
+    region: default
+    service-url:
+      defaultZone: http://localhost:2001/eureka
+    registryFetchIntervalSeconds: 5
+```
+
+== Specifying external configuration properties when lauching a jar file
+
+See https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/reference/htmlsingle/#boot-features-external-config-application-property-files[Application Property Files]
+on how to setup an external spring properties or yml file.
+
+See https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/reference/htmlsingle/#howto-set-active-spring-profiles[Set the Active Spring Profiles] for specifying alternate profile.
+
+
+== Specifying configuration properties when lauching a docker image
+
+Our docker image expects optionnal property file to be stored in the container
+/service-config folder. You can bind so docker volume to this path to make
+properties or yml available.
+
+At time of writting, you cannot specify an alternate profile at runtime.
+The default profiles activated are docker and native.
+
+
+== Specifying configuration properties when lauching on a kubernetes server
+
+In progress
