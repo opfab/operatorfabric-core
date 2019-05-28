@@ -6,7 +6,6 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { single } from './data';
 import {Observable, of} from "rxjs";
 import {LightCard} from "@ofModel/light-card.model";
 import {select, Store} from "@ngrx/store";
@@ -23,8 +22,6 @@ import * as moment from 'moment';
   templateUrl: './time-line.component.html',
 })
 export class TimeLineComponent implements OnInit {
-
-  data$: Observable<any[]>;
   selection$: Observable<string>;
   lastCards$: Observable<LightCard[]>;
 
@@ -73,7 +70,7 @@ export class TimeLineComponent implements OnInit {
         // endDomain3.month(10); // example
         const forwardLevel = 'W';
         this.conf = {
-            enableDrag: true,
+            enableDrag: false,
             enableZoom: true,
             autoScale: false,
             animations: false,
@@ -87,19 +84,18 @@ export class TimeLineComponent implements OnInit {
             forwardLevel,
             followCloackTick: false,
         },
-            {
-                startDomain: startDomain2.valueOf(),
-                endDomain: endDomain2.valueOf(),
-                forwardLevel: 'M',
-                followCloackTick: false,
-            },
-            {
-                startDomain: startDomain3.valueOf(),
-                endDomain: endDomain3.valueOf(),
-                forwardLevel: 'Y',
-                followCloackTick: false,
-            }];
-        console.log(this.confZoom);
+        {
+            startDomain: startDomain2.valueOf(),
+            endDomain: endDomain2.valueOf(),
+            forwardLevel: 'M',
+            followCloackTick: false,
+        },
+        {
+            startDomain: startDomain3.valueOf(),
+            endDomain: endDomain3.valueOf(),
+            forwardLevel: 'Y',
+            followCloackTick: false,
+        }];
         this.lastCards$ = this.store.select(timelineSelectors.selectLastCardsSelection);
 
         this.store.dispatch(new InitTimeline({
@@ -120,64 +116,4 @@ export class TimeLineComponent implements OnInit {
             }
         });
     }
-
-
-
-/*  // Ngx-charts
-
-  single: any[];
-  multi: any[];
-
-  view: any[] = [700, 400];
-
-  // options
-  showXAxis = true;
-  showYAxis = true;
-  gradient = false;
-  showLegend = true;
-  showXAxisLabel = true;
-  xAxisLabel = 'Country';
-  showYAxisLabel = true;
-  yAxisLabel = 'Population';
-
-  colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
-  };
-
-  constructor(private store: Store<AppState>) {
-    Object.assign(this, { single });
-  }*/
-/*
-  ngOnInit() {
-    /!*this.data$ = this.store.pipe(
-        select(timelineSelectors.selectTimelineSelection),
-        catchError(err => of([]))
-    );
-    *!/
-    // this.selection$ = this.store.select(timelineSelectors.selectLightCardSelection);
-    this.lastCards$ = this.store.select(timelineSelectors.selectLastCardsSelection);
-
-    this.store.dispatch(new InitTimeline({
-      data: [],
-    }));
-
-    this.lastCards$.subscribe(value => {
-      for (const val of value) {
-        // val.endDate val.startDate val.severity
-        const myCardTimeline = {
-        startDate: val.startDate,
-        endDate: val.endDate,
-        severity: val.severity
-        };
-        this.store.dispatch(new AddCardDataTimeline({
-          cardTimeline: myCardTimeline,
-        }));
-      }
-    });
-  }
-
-
-  onSelect(event) {
-    console.log(event);
-  }*/
 }

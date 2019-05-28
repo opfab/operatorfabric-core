@@ -39,11 +39,46 @@ describe('InitChartComponent', () => {
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
     fixture = TestBed.createComponent(InitChartComponent);
-    component = fixture.componentInstance;
+    component = fixture.debugElement.componentInstance;
   });
 
   it('should create', () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
+
+ /* it('should create Month', () => {
+    const startDomain2 = moment();
+    startDomain2.hours(0).minutes(0).seconds(0).millisecond(0);
+    const endDomain2 = _.cloneDeep(startDomain2);
+    endDomain2.startOf('month');
+    endDomain2.add(2, 'months');
+    const confZoom =  {
+      startDomain: startDomain2.valueOf(),
+      endDomain: endDomain2.valueOf(),
+      forwardLevel: 'M',
+      followCloackTick: false,
+    };
+    component.confZoom = confZoom;
+    fixture.detectChanges();
+    expect(component).toBeTruthy();
+  });*/
+/*
+  it('should create Year', () => {
+    const startDomain3 = moment();
+    startDomain3.startOf('month');
+    startDomain3.hours(0);
+    const endDomain3 = _.cloneDeep(startDomain3);
+    endDomain3.add(2, 'years');
+    endDomain3.startOf('year');
+    const confZoom =  {
+      startDomain: startDomain3.valueOf(),
+      endDomain: endDomain3.valueOf(),
+      forwardLevel: 'Y',
+      followCloackTick: false,
+    };
+    component.confZoom = confZoom;
+    fixture.detectChanges();
+    expect(component).toBeTruthy();
+  });*/
 });

@@ -79,7 +79,6 @@ import {XAxisTickFormatPipe} from "../time-line/x-axis-tick-format.pipe";
       ></svg:rect>
       <svg:g *ngFor="let series of dataClustered">
         <svg:g *ngFor="let myCircle of series"
-               (click)="test2()"
                (mouseenter)="feedCircleHovered(myCircle)"
                ngx-tooltip
                [tooltipTemplate]="tooltipTemplate2">
@@ -191,7 +190,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   yAxisWidth = 0;
   timeScale: any;
   margin: any[] = [10, 20, 10, 0];
-  initialized = false;
   transform: string;
   transform2: string;
   xRealTimeLine = moment();
@@ -246,9 +244,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     this.transform2 = `translate(0, ${ this.dims.height + 15})`;
     // this.myData = this.clusterize(this.clusterData);
     console.log('update');
-    if (!this.initialized) {
-      this.initialized = true;
-    }
 
     if (this.first) {
       this.first = false;
@@ -256,13 +251,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     }
   }
 
-  test3() {
+/*  test3() {
     console.log('k');
   }
+*/
 
   hideLabelsTicks = (e) => {
     return '';
-    console.log('o')
   }
 
   updateRealTimeDate() {
@@ -295,29 +290,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     } else {
       this.circleHovered.period = 'Periode : ' + this.fctTickFormatting(myCircle.start) + ' - ' + this.fctTickFormatting(myCircle.end);
     }
-  }
-
-  test2() {
-    console.log('TEST2 Selection circle', this.circleHovered);
-  }
-
-  multiHorizontalTicksLine(pos: number) {
-    const newList = [];
-    if (pos === 1) {
-      for (let i = 0; i < this.myTicks.length; i++) {
-        if (i % 2 === 0) {
-          newList.push(this.myTicks[i]);
-        }
-      }
-    } else if (pos === 2) {
-      for (let i = 0; i < this.myTicks.length; i++) {
-        if (i % 2 === 1) {
-          newList.push(this.myTicks[i]);
-        }
-      }
-    }
-    console.log('i');
-    return newList;
   }
 
   // DRAG
@@ -413,8 +385,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     if (this.xDomain) {
       return this.xDomain;
     }
+    return [0, 1];
     /* INUTILE SI L'CONF PAR DEFAULT LE DOMAIN */
     // Stack on values array all the date of our data
+/*
     const values = [];
     for (const series of this.myData) {
       for (const d of series) {
@@ -430,6 +404,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     max.hours(0).minutes(0).seconds(0).milliseconds(0);
     domain = [min.valueOf(), max.valueOf()];
     return domain;
+*/
 
     /* FINNN */
   }
@@ -443,7 +418,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   }
 
 
-  fctTickFormatting2 = (e) => {
+  /*fctTickFormatting2 = (e) => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
     // renvoie une string
     console.log('fctTickFormatting2', this.myTicks.length);
@@ -454,12 +429,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     }
     return formatPipe.transform2(e, 'en-US', this.clusterLevel, this.oneOnTwo);
 
-    /*let lkj = 'er';
+    /!*let lkj = 'er';
     lkj = 'lk';
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
     lkj = formatPipe.transform(e, 'en-US', this.clusterLevel);
-    */
-    /*if (this.oneOnTwo === 3) {
+    *!/
+    /!*if (this.oneOnTwo === 3) {
       this.oneOnTwo = 1;
       console.log('k');
       const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
@@ -471,9 +446,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
       this.oneOnTwo++;
     }
     console.log('fin', lkj, this.oneOnTwo);
-    return(lkj);*/
+    return(lkj);*!/
   }
-
+*/
   /**
    * define for a week until 2 weeks the number and the value of ticks on xAxis
    */

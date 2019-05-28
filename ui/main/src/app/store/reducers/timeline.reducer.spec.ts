@@ -6,21 +6,9 @@
  */
 
 import {reducer} from './timeline.reducer';
-import {feedInitialState} from '@ofStates/feed.state';
-import {createEntityAdapter} from "@ngrx/entity";
-import {LightCard} from "@ofModel/light-card.model";
-import {getOneRandomLigthCard, getRandomAlphanumericValue, getSeveralRandomLightCards} from "@tests/helpers";
-import {AddLightCardFailure, LoadLightCardsFailure} from "@ofActions/light-card.actions";
-import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
-import {Filter} from "@ofModel/feed-filter.model";
-import {FilterType} from "@ofServices/filter.service";
 import {timelineInitialState} from "@ofStates/timeline.state";
 
 describe('Timeline Reducer', () => {
-
-    const lightCardEntityAdapter = createEntityAdapter<LightCard>();
-
-
     describe('unknown action', () => {
         it('should return the initial state on initial state', () => {
             const action = {} as any;

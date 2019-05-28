@@ -16,7 +16,6 @@ export class InitChartComponent implements OnInit {
   @Input() conf;
   @Input() confZoom;
   arrayChartData: any[];
-  chartData: any[];
   myDomain: number[];
   data$: Observable<any[]>;
 
@@ -74,238 +73,7 @@ export class InitChartComponent implements OnInit {
     );
 
     this.confContextGraph();
-   // this.setChartData(); // example de test
-   // this.setCustomDate(); // example de test
-   // this.setArrayChartData(); // example de test
     this.setChartData2();
-
-    /* setTimeout(() => {
-       this.chartData[2].r = 30;
-       let tmpDate = new Date();
-       tmpDate.setMonth(9);
-       this.chartData.push({
-         date: tmpDate,
-         value: 4,
-         cy: 250,
-         r: 20,
-         color: 'pink',
-         stroke: 'stroke',
-         count: 5
-       });
-       this.setArrayChartData();
-     }, 3000);*/
-    /*setTimeout(() => {
-      let myTime = new Date();
-      myTime.setMonth(1);
-      const tmp = myTime.getTime();
-      myTime.setMonth(5);
-      const tmp2 = myTime.getTime();
-      this.myDomain = [tmp, tmp2];
-    }, 3000);*/
-    /*setTimeout(() => {
-      let myTime = new Date();
-      myTime.setFullYear(2018);
-      const tmp = myTime.getTime();
-      myTime.setFullYear(2019);
-      myTime.setMonth(10);
-      const tmp2 = myTime.getTime();
-      this.myDomain = [tmp, tmp2];
-    }, 6000);*/
-  }
-
-  setChartData() {
-    this.chartData = [
-      {
-        date: moment(),
-        value: 4,
-        cy: 300,
-        r: 20,
-        color: 'red',
-        stroke: 'stroke',
-        count: 23
-      },
-      {
-        date: moment(),
-        value: 3,
-        cy: 200,
-        r: 20,
-        color: 'orange',
-        stroke: 'stroke',
-        count: 15
-      },
-      {
-        date: moment(),
-        value: 2,
-        cy: 250,
-        r: 20,
-        color: 'blue',
-        stroke: 'stroke',
-        count: 3
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 350,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 102
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 350,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 21
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 350,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 1
-      },
-      {
-        date: moment(),
-        value: 2,
-        cy: 250,
-        r: 30,
-        color: 'blue',
-        stroke: 'stroke',
-        count: 5
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 250,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 87
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 250,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 144
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 250,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 8
-      },
-      {
-        date: moment(),
-        value: 2,
-        cy: 250,
-        r: 20,
-        color: 'blue',
-        stroke: 'stroke',
-        count: 3
-      },
-      {
-        date: moment(),
-        value: 4,
-        cy: 300,
-        r: 20,
-        color: 'red',
-        stroke: 'stroke',
-        count: 23
-      },
-      {
-        date: moment(),
-        value: 3,
-        cy: 200,
-        r: 20,
-        color: 'orange',
-        stroke: 'stroke',
-        count: 15
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 250,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 256
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 250,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 4
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 250,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 34
-      },
-      {
-        date: moment(),
-        value: 1,
-        cy: 250,
-        r: 20,
-        color: 'green',
-        stroke: 'stroke',
-        count: 56
-      },
-    ];
-  }
-
-  /**
-   * set the First List of Date
-   */
-  setCustomDate() {
-    this.chartData[0].date.year(2017);
-    this.chartData[1].date.year(2018);
-    this.chartData[2].date.month(11);
-    this.chartData[4].date.month(4);
-    this.chartData[4].date.date(20); // Disparition 22 04 2019
-    this.chartData[5].date.year(2020);
-    this.chartData[6].date.month(11);
-    this.chartData[6].date.date(10);
-    this.chartData[7].date.hours(19);
-    console.log(this.chartData[7].date)
-    this.chartData[8].date.hours(24);
-    this.chartData[9].date.hours(28);
-    /*
-    // TEST le premier segment sur le clustering
-    this.chartData[10].date.hours(1);
-    this.chartData[11].date.hours(1);
-    this.chartData[12].date.hours(1);
-    */
-    // -------WEEK AND MONTH TEST------
-    /*this.chartData[14].date.hours(60);
-    this.chartData[15].date.hours(64);
-    this.chartData[16].date.hours(68);
-    this.chartData[13].date.hours(72);*/
-    // -------YEAR TEST------
-    this.chartData[14].date.month(7);
-    this.chartData[14].date.date(1);
-    this.chartData[15].date.month(7);
-    this.chartData[16].date.month(8);
-    this.chartData[16].date.date(1);
-    this.chartData[13].date.month(8);
-    console.log('Les dates pr lexemples :', this.chartData[14].date, this.chartData[15].date, this.chartData[16].date, this.chartData[13].date)
   }
 
   setChartData2() {
@@ -359,61 +127,27 @@ export class InitChartComponent implements OnInit {
         }
       }
     }
-    console.log('setArrayChartData this.arrayChartData =', this.arrayChartData);
   }
 
   setColorSeverity(color: string) {
     if (color) {
      switch (color) {
-       case 'ACTION': {
+       case 'ALARM': {
          return 'red';
        }
-       case 'A Définir....': {
-         return 'green/blue/orange';
+       case 'ACTION': {
+         return 'orange';
+       }
+       case 'QUESTION': {
+         return 'blue';
+       }
+       case 'NOTIFICATION': {
+         return 'green';
        }
      }
     } else {
-      return 'noColor';
+      return 'black';
     }
-  }
-
-  /**
-   * set a array with arrays for each severity of Cards
-   * sort by date
-   */
-  setArrayChartData() {
-    this.chartData.sort((val1, val2) => { return val1.date - val2.date; });
-
-    const arraySeverity = [];
-    this.arrayChartData = [];
-
-    for (const value of this.chartData) {
-      // Set this.arrayChartData and arraySeverity
-      const obj = _.cloneDeep(value);
-      if (this.arrayChartData === []) {
-        this.arrayChartData = [];
-        this.arrayChartData.push([]);
-        this.arrayChartData[0].push(obj);
-        arraySeverity.push({color: obj.color, id: 0});
-      } else {
-        let idx = -1;
-        for (let i = 0; i < arraySeverity.length; i++) {
-          if (arraySeverity[i].color === obj.color) {
-            idx = i;
-            break;
-          }
-        }
-        if (idx === -1) {
-          const last = this.arrayChartData.length;
-          this.arrayChartData.push([]);
-          this.arrayChartData[last].push(obj);
-          arraySeverity.push({color: obj.color, id: last});
-        } else {
-          this.arrayChartData[idx].push(obj);
-        }
-      }
-    }
-    console.log('setArrayChartData this.arrayChartData =', this.arrayChartData);
   }
 
   readConf() {
@@ -572,7 +306,6 @@ export class InitChartComponent implements OnInit {
    * @param forward
    */
   moveDomainByWeek(forward: boolean) {
-    console.log('moveDomainByWeek funcction');
     const startDomain = moment(this.myDomain[0]);
     startDomain.day(0);
     /*
@@ -596,7 +329,6 @@ export class InitChartComponent implements OnInit {
   }
 
   moveDomainByMonth(forward: boolean) {
-    console.log('moveDomainBy MONTH function');
     const prevStartDomain = moment(this.myDomain[0]);
     const startDomain = _.cloneDeep(prevStartDomain);
     if (this.realCaseActivate) {
@@ -619,7 +351,6 @@ export class InitChartComponent implements OnInit {
   }
 
   moveDomainByYear(forward: boolean) {
-    console.log('moveDomainBy MONTH function');
     const prevStartDomain = moment(this.myDomain[0]);
     const startDomain = _.cloneDeep(prevStartDomain);
     if (this.realCaseActivate) {

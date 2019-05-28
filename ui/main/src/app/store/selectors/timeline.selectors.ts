@@ -8,9 +8,6 @@
 import {createSelector} from '@ngrx/store';
 import {LightCardAdapter} from '@ofStates/feed.state';
 import {AppState} from "@ofStore/index";
-import {Filter} from "@ofModel/feed-filter.model";
-import {LightCard} from "@ofModel/light-card.model";
-import {FilterType} from "@ofServices/filter.service";
 import {selectLightCardsState} from "@ofSelectors/feed.selectors";
 
 export const selectTimelineState = (state: AppState) => state.timeline;

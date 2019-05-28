@@ -64,7 +64,7 @@ export class XAxisTickFormatPipe implements PipeTransform {
     }
   }
 
-
+/*
   transform2(value: any, languageTag: string, clusterLevel: string, onOnTwo): string {
     let lkj = '';
     console.log('debut', onOnTwo);
@@ -75,11 +75,11 @@ export class XAxisTickFormatPipe implements PipeTransform {
       lkj = formatPipe.transform(value, 'en-US', clusterLevel);
       // renvoie une string
       // this.multiHorizontalTicksLine(1)
-    }/* else {
+    }/!* else {
       console.log('j');
       onOnTwo++;
-    }*/
+    }*!/
     console.log('fin', lkj, onOnTwo);
     return(lkj);
-  }
+  }*/
 }
