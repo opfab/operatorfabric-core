@@ -18,5 +18,8 @@
   "menu":{
     "first":"First Entry",
     "second":"Second Entry"
+  },
+  "template":{
+    "title": "Asset details"
   }
 }
