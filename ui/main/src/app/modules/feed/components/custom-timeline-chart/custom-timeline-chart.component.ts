@@ -206,7 +206,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
 
   // DATA
   private _myData;
-  private dataClustered;
+  public dataClustered;
   private first = true;
 
   // ZOOM
