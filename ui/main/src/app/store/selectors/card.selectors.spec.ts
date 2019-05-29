@@ -28,6 +28,7 @@ describe('ConfigSelectors', () => {
     let emptyAppState: AppState = {
         router: null,
         feed: null,
+        timeline: null,
         authentication: null,
         card: null,
         menu: null,
