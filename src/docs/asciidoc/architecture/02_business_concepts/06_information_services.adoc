@@ -17,6 +17,10 @@ Responsible for data persistence / data retrieval.
 
 Responsible for user authentication and authorization.
 
+==== User Management Service
+
+Responsible for user management and user personal settings.
+
 ==== Monitoring Service
 
 Responsible for global system monitoring.

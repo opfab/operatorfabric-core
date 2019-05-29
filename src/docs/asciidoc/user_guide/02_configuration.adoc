@@ -5,14 +5,16 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 :springboot_doc: https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE
 :spring_cloud_config_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.1.0.RELEASE/
+:opfab_architecture_doc: https://opfab.github.io/documentation/0.4.1.SNAPSHOT/architecture/
 
 == Configuration
 
-As a microservice architectured solution, Operator Fabric as multiple services
+As a microservice architectured solution, Operator Fabric has multiple services
 to configure. These configuration are gathered by a Configuration Service that
 can be redunded for safety.
 
-
+See {opfab_architecture_doc}[Operator Fabric Architecture] for more information
+on the different services.
 
 All services are springboot application and share some common configuration and
 uses jetty as an embedded servlet container. The following documentation

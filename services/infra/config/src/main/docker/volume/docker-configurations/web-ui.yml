@@ -4,4 +4,5 @@ operatorfabric:
       flow:
         mode: CODE
         provider: Opfab Keycloak
+        delagate-url: http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client
   feed.subscription.timeout: 600000

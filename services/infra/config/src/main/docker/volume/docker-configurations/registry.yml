@@ -1,5 +1,5 @@
 eureka:
-#  instance.hostname: registry
+  instance.hostname: registry
   client:
     serviceUrl.defaultZone: http://registry:8080/eureka/
     registerWithEureka: false

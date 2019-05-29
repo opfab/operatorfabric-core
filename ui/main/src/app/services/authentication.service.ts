@@ -39,6 +39,7 @@ export class AuthenticationService {
     private clientSecret: string;
     private loginClaim: string;
     private expireClaim: string;
+    private delegateUrl: string;
 
     /**
      * @constructor
@@ -57,6 +58,7 @@ export class AuthenticationService {
     assignConfigurationProperties(oauth2Conf) {
         this.clientId = _.get(oauth2Conf, 'oauth2.client-id', null);
         this.clientSecret = _.get(oauth2Conf, 'oauth2.client-secret', null);
+        this.delegateUrl = _.get(oauth2Conf, 'oauth2.flow.delagate-url', null);
         this.loginClaim = _.get(oauth2Conf, 'jwt.login-claim', 'sub');
         this.expireClaim = _.get(oauth2Conf, 'jwt.expire-claim', 'exp');
     }
@@ -241,7 +243,11 @@ export class AuthenticationService {
     public moveToCodeFlowLoginPage() {
         if (!this.clientId || !this.clientSecret)
             return throwError('The authentication service is no correctly iniitialized');
-        window.location.href = `${environment.urls.auth}/code/redirect_uri=${AuthenticationService.computeRedirectUri()}`;
+        if(!this.delegateUrl)
+            window.location.href = `${environment.urls.auth}/code/redirect_uri=${AuthenticationService.computeRedirectUri()}`;
+        else{
+            window.location.href = `${this.delegateUrl}&redirect_uri=${AuthenticationService.computeRedirectUri()}`;
+        }
     }
 
     static computeRedirectUri(){
