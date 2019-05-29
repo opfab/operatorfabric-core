@@ -661,6 +661,7 @@ HTTP_PROXY=http://user:password@proxy.example.com:80/
 ----
 
 IMPORTANT: The password should be URL-encoded.
+
 +++ </div></details> +++
 
 +++ <details><summary> +++
