@@ -94,7 +94,7 @@ properties or yml available.
 At time of writting, you cannot specify an alternate profile at runtime.
 The default profiles activated are docker and native.
 
-=== available environment variables for docker image
+=== Available environment variables for docker image
 
 * RABBITMQ_HOST: Rabbitmq host name
 * RABBITMQ_PORT: Rabbitmq host port
@@ -107,7 +107,7 @@ The default profiles activated are docker and native.
 
 In progress
 
-=== available environment variables when launching on Kubernetes
+=== Available environment variables when launching on Kubernetes
 
 * RABBITMQ_HOST: Rabbitmq host name
 * RABBITMQ_PORT: Rabbitmq host port

@@ -10,6 +10,3 @@ spring:
       discovery:
         service-id: config
         enabled: true
-    discovery:
-      service-id: config
-      enabled: true

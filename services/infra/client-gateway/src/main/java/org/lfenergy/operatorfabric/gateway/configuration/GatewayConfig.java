@@ -59,6 +59,37 @@ public class GatewayConfig {
                                     ;
                         })
                         .uri("lb://CONFIG")
-                ).build();
+                )
+                .route("time",
+                        r-> r
+                                .path("/time/**")
+                                .filters(f->f.rewritePath("/time/(?<path>.*)", "/$\\{path}"))
+                                .uri("lb://TIME")
+                        )
+                .route("thirds",
+                        r-> r
+                                .path("/thirds/**")
+                                .filters(f->f.rewritePath("/thirds/(?<path>.*)", "/thirds/$\\{path}"))
+                                .uri("lb://THIRDS")
+                        )
+                .route("users",
+                        r-> r
+                                .path("/users/**")
+                                .filters(f->f.rewritePath("/users/(?<path>.*)", "/$\\{path}"))
+                                .uri("lb://USERS")
+                )
+                .route("cards",
+                        r-> r
+                                .path("/cards/**")
+                                .filters(f->f.rewritePath("/cards/(?<path>.*)", "/$\\{path}"))
+                                .uri("lb://CARDS-CONSULTATION")
+                )
+                .route("web-ui",
+                        r-> r
+                                .path("/ui/**")
+                                .filters(f->f.rewritePath("/ui/(?<path>.*)", "/$\\{path}"))
+                                .uri("lb://WEB-UI")
+                )
+                .build();
     }
 }

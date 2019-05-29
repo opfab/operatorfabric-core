@@ -5,11 +5,13 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 :springboot_doc: https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE
 :spring_cloud_config_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.1.0.RELEASE/
+:spring_cloud_netflix_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-netflix/2.1.0.RC3/
+:spring_cloud_gateway_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-gateway/2.1.0.RELEASE/
 :opfab_architecture_doc: https://opfab.github.io/documentation/0.4.1.SNAPSHOT/architecture/
 
 == Configuration
 
-As a microservice architectured solution, Operator Fabric has multiple services
+As a micro service architectured solution, Operator Fabric has multiple services
 to configure. These configuration are gathered by a Configuration Service that
 can be redunded for safety.
 
@@ -27,13 +29,32 @@ references describes Springboot configuration.
 === Global configuration
 
 Aside from the configuration service, all configurations are gathered in the
-configuration service environment backend (see <<Cloud Configuration service>>)
+configuration service environment backend (see <<Cloud Configuration service>>).
+
+Note that a few things cannot be set in the global configuration backend and
+must be set in each services bootstrap configuration file. In this regard,
+<<Cloud Configuration service>>[Configuration] and <<Cloud Registry service>>[Registry]
+services have specific configuration but for other services, they all require
+the same minimal information:
+
+* *mandatory* service name(spring.application.name)
+* *mandatory* configuration name (spring.cloud.config.name)
+* *mandatory* configuration fetch from registry enabled (spring.cloud.config.discovery.enabled: true)
+* *mandatory* configuration service name in registry (spring.cloud.config.discovery.service-id)
+* *mandatory* eureka registration (eureka.client.register-with-eureka: true and
+eureka.client.fetch-registry: true)
+* mandatory eureka registry urls (eureka.client.service-url.defaultZone)
+* configuration fail fast (spring.cloud.config.fail-fast)
+* configuration fetch maximum retry (spring.cloud.config.retry.max-attempts)
+
+In most situation, you do not need to change the default bootstrap
+configuration for those services.
 
 === Per service Configuration Guides
 
 include::../../../../services/infra/config/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
 include::../../../../services/infra/registry/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
-//include::../../../../services/client-gateway/cards-publication/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+include::../../../../services/client-gateway/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
 //include::../../../../services/core/cards-publication/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
 //include::../../../../services/core/cards-consultation/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
 //include::../../../../services/core/thirds/src/docs/asciidoc/configuration.adoc[leveloffset=+2]

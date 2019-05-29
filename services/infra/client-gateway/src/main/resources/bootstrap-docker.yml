@@ -10,7 +10,6 @@ spring:
       discovery:
         service-id: config
         enabled: true
-  level.root: debg
 eureka:
   client:
     registerWithEureka: true
