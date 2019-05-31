@@ -16,39 +16,6 @@ export function reducer(
     action: LightCardActions|TimelineActions
 ): TimelineState {
     switch (action.type) {
-        case LightCardActionTypes.LoadLightCardsSuccess: {
-            return {
-                ...LightCardAdapter.upsertMany(action.payload.lightCards, state),
-                loading: false,
-                lastCards: action.payload.lightCards
-            };
-        }
-
-        case LightCardActionTypes.LoadLightCardsFailure: {
-            return {
-                ...state,
-                loading: false,
-                error: `error while loading cards: '${action.payload.error}'`,
-                lastCards: []
-            };
-        }
-
-        case LightCardActionTypes.SelectLightCard: {
-            return {
-                ...state,
-                ...action.payload,
-                lastCards: []
-            };
-        }
-
-        case LightCardActionTypes.AddLightCardFailure: {
-            return {
-                ...state,
-                loading: false,
-                error: `error while adding a single lightCard: '${action.payload.error}'`,
-                lastCards: []
-            };
-        }
         case TimelineActionTypes.InitTimeline: {
             return {
                 ...state,

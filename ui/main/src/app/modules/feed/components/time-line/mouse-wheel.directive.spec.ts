@@ -64,4 +64,18 @@ describe('Directive: AppMouseWheel', () => {
         fixture.detectChanges();
         expect(component).toBeTruthy();
     });
+
+    it('event not window.event & not preventDefault' +
+        'event.wheelDelta > 0', () => {
+        inputEl.triggerEventHandler('mousewheel', {wheelDelta: 50});
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
+    });
+
+    it('event not window.event & not preventDefault' +
+        'event.wheelDelta < 0', () => {
+        inputEl.triggerEventHandler('mousewheel', {wheelDelta: -50});
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
+    });
 });

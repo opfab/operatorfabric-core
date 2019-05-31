@@ -20,11 +20,17 @@ import {CustomTimelineChartComponent} from "../custom-timeline-chart/custom-time
 import {InitChartComponent} from "../init-chart/init-chart.component";
 import {CustomRouterStateSerializer} from "@ofStates/router.state";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {getOneRandomCard, getOneRandomLigthCard} from "@tests/helpers";
+import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
+import {LightCard} from "@ofModel/light-card.model";
+import * as fromStore from "@ofSelectors/feed.selectors";
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
+  // let componentInit: InitChartComponent;
   let store: Store<AppState>;
   let fixture: ComponentFixture<TimeLineComponent>;
+  // let fixtureInit: ComponentFixture<InitChartComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -53,19 +59,84 @@ describe('TimeLineComponent', () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
-/*  it('should create', () => {
-    const lightCard = getOneRandomLigthCard();
 
-    // extract expected data
-    const id = lightCard.id;
-    const uid = lightCard.uid;
-    const title = lightCard.title.key;
-    const summaryValue = lightCard.summary.key;
-    const publisher = lightCard.publisher;
-    const version = lightCard.publisherVersion;
-
-    component.lightCard = lightCard;
+/*  it('should create', async() => {
     fixture.detectChanges();
+    fixtureInit = TestBed.createComponent(InitChartComponent);
+    componentInit = fixtureInit.componentInstance;
+    fixtureInit.detectChanges();
+    spyOn(componentInit, 'applyNewZoom');
+
+    const button = fixture.nativeElement.children[1].children[0].querySelectorAll('button');
+    button[2].click();
+    button[3].click();
+    componentInit.applyNewZoom('in');
+    // button[4].click();
+    /!*fixture.whenStable().then(() => {
+      expect(component.onEditButtonClick).toHaveBeenCalled();
+    });*!/
     expect(component).toBeTruthy();
   });*/
+
+  it('should create timeline with other conf', () => {
+    const conf = {
+      enableDrag: true,
+      enableZoom: false,
+      autoScale: true,
+      animations: true,
+      showGridLines: false,
+      realTimeBar: false,
+      centeredOnTicks: false,
+    };
+    component.conf = conf;
+    fixture.detectChanges();
+    component.conf = conf;
+    expect(component).toBeTruthy();
+  });
+
+  it('should create a list with one element when there are ' +
+      'only one card in the state', () => {
+    // const compiled = fixture.debugElement.nativeElement;
+    const oneCard = getOneRandomLigthCard();
+    const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
+    store.dispatch(action);
+    const lightCards$ = store.select(fromStore.selectFeed);
+    lightCards$.subscribe(lightCard => {
+      expect(lightCard).toEqual([oneCard]);
+    });
+    expect(store.dispatch).toHaveBeenCalledWith(action);
+    expect(component).toBeTruthy();
+    const compiled = fixture.debugElement.nativeElement;
+    fixture.detectChanges();
+/*
+    // title exists
+    // expect(compiled.querySelector('h3').textContent).toContain('Feed');
+    // a list exists
+    expect(compiled.querySelector('.feed-content > div')).toBeTruthy();*/
+  });
+
+  it('should create four differents circles when there are ' +
+      'four cards with differents severity in the state', () => {
+    // const compiled = fixture.debugElement.nativeElement;
+    const oneCard = getOneRandomLigthCard();
+    const actionCard = getOneRandomLigthCard({severity: 'ACTION'});
+    const alarmCard = getOneRandomLigthCard({severity: 'ALARM'});
+    const notificationCard = getOneRandomLigthCard({severity: 'NOTIFICATION'});
+    const action = new LoadLightCardsSuccess({lightCards: [oneCard, actionCard, alarmCard, notificationCard] as LightCard[]});
+    store.dispatch(action);
+    const lightCards$ = store.select(fromStore.selectFeed);
+    lightCards$.subscribe(lightCard => {
+      expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard]);
+    });
+    expect(store.dispatch).toHaveBeenCalledWith(action);
+    expect(component).toBeTruthy();
+    const compiled = fixture.debugElement.nativeElement;
+    fixture.detectChanges();
+/*
+    expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
+    // counts the list elements
+    const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
+    const numberOfCardsInTheActionPayload = 2;
+    expect(listElements.length).toEqual(numberOfCardsInTheActionPayload);*/
+  });
 });

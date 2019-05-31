@@ -16,14 +16,14 @@ import {InitTimeline} from "@ofActions/timeline.actions";
 import {AddCardDataTimeline} from "@ofActions/timeline.actions";
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import * as feedSelectors from "@ofSelectors/feed.selectors";
 
 @Component({
   selector: 'of-time-line',
   templateUrl: './time-line.component.html',
 })
 export class TimeLineComponent implements OnInit {
-  selection$: Observable<string>;
-  lastCards$: Observable<LightCard[]>;
+    lightCards$: Observable<LightCard[]>;
 
     public conf: any;
     public confZoom: any;
@@ -96,13 +96,21 @@ export class TimeLineComponent implements OnInit {
             forwardLevel: 'Y',
             followCloackTick: false,
         }];
-        this.lastCards$ = this.store.select(timelineSelectors.selectLastCardsSelection);
+
+        // this.lastCards$ = this.store.select(timelineSelectors.selectLastCardsSelection);
+        this.lightCards$ = this.store.pipe(
+            select(feedSelectors.selectFilteredFeed),
+            catchError(err => of([]))
+        );
 
         this.store.dispatch(new InitTimeline({
             data: [],
         }));
 
-        this.lastCards$.subscribe(value => {
+        this.lightCards$.subscribe(value => {
+            this.store.dispatch(new InitTimeline({
+                data: [],
+            }));
             for (const val of value) {
                 // val.endDate val.startDate val.severity
                 const myCardTimeline = {

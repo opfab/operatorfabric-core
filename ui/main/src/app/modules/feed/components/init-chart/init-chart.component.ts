@@ -105,7 +105,6 @@ export class InitChartComponent implements OnInit {
 
       // Set this.arrayChartData and arraySeverity
       if (this.arrayChartData === []) {
-        this.arrayChartData = [];
         this.arrayChartData.push([]);
         this.arrayChartData[0].push(obj);
         arraySeverity.push({color: obj.color, id: 0});
@@ -309,7 +308,7 @@ export class InitChartComponent implements OnInit {
     const startDomain = moment(this.myDomain[0]);
     startDomain.day(0);
     /*
-    // For the first step, set to next week
+    // For the first step, set to next week of visualization
     if (this.realCaseActivate) {
       startDomain.add(7, 'days');
       this.realCaseActivate = false;
@@ -331,11 +330,14 @@ export class InitChartComponent implements OnInit {
   moveDomainByMonth(forward: boolean) {
     const prevStartDomain = moment(this.myDomain[0]);
     const startDomain = _.cloneDeep(prevStartDomain);
+    /*
+    // For the first step, set to next month of visualization
     if (this.realCaseActivate) {
       startDomain.add(1, 'months');
       startDomain.startOf('month').hours(0);
       this.realCaseActivate = false;
     }
+    */
     // startDomain.setDate(1);
     const prevEndDomain = moment(this.myDomain[1]);
     const endDomain = _.cloneDeep(prevEndDomain);
@@ -353,11 +355,14 @@ export class InitChartComponent implements OnInit {
   moveDomainByYear(forward: boolean) {
     const prevStartDomain = moment(this.myDomain[0]);
     const startDomain = _.cloneDeep(prevStartDomain);
+    /*
+    // For the first step, set to next month of visualization
     if (this.realCaseActivate) {
       startDomain.add(1, 'year');
       startDomain.startOf('year').hours(0);
       this.realCaseActivate = false;
     }
+    */
     // startDomain.setDate(1);
     const prevEndDomain = moment(this.myDomain[1]);
     const endDomain = _.cloneDeep(prevEndDomain);

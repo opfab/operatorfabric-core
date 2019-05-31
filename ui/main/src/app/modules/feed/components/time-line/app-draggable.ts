@@ -16,7 +16,7 @@ export class DraggableDirective {
     this.dragStart.emit(event);
   }
 
-  @HostListener('document:pointermove', ['$event'])
+  @HostListener('pointermove', ['$event'])
   onPointerMove(event: PointerEvent): void {
     if (!this.dragging) {
       return;
@@ -25,7 +25,7 @@ export class DraggableDirective {
     this.dragMove.emit(event);
   }
 
-  @HostListener('document:pointerup', ['$event'])
+  @HostListener('pointerup', ['$event'])
   onPointerUp(event: PointerEvent): void {
     if (!this.dragging) {
       return;

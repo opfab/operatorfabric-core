@@ -7,16 +7,8 @@
 
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {LightCard} from '@ofModel/light-card.model';
+import {LightCardAdapter} from "@ofStates/feed.state";
 
-/**
- * The Feed State consist of:
- *  * EntityState of LightCard
- *  * selectedCardId: the currently selected card id
- *  * lastCards the last cards added / updated to the feed
- *  * loading: weather there is an ongoing state modification
- *  * error: last error during state processing
- *  * filters: a collection of filter to apply to the rendered feed
- */
 export interface TimelineState extends EntityState<LightCard> {
     selectedCardId: string;
     lastCards: LightCard[];
@@ -25,13 +17,13 @@ export interface TimelineState extends EntityState<LightCard> {
     data: any[];
 }
 
-export function sortByStartDate(card1: LightCard, card2: LightCard){
+/*export function sortByStartDate(card1: LightCard, card2: LightCard){
     return card1.startDate - card2.startDate;
 }
 
 export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<LightCard>({
     sortComparer:sortByStartDate
-});
+});*/
 
 export const timelineInitialState: TimelineState = LightCardAdapter.getInitialState(
     {
