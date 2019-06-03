@@ -1,18 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CustomTimelineChartComponent } from './custom-timeline-chart.component';
-import {CommonModule} from "@angular/common";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {FormsModule} from "@angular/forms";
-import {NgxChartsModule} from "@swimlane/ngx-charts";
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { DebugElement } from '@angular/core';
 import * as moment from 'moment';
-import {DebugElement} from "@angular/core";
 
 describe('CustomTimelineChartComponent', () => {
   let component: CustomTimelineChartComponent;
   let fixture: ComponentFixture<CustomTimelineChartComponent>;
+  let inputEl: DebugElement;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule,
         BrowserAnimationsModule,
@@ -21,9 +21,6 @@ describe('CustomTimelineChartComponent', () => {
       declarations: [ CustomTimelineChartComponent ]
     })
     .compileComponents();
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(CustomTimelineChartComponent);
     component = fixture.componentInstance;
   });
@@ -75,76 +72,97 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('check week ticks assignation more than 10 days',() => {
+  it('check setXTicksValue function', () => {
+    fixture.detectChanges();
+    component.clusterLevel = 'M';
+    component.setXTicksValue([0, 2888000000]);
+    component.clusterLevel = 'Y';
+    component.setXTicksValue([0, 34888000000]);
+    expect(component).toBeTruthy();
+  });
+
+  it('check week ticks assignation more than 10 days', () => {
     fixture.detectChanges();
     // more than 10 days
     component.weekTicks([0, 964000000]);
     expect(component).toBeTruthy();
   });
 
-  it('check week ticks assignation less than 10 days',() => {
+  it('check week ticks assignation less than 10 days', () => {
     fixture.detectChanges();
-    // more less 10 days ==> 864000000
+    // less than 10 days ==> 864000000
     component.weekTicks([0, 664000000]);
     expect(component).toBeTruthy();
   });
 
-  it('checheck week ticks assignation more than 45 days',() => {
+  it('checheck week ticks assignation more than 45 days', () => {
     fixture.detectChanges();
     // more than 45 days
     component.monthTicks([0, 4888000000]);
     expect(component).toBeTruthy();
   });
 
-  it('check week ticks assignation less than 45 days',() => {
+  it('check week ticks assignation less than 45 days', () => {
     fixture.detectChanges();
-    // more less 45 days ==> 3888000000
+    // less than 45 days ==> 3888000000
     component.monthTicks([0, 2888000000]);
     expect(component).toBeTruthy();
   });
 
-  /*fit('check drag start function',() => {
-    initMouseEvent(MouseEvent);
-    inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
-    inputEl.triggerEventHandler('pointerup', {clientX: 5});
-    inputEl.triggerEventHandler('move', {clientX: 0});
-    inputEl.triggerEventHandler('pointerdown', {clientX: -5});
+  it('check year ticks assignation', () => {
     fixture.detectChanges();
-    expect(component).toBeTruthy();
-  });*/
-
-  /*fit('check drag start function',() => {
-    fixture.detectChanges();
-    let event = instanceOfMouseEvent.clientX;
-    event["clientX"] = 5;
-    component.onDragStart(event);
-    expect(component).toBeTruthy();
-  });*/
-
-
- /* fit('should create', () => {
-    fixture.detectChanges();
-    const start = moment();
-    start.hours(0).minutes(0).seconds(0).millisecond(0);
-    const end = _.cloneDeep(start);
-    end.startOf('month');
-    end.add(2, 'months');
-    const testCircle = {start, end, count: 4}
-    component.clusterLevel = 'M';
-    component.feedCircleHovered(testCircle);
+    // more than 13 months ==> 34888000000
+    component.yearTicks([0, 34888000000]);
     expect(component).toBeTruthy();
   });
 
-  fit('should create', () => {
+  /*fit('check drag start function',() => {
     fixture.detectChanges();
-    const start = moment();
-    start.hours(0).minutes(0).seconds(0).millisecond(0);
-    const end = _.cloneDeep(start);
-    end.startOf('month');
-    end.add(2, 'months');
-    const testCircle = {start, end, count: 4}
-    component.clusterLevel = 'Y';
-    component.feedCircleHovered(testCircle);
+    let event = new PointerEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 100,
+      clientY: 100
+    });
+    let event2 = new PointerEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 200,
+      clientY: 100
+    });
+    let event3 = new PointerEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 300,
+      clientY: 100
+    });
+    inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
+    inputEl.triggerEventHandler('pointerdown', event);
+    inputEl.triggerEventHandler('move', event2);
+    inputEl.triggerEventHandler('pointerup', event3);
+
+    fixture.detectChanges();
+    expect(component).toBeTruthy();
+  });*/
+
+ /* fit('check drag start function',() => {
+    fixture.detectChanges();
+    let event = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 100,
+      clientY: 100
+    });
+    let event2 = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: 150,
+      clientY: 100
+    });
+    console.log('EVENT=', event);
+    component.startDragX = 90;
+    component.onDragStart(event);
+    component.onDragMove(event2);
     expect(component).toBeTruthy();
   });*/
 });

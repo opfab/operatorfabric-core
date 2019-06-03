@@ -48,7 +48,7 @@ export class TimeLineComponent implements OnInit {
         // conf 2
         const startDomain2 = moment();
         startDomain2.hours(0).minutes(0).seconds(0).millisecond(0);
-        //startDomain2.startOf('month');
+        startDomain2.startOf('month');
         /*
         // pas obligatoire
         startDomain2.subtract(2, 'days'); // deux jours avant

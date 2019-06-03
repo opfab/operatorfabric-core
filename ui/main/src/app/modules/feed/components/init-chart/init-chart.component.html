@@ -1,14 +1,4 @@
 <div class="timeline">
-  <!--
-   [autoScale] make the yScale start at 0 ( and end at 5 if the value is not higher)
-   [results] is the basic input for data on ngx-charts, we don't use it but we must set it
-   [myData] is the data pass to our timeline
-   [xAxis] allow to show xAxis (xAxis show the vertical line of the grid)
-   [yAxis] allow to show yAxis (yAxis show the horizontal line of the grid)
-   [valueDomain] preDefine the Domain of timeline
-   [showGridLines] allow to show grid and ticks Label automatic
-   [showXAxisLabel] allow to show X axis label under the label Tick show by the grid
-  -->
   <div class="menu-timeline">
     <button class="home-btn" *ngIf="checkButtonHomeDisplay()" (click)="homeClick(buttonHome[0], buttonHome[1])">
       <em class="fas fa-home"></em>
@@ -33,19 +23,39 @@
       </ul>
     </div>
   </div>
+  <!--
+   [autoScale] make the yScale start at 0 ( and end at 5 if the value is not higher)
+   [results] is the basic input for data on ngx-charts
+   [myData] is the data used by our timeline
+   [xAxis] allow to show xAxis (xAxis show the vertical line of the grid)
+   [yAxis] allow to show yAxis (yAxis show the horizontal line of the grid)
+   [valueDomain] preDefine the Domain of timeline
+   [showGridLines] allow to show grid and ticks Label automatic
+   [showXAxisLabel] allow to show X axis label under the label Tick show by the grid
+   [enableZoom] allow to zoom on timeline
+   [zoomOnButton] if zoom is allowed, mouse wheel movements follow zoom buttons
+   [enableDrag] allow to drag on timeline
+   [realTimeBar] show vertical blue bar at currently time
+   [clusterLevel] define the clusterLevel (zoomLevel) of timeline
+   [centeredOnTicks] position of circle centered on Ticks' timeline
+   [circleDiameter] circle diameter size
+   (zoomChange) call when custom timeline chart change his domain
+  -->
   <of-custom-timeline-chart *ngIf="arrayChartData"
                              [animations]="animations"
                              [autoScale]="autoScale"
-                             [enableZoom]="enableZoom"
-                             [enableDrag]="enableDrag"
-                             [realTimeBar]="realTimeBar"
                              [myData]="arrayChartData"
-                             [showGridLines]="showGridLines"
-                             [valueDomain]="myDomain"
                              [xAxis]="true"
                              [yAxis]="true"
+                             [valueDomain]="myDomain"
+                             [showGridLines]="showGridLines"
+                             [enableZoom]="enableZoom"
+                             [zoomOnButton]="true"
+                             [enableDrag]="enableDrag"
+                             [realTimeBar]="realTimeBar"
                              [clusterLevel]="forwardButtonType"
                              [centeredOnTicks]="centeredOnTicks"
+                             [circleDiameter]="circleDiameter"
                              (zoomChange)="applyNewZoom($event)">
   </of-custom-timeline-chart>
 </div>

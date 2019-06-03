@@ -5,25 +5,24 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {TimeLineComponent} from './time-line.component';
-import {CommonModule} from "@angular/common";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {FormsModule} from "@angular/forms";
-import {NgxChartsModule} from "@swimlane/ngx-charts";
-import {Store, StoreModule} from "@ngrx/store";
-import {appReducer, AppState, storeConfig} from "@ofStore/index";
-import {RouterTestingModule} from "@angular/router/testing";
-import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
-import {CustomTimelineChartComponent} from "../custom-timeline-chart/custom-timeline-chart.component";
-import {InitChartComponent} from "../init-chart/init-chart.component";
-import {CustomRouterStateSerializer} from "@ofStates/router.state";
-import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {getOneRandomCard, getOneRandomLigthCard} from "@tests/helpers";
-import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
-import {LightCard} from "@ofModel/light-card.model";
-import * as fromStore from "@ofSelectors/feed.selectors";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TimeLineComponent } from './time-line.component';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { Store, StoreModule } from '@ngrx/store';
+import { appReducer, AppState, storeConfig } from '@ofStore/index';
+import { RouterTestingModule } from '@angular/router/testing';
+import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { CustomTimelineChartComponent } from '../custom-timeline-chart/custom-timeline-chart.component';
+import { InitChartComponent } from '../init-chart/init-chart.component';
+import { CustomRouterStateSerializer } from '@ofStates/router.state';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { getOneRandomLigthCard } from '@tests/helpers';
+import { LoadLightCardsSuccess } from '@ofActions/light-card.actions';
+import { LightCard } from '@ofModel/light-card.model';
+import * as fromStore from '@ofSelectors/feed.selectors';
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
@@ -32,7 +31,7 @@ describe('TimeLineComponent', () => {
   let fixture: ComponentFixture<TimeLineComponent>;
   // let fixtureInit: ComponentFixture<InitChartComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule,
         BrowserAnimationsModule,
@@ -46,9 +45,6 @@ describe('TimeLineComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
-  }));
-
-  beforeEach(() => {
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
     fixture = TestBed.createComponent(TimeLineComponent);
@@ -82,7 +78,7 @@ describe('TimeLineComponent', () => {
     const conf = {
       enableDrag: true,
       enableZoom: false,
-      autoScale: true,
+      autoScale: false,
       animations: true,
       showGridLines: false,
       realTimeBar: false,
