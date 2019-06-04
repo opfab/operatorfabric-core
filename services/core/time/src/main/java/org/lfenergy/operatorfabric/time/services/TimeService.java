@@ -34,7 +34,7 @@ public class TimeService {
     private final VirtualTime virtualTime;
     private final ObjectMapper mapper;
     private final FanoutExchange timeExchange;
-    @Value("${time.default:#{null}}")
+    @Value("${operatorfabric.time.default:#{null}}")
     private Long defaultStartTime;
 
     /**

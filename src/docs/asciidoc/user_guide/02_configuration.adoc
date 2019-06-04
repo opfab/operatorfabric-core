@@ -3,7 +3,8 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
-:springboot_doc: https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE
+:springboot_doc: https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/
+:spring_doc: https://docs.spring.io/spring/docs/5.1.4.RELEASE/
 :spring_cloud_config_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.1.0.RELEASE/
 :spring_cloud_netflix_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-netflix/2.1.0.RC3/
 :spring_cloud_gateway_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-gateway/2.1.0.RELEASE/
@@ -72,10 +73,6 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://authserver/auth/realms/dev/protocol/openid-connect/certs
-  cloud:
-    config:
-      discovery:
-        enabled: true
 eureka:
   client:
     service-url:
@@ -97,8 +94,7 @@ In the above exemple you can see that we need to configure:
 
 * RabbitMQ (See {spring_amqp_doc}/reference/htmlsingle/[spring-amqp doc])
 * MongoDB
-* Cloud discovery (See ...)
-* Eureka
+* Eureka (See {spring_cloud_netflix_doc}/single/spring-cloud-netflix.html#_service_discovery_eureka_clients[spring eureka])
 * Operator Fabric
 
 ==== Operator Fabric Mongo configuration
@@ -110,18 +106,31 @@ See {mongo_doc}/connection-string/[mongo connection string] for the complete URI
 
 ==== Operator Fabric Specific configuration
 
+Bellow are description of Operator Fabric specific configuration properties.
 
 Note that other components may have specific configuration, see they relevant
 sub-sections.
+
+===== Security
+
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.security.oauth2.client-id|null|yes| Oauth2 client id used by operator fabric may be specific for each service|
+|operatorfabric.security.oauth2.client-secret|null|yes| Oauth2 client secret used by operator fabric may be specific for each service|
+|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim to use as user login or id|
+|operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim to use as token expiration timestamp|
+
+|===
 
 === Per service Configuration Guides
 
 include::../../../../services/infra/config/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
 include::../../../../services/infra/registry/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
-include::../../../../services/client-gateway/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-//include::../../../../services/core/cards-publication/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-//include::../../../../services/core/cards-consultation/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-//include::../../../../services/core/thirds/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-//include::../../../../services/core/users/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
-//include::../../../../services/core/time/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+include::../../../../services/infra/client-gateway/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
+include::../../../../services/core/cards-publication/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+include::../../../../services/core/cards-consultation/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+include::../../../../services/core/thirds/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
+include::../../../../services/core/users/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
+include::../../../../services/core/time/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
 //include::../../../../services/web/web-ui/src/docs/asciidoc/configuration.adoc[leveloffset=+2]

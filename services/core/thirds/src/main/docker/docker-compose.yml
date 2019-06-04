@@ -1,6 +1,6 @@
 version: '2.1'
 services:
-  thirds:
+  operatorfabric.thirds:
     image: "org.lfenergy.operatorfabric/thirds"
     ports:
      - "2100:8080"

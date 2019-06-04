@@ -63,8 +63,8 @@ import java.util.function.Function;
  *
  * <p>Configuration properties available in spring configuration</p>
  * <ul>
- *     <li>opfab.write.window: treatment window maximum size</li>
- *     <li>opfab.write.timeout: maximum wait time before treatment window creation</li>
+ *     <li>operatorfabric.card-write.window: treatment window maximum size</li>
+ *     <li>operatorfabric.write.timeout: maximum wait time before treatment window creation</li>
  * </ul>
  *
  * @author David Binder
@@ -88,8 +88,8 @@ public class CardWriteService {
                             MongoTemplate template,
                             LocalValidatorFactoryBean localValidatorFactoryBean,
                             CardNotificationService cardNotificationService,
-                            @Value("${opfab.write.window:1000}") int windowSize,
-                            @Value("${opfab.write.timeout:500}") long windowTimeOut
+                            @Value("${operatorfabric.card-write.window.size:1000}") int windowSize,
+                            @Value("${operatorfabric.card-write.window.timeout:500}") long windowTimeOut
                             ) {
 
         this.recipientProcessor = recipientProcessor;

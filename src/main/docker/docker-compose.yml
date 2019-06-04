@@ -5,7 +5,7 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  thirds:
+  operatorfabric.thirds:
     depends_on:
       - "rabbitmq"
     image: "org.lfenergy.operatorfabric/config"
@@ -14,7 +14,7 @@ services:
      - "3100:5005"
     volumes:
      - "../../../services/core/thirds/build/docker-volume:/configuration"
-  thirds:
+  operatorfabric.thirds:
     depends_on:
       - "rabbitmq"
     image: "org.lfenergy.operatorfabric/thirds"

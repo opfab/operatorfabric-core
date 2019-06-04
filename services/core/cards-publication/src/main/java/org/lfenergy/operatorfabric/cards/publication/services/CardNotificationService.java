@@ -52,8 +52,8 @@ import java.util.stream.Collectors;
  *
  * <p>Configuration properties available in spring configuration</p>
  * <ul>
- * <li>opfab.notification.window: treatment window maximum size</li>
- * <li>opfab.notification.timeout: maximum wait time before treatment window creation</li>
+ * <li>operatorfabric.card-notification.window: treatment window maximum size</li>
+ * <li>operatorfabric.notification.timeout: maximum wait time before treatment window creation</li>
  * </ul>
  *
  * @author David Binder
@@ -74,8 +74,8 @@ public class CardNotificationService {
                                    TopicExchange groupExchange,
                                    DirectExchange userExchange,
                                    ObjectMapper mapper,
-                                   @Value("${opfab.notification.window:100}") int windowSize,
-                                   @Value("${opfab.notification.timeout:1000}") long windowTimeOut
+                                   @Value("${operatorfabric.card-notification.window.size:100}") int windowSize,
+                                   @Value("${operatorfabric.card-notification.window.timeout:1000}") long windowTimeOut
     ) {
         this.rabbitTemplate = rabbitTemplate;
         this.groupExchange = groupExchange;

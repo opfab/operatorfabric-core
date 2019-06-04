@@ -4,31 +4,32 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Cloud Gateway service
+= Thirds Business service
 
-Operator Fabric Client Gateway service is a Spring Cloud Gateway application
+Operator Fabric Thirds Business service is a Spring MVC application
 bootstrapped using SpringBoot.
 
-In our spring micro service architecture the gateway service depends on Eureka
+In our spring micro service architecture this service depends on Eureka
 Registry.
 
 == Mandatory configuration, Profiles and default properties
 
-To get a working gateway service, there a few mandatory configuration
-properties:
+The service has no mandatory configuration besside global configuration and
+usual bootstrap configuration.
 
-In a configuration service client-gateway.yml file
+For other configuration see:
 
-* The application must set up a route to the oauth server
-** /auth/token(?<path>.*) must match the oauth2 token entry point
-** /auth/code/(?<params>.*) must match the auth entry point with specific query
-parameters : response_type=code&client_id=[client id]&$\{params}
-** /auth/check_token must match token introspection entry point
-* The application may set up CORS rules if api are to be accessed outside of
-the deployment domain
+* {springboot_doc}/reference/htmlsingle/[Spring Boot documentation].
+* {spring_doc}spring-framework-reference/web.html#mvc[Spring MVC documentation].
 
-For other configuration see {spring_cloud_gateway_doc}single/spring-cloud-gateway.html[spring cloud gateway documentation].
+=== Service specific properties
 
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.thirds.storage.path|null|no|File path to data storage folder
+
+|===
 
 === default properties
 
@@ -64,13 +65,13 @@ The above embedded configurations are the basic settings of the application:
 === Sample developpement configuration
 
 ```
-include::../../../../config/src/main/docker/volume/dev-configurations/client-gateway.yml[]
+include::../../../../../infra/config/src/main/docker/volume/dev-configurations/thirds.yml[]
 ```
 
 === Sample docker image configuration
 
 ```
-include::../../../../config/src/main/docker/volume/docker-configurations/client-gateway.yml[]
+include::../../../../../infra/config/src/main/docker/volume/docker-configurations/thirds.yml[]
 ```
 
 == Specifying external configuration properties when lauching a jar file
@@ -87,7 +88,7 @@ Our docker image expects optional property file to be stored in the container
 /service-config folder. You can bind so docker volume to this path to make
 properties or yml available.
 
-At time of writting, you cannot specify an alternate profile at runtime.
+At time of writing, you cannot specify an alternate profile at runThirds.
 The default profiles activated are docker and native.
 
 === Available environment variables for docker image

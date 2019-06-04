@@ -604,7 +604,7 @@ NB : properties may be set using ".properties" file or ".yml" file. See https://
 * Generic property list extract :
 ** server.port (defaults to 8080) : embedded server port
 * :services:core:third-party-service properties list extract :
-** thirds.storage.path (defaults to &quot;&quot;) : where to save/load OperatorFabric Third Party data
+** operatorfabric.thirds.storage.path (defaults to &quot;&quot;) : where to save/load OperatorFabric Third Party data
 
 === Service port table
 
