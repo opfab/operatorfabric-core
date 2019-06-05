@@ -279,7 +279,7 @@ public class CardWriteService {
             return;
         BulkOperations bulkCard = template.bulkOps(BulkOperations.BulkMode.ORDERED, CardPublicationData.class);
         cards.forEach(c -> {
-            log.info("preparing to write " + c.toString());
+            log.trace("preparing to write " + c.toString());
             addBulkCard(bulkCard, c);
         });
         bulkCard.execute();

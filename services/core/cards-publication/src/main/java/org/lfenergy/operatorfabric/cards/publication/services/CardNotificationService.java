@@ -63,8 +63,8 @@ import java.util.stream.Collectors;
 public class CardNotificationService {
 
     private final RabbitTemplate rabbitTemplate;
-    private final TopicExchange groupExchange;
-    private final DirectExchange userExchange;
+//    private final TopicExchange groupExchange;
+//    private final DirectExchange userExchange;
     private final ObjectMapper mapper;
     private final EmitterProcessor<Tuple2<CardPublicationData, CardOperationTypeEnum>> processor;
     private final FluxSink<Tuple2<CardPublicationData, CardOperationTypeEnum>> sink;
@@ -78,8 +78,8 @@ public class CardNotificationService {
                                    @Value("${operatorfabric.card-notification.window.timeout:1000}") long windowTimeOut
     ) {
         this.rabbitTemplate = rabbitTemplate;
-        this.groupExchange = groupExchange;
-        this.userExchange = userExchange;
+//        this.groupExchange = groupExchange;
+//        this.userExchange = userExchange;
         this.mapper = mapper;
 
         this.processor = EmitterProcessor.create();
