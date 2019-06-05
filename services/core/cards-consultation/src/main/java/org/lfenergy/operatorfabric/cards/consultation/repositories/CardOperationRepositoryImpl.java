@@ -111,7 +111,7 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
                 )
         ));
         TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class, queryStage, sortStage1, groupStage, projectStage, sortStage2);
-
+        aggregation.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
         return template.aggregate(aggregation, clazz);
     }
 
@@ -132,7 +132,7 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
                 where(START_DATE_FIELD).gt(rangeStart)));
 
         TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class, queryStage, sortStage1,groupStage, projectStage, sortStage2);
-
+        aggregation.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
         return template.aggregate(aggregation, clazz);
     }
 
@@ -143,6 +143,7 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
                 where(END_DATE_FIELD).lt(rangeEnd)));
 
         TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class, queryStage, sortStage1, groupStage, projectStage, sortStage2);
+        aggregation.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
         return template.aggregate(aggregation, clazz);
     }
 

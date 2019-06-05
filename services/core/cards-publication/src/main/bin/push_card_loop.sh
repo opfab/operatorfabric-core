@@ -39,8 +39,8 @@ display_usage() {
 	echo -e "\t-r, --process  : string. Process id suffix. Defaults to $process"
 	echo -e "\t-c, --process-count  : number. Number of different process. Defaults to $processNumber"
 	echo -e "\t-d, --date-shift  : number. millisecond date shift. Defaults to $dateShift"
-	echo -e "\t-a, --payload  : specify an external json file as payload. Defaults to $payload"
     echo -e "\t-s, --severity : string. Card severity. Defaults to $severity"
+	echo -e "\t-a, --payload  : specify an external json file as payload."
 }
 
 # dateShift example values
