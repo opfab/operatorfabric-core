@@ -102,6 +102,7 @@ The default profiles activated are docker and native.
 * RABBITMQ_PASSWORD: Rabbitmq user password used for authentication service
 * REGISTRY_HOST: Registry (eureka) host name
 * REGISTRY_PORT: Registry (eureka) host port
+* JAVA_OPTIONS: Additional java options
 
 == Specifying configuration properties when lauching on Kubernetes
 
@@ -115,3 +116,4 @@ In progress
 * RABBITMQ_PASSWORD: Rabbitmq user password used for authentication service
 * REGISTRY_HOST: Registry (eureka) host name
 * REGISTRY_PORT: Registry (eureka) host port
+* JAVA_OPTIONS: Additional java options

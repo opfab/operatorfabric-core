@@ -95,6 +95,7 @@ The default profiles activated are docker and native.
 
 * REGISTRY_HOST: Registry service host
 * REGISTRY_PORT: Registry service port
+* JAVA_OPTIONS: Additional java options
 
 == Specifying configuration properties when lauching on Kubernetes
 
@@ -104,3 +105,4 @@ In progress
 
 * REGISTRY_HOST: Registry service host
 * REGISTRY_PORT: Registry service port
+* JAVA_OPTIONS: Additional java options

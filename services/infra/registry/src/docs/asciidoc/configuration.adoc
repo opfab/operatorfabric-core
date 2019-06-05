@@ -110,6 +110,7 @@ The default profiles activated are docker and native.
 
 * CONFIG_HOST: Configuration service host
 * CONFIG_PORT: Configuration service port
+* JAVA_OPTIONS: Additional java options
 
 == Specifying configuration properties when lauching on Kubernetes
 
@@ -119,3 +120,4 @@ In progress
 
 * CONFIG_HOST: Configuration service host
 * CONFIG_PORT: Configuration service port
+* JAVA_OPTIONS: Additional java options

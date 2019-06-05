@@ -39,6 +39,6 @@ else
         exit 1
      else
      echo "$DEPENDS_ON is declared in Registry, starting Client Gateway service"
-        java -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n -Djava.security.egd=file:/dev/./urandom -jar /app.jar
+        java -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n -Djava.security.egd=file:/dev/./urandom -jar /app.jar $JAVA_OPTIONS
     fi
 fi
