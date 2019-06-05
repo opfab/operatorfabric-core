@@ -10,6 +10,22 @@ interval=5
 url=http://localhost:2102/cards
 processNumber=5
 dateShift=0
+payload="{ "$'\n'
+payload+="    \"rootProp\": \"This is a root property\", "$'\n'
+payload+="    \"level1\": { "$'\n'
+payload+="      \"level1Prop\": \"This is a level1 property\", "$'\n'
+payload+="      \"level1Array\": [ "$'\n'
+payload+="        {\"level1ArrayProp\" : 1}, "$'\n'
+payload+="        {\"level1ArrayProp\" : 2}, "$'\n'
+payload+="        {\"level1ArrayProp\" : 3} "$'\n'
+payload+="        ] "$'\n'
+payload+="      }, "$'\n'
+payload+="    \"rootArray\": [ "$'\n'
+payload+="      \"value 1\", "$'\n'
+payload+="      \"value 2\", "$'\n'
+payload+="      \"value 3\" "$'\n'
+payload+="      ] "$'\n'
+payload+="    } "$'\n'
 
 display_usage() {
 	echo "This script sends card periodically to a card publication server to groups RTE, CORESO and user admin.\n"
@@ -21,7 +37,8 @@ display_usage() {
 	echo -e "\t-p, --publisher  : string. Publisher service name. Defaults to $publisher"
 	echo -e "\t-r, --process  : string. Process id suffix. Defaults to $process"
 	echo -e "\t-c, --process-count  : number. Number of different process. Defaults to $processNumber"
-	echo -e "\t-d, --dtae-shift  : number. millisecond date shift. Defaults to $dateShift"
+	echo -e "\t-d, --date-shift  : number. millisecond date shift. Defaults to $dateShift"
+	echo -e "\t-a, --payload  : specify an external json file as payload. Defaults to $payload"
 }
 
 while [[ $# -gt 0 ]]
@@ -41,6 +58,11 @@ case $key in
     ;;
     -p|--publisher)
     publisher="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -a|--payload)
+    payload=`cat $2`
     shift # past argument
     shift # past value
     ;;
@@ -111,22 +133,9 @@ piece_of_data(){
     piece+="    \"key\": \"$2.summary\", "$'\n'
     piece+="    \"parameters\": { \"value\": \"summary value\" } "$'\n'
     piece+="    }, "$'\n'
-    piece+="  \"data\": { "$'\n'
-    piece+="    \"rootProp\": \"This is a root property\", "$'\n'
-    piece+="    \"level1\": { "$'\n'
-    piece+="      \"level1Prop\": \"This is a level1 property\", "$'\n'
-    piece+="      \"level1Array\": [ "$'\n'
-    piece+="        {\"level1ArrayProp\" : 1}, "$'\n'
-    piece+="        {\"level1ArrayProp\" : 2}, "$'\n'
-    piece+="        {\"level1ArrayProp\" : 3} "$'\n'
-    piece+="        ] "$'\n'
-    piece+="      }, "$'\n'
-    piece+="    \"rootArray\": [ "$'\n'
-    piece+="      \"value 1\", "$'\n'
-    piece+="      \"value 2\", "$'\n'
-    piece+="      \"value 3\" "$'\n'
-    piece+="      ] "$'\n'
-    piece+="    }, "$'\n'
+    piece+="  \"data\":  "$'\n'
+    piece+=$payload
+    piece+="    , "$'\n'
     piece+="  \"details\": [ "$'\n'
     piece+="    { "$'\n'
     piece+="      \"title\": { \"key\": \"$2.detail.tab.first\" }, "$'\n'
@@ -177,14 +186,15 @@ card_data(){
     data+="]"
     echo "${data}"
 }
-
 while true
 do
+    echo "Preparing card data"
     cardData=$(card_data $publisher $process $plusOneHTen $plusOneH $plusTwoH)
-#    echo "sending $cardData"
+    echo $cardData > /tmp/tmpCard.json
+    echo "Sending card data"
     curl --header "Content-Type: application/json" \
       --request POST \
-      --data "$cardData" \
+      --data @/tmp/tmpCard.json \
       $url
 
     plusOneH=$((plusOneH+1000*interval))
