@@ -27,20 +27,25 @@ import {withLatestFrom} from "rxjs/internal/operators/withLatestFrom";
 })
 export class IframeDisplayComponent implements OnInit {
 
-  private _menu_id : Observable<string>;
-  private _menu_entry_id : Observable<string>;
-  private _currentSelection: Observable<{selectedThirdMenu: ThirdMenu,selectedThirdMenuEntry: ThirdMenuEntry,selectedURL: string}>;
+  private _menu_id : string;
+  private _menu_entry_id : string;
+  private _currentSelection: {selectedThirdMenu: ThirdMenu,selectedThirdMenuEntry: ThirdMenuEntry,selectedURL: string};
 
   constructor(private store: Store<AppState>,
               private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
-    this._menu_id=this.store.select(selectMenuStateSelectedMenuId);
-    this._menu_entry_id=this.store.select(selectMenuStateSelectedMenuEntryId);
+
+    this.store.select(selectMenuStateSelectedMenuId).subscribe(menu_id => {
+      this._menu_id = menu_id;
+    });
+    this.store.select(selectMenuStateSelectedMenuEntryId).subscribe(menu_entry_id => {
+      this._menu_entry_id = menu_entry_id;
+    });
 
     //TODO Init currentSelection in separate function, handle undefined / not found better
-    this._currentSelection=combineLatest(this.menu_id,this.menu_entry_id) //Emit a [menu_entry_id,menu_entry_id] array every time any of them is updated
+    combineLatest(this.store.select(selectMenuStateSelectedMenuId),this.store.select(selectMenuStateSelectedMenuEntryId)) //Emit a [menu_entry_id,menu_entry_id] array every time any of them is updated
         .pipe(
             withLatestFrom(this.store.select(selectMenuStateMenu)), //Add latest emitted value from selectMenuStateMenu to emission [menu_entry_id, menu_entry_id, thirdMenus]
             map((currentSelection: [[string,string],ThirdMenu[]]) => {
@@ -63,33 +68,34 @@ export class IframeDisplayComponent implements OnInit {
               }
               return {selectedThirdMenu: selectedThirdMenu, selectedThirdMenuEntry: selectedThirdMenuEntry, selectedURL: selectedURL};
             }
-        ))
+        )).subscribe( currentSelection => {
+          this._currentSelection = currentSelection;
+        })
   }
 
-  get menu_id(): Observable<string> {
+  get menu_id(): string {
     return this._menu_id;
   }
 
-  get menu_entry_id(): Observable<string> {
+  get menu_entry_id(): string {
     return this._menu_entry_id;
   }
 
-  get selectedThirdMenu() {
-    return this._currentSelection.pipe(pluck('selectedThirdMenu'));
+  get selectedThirdMenu(): ThirdMenu {
+    return this._currentSelection.selectedThirdMenu;
   }
 
-  get selectedThirdMenuEntry() {
-    return this._currentSelection.pipe(pluck('selectedThirdMenuEntry'));
+  get selectedThirdMenuEntry(): ThirdMenuEntry {
+    return this._currentSelection.selectedThirdMenuEntry;
   }
 
-  get iframeURL(): Observable<string> {
-    return this._currentSelection.pipe(pluck('selectedURL'));
+  get iframeURL(): string {
+    return this._currentSelection.selectedURL;
   }
+  //TODO See if we really need the iframeURL intermediate step anywhere
 
-  get safeIframeURL(): Observable<SafeUrl> {
-    return this.iframeURL.pipe(map(url => {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(url)
-    }))
+  get safeIframeURL(): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.iframeURL)
   }
 
   getMenuById(menu_id: string, thirdMenus: ThirdMenu[]): ThirdMenu[]{ //Assuming it should only return 0 or 1 ThirdMenus
