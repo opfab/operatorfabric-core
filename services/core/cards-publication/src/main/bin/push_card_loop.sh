@@ -10,6 +10,7 @@ interval=5
 url=http://localhost:2102/cards
 processNumber=5
 dateShift=0
+severity=ACTION
 payload="{ "$'\n'
 payload+="    \"rootProp\": \"This is a root property\", "$'\n'
 payload+="    \"level1\": { "$'\n'
@@ -39,7 +40,14 @@ display_usage() {
 	echo -e "\t-c, --process-count  : number. Number of different process. Defaults to $processNumber"
 	echo -e "\t-d, --date-shift  : number. millisecond date shift. Defaults to $dateShift"
 	echo -e "\t-a, --payload  : specify an external json file as payload. Defaults to $payload"
+    echo -e "\t-s, --severity : string. Card severity. Defaults to $severity"
 }
+
+# dateShift example values
+# s 1 000
+# m 60 000
+# h	3 600 000
+# day 86 400 000
 
 while [[ $# -gt 0 ]]
 do
@@ -72,12 +80,17 @@ case $key in
     shift # past value
     ;;
     -c|--process-count)
-    content="$2"
+    processNumber="$2"
     shift # past argument
     shift # past value
     ;;
     -i|--interval)
     interval="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -s|--severity)
+    severity="$2"
     shift # past argument
     shift # past value
     ;;
@@ -109,6 +122,7 @@ plusTwoH=$(($now + 7200000))
 #$4 lttd
 #$5 endDate
 #$6 processNum
+#$7 severity
 
 piece_of_data(){
     piece=$'{\n'
@@ -120,7 +134,7 @@ piece_of_data(){
     piece+="  \"startDate\": $3, "$'\n'
     piece+="  \"endDate\": $5, "$'\n'
     piece+="  \"lttd\": $4, "$'\n'
-    piece+="  \"severity\": \"ACTION\", "$'\n'
+    piece+="  \"severity\": \"$7\", "$'\n'
     piece+="  \"tags\": [ "$'\n'
     piece+="    \"$1\", "$'\n'
     piece+="    \"$2\" "$'\n'
@@ -178,7 +192,7 @@ card_data(){
     data="["
     for((i=0;i<$processNumber;i=$((i+1))));
     do
-        data+="$(piece_of_data $1 $2 $3 $4 $5 $i)"
+        data+="$(piece_of_data $1 $2 $3 $4 $5 $i $6)"
         if((i<$((processNumber - 1)))); then
             data+=","
         fi
@@ -189,7 +203,7 @@ card_data(){
 while true
 do
     echo "Preparing card data"
-    cardData=$(card_data $publisher $process $plusOneHTen $plusOneH $plusTwoH)
+    cardData=$(card_data $publisher $process $plusOneHTen $plusOneH $plusTwoH $severity)
     echo $cardData > /tmp/tmpCard.json
     echo "Sending card data"
     curl --header "Content-Type: application/json" \
