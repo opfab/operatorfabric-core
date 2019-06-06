@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  * entities through bindings to these exchanges.
  * </p>
  *
- * <p>Two exchanges are used, {@link #groupExchange} and {@link #userExchange}.
+ * <p>Two exchanges are used, groupExchange and userExchange.
  * See amqp.xml resource file ([project]/services/core/cards-publication/src/main/resources/amqp.xml)
  * for their exact configuration</p>
  *
