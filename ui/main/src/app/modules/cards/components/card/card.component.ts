@@ -13,6 +13,9 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectCardStateSelectedId} from "@ofSelectors/card.selectors";
 import {map} from "rxjs/operators";
+import {buildConfigSelector} from "@ofSelectors/config.selectors";
+import * as moment from "moment"
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
     selector: 'of-card',
@@ -25,10 +28,12 @@ export class CardComponent implements OnInit{
     @Input() public lightCard: LightCard;
     currentPath: any;
     private _i18nPrefix: string;
+    dateToDisplay: string;
 
     /* istanbul ignore next */
     constructor(private router: Router,
-                private store: Store<AppState>) {
+                private store: Store<AppState>,
+                private translate: TranslateService) {
 
     }
 
@@ -48,7 +53,32 @@ export class CardComponent implements OnInit{
                 map(id=>this.lightCard.id == id)
             ).subscribe(open=>this.open = open)
         ;
+        // fetch configuration
+        this.store.select(buildConfigSelector('display.card.show.time'))
+            // use configuration to compute date
+            .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
+            .subscribe(computedDate => this.dateToDisplay=computedDate);
     }
+
+    computeDisplayedDates(config:string,lightCard:LightCard):string{
+        switch (config) {
+            case 'NONE': return '';
+            case 'LTTD': return this.handleDate(lightCard.lttd);
+            case 'PUBLICATION': return this.handleDate(lightCard.publishDate);
+            case 'BUSINESS_START': return this.handleDate(lightCard.startDate);
+            default:return `${this.handleDate(lightCard.startDate)} - ${this.handleDate(lightCard.endDate)}`
+        }
+    }
+
+    handleDate(timeStamp:number):string{
+        let result = '';
+        if(timeStamp){
+            moment.locale(this.translate.currentLang);
+            result=moment(timeStamp).format('L LT');
+        }
+        return result;
+    }
+
 
     get i18nPrefix(): string {
         return this._i18nPrefix;

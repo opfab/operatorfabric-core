@@ -5,19 +5,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 
 
 import {CardComponent} from './card.component';
-import {getOneRandomLigthCard} from '@tests/helpers';
+import {getOneRandomLigthCard, getRandomAlphanumericValue} from '@tests/helpers';
 import {RouterTestingModule} from "@angular/router/testing";
-import {TranslateModule} from "@ngx-translate/core";
-import {translateConfig} from "../../../../translate.config";
+import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
 import {of} from "rxjs";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {ThirdsService} from "../../../../services/thirds.service";
+import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 import {Router} from "@angular/router";
 import SpyObj = jasmine.SpyObj;
@@ -28,6 +27,8 @@ describe('CardComponent', () => {
     let fixture: ComponentFixture<CardComponent>;
     let store: Store<AppState>;
     let router: SpyObj<Router>;
+    let injector: TestBed;
+    let translateService: TranslateService;
 
     beforeEach(async(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -38,7 +39,14 @@ describe('CardComponent', () => {
                 StoreModule.forRoot(appReducer),
                 RouterTestingModule,
                 HttpClientTestingModule,
-                TranslateModule.forRoot(translateConfig)],
+                TranslateModule.forRoot({
+                    loader: {
+                        provide: TranslateLoader,
+                        useFactory: ThirdsI18nLoaderFactory,
+                        deps: [ThirdsService]
+                    },
+                    useDefaultLang: false
+                })],
             declarations: [CardComponent],
             providers: [{provide: store, useClass: Store},{provide: Router, useValue: routerSpy},ThirdsService]
         })
@@ -47,6 +55,13 @@ describe('CardComponent', () => {
         spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
         spyOn(store, 'pipe').and.callFake(() => of('/test/url'));
+
+        injector=getTestBed();
+        translateService = injector.get(TranslateService);
+        translateService.addLangs(["en", "fr"]);
+        translateService.setDefaultLang("en");
+        translateService.use("en");
+
     }));
 
     beforeEach(() => {
@@ -89,5 +104,72 @@ describe('CardComponent', () => {
         expect(lightCardDetailsComp.open).toBeTruthy();
         expect(router.navigate).toHaveBeenCalledWith(['/'+lightCardDetailsComp.currentPath,'cards',lightCard.id]);
     });
+
+    it('should handle non existent timestamp with an empty string', () => {
+        const expectedEmptyString = lightCardDetailsComp.handleDate(undefined);
+        expect(expectedEmptyString).toEqual('');
+    });
+
+    it( 'should handle timestamp in English', () => {
+        const timeStampFor5June2019at10AM = 1559721600000;
+        const FiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(timeStampFor5June2019at10AM);
+        expect(FiveJune2019at10AMDateString).toEqual('06/05/2019 10:00 AM');
+        });
+
+    it( 'should handle timestamp in French', () => {
+        translateService.use('fr');
+        const timeStampFor5June2019at10AM = 1559721600000;
+        const FiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(timeStampFor5June2019at10AM);
+        expect(FiveJune2019at10AMDateString).toEqual('05/06/2019 10:00');
+        });
+
+    it('should return an empty string if NONE is configured', () =>{
+        const lightCard = getOneRandomLigthCard();
+        const expectedEmptyDisplayedDate = lightCardDetailsComp.computeDisplayedDates('NONE',lightCard);
+        expect(expectedEmptyDisplayedDate).toEqual('');
+        });
+    it('should return interval if BUSINESS is configured', () =>{
+        const lightCard = getOneRandomLigthCard();
+        const expectedBuisnessInterval = lightCardDetailsComp.computeDisplayedDates('BUSINESS',lightCard);
+        verifyCorrectInterval(expectedBuisnessInterval);
+    });
+
+    function verifyCorrectInterval(testedString: string) {
+        const minimalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale = 39;
+        const maximalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale = 41;
+        verifyCorrectString(testedString, minimalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale
+            , maximalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale);
+    }
+
+    function verifyCorrectString(testedString: string, min: number, max: number) {
+        expect(testedString).toBeTruthy();
+        const testedLength = testedString.length;
+        expect(testedLength).toBeGreaterThanOrEqual(min);
+        expect(testedLength).toBeLessThanOrEqual(max);
+    }
+
+    it('should return interval if there is no configuration', () =>{
+        const lightCard = getOneRandomLigthCard();
+        const expectedBusinessInterVal = lightCardDetailsComp.computeDisplayedDates(undefined,lightCard);
+        verifyCorrectInterval(expectedBusinessInterVal);
+    });
+
+    it('should return interval with unexpected configuration', () =>{
+        const lightCard = getOneRandomLigthCard();
+        const expectedBusinessInterVal = lightCardDetailsComp.computeDisplayedDates(getRandomAlphanumericValue(12)
+            ,lightCard);
+        verifyCorrectInterval(expectedBusinessInterVal);
+    });
+
+    it( 'should return a single date with LTTD configuration', () => {
+       const expectDate = lightCardDetailsComp.computeDisplayedDates('LTTD',getOneRandomLigthCard());
+       verifyCorrectString(expectDate,18,20);
+    });
+
+    it( 'should return a single date with BUSINESS_START configuration', () => {
+        const expectDate = lightCardDetailsComp.computeDisplayedDates('BUSINESS_START',getOneRandomLigthCard());
+        verifyCorrectString(expectDate,18,20);
+    });
+
 
 });

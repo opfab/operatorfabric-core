@@ -11,7 +11,7 @@
         </div>
         <div class="p-1">
             <p class="card-title" translate [translateParams]="lightCard.title.parameters">{{i18nPrefix+lightCard.title.key}}</p>
-            <p class="card-subtitle">({{lightCard.startDate|date:'short'}} - {{lightCard.endDate|date:'short'}})</p>
+            <p *ngIf="this.dateToDisplay" class="card-subtitle">({{this.dateToDisplay}})</p>
         </div>
     </div>
     <div class="d-flex card-body p-0 border-0" *ngIf="open">
