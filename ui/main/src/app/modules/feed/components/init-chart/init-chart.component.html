@@ -11,7 +11,7 @@
           </button>
         </li>
         <li *ngFor="let button of buttonList">
-          <button (click)="changeGraphConf(button)">
+          <button [ngClass]="button.selected ? 'btn-selected' : 'btn-unselect'" (click)="changeGraphConf(button)">
             {{button.forwardLevel}}
           </button>
         </li>

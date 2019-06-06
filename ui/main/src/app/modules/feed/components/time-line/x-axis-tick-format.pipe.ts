@@ -7,6 +7,40 @@ import * as moment from 'moment';
 })
 export class XAxisTickFormatPipe implements PipeTransform {
 
+  transformHovered(value: any, languageTag: string, clusterLevel: string): string {
+    if (languageTag) {
+        const date = moment(value);
+        const startYear = moment(date).startOf('year');
+        if (clusterLevel === 'W') {
+          return date.format('ddd DD MMM HH') + 'h'; // 'short');
+        } else if (clusterLevel === 'M') {
+          if (date.valueOf() === startYear.valueOf()) {
+            return date.format('ddd DD MMM YYYY');
+          }
+          return date.format('ddd DD MMM'); //'d EE, MMMM, ');
+        } else if (clusterLevel === 'Y') {
+            /*
+          if (date.valueOf() === startYear.valueOf()) {
+            return date.format('MMM D, YYYY');
+          }*/
+          return date.format('ddd DD MMM YYYY');
+        }
+    } else {
+      return value.toString();
+    }
+  }
+
+  transformAdvanced(value: any, languageTag: string, clusterLevel: string): string {
+    if (languageTag) {
+        const date = moment(value);
+        if (clusterLevel === 'W') {
+            return date.format('HH') + 'h';
+        }
+    } else {
+      return value.toString();
+    }
+  }
+
   transform(value: any, languageTag: string, clusterLevel: string): string {
     if (languageTag) {
       /*if (value instanceof moment) {*/
@@ -15,7 +49,9 @@ export class XAxisTickFormatPipe implements PipeTransform {
         const date = moment(value);
         const startYear = moment(date).startOf('year');
         if (clusterLevel === 'W') {
-
+            if (date.valueOf() === startYear.valueOf()) {
+                return date.format('ddd DD MMM YYYY');
+            }
           /* Bordel ici */
           // hours
           if (date.hours() === 0) {
@@ -23,10 +59,9 @@ export class XAxisTickFormatPipe implements PipeTransform {
             // const result = hours + '\n' + datePipe.transform(date, 'EE d MMMM');
             // return result;
 
-            return date.format('ddd D, MMM'); // 'short');
-          }
-          else {
-            // return '';
+            return date.format('ddd DD MMM'); // 'short');
+          } else {
+            //return ''; // For test, uncomment next line for real comportement
             return date.format('HH');
           }
 
@@ -35,14 +70,14 @@ export class XAxisTickFormatPipe implements PipeTransform {
           //  return datePipe.transform(date, 'd EE, MMMM'); //'short');
         } else if (clusterLevel === 'M') {
           if (date.valueOf() === startYear.valueOf()) {
-            return date.format('ddd D, MMM YYYY');
+            return date.format('DD MMM YY');
           }
-          return date.format('ddd D, MMM'); //'d EE, MMMM, ');
+          return date.format('ddd DD MMM'); //'d EE, MMMM, ');
         } else if (clusterLevel === 'Y') {
           if (date.valueOf() === startYear.valueOf()) {
-            return date.format('MMM D, YYYY');
+            return date.format('D MMM YY');
           }
-          return date.format('MMM D');
+          return date.format('D MMM');
         }
         /*if (date.getHours() === 0 &&
           date.getMinutes() === 0 &&

@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Observable, of} from "rxjs";
 import {LightCard} from "@ofModel/light-card.model";
 import {select, Store} from "@ngrx/store";
@@ -22,7 +22,7 @@ import * as feedSelectors from "@ofSelectors/feed.selectors";
   selector: 'of-time-line',
   templateUrl: './time-line.component.html',
 })
-export class TimeLineComponent implements OnInit {
+export class TimeLineComponent implements OnInit, AfterViewInit {
     lightCards$: Observable<LightCard[]>;
 
     public conf: any;

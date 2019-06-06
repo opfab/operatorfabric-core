@@ -84,7 +84,7 @@ export class InitChartComponent implements OnInit {
    * subscribe on timeline's State data
    * feed arrayChartData with values from data
    */
-  setChartData() {
+  setChartData(): void {
     this.data$.subscribe(value => {
       const chartData = value.map(d => d);
       this.setArrayChartData(chartData);
@@ -95,7 +95,7 @@ export class InitChartComponent implements OnInit {
    * sort by date the array received on param
    * set an array with arrays for each severity of Cards
    */
-  setArrayChartData(array: any[]) {
+  setArrayChartData(array: any[]): void {
     array.sort((val1, val2) => { return val1.date - val2.date; });
 
     const arraySeverity = [];
@@ -106,8 +106,8 @@ export class InitChartComponent implements OnInit {
       obj.r = 20;
       obj.stroke = 'stroke';
       obj.count = 1;
-      obj.value = 1;
-      obj.color = this.setColorSeverity(obj.severity);
+      obj.color = this.getColorSeverity(obj.severity);
+      obj.value = this.getCircleValue(obj.severity);
 
       // Set this.arrayChartData and arraySeverity
       if (this.arrayChartData === []) {
@@ -138,7 +138,7 @@ export class InitChartComponent implements OnInit {
    * return color according to severity
    * @param color
    */
-  setColorSeverity(color: string) {
+  getColorSeverity(color: string): string {
     if (color) {
      switch (color) {
        case 'ALARM': {
@@ -148,21 +148,46 @@ export class InitChartComponent implements OnInit {
          return 'orange';
        }
        case 'QUESTION': {
-         return 'blue';
-       }
-       case 'NOTIFICATION': {
          return 'green';
        }
+       case 'NOTIFICATION': {
+         return 'blue';
+       }
      }
-    } else {
+    } else { // default
       return 'black';
+    }
+  }
+
+  /**
+   * return color according to severity
+   * @param color
+   */
+  getCircleValue(color: string): number {
+    if (color) {
+     switch (color) {
+       case 'ALARM': {
+         return 4;
+       }
+       case 'ACTION': {
+         return 3;
+       }
+       case 'QUESTION': {
+         return 2;
+       }
+       case 'NOTIFICATION': {
+         return 1;
+       }
+     }
+    } else { // default
+      return 5;
     }
   }
 
   /**
    * set timeline options from conf
    */
-  readConf() {
+  readConf(): void {
     // Options on graph
     if (this.conf) {
       if (this.conf.enableDrag) {
@@ -197,7 +222,7 @@ export class InitChartComponent implements OnInit {
    * if it was given on confZoom => set the list of zoom buttons & zoom activated
    * else default zoom is weekly
    */
-  confContextGraph() {
+  confContextGraph(): void {
     this.readConf();
 
     // Feed zoom buttons Array by the conf received
@@ -222,10 +247,6 @@ export class InitChartComponent implements OnInit {
     // Set the zoom activate and assigne the width of the buttons list on html
     if (this.buttonList.length > 0) {
       this.zoomButtonsActive = true;
-      this.buttonListWidth = (2 + this.buttonList.length) * 52; // add fct responsive
-      const widthPx = this.buttonListWidth + 'px';
-      document.getElementById('btn-menu-timeline').style.width = widthPx;
-      // this.setStartAndEndDomain(this.buttonList[0].startDomain, this.buttonList[0].endDomain);
       this.changeGraphConf(this.buttonList[0]);
     }
   }
@@ -235,7 +256,7 @@ export class InitChartComponent implements OnInit {
    * set the zoom Level Type activate and timeline domain
    * @param conf
    */
-  changeGraphConf(conf: any) {
+  changeGraphConf(conf: any): void {
     if (conf) {
       this.buttonHomeActive = false;
       this.realCaseActivate = true;
@@ -244,6 +265,10 @@ export class InitChartComponent implements OnInit {
         this.forwardButtonType = conf.forwardLevel;
       }
       this.buttonHome = [conf.startDomain, conf.endDomain];
+      this.buttonList.forEach(button => {
+        button.selected = false;
+      });
+      conf.selected = true;
     }
   }
 
@@ -253,7 +278,7 @@ export class InitChartComponent implements OnInit {
    * receive by child component custom-timeline-chart
    * @param direction
    */
-  applyNewZoom(direction: string) {
+  applyNewZoom(direction: string): void {
     if (direction === 'in') {
       const reverseButtonList = _.cloneDeep(this.buttonList);
       reverseButtonList.reverse();
@@ -289,7 +314,7 @@ export class InitChartComponent implements OnInit {
    * @param startDomain
    * @param endDomain
    */
-  homeClick(startDomain: number, endDomain: number) {
+  homeClick(startDomain: number, endDomain: number): void {
     this.setStartAndEndDomain(startDomain, endDomain);
     this.buttonHomeActive = false;
   }
@@ -299,7 +324,7 @@ export class InitChartComponent implements OnInit {
    * @param startDomain
    * @param endDomain
    */
-  setStartAndEndDomain(startDomain: number, endDomain: number) {
+  setStartAndEndDomain(startDomain: number, endDomain: number): void {
     const valueStart = startDomain;
     const valueEnd = endDomain;
     this.myDomain = [valueStart, valueEnd];
@@ -310,7 +335,7 @@ export class InitChartComponent implements OnInit {
    * only three set : Week, Month , Year
    * @param moveForward
    */
-  moveDomain(moveForward: boolean) {
+  moveDomain(moveForward: boolean): void {
     switch (this.forwardButtonType) {
       case 'W':
         this.moveDomainByWeek(moveForward);
@@ -329,7 +354,7 @@ export class InitChartComponent implements OnInit {
    * move 7 days before or after the week selected
    * @param forward
    */
-  moveDomainByWeek(forward: boolean) {
+  moveDomainByWeek(forward: boolean): void {
     const startDomain = moment(this.myDomain[0]);
     startDomain.day(0);
     const endDomain = moment(startDomain);
@@ -350,7 +375,7 @@ export class InitChartComponent implements OnInit {
    * move 1 month before or after the month selected
    * @param forward
    */
-  moveDomainByMonth(forward: boolean) {
+  moveDomainByMonth(forward: boolean): void {
     const prevStartDomain = moment(this.myDomain[0]);
     const startDomain = _.cloneDeep(prevStartDomain);
     // For the first step, set to start of the month
@@ -374,7 +399,7 @@ export class InitChartComponent implements OnInit {
    * move 1 year before or after the year selected
    * @param forward
    */
-  moveDomainByYear(forward: boolean) {
+  moveDomainByYear(forward: boolean): void {
     const prevStartDomain = moment(this.myDomain[0]);
     const startDomain = _.cloneDeep(prevStartDomain);
     // For the first step, set to start of the year
@@ -396,7 +421,7 @@ export class InitChartComponent implements OnInit {
   /**
    * return true for display home button
    */
-  checkButtonHomeDisplay() {
+  checkButtonHomeDisplay(): boolean {
     // buttonHomeActive = true when drag movement started
     if (this.buttonHomeActive) {
       return true;

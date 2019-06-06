@@ -3,43 +3,60 @@
 }
 
 .timeline {
-  height: 300px;
-  width: 90%;
+  height: 170px;
+  width: 98%;
   margin-left: auto;
   margin-right: auto;
 
+  of-custom-timeline-chart {
+    max-height: 100px;
+  }
+
   .menu-timeline {
-    position: relative;
+    max-height: 40px;
+    padding-top: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 
     .home-btn {
-      position: absolute;
-      width: 45px;
-      height: 45px;
-      margin-top: 24px;
-      margin-left: 50px;
+      align-self: flex-start;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       border: none;
       opacity:0.7;
     }
 
     #btn-menu-timeline {
-      position: absolute;
+      flex-grow: 1;
       right: 30px;
-      margin-top: 8px;
+      font-size: 12px;
 
       ul {
         padding: 0;
+        margin: 0;
         list-style: none;
         display: flex;
+        justify-content: flex-end;
         opacity:0.7;
 
 
         li {
           button {
             list-style: none;
-            width: 45px;
-            height: 45px;
+            width: 30px;
+            height: 30px;
             color: black;
+          }
+
+          .btn-selected {
+            background-color: black;
+            color: white;
+          }
+
+          .btn-unselect {
+            background-color: rgb(221, 221, 221);
           }
 
           .circle-btn {
