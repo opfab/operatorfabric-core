@@ -749,6 +749,9 @@ definitions:
       endDate:
         $ref: '#/definitions/EpochDate'
         description: Card validity end time
+      publishDate:
+        $ref: '#/definitions/EpochDate'
+        description: Publication time of the Card
       severity:
         $ref: '#/definitions/SeverityEnum'
         description: Card severity
