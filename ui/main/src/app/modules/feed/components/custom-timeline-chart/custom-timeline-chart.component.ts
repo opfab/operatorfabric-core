@@ -228,15 +228,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     console.log('update');
 
     if (this.first) {
-      this.first = false;
-      this.updateRealTimeDate();
-      // set inside ngx-charts verticalSpacing variable to 10
-      setTimeout(() => { // this.transform is set before this.dims.xOffset is set
+        this.first = false;
+        this.updateRealTimeDate();
+        // set inside ngx-charts library verticalSpacing variable to 10
+        // Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks
         for (let i = 0; i < 50; i++) {
-          this.xTicksOne.push('Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks');
-          this.xTicksTwo.push('Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks');
+            this.xTicksOne.push(moment(i));
+            this.xTicksTwo.push(moment(i));
         }
-      }, 1000);
     }
   }
 
