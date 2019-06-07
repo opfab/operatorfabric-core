@@ -171,5 +171,9 @@ describe('CardComponent', () => {
         verifyCorrectString(expectDate,18,20);
     });
 
+    it( 'should return a single date with PUBLICATION configuration', () => {
+        const expectDate = lightCardDetailsComp.computeDisplayedDates('PUBLICATION',getOneRandomLigthCard());
+        verifyCorrectString(expectDate,18,20);
+    });
 
 });
