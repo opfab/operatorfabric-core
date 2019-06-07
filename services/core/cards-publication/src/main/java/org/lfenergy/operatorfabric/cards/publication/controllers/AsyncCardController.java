@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 
@@ -36,10 +37,12 @@ public class AsyncCardController {
      *
      * @param cards cards to create publisher
      */
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public @Valid void createCards(@Valid @RequestBody Flux<CardPublicationData> cards){
-        cardWriteService.pushCardsAsyncParallel(cards);
-
+    public Mono<Integer> createCards(@Valid @RequestBody Flux<CardPublicationData> cards) throws InterruptedException {
+//        cardWriteService.pushCardsAsyncParallel(cards);
+        return cards
+                .doOnNext(cardWriteService::pushCardAsyncParallel)
+                .last().map(c->202);
     }
 }

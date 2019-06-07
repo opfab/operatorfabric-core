@@ -63,8 +63,8 @@ import java.util.function.Function;
  *
  * <p>Configuration properties available in spring configuration</p>
  * <ul>
- *     <li>operatorfabric.card-write.window: treatment window maximum size</li>
- *     <li>operatorfabric.write.timeout: maximum wait time before treatment window creation</li>
+ * <li>operatorfabric.card-write.window: treatment window maximum size</li>
+ * <li>operatorfabric.write.timeout: maximum wait time before treatment window creation</li>
  * </ul>
  *
  * @author David Binder
@@ -75,6 +75,8 @@ public class CardWriteService {
 
     private final EmitterProcessor<CardPublicationData> processor;
     private final FluxSink<CardPublicationData> sink;
+    private final long windowTimeOut;
+    private final int windowSize;
 
     //injected
     private RecipientProcessor recipientProcessor;
@@ -90,7 +92,7 @@ public class CardWriteService {
                             CardNotificationService cardNotificationService,
                             @Value("${operatorfabric.card-write.window.size:1000}") int windowSize,
                             @Value("${operatorfabric.card-write.window.timeout:500}") long windowTimeOut
-                            ) {
+    ) {
 
         this.recipientProcessor = recipientProcessor;
         this.template = template;
@@ -99,6 +101,12 @@ public class CardWriteService {
 
         this.processor = EmitterProcessor.create();
         this.sink = this.processor.sink();
+        this.windowSize = windowSize;
+        this.windowTimeOut = windowTimeOut;
+        wireProcessor(windowSize, windowTimeOut);
+    }
+
+    private void wireProcessor(@Value("${operatorfabric.card-write.window.size:1000}") int windowSize, @Value("${operatorfabric.card-write.window.timeout:500}") long windowTimeOut) {
         processor
                 //parallelizing card treatments
                 .flatMap(c -> Mono.just(c).subscribeOn(Schedulers.parallel()))
@@ -107,16 +115,27 @@ public class CardWriteService {
                 //remembering startime for measurement
                 .map(card -> Tuples.of(card, System.nanoTime(), VirtualTime.getInstance().computeNow().toEpochMilli()))
                 //trigger batched treatment upon window readiness
-                .subscribe(cardAndTimeTuple -> handleWindowedCardFlux(cardAndTimeTuple));
+                .subscribe(cardAndTimeTuple -> handleWindowedCardFlux(cardAndTimeTuple),
+                        error -> handleError(error));
+    }
+
+    private void handleError(Throwable error) {
+        log.error("Unexpected Error arose, processor will be rewired", error);
+        wireProcessor(this.windowSize, this.windowTimeOut);
     }
 
     private void handleWindowedCardFlux(Tuple3<Flux<CardPublicationData>, Long, Long> cardAndTimeTuple) {
         long windowStart = cardAndTimeTuple.getT2();
         Flux<CardPublicationData> cards = registerRecipientProcess(cardAndTimeTuple.getT1());
         cards = registerTolerantValidationProcess(cards, cardAndTimeTuple.getT3());
-        registerPersistingProcess(cards, windowStart)
-                .doOnError(t -> log.error("Unexpected Error arose", t))
-                .subscribe();
+        registerPersistenceAndNotificationProcess(cards, windowStart)
+                .subscribe(count -> {
+                            if (count > 0)
+                                log.info(String.format("%d cards persisted", count));
+                            else if (log.isTraceEnabled())
+                                log.trace(String.format("%d cards persisted", count));
+                        },
+                        error -> log.error("Unexpected Error arose, persistence window lost", error));
     }
 
     /**
@@ -124,7 +143,7 @@ public class CardWriteService {
      **/
     private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards) {
         return cards
-                .doOnNext(recipientProcessor::processAll);
+                .doOnNext(ignoreErrorDo(recipientProcessor::processAll));
     }
 
     /**
@@ -137,9 +156,9 @@ public class CardWriteService {
     private Flux<CardPublicationData> registerTolerantValidationProcess(Flux<CardPublicationData> cards, Long publishDate) {
         return cards
                 // prepare card computed data (id, shardkey)
-                .flatMap(doOnNextOnErrorContinue(c -> c.prepare(publishDate)))
+                .flatMap(ignoreErrorFlatMap(c -> c.prepare(publishDate)))
                 // JSR303 bean validation of card
-                .flatMap(doOnNextOnErrorContinue(this::validate));
+                .flatMap(ignoreErrorFlatMap(this::validate));
     }
 
     /**
@@ -164,7 +183,7 @@ public class CardWriteService {
      * @param windowStart
      * @return
      */
-    private Mono<Integer> registerPersistingProcess(Flux<CardPublicationData> cards, long windowStart) {
+    private Mono<Integer> registerPersistenceAndNotificationProcess(Flux<CardPublicationData> cards, long windowStart) {
         // this reduce function removes CardPublicationData "duplicates" (based on id) but leaves ArchivedCard as is
         BiFunction<Tuple2<LinkedList<CardPublicationData>, ArrayList<ArchivedCardPublicationData>>,
                 Tuple2<CardPublicationData, ArchivedCardPublicationData>,
@@ -214,14 +233,24 @@ public class CardWriteService {
      * @param onNext
      * @return
      */
-    private static Function<CardPublicationData, Publisher<CardPublicationData>> doOnNextOnErrorContinue(Consumer<CardPublicationData> onNext) {
+    private static Function<CardPublicationData, Publisher<CardPublicationData>> ignoreErrorFlatMap(Consumer<CardPublicationData> onNext) {
         return c -> {
             try {
                 onNext.accept(c);
                 return Mono.just(c);
             } catch (Exception e) {
-                log.warn("Error aaroseand will be ignored", e);
+                log.warn("Error aarose and will be ignored", e);
                 return Mono.empty();
+            }
+        };
+    }
+
+    private static Consumer<CardPublicationData> ignoreErrorDo(Consumer<CardPublicationData> onNext) {
+        return c -> {
+            try {
+                onNext.accept(c);
+            } catch (Exception e) {
+                log.warn("Error aarose and will be ignored", e);
             }
         };
     }
@@ -248,6 +277,15 @@ public class CardWriteService {
     }
 
     /**
+     * Asynchronous fire and forget card push in the persisting/notification process
+     *
+     * @param pushedCard published card to add
+     */
+    public void pushCardAsyncParallel(CardPublicationData pushedCard) {
+        sink.next(pushedCard);
+    }
+
+    /**
      * Synchronous card push in the persisting/notification process use the same treatment as those associated to
      * the internal {@link FluxSink} but adds a last step to prepare {@link CardCreationReportData}
      *
@@ -258,12 +296,12 @@ public class CardWriteService {
         long windowStart = Instant.now().toEpochMilli();
         Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
         cards = registerValidationProcess(cards, VirtualTime.getInstance().computeNow().toEpochMilli());
-        return registerPersistingProcess(cards, windowStart)
-                .doOnNext(count -> log.info(count + " pushedCards persisted"))
+        return registerPersistenceAndNotificationProcess(cards, windowStart)
+                .doOnNext(count -> log.info(count + " pushed Cards persisted"))
                 .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
                 .onErrorResume(e -> {
-                    log.error("Unexpected error during pushedCards persistence", e);
-                    return Mono.just(new CardCreationReportData(0, "Error, unable to handle pushedCards: " + e.getMessage
+                    log.error("Unexpected error during pushed Cards persistence", e);
+                    return Mono.just(new CardCreationReportData(0, "Error, unable to handle pushed Cards: " + e.getMessage
                             ()));
                 });
 
@@ -279,7 +317,8 @@ public class CardWriteService {
             return;
         BulkOperations bulkCard = template.bulkOps(BulkOperations.BulkMode.ORDERED, CardPublicationData.class);
         cards.forEach(c -> {
-            log.trace("preparing to write " + c.toString());
+            if (log.isTraceEnabled())
+                log.trace("preparing to write " + c.toString());
             addBulkCard(bulkCard, c);
         });
         bulkCard.execute();

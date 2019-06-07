@@ -63,11 +63,13 @@ import java.util.stream.Collectors;
 public class CardNotificationService {
 
     private final RabbitTemplate rabbitTemplate;
-//    private final TopicExchange groupExchange;
-//    private final DirectExchange userExchange;
+    private final TopicExchange groupExchange;
+    private final DirectExchange userExchange;
     private final ObjectMapper mapper;
     private final EmitterProcessor<Tuple2<CardPublicationData, CardOperationTypeEnum>> processor;
     private final FluxSink<Tuple2<CardPublicationData, CardOperationTypeEnum>> sink;
+    private final int windowSize;
+    private final long windowTimeOut;
 
     @Autowired
     public CardNotificationService(RabbitTemplate rabbitTemplate,
@@ -78,29 +80,43 @@ public class CardNotificationService {
                                    @Value("${operatorfabric.card-notification.window.timeout:1000}") long windowTimeOut
     ) {
         this.rabbitTemplate = rabbitTemplate;
-//        this.groupExchange = groupExchange;
-//        this.userExchange = userExchange;
+        this.groupExchange = groupExchange;
+        this.userExchange = userExchange;
         this.mapper = mapper;
+        this.windowSize = windowSize;
+        this.windowTimeOut = windowTimeOut;
 
         this.processor = EmitterProcessor.create();
         this.sink = this.processor.sink();
+        wireProcessor();
+    }
+
+    private void wireProcessor() {
         this.processor
                 //parallelizing card treatments
                 .flatMap(tupleCard -> Mono.just(tupleCard).subscribeOn(Schedulers.parallel()))
                 //batching cards
                 .windowTimeout(windowSize, Duration.ofMillis(windowTimeOut))
                 .subscribe(windowCard ->
-                        windowCard.map(tupleCard -> arrangeUnitaryCardOperation(tupleCard.getT1(), tupleCard.getT2()))
-                                .reduce(Tuples.of(new LinkedHashMap<String, List<CardOperation>>(), new LinkedHashMap<String, List<CardOperation>>()), (result, item) ->
-                                        reduceCardOperationBuilders(result, item))
-                                //group card operation by types and publication/deletion date
-                                .map(t -> Tuples.of(fuseCardOperations(t.getT1()), fuseCardOperations(t.getT2())))
+                                windowCard.map(tupleCard -> arrangeUnitaryCardOperation(tupleCard.getT1(), tupleCard.getT2()))
+                                        .reduce(Tuples.of(new LinkedHashMap<String, List<CardOperation>>(), new LinkedHashMap<String, List<CardOperation>>()), (result, item) ->
+                                                reduceCardOperationBuilders(result, item))
+                                        //group card operation by types and publication/deletion date
+                                        .map(t -> Tuples.of(fuseCardOperations(t.getT1()), fuseCardOperations(t.getT2())))
 
-                                .subscribe(t -> {
-                                    sendOperation(t.getT1(), groupExchange);
-                                    sendOperation(t.getT2(), userExchange);
-                                })
-                );
+                                        .subscribe(t -> {
+                                                    sendOperation(t.getT1(), groupExchange);
+                                                    sendOperation(t.getT2(), userExchange);
+                                                },
+                                                error -> {
+                                                    log.error("Unexpected Error arose, notification window lost", error);
+                                                })
+                        , t -> handleError(t));
+    }
+
+    private void handleError(Throwable error) {
+        log.error("Unexpected Error arose, processor will be rewired", error);
+        wireProcessor();
     }
 
     /**
@@ -167,7 +183,7 @@ public class CardNotificationService {
      * <p>The handling is asynchronous and is published to a backing {@link FluxSink}</p>
      *
      * @param cards cards to notify
-     * @param type type of notification
+     * @param type  type of notification
      */
     public void notifyCards(Collection<CardPublicationData> cards, CardOperationTypeEnum type) {
         cards.forEach(c -> sink.next(Tuples.of(c, type)));
