@@ -231,10 +231,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
       this.first = false;
       this.updateRealTimeDate();
       // set inside ngx-charts verticalSpacing variable to 10
-      for (let i = 0; i < 50; i++) {
-        this.xTicksOne.push('Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks');
-        this.xTicksTwo.push('Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks');
-      }
+      setTimeout(() => { // this.transform is set before this.dims.xOffset is set
+        for (let i = 0; i < 50; i++) {
+          this.xTicksOne.push('Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks');
+          this.xTicksTwo.push('Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks');
+        }
+      }, 1000);
     }
   }
 
@@ -691,6 +693,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     this.dataClustered = [];
     let y = 0;
     for (const array of this._myData) { // array = [red, red, red]
+      let firstPass = true;
       let j = 0; // array[j] = red
       this.dataClustered.push([]);
       if (array.length > 0) {
@@ -732,23 +735,25 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
             let endLimit: number;
             // Group Algo 1
             if (this.centeredOnTicks) {
-              startLimit = this.xTicks[i] - ((this.xTicks[i] - this.xTicks[i - 1]) / 2);
-              /* !!!! Make special case for begin
-                 actually first circle are from first tick to half of next interval ticks
-                  0 to 1.5 */
-              if (i === 1) {
-                startLimit = this.xTicks[i - 1];
-              }
-              // Last tick has is own value for endLimit;
-              if (i + 1 === this.xTicks.length) {
-                endLimit = this.xTicks[i].valueOf();
-              } else {
+              if (firstPass) {
+                firstPass = false;
+                i = 0;
+                newCircle.date = moment(this.xTicks[i].valueOf());
+                startLimit = this.xTicks[i];
                 endLimit = this.xTicks[i] + ((this.xTicks[i + 1] - this.xTicks[i]) / 2);
+              } else {
+                startLimit = this.xTicks[i] - ((this.xTicks[i] - this.xTicks[i - 1]) / 2);
+                // Last tick has is own value for endLimit;
+                if (i + 1 === this.xTicks.length) {
+                  endLimit = this.xTicks[i] + 1;
+                } else {
+                  endLimit = this.xTicks[i] + ((this.xTicks[i + 1] - this.xTicks[i]) / 2);
+                }
               }
             } else { // Group Algo 2
               startLimit = this.xTicks[i - 1];
               // !!! actually the domain[1], last value of ticks, it's exclude !!!
-              endLimit = this.xTicks[i];
+              endLimit = this.xTicks[i] + 1; // check +1 if it's working
 
             }
             while (array[j] && startLimit <= array[j].date && array[j].date < endLimit) {
@@ -760,7 +765,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
             }
             if (feedIt) {
               this.dataClustered[y].push(_.cloneDeep(newCircle));
-              console.log('feed HERE');
             }
           }
         }
