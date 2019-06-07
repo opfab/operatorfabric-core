@@ -21,6 +21,7 @@ import {ServicesModule} from "@ofServices/services.module";
 import {Router} from "@angular/router";
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
+import * as moment from "moment";
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
@@ -29,6 +30,11 @@ describe('CardComponent', () => {
     let router: SpyObj<Router>;
     let injector: TestBed;
     let translateService: TranslateService;
+
+    beforeAll(()=>{
+        moment.tz.setDefault("Europe/Paris");
+        moment.locale('fr-FR');
+    });
 
     beforeEach(async(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -111,6 +117,7 @@ describe('CardComponent', () => {
     });
 
     it( 'should handle timestamp in English', () => {
+        translateService.use('en');
         const timeStampFor5June2019at10AM = 1559721600000;
         const FiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(timeStampFor5June2019at10AM);
         expect(FiveJune2019at10AMDateString).toEqual('06/05/2019 10:00 AM');
