@@ -22,5 +22,6 @@ public class UsersModule extends SimpleModule {
     addAbstractTypeMapping(User.class,UserData.class);
     addAbstractTypeMapping(Group.class,GroupData.class);
     addAbstractTypeMapping(SimpleUser.class,SimpleUserData.class);
+    addAbstractTypeMapping(UserSettings.class,UserSettingsData.class);
     }
 }

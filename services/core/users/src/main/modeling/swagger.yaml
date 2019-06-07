@@ -49,6 +49,8 @@ definitions:
         items:
           type: string
           uniqueItems: true
+    required:
+      - login
     example:
       login: jcleese
       firstName: John
@@ -63,9 +65,33 @@ definitions:
         type: string
       description:
         type: string
+    required:
+      - name
     example:
       name: Wanda
       description: They were not as successful in Fierce Creatures.
+
+  UserSettings:
+    type: object
+    description: User associated settings
+    properties:
+      login:
+        type: string
+      description:
+        type: string
+      timeZone:
+        type: string
+      locale:
+        type: string
+      timeFormat:
+        type: string
+      dateFormat:
+        type: string
+      defaultTags:
+        type: array
+        items:
+          type: string
+          uniqueItems: true
 paths:
   /users:
     get:
@@ -159,10 +185,72 @@ paths:
           description: Required user not found
     put:
       tags:
-        - users
+      - users
       summary: Update existing user
       description: Update existing user
       operationId: updateUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: login
+        description: user login (should match login in request body)
+        type: string
+        required: true
+      - in: body
+        name: user
+        description: User to be updated (login should match path parameter)
+        schema:
+          $ref: '#/definitions/SimpleUser'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SimpleUser'
+        '400':
+          description: Bad request (body doesn't match login path parameter)
+        '401':
+          description: Authentication required
+        '403':
+          description: Authenticated users who are not admins can only update their own data
+        '404':
+          description: User not found
+  '/users/{login}/settings':
+    get:
+      tags:
+      - users
+      summary: Fetch an existing user's settings
+      description: Fetch existing user's settings from their login
+      operationId: fetchUserSetting
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: login
+        description: user login
+        type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserSettings'
+        '401':
+          description: Authentication required
+        '403':
+          description: >-
+            Authenticated users who are not admins can only access their own
+            data
+        '404':
+          description: Required user not found
+    put:
+      tags:
+        - users
+      summary: Update existing user settings
+      description: Update existing user settiogs
+      operationId: updateUserSettings
       consumes:
         - application/json
       produces:
@@ -174,17 +262,49 @@ paths:
           type: string
           required: true
         - in: body
-          name: user
-          description: User to be updated (login should match path parameter)
+          name: userSettings
+          description: User settings to be updated (login should match path parameter)
           schema:
-            $ref: '#/definitions/SimpleUser'
+            $ref: '#/definitions/UserSettings'
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/SimpleUser'
+            $ref: '#/definitions/UserSettings'
         '400':
           description: Bad request (body doesn't match login path parameter)
+        '401':
+          description: Authentication required
+        '403':
+          description: Authenticated users who are not admins can only update their own data
+        '404':
+          description: User not found
+    patch:
+      tags:
+      - users
+      summary: Patch existing user settings
+      description: Patch existing user settions
+      operationId: patchUserSettings
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: login
+        description: user login
+        type: string
+        required: true
+      - in: body
+        name: userSettings
+        description: User settings to be updated
+        schema:
+          $ref: '#/definitions/UserSettings'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserSettings'
         '401':
           description: Authentication required
         '403':

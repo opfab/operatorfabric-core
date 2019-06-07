@@ -10,10 +10,9 @@ package org.lfenergy.operatorfabric.users.controllers;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.SimpleUser;
-import org.lfenergy.operatorfabric.users.model.User;
-import org.lfenergy.operatorfabric.users.model.UserData;
+import org.lfenergy.operatorfabric.users.model.*;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
+import org.lfenergy.operatorfabric.users.repositories.UserSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
@@ -33,9 +32,12 @@ import java.util.List;
 public class UsersController implements UsersApi {
 
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
+    public static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
     public static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserSettingsRepository userSettingsRepository;
 
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
      *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
@@ -63,8 +65,37 @@ public class UsersController implements UsersApi {
     }
 
     @Override
+    public UserSettings fetchUserSetting(String login) throws Exception {
+        return userSettingsRepository.findById(login)
+                .orElseThrow(()->new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.NOT_FOUND)
+                                .message(String.format(USER_SETTINGS_NOT_FOUND_MSG,login)).build()
+                ));
+    }
+
+    @Override
     public List<? extends User> fetchUsers() throws Exception {
         return userRepository.findAll();
+    }
+
+    @Override
+    public UserSettings patchUserSettings(String login, UserSettings userSettings) throws Exception {
+        UserSettingsData settings = userSettingsRepository.findById(login)
+                .orElse(UserSettingsData.builder().login(login).build());
+        return userSettingsRepository.save(settings.patch(userSettings));
+    }
+
+    @Override
+    public UserSettings updateUserSettings(String login, UserSettings userSettings) throws Exception {
+        if(!userSettings.getLogin().equals(login)) {
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(NO_MATCHING_USER_NAME_MSG)
+                            .build());
+        }
+        return userSettingsRepository.save(new UserSettingsData(userSettings));
     }
 
     @Override
