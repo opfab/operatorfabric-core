@@ -37,6 +37,7 @@ public class LightCardConsultationData implements LightCard {
     private String processId;
     private String state;
     private Long lttd;
+    private Long publishDate;
     @Indexed
     private Long startDate;
     @Indexed
@@ -59,6 +60,7 @@ public class LightCardConsultationData implements LightCard {
                 .processId(other.getProcessId())
                 .lttd(other.getLttd())
                 .startDate(other.getStartDate())
+                .publishDate(other.getPublishDate())
                 .endDate(other.getEndDate())
                 .severity(other.getSeverity())
                 .media(other.getMedia())

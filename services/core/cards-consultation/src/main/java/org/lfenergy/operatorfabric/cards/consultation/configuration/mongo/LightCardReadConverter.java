@@ -37,6 +37,7 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
                 .lttd(source.getLong("lttd"))
                 .startDate(source.getLong("startDate"))
                 .endDate(source.getLong("endDate"))
+                .publishDate(source.getLong("publishDate"))
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
                 .media(source.getString("media"))
                 .mainRecipient(source.getString("mainRecipient"))

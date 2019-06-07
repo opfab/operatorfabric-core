@@ -112,6 +112,7 @@ public class CardPublicationData implements Card {
             .lttd(this.getLttd())
             .startDate(this.getStartDate())
             .endDate(this.getEndDate())
+            .publishDate(this.getPublishDate())
             .severity(this.getSeverity())
             .media(this.getMedia())
             .tags(this.getTags())

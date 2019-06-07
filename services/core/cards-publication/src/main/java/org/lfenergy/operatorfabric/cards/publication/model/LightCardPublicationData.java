@@ -44,6 +44,7 @@ public class LightCardPublicationData implements LightCard {
     private String processId;
     private String state;
     private Long lttd;
+    private Long publishDate;
     @NotNull
     @Indexed
     private Long startDate;
