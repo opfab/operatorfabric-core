@@ -19,4 +19,6 @@ spring:
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "Authorization, Content-Type"
+operatorfabric.gateway.configs:
+  - web-ui.json
 #logging.level.root: debug

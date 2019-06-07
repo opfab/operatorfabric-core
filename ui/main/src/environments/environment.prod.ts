@@ -13,6 +13,6 @@ export const environment = {
         cards: '/cards',
         archives : '',
         thirds: '/thirds',
-        config: '/config'
+        config: '/config/web-ui.json'
     }
 };

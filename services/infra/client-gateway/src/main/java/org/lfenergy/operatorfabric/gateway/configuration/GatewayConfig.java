@@ -8,6 +8,8 @@
 package org.lfenergy.operatorfabric.gateway.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +19,10 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * TODO can't remember the reason of this code, explore and remove if not needed
@@ -28,6 +33,9 @@ import java.util.Map;
 public class GatewayConfig {
 
     ObjectMapper om = new ObjectMapper();
+
+    @Autowired
+    private OperatorFabricGatewayConf conf;
 
     @Bean
     public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
@@ -43,10 +51,10 @@ public class GatewayConfig {
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("config",
-                        r -> r.path("/config")
+                        r -> r.path(conf.getConfigs().stream().map(c->"/config/"+c).collect(Collectors.toList()).toArray(new String[0]))
                         .filters(f -> {
                             return f
-                                    .rewritePath("/config", "/web-ui.json")
+                                    .rewritePath("/config/(?<path>.*)", "/$\\{path}")
                                     .modifyResponseBody(String.class, String.class,
                                             (exchange, s) -> {
                                                 try {

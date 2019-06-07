@@ -17,7 +17,7 @@ export const environment = {
         cards: 'http://opfab.rte-europe.com:2002/cards',
         archives : '',
         thirds: 'http://opfab.rte-europe.com:2002/thirds',
-        config: 'http://opfab.rte-europe.com:2002/config'
+        config: 'http://opfab.rte-europe.com:2002/config/web-ui.json'
     }
 };
 

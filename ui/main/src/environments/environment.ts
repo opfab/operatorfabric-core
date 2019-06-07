@@ -17,7 +17,7 @@ export const environment = {
         cards: 'http://localhost:2002/cards',
         archives : '',
         thirds: 'http://localhost:2002/thirds',
-        config: 'http://localhost:2002/config'
+        config: 'http://localhost:2002/config/web-ui.json'
     }
 };
 
