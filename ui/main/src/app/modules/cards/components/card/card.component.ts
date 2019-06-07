@@ -54,7 +54,7 @@ export class CardComponent implements OnInit{
             ).subscribe(open=>this.open = open)
         ;
         // fetch configuration
-        this.store.select(buildConfigSelector('display.card.show.time'))
+        this.store.select(buildConfigSelector('feed.card.time.display'))
             // use configuration to compute date
             .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
             .subscribe(computedDate => this.dateToDisplay=computedDate);
