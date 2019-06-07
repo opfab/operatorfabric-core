@@ -133,4 +133,4 @@ include::../../../../services/core/cards-consultation/src/docs/asciidoc/configur
 include::../../../../services/core/thirds/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
 include::../../../../services/core/users/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
 include::../../../../services/core/time/src/docs/asciidoc/configuration.adoc[leveloffset=+3]
-//include::../../../../services/web/web-ui/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
+include::../../../../services/web/web-ui/src/docs/asciidoc/configuration.adoc[leveloffset=+2]
