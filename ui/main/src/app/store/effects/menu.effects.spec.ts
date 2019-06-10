@@ -11,6 +11,9 @@ import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
 import {LoadMenu, LoadMenuSuccess} from "@ofActions/menu.actions";
 import {of} from "rxjs";
+import {Router} from "@angular/router";
+import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
 
 describe('MenuEffects', () => {
     let effects: MenuEffects;
@@ -29,14 +32,13 @@ describe('MenuEffects', () => {
         const expectedAction = new LoadMenuSuccess({menu: expectedMenu});
         const localExpected = hot('---c', {c: expectedAction});
 
-        effects = new MenuEffects(mockStore, localActions$, localMockMenuService);
+        const localMockRouter = jasmine.createSpyObj('Router', ['navigate']);
+
+        effects = new MenuEffects(mockStore, localActions$, localMockMenuService, localMockRouter);
 
         expect(effects).toBeTruthy();
         expect(effects.load).toBeObservable(localExpected);
     });
-
-
-
 
 
 });

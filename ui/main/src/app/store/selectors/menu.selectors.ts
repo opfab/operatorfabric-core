@@ -11,5 +11,4 @@ import {MenuState} from "@ofStates/menu.state";
 
 export const selectMenuState = (state:AppState) => state.menu;
 export const selectMenuStateMenu =  createSelector(selectMenuState, (menuState:MenuState)=> menuState.menu);
-export const selectMenuStateSelectedMenuId =  createSelector(selectMenuState, (menuState:MenuState)=> menuState.selected_menu_id);
-export const selectMenuStateSelectedMenuEntryId =  createSelector(selectMenuState, (menuState:MenuState)=> menuState.selected_menu_entry_id);
+export const selectMenuStateSelectedIframeURL =  createSelector(selectMenuState, (menuState:MenuState)=> menuState.selected_iframe_url);

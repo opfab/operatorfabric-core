@@ -13,7 +13,9 @@ export enum MenuActionTypes {
     LoadMenuSuccess = '[Menu] Load Menu Success',
     LoadMenuFailure = '[Menu] Load Menu Fail',
     HandleUnexpectedError = '[Menu] Handle unexpected error',
-    UpdateSelectedMenu = '[Menu] Update Selected Menu',
+    SelectMenuLink = '[Menu] Select Menu Link',
+    SelectMenuLinkSuccess = '[Menu] Select Menu Link Success',
+    SelectMenuLinkFailure = '[Menu] Select Menu Link Failure',
 }
 // needed by NGRX entities
 export class LoadMenu implements Action {
@@ -52,11 +54,26 @@ export class HandleUnexpectedError implements Action {
  * Action used to update the state with the selected menu
  */
 //TODO Describe usage (cf authentication example)
-export class UpdateSelectedMenu implements Action {
-    readonly type = MenuActionTypes.UpdateSelectedMenu;
+export class SelectMenuLink implements Action {
+    readonly type = MenuActionTypes.SelectMenuLink;
 
     /* istanbul ignore next */
-    constructor(public payload: {menu_id: string, menu_entry_id: string}) {}
+    constructor(public payload: {menu_id: string, menu_version: string, menu_entry_id: string}) {}
+}
+
+export class SelectMenuLinkSuccess implements Action {
+    readonly type = MenuActionTypes.SelectMenuLinkSuccess;
+
+    /* istanbul ignore next */
+    constructor(public payload: {iframe_url: string}) {}
+}
+
+export class SelectMenuLinkFailure implements Action {
+    readonly type = MenuActionTypes.SelectMenuLinkFailure;
+
+    /* istanbul ignore next */
+    constructor(public payload: { error: Error }) {
+    }
 }
 
 export type MenuActions =
@@ -64,4 +81,6 @@ export type MenuActions =
     | LoadMenuSuccess
     | LoadMenuFailure
     | HandleUnexpectedError
-    | UpdateSelectedMenu;
+    | SelectMenuLink
+    | SelectMenuLinkSuccess
+    | SelectMenuLinkFailure;

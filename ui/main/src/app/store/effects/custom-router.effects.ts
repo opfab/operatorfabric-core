@@ -15,7 +15,7 @@ import {ROUTER_NAVIGATION, RouterNavigationAction} from "@ngrx/router-store";
 import {filter, switchMap} from "rxjs/operators";
 import {LoadCard} from "@ofActions/card.actions";
 import {SelectLightCard} from "@ofActions/light-card.actions";
-import {UpdateSelectedMenu} from "@ofActions/menu.actions";
+import {SelectMenuLink} from "@ofActions/menu.actions";
 
 @Injectable()
 export class CustomRouterEffects {
@@ -49,7 +49,7 @@ export class CustomRouterEffects {
         switchMap(action=>{
             const routerState:any = action.payload.routerState;
             return [
-                new UpdateSelectedMenu({menu_id: routerState.params['menu_id'],menu_entry_id: routerState.params['menu_entry_id']})
+                new SelectMenuLink({menu_id: routerState.params['menu_id'], menu_version: routerState.params['menu_version'],menu_entry_id: routerState.params['menu_entry_id']})
             ];
         })
     );

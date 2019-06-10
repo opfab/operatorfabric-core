@@ -32,15 +32,22 @@ export function reducer(
             return {
                 ...state,
                 loading: false,
-                error: `error while loading a single lightCard: '${action.payload.error}'`
+                error: `error while loading menu: '${action.payload.error}'`
             };
         }
-        case MenuActionTypes.UpdateSelectedMenu: {
+
+        case MenuActionTypes.SelectMenuLinkSuccess: {
             return {
                 ...state,
-                selected_menu_id: action.payload.menu_id,
-                selected_menu_entry_id: action.payload.menu_entry_id
+                selected_iframe_url: action.payload.iframe_url
             }
+        }
+
+        case MenuActionTypes.SelectMenuLinkFailure: {
+            return {
+                ...state,
+                error: `error while retrieving third-party menu url: '${action.payload.error}'`
+            };
         }
 
         default: {
@@ -48,6 +55,5 @@ export function reducer(
         }
     }
 }
-
 
 export const getSelectedId = (state: CardFeedState) => state.selectedCardId;

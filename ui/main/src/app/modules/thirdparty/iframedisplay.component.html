@@ -4,12 +4,9 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<div *ngIf="safeIframeURL; else noURL" class="embed-responsive embed-responsive-16by9">
-  <iframe class="embed-responsive-item" [src]="safeIframeURL" style="border:none" title="Third-party iframe"></iframe>
+<div class="embed-responsive embed-responsive-16by9">
+    <!-- nfFor is needed so the iframe is created rather than updated each time the iframe url changes.
+    Otherwise, the update of the src property creates a duplicate entry in the browser history, messing with the back button
+    -->
+    <iframe *ngFor="let url of [selectedIframeURL];" class="embed-responsive-item" [src]="url" style="border:none" title="Third-party iframe"></iframe>
 </div>
-
-<ng-template #noURL>
-  <p>
-    No iframe URL to display.
-  </p>
-</ng-template>

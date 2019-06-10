@@ -63,14 +63,18 @@ describe('NavbarComponent', () => {
         expect(component).toBeTruthy();
         expect(rootElement.queryAll(By.css('li > div.nav-link')).length).toBe(1)
         expect(rootElement.queryAll(By.css('li > div.nav-link > a')).length).toBe(2) //Because there is two <a> for each menu entry: text link and icon
+        expect(rootElement.queryAll(By.css('li > div.nav-link > a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/thirdparty,t2,1,id3") //As defined in ThirdsServiceMock
         expect(rootElement.queryAll(By.css('li > div.nav-link > a > fa-icon')).length).toBe(1)
+        expect(rootElement.queryAll(By.css('li > div.nav-link > a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link3") //As defined in ThirdsServiceMock
     });
     it('should create menu', () => {
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
         expect( rootElement.queryAll(By.css('li.dropdown')).length).toBe(1)
         expect( rootElement.queryAll(By.css('li.dropdown > div a')).length).toBe(4) //Because there is now two <a> for each menu entry: text link and icon
+        expect( rootElement.queryAll(By.css('li.dropdown > div a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/thirdparty,t1,1,id1") //As defined in ThirdsServiceMock
         expect( rootElement.queryAll(By.css('li.dropdown > div a > fa-icon')).length).toBe(2)
+        expect( rootElement.queryAll(By.css('li.dropdown > div a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link1") //As defined in ThirdsServiceMock
         expect( rootElement.queryAll(By.css('li.nav-item')).length).toBe(4)
     });
     it('should toggle menu ', (done) => {

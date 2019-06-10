@@ -8,18 +8,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IframeDisplayComponent } from './iframedisplay.component';
-import {DomSanitizer} from "@angular/platform-browser";
-import {ThirdsService} from "@ofServices/thirds.service";
-import {ThirdsServiceMock} from "@tests/mocks/thirds.service.mock";
+import {By, DomSanitizer} from "@angular/platform-browser";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {getRandomAlphanumericValue} from "@tests/helpers";
+import {SelectMenuLinkSuccess} from "@ofActions/menu.actions";
 
 describe('IframeDisplayComponent', () => {
   let component: IframeDisplayComponent;
   let fixture: ComponentFixture<IframeDisplayComponent>;
   let sanitizer: DomSanitizer;
-  let thirdService: ThirdsService;
   let store: Store<AppState>;
 
   beforeEach(async(() => {
@@ -28,13 +27,11 @@ describe('IframeDisplayComponent', () => {
         StoreModule.forRoot(appReducer),
       ],
       declarations: [IframeDisplayComponent],
-      providers: [{provide: store, useClass: Store},
-        {provide: ThirdsService, useClass: ThirdsServiceMock}]
+      providers: [{provide: store, useClass: Store}]
     })
         .compileComponents();
     store = TestBed.get(Store);
     sanitizer= TestBed.get(DomSanitizer);
-    thirdService= TestBed.get(ThirdsService);
   }));
 
   beforeEach(() => {
@@ -45,6 +42,18 @@ describe('IframeDisplayComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display iframe with appropriate url', () => {
+
+    const url = getRandomAlphanumericValue(5, 12);
+    store.dispatch(new SelectMenuLinkSuccess({iframe_url: url}));
+    component.ngOnInit();
+    fixture.detectChanges();
+    expect(component).toBeTruthy();
+    expect( fixture.debugElement.queryAll(By.css('iframe')).length).toBe(1);
+    expect( fixture.nativeElement.querySelector('iframe').getAttribute('src')).toEqual(url);
+
   });
 
 

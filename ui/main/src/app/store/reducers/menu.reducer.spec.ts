@@ -8,7 +8,13 @@
 import {reducer} from "@ofStore/reducers/menu.reducer";
 import {menuInitialState, MenuState} from "@ofStates/menu.state";
 import {getRandomAlphanumericValue, getRandomMenu} from "@tests/helpers";
-import {LoadMenu, LoadMenuFailure, LoadMenuSuccess, UpdateSelectedMenu} from "@ofActions/menu.actions";
+import {
+    LoadMenu,
+    LoadMenuFailure,
+    LoadMenuSuccess,
+    SelectMenuLink,
+    SelectMenuLinkSuccess
+} from "@ofActions/menu.actions";
 
 describe('Menu Reducer', () => {
     describe('unknown action', () => {
@@ -24,9 +30,7 @@ describe('Menu Reducer', () => {
                 menu: getRandomMenu(),
                 loading: false,
                 error: getRandomAlphanumericValue(5, 12),
-                selected_menu_id: getRandomAlphanumericValue(3,10),
-                selected_menu_entry_id: getRandomAlphanumericValue(3,10),
-                //this way selected_menu_id and selected_menu_entry_id don't necessarily exist in menu, but it doesn't matter for the purpose of this test
+                selected_iframe_url: getRandomAlphanumericValue(3,10)
             }
             const actualState = reducer(previousState, unknowAction);
             expect(actualState).toBe(previousState);
@@ -45,8 +49,7 @@ describe('Menu Reducer', () => {
                 menu: [],
                 loading: true,
                 error: null,
-                selected_menu_id: null,
-                selected_menu_entry_id: null,
+                selected_iframe_url: null
             }
             const actualState = reducer(previousState,
                 new LoadMenu());
@@ -61,9 +64,7 @@ describe('Menu Reducer', () => {
                 menu: actualMenu,
                 loading: true,
                 error: null,
-                selected_menu_id: getRandomAlphanumericValue(3,10),
-                selected_menu_entry_id: getRandomAlphanumericValue(3,10),
-                //this way selected_menu_id and selected_menu_entry_id don't necessarily exist in menu, but it doesn't matter for the purpose of this test
+                selected_iframe_url: getRandomAlphanumericValue(3,10)
             };
             const actualState = reducer(previousState,
                 new LoadMenuFailure({error: new Error(getRandomAlphanumericValue(5, 12))}));
@@ -81,9 +82,7 @@ describe('Menu Reducer', () => {
                 menu: previousMenu,
                 loading: true,
                 error: getRandomAlphanumericValue(5, 12),
-                selected_menu_id: getRandomAlphanumericValue(3,10),
-                selected_menu_entry_id: getRandomAlphanumericValue(3,10),
-                //this way selected_menu_id and selected_menu_entry_id don't necessarily exist in menu, but it doesn't matter for the purpose of this test
+                selected_iframe_url:getRandomAlphanumericValue(5, 12)
             };
             const actualMenu = getRandomMenu();
             const actualState = reducer(previousState, new LoadMenuSuccess({menu: actualMenu}));
@@ -95,27 +94,23 @@ describe('Menu Reducer', () => {
         });
     });
 
-    describe('UpdateSelectedMenu', () => {
-        it('should set selectedMenu and selectedMenuEntry to corresponding payload', () => {
+    describe('SelectMenuLinkSuccess', () => {
+        it('should set selected_iframe_url to corresponding payload', () => {
             const previousState: MenuState = {
                 menu: getRandomMenu(),
                 loading: true,
                 error: getRandomAlphanumericValue(5, 12),
-                selected_menu_id: getRandomAlphanumericValue(3,10),
-                selected_menu_entry_id: getRandomAlphanumericValue(3,10),
-                //this way selected_menu_id and selected_menu_entry_id don't necessarily exist in menu, but it doesn't matter for the purpose of this test
+                selected_iframe_url:getRandomAlphanumericValue(5, 12)
             };
 
-            const actual_selected_menu_id = getRandomAlphanumericValue(3,10);
-            const actual_selected_menu_entry_id = getRandomAlphanumericValue(3,10);
-            const actualState = reducer(previousState, new UpdateSelectedMenu({menu_id: actual_selected_menu_id, menu_entry_id: actual_selected_menu_entry_id}));
+            const actual_selected_iframe_url = getRandomAlphanumericValue(3,10);
+            const actualState = reducer(previousState, new SelectMenuLinkSuccess({iframe_url: actual_selected_iframe_url}));
             expect(actualState).not.toBe(previousState);
             expect(actualState).not.toEqual(previousState);
             expect(actualState.menu).toEqual(previousState.menu);
             expect(actualState.error).toEqual(previousState.error);
             expect(actualState.loading).toEqual(previousState.loading);
-            expect(actualState.selected_menu_id).toEqual(actual_selected_menu_id);
-            expect(actual_selected_menu_entry_id).toEqual(actual_selected_menu_entry_id);
+            expect(actualState.selected_iframe_url).toEqual(actual_selected_iframe_url);
         });
     });
 });

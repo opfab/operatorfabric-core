@@ -11,12 +11,12 @@ import {environment} from "../../environments/environment";
 import {AuthenticationService} from "@ofServices/authentication.service";
 import {EMPTY, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
-import {catchError, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
+import {catchError, filter, map, mergeMap, reduce, switchMap, take, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
-import {Third, ThirdMenu} from "@ofModel/thirds.model";
+import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 
 @Injectable()
 export class ThirdsService {
@@ -56,10 +56,20 @@ export class ThirdsService {
         });
     }
 
+    queryMenuEntryURL(thirdMenuId: string, thirdMenuVersion: string, thirdMenuEntryId: string): Observable<string> {
+        return this.queryThird(thirdMenuId,thirdMenuVersion).pipe(
+            filter((third :Third)=>!(!third.menuEntries)),
+            switchMap(third => {
+                return third.menuEntries.filter(entry => entry.id === thirdMenuEntryId)
+            }),
+            map( menuEntry => menuEntry.url)
+        )
+    }
+
     fetchHbsTemplate(publisher: string, version: string, name: string, locale: string): Observable<string> {
         const params = new HttpParams()
-                .set("locale", locale)
-                .set("version", version);
+            .set("locale", locale)
+            .set("version", version);
         return this.httpClient.get(`${this.thirdsUrl}/${publisher}/templates/${name}`,{
             params,
             responseType: 'text'
