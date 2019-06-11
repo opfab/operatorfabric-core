@@ -52,6 +52,7 @@ describe('Handlebars Services', () => {
                 })
             ],
             providers: [
+                {provide:'TimeEventSource',useValue:null},
                 {provide: store, useClass: Store},
                 {provide: time, useClass: TimeService},
                 ThirdsService, HandlebarsService

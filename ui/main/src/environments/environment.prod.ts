@@ -14,6 +14,8 @@ export const environment = {
         users: '/users',
         archives : '',
         thirds: '/thirds',
-        config: '/config/web-ui.json'
+        config: '/config/web-ui.json',
+        time: '/time'
+
     }
 };

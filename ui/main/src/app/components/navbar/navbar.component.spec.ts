@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {NavbarComponent} from './navbar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -19,10 +19,9 @@ import {ThirdsService} from "@ofServices/thirds.service";
 import {By} from "@angular/platform-browser";
 import {ThirdsServiceMock} from "@tests/mocks/thirds.service.mock";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import clock = jasmine.clock;
 import {InfoComponent} from "./info/info.component";
 import {TimeService} from "@ofServices/time.service";
-
+import clock = jasmine.clock;
 
 
 describe('NavbarComponent', () => {
@@ -42,7 +41,8 @@ describe('NavbarComponent', () => {
             ],
             declarations: [NavbarComponent, IconComponent, InfoComponent],
             providers: [{provide: store, useClass: Store},
-                {provide: ThirdsService, useClass: ThirdsServiceMock}, TimeService]
+                {provide: ThirdsService, useClass: ThirdsServiceMock},
+                TimeService]
         })
             .compileComponents();
         store = TestBed.get(Store);

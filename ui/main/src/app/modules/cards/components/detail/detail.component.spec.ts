@@ -52,7 +52,9 @@ describe('DetailComponent', () => {
                 })
             ],
             declarations: [DetailComponent],
-            providers: [ThirdsService, HandlebarsService, TimeService]
+            providers: [ThirdsService, HandlebarsService,
+                {provide:'TimeEventSource',useValue:null},
+                TimeService]
         })
             .compileComponents();
         injector = getTestBed();

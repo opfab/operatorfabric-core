@@ -18,7 +18,8 @@ export const environment = {
         users: 'http://opfab.rte-europe.com:2002/users',
         archives : '',
         thirds: 'http://opfab.rte-europe.com:2002/thirds',
-        config: 'http://opfab.rte-europe.com:2002/config/web-ui.json'
+        config: 'http://opfab.rte-europe.com:2002/config/web-ui.json',
+      time: 'http://opfab.rte-europe.com:2002/time'
     }
 };
 

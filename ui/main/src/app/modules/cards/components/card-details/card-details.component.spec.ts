@@ -50,7 +50,9 @@ describe('CardDetailsComponent', () => {
                 })
             ],
             declarations: [CardDetailsComponent, DetailsComponent, DetailComponent],
-            providers: [ThirdsService, HandlebarsService, TimeService]
+            providers: [ThirdsService, HandlebarsService,
+                {provide:'TimeEventSource',useValue:null},
+                TimeService]
         })
             .compileComponents();
     }));

@@ -23,6 +23,7 @@ import {cold, hot} from "jasmine-marbles";
 import {TimeService} from "@ofServices/time.service";
 import {I18nService} from "@ofServices/i18n.service";
 import {TranslateModule} from "@ngx-translate/core";
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 
 describe('TimeFilterComponent', () => {
     let component: TimeFilterComponent;
@@ -30,6 +31,7 @@ describe('TimeFilterComponent', () => {
     let store: Store<AppState>;
     let filterService: FilterService;
     let timeService: TimeService;
+    let httpMock: HttpTestingController;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -40,12 +42,16 @@ describe('TimeFilterComponent', () => {
                 TranslateModule.forRoot(),
                 StoreModule.forRoot(appReducer, storeConfig),
                 FontAwesomeModule,
-                ServicesModule
+                ServicesModule,
+                HttpClientTestingModule
             ],
             declarations: [TimeFilterComponent],
-            providers:[TimeService, I18nService]
+            providers:[ I18nService,
+            {provide:'TimeEventSource',useValue:null},
+                TimeService]
         })
             .compileComponents();
+        httpMock = TestBed.get(HttpTestingController);
     }));
 
     beforeEach(() => {

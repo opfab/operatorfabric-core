@@ -26,7 +26,9 @@ describe('SettingsXConfigSelectors', () => {
         card: null,
         menu: null,
         config: null,
-        settings: null
+        settings: null,
+        time:null
+
     }
 
     let loadedSettingsState: SettingsState = {

@@ -18,7 +18,8 @@ export const environment = {
         users: 'http://localhost:2002/users',
         archives : '',
         thirds: 'http://localhost:2002/thirds',
-        config: 'http://localhost:2002/config/web-ui.json'
+        config: 'http://localhost:2002/config/web-ui.json',
+        time: 'http://localhost:2002/time'
     }
 };
 

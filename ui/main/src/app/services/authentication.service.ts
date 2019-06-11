@@ -232,6 +232,7 @@ export class AuthenticationService {
      */
     public convert(payload: AuthObject):
         PayloadForSuccessfulAuthentication {
+
         let expirationDate;
         const jwt = AuthenticationService.decodeToken(payload.access_token);
         if (!!payload.expires_in)

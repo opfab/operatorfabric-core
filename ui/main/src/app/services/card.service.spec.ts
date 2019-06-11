@@ -4,17 +4,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import 'jasmine-sse/dist/jasmine-sse.js';
 import {inject, TestBed} from '@angular/core/testing';
 
 import {CardService} from './card.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {AuthenticationService} from '@ofServices/authentication.service';
 import {GuidService} from "@ofServices/guid.service";
-import SpyObj = jasmine.SpyObj;
-import createSpyObj = jasmine.createSpyObj;
 import {StoreModule} from "@ngrx/store";
 import {appReducer} from "@ofStore/index";
+import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
 
 
 describe('CardService', () => {
@@ -40,6 +39,7 @@ describe('CardService', () => {
         httpMock = TestBed.get(HttpTestingController);
         authenticationService = TestBed.get(AuthenticationService);
     });
+
 
     it('should be created', inject([CardService], (service: CardService) => {
 

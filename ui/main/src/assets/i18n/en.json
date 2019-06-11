@@ -57,5 +57,8 @@
     "timeFormat": "Time format",
     "dateFormat": "Date format",
     "dateTimeFormat": "Date Time format"
+  },
+  "time": {
+    "error": "time reference update failed for following reason: {{error}}"
   }
 }

@@ -37,6 +37,7 @@ describe('ListSettingComponent', () => {
         menu: null,
         config: configInitialState,
         settings: null,
+        time:null
     }
     beforeEach(async(() => {
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);

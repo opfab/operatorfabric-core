@@ -53,7 +53,11 @@ describe('CardComponent', () => {
                     useDefaultLang: false
                 })],
             declarations: [CardComponent],
-            providers: [{provide: store, useClass: Store},{provide: Router, useValue: routerSpy},ThirdsService, TimeService,I18nService]
+            providers: [{provide: store, useClass: Store},
+                {provide: Router, useValue: routerSpy},
+                ThirdsService,
+                {provide:'TimeEventSource',useValue:null},
+                TimeService,I18nService]
         })
             .compileComponents();
         store = TestBed.get(Store);

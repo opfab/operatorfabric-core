@@ -46,7 +46,7 @@ const routes: Routes = [
 export const navigationRoutes: Routes = routes.slice(0, 2);
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes,{ enableTracing: !environment.production, preloadingStrategy: PreloadAllModules })],
+    imports: [RouterModule.forRoot(routes,{ enableTracing: false, preloadingStrategy: PreloadAllModules })],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

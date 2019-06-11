@@ -10,7 +10,6 @@ import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
 import {TokenInjector} from './interceptors.service';
-// import {AuthenticationGuard} from './guard.service';
 import {CardService} from './card.service';
 import {GuidService} from "@ofServices/guid.service";
 import {TimeService} from "@ofServices/time.service";
@@ -35,7 +34,7 @@ import {SettingsService} from "@ofServices/settings.service";
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInjector,
             multi: true
-        },
+        }   ,
         GuidService,
         FilterService,
         I18nService
@@ -61,3 +60,4 @@ export class ServicesModule {
         }
     }
 }
+

@@ -11,11 +11,11 @@ import {Store} from "@ngrx/store";
 import {selectUserNameOrIdentifier} from "@ofSelectors/authentication.selectors";
 import {combineLatest, Observable, of} from "rxjs";
 import {buildSettingsSelector} from "@ofSelectors/settings.selectors";
-import * as moment from 'moment-timezone';
 import {TimeService} from "@ofServices/time.service";
 import {map} from "rxjs/operators";
-import {Moment} from "moment-timezone/moment-timezone";
+import * as moment from "moment";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
+import {selectCurrentDate} from "@ofSelectors/time.selectors";
 
 @Component({
     selector: 'of-info',
@@ -34,14 +34,13 @@ export class InfoComponent implements OnInit {
         this._userName$ = this.store.select(selectUserNameOrIdentifier);
         this._description$ = this.store.select(buildSettingsSelector('description'));
         this._time$ = combineLatest(
-        of(moment().valueOf()),
+        this.store.select(selectCurrentDate),
             this.store.select(buildSettingsOrConfigSelector('locale')),
             this.store.select(buildSettingsOrConfigSelector('timeZone'))
         ).pipe(
             map(values => this.timeService.formatTime(moment(values[0])))
         );
     }
-
     get userName$() {
         return this._userName$;
     }

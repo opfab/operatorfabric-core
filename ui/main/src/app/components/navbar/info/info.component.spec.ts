@@ -5,17 +5,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { InfoComponent } from './info.component';
+import {InfoComponent} from './info.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {RouterTestingModule} from "@angular/router/testing";
 import {StoreModule} from "@ngrx/store";
 import {appReducer} from "@ofStore/index";
-import {EffectsModule} from "@ngrx/effects";
-import {MenuEffects} from "@ofEffects/menu.effects";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {TimeService} from "@ofServices/time.service";
+import createSpyObj = jasmine.createSpyObj;
 
 describe('InfoComponent', () => {
   let component: InfoComponent;
@@ -29,7 +27,9 @@ describe('InfoComponent', () => {
             RouterTestingModule,
             StoreModule.forRoot(appReducer)
         ],
-        providers: [TimeService]
+        providers: [{provide:'TimeEventSource',useValue:null},
+          {provide:TimeService,useValue:createSpyObj('TimeService',
+                 ['formatTime'])}]
     })
     .compileComponents();
   }));

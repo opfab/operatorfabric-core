@@ -11,29 +11,35 @@ import {TimeService} from './time.service';
 
 import * as moment from 'moment';
 import {RouterTestingModule} from "@angular/router/testing";
-import {StoreModule} from "@ngrx/store";
-import {appReducer} from "@ofStore/index";
+import {Store, StoreModule} from "@ngrx/store";
+import {appReducer, AppState} from "@ofStore/index";
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {TimeReference, TimeSpeed} from "@ofModel/time.model";
 
 describe('TimeService', () => {
 
     let service: TimeService;
+    let httpMock: HttpTestingController;
     beforeAll(()=>{
        moment.tz.setDefault("Europe/Paris");
        moment.locale('fr-FR');
     });
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                TimeService
-            ],
-            imports: [
-                RouterTestingModule,
-                StoreModule.forRoot(appReducer)
-            ],
+            providers: [TimeService],
+            imports:[  HttpClientTestingModule,
+                        RouterTestingModule,
+                        StoreModule.forRoot(appReducer)
+                    ],
         });
+
+        httpMock = TestBed.get(HttpTestingController);
         service = TestBed.get(TimeService);
     });
 
+    afterEach(()=>{
+        httpMock.verify();
+    })
     it('should be created', () => {
 
         expect(service).toBeTruthy();
@@ -65,6 +71,115 @@ describe('TimeService', () => {
         expect(service).toBeTruthy();
         expect(service.formatDate(1559721600000)).toEqual('06/05/2019');
         expect(service.formatDate(new Date(1559721600000))).toEqual('06/05/2019');
-        expect(service.formatDate(moment(new Date(1559721600000)))).toEqual('06/05/2019');
+expect(service.formatDate(moment(new Date(1559721600000)))).toEqual('06/05/2019');
     });
+
+
+    it('should return now given as argument when compute the correct time for a X1 virtual time speed',()=>{
+        const testedNow = moment();
+        const tested = service.computeCurrentTime(testedNow,new TimeReference(null,
+            null,
+            moment.now().valueOf(),
+            TimeSpeed.X1));
+        expect(tested).toEqual(testedNow);
+    });
+
+    it( 'should return a fixed moment given as argument when compute the correct time for X1 virtual' +
+        'time speed', () => {
+        const testedNow = moment('2019-06-12T16:08:25+02:00');
+        const tested =service.computeCurrentTime(testedNow,new TimeReference(null,
+            null,
+            moment.now().valueOf(),
+            TimeSpeed.X1));
+        expect(tested).toEqual(testedNow);
+    });
+
+    it('should return two hours from a given moment corresponding to one hour after ' +
+        'virtual time has been set when timeSpeed is X2', () =>{
+    const initialReferenceMoment=moment('2019-06-12T16:08:25+02:00');
+    const momentAtRequestMoment=moment('2019-06-12T17:08:25+02:00');
+    const expectedMoment = moment('2019-06-12T19:08:25+02:00');
+    const doubleSpeed = TimeSpeed.X2;
+    const tested = service.computeCurrentTime(momentAtRequestMoment,
+                                                new TimeReference(
+                                                    initialReferenceMoment.valueOf(),
+                                                    null,
+                                                    initialReferenceMoment.valueOf()
+                                                    ,doubleSpeed
+                                                )
+    );
+       expect(tested.valueOf).toEqual(expectedMoment.valueOf);
+    });
+
+});
+
+describe('TimeService time Reference',() =>{
+    let service: TimeService;
+    let httpMock: HttpTestingController;
+    let store: Store<AppState>;
+    beforeAll(()=>{
+        moment.tz.setDefault("Europe/Paris");
+        moment.locale('fr-FR');
+    });
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [TimeService],
+            imports:[  HttpClientTestingModule,
+                RouterTestingModule,
+                StoreModule.forRoot(appReducer)
+            ],
+        });
+
+        httpMock = TestBed.get(HttpTestingController);
+        service = TestBed.get(TimeService);
+
+    });
+
+
+    afterAll(()=>{
+
+    })
+    it('should be connected to an SSE stream', () => {
+        // service.fetchVirtualTime(sseMock).subscribe(tested=>{
+        //     console.error('XXXXXXXXXXXX',tested);
+        //     expect(tested).toBeTruthy();
+        //     expect(tested.speed).toEqual(TimeSpeed.X10);
+        //     expect(tested.referenceTime).toEqual(1560385830000);
+        //     expect(tested.virtualTime).toEqual(1560385830000);
+        //     expect(tested.computedNow).toEqual(1560439225927);
+        // });
+        // esMock.onmessage({data:`{
+        //         "referenceTime": 1560385830000,
+        //         "virtualTime": 1560385830000,
+        //         "computedNow": 1560439225927,
+        //         "speed": "X10"
+        //     }`} as OnMessageEvent);
+
+
+        // service.initiateTimeReference();
+
+    });
+
+    xit('should manage error silently and keep running from SSE',()=>{
+        let isError=false;
+        // service.fetchVirtualTime(sseMock).subscribe(virtualTimeReference=>{
+        //         expect(virtualTimeReference).toBeTruthy();
+        //     },
+        //     (error)=>{
+        //         isError=true;
+        //     },
+        //     ()=>{
+        //         expect(isError).toBe(false);
+        //
+        //     })
+        // sseMock.onerror(new ErrorEvent('something goes wrong'));
+        // sseMock.onmessage({data:`{
+        //                                         "referenceTime": 1560385830000,
+        //                                         "virtualTime": 1560385830000,
+        //                                         "computedNow": 1560439225927,
+        //                                         "speed": "X2"
+        //
+        //                                         }`});
+    });
+
 });

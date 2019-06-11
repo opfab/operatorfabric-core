@@ -42,7 +42,7 @@ export class AuthenticationEffects {
     /**
      * @constructor
      * @param store - {Store<AppState>} state manager
-     * @param action$ - {Action} {Observable} of Action of the Application
+     * @param actions$ - {Action} {Observable} of Action of the Application
      * @param authService - service implementing the authentication business rules
      * @param router - router service to redirect user accordingly to the user authentication status or variation of it.
      *

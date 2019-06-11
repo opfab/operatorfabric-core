@@ -57,5 +57,8 @@
     "timeFormat": "Format heure/minute",
     "dateFormat": "Format de date",
     "dateTimeFormat": "Format date et heure/minute"
+  },
+  "time": {
+    "error": "La mise-à-jour du temps de référence a échoué pour la raison suivante: {{error}}"
   }
 }

@@ -42,3 +42,5 @@ operatorfabric:
   i18n.supported.locales:
     - fr
     - en
+  time:
+    pulse: 5000
