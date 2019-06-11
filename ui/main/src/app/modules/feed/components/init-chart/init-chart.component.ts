@@ -62,7 +62,7 @@ export class InitChartComponent implements OnInit {
     this.showGridLines = false;
     this.centeredOnTicks = false;
     this.realTimeBar = false;
-    this.circleDiameter = 12;
+    this.circleDiameter = 10;
   }
 
 

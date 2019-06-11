@@ -22,7 +22,7 @@ import * as feedSelectors from "@ofSelectors/feed.selectors";
   selector: 'of-time-line',
   templateUrl: './time-line.component.html',
 })
-export class TimeLineComponent implements OnInit, AfterViewInit {
+export class TimeLineComponent implements OnInit {
     lightCards$: Observable<LightCard[]>;
 
     public conf: any;
