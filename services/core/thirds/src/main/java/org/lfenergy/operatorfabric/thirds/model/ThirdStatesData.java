@@ -27,10 +27,12 @@ public class ThirdStatesData implements ThirdStates {
         return detailsData;
     }
 
+    @Override
     public Map<String, ? extends Action> getActions(){
         return actionsData;
     }
 
+    @Override
     public void setActions(Map<String, ? extends Action> actionsData){
         this.actionsData = new HashMap<>((Map<String,ActionData>) actionsData);
     }

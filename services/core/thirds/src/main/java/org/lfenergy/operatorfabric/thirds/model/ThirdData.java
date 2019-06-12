@@ -45,26 +45,32 @@ public class ThirdData implements Third {
   private List<? extends ThirdMenuEntry> menuEntriesData;
   private String i18nLabelKey;
 
+  @Override
   public Map<String, ? extends ThirdProcesses> getProcesses(){
     return processesData;
   }
 
+  @Override
   public void setProcesses(Map<String, ? extends ThirdProcesses> processesData){
     this.processesData = new HashMap<>((Map<String,ThirdProcessesData>) processesData);
   }
 
+  @Override
   public Map<String, ? extends ThirdMedias> getMedias(){
     return mediasData;
   }
 
+  @Override
   public void setMedias(Map<String, ? extends ThirdMedias> mediasData){
     this.mediasData = new HashMap<>((Map<String,ThirdMediasData>) mediasData);
   }
 
+  @Override
   public List<? extends ThirdMenuEntry> getMenuEntries(){
     return menuEntriesData;
   }
 
+  @Override
   public void setMenuEntries(List<? extends ThirdMenuEntry> menuEntries){
     this.menuEntriesData = new ArrayList<>((List < ThirdMenuEntryData >) menuEntries);
   }

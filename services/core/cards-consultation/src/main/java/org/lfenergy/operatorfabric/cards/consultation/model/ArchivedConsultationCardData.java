@@ -18,7 +18,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>Please use builder to instantiate</p>
