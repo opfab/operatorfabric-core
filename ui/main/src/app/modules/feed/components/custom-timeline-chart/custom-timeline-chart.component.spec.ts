@@ -120,6 +120,8 @@ describe('CustomTimelineChartComponent', () => {
     component.setXTicksValue([0, 2888000000]);
     component.clusterLevel = 'Y';
     component.setXTicksValue([0, 34888000000]);
+    component.clusterLevel = 'R';
+    component.setXTicksValue([0, 1]);
     expect(component).toBeTruthy();
   });
 
@@ -161,6 +163,7 @@ describe('CustomTimelineChartComponent', () => {
   it('check drag on left', () => {
     fixture.detectChanges();
     component.valueDomain = [0, 5];
+    component.enableDrag = true;
     inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
     const event = new PointerEvent('click', {
       clientX: 100,
@@ -182,6 +185,7 @@ describe('CustomTimelineChartComponent', () => {
   it('check drag on right', () => {
     fixture.detectChanges();
     component.valueDomain = [0, 5];
+    component.enableDrag = true;
     inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
     const event = new PointerEvent('click', {
       clientX: 100,

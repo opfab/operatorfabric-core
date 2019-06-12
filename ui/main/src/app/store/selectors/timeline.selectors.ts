@@ -21,8 +21,8 @@ export const {
 export const selectTimelineSelection = createSelector(selectTimelineState,
     state => state.data);
 
-export const selectLightCardSelection = createSelector(selectLightCardsState,
+/*export const selectLightCardSelection = createSelector(selectLightCardsState,
     state => state.selectedCardId);
 
 export const selectLastCardsSelection = createSelector(selectTimelineState,
-    state => state.lastCards);
+    state => state.lastCards);*/
