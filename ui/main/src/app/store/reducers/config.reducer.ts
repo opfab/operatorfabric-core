@@ -24,7 +24,8 @@ export function reducer(
                 ...state,
                 config: action.payload.config,
                 loading: false,
-                loaded:true
+                loaded:true,
+                retry:0
             };
         }
 
@@ -57,7 +58,6 @@ export function reducer(
                 ...state,
                 loading: false,
                 error: `error while loading a Settings: '${action.payload.error}'`,
-                retry: state.retry+1
             };
         }
 

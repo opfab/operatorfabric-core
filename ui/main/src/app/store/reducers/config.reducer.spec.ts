@@ -141,7 +141,7 @@ describe('Config Reducer', () => {
             expect(actualState.loading).toEqual(false);
             expect(actualState.error).not.toBeNull();
             expect(actualState.loaded).toEqual(false);
-            expect(actualState.retry).toEqual(1);
+            expect(actualState.retry).toEqual(0);
 
         });
     });

@@ -13,7 +13,7 @@ import {
     ConfigActionTypes,
     LoadConfig,
     LoadConfigFailure,
-    LoadConfigSuccess
+    LoadConfigSuccess, LoadSettings, LoadSettingsSuccess
 } from "@ofActions/config.actions";
 import {async} from "@angular/core/testing";
 import {ConfigService} from "@ofServices/config.service";
@@ -29,11 +29,11 @@ describe('ConfigEffects', () => {
     let mockStore: SpyObj<Store<AppState>>;
 
     beforeEach(async(() => {
-        configService = jasmine.createSpyObj('ConfigService', ['fetchConfiguration']);
+        configService = jasmine.createSpyObj('ConfigService', ['fetchConfiguration','fetchUserSettings']);
         mockStore = jasmine.createSpyObj('Store', ['dispatch', 'select']);
 
     }))
-    describe('loadById', () => {
+    describe('loadConfiguration', () => {
         it('should return a LoadConfigsSuccess when the configService serve configuration', () => {
             const expectedConfig = {value: {subValue1: 1, subValue2: 2}};
 
@@ -48,7 +48,7 @@ describe('ConfigEffects', () => {
             effects = new ConfigEffects(mockStore, localActions$, configService);
 
             expect(effects).toBeTruthy();
-            expect(effects.loadById).toBeObservable(localExpected);
+            expect(effects.loadConfiguration).toBeObservable(localExpected);
         });
         it('should return a LoadConfigsFailure when the configService doesn\'t serve configuration', () => {
 
@@ -56,11 +56,11 @@ describe('ConfigEffects', () => {
             configService.fetchConfiguration.and.returnValue(hot('---#'));
             effects = new ConfigEffects(mockStore, localActions$, configService);
             expect(effects).toBeTruthy();
-            effects.loadById.subscribe((action: ConfigActions) => expect(action.type).toEqual(ConfigActionTypes.LoadConfigFailure));
-            // expect(effects.loadById).toBeObservable(localExpected);
+            effects.loadConfiguration.subscribe((action: ConfigActions) => expect(action.type).toEqual(ConfigActionTypes.LoadConfigFailure));
+            // expect(effects.loadConfiguration).toBeObservable(localExpected);
         });
-    })
-    describe('retry', () => {
+    });
+    describe('retryConfigurationLoading', () => {
         it('should return a LoadConfig if not much retry', () => {
             mockStore.select.withArgs(selectConfigRetry).and.returnValue(of(1));
             const localActions$ = new Actions(hot('-a--', {a: new LoadConfigFailure({error: new Error('test message')})}));
@@ -70,9 +70,35 @@ describe('ConfigEffects', () => {
 
             effects = new ConfigEffects(mockStore, localActions$, configService,0);
             expect(effects).toBeTruthy();
-            expect(effects.retry).toBeObservable(localExpected);
+            expect(effects.retryConfigurationLoading).toBeObservable(localExpected);
         })
     })
+    describe('loadSettings', () => {
+        it('should return a LoadSettingsSuccess when the configService serve settings', () => {
+            const expectedSettings = {value: 1};
 
+            const localActions$ = new Actions(hot('-a--', {a: new LoadSettings()}));
+
+            // const localMockConfigService = jasmine.createSpyObj('ConfigService', ['fetchConfiguration']);
+
+            configService.fetchUserSettings.and.returnValue(hot('---b', {b: expectedSettings}));
+            const expectedAction = new LoadSettingsSuccess({settings: expectedSettings});
+            const localExpected = hot('---c', {c: expectedAction});
+
+            effects = new ConfigEffects(mockStore, localActions$, configService);
+
+            expect(effects).toBeTruthy();
+            expect(effects.loadSettings).toBeObservable(localExpected);
+        });
+        it('should return a LoadSettingsFailure when the configService doesn\'t serve settings', () => {
+
+            const localActions$ = new Actions(hot('-a--', {a: new LoadSettings()}));
+            configService.fetchUserSettings.and.returnValue(hot('---#'));
+            effects = new ConfigEffects(mockStore, localActions$, configService);
+            expect(effects).toBeTruthy();
+            effects.loadSettings.subscribe((action: ConfigActions) => expect(action.type).toEqual(ConfigActionTypes.LoadSettingsFailure));
+            // expect(effects.loadConfiguration).toBeObservable(localExpected);
+        });
+    });
 
 });
