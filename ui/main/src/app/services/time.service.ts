@@ -25,4 +25,11 @@ export class TimeService {
     public asInputString(value: number): string {
         return moment(value).format('YYYY-MM-DDTHH:mm:ss.SSS');
     }
+
+    public formatDateTime(timestamp: number):string {
+        // moment.locale(this.translate.currentLang);
+        if(timestamp)
+        return moment(timestamp).format('L LT');
+        return '';
+    }
 }

@@ -17,6 +17,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {isInTheFuture} from "@ofServices/authentication.service";
 import {LoadConfig} from "@ofActions/config.actions";
 import {selectConfigLoaded, selectMaxedRetries} from "@ofSelectors/config.selectors";
+import {I18nService} from "@ofServices/i18n.service";
 
 @Component({
     selector: 'of-root',
@@ -32,15 +33,9 @@ export class AppComponent implements OnInit {
     private maxedRetries: boolean = false;
 
     constructor(private store: Store<AppState>,
-                private translate: TranslateService) {
+                private i18n: I18nService) {
         this.getRoutePE = this.store.pipe(select(selectRouterState));
-        this.configureL10nWithEnglishAsDefault();
-    }
-
-    private configureL10nWithEnglishAsDefault() {
-        this.translate.setDefaultLang('en');
-        const browserLang = this.translate.getBrowserLang();
-        this.translate.use(browserLang);
+        this.i18n.configureI18nWithEnglishAsDefault();
     }
 
     /**

@@ -23,6 +23,8 @@ import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import * as moment from "moment";
 import 'moment/locale/fr';
+import {TimeService} from "@ofServices/time.service";
+import {I18nService} from "@ofServices/i18n.service";
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
@@ -31,6 +33,7 @@ describe('CardComponent', () => {
     let router: SpyObj<Router>;
     let injector: TestBed;
     let translateService: TranslateService;
+    let i18nService: I18nService;
 
     beforeAll(()=>{
         moment.tz.setDefault("Europe/Paris");
@@ -56,7 +59,7 @@ describe('CardComponent', () => {
                     useDefaultLang: false
                 })],
             declarations: [CardComponent],
-            providers: [{provide: store, useClass: Store},{provide: Router, useValue: routerSpy},ThirdsService]
+            providers: [{provide: store, useClass: Store},{provide: Router, useValue: routerSpy},ThirdsService, TimeService,I18nService]
         })
             .compileComponents();
         store = TestBed.get(Store);
@@ -68,7 +71,9 @@ describe('CardComponent', () => {
         translateService = injector.get(TranslateService);
         translateService.addLangs(["en", "fr"]);
         translateService.setDefaultLang("en");
-        translateService.use("en");
+        // translateService.use("en");
+        i18nService = injector.get(I18nService);
+        i18nService.changeLocale('en');
 
     }));
 
@@ -119,14 +124,14 @@ describe('CardComponent', () => {
     });
 
     it( 'should handle timestamp in English', () => {
-        translateService.use('en');
+        i18nService.changeLocale('en');
         const timeStampFor5June2019at10AM = 1559721600000;
         const FiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(timeStampFor5June2019at10AM);
         expect(FiveJune2019at10AMDateString).toEqual('06/05/2019 10:00 AM');
         });
 
     it( 'should handle timestamp in French', () => {
-        translateService.use('fr');
+        i18nService.changeLocale('fr');
         const timeStampFor5June2019at10AM = 1559721600000;
         const FiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(timeStampFor5June2019at10AM);
         expect(FiveJune2019at10AMDateString).toEqual('05/06/2019 10:00');

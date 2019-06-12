@@ -16,6 +16,7 @@ import {map} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import * as moment from "moment"
 import {TranslateService} from "@ngx-translate/core";
+import {TimeService} from "@ofServices/time.service";
 
 @Component({
     selector: 'of-card',
@@ -33,7 +34,8 @@ export class CardComponent implements OnInit{
     /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private time: TimeService) {
 
     }
 
@@ -71,12 +73,7 @@ export class CardComponent implements OnInit{
     }
 
     handleDate(timeStamp:number):string{
-        let result = '';
-        if(timeStamp){
-            moment.locale(this.translate.currentLang);
-            result=moment(timeStamp).format('L LT');
-        }
-        return result;
+        return this.time.formatDateTime(timeStamp);
     }
 
 

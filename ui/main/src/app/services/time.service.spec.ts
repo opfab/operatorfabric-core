@@ -45,4 +45,9 @@ describe('TimeService', () => {
         expect(service).toBeTruthy();
         expect(service.asInputString(1558686353000)).toEqual('2019-05-24T10:25:53.000');
     });
+    it('should format timestamp to date time string', () => {
+        moment.locale('en');
+        expect(service).toBeTruthy();
+        expect(service.formatDateTime(1559721600000)).toEqual('06/05/2019 10:00 AM');
+    });
 });

@@ -18,6 +18,7 @@ import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {IconComponent} from "./components/icon/icon.component";
 import {TranslateModule} from "@ngx-translate/core";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {I18nService} from "@ofServices/i18n.service";
 
 
 describe('AppComponent', () => {
@@ -41,7 +42,7 @@ describe('AppComponent', () => {
                 RouterTestingModule
             ],
             declarations: [AppComponent,NavbarComponent, IconComponent],
-            providers: [{provide: store, useClass: Store}],
+            providers: [{provide: store, useClass: Store},I18nService],
             schemas: [ NO_ERRORS_SCHEMA ]
         }).compileComponents();
         store = TestBed.get(Store);
