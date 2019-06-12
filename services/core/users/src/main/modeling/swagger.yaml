@@ -73,7 +73,7 @@ definitions:
 
   UserSettings:
     type: object
-    description: User associated settings
+    description: User associated settings. Note that the current supported locales are en and fr. Date and time formats use Moment.js formats.
     properties:
       login:
         type: string
@@ -92,6 +92,15 @@ definitions:
         items:
           type: string
           uniqueItems: true
+    example:
+      login: jcleese
+      description: once played Sir Lancelot
+      timezone: Europe/London
+      locale: en-GB
+      timeFormat: LT
+      dateFormat: L
+      defaultTags: ['humor','movies']
+
 paths:
   /users:
     get:

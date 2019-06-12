@@ -27,7 +27,7 @@ public class OpfabClientGenerator extends SpringCodegen {
 
         while(listIterator.hasNext()) {
             String _import = (String)((Map)listIterator.next()).get("import");
-            if(_import.contains("Json"))
+            if(_import.contains("Json") || _import.contains("ApiModel"))
                 listIterator.remove();
         }
         return result;

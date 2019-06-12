@@ -17,10 +17,10 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+//import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableSwagger2
+//@EnableSwagger2
 @Slf4j
 @RefreshScope
 @EnableFeignClients(basePackageClasses = CardConsultationServiceProxy.class)

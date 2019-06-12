@@ -22,6 +22,7 @@ import {Router} from "@angular/router";
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import * as moment from "moment";
+import 'moment/locale/fr';
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
@@ -33,7 +34,8 @@ describe('CardComponent', () => {
 
     beforeAll(()=>{
         moment.tz.setDefault("Europe/Paris");
-        moment.locale('fr-FR');
+        moment.locale('fr');
+        console.log(moment.locale());
     });
 
     beforeEach(async(() => {

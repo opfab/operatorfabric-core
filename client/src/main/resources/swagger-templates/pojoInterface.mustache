@@ -1,7 +1,7 @@
 /**
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */{{#description}}
-@ApiModel(description = "{{{description}}}"){{/description}}
+//@ApiModel(description = "{{{description}}}"){{/description}}
 {{#useBeanValidation}}@Validated{{/useBeanValidation}}
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
 public interface {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#serializableModel}}{{#parent}}, {{/parent}}{{^parent}}extends {{/parent}} Serializable{{/serializableModel}} {
@@ -39,7 +39,7 @@ public interface {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#ser
  {{#vendorExtensions.extraAnnotation}}
   {{{vendorExtensions.extraAnnotation}}}
   {{/vendorExtensions.extraAnnotation}}
-  @ApiModelProperty({{#example}}example = "{{{example}}}", {{/example}}{{#required}}required = {{required}}, {{/required}}{{#isReadOnly}}readOnly = {{{isReadOnly}}}, {{/isReadOnly}}value = "{{{description}}}")
+  //@ApiModelProperty({{#example}}example = "{{{example}}}", {{/example}}{{#required}}required = {{required}}, {{/required}}{{#isReadOnly}}readOnly = {{{isReadOnly}}}, {{/isReadOnly}}value = "{{{description}}}")
   {{#jackson}}
   @JsonProperty("{{baseName}}")  {{#withXml}}@JacksonXmlProperty({{#isXmlAttribute}}isAttribute = true, {{/isXmlAttribute}}{{#xmlNamespace}}namespace="{{xmlNamespace}}", {{/xmlNamespace}}localName = "{{#xmlName}}{{xmlName}}{{/xmlName}}{{^xmlName}}{{baseName}}{{/xmlName}}"){{/withXml}}{{/jackson}}
   {{#gson}}@SerializedName("{{baseName}}")

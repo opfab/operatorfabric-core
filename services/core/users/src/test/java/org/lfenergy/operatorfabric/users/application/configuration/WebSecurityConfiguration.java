@@ -25,22 +25,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
  */
 @Configuration
 @Slf4j
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    WebSecurityChecks webSecurityChecks;
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter  {
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
-                .antMatchers(HttpMethod.PUT,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
-                .antMatchers("/users/**").hasRole("ADMIN")
-                .antMatchers("/groups/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
+        org.lfenergy.operatorfabric.users.configuration.oauth2.WebSecurityConfiguration.configureCommon(http);
+        http.csrf().disable();
         ;
     }
 

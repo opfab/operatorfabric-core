@@ -35,19 +35,26 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
+        configureCommon(http);
+        http
+                .oauth2ResourceServer()
+                .jwt()
+                .jwtAuthenticationConverter(opfabJwtConverter)
+        ;
+    }
+
+    public static void configureCommon(final HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
                 .antMatchers(HttpMethod.PUT,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
+                .antMatchers(HttpMethod.GET,"/users/{login}/settings").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
+                .antMatchers(HttpMethod.PUT,"/users/{login}/settings").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
+                .antMatchers(HttpMethod.PATCH,"/users/{login}/settings").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
                 .antMatchers("/users/**").hasRole("ADMIN")
                 .antMatchers("/groups/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
-                .and()
-                .oauth2ResourceServer()
-                .jwt()
-                .jwtAuthenticationConverter(opfabJwtConverter)
-        ;
+                .anyRequest().permitAll();
     }
 
 }

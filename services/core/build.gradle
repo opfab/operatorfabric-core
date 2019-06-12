@@ -29,7 +29,7 @@ subprojects {
     dependencies {
         swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
 
-        compile generator.springfoxSwagger2, generator.springfoxSwaggerUI
+//        compile generator.springfoxSwagger2, generator.springfoxSwaggerUI
         compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
         compile  cloud.starterBus, cloud.eurekaClient
         compile boot.starterAop, spring.retry

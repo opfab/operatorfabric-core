@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -103,4 +104,18 @@ public class OpfabSpringGenerator extends SpringCodegen {
     }
     return super.getTypeDeclaration(p);
   }
+
+    @Override
+    public Map<String, Object> postProcessModels(Map<String, Object> objs) {
+        Map<String, Object> result = super.postProcessModels(objs);
+        List<Map<String, String>> imports = (List)objs.get("imports");
+        ListIterator listIterator = imports.listIterator();
+
+        while(listIterator.hasNext()) {
+            String _import = (String)((Map)listIterator.next()).get("import");
+            if( _import.contains("ApiModel")||_import.contains("io\\.swagger\\.annotations") ||_import.contains("springfox"))
+                listIterator.remove();
+        }
+        return result;
+    }
 }

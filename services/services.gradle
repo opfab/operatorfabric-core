@@ -53,6 +53,7 @@ subprojects {
 
         configurations {
             compile.exclude module: "spring-boot-starter-tomcat"
+            testCompile.exclude module: "spring-boot-starter-tomcat"
             testCompile.exclude module: "junit"
         }
 
