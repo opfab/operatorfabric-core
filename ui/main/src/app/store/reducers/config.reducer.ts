@@ -36,6 +36,37 @@ export function reducer(
                 retry: state.retry+1
             };
         }
+
+        case ConfigActionTypes.LoadSettings: {
+            return {
+                ...state,
+                loading: true
+            };
+        }
+        case ConfigActionTypes.LoadSettingsSuccess: {
+            return {
+                ...state,
+                config: {...state.config,...action.payload.settings},
+                loading: false,
+                loaded:true
+            };
+        }
+
+        case ConfigActionTypes.LoadSettingsFailure: {
+            return {
+                ...state,
+                loading: false,
+                error: `error while loading a Settings: '${action.payload.error}'`,
+                retry: state.retry+1
+            };
+        }
+
+        case ConfigActionTypes.HandleUnexpectedError:{
+            return {
+                ...state,
+                error: action.payload.error.message
+            }
+        }
         default: {
             return state;
         }

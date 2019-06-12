@@ -11,6 +11,9 @@ export enum ConfigActionTypes {
     LoadConfig = '[Config] Load Config',
     LoadConfigSuccess = '[Config] Load Config Success',
     LoadConfigFailure = '[Config] Load Config Fail',
+    LoadSettings = '[Config - Settings] Load Settings',
+    LoadSettingsSuccess = '[Config - Settings] Load Settings Success',
+    LoadSettingsFailure = '[Confing - Settings] Load Settings Fail',
     HandleUnexpectedError = '[Config] Handle unexpected error related to configuration issue'
 }
 // needed by NGRX entities
@@ -33,6 +36,25 @@ export class LoadConfigSuccess implements Action {
     }
 }
 
+export class LoadSettings implements Action {
+    readonly type = ConfigActionTypes.LoadSettings;
+}
+export class LoadSettingsFailure implements Action {
+    readonly type = ConfigActionTypes.LoadSettingsFailure;
+
+    /* istanbul ignore next */
+    constructor(public payload: { error: Error }) {
+    }
+}
+
+export class LoadSettingsSuccess implements Action {
+    readonly type = ConfigActionTypes.LoadSettingsSuccess;
+
+    /* istanbul ignore next */
+    constructor(public payload: { settings: any }) {
+    }
+}
+
 export class HandleUnexpectedError implements Action {
     /* istanbul ignore next */
     readonly type = ConfigActionTypes.HandleUnexpectedError;
@@ -46,4 +68,7 @@ export type ConfigActions =
     LoadConfig
     | LoadConfigSuccess
     | LoadConfigFailure
+    | LoadSettings
+    | LoadSettingsSuccess
+    | LoadSettingsFailure
     | HandleUnexpectedError;
