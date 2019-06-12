@@ -11,6 +11,7 @@ export const environment = {
         authentication: '',
         auth: '/auth',
         cards: '/cards',
+        users: '/users',
         archives : '',
         thirds: '/thirds',
         config: '/config/web-ui.json'

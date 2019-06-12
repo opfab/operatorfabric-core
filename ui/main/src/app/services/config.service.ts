@@ -12,16 +12,26 @@ import {AuthenticationService} from "@ofServices/authentication.service";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {environment} from "@env/environment";
+import {selectIdentifier} from "@ofSelectors/authentication.selectors";
 
 @Injectable()
 export class ConfigService {
     private configUrl: string;
+    private usersUrl: string;
+    private userId: string;
 
-    constructor(private httpClient: HttpClient) {
+    constructor(private httpClient: HttpClient,
+                private store: Store<AppState>) {
         this.configUrl = `${environment.urls.config}`;
+        this.usersUrl = `${environment.urls.users}`;
+        this.store.select(selectIdentifier).subscribe(id=>this.userId=id);
     }
 
     fetchConfiguration(): Observable<any> {
         return this.httpClient.get(`${this.configUrl}`)
+    }
+
+    fetchUserSettings(): Observable<any> {
+        return this.httpClient.get(`${this.usersUrl}/users/${this.userId}/settings`)
     }
 }

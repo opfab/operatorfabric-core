@@ -6,27 +6,12 @@
  */
 
 import {getTestBed, TestBed} from '@angular/core/testing';
-
-import {ThirdsI18nLoaderFactory, ThirdsService} from './thirds.service';
-import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {environment} from '../../environments/environment';
-import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
-import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "../store/index";
-import {getOneRandomLigthCard, getRandomAlphanumericValue, getRandomMenu} from "../../tests/helpers";
-import * as _ from 'lodash';
-import {LoadLightCardsSuccess} from "../store/actions/light-card.actions";
-import {LightCard} from "../model/light-card.model";
-import {AuthenticationService} from "@ofServices/authentication.service";
-import {GuidService} from "@ofServices/guid.service";
-import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
-import {EffectsModule} from "@ngrx/effects";
-import {LightCardEffects} from "@ofEffects/light-card.effects";
-import {MenuEffects} from "@ofEffects/menu.effects";
-import {empty, from, merge, Observable, of, zip} from "rxjs";
-import {switchMap} from "rxjs/operators";
 import {ConfigService} from "@ofServices/config.service";
+import {AcceptLogIn, PayloadForSuccessfulAuthentication} from "@ofActions/authentication.actions";
 
 describe('Thirds Services', () => {
     let injector: TestBed;
@@ -38,11 +23,16 @@ describe('Thirds Services', () => {
             level2: 'value'
         }
     };
+    let settings = {
+        setting1: 'one',
+        setting2: 'two'
+    };
     let url = `${environment.urls.config}`;
+    let urlSettings = `${environment.urls.users}/users/test-user/settings`;
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                // StoreModule.forRoot(appReducer),
+                StoreModule.forRoot(appReducer),
                 HttpClientTestingModule,
                 // RouterTestingModule,
                 ],
@@ -52,12 +42,13 @@ describe('Thirds Services', () => {
             ]
         });
         injector = getTestBed();
-        // store = TestBed.get(Store);
+        store = TestBed.get(Store);
         // spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
         // spyOn(store, 'select').and.callFake(() => of('/test/url'));
         httpMock = injector.get(HttpTestingController);
         configService = TestBed.get(ConfigService);
+        store.dispatch(new AcceptLogIn(new PayloadForSuccessfulAuthentication('test-user',null,null,null)))
     });
     afterEach(() => {
         httpMock.verify();
@@ -74,6 +65,18 @@ describe('Thirds Services', () => {
             let calls = httpMock.match(req => req.url == url);
             expect(calls.length).toEqual(1);
             calls[0].flush(config);
+        });
+
+    });
+
+    describe('#fetchSettings', () => {
+        it('should return settings on 200', () => {
+            configService.fetchUserSettings().subscribe(
+                result => expect(eval(result)).toBe(settings)
+            )
+            let calls = httpMock.match(req => req.url == urlSettings);
+            expect(calls.length).toEqual(1);
+            calls[0].flush(settings);
         });
 
     });

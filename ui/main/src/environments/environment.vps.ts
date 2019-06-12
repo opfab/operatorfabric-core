@@ -15,6 +15,7 @@ export const environment = {
       authentication: '',
         auth: 'http://opfab.rte-europe.com:2002/auth',
         cards: 'http://opfab.rte-europe.com:2002/cards',
+        users: 'http://opfab.rte-europe.com:2002/users',
         archives : '',
         thirds: 'http://opfab.rte-europe.com:2002/thirds',
         config: 'http://opfab.rte-europe.com:2002/config/web-ui.json'
