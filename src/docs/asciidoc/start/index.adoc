@@ -335,12 +335,12 @@ The card content is :
 	        "start" : 1553186770681
         },
         {
-            "start" : 1553186780681
+            "start" : 1553186780681,
             "end" : 1553186790681
         },
         {
-            "start" : 1553186800681
-            "end" : 1553186810681
+            "start" : 1553186800681,
+            "end" : 1553186810681,
             "display" : "BUBBLE"
         }
 	]
@@ -435,7 +435,7 @@ As in the card, we define several keys, one for the title: `defaultProcess.title
 
 ==== Template
 
-In the `template` folder, as we have two `i18n` we need to create two folders, `en` and `fr`. 
+In the `template` folder, as we have two `i18n` we need to create two folders, `en` and `fr`.
 In each folder we create a file named `template.handlebars` containing:
 
 - `en/template.handlebars`
