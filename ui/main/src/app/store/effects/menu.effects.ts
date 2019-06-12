@@ -21,7 +21,6 @@ import {
     SelectMenuLinkSuccess
 } from "@ofActions/menu.actions";
 import {Router} from "@angular/router";
-import {first} from "rxjs/internal/operators/first";
 
 @Injectable()
 export class MenuEffects {
