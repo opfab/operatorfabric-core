@@ -1,11 +1,11 @@
 import { Component, Input, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {Observable, of} from "rxjs";
-import {select, Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
+import {Observable, of} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
 import * as timelineSelectors from '@ofSelectors/timeline.selectors';
-import {catchError} from "rxjs/operators";
+import {catchError} from 'rxjs/operators';
 
 @Component({
   selector: 'of-init-chart',
@@ -16,12 +16,12 @@ export class InitChartComponent implements OnInit {
   @Input() conf;
   @Input() confZoom;
 
-  // Required by Timeline
+  // required by Timeline
   public arrayChartData: any[];
   public myDomain: number[];
   data$: Observable<any[]>;
 
-  // Options of Timeline
+  // options of Timeline
   public enableDrag: boolean;
   public enableZoom: boolean;
   public autoScale: boolean;
@@ -31,10 +31,10 @@ export class InitChartComponent implements OnInit {
   public centeredOnTicks: boolean;
   public circleDiameter: number;
 
-  // Required for domain movements specifications
+  // required for domain movements specifications
   private realCaseActivate: boolean;
 
-  // Buttons
+  // buttons
   public forwardButtonType: string;
   public zoomButtonsActive: boolean;
   public buttonHome: number[];
@@ -53,7 +53,7 @@ export class InitChartComponent implements OnInit {
     this.realCaseActivate = true;
 
 
-    // Options
+    // options
     this.myDomain = undefined;
     this.enableDrag = false;
     this.enableZoom = false;
@@ -82,7 +82,7 @@ export class InitChartComponent implements OnInit {
 
   /**
    * subscribe on timeline's State data
-   * feed arrayChartData with values from data
+   * feed arrayChartData with values from data Observable
    */
   setChartData(): void {
     this.data$.subscribe(value => {
@@ -93,7 +93,7 @@ export class InitChartComponent implements OnInit {
 
   /**
    * sort by date the array received on param
-   * set an array with arrays for each severity of Cards
+   * set an list of arrays for each severity of Cards
    */
   setArrayChartData(array: any[]): void {
     array.sort((val1, val2) => { return val1.date - val2.date; });
@@ -153,14 +153,17 @@ export class InitChartComponent implements OnInit {
        case 'NOTIFICATION': {
          return 'blue';
        }
+       default : {
+         return 'white';
+       }
      }
     } else { // default
-      return 'black';
+      return 'white';
     }
   }
 
   /**
-   * return color according to severity
+   * return value (y position) according to severity
    * @param color
    */
   getCircleValue(color: string): number {
@@ -177,6 +180,9 @@ export class InitChartComponent implements OnInit {
        }
        case 'NOTIFICATION': {
          return 1;
+       }
+       default : {
+         return 5;
        }
      }
     } else { // default
@@ -218,9 +224,10 @@ export class InitChartComponent implements OnInit {
   }
 
   /**
+   * timeline configuration make by calling readConf function
    * set domain context of timeline :
-   * if it was given on confZoom => set the list of zoom buttons & zoom activated
-   * else default zoom is weekly
+   * if it was given on confZoom, set the list of zoom buttons
+   * else default zoom is weekly without selection
    */
   confContextGraph(): void {
     this.readConf();
@@ -244,7 +251,7 @@ export class InitChartComponent implements OnInit {
       this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
       this.buttonHome = [startDomain.valueOf(), endDomain.valueOf()];
     }
-    // Set the zoom activate and assigne the width of the buttons list on html
+    // Set the zoom activate and assign the width of the buttons list on html
     if (this.buttonList.length > 0) {
       this.zoomButtonsActive = true;
       this.changeGraphConf(this.buttonList[0]);
@@ -253,7 +260,10 @@ export class InitChartComponent implements OnInit {
 
   /**
    * desactive the home button and set his new field
-   * set the zoom Level Type activate and timeline domain
+   * set the zoom level type
+   * change timeline domain
+   * set all buttons selected property to false
+   * select the button from the conf received
    * @param conf
    */
   changeGraphConf(conf: any): void {
@@ -273,10 +283,11 @@ export class InitChartComponent implements OnInit {
   }
 
   /**
-   * apply zoom buttons clicked
-   * or set the buttonHomeActive for display home button
-   * receive by child component custom-timeline-chart
-   * @param direction
+   * 2 cases :
+   *  - apply arrow button clicked : switch the graph configuration with the zoom button configuration
+   * at the left or right of our actual button selected
+   *  - display home button
+   * @param direction receive by child component custom-timeline-chart
    */
   applyNewZoom(direction: string): void {
     if (direction === 'in') {
@@ -341,22 +352,22 @@ export class InitChartComponent implements OnInit {
         this.moveDomainByWeek(moveForward);
         break;
       case 'M':
-        this.moveDomainByMonth(moveForward);
+        this.moveDomainByMonthOrYear(moveForward, 'months');
         break;
       case 'Y':
-        this.moveDomainByYear(moveForward);
+        this.moveDomainByMonthOrYear(moveForward, 'years');
         break;
     }
   }
 
   /**
-   * set the actual week
+   * define the actual week
    * move 7 days before or after the week selected
    * @param forward
    */
   moveDomainByWeek(forward: boolean): void {
     const startDomain = moment(this.myDomain[0]);
-    startDomain.day(0);
+    startDomain.startOf('week');
     const endDomain = moment(startDomain);
     endDomain.add(7, 'days');
     if (forward) {
@@ -371,49 +382,26 @@ export class InitChartComponent implements OnInit {
   }
 
   /**
-   * set the actual month
-   * move 1 month before or after the month selected
+   * define the actual unit received
+   * move 1 unit before or after the unit selected
+   * example of unit : months, years...
    * @param forward
    */
-  moveDomainByMonth(forward: boolean): void {
+  moveDomainByMonthOrYear(forward: boolean, unit): void {
     const prevStartDomain = moment(this.myDomain[0]);
     const startDomain = _.cloneDeep(prevStartDomain);
     // For the first step, set to start of the month
     if (this.realCaseActivate) {
-      startDomain.startOf('month').hours(0);
+      startDomain.startOf(unit).hours(0);
       this.realCaseActivate = false;
     }
     const endDomain = _.cloneDeep(startDomain);
     if (forward) {
-      startDomain.add(1, 'months');
-      endDomain.add(2, 'months');
+      startDomain.add(1, unit);
+      endDomain.add(2, unit);
       this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
     } else {
-      startDomain.subtract(1, 'months');
-      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
-    }
-  }
-
-  /**
-   * set the actual week
-   * move 1 year before or after the year selected
-   * @param forward
-   */
-  moveDomainByYear(forward: boolean): void {
-    const prevStartDomain = moment(this.myDomain[0]);
-    const startDomain = _.cloneDeep(prevStartDomain);
-    // For the first step, set to start of the year
-    if (this.realCaseActivate) {
-      startDomain.startOf('year').hours(0);
-      this.realCaseActivate = false;
-    }
-    const endDomain = _.cloneDeep(startDomain);
-    if (forward) {
-      startDomain.add(1, 'years');
-      endDomain.add(2, 'years');
-      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
-    } else {
-      startDomain.subtract(1, 'years');
+      startDomain.subtract(1, unit);
       this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
     }
   }

@@ -3,18 +3,24 @@
 }
 
 .timeline {
-  height: 170px;
+  height: 150px;
   width: 98%;
   margin-left: auto;
   margin-right: auto;
+  // margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+}
 
   of-custom-timeline-chart {
     max-height: 100px;
+    margin-bottom: 40px;
   }
 
   .menu-timeline {
     max-height: 40px;
     padding-top: 5px;
+    margin-bottom: 5px;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -67,4 +73,3 @@
       }
     }
   }
-}

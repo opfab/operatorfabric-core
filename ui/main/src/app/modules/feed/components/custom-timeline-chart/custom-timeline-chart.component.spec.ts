@@ -6,6 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { DebugElement } from '@angular/core';
 import * as moment from 'moment';
+import { By } from '@angular/platform-browser';
+import { DraggableDirective } from '../time-line/app-draggable';
+import { MouseWheelDirective } from '../time-line/mouse-wheel.directive';
+import { XAxisTickFormatPipe } from '../time-line/x-axis-tick-format.pipe';
 
 describe('CustomTimelineChartComponent', () => {
   let component: CustomTimelineChartComponent;
@@ -18,7 +22,9 @@ describe('CustomTimelineChartComponent', () => {
         BrowserAnimationsModule,
         FormsModule,
         NgxChartsModule ],
-      declarations: [ CustomTimelineChartComponent ]
+      declarations: [ CustomTimelineChartComponent,
+        DraggableDirective, MouseWheelDirective,
+        XAxisTickFormatPipe]
     })
     .compileComponents();
     fixture = TestBed.createComponent(CustomTimelineChartComponent);
@@ -37,7 +43,35 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('simulate circle hovered',() => {
+  it('should return the same string which was received', () => {
+    fixture.detectChanges();
+    component.autoScale = true;
+    component.hideLabelsTicks('test');
+    expect(component).toBeTruthy();
+  });
+
+  it('should return without effect', () => {
+    fixture.detectChanges();
+    component.enableDrag = false;
+    component.onDragMove(null);
+    expect(component).toBeTruthy();
+  });
+
+  it('should set zoomLevel', () => {
+    fixture.detectChanges();
+    component.zoomLevel = 2;
+    expect(component).toBeTruthy();
+  });
+
+  it('should return without effect', () => {
+    fixture.detectChanges();
+    component.clusterLevel = 'M';
+    const test = moment();
+    component.fctTickFormattingAdvanced(test);
+    expect(component).toBeTruthy();
+  });
+
+  it('simulate circle hovered', () => {
     fixture.detectChanges();
     const circleTest = {
       start: moment(),
@@ -56,14 +90,22 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('check zoom function when zoom disabled',() => {
+  it('check zoom function when zoom disabled', () => {
     fixture.detectChanges();
     component.enableZoom = false;
     component.onZoom(null, 'in');
     expect(component).toBeTruthy();
   });
 
-  it('check zoom function when zoom on button actived',() => {
+  it('check zoom function when zoom enable but button disabled', () => {
+    fixture.detectChanges();
+    component.enableZoom = true;
+    component.zoomOnButton = false;
+    component.onZoom(null, 'in');
+    expect(component).toBeTruthy();
+  });
+
+  it('check zoom function when zoom on button actived', () => {
     fixture.detectChanges();
     component.enableZoom = true;
     component.zoomOnButton = true;
@@ -116,53 +158,45 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  /*fit('check drag start function',() => {
+  it('check drag on left', () => {
     fixture.detectChanges();
-    let event = new PointerEvent('click', {
-      bubbles: true,
-      cancelable: true,
-      clientX: 100,
-      clientY: 100
-    });
-    let event2 = new PointerEvent('click', {
-      bubbles: true,
-      cancelable: true,
-      clientX: 200,
-      clientY: 100
-    });
-    let event3 = new PointerEvent('click', {
-      bubbles: true,
-      cancelable: true,
-      clientX: 300,
-      clientY: 100
-    });
+    component.valueDomain = [0, 5];
     inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
-    inputEl.triggerEventHandler('pointerdown', event);
-    inputEl.triggerEventHandler('move', event2);
-    inputEl.triggerEventHandler('pointerup', event3);
-
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
-  });*/
-
- /* fit('check drag start function',() => {
-    fixture.detectChanges();
-    let event = new MouseEvent('click', {
-      bubbles: true,
-      cancelable: true,
+    const event = new PointerEvent('click', {
       clientX: 100,
-      clientY: 100
     });
-    let event2 = new MouseEvent('click', {
-      bubbles: true,
-      cancelable: true,
-      clientX: 150,
-      clientY: 100
+    const event2 = new PointerEvent('click', {
+      clientX: -200,
     });
-    console.log('EVENT=', event);
-    component.startDragX = 90;
-    component.onDragStart(event);
-    component.onDragMove(event2);
+    const event3 = new PointerEvent('click', {
+      clientX: 300,
+    });
+    component.dragDirection = false;
+    inputEl.triggerEventHandler('pointerdown', event);
+    inputEl.triggerEventHandler('pointermove', event2);
+    inputEl.triggerEventHandler('pointermove', event3);
+    fixture.detectChanges();
     expect(component).toBeTruthy();
-  });*/
+  });
+
+  it('check drag on right', () => {
+    fixture.detectChanges();
+    component.valueDomain = [0, 5];
+    inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
+    const event = new PointerEvent('click', {
+      clientX: 100,
+    });
+    const event2 = new PointerEvent('click', {
+      clientX: -200,
+    });
+    const event3 = new PointerEvent('click', {
+      clientX: 300,
+    });
+    component.dragDirection = true;
+    inputEl.triggerEventHandler('pointerdown', event);
+    inputEl.triggerEventHandler('pointermove', event3);
+    inputEl.triggerEventHandler('pointermove', event2);
+    fixture.detectChanges();
+    expect(component).toBeTruthy();
+  });
 });

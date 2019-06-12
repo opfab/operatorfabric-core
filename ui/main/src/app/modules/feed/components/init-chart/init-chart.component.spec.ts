@@ -11,6 +11,9 @@ import { appReducer, AppState, storeConfig } from '@ofStore/index';
 import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { CustomRouterStateSerializer } from '@ofStates/router.state';
 import { RouterTestingModule } from '@angular/router/testing';
+import { DraggableDirective } from '../time-line/app-draggable';
+import { MouseWheelDirective } from '../time-line/mouse-wheel.directive';
+import { XAxisTickFormatPipe } from '../time-line/x-axis-tick-format.pipe';
 
 describe('InitChartComponent', () => {
   let component: InitChartComponent;
@@ -26,8 +29,9 @@ describe('InitChartComponent', () => {
         RouterTestingModule,
         StoreRouterConnectingModule,
         NgxChartsModule ],
-      declarations: [ InitChartComponent, CustomTimelineChartComponent],
-      providers: [{provide: Store, useClass: Store},{provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
+      declarations: [ InitChartComponent, CustomTimelineChartComponent,
+        DraggableDirective, MouseWheelDirective, XAxisTickFormatPipe],
+      providers: [{provide: Store, useClass: Store}, {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
@@ -35,11 +39,6 @@ describe('InitChartComponent', () => {
     spyOn(store, 'dispatch').and.callThrough();
     fixture = TestBed.createComponent(InitChartComponent);
     component = fixture.debugElement.componentInstance;
-  });
-
-  it('should create', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
   });
 
   it('should create button home display', () => {
@@ -56,10 +55,12 @@ describe('InitChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create timeline with month confZoom', () => {
+  it('should apply differents zoom levels on timeline' +
+      'for simulate movement on timeline domain', () => {
     fixture.detectChanges();
     component.applyNewZoom('in');
     component.applyNewZoom('out');
+    component.applyNewZoom('drag');
     component.homeClick(1, 2);
     component.moveDomain(true);
     component.moveDomain(false);
@@ -100,7 +101,7 @@ describe('InitChartComponent', () => {
   });
 
   it('check applyNewZoom function with two buttons' +
-      'forward level conf is same than one button', () => {
+      'forward level conf is same than last button', () => {
     fixture.detectChanges();
     component.buttonList = [{forwardLevel: 'M'}, {forwardLevel: 'W'}];
     component.applyNewZoom('in');
@@ -108,17 +109,30 @@ describe('InitChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create timeline with other conf', () => {
-    const conf = {
+  it('check getCircleValue & getColorSeverity functions' +
+      'on switch default case (unused normally)' +
+      'and with null params', () => {
+    fixture.detectChanges();
+    component.getCircleValue('0');
+    component.getColorSeverity('NO');
+    component.getCircleValue(null);
+    component.getColorSeverity(null);
+    component.changeGraphConf(null);
+    expect(component).toBeTruthy();
+  });
+
+  it('should create timeline with another conf', () => {
+    const myConf = {
       enableDrag: true,
       enableZoom: false,
-      autoScale: false,
+      autoScale: true,
       animations: true,
       showGridLines: false,
       realTimeBar: false,
       centeredOnTicks: false,
+      circleDiameter: 12,
     };
-    component.conf = conf;
+    component.conf = myConf;
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });

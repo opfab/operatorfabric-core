@@ -33,27 +33,52 @@ describe('Directive: XAxisTickFormatPipe', () => {
         expect(component).toBeTruthy();
     });
 
-    it('Check transform fct :' +
+    it('Check transform & transformHovered fct :' +
         'return the string like it is, if no lang specified', () => {
         fixture.detectChanges();
         const start = 'not Date';
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
         formatPipe.transform(start, null, 'Y');
+        formatPipe.transformHovered(start, null, 'Y');
         expect(component).toBeTruthy();
     });
 
-    it('Check transform fct :' +
-        'return format date on Month Zoom configuration', () => {
+    it('Check transform & transformHovered fct :' +
+        'return formatted date on Month Zoom configuration', () => {
         fixture.detectChanges();
         const start = moment();
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
         formatPipe.transform(start, 'en-US', 'M');
+        formatPipe.transformHovered(start, 'en-US', 'M');
+        expect(component).toBeTruthy();
+    });
+
+    it('Check transform & transformHovered fct :' +
+        'return formatted date on Year Zoom configuration', () => {
+        fixture.detectChanges();
+        const start = moment();
+        start.hours(0).minutes(0).seconds(0).millisecond(0);
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        formatPipe.transform(start, 'en-US', 'Y');
+        formatPipe.transformHovered(start, 'en-US', 'Y');
+        expect(component).toBeTruthy();
+    });
+
+    it('Check transform & transformHovered fct :' +
+        'return formatted first day of year on Week Zoom configuration', () => {
+        fixture.detectChanges();
+        const start = moment();
+        start.hours(0).minutes(0).seconds(0).millisecond(0);
+        start.startOf('year');
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        formatPipe.transform(start, 'en-US', 'W');
+        formatPipe.transformHovered(start, 'en-US', 'W');
         expect(component).toBeTruthy();
     });
 
     it('Check transform fct :' +
-        'return format first day of year on Month Zoom configuration', () => {
+        'return formatted first day of year on Month Zoom configuration', () => {
         fixture.detectChanges();
         const start = moment();
         start.hours(0).minutes(0).seconds(0).millisecond(0);
@@ -64,23 +89,34 @@ describe('Directive: XAxisTickFormatPipe', () => {
     });
 
     it('Check transform fct :' +
-        'return format date on Year Zoom configuration', () => {
-        fixture.detectChanges();
-        const start = moment();
-        start.hours(0).minutes(0).seconds(0).millisecond(0);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transform(start, 'en-US', 'Y');
-        expect(component).toBeTruthy();
-    });
-
-    it('Check transform fct :' +
-        'return format first day of year on Year Zoom configuration', () => {
+        'return formatted first day of year on Year Zoom configuration', () => {
         fixture.detectChanges();
         const start = moment();
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
         formatPipe.transform(start, 'en-US', 'Y');
+        expect(component).toBeTruthy();
+    });
+
+    it('Check transformAdvanced fct :' +
+        'return empty string', () => {
+        fixture.detectChanges();
+        component.clusterLevel = 'M';
+        const start = moment();
+        start.hours(0).minutes(0).seconds(0).millisecond(0);
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        formatPipe.transformAdvanced(start, 'Y');
+        expect(component).toBeTruthy();
+    });
+
+    it('Check transform fct :' +
+        'return nothing when cluster level isnt identified' , () => {
+        fixture.detectChanges();
+        const start = moment();
+        start.hours(0).minutes(0).seconds(0).millisecond(0);
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        formatPipe.transform(start, 'en-US', 'R');
         expect(component).toBeTruthy();
     });
 });

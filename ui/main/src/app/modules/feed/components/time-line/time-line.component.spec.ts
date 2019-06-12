@@ -23,6 +23,9 @@ import { getOneRandomLigthCard } from '@tests/helpers';
 import { LoadLightCardsSuccess } from '@ofActions/light-card.actions';
 import { LightCard } from '@ofModel/light-card.model';
 import * as fromStore from '@ofSelectors/feed.selectors';
+import { DraggableDirective } from './app-draggable';
+import { MouseWheelDirective } from './mouse-wheel.directive';
+import { XAxisTickFormatPipe } from './x-axis-tick-format.pipe';
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
@@ -40,8 +43,9 @@ describe('TimeLineComponent', () => {
         RouterTestingModule,
         StoreRouterConnectingModule,
         NgxChartsModule ],
-      declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent ],
-      providers: [{provide: Store, useClass: Store},{provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
+      declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent, DraggableDirective, MouseWheelDirective,
+        XAxisTickFormatPipe],
+      providers: [{provide: Store, useClass: Store}, {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
@@ -78,11 +82,12 @@ describe('TimeLineComponent', () => {
     const conf = {
       enableDrag: true,
       enableZoom: false,
-      autoScale: false,
+      autoScale: true,
       animations: true,
       showGridLines: false,
       realTimeBar: false,
       centeredOnTicks: false,
+      circleDiameter: 12,
     };
     component.conf = conf;
     fixture.detectChanges();
@@ -93,6 +98,7 @@ describe('TimeLineComponent', () => {
   it('should create a list with one element when there are ' +
       'only one card in the state', () => {
     // const compiled = fixture.debugElement.nativeElement;
+    fixture.detectChanges();
     const oneCard = getOneRandomLigthCard();
     const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
     store.dispatch(action);
@@ -102,8 +108,7 @@ describe('TimeLineComponent', () => {
     });
     expect(store.dispatch).toHaveBeenCalledWith(action);
     expect(component).toBeTruthy();
-    const compiled = fixture.debugElement.nativeElement;
-    fixture.detectChanges();
+    // const compiled = fixture.debugElement.nativeElement;
 /*
     // title exists
     // expect(compiled.querySelector('h3').textContent).toContain('Feed');
@@ -114,6 +119,7 @@ describe('TimeLineComponent', () => {
   it('should create four differents circles when there are ' +
       'four cards with differents severity in the state', () => {
     // const compiled = fixture.debugElement.nativeElement;
+    fixture.detectChanges();
     const oneCard = getOneRandomLigthCard();
     const actionCard = getOneRandomLigthCard({severity: 'ACTION'});
     const alarmCard = getOneRandomLigthCard({severity: 'ALARM'});
@@ -126,8 +132,7 @@ describe('TimeLineComponent', () => {
     });
     expect(store.dispatch).toHaveBeenCalledWith(action);
     expect(component).toBeTruthy();
-    const compiled = fixture.debugElement.nativeElement;
-    fixture.detectChanges();
+    // const compiled = fixture.debugElement.nativeElement;
 /*
     expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
     // counts the list elements

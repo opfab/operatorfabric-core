@@ -25,7 +25,6 @@ export function reducer(
         }
         case TimelineActionTypes.AddCardDataTimeline: {
             let newData = state.data.map(d => d);
-            console.log('newData = ', newData);
             newData.push(action.payload.cardTimeline);
             return {
                 ...state,
@@ -33,8 +32,6 @@ export function reducer(
                 data: newData
             };
         }
-
-
         default: {
             return state;
         }

@@ -38,13 +38,13 @@ describe('Directive: AppMouseWheel', () => {
         expect(component).toBeTruthy();
     });
 
-    it('mouse drag pointer move event Only', () => {
+    it('mouse drag pointer move event only', () => {
         inputEl.triggerEventHandler('pointermove', null);
         fixture.detectChanges();
         expect(component).toBeTruthy();
     });
 
-    it('mouse drag pointer up event Only', () => {
+    it('mouse drag pointer up event only', () => {
         inputEl.triggerEventHandler('pointerup', null);
         fixture.detectChanges();
         expect(component).toBeTruthy();

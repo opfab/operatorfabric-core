@@ -3,7 +3,6 @@ import { Directive, Output, HostListener, EventEmitter } from '@angular/core';
 /**
  * Mousewheel directive
  * https://github.com/SodhanaLibrary/angular2-examples/blob/master/app/mouseWheelDirective/mousewheel.directive.ts
- *
  * @export
  */
 @Directive({ selector: '[appMouseWheel]' })
@@ -28,20 +27,28 @@ export class MouseWheelDirective {
     this.mouseWheelFunc(event);
   }
 
+  /**
+   * emit mouse wheel up or down event
+   * @param event
+   */
   mouseWheelFunc(event: any): void {
     if (window.event) {
       event = window.event;
     }
 
-    const delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
-    if (delta > 0) {
-      this.mouseWheelUp.emit(event);
-    } else if (delta < 0) {
-      this.mouseWheelDown.emit(event);
+    if (event && (event.wheelDelta || event.detail)) {
+      const delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
+      if (delta > 0) {
+        this.mouseWheelUp.emit(event);
+      } else if (delta < 0) {
+        this.mouseWheelDown.emit(event);
+      }
     }
 
     // for IE
-    event.returnValue = false;
+    if (event) {
+      event.returnValue = false;
+    }
 
     // for Chrome and Firefox
     if (event.preventDefault) {

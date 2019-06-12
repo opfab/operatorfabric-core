@@ -48,6 +48,22 @@ describe('Directive: AppMouseWheel', () => {
         expect(component).toBeTruthy();
     });
 
+    /*fit('event not window.event & not preventDefault' +
+        'event.wheelDelta > 0', () => {
+        const event = new WheelEvent('mouseup', {
+            deltaX: -200,
+            deltaY: -200,
+            deltaZ: -200,
+        });
+        const event2 = new MouseEvent('mouseup', {
+            detail: 200,
+        });
+        inputEl.triggerEventHandler('mousewheel', event);
+        inputEl.triggerEventHandler('mousewheel', event2);
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
+    });
+*/
     it('event not window.event & not preventDefault' +
         'event.wheelDelta > 0', () => {
         inputEl.triggerEventHandler('mousewheel', {wheelDelta: 50});

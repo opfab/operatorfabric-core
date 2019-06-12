@@ -5,18 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {Observable, of} from "rxjs";
-import {LightCard} from "@ofModel/light-card.model";
-import {select, Store} from "@ngrx/store";
-import * as timelineSelectors from '@ofSelectors/timeline.selectors';
-import {catchError} from "rxjs/operators";
-import {AppState} from "@ofStore/index";
-import {InitTimeline} from "@ofActions/timeline.actions";
-import {AddCardDataTimeline} from "@ofActions/timeline.actions";
+import { Component, OnInit } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { LightCard } from '@ofModel/light-card.model';
+import { select, Store } from '@ngrx/store';
+import { catchError } from 'rxjs/operators';
+import { AppState } from '@ofStore/index';
+import { InitTimeline } from '@ofActions/timeline.actions';
+import { AddCardDataTimeline } from '@ofActions/timeline.actions';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import * as feedSelectors from "@ofSelectors/feed.selectors";
+import * as feedSelectors from '@ofSelectors/feed.selectors';
 
 @Component({
   selector: 'of-time-line',
@@ -31,11 +30,13 @@ export class TimeLineComponent implements OnInit {
     constructor(private store: Store<AppState>) {}
 
     ngOnInit() {
-        // check le ticket correspondant, pour savoir si
-        // on set la start et end domain par un dictionnaire
-        // W/M/Y ou autre
+        // set start of Week to saturday on moment locale used
+        moment.updateLocale('en', { week: {
+                dow: 6, // First day of week is Saturday
+                doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
+            }});
 
-        // conf 1
+        // conf 1 === end of the actual week + next week
         const startDomain = moment();
         startDomain.hours(0).minutes(0).seconds(0).millisecond(0);
         const endDomain = _.cloneDeep(startDomain);
@@ -45,30 +46,25 @@ export class TimeLineComponent implements OnInit {
         endDomain.add(7, 'days');
         // endDomain.add(5, 'days'); // example
 
-        // conf 2
+        // conf 2 === actual month + next month
         const startDomain2 = moment();
         startDomain2.hours(0).minutes(0).seconds(0).millisecond(0);
         startDomain2.startOf('month');
-        /*
-        // pas obligatoire
-        startDomain2.subtract(2, 'days'); // deux jours avant
-        startDomain2.hours(0);*/
         const endDomain2 = _.cloneDeep(startDomain2);
         endDomain2.startOf('month');
         endDomain2.add(2, 'months');
         // endDomain2.add(1, 'months'); // example
         // endDomain2.date(15); // example
 
-        // conf 3
+        // conf 3 === from start of actual month to end of the year + 1 year
         const startDomain3 = moment();
         startDomain3.startOf('month');
         startDomain3.hours(0);
         const endDomain3 = _.cloneDeep(startDomain3);
         endDomain3.add(2, 'years');
-        // endDomain3.add(1, 'years'); // example
         endDomain3.startOf('year'); // Voir avec Guillaume
+        // endDomain3.add(1, 'years'); // example
         // endDomain3.month(10); // example
-        const forwardLevel = 'W';
         this.conf = {
             enableDrag: false,
             enableZoom: true,
@@ -81,7 +77,7 @@ export class TimeLineComponent implements OnInit {
         this.confZoom = [{
             startDomain: startDomain.valueOf(),
             endDomain: endDomain.valueOf(),
-            forwardLevel,
+            forwardLevel: 'W',
             followCloackTick: false,
         },
         {
@@ -97,16 +93,19 @@ export class TimeLineComponent implements OnInit {
             followCloackTick: false,
         }];
 
-        // this.lastCards$ = this.store.select(timelineSelectors.selectLastCardsSelection);
+        // timeline state is same than feed state (not filtered Feed)
+        // select all the feed
         this.lightCards$ = this.store.pipe(
-            select(feedSelectors.selectFilteredFeed),
+            select(feedSelectors.selectFeed),
             catchError(err => of([]))
         );
 
+        // init timeline state
         this.store.dispatch(new InitTimeline({
             data: [],
         }));
 
+        // add a card data to the timeline state for each new card received
         this.lightCards$.subscribe(value => {
             this.store.dispatch(new InitTimeline({
                 data: [],
@@ -123,5 +122,24 @@ export class TimeLineComponent implements OnInit {
                 }));
             }
         });
+
+        // this.lastCards$ = this.store.select(timelineSelectors.selectLastCardsSelection);
+        /* // TRY ON TIMELINE
+         this.lightCards$ = this.store.pipe(
+             select(timelineSelectors.selectFeed),
+             catchError(err => of([]))
+         );*/
+        /* // TRY ON FEED
+        this.lightCards$ = this.store.pipe(
+            select(feedSelectors.selectFeed),
+            catchError(err => of([]))
+        );*/
+
+        /*
+        // TRY selectUnFilteredFeed
+        this.lightCards$ = this.store.pipe(
+            select(feedSelectors.selectUnFilteredFeed),
+            catchError(err => of([]))
+        );*/
     }
 }
