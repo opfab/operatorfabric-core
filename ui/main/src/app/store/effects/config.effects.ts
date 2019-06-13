@@ -16,11 +16,12 @@ import {
     ConfigActionTypes,
     LoadConfig,
     LoadConfigFailure,
-    LoadConfigSuccess, LoadSettingsFailure,
+    LoadConfigSuccess, LoadSettings, LoadSettingsFailure,
     LoadSettingsSuccess
 } from "@ofActions/config.actions";
 import {selectConfigRetry} from "@ofSelectors/config.selectors";
 import {CONFIG_LOAD_MAX_RETRIES} from "@ofStates/config.state";
+import {AcceptLogIn, AuthenticationActionTypes} from "@ofActions/authentication.actions";
 
 // those effects are unused for the moment
 @Injectable()
@@ -92,4 +93,12 @@ export class ConfigEffects {
                 return caught;
             })
         );
+
+    @Effect()
+    loadSettingsOnLogin: Observable<Action> = this.actions$.pipe(
+      ofType<AcceptLogIn>(AuthenticationActionTypes.AcceptLogIn),
+      map(a=>new LoadSettings())
+    );
+
+    
 }

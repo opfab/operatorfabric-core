@@ -22,6 +22,7 @@ import {AppState} from "@ofStore/index";
 import {selectConfigRetry} from "@ofSelectors/config.selectors";
 import {of} from "rxjs";
 import SpyObj = jasmine.SpyObj;
+import {AcceptLogIn} from "@ofActions/authentication.actions";
 
 describe('ConfigEffects', () => {
     let effects: ConfigEffects;
@@ -100,5 +101,18 @@ describe('ConfigEffects', () => {
             // expect(effects.loadConfiguration).toBeObservable(localExpected);
         });
     });
+    describe('loadSettingsOnLogin', () => {
+        it('should return a LoadSettings Action', () => {
 
+            const localActions$ = new Actions(hot('-a--', {a: new AcceptLogIn(null)}));
+
+            const expectedAction = new LoadSettings();
+            const localExpected = hot('-c--', {c: expectedAction});
+
+            effects = new ConfigEffects(mockStore, localActions$, configService);
+
+            expect(effects).toBeTruthy();
+            expect(effects.loadSettingsOnLogin).toBeObservable(localExpected);
+        });
+    });
 });
