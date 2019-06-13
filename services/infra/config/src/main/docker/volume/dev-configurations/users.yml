@@ -21,4 +21,7 @@ operatorfabric.users.default:
       description: TSO 2 Group
     - name: TRANS
       description: Transnationnal Group
+  user-settings:
+    - login: rte-operator
+      description: Da Operator Rulez
 #logging.level.root: DEBUG

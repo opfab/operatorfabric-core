@@ -12,8 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
 import org.lfenergy.operatorfabric.users.model.GroupData;
 import org.lfenergy.operatorfabric.users.model.UserData;
+import org.lfenergy.operatorfabric.users.model.UserSettingsData;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
+import org.lfenergy.operatorfabric.users.repositories.UserSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -40,6 +42,9 @@ public class DataInitComponent {
     @Autowired
     private GroupRepository groupRepository;
 
+    @Autowired
+    private UserSettingsRepository userSettingsRepository;
+
     @Getter
     private boolean initiated;
 
@@ -52,8 +57,26 @@ public class DataInitComponent {
             for (UserData u : usersProperties.getUsers()) {
                 safeInsertUsers(u);
             }
+
+            for (UserSettingsData us : usersProperties.getUserSettings())
+                safeInsertUserSettings(us);
         }finally {
             initiated=true;
+        }
+    }
+
+    /**
+     * Insert user settings, if failure (seetings already exist), logs and carries on to next user settings
+     *
+     * If users exist adds missing groups (no delete)
+     *
+     * @param u
+     */
+    private void safeInsertUserSettings(UserSettingsData u) {
+        try {
+            userSettingsRepository.insert(u);
+        } catch (DuplicateKeyException ex) {
+            log.warn("unnable to init " + u.getLogin() + " user settings: duplicate");
         }
     }
 

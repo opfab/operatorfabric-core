@@ -10,6 +10,7 @@ package org.lfenergy.operatorfabric.users.configuration.users;
 import lombok.Data;
 import org.lfenergy.operatorfabric.users.model.GroupData;
 import org.lfenergy.operatorfabric.users.model.UserData;
+import org.lfenergy.operatorfabric.users.model.UserSettingsData;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -34,4 +35,5 @@ public class UsersProperties {
 
     private List<UserData> users = new ArrayList<>();
     private List<GroupData> groups = new ArrayList<>();
+    private List<UserSettingsData> userSettings = new ArrayList<>();
 }

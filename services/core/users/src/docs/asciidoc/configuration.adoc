@@ -28,6 +28,7 @@ For other configuration see:
 |name|default|mandatory?|Description
 
 |operatorfabric.users.default.users|null|no| Array of user objects to create upon startup if they don't exist
+|operatorfabric.users.default.user-settings|null|no| Array of user settings objects to create upon startup if they don't exist
 |operatorfabric.users.default.groups|null|no| Array of group objects to create upon startup if they don't exist
 
 |===
