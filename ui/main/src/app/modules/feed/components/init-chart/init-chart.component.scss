@@ -7,7 +7,7 @@
   width: 98%;
   margin-left: auto;
   margin-right: auto;
-  // margin-bottom: 50px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
 }
@@ -18,6 +18,7 @@
   }
 
   .menu-timeline {
+    position: relative;
     max-height: 40px;
     padding-top: 5px;
     margin-bottom: 5px;
@@ -26,15 +27,19 @@
     justify-content: flex-end;
 
     .home-btn {
+      position: absolute;
       align-self: flex-start;
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
       border-radius: 50%;
       border: none;
       opacity:0.7;
+      left: -25px;
+      padding: 1px;
     }
 
     #btn-menu-timeline {
+      position: absolute;
       flex-grow: 1;
       right: 30px;
       font-size: 12px;
@@ -51,9 +56,11 @@
         li {
           button {
             list-style: none;
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
+            padding: 1px;
             color: black;
+            font-weight: bold;
           }
 
           .btn-selected {

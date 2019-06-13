@@ -1,4 +1,28 @@
 <div class="timeline">
+  <div class="menu-timeline">
+    <button class="home-btn" *ngIf="checkButtonHomeDisplay()" (click)="homeClick(buttonHome[0], buttonHome[1])">
+      <em class="fas fa-home"></em>
+    </button>
+    <div id="btn-menu-timeline">
+      <ul *ngIf="zoomButtonsActive">
+        <li style="margin-right: 1rem;">
+          <button class="circle-btn" (click)="moveDomain(false)">
+            <em class="fas fa-angle-double-left"></em>
+          </button>
+        </li>
+        <li *ngFor="let button of buttonList">
+          <button [ngClass]="button.selected ? 'btn-selected' : 'btn-unselect'" (click)="changeGraphConf(button)">
+            {{button.forwardLevel}}
+          </button>
+        </li>
+        <li style="margin-left: 1rem">
+          <button class="circle-btn" (click)="moveDomain(true)">
+            <em class="fas fa-angle-double-right"></em>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
   <!--
    [results] is the basic input for data on ngx-charts
    [autoScale] make the yScale start at 0 ( and end at 5 if the value is not higher)
@@ -33,28 +57,4 @@
                              [circleDiameter]="circleDiameter"
                              (zoomChange)="applyNewZoom($event)">
   </of-custom-timeline-chart>
-</div>
-<div class="menu-timeline">
-  <button class="home-btn" *ngIf="checkButtonHomeDisplay()" (click)="homeClick(buttonHome[0], buttonHome[1])">
-    <em class="fas fa-home"></em>
-  </button>
-  <div id="btn-menu-timeline">
-    <ul *ngIf="zoomButtonsActive">
-      <li style="margin-right: 1rem;">
-        <button class="circle-btn" (click)="moveDomain(false)">
-          <em class="fas fa-angle-double-left"></em>
-        </button>
-      </li>
-      <li *ngFor="let button of buttonList">
-        <button [ngClass]="button.selected ? 'btn-selected' : 'btn-unselect'" (click)="changeGraphConf(button)">
-          {{button.forwardLevel}}
-        </button>
-      </li>
-      <li style="margin-left: 1rem">
-        <button class="circle-btn" (click)="moveDomain(true)">
-          <em class="fas fa-angle-double-right"></em>
-        </button>
-      </li>
-    </ul>
-  </div>
 </div>
