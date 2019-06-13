@@ -49,7 +49,6 @@ export class TimeLineComponent implements OnInit {
         // conf 2 === actual month + next month
         const startDomain2 = moment();
         startDomain2.hours(0).minutes(0).seconds(0).millisecond(0);
-        startDomain2.startOf('month');
         const endDomain2 = _.cloneDeep(startDomain2);
         endDomain2.startOf('month');
         endDomain2.add(2, 'months');
