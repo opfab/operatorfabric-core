@@ -51,9 +51,10 @@ export class HandleUnexpectedError implements Action {
 }
 
 /**
- * Action used to update the state with the selected menu
+ * Action triggered by navigation to /thirparty/*** (for example by clicking on a third-party menu link)
+ * Payload contains route parameters identifying the clicked menu entry (menu id, menu version and menu entry id)
+ * Emitted by {CustomRouterEffects} in the following {Observable} @member: navigateToMenuURL
  */
-//TODO Describe usage (cf authentication example)
 export class SelectMenuLink implements Action {
     readonly type = MenuActionTypes.SelectMenuLink;
 
@@ -61,6 +62,10 @@ export class SelectMenuLink implements Action {
     constructor(public payload: {menu_id: string, menu_version: string, menu_entry_id: string}) {}
 }
 
+/**
+ * Action triggered if menu link url was correctly computed from the given parameters (menu_id, menu_version and menu_entry_id)
+ * Payload contains the computed url
+ */
 export class SelectMenuLinkSuccess implements Action {
     readonly type = MenuActionTypes.SelectMenuLinkSuccess;
 
@@ -68,6 +73,10 @@ export class SelectMenuLinkSuccess implements Action {
     constructor(public payload: {iframe_url: string}) {}
 }
 
+/**
+ * Action triggered if no menu entry was found for the given parameters (menu_id, menu_version and menu_entry_id)
+ * Payload contains the error
+ */
 export class SelectMenuLinkFailure implements Action {
     readonly type = MenuActionTypes.SelectMenuLinkFailure;
 

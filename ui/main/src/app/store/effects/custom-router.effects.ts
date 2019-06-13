@@ -40,6 +40,13 @@ export class CustomRouterEffects {
         })
     );
 
+    /**
+     * This {Observable} listens for {ROUTER_NAVIGATION} type, filtering only actions navigating to an url containing "/thirdparty/".
+     * This will typically be triggered when clicking on a third-party menu link.
+     * It then fires a {SelectMenuLink} action containing the route parameters (identifying the third-party menu entry that was clicked) as payload.
+
+     * @name navigateToMenuURL
+     */
     @Effect()
     navigateToMenuURL: Observable<Action> = this.actions$.pipe(
         ofType(ROUTER_NAVIGATION),

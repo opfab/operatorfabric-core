@@ -58,9 +58,18 @@ export class ThirdsService {
 
     queryMenuEntryURL(thirdMenuId: string, thirdMenuVersion: string, thirdMenuEntryId: string): Observable<string> {
         return this.queryThird(thirdMenuId,thirdMenuVersion).pipe(
-            filter((third :Third)=>!(!third.menuEntries)),
+            //filter((third :Third)=>!(!third.menuEntries)),
             switchMap(third => {
-                return third.menuEntries.filter(entry => entry.id === thirdMenuEntryId)
+                const entry = third.menuEntries.filter(entry => entry.id === thirdMenuEntryId)
+                if(entry.length==1){
+                    return entry;
+                } else {
+                    throwError(new Error('No such menu entry.'))
+                }
+            }),
+            catchError((err, caught) => {
+                console.log(err)
+                return throwError(err);
             }),
             map( menuEntry => menuEntry.url)
         )

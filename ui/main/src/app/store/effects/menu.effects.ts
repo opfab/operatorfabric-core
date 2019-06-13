@@ -55,6 +55,14 @@ export class MenuEffects {
             })
         );
 
+    /**
+     * This {Observable} listens for {MenuActionTypes.SelectMenuLink} type.
+     * It then tries to get the corresponding menu link from the {ThirdsService}.
+     * If successful, it fires a {SelectMenuLinkSuccess} action with the result as payload.
+     * If not, it fires a {SelectMenuLinkFailure} action with the error as payload and navigates back to the index page
+     *
+     * @name resolveThirdPartyLink
+     */
     @Effect()
     resolveThirdPartyLink: Observable<Action> = this.actions$
         .pipe(
