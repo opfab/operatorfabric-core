@@ -19,6 +19,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,20 @@ public class GatewayConfig {
 
     ObjectMapper om = new ObjectMapper();
 
-    @Autowired
     private OperatorFabricGatewayConf conf;
+
+    @Autowired
+    public GatewayConfig(OperatorFabricGatewayConf conf){
+        if(conf == null){
+            this.conf = new OperatorFabricGatewayConf();
+            this.conf.setConfigs(new ArrayList<>());
+
+        }else
+            this.conf = conf;
+        if(!this.conf.getConfigs().contains("web-ui.json")){
+            this.conf.getConfigs().add("web-ui.json");
+        }
+    }
 
     @Bean
     public HiddenHttpMethodFilter hiddenHttpMethodFilter() {

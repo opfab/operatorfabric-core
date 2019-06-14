@@ -17,5 +17,5 @@ spring:
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "Authorization, Content-Type"
-operatorfabric.authorized.configs:
+operatorfabric.gateway.configs:
   - web-ui.json
