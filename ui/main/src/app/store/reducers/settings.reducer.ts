@@ -5,41 +5,38 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {configInitialState, ConfigState} from "@ofStates/config.state";
-import {ConfigActions, ConfigActionTypes} from "@ofActions/config.actions";
+import {settingsInitialState, SettingsState} from "@ofStates/settings.state";
+import {SettingsActions, SettingsActionTypes} from "@ofActions/settings.actions";
 
 export function reducer(
-    state = configInitialState,
-    action: ConfigActions
-): ConfigState {
+    state = settingsInitialState,
+    action: SettingsActions
+): SettingsState {
     switch (action.type) {
-        case ConfigActionTypes.LoadConfig: {
+        case SettingsActionTypes.LoadSettings: {
             return {
                 ...state,
                 loading: true
             };
         }
-        case ConfigActionTypes.LoadConfigSuccess: {
+        case SettingsActionTypes.LoadSettingsSuccess: {
             return {
                 ...state,
-                config: action.payload.config,
+                settings: action.payload.settings,
                 loading: false,
                 loaded:true,
-                retry:0
             };
         }
 
-        case ConfigActionTypes.LoadConfigFailure: {
+        case SettingsActionTypes.LoadSettingsFailure: {
             return {
                 ...state,
                 loading: false,
-                error: `error while loading a Config: '${action.payload.error}'`,
-                retry: state.retry+1
+                error: `error while loading a Settings: '${action.payload.error}'`,
             };
         }
 
-
-        case ConfigActionTypes.HandleUnexpectedError:{
+        case SettingsActionTypes.HandleUnexpectedError:{
             return {
                 ...state,
                 error: action.payload.error.message

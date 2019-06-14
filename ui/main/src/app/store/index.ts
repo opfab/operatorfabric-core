@@ -21,6 +21,7 @@ import {reducer as timelineReducer} from '@ofStore/reducers/timeline.reducer';
 import {reducer as lightCardReducer} from '@ofStore/reducers/light-card.reducer';
 import {reducer as cardReducer} from '@ofStore/reducers/card.reducer';
 import {reducer as configReducer} from '@ofStore/reducers/config.reducer';
+import {reducer as settingsReducer} from '@ofStore/reducers/settings.reducer';
 import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 import {CardState} from "@ofStates/card.state";
@@ -32,6 +33,7 @@ import {FeedFiltersEffects} from "@ofEffects/feed-filters.effects";
 import {ConfigState} from "@ofStates/config.state";
 import {ConfigEffects} from "@ofEffects/config.effects";
 import {TimelineState} from "@ofStates/timeline.state";
+import {SettingsState} from "@ofStates/settings.state";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -40,7 +42,8 @@ export interface AppState {
     authentication: AuthState;
     card: CardState;
     menu: MenuState;
-    config: ConfigState
+    config: ConfigState;
+    settings: SettingsState;
 }
 
 export const appEffects = [
@@ -61,7 +64,8 @@ export const appReducer: ActionReducerMap<AppState> = {
     authentication: authenticationReducer,
     card: cardReducer,
     menu: menuReducer,
-    config: configReducer
+    config: configReducer,
+    settings: settingsReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production

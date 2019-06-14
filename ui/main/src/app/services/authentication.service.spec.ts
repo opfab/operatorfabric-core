@@ -175,10 +175,15 @@ describe('AuthenticationService', () => {
             const response = new AuthObject(token,123, Guid.create(),'johndoe');
             service.askTokenFromCode('fake-code').subscribe((next: PayloadForSuccessfulAuthentication) => {
                 expect(next.token).toEqual(token);
+                expect(next.firstName).toEqual('john');
+                expect(next.lastName).toEqual('doe');
             });
-            let calls = httpMock.match(req => req.url == `${environment.urls.auth}/token`);
-            expect(calls.length).toEqual(1);
-            calls[0].flush(response);
+            let tokenCalls = httpMock.match(req => req.url == `${environment.urls.auth}/token`);
+            expect(tokenCalls.length).toEqual(1);
+            tokenCalls[0].flush(response);
+            let userCalls = httpMock.match(req => req.url == `${environment.urls.users}/users/rte-operator`);
+            expect(userCalls.length).toEqual(1);
+            userCalls[0].flush({firstName: 'john', lastName: 'doe'});
 
         });
 
@@ -213,10 +218,15 @@ describe('AuthenticationService', () => {
             const response = new AuthObject(token,123, Guid.create(),'johndoe');
             service.askTokenFromPassword('fake-login','fake-pwd').subscribe((next: PayloadForSuccessfulAuthentication) => {
                 expect(next.token).toEqual(token);
+                expect(next.firstName).toEqual('john');
+                expect(next.lastName).toEqual('doe');
             });
             let calls = httpMock.match(req => req.url == `${environment.urls.auth}/token`);
             expect(calls.length).toEqual(1);
             calls[0].flush(response);
+            let userCalls = httpMock.match(req => req.url == `${environment.urls.users}/users/rte-operator`);
+            expect(userCalls.length).toEqual(1);
+            userCalls[0].flush({firstName: 'john', lastName: 'doe'});
 
         });
 

@@ -27,7 +27,9 @@ export class PayloadForSuccessfulAuthentication {
     constructor(public identifier: string,
                 public clientId: Guid,
                 public token: string,
-                public expirationDate: Date) {
+                public expirationDate: Date,
+                public firstName?:string,
+                public lastName?:string) {
     }
 }
 

@@ -18,6 +18,7 @@ import {ThirdsService} from "@ofServices/thirds.service";
 import {FilterService} from "@ofServices/filter.service";
 import {ConfigService} from "@ofServices/config.service";
 import {I18nService} from "@ofServices/i18n.service";
+import {SettingsService} from "@ofServices/settings.service";
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import {I18nService} from "@ofServices/i18n.service";
     ],
     providers: [
         ConfigService,
+        SettingsService,
         CardService,
         AuthenticationService,
         TimeService,

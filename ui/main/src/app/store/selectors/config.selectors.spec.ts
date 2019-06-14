@@ -24,7 +24,8 @@ describe('ConfigSelectors', () => {
         authentication: null,
         card: null,
         menu: null,
-        config: null
+        config: null,
+        settings: null,
     }
 
     let loadedConfigState: ConfigState = {

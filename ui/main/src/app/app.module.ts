@@ -24,6 +24,7 @@ import {translateConfig} from "./translate.config";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { InfoComponent } from './components/navbar/info/info.component';
 
 library.add(faExternalLinkAlt);
 
@@ -42,7 +43,7 @@ library.add(faExternalLinkAlt);
         TranslateModule.forRoot(translateConfig),
         FontAwesomeModule
     ],
-    declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent],
+    declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent, InfoComponent],
     providers: [ { provide: LocationStrategy, useClass: HashLocationStrategy }],
     bootstrap: [AppComponent]
 })

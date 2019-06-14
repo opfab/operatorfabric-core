@@ -12,16 +12,9 @@ import {Observable} from 'rxjs';
 import {catchError, delay, filter, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {ConfigService} from '@ofServices/config.service';
 import {AppState} from "@ofStore/index";
-import {
-    ConfigActionTypes,
-    LoadConfig,
-    LoadConfigFailure,
-    LoadConfigSuccess, LoadSettings, LoadSettingsFailure,
-    LoadSettingsSuccess
-} from "@ofActions/config.actions";
+import {ConfigActionTypes, LoadConfig, LoadConfigFailure, LoadConfigSuccess} from "@ofActions/config.actions";
 import {selectConfigRetry} from "@ofSelectors/config.selectors";
 import {CONFIG_LOAD_MAX_RETRIES} from "@ofStates/config.state";
-import {AcceptLogIn, AuthenticationActionTypes} from "@ofActions/authentication.actions";
 
 // those effects are unused for the moment
 @Injectable()
@@ -76,29 +69,5 @@ export class ConfigEffects {
      */
     @Effect()
     retryConfigurationLoading: Observable<Action>;
-
-    /**
-     * Manages settings load -> service request -> success/message
-     */
-    @Effect()
-    loadSettings: Observable<Action> = this.actions$
-        .pipe(
-            ofType<LoadConfig>(ConfigActionTypes.LoadSettings),
-            switchMap(action => this.service.fetchUserSettings()),
-            map((settings: any) => {
-                return new LoadSettingsSuccess({settings: settings});
-            }),
-            catchError((err, caught) => {
-                this.store.dispatch(new LoadSettingsFailure(err));
-                return caught;
-            })
-        );
-
-    @Effect()
-    loadSettingsOnLogin: Observable<Action> = this.actions$.pipe(
-      ofType<AcceptLogIn>(AuthenticationActionTypes.AcceptLogIn),
-      map(a=>new LoadSettings())
-    );
-
     
 }

@@ -8,7 +8,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {Guid} from 'guid-typescript';
 import {PayloadForSuccessfulAuthentication} from '@ofActions/authentication.actions';
 import {environment} from "@env/environment";
@@ -18,6 +18,7 @@ import {Store} from "@ngrx/store";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import * as jwt_decode from "jwt-decode";
 import * as _ from "lodash";
+import {User} from "@ofModel/user.model";
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -35,6 +36,7 @@ export class AuthenticationService {
     private checkTokenUrl = `${environment.urls.auth}/check_token`;
     /** url to ask for an authentication token (jwt) */
     private askTokenUrl = `${environment.urls.auth}/token`;
+    private userDataUrl = `${environment.urls.users}/users`;
     private clientId: string;
     private clientSecret: string;
     private loginClaim: string;
@@ -141,8 +143,21 @@ export class AuthenticationService {
             }),
             map((auth: AuthObject) => this.convert(auth)),
             tap(AuthenticationService.saveAuthenticationInformation),
-            catchError(AuthenticationService.handleError)
+            catchError(AuthenticationService.handleError),
+            switchMap((auth)=>this.loadUserData(auth))
         );
+    }
+
+    private loadUserData(auth:PayloadForSuccessfulAuthentication):Observable<PayloadForSuccessfulAuthentication>{
+        return this.httpClient.get<User>(`${this.userDataUrl}/${auth.identifier}`)
+            .pipe(
+                map(u => {
+                    auth.firstName = u.firstName;
+                    auth.lastName = u.lastName;
+                    return auth;
+                }),
+                catchError(e=>of(auth))
+            );
     }
 
     private static handleError(error: any) {

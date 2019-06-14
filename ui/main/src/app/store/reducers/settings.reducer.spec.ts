@@ -5,98 +5,91 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {reducer} from "@ofStore/reducers/config.reducer";
-import {configInitialState, ConfigState} from "@ofStates/config.state";
+import {reducer} from "@ofStore/reducers/settings.reducer";
 import {getRandomAlphanumericValue} from "@tests/helpers";
 import {
-    LoadConfig,
-    LoadConfigFailure,
-    LoadConfigSuccess
-} from "@ofActions/config.actions";
+    LoadSettings,
+    LoadSettingsFailure, LoadSettingsSuccess
+} from "@ofActions/settings.actions";
+import {settingsInitialState, SettingsState} from "@ofStates/settings.state";
 
 describe('Config Reducer', () => {
     describe('unknown action', () => {
         it('should return the initial state unchange', () => {
             const unknownAction = {} as any;
-            const actualState = reducer(configInitialState, unknownAction);
-            expect(actualState).toBe(configInitialState);
+            const actualState = reducer(settingsInitialState, unknownAction);
+            expect(actualState).toBe(settingsInitialState);
         });
 
         it('should return the previous state on living state', () => {
             const unknowAction = {} as any;
-            const previousState: ConfigState = {
-                config:{test:'config'},
+            const previousState: SettingsState = {
+                settings:{test:'config'},
                 loading: false,
                 error: getRandomAlphanumericValue(5, 12),
-                loaded:false,
-                retry:0
+                loaded:false
             }
             const actualState = reducer(previousState, unknowAction);
             expect(actualState).toBe(previousState);
         });
     });
-    describe('Load Config action', () => {
+    describe('Load Setting action', () => {
         it('should set state load to true', () => {
-            // configInitialState.load is false
-            const actualState = reducer(configInitialState,
-                new LoadConfig());
-            expect(actualState).not.toBe(configInitialState);
+            // settingsInitialState.load is false
+            const actualState = reducer(settingsInitialState,
+                new LoadSettings());
+            expect(actualState).not.toBe(settingsInitialState);
             expect(actualState.loading).toEqual(true);
         });
         it('should leave state load to true', () => {
-            const previousState: ConfigState = {
-                config: null,
+            const previousState: SettingsState = {
+                settings: null,
                 loading: true,
                 error: null,
-                loaded:false,
-                retry:0
+                loaded:false
             }
             const actualState = reducer(previousState,
-                new LoadConfig());
+                new LoadSettings());
             expect(actualState).not.toBe(previousState);
             expect(actualState).toEqual(previousState);
         });
     });
-    describe('LoadConfigFailure', () => {
+    describe('LoadSettingsFailure', () => {
         it('should set loading to false and message to specific message', () => {
-            const actualConfig = {test:'config'};
-            const previousState: ConfigState = {
-                config: actualConfig,
+            const actualSettings = {test:'config'};
+            const previousState: SettingsState = {
+                settings: actualSettings,
                 loading: true,
                 error: null,
-                loaded:false,
-                retry:0
+                loaded:false
             };
             const actualState = reducer(previousState,
-                new LoadConfigFailure({error: new Error(getRandomAlphanumericValue(5, 12))}));
+                new LoadSettingsFailure({error: new Error(getRandomAlphanumericValue(5, 12))}));
             expect(actualState).not.toBe(previousState);
             expect(actualState).not.toEqual(previousState);
             expect(actualState.loading).toEqual(false);
             expect(actualState.error).not.toBeNull();
             expect(actualState.loaded).toEqual(false);
-            expect(actualState.retry).toEqual(1);
 
         });
     });
-    describe('LoadConfigSuccess', () => {
+    describe('LoadSettingsSuccess', () => {
         it('should set loading to false and selected to corresponding payload', () => {
-            const previousConfig = {test:'config'};
-            const previousState: ConfigState = {
-                config: previousConfig,
+            const previousSettings = {test:'config'};
+            const previousState: SettingsState = {
+                settings: previousSettings,
                 loading: true,
                 error: getRandomAlphanumericValue(5, 12),
-                loaded:false,
-                retry:0
+                loaded:false
             };
 
-            const actualConfig = {test:'config2'};
-            const actualState = reducer(previousState, new LoadConfigSuccess({config: actualConfig}));
+            const actualSettings = {setting:'config2'};
+            const actualState = reducer(previousState, new LoadSettingsSuccess({settings: actualSettings}));
             expect(actualState).not.toBe(previousState);
             expect(actualState).not.toEqual(previousState);
             expect(actualState.error).toEqual(previousState.error);
             expect(actualState.loading).toEqual(false);
-            expect(actualState.config).toEqual(actualConfig);
-            expect(actualState.retry).toEqual(0);
+            expect(actualState.settings).toEqual(actualSettings);
             expect(actualState.loaded).toEqual(true);
         });
     });

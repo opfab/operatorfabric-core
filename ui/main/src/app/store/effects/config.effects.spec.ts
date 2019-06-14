@@ -13,7 +13,7 @@ import {
     ConfigActionTypes,
     LoadConfig,
     LoadConfigFailure,
-    LoadConfigSuccess, LoadSettings, LoadSettingsSuccess
+    LoadConfigSuccess
 } from "@ofActions/config.actions";
 import {async} from "@angular/core/testing";
 import {ConfigService} from "@ofServices/config.service";
@@ -74,45 +74,4 @@ describe('ConfigEffects', () => {
             expect(effects.retryConfigurationLoading).toBeObservable(localExpected);
         })
     })
-    describe('loadSettings', () => {
-        it('should return a LoadSettingsSuccess when the configService serve settings', () => {
-            const expectedSettings = {value: 1};
-
-            const localActions$ = new Actions(hot('-a--', {a: new LoadSettings()}));
-
-            // const localMockConfigService = jasmine.createSpyObj('ConfigService', ['fetchConfiguration']);
-
-            configService.fetchUserSettings.and.returnValue(hot('---b', {b: expectedSettings}));
-            const expectedAction = new LoadSettingsSuccess({settings: expectedSettings});
-            const localExpected = hot('---c', {c: expectedAction});
-
-            effects = new ConfigEffects(mockStore, localActions$, configService);
-
-            expect(effects).toBeTruthy();
-            expect(effects.loadSettings).toBeObservable(localExpected);
-        });
-        it('should return a LoadSettingsFailure when the configService doesn\'t serve settings', () => {
-
-            const localActions$ = new Actions(hot('-a--', {a: new LoadSettings()}));
-            configService.fetchUserSettings.and.returnValue(hot('---#'));
-            effects = new ConfigEffects(mockStore, localActions$, configService);
-            expect(effects).toBeTruthy();
-            effects.loadSettings.subscribe((action: ConfigActions) => expect(action.type).toEqual(ConfigActionTypes.LoadSettingsFailure));
-            // expect(effects.loadConfiguration).toBeObservable(localExpected);
-        });
-    });
-    describe('loadSettingsOnLogin', () => {
-        it('should return a LoadSettings Action', () => {
-
-            const localActions$ = new Actions(hot('-a--', {a: new AcceptLogIn(null)}));
-
-            const expectedAction = new LoadSettings();
-            const localExpected = hot('-c--', {c: expectedAction});
-
-            effects = new ConfigEffects(mockStore, localActions$, configService);
-
-            expect(effects).toBeTruthy();
-            expect(effects.loadSettingsOnLogin).toBeObservable(localExpected);
-        });
-    });
 });

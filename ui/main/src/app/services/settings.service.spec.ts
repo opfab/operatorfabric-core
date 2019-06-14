@@ -10,20 +10,19 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import {environment} from '../../environments/environment';
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "../store/index";
-import {ConfigService} from "@ofServices/config.service";
+import {SettingsService} from "@ofServices/settings.service";
 import {AcceptLogIn, PayloadForSuccessfulAuthentication} from "@ofActions/authentication.actions";
 
 describe('Thirds Services', () => {
     let injector: TestBed;
-    let configService: ConfigService;
+    let settingsService: SettingsService;
     let httpMock: HttpTestingController;
     let store: Store<AppState>;
-    let config = {
-        level1:{
-            level2: 'value'
-        }
+    let settings = {
+        setting1: 'one',
+        setting2: 'two'
     };
-    let url = `${environment.urls.config}`;
+    let urlSettings = `${environment.urls.users}/users/test-user/settings`;
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -33,7 +32,7 @@ describe('Thirds Services', () => {
                 ],
             providers: [
                 // {provide: store, useClass: Store},
-                ConfigService,
+                SettingsService,
             ]
         });
         injector = getTestBed();
@@ -42,7 +41,7 @@ describe('Thirds Services', () => {
         // avoid exceptions during construction and init of the component
         // spyOn(store, 'select').and.callFake(() => of('/test/url'));
         httpMock = injector.get(HttpTestingController);
-        configService = TestBed.get(ConfigService);
+        settingsService = TestBed.get(SettingsService);
         store.dispatch(new AcceptLogIn(new PayloadForSuccessfulAuthentication('test-user',null,null,null)))
     });
     afterEach(() => {
@@ -50,19 +49,21 @@ describe('Thirds Services', () => {
     });
 
     it('should be created', () => {
-        expect(configService).toBeTruthy();
+        expect(settingsService).toBeTruthy();
     });
-    describe('#fetchConfiguration', () => {
-        it('should return configuration on 200', () => {
-            configService.fetchConfiguration().subscribe(
-                result => expect(eval(result)).toBe(config)
+
+    describe('#fetchSettings', () => {
+        it('should return settings on 200', () => {
+            settingsService.fetchUserSettings().subscribe(
+                result => expect(eval(result)).toBe(settings)
             )
-            let calls = httpMock.match(req => req.url == url);
+            let calls = httpMock.match(req => req.url == urlSettings);
             expect(calls.length).toEqual(1);
-            calls[0].flush(config);
+            calls[0].flush(settings);
         });
 
     });
+
 })
 ;
 
