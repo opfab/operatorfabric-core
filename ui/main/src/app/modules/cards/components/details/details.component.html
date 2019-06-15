@@ -5,7 +5,7 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 <ul class="nav nav-tabs">
-  <li *ngFor="let detailC of details" (click)="selectDetail(detailC)" [class.active]="detailC.active" class="nav-item">
+  <li *ngFor="let detailC of details" (click)="selectDetail(detailC)" [class.show]="detailC.active" class="nav-item" data-toggle="tab">
     <span class="nav-link" translate [translateParams]="detailC.detail.title.parameters">{{i18nPrefix+detailC.detail.title.key}}</span>
   </li>
 </ul>
