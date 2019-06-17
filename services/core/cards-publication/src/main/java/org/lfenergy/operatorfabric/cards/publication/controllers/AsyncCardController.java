@@ -39,8 +39,7 @@ public class AsyncCardController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<Integer> createCards(@Valid @RequestBody Flux<CardPublicationData> cards) throws InterruptedException {
-//        cardWriteService.pushCardsAsyncParallel(cards);
+    public Mono<Integer> createCards(@Valid @RequestBody Flux<CardPublicationData> cards) {
         return cards
                 .doOnNext(cardWriteService::pushCardAsyncParallel)
                 .last().map(c->202);

@@ -69,12 +69,14 @@ public class WebSecurityConfiguration {
 
     }
 
+    /**
+     * */
     private static Mono<AuthorizationDecision> currentUserHasAnyRole(Mono<Authentication> authentication, AuthorizationContext context) {
         return authentication
-                .filter(a -> a.isAuthenticated())
-                .flatMapIterable( a -> a.getAuthorities())
+                .filter(Authentication::isAuthenticated)
+                .flatMapIterable(Authentication::getAuthorities)
                 .hasElements()
-                .map(hasAuthorities -> new AuthorizationDecision(hasAuthorities))
+                .map(AuthorizationDecision::new)
                 .defaultIfEmpty(new AuthorizationDecision(false))
                 ;
     }

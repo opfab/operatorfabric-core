@@ -108,10 +108,9 @@ public class CardNotificationService {
                                                     sendOperation(t.getT1(), groupExchange);
                                                     sendOperation(t.getT2(), userExchange);
                                                 },
-                                                error -> {
-                                                    log.error("Unexpected Error arose, notification window lost", error);
-                                                })
-                        , t -> handleError(t));
+                                                error -> log.error("Unexpected Error arose, notification window lost", error)
+                                                )
+                        , this::handleError);
     }
 
     private void handleError(Throwable error) {
