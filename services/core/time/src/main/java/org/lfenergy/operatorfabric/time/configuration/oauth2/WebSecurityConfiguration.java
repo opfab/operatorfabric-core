@@ -39,17 +39,22 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/webjars/**"
     };
 
-
-    @Override
-    public void configure(final HttpSecurity http) throws Exception {
+    /**This method handles the configuration to be shared with the test WebSecurityConfiguration class (access rules to be tested)
+     * */
+    public static void configureCommon(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.POST,"/time/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,"/time/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/time/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
+                .anyRequest().authenticated();
+    }
+
+    @Override
+    public void configure(final HttpSecurity http) throws Exception {
+        configureCommon(http);
+        http
                 .oauth2ResourceServer()
                 .jwt().jwtAuthenticationConverter(opfabJwtConverter);
     }

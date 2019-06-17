@@ -36,35 +36,40 @@ public class WebSecurityConfiguration {
     /**
      * Secures access (all uris are secured)
      *
-     * @param httpSecurity
+     * @param http
      *    http security configuration
      * @param opfabReactiveJwtConverter
      *    OperatorFabric authentication converter
      * @return http security filter chain
      */
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity httpSecurity,
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,
                                                             Converter<Jwt, Mono<AbstractAuthenticationToken>>
                                                                     opfabReactiveJwtConverter) {
-        httpSecurity
-                .headers()
-                .frameOptions()
-                .disable();
-        httpSecurity
-                .authorizeExchange()
-                .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .pathMatchers("/cards/**").access(this::currentUserHasAnyRole)
-                .pathMatchers("/cardSubscription/**").access(this::currentUserHasAnyRole)
-                .anyExchange().authenticated()
-                .and()
+        configureCommon(http);
+        http
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(opfabReactiveJwtConverter);
 
-        return httpSecurity.build();
+        return http.build();
     }
 
-    private Mono<AuthorizationDecision> currentUserHasAnyRole(Mono<Authentication> authentication, AuthorizationContext context) {
+    /**This method handles the configuration to be shared with the test WebSecurityConfiguration class (access rules to be tested)
+     * */
+    public static void configureCommon(final ServerHttpSecurity http) {
+        http
+                .headers().frameOptions().disable()
+                .and()
+                .authorizeExchange()
+                .pathMatchers(HttpMethod.OPTIONS).permitAll()
+                .pathMatchers("/cards/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
+                .pathMatchers("/cardSubscription/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
+                .anyExchange().authenticated();
+
+    }
+
+    private static Mono<AuthorizationDecision> currentUserHasAnyRole(Mono<Authentication> authentication, AuthorizationContext context) {
         return authentication
                 .filter(a -> a.isAuthenticated())
                 .flatMapIterable( a -> a.getAuthorities())

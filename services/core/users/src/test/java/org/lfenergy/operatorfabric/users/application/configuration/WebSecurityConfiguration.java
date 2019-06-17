@@ -17,7 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 /**
  * WebSecurity test configuration
- * This should match the main WebSecurity configuration for the service, with the following changes:
+ * The following changes to the main WebSecurityConfiguration are necessary for tests
  *  - Disable csrf
  *  - Remove configuration of OAuth2ResourceServer
  *
@@ -31,7 +31,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter  {
     public void configure(final HttpSecurity http) throws Exception {
         org.lfenergy.operatorfabric.users.configuration.oauth2.WebSecurityConfiguration.configureCommon(http);
         http.csrf().disable();
-        ;
     }
 
 }

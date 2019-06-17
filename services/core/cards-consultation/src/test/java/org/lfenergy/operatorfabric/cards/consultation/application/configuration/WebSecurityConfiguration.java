@@ -19,11 +19,13 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import reactor.core.publisher.Mono;
 
+import static org.lfenergy.operatorfabric.cards.consultation.configuration.webflux.WebSecurityConfiguration.configureCommon;
+
 
 /**
  * Configures web security
 
- * This should match the main WebSecurity configuration for the service, with the following changes:
+ * The following changes to the main WebSecurityConfiguration are necessary for tests
  *  - Disable csrf
  *  - Remove configuration of OAuth2ResourceServer
  *
@@ -37,33 +39,15 @@ public class WebSecurityConfiguration {
     /**
      * Secures access (all uris are secured)
      *
-     * @param httpSecurity
+     * @param http
      *    http security configuration
      * @return http security filter chain
      */
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity httpSecurity) {
-        httpSecurity.headers().frameOptions().disable();
-        httpSecurity.csrf().disable();
-        httpSecurity
-                .authorizeExchange()
-                .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .pathMatchers("/cards/**").access(this::currentUserHasAnyRole)
-                .pathMatchers("/cardSubscription/**").access(this::currentUserHasAnyRole)
-                .anyExchange().authenticated();
-        return httpSecurity.build();
-    }
-
-    private Mono<AuthorizationDecision> currentUserHasAnyRole(Mono<Authentication> authentication, AuthorizationContext context) {
-        log.info("currentUserHasAnyRole was called");
-        return authentication
-                .filter(a -> a.isAuthenticated())
-                .flatMapIterable( a -> a.getAuthorities())
-                .hasElements()
-                .map(hasAuthorities -> new AuthorizationDecision(hasAuthorities))
-                .defaultIfEmpty(new AuthorizationDecision(false))
-                .log()
-                ;
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        configureCommon(http);
+        http.csrf().disable();
+        return http.build();
     }
 
 }

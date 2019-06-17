@@ -41,17 +41,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final HttpSecurity http) throws Exception {
+        configureCommon(http);
+        http
+                .oauth2ResourceServer()
+                .jwt().jwtAuthenticationConverter(opfabJwtConverter);
+    }
+
+    public static void configureCommon(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.POST,"/thirds/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,"/thirds/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/thirds/**").hasRole("ADMIN")
-                .anyRequest().permitAll() //Needed to allow styles to be loaded without auth
-                .and()
-                .oauth2ResourceServer()
-                .jwt().jwtAuthenticationConverter(opfabJwtConverter);
+                .anyRequest().permitAll(); //Needed to allow styles to be loaded without auth
     }
-
 
 }

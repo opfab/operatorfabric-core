@@ -9,13 +9,12 @@ package org.lfenergy.operatorfabric.time.application;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
  * WebSecurity test configuration
- * This should match the main WebSecurity configuration for the service, with the following changes:
+ * The following changes to the main WebSecurityConfiguration are necessary for tests
  *  - Disable csrf
  *  - Remove configuration of OAuth2ResourceServer
  *
@@ -25,27 +24,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Slf4j
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String[] AUTH_WHITELIST = {
-
-            // -- swagger ui
-            "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/swagger.json",
-            "/v2/api-docs",
-            "/webjars/**"
-    };
-
     @Override
     public void configure(final HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers(HttpMethod.POST,"/time/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT,"/time/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE,"/time/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                ;
+        org.lfenergy.operatorfabric.time.configuration.oauth2.WebSecurityConfiguration.configureCommon(http);
+        http.csrf().disable();
     }
 
 }

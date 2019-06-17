@@ -43,6 +43,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         ;
     }
 
+    /**This method handles the configuration to be shared with the test WebSecurityConfiguration class (access rules to be tested)
+     * */
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
