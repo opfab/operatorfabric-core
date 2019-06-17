@@ -85,7 +85,8 @@ import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
                       [attr.opacity]="0.7"
           />
          
-          <text *ngIf="checkInsideDomain(myCircle.date)" [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)" stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> {{myCircle.count}} </text>
+          <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count < 100" [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)" stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> {{myCircle.count}} </text>
+          <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count > 99" [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)" stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> +99 </text>
         </svg:g>
       </svg:g>
     </svg:g>
@@ -226,7 +227,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
 
     if (this.first) {
         this.first = false;
-        this.updateRealTimeDate();
+        if (this.realTimeBar) {
+          this.updateRealTimeDate();
+        }
         // set inside ngx-charts library verticalSpacing variable to 10
         // Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks
         for (let i = 0; i < 50; i++) {
@@ -398,7 +401,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
    */
   fctTickFormatting = (e): string => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    return formatPipe.transform(e, 'en-US', this.clusterLevel);
+    return formatPipe.transform(e, this.clusterLevel);
   }
 
   /**
@@ -407,10 +410,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
    */
   fctTickFormattingAdvanced = (e): string => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    if (this.clusterLevel === 'W') {
+    if (this.clusterLevel === 'W' || this.clusterLevel === 'D-7') {
       return formatPipe.transformAdvanced(e, this.clusterLevel);
     }
-    return formatPipe.transform(e, 'en-US', this.clusterLevel);
+    return formatPipe.transform(e, this.clusterLevel);
   }
 
   /**
@@ -418,7 +421,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
    */
   fctHoveredCircleDateFormatting(e): string {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    return formatPipe.transformHovered(e, 'en-US', this.clusterLevel);
+    return formatPipe.transformHovered(e, this.clusterLevel);
   }
 
   /**
@@ -433,6 +436,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
       nextDay.add((i * 4), 'hours');
       this.xTicks.push(nextDay);
     }
+    console.log(this.xTicks);
   }
 
   /**
@@ -458,6 +462,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     const startDomain = moment(domain[0]);
     let nextMonth = moment(startDomain);
     let i = 0;
+    // when not starting by begin of month, first write 16th day tick
+    if (nextMonth.date() >= 16) {
+      this.xTicks.push(nextMonth.date(16));
+      i++;
+    }
     // until the end of our domain, push one tick for the 1st & 16th day of each month
     while (nextMonth.valueOf() < domain[1]) {
       nextMonth = moment(startDomain).date(1);
@@ -478,7 +487,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
    */
   setXTicksValue(domain): void { // add width and make différent treatment (responsive)
     switch (this.clusterLevel) {
-      case 'W': {
+      case 'W': case 'D-7': {
         this.weekTicks(domain);
         break;
       }
@@ -643,7 +652,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
       }
       case 4: {
         for (let i = 0; i < this.xTicks.length; i++) {
-          if (i % 6 === 0) {
+          /*if (i % 6 === 0) {
+            newList.push(this.xTicks[i]);
+          }*/
+          if (this.xTicks[i].hours() === 0) {
             newList.push(this.xTicks[i]);
           }
         }
@@ -666,7 +678,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     this.setXTicksValue(domain);
     this.xTicksOne = [];
     this.xTicksTwo = [];
-    if (this.clusterLevel === 'W') {
+    if (this.clusterLevel === 'W' || this.clusterLevel === 'D-7') {
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(4);
     } else {

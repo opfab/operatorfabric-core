@@ -38,8 +38,8 @@ describe('Directive: XAxisTickFormatPipe', () => {
         fixture.detectChanges();
         const start = 'not Date';
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transform(start, null, 'Y');
-        formatPipe.transformHovered(start, null, 'Y');
+        formatPipe.transform(start, null);
+        formatPipe.transformHovered(start, null);
         expect(component).toBeTruthy();
     });
 
@@ -49,8 +49,8 @@ describe('Directive: XAxisTickFormatPipe', () => {
         const start = moment();
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transform(start, 'en-US', 'M');
-        formatPipe.transformHovered(start, 'en-US', 'M');
+        formatPipe.transform(start, 'M');
+        formatPipe.transformHovered(start, 'M');
         expect(component).toBeTruthy();
     });
 
@@ -60,8 +60,8 @@ describe('Directive: XAxisTickFormatPipe', () => {
         const start = moment();
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transform(start, 'en-US', 'Y');
-        formatPipe.transformHovered(start, 'en-US', 'Y');
+        formatPipe.transform(start, 'Y');
+        formatPipe.transformHovered(start, 'Y');
         expect(component).toBeTruthy();
     });
 
@@ -72,8 +72,8 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transform(start, 'en-US', 'W');
-        formatPipe.transformHovered(start, 'en-US', 'W');
+        formatPipe.transform(start, 'W');
+        formatPipe.transformHovered(start, 'W');
         expect(component).toBeTruthy();
     });
 
@@ -84,7 +84,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transform(start, 'en-US', 'M');
+        formatPipe.transform(start, 'M');
         expect(component).toBeTruthy();
     });
 
@@ -95,7 +95,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transform(start, 'en-US', 'Y');
+        formatPipe.transform(start, 'Y');
         expect(component).toBeTruthy();
     });
 
@@ -116,7 +116,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         const start = moment();
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transform(start, 'en-US', 'R');
+        formatPipe.transform(start, 'R');
         expect(component).toBeTruthy();
     });
 });

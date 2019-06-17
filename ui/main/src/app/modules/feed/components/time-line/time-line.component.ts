@@ -37,8 +37,9 @@ export class TimeLineComponent implements OnInit {
             }});
 
         // conf 1 === end of the actual week + next week
-        const startDomain = moment();
-        startDomain.hours(0).minutes(0).seconds(0).millisecond(0);
+        /*const startDomain = moment();
+        startDomain.hours(0).minutes(0).seconds(0).millisecond(0);*/
+        const startDomain = this.dateWithSpaceBeforeMoment('W');
         const endDomain = _.cloneDeep(startDomain);
         endDomain.add(1, 'week');
         endDomain.startOf('week');
@@ -46,9 +47,19 @@ export class TimeLineComponent implements OnInit {
         endDomain.add(7, 'days');
         // endDomain.add(5, 'days'); // example
 
+        // conf 4 === end of the actual day + 7 days
+        /*const startDomain4 = moment();
+        startDomain4.hours(0).minutes(0).seconds(0).millisecond(0);*/
+        const startDomain4 = moment(this.dateWithSpaceBeforeMoment('W'));
+        const endDomain4 = _.cloneDeep(startDomain4);
+        endDomain4.hours(0).minutes(0).seconds(0).millisecond(0);
+        endDomain4.add(7, 'days');
+        // endDomain.add(5, 'days'); // example
+
         // conf 2 === actual month + next month
-        const startDomain2 = moment();
-        startDomain2.hours(0).minutes(0).seconds(0).millisecond(0);
+        /*const startDomain2 = moment();
+        startDomain2.hours(0).minutes(0).seconds(0).millisecond(0);*/
+        const startDomain2 = this.dateWithSpaceBeforeMoment('M');
         const endDomain2 = _.cloneDeep(startDomain2);
         endDomain2.startOf('month');
         endDomain2.add(2, 'months');
@@ -56,9 +67,10 @@ export class TimeLineComponent implements OnInit {
         // endDomain2.date(15); // example
 
         // conf 3 === from start of actual month to end of the year + 1 year
-        const startDomain3 = moment();
+        /*const startDomain3 = moment();
         startDomain3.startOf('month');
-        startDomain3.hours(0);
+        startDomain3.hours(0);*/
+        const startDomain3 = this.dateWithSpaceBeforeMoment('Y');
         const endDomain3 = _.cloneDeep(startDomain3);
         endDomain3.add(2, 'years');
         endDomain3.startOf('year'); // Voir avec Guillaume
@@ -78,6 +90,12 @@ export class TimeLineComponent implements OnInit {
             endDomain: endDomain.valueOf(),
             forwardLevel: 'W',
             followCloackTick: false,
+        },
+        {
+            startDomain: startDomain4.valueOf(),
+            endDomain: endDomain4.valueOf(),
+            forwardLevel: 'D-7',
+            followCloackTick: true,
         },
         {
             startDomain: startDomain2.valueOf(),
@@ -140,5 +158,47 @@ export class TimeLineComponent implements OnInit {
             select(feedSelectors.selectUnFilteredFeed),
             catchError(err => of([]))
         );*/
+    }
+
+    /**
+     * make start of domain begin 4 ticks before actual date (moment())
+     * each cluster level had a different treatment
+     * @param clusterLevel
+     */
+    dateWithSpaceBeforeMoment(clusterLevel) {
+        const date = moment();
+        date.minutes(0).seconds(0).millisecond(0);
+        switch (clusterLevel) {
+            case 'W' : case 'D-7': {
+                for (let i = 0; i < 35; i++) {
+                    if (((date.hours() - i) % 4) === 0) {
+                        date.subtract(i, 'hours');
+                        break;
+                    }
+                }
+                // start 12 hours before date
+                date.subtract(3 * 4, 'hours');
+                return date;
+            }
+            case 'M': {
+                // start 3 days before moment()
+                date.startOf('day');
+                date.subtract(3, 'days');
+                return date;
+            }
+            case 'Y': {
+                date.startOf('day');
+                // start at begin of month
+                if (date.date() >= 16) {
+                    date.startOf('month');
+                    date.subtract(1, 'months');
+                } else {
+                    // start at middle of month (16th)
+                    date.date(16);
+                    date.subtract(2, 'months');
+                }
+                return date;
+            }
+        }
     }
 }

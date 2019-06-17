@@ -33,6 +33,7 @@ export class InitChartComponent implements OnInit {
 
   // required for domain movements specifications
   private realCaseActivate: boolean;
+  private continuousForward: number;
 
   // buttons
   public forwardButtonType: string;
@@ -51,7 +52,7 @@ export class InitChartComponent implements OnInit {
     this.zoomButtonsActive = false;
     this.forwardButtonType = undefined;
     this.realCaseActivate = true;
-
+    this.continuousForward = 0;
 
     // options
     this.myDomain = undefined;
@@ -270,15 +271,19 @@ export class InitChartComponent implements OnInit {
     if (conf) {
       this.buttonHomeActive = false;
       this.realCaseActivate = true;
+      this.continuousForward = 0;
       this.setStartAndEndDomain(conf.startDomain, conf.endDomain);
       if (conf.forwardLevel) {
         this.forwardButtonType = conf.forwardLevel;
       }
       this.buttonHome = [conf.startDomain, conf.endDomain];
       this.buttonList.forEach(button => {
-        button.selected = false;
+        if (button.forwardLevel === conf.forwardLevel) {
+          button.selected = true;
+        } else {
+          button.selected = false;
+        }
       });
-      conf.selected = true;
     }
   }
 
@@ -351,6 +356,9 @@ export class InitChartComponent implements OnInit {
       case 'W':
         this.moveDomainByWeek(moveForward);
         break;
+      case 'D-7':
+        this.moveDomainByDay(moveForward);
+        break;
       case 'M':
         this.moveDomainByMonthOrYear(moveForward, 'months');
         break;
@@ -377,6 +385,41 @@ export class InitChartComponent implements OnInit {
     } else {
       startDomain.subtract(7, 'days');
       endDomain.subtract(7, 'days');
+      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
+    }
+  }
+
+ /**
+   * define the actual week
+   * add 1 day after the week selected
+   * or move 1 day backward the week selected
+   * @param forward
+   */
+  moveDomainByDay(forward: boolean): void {
+    const startDomain = moment(this.myDomain[0]);
+    const endDomain = moment(startDomain);
+    endDomain.add(7, 'days');
+    if (forward) {
+      this.continuousForward++;
+      // extend domain by one day
+      if (this.continuousForward > 0) {
+        endDomain.add(this.continuousForward, 'days');
+      } else {
+        // progress 1 day in time on the domain
+        startDomain.add(1, 'days');
+        endDomain.add(1, 'days');
+      }
+      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
+    } else {
+      this.continuousForward--;
+      // decrease domain by one day
+      if (this.continuousForward > 0) {
+        endDomain.add(this.continuousForward, 'days');
+      } else {
+        // move 1 day back in time on the domain
+        startDomain.subtract(1, 'days');
+        endDomain.subtract(1, 'days');
+      }
       this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
     }
   }
