@@ -32,6 +32,7 @@ For other configuration see:
 |operatorfabric.security.oauth2.flow.delegate-url|null|no|Url to redirect the browser to for authentication, mandatory with CODE flow
 |operatorfabric.feed.subscription.timeout|60000|no|Milliseconds between card subscription renewal
 |operatorfabric.feed.card.time.display|BUSINESS|no|card time display mode in the feed (BUSINESS: display card with entire business period,BUSINESS_START: display card with business start, PUBLICATION: display card with publication date,LTTD: : display card with lttd date,NONE: date is hidden)
+|operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen
 
 |===
 

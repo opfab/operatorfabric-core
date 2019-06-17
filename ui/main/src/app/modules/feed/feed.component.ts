@@ -12,6 +12,7 @@ import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {catchError} from "rxjs/operators";
+import {buildConfigSelector} from "@ofSelectors/config.selectors";
 
 @Component({
     selector: 'of-cards',
@@ -22,6 +23,7 @@ export class FeedComponent implements OnInit, AfterViewInit {
 
     lightCards$: Observable<LightCard[]>;
     selection$: Observable<string>;
+    hideTimeLine: boolean;
 
     constructor(private store: Store<AppState>) {
     }
@@ -32,6 +34,8 @@ export class FeedComponent implements OnInit, AfterViewInit {
             catchError(err => of([]))
         );
         this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);
+        this.store.select(buildConfigSelector('feed.timeline.hide'))
+            .subscribe(v=>this.hideTimeLine = v);
     }
 
 
