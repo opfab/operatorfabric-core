@@ -34,6 +34,7 @@ export function reducer(
         case CardActionTypes.LoadCardFailure: {
             return {
                 ...state,
+                selected:null,
                 loading: false,
                 error: `error while loading a Card: '${action.payload.error}'`
             };

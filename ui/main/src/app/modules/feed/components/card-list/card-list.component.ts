@@ -7,6 +7,7 @@
 
 import {Component, Input} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'of-card-list',
@@ -15,7 +16,7 @@ import {LightCard} from '@ofModel/light-card.model';
 export class CardListComponent  {
 
   @Input() public lightCards: LightCard[];
-  @Input() public selection: string;
+  @Input() public selection: Observable<string>;
 
   constructor() { }
 

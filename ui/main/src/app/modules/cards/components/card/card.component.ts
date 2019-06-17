@@ -41,7 +41,7 @@ export class CardComponent implements OnInit{
 
     public select() {
         this.router.navigate(['/'+this.currentPath,'cards',this.lightCard.id]);
-        this.open=true;
+        // this.open=true;
     }
 
     ngOnInit() {
@@ -50,10 +50,10 @@ export class CardComponent implements OnInit{
             if(url)
                 this.currentPath = url.split('/')[1];
         });
-        this.store.select(selectCardStateSelectedId)
-            .pipe(
-                map(id=>this.lightCard.id == id)
-            ).subscribe(open=>this.open = open)
+        // this.store.select(selectCardStateSelectedId)
+        //     .pipe(
+        //         map(id=>this.lightCard.id == id)
+        //     ).subscribe(open=>this.open = open)
         ;
         // fetch configuration
         this.store.select(buildConfigSelector('feed.card.time.display'))
