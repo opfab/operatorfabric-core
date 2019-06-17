@@ -40,7 +40,8 @@
    [circleDiameter] circle diameter size
    (zoomChange) call when custom timeline chart change his domain
   -->
-  <of-custom-timeline-chart *ngIf="arrayChartData"
+  <of-custom-timeline-chart class="of-custom-timeline-chart"
+                              *ngIf="arrayChartData"
                              [animations]="animations"
                              [autoScale]="autoScale"
                              [myData]="arrayChartData"
