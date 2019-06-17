@@ -9,7 +9,7 @@
         <div class="badge-border rounded-top-left bg-sev-{{lightCard.severity.toString()|lowercase}} col-1"
              [class.rounded-left]="!open">
         </div>
-        <div class="p-1">
+        <div class="p-1" [class.text-truncate]="!open">
             <p class="card-title" translate [translateParams]="lightCard.title.parameters">{{i18nPrefix+lightCard.title.key}}</p>
             <p *ngIf="this.dateToDisplay" class="card-subtitle">({{this.dateToDisplay}})</p>
         </div>
