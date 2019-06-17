@@ -60,6 +60,7 @@ describe('SettingsXConfigSelectors', () => {
         expect(selectMergedSettings(testAppState)).toEqual({});
         expect(buildSettingsOrConfigSelector('test.path.my.settings')(testAppState)).toEqual(null);
         expect(buildSettingsOrConfigSelector('test.byDefault.value')(testAppState)).toEqual(null);
+        expect(buildSettingsOrConfigSelector('test.byDefault.value','fallback')(testAppState)).toEqual('fallback');
     });
 
     it('manage loaded settings and config', () => {
@@ -74,6 +75,7 @@ describe('SettingsXConfigSelectors', () => {
         });
         expect(buildSettingsOrConfigSelector('test.path.my.settings')(testAppState)).toEqual('value');
         expect(buildSettingsOrConfigSelector('test.byDefault.value')(testAppState)).toEqual('default value');
+        expect(buildSettingsOrConfigSelector('test.byDefault.value','fallback')(testAppState)).toEqual('default value');
     });
 
 

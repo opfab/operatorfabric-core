@@ -65,7 +65,7 @@ describe('CardComponent', () => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
-        spyOn(store, 'pipe').and.callFake(() => of('/test/url'));
+
 
         injector=getTestBed();
         translateService = injector.get(TranslateService);

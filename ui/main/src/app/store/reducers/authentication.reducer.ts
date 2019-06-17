@@ -27,6 +27,8 @@ export function reducer(state: AuthState = authInitialState, action: Authenticat
                 ...state,
                 identifier: payload.identifier,
                 clientId: payload.clientId,
+                firstName: payload.firstName,
+                lastName: payload.lastName,
                 token: payload.token,
                 expirationDate: payload.expirationDate,
                 message: null
@@ -39,7 +41,9 @@ export function reducer(state: AuthState = authInitialState, action: Authenticat
                 clientId: null,
                 token: null,
                 expirationDate: new Date(0),
-                message: null
+                message: null,
+                firstName: null,
+                lastName:null
             };
         }
         case AuthenticationActionTypes.RejectLogIn: {

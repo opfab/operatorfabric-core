@@ -17,7 +17,12 @@ export const selectMaxedRetries =  createSelector(selectConfigRetry, (retries:nu
 
 export const selectConfigData =  createSelector(selectConfig, (configState:ConfigState)=> configState.config)
 
-export function buildConfigSelector(path:string){
-    return createSelector(selectConfigData,(config)=>_.get(config,path,{}));
+export function buildConfigSelector(path:string, fallback: string = null){
+    return createSelector(selectConfigData,(config)=>{
+        let result = _.get(config,path,null);
+        if(!result && fallback)
+            return fallback;
+        return result;
+    });
 }
 

@@ -5,20 +5,47 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AppState} from "@ofStore/index";
 import {Store} from "@ngrx/store";
+import {selectUserNameOrIdentifier} from "@ofSelectors/authentication.selectors";
+import {Observable, of} from "rxjs";
+import {buildSettingsSelector} from "@ofSelectors/settings.selectors";
+import * as moment from 'moment-timezone';
+import {TimeService} from "@ofServices/time.service";
+import {map} from "rxjs/operators";
+import {Moment} from "moment-timezone/moment-timezone";
 
 @Component({
-  selector: 'of-info',
-  templateUrl: './info.component.html',
-  styleUrls: ['./info.component.css']
+    selector: 'of-info',
+    templateUrl: './info.component.html',
+    styleUrls: ['./info.component.scss']
 })
 export class InfoComponent implements OnInit {
+    private _userName$: Observable<string>;
+    private _description$: Observable<string>;
+    private _time$: Observable<string>
 
-  constructor(private store: Store<AppState>) { }
+    constructor(private store: Store<AppState>, private timeService: TimeService) {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+        this._userName$ = this.store.select(selectUserNameOrIdentifier);
+        this._description$ = this.store.select(buildSettingsSelector('description'));
+        this._time$ = of(moment()).pipe(
+            map((m:Moment) => this.timeService.formatTime(m))
+        )
+    }
 
+    get userName$() {
+        return this._userName$;
+    }
+
+    get description$() {
+        return this._description$;
+    }
+
+    get time$() {
+        return this._time$;
+    }
 }

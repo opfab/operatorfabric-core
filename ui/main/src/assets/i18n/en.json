@@ -2,7 +2,8 @@
   "menu": {
     "feed": "Card Feed",
     "archives": "Archives",
-    "logout": "Logout"
+    "logout": "Logout",
+    "settings": "Settings"
   },
   "feed": {
     "filters": {

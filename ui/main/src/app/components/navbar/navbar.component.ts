@@ -21,6 +21,7 @@ import * as _ from 'lodash';
 @Component({
   selector: 'of-navbar',
   templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
 
@@ -29,6 +30,7 @@ export class NavbarComponent implements OnInit {
     currentPath: any;
     private _thirdMenus: Observable<ThirdMenu[]>;
     expandedMenu:boolean[]=[];
+    expandedUserMenu=false;
 
     constructor(private store: Store<AppState>) {
     }
@@ -59,5 +61,11 @@ export class NavbarComponent implements OnInit {
         this.expandedMenu[index]=!this.expandedMenu[index];
         if(this.expandedMenu[index])
             setTimeout(()=>this.expandedMenu[index]=false,5000);
+    }
+
+    toggleUserMenu(){
+        this.expandedUserMenu=!this.expandedUserMenu;
+        if(this.expandedUserMenu)
+            setTimeout(()=>this.expandedUserMenu=false,5000);
     }
 }

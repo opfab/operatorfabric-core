@@ -15,6 +15,11 @@ export const selectSettingsLoaded =  createSelector(selectSettings, (settingsSta
 
 export const selectSettingsData =  createSelector(selectSettings, (settingsState:SettingsState)=> settingsState.settings)
 
-export function buildSettingsSelector(path:string){
-    return createSelector(selectSettingsData,(settings)=>_.get(settings,path,{}));
+export function buildSettingsSelector(path:string, fallback: any = null){
+    return createSelector(selectSettingsData,(settings)=>{
+        let result = _.get(settings,path,null);
+        if(!result && fallback)
+            return fallback;
+        return result;
+    });
 }

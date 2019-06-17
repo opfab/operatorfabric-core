@@ -10,6 +10,9 @@ import {TestBed} from '@angular/core/testing';
 import {TimeService} from './time.service';
 
 import * as moment from 'moment';
+import {RouterTestingModule} from "@angular/router/testing";
+import {StoreModule} from "@ngrx/store";
+import {appReducer} from "@ofStore/index";
 
 describe('TimeService', () => {
 
@@ -22,7 +25,11 @@ describe('TimeService', () => {
         TestBed.configureTestingModule({
             providers: [
                 TimeService
-            ]
+            ],
+            imports: [
+                RouterTestingModule,
+                StoreModule.forRoot(appReducer)
+            ],
         });
         service = TestBed.get(TimeService);
     });
@@ -45,9 +52,19 @@ describe('TimeService', () => {
         expect(service).toBeTruthy();
         expect(service.asInputString(1558686353000)).toEqual('2019-05-24T10:25:53.000');
     });
-    it('should format timestamp to date time string', () => {
+    it('should format timestamp, date and moment to date time string', () => {
         moment.locale('en');
         expect(service).toBeTruthy();
         expect(service.formatDateTime(1559721600000)).toEqual('06/05/2019 10:00 AM');
+        expect(service.formatDateTime(new Date(1559721600000))).toEqual('06/05/2019 10:00 AM');
+        expect(service.formatDateTime(moment(new Date(1559721600000)))).toEqual('06/05/2019 10:00 AM');
+    });
+
+    it('should format timestamp, date and moment to date string', () => {
+        moment.locale('en');
+        expect(service).toBeTruthy();
+        expect(service.formatDate(1559721600000)).toEqual('06/05/2019');
+        expect(service.formatDate(new Date(1559721600000))).toEqual('06/05/2019');
+        expect(service.formatDate(moment(new Date(1559721600000)))).toEqual('06/05/2019');
     });
 });

@@ -47,7 +47,8 @@ describe('SettingsSelectors', () => {
         expect(selectSettings(testAppState)).toEqual(settingsInitialState);
         expect(selectSettingsLoaded(testAppState)).toEqual(false);
         expect(selectSettingsData(testAppState)).toEqual({});
-        expect(buildSettingsSelector('test.path')(testAppState)).toEqual({});
+        expect(buildSettingsSelector('test.path')(testAppState)).toEqual(null);
+        expect(buildSettingsSelector('test.path','fallback')(testAppState)).toEqual('fallback');
     });
 
     it('manage message settings', () => {
@@ -56,7 +57,8 @@ describe('SettingsSelectors', () => {
         expect(selectSettingsLoaded(testAppState)).toEqual(false);
         expect(selectSettingsData(testAppState)).toEqual({});
         expect(selectSettingsData(testAppState)).toEqual({});
-        expect(buildSettingsSelector('test.path')(testAppState)).toEqual({});
+        expect(buildSettingsSelector('test.path')(testAppState)).toEqual(null);
+        expect(buildSettingsSelector('test.path','fallback')(testAppState)).toEqual('fallback');
     });
 
     it('manage loaded settings', () => {
@@ -65,6 +67,7 @@ describe('SettingsSelectors', () => {
         expect(selectSettingsLoaded(testAppState)).toEqual(true);
         expect(selectSettingsData(testAppState)).toEqual({test: {path: {my: {settings: 'value'}}}});
         expect(buildSettingsSelector('test.path')(testAppState)).toEqual({my: {settings: 'value'}});
+        expect(buildSettingsSelector('test.path','fallback')(testAppState)).toEqual({my: {settings: 'value'}});
     });
 
 

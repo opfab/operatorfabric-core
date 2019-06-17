@@ -2,7 +2,8 @@
   "menu": {
     "feed": "Flux de cartes",
     "archives": "Archives",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "settings": "Paramètres"
   },
   "feed": {
     "filters": {

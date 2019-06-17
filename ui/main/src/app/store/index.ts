@@ -34,6 +34,7 @@ import {ConfigState} from "@ofStates/config.state";
 import {ConfigEffects} from "@ofEffects/config.effects";
 import {TimelineState} from "@ofStates/timeline.state";
 import {SettingsState} from "@ofStates/settings.state";
+import {SettingsEffects} from "@ofEffects/settings.effects";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -49,6 +50,7 @@ export interface AppState {
 export const appEffects = [
     CardEffects,
     ConfigEffects,
+    SettingsEffects,
     CardOperationEffects,
     RouterEffects,
     CustomRouterEffects,

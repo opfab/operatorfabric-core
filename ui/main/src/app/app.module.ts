@@ -24,9 +24,11 @@ import {translateConfig} from "./translate.config";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import { InfoComponent } from './components/navbar/info/info.component';
 
 library.add(faExternalLinkAlt);
+library.add(faSignOutAlt)
 
 @NgModule({
     imports: [

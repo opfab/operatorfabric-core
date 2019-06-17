@@ -24,7 +24,10 @@ const previousState: AuthState = {
     token: getRandomAlphanumericValue(100,150),
     expirationDate: new Date(2000, 1, 1),
     message: null,
-    code: null
+    code: null,
+    firstName: 'john',
+    lastName: 'doe'
+
 };
 
 
@@ -78,6 +81,8 @@ describe('Authentication Reducer', () => {
             expect(result.expirationDate).toBe(myPayload.expirationDate);
             expect(result.identifier).toBe(myPayload.identifier);
             expect(result.token).toBe(myPayload.token);
+            expect(result.firstName).toBe(myPayload.firstName);
+            expect(result.lastName).toBe(myPayload.lastName);
         });
     });
 
@@ -91,6 +96,8 @@ describe('Authentication Reducer', () => {
             expect(result.identifier).toBeNull();
             expect(result.expirationDate).toEqual(new Date(0));
             expect(result.message).toBeNull();
+            expect(result.firstName).toBeNull();
+            expect(result.lastName).toBeNull();
         });
 
         it('shuold leave an empty state on a logged state', () => {
@@ -175,5 +182,5 @@ function produceMockPayLoadForSucessfulAuthintication(id?: string, clientId?: Gu
     if (!expiration) {
         expiration = new Date();
     }
-    return new PayloadForSuccessfulAuthentication(id, clientId, token, expiration);
+    return new PayloadForSuccessfulAuthentication(id, clientId, token, expiration,'john','doe');
 }

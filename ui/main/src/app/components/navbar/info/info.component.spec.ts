@@ -8,6 +8,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InfoComponent } from './info.component';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {RouterTestingModule} from "@angular/router/testing";
+import {StoreModule} from "@ngrx/store";
+import {appReducer} from "@ofStore/index";
+import {EffectsModule} from "@ngrx/effects";
+import {MenuEffects} from "@ofEffects/menu.effects";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {TimeService} from "@ofServices/time.service";
 
 describe('InfoComponent', () => {
   let component: InfoComponent;
@@ -15,7 +23,13 @@ describe('InfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InfoComponent ]
+      declarations: [ InfoComponent ],
+        imports: [
+            NgbModule.forRoot(),
+            RouterTestingModule,
+            StoreModule.forRoot(appReducer)
+        ],
+        providers: [TimeService]
     })
     .compileComponents();
   }));

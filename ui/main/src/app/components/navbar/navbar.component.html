@@ -28,7 +28,7 @@
         >{{'menu.'+link.path}}</a>
       </li>
       <!-- Links from menus declared in third-party bundles-->
-      <li *ngFor="let tMenu of (thirdMenus|async); let index = index;" class="nav-item" [class.dropdown]="tMenu.entries.length>1">
+      <li *ngFor="let tMenu of (thirdMenus|async); let index = index;" class="nav-item" [class.dropdown]="tMenu.entries.length>1" [class.thirds-dropdown]="tMenu.entries.length>1">
         <!-- Dropdown menu if at least 2 entries-->
         <a
                 class="nav-link dropdown-toggle"
@@ -44,26 +44,48 @@
           <div class="dropdown-item" *ngFor="let entry of tMenu.entries">
             <a class="text-dark text-decoration-none" [routerLink]="['/thirdparty',tMenu.id,tMenu.version,entry.id]" translate>
               {{tMenu.id}}.{{tMenu.version}}.{{entry.label}}</a>
-            <a style="color:inherit; padding-left: 0.5rem;" [href]="entry.url" target="_blank">
+            <a class="dropdown-item-external-link" [href]="entry.url" target="_blank">
               <fa-icon icon="external-link-alt"></fa-icon>
             </a>
           </div>
         </div>
         <!-- Navbar link if only one entry -->
-        <div class="nav-link" style="display: flex" *ngIf="tMenu.entries.length==1">
-          <a style="color: inherit; text-decoration: none;" [routerLink]="['/thirdparty',tMenu.id,tMenu.version,tMenu.entries[0].id]"
+        <div class="nav-link single-third-menu-entry" *ngIf="tMenu.entries.length==1">
+          <a class="dropdown-item-internal-link" [routerLink]="['/thirdparty',tMenu.id,tMenu.version,tMenu.entries[0].id]"
                 routerLinkActive #rla="routerLinkActive"
                 translate
           >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.entries[0].label}}</a>
-          <a style="color: inherit; text-decoration: none; padding-left: 0.5rem;" [href]="tMenu.entries[0].url" target="_blank">
+          <a class="dropdown-item-external-link" [href]="tMenu.entries[0].url" target="_blank">
             <fa-icon icon="external-link-alt"></fa-icon>
           </a>
         </div>
       </li>
-      <li>
-        <form>
-          <button type="button" class="btn btn-link btn-logout" (click)="logOut()" translate>menu.logout</button>
-        </form>
+    </ul>
+    <ul class="navbar-nav navbar-right">
+      <li class="nav-item dropdown align-middle">
+        <a
+                class="nav-link dropdown-toggle"
+                id="drop_user_menu"
+                [attr.aria-expanded]="expandedUserMenu"
+                (click)="toggleUserMenu()"
+        ><of-info></of-info></a>
+        <div class="dropdown-menu dropdown-menu-right"
+             [ngbCollapse]="!expandedUserMenu">
+          <div class="dropdown-item">
+            <a
+                    class="nav-link text-dark text-decoration-none"
+                    routerLink="/settings"
+                    routerLinkActive #rla="routerLinkActive"
+                    translate
+            >menu.settings</a>
+          </div>
+          <div class="dropdown-item">
+            <form>
+              <a class="nav-link text-dark text-decoration-none" (click)="logOut()">
+                <span translate>menu.logout</span>&nbsp;<fa-icon icon="sign-out-alt"></fa-icon></a>
+            </form>
+          </div>
+        </div>
       </li>
     </ul>
   </div>

@@ -4,6 +4,6 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<p>
-  info works!
-</p>
+<div class="text-center navbar-info-block" ngbTooltip="{{description$|async}}" placement="bottom">
+    <span class="user-name text-white">{{userName$|async}}</span><br><span class="time text-white">{{time$|async}}</span>
+</div>

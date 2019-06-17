@@ -14,7 +14,7 @@ export const selectMergedSettings =  (state:AppState) =>{
     return _.merge(configSettings,settings);
 };
 
-export function buildSettingsOrConfigSelector(path:string){
+export function buildSettingsOrConfigSelector(path:string,fallback:any = null){
     return (state:AppState) => {
         const settings = state.settings.settings;
         const config = state.config.config;
@@ -22,6 +22,8 @@ export function buildSettingsOrConfigSelector(path:string){
         if(!result){
             result = _.get(config,`settings.${path}`,null);
         }
+        if(!result && fallback)
+            return fallback
         return result;
     }
 }

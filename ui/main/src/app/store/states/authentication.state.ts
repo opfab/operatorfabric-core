@@ -15,6 +15,8 @@ export interface AuthState {
     token: string;
     expirationDate: Date;
     message: Message;
+    firstName: string;
+    lastName: string;
 }
 
 export const authInitialState: AuthState = {
@@ -23,5 +25,7 @@ export const authInitialState: AuthState = {
     clientId: null,
     token: null,
     expirationDate: new Date(0),
-    message: null
+    message: null,
+    firstName: null,
+    lastName: null
 };

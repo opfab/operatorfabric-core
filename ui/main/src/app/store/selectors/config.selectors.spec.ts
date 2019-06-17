@@ -53,7 +53,8 @@ describe('ConfigSelectors', () => {
         expect(selectConfigRetry(testAppState)).toEqual(0);
         expect(selectMaxedRetries(testAppState)).toEqual(false);
         expect(selectConfigData(testAppState)).toEqual({});
-        expect(buildConfigSelector('test.path')(testAppState)).toEqual({});
+        expect(buildConfigSelector('test.path')(testAppState)).toEqual(null);
+        expect(buildConfigSelector('test.path','fallback')(testAppState)).toEqual('fallback');
     });
 
     it('manage message config', () => {
@@ -64,7 +65,7 @@ describe('ConfigSelectors', () => {
         expect(selectMaxedRetries(testAppState)).toEqual(true);
         expect(selectConfigData(testAppState)).toEqual({});
         expect(selectConfigData(testAppState)).toEqual({});
-        expect(buildConfigSelector('test.path')(testAppState)).toEqual({});
+        expect(buildConfigSelector('test.path')(testAppState)).toEqual(null);
     });
 
     it('manage loaded config', () => {
@@ -75,6 +76,7 @@ describe('ConfigSelectors', () => {
         expect(selectMaxedRetries(testAppState)).toEqual(false);
         expect(selectConfigData(testAppState)).toEqual({test: {path: {my: {config: 'value'}}}});
         expect(buildConfigSelector('test.path')(testAppState)).toEqual({my: {config: 'value'}});
+        expect(buildConfigSelector('test.path','fallback')(testAppState)).toEqual({my: {config: 'value'}});
     });
 
 
