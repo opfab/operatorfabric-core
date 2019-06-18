@@ -77,23 +77,36 @@ definitions:
     properties:
       login:
         type: string
+        description: User login
+      email:
+        type: string
+        description: User email
       description:
         type: string
+        description: 'Free user description label (ex: organization role)'
       timeZone:
         type: string
+        description: User time zone (See https://momentjs.com)
       locale:
         type: string
+        description: User using browser format
       timeFormat:
         type: string
+        description: Time formatting (See https://momentjs.com)
       dateFormat:
         type: string
+        description: Date formatting (See https://momentjs.com)
       defaultTags:
         type: array
+        description: Default tags used in tag filter
         items:
           type: string
           uniqueItems: true
+    required:
+      - login
     example:
       login: jcleese
+      email: john.cleese@monty.python.org
       description: once played Sir Lancelot
       timezone: Europe/London
       locale: en-GB
