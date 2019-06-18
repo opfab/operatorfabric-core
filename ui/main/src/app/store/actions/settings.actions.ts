@@ -11,6 +11,11 @@ export enum SettingsActionTypes {
     LoadSettings = '[Settings] Load Settings',
     LoadSettingsSuccess = '[Settings] Load Settings Success',
     LoadSettingsFailure = '[Settings] Load Settings Fail',
+
+    PatchSettings = '[Settings] Patch Settings',
+    PatchSettingsSuccess = '[Settings] Patch Settings Success',
+    PatchSettingsFailure = '[Settings] Patch Settings Fail',
+
     HandleUnexpectedError = '[Settings] Handle unexpected error related to user settings issue'
 }
 // needed by NGRX entities
@@ -34,6 +39,26 @@ export class LoadSettingsSuccess implements Action {
     }
 }
 
+export class PatchSettings implements Action {
+    readonly type = SettingsActionTypes.PatchSettings;
+    constructor(public payload: {settings:any}){}
+}
+export class PatchSettingsFailure implements Action {
+    readonly type = SettingsActionTypes.PatchSettingsFailure;
+
+    /* istanbul ignore next */
+    constructor(public payload: { error: Error }) {
+    }
+}
+
+export class PatchSettingsSuccess implements Action {
+    readonly type = SettingsActionTypes.PatchSettingsSuccess;
+
+    /* istanbul ignore next */
+    constructor(public payload: { settings: any }) {
+    }
+}
+
 export class HandleUnexpectedError implements Action {
     /* istanbul ignore next */
     readonly type = SettingsActionTypes.HandleUnexpectedError;
@@ -47,4 +72,7 @@ export type SettingsActions =
     LoadSettings
     | LoadSettingsSuccess
     | LoadSettingsFailure
+    | PatchSettings
+    | PatchSettingsSuccess
+    | PatchSettingsFailure
     | HandleUnexpectedError;

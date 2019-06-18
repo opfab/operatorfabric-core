@@ -26,6 +26,10 @@ export class SettingsService {
     }
 
     fetchUserSettings(): Observable<any> {
-        return this.httpClient.get(`${this.usersUrl}/users/${this.userId}/settings`)
+        return this.httpClient.get(`${this.usersUrl}/users/${this.userId}/settings`);
+    }
+
+    patchUserSettings(settings:any): Observable<any> {
+        return this.httpClient.patch(`${this.usersUrl}/users/${this.userId}/settings`, settings);
     }
 }

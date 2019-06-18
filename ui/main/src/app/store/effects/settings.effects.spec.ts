@@ -8,7 +8,13 @@
 import {SettingsEffects} from './settings.effects';
 import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
-import {LoadSettings, LoadSettingsSuccess, SettingsActions, SettingsActionTypes} from "@ofActions/settings.actions";
+import {
+    LoadSettings,
+    LoadSettingsSuccess,
+    PatchSettings, PatchSettingsSuccess,
+    SettingsActions,
+    SettingsActionTypes
+} from "@ofActions/settings.actions";
 import {async} from "@angular/core/testing";
 import {SettingsService} from "@ofServices/settings.service";
 import {Store} from "@ngrx/store";
@@ -22,7 +28,7 @@ describe('SettingsEffects', () => {
     let mockStore: SpyObj<Store<AppState>>;
 
     beforeEach(async(() => {
-        settingsService = jasmine.createSpyObj('SettingsService', ['fetchUserSettings']);
+        settingsService = jasmine.createSpyObj('SettingsService', ['fetchUserSettings','patchUserSettings']);
         mockStore = jasmine.createSpyObj('Store', ['dispatch', 'select']);
 
     }))
@@ -65,6 +71,32 @@ describe('SettingsEffects', () => {
 
             expect(effects).toBeTruthy();
             expect(effects.loadSettingsOnLogin).toBeObservable(localExpected);
+        });
+    });
+    describe('patchSettings', () => {
+        it('should return a PatchSettingsSuccess when the settingsService patches settings', () => {
+            const expectedSettings = {value1: 1,value2: 2};
+
+            const localActions$ = new Actions(hot('-a--', {a: new PatchSettings({settings:{value2: 2}})}));
+
+            // const localMockSettingsService = jasmine.createSpyObj('SettingsService', ['fetchSettingsuration']);
+
+            settingsService.patchUserSettings.and.returnValue(hot('---b', {b: expectedSettings}));
+            const expectedAction = new PatchSettingsSuccess({settings: expectedSettings});
+            const localExpected = hot('---c', {c: expectedAction});
+
+            effects = new SettingsEffects(mockStore, localActions$, settingsService);
+
+            expect(effects).toBeTruthy();
+            expect(effects.patchSettings).toBeObservable(localExpected);
+        });
+        it('should return a PatchSettingsFailure when the settingsService doesn\'t patch settings', () => {
+
+            const localActions$ = new Actions(hot('-a--', {a: new PatchSettings({settings:{}})}));
+            settingsService.patchUserSettings.and.returnValue(hot('---#'));
+            effects = new SettingsEffects(mockStore, localActions$, settingsService);
+            expect(effects).toBeTruthy();
+            effects.patchSettings.subscribe((action: SettingsActions) => expect(action.type).toEqual(SettingsActionTypes.PatchSettingsFailure));
         });
     });
 });

@@ -8,10 +8,16 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
-import {LoadSettings, LoadSettingsFailure, LoadSettingsSuccess, SettingsActionTypes} from "@ofActions/settings.actions";
+import {
+    LoadSettings,
+    LoadSettingsFailure,
+    LoadSettingsSuccess, PatchSettings, PatchSettingsFailure,
+    PatchSettingsSuccess,
+    SettingsActionTypes
+} from "@ofActions/settings.actions";
 import {AcceptLogIn, AuthenticationActionTypes} from "@ofActions/authentication.actions";
 import {SettingsService} from "@ofServices/settings.service";
 
@@ -37,10 +43,7 @@ export class SettingsEffects {
             map((settings: any) => {
                 return new LoadSettingsSuccess({settings: settings});
             }),
-            catchError((err, caught) => {
-                this.store.dispatch(new LoadSettingsFailure(err));
-                return caught;
-            })
+            catchError((err, caught) => of(new LoadSettingsFailure(err)))
         );
 
     @Effect()
@@ -49,5 +52,11 @@ export class SettingsEffects {
       map(a=>new LoadSettings())
     );
 
-    
+    @Effect()
+    patchSettings: Observable<Action> = this.actions$.pipe(
+        ofType(SettingsActionTypes.PatchSettings),
+        switchMap((action:PatchSettings)=>this.service.patchUserSettings(action.payload.settings)),
+        map(settings => new PatchSettingsSuccess({settings:settings})),
+        catchError((err, caught) => of(new PatchSettingsFailure(err)))
+    );
 }

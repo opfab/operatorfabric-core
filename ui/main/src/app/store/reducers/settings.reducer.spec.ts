@@ -9,7 +9,7 @@ import {reducer} from "@ofStore/reducers/settings.reducer";
 import {getRandomAlphanumericValue} from "@tests/helpers";
 import {
     LoadSettings,
-    LoadSettingsFailure, LoadSettingsSuccess
+    LoadSettingsFailure, LoadSettingsSuccess, PatchSettings, PatchSettingsFailure, PatchSettingsSuccess
 } from "@ofActions/settings.actions";
 import {settingsInitialState, SettingsState} from "@ofStates/settings.state";
 
@@ -85,6 +85,66 @@ describe('Config Reducer', () => {
 
             const actualSettings = {setting:'config2'};
             const actualState = reducer(previousState, new LoadSettingsSuccess({settings: actualSettings}));
+            expect(actualState).not.toBe(previousState);
+            expect(actualState).not.toEqual(previousState);
+            expect(actualState.error).toEqual(previousState.error);
+            expect(actualState.loading).toEqual(false);
+            expect(actualState.settings).toEqual(actualSettings);
+            expect(actualState.loaded).toEqual(true);
+        });
+    });
+    describe('Patch Setting action', () => {
+        it('should set state loading to true', () => {
+            // settingsInitialState.patch is false
+            const actualState = reducer(settingsInitialState,
+                new PatchSettings({settings:{prop:"value"}}));
+            expect(actualState).not.toBe(settingsInitialState);
+            expect(actualState.loading).toEqual(true);
+        });
+        it('should leave state loading to true', () => {
+            const previousState: SettingsState = {
+                settings: null,
+                loading: true,
+                error: null,
+                loaded:false
+            }
+            const actualState = reducer(previousState,
+                new PatchSettings({settings:{prop:"value"}}));
+            expect(actualState).not.toBe(previousState);
+            expect(actualState).toEqual(previousState);
+        });
+    });
+    describe('PatchSettingsFailure', () => {
+        it('should set loading to false and message to specific message', () => {
+            const actualSettings = {test:'config'};
+            const previousState: SettingsState = {
+                settings: actualSettings,
+                loading: true,
+                error: null,
+                loaded:false
+            };
+            const actualState = reducer(previousState,
+                new PatchSettingsFailure({error: new Error(getRandomAlphanumericValue(5, 12))}));
+            expect(actualState).not.toBe(previousState);
+            expect(actualState).not.toEqual(previousState);
+            expect(actualState.loading).toEqual(false);
+            expect(actualState.error).not.toBeNull();
+            expect(actualState.loaded).toEqual(false);
+
+        });
+    });
+    describe('PatchSettingsSuccess', () => {
+        it('should set loading to false and settings to payload', () => {
+            const previousSettings = {test:'config'};
+            const previousState: SettingsState = {
+                settings: previousSettings,
+                loading: true,
+                error: getRandomAlphanumericValue(5, 12),
+                loaded:false
+            };
+
+            const actualSettings = {setting:'config2'};
+            const actualState = reducer(previousState, new PatchSettingsSuccess({settings: actualSettings}));
             expect(actualState).not.toBe(previousState);
             expect(actualState).not.toEqual(previousState);
             expect(actualState.error).toEqual(previousState.error);

@@ -22,7 +22,7 @@ describe('Thirds Services', () => {
         setting1: 'one',
         setting2: 'two'
     };
-    let urlSettings = `${environment.urls.users}/users/test-user/settings`;
+    let settingsUrl = `${environment.urls.users}/users/test-user/settings`;
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -57,9 +57,20 @@ describe('Thirds Services', () => {
             settingsService.fetchUserSettings().subscribe(
                 result => expect(eval(result)).toBe(settings)
             )
-            let calls = httpMock.match(req => req.url == urlSettings);
+            let calls = httpMock.match(req => req.url == settingsUrl);
             expect(calls.length).toEqual(1);
             calls[0].flush(settings);
+        });
+
+    });
+    describe('#patchSettings', () => {
+        it('should return settings on 200', () => {
+            settingsService.patchUserSettings({patched:"value"}).subscribe(
+                result => expect(eval(result)).toEqual({...settings, patched: "value"})
+            )
+            let calls = httpMock.match(req => req.url == settingsUrl);
+            expect(calls.length).toEqual(1);
+            calls[0].flush({...settings, patched: "value"});
         });
 
     });
