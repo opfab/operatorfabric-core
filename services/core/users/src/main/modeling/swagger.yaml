@@ -96,6 +96,9 @@ definitions:
       dateFormat:
         type: string
         description: Date formatting (See https://momentjs.com)
+      dateTimeFormat:
+        type: string
+        description: Date Time formatting (See https://momentjs.com). If not set dateFormat and timeFormat are used to deduce date time format.
       defaultTags:
         type: array
         description: Default tags used in tag filter

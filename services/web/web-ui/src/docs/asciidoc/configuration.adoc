@@ -36,6 +36,7 @@ For other configuration see:
 |operatorfabric.settings.timeZone||no|Default user time zone for users (use browser time zone if not set)
 |operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
 |operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
+|operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
 |operatorfabric.settings.locale|LT|no|Default user locale (use browser if not set)
 |operatorfabric.settings.default-tags||no|Default user list of filtered in tags
 

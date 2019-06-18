@@ -20,6 +20,7 @@ public class UserSettingsData implements UserSettings {
     private String locale;
     private String timeFormat;
     private String dateFormat;
+    private String dateTimeFormat;
     private String email;
     @JsonIgnore
     @Singular("defaultTag")
@@ -32,6 +33,7 @@ public class UserSettingsData implements UserSettings {
         this.locale = settings.getLocale();
         this.timeFormat = settings.getTimeFormat();
         this.dateFormat = settings.getDateFormat();
+        this.dateTimeFormat = settings.getDateFormat();
         this.defaultTagsSet = new HashSet<>(settings.getDefaultTags());
         this.email = settings.getEmail();
     }
@@ -82,6 +84,7 @@ public class UserSettingsData implements UserSettings {
         result.locale = other.getLocale() != null ? other.getLocale() : this.getLocale();
         result.timeFormat = other.getTimeFormat() != null ? other.getTimeFormat() : this.getTimeFormat();
         result.dateFormat = other.getDateFormat() != null ? other.getDateFormat() : this.getDateFormat();
+        result.dateTimeFormat = other.getDateTimeFormat() != null ? other.getDateTimeFormat() : this.getDateTimeFormat();
         result.email = other.getEmail() != null ? other.getEmail() : this.getEmail();
         Set<String> tags = new HashSet<>(other.getDefaultTags());
         tags.addAll(this.getDefaultTags());
