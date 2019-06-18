@@ -114,7 +114,6 @@ describe('CardComponent', () => {
 
         expect(lightCardDetailsComp.open).toBeFalsy();
         lightCardDetailsComp.select();
-        expect(lightCardDetailsComp.open).toBeTruthy();
         expect(router.navigate).toHaveBeenCalledWith(['/'+lightCardDetailsComp.currentPath,'cards',lightCard.id]);
     });
 

@@ -42,16 +42,16 @@ public class UserSettingsData implements UserSettings {
         return defaultTagsSet;
     }
 
-    public void addDefaultTag(String tag){
-        if(this.defaultTagsSet == null)
-            this.defaultTagsSet = new HashSet<>();
-        this.defaultTagsSet.add(tag);
-    }
-
-    public void deleteDefaultTag(String tag){
-        if(this.defaultTagsSet!= null)
-            this.defaultTagsSet.remove(tag);
-    }
+//    public void addDefaultTag(String tag){
+//        if(this.defaultTagsSet == null)
+//            this.defaultTagsSet = new HashSet<>();
+//        this.defaultTagsSet.add(tag);
+//    }
+//
+//    public void deleteDefaultTag(String tag){
+//        if(this.defaultTagsSet!= null)
+//            this.defaultTagsSet.remove(tag);
+//    }
 
     @Override
     public List<String> getDefaultTags() {
@@ -65,18 +65,27 @@ public class UserSettingsData implements UserSettings {
         defaultTagsSet = new HashSet<>(defaultTags);
     }
 
-    public UserSettingsData patch(UserSettings settings) {
+    /**
+     * Create a new patched settings using this as reference and overiding fields from other parameter when filed is not
+     * null.
+     * <br>
+     * NB: resulting field defaultTags is the addition of collectins from both sides
+     * NB2: login cannot be changed
+     * @param other
+     * @return
+     */
+    public UserSettingsData patch(UserSettings other) {
         UserSettingsData result = new UserSettingsData();
-        result.login = settings.getLogin() != null ? settings.getLogin() : this.getLogin();
-        result.description = settings.getDescription() != null ? settings.getDescription() : this.getDescription();
-        result.timeZone = settings.getTimeZone() != null ? settings.getTimeZone() : this.getTimeZone();
-        result.locale = settings.getLocale() != null ? settings.getLocale() : this.getLocale();
-        result.timeFormat = settings.getTimeFormat() != null ? settings.getTimeFormat() : this.getTimeFormat();
-        result.dateFormat = settings.getDateFormat() != null ? settings.getDateFormat() : this.getDateFormat();
-        if (settings.getDefaultTags() != null)
-            result.defaultTagsSet = new HashSet<>(settings.getDefaultTags());
-        else if (this.defaultTagsSet != null)
-            result.defaultTagsSet = new HashSet<>(this.getDefaultTags());
+        result.login = this.login;
+        result.description = other.getDescription() != null ? other.getDescription() : this.getDescription();
+        result.timeZone = other.getTimeZone() != null ? other.getTimeZone() : this.getTimeZone();
+        result.locale = other.getLocale() != null ? other.getLocale() : this.getLocale();
+        result.timeFormat = other.getTimeFormat() != null ? other.getTimeFormat() : this.getTimeFormat();
+        result.dateFormat = other.getDateFormat() != null ? other.getDateFormat() : this.getDateFormat();
+        result.email = other.getEmail() != null ? other.getEmail() : this.getEmail();
+        Set<String> tags = new HashSet<>(other.getDefaultTags());
+        tags.addAll(this.getDefaultTags());
+        result.defaultTagsSet = tags;
         return result;
     }
 }
