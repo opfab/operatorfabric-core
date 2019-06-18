@@ -9,6 +9,7 @@ package org.lfenergy.operatorfabric.cards.consultation.routes;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,8 +40,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.creat
 @Tag("end-to-end")
 @Tag("mongo")
 @Slf4j
-@WithMockOpFabUser(login="userWithNoGroup", roles = {})
-public class GivenUserWithNoGroupCardRoutesShould {
+public class CardRoutesShould {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -54,23 +54,64 @@ public class GivenUserWithNoGroupCardRoutesShould {
         repository.deleteAll().subscribe();
 
     }
-    @Test
-    public void respondOkIfOptions(){
-        assertThat(cardRoutes).isNotNull();
-        webTestClient.options().uri("/cards/id").exchange()
-                .expectStatus().isOk();
+
+    @Nested
+    @WithMockOpFabUser(login="userWithGroup", roles = {"SOME_GROUP"})
+    public class GivenUserWithGroupCardRoutesShould {
+
+        @Test
+        public void respondOkIfOptions() {
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.options().uri("/cards/id").exchange()
+                    .expectStatus().isOk();
+        }
+
+        @Test
+        public void respondNotFound() {
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/id").exchange()
+                    .expectStatus().isNotFound();
+        }
+
+        @Test
+        public void findOutCard() {
+            CardConsultationData simpleCard = createSimpleCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
+            StepVerifier.create(repository.save(simpleCard))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+                    .expectStatus().isOk()
+                    .expectBody(CardConsultationData.class).value(card -> {
+                assertThat(card).isEqualToComparingFieldByFieldRecursively(simpleCard);
+            });
+        }
     }
 
-    @Test
-    public void findOutCard(){
-        CardConsultationData simpleCard = createSimpleCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
-        StepVerifier.create(repository.save(simpleCard))
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
-        assertThat(cardRoutes).isNotNull();
-        webTestClient.get().uri("/cards/{id}",simpleCard.getId()).exchange()
-                .expectStatus().isForbidden()
-        ;
+    @Nested
+    @WithMockOpFabUser(login="userWithNoGroup", roles = {})
+    public class GivenUserWithNoGroupCardRoutesShould {
+
+        @Test
+        public void respondOkIfOptions(){
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.options().uri("/cards/id").exchange()
+                    .expectStatus().isOk();
+        }
+
+        @Test
+        public void findOutCard(){
+            CardConsultationData simpleCard = createSimpleCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
+            StepVerifier.create(repository.save(simpleCard))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}",simpleCard.getId()).exchange()
+                    .expectStatus().isForbidden()
+            ;
+        }
+
     }
 }
