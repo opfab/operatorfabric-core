@@ -1,7 +1,7 @@
 # Supported Tags
 ## Releases
 * 0.1.1.RELEASE
-* 0.4.1.RELEASE
+* 0.5.1.SNAPSHOT
 ## Snapshot
 ## Short cuts
 * snaphot -> 0.2.1.SNAPSHOT
