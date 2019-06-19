@@ -32,10 +32,13 @@ export class AppComponent implements OnInit {
     configLoaded: boolean = false ;
     private maxedRetries: boolean = false;
 
-    constructor(private store: Store<AppState>,
-                private i18n: I18nService) {
+    /**
+     * NB: I18nService is injected to trigger its constructor at application startup
+     * @param store
+     * @param i18nService
+     */
+    constructor(private store: Store<AppState>,private i18nService:I18nService) {
         this.getRoutePE = this.store.pipe(select(selectRouterState));
-        this.i18n.configureI18nWithEnglishAsDefault();
     }
 
     /**

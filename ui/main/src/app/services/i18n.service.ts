@@ -8,21 +8,48 @@
 import {Injectable} from '@angular/core';
 import * as moment from 'moment-timezone';
 import {TranslateService} from "@ngx-translate/core";
+import {Store} from "@ngrx/store";
+import {AppState} from "@ofStore/index";
+import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
+import {withLatestFrom} from "rxjs/operators";
+import {zip} from "rxjs";
 
 @Injectable()
 export class I18nService {
 
-    constructor(private translate: TranslateService) {
+    private _locale:string;
+    private _timeZone:string;
+
+    constructor(private translate: TranslateService,private store: Store<AppState>) {
+        zip(
+        this.store.select(buildSettingsOrConfigSelector('locale')),
+        this.store.select(buildSettingsOrConfigSelector('timeZone' )))
+
+            .subscribe(([locale,timeZone]) =>this.changeLocale(locale, timeZone));
     }
 
-    public changeLocale(locale:string){
-        moment.locale(locale);
-        this.translate.use(locale);
+    public changeLocale(locale:string, timeZone: string){
+        if(locale) {
+            this._locale = locale;
+        }else{
+            this._locale = this.translate.getBrowserLang();
+        }
+        moment.locale(this._locale);
+        this.translate.use(this._locale);
+        if(timeZone) {
+            this._timeZone = timeZone;
+        }else{
+            timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }
+            moment.tz.setDefault(timeZone);
     }
 
-    public configureI18nWithEnglishAsDefault() {
-        this.translate.setDefaultLang('en');
-        const browserLang = this.translate.getBrowserLang();
-        this.changeLocale(browserLang);
+    public get locale(){
+        return this._locale;
     }
+
+    public get timeZone(){
+        return this._timeZone;
+    }
+
 }

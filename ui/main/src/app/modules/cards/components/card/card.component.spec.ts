@@ -73,7 +73,7 @@ describe('CardComponent', () => {
         translateService.setDefaultLang("en");
         // translateService.use("en");
         i18nService = injector.get(I18nService);
-        i18nService.changeLocale('en');
+        i18nService.changeLocale('en',null);
 
     }));
 
@@ -123,14 +123,14 @@ describe('CardComponent', () => {
     });
 
     it( 'should handle timestamp in English', () => {
-        i18nService.changeLocale('en');
+        i18nService.changeLocale('en',null);
         const timeStampFor5June2019at10AM = 1559721600000;
         const FiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(timeStampFor5June2019at10AM);
         expect(FiveJune2019at10AMDateString).toEqual('06/05/2019 10:00 AM');
         });
 
     it( 'should handle timestamp in French', () => {
-        i18nService.changeLocale('fr');
+        i18nService.changeLocale('fr',null);
         const timeStampFor5June2019at10AM = 1559721600000;
         const FiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(timeStampFor5June2019at10AM);
         expect(FiveJune2019at10AMDateString).toEqual('05/06/2019 10:00');
