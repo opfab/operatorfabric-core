@@ -33,9 +33,11 @@ export class XAxisTickFormatPipe implements PipeTransform {
    * @param clusterLevel
    */
   transformAdvanced(value: any, clusterLevel: string): string {
-    const date = moment(value);
-    if (date) {
-      return date.format('HH') + 'h';
+    if (clusterLevel) {
+      const date = moment(value);
+      if (date) {
+        return date.format('HH') + 'h';
+      }
     }
     return '';
   }

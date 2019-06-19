@@ -1,18 +1,18 @@
-import { Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import * as timelineSelectors from '@ofSelectors/timeline.selectors';
-import {catchError} from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged} from 'rxjs/operators';
 
 @Component({
   selector: 'of-init-chart',
   templateUrl: './init-chart.component.html',
   styleUrls: ['./init-chart.component.scss']
 })
-export class InitChartComponent implements OnInit {
+export class InitChartComponent implements OnInit, OnDestroy {
   @Input() conf;
   @Input() confZoom;
 
@@ -20,6 +20,7 @@ export class InitChartComponent implements OnInit {
   public arrayChartData: any[];
   public myDomain: number[];
   data$: Observable<any[]>;
+  subscription: Subscription;
 
   // options of Timeline
   public enableDrag: boolean;
@@ -81,13 +82,21 @@ export class InitChartComponent implements OnInit {
     this.setChartData();
   }
 
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   /**
    * subscribe on timeline's State data
    * feed arrayChartData with values from data Observable
    */
   setChartData(): void {
-    this.data$.subscribe(value => {
-      const chartData = value.map(d => d);
+    this.subscription = this.data$.pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe(value => {
+      console.log('init-chart subscribe');
+      const chartData = _.cloneDeep(value);
       this.setArrayChartData(chartData);
     });
   }

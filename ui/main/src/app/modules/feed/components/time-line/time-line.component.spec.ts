@@ -23,15 +23,17 @@ import { getOneRandomLigthCard } from '@tests/helpers';
 import { LoadLightCardsSuccess } from '@ofActions/light-card.actions';
 import { LightCard } from '@ofModel/light-card.model';
 import * as fromStore from '@ofSelectors/feed.selectors';
+import * as timelineSelectors from '@ofSelectors/timeline.selectors';
 import { DraggableDirective } from './app-draggable';
 import { MouseWheelDirective } from './mouse-wheel.directive';
 import { XAxisTickFormatPipe } from './x-axis-tick-format.pipe';
+import * as moment from 'moment';
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
-  // let componentInit: InitChartComponent;
   let store: Store<AppState>;
   let fixture: ComponentFixture<TimeLineComponent>;
+  // let componentInit: InitChartComponent;
   // let fixtureInit: ComponentFixture<InitChartComponent>;
 
   beforeEach(() => {
@@ -55,10 +57,68 @@ describe('TimeLineComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it('should init timeline', () => {
+    component.ngOnInit();
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
+
+  it('should return a date formatted by a cluster level W ' +
+    'from dateWithSpaceBeforeMom function', () => {
+    const actualMoment = moment();
+    actualMoment.hours(0);
+    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), 'W');
+    const dateMoment = moment(actualMoment);
+    dateMoment.minutes(0).seconds(0).millisecond(0);
+    dateMoment.subtract(3 * 4, 'hours');
+    expect(date.valueOf()).toEqual(dateMoment.valueOf());
+  });
+
+
+  it('should return a date formatted by a cluster level D-7 ' +
+    'from dateWithSpaceBeforeMom function', () => {
+    const actualMoment = moment();
+    actualMoment.hours(1);
+    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), 'D-7');
+    const dateMoment = moment(actualMoment);
+    dateMoment.minutes(0).seconds(0).millisecond(0);
+    dateMoment.subtract(13, 'hours');
+    expect(date.valueOf()).toEqual(dateMoment.valueOf());
+  });
+
+
+  it('should return a date formatted by a cluster level M ' +
+    'from dateWithSpaceBeforeMom function', () => {
+    const actualMoment = moment();
+    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), 'M');
+    const dateMoment = moment(actualMoment);
+    dateMoment.startOf('day');
+    dateMoment.subtract(3, 'days');
+    expect(date.valueOf()).toEqual(dateMoment.valueOf());
+  });
+
+
+  it('should return a date formatted by a cluster level Y ' +
+    'from dateWithSpaceBeforeMom function', () => {
+    // referenceMoment date is after the half of the Month
+    const referenceMoment = moment();
+    referenceMoment.date(17);
+    let date = component.dateWithSpaceBeforeMoment(moment(referenceMoment), 'Y');
+    let dateMoment = moment(referenceMoment);
+    dateMoment.startOf('day');
+    dateMoment.startOf('month');
+    dateMoment.subtract(1, 'months');
+    expect(date.valueOf()).toEqual(dateMoment.valueOf());
+    // referenceMoment date is before the half of the Month
+    referenceMoment.date(4);
+    date = component.dateWithSpaceBeforeMoment(moment(referenceMoment), 'Y');
+    dateMoment = moment(referenceMoment);
+    dateMoment.startOf('day');
+    dateMoment.date(16);
+    dateMoment.subtract(2, 'months');
+    expect(date.valueOf()).toEqual(dateMoment.valueOf());
+  });
+
 
 /*  it('should create', async() => {
     fixture.detectChanges();
@@ -78,26 +138,8 @@ describe('TimeLineComponent', () => {
     expect(component).toBeTruthy();
   });*/
 
-  it('should create timeline with other conf', () => {
-    const conf = {
-      enableDrag: true,
-      enableZoom: false,
-      autoScale: true,
-      animations: true,
-      showGridLines: false,
-      realTimeBar: false,
-      centeredOnTicks: false,
-      circleDiameter: 12,
-    };
-    component.conf = conf;
-    fixture.detectChanges();
-    component.conf = conf;
-    expect(component).toBeTruthy();
-  });
-
-  it('should create a list with one element when there are ' +
+  it('should create a list with one element when there is ' +
       'only one card in the state', () => {
-    // const compiled = fixture.debugElement.nativeElement;
     fixture.detectChanges();
     const oneCard = getOneRandomLigthCard();
     const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
@@ -106,17 +148,27 @@ describe('TimeLineComponent', () => {
     lightCards$.subscribe(lightCard => {
       expect(lightCard).toEqual([oneCard]);
     });
+    const dataCard = [{
+      startDate: oneCard.startDate,
+      endDate: oneCard.endDate,
+      severity: oneCard.severity,
+    }];
+    const data$ = store.select((timelineSelectors.selectTimelineSelection));
+    data$.subscribe(value => {
+      expect(value).toEqual(dataCard);
+    });
     expect(store.dispatch).toHaveBeenCalledWith(action);
     expect(component).toBeTruthy();
-    // const compiled = fixture.debugElement.nativeElement;
-/*
     // title exists
-    // expect(compiled.querySelector('h3').textContent).toContain('Feed');
+    // expect(compiled.childrend[0]); // .querySelector('h3').textContent).toContain('Feed');
     // a list exists
-    expect(compiled.querySelector('.feed-content > div')).toBeTruthy();*/
+    // expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
   });
 
-  it('should create four differents circles when there are ' +
+  //const compiled = fixture.debugElement.nativeElement.children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[0].children[4];
+  //console.log('childrendnnnnn', compiled);
+
+  it('should create four differents circles when there is ' +
       'four cards with differents severity in the state', () => {
     // const compiled = fixture.debugElement.nativeElement;
     fixture.detectChanges();
@@ -130,10 +182,31 @@ describe('TimeLineComponent', () => {
     lightCards$.subscribe(lightCard => {
       expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard]);
     });
+    const dataCard = [{
+      startDate: oneCard.startDate,
+      endDate: oneCard.endDate,
+      severity: oneCard.severity,
+    }, {
+      startDate: actionCard.startDate,
+      endDate: actionCard.endDate,
+      severity: actionCard.severity,
+    }, {
+      startDate: alarmCard.startDate,
+      endDate: alarmCard.endDate,
+      severity: alarmCard.severity,
+    }, {
+      startDate: notificationCard.startDate,
+      endDate: notificationCard.endDate,
+      severity: notificationCard.severity,
+    }];
+    const data$ = store.select((timelineSelectors.selectTimelineSelection));
+    data$.subscribe(value => {
+      expect(value).toEqual(dataCard);
+    });
     expect(store.dispatch).toHaveBeenCalledWith(action);
     expect(component).toBeTruthy();
-    // const compiled = fixture.debugElement.nativeElement;
 /*
+    // const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
     // counts the list elements
     const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));

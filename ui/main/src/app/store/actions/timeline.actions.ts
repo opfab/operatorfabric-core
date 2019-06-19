@@ -9,7 +9,7 @@ import {Action} from '@ngrx/store';
 
 export enum TimelineActionTypes {
     InitTimeline = '[timeline] Init timeline',
-    AddCardDataTimeline = '[timeline] Add Card to data'
+    SetCardDataTimeline = '[timeline] Set Card Data'
 }
 
 export class InitTimeline implements Action {
@@ -17,11 +17,11 @@ export class InitTimeline implements Action {
     constructor(public payload:{data: any[]}){}
 }
 
-export class AddCardDataTimeline implements Action {
-    readonly type = TimelineActionTypes.AddCardDataTimeline
-    constructor(public payload:{cardTimeline: any}){}
+export class SetCardDataTimeline implements Action {
+    readonly type = TimelineActionTypes.SetCardDataTimeline
+    constructor(public payload:{cardsTimeline: any}){}
 }
 
 export type TimelineActions =
     InitTimeline
-    | AddCardDataTimeline;
+    | SetCardDataTimeline;

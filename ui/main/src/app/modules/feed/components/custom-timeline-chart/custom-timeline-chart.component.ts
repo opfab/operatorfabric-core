@@ -150,7 +150,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   // TICKS
   @Input() centeredOnTicks;
   @Input() clusterLevel;
-  private xTicks = [];
+  public xTicks = [];
   public xTicksOne = [];
   public xTicksTwo = [];
   public yTicks = [];
@@ -436,7 +436,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
       nextDay.add((i * 4), 'hours');
       this.xTicks.push(nextDay);
     }
-    console.log(this.xTicks);
   }
 
   /**

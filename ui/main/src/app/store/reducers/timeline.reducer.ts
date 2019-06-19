@@ -10,6 +10,7 @@ import {LightCardAdapter} from '@ofStates/feed.state';
 import {TimelineActions, TimelineActionTypes} from "@ofActions/timeline.actions";
 import {timelineInitialState, TimelineState} from "@ofStates/timeline.state";
 import {map} from "rxjs/operators";
+import * as _ from 'lodash';
 
 export function reducer(
     state: TimelineState = timelineInitialState,
@@ -23,9 +24,8 @@ export function reducer(
                 data: action.payload.data
             };
         }
-        case TimelineActionTypes.AddCardDataTimeline: {
-            let newData = state.data.map(d => d);
-            newData.push(action.payload.cardTimeline);
+        case TimelineActionTypes.SetCardDataTimeline: {
+            const newData = _.cloneDeep(action.payload.cardsTimeline);
             return {
                 ...state,
                 loading: false,

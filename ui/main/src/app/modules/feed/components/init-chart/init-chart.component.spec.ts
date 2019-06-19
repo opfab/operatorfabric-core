@@ -38,74 +38,126 @@ describe('InitChartComponent', () => {
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
     fixture = TestBed.createComponent(InitChartComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
   it('should create button home display', () => {
     fixture.detectChanges();
     component.buttonHomeActive = true;
-    component.checkButtonHomeDisplay();
-    expect(component).toBeTruthy();
+    expect(component.checkButtonHomeDisplay()).toBeTruthy();
   });
 
   it('should create button home cause domains differs', () => {
     fixture.detectChanges();
     component.buttonHome = [4, 5];
-    component.checkButtonHomeDisplay();
-    expect(component).toBeTruthy();
+    expect(component.checkButtonHomeDisplay()).toBeTruthy();
+  });
+
+  it('should not create button home cause is undefined', () => {
+    fixture.detectChanges();
+    component.buttonHome = null;
+    expect(component.checkButtonHomeDisplay()).toBeFalsy();
   });
 
   it('should apply differents zoom levels on timeline' +
-      'for simulate movement on timeline domain', () => {
+      'should verify domain value is changed after calling moveDomain & homeClick functions', () => {
     fixture.detectChanges();
-    component.applyNewZoom('in');
-    component.applyNewZoom('out');
+    const tmp = component.forwardButtonType;
     component.applyNewZoom('drag');
+    expect(tmp).toEqual(component.forwardButtonType);
+    expect(component.buttonHomeActive).toBeTruthy();
+
     component.homeClick(1, 2);
+    expect(component.buttonHomeActive).toBeFalsy();
+    expect(component.myDomain).toEqual([1, 2]);
+
+    // check domain change after call moveDomain function with any forwardButtonType
+    let domain = component.myDomain;
     component.moveDomain(true);
+    expect(domain).not.toEqual(component.myDomain);
+    domain = component.myDomain;
     component.moveDomain(false);
+    expect(domain).not.toEqual(component.myDomain);
+
+    // move two times domain in same direction for
+    // increment continuousForward allowing a full condition coverage of moveDomainByDay
+    domain = component.myDomain;
+    component.forwardButtonType = 'D-7';
+    component.moveDomain(true);
+    component.moveDomain(true);
+    expect(domain).not.toEqual(component.myDomain);
+    domain = component.myDomain;
+    component.moveDomain(false);
+    expect(domain).not.toEqual(component.myDomain);
+
+    // for D-7 two cases to test, we inverse boolean value passed at moveDomain function
+    domain = component.myDomain;
+    component.forwardButtonType = 'D-7';
+    component.moveDomain(false);
+    component.moveDomain(false);
+    expect(domain).not.toEqual(component.myDomain);
+    domain = component.myDomain;
+    component.moveDomain(true);
+    expect(domain).not.toEqual(component.myDomain);
+
+    domain = component.myDomain;
     component.forwardButtonType = 'M';
     component.moveDomain(true);
+    expect(domain).not.toEqual(component.myDomain);
+    domain = component.myDomain;
     component.moveDomain(false);
+    expect(domain).not.toEqual(component.myDomain);
+
+    domain = component.myDomain;
     component.forwardButtonType = 'Y';
     component.moveDomain(true);
+    expect(domain).not.toEqual(component.myDomain);
+    domain = component.myDomain;
     component.moveDomain(false);
+    expect(domain).not.toEqual(component.myDomain);
     expect(component).toBeTruthy();
   });
 
   it('check applyNewZoom function with only one button' +
-      'forward level conf is different', () => {
+      'forward level activated is different', () => {
     fixture.detectChanges();
+    component.forwardButtonType = 'W';
     component.buttonList = [{forwardLevel: 'M'}];
+    const tmp = component.forwardButtonType;
     component.applyNewZoom('in');
+    // no change expected, cause button forwardLevel is not equal to forwardButtonType
+    expect(tmp).toEqual(component.forwardButtonType);
     component.applyNewZoom('out');
+    expect(tmp).toEqual(component.forwardButtonType);
     expect(component).toBeTruthy();
   });
 
   it('check applyNewZoom function with only one button' +
-      'forward level conf is same than one button', () => {
+      'forward level activated is same than one button', () => {
     fixture.detectChanges();
+    component.forwardButtonType = 'W';
     component.buttonList = [{forwardLevel: 'W'}];
+    const tmp = component.forwardButtonType;
     component.applyNewZoom('in');
+    // no change expected, cause buttonList got only one button
+    expect(tmp).toEqual(component.forwardButtonType);
     component.applyNewZoom('out');
+    expect(tmp).toEqual(component.forwardButtonType);
     expect(component).toBeTruthy();
   });
 
   it('check applyNewZoom function with two buttons' +
-      'forward level conf is different', () => {
+      'forward level activated is same than last button', () => {
     fixture.detectChanges();
-    component.buttonList = [{forwardLevel: 'M'}, {forwardLevel: 'Y'}];
-    component.applyNewZoom('in');
-    component.applyNewZoom('out');
-    expect(component).toBeTruthy();
-  });
-
-  it('check applyNewZoom function with two buttons' +
-      'forward level conf is same than last button', () => {
-    fixture.detectChanges();
+    component.forwardButtonType = 'W';
     component.buttonList = [{forwardLevel: 'M'}, {forwardLevel: 'W'}];
     component.applyNewZoom('in');
+    // change expected, cause buttonList got two buttons :
+    //  - one is the same than actual forwardButtonType
+    //  - next one has forwardLevel differe
+    expect(component.forwardButtonType).toEqual('M');
     component.applyNewZoom('out');
+    expect(component.forwardButtonType).toEqual('W');
     expect(component).toBeTruthy();
   });
 
@@ -113,10 +165,10 @@ describe('InitChartComponent', () => {
       'on switch default case (unused normally)' +
       'and with null params', () => {
     fixture.detectChanges();
-    component.getCircleValue('0');
-    component.getColorSeverity('NO');
-    component.getCircleValue(null);
-    component.getColorSeverity(null);
+    expect(component.getCircleValue('0')).toEqual(5);
+    expect(component.getColorSeverity('NO')).toEqual('white');
+    expect(component.getCircleValue(null)).toEqual(5);
+    expect(component.getColorSeverity(null)).toEqual('white');
     component.changeGraphConf(null);
     expect(component).toBeTruthy();
   });

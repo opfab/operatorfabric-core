@@ -30,7 +30,9 @@ describe('Directive: AppMouseWheel', () => {
         inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
     });
 
-    it('simulate the combination of events when we drag on the chart', () => {
+    it('simulate the combination of events when we make a drag on the chart ' +
+        'emit all draggable directive signal', () => {
+        // expect(component.onDragMove)
         inputEl.triggerEventHandler('pointerdown', null);
         inputEl.triggerEventHandler('pointermove', null);
         inputEl.triggerEventHandler('pointerup', null);
@@ -38,13 +40,9 @@ describe('Directive: AppMouseWheel', () => {
         expect(component).toBeTruthy();
     });
 
-    it('mouse drag pointer move event only', () => {
+    it('simulate the combination of events : mouse move & mouse release ' +
+        'on the chart, nothing happen', () => {
         inputEl.triggerEventHandler('pointermove', null);
-        fixture.detectChanges();
-        expect(component).toBeTruthy();
-    });
-
-    it('mouse drag pointer up event only', () => {
         inputEl.triggerEventHandler('pointerup', null);
         fixture.detectChanges();
         expect(component).toBeTruthy();

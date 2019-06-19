@@ -5,14 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Observable, of, Subscription} from 'rxjs';
 import { LightCard } from '@ofModel/light-card.model';
 import { select, Store } from '@ngrx/store';
-import { catchError } from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import { AppState } from '@ofStore/index';
-import { InitTimeline } from '@ofActions/timeline.actions';
-import { AddCardDataTimeline } from '@ofActions/timeline.actions';
+import {InitTimeline, SetCardDataTimeline} from '@ofActions/timeline.actions';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
@@ -21,8 +20,9 @@ import * as feedSelectors from '@ofSelectors/feed.selectors';
   selector: 'of-time-line',
   templateUrl: './time-line.component.html',
 })
-export class TimeLineComponent implements OnInit {
+export class TimeLineComponent implements OnInit, OnDestroy {
     lightCards$: Observable<LightCard[]>;
+    subscription: Subscription;
 
     public conf: any;
     public confZoom: any;
@@ -36,10 +36,12 @@ export class TimeLineComponent implements OnInit {
                 doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
             }});
 
+        const actualMoment = moment();
+
         // conf 1 === end of the actual week + next week
         /*const startDomain = moment();
         startDomain.hours(0).minutes(0).seconds(0).millisecond(0);*/
-        const startDomain = this.dateWithSpaceBeforeMoment('W');
+        const startDomain = this.dateWithSpaceBeforeMoment(moment(actualMoment), 'W');
         const endDomain = _.cloneDeep(startDomain);
         endDomain.add(1, 'week');
         endDomain.startOf('week');
@@ -50,7 +52,7 @@ export class TimeLineComponent implements OnInit {
         // conf 4 === end of the actual day + 7 days
         /*const startDomain4 = moment();
         startDomain4.hours(0).minutes(0).seconds(0).millisecond(0);*/
-        const startDomain4 = moment(this.dateWithSpaceBeforeMoment('W'));
+        const startDomain4 = this.dateWithSpaceBeforeMoment(moment(actualMoment), 'W');
         const endDomain4 = _.cloneDeep(startDomain4);
         endDomain4.hours(0).minutes(0).seconds(0).millisecond(0);
         endDomain4.add(7, 'days');
@@ -59,7 +61,7 @@ export class TimeLineComponent implements OnInit {
         // conf 2 === actual month + next month
         /*const startDomain2 = moment();
         startDomain2.hours(0).minutes(0).seconds(0).millisecond(0);*/
-        const startDomain2 = this.dateWithSpaceBeforeMoment('M');
+        const startDomain2 = this.dateWithSpaceBeforeMoment(moment(actualMoment), 'M');
         const endDomain2 = _.cloneDeep(startDomain2);
         endDomain2.startOf('month');
         endDomain2.add(2, 'months');
@@ -70,7 +72,7 @@ export class TimeLineComponent implements OnInit {
         /*const startDomain3 = moment();
         startDomain3.startOf('month');
         startDomain3.hours(0);*/
-        const startDomain3 = this.dateWithSpaceBeforeMoment('Y');
+        const startDomain3 = this.dateWithSpaceBeforeMoment(moment(actualMoment), 'Y');
         const endDomain3 = _.cloneDeep(startDomain3);
         endDomain3.add(2, 'years');
         endDomain3.startOf('year'); // Voir avec Guillaume
@@ -123,11 +125,14 @@ export class TimeLineComponent implements OnInit {
         }));
 
         // add a card data to the timeline state for each new card received
-        this.lightCards$.subscribe(value => {
+        this.subscription = this.lightCards$.pipe(debounceTime(300), distinctUntilChanged())
+            .subscribe(value => {
+            console.log('timeline subscribe');
+            const tmp = _.cloneDeep(value);
             this.store.dispatch(new InitTimeline({
                 data: [],
             }));
-            for (const val of value) {
+            /*for (const val of tmp) {
                 // val.endDate val.startDate val.severity
                 const myCardTimeline = {
                     startDate: val.startDate,
@@ -135,9 +140,24 @@ export class TimeLineComponent implements OnInit {
                     severity: val.severity
                 };
                 this.store.dispatch(new AddCardDataTimeline({
+
                     cardTimeline: myCardTimeline,
                 }));
+                // console.log('timeline subscribe');
+            }*/
+            const myCardsTimeline = [];
+            for (const val of tmp) {
+                // val.endDate val.startDate val.severity
+                const myCardTimeline = {
+                    startDate: val.startDate,
+                    endDate: val.endDate,
+                    severity: val.severity
+                };
+                myCardsTimeline.push(myCardTimeline);
             }
+            this.store.dispatch(new SetCardDataTimeline({
+                cardsTimeline: myCardsTimeline,
+            }));
         });
 
         // this.lastCards$ = this.store.select(timelineSelectors.selectLastCardsSelection);
@@ -165,8 +185,7 @@ export class TimeLineComponent implements OnInit {
      * each cluster level had a different treatment
      * @param clusterLevel
      */
-    dateWithSpaceBeforeMoment(clusterLevel) {
-        const date = moment();
+    dateWithSpaceBeforeMoment(date, clusterLevel) {
         date.minutes(0).seconds(0).millisecond(0);
         switch (clusterLevel) {
             case 'W' : case 'D-7': {
@@ -199,6 +218,12 @@ export class TimeLineComponent implements OnInit {
                 }
                 return date;
             }
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
         }
     }
 }

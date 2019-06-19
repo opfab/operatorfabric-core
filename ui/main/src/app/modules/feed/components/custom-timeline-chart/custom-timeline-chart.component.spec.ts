@@ -10,6 +10,7 @@ import { By } from '@angular/platform-browser';
 import { DraggableDirective } from '../time-line/app-draggable';
 import { MouseWheelDirective } from '../time-line/mouse-wheel.directive';
 import { XAxisTickFormatPipe } from '../time-line/x-axis-tick-format.pipe';
+import * as _ from 'lodash';
 
 describe('CustomTimelineChartComponent', () => {
   let component: CustomTimelineChartComponent;
@@ -39,20 +40,22 @@ describe('CustomTimelineChartComponent', () => {
   it('should create without domain', () => {
     fixture.detectChanges();
     component.xDomain = null;
-    component.getXDomain();
+    expect(component.getXDomain()).toEqual([0, 1]);
     expect(component).toBeTruthy();
   });
 
   it('should return the same string which was received', () => {
     fixture.detectChanges();
     component.autoScale = true;
-    component.hideLabelsTicks('test');
-    expect(component).toBeTruthy();
+    expect(component.hideLabelsTicks('test')).toEqual('test');
   });
 
   it('should return without effect', () => {
     fixture.detectChanges();
     component.enableDrag = false;
+    component.onDragMove(null);
+    expect(component).toBeTruthy();
+    component.enableDrag = true;
     component.onDragMove(null);
     expect(component).toBeTruthy();
   });
@@ -63,12 +66,12 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return without effect', () => {
+  it('should return the param formatted by normal transform', () => {
     fixture.detectChanges();
     component.clusterLevel = 'M';
     const test = moment();
-    component.fctTickFormattingAdvanced(test);
-    expect(component).toBeTruthy();
+    test.date(3);
+    expect(component.fctTickFormattingAdvanced(test)).toEqual(test.format('ddd DD MMM'));
   });
 
   it('simulate circle hovered', () => {
@@ -85,8 +88,12 @@ describe('CustomTimelineChartComponent', () => {
       end,
       count: 5,
     };
+    expect(component.circleHovered.period).toEqual('');
     component.feedCircleHovered(circleTest);
+    expect(component.circleHovered.period).not.toEqual('');
+    const tmp = component.circleHovered.period;
     component.feedCircleHovered(circleTestPeriod);
+    expect(component.circleHovered.period).not.toEqual(tmp);
     expect(component).toBeTruthy();
   });
 
@@ -116,51 +123,26 @@ describe('CustomTimelineChartComponent', () => {
 
   it('check setXTicksValue function', () => {
     fixture.detectChanges();
+    let tmp = _.cloneDeep(component.xTicks);
     component.clusterLevel = 'M';
     component.setXTicksValue([0, 2888000000]);
+    expect(component.xTicks).not.toEqual(tmp);
+
+    tmp = _.cloneDeep(component.xTicks);
     component.clusterLevel = 'Y';
-    component.setXTicksValue([0, 34888000000]);
+    component.setXTicksValue([10000000000, 44888000000]);
+    expect(component.xTicks).not.toEqual(tmp);
+
+    tmp = _.cloneDeep(component.xTicks);
     component.clusterLevel = 'R';
     component.setXTicksValue([0, 1]);
+    expect(component.xTicks).toEqual(tmp);
     expect(component).toBeTruthy();
   });
 
-  it('check week ticks assignation more than 10 days', () => {
-    fixture.detectChanges();
-    // more than 10 days
-    component.weekTicks([0, 964000000]);
-    expect(component).toBeTruthy();
-  });
-
-  it('check week ticks assignation less than 10 days', () => {
-    fixture.detectChanges();
-    // less than 10 days ==> 864000000
-    component.weekTicks([0, 664000000]);
-    expect(component).toBeTruthy();
-  });
-
-  it('checheck week ticks assignation more than 45 days', () => {
-    fixture.detectChanges();
-    // more than 45 days
-    component.monthTicks([0, 4888000000]);
-    expect(component).toBeTruthy();
-  });
-
-  it('check week ticks assignation less than 45 days', () => {
-    fixture.detectChanges();
-    // less than 45 days ==> 3888000000
-    component.monthTicks([0, 2888000000]);
-    expect(component).toBeTruthy();
-  });
-
-  it('check year ticks assignation', () => {
-    fixture.detectChanges();
-    // more than 13 months ==> 34888000000
-    component.yearTicks([0, 34888000000]);
-    expect(component).toBeTruthy();
-  });
-
-  it('check drag on left', () => {
+  it('check drag on left' +
+    'check special case when dragDirection is false ' +
+    'and the mouse x position is biggest than previous mouse x position ', () => {
     fixture.detectChanges();
     component.valueDomain = [0, 5];
     component.enableDrag = true;
@@ -174,15 +156,21 @@ describe('CustomTimelineChartComponent', () => {
     const event3 = new PointerEvent('click', {
       clientX: 300,
     });
-    component.dragDirection = false;
     inputEl.triggerEventHandler('pointerdown', event);
+    expect(component.dragDirection).toBeUndefined();
     inputEl.triggerEventHandler('pointermove', event2);
+    expect(component.dragDirection).toBeFalsy();
     inputEl.triggerEventHandler('pointermove', event3);
+    expect(component.dragDirection).toBeFalsy();
+    // Cant check cause of timeScale and all variables are not set
+    // expect(component.valueDomain).not.toEqual([0, 5]);
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  it('check drag on right', () => {
+  it('check drag on right ' +
+    'check special case when dragDirection is true ' +
+    'and the mouse x position is smallest than previous mouse x position ', () => {
     fixture.detectChanges();
     component.valueDomain = [0, 5];
     component.enableDrag = true;
@@ -191,15 +179,17 @@ describe('CustomTimelineChartComponent', () => {
       clientX: 100,
     });
     const event2 = new PointerEvent('click', {
-      clientX: -200,
+      clientX: 200,
     });
     const event3 = new PointerEvent('click', {
-      clientX: 300,
+      clientX: -300,
     });
-    component.dragDirection = true;
     inputEl.triggerEventHandler('pointerdown', event);
-    inputEl.triggerEventHandler('pointermove', event3);
+    expect(component.dragDirection).toBeUndefined();
     inputEl.triggerEventHandler('pointermove', event2);
+    expect(component.dragDirection).toBeTruthy();
+    inputEl.triggerEventHandler('pointermove', event3);
+    expect(component.dragDirection).toBeTruthy();
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
