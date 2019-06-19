@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,15 +46,15 @@ public class ArchivedCardPublicationData implements Card {
     private I18n title;
     private I18n summary;
     @CreatedDate
-    private Long publishDate;
+    private Instant publishDate;
     @Transient
-    private Long deletionDate;
-    private Long lttd;
+    private Instant deletionDate;
+    private Instant lttd;
     @NotNull
     @Indexed
-    private Long startDate;
+    private Instant startDate;
     @Indexed
-    private Long endDate;
+    private Instant endDate;
     private String media;
     private SeverityEnum severity;
     private List<String> tags;

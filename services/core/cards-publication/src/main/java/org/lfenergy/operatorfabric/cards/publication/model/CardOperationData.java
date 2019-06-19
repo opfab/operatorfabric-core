@@ -12,6 +12,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ import java.util.List;
 public class CardOperationData implements CardOperation {
 
     private Long number;
-    private Long publishDate;
+    private Instant publishDate;
     private CardOperationTypeEnum type;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

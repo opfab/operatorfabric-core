@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum;
 
+import java.time.Instant;
+
 /**
  * <p>Please use builder to instantiate</p>
  *
@@ -20,7 +22,7 @@ import org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum;
 @NoArgsConstructor
 @Builder
 public class TimeSpanConsultationData implements TimeSpan{
-    private Long start;
-    private Long end;
+    private Instant start;
+    private Instant end;
     private TimeSpanDisplayModeEnum display;
 }

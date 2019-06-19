@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -12,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CardSubscriptionDto implements Subscription {
-    private Long rangeStart;
-    private Long rangeEnd;
+    private Instant rangeStart;
+    private Instant rangeEnd;
     private List<String> loadedCards;
 
 }

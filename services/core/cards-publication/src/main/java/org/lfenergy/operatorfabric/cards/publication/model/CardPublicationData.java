@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,16 +54,16 @@ public class CardPublicationData implements Card {
     @NotNull
     private I18n summary;
     @CreatedDate
-    private Long publishDate;
+    private Instant publishDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long deletionDate;
-    private Long lttd;
+    private Instant deletionDate;
+    private Instant lttd;
     @NotNull
     @Indexed
-    private Long startDate;
+    private Instant startDate;
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long endDate;
+    private Instant endDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String media;
     @NotNull

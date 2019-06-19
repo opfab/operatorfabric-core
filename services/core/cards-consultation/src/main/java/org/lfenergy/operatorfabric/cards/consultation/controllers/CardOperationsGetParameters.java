@@ -13,6 +13,7 @@ import lombok.Singular;
 import lombok.Value;
 import org.lfenergy.operatorfabric.users.model.User;
 
+import java.time.Instant;
 import java.util.List;
 
 /** This class contains all the information necessary to define a feed
@@ -40,8 +41,8 @@ public class CardOperationsGetParameters {
      *  <li>starting before <code>rangeStart</code> and ending after <code>rangeEnd</code></li>
      *  <li>starting before <code>rangeStart</code> and never ending</li>
      */
-    private Long rangeStart;
-    private Long rangeEnd;
+    private Instant rangeStart;
+    private Instant rangeEnd;
     /**
      * Filter only cards for which this user is a recipient
      * */

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ import java.util.List;
 public class CardOperationConsultationData implements CardOperation {
 
     private Long number;
-    private Long publishDate;
+    private Instant publishDate;
     private CardOperationTypeEnum type;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

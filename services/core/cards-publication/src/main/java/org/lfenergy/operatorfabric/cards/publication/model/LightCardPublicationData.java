@@ -16,6 +16,7 @@ import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -43,14 +44,14 @@ public class LightCardPublicationData implements LightCard {
     @NotNull
     private String processId;
     private String state;
-    private Long lttd;
-    private Long publishDate;
+    private Instant lttd;
+    private Instant publishDate;
     @NotNull
     @Indexed
-    private Long startDate;
+    private Instant startDate;
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long endDate;
+    private Instant endDate;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String media;

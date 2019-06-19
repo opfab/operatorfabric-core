@@ -12,6 +12,7 @@ import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -36,13 +37,13 @@ public class LightCardConsultationData implements LightCard {
     private String process;
     private String processId;
     private String state;
-    private Long lttd;
-    private Long publishDate;
+    private Instant lttd;
+    private Instant publishDate;
     @Indexed
-    private Long startDate;
+    private Instant startDate;
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long endDate;
+    private Instant endDate;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String media;

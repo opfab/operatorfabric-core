@@ -22,6 +22,8 @@ import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
+import java.time.Instant;
+
 /**
  * <p>This object manages subscription to AMQP exchange</p>
  *
@@ -56,13 +58,13 @@ public class CardSubscription {
     private MessageListenerContainer groupMlc;
     @Getter
     @JsonInclude
-    private Long rangeStart;
+    private Instant rangeStart;
     @Getter
     @JsonInclude
-    private Long rangeEnd;
+    private Instant rangeEnd;
     private boolean filterNotification;
     @Getter
-    private Long startingPublishDate;
+    private Instant startingPublishDate;
     @Getter
     private boolean cleared = false;
     private final String clientId;
