@@ -7,7 +7,8 @@ import feign.jackson.JacksonDecoder;
 import feign.mock.HttpMethod;
 import feign.mock.MockClient;
 import feign.mock.MockTarget;
-import org.lfenergy.operatorfabric.cards.model.Card;
+import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.cards.model.Card;;
 import org.lfenergy.operatorfabric.time.services.feign.CardConsultationServiceProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
@@ -15,7 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.time.Instant;
+
 @Configuration
+@Slf4j
 public class CardFeignMockConfiguration {
 
     @Autowired
@@ -27,10 +31,10 @@ public class CardFeignMockConfiguration {
         //Create MockClient and set behaviour
         Card card1 = new Card();
         card1.setId("id1");
-        card1.setStartDate(2300000l);
+        card1.setStartDate(Instant.ofEpochMilli(2300000l));
         Card card2 = new Card();
         card2.setId("id1");
-        card2.setStartDate(1300000l);
+        card2.setStartDate(Instant.ofEpochMilli(1300000l));
 
         MockClient mockClient = new MockClient();
         mockClient = mockClient
@@ -49,7 +53,7 @@ public class CardFeignMockConfiguration {
 
         //Build Feign with MockClient
         return Feign.builder()
-                .decoder(new JacksonDecoder())
+                .decoder(new JacksonDecoder(mapper))
                 .client(mockClient)
                 .contract(new SpringMvcContract()) // Needed because spring-cloud-starter-feign implements a default Contract class "SpringMvcContract". See https://github.com/spring-cloud/spring-cloud-netflix/issues/760
                 .target(new MockTarget<>(CardConsultationServiceProxy.class));

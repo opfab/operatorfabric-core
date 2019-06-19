@@ -87,8 +87,8 @@ public class CardSubscription {
                             DirectExchange userExchange,
                             TopicExchange groupExchange,
                             ConnectionFactory connectionFactory,
-                            Long rangeStart,
-                            Long rangeEnd,
+                            Instant rangeStart,
+                            Instant rangeEnd,
                             Boolean filterNotification) {
         if(user!=null)
             this.id = computeSubscriptionId(user.getLogin(), clientId);
@@ -137,7 +137,7 @@ public class CardSubscription {
                 userMlc.start();
                 log.info(String.format("LISTENING to messages on Group[%sGroups] queue",this.user.getLogin()));
                 groupMlc.start();
-                startingPublishDate = VirtualTime.getInstance().computeNow().toEpochMilli();
+                startingPublishDate = VirtualTime.getInstance().computeNow();
             });
             emitter.onDispose(()->{
                 log.info("DISPOSING amqp publisher");
@@ -250,10 +250,10 @@ public class CardSubscription {
         return mlc;
     }
 
-    public void updateRange(Long rangeStart, Long rangeEnd) {
+    public void updateRange(Instant rangeStart, Instant rangeEnd) {
         this.rangeStart = rangeStart;
         this.rangeEnd = rangeEnd;
-        startingPublishDate = VirtualTime.getInstance().computeNow().toEpochMilli();
+        startingPublishDate = VirtualTime.getInstance().computeNow();
     }
 
     public void publishInto(Flux<String> fetchOldCards) {

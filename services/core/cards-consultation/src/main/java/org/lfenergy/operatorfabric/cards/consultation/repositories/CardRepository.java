@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+
 /**
  * <p>Custom spring mongo reactive repository to access {@link org.lfenergy.operatorfabric.cards.consultation.model.Card} mongodb collection</p>
  *
@@ -30,16 +32,16 @@ public interface CardRepository extends ReactiveMongoRepository<CardConsultation
 
     /**
      * Finds next card if any whose startDate is before a specified date
-     * @param pivotalDateMillis specified reference date
+     * @param pivotalInstant specified reference date
      * @return Card result or empty Mono
      */
-    public Mono<CardConsultationData> findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(long pivotalDateMillis);
+    public Mono<CardConsultationData> findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(Instant pivotalInstant);
 
     /**
      * Finds next card if any whose startDate is after a specified date
-     * @param pivotalDateMillis specified reference date
+     * @param pivotalInstant specified reference date
      * @return Card result or empty Mono
      */
-    public Mono<CardConsultationData> findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(long pivotalDateMillis);
+    public Mono<CardConsultationData> findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(Instant pivotalInstant);
 
 }

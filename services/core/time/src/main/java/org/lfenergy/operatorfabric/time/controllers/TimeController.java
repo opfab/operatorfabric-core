@@ -42,7 +42,7 @@ public class TimeController implements TimeApi {
     public static final String CARD_RESPONSE_MSG = "Card service responded %d: %s";
     public static final String NO_CARD = "No card found";
     public static final String CARD_UNEXPECTED_ERROR_MSG = "Unexpected error from card service";
-    public static final String CARD_UNAVAILABLE_MSG = "Unnable to reach card service";
+    public static final String CARD_UNAVAILABLE_MSG = "Unable to reach card service";
     private final CardConsultationServiceProxy cardConsultationServiceProxy;
     private final TimeService timeService;
 
@@ -73,7 +73,7 @@ public class TimeController implements TimeApi {
     private Void fetchNextTime0(long longMillisTime) {
         try {
             Card card = this.cardConsultationServiceProxy.fetchNextCard(longMillisTime);
-            timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
+            timeService.updateTime(card.getStartDate().minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
         } catch (FeignException fex) {
             handleCardServiceErrors(fex);
         }
@@ -89,7 +89,7 @@ public class TimeController implements TimeApi {
     private Void fetchPreviousTime0(long longMillisTime) {
         try {
             Card card = this.cardConsultationServiceProxy.fetchPreviousCard(longMillisTime);
-            timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
+            timeService.updateTime(card.getStartDate().minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
         } catch (FeignException fex) {
             return handleCardServiceErrors(fex);
         }
@@ -138,7 +138,7 @@ public class TimeController implements TimeApi {
             log.info("Time updated by " + user.getLogin());
         }
         if (time.getSpeed() != null && time.getVirtualTime() != null)
-            timeService.updateSpeedAndTime(time.getSpeed(), DateTimeUtil.toInstant(time.getVirtualTime()));
+            timeService.updateSpeedAndTime(time.getSpeed(), time.getVirtualTime());
         else if (time.getSpeed() != null)
             setCurrentSpeed(time.getSpeed());
         else if (time.getVirtualTime() != null)
@@ -165,13 +165,13 @@ public class TimeController implements TimeApi {
     }
 
     @Override
-    public Long setVirtualTime(java.lang.Long virtualTime) {
-        this.timeService.updateTime(Instant.ofEpochMilli(virtualTime));
-        return this.timeService.computeNow().toEpochMilli();
+    public Instant setVirtualTime(Instant virtualTime) {
+        this.timeService.updateTime(virtualTime);
+        return this.timeService.computeNow();
     }
 
     @Override
-    public Long updateVirtualTime(java.lang.Long virtualTime) {
+    public Instant updateVirtualTime(Instant virtualTime) {
         return setVirtualTime(virtualTime);
     }
 

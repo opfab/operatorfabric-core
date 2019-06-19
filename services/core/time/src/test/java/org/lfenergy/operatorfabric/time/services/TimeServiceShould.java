@@ -62,7 +62,7 @@ class TimeServiceShould {
     Thread.sleep(1500);
     Instant computedNow = timeModule.computeNow();
     log.info("computed now is : " + computedNow.toString());
-    assertThat(timeModule.fetchTimeData().getVirtualTime()).isEqualTo(lastYear.toEpochMilli());
+    assertThat(timeModule.fetchTimeData().getVirtualTime()).isEqualTo(lastYear);
     assertThat(lastYear.isBefore(computedNow)).describedAs(lastYear.toString() + " should be before " + computedNow
        .toString()).isTrue();
 

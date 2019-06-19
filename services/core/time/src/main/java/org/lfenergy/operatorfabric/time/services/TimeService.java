@@ -164,9 +164,9 @@ public class TimeService {
      */
     public TimeData fetchTimeData() {
         return new ServerTimeData(
-           virtualTime.getReferenceSystemTime()==null?null: virtualTime.getReferenceSystemTime().toEpochMilli(),
-           virtualTime.getStartVirtualTime()==null?null: virtualTime.getStartVirtualTime().toEpochMilli(),
-           computeNow().toEpochMilli(),
+           virtualTime.getReferenceSystemTime()==null?null: virtualTime.getReferenceSystemTime(),
+           virtualTime.getStartVirtualTime()==null?null: virtualTime.getStartVirtualTime(),
+           computeNow(),
            retrieveSpeed());
     }
 }

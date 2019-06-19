@@ -31,6 +31,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuples;
 
 import java.time.Duration;
+import java.time.Instant;
 
 /**
  * <p>Handles cards access at the rest level. Depends on {@link CardSubscriptionService} for business logic</p>
@@ -126,20 +127,20 @@ public class CardOperationsController {
      * @return
      */
     private Flux<String> fetchOldCards(CardSubscription subscription) {
-        Long start = subscription.getRangeStart();
-        Long end = subscription.getRangeEnd();
+        Instant start = subscription.getRangeStart();
+        Instant end = subscription.getRangeEnd();
         return fetchOldCards0(subscription.getStartingPublishDate(), start, end, subscription.getUser());
     }
 
     private Flux<String> fetchOldCards(CardOperationsGetParameters parameters) {
-        Long start = parameters.getRangeStart();
-        Long end = parameters.getRangeEnd();
+        Instant start = parameters.getRangeStart();
+        Instant end = parameters.getRangeEnd();
         return fetchOldCards0(null, start, end, parameters.getUser());
     }
 
-    private Flux<String> fetchOldCards0(Long referencePublishDate, Long start, Long end, User user) {
+    private Flux<String> fetchOldCards0(Instant referencePublishDate, Instant start, Instant end, User user) {
         Flux<String> oldCards;
-        referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow().toEpochMilli() : referencePublishDate;
+        referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow() : referencePublishDate;
         String login = user.getLogin();
         String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
         if (end != null && start != null) {
@@ -168,7 +169,7 @@ public class CardOperationsController {
                 .doOnEach(l -> log.info("message " + l + " to " + t.getUser().getLogin()))
                 .map(l -> CardOperationConsultationData.builder()
                         .number(l)
-                        .publishDate(VirtualTime.getInstance().computeNow().toEpochMilli() - 600000)
+                        .publishDate(VirtualTime.getInstance().computeNow().minusMillis(600000))
                         .type(CardOperationTypeEnum.ADD)
                         .card(
                                 LightCardConsultationData.builder()
@@ -178,8 +179,8 @@ public class CardOperationsController {
                                         .title(I18nConsultationData.builder().key("title").build())
                                         .mainRecipient("rte-operator")
                                         .severity(SeverityEnum.ALARM)
-                                        .startDate(VirtualTime.getInstance().computeNow().toEpochMilli())
-                                        .endDate(VirtualTime.getInstance().computeNow().toEpochMilli() + 3600000)
+                                        .startDate(VirtualTime.getInstance().computeNow())
+                                        .endDate(VirtualTime.getInstance().computeNow().plusMillis(3600000))
                                         .build()
                         )
                         .build())

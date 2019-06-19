@@ -835,11 +835,13 @@ paths:
         - application/json
       parameters:
         - name: rangeStart
-          type: integer
+          type: string
+          format: date-time
           in: query
           description: start of time range to get published card
         - name: rangeEnd
-          type: integer
+          type: string
+          format: date-time
           in: query
           description: end of time range to get published card
         - name: notification

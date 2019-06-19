@@ -13,6 +13,8 @@ import org.lfenergy.operatorfabric.cards.publication.model.TimeSpan;
 import org.lfenergy.operatorfabric.cards.publication.model.TimeSpanPublicationData;
 import org.springframework.core.convert.converter.Converter;
 
+import java.time.Instant;
+
 /**
  *
  * <p>Spring converter registered in mongo conversions</p>
@@ -22,13 +24,13 @@ import org.springframework.core.convert.converter.Converter;
  */
 public class TimeSpanReadConverter implements Converter<Document, TimeSpan> {
 
-
     @Override
     public TimeSpan convert(Document source) {
+        Instant start = source.getDate("start") == null ? null : source.getDate("start").toInstant();
+        Instant end = source.getDate("end") == null ? null : source.getDate("end").toInstant();
         TimeSpanPublicationData.TimeSpanPublicationDataBuilder builder = TimeSpanPublicationData.builder()
-                .start(source.getLong("start"))
+                .start(start)
                 ;
-        Long end = source.getLong("end");
         String stringDisplay = source.getString("display");
         if(end!=null)
             builder.end(end);

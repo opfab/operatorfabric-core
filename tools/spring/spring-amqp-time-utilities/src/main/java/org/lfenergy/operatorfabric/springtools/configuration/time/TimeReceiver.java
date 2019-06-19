@@ -41,7 +41,7 @@ public class TimeReceiver {
     @RabbitListener(queues = "#{timeQueue.name}")
     public void receive(String stringMessage) throws IOException {
         ClientTimeData data = mapper.readValue(stringMessage,ClientTimeData.class);
-        setSpeedAndTime(data.getSpeed(),Instant.ofEpochMilli(data.getVirtualTime()));
+        setSpeedAndTime(data.getSpeed(),data.getVirtualTime());
     }
 
     /**

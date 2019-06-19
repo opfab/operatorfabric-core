@@ -42,6 +42,7 @@ public class ObjectMapperShould {
     @Test
     public void readCard() throws IOException {
         String stringCard = "{" +
+                "\"publishDate\": 123,"+
                 "\"data\": {"+
                   "\"int\": 123,"+
                   "\"string\": \"test\","+
@@ -58,5 +59,6 @@ public class ObjectMapperShould {
         assertThat((Map) ((Map) card.getData()).get("object")).isNotNull();
         assertThat(((Map) ((Map) card.getData()).get("object")).get("int")).isEqualTo(456);
         assertThat(((Map) ((Map) card.getData()).get("object")).get("string")).isEqualTo("test2");
+        assertThat(card.getPublishDate().toEpochMilli()).isEqualTo(123);
     }
 }

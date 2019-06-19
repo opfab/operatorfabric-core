@@ -14,6 +14,7 @@ import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultatio
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.core.convert.converter.Converter;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -34,10 +35,10 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
                 .uid(source.getString("uid"))
                 .id(source.getString("_id"))
                 .processId(source.getString("processId"))
-                .lttd(source.getLong("lttd"))
-                .startDate(source.getLong("startDate"))
-                .endDate(source.getLong("endDate"))
-                .publishDate(source.getLong("publishDate"))
+                .lttd(source.getDate("lttd") == null ? null : source.getDate("lttd").toInstant())
+                .startDate(source.getDate("startDate") == null ? null : source.getDate("startDate").toInstant())
+                .endDate(source.getDate("endDate") == null ? null : source.getDate("endDate").toInstant())
+                .publishDate(source.getDate("publishDate") == null ? null : source.getDate("publishDate").toInstant())
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
                 .media(source.getString("media"))
                 .mainRecipient(source.getString("mainRecipient"))

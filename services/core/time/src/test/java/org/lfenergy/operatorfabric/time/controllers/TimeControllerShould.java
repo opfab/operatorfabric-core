@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.time.application.IntegrationTestApplication;
+import org.lfenergy.operatorfabric.time.configuration.json.JacksonConfig;
 import org.lfenergy.operatorfabric.time.model.ClientTimeData;
 import org.lfenergy.operatorfabric.time.model.SpeedEnum;
 import org.lfenergy.operatorfabric.time.model.TimeData;
@@ -37,8 +38,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {IntegrationTestApplication.class})
+@SpringBootTest(classes = {IntegrationTestApplication.class, JacksonConfig.class})
 @ActiveProfiles("test")
 @WebAppConfiguration
 @Slf4j
@@ -112,7 +112,7 @@ class TimeControllerShould {
             MvcResult result = mockMvc.perform(post("/time/{millisTime}/next/card", 1000000))
                     .andExpect(status().isOk())
                     .andReturn();
-            assertThat(timeService.computeNow().toEpochMilli()).isCloseTo(2000000l, Offset.offset(500l));
+            assertThat(timeService.computeNow()).isCloseTo(Instant.ofEpochMilli(2000000l), within(500l, ChronoUnit.MILLIS));
         }
 
         @Test
@@ -120,14 +120,13 @@ class TimeControllerShould {
             MvcResult result = mockMvc.perform(post("/time/{millisTime}/previous/card", 1000000))
                     .andExpect(status().isOk())
                     .andReturn();
-            assertThat(timeService.computeNow().toEpochMilli()).isCloseTo(1000000l, Offset.offset(500l));
+            assertThat(timeService.computeNow()).isCloseTo(Instant.ofEpochMilli(1000000l), within(500l, ChronoUnit.MILLIS));
         }
 
         @Test
         public void forward404() throws Exception {
             assertThatThrownBy(() -> {
-                MvcResult result = mockMvc.perform(post("/time/{millisTime}/next/card", 2000000))
-                        .andExpect(status().isGone())
+                MvcResult result = mockMvc.perform(post("/time/{millisTime}/next/card", 2000000)).andExpect(status().isGone())
                         .andReturn();
             }).isInstanceOf(NestedServletException.class)
                     .hasFieldOrProperty("rootCause")
@@ -163,7 +162,7 @@ class TimeControllerShould {
             log.info("now is : " + now.toString());
             Instant lastYear = now.minus(365, ChronoUnit.DAYS);
             log.info("last year is : " + lastYear.toString());
-            ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear.toEpochMilli(), null, SpeedEnum.X2);
+            ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear, null, SpeedEnum.X2);
             String jsonEntity = objectMapper.writeValueAsString(updatedTimeData);
             MvcResult result = mockMvc.perform(put("/time")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -176,7 +175,7 @@ class TimeControllerShould {
                     .andExpect(jsonPath("$.speed", is("X2")))
                     .andReturn();
             TimeData timeData = objectMapper.readValue(result.getResponse().getContentAsString(), TimeData.class);
-            assertThat(timeData.getVirtualTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
+            assertThat(timeData.getVirtualTime()).isCloseTo(lastYear, within(500, ChronoUnit.MILLIS));
             setAndResetTimeData0(lastYear);
         }
 
@@ -186,7 +185,7 @@ class TimeControllerShould {
             log.info("now is : " + now.toString());
             Instant lastYear = now.minus(365, ChronoUnit.DAYS);
             log.info("last year is : " + lastYear.toString());
-            ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear.toEpochMilli(), null, SpeedEnum.X2);
+            ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear, null, SpeedEnum.X2);
             String jsonEntity = objectMapper.writeValueAsString(updatedTimeData);
             MvcResult result = mockMvc.perform(post("/time")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -199,7 +198,7 @@ class TimeControllerShould {
                     .andExpect(jsonPath("$.speed", is("X2")))
                     .andReturn();
             TimeData timeData = objectMapper.readValue(result.getResponse().getContentAsString(), TimeData.class);
-            assertThat(timeData.getVirtualTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
+            assertThat(timeData.getVirtualTime()).isCloseTo(lastYear, within(500, ChronoUnit.MILLIS));
             setAndResetTimeData0(lastYear);
         }
 
@@ -263,7 +262,7 @@ class TimeControllerShould {
             log.info("now is : " + now.toString());
             Instant lastYear = now.minus(365, ChronoUnit.DAYS);
             log.info("last year is : " + lastYear.toString());
-            String jsonEntity = objectMapper.writeValueAsString(lastYear.toEpochMilli());
+            String jsonEntity = objectMapper.writeValueAsString(lastYear);
             MvcResult result = mockMvc.perform(post("/time/current")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(jsonEntity))
@@ -272,8 +271,8 @@ class TimeControllerShould {
 //           .andExpect(jsonPath("$", is(lastYear.toEpochMilli())))
                     .andReturn();
 
-            Long time = objectMapper.readValue(result.getResponse().getContentAsString(), Long.class);
-            assertThat(time).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
+            Instant time = objectMapper.readValue(result.getResponse().getContentAsString(), Instant.class);
+            assertThat(time).isCloseTo(lastYear, within(500, ChronoUnit.MILLIS));
 
             jsonEntity = objectMapper.writeValueAsString(SpeedEnum.X2);
             mockMvc.perform(post("/time/speed")
@@ -357,8 +356,9 @@ class TimeControllerShould {
             log.info("now is : " + now.toString());
             Instant lastYear = now.minus(365, ChronoUnit.DAYS);
             log.info("last year is : " + lastYear.toString());
-            ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear.toEpochMilli(), null, SpeedEnum.X2);
+            ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear, null, SpeedEnum.X2);
             String jsonEntity = objectMapper.writeValueAsString(updatedTimeData);
+            log.info("jsonEntity "+jsonEntity);
             mockMvc.perform(put("/time")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(jsonEntity))
@@ -386,7 +386,7 @@ class TimeControllerShould {
             log.info("now is : " + now.toString());
             Instant lastYear = now.minus(365, ChronoUnit.DAYS);
             log.info("last year is : " + lastYear.toString());
-            ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear.toEpochMilli(), null, SpeedEnum.X2);
+            ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear, null, SpeedEnum.X2);
             String jsonEntity = objectMapper.writeValueAsString(updatedTimeData);
             mockMvc.perform(post("/time")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -445,7 +445,7 @@ class TimeControllerShould {
                 .andExpect(jsonPath("$.speed", is("X2")))
                 .andReturn();
         TimeData timeData = objectMapper.readValue(result.getResponse().getContentAsString(), TimeData.class);
-        Instant computedNow = DateTimeUtil.toInstant(timeData.getComputedNow());
+        Instant computedNow = timeData.getComputedNow();
         log.info("computed now is : " + computedNow.toString());
         assertThat(lastYear.isBefore(computedNow)).describedAs(lastYear.toString() + " should be before " + computedNow
                 .toString()).isTrue();
@@ -488,9 +488,9 @@ class TimeControllerShould {
         TimeData timeData = objectMapper.readValue(result.getResponse().getContentAsString(), TimeData.class);
 
         //Check that virtualTime for the current configuration is the intended start for virtual time: lastYear
-        assertThat(timeData.getVirtualTime()).isCloseTo(lastYear.toEpochMilli(), Offset.offset(500l));
+        assertThat(timeData.getVirtualTime()).isCloseTo(lastYear, within(500, ChronoUnit.MILLIS));
 
-        Instant computedNow = DateTimeUtil.toInstant(timeData.getComputedNow());
+        Instant computedNow = timeData.getComputedNow();
         log.info("computed now is : " + computedNow.toString());
 
         //Check that the current virtual time (computedNow) is later than the chosen virtual time start (lastYear)

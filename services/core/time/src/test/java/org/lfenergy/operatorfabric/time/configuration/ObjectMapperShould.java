@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,9 +52,9 @@ public class ObjectMapperShould {
         TimeData time = mapper.readValue(stringTime, TimeData.class);
         assertThat(time).isNotNull();
         assertThat(time).isInstanceOf(ServerTimeData.class);
-        assertThat(time.getReferenceTime()).isEqualTo(123);
-        assertThat(time.getVirtualTime()).isEqualTo(456);
-        assertThat(time.getComputedNow()).isEqualTo(789);
+        assertThat(time.getReferenceTime().toEpochMilli()).isEqualTo(123);
+        assertThat(time.getVirtualTime().toEpochMilli()).isEqualTo(456);
+        assertThat(time.getComputedNow().toEpochMilli()).isEqualTo(789);
         assertThat(time.getSpeed()).isEqualTo(SpeedEnum.X2);
     }
 }

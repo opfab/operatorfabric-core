@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -78,8 +79,8 @@ public class CardSubscriptionService {
     public synchronized CardSubscription subscribe(
             User user,
             String clientId,
-            Long rangeStart,
-            Long rangeEnd,
+            Instant rangeStart,
+            Instant rangeEnd,
             boolean filterNotification) {
         String subId = CardSubscription.computeSubscriptionId(user.getLogin(), clientId);
         CardSubscription cardSubscription = cache.get(subId);

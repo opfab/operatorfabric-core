@@ -94,10 +94,10 @@ public class CardPublicationData implements Card {
     @JsonIgnore
     private List<String> orphanedUsers;
 
-    public void prepare(Long publishDate) {
+    public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
         this.id = publisher + "_" + processId;
-        this.setShardKey(Math.toIntExact(this.getStartDate() % 24 * 1000));
+        this.setShardKey(Math.toIntExact(this.getStartDate().toEpochMilli() % 24 * 1000));
     }
 
     public LightCardPublicationData toLightCard() {

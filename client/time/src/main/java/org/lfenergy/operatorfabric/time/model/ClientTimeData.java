@@ -12,6 +12,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 /**
  * Client time data
  *
@@ -30,8 +32,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ClientTimeData {
 
-  private Long referenceTime;
-  private Long virtualTime;
-  private Long computedNow;
+  private Instant referenceTime;
+  private Instant virtualTime;
+  private Instant computedNow;
   private SpeedEnum speed;
 }

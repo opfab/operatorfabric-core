@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.utilities.json.InstantModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,7 @@ public class JacksonConfig {
     objectMapper.registerModule(new Jdk8Module());
     objectMapper.registerModule(new JavaTimeModule());
     objectMapper.registerModule(new TimeModule());
+    objectMapper.registerModule(new InstantModule());
     return objectMapper;
   }
 }

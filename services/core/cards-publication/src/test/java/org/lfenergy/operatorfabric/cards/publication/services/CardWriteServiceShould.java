@@ -82,7 +82,7 @@ class CardWriteServiceShould {
                 .severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now().toEpochMilli())
+                .startDate(Instant.now())
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .build(),
             CardPublicationData.builder()
@@ -92,7 +92,7 @@ class CardWriteServiceShould {
                 .severity(SeverityEnum.NOTIFICATION)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now().toEpochMilli())
+                .startDate(Instant.now())
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .build(),
             CardPublicationData.builder()
@@ -102,7 +102,7 @@ class CardWriteServiceShould {
                 .severity(SeverityEnum.QUESTION)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now().toEpochMilli())
+                .startDate(Instant.now())
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .build(),
             CardPublicationData.builder()
@@ -112,7 +112,7 @@ class CardWriteServiceShould {
                 .severity(SeverityEnum.NOTIFICATION)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now().toEpochMilli())
+                .startDate(Instant.now())
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .build(),
             CardPublicationData.builder()
@@ -122,7 +122,7 @@ class CardWriteServiceShould {
                 .severity(SeverityEnum.NOTIFICATION)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now().toEpochMilli())
+                .startDate(Instant.now())
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .build()
         );
@@ -136,7 +136,7 @@ class CardWriteServiceShould {
                 .severity(SeverityEnum.NOTIFICATION)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now().toEpochMilli())
+                .startDate(Instant.now())
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .build();
     }
@@ -196,12 +196,12 @@ class CardWriteServiceShould {
                 .publisherVersion("0.0.1")
                 .processId("PROCESS_1")
                 .severity(SeverityEnum.ALARM)
-                .startDate(start.toEpochMilli())
+                .startDate(start)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1").build())
-                .endDate(start.plusSeconds(60).toEpochMilli())
-                .lttd(start.minusSeconds(600).toEpochMilli())
-                .deletionDate(start.plusSeconds(3600).toEpochMilli())
+                .endDate(start.plusSeconds(60))
+                .lttd(start.minusSeconds(600))
+                .deletionDate(start.plusSeconds(3600))
                 .tag("tag1").tag("tag2")
                 .media("SOUND")
                 .data(data)
@@ -265,7 +265,7 @@ class CardWriteServiceShould {
 //                                )
 //                                .build())
                 .timeSpan(TimeSpanPublicationData.builder()
-                        .start(123l)
+                        .start(Instant.ofEpochMilli(123l))
                         .build()
                 )
                 .build();

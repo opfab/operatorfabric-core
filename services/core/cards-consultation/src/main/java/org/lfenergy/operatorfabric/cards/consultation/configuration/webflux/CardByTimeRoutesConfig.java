@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 
+import java.time.Instant;
+
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -46,14 +48,14 @@ public class CardByTimeRoutesConfig {
 
     private HandlerFunction<ServerResponse> cardByNextTimeGetRoute() {
         return request ->
-                cardRepository.findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(Long.parseLong(request.pathVariable("millisTime")))
+                cardRepository.findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(parseAsInstant(request.pathVariable("millisTime")))
                 .flatMap(card-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
                 .switchIfEmpty(notFound().build());
     }
 
     private HandlerFunction<ServerResponse> cardByPreviousTimeGetRoute() {
         return request ->
-                cardRepository.findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(Long.parseLong(request.pathVariable("millisTime")))
+                cardRepository.findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(parseAsInstant(request.pathVariable("millisTime")))
                 .flatMap(card-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
                 .switchIfEmpty(notFound().build());
     }
@@ -63,5 +65,11 @@ public class CardByTimeRoutesConfig {
     }
     private HandlerFunction<ServerResponse> cardByPreviousTimeOptionRoute() {
         return request -> ok().build();
+    }
+
+    /** Takes string representing number of milliseconds since Epoch and returns corresponding Instant
+     * */
+    private static Instant parseAsInstant(String instantAsEpochMillString) {
+        return instantAsEpochMillString==null?null:Instant.ofEpochMilli(Long.parseLong(instantAsEpochMillString));
     }
 }

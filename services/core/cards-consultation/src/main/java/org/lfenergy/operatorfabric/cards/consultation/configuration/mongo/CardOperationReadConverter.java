@@ -14,6 +14,7 @@ import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsult
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.springframework.core.convert.converter.Converter;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class CardOperationReadConverter implements Converter<Document, CardOpera
     public CardOperation convert(Document source) {
         CardOperationConsultationData.CardOperationConsultationDataBuilder builder = CardOperationConsultationData.builder();
         builder.number(source.getLong("number"))
-                .publishDate(source.getLong("publishDate"));
+                .publishDate(source.getDate("publishDate").toInstant());
         String type = source.getString("type");
         if(type!=null)
             builder.type(CardOperationTypeEnum.valueOf(type));

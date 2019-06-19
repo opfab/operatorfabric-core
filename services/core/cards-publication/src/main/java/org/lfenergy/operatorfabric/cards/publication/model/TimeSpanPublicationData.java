@@ -25,7 +25,7 @@ public class TimeSpanPublicationData implements TimeSpan{
     private Instant end;
     private TimeSpanDisplayModeEnum display;
 
-    public TimeSpanPublicationData(Long start, Long end, TimeSpanDisplayModeEnum display){
+    public TimeSpanPublicationData(Instant start, Instant end, TimeSpanDisplayModeEnum display){
         if(display == null && end != null)
             display = TimeSpanDisplayModeEnum.LINE;
         else if(display == null)

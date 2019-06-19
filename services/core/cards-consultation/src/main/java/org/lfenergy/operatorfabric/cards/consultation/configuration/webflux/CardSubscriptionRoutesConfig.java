@@ -20,6 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Slf4j
@@ -103,8 +105,8 @@ public class CardSubscriptionRoutesConfig {
                     return CardOperationsGetParameters.builder()
                             .user((User) jwtPrincipal.getPrincipal())
                             .clientId(request.queryParam("clientId").orElse(null))
-                            .rangeStart(parseAsLong(request.queryParam("rangeStart").orElse(null)))
-                            .rangeEnd(parseAsLong(request.queryParam("rangeEnd").orElse(null)))
+                            .rangeStart(parseAsInstant(request.queryParam("rangeStart").orElse(null)))
+                            .rangeEnd(parseAsInstant(request.queryParam("rangeEnd").orElse(null)))
                             .test(request.queryParam("test").orElse(FALSE).equals(TRUE))
                             .notification(request.queryParam("notification").orElse(FALSE).equals(TRUE))
                             .build();
@@ -134,7 +136,9 @@ public class CardSubscriptionRoutesConfig {
                 });
     }
 
-    private static Long parseAsLong(String longAsString) {
-        return longAsString==null?null:Long.parseLong(longAsString);
+    /** Takes string representing number of milliseconds since Epoch and returns corresponding Instant
+     * */
+    private static Instant parseAsInstant(String instantAsEpochMillString) {
+        return instantAsEpochMillString==null?null:Instant.ofEpochMilli(Long.parseLong(instantAsEpochMillString));
     }
 }

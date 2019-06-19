@@ -42,8 +42,8 @@ public class TestUtilities {
                 .processId("PROCESS" + processSuffix)
                 .publisher("PUBLISHER")
                 .publisherVersion("0")
-                .startDate(start.toEpochMilli())
-                .endDate(end != null ? end.toEpochMilli() : null)
+                .startDate(start)
+                .endDate(end != null ? end : null)
                 .severity(SeverityEnum.ALARM)
                 .title(I18nConsultationData.builder().key("title").build())
                 .summary(I18nConsultationData.builder().key("summary").build())
@@ -54,7 +54,7 @@ public class TestUtilities {
         if(login!=null)
             cardBuilder.orphanedUser(login);
         CardConsultationData card = cardBuilder.build();
-        prepareCard(card, publication.toEpochMilli());
+        prepareCard(card, publication);
         return card;
     }
 
@@ -98,11 +98,11 @@ public class TestUtilities {
     }
 
 
-    public static void prepareCard(CardConsultationData card, Long publishDate) {
+    public static void prepareCard(CardConsultationData card, Instant publishDate) {
         card.setUid(UUID.randomUUID().toString());
         card.setPublishDate(publishDate);
         card.setId(card.getPublisher() + "_" + card.getProcessId());
-        card.setShardKey(Math.toIntExact(card.getStartDate() % 24 * 1000));
+        card.setShardKey(Math.toIntExact(card.getStartDate().toEpochMilli() % 24 * 1000));
     }
 
     @NotNull

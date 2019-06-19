@@ -113,7 +113,7 @@ public class CardWriteService {
                 //batching cards
                 .windowTimeout(windowSize, Duration.ofMillis(windowTimeOut))
                 //remembering startime for measurement
-                .map(card -> Tuples.of(card, System.nanoTime(), VirtualTime.getInstance().computeNow().toEpochMilli()))
+                .map(card -> Tuples.of(card, System.nanoTime(), VirtualTime.getInstance().computeNow()))
                 //trigger batched treatment upon window readiness
                 .subscribe(cardAndTimeTuple -> handleWindowedCardFlux(cardAndTimeTuple),
                         error -> handleError(error));
@@ -124,7 +124,7 @@ public class CardWriteService {
         wireProcessor(this.windowSize, this.windowTimeOut);
     }
 
-    private void handleWindowedCardFlux(Tuple3<Flux<CardPublicationData>, Long, Long> cardAndTimeTuple) {
+    private void handleWindowedCardFlux(Tuple3<Flux<CardPublicationData>, Long, Instant> cardAndTimeTuple) {
         long windowStart = cardAndTimeTuple.getT2();
         Flux<CardPublicationData> cards = registerRecipientProcess(cardAndTimeTuple.getT1());
         cards = registerTolerantValidationProcess(cards, cardAndTimeTuple.getT3());
@@ -153,7 +153,7 @@ public class CardWriteService {
      * @param publishDate
      * @return
      */
-    private Flux<CardPublicationData> registerTolerantValidationProcess(Flux<CardPublicationData> cards, Long publishDate) {
+    private Flux<CardPublicationData> registerTolerantValidationProcess(Flux<CardPublicationData> cards, Instant publishDate) {
         return cards
                 // prepare card computed data (id, shardkey)
                 .flatMap(ignoreErrorFlatMap(c -> c.prepare(publishDate)))
@@ -168,10 +168,10 @@ public class CardWriteService {
      * @param publishDate
      * @return
      */
-    private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards, Long publishDate) {
+    private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards, Instant publishDate) {
         return cards
                 // prepare card computed data (id, shardkey)
-                .doOnNext(c -> c.prepare(Math.round(publishDate / 1000d) * 1000))
+                .doOnNext(c -> c.prepare(Instant.ofEpochMilli(Math.round(publishDate.toEpochMilli() / 1000d) * 1000)))
                 // JSR303 bean validation of card
                 .doOnNext(this::validate);
     }
@@ -295,7 +295,7 @@ public class CardWriteService {
     public Mono<CardCreationReportData> createCardsWithResult(Flux<CardPublicationData> pushedCards) {
         long windowStart = Instant.now().toEpochMilli();
         Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
-        cards = registerValidationProcess(cards, VirtualTime.getInstance().computeNow().toEpochMilli());
+        cards = registerValidationProcess(cards, VirtualTime.getInstance().computeNow());
         return registerPersistenceAndNotificationProcess(cards, windowStart)
                 .doOnNext(count -> log.info(count + " pushed Cards persisted"))
                 .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))

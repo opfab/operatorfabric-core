@@ -104,7 +104,7 @@ class AsyncCardControllerShould {
               .severity(SeverityEnum.ALARM)
               .title(I18nPublicationData.builder().key("title").build())
               .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
+              .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
               .build(),
            CardPublicationData.builder()
@@ -114,7 +114,7 @@ class AsyncCardControllerShould {
               .severity(SeverityEnum.NOTIFICATION)
               .title(I18nPublicationData.builder().key("title").build())
               .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
+              .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
               .build(),
            CardPublicationData.builder()
@@ -124,7 +124,7 @@ class AsyncCardControllerShould {
               .severity(SeverityEnum.QUESTION)
               .title(I18nPublicationData.builder().key("title").build())
               .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
+              .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
               .build(),
            CardPublicationData.builder()
@@ -134,7 +134,7 @@ class AsyncCardControllerShould {
               .severity(SeverityEnum.NOTIFICATION)
               .title(I18nPublicationData.builder().key("title").build())
               .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
+              .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
               .build(),
            CardPublicationData.builder()
@@ -144,7 +144,7 @@ class AsyncCardControllerShould {
               .severity(SeverityEnum.NOTIFICATION)
               .title(I18nPublicationData.builder().key("title").build())
               .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now().toEpochMilli())
+              .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
               .build()
         );

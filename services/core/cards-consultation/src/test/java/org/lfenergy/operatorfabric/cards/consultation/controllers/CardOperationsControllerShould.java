@@ -193,7 +193,7 @@ public class CardOperationsControllerShould {
         verifier
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(2);
-                    assertThat(op.getPublishDate()).isEqualTo(nowPlusOne.toEpochMilli());
+                    assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
                     assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESSnotif1");
                     assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESSnotif2");
                 })
@@ -208,15 +208,15 @@ public class CardOperationsControllerShould {
                         .user(user)
                         .clientId(TEST_ID)
                         .test(false)
-                        .rangeStart(now.toEpochMilli())
-                        .rangeEnd(nowPlusThree.toEpochMilli())
+                        .rangeStart(now)
+                        .rangeEnd(nowPlusThree)
                         .notification(false).build()
         ));
         StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
         verifier
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(6);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
+                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
                     assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS6");
                     assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS7");
                     assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS2");
@@ -234,15 +234,15 @@ public class CardOperationsControllerShould {
                         .user(user)
                         .clientId(TEST_ID)
                         .test(false)
-                        .rangeStart(now.toEpochMilli())
-                        .rangeEnd(nowPlusThree.toEpochMilli())
+                        .rangeStart(now)
+                        .rangeEnd(nowPlusThree)
                         .notification(true).build()
         ));
         StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
         verifier
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(6);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
+                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
                     assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS6");
                     assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS7");
                     assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS2");
@@ -253,14 +253,14 @@ public class CardOperationsControllerShould {
                 .then(createSendMessageTask())
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(2);
-                    assertThat(op.getPublishDate()).isEqualTo(nowPlusOne.toEpochMilli());
+                    assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
                     assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESSnotif1");
                     assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESSnotif2");
                 })
                 .then(createUpdateSubscriptionTask())
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(3);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree.toEpochMilli());
+                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
                     assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS6");
                     assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS7");
                     assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS0");
@@ -273,13 +273,13 @@ public class CardOperationsControllerShould {
     private Runnable createUpdateSubscriptionTask() {
         return () -> {
             log.info("execute update subscription task");
-            CardSubscription subscription = CardSubscription.builder().rangeStart(nowMinusThree.toEpochMilli()).rangeEnd(nowMinusTwo.toEpochMilli()).build();
+            CardSubscription subscription = CardSubscription.builder().rangeStart(nowMinusThree).rangeEnd(nowMinusTwo).build();
             Mono<CardOperationsGetParameters> parameters = Mono.just(CardOperationsGetParameters.builder()
                     .user(user)
                     .clientId(TEST_ID)
                     .test(false)
-                    .rangeStart(nowMinusThree.toEpochMilli())
-                    .rangeEnd(nowMinusTwo.toEpochMilli())
+                    .rangeStart(nowMinusThree)
+                    .rangeEnd(nowMinusTwo)
                     .notification(true).build());
             StepVerifier.create(controller.updateSubscriptionAndPublish(parameters))
             .expectNextCount(1)
@@ -308,7 +308,7 @@ public class CardOperationsControllerShould {
             try {
                 log.info("execute send task");
                 CardOperationConsultationData.CardOperationConsultationDataBuilder builder = CardOperationConsultationData.builder();
-                builder.publishDate(nowPlusOne.toEpochMilli())
+                builder.publishDate(nowPlusOne)
                         .card(LightCardConsultationData.copy(TestUtilities.createSimpleCard("notif1", nowPlusOne, nowPlusTwo, nowPlusThree,"rte-operator","rte","operator")))
                         .card(LightCardConsultationData.copy(TestUtilities.createSimpleCard("notif2", nowPlusOne, nowPlusTwo, nowPlusThree,"rte-operator","rte","operator")))
                 ;
@@ -350,7 +350,7 @@ public class CardOperationsControllerShould {
                 assertThat(c.getMainRecipient()).isEqualTo("rte-operator");
                 assertThat(c.getSeverity()).isEqualTo(SeverityEnum.ALARM);
             } catch (IOException e) {
-                log.error("Unnabable to extract light cards",e);
+                log.error("Unable to extract light cards",e);
                 Assertions.assertThat(e).doesNotThrowAnyException();
             }
         };

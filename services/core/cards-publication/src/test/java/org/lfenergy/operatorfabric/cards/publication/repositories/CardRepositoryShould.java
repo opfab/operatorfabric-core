@@ -57,7 +57,7 @@ public class CardRepositoryShould {
                 .processId("PROCESS")
                 .publisher("PUBLISHER")
                 .publisherVersion("0")
-                .startDate(Instant.now().toEpochMilli())
+                .startDate(Instant.now())
                 .severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
@@ -83,21 +83,21 @@ public class CardRepositoryShould {
                     .build())
                 .timeSpan(
                         TimeSpanPublicationData.builder()
-                                .start(123l)
+                                .start(Instant.ofEpochMilli(123l))
                                 .build())
                 .timeSpan(
                         TimeSpanPublicationData.builder()
-                                .start(123l)
-                                .end(456l)
+                                .start(Instant.ofEpochMilli(123l))
+                                .end(Instant.ofEpochMilli(456l))
                                 .build())
                 .timeSpan(
                         TimeSpanPublicationData.builder()
-                                .start(123l)
-                                .end(456l)
+                                .start(Instant.ofEpochMilli(123l))
+                                .end(Instant.ofEpochMilli(456l))
                                 .display(TimeSpanDisplayModeEnum.BUBBLE)
                                 .build())
                 .build();
-        card.prepare(Instant.now().toEpochMilli());
+        card.prepare(Instant.now());
         StepVerifier.create(repository.save(card))
                 .assertNext(computeCardAssertion(card))
                 .expectComplete()

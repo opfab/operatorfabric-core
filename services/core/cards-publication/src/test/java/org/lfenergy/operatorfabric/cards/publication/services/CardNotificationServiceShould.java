@@ -70,10 +70,10 @@ class CardNotificationServiceShould {
            .publisherVersion("0.0.1")
            .processId("PROCESS_1")
            .severity(SeverityEnum.ALARM)
-           .startDate(start.toEpochMilli())
+           .startDate(start)
            .title(I18nPublicationData.builder().key("title").build())
            .summary(I18nPublicationData.builder().key("summary").parameter("arg1","value1").build())
-           .lttd(start.minusSeconds(600).toEpochMilli())
+           .lttd(start.minusSeconds(600))
            .recipient(
               RecipientPublicationData.builder()
                  .type(RecipientEnum.UNION)

@@ -11,6 +11,8 @@ import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
 import reactor.core.publisher.Flux;
 
+import java.time.Instant;
+
 public interface CardOperationRepository {
     /**
      * Finds Card published earlier than <code>latestPublication</code> and either :
@@ -29,7 +31,7 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<String> findUrgentJSON(long latestPublication, long rangeStart, long rangeEnd, String login, String... groups);
+    Flux<String> findUrgentJSON(Instant latestPublication, Instant rangeStart, Instant rangeEnd, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and starting after <code>rangeStart</code>
@@ -41,7 +43,7 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<String> findFutureOnlyJSON(long latestPublication, long rangeStart, String login, String... groups);
+    Flux<String> findFutureOnlyJSON(Instant latestPublication, Instant rangeStart, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and ending before <code>rangeEnd</code>
@@ -53,7 +55,7 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<String> findPastOnlyJSON(long latestPublication, long rangeEnd, String login, String... groups);
+    Flux<String> findPastOnlyJSON(Instant latestPublication, Instant rangeEnd, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and either :
@@ -72,7 +74,7 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<CardOperation> findUrgent(long latestPublication, long rangeStart, long rangeEnd, String login, String... groups);
+    Flux<CardOperation> findUrgent(Instant latestPublication, Instant rangeStart, Instant rangeEnd, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and starting after <code>rangeStart</code>
@@ -84,7 +86,7 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<CardOperation> findFutureOnly(long latestPublication, long rangeStart, String login, String... groups);
+    Flux<CardOperation> findFutureOnly(Instant latestPublication, Instant rangeStart, String login, String... groups);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and ending before <code>rangeEnd</code>
@@ -96,5 +98,5 @@ public interface CardOperationRepository {
      * @param groups            only cards received by at least one of these groups (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<CardOperation> findPastOnly(long latestPublication, long rangeEnd, String login, String... groups);
+    Flux<CardOperation> findPastOnly(Instant latestPublication, Instant rangeEnd, String login, String... groups);
 }
