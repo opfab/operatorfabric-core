@@ -17,6 +17,7 @@ import {map, timeout} from "rxjs/operators";
 import {configInitialState} from "@ofStates/config.state";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
+import {authInitialState} from "@ofStates/authentication.state";
 
 describe('TextSettingComponent', () => {
     let component: TextSettingComponent;
@@ -26,7 +27,7 @@ describe('TextSettingComponent', () => {
         router: null,
         feed: null,
         timeline: null,
-        authentication: null,
+        authentication: {...authInitialState, identifier: 'test'},
         card: null,
         menu: null,
         config: configInitialState,
