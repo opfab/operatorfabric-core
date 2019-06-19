@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
 
     navbarCollapsed = true;
     navigationRoutes = navigationRoutes;
-    currentPath: any;
+    currentPath: string[];
     private _thirdMenus: Observable<ThirdMenu[]>;
     expandedMenu:boolean[]=[];
     expandedUserMenu=false;
@@ -38,7 +38,7 @@ export class NavbarComponent implements OnInit {
     ngOnInit() {
         this.store.select(selectCurrentUrl).subscribe(url=>{
             if(url)
-                this.currentPath = url.split('/')[1];
+                this.currentPath = url.split('/');
         });
         this._thirdMenus=this.store.select(selectMenuStateMenu)
             .pipe(tap(menus=>{

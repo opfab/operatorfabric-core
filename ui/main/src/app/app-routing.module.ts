@@ -32,6 +32,11 @@ const routes: Routes = [
         // canActivate: [AuthenticationGuard]
     },
     {
+        path: 'settings',
+        loadChildren: './modules/settings/settings.module#SettingsModule',
+        // canActivate: [AuthenticationGuard]
+    },
+    {
         path: 'navbar',
         component: LoginComponent
     },

@@ -18,7 +18,7 @@
     <ul class="navbar-nav mr-auto">
       <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
       <li class="nav-item" *ngFor="let link of navigationRoutes, let i = index"
-          [class.active]="link.path === currentPath">
+          [class.active]="link.path === currentPath[1]">
         <a
                 class="nav-link"
                 [routerLink]="link.path"
@@ -71,7 +71,7 @@
         ><of-info></of-info></a>
         <div class="dropdown-menu dropdown-menu-right"
              [ngbCollapse]="!expandedUserMenu">
-          <div class="dropdown-item">
+          <div class="dropdown-item" [class.active]="'settings' === currentPath[1]">
             <a
                     class="nav-link text-dark text-decoration-none"
                     routerLink="/settings"
