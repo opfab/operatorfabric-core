@@ -35,12 +35,6 @@ describe('CardComponent', () => {
     let translateService: TranslateService;
     let i18nService: I18nService;
 
-    beforeAll(()=>{
-        moment.tz.setDefault("Europe/Paris");
-        moment.locale('fr');
-        console.log(moment.locale());
-    });
-
     beforeEach(async(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
         TestBed.configureTestingModule({
@@ -73,7 +67,7 @@ describe('CardComponent', () => {
         translateService.setDefaultLang("en");
         // translateService.use("en");
         i18nService = injector.get(I18nService);
-        i18nService.changeLocale('en',null);
+        i18nService.changeLocale('en',"Europe/Paris");
 
     }));
 
