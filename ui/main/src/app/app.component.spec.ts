@@ -53,7 +53,7 @@ describe('AppComponent', () => {
                 // called in ngOnInit and passed to mat-tab-url
                 return of('/test/url');
             }
-            return of({});
+            return of(null);
         }
     );
         fixture = TestBed.createComponent(AppComponent);

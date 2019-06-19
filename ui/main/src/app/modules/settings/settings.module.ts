@@ -9,12 +9,19 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SettingsRoutingModule} from "./settings-routing.module";
 import { SettingsComponent } from './components/settings/settings.component';
+import { BaseSettingComponent } from './components/settings/base-setting/base-setting.component';
+import { TextSettingComponent } from './components/settings/text-setting/text-setting.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
-    declarations: [SettingsComponent],
+    declarations: [SettingsComponent, BaseSettingComponent, TextSettingComponent],
     imports: [
         CommonModule,
-        SettingsRoutingModule
+        FormsModule,
+        ReactiveFormsModule,
+        SettingsRoutingModule,
+        TranslateModule,
     ]
 })
 export class SettingsModule {

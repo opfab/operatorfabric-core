@@ -49,5 +49,13 @@
         "expiration": "The stored token has expired"
       }
     }
+  },
+  "settings":{
+    "email": "Email adress",
+    "description": "Description",
+    "locale": "Language",
+    "timeFormat": "Time format",
+    "dateFormat": "Date format",
+    "dateTimeFormat": "Date Time format"
   }
 }

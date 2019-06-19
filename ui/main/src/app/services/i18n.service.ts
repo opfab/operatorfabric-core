@@ -12,7 +12,7 @@ import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 import {withLatestFrom} from "rxjs/operators";
-import {zip} from "rxjs";
+import {combineLatest, zip} from "rxjs";
 
 @Injectable()
 export class I18nService {
@@ -21,7 +21,7 @@ export class I18nService {
     private _timeZone:string;
 
     constructor(private translate: TranslateService,private store: Store<AppState>) {
-        zip(
+        combineLatest(
         this.store.select(buildSettingsOrConfigSelector('locale')),
         this.store.select(buildSettingsOrConfigSelector('timeZone' )))
 

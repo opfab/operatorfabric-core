@@ -49,5 +49,13 @@
         "expiration": "Le jeton conservé a expiré"
       }
     }
+  },
+  "settings":{
+    "email": "Adresse mel",
+    "description": "Description",
+    "locale": "Langue",
+    "timeFormat": "Format heure/minute",
+    "dateFormat": "Format de date",
+    "dateTimeFormat": "Format date et heure/minute"
   }
 }

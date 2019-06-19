@@ -183,7 +183,8 @@ export class ThirdsService {
                 reduce((acc, val) => _.merge(acc,val)),
                 map(
                     (result:any) => {
-                        let langs = this.translate().getLangs();
+                        const langs = this.translate().getLangs();
+                        const currentLang = this.translate().currentLang;
                         for (let lang of langs) {
                             let translationElement = result.translation[lang];
                             if (translationElement) {
@@ -192,6 +193,7 @@ export class ThirdsService {
                                 this.translate().use(lang);
                             }
                         }
+                        this.translate().use(currentLang);
                         _.remove(this.loadingI18n, result.id);
                         this.loadedI18n.push(result.id);
                         return true;
