@@ -102,7 +102,7 @@ describe('TimeFilterComponent', () => {
         expect(formDivQuery.length).toBe(2);
         expect(checkedQuery.length).toBe(2);
     });
-    it('should update filter on input', () => {
+    it('should update filter on input', (done) => {
         //componenet state
         expect(component).toBeTruthy();
         //dom structure
@@ -119,6 +119,7 @@ describe('TimeFilterComponent', () => {
         fixture.whenStable().then(() => {
             expect(store.select(buildFilterSelector(FilterType.TYPE_FILTER)).pipe(map((filter => filter.status))))
                 .toBeObservable(hot('---a', {a: {start: Date.parse(dateStringValue), end: null}}));
+            done();
         });
 
     });

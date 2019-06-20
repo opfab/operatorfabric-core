@@ -17,13 +17,14 @@ import {InitFilters} from "@ofActions/feed.actions";
 import {map} from "rxjs/operators";
 import {By} from "@angular/platform-browser";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
-import {hot} from "jasmine-marbles";
+import {addMatchers, getTestScheduler, hot, initTestScheduler, resetTestScheduler} from "jasmine-marbles";
 
 describe('TypeFilterComponent', () => {
     let component: TypeFilterComponent;
     let fixture: ComponentFixture<TypeFilterComponent>;
     let store: Store<AppState>;
     let filterService: FilterService;
+
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -79,8 +80,8 @@ describe('TypeFilterComponent', () => {
         expect(checkedQuery.length).toBe(3);
         expect(uncheckedQuery.length).toBe(1);
     });
-    it('shouldupdate filter', () => {
-        //componenet state
+    it('should update filter', (done) => {
+        //component state
         expect(component).toBeTruthy();
         //dom structure
         let debugElement = fixture.debugElement;
@@ -95,6 +96,7 @@ describe('TypeFilterComponent', () => {
         fixture.whenStable().then(() => {
             expect(store.select(buildFilterSelector(FilterType.TYPE_FILTER)).pipe(map((filter => filter.status))))
                 .toBeObservable(hot('---a', {a: {alarm: true, action: true, question: true, notification: true}}));
+            done();
         });
 
     });
