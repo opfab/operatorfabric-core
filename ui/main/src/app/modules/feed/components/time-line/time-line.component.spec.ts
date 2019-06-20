@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimeLineComponent } from './time-line.component';
-import { CommonModule } from '@angular/common';
+import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -47,7 +47,8 @@ describe('TimeLineComponent', () => {
         NgxChartsModule ],
       declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent, DraggableDirective, MouseWheelDirective,
         XAxisTickFormatPipe],
-      providers: [{provide: Store, useClass: Store}, {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
+      providers: [{provide: APP_BASE_HREF, useValue: '/'}, {provide: Store, useClass: Store},
+        {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
