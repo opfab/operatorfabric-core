@@ -11,6 +11,9 @@ export class XAxisTickFormatPipe implements PipeTransform {
    * @param clusterLevel
    */
   transformHovered(value: any, clusterLevel: string): string {
+    if (typeof value === 'string') {
+      return value;
+    }
     const date = moment(value);
     switch (clusterLevel) {
       case 'W': case 'D-7': {
@@ -51,6 +54,9 @@ export class XAxisTickFormatPipe implements PipeTransform {
     // if (languageTag) {
     /*if (value instanceof moment) {*/
     // const datePipe = moment.locale(languageTag);
+    if (typeof value === 'string') {
+      return value;
+    }
     const date = moment(value);
     const startYear = moment(date).startOf('year');
     switch (clusterLevel) {
