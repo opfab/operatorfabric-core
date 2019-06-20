@@ -83,7 +83,7 @@ describe('InitChartComponent', () => {
     // move two times domain in same direction for
     // increment continuousForward allowing a full condition coverage of moveDomainByDay
     domain = component.myDomain;
-    component.forwardButtonType = 'D-7';
+    component.forwardButtonType = '7D';
     component.moveDomain(true);
     component.moveDomain(true);
     expect(domain).not.toEqual(component.myDomain);
@@ -93,7 +93,7 @@ describe('InitChartComponent', () => {
 
     // for D-7 two cases to test, we inverse boolean value passed at moveDomain function
     domain = component.myDomain;
-    component.forwardButtonType = 'D-7';
+    component.forwardButtonType = '7D';
     component.moveDomain(false);
     component.moveDomain(false);
     expect(domain).not.toEqual(component.myDomain);

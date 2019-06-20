@@ -67,7 +67,7 @@ import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
                 [attr.x]="timeScale(xRealTimeLine)"
                 [attr.width]="5"
                 y="0"
-                [attr.fill]="'blue'"
+                [attr.fill]="'grey'"
                 [attr.height]="dims.height"
                 class="realTimeLine"
       ></svg:rect>
@@ -181,7 +181,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   // DATA
   private _myData;
   public dataClustered;
-  private first = true;
+  public first = true;
 
   // ZOOM
   private maxZoom;
@@ -410,7 +410,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
    */
   fctTickFormattingAdvanced = (e): string => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    if (this.clusterLevel === 'W' || this.clusterLevel === 'D-7') {
+    if (this.clusterLevel === 'W' || this.clusterLevel === '7D') {
       return formatPipe.transformAdvanced(e, this.clusterLevel);
     }
     return formatPipe.transform(e, this.clusterLevel);
@@ -486,7 +486,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
    */
   setXTicksValue(domain): void { // add width and make différent treatment (responsive)
     switch (this.clusterLevel) {
-      case 'W': case 'D-7': {
+      case 'W': case '7D': {
         this.weekTicks(domain);
         break;
       }
@@ -569,6 +569,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   getYDomain(): number[] {
     const domain = [];
 
+    if (this._myData === undefined) {
+      return [0, 5];
+    }
     for (const series of this.myData) {
       for (const d of series) {
         if (domain.indexOf(d.value) < 0) {
@@ -677,7 +680,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     this.setXTicksValue(domain);
     this.xTicksOne = [];
     this.xTicksTwo = [];
-    if (this.clusterLevel === 'W' || this.clusterLevel === 'D-7') {
+    if (this.clusterLevel === 'W' || this.clusterLevel === '7D') {
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(4);
     } else {
@@ -713,6 +716,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
    */
   clusterize(domain): void {
     this.dataClustered = [];
+    if (this._myData === undefined) {
+      return;
+    }
     let y = 0;
     // loop on arrays (each severities) of our data
     for (const array of this._myData) {

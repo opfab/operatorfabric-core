@@ -95,7 +95,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
   setChartData(): void {
     this.subscription = this.data$.pipe(debounceTime(300), distinctUntilChanged())
         .subscribe(value => {
-      console.log('init-chart subscribe');
+      // console.log('init-chart subscribe');
       const chartData = _.cloneDeep(value);
       this.setArrayChartData(chartData);
     });
@@ -365,7 +365,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
       case 'W':
         this.moveDomainByWeek(moveForward);
         break;
-      case 'D-7':
+      case '7D':
         this.moveDomainByDay(moveForward);
         break;
       case 'M':

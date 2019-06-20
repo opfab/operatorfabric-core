@@ -16,7 +16,7 @@ export class XAxisTickFormatPipe implements PipeTransform {
     }
     const date = moment(value);
     switch (clusterLevel) {
-      case 'W': case 'D-7': {
+      case 'W': case '7D': {
         return date.format('ddd DD MMM HH') + 'h';
       }
       case 'M': case 'Y': {
@@ -60,7 +60,7 @@ export class XAxisTickFormatPipe implements PipeTransform {
     const date = moment(value);
     const startYear = moment(date).startOf('year');
     switch (clusterLevel) {
-      case 'W' : case 'D-7': {
+      case 'W' : case '7D': {
         if (date.valueOf() === startYear.valueOf()) {
           return date.format('ddd DD MMM YYYY');
         }

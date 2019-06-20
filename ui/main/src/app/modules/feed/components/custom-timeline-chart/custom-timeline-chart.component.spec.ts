@@ -32,22 +32,40 @@ describe('CustomTimelineChartComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it('should call update() and create chart by calling updateYAxisWidth function', () => {
     fixture.detectChanges();
+    component.clusterLevel = 'W';
+    component.realTimeBar = true;
+    component.updateYAxisWidth({width: 1920});
     expect(component).toBeTruthy();
   });
 
-  it('should create without domain', () => {
+  it('should create', () => {
+    fixture.detectChanges();
+    component.first = true;
+    component.realTimeBar = false;
+    component.updateYAxisWidth({width: 1920});
+    component.first = false;
+    component.updateYAxisWidth({width: 1900}); // check if on first
+    expect(component).toBeTruthy();
+  });
+
+  it('should create an default domain when it wasnt set yet ' +
+    'check if the moment is inside the domain', () => {
     fixture.detectChanges();
     component.xDomain = null;
     expect(component.getXDomain()).toEqual([0, 1]);
+    expect(component.checkInsideDomain(moment())).toEqual(false);
     expect(component).toBeTruthy();
   });
 
-  it('should return the same string which was received', () => {
+  it('should return the same string which was received when autoScale is true' +
+    'should return an empty string when autoScale is false', () => {
     fixture.detectChanges();
     component.autoScale = true;
     expect(component.hideLabelsTicks('test')).toEqual('test');
+    component.autoScale = false;
+    expect(component.hideLabelsTicks('test')).toEqual('');
   });
 
   it('should return without effect', () => {
@@ -70,8 +88,11 @@ describe('CustomTimelineChartComponent', () => {
     fixture.detectChanges();
     component.clusterLevel = 'M';
     const test = moment();
-    test.date(3);
+    test.date(3).hours(0);
+    expect(component.fctTickFormatting(test)).toEqual(test.format('ddd DD MMM'));
     expect(component.fctTickFormattingAdvanced(test)).toEqual(test.format('ddd DD MMM'));
+    component.clusterLevel = 'W';
+    expect(component.fctTickFormattingAdvanced(test)).toEqual(test.format('HH') + 'h');
   });
 
   it('simulate circle hovered', () => {

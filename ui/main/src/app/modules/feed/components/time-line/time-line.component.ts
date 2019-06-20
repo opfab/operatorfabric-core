@@ -96,7 +96,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         {
             startDomain: startDomain4.valueOf(),
             endDomain: endDomain4.valueOf(),
-            forwardLevel: 'D-7',
+            forwardLevel: '7D',
             followCloackTick: true,
         },
         {
@@ -127,7 +127,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         // add a card data to the timeline state for each new card received
         this.subscription = this.lightCards$.pipe(debounceTime(300), distinctUntilChanged())
             .subscribe(value => {
-            console.log('timeline subscribe');
+            // console.log('timeline subscribe');
             const tmp = _.cloneDeep(value);
             this.store.dispatch(new InitTimeline({
                 data: [],
@@ -188,7 +188,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
     dateWithSpaceBeforeMoment(date, clusterLevel) {
         date.minutes(0).seconds(0).millisecond(0);
         switch (clusterLevel) {
-            case 'W' : case 'D-7': {
+            case 'W' : case '7D': {
                 for (let i = 0; i < 35; i++) {
                     if (((date.hours() - i) % 4) === 0) {
                         date.subtract(i, 'hours');

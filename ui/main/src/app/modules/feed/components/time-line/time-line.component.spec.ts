@@ -28,6 +28,7 @@ import { DraggableDirective } from './app-draggable';
 import { MouseWheelDirective } from './mouse-wheel.directive';
 import { XAxisTickFormatPipe } from './x-axis-tick-format.pipe';
 import * as moment from 'moment';
+import {debounceTime, distinctUntilChanged} from "rxjs/operators";
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
@@ -80,7 +81,7 @@ describe('TimeLineComponent', () => {
     'from dateWithSpaceBeforeMom function', () => {
     const actualMoment = moment();
     actualMoment.hours(1);
-    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), 'D-7');
+    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), '7D');
     const dateMoment = moment(actualMoment);
     dateMoment.minutes(0).seconds(0).millisecond(0);
     dateMoment.subtract(13, 'hours');
@@ -120,98 +121,82 @@ describe('TimeLineComponent', () => {
     expect(date.valueOf()).toEqual(dateMoment.valueOf());
   });
 
-
-/*  it('should create', async() => {
+  it('should create a list with one element when there is ' +
+      'only one card in the state', (done) => {
     fixture.detectChanges();
-    fixtureInit = TestBed.createComponent(InitChartComponent);
-    componentInit = fixtureInit.componentInstance;
-    fixtureInit.detectChanges();
-    spyOn(componentInit, 'applyNewZoom');
-
-    const button = fixture.nativeElement.children[1].children[0].querySelectorAll('button');
-    button[2].click();
-    button[3].click();
-    componentInit.applyNewZoom('in');
-    // button[4].click();
-    /!*fixture.whenStable().then(() => {
-      expect(component.onEditButtonClick).toHaveBeenCalled();
-    });*!/
+    const oneCard = getOneRandomLigthCard();
+    const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
+    store.dispatch(action);
+    const lightCards$ = store.select(fromStore.selectFeed);
+    lightCards$.pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe(lightCard => {
+      expect(lightCard).toEqual([oneCard]);
+    });
+    const dataCard = [{
+      startDate: oneCard.startDate,
+      endDate: oneCard.endDate,
+      severity: oneCard.severity,
+    }];
+    const data$ = store.select((timelineSelectors.selectTimelineSelection));
+    data$.pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe(value => {
+          expect(value).toEqual(dataCard);
+          done();
+        });
+    expect(store.dispatch).toHaveBeenCalledWith(action);
     expect(component).toBeTruthy();
-  });*/
+    // title exists
+    // expect(compiled.childrend[0]); // .querySelector('h3').textContent).toContain('Feed');
+    // a list exists
+    // expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
+  });
 
-  // it('should create a list with one element when there is ' +
-  //     'only one card in the state', () => {
-  //   fixture.detectChanges();
-  //   const oneCard = getOneRandomLigthCard();
-  //   const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
-  //   store.dispatch(action);
-  //   const lightCards$ = store.select(fromStore.selectFeed);
-  //   lightCards$.subscribe(lightCard => {
-  //     expect(lightCard).toEqual([oneCard]);
-  //   });
-  //   const dataCard = [{
-  //     startDate: oneCard.startDate,
-  //     endDate: oneCard.endDate,
-  //     severity: oneCard.severity,
-  //   }];
-  //   const data$ = store.select((timelineSelectors.selectTimelineSelection));
-  //   data$.subscribe(value => {
-  //     expect(value).toEqual(dataCard);
-  //   });
-  //   expect(store.dispatch).toHaveBeenCalledWith(action);
-  //   expect(component).toBeTruthy();
-  //   // title exists
-  //   // expect(compiled.childrend[0]); // .querySelector('h3').textContent).toContain('Feed');
-  //   // a list exists
-  //   // expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
-  // });
-
-  //const compiled = fixture.debugElement.nativeElement.children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[0].children[4];
-  //console.log('childrendnnnnn', compiled);
-
-//   it('should create four differents circles when there is ' +
-//       'four cards with differents severity in the state', () => {
-//     // const compiled = fixture.debugElement.nativeElement;
-//     fixture.detectChanges();
-//     const oneCard = getOneRandomLigthCard();
-//     const actionCard = getOneRandomLigthCard({severity: 'ACTION'});
-//     const alarmCard = getOneRandomLigthCard({severity: 'ALARM'});
-//     const notificationCard = getOneRandomLigthCard({severity: 'NOTIFICATION'});
-//     const action = new LoadLightCardsSuccess({lightCards: [oneCard, actionCard, alarmCard, notificationCard] as LightCard[]});
-//     store.dispatch(action);
-//     const lightCards$ = store.select(fromStore.selectFeed);
-//     lightCards$.subscribe(lightCard => {
-//       expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard]);
-//     });
-//     const dataCard = [{
-//       startDate: oneCard.startDate,
-//       endDate: oneCard.endDate,
-//       severity: oneCard.severity,
-//     }, {
-//       startDate: actionCard.startDate,
-//       endDate: actionCard.endDate,
-//       severity: actionCard.severity,
-//     }, {
-//       startDate: alarmCard.startDate,
-//       endDate: alarmCard.endDate,
-//       severity: alarmCard.severity,
-//     }, {
-//       startDate: notificationCard.startDate,
-//       endDate: notificationCard.endDate,
-//       severity: notificationCard.severity,
-//     }];
-//     const data$ = store.select((timelineSelectors.selectTimelineSelection));
-//     data$.subscribe(value => {
-//       expect(value).toEqual(dataCard);
-//     });
-//     expect(store.dispatch).toHaveBeenCalledWith(action);
-//     expect(component).toBeTruthy();
-// /*
-//     // const compiled = fixture.debugElement.nativeElement;
-//     expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
-//     // counts the list elements
-//     const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
-//     const numberOfCardsInTheActionPayload = 2;
-//     expect(listElements.length).toEqual(numberOfCardsInTheActionPayload);*/
-//   });
+  it('should create four differents circles when there is ' +
+      'four cards with differents severity in the state', (done) => {
+    // const compiled = fixture.debugElement.nativeElement;
+    fixture.detectChanges();
+    const oneCard = getOneRandomLigthCard();
+    const actionCard = getOneRandomLigthCard({severity: 'ACTION'});
+    const alarmCard = getOneRandomLigthCard({severity: 'ALARM'});
+    const notificationCard = getOneRandomLigthCard({severity: 'NOTIFICATION'});
+    const action = new LoadLightCardsSuccess({lightCards: [oneCard, actionCard, alarmCard, notificationCard] as LightCard[]});
+    store.dispatch(action);
+    const lightCards$ = store.select(fromStore.selectFeed);
+    lightCards$.pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe(lightCard => {
+      expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard]);
+    });
+    const dataCard = [{
+      startDate: oneCard.startDate,
+      endDate: oneCard.endDate,
+      severity: oneCard.severity,
+    }, {
+      startDate: actionCard.startDate,
+      endDate: actionCard.endDate,
+      severity: actionCard.severity,
+    }, {
+      startDate: alarmCard.startDate,
+      endDate: alarmCard.endDate,
+      severity: alarmCard.severity,
+    }, {
+      startDate: notificationCard.startDate,
+      endDate: notificationCard.endDate,
+      severity: notificationCard.severity,
+    }];
+    const data$ = store.select((timelineSelectors.selectTimelineSelection));
+    data$.pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe(value => {
+          expect(value).toEqual(dataCard);
+          done();
+        });
+    expect(store.dispatch).toHaveBeenCalledWith(action);
+    expect(component).toBeTruthy();
+/*
+    // const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
+    // counts the list elements
+    const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
+    const numberOfCardsInTheActionPayload = 2;
+    expect(listElements.length).toEqual(numberOfCardsInTheActionPayload);*/
+  });
 });
