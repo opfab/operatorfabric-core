@@ -34,6 +34,9 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
 
     constructor(protected store: Store<AppState>) {
         this.form = this.initFormGroup();
+        if(!this.form){
+            throw 'Trying to instanciate component without form';
+        }
     }
 
     ngOnInit() {

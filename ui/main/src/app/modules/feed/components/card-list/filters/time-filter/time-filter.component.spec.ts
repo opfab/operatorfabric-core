@@ -19,8 +19,10 @@ import {ServicesModule} from "@ofServices/services.module";
 import {By} from "@angular/platform-browser";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
 import {map} from "rxjs/operators";
-import {hot} from "jasmine-marbles";
+import {cold, hot} from "jasmine-marbles";
 import {TimeService} from "@ofServices/time.service";
+import {I18nService} from "@ofServices/i18n.service";
+import {TranslateModule} from "@ngx-translate/core";
 
 describe('TimeFilterComponent', () => {
     let component: TimeFilterComponent;
@@ -35,12 +37,13 @@ describe('TimeFilterComponent', () => {
                 NgbModule.forRoot(),
                 FormsModule,
                 ReactiveFormsModule,
+                TranslateModule.forRoot(),
                 StoreModule.forRoot(appReducer, storeConfig),
                 FontAwesomeModule,
                 ServicesModule
             ],
             declarations: [TimeFilterComponent],
-            providers:[TimeService]
+            providers:[TimeService, I18nService]
         })
             .compileComponents();
     }));
@@ -48,6 +51,7 @@ describe('TimeFilterComponent', () => {
     beforeEach(() => {
         store = TestBed.get(Store);
         timeService = TestBed.get(TimeService);
+        TestBed.get(I18nService).changeLocale('fr','Europe/Paris');
         spyOn(store, 'dispatch').and.callThrough();
         filterService = TestBed.get(FilterService);
         const defaultFilters = filterService.defaultFilters;
@@ -116,11 +120,18 @@ describe('TimeFilterComponent', () => {
         startInput[0].nativeElement.dispatchEvent(new Event('input'));
         fixture.detectChanges();
         expect(component.timeFilterForm.get('start').value).toBe(dateStringValue);
-        fixture.whenStable().then(() => {
-            expect(store.select(buildFilterSelector(FilterType.TYPE_FILTER)).pipe(map((filter => filter.status))))
-                .toBeObservable(hot('---a', {a: {start: Date.parse(dateStringValue), end: null}}));
+        // setTimeout(() => {
+        //     expect(store.select(buildFilterSelector(FilterType.TYPE_FILTER)).pipe(map((filter => filter.status))))
+        //         .toBeObservable(hot('---a', {a: {start: Date.parse(dateStringValue), end: null}}));
+        //     done();
+        // });
+        setTimeout(() => {
+            const expectedObs = cold('b', {b: {start: Date.parse(dateStringValue), end: null}});
+
+            const selectTypeFilter = store.select(buildFilterSelector(FilterType.TIME_FILTER));
+            expect(selectTypeFilter.pipe(map((filter => filter.status)))).toBeObservable(expectedObs);
             done();
-        });
+        },1000);
 
     });
 });

@@ -17,7 +17,7 @@ import {InitFilters} from "@ofActions/feed.actions";
 import {map} from "rxjs/operators";
 import {By} from "@angular/platform-browser";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
-import {addMatchers, getTestScheduler, hot, initTestScheduler, resetTestScheduler} from "jasmine-marbles";
+import {addMatchers, cold, getTestScheduler, hot, initTestScheduler, resetTestScheduler} from "jasmine-marbles";
 
 describe('TypeFilterComponent', () => {
     let component: TypeFilterComponent;
@@ -93,11 +93,13 @@ describe('TypeFilterComponent', () => {
         notificationCheckboxQuery[0].nativeElement.click();
         fixture.detectChanges();
         expect(component.typeFilterForm.get('notification').value).toBe(true);
-        fixture.whenStable().then(() => {
-            expect(store.select(buildFilterSelector(FilterType.TYPE_FILTER)).pipe(map((filter => filter.status))))
-                .toBeObservable(hot('---a', {a: {alarm: true, action: true, question: true, notification: true}}));
+        setTimeout(() => {
+            const expectedObs = cold('b', {b: {alarm: true, action: true, question: true, notification: true}});
+
+            const selectTypeFilter = store.select(buildFilterSelector(FilterType.TYPE_FILTER));
+            expect(selectTypeFilter.pipe(map((filter => filter.status)))).toBeObservable(expectedObs);
             done();
-        });
+        },1000);
 
     });
 });
