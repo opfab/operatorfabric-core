@@ -126,7 +126,7 @@ describe('TimeFilterComponent', () => {
         //     done();
         // });
         setTimeout(() => {
-            const expectedObs = cold('b', {b: {start: Date.parse(dateStringValue), end: null}});
+            const expectedObs = cold('b', {b: {start: timeService.parseString(dateStringValue).valueOf(), end: null}});
 
             const selectTypeFilter = store.select(buildFilterSelector(FilterType.TIME_FILTER));
             expect(selectTypeFilter.pipe(map((filter => filter.status)))).toBeObservable(expectedObs);
