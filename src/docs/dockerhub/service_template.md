@@ -1,11 +1,14 @@
 # Supported Tags
 ## Releases
 * 0.1.1.RELEASE
+* 0.2.1.RELEASE
+* 0.3.1.RELEASE
+* 0.4.1.RELEASE
 * 0.5.1.SNAPSHOT
 ## Snapshot
 ## Short cuts
-* snaphot -> 0.2.1.SNAPSHOT
-* latest -> 0.1.1.RELEASE
+* snaphot -> 0.5.1.SNAPSHOT
+* latest -> 0.5.1.RELEASE
 # References
 * **[Operator Fabric Website](https://opfab.github.io/)**
 * **supported docker version:**

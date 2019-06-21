@@ -116,10 +116,10 @@ sub-sections.
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.security.oauth2.client-id|null|yes| Oauth2 client id used by operator fabric may be specific for each service|
-|operatorfabric.security.oauth2.client-secret|null|yes| Oauth2 client secret used by operator fabric may be specific for each service|
-|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim to use as user login or id|
-|operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim to use as token expiration timestamp|
+|operatorfabric.security.oauth2.client-id|null|yes| Oauth2 client id used by operator fabric may be specific for each service
+|operatorfabric.security.oauth2.client-secret|null|yes| Oauth2 client secret used by operator fabric may be specific for each service
+|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim to use as user login or id
+|operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim to use as token expiration timestamp
 
 |===
 
