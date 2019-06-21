@@ -10,6 +10,7 @@ import {BaseSettingComponent} from "../base-setting/base-setting.component";
 import {AppState} from "@ofStore/index";
 import {Store} from "@ngrx/store";
 import {FormControl, FormGroup} from "@angular/forms";
+import * as _ from "lodash";
 
 @Component({
     selector: 'of-text-setting',
@@ -34,7 +35,12 @@ export class TextSettingComponent extends BaseSettingComponent implements OnInit
     // }
 
     updateValue(value){
-        this.form.get('setting').setValue(value);
+        this.form.get('setting').setValue(value,{emitEvent:false});
+    }
+
+    protected isEqual(formA, formB):boolean{
+        console.log('TextSettingComponent.isEqual called')
+        return formA.setting === formB.setting;
     }
 
 }

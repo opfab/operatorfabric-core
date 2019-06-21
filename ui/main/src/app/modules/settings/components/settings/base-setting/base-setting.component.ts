@@ -49,9 +49,7 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
                 this.form.valueChanges
                     .pipe(
                         takeUntil(this.ngUnsubscribe$),
-                        distinctUntilChanged((formA, formB) => {
-                            return _.isEqual(formA, formB);
-                        }),
+                        distinctUntilChanged((formA, formB) => this.isEqual(formA, formB)),
                         debounce(() => timer(500))
                     )
                     .subscribe(next=>this.dispatch(this.convert(next)))
@@ -88,6 +86,10 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
         const settings = {...this.baseSettings};
         settings[this.settingPath] = value.setting;
         this.store.dispatch(new PatchSettings({settings: settings}));
+    }
+
+    protected isEqual(formA, formB):boolean{
+        return _.isEqual(formA, formB);
     }
 
 }

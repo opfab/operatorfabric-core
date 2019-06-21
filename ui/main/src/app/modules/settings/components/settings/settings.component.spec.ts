@@ -9,6 +9,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SettingsComponent } from './settings.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {By} from "@angular/platform-browser";
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -30,5 +31,6 @@ describe('SettingsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(fixture.debugElement.queryAll(By.css('.col-md-6')).length).toEqual(6)
   });
 });

@@ -18,6 +18,8 @@ import {configInitialState} from "@ofStates/config.state";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 import {authInitialState} from "@ofStates/authentication.state";
+import {By} from "@angular/platform-browser";
+import {PatchSettings} from "@ofActions/settings.actions";
 
 describe('TextSettingComponent', () => {
     let component: TextSettingComponent;
@@ -64,20 +66,35 @@ describe('TextSettingComponent', () => {
         });
         fixture = TestBed.createComponent(TextSettingComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
+
     });
 
     it('should create', () => {
+        fixture.detectChanges();
         expect(component).toBeTruthy();
     });
     it('should init', (done) => {
         component.settingPath = 'test';
-        component.ngOnInit();
         fixture.detectChanges();
         expect(component).toBeTruthy();
         setTimeout(()=>{
             expect(component.form.get('setting').value).toEqual('old-value');
             done();
         });
+    });
+    it('should submit', (done) => {
+        component.settingPath = 'test';
+        fixture.detectChanges();
+        // const settingInput = fixture.debugElement.queryAll(By.css('input'))[0];
+        // settingInput.nativeElement.value = 'new-value';
+        component.form.get('setting').setValue('new-value');
+        setTimeout(()=> {
+            expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
+            const settings = {login:'test'};
+            settings[component.settingPath] = 'new-value';
+            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
+            done();
+        },1000);
+
     });
 });

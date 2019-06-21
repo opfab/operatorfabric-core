@@ -41,7 +41,7 @@ export class I18nService {
         }else{
             timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         }
-            moment.tz.setDefault(timeZone);
+        moment.tz.setDefault(timeZone);
     }
 
     public get locale(){
