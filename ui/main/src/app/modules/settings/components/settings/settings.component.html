@@ -13,7 +13,10 @@
       <of-text-setting settingPath="description"></of-text-setting>
     </div>
     <div class="col-md-6">
-      <of-text-setting settingPath="locale" required="true"></of-text-setting>
+      <of-list-setting settingPath="locale" [values]="locales$|async" ></of-list-setting>
+    </div>
+    <div class="col-md-6">
+      <of-list-setting settingPath="timeZone" [values]="timeZones$|async" ></of-list-setting>
     </div>
     <div class="col-md-6">
       <of-text-setting settingPath="timeFormat"></of-text-setting>

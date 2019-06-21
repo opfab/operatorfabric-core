@@ -9,12 +9,13 @@ import {Component, OnInit} from '@angular/core';
 import {AppState} from "@ofStore/index";
 import {Store} from "@ngrx/store";
 import {selectUserNameOrIdentifier} from "@ofSelectors/authentication.selectors";
-import {Observable, of} from "rxjs";
+import {combineLatest, Observable, of} from "rxjs";
 import {buildSettingsSelector} from "@ofSelectors/settings.selectors";
 import * as moment from 'moment-timezone';
 import {TimeService} from "@ofServices/time.service";
 import {map} from "rxjs/operators";
 import {Moment} from "moment-timezone/moment-timezone";
+import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 
 @Component({
     selector: 'of-info',
@@ -32,9 +33,13 @@ export class InfoComponent implements OnInit {
     ngOnInit() {
         this._userName$ = this.store.select(selectUserNameOrIdentifier);
         this._description$ = this.store.select(buildSettingsSelector('description'));
-        this._time$ = of(moment()).pipe(
-            map((m:Moment) => this.timeService.formatTime(m))
-        )
+        this._time$ = combineLatest(
+        of(moment().valueOf()),
+            this.store.select(buildSettingsOrConfigSelector('locale')),
+            this.store.select(buildSettingsOrConfigSelector('timeZone'))
+        ).pipe(
+            map(values => this.timeService.formatTime(moment(values[0])))
+        );
     }
 
     get userName$() {

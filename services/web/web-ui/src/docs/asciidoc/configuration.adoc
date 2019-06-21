@@ -33,6 +33,8 @@ For other configuration see:
 |operatorfabric.feed.subscription.timeout|60000|no|Milliseconds between card subscription renewal
 |operatorfabric.feed.card.time.display|BUSINESS|no|card time display mode in the feed (BUSINESS: display card with entire business period,BUSINESS_START: display card with business start, PUBLICATION: display card with publication date,LTTD: : display card with lttd date,NONE: date is hidden)
 |operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen
+|operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en are choosable)
+|operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'
 |operatorfabric.settings.timeZone||no|Default user time zone for users (use browser time zone if not set)
 |operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
 |operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
