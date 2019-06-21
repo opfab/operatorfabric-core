@@ -57,7 +57,8 @@ describe('TextSettingComponent', () => {
                     ...settingsInitialState,
                     loaded: true,
                     settings: {
-                        test: 'old-value'
+                        test: 'old-value',
+                        empty: null
                     }
                 }
             }).pipe(
@@ -89,9 +90,52 @@ describe('TextSettingComponent', () => {
         // settingInput.nativeElement.value = 'new-value';
         component.form.get('setting').setValue('new-value');
         setTimeout(()=> {
+            expect(component.form.valid).toBeTruthy();
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
             const settings = {login:'test'};
             settings[component.settingPath] = 'new-value';
+            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
+            done();
+        },1000);
+
+    });
+
+    it('should not submit with required validator', (done) => {
+        component.settingPath = 'empty';
+        component.requiredField = true;
+        fixture.detectChanges();
+        component.form.get('setting').setValue(null);
+        setTimeout(()=> {
+            expect(component.form.valid).toBeFalsy();
+            expect(mockStore.dispatch).toHaveBeenCalledTimes(0);
+            done();
+        },1000);
+
+    });
+
+    it('should not submit with pattern validator', (done) => {
+        component.settingPath = 'empty';
+        component.pattern = 'fr|en';
+        fixture.detectChanges();
+        component.form.get('setting').setValue('de');
+        setTimeout(()=> {
+            expect(component.form.valid).toBeFalsy();
+            expect(mockStore.dispatch).toHaveBeenCalledTimes(0);
+            done();
+        },1000);
+
+    });
+
+    it('should submit with pattern validator', (done) => {
+        component.settingPath = 'empty';
+        component.pattern = 'fr|en';
+        fixture.detectChanges();
+        component.form.get('setting').setValue('fr');
+        setTimeout(()=> {
+            expect(component.form.valid).toBeTruthy();
+            expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
+            const settings = {login:'test'};
+            settings[component.settingPath] = 'fr';
             expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
             done();
         },1000);

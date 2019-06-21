@@ -34,13 +34,14 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
     private baseSettings = {};
 
     constructor(protected store: Store<AppState>) {
+
+    }
+
+    ngOnInit() {
         this.form = this.initFormGroup();
         if(!this.form){
             throw 'Trying to instanciate component without form';
         }
-    }
-
-    ngOnInit() {
         this.setting$ = this.store.select(buildSettingsSelector(this.settingPath))
             .pipe(takeUntil(this.ngUnsubscribe$));
             this.setting$.subscribe(next => this.updateValue(next));
