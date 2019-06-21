@@ -13,9 +13,10 @@ import { BaseSettingComponent } from './components/settings/base-setting/base-se
 import { TextSettingComponent } from './components/settings/text-setting/text-setting.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
+import { EmailSettingComponent } from './components/settings/email-setting/email-setting.component';
 
 @NgModule({
-    declarations: [SettingsComponent, BaseSettingComponent, TextSettingComponent],
+    declarations: [SettingsComponent, BaseSettingComponent, TextSettingComponent, EmailSettingComponent],
     imports: [
         CommonModule,
         FormsModule,

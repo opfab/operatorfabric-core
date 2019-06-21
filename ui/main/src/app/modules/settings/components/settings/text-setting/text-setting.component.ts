@@ -9,7 +9,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingComponent} from "../base-setting/base-setting.component";
 import {AppState} from "@ofStore/index";
 import {Store} from "@ngrx/store";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import * as _ from "lodash";
 
 @Component({
@@ -26,12 +26,22 @@ export class TextSettingComponent extends BaseSettingComponent implements OnInit
     }
 
     initFormGroup(){
+        let validators = this.computeTextValidators();
         return new FormGroup({
-            setting: new FormControl()
+            setting: new FormControl(null,validators)
         }, {updateOn: 'submit'});
     }
 
-    // ngOnInit() {
+    protected computeTextValidators() {
+        let validators = [];
+        if (this.requiredField)
+            validators.push(Validators.required);
+        if (this.pattern)
+            validators.push(Validators.pattern(this.pattern));
+        return validators;
+    }
+
+// ngOnInit() {
     // }
 
     updateValue(value){

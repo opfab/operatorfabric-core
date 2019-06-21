@@ -4,10 +4,10 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<form [formGroup]="form">
+<form [formGroup]="form" (ngSubmit)="submitValue()">
   <div class="form-group">
     <label for="setting" translate>settings.{{settingPath}}</label>
-    <input type="text" class="form-control" id="setting" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
+    <input type="email" class="form-control" id="setting" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
     <span class="text-danger" *ngIf="!form.valid">Incorrect submission</span>
   </div>
 </form>

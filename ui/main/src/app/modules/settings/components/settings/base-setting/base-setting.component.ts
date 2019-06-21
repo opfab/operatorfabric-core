@@ -12,7 +12,7 @@ import {PatchSettings} from "@ofActions/settings.actions";
 import {buildSettingsSelector} from "@ofSelectors/settings.selectors";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {Subject, timer} from "rxjs";
-import {debounce, distinctUntilChanged, first, map, takeUntil} from "rxjs/operators";
+import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from "rxjs/operators";
 import {FormGroup} from "@angular/forms";
 import * as _ from "lodash";
 import {selectIdentifier} from "@ofSelectors/authentication.selectors";
@@ -26,6 +26,7 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
 
     @Input() public settingPath: string;
     @Input() public messagePlaceOlder: string;
+    @Input() public requiredField: boolean;
     private ngUnsubscribe$ = new Subject<void>();
     protected setting$;
     protected placeholder$;
@@ -49,6 +50,7 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
                 this.form.valueChanges
                     .pipe(
                         takeUntil(this.ngUnsubscribe$),
+                        filter(()=>this.form.valid),
                         distinctUntilChanged((formA, formB) => this.isEqual(formA, formB)),
                         debounce(() => timer(500))
                     )
@@ -90,6 +92,10 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
 
     protected isEqual(formA, formB):boolean{
         return _.isEqual(formA, formB);
+    }
+
+    protected submitValue(){
+        alert('submitted');
     }
 
 }
