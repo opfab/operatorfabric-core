@@ -9,7 +9,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingComponent} from "../base-setting/base-setting.component";
 import {AppState} from "@ofStore/index";
 import {Store} from "@ngrx/store";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import {I18n} from "@ofModel/i18n.model";
 import {TranslateService} from "@ngx-translate/core";
 import {Observable, of} from "rxjs";
@@ -49,6 +49,7 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
 
     initFormGroup() {
         let validators = this.computeListValidators();
+        validators.push(this.valueInListValidator());
         return new FormGroup({
             setting: new FormControl(null, validators)
         }, {updateOn: 'change'});
@@ -71,6 +72,14 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
     protected isEqual(formA, formB): boolean {
         console.log('TextSettingComponent.isEqual called')
         return formA.setting === formB.setting;
+    }
+
+    private valueInListValidator(){
+        return (control: AbstractControl)=>{
+            if(this.preparedList.map(e=>e.value).indexOf(control.value)<0)
+                return {valueInList:{valid:false}};
+            return null;
+        }
     }
 
 }
