@@ -19,6 +19,7 @@ import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
 import {Filter} from "@ofModel/feed-filter.model";
 import {tap} from "rxjs/operators";
 import {FilterType} from "@ofServices/filter.service";
+import {compareByLttd, compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
 
 describe('Feed store', () => {
     let store: Store<AppState>;
@@ -36,7 +37,7 @@ describe('Feed store', () => {
     }));
 
     it('should be filtered when an all or nothing filter is activated', () => {
-        const lightCards: LightCard[] = getSeveralRandomLightCards(3);
+        const lightCards: LightCard[] = getSeveralRandomLightCards(3).sort(compareBySeverityLttdPublishDate);
         const loadCardAction = new LoadLightCardsSuccess({lightCards: lightCards});
         const filters = new Map();
         const testFilter = new Filter(
@@ -64,7 +65,7 @@ describe('Feed store', () => {
     });
 
     it('should be filtered when an evict odd filter is activated', () => {
-        const lightCards: LightCard[] = getSeveralRandomLightCards(3);
+        const lightCards: LightCard[] = getSeveralRandomLightCards(3).sort(compareBySeverityLttdPublishDate);
         const loadCardAction = new LoadLightCardsSuccess({lightCards: lightCards});
         let count = -1;
         const filters = new Map();

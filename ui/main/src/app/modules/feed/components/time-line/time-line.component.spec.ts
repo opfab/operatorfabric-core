@@ -29,6 +29,7 @@ import { MouseWheelDirective } from './mouse-wheel.directive';
 import { XAxisTickFormatPipe } from './x-axis-tick-format.pipe';
 import * as moment from 'moment';
 import {debounceTime, distinctUntilChanged} from "rxjs/operators";
+import {compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
@@ -164,20 +165,20 @@ describe('TimeLineComponent', () => {
     const lightCards$ = store.select(fromStore.selectFeed);
     lightCards$.pipe(debounceTime(300), distinctUntilChanged())
         .subscribe(lightCard => {
-      expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard]);
+      expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard].sort(compareBySeverityLttdPublishDate));
     });
     const dataCard = [{
+        startDate: alarmCard.startDate,
+        endDate: alarmCard.endDate,
+        severity: alarmCard.severity,
+    }, {
+        startDate: actionCard.startDate,
+        endDate: actionCard.endDate,
+        severity: actionCard.severity,
+    }, {
       startDate: oneCard.startDate,
       endDate: oneCard.endDate,
       severity: oneCard.severity,
-    }, {
-      startDate: actionCard.startDate,
-      endDate: actionCard.endDate,
-      severity: actionCard.severity,
-    }, {
-      startDate: alarmCard.startDate,
-      endDate: alarmCard.endDate,
-      severity: alarmCard.severity,
     }, {
       startDate: notificationCard.startDate,
       endDate: notificationCard.endDate,

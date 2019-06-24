@@ -136,7 +136,7 @@ export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
         lightCardTemplate.severity?lightCardTemplate.severity:Severity.QUESTION,
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
-        generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
+        lightCardTemplate.lttd?lightCardTemplate.lttd:generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
     );

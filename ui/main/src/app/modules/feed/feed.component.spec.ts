@@ -30,6 +30,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "../../translate.config";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {ServicesModule} from "@ofServices/services.module";
+import {compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
 
 describe('FeedComponent', () => {
     let component: FeedComponent;
@@ -104,7 +105,7 @@ describe('FeedComponent', () => {
         store.dispatch(action);
         const lightCards$ = store.select(fromStore.selectFeed);
         lightCards$.subscribe(lightCard => {
-            expect(lightCard).toEqual([oneCard, anotherCard]);
+            expect(lightCard).toEqual([oneCard, anotherCard].sort(compareBySeverityLttdPublishDate));
         });
         expect(store.dispatch).toHaveBeenCalledWith(action);
         expect(component).toBeTruthy();
@@ -132,7 +133,7 @@ describe('FeedComponent', () => {
         store.dispatch(action0);
         const lightCards$ = store.select(fromStore.selectFeed);
         lightCards$.subscribe(lightCard => {
-            expect(lightCard).toEqual([anotherCard,oneCard]);
+            expect(lightCard).toEqual([anotherCard,oneCard].sort(compareBySeverityLttdPublishDate));
         });
         expect(store.dispatch).toHaveBeenCalledWith(action);
         expect(component).toBeTruthy();
