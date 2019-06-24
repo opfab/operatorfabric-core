@@ -38,7 +38,7 @@ describe('TimeLineComponent', () => {
   // let componentInit: InitChartComponent;
   // let fixtureInit: ComponentFixture<InitChartComponent>;
 
-  beforeEach(() => {
+  beforeEach(asyn(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule,
         BrowserAnimationsModule,
@@ -58,7 +58,7 @@ describe('TimeLineComponent', () => {
     spyOn(store, 'dispatch').and.callThrough();
     fixture = TestBed.createComponent(TimeLineComponent);
     component = fixture.componentInstance;
-  });
+  }));
 
   it('should init timeline', () => {
     component.ngOnInit();
