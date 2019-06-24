@@ -90,7 +90,7 @@ operatorfabric:
       expire-claim: exp
 ```
 
-In the above exemple you can see that we need to configure:
+In the above example you can see that we need to configure:
 
 * RabbitMQ (See {spring_amqp_doc}/reference/htmlsingle/[spring-amqp doc])
 * MongoDB
@@ -104,11 +104,28 @@ it allows us to share the same configuration behavior for simple or cluster
 configuration and with both spring classic and reactive mongo configuration.
 See {mongo_doc}/connection-string/[mongo connection string] for the complete URI syntax.
 
+===== Define time to live for archived cards
+
+By default, archived cards will remain stored in the database forever. It is possible to have them automatically
+removed after a specified duration by using the link:https://docs.mongodb.com/manual/core/index-ttl/[TTL index feature of mongoDB] on their publishDate field.
+
+For example, to have cards expire after 10 days (864000s), enter the following commands in the mongo shell:
+
+[source,shell]
+----
+use operator-fabric
+db.archivedCards.createIndex( { "publishDate": 1 }, { expireAfterSeconds: 864000 } )
+----
+
+IMPORTANT: You cannot use createIndex() to change the value of expireAfterSeconds of an existing index.
+Instead use the link:https://docs.mongodb.com/manual/reference/command/collMod/#dbcmd.collMod[collMod] database command in conjunction with the index collection flag. Otherwise, to
+change the value of the option of an existing index, you must drop the index first and recreate.
+
 ==== Operator Fabric Specific configuration
 
-Bellow are description of Operator Fabric specific configuration properties.
+Below are description of Operator Fabric specific configuration properties.
 
-Note that other components may have specific configuration, see they relevant
+Note that other components may have specific configuration, see the relevant
 sub-sections.
 
 ===== Security
