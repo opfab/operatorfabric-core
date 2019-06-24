@@ -36,6 +36,7 @@ import java.util.List;
 public class GroupsController implements GroupsApi {
 
     public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
+    public static final String USER_NOT_FOUND_MSG = "User %s not found";
     public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
     public static final String NO_MATCHING_GROUP_NAME_MSG = "Payload Group name does not match URL Group name";
     @Autowired
@@ -54,7 +55,7 @@ public class GroupsController implements GroupsApi {
     public Void addGroupUsers(String name, List<String> users) throws Exception {
 
         //Only existing groups can be updated
-        checkGroupExists(name);
+        findGroupOrThrow(name);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
         List<UserData> foundUsers = retrieveUsers(users);
@@ -74,19 +75,43 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public Void deleteGroupUsers(String name, List<String> users) throws Exception {
+    public Void deleteGroupUsers(String name) throws Exception {
 
         //Only existing groups can be updated
-        checkGroupExists(name);
+         findGroupOrThrow(name);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
-        List<UserData> foundUsers = retrieveUsers(users);
+        List<UserData> foundUsers = userRepository.findByGroupSetContaining(name);
 
-        for (UserData userData : foundUsers) {
-            userData.deleteGroup(name);
-            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
+        if(foundUsers!=null) {
+            for (UserData userData : foundUsers) {
+                userData.deleteGroup(name);
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+            }
+            userRepository.saveAll(foundUsers);
         }
-        userRepository.saveAll(foundUsers);
+        return null;
+    }
+
+    @Override
+    public Void deleteGroupUser(String name, String login) throws Exception {
+
+        //Only existing groups can be updated
+        findGroupOrThrow(name);
+
+        //Retrieve users from repository for users list, throwing an error if a login is not found
+        UserData foundUser = userRepository.findById(login).orElseThrow(()->new ApiErrorException(
+                ApiError.builder()
+                        .status(HttpStatus.NOT_FOUND)
+                        .message(String.format(USER_NOT_FOUND_MSG,login))
+                        .build()
+        ));
+
+        if(foundUser!=null) {
+                foundUser.deleteGroup(name);
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+            userRepository.save(foundUser);
+        }
         return null;
     }
 
@@ -111,7 +136,7 @@ public class GroupsController implements GroupsApi {
     public Group updateGroup(String name, Group group) throws Exception {
 
         //Only existing groups can be updated
-        checkGroupExists(name);
+        findGroupOrThrow(name);
 
         //name from group body parameter should match name path parameter
         if(!group.getName().equals(name)){
@@ -130,7 +155,7 @@ public class GroupsController implements GroupsApi {
     public Void updateGroupUsers(String name, List<String> users) throws Exception {
 
         //Only existing groups can be updated
-        checkGroupExists(name);
+        findGroupOrThrow(name);
 
         List<UserData> formerlyBelongs = userRepository.findByGroupSetContaining(name);
         List<String> newUsersInGroup = new ArrayList<>(users);
@@ -157,8 +182,8 @@ public class GroupsController implements GroupsApi {
         return null;
     }
 
-    private void checkGroupExists(String name) {
-        groupRepository.findById(name).orElseThrow(
+    private GroupData findGroupOrThrow(String name) {
+        return groupRepository.findById(name).orElseThrow(
                 ()-> new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)

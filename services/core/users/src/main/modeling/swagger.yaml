@@ -492,7 +492,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
-    post:
+    patch:
       tags:
         - groups
         - users
@@ -531,8 +531,8 @@ paths:
       tags:
         - groups
         - users
-      summary: Remove users from group
-      description: ONLY remove users from group (no additions)
+      summary: Remove all users from group
+      description: remove all users from group
       operationId: deleteGroupUsers
       consumes:
         - application/json
@@ -544,13 +544,40 @@ paths:
           description: Group name
           type: string
           required: true
-        - in: body
-          name: users
-          description: Array of user logins to be removed from group
-          schema:
-            type: array
-            items:
-              type: string
+      responses:
+        '200':
+          description: Deleted
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required group not found
+  '/groups/{name}/users/{login}':
+    delete:
+      tags:
+      - groups
+      - users
+      summary: Remove users from group
+      description: ONLY remove users from group (no additions)
+      operationId: deleteGroupUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: name
+        description: Group name
+        type: string
+        required: true
+      - in: path
+        name: login
+        description: User login
+        type: string
+        required: true
       responses:
         '200':
           description: Deleted

@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -356,7 +357,7 @@ class GroupsControllerShould {
 
         @Test
         void addGroupToUsers() throws Exception {
-            mockMvc.perform(post("/groups/Wanda/users")
+            mockMvc.perform(patch("/groups/Wanda/users")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content("[\"gchapman\"]")
             )
@@ -382,7 +383,7 @@ class GroupsControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
-            mockMvc.perform(post("/groups/unknownGroupSoFar/users")
+            mockMvc.perform(patch("/groups/unknownGroupSoFar/users")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content("[\"gchapman\"]")
             )
@@ -409,7 +410,7 @@ class GroupsControllerShould {
 
         @Test
         void addGroupToUsersWithBadRequest() throws Exception {
-            mockMvc.perform(post("/groups/Wanda/users")
+            mockMvc.perform(patch("/groups/Wanda/users")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content("[\"gchapman\",\"unknownUserSoFar\"]")
             )
@@ -461,16 +462,30 @@ class GroupsControllerShould {
 
         @Test
         void deleteGroupsFromUsers() throws Exception {
+            List<UserData> pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            assertThat(pythons.size()).isEqualTo(2);
             mockMvc.perform(delete("/groups/Monty Pythons/users")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content("[\"gchapman\"]")
             )
                     .andExpect(status().isOk())
             ;
 
-            UserData gchapman = userRepository.findById("gchapman").get();
-            assertThat(gchapman).isNotNull();
-            assertThat(gchapman.getGroups()).isEmpty();
+            pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            assertThat(pythons).isEmpty();
+        }
+
+        @Test
+        void deleteGroupsFromUser() throws Exception {
+            List<UserData> pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            assertThat(pythons.size()).isEqualTo(2);
+            mockMvc.perform(delete("/groups/Monty Pythons/users/gchapman")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+            )
+                    .andExpect(status().isOk())
+            ;
+
+            pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            assertThat(pythons.size()).isEqualTo(1);
         }
 
         @Test
@@ -486,7 +501,6 @@ class GroupsControllerShould {
 
             mockMvc.perform(delete("/groups/unknownGroupSoFar/users")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content("[\"gchapman\"]")
             )
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -506,30 +520,60 @@ class GroupsControllerShould {
         }
 
         @Test
-        void deleteGroupFromUsersWithBadRequest() throws Exception {
-            mockMvc.perform(delete("/groups/Wanda/users")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content("[\"kkline\",\"unknownUserSoFar\"]")
-            )
-                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.BAD_USER_LIST_MSG, "unknownUserSoFar"))))
-                    .andExpect(jsonPath("$.errors").doesNotExist());
+        void deleteGroupFromUserWithNotFoundError() throws Exception {
 
-            //If the user list isn't correct, no user should be updated
-            UserData kkline = userRepository.findById("kkline").get();
-            assertThat(kkline).isNotNull();
-            assertThat(kkline.getGroups()).contains("Wanda");
-
-            mockMvc.perform(get("/users/unknownUserSoFar"))
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownUserSoFar"))))
-                    .andExpect(jsonPath("$.errors").doesNotExist());
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(delete("/groups/unknownGroupSoFar/users/gchapman")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+            )
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
 
         }
+//        @Test
+//        void deleteGroupFromUsersWithBadRequest() throws Exception {
+//            mockMvc.perform(delete("/groups/Wanda/users")
+//                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+////                    .content("[\"kkline\",\"unknownUserSoFar\"]")
+//            )
+//                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+//                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+//                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+//                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.BAD_USER_LIST_MSG, "unknownUserSoFar"))))
+//                    .andExpect(jsonPath("$.errors").doesNotExist());
+//
+//            //If the user list isn't correct, no user should be updated
+//            UserData kkline = userRepository.findById("kkline").get();
+//            assertThat(kkline).isNotNull();
+//            assertThat(kkline.getGroups()).contains("Wanda");
+//
+//            mockMvc.perform(get("/users/unknownUserSoFar"))
+//                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+//                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+//                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+//                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownUserSoFar"))))
+//                    .andExpect(jsonPath("$.errors").doesNotExist());
+//
+//        }
 
 
         @Test
