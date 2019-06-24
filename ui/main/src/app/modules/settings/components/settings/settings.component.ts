@@ -18,7 +18,7 @@ import {buildConfigSelector} from "@ofSelectors/config.selectors";
 })
 export class SettingsComponent implements OnInit {
   locales$:Observable<string[]>;
-    private timeZones$: Observable<string[]>;
+  timeZones$: Observable<string[]>;
 
   constructor(private store:Store<AppState>) { }
 
