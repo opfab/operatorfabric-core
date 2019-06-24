@@ -14,7 +14,6 @@ import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsult
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.springframework.core.convert.converter.Converter;
 
-import java.time.Instant;
 import java.util.List;
 
 /**

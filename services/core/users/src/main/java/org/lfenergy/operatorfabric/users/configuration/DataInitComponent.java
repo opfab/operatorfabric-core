@@ -33,6 +33,7 @@ import java.util.Optional;
 @Slf4j
 public class DataInitComponent {
 
+    private final String FAILED_INIT_MESSAGE = "Unable to init ";
     @Autowired
     private UsersProperties usersProperties;
 
@@ -76,7 +77,7 @@ public class DataInitComponent {
         try {
             userSettingsRepository.insert(u);
         } catch (DuplicateKeyException ex) {
-            log.warn("unnable to init " + u.getLogin() + " user settings: duplicate");
+            log.warn(FAILED_INIT_MESSAGE + u.getLogin() + " user settings: duplicate");
         }
     }
 
@@ -91,7 +92,7 @@ public class DataInitComponent {
         try {
             userRepository.insert(u);
         } catch (DuplicateKeyException ex) {
-            log.warn("unnable to init " + u.getLogin() + " user: duplicate");
+            log.warn(FAILED_INIT_MESSAGE + u.getLogin() + " user: duplicate");
             Optional<UserData> resultUser = userRepository.findById(u.getLogin());
             if (resultUser.isPresent()) {
                 UserData loadedUser = resultUser.get();
@@ -119,7 +120,7 @@ public class DataInitComponent {
         try {
             groupRepository.insert(g);
         } catch (DuplicateKeyException ex) {
-            log.warn("unnable to init " + g.getName() + " group: duplicate");
+            log.warn(FAILED_INIT_MESSAGE + g.getName() + " group: duplicate");
         }
     }
 }

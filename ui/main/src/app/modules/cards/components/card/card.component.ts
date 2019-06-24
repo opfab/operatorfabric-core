@@ -54,7 +54,7 @@ export class CardComponent implements OnInit{
         //     .pipe(
         //         map(id=>this.lightCard.id == id)
         //     ).subscribe(open=>this.open = open)
-        ;
+        // ;
         // fetch configuration
         this.store.select(buildConfigSelector('feed.card.time.display'))
             // use configuration to compute date

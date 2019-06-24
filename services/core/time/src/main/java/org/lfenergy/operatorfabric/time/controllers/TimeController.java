@@ -17,7 +17,6 @@ import org.lfenergy.operatorfabric.time.model.TimeData;
 import org.lfenergy.operatorfabric.time.services.TimeService;
 import org.lfenergy.operatorfabric.time.services.feign.CardConsultationServiceProxy;
 import org.lfenergy.operatorfabric.users.model.User;
-import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;

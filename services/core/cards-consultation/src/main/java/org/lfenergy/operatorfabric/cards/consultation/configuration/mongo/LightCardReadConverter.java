@@ -14,7 +14,6 @@ import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultatio
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.core.convert.converter.Converter;
 
-import java.time.Instant;
 import java.util.List;
 
 /**

@@ -13,7 +13,6 @@ import org.lfenergy.operatorfabric.users.configuration.DataInitComponent;
 import org.lfenergy.operatorfabric.users.configuration.json.JacksonConfig;
 import org.lfenergy.operatorfabric.users.configuration.mongo.LocalMongoConfiguration;
 import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
-import org.lfenergy.operatorfabric.users.configuration.oauth2.WebSecurityChecks;
 import org.lfenergy.operatorfabric.users.controllers.CustomExceptionHandler;
 import org.lfenergy.operatorfabric.users.controllers.GroupsController;
 import org.lfenergy.operatorfabric.users.controllers.UsersController;
@@ -25,8 +24,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-
-import java.util.Arrays;
 
 @SpringBootApplication
 @EnableOperatorFabricMongo
