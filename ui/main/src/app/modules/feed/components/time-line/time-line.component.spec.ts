@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimeLineComponent } from './time-line.component';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,7 +38,7 @@ describe('TimeLineComponent', () => {
   // let componentInit: InitChartComponent;
   // let fixtureInit: ComponentFixture<InitChartComponent>;
 
-  beforeEach(asyn(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule,
         BrowserAnimationsModule,
