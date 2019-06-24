@@ -36,36 +36,9 @@ paths:
               $ref: '#/definitions/Third'
         '401':
           description: Authentication required
-  '/thirds/{thirdName}':
-    get:
-      tags:
-        - thirds
-      summary: Access existing Third data
-      description: Access existing Third data
-      operationId: getThird
-      produces:
-        - application/json
-      parameters:
-        - name: thirdName
-          in: path
-          description: Name of Third to retrieve
-          required: true
-          type: string
-        - name: version
-          in: query
-          required: false
-          description: Expected version of template (defaults to latest)
-          type: string
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/Third'
-        '401':
-          description: Authentication required
     post:
       tags:
-        - thirds
+      - thirds
       summary: Uploads Third configuration bundle
       description: >-
         Uploads Third configuration bundle. Bundle is a gzipped tarball (tar.gz)
@@ -114,20 +87,15 @@ paths:
         [Models](#__Models))
       operationId: uploadBundle
       consumes:
-        - multipart/form-data
+      - multipart/form-data
       produces:
-        - application/json
+      - application/json
       parameters:
-        - name: thirdName
-          in: path
-          description: Name of Third to update
-          required: true
-          type: string
-        - name: file
-          in: formData
-          description: file to upload
-          required: true
-          type: file
+      - name: file
+        in: formData
+        description: file to upload
+        required: true
+        type: file
       responses:
         '200':
           description: Successful operation
@@ -137,6 +105,33 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
+  '/thirds/{thirdName}':
+    get:
+      tags:
+        - thirds
+      summary: Access existing Third data
+      description: Access existing Third data
+      operationId: getThird
+      produces:
+        - application/json
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: version
+          in: query
+          required: false
+          description: Expected version of template (defaults to latest)
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Third'
+        '401':
+          description: Authentication required
   '/thirds/{thirdName}/templates/{templateName}':
     get:
       tags:

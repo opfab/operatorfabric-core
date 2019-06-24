@@ -59,7 +59,7 @@ public class ThirdsServiceWithWrongConfigurationShould {
     Path pathToBundle = Paths.get("./build/test-data/bundles/second-2.1.tar.gz");
     MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz", "application/gzip", Files
        .readAllBytes(pathToBundle));
-    mockMvc.perform(multipart("/thirds/second").file(bundle))
+    mockMvc.perform(multipart("/thirds").file(bundle))
        .andExpect(status().isBadRequest());
   }
 }

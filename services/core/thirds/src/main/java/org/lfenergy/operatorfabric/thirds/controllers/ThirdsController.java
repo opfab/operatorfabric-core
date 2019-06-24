@@ -96,7 +96,7 @@ public class ThirdsController implements ThirdsApi {
   }
 
   @Override
-  public Third uploadBundle(String thirdName, @Valid MultipartFile file) {
+  public Third uploadBundle(@Valid MultipartFile file) {
     try (InputStream is = file.getInputStream()) {
       return service.updateThird(is);
     } catch (FileNotFoundException e) {
