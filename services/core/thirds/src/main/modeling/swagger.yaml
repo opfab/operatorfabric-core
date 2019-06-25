@@ -97,8 +97,8 @@ paths:
         required: true
         type: file
       responses:
-        '200':
-          description: Successful operation
+        '201':
+          description: Successful creation
           schema:
             $ref: '#/definitions/Third'
         '401':

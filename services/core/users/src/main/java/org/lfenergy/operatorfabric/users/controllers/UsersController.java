@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -48,13 +50,21 @@ public class UsersController implements UsersApi {
     private ApplicationEventPublisher publisher;
 
     @Override
-    public SimpleUser createUser(SimpleUser user) throws Exception {
-        userRepository.insert(new UserData(user));
+    public SimpleUser createUser(HttpServletRequest request, HttpServletResponse response, SimpleUser user) throws Exception {
+        boolean created = false;
+        if(userRepository.findById(user.getLogin()).orElse(null)==null){
+            response.addHeader("Location", request.getContextPath() + "/users/" + user.getLogin());
+            response.setStatus(201);
+            created = true;
+        }
+        userRepository.save(new UserData(user));
+        if(!created)
+            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),user.getLogin()));
         return user;
     }
 
     @Override
-    public User fetchUser(String login) throws Exception {
+    public User fetchUser(HttpServletRequest request, HttpServletResponse response, String login) throws Exception {
         return userRepository.findById(login)
                 .orElseThrow(()-> new ApiErrorException(
                         ApiError.builder()
@@ -65,7 +75,7 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public UserSettings fetchUserSetting(String login) throws Exception {
+    public UserSettings fetchUserSetting(HttpServletRequest request, HttpServletResponse response, String login) throws Exception {
         return userSettingsRepository.findById(login)
                 .orElseThrow(()->new ApiErrorException(
                         ApiError.builder()
@@ -75,19 +85,19 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public List<? extends User> fetchUsers() throws Exception {
+    public List<? extends User> fetchUsers(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return userRepository.findAll();
     }
 
     @Override
-    public UserSettings patchUserSettings(String login, UserSettings userSettings) throws Exception {
+    public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
         UserSettingsData settings = userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
         return userSettingsRepository.save(settings.patch(userSettings));
     }
 
     @Override
-    public UserSettings updateUserSettings(String login, UserSettings userSettings) throws Exception {
+    public UserSettings updateUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
         if(!userSettings.getLogin().equals(login)) {
             throw new ApiErrorException(
                     ApiError.builder()
@@ -99,17 +109,7 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public SimpleUser updateUser(String login, SimpleUser user) throws Exception {
-
-        //Only existing users can be updated
-        userRepository.findById(login)
-                .orElseThrow(()-> new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(USER_NOT_FOUND_MSG,login))
-                                .build()
-                ));
-
+    public SimpleUser updateUser(HttpServletRequest request, HttpServletResponse response, String login, SimpleUser user) throws Exception {
         //login from user body parameter should match login path parameter
         if(!user.getLogin().equals(login)){
             throw new ApiErrorException(
@@ -117,11 +117,9 @@ public class UsersController implements UsersApi {
                             .status(HttpStatus.BAD_REQUEST)
                             .message(NO_MATCHING_USER_NAME_MSG)
                             .build());
-        } else {
-            userRepository.save(new UserData(user));
-            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),user.getLogin()));
-            return user;
         }
+
+        return createUser(request, response, user);
 
     }
 }

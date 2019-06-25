@@ -173,6 +173,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/SimpleUser'
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/SimpleUser'
         '400':
           description: Bad request (duplicate key)
         '401':
@@ -234,14 +238,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/SimpleUser'
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/SimpleUser'
         '400':
           description: Bad request (body doesn't match login path parameter)
         '401':
           description: Authentication required
         '403':
           description: Authenticated users who are not admins can only update their own data
-        '404':
-          description: User not found
   '/users/{login}/settings':
     get:
       tags:
@@ -294,6 +300,10 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/UserSettings'
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/UserSettings'
         '400':
@@ -379,6 +389,10 @@ paths:
           schema:
             $ref: '#/definitions/Group'
       responses:
+        '200':
+          description: Updated
+          schema:
+            $ref: '#/definitions/Group'
         '201':
           description: Created
           schema:
@@ -389,8 +403,6 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-        '404':
-          description: Required group not found
   '/groups/{name}':
     put:
       tags:
@@ -414,8 +426,12 @@ paths:
           schema:
             $ref: '#/definitions/Group'
       responses:
-        '201':
+        '200':
           description: Updated
+          schema:
+            $ref: '#/definitions/Group'
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/Group'
         '400':
@@ -424,8 +440,6 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-        '404':
-          description: Group not found
     get:
       tags:
         - groups

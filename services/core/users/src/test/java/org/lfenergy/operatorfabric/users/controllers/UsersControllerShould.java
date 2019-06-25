@@ -329,7 +329,8 @@ class UsersControllerShould {
                             "\"lastName\": \"Palin\"" +
                             "}")
             )
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
+                    .andExpect(header().string("Location","/users/mpalin"))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.firstName", is("Michael")))
@@ -349,6 +350,21 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.lastName", is("Palin")))
             ;
 
+            mockMvc.perform(put("/users/tgillian")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content("{" +
+                            "\"login\": \"tgillian\","+
+                            "\"firstName\": \"Terry\","+
+                            "\"lastName\": \"Gillian\""+
+                            "}")
+            )
+                    .andExpect(status().is(HttpStatus.CREATED.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.login", is("tgillian")))
+                    .andExpect(jsonPath("$.firstName", is("Terry")))
+                    .andExpect(jsonPath("$.lastName", is("Gillian")))
+            ;
+
         }
 
         @Test
@@ -362,20 +378,20 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.lastName", is("Kline")))
             ;
 
-            ResultActions result = mockMvc.perform(post("/users")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content("{" +
-                            "\"login\": \"kkline\"," +
-                            "\"firstName\": \"KEVIN\"," +
-                            "\"lastName\": \"KLINE\"" +
-                            "}")
-            )
-                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                    .andExpect(jsonPath("$.message", is("Resource creation failed because a resource with the same key already exists.")))
-                    .andExpect(jsonPath("$.errors", hasSize(1)))
-                    .andExpect(jsonPath("$.errors[0]", stringContainsInOrder(Arrays.asList("duplicate key", "\"kkline\""))));
+//            ResultActions result = mockMvc.perform(post("/users")
+//                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+//                    .content("{" +
+//                            "\"login\": \"kkline\"," +
+//                            "\"firstName\": \"KEVIN\"," +
+//                            "\"lastName\": \"KLINE\"" +
+//                            "}")
+//            )
+//                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+//                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+//                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+//                    .andExpect(jsonPath("$.message", is("Resource creation failed because a resource with the same key already exists.")))
+//                    .andExpect(jsonPath("$.errors", hasSize(1)))
+//                    .andExpect(jsonPath("$.errors[0]", stringContainsInOrder(Arrays.asList("duplicate key", "\"kkline\""))));
 
             mockMvc.perform(get("/users"))
                     .andExpect(status().isOk())
@@ -428,21 +444,6 @@ class UsersControllerShould {
         void updateWithNotFoundError() throws Exception {
 
             mockMvc.perform(get("/users/unknownSoFar"))
-                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
-                    .andExpect(jsonPath("$.errors").doesNotExist())
-            ;
-
-            mockMvc.perform(put("/users/unknownSoFar")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content("{" +
-                            "\"login\": \"unknownSoFar\"," +
-                            "\"firstName\": \"John\"," +
-                            "\"lastName\": \"Doe\"" +
-                            "}")
-            )
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
@@ -513,10 +514,10 @@ class UsersControllerShould {
                             "\"lastName\": \"Doe\"" +
                             "}")
             )
-                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(UsersController.NO_MATCHING_USER_NAME_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
@@ -626,21 +627,6 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
-            mockMvc.perform(put("/users/unknownSoFar")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content("{" +
-                            "\"login\": \"unknownSoFar\","+
-                            "\"firstName\": \"John\","+
-                            "\"lastName\": \"Doe\""+
-                            "}")
-            )
-                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
-                    .andExpect(jsonPath("$.errors").doesNotExist())
-            ;
-
             mockMvc.perform(get("/users/unknownSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -697,10 +683,10 @@ class UsersControllerShould {
                             "\"lastName\": \"Doe\""+
                             "}")
             )
-                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(UsersController.NO_MATCHING_USER_NAME_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 

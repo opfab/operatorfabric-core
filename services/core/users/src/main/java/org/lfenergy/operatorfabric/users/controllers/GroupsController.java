@@ -22,6 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +54,7 @@ public class GroupsController implements GroupsApi {
     private ApplicationEventPublisher publisher;
 
     @Override
-    public Void addGroupUsers(String name, List<String> users) throws Exception {
+    public Void addGroupUsers(HttpServletRequest request, HttpServletResponse response, String name, List<String> users) throws Exception {
 
         //Only existing groups can be updated
         findGroupOrThrow(name);
@@ -70,12 +72,16 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public Group createGroup(Group group) throws Exception {
-        return groupRepository.insert((GroupData)group);
+    public Group createGroup(HttpServletRequest request, HttpServletResponse response, Group group) throws Exception {
+        if(groupRepository.findById(group.getName()).orElse(null) == null){
+            response.addHeader("Location", request.getContextPath() + "/groups/" + group.getName());
+            response.setStatus(201);
+        }
+        return groupRepository.save((GroupData)group);
     }
 
     @Override
-    public Void deleteGroupUsers(String name) throws Exception {
+    public Void deleteGroupUsers(HttpServletRequest request, HttpServletResponse response, String name) throws Exception {
 
         //Only existing groups can be updated
          findGroupOrThrow(name);
@@ -94,7 +100,7 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public Void deleteGroupUser(String name, String login) throws Exception {
+    public Void deleteGroupUser(HttpServletRequest request, HttpServletResponse response, String name, String login) throws Exception {
 
         //Only existing groups can be updated
         findGroupOrThrow(name);
@@ -116,12 +122,12 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public List<? extends Group> fetchGroups() throws Exception {
+    public List<? extends Group> fetchGroups(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return groupRepository.findAll();
     }
 
     @Override
-    public Group fetchGroup(String name) throws Exception {
+    public Group fetchGroup(HttpServletRequest request, HttpServletResponse response, String name) throws Exception {
         return groupRepository.findById(name).orElseThrow(
            ()-> new ApiErrorException(
               ApiError.builder()
@@ -133,11 +139,7 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public Group updateGroup(String name, Group group) throws Exception {
-
-        //Only existing groups can be updated
-        findGroupOrThrow(name);
-
+    public Group updateGroup(HttpServletRequest request, HttpServletResponse response, String name, Group group) throws Exception {
         //name from group body parameter should match name path parameter
         if(!group.getName().equals(name)){
             throw new ApiErrorException(
@@ -146,13 +148,13 @@ public class GroupsController implements GroupsApi {
                             .message(NO_MATCHING_GROUP_NAME_MSG)
                             .build());
         } else {
-            return groupRepository.save((GroupData)group);
+            return createGroup(request,response,group);
         }
 
     }
 
     @Override
-    public Void updateGroupUsers(String name, List<String> users) throws Exception {
+    public Void updateGroupUsers(HttpServletRequest request, HttpServletResponse response, String name, List<String> users) throws Exception {
 
         //Only existing groups can be updated
         findGroupOrThrow(name);
@@ -178,7 +180,7 @@ public class GroupsController implements GroupsApi {
             publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
         }
         userRepository.saveAll(toUpdate);
-        addGroupUsers(name,newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
+        addGroupUsers(request, response, name,newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
         return null;
     }
 

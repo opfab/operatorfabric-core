@@ -167,6 +167,19 @@ class GroupsControllerShould {
                             "\"description\": \"Chico, Groucho and Harpo, forget about Zeppo and Gummo\"" +
                             "}")
             )
+                    .andExpect(status().isCreated())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("$.name", is("Marx Brothers")))
+                    .andExpect(jsonPath("$.description", is("Chico, Groucho and Harpo, forget about Zeppo and Gummo")))
+            ;
+
+            mockMvc.perform(post("/groups")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content("{" +
+                            "\"name\": \"Marx Brothers\"," +
+                            "\"description\": \"Chico, Groucho and Harpo, forget about Zeppo and Gummo\"" +
+                            "}")
+            )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.name", is("Marx Brothers")))
@@ -183,45 +196,6 @@ class GroupsControllerShould {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.name", is("Marx Brothers")))
                     .andExpect(jsonPath("$.description", is("Chico, Groucho and Harpo, forget about Zeppo and Gummo")))
-            ;
-
-        }
-
-        @Test
-        void createWithDuplicateError() throws Exception {
-
-            mockMvc.perform(get("/groups/Monty Pythons"))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.name", is("Monty Pythons")))
-                    .andExpect(jsonPath("$.description", is("A bunch of humorous fellows")))
-            ;
-
-            mockMvc.perform(post("/groups")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content("{" +
-                            "\"name\": \"Monty Pythons\"," +
-                            "\"description\": \"They went in search of the Holy Grail.\"" +
-                            "}")
-            )
-                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                    .andExpect(jsonPath("$.message", is("Resource creation failed because a resource with the same key already exists.")))
-                    .andExpect(jsonPath("$.errors", hasSize(1)))
-                    .andExpect(jsonPath("$.errors[0]", stringContainsInOrder(Arrays.asList("duplicate key", "\"Monty Pythons\""))))
-            ;
-
-            mockMvc.perform(get("/groups"))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$", hasSize(2)));
-
-            mockMvc.perform(get("/groups/Monty Pythons"))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.name", is("Monty Pythons")))
-                    .andExpect(jsonPath("$.description", is("A bunch of humorous fellows")))
             ;
 
         }
@@ -252,41 +226,6 @@ class GroupsControllerShould {
                     .andExpect(jsonPath("$.name", is("Wanda")))
                     .andExpect(jsonPath("$.description", is("They were not as successful in Fierce Creatures")))
             ;
-        }
-
-        @Test
-        void updateWithNotFoundError() throws Exception {
-
-            mockMvc.perform(get("/groups/unknownGroupSoFar"))
-                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
-                    .andExpect(jsonPath("$.errors").doesNotExist())
-            ;
-
-            mockMvc.perform(put("/groups/unknownGroupSoFar")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content("{" +
-                            "\"name\": \"unknownGroupSoFar\"," +
-                            "\"description\": \"New description for group\"" +
-                            "}")
-            )
-                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
-                    .andExpect(jsonPath("$.errors").doesNotExist())
-            ;
-
-            mockMvc.perform(get("/groups/unknownGroupSoFar"))
-                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
-                    .andExpect(jsonPath("$.errors").doesNotExist())
-            ;
-
         }
 
         @Test
@@ -339,10 +278,10 @@ class GroupsControllerShould {
                             "\"description\": \"New description for group\"" +
                             "}")
             )
-                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.NO_MATCHING_GROUP_NAME_MSG, "unknownGroupSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
@@ -446,7 +385,8 @@ class GroupsControllerShould {
                             "\"firstName\": \"Freshly \"," +
                             "\"lastName\": \"New User\"" +
                             "}")
-            ).andExpect(status().isOk());
+            ).andExpect(status().isCreated())
+            .andExpect(header().string("Location","/users/"+newUserName));
 
             mockMvc.perform(put("/groups/Wanda/users")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)

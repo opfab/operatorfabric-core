@@ -24,6 +24,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -58,13 +60,13 @@ public class TimeController implements TimeApi {
     }
 
     @Override
-    public Void resetTime() {
+    public Void resetTime(HttpServletRequest request, HttpServletResponse response) {
         timeService.reset();
         return null;
     }
 
     @Override
-    public Void fetchNextTime(BigDecimal millisTime) throws Exception {
+    public Void fetchNextTime(HttpServletRequest request, HttpServletResponse response, BigDecimal millisTime) throws Exception {
         long longMillisTime = millisTime.longValue();
         return fetchNextTime0(longMillisTime);
     }
@@ -80,7 +82,7 @@ public class TimeController implements TimeApi {
     }
 
     @Override
-    public Void fetchPreviousTime(BigDecimal millisTime) throws Exception {
+    public Void fetchPreviousTime(HttpServletRequest request, HttpServletResponse response, BigDecimal millisTime) throws Exception {
         long longMillisTime = millisTime.longValue();
         return fetchPreviousTime0(longMillisTime);
     }
@@ -96,12 +98,12 @@ public class TimeController implements TimeApi {
     }
 
     @Override
-    public Void fetchNextTimeFromNow() throws Exception {
+    public Void fetchNextTimeFromNow(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return fetchNextTime0(timeService.computeNow().toEpochMilli());
     }
 
     @Override
-    public Void fetchPreviousTimeFromNow() throws Exception {
+    public Void fetchPreviousTimeFromNow(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return fetchPreviousTime0(timeService.computeNow().toEpochMilli());
     }
 
@@ -124,12 +126,12 @@ public class TimeController implements TimeApi {
     }
 
     @Override
-    public TimeData fetchTime() {
+    public TimeData fetchTime(HttpServletRequest request, HttpServletResponse response) {
         return timeService.fetchTimeData();
     }
 
     @Override
-    public TimeData setTime(TimeData time) {
+    public TimeData setTime(HttpServletRequest request, HttpServletResponse response, TimeData time) {
         User user = extractPrincipalFromContext();
         if (user == null) {
             log.info("Time updated by unknown user");
@@ -139,10 +141,10 @@ public class TimeController implements TimeApi {
         if (time.getSpeed() != null && time.getVirtualTime() != null)
             timeService.updateSpeedAndTime(time.getSpeed(), time.getVirtualTime());
         else if (time.getSpeed() != null)
-            setCurrentSpeed(time.getSpeed());
+            setCurrentSpeed(request, response, time.getSpeed());
         else if (time.getVirtualTime() != null)
-            setVirtualTime(time.getVirtualTime());
-        return fetchTime();
+            setVirtualTime(request, response, time.getVirtualTime());
+        return fetchTime(request,response);
     }
 
     private User extractPrincipalFromContext() {
@@ -153,30 +155,30 @@ public class TimeController implements TimeApi {
     }
 
     @Override
-    public TimeData updateTime(TimeData time) {
-        return setTime(time);
+    public TimeData updateTime(HttpServletRequest request, HttpServletResponse response, TimeData time) {
+        return setTime(request, response, time);
     }
 
     @Override
-    public SpeedEnum setCurrentSpeed(SpeedEnum currentSpeed) {
+    public SpeedEnum setCurrentSpeed(HttpServletRequest request, HttpServletResponse response, SpeedEnum currentSpeed) {
         this.timeService.updateSpeed(currentSpeed);
         return this.timeService.retrieveSpeed();
     }
 
     @Override
-    public Instant setVirtualTime(Instant virtualTime) {
-        this.timeService.updateTime(virtualTime);
-        return this.timeService.computeNow();
+    public Instant setVirtualTime(HttpServletRequest request, HttpServletResponse response, Instant virtualTime) {
+            this.timeService.updateTime(virtualTime);
+            return this.timeService.computeNow();
     }
 
     @Override
-    public Instant updateVirtualTime(Instant virtualTime) {
-        return setVirtualTime(virtualTime);
+    public Instant updateVirtualTime(HttpServletRequest request, HttpServletResponse response, Instant virtualTime) {
+        return setVirtualTime(request, response, virtualTime);
     }
 
     @Override
-    public SpeedEnum updateCurrentSpeed(SpeedEnum currentSpeed) {
-        return setCurrentSpeed(currentSpeed);
+    public SpeedEnum updateCurrentSpeed(HttpServletRequest request, HttpServletResponse response, SpeedEnum currentSpeed) {
+        return setCurrentSpeed(request, response, currentSpeed);
     }
 
 

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -46,7 +48,7 @@ public class ThirdsController implements ThirdsApi {
   }
 
   @Override
-  public byte[] getCss(String thirdName, String cssFileName, String apiVersion) throws IOException {
+  public byte[] getCss(HttpServletRequest request, HttpServletResponse response, String thirdName, String cssFileName, String apiVersion) throws IOException {
     Resource resource = service.fetchResource(thirdName, ResourceTypeEnum.CSS, apiVersion, cssFileName);
     return loadResource(resource);
   }
@@ -66,19 +68,19 @@ public class ThirdsController implements ThirdsApi {
   }
 
   @Override
-  public byte[] getI18n(String thirdName, String locale, String apiVersion) throws IOException {
+  public byte[] getI18n(HttpServletRequest request, HttpServletResponse response, String thirdName, String locale, String apiVersion) throws IOException {
     Resource resource = service.fetchResource(thirdName, ResourceTypeEnum.I18N, apiVersion, locale, null);
     return loadResource(resource);
   }
 
   @Override
-  public byte[] getMedia(String thirdName, String mediaFileName, String locale, String apiVersion) throws IOException {
+  public byte[] getMedia(HttpServletRequest request, HttpServletResponse response, String thirdName, String mediaFileName, String locale, String apiVersion) throws IOException {
     Resource resource = service.fetchResource(thirdName, ResourceTypeEnum.MEDIA, apiVersion, locale, mediaFileName);
     return loadResource(resource);
   }
 
   @Override
-  public byte[] getTemplate(String thirdName, String templateName, String locale, String apiVersion) throws
+  public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String thirdName, String templateName, String locale, String apiVersion) throws
      IOException {
     Resource resource;
     resource = service.fetchResource(thirdName, ResourceTypeEnum.TEMPLATE, apiVersion, locale, templateName);
@@ -86,19 +88,22 @@ public class ThirdsController implements ThirdsApi {
   }
 
   @Override
-  public Third getThird(@PathVariable String thirdName, String apiVersion) {
+  public Third getThird(HttpServletRequest request, HttpServletResponse response, @PathVariable String thirdName, String apiVersion) {
     return service.fetch(thirdName, apiVersion);
   }
 
   @Override
-  public List<Third> getThirds() {
+  public List<Third> getThirds(HttpServletRequest request, HttpServletResponse response) {
     return service.listThirds();
   }
 
   @Override
-  public Third uploadBundle(@Valid MultipartFile file) {
+  public Third uploadBundle(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
     try (InputStream is = file.getInputStream()) {
-      return service.updateThird(is);
+      Third result = service.updateThird(is);
+      response.addHeader("Location",request.getContextPath()+"/thirds/"+result.getName());
+      response.setStatus(201);
+      return result;
     } catch (FileNotFoundException e) {
       log.error("File not found while loading bundle file", e);
       throw new ApiErrorException(
@@ -128,16 +133,16 @@ public class ThirdsController implements ThirdsApi {
   }
 
   @Override
-  public Map<String, ? extends Action> getActions(String thirdName, String processName, String stateName, String apiVersion) {
-    ThirdStates state = getState(thirdName, processName, stateName, apiVersion);
+  public Map<String, ? extends Action> getActions(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String apiVersion) {
+    ThirdStates state = getState(request, response, thirdName, processName, stateName, apiVersion);
     if(state!=null)
       return state.getActions();
     return Collections.emptyMap();
   }
 
-  private ThirdStates getState(String thirdName, String processName, String stateName, String apiVersion) {
+  private ThirdStates getState(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String apiVersion) {
     ThirdStates state=null;
-    Third third = getThird(thirdName, apiVersion);
+    Third third = getThird(request, response, thirdName, apiVersion);
     if(third != null){
       ThirdProcesses process = third.getProcesses().get(processName);
       if(process != null){
@@ -173,8 +178,8 @@ public class ThirdsController implements ThirdsApi {
   }
 
   @Override
-  public List<? extends Detail> getDetails(String thirdName, String processName, String stateName, String apiVersion) {
-    ThirdStates state = getState(thirdName, processName, stateName, apiVersion);
+  public List<? extends Detail> getDetails(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String apiVersion) {
+    ThirdStates state = getState(request, response, thirdName, processName, stateName, apiVersion);
     if(state!=null)
       return state.getDetails();
     return Collections.emptyList();

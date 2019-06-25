@@ -817,7 +817,7 @@ paths:
             items:
               $ref: '#/definitions/Card'
       responses:
-        '201':
+        '202':
           description: accepted
   /cardSubscription:
     get:

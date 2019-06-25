@@ -299,7 +299,8 @@ class GivenAdminUserThirdControllerShould {
             MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz", "application/gzip", Files
                     .readAllBytes(pathToBundle));
             mockMvc.perform(multipart("/thirds").file(bundle))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
+                    .andExpect(header().string("Location", "/thirds/second"))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.name", is("second")))
                     .andExpect(jsonPath("$.version", is("2.1")))
