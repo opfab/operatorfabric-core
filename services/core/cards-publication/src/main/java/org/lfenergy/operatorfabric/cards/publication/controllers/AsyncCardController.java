@@ -12,6 +12,7 @@ import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardWriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -39,9 +40,9 @@ public class AsyncCardController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<Integer> createCards(@Valid @RequestBody Flux<CardPublicationData> cards) {
+    public Mono<Void> createCards(@Valid @RequestBody Flux<CardPublicationData> cards) {
         return cards
                 .doOnNext(cardWriteService::pushCardAsyncParallel)
-                .last().map(c->202);
+                .last().flatMap(c->Mono.empty());
     }
 }
