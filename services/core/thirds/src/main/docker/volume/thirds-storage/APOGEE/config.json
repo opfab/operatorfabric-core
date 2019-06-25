@@ -8,7 +8,7 @@
     "operation"
   ],
   "menuEntries": [
-    {"id": "uid test 0","url": "https://opfab.github.io/operatorfabric.community.io/","label": "menu.first"}
+    {"id": "uid test 0","url": "https://opfab.github.io/whatisopfab/","label": "menu.first"}
   ],
   "csses": [
     "tabs",
