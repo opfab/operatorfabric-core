@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ let component: CustomTimelineChartComponent;
 let fixture: ComponentFixture<CustomTimelineChartComponent>;
 
 describe('Directive: XAxisTickFormatPipe', () => {
-    beforeEach(() => {
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [CommonModule,
                 BrowserAnimationsModule,
@@ -26,7 +26,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         .compileComponents();
         fixture = TestBed.createComponent(CustomTimelineChartComponent);
         component = fixture.componentInstance;
-    });
+    }));
 
     it('should create', () => {
         fixture.detectChanges();

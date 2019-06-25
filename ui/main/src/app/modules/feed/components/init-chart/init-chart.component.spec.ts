@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { InitChartComponent } from './init-chart.component';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +20,7 @@ describe('InitChartComponent', () => {
   let store: Store<AppState>;
   let fixture: ComponentFixture<InitChartComponent>;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule,
         BrowserAnimationsModule,
@@ -40,7 +40,7 @@ describe('InitChartComponent', () => {
     spyOn(store, 'dispatch').and.callThrough();
     fixture = TestBed.createComponent(InitChartComponent);
     component = fixture.componentInstance;
-  });
+  }));
 
   it('should create button home display', () => {
     fixture.detectChanges();

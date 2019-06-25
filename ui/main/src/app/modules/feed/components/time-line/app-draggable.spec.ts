@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ let fixture: ComponentFixture<CustomTimelineChartComponent>;
 let inputEl: DebugElement;
 
 describe('Directive: AppMouseWheel', () => {
-    beforeEach(() => {
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [CommonModule,
                 BrowserAnimationsModule,
@@ -28,7 +28,7 @@ describe('Directive: AppMouseWheel', () => {
         fixture = TestBed.createComponent(CustomTimelineChartComponent);
         component = fixture.componentInstance;
         inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
-    });
+    }));
 
     it('simulate the combination of events when we make a drag on the chart ' +
         'emit all draggable directive signal', () => {
