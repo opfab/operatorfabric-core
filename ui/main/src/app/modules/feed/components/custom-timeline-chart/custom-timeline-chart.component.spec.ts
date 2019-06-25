@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CustomTimelineChartComponent } from './custom-timeline-chart.component';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,7 +17,7 @@ describe('CustomTimelineChartComponent', () => {
   let fixture: ComponentFixture<CustomTimelineChartComponent>;
   let inputEl: DebugElement;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule,
         BrowserAnimationsModule,
@@ -30,7 +30,7 @@ describe('CustomTimelineChartComponent', () => {
     .compileComponents();
     fixture = TestBed.createComponent(CustomTimelineChartComponent);
     component = fixture.componentInstance;
-  });
+  }));
 
   it('should call update() and create chart by calling updateYAxisWidth function', () => {
     fixture.detectChanges();
