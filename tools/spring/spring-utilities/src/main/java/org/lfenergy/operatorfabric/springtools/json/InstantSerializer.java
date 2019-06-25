@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.time.Instant;
 
 /**
- * Custom serializer to serialize link{@Instant} as number of milliseconds from Epoch rather than timestamp.
+ * Custom serializer to serialize {@link Instant} as number of milliseconds from Epoch rather than timestamp.
  *
  * @author Alexandra Guironnet
  */

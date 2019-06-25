@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.time.Instant;
 
 /**
- * Custom deserializer to turn number of milliseconds from Epoch into corresponding link{@Instant}
+ * Custom deserializer to turn number of milliseconds from Epoch into corresponding {@link Instant}
  *
  * @author Alexandra Guironnet
  */
