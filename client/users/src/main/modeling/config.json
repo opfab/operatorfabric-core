@@ -12,6 +12,6 @@
   "delegatePattern": true,
   "singleContentTypes": false,
   "importMappings": {
-    "EpochDate": "java.time.Instant"
+    "EpochDate": "java.lang.Long"
   }
 }

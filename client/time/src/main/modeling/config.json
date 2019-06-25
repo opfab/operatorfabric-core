@@ -13,6 +13,6 @@
   "singleContentTypes": false,
   "importMappings": {
     "SpeedEnum": "org.lfenergy.operatorfabric.time.model.SpeedEnum",
-    "EpochDate": "java.time.Instant"
+    "EpochDate": "java.lang.Long"
   }
 }
