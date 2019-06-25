@@ -276,7 +276,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
    */
   checkFollowClockTick() {
     if (this.xTicks && this.xTicks.length > 5) {
-      const tmp = moment(1561399200000);
+      const tmp = moment();
       tmp.millisecond(0);
       if (this.xTicks[4].valueOf() === tmp.valueOf()) {
           this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
