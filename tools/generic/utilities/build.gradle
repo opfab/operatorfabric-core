@@ -1,6 +1,5 @@
 dependencies{
     compile misc.compress
-    compile misc.jackson
     testCompile misc.slf4j
     testCompile project(':tools:generic:test-utilities')
 }

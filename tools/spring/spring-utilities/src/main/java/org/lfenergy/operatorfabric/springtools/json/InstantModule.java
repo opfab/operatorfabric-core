@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.lfenergy.operatorfabric.utilities.json;
+package org.lfenergy.operatorfabric.springtools.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -20,7 +20,7 @@ public class InstantModule extends SimpleModule {
 
     public InstantModule() {
 
-        addSerializer(Instant.class, new CustomInstantSerializer());
-        addDeserializer(Instant.class, new CustomInstantDeserializer());
+        addSerializer(Instant.class, new InstantSerializer());
+        addDeserializer(Instant.class, new InstantDeserializer());
     }
 }

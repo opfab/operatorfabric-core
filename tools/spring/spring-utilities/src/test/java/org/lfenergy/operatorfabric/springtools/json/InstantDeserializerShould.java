@@ -1,10 +1,9 @@
-package org.lfenergy.operatorfabric.utilities;
+package org.lfenergy.operatorfabric.springtools.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.lfenergy.operatorfabric.utilities.json.CustomInstantDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,18 +20,18 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Alexandra Guironnet
  */
-public class CustomInstantDeserializerShould {
+public class InstantDeserializerShould {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomInstantDeserializer.class);
+    private static final Logger log = LoggerFactory.getLogger(InstantDeserializer.class);
 
     private static ObjectMapper objectMapper;
-    private static CustomInstantDeserializer customInstantDeserializer;
+    private static InstantDeserializer instantDeserializer;
 
     @BeforeAll
     public static void setup(){
         objectMapper = new ObjectMapper();
-        customInstantDeserializer = new CustomInstantDeserializer();
-        objectMapper.registerModule(new SimpleModule().addDeserializer(Instant.class, customInstantDeserializer));
+        instantDeserializer = new InstantDeserializer();
+        objectMapper.registerModule(new SimpleModule().addDeserializer(Instant.class, instantDeserializer));
     }
 
     @Test

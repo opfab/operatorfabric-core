@@ -5,12 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.lfenergy.operatorfabric.utilities.json;
+package org.lfenergy.operatorfabric.springtools.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -20,13 +19,13 @@ import java.time.Instant;
  *
  * @author Alexandra Guironnet
  */
-public class CustomInstantSerializer extends StdSerializer<Instant> {
+public class InstantSerializer extends StdSerializer<Instant> {
 
-    protected CustomInstantSerializer(Class<Instant> t) {
+    protected InstantSerializer(Class<Instant> t) {
         super(t);
     }
 
-    public CustomInstantSerializer() {
+    public InstantSerializer() {
         this(null);
     }
 

@@ -5,15 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.lfenergy.operatorfabric.utilities.json;
+package org.lfenergy.operatorfabric.springtools.json;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -23,13 +20,13 @@ import java.time.Instant;
  *
  * @author Alexandra Guironnet
  */
-public class CustomInstantDeserializer extends StdDeserializer<Instant> {
+public class InstantDeserializer extends StdDeserializer<Instant> {
 
-    protected CustomInstantDeserializer(Class<Instant> vc) {
+    protected InstantDeserializer(Class<Instant> vc) {
         super(vc);
     }
 
-    public CustomInstantDeserializer() {
+    public InstantDeserializer() {
         this(null);
     }
 

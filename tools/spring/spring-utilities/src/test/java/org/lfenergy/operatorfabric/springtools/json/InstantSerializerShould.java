@@ -1,11 +1,10 @@
-package org.lfenergy.operatorfabric.utilities;
+package org.lfenergy.operatorfabric.springtools.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.lfenergy.operatorfabric.utilities.json.CustomInstantSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,18 +18,18 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Alexandra Guironnet
  */
-public class CustomInstantSerializerShould {
+public class InstantSerializerShould {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomInstantSerializer.class);
+    private static final Logger log = LoggerFactory.getLogger(InstantSerializer.class);
 
     private static ObjectMapper objectMapper;
-    private static CustomInstantSerializer customInstantSerializer;
+    private static InstantSerializer instantSerializer;
 
     @BeforeAll
     public static void setup(){
         objectMapper = new ObjectMapper();
-        customInstantSerializer = new CustomInstantSerializer();
-        objectMapper.registerModule(new SimpleModule().addSerializer(Instant.class, customInstantSerializer));
+        instantSerializer = new InstantSerializer();
+        objectMapper.registerModule(new SimpleModule().addSerializer(Instant.class, instantSerializer));
     }
 
     @Test
