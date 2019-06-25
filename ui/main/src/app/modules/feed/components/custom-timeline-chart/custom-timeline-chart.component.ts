@@ -151,6 +151,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
 
   // TICKS
   @Input() centeredOnTicks;
+  @Input() clusterTicksToTicks;
   @Input() clusterLevel;
   public xTicks = [];
   public xTicksOne = [];
@@ -761,10 +762,16 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
             // set the new position for the circle group
             // two cases : on ticks or in middle of two ticks
             if (this.centeredOnTicks) {
-              circleDate = this.xTicks[i].valueOf();
+              if (this.clusterTicksToTicks) {
+                circleDate = this.xTicks[i - 1].valueOf();
+              } else {
+                circleDate = this.xTicks[i].valueOf();
+              }
             } else {
+              // Circle on middle
               circleDate = this.xTicks[i - 1].valueOf() + ((this.xTicks[i].valueOf() - this.xTicks[i - 1].valueOf()) / 2);
             }
+
             const newDate = moment(circleDate);
             // initialisation a new circle
             // it's push on our new Data List only if it's inside the interval
@@ -780,9 +787,15 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
             };
             let startLimit: number;
             let endLimit: number;
-            // Group Algo 1
-            if (this.centeredOnTicks) {
-              // begin special case:
+
+            if (this.clusterTicksToTicks) { // Group Algo 1
+                startLimit = this.xTicks[i - 1].valueOf();
+                endLimit = this.xTicks[i].valueOf();
+                if (i + 1 === this.xTicks.length) {
+                  endLimit = this.xTicks[i].valueOf() + 1;
+                }
+            } else { // Group Algo 2
+            // begin special case:
               // first tick has is own value for startLimit
               // endLimit has half of 2nd tick
               // set i to 0 for one more loop
@@ -790,24 +803,19 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
                 firstPass = false;
                 i = 0;
                 newCircle.date = moment(this.xTicks[i].valueOf());
-                startLimit = this.xTicks[i];
-                endLimit = this.xTicks[i] + ((this.xTicks[i + 1] - this.xTicks[i]) / 2);
+                startLimit = this.xTicks[i].valueOf();
+                endLimit = this.xTicks[i].valueOf() + ((this.xTicks[i + 1].valueOf() - this.xTicks[i].valueOf()) / 2);
               } else {
                 // startLimit set with half of the interval between the actual and previous ticks
-                startLimit = this.xTicks[i] - ((this.xTicks[i] - this.xTicks[i - 1]) / 2);
+                startLimit = this.xTicks[i].valueOf() - ((this.xTicks[i].valueOf() - this.xTicks[i - 1].valueOf()) / 2);
                 // last tick has is own value for endLimit
                 if (i + 1 === this.xTicks.length) {
-                  endLimit = this.xTicks[i] + 1;
+                  endLimit = this.xTicks[i].valueOf() + 1;
                 } else {
                   // endLimit set with half of the interval between the actual and next ticks
-                  endLimit = this.xTicks[i] + ((this.xTicks[i + 1] - this.xTicks[i]) / 2);
+                  endLimit = this.xTicks[i].valueOf() + ((this.xTicks[i + 1].valueOf() - this.xTicks[i].valueOf()) / 2);
                 }
               }
-            } else { // Group Algo 2
-              startLimit = this.xTicks[i - 1];
-              // !!! actually the domain[1], last value of ticks, it's exclude !!!
-              endLimit = this.xTicks[i] + 1; // check +1 if it's working
-
             }
             // add value of array[j] if his date is inside the interval make by start and end limit
             while (array[j] && startLimit <= array[j].date && array[j].date < endLimit) {

@@ -86,6 +86,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             showGridLines: true,
             realTimeBar: true,
             centeredOnTicks: true,
+            clusterTicksToTicks: true,
         };
         this.confZoom = [{
             startDomain: startDomain.valueOf(),

@@ -30,6 +30,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public showGridLines: boolean;
   public realTimeBar: boolean;
   public centeredOnTicks: boolean;
+  public clusterTicksToTicks: boolean;
   public circleDiameter: number;
 
   // required for domain movements specifications
@@ -63,6 +64,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.animations = false;
     this.showGridLines = false;
     this.centeredOnTicks = false;
+    this.clusterTicksToTicks = false;
     this.realTimeBar = false;
     this.circleDiameter = 10;
   }
@@ -106,7 +108,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * set an list of arrays for each severity of Cards
    */
   setArrayChartData(array: any[]): void {
-    array.sort((val1, val2) => { return val1.date - val2.date; });
+    array.sort((val1, val2) => { return val1.startDate - val2.startDate; });
 
     const arraySeverity = [];
     this.arrayChartData = [];
@@ -226,6 +228,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
       }
       if (this.conf.centeredOnTicks) {
         this.centeredOnTicks = true;
+      }
+      if (this.conf.clusterTicksToTicks) {
+        this.clusterTicksToTicks = true;
       }
       if (this.conf.circleDiameter) {
         this.circleDiameter = this.conf.circleDiameter;

@@ -37,6 +37,7 @@
    [realTimeBar] show vertical blue bar at currently time
    [clusterLevel] define the clusterLevel (zoomLevel) of timeline
    [centeredOnTicks] position of circle centered on Ticks' timeline
+   [clusterTicksToTicks] algo used for group circles
    [circleDiameter] circle diameter size
    (zoomChange) call when custom timeline chart change his domain
   -->
@@ -55,6 +56,7 @@
                              [realTimeBar]="realTimeBar"
                              [clusterLevel]="forwardButtonType"
                              [centeredOnTicks]="centeredOnTicks"
+                             [clusterTicksToTicks]="clusterTicksToTicks"
                              [circleDiameter]="circleDiameter"
                              [realCaseActivate]="realCaseActivate"
                              (zoomChange)="applyNewZoom($event)">
