@@ -63,6 +63,12 @@ import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
                     [showGridLines]="showGridLines"
                     (dimensionsChanged)="updateYAxisWidth($event)">
       </svg:g>
+      <text *ngIf="realTimeBar && checkInsideDomain(xRealTimeLine)"
+            [attr.x]="timeScale(xRealTimeLine)" 
+            [attr.y]="-10" stroke="'grey'"
+            [attr.fill]="'grey'"
+            text-anchor="middle" stroke-width="1px"
+            [attr.font-size]="11" dy=".3em"> {{xRealTimeLine.format('DD/MM/YY HH:mm')}}</text>
       <svg:rect *ngIf="realTimeBar && checkInsideDomain(xRealTimeLine)"
                 [attr.x]="timeScale(xRealTimeLine)"
                 [attr.width]="5"
