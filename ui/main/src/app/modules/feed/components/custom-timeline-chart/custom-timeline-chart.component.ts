@@ -147,6 +147,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   // Circle
   @Input() circleDiameter;
 
+  @Input() realCaseActivate;
+
   // TICKS
   @Input() centeredOnTicks;
   @Input() clusterLevel;
@@ -255,12 +257,31 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   /**
    * loop function for set xRealTimeLine at the actual time
    * xRealTimeLine is a vertical bar which represent the actual time
+   * update the domain if real case are activate
    */
   updateRealTimeDate(): void {
     this.xRealTimeLine = moment();
+    if (this.realCaseActivate) {
+      this.checkFollowClockTick();
+      this.update();
+    }
     setTimeout(() => {
       this.updateRealTimeDate();
-    }, 3000);
+    }, 1000);
+  }
+
+  /**
+   * set the domain with the second tick value for start
+   * if moment is equal to the 4th tick (corresponding of the interval of dateWithSpaceBeforeMoment)
+   */
+  checkFollowClockTick() {
+    if (this.xTicks && this.xTicks.length > 5) {
+      const tmp = moment(1561399200000);
+      tmp.millisecond(0);
+      if (this.xTicks[4].valueOf() === tmp.valueOf()) {
+          this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
+      }
+    }
   }
 
   /**

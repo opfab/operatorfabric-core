@@ -385,6 +385,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
   moveDomainByWeek(forward: boolean): void {
     const startDomain = moment(this.myDomain[0]);
     startDomain.startOf('week');
+    if (this.realCaseActivate) {
+      this.realCaseActivate = false;
+    }
     const endDomain = moment(startDomain);
     endDomain.add(7, 'days');
     if (forward) {
