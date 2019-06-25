@@ -6,6 +6,8 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import * as timelineSelectors from '@ofSelectors/timeline.selectors';
 import {catchError, debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {FilterType} from "@ofServices/filter.service";
+import {ApplyFilter} from "@ofActions/feed.actions";
 
 @Component({
   selector: 'of-init-chart',
@@ -358,6 +360,11 @@ export class InitChartComponent implements OnInit, OnDestroy {
     const valueStart = startDomain;
     const valueEnd = endDomain;
     this.myDomain = [valueStart, valueEnd];
+    // apply zoom on feed
+    this.store.dispatch(new ApplyFilter({
+      name: FilterType.TIME_FILTER, active: false,
+      status: {start: startDomain.valueOf(), end: endDomain.valueOf()}
+    }));
   }
 
   /**
@@ -398,12 +405,11 @@ export class InitChartComponent implements OnInit, OnDestroy {
     if (forward) {
       startDomain.add(7, 'days');
       endDomain.add(7, 'days');
-      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
     } else {
       startDomain.subtract(7, 'days');
       endDomain.subtract(7, 'days');
-      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
     }
+    this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
   }
 
  /**
@@ -426,7 +432,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
         startDomain.add(1, 'days');
         endDomain.add(1, 'days');
       }
-      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
     } else {
       this.continuousForward--;
       // decrease domain by one day
@@ -437,8 +442,8 @@ export class InitChartComponent implements OnInit, OnDestroy {
         startDomain.subtract(1, 'days');
         endDomain.subtract(1, 'days');
       }
-      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
     }
+   this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
   }
 
   /**
@@ -459,11 +464,10 @@ export class InitChartComponent implements OnInit, OnDestroy {
     if (forward) {
       startDomain.add(1, unit);
       endDomain.add(2, unit);
-      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
     } else {
       startDomain.subtract(1, unit);
-      this.myDomain = [startDomain.valueOf(), endDomain.valueOf()];
     }
+    this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
   }
 
   /**
