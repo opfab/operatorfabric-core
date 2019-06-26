@@ -9,19 +9,21 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {CardService} from '@ofServices/card.service';
 import {Observable} from 'rxjs';
-import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, filter, map, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
 import {
     AddLightCardFailure,
     HandleUnexpectedError,
-    LightCardActions,
+    LightCardActions, LightCardActionTypes,
     LoadLightCardsSuccess,
     UpdatedSubscription
 } from '@ofActions/light-card.actions';
 import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
-import {Store} from "@ngrx/store";
+import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {ApplyFilter, FeedActionTypes} from "@ofActions/feed.actions";
 import {FilterType} from "@ofServices/filter.service";
+import {selectCardStateSelectedId} from "@ofSelectors/card.selectors";
+import {LoadCard} from "@ofActions/card.actions";
 
 @Injectable()
 export class CardOperationEffects {
@@ -82,4 +84,14 @@ export class CardOperationEffects {
             })
         );
 
+    @Effect()
+    refreshIfSelectedCard: Observable<Action> = this.actions$
+        .pipe(
+            ofType(LightCardActionTypes.LoadLightCardsSuccess),
+            map((a:LoadLightCardsSuccess) => a.payload.lightCards), //retrieve list of added light cards from action payload
+            withLatestFrom(this.store.select(selectCardStateSelectedId)), //retrieve currently selected card
+            switchMap(([lightCards, selectedCardId]) => lightCards.filter (card => card.id.indexOf(selectedCardId) >= 0)), //keep only lightCards matching the process id of current selected card
+            map( lightCard => new LoadCard({id: lightCard.id})) //if any, trigger refresh by firing LoadCard
+        )
+    ;
 }
