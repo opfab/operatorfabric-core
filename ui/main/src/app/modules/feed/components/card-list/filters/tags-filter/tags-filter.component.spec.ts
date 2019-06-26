@@ -1,0 +1,48 @@
+/* Copyright (c) 2018, RTE (http://www.rte-france.com)
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+
+import {TagsFilterComponent} from './tags-filter.component';
+import {TypeaheadModule} from "ngx-type-ahead";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {TranslateModule} from "@ngx-translate/core";
+import {StoreModule} from "@ngrx/store";
+import {appReducer, storeConfig} from "@ofStore/index";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {ServicesModule} from "@ofServices/services.module";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+
+describe('TagsFilterComponent', () => {
+    let component: TagsFilterComponent;
+    let fixture: ComponentFixture<TagsFilterComponent>;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [TypeaheadModule,
+                FormsModule,
+                ReactiveFormsModule,
+                TranslateModule.forRoot(),
+                StoreModule.forRoot(appReducer, storeConfig),
+                FontAwesomeModule,
+                ServicesModule,
+                HttpClientTestingModule],
+            declarations: [TagsFilterComponent]
+        })
+            .compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TagsFilterComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});

@@ -8,6 +8,7 @@
 import {Injectable} from '@angular/core';
 import {Filter} from "@ofModel/feed-filter.model";
 import {LightCard, Severity} from "@ofModel/light-card.model";
+import * as _ from "lodash";
 
 @Injectable({
     providedIn: 'root'
@@ -49,6 +50,14 @@ export class FilterService {
         );
     }
 
+    private initTagFilter() {
+        return new Filter(
+            (card, status) => _.intersection(card.tags,status.tags).length > 0,
+            false,
+            {tags:[]}
+        );
+    }
+
     private initRecipientFilter() {
         return new Filter(
             (card, status) => false,
@@ -82,8 +91,9 @@ export class FilterService {
     private initFilters(): Map<string, Filter> {
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
-        filters.set(FilterType.RECIPIENT_FILTER, this.initRecipientFilter());
+        // filters.set(FilterType.RECIPIENT_FILTER, this.initRecipientFilter());
         filters.set(FilterType.TIME_FILTER, this.initTimeFilter());
+        filters.set(FilterType.TAG_FILTER, this.initTagFilter());
         return filters;
     }
 }
@@ -91,6 +101,7 @@ export class FilterService {
 export enum FilterType {
     TYPE_FILTER,
     RECIPIENT_FILTER,
+    TAG_FILTER,
     TIME_FILTER,
     TEST_FILTER
 }

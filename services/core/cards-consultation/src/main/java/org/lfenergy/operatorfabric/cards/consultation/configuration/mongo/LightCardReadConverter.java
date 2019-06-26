@@ -50,7 +50,7 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
         if(summaryDoc!=null)
             builder.summary(i18nReadConverter.convert(summaryDoc));
 
-        List<String> tags = (List<String>) source.get("recipients");
+        List<String> tags = (List<String>) source.get("tags");
         if (tags != null)
             for (String t : tags) {
                 builder.tag(t);

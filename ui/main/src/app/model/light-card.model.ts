@@ -21,6 +21,7 @@ export interface LightCard {
     readonly lttd?: number;
     readonly title?: I18n;
     readonly summary?: I18n;
+    readonly tags?: string[];
 
 }
 
@@ -40,6 +41,7 @@ export class LightCard implements LightCard {
         readonly lttd?: number,
         readonly title?: I18n,
         readonly summary?: I18n,
+        readonly tags?: string[],
     ) {}
 }
 

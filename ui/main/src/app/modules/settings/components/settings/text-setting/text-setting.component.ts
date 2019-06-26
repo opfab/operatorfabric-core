@@ -10,7 +10,7 @@ import {BaseSettingComponent} from "../base-setting/base-setting.component";
 import {AppState} from "@ofStore/index";
 import {Store} from "@ngrx/store";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import * as _ from "lodash";
+
 
 @Component({
     selector: 'of-text-setting',

@@ -177,12 +177,9 @@ piece_of_data(){
     piece+="        } "$'\n'
     piece+="      ] "$'\n'
     piece+="    }, "$'\n'
-    piece+="  \"actions\": { "$'\n'
-    piece+="    \"first_action\": { "$'\n'
-    piece+="        \"type\": \"URI\", "$'\n'
-    piece+="        \"label\": { \"key\": \"$2.action.first\" } "$'\n'
-    piece+="      } "$'\n'
-    piece+="    } "$'\n'
+    piece+="  \"tags\": [ "$'\n'
+    piece+="      \"tag1\", \"$2\" "$'\n'
+    piece+="    ] "$'\n'
     piece+="} "$'\n'
 
     echo "$piece"

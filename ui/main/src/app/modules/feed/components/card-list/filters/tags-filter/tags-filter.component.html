@@ -3,10 +3,7 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
-<div class="card bg-less-dark rounded">
-    <div class="d-inline">
-    <of-type-filter></of-type-filter>
-    <of-time-filter></of-time-filter>
-    </div>
-    <div><of-tags-filter></of-tags-filter></div>
-</div>
+
+<form [formGroup]="tagFilterForm" id="time-filter-form">
+  <type-ahead class="tags-field rounded" formControlName="tags" [multi]="true" [custom]="true"></type-ahead>
+</form>
