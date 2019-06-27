@@ -40,7 +40,7 @@ describe('FiltersComponent', () => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
         filterService = TestBed.get(FilterService);
-        store.dispatch(new InitFilters({filters:filterService.defaultFilters}));
+        store.dispatch(new InitFilters({filters:filterService.defaultFilters()}));
         fixture = TestBed.createComponent(FiltersComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

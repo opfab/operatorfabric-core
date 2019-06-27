@@ -11,15 +11,19 @@ import {TagsFilterComponent} from './tags-filter.component';
 import {TypeaheadModule} from "ngx-type-ahead";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
-import {StoreModule} from "@ngrx/store";
-import {appReducer, storeConfig} from "@ofStore/index";
+import {Store, StoreModule} from "@ngrx/store";
+import {appReducer, AppState, storeConfig} from "@ofStore/index";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
+import {FilterService, FilterType} from "@ofServices/filter.service";
 
 describe('TagsFilterComponent', () => {
     let component: TagsFilterComponent;
     let fixture: ComponentFixture<TagsFilterComponent>;
+    let store: Store<AppState>;
+    let filterService: FilterService;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -37,6 +41,11 @@ describe('TagsFilterComponent', () => {
     }));
 
     beforeEach(() => {
+        store = TestBed.get(Store);
+        spyOn(store, 'dispatch').and.callThrough();
+        filterService = TestBed.get(FilterService);
+        const defaultFilters = filterService.defaultFilters();
+        store.dispatch(new InitFilters({filters: defaultFilters}));
         fixture = TestBed.createComponent(TagsFilterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -44,5 +53,18 @@ describe('TagsFilterComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+        expect(component.tagFilterForm.get('tags').value).toEqual([]);
+    });
+    it('should update filter on state change', () => {
+        //componenet state
+        store.dispatch(new ApplyFilter({
+            name: FilterType.TAG_FILTER,
+            active: true,
+            status: {
+                tags: ["test1", "test2"]
+            }
+        }));
+        fixture.detectChanges();
+        expect(component.tagFilterForm.get('tags').value).toEqual(["test1", "test2"]);
     });
 });

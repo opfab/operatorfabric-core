@@ -8,12 +8,14 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
 import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
-import {Store} from "@ngrx/store";
+import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
-import {FilterService} from "@ofServices/filter.service";
-import {FeedActions, InitFilters} from "@ofActions/feed.actions";
+import {FilterService, FilterType} from "@ofServices/filter.service";
+import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
+import {LoadSettingsSuccess, SettingsActionTypes} from "@ofActions/settings.actions";
+import {buildConfigSelector} from "@ofSelectors/config.selectors";
 
 @Injectable()
 export class FeedFiltersEffects {
@@ -25,12 +27,33 @@ export class FeedFiltersEffects {
     }
 
     @Effect()
-    loadFeedFilterOnAuthenticationSuccess: Observable<FeedActions> = this.actions$
+    loadFeedFilterOnAuthenticationSuccess: Observable<Action> = this.actions$
         .pipe(
             // loads card operations only after authentication of a default user ok.
+            tap(v=>console.log("loadFeedFilterOnAuthenticationSuccess: action start", v)),
             ofType(AuthenticationActionTypes.AcceptLogIn),
             map((action) => {
-                return new InitFilters({filters:this.service.defaultFilters});
+                return new InitFilters({filters:this.service.defaultFilters()});
             }));
 
+    @Effect()
+    initTagFilterOnLoadedSettings: Observable<Action> = this.actions$
+        .pipe(
+            tap(v=>console.log("initTagFilterOnLoadedSettings: action start", v)),
+            ofType<LoadSettingsSuccess>(SettingsActionTypes.LoadSettingsSuccess),
+            withLatestFrom(this.store.select(buildConfigSelector('settings.defaultTags'))),
+            tap(v=>console.log("initTagFilterOnLoadedSettings: latest config", v)),
+            map(([action,configTags])=>{
+                if(action.payload.settings.defaultTags && action.payload.settings.defaultTags.length>0)
+                    return action.payload.settings.defaultTags;
+                else if (configTags && configTags.length > 0)
+                    return configTags;
+                return null;
+            }),
+            tap(v=>console.log("initTagFilterOnLoadedSettings: mapped tag array", v)),
+            filter(v=>!!v),
+            tap(v=>console.log("initTagFilterOnLoadedSettings: filtered empty array", v)),
+            map(v=>new ApplyFilter({name:FilterType.TAG_FILTER,active:true,status:{tags:v}})),
+            // tap(v=>console.log("initTagFilterOnLoadedSettings: mapped action", v))
+        );
 }

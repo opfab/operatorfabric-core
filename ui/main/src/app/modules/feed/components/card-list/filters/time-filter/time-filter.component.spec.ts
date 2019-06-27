@@ -60,7 +60,7 @@ describe('TimeFilterComponent', () => {
         TestBed.get(I18nService).changeLocale('fr','Europe/Paris');
         spyOn(store, 'dispatch').and.callThrough();
         filterService = TestBed.get(FilterService);
-        const defaultFilters = filterService.defaultFilters;
+        const defaultFilters = filterService.defaultFilters();
         defaultFilters.get(FilterType.TIME_FILTER).status.start = null;
         defaultFilters.get(FilterType.TIME_FILTER).status.end = null;
         store.dispatch(new InitFilters({filters: defaultFilters}));

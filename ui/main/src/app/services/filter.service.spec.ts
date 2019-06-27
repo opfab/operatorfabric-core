@@ -63,7 +63,7 @@ describe('FilterService', () => {
     });
     describe('time filter', () => {
         it('should not filter if inactive', () => {
-            const timeFilter = service.defaultFilters.get(FilterType.TIME_FILTER);
+            const timeFilter = service.defaultFilters().get(FilterType.TIME_FILTER);
             let testCards = buildTestCards();
             timeFilter.status.start = Date.parse("2019-04-10T08:00");
             timeFilter.status.end = Date.parse("2019-04-10T16:00");
@@ -74,7 +74,7 @@ describe('FilterService', () => {
         });
         it('should filter whith start and end', () => {
             let testCards = buildTestCards();
-            const timeFilter = service.defaultFilters.get(FilterType.TIME_FILTER);
+            const timeFilter = service.defaultFilters().get(FilterType.TIME_FILTER);
             timeFilter.status.start = Date.parse("2019-04-10T08:00");
             timeFilter.status.end = Date.parse("2019-04-10T16:00");
             timeFilter.active = true;
@@ -83,7 +83,7 @@ describe('FilterService', () => {
         });
         it('should filter whith start', () => {
             let testCards = buildTestCards();
-            const timeFilter = service.defaultFilters.get(FilterType.TIME_FILTER);
+            const timeFilter = service.defaultFilters().get(FilterType.TIME_FILTER);
             timeFilter.status.start = Date.parse("2019-04-10T08:00");
             timeFilter.active = true;
             const filteredCards = testCards.filter((card) => timeFilter.applyFilter(card));
@@ -91,7 +91,7 @@ describe('FilterService', () => {
         });
         it('should filter whith end', () => {
             let testCards = buildTestCards();
-            const timeFilter = service.defaultFilters.get(FilterType.TIME_FILTER);
+            const timeFilter = service.defaultFilters().get(FilterType.TIME_FILTER);
             timeFilter.status.end = Date.parse("2019-04-10T16:00");
             timeFilter.active = true;
             const filteredCards = testCards.filter((card) => timeFilter.applyFilter(card));
@@ -100,7 +100,7 @@ describe('FilterService', () => {
     });
     describe('tag filter', () => {
         it('should not filter if inactive', () => {
-            const tagFilter = service.defaultFilters.get(FilterType.TAG_FILTER);
+            const tagFilter = service.defaultFilters().get(FilterType.TAG_FILTER);
             let testCards = buildTestCards();
             tagFilter.status.tags = ['tag1', 'tag2'];
             tagFilter.active = false;
@@ -109,7 +109,7 @@ describe('FilterService', () => {
             expect(filteredCards.length).toBe(16)
         });
         it('should not filter if inactive', () => {
-            const tagFilter = service.defaultFilters.get(FilterType.TAG_FILTER);
+            const tagFilter = service.defaultFilters().get(FilterType.TAG_FILTER);
             let testCards = buildTestCards();
             tagFilter.status.tags = ['tag1', 'tag2'];
             tagFilter.active = true;

@@ -46,6 +46,7 @@ export class SettingsEffects {
             catchError((err, caught) => of(new LoadSettingsFailure(err)))
         );
 
+
     @Effect()
     loadSettingsOnLogin: Observable<Action> = this.actions$.pipe(
       ofType<AcceptLogIn>(AuthenticationActionTypes.AcceptLogIn),

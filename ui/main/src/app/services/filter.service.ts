@@ -21,7 +21,7 @@ export class FilterService {
         this._defaultFilters = this.initFilters();
     }
 
-    get defaultFilters(): Map<FilterType, Filter> {
+    public defaultFilters(): Map<FilterType, Filter> {
         return this._defaultFilters;
     }
 
