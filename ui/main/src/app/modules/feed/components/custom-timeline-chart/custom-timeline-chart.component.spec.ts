@@ -1,16 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CustomTimelineChartComponent } from './custom-timeline-chart.component';
-import { CommonModule } from '@angular/common';
+import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { DebugElement } from '@angular/core';
+import {DebugElement, NO_ERRORS_SCHEMA} from '@angular/core';
 import * as moment from 'moment';
 import { By } from '@angular/platform-browser';
 import { DraggableDirective } from '../time-line/app-draggable';
 import { MouseWheelDirective } from '../time-line/mouse-wheel.directive';
 import { XAxisTickFormatPipe } from '../time-line/x-axis-tick-format.pipe';
 import * as _ from 'lodash';
+import {Store, StoreModule} from "@ngrx/store";
+import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
+import {CustomRouterStateSerializer} from "@ofStates/router.state";
+import {TimeService} from "@ofServices/time.service";
+import {appReducer, storeConfig} from "@ofStore/index";
+import {RouterTestingModule} from "@angular/router/testing";
 
 describe('CustomTimelineChartComponent', () => {
   let component: CustomTimelineChartComponent;
@@ -22,15 +28,30 @@ describe('CustomTimelineChartComponent', () => {
       imports: [CommonModule,
         BrowserAnimationsModule,
         FormsModule,
+        StoreModule.forRoot(appReducer, storeConfig),
+        RouterTestingModule,
+        StoreRouterConnectingModule,
         NgxChartsModule ],
       declarations: [ CustomTimelineChartComponent,
         DraggableDirective, MouseWheelDirective,
-        XAxisTickFormatPipe]
+        XAxisTickFormatPipe],
+      providers: [{provide: APP_BASE_HREF, useValue: '/'},
+        {provide: Store, useClass: Store},
+        {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
+        {provide: TimeService, useClass: TimeService}],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
     fixture = TestBed.createComponent(CustomTimelineChartComponent);
     component = fixture.componentInstance;
   }));
+
+  it('init myData & get zoomLevel', () => {
+    fixture.detectChanges();
+    component.myData = [];
+    const tmp = component.zoomLevel;
+    expect(component).toBeTruthy();
+  });
 
   it('should call update() and create chart by calling updateYAxisWidth function', () => {
     fixture.detectChanges();
@@ -42,11 +63,8 @@ describe('CustomTimelineChartComponent', () => {
 
   it('should create', () => {
     fixture.detectChanges();
-    component.first = true;
     component.realTimeBar = false;
-    component.updateYAxisWidth({width: 1920});
-    component.first = false;
-    component.updateYAxisWidth({width: 1900}); // check if on first
+    component.ngOnInit();
     expect(component).toBeTruthy();
   });
 
@@ -56,6 +74,40 @@ describe('CustomTimelineChartComponent', () => {
     component.xDomain = null;
     expect(component.getXDomain()).toEqual([0, 1]);
     expect(component.checkInsideDomain(moment())).toEqual(false);
+    expect(component).toBeTruthy();
+  });
+
+  it('should test checkFollowClockTick && updateRealTimeDate functions with : ' +
+    'an empty ticks list' +
+    'a ticks list of moment with a length biggest than 5' +
+    'realCaseActivate set to true', () => {
+    fixture.detectChanges();
+    expect(component.checkFollowClockTick()).toBeFalsy();
+    component.xTicks = [];
+    component.xDomain = [0,1];
+    const tmp = moment();
+    tmp.millisecond(0);
+    for (let i = 0; i < 6; i++) {
+      component.xTicks.push(tmp);
+    }
+    expect(component.checkFollowClockTick()).toBeTruthy();
+
+    component.realCaseActivate = true;
+    component.updateRealTimeDate();
+    expect(component).toBeTruthy();
+  });
+
+  it('should test checkFollowClockTick function with a ticks list ' +
+    'of moment (previous day) with a length biggest than 5', () => {
+    fixture.detectChanges();
+    component.xTicks = [];
+    component.xDomain = [0,1];
+    const tmp = moment();
+    tmp.subtract(1, 'day');
+    for (let i = 0; i < 6; i++) {
+      component.xTicks.push(tmp);
+    }
+    expect(component.checkFollowClockTick()).toBeFalsy();
     expect(component).toBeTruthy();
   });
 
@@ -167,6 +219,7 @@ describe('CustomTimelineChartComponent', () => {
     fixture.detectChanges();
     component.valueDomain = [0, 5];
     component.enableDrag = true;
+    component.timeScale = component.getTimeScale([0, 100000000], 1820);
     inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
     const event = new PointerEvent('click', {
       clientX: 100,

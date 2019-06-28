@@ -14,6 +14,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { DraggableDirective } from '../time-line/app-draggable';
 import { MouseWheelDirective } from '../time-line/mouse-wheel.directive';
 import { XAxisTickFormatPipe } from '../time-line/x-axis-tick-format.pipe';
+import {TimeService} from "@ofServices/time.service";
+import {getOneRandomLigthCard} from "@tests/helpers";
 
 describe('InitChartComponent', () => {
   let component: InitChartComponent;
@@ -31,8 +33,10 @@ describe('InitChartComponent', () => {
         NgxChartsModule ],
       declarations: [ InitChartComponent, CustomTimelineChartComponent,
         DraggableDirective, MouseWheelDirective, XAxisTickFormatPipe],
-      providers: [{provide: APP_BASE_HREF, useValue: '/'}, {provide: Store, useClass: Store},
-        {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
+      providers: [{provide: APP_BASE_HREF, useValue: '/'},
+        {provide: Store, useClass: Store},
+        {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
+        {provide: TimeService, useClass: TimeService}],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
@@ -82,6 +86,7 @@ describe('InitChartComponent', () => {
 
     // move two times domain in same direction for
     // increment continuousForward allowing a full condition coverage of moveDomainByDay
+    component.realCaseActivate = true;
     domain = component.myDomain;
     component.forwardButtonType = '7D';
     component.moveDomain(true);
@@ -101,6 +106,7 @@ describe('InitChartComponent', () => {
     component.moveDomain(true);
     expect(domain).not.toEqual(component.myDomain);
 
+    component.realCaseActivate = true;
     domain = component.myDomain;
     component.forwardButtonType = 'M';
     component.moveDomain(true);

@@ -30,6 +30,7 @@ import { XAxisTickFormatPipe } from './x-axis-tick-format.pipe';
 import * as moment from 'moment';
 import {debounceTime, distinctUntilChanged} from "rxjs/operators";
 import {compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
+import {TimeService} from "@ofServices/time.service";
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
@@ -49,8 +50,10 @@ describe('TimeLineComponent', () => {
         NgxChartsModule ],
       declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent, DraggableDirective, MouseWheelDirective,
         XAxisTickFormatPipe],
-      providers: [{provide: APP_BASE_HREF, useValue: '/'}, {provide: Store, useClass: Store},
-        {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
+      providers: [{provide: APP_BASE_HREF, useValue: '/'},
+        {provide: Store, useClass: Store},
+        {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
+        {provide: TimeService, useClass: TimeService}],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
@@ -137,6 +140,7 @@ describe('TimeLineComponent', () => {
       startDate: oneCard.startDate,
       endDate: oneCard.endDate,
       severity: oneCard.severity,
+      summary: oneCard.summary.parameters.value
     }];
     const data$ = store.select((timelineSelectors.selectTimelineSelection));
     data$.pipe(debounceTime(300), distinctUntilChanged())
@@ -171,18 +175,22 @@ describe('TimeLineComponent', () => {
         startDate: alarmCard.startDate,
         endDate: alarmCard.endDate,
         severity: alarmCard.severity,
+        summary: oneCard.summary.parameters.value
     }, {
         startDate: actionCard.startDate,
         endDate: actionCard.endDate,
         severity: actionCard.severity,
+        summary: oneCard.summary.parameters.value
     }, {
-      startDate: oneCard.startDate,
-      endDate: oneCard.endDate,
-      severity: oneCard.severity,
+        startDate: oneCard.startDate,
+        endDate: oneCard.endDate,
+        severity: oneCard.severity,
+        summary: oneCard.summary.parameters.value
     }, {
-      startDate: notificationCard.startDate,
-      endDate: notificationCard.endDate,
-      severity: notificationCard.severity,
+        startDate: notificationCard.startDate,
+        endDate: notificationCard.endDate,
+        severity: notificationCard.severity,
+        summary: oneCard.summary.parameters.value
     }];
     const data$ = store.select((timelineSelectors.selectTimelineSelection));
     data$.pipe(debounceTime(300), distinctUntilChanged())

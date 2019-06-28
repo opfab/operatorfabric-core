@@ -36,7 +36,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public circleDiameter: number;
 
   // required for domain movements specifications
-  private realCaseActivate: boolean;
+  public realCaseActivate: boolean;
   private continuousForward: number;
 
   // buttons
@@ -362,7 +362,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.myDomain = [valueStart, valueEnd];
     // apply zoom on feed
     this.store.dispatch(new ApplyFilter({
-      name: FilterType.TIME_FILTER, active: false,
+      name: FilterType.TIME_FILTER, active: true,
       status: {start: startDomain, end: endDomain}
     }));
   }
@@ -419,30 +419,20 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * @param forward
    */
   moveDomainByDay(forward: boolean): void {
-    const startDomain = moment(this.myDomain[0]);
-    const endDomain = moment(startDomain);
-    endDomain.add(7, 'days');
-    if (forward) {
-      this.continuousForward++;
-      // extend domain by one day
-      if (this.continuousForward > 0) {
-        endDomain.add(this.continuousForward, 'days');
-      } else {
-        // progress 1 day in time on the domain
-        startDomain.add(1, 'days');
-        endDomain.add(1, 'days');
-      }
-    } else {
-      this.continuousForward--;
-      // decrease domain by one day
-      if (this.continuousForward > 0) {
-        endDomain.add(this.continuousForward, 'days');
-      } else {
-        // move 1 day back in time on the domain
-        startDomain.subtract(1, 'days');
-        endDomain.subtract(1, 'days');
-      }
-    }
+   const startDomain = moment(this.myDomain[0]);
+   if (this.realCaseActivate) {
+     startDomain.hours(0);
+     this.realCaseActivate = false;
+   }
+   const endDomain = moment(startDomain);
+   endDomain.add(7, 'days');
+   if (forward) {
+     startDomain.add(1, 'days');
+     endDomain.add(1, 'days');
+   } else {
+     startDomain.subtract(1, 'days');
+     endDomain.subtract(1, 'days');
+   }
    this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
   }
 

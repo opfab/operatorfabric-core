@@ -55,7 +55,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         const startDomain4 = this.dateWithSpaceBeforeMoment(moment(actualMoment), 'W');
         const endDomain4 = _.cloneDeep(startDomain4);
         endDomain4.hours(0).minutes(0).seconds(0).millisecond(0);
-        endDomain4.add(7, 'days');
+        endDomain4.add(8, 'days');
         // endDomain.add(5, 'days'); // example
 
         // conf 2 === actual month + next month
@@ -152,7 +152,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 const myCardTimeline = {
                     startDate: val.startDate,
                     endDate: val.endDate,
-                    severity: val.severity
+                    severity: val.severity,
+                    summary: val.summary.parameters.value
                 };
                 myCardsTimeline.push(myCardTimeline);
             }

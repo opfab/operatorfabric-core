@@ -30,6 +30,7 @@ import {DraggableDirective} from "./components/time-line/app-draggable";
 import {InitChartComponent} from "./components/init-chart/init-chart.component";
 import {TagsFilterComponent } from './components/card-list/filters/tags-filter/tags-filter.component';
 import {TypeaheadModule} from "ngx-type-ahead";
+import {TimeService} from "@ofServices/time.service";
 
 library.add(faClock);
 
@@ -54,7 +55,8 @@ library.add(faClock);
         MouseWheelDirective,
         XAxisTickFormatPipe,
         TagsFilterComponent],
-    exports: [FeedComponent]
+    exports: [FeedComponent],
+    providers: [ {provide: TimeService, useClass: TimeService}]
 })
 export class FeedModule {
 }

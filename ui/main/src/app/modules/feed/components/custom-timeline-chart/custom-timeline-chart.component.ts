@@ -4,7 +4,7 @@ import {
   Output,
   EventEmitter,
   ViewEncapsulation,
-  ViewChild, ElementRef
+  ViewChild, ElementRef, NgZone, ChangeDetectorRef, OnInit
 } from '@angular/core';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import * as _ from 'lodash';
@@ -16,6 +16,7 @@ import {
 } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
 import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
+import {TimeService} from "@ofServices/time.service";
 
 @Component({
   selector: 'of-custom-timeline-chart',
@@ -99,12 +100,40 @@ import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
     <ng-template #tooltipTemplate2>
       {{circleHovered.period}} <br/>
       Count: {{circleHovered.count}} <br/>
+      Summary: <p *ngFor="let title of circleHovered.summary"style="padding: 0px;margin: 0px;line-height: 10px">{{title}}</p>
     </ng-template>
   </ngx-charts-chart>`,
   styleUrls: ['./custom-timeline-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CustomTimelineChartComponent extends BaseChartComponent {
+export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit {
+  /**
+   * add time service at this component
+   * init all variables
+   * @param chartElement
+   * @param zone
+   * @param cd
+   * @param time
+   */
+  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, private time: TimeService) {
+    super(chartElement, zone, cd);
+    this.xTicks = [];
+    this.xTicksOne = [];
+    this.xTicksTwo = [];
+    this.yTicks = [];
+    this.xAxisHeight = 0;
+    this.yAxisWidth = 0;
+    this.margin = [10, 20, 10, 0];
+    this.realTimeBar = moment();
+    this.circleHovered = {
+      period: '',
+      count: 0,
+      summary: []
+    };
+
+    console.log('En attente de time service', this.time.formatDate(100));
+  }
+
   // Domain
   @Input()
   set valueDomain(value: any) {
@@ -159,10 +188,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   @Input() centeredOnTicks;
   @Input() clusterTicksToTicks;
   @Input() clusterLevel;
-  public xTicks = [];
-  public xTicksOne = [];
-  public xTicksTwo = [];
-  public yTicks = [];
+  public xTicks: Array<any>;
+  public xTicksOne: Array<any>;
+  public xTicksTwo: Array<any>;
+  public yTicks: Array<any>;
 
   // Zoom (manage home btn when domain change inside this component)
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
@@ -174,23 +203,20 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   public xDomain: any;
   public yDomain: any;
   public yScale: any;
-  private xAxisHeight = 0;
-  private yAxisWidth = 0;
+  private xAxisHeight: number;
+  private yAxisWidth: number;
   public timeScale: any;
-  private margin: any[] = [10, 20, 10, 0];
+  private margin: any[];
   public transform: string;
   public transform2: string;
-  public xRealTimeLine = moment();
+  public xRealTimeLine: moment.Moment;
 
-  public circleHovered = {
-    period: '',
-    count: 0
-  };
+  // TOOLTIP
+  public circleHovered;
 
   // DATA
   private _myData;
   public dataClustered;
-  public first = true;
 
   // ZOOM
   private maxZoom;
@@ -204,14 +230,26 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   private previousXPos;
 
   /**
+   *  - call loop function for update real time bar value
+   *  - set xTicks for rotate it, and set a variable inside library
+   */
+  ngOnInit(): void {
+    if (this.realTimeBar || this.realCaseActivate) {
+      this.updateRealTimeDate();
+    }
+    // set inside ngx-charts library verticalSpacing variable to 10
+    // Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks
+    for (let i = 0; i < 50; i++) {
+      this.xTicksOne.push(moment(i));
+      this.xTicksTwo.push(moment(i));
+    }
+  }
+  /**
    * Main function for ngx-charts
    * Called for each update on chart
    * set chart dimension and chart domains
    * set chart scales and translate (add margin arround chart)
    *
-   * Only first time :
-   *  - call loop function for display real time bar
-   *  - set xTicks for rotate it, and set a variable inside library
    */
   update(): void {
     super.update();
@@ -233,19 +271,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     this.transform = `translate(${ this.dims.xOffset } , ${ this.margin[0] })`;
     this.transform2 = `translate(0, ${ this.dims.height + 15})`;
     console.log('update');
-
-    if (this.first) {
-        this.first = false;
-        if (this.realTimeBar) {
-          this.updateRealTimeDate();
-        }
-        // set inside ngx-charts library verticalSpacing variable to 10
-        // Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks
-        for (let i = 0; i < 50; i++) {
-            this.xTicksOne.push(moment(i));
-            this.xTicksTwo.push(moment(i));
-        }
-    }
   }
 
   /**
@@ -267,10 +292,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
    * update the domain if real case are activate
    */
   updateRealTimeDate(): void {
-    this.xRealTimeLine = moment();
+    if (this.realTimeBar) {
+      this.xRealTimeLine = moment();
+    }
     if (this.realCaseActivate) {
-      this.checkFollowClockTick();
-      this.update();
+      if (this.checkFollowClockTick()) {
+        this.update();
+      }
     }
     setTimeout(() => {
       this.updateRealTimeDate();
@@ -280,15 +308,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
   /**
    * set the domain with the second tick value for start
    * if moment is equal to the 4th tick (corresponding of the interval of dateWithSpaceBeforeMoment)
+   * return true when there are equal
    */
-  checkFollowClockTick() {
+  checkFollowClockTick(): boolean {
     if (this.xTicks && this.xTicks.length > 5) {
       const tmp = moment();
       tmp.millisecond(0);
       if (this.xTicks[4].valueOf() === tmp.valueOf()) {
           this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
+          return true;
       }
     }
+    return false;
   }
 
   /**
@@ -307,6 +338,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     this.circleHovered = {
       period: '',
       count: myCircle.count,
+      summary: [],
     };
     // surement implémenter un autre traitement de string
     if (myCircle.start.valueOf() === myCircle.end.valueOf()) {
@@ -315,6 +347,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
       this.circleHovered.period = 'Periode : ' + this.fctHoveredCircleDateFormatting(myCircle.start) +
           ' - ' + this.fctHoveredCircleDateFormatting(myCircle.end);
     }
+    this.circleHovered.summary = myCircle.summary;
   }
 
   /**
@@ -789,6 +822,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
               color: array[j].color,
               cy: array[j].cy,
               value: array[j].value,
+              summary: [],
               r: this.circleDiameter, // array[j].r
             };
             let startLimit: number;
@@ -829,6 +863,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
               feedIt = true;
               newCircle.count = newValue;
               newCircle.end = array[j].date;
+              const summaryDate = moment(array[j].date).format('DD/MM') +
+                  ' - ' + moment(array[j].date).format('HH:mm') + ' : ' + array[j].summary;
+              newCircle.summary.push(summaryDate);
               j++;
             }
             if (feedIt) {
