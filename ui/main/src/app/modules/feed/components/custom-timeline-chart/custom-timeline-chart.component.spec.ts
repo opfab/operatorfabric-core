@@ -61,6 +61,14 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should call update() and create chart by calling updateXAxisWidth function', () => {
+    fixture.detectChanges();
+    component.clusterLevel = 'W';
+    component.realTimeBar = true;
+    component.updateXAxisHeight({height: 1024});
+    expect(component).toBeTruthy();
+  });
+
   it('should create', () => {
     fixture.detectChanges();
     component.realTimeBar = false;
@@ -73,7 +81,43 @@ describe('CustomTimelineChartComponent', () => {
     fixture.detectChanges();
     component.xDomain = null;
     expect(component.getXDomain()).toEqual([0, 1]);
-    expect(component.checkInsideDomain(moment())).toEqual(false);
+    expect(component.checkInsideDomain(moment())).toBeFalsy();
+    component.xDomain = null;
+    const tmp = moment();
+    component.myData = [[{date: tmp}, {date: tmp}]];
+    tmp.hour(0).minutes(0).seconds(0).milliseconds(0);
+    expect(component.getXDomain()).toEqual([tmp.valueOf(), tmp.valueOf()]);
+    expect(component).toBeTruthy();
+  });
+
+  it('should create an domain with minimal and maximal values from properties: ' +
+    'value, min and max from objects inside each list stock inside myData', () => {
+    fixture.detectChanges();
+    component.autoScale = true;
+    const tmp = {
+      value: 0,
+      min: 1,
+      max: 2
+    };
+    component.myData = [[tmp, tmp]];
+    expect(component.getYDomain()).toEqual([0, 2]);
+    const tmp2 = {
+      value: 0,
+    };
+    component.myData = [[tmp2, tmp2]];
+    expect(component.getYDomain()).toEqual([0, 0]);
+    expect(component).toBeTruthy();
+  });
+
+  it('should create an default domain when it wasnt set yet ' +
+    'if myData return an array of two numbers 0 and 5 ' +
+    'if autoScale is true return an array of two numbers minimal (-infini, 0) & maximal (5, infini)', () => {
+    fixture.detectChanges();
+    component.autoScale = true;
+    expect(component.getYDomain()).toEqual([0, 5]);
+    component.myData = [];
+    component.autoScale = false;
+    expect(component.getYDomain()).toEqual([0, 5]);
     expect(component).toBeTruthy();
   });
 
@@ -147,6 +191,124 @@ describe('CustomTimelineChartComponent', () => {
     expect(component.fctTickFormattingAdvanced(test)).toEqual(test.format('HH') + 'h');
   });
 
+  it('check setXTicksValue function', () => {
+    fixture.detectChanges();
+    let tmp = _.cloneDeep(component.xTicks);
+    component.clusterLevel = 'M';
+    component.setXTicksValue([0, 2888000000]);
+    expect(component.xTicks).not.toEqual(tmp);
+
+    tmp = _.cloneDeep(component.xTicks);
+    component.clusterLevel = 'Y';
+    component.setXTicksValue([10000000000, 44888000000]);
+    expect(component.xTicks).not.toEqual(tmp);
+
+    tmp = _.cloneDeep(component.xTicks);
+    component.clusterLevel = 'R';
+    component.setXTicksValue([0, 1]);
+    expect(component.xTicks).toEqual(tmp);
+    expect(component).toBeTruthy();
+  });
+
+  it('check setYTicksValue function', () => {
+    fixture.detectChanges();
+    component.autoScale = true;
+    component.setYTicks();
+    expect(component.yTicks).toEqual(null);
+    component.autoScale = false;
+    component.yTicks = [];
+    component.myData = [];
+    component.setYTicks();
+    expect(component.yTicks).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(component).toBeTruthy();
+  });
+
+  it('check clusterize functions : ' +
+    'two algos create circle when detect one data in the scope of xTicks ' +
+    'this test doesnt look the date assigned', () => {
+    fixture.detectChanges();
+    const tmpMoment = moment();
+    component.xTicks.push(tmpMoment);
+    component.circleDiameter = 10; // set on init-chart
+
+    // Test 1
+    const tmpData = {
+      date: tmpMoment,
+      color: 'red',
+      count: 1,
+      cy: 0,
+      value: 4,
+      summary: 'test',
+    };
+    component.myData = [[tmpData]];
+    component.clusterLevel = 'M';
+    component.setTicksAndClusterize([0, 1]);
+    expect(component.dataClustered).toEqual([[]]);
+
+    // Test 2
+    const tmpData2 = {
+      date: moment(),
+      color: 'orange',
+      count: 1,
+      cy: 0,
+      value: 3,
+      summary: 'test2',
+    };
+    component.centeredOnTicks = true;
+    component.clusterTicksToTicks = false;
+    component.setTicksAndClusterize([tmpData.date.valueOf(), tmpData2.date.valueOf()]);
+    // Check if dataClustered was feed with the circle in myData
+    // can't compare date cause of _i property inside moment
+    expect(component.dataClustered[0][0].start).toEqual(tmpMoment);
+    expect(component.dataClustered[0][0].end).toEqual(tmpMoment);
+    expect(component.dataClustered[0][0].count).toEqual(1);
+    expect(component.dataClustered[0][0].color).toEqual('red');
+    expect(component.dataClustered[0][0].cy).toEqual(0);
+    expect(component.dataClustered[0][0].value).toEqual(4);
+    expect(component.dataClustered[0][0].summary).toEqual([tmpMoment.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
+    ' : ' + 'test']);
+    expect(component.dataClustered[0][0].r).toEqual(10);
+    expect(component.dataClustered[0][2]).toEqual(undefined);
+
+    // Test 3
+    component.clusterTicksToTicks = true;
+    const tmpData3 = {
+      date: moment(),
+      color: 'blue',
+      count: 1,
+      cy: 0,
+      value: 2,
+      summary: 'test3',
+    };
+    tmpData2.date.add(3, 'days');
+    tmpData3.date.subtract(3, 'days');
+    component.myData = [[tmpData3, tmpData, tmpData2]];
+    component.setTicksAndClusterize([tmpData.date.valueOf(), tmpData2.date.valueOf()]);
+    // First Circle
+    expect(component.dataClustered[0][0].start).toEqual(tmpMoment);
+    expect(component.dataClustered[0][0].end).toEqual(tmpMoment);
+    expect(component.dataClustered[0][0].count).toEqual(1);
+    expect(component.dataClustered[0][0].color).toEqual('red');
+    expect(component.dataClustered[0][0].cy).toEqual(0);
+    expect(component.dataClustered[0][0].value).toEqual(4);
+    expect(component.dataClustered[0][0].summary).toEqual([tmpMoment.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
+    ' : ' + 'test']);
+    expect(component.dataClustered[0][0].r).toEqual(10);
+    // Second Circle
+    expect(component.dataClustered[0][1].start).toEqual(tmpData2.date);
+    expect(component.dataClustered[0][1].end).toEqual(tmpData2.date);
+    expect(component.dataClustered[0][1].count).toEqual(1);
+    expect(component.dataClustered[0][1].color).toEqual('orange');
+    expect(component.dataClustered[0][1].cy).toEqual(0);
+    expect(component.dataClustered[0][1].value).toEqual(3);
+    expect(component.dataClustered[0][1].summary).toEqual([tmpData2.date.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
+    ' : ' + 'test2']);
+    expect(component.dataClustered[0][1].r).toEqual(10);
+    // Third circle isn't in the scope of ticks
+    expect(component.dataClustered[0][3]).toEqual(undefined);
+    expect(component).toBeTruthy();
+  });
+
   it('simulate circle hovered', () => {
     fixture.detectChanges();
     const circleTest = {
@@ -191,25 +353,6 @@ describe('CustomTimelineChartComponent', () => {
     component.zoomOnButton = true;
     component.onZoom(null, 'in');
     component.onZoom(null, 'out');
-    expect(component).toBeTruthy();
-  });
-
-  it('check setXTicksValue function', () => {
-    fixture.detectChanges();
-    let tmp = _.cloneDeep(component.xTicks);
-    component.clusterLevel = 'M';
-    component.setXTicksValue([0, 2888000000]);
-    expect(component.xTicks).not.toEqual(tmp);
-
-    tmp = _.cloneDeep(component.xTicks);
-    component.clusterLevel = 'Y';
-    component.setXTicksValue([10000000000, 44888000000]);
-    expect(component.xTicks).not.toEqual(tmp);
-
-    tmp = _.cloneDeep(component.xTicks);
-    component.clusterLevel = 'R';
-    component.setXTicksValue([0, 1]);
-    expect(component.xTicks).toEqual(tmp);
     expect(component).toBeTruthy();
   });
 

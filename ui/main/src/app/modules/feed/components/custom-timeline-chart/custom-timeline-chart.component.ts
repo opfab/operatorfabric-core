@@ -601,26 +601,31 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     if (this.xDomain) {
       return this.xDomain;
     }
-    return [0, 1];
     // Not use on Let's Co, commented for Unit Test
-    /*    // Stack on values array all the date of our data
+    // Stack on values array all the date of our data
 
-        const values = [];
-        for (const series of this.myData) {
-          for (const d of series) {
-            if (!values.includes(d.date)) {
-              values.push(d.date);
-            }
+    const values = [];
+    if (this.myData) {
+      for (const series of this.myData) {
+        for (const d of series) {
+          if (!values.includes(d.date)) {
+            values.push(d.date);
           }
         }
-        let domain: number[];
-        const min = moment(Math.min(...values));
-        min.hours(0).minutes(0).seconds(0).milliseconds(0);
-        const max = moment(Math.max(...values));
-        max.hours(0).minutes(0).seconds(0).milliseconds(0);
-        domain = [min.valueOf(), max.valueOf()];
-        return domain;
-    */
+      }
+    } else {
+      values.push(0);
+      values.push(1);
+    }
+    let domain: number[];
+    const min = moment(Math.min(...values));
+    const max = moment(Math.max(...values));
+    if (JSON.stringify(values) !== JSON.stringify([0, 1])) {
+      min.hours(0).minutes(0).seconds(0).milliseconds(0);
+      max.hours(0).minutes(0).seconds(0).milliseconds(0);
+    }
+    domain = [min.valueOf(), max.valueOf()];
+    return domain;
   }
 
   /**
@@ -777,7 +782,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   clusterize(domain): void {
     this.dataClustered = [];
-    if (this._myData === undefined) {
+    if (this._myData === undefined || this._myData === []) {
       return;
     }
     let y = 0;
@@ -788,7 +793,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.dataClustered.push([]);
       if (array.length > 0) {
         // move cursor to begin of ticks time
-        while (array[j] && (array[j].date < this.xTicks[0]) && (j < array.length)) {
+        while (array[j] && (array[j].date < domain[0]) && (j < array.length)) {
           j++;
         }
       }
