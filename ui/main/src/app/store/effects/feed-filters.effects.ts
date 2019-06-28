@@ -39,10 +39,10 @@ export class FeedFiltersEffects {
     @Effect()
     initTagFilterOnLoadedSettings: Observable<Action> = this.actions$
         .pipe(
-            tap(v=>console.log("initTagFilterOnLoadedSettings: action start", v)),
+            // tap(v=>console.log("initTagFilterOnLoadedSettings: action start", v)),
             ofType<LoadSettingsSuccess>(SettingsActionTypes.LoadSettingsSuccess),
             withLatestFrom(this.store.select(buildConfigSelector('settings.defaultTags'))),
-            tap(v=>console.log("initTagFilterOnLoadedSettings: latest config", v)),
+            // tap(v=>console.log("initTagFilterOnLoadedSettings: latest config", v)),
             map(([action,configTags])=>{
                 if(action.payload.settings.defaultTags && action.payload.settings.defaultTags.length>0)
                     return action.payload.settings.defaultTags;
@@ -50,9 +50,9 @@ export class FeedFiltersEffects {
                     return configTags;
                 return null;
             }),
-            tap(v=>console.log("initTagFilterOnLoadedSettings: mapped tag array", v)),
+            // tap(v=>console.log("initTagFilterOnLoadedSettings: mapped tag array", v)),
             filter(v=>!!v),
-            tap(v=>console.log("initTagFilterOnLoadedSettings: filtered empty array", v)),
+            // tap(v=>console.log("initTagFilterOnLoadedSettings: filtered empty array", v)),
             map(v=>new ApplyFilter({name:FilterType.TAG_FILTER,active:true,status:{tags:v}})),
             // tap(v=>console.log("initTagFilterOnLoadedSettings: mapped action", v))
         );

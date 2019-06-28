@@ -33,30 +33,30 @@ public class UserSettingsDataShould {
                 .locale("fr")
                 .timeZone("Europe/Berlin")
                 .build();
-        UserSettingsData patched = userData.patch(UserSettingsData.builder().timeFormat("LLT").build());
+        UserSettingsData patched = userData.patch(UserSettingsData.builder().timeFormat("LLT").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"timeFormat");
         assertThat(patched.getTimeFormat()).isEqualTo("LLT");
 
-        patched = userData.patch(UserSettingsData.builder().dateFormat("LLT").build());
+        patched = userData.patch(UserSettingsData.builder().dateFormat("LLT").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"dateFormat");
         assertThat(patched.getDateFormat()).isEqualTo("LLT");
 
-        patched = userData.patch(UserSettingsData.builder().login("new-login").build());
+        patched = userData.patch(UserSettingsData.builder().login("new-login").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData);
 
-        patched = userData.patch(UserSettingsData.builder().description("patched-description").build());
+        patched = userData.patch(UserSettingsData.builder().description("patched-description").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"description");
         assertThat(patched.getDescription()).isEqualTo("patched-description");
 
-        patched = userData.patch(UserSettingsData.builder().email("patched-email").build());
+        patched = userData.patch(UserSettingsData.builder().email("patched-email").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"email");
         assertThat(patched.getEmail()).isEqualTo("patched-email");
 
-        patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build());
+        patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"locale");
         assertThat(patched.getLocale()).isEqualTo("patched-locale");
 
-        patched = userData.patch(UserSettingsData.builder().timeZone("patched-zone").build());
+        patched = userData.patch(UserSettingsData.builder().timeZone("patched-zone").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"timeZone");
         assertThat(patched.getTimeZone()).isEqualTo("patched-zone");
     }

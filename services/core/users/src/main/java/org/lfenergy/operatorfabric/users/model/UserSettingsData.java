@@ -34,7 +34,10 @@ public class UserSettingsData implements UserSettings {
         this.timeFormat = settings.getTimeFormat();
         this.dateFormat = settings.getDateFormat();
         this.dateTimeFormat = settings.getDateFormat();
-        this.defaultTagsSet = new HashSet<>(settings.getDefaultTags());
+        if(settings.getDefaultTags()!=null)
+            this.defaultTagsSet = new HashSet<>(settings.getDefaultTags());
+        else
+            this.defaultTagsSet = null;
         this.email = settings.getEmail();
     }
 
@@ -58,13 +61,21 @@ public class UserSettingsData implements UserSettings {
     @Override
     public List<String> getDefaultTags() {
         if (defaultTagsSet == null)
-            return Collections.emptyList();
+            return null;
         return new ArrayList<>(defaultTagsSet);
     }
 
     @Override
     public void setDefaultTags(List<String> defaultTags) {
-        defaultTagsSet = new HashSet<>(defaultTags);
+        if (defaultTags != null)
+            defaultTagsSet = new HashSet<>(defaultTags);
+        else
+            defaultTagsSet = null;
+    }
+
+    public UserSettingsData clearTags(){
+        setDefaultTags(null);
+        return this;
     }
 
     /**
@@ -73,6 +84,7 @@ public class UserSettingsData implements UserSettings {
      * <br>
      * NB: resulting field defaultTags is the addition of collectins from both sides
      * NB2: login cannot be changed
+     *
      * @param other
      * @return
      */
@@ -86,9 +98,12 @@ public class UserSettingsData implements UserSettings {
         result.dateFormat = other.getDateFormat() != null ? other.getDateFormat() : this.getDateFormat();
         result.dateTimeFormat = other.getDateTimeFormat() != null ? other.getDateTimeFormat() : this.getDateTimeFormat();
         result.email = other.getEmail() != null ? other.getEmail() : this.getEmail();
-        Set<String> tags = new HashSet<>(other.getDefaultTags());
-        tags.addAll(this.getDefaultTags());
-        result.defaultTagsSet = tags;
+        if(other.getDefaultTags()!=null)
+            result.defaultTagsSet = new HashSet<>(other.getDefaultTags());
+        else if (this.getDefaultTags()!=null)
+            result.defaultTagsSet = new HashSet<>(this.getDefaultTags());
+        else
+            result.defaultTagsSet = null;
         return result;
     }
 }

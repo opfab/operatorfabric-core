@@ -15,13 +15,17 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
 import { EmailSettingComponent } from './components/settings/email-setting/email-setting.component';
 import {ListSettingComponent} from "./components/settings/list-setting/list-setting.component";
+import { MultiSettingsComponent } from './components/settings/multi-settings/multi-settings.component';
+import { TypeAheadSettingsComponent } from './components/settings/type-ahead-settings/type-ahead-settings.component';
+import {TypeaheadModule} from "ngx-type-ahead";
 
 @NgModule({
-    declarations: [SettingsComponent, BaseSettingComponent, TextSettingComponent, EmailSettingComponent, ListSettingComponent],
+    declarations: [SettingsComponent, BaseSettingComponent, TextSettingComponent, EmailSettingComponent, ListSettingComponent, MultiSettingsComponent, TypeAheadSettingsComponent],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        TypeaheadModule,
         SettingsRoutingModule,
         TranslateModule,
     ]

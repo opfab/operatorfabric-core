@@ -34,6 +34,6 @@ describe('SettingsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(fixture.debugElement.queryAll(By.css('.col-md-6')).length).toEqual(7)
+    expect(fixture.debugElement.queryAll(By.css('.col-md-6')).length).toEqual(8)
   });
 });

@@ -51,7 +51,7 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
         let validators = this.computeListValidators();
         validators.push(this.valueInListValidator());
         return new FormGroup({
-            setting: new FormControl(null, validators)
+            setting: new FormControl('', validators)
         }, {updateOn: 'change'});
     }
 
@@ -66,7 +66,7 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
     // }
 
     updateValue(value) {
-        this.form.get('setting').setValue(value, {emitEvent: false});
+        this.form.get('setting').setValue(value?value:'', {emitEvent: false});
     }
 
     protected isEqual(formA, formB): boolean {
@@ -76,7 +76,7 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
 
     private valueInListValidator(){
         return (control: AbstractControl)=>{
-            if(this.preparedList.map(e=>e.value).indexOf(control.value)<0)
+            if(!!control.value && this.preparedList.map(e=>e.value).indexOf(control.value)<0)
                 return {valueInList:{valid:false}};
             return null;
         }

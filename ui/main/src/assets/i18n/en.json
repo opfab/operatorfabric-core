@@ -54,9 +54,11 @@
     "email": "Email adress",
     "description": "Description",
     "locale": "Language",
+    "timeZone": "Time zone",
     "timeFormat": "Time format",
     "dateFormat": "Date format",
-    "dateTimeFormat": "Date Time format"
+    "dateTimeFormat": "Date Time format",
+    "defaultTags": "Default tags"
   },
   "time": {
     "error": "time reference update failed for following reason: {{error}}"
