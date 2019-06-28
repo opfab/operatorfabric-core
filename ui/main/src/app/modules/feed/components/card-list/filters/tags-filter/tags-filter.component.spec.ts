@@ -18,6 +18,7 @@ import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
 import {FilterService, FilterType} from "@ofServices/filter.service";
+import {PatchSettings} from "@ofActions/settings.actions";
 
 describe('TagsFilterComponent', () => {
     let component: TagsFilterComponent;
@@ -35,7 +36,7 @@ describe('TagsFilterComponent', () => {
                 FontAwesomeModule,
                 ServicesModule,
                 HttpClientTestingModule],
-            declarations: [TagsFilterComponent]
+            declarations: [TagsFilterComponent],
         })
             .compileComponents();
     }));
@@ -66,5 +67,20 @@ describe('TagsFilterComponent', () => {
         }));
         fixture.detectChanges();
         expect(component.tagFilterForm.get('tags').value).toEqual(["test1", "test2"]);
+    });
+    it('should dispatch on state change', (done) => {
+
+        //component state
+        component.tagFilterForm.get('tags').setValue(['A','B']);
+        setTimeout(()=> {
+            expect(component.tagFilterForm.valid).toBeTruthy();
+            expect(store.dispatch).toHaveBeenCalledTimes(2);
+            expect(store.dispatch).toHaveBeenCalledWith(new ApplyFilter({
+                name: FilterType.TAG_FILTER,
+                active: true,
+                status: {tags:['A','B']}
+            }));
+            done();
+        },1000);
     });
 });
