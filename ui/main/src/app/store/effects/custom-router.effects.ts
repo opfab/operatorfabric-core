@@ -9,20 +9,19 @@ import {Injectable} from "@angular/core";
 import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {Actions, Effect, ofType} from "@ngrx/effects";
-import {CardService} from "@ofServices/card.service";
-import {Observable} from "rxjs";
-import {ROUTER_NAVIGATION, RouterNavigationAction} from "@ngrx/router-store";
-import {filter, switchMap} from "rxjs/operators";
+import {Observable, of} from "rxjs";
+import {ROUTER_NAVIGATION, ROUTER_REQUEST, RouterNavigationAction, RouterRequestAction} from "@ngrx/router-store";
+import {filter, map, switchMap, tap} from "rxjs/operators";
 import {LoadCard} from "@ofActions/card.actions";
-import {SelectLightCard} from "@ofActions/light-card.actions";
+import {ClearLightCardSelection, SelectLightCard} from "@ofActions/light-card.actions";
 import {SelectMenuLink} from "@ofActions/menu.actions";
+import {AuthenticationActionTypes, TryToLogOut} from "@ofActions/authentication.actions";
 
 @Injectable()
 export class CustomRouterEffects {
-    /* istanbul ignore next */
+
     constructor(private store: Store<AppState>,
-                private actions$: Actions,
-                private service: CardService
+                private actions$: Actions
     ) {}
 
     @Effect()
@@ -60,4 +59,14 @@ export class CustomRouterEffects {
             ];
         })
     );
+
+    @Effect()
+    navigateAwayFromFeed: Observable<Action> = this.actions$.pipe(
+        ofType(ROUTER_REQUEST),
+        filter((action: RouterRequestAction, index)=> {
+            return (action.payload.routerState.url.indexOf("/feed/cards/")>=0) && (action.payload.event.url.indexOf("/feed/")<0); //If navigating from /feed/cards/ to somewhere else
+        }),
+        map( action => new ClearLightCardSelection())
+    )
+
 }

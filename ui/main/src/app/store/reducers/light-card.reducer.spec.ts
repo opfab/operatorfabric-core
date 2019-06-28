@@ -6,12 +6,16 @@
  */
 
 import {reducer} from './light-card.reducer';
-import {feedInitialState} from '@ofStates/feed.state';
+import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
 import {createEntityAdapter} from "@ngrx/entity";
 import {LightCard} from "@ofModel/light-card.model";
-import {getOneRandomLigthCard, getRandomAlphanumericValue, getSeveralRandomLightCards} from "@tests/helpers";
 import {
-    AddLightCardFailure,
+    getOneRandomLigthCard,
+    getRandomAlphanumericValue,
+    getSeveralRandomLightCards
+} from "@tests/helpers";
+import {
+    AddLightCardFailure, ClearLightCardSelection,
     EmptyLightCards,
     LoadLightCardsFailure,
     LoadLightCardsSuccess
@@ -169,4 +173,35 @@ describe('LightCard Reducer', () => {
         });
 
     });
+
+    describe('ClearLightCardSelection', () => {
+
+        it('should clear the selected card', () => {
+            const action = new ClearLightCardSelection();
+            const previousState: CardFeedState = LightCardAdapter.getInitialState(
+                {
+                    selectedCardId: getRandomAlphanumericValue(5,10),
+                    lastCards: [],
+                    loading: false,
+                    error: '',
+                    filters: new Map()
+                });
+
+            const expectedState: CardFeedState = LightCardAdapter.getInitialState(
+                {
+                    selectedCardId: null,
+                    lastCards: [],
+                    loading: false,
+                    error: '',
+                    filters: new Map()
+                });
+
+            const result = reducer(previousState, action);
+
+            expect(result).toEqual(expectedState);
+
+        });
+
+    });
+
 });

@@ -15,6 +15,7 @@ export enum LightCardActionTypes {
     LoadLightCardsExtendedData = '[LCard] Load Extended Data',
     LoadLightCardsFailure = '[LCard] Load Fail',
     SelectLightCard = '[LCard] Select One',
+    ClearLightCardSelection = '[LCard] Clear Light Card Selection',
     AddLightCardFailure = '[LCard] Add Light Card Fail',
     UpdatedSubscription = '[LCard] UpdateSubscription',
     HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
@@ -62,6 +63,13 @@ export class SelectLightCard implements Action {
 
 }
 
+export class ClearLightCardSelection implements Action {
+
+    readonly type = LightCardActionTypes.ClearLightCardSelection;
+    constructor() {
+    }
+}
+
 export class AddLightCardFailure implements Action {
     readonly type = LightCardActionTypes.AddLightCardFailure;
 
@@ -92,6 +100,7 @@ export type LightCardActions =
     | LoadLightCardsSuccess
     | LoadLightCardsFailure
     | SelectLightCard
+    | ClearLightCardSelection
     | AddLightCardFailure
     | UpdatedSubscription
     | HandleUnexpectedError
