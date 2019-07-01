@@ -1,0 +1,20 @@
+{
+  "library": "spring-boot",
+  "java8": true,
+  "modelPackage": "org.lfenergy.operatorfabric.actions.model",
+  "hideGenerationTimestamp": true,
+  "apiPackage": "org.lfenergy.operatorfabric.actions.controllers",
+  "configPackage": "org.lfenergy.operatorfabric.actions.config",
+  "invokerPackage": "org.lfenergy.operatorfabric.actions.invokers",
+  "dateLibrary": "java8",
+  "useBeanValidation": true,
+  "interfaceOnly": true,
+  "delegatePattern": true,
+  "singleContentTypes": false,
+  "importMappings" : {
+    "ActionEnum": "org.lfenergy.operatorfabric.actions.model.ActionEnum",
+    "InputEnum": "org.lfenergy.operatorfabric.actions.model.InputEnum",
+    "EpochDate": "java.time.Instant",
+    "LongInteger": "java.lang.Long"
+  }
+}

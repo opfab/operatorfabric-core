@@ -230,26 +230,26 @@ class CardWriteServiceShould {
                                 )
                                 .build())
                 // FIXME move this to thirds
-//                .action("act1",
+//                .actions("act1",
 //                        ActionPublicationData.builder()
 //                                .type(ActionEnum.URI)
-//                                .label(I18nPublicationData.builder().key("action.one").build())
+//                                .label(I18nPublicationData.builder().key("actions.one").build())
 //                                .build())
-//                .action("act2",
+//                .actions("act2",
 //                        ActionPublicationData.builder()
 //                                .type(ActionEnum.URI)
-//                                .label(I18nPublicationData.builder().key("action.two").build())
+//                                .label(I18nPublicationData.builder().key("actions.two").build())
 //                                .input(
 //                                        InputPublicationData.builder()
 //                                                .type(InputEnum.BOOLEAN)
-//                                                .label(I18nPublicationData.builder().key("action.two.input.one").build())
+//                                                .label(I18nPublicationData.builder().key("actions.two.input.one").build())
 //                                                .name("input1")
 //                                                .build()
 //                                )
 //                                .input(
 //                                        InputPublicationData.builder()
 //                                                .type(InputEnum.LIST)
-//                                                .label(I18nPublicationData.builder().key("action.two.input.two").build())
+//                                                .label(I18nPublicationData.builder().key("actions.two.input.two").build())
 //                                                .name("input2")
 //                                                .value(
 //                                                        ParameterListItemPublicationData.builder()

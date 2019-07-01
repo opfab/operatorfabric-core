@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.lfenergy.operatorfabric.cards.model;
+package org.lfenergy.operatorfabric.actions.model;
 
 /**
  * Card associated Action type
