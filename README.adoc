@@ -69,14 +69,6 @@ For instance, operators might be interested in knowing why a given decision was 
 the cards detailing the decision process steps will be accessible through the Archives screen, showing how the
 operators reached this agreement.
 
-== Licensing
-
-This project and all its sub-projects are licensed under https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2.0]. See link:LICENSE.txt[LICENSE.txt]
-
-== Contributing
-
-Read our link:CONTRIBUTING.adoc[CONTRIBUTING] file for more information on how to contribute to the project.
-
 == Requirements
 
 IMPORTANT: This section describes the projects requirements regardless of installation options.
@@ -133,8 +125,8 @@ We currently use Firefox (63.0.3). Automatic tests for the UI rely on Chrome (73
 
 == Getting Started
 
-WARNING: The steps below assume that you are using https://sdkman.io/[sdkman] and
-https://github.com/creationix/nvm[nvm] to manage tools versions and that you have already installed them.
+WARNING: The steps below assume that you have installed and are using https://sdkman.io/[sdkman] and
+https://github.com/creationix/nvm[nvm] to manage tool versions ( for java, gradle, node and npm).
 
 WARNING: Before running containers with docker-compose, it is required to configure a docker network for them using `docker network create opfabnet`. You can also use the bin/setup_dockerized_environment which builds the services images ant sets up the `opfabnet` network.
 
@@ -142,77 +134,58 @@ There are several ways to get started with OperatorFabric. Please look into the 
 
 TIP: If you encounter any issue, see <<Troubleshooting>> below. In particular, a command that hangs then fails is often a proxy issue.
 
-//+++ <details><summary> +++
-//**Error summary**
-//+++ </summary><div> +++
-//
-//.Error message
-//[source]
-//----
-//Paste error message
-//----
-//
-//.Possible causes & resolution
-//Describe possible causes and resolutions
-//
-//+++ </div></details> +++
-
 === Build and run using script
 
-+++ <details><summary> +++
-**See detailed steps**
-+++ </summary><div> +++
+The following steps describe how to launch MongoDB, RabbitMQ and SonarQube using Docker,  build OperatorFabric using gradle and run it using the `run_all.sh` script.
 
-These steps describe how to use dockerized Mongo, RabbitMQ and SonarQube and build and run OperatorFabric using the `run_all.sh` script.
-
-.Clone repository
+==== Clone repository
 ----
 git clone https://github.com/opfab/operatorfabric-core.git
 cd operatorfabric-core
 ----
 
-.Set up your environment (environment variables & appropriate versions of gradle, maven, etc.)
+==== Set up your environment (environment variables & appropriate versions of gradle, maven, etc…)
 ----
 source bin/load_environment_light.sh
 ----
 
-TIP: From now on, you can use environment variable $OF_HOME to get back to the repository home.
+TIP: From now on, you can use environment variable $OF_HOME to go back to the home repository of OperatorFabric.
 
-.Deploy dockerized MongoDB, RabbitMQ and SonarQube
-MongoDB, RabbitMQ and SonarQube are needed for the build so tests can be run.
+==== Deploy dockerized MongoDB, RabbitMQ and SonarQube
+MongoDB, RabbitMQ and SonarQube are needed for the tests to be run so the build can be done.
 
 A docker-compose file with properly configured containers is available link:src/main/docker/test-quality-environment/[there].
 
-If you haven't done so before, you will need to configure a docker network for the containers:
+If it hasn't be done before, a docker network need to be configured for the containers using the following command:
 ----
 docker network create opfabnet
 ----
 
-Then run the docker-compose in detached mode:
+Then `docker-compose` can be run in detached mode:
 ----
 cd src/main/docker/test-quality-environment/
 docker-compose up -d
 ----
 
-.Build
+==== Build OperatorFabric with Gradle
 ----
 cd $OF_HOME
 gradle assemble
 ----
 
-.Run OperatorFabric Services using the `run_all.sh` script
+==== Run OperatorFabric Services using the `run_all.sh` script
 ----
 bin/run_all.sh start
 ----
 
 TIP: See `bin/run_all.sh -h` for details.
 
-.Check services status
+==== Check services status
 ----
 bin/run_all.sh status
 ----
 
-.Log into the UI
+==== Log into the UI
 
 URL: localhost:2002/ui/
 
@@ -224,25 +197,24 @@ WARNING: It might take a little while for the UI to load even after all services
 
 WARNING: Don't forget the *final slash* in the URL or you will get an error.
 
-.Push cards to the feed
+==== Push cards to the feed
 
 You can check that you see cards into the feed by running the `push_card_loop.sh` script.
 ----
 services/core/cards-publication/src/main/bin/push_card_loop.sh
 ----
 
-+++ </div></details> +++
-
 === Demonstration mode
 
 If you only want a quick demonstration of what OperatorFabric looks like and what it can do, use our standalone docker demo.
-See <<Docker Demo>> for details.
+See <<Docker demo>> for details.
 
 === Going Further
 
 When you feel ready to experiment with the project, or if the steps above don't quite cover what you're planning to do, please look into the <<Recipes>> section.
 
-TIP: In addition, we now have a link:https://opfab.github.io/documentation/0.1.1.RELEASE/start/[Getting Started guide on our website], check it out.
+TIP: In addition, a link:https://opfab.github.io/documentation/0.1.1.RELEASE/start/[Getting Started guide on our website] exists.
+Check it out !
 
 == Project Contents
 
@@ -739,17 +711,10 @@ Available Java Versions
 
 +++ </div></details> +++
 
-//+++ <details><summary> +++
-//**Error summary**
-//+++ </summary><div> +++
-//
-//.Error message
-//[source]
-//----
-//Paste error message
-//----
-//
-//.Possible causes & resolution
-//Describe possible causes and resolutions
-//
-//+++ </div></details> +++
+== Licensing
+
+This project and all its sub-projects are licensed under https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2.0]. See link:LICENSE.txt[LICENSE.txt]
+
+== Contributing
+
+Read our link:CONTRIBUTING.adoc[CONTRIBUTING] file for more information on how to contribute to the project.
