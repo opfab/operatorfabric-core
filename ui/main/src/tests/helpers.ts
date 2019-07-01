@@ -139,7 +139,8 @@ export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
         lightCardTemplate.lttd?lightCardTemplate.lttd:generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
-        lightCardTemplate.tags?lightCardTemplate.tags:null
+        lightCardTemplate.tags?lightCardTemplate.tags:null,
+        lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null
     );
     return oneCard;
 }

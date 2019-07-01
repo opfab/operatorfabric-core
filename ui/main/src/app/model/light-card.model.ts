@@ -22,6 +22,7 @@ export interface LightCard {
     readonly title?: I18n;
     readonly summary?: I18n;
     readonly tags?: string[];
+    readonly timeSpans?: TimeSpan[];
 
 }
 
@@ -42,20 +43,30 @@ export class LightCard implements LightCard {
         readonly title?: I18n,
         readonly summary?: I18n,
         readonly tags?: string[],
-    ) {}
+        readonly timeSpans?: TimeSpan[]
+    ) {
+    }
 }
 
 export enum Severity {
     ALARM = "ALARM", ACTION = "ACTION", NOTIFICATION = "NOTIFICATION", QUESTION = "QUESTION"
 }
 
-export function severityOrdinal(severity: Severity){
+export function severityOrdinal(severity: Severity) {
     let result;
     switch (severity) {
-        case Severity.ALARM:result = 0;break;
-        case Severity.ACTION:result = 1;break;
-        case Severity.QUESTION:result = 2;break;
-        case Severity.NOTIFICATION:result = 3;break;
+        case Severity.ALARM:
+            result = 0;
+            break;
+        case Severity.ACTION:
+            result = 1;
+            break;
+        case Severity.QUESTION:
+            result = 2;
+            break;
+        case Severity.NOTIFICATION:
+            result = 3;
+            break;
     }
     return result;
 }
@@ -64,3 +75,14 @@ export enum Sound {
     NOTIFICATION, QUESTION
 }
 
+export enum Display {
+    BUBBLE, LINE
+}
+
+export class TimeSpan {
+    constructor(
+        readonly startDate: number,
+        readonly endDate?: number,
+        readonly display = Display.BUBBLE) {
+    }
+}
