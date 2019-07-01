@@ -173,7 +173,7 @@ cd operatorfabric-core
 
 .Set up your environment (environment variables & appropriate versions of gradle, maven, etc.)
 ----
-source ./bin/load_environment_light.sh
+source bin/load_environment_light.sh
 ----
 
 TIP: From now on, you can use environment variable $OF_HOME to get back to the repository home.
@@ -194,17 +194,22 @@ cd src/main/docker/test-quality-environment/
 docker-compose up -d
 ----
 
-.Build and run OperatorFabric Services using the `run_all.sh` script
+.Build
 ----
 cd $OF_HOME
-./bin/run_all.sh -s users,time,cards-publication,cards-consultation,thirds -b true start
+gradle assemble
 ----
 
-TIP: See `run_all.sh -h` for details.
+.Run OperatorFabric Services using the `run_all.sh` script
+----
+bin/run_all.sh start
+----
+
+TIP: See `bin/run_all.sh -h` for details.
 
 .Check services status
 ----
-./bin/run_all.sh -s users,time,cards-publication,cards-consultation,thirds status
+bin/run_all.sh status
 ----
 
 .Log into the UI
@@ -223,7 +228,7 @@ WARNING: Don't forget the *final slash* in the URL or you will get an error.
 
 You can check that you see cards into the feed by running the `push_card_loop.sh` script.
 ----
-./services/core/cards-publication/src/main/bin/push_card_loop.sh
+services/core/cards-publication/src/main/bin/push_card_loop.sh
 ----
 
 +++ </div></details> +++
