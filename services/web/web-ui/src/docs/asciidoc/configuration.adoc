@@ -14,7 +14,7 @@ Registry.
 
 == Mandatory configuration, Profiles and default properties
 
-The service has no mandatory configuration besside global configuration and
+The service has no mandatory configuration beside global configuration and
 usual bootstrap configuration.
 
 For other configuration see:
@@ -48,7 +48,7 @@ a|card time display mode in the feed. Values :
 |operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
 |operatorfabric.settings.locale|LT|no|Default user locale (use browser if not set)
 |operatorfabric.settings.default-tags||no|Default user list of filtered in tags
-|operatorfabric.time.pluse|5000|no|Duration between two ticks of the internal state of the User Interface
+|operatorfabric.time.pulse|5000|no|Duration between two ticks of the internal state of the User Interface
 
 |===
 

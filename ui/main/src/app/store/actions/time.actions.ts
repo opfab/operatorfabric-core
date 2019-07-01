@@ -5,7 +5,7 @@ import * as moment from "moment-timezone";
 
 export enum TimeActionTypes{
     Tick='[Time] tick',
-    UpdateTimeReference='[Time] try to upadate the time reference',
+    UpdateTimeReference='[Time] try to update the time reference',
     FailToUpdateTimeReference='[Time] fail to update the time reference'
 }
 
@@ -28,7 +28,7 @@ export class UpdateTimeReference implements Action{
 
 
 /**
- * Notify thate something went wrong while changing the virtual time.
+ * Notify that something went wrong while changing the virtual time.
  * Nothing has been done and an error is reported
  */
 export class FailToUpdateTimeReference implements Action{
