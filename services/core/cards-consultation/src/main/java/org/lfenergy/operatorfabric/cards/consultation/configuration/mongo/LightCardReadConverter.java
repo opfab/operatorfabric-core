@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpan;
+import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpanConsultationData;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.core.convert.converter.Converter;
 
@@ -25,6 +27,7 @@ import java.util.List;
 @Slf4j
 public class LightCardReadConverter implements Converter<Document, LightCard> {
     private I18nReadConverter i18nReadConverter = new I18nReadConverter();
+    private TimeSpanReadConverter timeSpanConverter = new TimeSpanReadConverter();
     @Override
     public LightCard convert(Document source) {
         LightCardConsultationData.LightCardConsultationDataBuilder builder = LightCardConsultationData.builder();
@@ -54,6 +57,11 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
         if (tags != null)
             for (String t : tags) {
                 builder.tag(t);
+            }
+        List<Document> timeSpans = (List<Document>) source.get("timeSpans");
+        if (timeSpans != null)
+            for (Document d : timeSpans) {
+                builder.timeSpan((TimeSpanConsultationData)timeSpanConverter.convert(d));
             }
         return builder.build();
     }

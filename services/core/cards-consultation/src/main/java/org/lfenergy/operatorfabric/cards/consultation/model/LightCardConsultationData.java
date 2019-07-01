@@ -13,7 +13,10 @@ import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>Please use builder to instantiate</p>
@@ -53,6 +56,23 @@ public class LightCardConsultationData implements LightCard {
     private I18n title;
     private I18n summary;
     private String mainRecipient;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular("timeSpan")
+    private Set<TimeSpanConsultationData> timeSpansSet;
+
+    @Override
+    public List<TimeSpan> getTimeSpans() {
+        if(this.timeSpansSet!=null)
+            return new ArrayList<>(this.timeSpansSet);
+        return null;
+    }
+
+    @Override
+    public void setTimeSpans(List<? extends TimeSpan> timeSpans) {
+        if(timeSpans != null)
+            this.timeSpansSet = new HashSet(timeSpans);
+
+    }
 
     public static LightCardConsultationData copy(Card other) {
         LightCardConsultationDataBuilder builder = builder()
@@ -70,6 +90,8 @@ public class LightCardConsultationData implements LightCard {
                 ;
         if(other.getTags()!=null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());
+        if(other.getTimeSpans()!=null && !other.getTimeSpans().isEmpty())
+            builder.timeSpansSet(new HashSet(other.getTimeSpans()));
         return builder.build();
 
     }

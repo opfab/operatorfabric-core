@@ -773,6 +773,11 @@ definitions:
         description: Main user recipient ID (if any)
         type: string
         readOnly: true
+      timeSpans:
+        type: array
+        description: List of business time span associated to card
+        items:
+          $ref: '#/definitions/TimeSpan'
     example:
       uid: 12345
       id: cardIdFromMyProcess

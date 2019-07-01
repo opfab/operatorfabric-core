@@ -8,16 +8,16 @@
 package org.lfenergy.operatorfabric.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>Please use builder to instantiate</p>
@@ -61,4 +61,22 @@ public class LightCardPublicationData implements LightCard {
     private I18n title;
     private I18n summary;
     private String mainRecipient;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular("timeSpan")
+    private Set<TimeSpanPublicationData> timeSpansSet;
+
+    @Override
+    public List<TimeSpan> getTimeSpans() {
+        if(this.timeSpansSet!=null)
+            return new ArrayList<>(this.timeSpansSet);
+        return null;
+    }
+
+    @Override
+    public void setTimeSpans(List<? extends TimeSpan> timeSpans) {
+        if(timeSpans != null)
+            this.timeSpansSet = new HashSet(timeSpans);
+
+    }
+
 }
