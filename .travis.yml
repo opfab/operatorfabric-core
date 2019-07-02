@@ -9,6 +9,7 @@ services:
   - docker
 env:
   - NODE_VERSION="v10.10.0"
+  - GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
 language: java
 before_install:
   - sudo apt-get install realpath
