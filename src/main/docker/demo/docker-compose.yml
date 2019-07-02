@@ -18,7 +18,7 @@ services:
   keycloak:
     container_name: keycloak
     image: jboss/keycloak
-    command: -Dkeycloak.migration.actions=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/realms/export
+    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/realms/export
     environment:
     - KEYCLOAK_USER=admin
     - KEYCLOAK_PASSWORD=admin

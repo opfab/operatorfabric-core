@@ -496,7 +496,7 @@ definitions:
                       $ref: '#/definitions/Detail'
                   actions:
                     type: object
-                    description: 'Map of actions, identifying an actions by its unique card related id'
+                    description: 'Map of actions, identifying an action by its unique card related id'
                     additionalProperties:
                       $ref: '#/definitions/Action'
     required:
@@ -554,7 +554,7 @@ definitions:
                 contentStyle: buttonContentClass
                 buttonStyle: buttonClass
                 label:
-                  key: my.card.my.actions.label
+                  key: my.card.my.action.label
                 inputs:
                   - type: LIST
                     label:
@@ -678,7 +678,7 @@ definitions:
         - otherStyle.css
           
   Action:
-    description: defines an actions on the business process associated to the card
+    description: defines an action on the business process associated to the card
     type: object
     properties:
       type:
@@ -687,11 +687,11 @@ definitions:
       lockAction:
         type: boolean
         default: false
-        description: 'if true, actions will be locked after clicked client-side'
+        description: 'if true, action will be locked after clicked client-side'
       lockCard:
         type: boolean
         default: false
-        description: 'if true, all card actions will be locked after clicked client-side'
+        description: 'if true, all card action will be locked after clicked client-side'
       needsConfirm:
         type: boolean
         default: false
@@ -700,7 +700,7 @@ definitions:
         type: boolean
         default: false
         readOnly: true
-        description: True if actions has already been called at least once
+        description: True if action has already been called at least once
       updateState:
         type: boolean
         default: false
@@ -716,13 +716,13 @@ definitions:
       hidden:
         type: boolean
         default: false
-        description: This actions is hidden from card and is only available to details;
+        description: This action is hidden from card and is only available to details;
       contentStyle:
         type: string
-        description: css classes of actions button content (a &lt;i&gt; tag)
+        description: css classes of action button content (a &lt;i&gt; tag)
       buttonStyle:
         type: string
-        description: css classes of actions button
+        description: css classes of action button
       label:
         description: 'button default label, appears as a tooltip'
         $ref: '#/definitions/I18n'
@@ -809,7 +809,7 @@ definitions:
         description: Is the parameter required
       name:
         type: string
-        description: Parameter name (unique in actions scope)
+        description: Parameter name (unique in action scope)
       value:
         type: string
         description: Parameter default value
