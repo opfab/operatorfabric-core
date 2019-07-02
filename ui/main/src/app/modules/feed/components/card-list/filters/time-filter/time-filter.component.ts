@@ -73,7 +73,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
                     distinctUntilChanged((formA, formB) => {
                         return _.isEqual(formA, formB);
                     }),
-                    debounce(() => timer(500)))
+                    debounce(() => timer(500))) //TODO Filter so it doesn't fire ApplyFilter actions that wouldn't change current filter
                 .subscribe(form => this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.TIME_FILTER,

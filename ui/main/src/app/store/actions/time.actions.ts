@@ -11,10 +11,12 @@ export enum TimeActionTypes{
 
 /**
  * Heart beat of the application change current date
+ * Contains the elapsed virtual time since the previous heart beat so any components following the clock
+ * can shift their timespan accordingly
  */
 export class Tick implements  Action{
     readonly type=TimeActionTypes.Tick;
-    constructor(public payload:{currentTime:moment.Moment}){}
+    constructor(public payload:{currentTime:moment.Moment, elapsedSinceLast:number}){}
 }
 
 /**

@@ -32,14 +32,13 @@ export class TimeEffects {
      *This Observable send a tick corresponding to the heart beat of the application.
      *
      */
-
     @Effect()
     heartBeat: Observable<Action> = this.actions$
         .pipe(
             ofType(AuthenticationActionTypes.AcceptLogIn),
             switchMap(() => this.service.pulsate()
-                .pipe(map(() => {
-                        return new Tick({currentTime: this.currentTimeReference.computeNow(moment())});
+                .pipe(map(pulse => {
+                        return new Tick(pulse);
                     })
                 ))
         );

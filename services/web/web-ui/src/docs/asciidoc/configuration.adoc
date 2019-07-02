@@ -40,7 +40,8 @@ a|card time display mode in the feed. Values :
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
 |operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen
-|operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en are choosable)
+|operatorfabric.feed.timeFilter.followClockTick|false|no|If set to true, the time filter on the feed will shift with every clock tick
+|operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 |operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'
 |operatorfabric.settings.timeZone||no|Default user time zone for users (use browser time zone if not set)
 |operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
@@ -85,7 +86,7 @@ The above embedded configurations are the basic settings of the application:
 * it sets the configuration name to use (which configuration file to retrieve)
 * it must set the registry service (example in bootstrap-docker.yml)
 
-=== Sample developpement configuration
+=== Sample development configuration
 
 ```
 include::../../../../../infra/config/src/main/docker/volume/dev-configurations/web-ui.yml[]

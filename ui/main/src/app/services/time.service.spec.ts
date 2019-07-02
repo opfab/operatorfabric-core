@@ -18,6 +18,8 @@ import {TimeReference, TimeSpeed} from "@ofModel/time.model";
 
 describe('TimeService', () => {
 
+    //TODO Update test values so the milliseconds values are not 000
+
     let service: TimeService;
     let httpMock: HttpTestingController;
     beforeAll(()=>{
@@ -52,8 +54,9 @@ describe('TimeService', () => {
 
     it('should parse', () => {
         expect(service).toBeTruthy();
-        expect(service.parseString('2019-05-24T10:25').valueOf()).toEqual(1558686300000);
+        expect(service.parseString('2019-05-24T10:25:17.989').valueOf()).toEqual(1558686317989);
     });
+
     it('should format html input value string', () => {
         expect(service).toBeTruthy();
         expect(service.asInputString(1558686353000)).toEqual('2019-05-24T10:25:53.000');

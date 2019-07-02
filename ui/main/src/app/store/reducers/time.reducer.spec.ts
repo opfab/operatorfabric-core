@@ -21,7 +21,7 @@ describe('TimeReducer', () => {
             it('should update currentDate', () => {
                 const testedTime = moment();
 
-                const tick = new Tick({currentTime: testedTime});
+                const tick = new Tick({currentTime: testedTime, elapsedSinceLast: 10});
                 const actualState = reducer(timeInitialState, tick);
                 const initialTime=timeInitialState.currentDate.valueOf();
                 const actual = actualState.currentDate.valueOf();

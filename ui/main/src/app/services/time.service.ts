@@ -16,7 +16,7 @@ import {environment} from '@env/environment';
 import {neutralTimeReference, TimeReference} from "@ofModel/time.model";
 import {interval, Observable, of} from "rxjs";
 import {EventSourceInit, EventSourcePolyfill} from "ng-event-source";
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import {selectTimeReference} from "@ofSelectors/time.selectors";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {AuthenticationService} from "@ofServices/authentication.service";
@@ -33,6 +33,7 @@ export class TimeService {
     private timeReference$: Observable<TimeReference>;
     private currentTimeReference: TimeReference=neutralTimeReference;
     private beatDurationInMilliseconds: number;
+    private timeAtLastHeartBeat: Moment;
 
     constructor(private store: Store<AppState>) {
         this.initializeTimeFormat();
@@ -88,13 +89,26 @@ export class TimeService {
             .subscribe(timeRef => this.currentTimeReference = timeRef);
     }
 
-    public pulsate(): Observable<moment.Moment> {
+    /**
+     * Emits a pulse every beatDurationInMilliseconds, containing the current virtual time as well as the
+     * elapsed time (milliseconds) since the previous pulse
+     * */
+    public pulsate(): Observable<{currentTime: moment.Moment, elapsedSinceLast: number}> { //TODO Replace by "pulse" type (is also Tick payload)
         return this.heartBeat(this.beatDurationInMilliseconds);
     }
 
-    public heartBeat(interValDurationInMilliseconds: number): Observable<moment.Moment> {
+    private heartBeat(interValDurationInMilliseconds: number): Observable<{currentTime: moment.Moment, elapsedSinceLast: number}> {
         return interval(interValDurationInMilliseconds)
-            .pipe(map(n => this.currentTime()));
+            .pipe(
+                map(n => this.currentTime()),
+                map(heartBeat => {
+                    return {
+                        currentTime: heartBeat,
+                        elapsedSinceLast: heartBeat.diff(this.timeAtLastHeartBeat)
+                    };
+                }),
+                tap(heartBeat => this.timeAtLastHeartBeat = heartBeat.currentTime) // update timeAtLastHeartBeat with the emitted value
+            );
     }
 
     fetchVirtualTime(eventSource: EventSourcePolyfill): Observable<TimeReference> {
@@ -126,7 +140,7 @@ export class TimeService {
     }
 
     public parseString(value: string): moment.Moment {
-        return moment(value, 'YYYY-MM-DDTHH:mm');
+        return moment(value, 'YYYY-MM-DDTHH:mm:ss.SSS');
     }
 
     public asInputString(value: number): string {

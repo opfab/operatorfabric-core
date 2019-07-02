@@ -44,18 +44,19 @@ describe('TimeEffects', () => {
 
     }));
     describe('heartBeat', () => {
-        it('should emit an action containing an instant after the user is logged in', () => {
+        it('should emit (clock) tick actions after the user is logged in', () => {
 
-            timeService.pulsate.and.returnValue(hot('abcd', {a: 1, b: 2, c: 3, d: 4}));
+            const localAction$ = new Actions(hot('a---', {a: new AcceptLogIn(new PayloadForSuccessfulAuthentication(null, null, null, null))}));
 
-            timeRef.computeNow.and.returnValue(momentForTesting);
+            timeService.pulsate.and.returnValue(hot('-bcd', {
+                b: {currentTime: momentForTesting, elapsedSinceLast: 1},
+                c: {currentTime: momentForTesting, elapsedSinceLast: 1},
+                d: {currentTime: momentForTesting, elapsedSinceLast: 1}}));
 
-            const localExpected = hot('abcd'
-                , {
-                    a: new Tick({currentTime: momentForTesting})
-                    , b: new Tick({currentTime: momentForTesting})
-                    , c: new Tick({currentTime: momentForTesting})
-                    , d: new Tick({currentTime: momentForTesting})
+            const localExpected = hot('-bcd'
+                , { b: new Tick({currentTime: momentForTesting, elapsedSinceLast: 1})
+                    , c: new Tick({currentTime: momentForTesting, elapsedSinceLast: 1})
+                    , d: new Tick({currentTime: momentForTesting, elapsedSinceLast: 1})
                 }
             );
 
