@@ -875,6 +875,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.setFormatLevel();
     }
     this.setXTicksValue(domain);
+    console.log('xticks after set = ', this.xTicks);
     this.xTicksOne = [];
     this.xTicksTwo = [];
     if (this.formatLevel === 'Hou') {
@@ -890,9 +891,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(7);
     } else {
+      console.log('uie');
       this.xTicksOne = this.multiHorizontalTicksLine(1);
       this.xTicksTwo = this.multiHorizontalTicksLine(2);
     }
+    console.log('xticksONE & TWO  = ', this.xTicksOne, this.xTicksTwo);
     this.clusterize(domain);
   }
 
