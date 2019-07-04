@@ -196,12 +196,12 @@ startCommand() {
         cd $OF_HOME
         echo "#### Preparing runtime data ####"
         echo "## Preparing business runtime data"
-        cd services/core
+#        cd services/core
         gradle copyWorkingDir $GRADLE_OPTIONS
         echo "## Preparing infrastucture runtime data"
-        cd ../infra
-        gradle copyWorkingDir $GRADLE_OPTIONS
-        cd ..
+#        cd ../infra
+#        gradle copyWorkingDir $GRADLE_OPTIONS
+#        cd ..
         cd $CURRENT_PATH
     fi
 

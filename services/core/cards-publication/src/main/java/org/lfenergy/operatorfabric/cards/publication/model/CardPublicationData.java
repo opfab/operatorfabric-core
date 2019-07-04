@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -98,6 +99,9 @@ public class CardPublicationData implements Card {
         this.publishDate = publishDate;
         this.id = publisher + "_" + processId;
         this.setShardKey(Math.toIntExact(this.getStartDate().toEpochMilli() % 24 * 1000));
+        if(this.getTimeSpans()!=null)
+            for(TimeSpan ts:this.getTimeSpans())
+                ((TimeSpanPublicationData)ts).init();
     }
 
     public LightCardPublicationData toLightCard() {
@@ -119,6 +123,7 @@ public class CardPublicationData implements Card {
             .mainRecipient(this.getMainRecipient())
             .title(((I18nPublicationData) this.getTitle()).copy())
             .summary(((I18nPublicationData) this.getSummary()).copy())
+                .timeSpansSet(new HashSet(this.getTimeSpans()))
             .build();
     }
 }

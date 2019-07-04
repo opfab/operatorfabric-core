@@ -107,7 +107,7 @@ public class CardRepositoryShould {
                 .assertNext(c->{
                     computeCardAssertion(card).accept(c);
                     assertThat(c.getTimeSpans().get(0).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.BUBBLE);
-                    assertThat(c.getTimeSpans().get(1).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.LINE);
+                    assertThat(c.getTimeSpans().get(1).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.BUBBLE);
                     assertThat(c.getTimeSpans().get(2).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.BUBBLE);
                 })
                 .expectComplete()

@@ -7,13 +7,6 @@
 
 import {LightCard} from './light-card.model';
 
-export interface CardOperation {
-    readonly number: number;
-    readonly publicationDate: number;
-    readonly type: CardOperationType;
-    readonly cards?: LightCard[];
-}
-
 export class CardOperation implements CardOperation {
     /* istanbul ignore next */
     constructor(
@@ -21,13 +14,19 @@ export class CardOperation implements CardOperation {
         readonly publicationDate: number,
         readonly type: CardOperationType,
         readonly cards?: LightCard[],
+        readonly cardIds?: string[]
     ) {
+    }
+
+    static convertTypeIntoEnum(key:string, value:string){
+        if(key === 'type'){
+            return CardOperationType[value]
+        }
+        return value;
     }
 
 }
 
 export enum CardOperationType {
-    ADD = 'ADD'
-    , UPDATE = 'UPDATE'
-    , DELETE = 'DELETE'
+    ADD , UPDATE, DELETE
 }

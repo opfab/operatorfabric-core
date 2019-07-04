@@ -19,7 +19,9 @@ export enum LightCardActionTypes {
     AddLightCardFailure = '[LCard] Add Light Card Fail',
     UpdatedSubscription = '[LCard] UpdateSubscription',
     HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
+    RemoveLightCard = '[LCard] Remove a card'
 }
+
 // needed by NGRX entities
 export class LoadLightCards implements Action {
     /* istanbul ignore next */
@@ -93,7 +95,19 @@ export class HandleUnexpectedError implements Action {
     constructor(public payload: {error: Error}) {
 
     }
+
+
 }
+
+export class RemoveLightCard implements Action {
+
+    readonly  type = LightCardActionTypes.RemoveLightCard;
+
+    constructor(public  payload: {cards: string[]}){
+
+    }
+}
+
 
 export type LightCardActions =
     LoadLightCards
@@ -104,4 +118,5 @@ export type LightCardActions =
     | AddLightCardFailure
     | UpdatedSubscription
     | HandleUnexpectedError
-    | EmptyLightCards;
+    | EmptyLightCards
+    | RemoveLightCard;

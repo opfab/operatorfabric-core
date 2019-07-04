@@ -26,12 +26,16 @@ public class TimeSpanPublicationData implements TimeSpan{
     private TimeSpanDisplayModeEnum display;
 
     public TimeSpanPublicationData(Instant start, Instant end, TimeSpanDisplayModeEnum display){
-        if(display == null && end != null)
-            display = TimeSpanDisplayModeEnum.LINE;
-        else if(display == null)
-            display = TimeSpanDisplayModeEnum.BUBBLE;
         this.start = start;
         this.end = end;
         this.display = display;
+        init();
+    }
+
+    void init(){
+        if(display == null && end != null)
+            display = TimeSpanDisplayModeEnum.BUBBLE;
+        else if(display == null)
+            display = TimeSpanDisplayModeEnum.BUBBLE;
     }
 }

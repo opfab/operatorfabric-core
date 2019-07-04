@@ -43,4 +43,10 @@ public class CardController {
         return cardWriteService.createCardsWithResult(cards);
 
     }
+
+    @DeleteMapping("/{processId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteCards(@PathVariable String processId){
+        cardWriteService.deleteCard(processId);
+    }
 }

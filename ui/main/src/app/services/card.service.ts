@@ -52,7 +52,7 @@ export class CardService {
                     if (!message) {
                         return observer.error(message);
                     }
-                    return observer.next(JSON.parse(message.data));
+                    return observer.next(JSON.parse(message.data,CardOperation.convertTypeIntoEnum));
                 };
                 eventSource.onerror = error => {
                     console.error(`error occurred from ES: ${error.toString()}`)

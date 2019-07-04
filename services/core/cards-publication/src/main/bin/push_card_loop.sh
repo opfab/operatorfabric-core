@@ -11,6 +11,7 @@ url=http://localhost:2102/cards
 processNumber=5
 dateShift=0
 severity=ACTION
+useTimeSpan=false
 payload="{ "$'\n'
 payload+="    \"rootProp\": \"This is a root property\", "$'\n'
 payload+="    \"level1\": { "$'\n'
@@ -41,6 +42,7 @@ display_usage() {
 	echo -e "\t-d, --date-shift  : number. millisecond date shift. Defaults to $dateShift"
     echo -e "\t-s, --severity : string. Card severity. Defaults to $severity"
 	echo -e "\t-a, --payload  : specify an external json file as payload."
+	echo -e "\t-t, --timeSpans  : use timeSpans instead of card start and end time. Defaults to $useTimeSpan"
 }
 
 # dateShift example values
@@ -94,6 +96,11 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -t|--timeSpans)
+    useTimeSpan=true
+    shift # past argument
+    shift # past value
+    ;;
     -h|--help)
     interval="$2"
     shift # past argument
@@ -125,13 +132,24 @@ plusTwoH=$(($now + 7200000))
 #$7 severity
 
 piece_of_data(){
+    date="  \"startDate\": $3, "$'\n'
+    date+="  \"endDate\": $5, "$'\n'
+    if [ $useTimeSpan ]; then
+        date+="  \"timeSpans\": [ "$'\n'
+        date+="    {"$'\n'
+        date+="      \"start\": $3,"$'\n'
+        date+="      \"end\": $5"$'\n'
+        date+="    }"$'\n'
+        date+="   ],"$'\n'
+    fi
     piece=$'{\n'
     piece+="  \"publisher\": \"$1\", "$'\n'
     piece+="  \"publisherVersion\": \"1\", "$'\n'
     piece+="  \"process\": \"$2\", "$'\n'
     piece+="  \"processId\": \"$2$6\", "$'\n'
-    piece+="  \"state\": \"firstState\", "$'\n'
-    piece+="  \"startDate\": $3, "$'\n'
+#    piece+="  \"state\": \"firstState\", "$'\n'
+#    piece+="  \"startDate\": $3, "$'\n'
+    piece+=$date
     piece+="  \"endDate\": $5, "$'\n'
     piece+="  \"lttd\": $4, "$'\n'
     piece+="  \"severity\": \"$7\", "$'\n'
