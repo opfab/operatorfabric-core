@@ -30,6 +30,13 @@ export function reducer(
             };
         }
 
+        case LightCardActionTypes.RemoveLightCard:{
+            return {
+                ...LightCardAdapter.removeMany(action.payload.cards,state),
+                loading:false,
+                lastCards:[]
+            }
+        }
         case LightCardActionTypes.LoadLightCardsFailure: {
             return {
                 ...state,
