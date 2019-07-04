@@ -44,11 +44,14 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._filter$ = this.store.select(buildFilterSelector(FilterType.TIME_FILTER));
+
+        //Update the values of the filter form if the state of the filter has been changed by other means (timeline, followClockTick, etc.)
+        //With {emitEvent:false}, this update won't trigger a valueChanges, so no ApplyFilter action will be dispatched
         this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
             if (next) {
                 if (this.timeService.parseString(this.timeFilterForm.get('start').value).valueOf() != next.status.start) {
                     if(!!next.status.start)
-                        this.timeFilterForm.get('start').setValue(this.timeService.asInputString(next.status.start), {emitEvent: false});
+                        this.timeFilterForm.get('start').setValue(this.timeService.asInputString(next.status.start), {emitEvent:false});
                     else
                         this.timeFilterForm.get('start').setValue(null, {emitEvent: false});
                 }
@@ -65,6 +68,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
                     this.timeFilterForm.get('end').setValue(null, {emitEvent: false});
             }
         });
+
         this._filter$.pipe(first(), takeUntil(this.ngUnsubscribe$)).subscribe(() => {
             this.timeFilterForm
                 .valueChanges
@@ -73,7 +77,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
                     distinctUntilChanged((formA, formB) => {
                         return _.isEqual(formA, formB);
                     }),
-                    debounce(() => timer(500))) //TODO Filter so it doesn't fire ApplyFilter actions that wouldn't change current filter
+                    debounce(() => timer(500)))
                 .subscribe(form => this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.TIME_FILTER,

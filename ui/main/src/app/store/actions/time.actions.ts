@@ -2,6 +2,7 @@ import {Action} from "@ngrx/store";
 import {TimeReference} from "@ofModel/time.model";
 import {Message} from "@ofModel/message.model";
 import * as moment from "moment-timezone";
+import {Guid} from "guid-typescript";
 
 export enum TimeActionTypes{
     Tick='[Time] tick',
@@ -16,7 +17,16 @@ export enum TimeActionTypes{
  */
 export class Tick implements  Action{
     readonly type=TimeActionTypes.Tick;
-    constructor(public payload:{currentTime:moment.Moment, elapsedSinceLast:number}){}
+    constructor(public payload:TickPayload){}
+}
+
+/**
+ * Clock tick (heart beat) payload
+ */
+export class TickPayload {
+    constructor(public currentTime: moment.Moment,
+                public elapsedSinceLast: number) {
+    }
 }
 
 /**

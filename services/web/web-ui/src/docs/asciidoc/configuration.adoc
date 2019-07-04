@@ -40,7 +40,8 @@ a|card time display mode in the feed. Values :
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
 |operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen
-|operatorfabric.feed.timeFilter.followClockTick|false|no|If set to true, the time filter on the feed will shift with every clock tick
+|operatorfabric.feed.timeFilter.followClockTick|false|no|If set to true, the time filter on the feed will shift
+to reflect elapsed time
 |operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 |operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'
 |operatorfabric.settings.timeZone||no|Default user time zone for users (use browser time zone if not set)

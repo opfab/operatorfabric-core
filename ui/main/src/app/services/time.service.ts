@@ -20,6 +20,7 @@ import {map, tap} from "rxjs/operators";
 import {selectTimeReference} from "@ofSelectors/time.selectors";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {AuthenticationService} from "@ofServices/authentication.service";
+import {TickPayload} from "@ofActions/time.actions";
 
 @Injectable()
 export class TimeService {
@@ -93,18 +94,18 @@ export class TimeService {
      * Emits a pulse every beatDurationInMilliseconds, containing the current virtual time as well as the
      * elapsed time (milliseconds) since the previous pulse
      * */
-    public pulsate(): Observable<{currentTime: moment.Moment, elapsedSinceLast: number}> { //TODO Replace by "pulse" type (is also Tick payload)
+    public pulsate(): Observable<TickPayload> {
         return this.heartBeat(this.beatDurationInMilliseconds);
     }
 
-    private heartBeat(interValDurationInMilliseconds: number): Observable<{currentTime: moment.Moment, elapsedSinceLast: number}> {
+    private heartBeat(interValDurationInMilliseconds: number): Observable<TickPayload> {
         return interval(interValDurationInMilliseconds)
             .pipe(
                 map(n => this.currentTime()),
                 map(heartBeat => {
                     return {
                         currentTime: heartBeat,
-                        elapsedSinceLast: heartBeat.diff(this.timeAtLastHeartBeat)
+                        elapsedSinceLast: this.timeAtLastHeartBeat ? heartBeat.diff(this.timeAtLastHeartBeat) : 0
                     };
                 }),
                 tap(heartBeat => this.timeAtLastHeartBeat = heartBeat.currentTime) // update timeAtLastHeartBeat with the emitted value
@@ -140,7 +141,7 @@ export class TimeService {
     }
 
     public parseString(value: string): moment.Moment {
-        return moment(value, 'YYYY-MM-DDTHH:mm:ss.SSS');
+        return moment(value, 'YYYY-MM-DDTHH:mm');
     }
 
     public asInputString(value: number): string {

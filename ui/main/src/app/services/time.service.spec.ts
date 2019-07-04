@@ -18,8 +18,6 @@ import {TimeReference, TimeSpeed} from "@ofModel/time.model";
 
 describe('TimeService', () => {
 
-    //TODO Update test values so the milliseconds values are not 000
-
     let service: TimeService;
     let httpMock: HttpTestingController;
     beforeAll(()=>{
@@ -54,27 +52,27 @@ describe('TimeService', () => {
 
     it('should parse', () => {
         expect(service).toBeTruthy();
-        expect(service.parseString('2019-05-24T10:25:17.989').valueOf()).toEqual(1558686317989);
+        expect(service.parseString('2019-05-24T10:25').valueOf()).toEqual(1558686300000);
     });
 
     it('should format html input value string', () => {
         expect(service).toBeTruthy();
-        expect(service.asInputString(1558686353000)).toEqual('2019-05-24T10:25:53.000');
+        expect(service.asInputString(1558686353989)).toEqual('2019-05-24T10:25:53.989');
     });
     it('should format timestamp, date and moment to date time string', () => {
         moment.locale('en');
         expect(service).toBeTruthy();
-        expect(service.formatDateTime(1559721600000)).toEqual('06/05/2019 10:00 AM');
-        expect(service.formatDateTime(new Date(1559721600000))).toEqual('06/05/2019 10:00 AM');
-        expect(service.formatDateTime(moment(new Date(1559721600000)))).toEqual('06/05/2019 10:00 AM');
+        expect(service.formatDateTime(1559721634989)).toEqual('06/05/2019 10:00 AM');
+        expect(service.formatDateTime(new Date(1559721634989))).toEqual('06/05/2019 10:00 AM');
+        expect(service.formatDateTime(moment(new Date(1559721634989)))).toEqual('06/05/2019 10:00 AM');
     });
 
     it('should format timestamp, date and moment to date string', () => {
         moment.locale('en');
         expect(service).toBeTruthy();
-        expect(service.formatDate(1559721600000)).toEqual('06/05/2019');
-        expect(service.formatDate(new Date(1559721600000))).toEqual('06/05/2019');
-expect(service.formatDate(moment(new Date(1559721600000)))).toEqual('06/05/2019');
+        expect(service.formatDate(1559721634989)).toEqual('06/05/2019');
+        expect(service.formatDate(new Date(1559721634989))).toEqual('06/05/2019');
+expect(service.formatDate(moment(new Date(1559721634989)))).toEqual('06/05/2019');
     });
 
 

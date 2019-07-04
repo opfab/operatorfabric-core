@@ -10,13 +10,10 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable} from 'rxjs';
 import {
     concatMap,
-    distinctUntilChanged,
     filter,
     map,
     reduce,
-    switchMap,
-    tap,
-    windowTime,
+    tap, windowCount,
     withLatestFrom
 } from 'rxjs/operators';
 import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
@@ -32,19 +29,29 @@ import {buildFilterSelector} from "@ofSelectors/feed.selectors";
 @Injectable()
 export class FeedFiltersEffects {
 
-    //private elapsedTimeBuffer: number;
+    private followClockTick = false;
+
+    //Constants used by the updateFilterOnClockTick effect if the feed.timeFilter.followClockTick property is set to true
+    private elapsedSoFar = 0;
+    /*The time filter should only be refreshed once the accumulated shift in time is 1m
+    (since the time filter component only displays the time up to minutes)*/
+    private refreshThreshold = 60000;
+
 
     /* istanbul ignore next */
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private service: FilterService) {
+
+        this.store.select(buildConfigSelector('feed.timeFilter.followClockTick')).subscribe(x => this.followClockTick = x);
+
     }
 
     @Effect()
     loadFeedFilterOnAuthenticationSuccess: Observable<Action> = this.actions$
         .pipe(
             // loads card operations only after authentication of a default user ok.
-            tap(v=>console.log("loadFeedFilterOnAuthenticationSuccess: action start", v)),
+            // tap(v=>console.log("loadFeedFilterOnAuthenticationSuccess: action start", v)),
             ofType(AuthenticationActionTypes.AcceptLogIn),
             map((action) => {
                 return new InitFilters({filters:this.service.defaultFilters()});
@@ -72,47 +79,34 @@ export class FeedFiltersEffects {
         );
 
     @Effect()
-    updateFilterOnClockTick: Observable<Action> = this.store.select(buildConfigSelector('feed.timeFilter.followClockTick'))
+    updateFilterOnClockTick: Observable<any> = this.actions$
         .pipe(
-            distinctUntilChanged(),
-            switchMap(followClockTick => {
-                if(followClockTick) {
-                    return this.actions$
-                        .pipe(
-                            ofType<Tick>(TimeActionTypes.Tick),
-                            windowTime(20000),  // add up the elapsed time from each Tick action in local buffer, waiting for next emission
-                            concatMap(tickWindow => tickWindow.pipe(
-                                map(tick => tick.payload.elapsedSinceLast),
-                                reduce((acc, elapsedSinceLast) => acc + elapsedSinceLast))),
-                            withLatestFrom(this.store.select(buildFilterSelector(FilterType.TIME_FILTER))),
-                            filter(([elapsedSinceLast, currentTimeFilter]) => (currentTimeFilter.active && (!!currentTimeFilter.status.start || !!currentTimeFilter.status.end))),
-                            map(([elapsedSinceLast, currentTimeFilter]) => {
-                                const start = currentTimeFilter.status.start == null ? null : currentTimeFilter.status.start + elapsedSinceLast;
-                                const end = currentTimeFilter.status.end == null ? null : currentTimeFilter.status.end + elapsedSinceLast;
-                                return new ApplyFilter({
-                                    name: FilterType.TIME_FILTER,
-                                    active: true,
-                                    status: {
-                                        start: start,
-                                        end: end,
-                                    }
-                                })
-                            }))
+            filter(x => this.followClockTick),
+            ofType<Tick>(TimeActionTypes.Tick),
+            map( tick => {
+                const newElapsedSoFar = this.elapsedSoFar+tick.payload.elapsedSinceLast;
+                if(newElapsedSoFar>=this.refreshThreshold){
+                    this.elapsedSoFar = newElapsedSoFar - this.refreshThreshold;
+                    return this.refreshThreshold;
+                } else {
+                    this.elapsedSoFar = newElapsedSoFar;
+                    return newElapsedSoFar;
                 }
-            })
-        )
-    //DONE Add and manage elapsed time since last heart beat info
-    //DONE Fix existing tests
-    //DONE Get previous filter status to update
-    //DONE Debounce events with a certain delay
-    //TODO Make delay a configurable property
-    //TODO Make sure we're not one elapsedTime short
-    //DONE Only do it if followClockTick property is set to true
-    //TODO Manual tests, including time reference / speed update
-    //TODO Add tests
-    //TODO Update doc & define properties
-    //DONE Test with and without timeline, with and without follow clock tick
-    //TODO Add default value somewhere (config file) if needed (see what happens if no value)
-
-
+            }),
+            filter(time => (time >= this.refreshThreshold)), //Only emit accumulation values that are above the threshold
+            withLatestFrom(this.store.select(buildFilterSelector(FilterType.TIME_FILTER))),
+            filter(([elapsedSinceLast, currentTimeFilter]) => (currentTimeFilter.active && (!!currentTimeFilter.status.start || !!currentTimeFilter.status.end))),
+            //updates should only be sent if the filter is active and if there is something to shift (start or end)
+            map(([elapsedSinceLast, currentTimeFilter]) => {
+                const start = currentTimeFilter.status.start == null ? null : currentTimeFilter.status.start + elapsedSinceLast;
+                const end = currentTimeFilter.status.end == null ? null : currentTimeFilter.status.end + elapsedSinceLast;
+                return new ApplyFilter({
+                    name: FilterType.TIME_FILTER,
+                    active: true,
+                    status: {
+                        start: start,
+                        end: end,
+                    }
+                })
+            }))
 }
