@@ -48,21 +48,21 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
             if (next) {
                 if (this.timeService.parseString(this.timeFilterForm.get('start').value).valueOf() != next.status.start) {
                     if(!!next.status.start)
-                        this.timeFilterForm.get('start').setValue(this.timeService.asInputString(next.status.start));
+                        this.timeFilterForm.get('start').setValue(this.timeService.asInputString(next.status.start), {emitEvent: false});
                     else
-                        this.timeFilterForm.get('start').setValue(null);
+                        this.timeFilterForm.get('start').setValue(null, {emitEvent: false});
                 }
                 if (this.timeService.parseString(this.timeFilterForm.get('end').value).valueOf() != next.status.end) {
                     if(!!next.status.end)
-                        this.timeFilterForm.get('end').setValue(this.timeService.asInputString(next.status.end));
+                        this.timeFilterForm.get('end').setValue(this.timeService.asInputString(next.status.end), {emitEvent: false});
                     else
-                        this.timeFilterForm.get('end').setValue(null);
+                        this.timeFilterForm.get('end').setValue(null, {emitEvent: false});
                 }
             } else {
                 if (!!this.timeFilterForm.get('start').value)
-                    this.timeFilterForm.get('start').setValue(null);
+                    this.timeFilterForm.get('start').setValue(null, {emitEvent: false});
                 if (!!this.timeFilterForm.get('end').value)
-                    this.timeFilterForm.get('end').setValue(null);
+                    this.timeFilterForm.get('end').setValue(null, {emitEvent: false});
             }
         });
         this._filter$.pipe(first(), takeUntil(this.ngUnsubscribe$)).subscribe(() => {

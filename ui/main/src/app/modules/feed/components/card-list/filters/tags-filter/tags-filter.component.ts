@@ -37,9 +37,9 @@ export class TagsFilterComponent implements OnInit, OnDestroy {
         this._filter$ = this.store.select(buildFilterSelector(FilterType.TAG_FILTER));
         this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
             if (next) {
-                this.tagFilterForm.get('tags').setValue(next.active?next.status.tags:[]);
+                this.tagFilterForm.get('tags').setValue(next.active?next.status.tags:[], {emitEvent: false});
             } else {
-                this.tagFilterForm.get('tags').setValue([]);
+                this.tagFilterForm.get('tags').setValue([], {emitEvent: false});
             }
         });
         this._filter$.pipe(first(),takeUntil(this.ngUnsubscribe$)).subscribe(()=>{
