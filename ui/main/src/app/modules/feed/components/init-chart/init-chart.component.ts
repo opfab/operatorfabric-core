@@ -40,7 +40,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
   private continuousForward: number;
 
   // buttons
-  public forwardButtonType: string;
+  public forwardConf: any; // could make interface
+  public ticksConf: any; // could make interface
+  public buttonTitle: string;
   public zoomButtonsActive: boolean;
   public buttonHome: number[];
   public buttonHomeActive: boolean;
@@ -54,7 +56,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.buttonList = undefined;
     this.buttonListWidth = 0;
     this.zoomButtonsActive = false;
-    this.forwardButtonType = undefined;
+    this.buttonTitle = undefined;
+    this.forwardConf = undefined;
+    this.ticksConf = undefined;
     this.realCaseActivate = true;
     this.continuousForward = 0;
 
@@ -258,7 +262,23 @@ export class InitChartComponent implements OnInit, OnDestroy {
       }
     } else {
       // Default domain set (week)
-      this.forwardButtonType = 'W';
+      this.buttonTitle = 'W';
+      this.forwardConf = {
+        year: 0,
+        month: 0,
+        week: 1,
+        day: 0,
+        hour: 0,
+        seconde: 0,
+      };
+      this.ticksConf = {
+        year: 0,
+        month: 0,
+        week: 0,
+        day: 0,
+        hour: 4,
+        seconde: 0,
+      };
       this.zoomButtonsActive = true;
       const startDomain = moment();
       startDomain.startOf('week');
@@ -289,12 +309,18 @@ export class InitChartComponent implements OnInit, OnDestroy {
       this.realCaseActivate = true;
       this.continuousForward = 0;
       this.setStartAndEndDomain(conf.startDomain, conf.endDomain);
-      if (conf.forwardLevel) {
-        this.forwardButtonType = conf.forwardLevel;
+      if (conf.buttonTitle) {
+        this.buttonTitle = conf.buttonTitle;
+      }
+      if (conf.forwardConf) {
+        this.forwardConf = _.cloneDeep(conf.forwardConf);
+      }
+      if (conf.ticksConf) {
+        this.ticksConf = _.cloneDeep(conf.ticksConf);
       }
       this.buttonHome = [conf.startDomain, conf.endDomain];
       this.buttonList.forEach(button => {
-        if (button.forwardLevel === conf.forwardLevel) {
+        if (button.buttonTitle === conf.buttonTitle) {
           button.selected = true;
         } else {
           button.selected = false;
@@ -315,7 +341,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
       const reverseButtonList = _.cloneDeep(this.buttonList);
       reverseButtonList.reverse();
       for (let i = 0; i < reverseButtonList.length; i++) {
-        if (reverseButtonList[i].forwardLevel === this.forwardButtonType) {
+        if (reverseButtonList[i].buttonTitle === this.buttonTitle) {
           if (i + 1 === reverseButtonList.length) {
             return;
           } else {
@@ -326,7 +352,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
       }
     } else if (direction === 'out') {
       for (let i = 0; i < this.buttonList.length; i++) {
-        if (this.buttonList[i].forwardLevel === this.forwardButtonType) {
+        if (this.buttonList[i].buttonTitle === this.buttonTitle) {
           if (i + 1 === this.buttonList.length) {
             return;
           } else {
@@ -369,48 +395,34 @@ export class InitChartComponent implements OnInit, OnDestroy {
 
   /**
    * select the movement apply on domain
-   * only three set : Week, Month , Year
+   * only four set : Day, Week, Month , Year
    * @param moveForward
    */
   moveDomain(moveForward: boolean): void {
-    switch (this.forwardButtonType) {
-      case 'W':
-        this.moveDomainByWeek(moveForward);
-        break;
-      case '7D':
-        this.moveDomainByDay(moveForward);
-        break;
-      case 'M':
-        this.moveDomainByMonthOrYear(moveForward, 'months');
-        break;
-      case 'Y':
-        this.moveDomainByMonthOrYear(moveForward, 'years');
-        break;
-    }
+    Object.keys(this.forwardConf).forEach(key => {
+      if (this.forwardConf[key] > 0) {
+        this.moveDomainByUnit(moveForward, key, this.forwardConf[key]);
+      }
+    });
+    // switch (this.forwardButtonType) {
+    //   case 'W':
+    //     this.moveDomainByUnit(moveForward, 'weeks');
+    //     break;
+    //   case 'D':
+    //     this.moveDomainByUnit(moveForward, 'days');
+    //     break;
+    //   case '7D': // become D by changing moveDomainByDay function
+    //     this.moveDomainBy7Day(moveForward);
+    //     break;
+    //   case 'M':
+    //     this.moveDomainByUnit(moveForward, 'months');
+    //     break;
+    //   case 'Y':
+    //     this.moveDomainByUnit(moveForward, 'years');
+    //     break;
+    // }
   }
 
-  /**
-   * define the actual week
-   * move 7 days before or after the week selected
-   * @param forward
-   */
-  moveDomainByWeek(forward: boolean): void {
-    const startDomain = moment(this.myDomain[0]);
-    startDomain.startOf('week');
-    if (this.realCaseActivate) {
-      this.realCaseActivate = false;
-    }
-    const endDomain = moment(startDomain);
-    endDomain.add(7, 'days');
-    if (forward) {
-      startDomain.add(7, 'days');
-      endDomain.add(7, 'days');
-    } else {
-      startDomain.subtract(7, 'days');
-      endDomain.subtract(7, 'days');
-    }
-    this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
-  }
 
  /**
    * define the actual week
@@ -418,7 +430,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * or move 1 day backward the week selected
    * @param forward
    */
-  moveDomainByDay(forward: boolean): void {
+  moveDomainBy7Day(forward: boolean): void {
    const startDomain = moment(this.myDomain[0]);
    if (this.realCaseActivate) {
      startDomain.hours(0);
@@ -437,25 +449,31 @@ export class InitChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * define the actual unit received
-   * move 1 unit before or after the unit selected
-   * example of unit : months, years...
+   * define the actual domain received
+   * move domain 1 unit before or after the unit selected
+   * example of unit : days, weeks, months, years...
    * @param forward
+   * @param unit unit of time
+   * @param ops number of unit
    */
-  moveDomainByMonthOrYear(forward: boolean, unit): void {
-    const prevStartDomain = moment(this.myDomain[0]);
-    const startDomain = _.cloneDeep(prevStartDomain);
-    // For the first step, set to start of the month
+  moveDomainByUnit(forward: boolean, unit, ope: number): void {
+    const startDomain = moment(this.myDomain[0]);
+    const endDomain = moment(this.myDomain[1]);
+    let realCaseSpe = 0;
+
+    // For the first step, set to start of the unit
     if (this.realCaseActivate) {
       startDomain.startOf(unit).hours(0);
+      endDomain.startOf(unit).hours(0);
+      realCaseSpe = 1;
       this.realCaseActivate = false;
     }
-    const endDomain = _.cloneDeep(startDomain);
     if (forward) {
-      startDomain.add(1, unit);
-      endDomain.add(2, unit);
+      startDomain.add(ope, unit);
+      endDomain.add(ope - realCaseSpe, unit);
     } else {
-      startDomain.subtract(1, unit);
+      startDomain.subtract(ope, unit);
+      endDomain.subtract(ope + realCaseSpe, unit);
     }
     this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
   }

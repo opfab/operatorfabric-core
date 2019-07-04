@@ -149,6 +149,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   get myData() {
     return this._myData;
   }
+
+  // formatting and ticks spacing
+  @Input() clusterLevel;
+
   // Axis
   @Input() xAxis;
   @Input() yAxis;
@@ -186,11 +190,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   // TICKS
   @Input() centeredOnTicks;
   @Input() clusterTicksToTicks;
-  @Input() clusterLevel;
   public xTicks: Array<any>;
   public xTicksOne: Array<any>;
   public xTicksTwo: Array<any>;
   public yTicks: Array<any>;
+  public formatLevel: string;
 
   // Zoom (manage home btn when domain change inside this component)
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
@@ -238,7 +242,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
     // set inside ngx-charts library verticalSpacing variable to 10
     // Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
       this.xTicksOne.push(moment(i));
       this.xTicksTwo.push(moment(i));
     }
@@ -461,7 +465,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   fctTickFormatting = (e): string => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    return formatPipe.transform(e, this.clusterLevel);
+    return formatPipe.transform(e, this.formatLevel);
   }
 
   /**
@@ -470,10 +474,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   fctTickFormattingAdvanced = (e): string => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    if (this.clusterLevel === 'W' || this.clusterLevel === '7D') {
-      return formatPipe.transformAdvanced(e, this.clusterLevel);
+    if (this.formatLevel === 'D') {
+      return formatPipe.transformAdvanced(e, this.formatLevel);
     }
-    return formatPipe.transform(e, this.clusterLevel);
+    return formatPipe.transform(e, this.formatLevel);
   }
 
   /**
@@ -481,8 +485,23 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   fctHoveredCircleDateFormatting(e): string {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    return formatPipe.transformHovered(e, this.clusterLevel);
+    return formatPipe.transformHovered(e, this.formatLevel);
   }
+
+  /**
+   * define for a day the number and the value of ticks on xAxis
+   * from start of domain place a tick all the hours
+   */
+  dayTicks(domain): void {
+    const startDomain = moment(domain[0]);
+    let nextDay = moment(startDomain);
+    for (let i = 0; nextDay.valueOf() < domain[1]; i++) {
+      nextDay = moment(startDomain);
+      nextDay.add((i), 'hours');
+      this.xTicks.push(nextDay);
+    }
+  }
+
 
   /**
    * define for a week until 2 weeks the number and the value of ticks on xAxis
@@ -512,6 +531,22 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
   }
 
+  /**
+   * define for a month until 2 months the number and the value of ticks on xAxis
+   * from start of domain place a tick all the day
+   */
+  unitTicks(domain, unit, ops: number): void {
+    const startDomain = moment(domain[0]);
+    let nextWeek = moment(startDomain);
+    let previousMoment = moment(nextWeek);
+    this.xTicks.push(nextWeek);
+    for (let i = 0; nextWeek.valueOf() < domain[1]; i++) {
+      nextWeek = moment(previousMoment);
+      nextWeek.add((ops), unit);
+      previousMoment = moment(nextWeek);
+      this.xTicks.push(nextWeek);
+    }
+  }
 
   /**
    * define for a year until 2 years the number and the value of ticks on xAxis
@@ -545,23 +580,39 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * @param domain
    */
   setXTicksValue(domain): void { // add width and make différent treatment (responsive)
-    switch (this.clusterLevel) {
-      case 'W': case '7D': {
-        this.weekTicks(domain);
-        break;
-      }
-      case 'M': {
-        this.monthTicks(domain);
-        break;
-      }
-      case 'Y': {
+    Object.keys(this.clusterLevel).forEach(key => {
+      if (key === 'date') {
         this.yearTicks(domain);
-        break;
+      } else if (this.clusterLevel[key] > 0) {
+        this.unitTicks(domain, key, this.clusterLevel[key]);
       }
-      default : {
-        break;
-      }
-    }
+    });
+    // switch (this.formatLevel) {
+    //   case 'D': {
+    //     this.dayTicks(domain);
+    //     break;
+    //   }
+    //   case 'W': case '7D': {
+    //     this.weekTicks(domain);
+    //     break;
+    //   }
+    //   case 'M': {
+    //     this.monthTicks(domain);
+    //     break;
+    //   }
+    //   case 'Y': {
+    //     this.yearTicks(domain);
+    //     break;
+    //   }
+    //   default : {
+    //     break;
+    //   }
+    // }
+    // if (this.xTicks.length > 90) {
+    //   console.log('special case cause of 7D cant use normal ticks of cluster level D');
+    //   this.xTicks = [];
+    //   this.weekTicks(domain);
+    // }
   }
 
   /**
@@ -742,16 +793,35 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * @param domain
    */
   setTicksAndClusterize(domain): void {
+    Object.keys(this.clusterLevel).forEach(key => {
+      if (key === 'date') {
+        this.formatLevel = 'Y';
+      } else if (this.clusterLevel[key] > 0) {
+        switch (key) {
+          case 'day': {
+            this.formatLevel = 'M';
+            break;
+          }
+          case 'hour': {
+            this.formatLevel = 'D';
+            break;
+          }
+        }
+      }
+    });
     this.setXTicksValue(domain);
+    console.log('xticks after set = ', this.xTicks);
     this.xTicksOne = [];
     this.xTicksTwo = [];
-    if (this.clusterLevel === 'W' || this.clusterLevel === '7D') {
+    if (this.formatLevel === 'D') {
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(4);
     } else {
+      console.log('uie');
       this.xTicksOne = this.multiHorizontalTicksLine(1);
       this.xTicksTwo = this.multiHorizontalTicksLine(2);
     }
+    console.log('xticksONE & TWO  = ', this.xTicksOne, this.xTicksTwo);
     this.clusterize(domain);
   }
 

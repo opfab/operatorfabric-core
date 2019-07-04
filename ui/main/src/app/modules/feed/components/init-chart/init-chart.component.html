@@ -12,7 +12,7 @@
         </li>
         <li *ngFor="let button of buttonList">
           <button [ngClass]="button.selected ? 'btn-selected' : 'btn-unselect'" (click)="changeGraphConf(button)">
-            {{button.forwardLevel}}
+            {{button.buttonTitle}}
           </button>
         </li>
         <li style="margin-left: 1rem">
@@ -54,7 +54,7 @@
                              [zoomOnButton]="true"
                              [enableDrag]="enableDrag"
                              [realTimeBar]="realTimeBar"
-                             [clusterLevel]="forwardButtonType"
+                             [clusterLevel]="ticksConf"
                              [centeredOnTicks]="centeredOnTicks"
                              [clusterTicksToTicks]="clusterTicksToTicks"
                              [circleDiameter]="circleDiameter"
