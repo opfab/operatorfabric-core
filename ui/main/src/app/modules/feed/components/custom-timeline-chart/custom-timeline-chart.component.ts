@@ -16,6 +16,7 @@ import {BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensi
 import * as moment from 'moment';
 import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
 import {TimeService} from "@ofServices/time.service";
+import {dom} from "@fortawesome/fontawesome-svg-core";
 
 @Component({
   selector: 'of-custom-timeline-chart',
@@ -535,16 +536,35 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * define for a month until 2 months the number and the value of ticks on xAxis
    * from start of domain place a tick all the day
    */
+  dateTicks(domain, ops: Array<number>): void {
+    const startDomain = moment(domain[0]);
+    this.xTicks.push(startDomain);
+    let nextMonth = moment(startDomain);
+    while (nextMonth.valueOf() < domain[1]) {
+      ops.forEach(op => {
+        const tmp = moment(nextMonth);
+        tmp.date(op);
+        if (tmp.valueOf() > domain[0]) {
+          this.xTicks.push(tmp);
+        }
+      });
+      nextMonth.add(1, 'month');
+    }
+    this.xTicks.push(moment(domain[1]));
+  }
+
+  /**
+   * define for a month until 2 months the number and the value of ticks on xAxis
+   * from start of domain place a tick all the day
+   */
   unitTicks(domain, unit, ops: number): void {
     const startDomain = moment(domain[0]);
-    let nextWeek = moment(startDomain);
-    let previousMoment = moment(nextWeek);
-    this.xTicks.push(nextWeek);
-    for (let i = 0; nextWeek.valueOf() < domain[1]; i++) {
-      nextWeek = moment(previousMoment);
-      nextWeek.add((ops), unit);
-      previousMoment = moment(nextWeek);
-      this.xTicks.push(nextWeek);
+    this.xTicks.push(startDomain);
+    let nextUnit = moment(startDomain);
+    while (nextUnit.valueOf() < domain[1]) {
+      nextUnit.add((ops), unit);
+      const tmp = moment(nextUnit);
+      this.xTicks.push(tmp);
     }
   }
 
@@ -582,7 +602,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   setXTicksValue(domain): void { // add width and make différent treatment (responsive)
     Object.keys(this.clusterLevel).forEach(key => {
       if (key === 'date') {
-        this.yearTicks(domain);
+        this.dateTicks(domain, this.clusterLevel[key]);
+        // this.yearTicks(domain);
       } else if (this.clusterLevel[key] > 0) {
         this.unitTicks(domain, key, this.clusterLevel[key]);
       }

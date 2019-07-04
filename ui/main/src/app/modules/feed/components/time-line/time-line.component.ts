@@ -36,20 +36,69 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
             }});
 
-        //
-        let result = this.periodStartToEnd('W', 1, true);
+        // DOMAIN CONF from moment() to our conf
+
+        const domainYearConf = {
+            year: 2,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            seconde: 0,
+            startOf: ['year'],
+        };
+
+        const domainMonthConf = {
+            year: 0,
+            month: 2,
+            week: 0,
+            day: 0,
+            hour: 0,
+            seconde: 0,
+            startOf: ['month'],
+        };
+
+        const domainWeekConf = {
+            year: 0,
+            month: 0,
+            week: 2,
+            day: 0,
+            hour: 0,
+            seconde: 0,
+            startOf: ['week'],
+        };
+
+        const domain7DayConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 8,
+            hour: 0,
+            seconde: 0,
+        };
+
+        const domainDayConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 1,
+            hour: 0,
+            seconde: 0,
+        };
+
+        let result = this.periodStartToEnd(domainWeekConf, 'W', true);
         const startDomain = result[0];
         const endDomain = result[1];
-        result = this.periodStartToEnd('M', 1, true);
+        result = this.periodStartToEnd(domainMonthConf, 'M', true);
         const startDomain2 = result[0];
         const endDomain2 = result[1];
-        result = this.periodStartToEnd('Y', 1, true);
+        result = this.periodStartToEnd(domainYearConf, 'Y', true);
         const startDomain3 = result[0];
         const endDomain3 = result[1];
-        result = this.periodStartToEnd('7D', 7, true);
+        result = this.periodStartToEnd(domain7DayConf, '7D', true);
         const startDomain4 = result[0];
         const endDomain4 = result[1];
-        result = this.periodStartToEnd('D', 7, false);
+        result = this.periodStartToEnd(domainDayConf, 'D', false);
         const startDomain5 = result[0];
         const endDomain5 = result[1];
 
@@ -127,7 +176,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 0,
             hour: 0,
             seconde: 0,
-            date: [1, 15],
+            date: [1, 16],
         };
 
         this.conf = {
@@ -238,51 +287,76 @@ export class TimeLineComponent implements OnInit, OnDestroy {
      * @param level
      * @param spaceBeforeMoment
      */
-    periodStartToEnd(level: string, number: number, spaceBeforeMoment: boolean): [moment.Moment, moment.Moment] {
+    periodStartToEnd(conf, level: string, spaceBeforeMoment: boolean): [moment.Moment, moment.Moment] {
         let tmpMoment = moment();
         if (spaceBeforeMoment) {
             tmpMoment = this.dateWithSpaceBeforeMoment(moment(tmpMoment), level);
         }
         const startDomain = tmpMoment;
         const endDomain = _.cloneDeep(startDomain);
+        Object.keys(conf).forEach(key => {
+            if (key === 'startOf') {
+                conf[key].forEach(value => {
+                    endDomain.startOf(value);
+                });
+            } else if (conf[key] > 0) {
+                endDomain.add(conf[key], key);
+                endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
+            }
+        });
+        // if (spaceBeforeMoment) {
+        //     tmpMoment = this.dateWithSpaceBeforeMoment(moment(tmpMoment), level);
+        // }
 
-        switch (level) {
-            case 'D': {
-                // conf 5 === end of the actual day + 1 day
-                endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
-                endDomain.startOf('day');
-                endDomain.add(1 + number, 'days');
-                break;
-            }
-            case 'W': {
-                // conf 1 === end of the actual week + next week
-                endDomain.add(1 + number, 'weeks');
-                endDomain.startOf('week');
-                endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
-                break;
-            }
-            case '7D': {
-                // conf 4 === end of the actual day + 7 days
-                endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
-                endDomain.add(1 + number, 'days');
-                break;
-            }
-            case 'M': {
-                // conf 2 === actual month + next month
-                endDomain.add(1 + number, 'months');
-                endDomain.startOf('month');
-                break;
-            }
-            case 'Y': {
-                // conf 3 === from start of actual month to end of the year + 1 year
-                endDomain.add(1 + number, 'years');
-                endDomain.startOf('year'); // Voir avec Guillaume
-                break;
-            }
-            default: {
-                return [moment(), moment()];
-            }
-        }
+        // switch (level) {
+        //     case 'D': {
+        //         // conf 5 === end of the actual day + 1 day
+        //         endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
+        //         endDomain.startOf('day');
+        //         endDomain.add(1 + number, 'days');
+        //         break;
+        //     }
+        //     case 'W': {
+        //         // conf 1 === end of the actual week + next week
+        //         endDomain.add(1 + number, 'weeks');
+        //         endDomain.startOf('week');
+        //         endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
+        //         break;
+        //     }
+        //     case '7D': {
+        //         // tes(0).seconds(0).millisecond(0);
+        //         endDomain.startOf('day');
+        //         endDomain.add(1 + number, 'days');
+        //         break;
+        //     }
+        //     case 'W': {
+        //         // conf 1 === end of the actual week + next week
+        //         endDomain.add(1 + number, 'weeks');
+        //         endDomain.startOf('week');
+        //         endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
+        //         break;
+        //     }
+        //     case '7conf 4 === end of the actual day + 7 days
+        //         endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
+        //         endDomain.add(1 + number, 'days');
+        //         break;
+        //     }
+        //     case 'M': {
+        //         // conf 2 === actual month + next month
+        //         endDomain.add(1 + number, 'months');
+        //         endDomain.startOf('month');
+        //         break;
+        //     }
+        //     case 'Y': {
+        //         // conf 3 === from start of actual month to end of the year + 1 year
+        //         endDomain.add(1 + number, 'years');
+        //         endDomain.startOf('year'); // Voir avec Guillaume
+        //         break;
+        //     }
+        //     default: {
+        //         return [moment(), moment()];
+        //     }
+        // }
         return [startDomain, endDomain];
     }
 
