@@ -182,7 +182,7 @@ class GivenAdminUserThirdControllerShould {
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.testAction.type", is("URI")))
+                .andExpect(jsonPath("$.testAction.type", is("URL")))
         ;
     }
 

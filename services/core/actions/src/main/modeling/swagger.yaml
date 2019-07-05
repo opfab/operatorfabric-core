@@ -50,7 +50,7 @@ paths:
           schema:
             type: object
             additionalProperties:
-              $ref: '#/definitions/Action'
+              $ref: '#/definitions/ActionStatus'
         '404':
           description: No such Process, State or Action
         '401':
@@ -61,7 +61,7 @@ paths:
       summary: Post action associated to process
       description: >-
         Post action associated with process and state return action with updated status
-      operationId: getAction
+      operationId: triggerAction
       produces:
       - application/json
       parameters:
@@ -86,7 +86,7 @@ paths:
           schema:
             type: object
             additionalProperties:
-              $ref: '#/definitions/Action'
+              $ref: '#/definitions/ActionStatus'
         '404':
           description: No such Process, State or Action
         '401':
@@ -99,13 +99,13 @@ definitions:
     description: |-
       Action type >
       * INTERNAL - Internal OperatorFabric action
-      * URI - Uri based action
+      * URL - Uri based action
       * JNLP - Uri based jnlp action
     enum:
       - INTERNAL
-      - URI
+      - URL
       - JNLP
-    example: URI
+    example: URL
   InputEnum:
     type: string
     description: |-
@@ -144,14 +144,16 @@ definitions:
       parameters:
         EN: My Title
         FR: Mon Titre
-        
   Action:
-    description: defines an actions on the business process associated to the card
+    description: defines an action on the business process associated to the card
     type: object
     properties:
       type:
         description: Action type
         $ref: '#/definitions/ActionEnum'
+      url:
+        description: Url of remtote service entry point
+        type: string
       lockAction:
         type: boolean
         default: false
@@ -202,10 +204,113 @@ definitions:
         items:
           $ref: '#/definitions/Input'
     required:
+    - type
+    - label
+    example:
+      type: URL
+      lockAction: true
+      lockCard: true
+      needsConfirm: false
+      called: false
+      updateState: false
+      updateStateBeforeAction: false
+      hidden: true
+      contentStyle: buttonContentClass
+      buttonStyle: buttonClass
+      label:
+        key: myCard.myAction.label
+        parameters:
+          EN: Choose colour
+          FR: Choisir une couleur
+      inputs:
+      - type: LIST
+        label:
+          key: myCard.myAction.myInput1.label
+          parameters:
+            EN: Colours
+            FR: Couleurs
+        mandatory: true
+        name: selectedColour
+        value:
+          value: '#000000'
+          label:
+            key: black
+            parameters:
+              EN: Paint It Black
+              FR: Broyer du noir
+        values:
+        - value: '#000000'
+          label:
+            key: black
+            parameters:
+              EN: Paint It Black
+              FR: Broyer du noir
+        - value: '#51CE1E'
+          label:
+            key: green
+            parameters:
+              EN: Go Green
+              FR: Se mettre au vert
+      - type: LONGTEXT
+        label:
+          key: myCard.myAction.myInput2.label
+          parameters:
+            EN: Comment
+            FR: Commentaire
+        mandatory: false
+        name: comment
+        value: ''
+        maxLength: 250
+        rows: 10
+  ActionStatus:
+    description: a refined view of an action to update its client side behavior
+    type: object
+    properties:
+      lockAction:
+        type: boolean
+        default: false
+        description: 'if true, action will be locked after clicked client-side'
+      lockCard:
+        type: boolean
+        default: false
+        description: 'if true, all card action will be locked after clicked client-side'
+      needsConfirm:
+        type: boolean
+        default: false
+        description: 'if true, a confirmation will be asked before execution client-side'
+      updateState:
+        type: boolean
+        default: false
+        description: >-
+          If true, client will attempt an update of ActionStatus before
+          rendering
+      updateStateBeforeAction:
+        type: boolean
+        default: false
+        description: >-
+          if true, client will attempt an update of ActionStatus before
+          execution
+      contentStyle:
+        type: string
+        description: css classes of action button content (a &lt;i&gt; tag)
+      buttonStyle:
+        type: string
+        description: css classes of action button
+      label:
+        description: 'button default label, appears as a tooltip'
+        $ref: '#/definitions/I18n'
+      inputs:
+        description: >-
+          list of action input parameters, generate a popup form upon action
+          call
+        type: array
+        items:
+          $ref: '#/definitions/Input'
+    required:
       - type
       - label
     example:
-      type: URI
+      type: URL
       lockAction: true
       lockCard: true
       needsConfirm: false
@@ -260,6 +365,7 @@ definitions:
           value: ''
           maxLength: 250
           rows: 10
+          
           
   Input:
     description: Describe an input parameter for an Action

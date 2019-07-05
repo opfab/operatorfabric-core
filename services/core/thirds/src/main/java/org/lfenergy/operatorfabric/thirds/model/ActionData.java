@@ -28,6 +28,7 @@ import java.util.List;
 public class ActionData implements Action {
     @NotNull
     private ActionEnum type;
+    private String url;
     @NotNull
     private I18n label;
     @Singular  private List<? extends Input> inputs;

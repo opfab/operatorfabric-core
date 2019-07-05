@@ -21,6 +21,6 @@ package org.lfenergy.operatorfabric.thirds.model;
 public enum ActionEnum {
   EXTERNAL,
   JNLP,
-  URI
+  URL
 }
 

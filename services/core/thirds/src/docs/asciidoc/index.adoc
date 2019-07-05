@@ -16,10 +16,14 @@
 :icons: font
 :hide-uri-scheme:
 
-Third service is used by third parties to customize some parts of OperatorFabric to fit their needs. There are two possibilities of customization:
+Third service is used by third party service to customize some parts of OperatorFabric to fit their needs.
+It allows to refine Operator Fabric behavior regarding:
 
-- add to OperatorFabric some entries in the main menu to access external services provided by third parties;
-- the way card details are displayed.
+* Published card details rendering
+* Card available actions and rendering
+* I18n resources for card rendering
+* Additional menu entries
+* Notification sound (not yet implemented)
 
 include::00_customization_example.adoc[]
 

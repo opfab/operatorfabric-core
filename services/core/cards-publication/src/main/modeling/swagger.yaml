@@ -100,13 +100,13 @@ definitions:
     description: |-
       Action type >
       * INTERNAL - Internal OperatorFabric action
-      * URI - Uri based action
+      * URL - Uri based action
       * JNLP - Uri based jnlp action
     enum:
       - INTERNAL
-      - URI
+      - URL
       - JNLP
-    example: URI
+    example: URL
   TitlePositionEnum:
     type: string
     description: |-
@@ -621,7 +621,7 @@ definitions:
         - MyProcess
         - ACTION
       actions:
-        - type: URI
+        - type: URL
           lockAction: true
           lockCard: true
           needsConfirm: false

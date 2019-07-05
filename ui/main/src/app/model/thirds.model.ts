@@ -69,7 +69,7 @@ export class State{
 export enum ActionType {
     EXTERNAL,
     JNLP,
-    URI
+    URL
 
 }
 

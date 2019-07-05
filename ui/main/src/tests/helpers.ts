@@ -147,10 +147,10 @@ export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
 
 export function getRandomActions() {
     let actions:OfMap<Action> = new OfMap();
-    actions['visible1']=new Action(ActionType.URI, getRandomI18nData());
-    actions['visible2']=new Action(ActionType.URI, getRandomI18nData());
-    actions['hidden1']= new Action(ActionType.URI, getRandomI18nData(), true, 'buttonStyle', 'contentStyle');
-    actions['hidden2']= new Action(ActionType.URI, getRandomI18nData(), true);
+    actions['visible1']=new Action(ActionType.URL, getRandomI18nData());
+    actions['visible2']=new Action(ActionType.URL, getRandomI18nData());
+    actions['hidden1']= new Action(ActionType.URL, getRandomI18nData(), true, 'buttonStyle', 'contentStyle');
+    actions['hidden2']= new Action(ActionType.URL, getRandomI18nData(), true);
     return actions;
 }
 

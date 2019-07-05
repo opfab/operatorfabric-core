@@ -34,7 +34,7 @@
           ],
           "actions": {
             "testAction": {
-              "type": "URI",
+              "type": "URL",
               "label": {
                 "key": "my.card.my.action.label"
               }
