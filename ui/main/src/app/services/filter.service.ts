@@ -45,7 +45,7 @@ export class FilterService {
                 alarm: true,
                 action: true,
                 question: true,
-                notification: false
+                notification: true
             }
         );
     }
