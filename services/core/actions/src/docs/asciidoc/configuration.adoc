@@ -4,9 +4,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Cards-Consultation Business service
+= Actions Business service
 
-Operator Fabric Cards-Consultation Business service is a Spring Webflux application
+Operator Fabric Actions Business service is a Spring Webflux application
 bootstrapped using SpringBoot.
 
 In our spring micro service architecture this service depends on Eureka
@@ -14,7 +14,7 @@ Registry.
 
 == Mandatory configuration, Profiles and default properties
 
-The service has no mandatory configuration besside global configuration and
+The service has no mandatory configuration beside global configuration and
 usual bootstrap configuration.
 
 For other configuration see:
@@ -60,13 +60,13 @@ The above embedded configurations are the basic settings of the application:
 === Sample developpement configuration
 
 ```
-include::../../../../../infra/config/src/main/docker/volume/dev-configurations/cards-Consultation.yml[]
+include::../../../../../infra/config/src/main/docker/volume/dev-configurations/actions.yml[]
 ```
 
 === Sample docker image configuration
 
 ```
-include::../../../../../infra/config/src/main/docker/volume/docker-configurations/cards-Consultation.yml[]
+include::../../../../../infra/config/src/main/docker/volume/docker-configurations/actions.yml[]
 ```
 
 == Specifying external configuration properties when lauching a jar file
@@ -83,7 +83,7 @@ Our docker image expects optional property file to be stored in the container
 /service-config folder. You can bind so docker volume to this path to make
 properties or yml available.
 
-At time of writing, you cannot specify an alternate profile at runCards-Consultation.
+At time of writing, you cannot specify an alternate profile at runActions.
 The default profiles activated are docker and native.
 
 === Available environment variables for docker image

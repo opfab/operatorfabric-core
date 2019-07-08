@@ -4,10 +4,11 @@
 * 0.2.1.RELEASE
 * 0.3.1.RELEASE
 * 0.4.1.RELEASE
-* 0.5.1.SNAPSHOT
+* 0.5.1.RELEASE
 ## Snapshot
+* 0.5.1.SNAPSHOT
 ## Short cuts
-* snaphot -> 0.5.1.SNAPSHOT
+* snapshot -> 0.5.1.SNAPSHOT
 * latest -> 0.5.1.RELEASE
 # References
 * **[Operator Fabric Website](https://opfab.github.io/)**

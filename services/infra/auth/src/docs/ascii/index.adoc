@@ -6,7 +6,7 @@
 
 = OperatorFabric Authentication Service
 David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: 0.5.1.SNAPSHOT
+:revnumber: 0.5.1.RELEASE
 :revdate: July 8, 2019
 :imagesdir: images
 :sectnums:
@@ -28,7 +28,7 @@ This section is useful along the following of cookbook of others services
 such as Users or Card consultation.
 
 For the examples in this section, the user existing in the data are the one 
-created for the developper profile of compilation.
+created for the developer profile of compilation.
 The existing users of an OperatorFabric running solution are defined in the 
 following file:
 `$OPERATORFABRIC_CORE_HOME/services/infra/auth/src/main/java/org/lfenergy/operat

@@ -105,25 +105,26 @@ public class CardPublicationData implements Card {
     }
 
     public LightCardPublicationData toLightCard() {
-        return LightCardPublicationData.builder()
-            .id(this.getId())
-            .uid(this.getUid())
-            .publisher(this.getPublisher())
-            .publisherVersion(this.getPublisherVersion())
-            .process(this.getProcess())
-            .processId(this.getProcessId())
-            .state(this.getState())
-            .lttd(this.getLttd())
-            .startDate(this.getStartDate())
-            .endDate(this.getEndDate())
-            .publishDate(this.getPublishDate())
-            .severity(this.getSeverity())
-            .media(this.getMedia())
-            .tags(this.getTags())
-            .mainRecipient(this.getMainRecipient())
-            .title(((I18nPublicationData) this.getTitle()).copy())
-            .summary(((I18nPublicationData) this.getSummary()).copy())
-                .timeSpansSet(new HashSet(this.getTimeSpans()))
-            .build();
+        LightCardPublicationData.LightCardPublicationDataBuilder result = LightCardPublicationData.builder()
+                .id(this.getId())
+                .uid(this.getUid())
+                .publisher(this.getPublisher())
+                .publisherVersion(this.getPublisherVersion())
+                .process(this.getProcess())
+                .processId(this.getProcessId())
+                .state(this.getState())
+                .lttd(this.getLttd())
+                .startDate(this.getStartDate())
+                .endDate(this.getEndDate())
+                .publishDate(this.getPublishDate())
+                .severity(this.getSeverity())
+                .media(this.getMedia())
+                .tags(this.getTags())
+                .mainRecipient(this.getMainRecipient())
+                .title(((I18nPublicationData) this.getTitle()).copy())
+                .summary(((I18nPublicationData) this.getSummary()).copy());;
+        if(this.getTimeSpans()!=null)
+            result.timeSpansSet(new HashSet(this.getTimeSpans()));
+        return result.build();
     }
 }

@@ -54,7 +54,8 @@ describe('AuthenticationEffects', () => {
                 'extractIdentificationInformation',
                 'askTokenFromPassword',
                 'checkAuthentication',
-                'askTokenFromCode'
+                'askTokenFromCode',
+                'loadUserData'
             ]);
         const cardServiceSpy = createSpyObj('CardService'
             , ['unsubscribeCardOperation']);
@@ -152,6 +153,7 @@ describe('AuthenticationEffects', () => {
                 new CheckTokenResponse('johndoe', 123, Guid.create().toString())
             ));
             mockStore.select.and.returnValue(of(null));
+            authenticationService.loadUserData.and.callFake(auth=>of(auth));
             effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
