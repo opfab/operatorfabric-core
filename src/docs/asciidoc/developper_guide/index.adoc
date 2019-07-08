@@ -4,15 +4,19 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Client Gateway Service Reference Documentation
-David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-0.5.1.SNAPSHOT, April 15, 2019
+= OperatorFabric Developper Guide
+:author: David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
+:revnumber: 0.5.1.SNAPSHOT
+:revdate: April 15, 2019
 :imagesdir: images
 :sectnums:
 :toc: left
-:toclevels: 2
-:toc-title: Architecture
+:toclevels: 3
+:toc-title: User Guide
 :icons: font
 :hide-uri-scheme:
 
-Work in progress
+include::01_versionning.adoc[]
+
+
+

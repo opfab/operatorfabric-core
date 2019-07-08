@@ -1,0 +1,105 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+== Versioning
+
+=== Version numbers
+
+version numbers X.Y.Z.label should be understood like this:
+
+* X: Major version, a major version adds new features and breaks compatibility with previous major and minor versions.
+* Y: Minor version, a minor version adds new features and does not break compatibility with previous minor versions for
+the same major version.
+* Z: Patch, a patch version only contains bug fixes of current minor version
+* label: pre-release or build metadata:
+** SNAPSHOT: a version whose development is in progress, nightly builds only deliver SNAPSHOT versions
+** RELEASE: a version whose development is finished
+
+=== Releasing Version
+
+To release a version we use some Travis dedicated jobs. Before releasing a version, you need to prepare the release.
+
+Considering a version X.X.X.SNAPSHOT.
+
+*In operatorfabric-core:*
+
+* replace X.X.X.SNAPHOT with X.X.X.RELEASE
+* commit with the model message:
+```
+[RELEASE] X.X.X.RELEASE (ci_docker,ci_latest,ci_documentation)
+
+```
+* tag the commit with the version
+
+```
+git tag X.X.X.RELEASE
+```
+
+* push both the commit and the tag
+
+The commit comment leverages three keywords to trigger the delivery of documentation and docker images:
+
+* ci_docker: triggers the build and upload of versioned docker images to dockerhub
+* ci_latest: associate the latest alias to the current versioned docker images
+* ci_documentation: triggers the build and upload of the current documentation
+
+*In operatorfabric documentation project _data/versions.yml file*:
+
+change:
+
+```
+- name: X.X.X
+  fullname: X.X.X.SNAPSHOT
+  badges:
+  - name: SNAPSHOT
+    style: badge-snapshot
+```
+
+to:
+
+```
+- name: X.X.X
+  fullname: X.X.X.RELEASE
+  badges:
+  - name: RELEASE
+    style: badge-release
+  - name: CURRENT
+    style: badge-current
+```
+
+*In Jira*
+
+* Set all concerned tickets (US, BUG, FR) and set fix version to X.X.X.RELEASE
+* In the version screen release X.X.X.RELEASE version;
+=== Preparing next version
+
+To prepare a next version you simply need to increment the version after a release (see <<Version numbers>>).
+
+*In operatorfabric-core*
+
+* Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPHOT.
+* commit changes for the following message:
+
+```
+[PREPARE] next version: Y.Y.Y.SNAPSHOT
+```
+
+*In operatorfabric documentation project _data/versions.yml file*:
+
+Add the Y.Y.Y.SNAPHOT version
+
+```
+- name: Y.Y.Y
+  fullname: Y.Y.Y.SNAPSHOT
+  badges:
+  - name: SNAPSHOT
+    style: badge-snapshot
+```
+
+*In Jira*
+
+* In the version screen create a  Y.Y.Y..RELEASE version;
