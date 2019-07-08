@@ -36,11 +36,13 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public circleDiameter: number;
 
   // required for domain movements specifications
-  public realCaseActivate: boolean;
+  public followClockTick: boolean;
+  private firstMoveStartOfUnit: boolean;
   private continuousForward: number;
 
   // buttons
   public forwardConf: any; // could make interface
+  public backwardConf: any; // could make interface
   public ticksConf: any; // could make interface
   public buttonTitle: string;
   public zoomButtonsActive: boolean;
@@ -58,8 +60,8 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.zoomButtonsActive = false;
     this.buttonTitle = undefined;
     this.forwardConf = undefined;
+    this.backwardConf = undefined;
     this.ticksConf = undefined;
-    this.realCaseActivate = true;
     this.continuousForward = 0;
 
     // options
@@ -264,12 +266,24 @@ export class InitChartComponent implements OnInit, OnDestroy {
       // Default domain set (week)
       this.buttonTitle = 'W';
       this.forwardConf = {
-        year: 0,
-        month: 0,
-        week: 1,
-        day: 0,
-        hour: 0,
-        seconde: 0,
+        start: {
+          year: 0,
+          month: 0,
+          week: 1,
+          day: 0,
+          hour: 0,
+          minute: 0,
+          seconde: 0,
+        },
+        end: {
+          year: 0,
+          month: 0,
+          week: 1,
+          day: 0,
+          hour: 0,
+          minute: 0,
+          seconde: 0,
+        },
       };
       this.ticksConf = {
         year: 0,
@@ -304,16 +318,27 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * @param conf
    */
   changeGraphConf(conf: any): void {
+    this.followClockTick = false;
+    this.firstMoveStartOfUnit = false;
+    this.backwardConf = undefined;
     if (conf) {
       this.buttonHomeActive = false;
-      this.realCaseActivate = true;
       this.continuousForward = 0;
       this.setStartAndEndDomain(conf.startDomain, conf.endDomain);
+      if (conf.followClockTick) {
+        this.followClockTick = true;
+      }
+      if (conf.firstMoveStartOfUnit) {
+        this.firstMoveStartOfUnit = true;
+      }
       if (conf.buttonTitle) {
         this.buttonTitle = conf.buttonTitle;
       }
       if (conf.forwardConf) {
         this.forwardConf = _.cloneDeep(conf.forwardConf);
+      }
+      if (conf.backwardConf) {
+        this.backwardConf = _.cloneDeep(conf.backwardConf);
       }
       if (conf.ticksConf) {
         this.ticksConf = _.cloneDeep(conf.ticksConf);
@@ -399,11 +424,47 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * @param moveForward
    */
   moveDomain(moveForward: boolean): void {
-    Object.keys(this.forwardConf).forEach(key => {
-      if (this.forwardConf[key] > 0) {
-        this.moveDomainByUnit(moveForward, key, this.forwardConf[key]);
+    let startDomain = moment(this.myDomain[0]);
+    let endDomain = moment(this.myDomain[1]);
+    let movementConf = _.cloneDeep(this.forwardConf);
+    if (moveForward === false) { // use backward configuration if it's set
+      if (this.backwardConf) {
+        movementConf = _.cloneDeep(this.backwardConf);
       }
-    });
+    }
+    if (movementConf.end === undefined || movementConf.end === {}) {
+      Object.keys(movementConf.start).forEach(key => {
+        if (movementConf.start[key] > 0) {
+          startDomain = moment(this.getDomainByUnit(moveForward, key, movementConf.start[key], startDomain, false));
+          // let's Co speacial case, for recentered domain on one unit not 2 unit
+          if (this.firstMoveStartOfUnit) {
+            endDomain = moment(this.getDomainByUnit(moveForward, key, movementConf.end[key], endDomain, true));
+          } else {
+            endDomain = moment(this.getDomainByUnit(moveForward, key, movementConf.end[key], endDomain, false));
+          }
+        }
+      });
+    } else { // new start and end of domain are define by 2 conf object: start and end
+      Object.keys(movementConf.start).forEach(key => {
+        if (movementConf.start[key] > 0) {
+          startDomain = moment(this.getDomainByUnit(moveForward, key, movementConf.start[key], startDomain, false));
+        }
+      });
+      Object.keys(movementConf.end).forEach(key => {
+        if (movementConf.end[key] > 0) {
+          // let's Co speacial case, for recentered domain on one unit not 2 unit
+          if (this.firstMoveStartOfUnit) {
+            endDomain = moment(this.getDomainByUnit(moveForward, key, movementConf.end[key], endDomain, true));
+          } else {
+            endDomain = moment(this.getDomainByUnit(moveForward, key, movementConf.end[key], endDomain, false));
+          }
+        }
+      });
+    }
+    if (this.firstMoveStartOfUnit) {
+      this.firstMoveStartOfUnit = false;
+    }
+    this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
     // switch (this.forwardButtonType) {
     //   case 'W':
     //     this.moveDomainByUnit(moveForward, 'weeks');
@@ -423,6 +484,39 @@ export class InitChartComponent implements OnInit, OnDestroy {
     // }
   }
 
+  /**
+   * define the actual domain received
+   * move domain 1 unit before or after the unit selected
+   * example of unit : days, weeks, months, years...
+   * @param forward
+   * @param unit unit of time
+   * @param ops number of unit
+   */
+    getDomainByUnit(forward: boolean, unit, ope: number, tmpMoment, speCase: boolean): number {
+    // Move from main visualisation, domain stop to move
+    if (this.followClockTick) {
+      this.followClockTick = false;
+    }
+    // For the first step, set to start of the unit (Let's Co)
+    if (this.firstMoveStartOfUnit) {
+      tmpMoment.startOf(unit).hours(0);
+    }
+    if (forward) {
+      if (speCase) {
+        // For let's Co subtract 1 unit when it is first move
+        tmpMoment.add(ope - 1, unit);
+      } else {
+        tmpMoment.add(ope, unit);
+      }
+    } else {
+      if (speCase) {
+        tmpMoment.subtract(ope + 1, unit);
+      } else {
+        tmpMoment.subtract(ope, unit);
+      }
+    }
+    return tmpMoment.valueOf();
+  }
 
  /**
    * define the actual week
@@ -432,9 +526,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
    */
   moveDomainBy7Day(forward: boolean): void {
    const startDomain = moment(this.myDomain[0]);
-   if (this.realCaseActivate) {
+   if (this.followClockTick) {
      startDomain.hours(0);
-     this.realCaseActivate = false;
+     this.followClockTick = false;
    }
    const endDomain = moment(startDomain);
    endDomain.add(7, 'days');
@@ -461,12 +555,16 @@ export class InitChartComponent implements OnInit, OnDestroy {
     const endDomain = moment(this.myDomain[1]);
     let realCaseSpe = 0;
 
-    // For the first step, set to start of the unit
-    if (this.realCaseActivate) {
-      startDomain.startOf(unit).hours(0);
-      endDomain.startOf(unit).hours(0);
-      realCaseSpe = 1;
-      this.realCaseActivate = false;
+    // Move from main visualisation, domain stop to move
+    if (this.followClockTick) {
+      this.followClockTick = false;
+    }
+    // For the first step, set to start of the unit (Let's Co)
+    if (this.firstMoveStartOfUnit) {
+        startDomain.startOf(unit).hours(0);
+        endDomain.startOf(unit).hours(0);
+        realCaseSpe = 1;
+        this.firstMoveStartOfUnit = false;
     }
     if (forward) {
       startDomain.add(ope, unit);

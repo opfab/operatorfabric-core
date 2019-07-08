@@ -39,7 +39,11 @@ export class XAxisTickFormatPipe implements PipeTransform {
     if (clusterLevel) {
       const date = moment(value);
       if (date) {
-        return date.format('HH') + 'h';
+        if (clusterLevel === 'D') {
+          return date.format('HH') + 'h';
+        } else if (clusterLevel === 'Min') {
+          return date.format('mm');
+        }
       }
     }
     return '';
@@ -68,6 +72,15 @@ export class XAxisTickFormatPipe implements PipeTransform {
           return date.format('ddd DD MMM');
         } else {
           return date.format('HH');
+        }
+      }
+      case 'Min': {
+        if (date.minutes() === 0) {
+          if (date.hour() === 0) {
+            return date.format('ddd DD MMM');
+          } else {
+            return date.format('HH');
+          }
         }
       }
       case 'M': {

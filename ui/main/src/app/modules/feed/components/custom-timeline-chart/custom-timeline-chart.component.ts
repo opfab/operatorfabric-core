@@ -186,7 +186,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   // Circle
   @Input() circleDiameter;
 
-  @Input() realCaseActivate;
+  @Input() followClockTick;
 
   // TICKS
   @Input() centeredOnTicks;
@@ -238,7 +238,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    *  - set xTicks for rotate it, and set a variable inside library
    */
   ngOnInit(): void {
-    if (this.realTimeBar || this.realCaseActivate) {
+    if (this.realTimeBar || this.followClockTick) {
       this.updateRealTimeDate();
     }
     // set inside ngx-charts library verticalSpacing variable to 10
@@ -274,7 +274,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.yScale = this.getYScale(this.yDomain, this.dims.height);
     this.transform = `translate(${ this.dims.xOffset } , ${ this.margin[0] })`;
     this.transform2 = `translate(0, ${ this.dims.height + 15})`;
-    console.log('update');
+    console.log('update', this.formatLevel);
   }
 
   /**
@@ -299,7 +299,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     if (this.realTimeBar) {
       this.xRealTimeLine = moment();
     }
-    if (this.realCaseActivate) {
+    if (this.followClockTick) {
       if (this.checkFollowClockTick()) {
         this.update();
       }
@@ -475,7 +475,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   fctTickFormattingAdvanced = (e): string => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    if (this.formatLevel === 'D') {
+    if (this.formatLevel === 'D' || this.formatLevel === 'Min') {
       return formatPipe.transformAdvanced(e, this.formatLevel);
     }
     return formatPipe.transform(e, this.formatLevel);
@@ -600,14 +600,53 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * @param domain
    */
   setXTicksValue(domain): void { // add width and make différent treatment (responsive)
-    Object.keys(this.clusterLevel).forEach(key => {
-      if (key === 'date') {
-        this.dateTicks(domain, this.clusterLevel[key]);
-        // this.yearTicks(domain);
-      } else if (this.clusterLevel[key] > 0) {
-        this.unitTicks(domain, key, this.clusterLevel[key]);
+    // Object.keys(this.clusterLevel).forEach(key => {
+    //   if (key === 'date') {
+    //     this.dateTicks(domain, this.clusterLevel[key]);
+    //     // this.yearTicks(domain);
+    //   } else if (this.clusterLevel[key] > 0) {
+    //     this.unitTicks(domain, key, this.clusterLevel[key]);
+    //   }
+    // });
+    const startDomain = moment(domain[0]);
+    this.xTicks.push(startDomain);
+    let nextUnit = moment(startDomain);
+    while (nextUnit.valueOf() < domain[1]) {
+      if (this.clusterLevel.date && this.clusterLevel.date.length > 0) {
+        this.clusterLevel.date.forEach(op => {
+          nextUnit.date(op);
+          Object.keys(this.clusterLevel).forEach(key => {
+            if (key === 'date') {
+            } else if (this.clusterLevel[key] > 0) {
+              nextUnit.add((this.clusterLevel[key]), key);
+            }
+          });
+          const tmp2 = moment(nextUnit);
+          if (tmp2 > domain[0]) {
+            this.xTicks.push(tmp2);
+          }
+        });
+        nextUnit.add(1, 'month');
+      } else {
+        Object.keys(this.clusterLevel).forEach(key => {
+          if (key === 'date') {
+          } else if (this.clusterLevel[key] > 0) {
+            nextUnit.add((this.clusterLevel[key]), key);
+          }
+        });
+        const tmp = moment(nextUnit);
+        this.xTicks.push(tmp);
       }
-    });
+    }
+    // delete all ticks until the end of domain, and push a tick for the end of domain
+    let j = this.xTicks.length - 1;
+    while (j >= 0) {
+      if (this.xTicks[j] >= domain[1]) {
+        this.xTicks.pop();
+      }
+      j--;
+    }
+    this.xTicks.push(moment(domain[1]));
     // switch (this.formatLevel) {
     //   case 'D': {
     //     this.dayTicks(domain);
@@ -794,7 +833,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
           /*if (i % 6 === 0) {
             newList.push(this.xTicks[i]);
           }*/
-          if (this.xTicks[i].hours() === 0) {
+          if (this.xTicks[i].hour() === 0) {
+            newList.push(this.xTicks[i]);
+          }
+        }
+        break;
+      }
+      case 5: {
+        for (let i = 0; i < this.xTicks.length; i++) {
+          /*if (i % 6 === 0) {
+            newList.push(this.xTicks[i]);
+          }*/
+          if (this.xTicks[i].minute() === 0) {
             newList.push(this.xTicks[i]);
           }
         }
@@ -808,28 +858,47 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   /**
-   * set the x ticks value
-   * set the two x ticks displayed lists
-   * call clusterize function
-   * @param domain
+   * set the format level
+   * run through ticks configuration for find the precision needed
    */
-  setTicksAndClusterize(domain): void {
+  setFormatLevel() { // Mettre ne place la selection du formatLevel
+    // celon le domain et le tickConf
+    // plus on précise, plus les ticks sont précis
+    // ex: week: 1 hour: 1 l'affichage doit afficher les heures
     Object.keys(this.clusterLevel).forEach(key => {
       if (key === 'date') {
         this.formatLevel = 'Y';
       } else if (this.clusterLevel[key] > 0) {
         switch (key) {
           case 'day': {
+            console.log('ici1')
             this.formatLevel = 'M';
             break;
           }
           case 'hour': {
+            console.log('ici2')
             this.formatLevel = 'D';
+            break;
+          }
+          case 'minute': {
+            console.log('ici3')
+            this.formatLevel = 'Min';
             break;
           }
         }
       }
     });
+
+  }
+
+  /**
+   * set the x ticks value
+   * set the two x ticks displayed lists
+   * call clusterize function
+   * @param domain
+   */
+  setTicksAndClusterize(domain): void {
+    this.setFormatLevel();
     this.setXTicksValue(domain);
     console.log('xticks after set = ', this.xTicks);
     this.xTicksOne = [];
@@ -837,6 +906,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     if (this.formatLevel === 'D') {
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(4);
+    } else if (this.formatLevel === 'Min') {
+      this.xTicksOne = this.multiHorizontalTicksLine(3);
+      this.xTicksTwo = this.multiHorizontalTicksLine(5);
     } else {
       console.log('uie');
       this.xTicksOne = this.multiHorizontalTicksLine(1);
