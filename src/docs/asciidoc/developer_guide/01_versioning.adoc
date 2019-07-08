@@ -27,7 +27,12 @@ Considering a version X.X.X.SNAPSHOT.
 
 *In operatorfabric-core:*
 
-* replace X.X.X.SNAPHOT with X.X.X.RELEASE
+* replace X.X.X.SNAPSHOT with X.X.X.RELEASE
+
+IMPORTANT: In the dockerhub documentation (src/docs/dockerhub/service_template.md), no replacement should be made.
+Instead, the X.X.X.RELEASE version should be added to the "RELEASES" list, and under "shortcuts" the "latest" tag
+should be updated to X.X.X.RELEASE.
+
 * commit with the model message:
 ```
 [RELEASE] X.X.X.RELEASE (ci_docker,ci_latest,ci_documentation)
@@ -49,7 +54,7 @@ The commit comment leverages three keywords to trigger the delivery of documenta
 
 *In operatorfabric documentation project _data/versions.yml file*:
 
-change:
+* Change:
 
 ```
 - name: X.X.X
@@ -70,27 +75,40 @@ to:
   - name: CURRENT
     style: badge-current
 ```
+* Remove the following lines from the previous release version:
+
+```
+  - name: CURRENT
+    style: badge-current
+```
+
+* Commit and push changes.
 
 *In Jira*
 
 * Set all concerned tickets (US, BUG, FR) and set fix version to X.X.X.RELEASE
-* In the version screen release X.X.X.RELEASE version;
+* In the "Releases" screen release X.X.X.RELEASE version;
+
 === Preparing next version
 
 To prepare a next version you simply need to increment the version after a release (see <<Version numbers>>).
 
 *In operatorfabric-core*
 
-* Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPHOT.
-* commit changes for the following message:
+* Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT.
+
+* In the dockerhub documentation (src/docs/dockerhub/service_template.md), replace the two occurences of X.X.X.SNAPSHOT
+by Y.Y.Y.RELEASE.
+
+* Commit changes for the following message:
 
 ```
 [PREPARE] next version: Y.Y.Y.SNAPSHOT
 ```
 
-*In operatorfabric documentation project _data/versions.yml file*:
+* In operatorfabric documentation project _data/versions.yml file*:
 
-Add the Y.Y.Y.SNAPHOT version
+Add the Y.Y.Y.SNAPSHOT version
 
 ```
 - name: Y.Y.Y
@@ -100,6 +118,8 @@ Add the Y.Y.Y.SNAPHOT version
     style: badge-snapshot
 ```
 
+* Commit and push changes.
+
 *In Jira*
 
-* In the version screen create a  Y.Y.Y..RELEASE version;
+* In the "Releases" screen create a  Y.Y.Y.RELEASE version.

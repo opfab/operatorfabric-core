@@ -16,7 +16,7 @@
 :icons: font
 :hide-uri-scheme:
 
-include::01_versionning.adoc[]
+include::01_versioning.adoc[]
 
 
 
