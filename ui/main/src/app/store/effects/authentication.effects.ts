@@ -202,7 +202,11 @@ export class AuthenticationEffects {
                         } else {
                             if (!AuthenticationService.isExpirationDateOver()) {
                                 const authInfo = AuthenticationService.extractIdentificationInformation();
-                                return of(new AcceptLogIn(authInfo));
+                                return this.authService.loadUserData(authInfo)
+                                    .pipe(
+                                        map(auth => new AcceptLogIn(auth))
+                                    );
+                                // return of(new AcceptLogIn(authInfo));
                             }
                             return of(this.handleRejectedLogin(new Message('The stored token has expired',
                                 MessageLevel.ERROR,

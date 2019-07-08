@@ -148,7 +148,7 @@ export class AuthenticationService {
         );
     }
 
-    private loadUserData(auth:PayloadForSuccessfulAuthentication):Observable<PayloadForSuccessfulAuthentication>{
+    loadUserData(auth:PayloadForSuccessfulAuthentication):Observable<PayloadForSuccessfulAuthentication>{
         return this.httpClient.get<User>(`${this.userDataUrl}/${auth.identifier}`)
             .pipe(
                 map(u => {
