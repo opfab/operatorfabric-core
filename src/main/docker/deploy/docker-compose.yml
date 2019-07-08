@@ -140,5 +140,3 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-
-
