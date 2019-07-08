@@ -22,21 +22,8 @@ operatorfabric:
   - Europe/Lisbon
   - Europe/Amsterdam
   - Europe/Athens
-  - BST
-  - CEST
-  - CET
-  - EEST
-  - EET
-  - FET
-  - GMT
-  - IST
-  - KUYT
-  - MSD
-  - MSK
-  - SAMT
-  - TRT
-  - WEST
-  - WET
+  - Australia/Melbourne
+  - Pacific/Samoa
   i18n.supported.locales:
   - fr
   - en
