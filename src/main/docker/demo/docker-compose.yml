@@ -32,7 +32,7 @@ services:
     depends_on:
      - rabbitmq
     container_name: config
-    image: "lfeoperatorfabric/of-configuration-cloud-service:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-configuration-cloud-service:0.6.1.SNAPSHOT"
     ports:
      - "2000:8080"
      - "4000:5005"
@@ -51,7 +51,7 @@ services:
     depends_on:
      - config
     container_name: registry
-    image: "lfeoperatorfabric/of-registry-cloud-service:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-registry-cloud-service:0.6.1.SNAPSHOT"
     ports:
      - "2001:8080"
      - "4001:5005"
@@ -63,7 +63,7 @@ services:
   client_gateway:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-client-gateway-cloud-service:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-client-gateway-cloud-service:0.6.1.SNAPSHOT"
     ports:
      - "2002:8080"
      - "4002:5005"
@@ -74,7 +74,7 @@ services:
   users:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-users-business-service:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-users-business-service:0.6.1.SNAPSHOT"
     ports:
      - "2103:8080"
      - "4103:5005"
@@ -85,7 +85,7 @@ services:
   operatorfabric.thirds:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-thirds-business-service:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-thirds-business-service:0.6.1.SNAPSHOT"
     ports:
      - "2100:8080"
      - "4100:5005"
@@ -98,7 +98,7 @@ services:
   time:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-time-business-service:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-time-business-service:0.6.1.SNAPSHOT"
     ports:
      - "2101:8080"
      - "4101:5005"
@@ -110,7 +110,7 @@ services:
     container_name: cards-publication
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-cards-publication-business-service:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-cards-publication-business-service:0.6.1.SNAPSHOT"
     ports:
      - "2102:8080"
      - "4102:5005"
@@ -121,7 +121,7 @@ services:
   cards-consultation:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-cards-consultation-business-service:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-cards-consultation-business-service:0.6.1.SNAPSHOT"
     ports:
      - "2104:8080"
      - "4104:5005"
@@ -132,7 +132,7 @@ services:
   actions:
     depends_on:
     - registry
-    image: "lfeoperatorfabric/of-actions-business-service:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-actions-business-service:0.6.1.SNAPSHOT"
     ports:
     - "2105:8080"
     - "4105:5005"
@@ -143,7 +143,7 @@ services:
   dummy-card-daemon:
     depends_on:
     - cards-publication
-    image: "lfeoperatorfabric/of-dummy-card-daemon:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-dummy-card-daemon:0.6.1.SNAPSHOT"
     environment:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
@@ -152,7 +152,7 @@ services:
   web-ui:
     depends_on:
     - registry
-    image: "lfeoperatorfabric/of-web-ui:0.5.1.RELEASE"
+    image: "lfeoperatorfabric/of-web-ui:0.6.1.SNAPSHOT"
     ports:
     - "2200:8080"
     - "4200:5005"
