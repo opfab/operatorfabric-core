@@ -368,6 +368,7 @@ specified using curly brackets. Available parameters:
  ** process: the name of the process
  ** state: the state name of the process
  ** token: the jwt token of the user
+ ** data.[path]: a path to object in card data structure
 * hidden: if true, action won't be visible on the card but will be available to templates
 * contentStyle: css style classes to apply to the content of the action button
 * buttonStyle: css style classes to apply to the action button

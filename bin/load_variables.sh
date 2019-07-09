@@ -16,13 +16,13 @@ export OF_COMPONENTS=( "$OF_TOOLS/swagger-spring-generators" "$OF_TOOLS/generic/
 OF_COMPONENTS+=( "$OF_TOOLS/spring/spring-utilities" "$OF_TOOLS/spring/spring-amqp-time-utilities" "$OF_TOOLS/spring/spring-mongo-utilities" "$OF_TOOLS/spring/spring-oauth2-utilities" )
 OF_COMPONENTS+=( "$OF_INFRA/config" "$OF_INFRA/auth" "$OF_INFRA/registry" "$OF_INFRA/client-gateway" )
 OF_COMPONENTS+=( "$OF_CLIENT/time" "$OF_CLIENT/cards" "$OF_CLIENT/users")
-OF_COMPONENTS+=("$OF_CORE/thirds" "$OF_CORE/time" "$OF_CORE/cards-publication" "$OF_CORE/cards-consultation" "$OF_CORE/users" )
+OF_COMPONENTS+=("$OF_CORE/thirds" "$OF_CORE/time" "$OF_CORE/cards-publication" "$OF_CORE/cards-consultation" "$OF_CORE/users" "$OF_CORE/actions")
 
 export OF_REL_COMPONENTS=( "tools/swagger-spring-generators" "tools/generic/utilities" "tools/generic/test-utilities" )
 OF_REL_COMPONENTS+=( "tools/spring/spring-utilities" "tools/spring/spring-amqp-time-utilities" "tools/spring/spring-mongo-utilities" "tools/spring/spring-oauth2-utilities" )
 OF_REL_COMPONENTS+=( "services/infra/config" "services/infra/auth" "services/infra/registry" "services/infra/client-gateway" )
 OF_REL_COMPONENTS+=( "client/time" "client/cards" "client/users")
-OF_REL_COMPONENTS+=("services/core/thirds" "services/core/time" "services/core/cards-publication" "services/core/cards-consultation" "services/core/users" )
+OF_REL_COMPONENTS+=("services/core/thirds" "services/core/time" "services/core/cards-publication" "services/core/cards-consultation" "services/core/users" "services/core/actions" )
 
 export OF_VERSION=$(cat "$OF_HOME/VERSION")
 

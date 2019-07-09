@@ -1,0 +1,49 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+== Third Party Endpoint Specification
+
+URL Action may specify any url as action to trigger but those resourse must
+comply to certain constraints
+
+=== GET
+
+An access to the resource using GET method allow to gather information to
+update the corresponding action.
+
+==== return codes
+
+|===
+|code|message|payload
+|200|ok|payload is an action status
+|204|no content|action is not updated
+|404|not found|no action associated with URL
+|===
+
+==== response payload
+
+=== POST
+
+An access to the resource using POST method allow to submit the action
+to trigger business behavior.
+
+==== return codes
+
+|===
+|code|message|payload
+|200|ok|payload is an action status
+|204|no content|action is not updated on submission
+|404|not found|no action associated with URL
+|===
+
+==== submission payload
+
+(Not implemented)
+
+Submission payload is a json object containing information submitted by
+the operator. The structure of the object reflects
+
+==== response payload
