@@ -246,20 +246,22 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
         const forwardMyConf = {
             start: {
+                weekDay: 1, // 1 = next Sunday
                 year: 0,
                 month: 0,
                 week: 0,
-                day: 1,
+                day: 0,
                 hour: 0,
                 minute: 0,
                 seconde: 0,
             },
             end: {
+                weekDay: 1,
                 year: 0,
                 month: 0,
                 week: 0,
-                day: 4,
-                hour: 1,
+                day: 0,
+                hour: 0,
                 minute: 0,
                 seconde: 0,
             },
@@ -363,7 +365,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             forwardConf: forwardDayConf,
             ticksConf: ticks4HoursConf,
             followClockTick: true,
-            firstMoveStartOfUnit: true,
+            firstMoveStartOfUnit: false,
         },
         {
             startDomain: startDomain2.valueOf(),

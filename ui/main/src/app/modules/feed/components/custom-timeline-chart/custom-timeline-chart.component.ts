@@ -595,6 +595,27 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.xTicks.pop();
   }
 
+  getDateParsedConfCluster(nextUnit) {
+    Object.keys(this.clusterLevel).forEach(key => {
+      if (key === 'date') {
+      } else if (this.clusterLevel[key] > 0) {
+        nextUnit.add((this.clusterLevel[key]), key);
+      }
+    });
+  }
+
+  cleanXTicksOffFields(domain): void {
+    // delete all ticks until the end of domain, and push a tick for the end of domain
+    let j = this.xTicks.length - 1;
+    while (j >= 0) {
+      if (this.xTicks[j] >= domain[1]) {
+        this.xTicks.pop();
+      }
+      j--;
+    }
+    this.xTicks.push(moment(domain[1]));
+  }
+
   /**
    * call appropriate function for set Ticks according to cluster level
    * @param domain
@@ -612,15 +633,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.xTicks.push(startDomain);
     let nextUnit = moment(startDomain);
     while (nextUnit.valueOf() < domain[1]) {
+      // special case date : list of day
       if (this.clusterLevel.date && this.clusterLevel.date.length > 0) {
         this.clusterLevel.date.forEach(op => {
           nextUnit.date(op);
-          Object.keys(this.clusterLevel).forEach(key => {
-            if (key === 'date') {
-            } else if (this.clusterLevel[key] > 0) {
-              nextUnit.add((this.clusterLevel[key]), key);
-            }
-          });
+          this.getDateParsedConfCluster(nextUnit);
           const tmp2 = moment(nextUnit);
           if (tmp2 > domain[0]) {
             this.xTicks.push(tmp2);
@@ -628,25 +645,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         });
         nextUnit.add(1, 'month');
       } else {
-        Object.keys(this.clusterLevel).forEach(key => {
-          if (key === 'date') {
-          } else if (this.clusterLevel[key] > 0) {
-            nextUnit.add((this.clusterLevel[key]), key);
-          }
-        });
+        this.getDateParsedConfCluster(nextUnit);
         const tmp = moment(nextUnit);
         this.xTicks.push(tmp);
       }
     }
-    // delete all ticks until the end of domain, and push a tick for the end of domain
-    let j = this.xTicks.length - 1;
-    while (j >= 0) {
-      if (this.xTicks[j] >= domain[1]) {
-        this.xTicks.pop();
-      }
-      j--;
-    }
-    this.xTicks.push(moment(domain[1]));
+    this.cleanXTicksOffFields(domain);
     // switch (this.formatLevel) {
     //   case 'D': {
     //     this.dayTicks(domain);

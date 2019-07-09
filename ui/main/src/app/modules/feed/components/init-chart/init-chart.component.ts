@@ -427,7 +427,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     let startDomain = moment(this.myDomain[0]);
     let endDomain = moment(this.myDomain[1]);
     let movementConf = _.cloneDeep(this.forwardConf);
-    if (moveForward === false) { // use backward configuration if it's set
+    if (moveForward === false) { // backward movement use backward configuration if it's set
       if (this.backwardConf) {
         movementConf = _.cloneDeep(this.backwardConf);
       }
@@ -484,6 +484,37 @@ export class InitChartComponent implements OnInit, OnDestroy {
     // }
   }
 
+  getWeekDayBalanceNumber(dayNumber: number): number {
+    let weekDayBalance = 0;
+    switch (dayNumber) {
+      case 2: { // Monday
+        weekDayBalance = 2;
+        break;
+      }
+      case 3: { // Tuesday
+        weekDayBalance = 4;
+        break;
+      }
+      case 4: { // Wednesday
+        weekDayBalance = 6;
+        break;
+      }
+      case 5: { // Thursday
+        weekDayBalance = 8;
+        break;
+      }
+      case 6: { // Friday
+        weekDayBalance = 10;
+        break;
+      }
+      case 7: { // Saturday
+        weekDayBalance = 12;
+        break;
+      }
+    }
+    return weekDayBalance;
+  }
+
   /**
    * define the actual domain received
    * move domain 1 unit before or after the unit selected
@@ -499,17 +530,27 @@ export class InitChartComponent implements OnInit, OnDestroy {
     }
     // For the first step, set to start of the unit (Let's Co)
     if (this.firstMoveStartOfUnit) {
-      tmpMoment.startOf(unit).hours(0);
+      if (unit !== 'weekDay') {
+        tmpMoment.startOf(unit).hours(0);
+      }
     }
     if (forward) {
-      if (speCase) {
+      if (unit === 'weekDay') {
+        // add 6 for target one week after
+        tmpMoment.day(ope + 6);
+      } else if (speCase) {
         // For let's Co subtract 1 unit when it is first move
         tmpMoment.add(ope - 1, unit);
       } else {
         tmpMoment.add(ope, unit);
       }
     } else {
-      if (speCase) {
+      if (unit === 'weekDay') {
+        const weekDayBalance = this.getWeekDayBalanceNumber(ope);
+        // remove 6 for target one week before
+        tmpMoment.day(-ope - 6 + weekDayBalance);
+      } else if (speCase) {
+        // For let's Co subtract 1 unit more when it is first move
         tmpMoment.subtract(ope + 1, unit);
       } else {
         tmpMoment.subtract(ope, unit);
