@@ -15,65 +15,66 @@ import {map} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
+import {ThirdsService} from "@ofServices/thirds.service";
+import {Action} from "@ofModel/thirds.model";
 
 @Component({
     selector: 'of-card',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss']
 })
-export class CardComponent implements OnInit{
+export class CardComponent implements OnInit {
 
     @Input() public open: boolean = false;
     @Input() public lightCard: LightCard;
     currentPath: any;
     private _i18nPrefix: string;
     dateToDisplay: string;
+    actions: Array<Action>
 
     /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>,
                 private translate: TranslateService,
-                private time: TimeService) {
+                private time: TimeService,
+                private third: ThirdsService) {
 
     }
 
     public select() {
-        this.router.navigate(['/'+this.currentPath,'cards',this.lightCard.id]);
-        // this.open=true;
+        this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
     }
 
     ngOnInit() {
-        this._i18nPrefix = this.lightCard.publisher+'.'+this.lightCard.publisherVersion+'.'
-        this.store.select(selectCurrentUrl).subscribe(url=>{
-            if(url)
+        this._i18nPrefix = this.lightCard.publisher + '.' + this.lightCard.publisherVersion + '.'
+        this.store.select(selectCurrentUrl).subscribe(url => {
+            if (url)
                 this.currentPath = url.split('/')[1];
         });
-        // this.store.select(selectCardStateSelectedId)
-        //     .pipe(
-        //         map(id=>this.lightCard.id == id)
-        //     ).subscribe(open=>this.open = open)
-        // ;
-        // fetch configuration
         this.store.select(buildConfigSelector('feed.card.time.display'))
-            // use configuration to compute date
+        // use configuration to compute date
             .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
-            .subscribe(computedDate => this.dateToDisplay=computedDate);
+            .subscribe(computedDate => this.dateToDisplay = computedDate);
     }
 
-    computeDisplayedDates(config:string,lightCard:LightCard):string{
+    computeDisplayedDates(config: string, lightCard: LightCard): string {
         switch (config) {
-            case 'NONE': return '';
-            case 'LTTD': return this.handleDate(lightCard.lttd);
-            case 'PUBLICATION': return this.handleDate(lightCard.publishDate);
-            case 'BUSINESS_START': return this.handleDate(lightCard.startDate);
-            default:return `${this.handleDate(lightCard.startDate)} - ${this.handleDate(lightCard.endDate)}`
+            case 'NONE':
+                return '';
+            case 'LTTD':
+                return this.handleDate(lightCard.lttd);
+            case 'PUBLICATION':
+                return this.handleDate(lightCard.publishDate);
+            case 'BUSINESS_START':
+                return this.handleDate(lightCard.startDate);
+            default:
+                return `${this.handleDate(lightCard.startDate)} - ${this.handleDate(lightCard.endDate)}`
         }
     }
 
-    handleDate(timeStamp:number):string{
+    handleDate(timeStamp: number): string {
         return this.time.formatDateTime(timeStamp);
     }
-
 
     get i18nPrefix(): string {
         return this._i18nPrefix;
