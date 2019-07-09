@@ -209,6 +209,15 @@ export class ThirdsService {
     private translate(): TranslateService {
         return this.$injector.get(TranslateService);
     }
+
+    fetchActions(publisher: string, process: string, state: string, version: string):Observable<Object> {
+        const params = new HttpParams().set("apiVersion", version);
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`,{
+            params,
+            responseType: 'json'
+        });
+    }
+
 }
 
 export class ThirdsI18nLoader implements TranslateLoader {
