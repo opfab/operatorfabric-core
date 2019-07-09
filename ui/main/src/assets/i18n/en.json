@@ -51,7 +51,7 @@
     }
   },
   "settings":{
-    "email": "Email adress",
+    "email": "Email address",
     "description": "Description",
     "locale": "Language",
     "timeZone": "Time zone",
