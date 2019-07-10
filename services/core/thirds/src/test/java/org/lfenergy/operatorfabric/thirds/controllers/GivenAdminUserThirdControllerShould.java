@@ -187,6 +187,59 @@ class GivenAdminUserThirdControllerShould {
     }
 
     @Test
+    void fetchActions404() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/testFakeProcess/testState/actions")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
+        ;
+
+        result = mockMvc.perform(
+                get("/thirds/first/testProcess/testFakeState/actions")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
+        ;
+    }
+
+    @Test
+    void fetchAction() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/testProcess/testState/actions/testAction")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.type", is("URL")))
+        ;
+    }
+
+    @Test
+    void fetchAction404() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/testProcess/testState/actions/testFakeAction")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
+        ;
+
+        result = mockMvc.perform(
+                get("/thirds/first/testProcess/testFakeState/actions/testFakeAction")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
+        ;
+
+        result = mockMvc.perform(
+                get("/thirds/first/testFakeProcess/testState/actions/testFakeAction")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
+        ;
+    }
+
+    @Test
     void fetchTemplateResource() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/thirds/first/templates/template1?locale=fr")

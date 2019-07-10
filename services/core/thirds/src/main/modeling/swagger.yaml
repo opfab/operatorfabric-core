@@ -381,6 +381,51 @@ paths:
           description: No such third
         '401':
           description: Authentication required
+  '/thirds/{thirdName}/{process}/{state}/actions/{actionKey}':
+    get:
+      tags:
+        - thirds
+      summary: Get actions associated to thirds
+      description: >-
+        Get actions associated with Third+process+state, returns an array of actions (application/json)
+      operationId: getAction
+      produces:
+        - application/json
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: process
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: state
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: actionKey
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: apiVersion
+          in: query
+          required: false
+          description: Expected version of third
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Action'
+        '404':
+          description: No such third
+        '401':
+          description: Authentication required
 definitions:
 
   ActionEnum:

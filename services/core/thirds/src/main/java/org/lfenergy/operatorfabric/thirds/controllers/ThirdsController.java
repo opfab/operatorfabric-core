@@ -140,6 +140,24 @@ public class ThirdsController implements ThirdsApi {
     return Collections.emptyMap();
   }
 
+  @Override
+  public Action getAction(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String actionKey, String apiVersion) {
+    ThirdStates state = getState(request, response, thirdName, processName, stateName, apiVersion);
+    if(state!=null) {
+      Map<String, ? extends Action> actions = state.getActions();
+      if (actions != null && actions.containsKey(actionKey))
+        return actions.get(actionKey);
+    }
+    String message = String.format("Unknown action for third party service process %s state %s and action key %s", processName, stateName, actionKey);
+    throw new ApiErrorException(
+            ApiError.builder()
+                    .status(HttpStatus.NOT_FOUND)
+                    .message(message)
+                    .build(),
+            message
+    );
+  }
+
   private ThirdStates getState(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String apiVersion) {
     ThirdStates state=null;
     Third third = getThird(request, response, thirdName, apiVersion);
