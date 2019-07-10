@@ -110,13 +110,13 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * set an list of arrays for each severity of Cards
    */
   setArrayChartData(array: any[]): void {
-    array.sort((val1, val2) => { return val1.startDate - val2.startDate; });
+    array.sort((val1, val2) => { return val1.publishDate - val2.publishDate; });
 
     const arraySeverity = [];
     this.arrayChartData = [];
     for (const value of array) {
       const obj = _.cloneDeep(value);
-      obj.date = obj.startDate;
+      obj.date = obj.publishDate;
       obj.r = 20;
       obj.stroke = 'stroke';
       obj.count = 1;

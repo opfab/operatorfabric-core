@@ -81,8 +81,8 @@ export enum Display {
 
 export class TimeSpan {
     constructor(
-        readonly startDate: number,
-        readonly endDate?: number,
+        readonly start: number,
+        readonly end?: number,
         readonly display = Display.BUBBLE) {
     }
 }

@@ -137,6 +137,7 @@ describe('TimeLineComponent', () => {
       expect(lightCard).toEqual([oneCard]);
     });
     const dataCard = [{
+      publishDate: oneCard.publishDate,
       startDate: oneCard.startDate,
       endDate: oneCard.endDate,
       severity: oneCard.severity,
@@ -172,25 +173,29 @@ describe('TimeLineComponent', () => {
       expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard].sort(compareBySeverityLttdPublishDate));
     });
     const dataCard = [{
+        publishDate: alarmCard.publishDate,
         startDate: alarmCard.startDate,
         endDate: alarmCard.endDate,
         severity: alarmCard.severity,
-        summary: oneCard.summary.parameters.value
+        summary: alarmCard.summary.parameters.value
     }, {
+        publishDate: actionCard.publishDate,
         startDate: actionCard.startDate,
         endDate: actionCard.endDate,
         severity: actionCard.severity,
-        summary: oneCard.summary.parameters.value
+        summary: actionCard.summary.parameters.value
     }, {
-        startDate: oneCard.startDate,
+      publishDate: oneCard.publishDate,
+      startDate: oneCard.startDate,
         endDate: oneCard.endDate,
         severity: oneCard.severity,
         summary: oneCard.summary.parameters.value
     }, {
-        startDate: notificationCard.startDate,
+      publishDate: notificationCard.publishDate,
+      startDate: notificationCard.startDate,
         endDate: notificationCard.endDate,
         severity: notificationCard.severity,
-        summary: oneCard.summary.parameters.value
+        summary: notificationCard.summary.parameters.value
     }];
     const data$ = store.select((timelineSelectors.selectTimelineSelection));
     data$.pipe(debounceTime(300), distinctUntilChanged())

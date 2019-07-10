@@ -148,14 +148,28 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             }*/
             const myCardsTimeline = [];
             for (const val of tmp) {
-                // val.endDate val.startDate val.severity
-                const myCardTimeline = {
-                    startDate: val.startDate,
-                    endDate: val.endDate,
-                    severity: val.severity,
-                    summary: val.summary.parameters.value
-                };
-                myCardsTimeline.push(myCardTimeline);
+                if (val.timeSpans && val.timeSpans.length > 0) {
+                    val.timeSpans.forEach(d => {
+                        const myCardTimelineTimespans = {
+                            publishDate: d.start,
+                            startDate: d.start, // useless
+                            endDate: d.end, // useless
+                            severity: val.severity,
+                            summary: val.summary.parameters.value,
+                        };
+                        myCardsTimeline.push(myCardTimelineTimespans);
+                    });
+                } else {
+                    // val.endDate val.startDate val.severity
+                    const myCardTimeline = {
+                        publishDate: val.publishDate,
+                        startDate: val.startDate, // useless
+                        endDate: val.endDate, // useless
+                        severity: val.severity,
+                        summary: val.summary.parameters.value,
+                    };
+                    myCardsTimeline.push(myCardTimeline);
+                }
             }
             this.store.dispatch(new SetCardDataTimeline({
                 cardsTimeline: myCardsTimeline,
