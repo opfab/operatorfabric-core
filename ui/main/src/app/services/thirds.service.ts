@@ -16,7 +16,7 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
-import {Third, ThirdMenu} from "@ofModel/thirds.model";
+import {Action, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 
 @Injectable()
 export class ThirdsService {
@@ -210,12 +210,16 @@ export class ThirdsService {
         return this.$injector.get(TranslateService);
     }
 
-    fetchActions(publisher: string, process: string, state: string, version: string):Observable<Object> {
+    fetchActionsFromLightCard(card:LightCard):Observable<any>{
+        return this.fetchActions(card.publisher,card.process,card.state,card.publisherVersion);
+    }
+
+    fetchActions(publisher: string, process: string, state: string, version: string):Observable<Map<string,Action>> {
         const params = new HttpParams().set("apiVersion", version);
         return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`,{
             params,
-            responseType: 'json'
-        });
+            responseType: 'text'
+        }).pipe(map(json =>JSON.parse(json) as Map<string, Action>));
     }
 
 }

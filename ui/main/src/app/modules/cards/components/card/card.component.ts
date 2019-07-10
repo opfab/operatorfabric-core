@@ -30,7 +30,7 @@ export class CardComponent implements OnInit {
     currentPath: any;
     private _i18nPrefix: string;
     dateToDisplay: string;
-    actions: Array<Action>
+    actions: Map<string,Action>;
 
     /* istanbul ignore next */
     constructor(private router: Router,
@@ -55,7 +55,7 @@ export class CardComponent implements OnInit {
         // use configuration to compute date
             .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
-    }
+        this.third.fetchActionsFromLightCard(this.lightCard).subscribe(object=> {this.actions=new Map(Object.entries(object))});}
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {
         switch (config) {
