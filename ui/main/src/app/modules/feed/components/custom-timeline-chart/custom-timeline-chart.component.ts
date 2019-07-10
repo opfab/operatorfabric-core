@@ -16,7 +16,6 @@ import {BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensi
 import * as moment from 'moment';
 import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
 import {TimeService} from "@ofServices/time.service";
-import {dom} from "@fortawesome/fontawesome-svg-core";
 
 @Component({
   selector: 'of-custom-timeline-chart',
@@ -64,12 +63,18 @@ import {dom} from "@fortawesome/fontawesome-svg-core";
                     [showGridLines]="showGridLines"
                     (dimensionsChanged)="updateYAxisWidth($event)">
       </svg:g>
-      <text *ngIf="realTimeBar && checkInsideDomain(xRealTimeLine)"
-            [attr.x]="timeScale(xRealTimeLine)" 
+      <text *ngIf="realTimeBar && checkInsideDomain(xRealTimeLine) && !underDayPeriod"
+            [attr.x]="timeScale(xRealTimeLine)"
             [attr.y]="-10" stroke="'grey'"
             [attr.fill]="'grey'"
             text-anchor="middle" stroke-width="1px"
             [attr.font-size]="11" dy=".3em"> {{xRealTimeLine.format('DD/MM/YY HH:mm')}}</text>
+      <text *ngIf="underDayPeriod"
+            [attr.x]="40"
+            [attr.y]="-10" stroke="'black'"
+            [attr.fill]="'black'"
+            text-anchor="middle" stroke-width="1px"
+            [attr.font-size]="12" dy=".3em"> {{xTicks[0].format('ddd DD MMM YYYY')}}</text>
       <svg:rect *ngIf="realTimeBar && checkInsideDomain(xRealTimeLine)"
                 [attr.x]="timeScale(xRealTimeLine)"
                 [attr.width]="5"
@@ -130,6 +135,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       count: 0,
       summary: []
     };
+    this.underDayPeriod = false;
 
     console.log('En attente de time service', this.time.formatDate(100));
   }
@@ -138,6 +144,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Input()
   set valueDomain(value: any) {
     this.xDomain = value;
+    // allow to show on top left of component date from the first tick === xDomain[0]
+    this.underDayPeriod = false;
+    if (value[1] - value[0] < 86400000) {
+      this.underDayPeriod = true;
+    }
   }
   get valueDomain() {
     return this.xDomain;
@@ -196,6 +207,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public xTicksTwo: Array<any>;
   public yTicks: Array<any>;
   public formatLevel: string;
+  public underDayPeriod: boolean;
 
   // Zoom (manage home btn when domain change inside this component)
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
@@ -986,8 +998,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             // initialisation a new circle
             // it's push on our new Data List only if it's inside the interval
             const newCircle = {
-              start: moment(array[j].date),
-              end: moment(array[j].date),
+              start: moment(array[j].startDate),
+              end: moment(array[j].endDate),
               date: newDate,
               count: 0,
               color: array[j].color,
