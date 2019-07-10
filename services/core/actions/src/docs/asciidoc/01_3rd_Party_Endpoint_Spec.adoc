@@ -25,6 +25,11 @@ update the corresponding action.
 
 ==== response payload
 
+
+See Actions Service Rest API for complete structure.
+
+This reponse gathers information to update the client side behavior of the action.
+
 === POST
 
 An access to the resource using POST method allow to submit the action
@@ -47,3 +52,7 @@ Submission payload is a json object containing information submitted by
 the operator. The structure of the object reflects
 
 ==== response payload
+
+See Actions Service Rest API for complete structure.
+
+This reponse gathers information to update the client side behavior of the action.
