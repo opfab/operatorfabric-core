@@ -15,9 +15,10 @@ import {TranslateModule} from "@ngx-translate/core";
 import {ThirdsService} from "../../services/thirds.service";
 import {HandlebarsService} from "./services/handlebars.service";
 import {UtilitiesModule} from "../utilities/utilities.module";
+import { ActionComponent } from './components/action/action.component';
 
 @NgModule({
-  declarations: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
+  declarations: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent, ActionComponent],
   imports: [
     CommonModule,
       TranslateModule,
