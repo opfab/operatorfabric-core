@@ -18,9 +18,7 @@
         <div class="badge-border rounded-bottom-left bg-sev-{{lightCard.severity.toString()|lowercase}} col-1"></div>
         <div class="card-text p-1" translate [translateParams]="lightCard.summary.parameters">
             {{i18nPrefix+lightCard.summary.key}}
-            <ul>
-                <li *ngFor="let action of actions.values()" >{{action.type}}</li>
-            </ul>
+           <of-action-list [actions]="actions | async" ></of-action-list>
         </div>
     </div>
 </div>

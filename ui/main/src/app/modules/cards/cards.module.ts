@@ -16,9 +16,10 @@ import {ThirdsService} from "../../services/thirds.service";
 import {HandlebarsService} from "./services/handlebars.service";
 import {UtilitiesModule} from "../utilities/utilities.module";
 import { ActionComponent } from './components/action/action.component';
+import { ActionListComponent } from './components/action-list/action-list.component';
 
 @NgModule({
-  declarations: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent, ActionComponent],
+  declarations: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent, ActionComponent, ActionListComponent],
   imports: [
     CommonModule,
       TranslateModule,

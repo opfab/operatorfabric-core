@@ -17,6 +17,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
 import {ThirdsService} from "@ofServices/thirds.service";
 import {Action} from "@ofModel/thirds.model";
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'of-card',
@@ -30,14 +31,16 @@ export class CardComponent implements OnInit {
     currentPath: any;
     private _i18nPrefix: string;
     dateToDisplay: string;
-    actions: Map<string,Action>;
+    actions: Observable<Map<string,Action>>;
 
     /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>,
                 private translate: TranslateService,
                 private time: TimeService,
-                private third: ThirdsService) {
+                private third: ThirdsService
+    )
+    {
 
     }
 
@@ -55,7 +58,8 @@ export class CardComponent implements OnInit {
         // use configuration to compute date
             .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
-        this.third.fetchActionsFromLightCard(this.lightCard).subscribe(object=> {this.actions=new Map(Object.entries(object))});}
+        this.actions = this.third.fetchActionsFromLightCard(this.lightCard).pipe(map(obj=>new Map(Object.entries(obj))));
+        }
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {
         switch (config) {
