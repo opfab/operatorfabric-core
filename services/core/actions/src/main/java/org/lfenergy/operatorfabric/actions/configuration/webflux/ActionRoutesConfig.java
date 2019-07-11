@@ -7,15 +7,19 @@
 
 package org.lfenergy.operatorfabric.actions.configuration.webflux;
 
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.actions.model.Action;
 import org.lfenergy.operatorfabric.actions.model.ActionStatusData;
 import org.lfenergy.operatorfabric.actions.services.feign.CardConsultationServiceProxy;
 import org.lfenergy.operatorfabric.actions.services.feign.ThirdsServiceProxy;
 import org.lfenergy.operatorfabric.cards.model.Card;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
@@ -78,14 +82,19 @@ public class ActionRoutesConfig {
     }
 
     private Action lookUpAction(String cardId, String actionKey){
-        Card card = this.cardService.fetchCard(cardId);
-        if (card != null) {
-            Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey);
-            if (action != null) {
-                return action;
+        try {
+            Card card = this.cardService.fetchCard(cardId);
+            if (card != null) {
+                Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey);
+                if (action != null) {
+                    return action;
+                }
             }
+            return null;
+        }catch (FeignException fe){
+            throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_GATEWAY)
+                    .message("Error accessing remote service, no fallback behavior").build(),fe);
         }
-        return null;
     }
 
     private Mono<Tuple3<String, String, String>> extractParameters(ServerRequest request) {
