@@ -135,6 +135,8 @@ export class DetailComponent implements OnInit {
         } else {
             button.children[0].classList.add('fa', 'fa-warning', 'text-dark');
         }
+        const label = action.label;
+        if(label) button.children[0].textContent=label.key
         button.addEventListener('click', (event: Event) => {
             alert(`${actionId} was triggered.\nAction handling is not yet implemented`);
         });
