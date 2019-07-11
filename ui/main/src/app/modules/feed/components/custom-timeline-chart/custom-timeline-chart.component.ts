@@ -95,8 +95,12 @@ import {TimeService} from '@ofServices/time.service';
                       [attr.stroke]="myCircle.stroke"
                       [attr.opacity]="0.7"
           />
-          <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count < 100" [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)" stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> {{myCircle.count}} </text>
-          <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count > 99" [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)" stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> +99 </text>
+          <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count < 100"
+                [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)"
+                stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> {{myCircle.count}} </text>
+          <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count > 99"
+                [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)"
+                stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> +99 </text>
         </svg:g>
       </svg:g>
     </svg:g>
@@ -889,11 +893,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(7);
     } else {
-      console.log('uie');
       this.xTicksOne = this.multiHorizontalTicksLine(1);
       this.xTicksTwo = this.multiHorizontalTicksLine(2);
     }
-    console.log('xticksONE & TWO  = ', this.xTicksOne, this.xTicksTwo);
     this.clusterize(domain);
   }
 
