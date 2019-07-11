@@ -1,28 +1,28 @@
 [#TroubleShooting]
 == Troubleshooting
 
-=== My bundle is not load 
+=== My bundle is not loaded
 
-The server send a `+{"status":"BAD_REQUEST","message":"unable to open submitted file","errors":["Error detected parsing the header"]}+`, despite http headers are correct.
+The server send a `+{"status":"BAD_REQUEST","message":"unable to open submitted file","errors":["Error detected parsing the header"]}+`, despite correct http headers.
 
-Your bundle is corrupted. Test your bundle in a terminal (Linux solution) 
+The uploaded bundle is corrupted. Test your bundle in a terminal (Linux solution) 
 
-example for a bundle archive named `MyBundleToTest.tar.gz' giving the mentionned error when uploaded :
+example for a bundle archive named `MyBundleToTest.tar.gz` giving the mentionned error when uploaded :
 ....
-tar -tzf MyBundleToTest.tar.gz >/dev/null ...  which should return: ...
+tar -tzf MyBundleToTest.tar.gz >/dev/null
 tar: This does not look like a tar archive
 tar: Skipping to next header
 tar: Exiting with failure status due to previous errors
 ....
 
 ==== Solution
-Extract content if possible and compress it in a correct form.
+Extract content if possible and compress it to a correct compressed archive format.
 
 === I can't upload my bundle
 
-The server repsonds by `+{"status":"BAD_REQUEST","message":"unable to open submitted file","errors":["Input is not in the .gz format"]}+`
+The server repsonds with a message like the following : `+{"status":"BAD_REQUEST","message":"unable to open submitted file","errors":["Input is not in the .gz format"]}+`
 
-The bundle has be compressed with in an unmanaged format. 
+The bundle has been compressed using an unmanaged format. 
 
 ==== Format verification 
 
@@ -33,7 +33,7 @@ Command line example to verify the format of a bundle archive named `MyBundleToT
  tar -tzf MyBundleToTest.tar.gz >/dev/null
 ....
 
-which should return the following response
+which should return in such case the following messages:
 
 ....
 gzip: stdin: not in gzip format
@@ -43,7 +43,7 @@ tar: Error is not recoverable: exiting now
 
 ==== Solution
 
-Use `tar.gz` format for archive. Shell command is `tar -czvf MyBundleToTest.tar.gz config.json template/ css/` for a bundle containing templates and css files.
+Use `tar.gz` format for the archive compression. Shell command is `tar -czvf MyBundleToTest.tar.gz config.json template/ css/` for a bundle containing templates and css files.
 
 === My bundle is rejected due to internal structure
 
