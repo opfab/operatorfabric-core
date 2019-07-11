@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ActionComponent implements OnInit {
 
-
+  @Input() readonly name
   constructor() { }
 
   ngOnInit() {

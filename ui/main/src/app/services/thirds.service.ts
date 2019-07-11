@@ -219,7 +219,10 @@ export class ThirdsService {
         return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`,{
             params,
             responseType: 'text'
-        }).pipe(map(json =>JSON.parse(json) as Map<string, Action>));
+        }).pipe(map(json =>{
+            const obj = JSON.parse(json)
+            return new Map(Object.entries(obj))
+        }));
     }
 
 }

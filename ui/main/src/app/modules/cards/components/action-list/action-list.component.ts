@@ -8,8 +8,8 @@ import {Action} from "@ofModel/thirds.model";
 })
 export class ActionListComponent implements OnInit {
 
-  @Input()public actions:Map<string,Action>
-
+  @Input()public actions:Array<[string, Action]>
+  
   constructor() { }
 
   ngOnInit() {
