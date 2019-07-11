@@ -17,6 +17,7 @@ import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
 import {Action, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import {Card} from "@ofModel/card.model";
 
 @Injectable()
 export class ThirdsService {
@@ -33,6 +34,10 @@ export class ThirdsService {
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.thirdsUrl = `${environment.urls.thirds}`;
+    }
+
+    queryThirdFromCard(card:Card):Observable<Third>{
+        return this.queryThird(card.publisher,card.publisherVersion);
     }
 
     queryThird(thirdName:string, version:string):Observable<Third> {

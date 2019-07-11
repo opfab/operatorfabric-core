@@ -7,7 +7,7 @@
 
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
-import {ThirdsService} from "../../../../services/thirds.service";
+import {ThirdsService} from "@ofServices/thirds.service";
 import {HandlebarsService} from "../../services/handlebars.service";
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from "@angular/platform-browser";
 import {Action, Third} from "@ofModel/thirds.model";
@@ -70,7 +70,7 @@ export class DetailComponent implements OnInit {
 
     private initializeHandlebarsTemplates() {
 
-        zip(this.thirds.queryThird(this.card.publisher,this.card.publisherVersion),
+        zip(this.thirds.queryThirdFromCard(this.card),
         this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card,null)))
             .subscribe(
                 ([third,html]) => {
