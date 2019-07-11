@@ -23,8 +23,11 @@ import {TimeService} from "@ofServices/time.service";
 import {I18nService} from "@ofServices/i18n.service";
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
+import {ActionListComponent} from "../action-list/action-list.component";
+import {ActionComponent} from "../action/action.component";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
-describe('CardComponent', () => {
+fdescribe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
     let fixture: ComponentFixture<CardComponent>;
     let store: Store<AppState>;
@@ -49,8 +52,9 @@ describe('CardComponent', () => {
                         deps: [ThirdsService]
                     },
                     useDefaultLang: false
-                })],
-            declarations: [CardComponent],
+                }),
+            NgbModule],
+            declarations: [CardComponent,ActionListComponent,ActionComponent],
             providers: [{provide: store, useClass: Store},
                 {provide: Router, useValue: routerSpy},
                 ThirdsService,

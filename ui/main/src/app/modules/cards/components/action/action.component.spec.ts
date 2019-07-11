@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActionComponent } from './action.component';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 describe('ActionComponent', () => {
   let component: ActionComponent;
@@ -8,6 +9,7 @@ describe('ActionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports:[NgbModule],
       declarations: [ ActionComponent ]
     })
     .compileComponents();
