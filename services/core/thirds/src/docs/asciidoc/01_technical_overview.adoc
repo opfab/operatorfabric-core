@@ -263,13 +263,13 @@ outputs
 ....
 
 [[cardaction]]
-===== cardAction
+===== action
 
 outputs a card action button whose card action id is the concatenation of an
 arbitrary number of helper arguments
 
 ....
-{{{cardAction "PREREQUISITE_" id}}}
+{{{action "PREREQUISITE_" id}}}
 ....
 
 [[svg]]
