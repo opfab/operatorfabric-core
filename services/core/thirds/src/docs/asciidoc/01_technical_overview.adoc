@@ -1,6 +1,7 @@
 == Technical overview
 
-See link:../api/#__Models[the model section of the swagger generated documentation] for data layout
+See link:../api/#__Models[the model section of the swagger generated 
+documentation] for data layout
 
 [[resource-serving]]
 === Resource serving
@@ -16,7 +17,8 @@ selector
 ==== Internationalization
 
 Internationalization (i18n) files are json file (JavaScript Object Notation).
-One file must be defined by module supported language. See link:../api/#__Models[the model section of the swagger
+One file must be defined by module supported language. See 
+link:../api/#__Models[the model section of the swagger
 generated documentation] for data layout.
 
 Sample json i18n file
@@ -70,7 +72,8 @@ following helpers :
 ===== numberFormat
 
 formats a number parameter using
-https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/NumberFormat[Intl.NumberFormat].
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Nu
+mberFormat[Intl.NumberFormat].
 The locale used is the current user selected one, and options are passed as hash
 parameters (https://handlebarsjs.com/[see Handlebars doc Literals section]).
 
@@ -279,7 +282,8 @@ outputs a svg tag with lazy loading, and missing image replacement message. The
 image url is the concatenation of an arbitrary number of helper arguments
 
 ....
-{{{svg baseUri scheduledOpId "/" substation "/before/" computationPhaseOrdinal}}}
+{{{svg baseUri scheduledOpId "/" substation "/before/" 
+computationPhaseOrdinal}}}
 ....
 
 [[i18n]]
