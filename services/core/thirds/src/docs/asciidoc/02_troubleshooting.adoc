@@ -25,7 +25,7 @@ format.
 
 === I can't upload my bundle
 
-The server repsonds with a message like the following : 
+The server repsonds with a message like the following: 
 `+{"status":"BAD_REQUEST","message":"unable to open submitted 
 file","errors":["Input is not in the .gz format"]}+`
 
@@ -57,7 +57,7 @@ templates and css files.
 
 === My bundle is rejected due to internal structure
 
-The server send `+{"status":"BAD_REQUEST","message":"Incorrect inner file 
+The server sends `+{"status":"BAD_REQUEST","message":"Incorrect inner file 
 structure","errors":["$OPERATOR_FABRIC_INSTANCE_PATH/d91ba68c-de6b-4635-a8e8-b58
 fff77dfd2/config.json (Aucun fichier ou dossier de ce type)"]}+`
 
