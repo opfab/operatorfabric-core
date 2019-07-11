@@ -70,11 +70,11 @@ import {TimeService} from "@ofServices/time.service";
             text-anchor="middle" stroke-width="1px"
             [attr.font-size]="11" dy=".3em"> {{xRealTimeLine.format('DD/MM/YY HH:mm')}}</text>
       <text *ngIf="underDayPeriod"
-            [attr.x]="40"
+            [attr.x]="50"
             [attr.y]="-10" stroke="'black'"
             [attr.fill]="'black'"
             text-anchor="middle" stroke-width="1px"
-            [attr.font-size]="12" dy=".3em"> {{xTicks[0].format('ddd DD MMM YYYY')}}</text>
+            [attr.font-size]="12" dy=".3em"> {{dateFirstTick}}</text>
       <svg:rect *ngIf="realTimeBar && checkInsideDomain(xRealTimeLine)"
                 [attr.x]="timeScale(xRealTimeLine)"
                 [attr.width]="5"
@@ -146,8 +146,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.xDomain = value;
     // allow to show on top left of component date from the first tick === xDomain[0]
     this.underDayPeriod = false;
-    if (value[1] - value[0] < 86400000) {
+    const millisecondsDomain = value[1] - value[0];
+    if (millisecondsDomain < 3600001) {
       this.underDayPeriod = true;
+      this.dateFirstTick = moment(value[0]).format('ddd DD MMM YYYY HH') + 'h';
+    } else if (millisecondsDomain < 86400000) {
+      this.underDayPeriod = true;
+      this.dateFirstTick = moment(value[0]).format('ddd DD MMM YYYY');
     }
   }
   get valueDomain() {
@@ -208,6 +213,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public yTicks: Array<any>;
   public formatLevel: string;
   public underDayPeriod: boolean;
+  public dateFirstTick: string;
 
   // Zoom (manage home btn when domain change inside this component)
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
@@ -330,7 +336,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     if (this.xTicks && this.xTicks.length > 5) {
       const tmp = moment();
       tmp.millisecond(0);
-      if (this.xTicks[4].valueOf() === tmp.valueOf()) {
+      // const tmpTick = moment(this.xTicks[4]);
+      // tmpTick.millisecond(0);
+      if (this.xTicks[4].valueOf() <= tmp.valueOf()) {
           this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
           return true;
       }
@@ -487,7 +495,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   fctTickFormattingAdvanced = (e): string => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    if (this.formatLevel === 'D' || this.formatLevel === 'Min') {
+    if (this.formatLevel === 'D' || this.formatLevel === 'Min' ||
+        this.formatLevel === 'Sec' || this.formatLevel === 'Wnb') {
       return formatPipe.transformAdvanced(e, this.formatLevel);
     }
     return formatPipe.transform(e, this.formatLevel);
@@ -866,6 +875,28 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }
         break;
       }
+      case 6: {
+        for (let i = 0; i < this.xTicks.length; i++) {
+          /*if (i % 6 === 0) {
+            newList.push(this.xTicks[i]);
+          }*/
+          if (this.xTicks[i].second() === 0) {
+            newList.push(this.xTicks[i]);
+          }
+        }
+        break;
+      }
+      case 7: {
+        for (let i = 0; i < this.xTicks.length; i++) {
+          /*if (i % 6 === 0) {
+            newList.push(this.xTicks[i]);
+          }*/
+          if (this.xTicks[i].week() === 1 || this.xTicks[i].week() % 5 === 0) {
+            newList.push(this.xTicks[i]);
+          }
+        }
+        break;
+      }
       default : {
         break;
       }
@@ -886,19 +917,36 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         this.formatLevel = 'Y';
       } else if (this.clusterLevel[key] > 0) {
         switch (key) {
+          case 'weekNb': {
+            this.formatLevel = 'Wnb';
+            break;
+          }
+          case 'year': { // change
+            this.formatLevel = 'RealY';
+            break;
+          }
+          case 'month': { // change
+            this.formatLevel = 'RealM';
+            break;
+          }
+          case 'week': { // change
+            this.formatLevel = 'RealW';
+            break;
+          }
           case 'day': {
-            console.log('ici1')
             this.formatLevel = 'M';
             break;
           }
           case 'hour': {
-            console.log('ici2')
             this.formatLevel = 'D';
             break;
           }
           case 'minute': {
-            console.log('ici3')
             this.formatLevel = 'Min';
+            break;
+          }
+          case 'second': {
+            this.formatLevel = 'Sec';
             break;
           }
         }
@@ -925,8 +973,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     } else if (this.formatLevel === 'Min') {
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(5);
+    } else if (this.formatLevel === 'Sec') {
+      this.xTicksOne = this.multiHorizontalTicksLine(3);
+      this.xTicksTwo = this.multiHorizontalTicksLine(6);
+    } else if (this.formatLevel === 'Wnb') {
+      this.xTicksOne = this.multiHorizontalTicksLine(3);
+      this.xTicksTwo = this.multiHorizontalTicksLine(7);
     } else {
-      console.log('uie');
       this.xTicksOne = this.multiHorizontalTicksLine(1);
       this.xTicksTwo = this.multiHorizontalTicksLine(2);
     }

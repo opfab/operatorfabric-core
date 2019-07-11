@@ -38,6 +38,36 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
         // DOMAIN CONF from moment() to our conf
 
+        const domain60YearConf = {
+            year: 60,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+        };
+
+        const domain16YearConf = {
+            year: 16,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+        };
+
+        const domain16MonthConf = {
+            year: 0,
+            month: 16,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+        };
+
         const domainYearConf = {
             year: 2,
             month: 0,
@@ -45,7 +75,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 0,
             hour: 0,
             minute: 0,
-            seconde: 0,
+            second: 0,
             startOf: ['year'],
         };
 
@@ -56,8 +86,18 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 0,
             hour: 0,
             minute: 0,
-            seconde: 0,
+            second: 0,
             startOf: ['month'],
+        };
+
+        const domain20WeekConf = {
+            year: 4,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
         };
 
         const domainWeekConf = {
@@ -67,7 +107,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 0,
             hour: 0,
             minute: 0,
-            seconde: 0,
+            second: 0,
             startOf: ['week'],
         };
 
@@ -78,7 +118,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 8,
             hour: 0,
             minute: 0,
-            seconde: 0,
+            second: 0,
             startOf: ['day'],
         };
 
@@ -89,27 +129,47 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 1,
             hour: 0,
             minute: 0,
-            seconde: 0,
+            second: 0,
         };
 
-        const myDomainConf = {
+        const domain6DaysConf = {
             year: 0,
             month: 0,
             week: 0,
             day: 6,
             hour: 0,
             minute: 0,
-            seconde: 0,
+            second: 0,
         };
 
-        const myDomainConf2 = {
+        const domain6HoursConf = {
             year: 0,
             month: 0,
             week: 0,
             day: 0,
             hour: 6,
             minute: 0,
-            seconde: 0,
+            second: 0,
+        };
+
+        const domainHourConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 1,
+            minute: 0,
+            second: 0,
+        };
+
+        const domain5MinConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 5,
+            second: 0,
         };
 
         let result = this.periodStartToEnd(domainWeekConf, 'W', true);
@@ -124,19 +184,41 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         result = this.periodStartToEnd(domain7DayConf, '7D', true);
         const startDomain4 = result[0];
         const endDomain4 = result[1];
-        result = this.periodStartToEnd(domainDayConf, 'D', false);
+        result = this.periodStartToEnd(domain16MonthConf, 'R', false);
         const startDomain5 = result[0];
         const endDomain5 = result[1];
-        result = this.periodStartToEnd(myDomainConf, 'R', false);
+        result = this.periodStartToEnd(domain16YearConf, 'R', false);
+        const startDomain6 = result[0];
+        startDomain6.startOf('year');
+        const endDomain6 = result[1];
+        result = this.periodStartToEnd(domain60YearConf, 'R', false);
+        const startDomain7 = result[0];
+        startDomain6.startOf('year');
+        const endDomain7 = result[1];
+        result = this.periodStartToEnd(domain6DaysConf, 'R', false);
         const myStart = moment();
         myStart.hour(8);
         const myEnd = result[1];
-        result = this.periodStartToEnd(myDomainConf2, 'R', false);
+        result = this.periodStartToEnd(domain6HoursConf, 'R', false);
         const myStart2 = moment();
         myStart2.minute(0);
         const myEnd2 = result[1];
         myEnd2.minutes(0);
+        result = this.periodStartToEnd(domainHourConf, 'R', false);
+        const myStart3 = moment();
+        myStart3.minute(0);
+        const myEnd3 = result[1];
+        myEnd3.minutes(0);
+        result = this.periodStartToEnd(domain5MinConf, 'R', false);
+        const myStart4 = moment();
+        myStart4.seconds(0);
+        const myEnd4 = result[1];
+        myEnd4.seconds(0);
 
+        result = this.periodStartToEnd(domain20WeekConf, 'R', false);
+        const onlyWeekS = result[0]
+        onlyWeekS.startOf("month");
+        const onlyWeekE = result[1];
         // FORWARD CONF (movement on domain)
 
         const forwardYearConf = {
@@ -147,7 +229,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
             end: {
                 year: 1,
@@ -156,7 +238,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
         };
 
@@ -168,7 +250,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
             end: {
                 year: 0,
@@ -177,7 +259,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
         };
 
@@ -189,7 +271,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
             end: {
                 year: 0,
@@ -198,7 +280,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
         };
 
@@ -210,7 +292,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 1,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
             end: {
                 year: 0,
@@ -219,7 +301,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 1,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
         };
 
@@ -231,7 +313,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 1,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
             end: {
                 year: 0,
@@ -240,7 +322,28 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 1,
                 minute: 0,
-                seconde: 0,
+                second: 0,
+            },
+        };
+
+        const forward5MinConf = {
+            start: {
+                year: 0,
+                month: 0,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 5,
+                second: 0,
+            },
+            end: {
+                year: 0,
+                month: 0,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 5,
+                second: 0,
             },
         };
 
@@ -253,7 +356,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
             end: {
                 weekDay: 1,
@@ -263,20 +366,61 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 day: 0,
                 hour: 0,
                 minute: 0,
-                seconde: 0,
+                second: 0,
             },
         };
 
         // TICKS CONF
 
-        const myTickConf = {
+
+        const myticksYearConf = {
+            year: 1,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+        };
+
+        const myticks4MonthConf = {
+            year: 0,
+            month: 4,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+        };
+
+        const ticks5secondsConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 5,
+        };
+
+        const ticksMinuteConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 1,
+            second: 0,
+        };
+
+        const ticks5MinutesConf = {
             year: 0,
             month: 0,
             week: 0,
             day: 0,
             hour: 0,
             minute: 5,
-            seconde: 0,
+            second: 0,
         };
 
         const ticks4HoursConf = {
@@ -286,7 +430,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 0,
             hour: 4,
             minute: 0,
-            seconde: 0,
+            second: 0,
         };
 
         const ticksDayConf = {
@@ -296,7 +440,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 1,
             hour: 0,
             minute: 0,
-            seconde: 0,
+            second: 0,
         };
 
         const ticksHourConf = {
@@ -306,7 +450,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 0,
             hour: 1,
             minute: 0,
-            seconde: 0,
+            second: 0,
         };
 
         const ticksHalfMonthConf = {
@@ -316,8 +460,29 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             day: 0,
             hour: 0,
             minute: 0,
-            seconde: 0,
+            second: 0,
             date: [1, 16],
+        };
+
+        const ticks7WeeksConf = {
+            year: 0,
+            month: 0,
+            week: 7,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+        };
+
+        const ticksWeekNumberConf = {
+            year: 0,
+            month: 0,
+            week: 1,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            weekNb: 1, // 1 show number of week
         };
 
         this.conf = {
@@ -341,20 +506,65 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             firstMoveStartOfUnit: true,
         },
         {
+            startDomain: onlyWeekS.valueOf(),
+            endDomain: onlyWeekE.valueOf(),
+            buttonTitle: '7W',
+            forwardConf: forwardWeekConf,
+            ticksConf: ticks7WeeksConf,
+            followClockTick: true,
+            firstMoveStartOfUnit: false,
+        },
+        {
+            startDomain: myStart4.valueOf(),
+            endDomain: myEnd4.valueOf(),
+            buttonTitle: '5Mi',
+            forwardConf: forward5MinConf,
+            ticksConf: ticks5secondsConf,
+            followClockTick: true,
+            firstMoveStartOfUnit: false,
+        },
+        {
+            startDomain: myStart3.valueOf(),
+            endDomain: myEnd3.valueOf(),
+            buttonTitle: '1H',
+            forwardConf: forwardHourConf,
+            ticksConf: ticksMinuteConf,
+            followClockTick: true,
+            firstMoveStartOfUnit: false,
+        },
+        {
             startDomain: myStart2.valueOf(),
             endDomain: myEnd2.valueOf(),
-            buttonTitle: 'myW',
+            buttonTitle: '6H',
             forwardConf: forwardHourConf,
-            ticksConf: myTickConf,
+            ticksConf: ticks5MinutesConf,
             followClockTick: true,
             firstMoveStartOfUnit: false,
         },
         {
             startDomain: startDomain5.valueOf(),
             endDomain: endDomain5.valueOf(),
-            buttonTitle: 'D',
-            forwardConf: forwardDayConf,
-            ticksConf: ticksHourConf,
+            buttonTitle: 'nbW',
+            forwardConf: forwardMonthConf,
+            ticksConf: ticksWeekNumberConf,
+            followClockTick: false,
+            firstMoveStartOfUnit: false,
+        },
+        {
+            startDomain: startDomain6.valueOf(),
+            endDomain: endDomain6.valueOf(),
+            buttonTitle: '4M',
+            forwardConf: forwardYearConf,
+            ticksConf: myticks4MonthConf,
+            followClockTick: false,
+            firstMoveStartOfUnit: false,
+        },
+        {
+            startDomain: startDomain7.valueOf(),
+            endDomain: endDomain7.valueOf(),
+            buttonTitle: '60Y',
+            forwardConf: forwardYearConf,
+            ticksConf: myticksYearConf,
             followClockTick: false,
             firstMoveStartOfUnit: false,
         },

@@ -43,6 +43,10 @@ export class XAxisTickFormatPipe implements PipeTransform {
           return date.format('HH') + 'h';
         } else if (clusterLevel === 'Min') {
           return date.format('mm');
+        } else if (clusterLevel === 'Sec') {
+          return date.format('ss');
+        } else if (clusterLevel === 'Wnb') {
+          return date.format('ww');
         }
       }
     }
@@ -83,6 +87,19 @@ export class XAxisTickFormatPipe implements PipeTransform {
           }
         }
       }
+      case 'Sec': {
+        if (date.seconds() === 0) {
+          if (date.minutes() === 0) {
+            if (date.hour() === 0) {
+              return date.format('ddd DD MMM');
+            } else {
+              return date.format('HH') + 'h';
+            }
+          } else {
+            return date.format('mm');
+          }
+        }
+      }
       case 'M': {
         if (date.valueOf() === startYear.valueOf()) {
           return date.format('DD MMM YY');
@@ -94,6 +111,18 @@ export class XAxisTickFormatPipe implements PipeTransform {
           return date.format('D MMM YY');
         }
         return date.format('D MMM');
+      }
+      case 'RealW': {
+        return date.format('DD/MM/YY');
+      }
+      case 'RealM': {
+        return date.format('MMM YY');
+      }
+      case 'RealY': {
+        return date.format('YYYY');
+      }
+      case 'Wnb': {
+        return date.format('YYYY');
       }
       default: {
         return value;
