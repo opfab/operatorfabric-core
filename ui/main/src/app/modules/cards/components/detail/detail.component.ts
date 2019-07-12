@@ -18,6 +18,8 @@ import {AppState} from "@ofStore/index";
 import {selectAuthenticationState} from "@ofSelectors/authentication.selectors";
 import {UserContext} from "@ofModel/user-context.model";
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
+import {TranslateService} from "@ngx-translate/core";
+import {I18n} from "@ofModel/i18n.model";
 
 @Component({
     selector: 'of-detail',
@@ -35,7 +37,8 @@ export class DetailComponent implements OnInit {
                 private thirds: ThirdsService,
                 private handlebars: HandlebarsService,
                 private sanitizer: DomSanitizer,
-                private store: Store<AppState>) {
+                private store: Store<AppState>,
+                private translate: TranslateService ) {
     }
 
     ngOnInit() {
@@ -135,11 +138,25 @@ export class DetailComponent implements OnInit {
         } else {
             button.children[0].classList.add('fa', 'fa-warning', 'text-dark');
         }
-        const label = action.label;
-        if(label) button.children[0].textContent=label.key
+
+        button.children[0].textContent=this.handelActionButtonText(action.label);
+
         button.addEventListener('click', (event: Event) => {
             alert(`${actionId} was triggered.\nAction handling is not yet implemented`);
         });
     }
 
+    private handelActionButtonText(label: I18n) {
+        if (label) {
+            if(this.card){
+                console.log('card exists!');
+            }else{
+                console.log(`card doesn't exist yet`);
+            }
+           return this.translate.instant(
+               `${this.card.publisher}.${this.card.publisherVersion}.${label.key}`
+               , label.parameters);
+        }
+        return 'Undefined';
+    }
 }

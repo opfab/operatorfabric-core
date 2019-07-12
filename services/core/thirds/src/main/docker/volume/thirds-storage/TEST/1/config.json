@@ -37,10 +37,25 @@
             "action1": {
               "type": "URL",
               "label": {
-                "key": "my.card.my.action.label"
+                "key": "process.action.first",
+                "parameters": {"value": "1"}
               },
               "url":"http://localhost:3000/{process}/{state}/action1?access_token={jwt}",
               "updateState":true
+            },
+            "action2": {
+              "type": "URL",
+              "label": {
+                "key": "process.action.first",
+                "parameters": {"value": "2"}
+              }
+            },
+            "action3": {
+              "type": "URL",
+              "label": {
+                "key": "process.action.first",
+                "parameters": {"value": "2"}
+              }
             }
           }
         }

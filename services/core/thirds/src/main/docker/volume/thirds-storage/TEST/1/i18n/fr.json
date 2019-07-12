@@ -9,7 +9,7 @@
       }
     },
     "action":{
-      "first": "Première action"
+      "first": "Action {{value}}"
     }
   },
   "third":{
