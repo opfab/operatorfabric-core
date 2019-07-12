@@ -1009,7 +1009,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.setFormatLevel();
     }
     this.setXTicksValue(domain);
-    console.log('xticks after set = ', this.xTicks);
     this.xTicksOne = [];
     this.xTicksTwo = [];
     // Use else if formatTicks is set
@@ -1097,8 +1096,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             // initialisation a new circle
             // it's push on our new Data List only if it's inside the interval
             const newCircle = {
-              start: moment(array[j].startDate),
-              end: moment(array[j].endDate),
+              start: moment(array[j].date),
+              end: moment(array[j].date),
               date: newDate,
               count: 0,
               color: array[j].color,

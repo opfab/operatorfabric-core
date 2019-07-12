@@ -605,7 +605,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             buttonTitle: '60Y',
             forwardConf: forwardYearConf,
             ticksConf: myticksResponsiveConf, // myticksYearConf,
-            formatTicks: formatTicksConf,
+            formatTicks: formatTicksConf, // responsive conf
+            // formatTooltipsDate: 'DDD',
             followClockTick: false,
             firstMoveStartOfUnit: false,
         },
@@ -624,7 +625,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             buttonTitle: 'M',
             forwardConf: forwardMonthConf,
             ticksConf: ticksDayConf,
-            formatTicks: 'DD/MM',
+            formatTicks: 'DD',
             // formatTooltipsDate: 'DD/MM',
             followClockTick: true,
             firstMoveStartOfUnit: true,

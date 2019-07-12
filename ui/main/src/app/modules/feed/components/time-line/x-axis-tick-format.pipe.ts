@@ -16,10 +16,13 @@ export class XAxisTickFormatPipe implements PipeTransform {
     }
     const date = moment(value);
     switch (clusterLevel) {
-      case 'W': case '7D': case 'D': { // rajouter nouveaux
+      case 'Min': case 'Sec': {
+        return date.format('ddd DD MMM HH') + 'h' + date.format('mm');
+      }
+      case 'W': case '7D': case 'D':{
         return date.format('ddd DD MMM HH') + 'h';
       }
-      case 'M': case 'Y': {
+      case 'M': case 'Y': case 'RealW': case 'RealM': case 'RealY': case 'nbW': {
         return date.format('ddd DD MMM YYYY');
       }
       default: {

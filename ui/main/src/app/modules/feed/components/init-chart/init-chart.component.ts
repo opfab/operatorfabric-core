@@ -325,6 +325,8 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.followClockTick = false;
     this.firstMoveStartOfUnit = false;
     this.backwardConf = undefined;
+    this.formatTicks = undefined;
+    this.formatTooltipsDate = undefined;
     if (conf) {
       this.buttonHomeActive = false;
       this.continuousForward = 0;
@@ -333,7 +335,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
         this.followClockTick = true;
       }
       if (conf.formatTicks) {
-        this.formatTicks = conf.formatTicks;
+        this.formatTicks = _.cloneDeep(conf.formatTicks);
       }
       if (conf.formatTooltipsDate) {
         this.formatTooltipsDate = conf.formatTooltipsDate;
