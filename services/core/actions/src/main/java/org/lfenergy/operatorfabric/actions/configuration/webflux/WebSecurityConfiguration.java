@@ -63,7 +63,7 @@ public class WebSecurityConfiguration {
                 .and()
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .pathMatchers("/actions/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
+                .pathMatchers("/process/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
                 .anyExchange().authenticated();
 
     }

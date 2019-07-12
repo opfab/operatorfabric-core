@@ -7,24 +7,20 @@
 
 package org.lfenergy.operatorfabric.actions.configuration.webflux;
 
-import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.actions.model.Action;
-import org.lfenergy.operatorfabric.actions.model.ActionStatusData;
-import org.lfenergy.operatorfabric.actions.services.feign.CardConsultationServiceProxy;
-import org.lfenergy.operatorfabric.actions.services.feign.ThirdsServiceProxy;
-import org.lfenergy.operatorfabric.cards.model.Card;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
+import org.lfenergy.operatorfabric.actions.model.ActionStatus;
+import org.lfenergy.operatorfabric.actions.services.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
+import reactor.util.function.Tuple4;
 import reactor.util.function.Tuples;
+
+import java.util.List;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
@@ -34,73 +30,63 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @Configuration
 public class ActionRoutesConfig {
 
-    private final CardConsultationServiceProxy cardService;
-    private final ThirdsServiceProxy thirdsService;
+
+    private final ActionService actionService;
 
     @Autowired
-    public ActionRoutesConfig(CardConsultationServiceProxy cardService, ThirdsServiceProxy thirdsService){
-        this.cardService = cardService;
-        this.thirdsService = thirdsService;
+    public ActionRoutesConfig(ActionService actionService) {
+        this.actionService = actionService;
     }
 
     /**
      * Card route configuration
+     *
      * @return route
      */
     @Bean
     public RouterFunction<ServerResponse> cardRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/process/{processInstanceId}/states/{state}/actions/{actionKey}"),actionGetRoute())
-                .andRoute(RequestPredicates.POST("/process/{processInstanceId}/states/{state}/actions/{actionKey}"),actionPostRoute())
-                .andRoute(RequestPredicates.OPTIONS("/process/{processInstanceId}/states/{state}/actions/{actionKey}"),actionOptionRoute());
+                .route(RequestPredicates.GET("/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionGetRoute())
+                .andRoute(RequestPredicates.POST("/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionPostRoute())
+                .andRoute(RequestPredicates.OPTIONS("/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionOptionRoute());
     }
 
 
     private HandlerFunction<ServerResponse> actionGetRoute() {
         return request -> extractParameters(request)
-                    .flatMap(t -> {
-                        Action action = lookUpAction(t.getT1(),t.getT3());
-                        if(action != null) {
-                            if (action.getUpdateState() || action.getUpdateStateBeforeAction())
-                                return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(ActionStatusData.fromAction(action)));
-                            else
-                                return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(ActionStatusData.fromAction(action)));
-                        }
-                        return notFound().build();
-                    });
-    }
-
-    private HandlerFunction<ServerResponse> actionPostRoute() {
-        return request -> extractParameters(request)
                 .flatMap(t -> {
-                    Action action = lookUpAction(t.getT1(),t.getT3());
-                    if(action != null) {
-                        return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(ActionStatusData.fromAction(action)));
+                        ActionStatus actionStatus = this.actionService.lookUpActionStatus(t.getT1(),t.getT3());
+                    if (actionStatus != null) {
+                            return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(actionStatus));
                     }
                     return notFound().build();
                 });
     }
 
-    private Action lookUpAction(String cardId, String actionKey){
-        try {
-            Card card = this.cardService.fetchCard(cardId);
-            if (card != null) {
-                Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey);
-                if (action != null) {
-                    return action;
-                }
-            }
-            return null;
-        }catch (FeignException fe){
-            throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_GATEWAY)
-                    .message("Error accessing remote service, no fallback behavior").build(),fe);
-        }
+    private HandlerFunction<ServerResponse> actionPostRoute() {
+        return request -> extractParameters(request)
+                .flatMap(t -> {
+                    ActionStatus actionStatus = this.actionService.submitAction(t.getT1(),t.getT3(), t.getT4());
+                    if (actionStatus != null) {
+                        return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(actionStatus));
+                    }
+                    return ok().build();
+                });
     }
 
-    private Mono<Tuple3<String, String, String>> extractParameters(ServerRequest request) {
+
+
+    private Mono<Tuple4<String, String, String, String>> extractParameters(ServerRequest request) {
+        String jwt = null;
+        List<String> authorizations = request.headers().header("Authorization");
+        if(authorizations.size()>0){
+            jwt = authorizations.get(0).replaceAll("Bearer (.+)","$1");
+
+        }
         return Mono.just(Tuples.of(request.pathVariable("processInstanceId"),
                 request.pathVariable("state"),
-                request.pathVariable("actionKey")));
+                request.pathVariable("actionKey"),
+                jwt));
     }
 
     private HandlerFunction<ServerResponse> actionOptionRoute() {
