@@ -963,8 +963,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             // initialisation a new circle
             // it's push on our new Data List only if it's inside the interval
             const newCircle = {
-              start: moment(array[j].startDate),
-              end: moment(array[j].endDate),
+              start: moment(array[j].date),
+              end: moment(array[j].date),
               date: newDate,
               count: 0,
               color: array[j].color,
