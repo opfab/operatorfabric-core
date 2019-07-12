@@ -877,7 +877,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.setFormatLevel();
     }
     this.setXTicksValue(domain);
-    console.log('xticks after set = ', this.xTicks);
     this.xTicksOne = [];
     this.xTicksTwo = [];
     if (this.formatLevel === 'Hou') {
