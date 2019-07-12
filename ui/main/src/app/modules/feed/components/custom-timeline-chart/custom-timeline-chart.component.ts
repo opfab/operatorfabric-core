@@ -168,7 +168,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   // formatting and ticks spacing
-  @Input() clusterLevel;
+  @Input() clusterConf;
+  public clusterLevel;
 
   // Axis
   @Input() xAxis;
@@ -207,6 +208,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   // TICKS
   @Input() centeredOnTicks;
   @Input() clusterTicksToTicks;
+  @Input() formatTicks;
+  @Input() formatTooltipsDate;
   public xTicks: Array<any>;
   public xTicksOne: Array<any>;
   public xTicksTwo: Array<any>;
@@ -496,7 +499,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   fctTickFormattingAdvanced = (e): string => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
     if (this.formatLevel === 'D' || this.formatLevel === 'Min' ||
-        this.formatLevel === 'Sec' || this.formatLevel === 'Wnb') {
+        this.formatLevel === 'Sec' || this.formatLevel === 'nbW') {
       return formatPipe.transformAdvanced(e, this.formatLevel);
     }
     return formatPipe.transform(e, this.formatLevel);
@@ -507,7 +510,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   fctHoveredCircleDateFormatting(e): string {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-    return formatPipe.transformHovered(e, this.formatLevel);
+    if (this.formatTooltipsDate) {
+        return formatPipe.transformHovered(e, this.formatTooltipsDate);
+    } else {
+        return formatPipe.transformHovered(e, this.formatLevel);
+    }
   }
 
   /**
@@ -906,19 +913,17 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
   /**
    * set the format level
-   * run through ticks configuration for find the precision needed
+   * run through ticks configuration for find the format of moment needed
    */
-  setFormatLevel() { // Mettre ne place la selection du formatLevel
-    // celon le domain et le tickConf
-    // plus on précise, plus les ticks sont précis
-    // ex: week: 1 hour: 1 l'affichage doit afficher les heures
+  setFormatLevel() {
+    // Use the more precise unit set on ticks configuration object
     Object.keys(this.clusterLevel).forEach(key => {
       if (key === 'date') {
         this.formatLevel = 'Y';
       } else if (this.clusterLevel[key] > 0) {
         switch (key) {
           case 'weekNb': {
-            this.formatLevel = 'Wnb';
+            this.formatLevel = 'nbW';
             break;
           }
           case 'year': { // change
@@ -952,7 +957,39 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }
       }
     });
+  }
 
+  selectFormatTicks() {
+    let keepGoing = true;
+    if (Array.isArray(this.formatTicks)) {
+      this.formatTicks.forEach(oneSet => {
+        if (keepGoing) {
+          if (oneSet.width <= window.innerWidth) {
+            this.formatLevel = _.cloneDeep(oneSet.formatTicks);
+            keepGoing = false;
+          }
+        }
+      });
+    } else {
+      this.formatLevel = _.cloneDeep(this.formatTicks);
+    }
+  }
+
+  setClusterLevel(domain) { // conf celon la taille de l'ecran et la conf
+    // use domain for automatic cluster cconf
+    let keepGoing = true;
+    if (this.clusterConf && Array.isArray(this.clusterConf)) {
+      this.clusterConf.forEach(oneSet => {
+        if (keepGoing) {
+          if (oneSet.width <= window.innerWidth) {
+            this.clusterLevel = _.cloneDeep(oneSet.conf);
+            keepGoing = false;
+          }
+        }
+      });
+    } else {
+      this.clusterLevel = _.cloneDeep(this.clusterConf);
+    }
   }
 
   /**
@@ -962,11 +999,20 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * @param domain
    */
   setTicksAndClusterize(domain): void {
-    this.setFormatLevel();
+    // rajouter la valeur de clusterLevel celon clusterConf
+    this.setClusterLevel(domain);
+    if (this.formatTicks) {
+      // use format pass on configuration
+      this.selectFormatTicks();
+    } else {
+      // set a format related of ticks configuration
+      this.setFormatLevel();
+    }
     this.setXTicksValue(domain);
     console.log('xticks after set = ', this.xTicks);
     this.xTicksOne = [];
     this.xTicksTwo = [];
+    // Use else if formatTicks is set
     if (this.formatLevel === 'D') {
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(4);
@@ -976,7 +1022,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     } else if (this.formatLevel === 'Sec') {
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(6);
-    } else if (this.formatLevel === 'Wnb') {
+    } else if (this.formatLevel === 'nbW') {
       this.xTicksOne = this.multiHorizontalTicksLine(3);
       this.xTicksTwo = this.multiHorizontalTicksLine(7);
     } else {

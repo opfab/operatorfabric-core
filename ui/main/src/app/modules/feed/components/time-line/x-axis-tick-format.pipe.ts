@@ -16,14 +16,14 @@ export class XAxisTickFormatPipe implements PipeTransform {
     }
     const date = moment(value);
     switch (clusterLevel) {
-      case 'W': case '7D': case 'D': {
+      case 'W': case '7D': case 'D': { // rajouter nouveaux
         return date.format('ddd DD MMM HH') + 'h';
       }
       case 'M': case 'Y': {
         return date.format('ddd DD MMM YYYY');
       }
       default: {
-        return value;
+        return date.format(clusterLevel);
       }
     }
   }
@@ -45,7 +45,7 @@ export class XAxisTickFormatPipe implements PipeTransform {
           return date.format('mm');
         } else if (clusterLevel === 'Sec') {
           return date.format('ss');
-        } else if (clusterLevel === 'Wnb') {
+        } else if (clusterLevel === 'nbW') {
           return date.format('ww');
         }
       }
@@ -121,11 +121,11 @@ export class XAxisTickFormatPipe implements PipeTransform {
       case 'RealY': {
         return date.format('YYYY');
       }
-      case 'Wnb': {
+      case 'nbW': {
         return date.format('YYYY');
       }
       default: {
-        return value;
+        return date.format(clusterLevel);
       }
     }
         // else {

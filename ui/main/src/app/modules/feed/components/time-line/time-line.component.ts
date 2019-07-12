@@ -58,6 +58,16 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             second: 0,
         };
 
+        const domain4YearConf = {
+            year: 4,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+        };
+
         const domain16MonthConf = {
             year: 0,
             month: 16,
@@ -88,16 +98,6 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             minute: 0,
             second: 0,
             startOf: ['month'],
-        };
-
-        const domain20WeekConf = {
-            year: 4,
-            month: 0,
-            week: 0,
-            day: 0,
-            hour: 0,
-            minute: 0,
-            second: 0,
         };
 
         const domainWeekConf = {
@@ -215,9 +215,9 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         const myEnd4 = result[1];
         myEnd4.seconds(0);
 
-        result = this.periodStartToEnd(domain20WeekConf, 'R', false);
+        result = this.periodStartToEnd(domain4YearConf, 'R', false);
         const onlyWeekS = result[0]
-        onlyWeekS.startOf("month");
+        onlyWeekS.startOf('month');
         const onlyWeekE = result[1];
         // FORWARD CONF (movement on domain)
 
@@ -373,6 +373,39 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         // TICKS CONF
 
 
+        const myticksResponsiveConf = [{ width: 1400,
+            conf: {
+                year: 0,
+                month: 4,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            }
+        },{ width: 1100,
+            conf: {
+                year: 0,
+                month: 6,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            }
+        }, {
+            width: 800,
+            conf: {
+                year: 1,
+                month: 0,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            }
+        }];
+
         const myticksYearConf = {
             year: 1,
             month: 0,
@@ -485,6 +518,13 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             weekNb: 1, // 1 show number of week
         };
 
+        const formatTicksConf = [
+            {width: 1400, formatTicks: 'M YYYY'},
+            {width: 1100, formatTicks: 'MM YY'},
+            {width: 800, formatTicks: 'YY'},
+        ];
+
+
         this.conf = {
             enableDrag: false,
             enableZoom: true,
@@ -506,7 +546,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             firstMoveStartOfUnit: true,
         },
         {
-            startDomain: onlyWeekS.valueOf(),
+            startDomain: onlyWeekS.valueOf(), // 4 Years
             endDomain: onlyWeekE.valueOf(),
             buttonTitle: '7W',
             forwardConf: forwardWeekConf,
@@ -542,7 +582,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             firstMoveStartOfUnit: false,
         },
         {
-            startDomain: startDomain5.valueOf(),
+            startDomain: startDomain5.valueOf(), // 16 Months
             endDomain: endDomain5.valueOf(),
             buttonTitle: 'nbW',
             forwardConf: forwardMonthConf,
@@ -564,7 +604,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             endDomain: endDomain7.valueOf(),
             buttonTitle: '60Y',
             forwardConf: forwardYearConf,
-            ticksConf: myticksYearConf,
+            ticksConf: myticksResponsiveConf, // myticksYearConf,
+            formatTicks: formatTicksConf,
             followClockTick: false,
             firstMoveStartOfUnit: false,
         },
@@ -575,7 +616,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             forwardConf: forwardDayConf,
             ticksConf: ticks4HoursConf,
             followClockTick: true,
-            firstMoveStartOfUnit: false,
+            firstMoveStartOfUnit: true,
         },
         {
             startDomain: startDomain2.valueOf(),
@@ -583,6 +624,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             buttonTitle: 'M',
             forwardConf: forwardMonthConf,
             ticksConf: ticksDayConf,
+            formatTicks: 'DD/MM',
+            // formatTooltipsDate: 'DD/MM',
             followClockTick: true,
             firstMoveStartOfUnit: true,
         },

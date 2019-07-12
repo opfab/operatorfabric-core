@@ -36,18 +36,22 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public circleDiameter: number;
 
   // required for domain movements specifications
+  public forwardConf: any; // could make interface
+  public backwardConf: any; // could make interface
   public followClockTick: boolean;
   private firstMoveStartOfUnit: boolean;
   private continuousForward: number;
 
-  // buttons
-  public forwardConf: any; // could make interface
-  public backwardConf: any; // could make interface
+  // ticks
+  public formatTicks: any;
   public ticksConf: any; // could make interface
+  public formatTooltipsDate: any; // could make interface
+
+  // buttons
   public buttonTitle: string;
-  public zoomButtonsActive: boolean;
   public buttonHome: number[];
   public buttonHomeActive: boolean;
+  public zoomButtonsActive: boolean;
   public buttonList;
   private buttonListWidth: number;
 
@@ -273,7 +277,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
           day: 0,
           hour: 0,
           minute: 0,
-          seconde: 0,
+          second: 0,
         },
         end: {
           year: 0,
@@ -282,7 +286,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
           day: 0,
           hour: 0,
           minute: 0,
-          seconde: 0,
+          second: 0,
         },
       };
       this.ticksConf = {
@@ -291,7 +295,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
         week: 0,
         day: 0,
         hour: 4,
-        seconde: 0,
+        second: 0,
       };
       this.zoomButtonsActive = true;
       const startDomain = moment();
@@ -327,6 +331,12 @@ export class InitChartComponent implements OnInit, OnDestroy {
       this.setStartAndEndDomain(conf.startDomain, conf.endDomain);
       if (conf.followClockTick) {
         this.followClockTick = true;
+      }
+      if (conf.formatTicks) {
+        this.formatTicks = conf.formatTicks;
+      }
+      if (conf.formatTooltipsDate) {
+        this.formatTooltipsDate = conf.formatTooltipsDate;
       }
       if (conf.firstMoveStartOfUnit) {
         this.firstMoveStartOfUnit = true;

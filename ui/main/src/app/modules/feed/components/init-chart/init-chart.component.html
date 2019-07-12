@@ -54,11 +54,13 @@
                              [zoomOnButton]="true"
                              [enableDrag]="enableDrag"
                              [realTimeBar]="realTimeBar"
-                             [clusterLevel]="ticksConf"
+                             [clusterConf]="ticksConf"
                              [centeredOnTicks]="centeredOnTicks"
                              [clusterTicksToTicks]="clusterTicksToTicks"
                              [circleDiameter]="circleDiameter"
                              [followClockTick]="followClockTick"
+                             [formatTicks]="formatTicks"
+                             [formatTooltipsDate]="formatTooltipsDate"
                              (zoomChange)="applyNewZoom($event)">
   </of-custom-timeline-chart>
 </div>
