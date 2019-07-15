@@ -1,6 +1,6 @@
 <br>
-<ng-template #testPopContent>This is '{{name}}'<br>
-    <button type="button" class="btn btn-outline-secondary">ok</button>
+<ng-template #testPopContent>This is '{{action.label}}'<br>
+    <button type="button" class="btn btn-outline-secondary" (click)="submit()" >ok</button>
 </ng-template>
 <ng-template #testPopTitle>Action !</ng-template>
 <button type="button"
