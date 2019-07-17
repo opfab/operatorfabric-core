@@ -1,6 +1,6 @@
 import {
     Directive, ElementRef, AfterViewChecked,
-    Input, HostListener, AfterViewInit, OnChanges, SimpleChanges
+    Input, HostListener, AfterViewInit, OnChanges, SimpleChanges, OnInit
 } from '@angular/core';
 import {debounceTime, distinctUntilChanged, tap, throttleTime} from "rxjs/operators";
 import {Observable, Subject} from "rxjs";
@@ -9,7 +9,7 @@ import {now} from "moment";
 @Directive({
     selector: '[calcHeightDirective]'
 })
-export class CalcHeightDirective {
+export class CalcHeightDirective implements OnInit {
 
     //TODO Get rid of cascading "style="height: 100%;"
 
@@ -32,8 +32,12 @@ export class CalcHeightDirective {
     @HostListener('window:resize', ['$event.target.innerHeight'])
     onResize(height: number) {
 
-        this._resizeSubject$.next(height);
+        this._resizeSubject$.next(height); //TODO Do we really need height?
 
+    }
+
+    ngOnInit(): void {
+        this._resizeSubject$.next(0); //TODO find a way to bypass debounce
     }
 
     calcHeight(parent: HTMLElement, fixedHeightClass: string, calcHeightClass: string) {

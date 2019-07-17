@@ -16,7 +16,6 @@ import {zip} from "rxjs";
 @Component({
     selector: 'of-detail',
     templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit {
     public active = false;
