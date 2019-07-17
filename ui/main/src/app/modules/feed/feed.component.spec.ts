@@ -71,7 +71,7 @@ describe('FeedComponent', () => {
         // title exists
         // expect(compiled.querySelector('h3').textContent).toContain('Feed');
         // no list in it
-        expect(compiled.querySelector('.feed-content > div')).toBeFalsy();
+        expect(compiled.querySelector('.calc-height-feed-content > div')).toBeFalsy();
     });
 
     it('should create a list with one element when there are ' +
@@ -93,7 +93,7 @@ describe('FeedComponent', () => {
         // title exists
         // expect(compiled.querySelector('h3').textContent).toContain('Feed');
         // a list exists
-        expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
+        expect(compiled.querySelector('.calc-height-feed-content > div')).toBeTruthy();
     });
 
     it('should create a list with two elements when there are ' +
@@ -115,9 +115,9 @@ describe('FeedComponent', () => {
         // title exists
         // expect(compiled.querySelector('h3').textContent).toContain('Feed');
         // a list exists
-        expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
+        expect(compiled.querySelector('.calc-height-feed-content > div')).toBeTruthy();
         // counts the list elements
-        const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
+        const listElements = fixture.debugElement.queryAll(By.css('.calc-height-feed-content > div'));
         const numberOfCardsInTheActionPayload = 2;
         expect(listElements.length).toEqual(numberOfCardsInTheActionPayload);
     });
@@ -143,9 +143,9 @@ describe('FeedComponent', () => {
         // title exists
         // expect(compiled.nativeElement.querySelector('h3').textContent).toContain('Feed');
         // a list exists
-        expect(compiled.nativeElement.querySelector('.feed-content > div')).toBeTruthy();
+        expect(compiled.nativeElement.querySelector('.calc-height-feed-content > div')).toBeTruthy();
         // counts list elements
-        const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
+        const listElements = fixture.debugElement.queryAll(By.css('.calc-height-feed-content > div'));
         const totalNumberOfLightCardsPassByActions = 2;
         expect(listElements.length).toEqual(totalNumberOfLightCardsPassByActions);
 
@@ -166,7 +166,7 @@ describe('FeedComponent', () => {
         const compiled = fixture.debugElement;
         expect(compiled.nativeElement.querySelector('.feed-content > div')).toBeTruthy();
         // counts list elements
-        const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
+        const listElements = fixture.debugElement.queryAll(By.css('.calc-height-feed-content > div'));
         expect(listElements.length).toEqual(totalNumberOfLightCards);
 
     });
