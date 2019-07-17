@@ -8,6 +8,9 @@
 import {Card, Detail} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap} from "@ofModel/map";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {EMPTY, Observable, of} from "rxjs";
+import {map} from "rxjs/operators";
 
 export class Third{
     /* istanbul ignore next */
@@ -89,6 +92,17 @@ export class Action {
         readonly called: boolean = false,
         readonly needsConfirm: boolean = false,
     ) {
+    }
+
+    update(httpClient: HttpClient, url:string, params: HttpParams):Observable<Action>{
+        if(this.isUnlock()){
+            return  httpClient.get(url,{params,responseType: 'text'}).pipe(map(json=>JSON.parse(json)))
+        }
+        return of(null);
+    }
+
+    isUnlock():boolean{
+        return !this.lockAction;
     }
 }
 

@@ -19,7 +19,8 @@ export const environment = {
         archives : '',
         thirds: 'http://localhost:2002/thirds',
         config: 'http://localhost:2002/config/web-ui.json',
-        time: 'http://localhost:2002/time'
+        time: 'http://localhost:2002/time',
+      actions:'http://localhost:2002/actions'
     }
 };
 

@@ -15,7 +15,8 @@ export const environment = {
         archives : '',
         thirds: '/thirds',
         config: '/config/web-ui.json',
-        time: '/time'
+        time: '/time',
+        actions: '/actions'
 
     }
 };
