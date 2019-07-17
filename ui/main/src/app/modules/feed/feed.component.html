@@ -5,17 +5,17 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 <div class="container-fluid">
-    <div class="row" *ngIf="!hideTimeLine">
+    <div class="row fixed-height-main-layout" *ngIf="!hideTimeLine">
         <div class="col-12" style="margin-bottom: 1rem;">
             <of-time-line></of-time-line>
         </div>
     </div>
-    <div class="row">
-        <div class="col-3">
-            <of-card-list [lightCards]="lightCards$|async" [selection]="selection$"></of-card-list>
+    <div class="row calc-height-main-layout">
+        <div class="col-3" style="height: 100%">
+            <of-card-list style="height: 100%" [lightCards]="lightCards$|async" [selection]="selection$"></of-card-list>
         </div>
-        <div class="col-9">
-            <router-outlet></router-outlet>
+        <div class="col-9" style="height: 100%">
+            <router-outlet style="height: 100%"></router-outlet>
         </div>
     </div>
 </div>

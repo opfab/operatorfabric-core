@@ -4,14 +4,16 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<of-navbar *ngIf="isAuthenticated$"></of-navbar>
-<router-outlet *ngIf="isAuthenticated$ && configLoaded" ></router-outlet>
-<of-login *ngIf="!isAuthenticated$ && configLoaded"></of-login>
-<div *ngIf="!configLoaded">
+<div class="app-component-content" calcHeightDirective fixedHeightClass="fixed-height-main-layout" calcHeightClass="calc-height-main-layout">
+    <of-navbar *ngIf="isAuthenticated$"></of-navbar>
+    <router-outlet *ngIf="isAuthenticated$ && configLoaded" ></router-outlet>
+    <of-login *ngIf="!isAuthenticated$ && configLoaded"></of-login>
+    <div *ngIf="!configLoaded">
     <span *ngIf="!maxedRetries">
         Application is loading ...
     </span>
-    <span *ngIf="maxedRetries">
+        <span *ngIf="maxedRetries">
         Application is not available yet, please reload later (F5)
     </span>
+    </div>
 </div>

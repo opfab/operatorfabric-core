@@ -31,6 +31,7 @@ import {InitChartComponent} from "./components/init-chart/init-chart.component";
 import {TagsFilterComponent } from './components/card-list/filters/tags-filter/tags-filter.component';
 import {TypeaheadModule} from "ngx-type-ahead";
 import {TimeService} from "@ofServices/time.service";
+import {UtilitiesModule} from "../utilities/utilities.module";
 
 library.add(faClock);
 
@@ -47,6 +48,7 @@ library.add(faClock);
         CardsModule,
         FeedRoutingModule,
         FontAwesomeModule,
+        UtilitiesModule
     ],
     declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent, TimeFilterComponent,
         InitChartComponent,

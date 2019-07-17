@@ -26,6 +26,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import { InfoComponent } from './components/navbar/info/info.component';
+import {UtilitiesModule} from "./modules/utilities/utilities.module";
 
 library.add(faExternalLinkAlt);
 library.add(faSignOutAlt)
@@ -43,7 +44,8 @@ library.add(faSignOutAlt)
         ServicesModule.forRoot(),
         NgbModule,
         TranslateModule.forRoot(translateConfig),
-        FontAwesomeModule
+        FontAwesomeModule,
+        UtilitiesModule
     ],
     declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent, InfoComponent],
     providers: [ { provide: LocationStrategy, useClass: HashLocationStrategy }],

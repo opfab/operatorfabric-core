@@ -14,7 +14,7 @@
 @import "utilities.scss";
 @import "popover.scss";
 
-$top-padding: 80px ;
+$top-padding: 10px ;
 $bottom-padding: 10px ;
 $body-padding: $top-padding 20px $bottom-padding 20px ;
 $total-vertical-padding: $top-padding + $bottom-padding ;
@@ -24,11 +24,6 @@ body {
   padding: $body-padding;
   min-width: 500px;
   background-color: $dark;
-}
-
-
-.global-view{
-  height: -webkit-calc(100vh - #{$total-vertical-padding});
-  height: -moz-calc(100vh - #{$total-vertical-padding});
-  height: calc(100vh - #{$total-vertical-padding});
+  height: 100vh;
+  overflow-y: scroll;
 }
