@@ -18,7 +18,7 @@ tags:
 schemes:
   - http
 paths:
-  '/process/{processInstanceId}/states/{state}/actions/{actionKey}':
+  '/publisher/{publisher}/process/{processInstanceId}/states/{state}/actions/{actionKey}':
     get:
       tags:
         - actions
@@ -48,9 +48,7 @@ paths:
         '200':
           description: OK
           schema:
-            type: object
-            additionalProperties:
-              $ref: '#/definitions/ActionStatus'
+            $ref: '#/definitions/ActionStatus'
         '404':
           description: No such Process, State or Action
         '401':
@@ -84,9 +82,7 @@ paths:
         '200':
           description: OK
           schema:
-            type: object
-            additionalProperties:
-              $ref: '#/definitions/ActionStatus'
+            $ref: '#/definitions/ActionStatus'
         '404':
           description: No such Process, State or Action
         '401':
@@ -310,11 +306,9 @@ definitions:
       - type
       - label
     example:
-      type: URL
       lockAction: true
       lockCard: true
       needsConfirm: false
-      called: false
       updateState: false
       updateStateBeforeAction: false
       hidden: true

@@ -16,9 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple3;
-import reactor.util.function.Tuple4;
-import reactor.util.function.Tuples;
+import reactor.util.function.*;
 
 import java.util.List;
 
@@ -46,16 +44,18 @@ public class ActionRoutesConfig {
     @Bean
     public RouterFunction<ServerResponse> cardRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionGetRoute())
-                .andRoute(RequestPredicates.POST("/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionPostRoute())
-                .andRoute(RequestPredicates.OPTIONS("/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionOptionRoute());
+                .route(RequestPredicates.GET("/test"),r->ok().build())
+                .andRoute(RequestPredicates.GET("/publisher/{publisher}/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionGetRoute())
+                .andRoute(RequestPredicates.POST("/publisher/{publisher}/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionPostRoute())
+                .andRoute(RequestPredicates.OPTIONS("/publisher/{publisher}/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionOptionRoute())
+                ;
     }
 
 
     private HandlerFunction<ServerResponse> actionGetRoute() {
         return request -> extractParameters(request)
                 .flatMap(t -> {
-                        ActionStatus actionStatus = this.actionService.lookUpActionStatus(t.getT1(),t.getT3());
+                        ActionStatus actionStatus = this.actionService.lookUpActionStatus(t.getT1(),t.getT2(),t.getT3(),t.getT4(),t.getT5());
                     if (actionStatus != null) {
                             return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(actionStatus));
                     }
@@ -66,7 +66,7 @@ public class ActionRoutesConfig {
     private HandlerFunction<ServerResponse> actionPostRoute() {
         return request -> extractParameters(request)
                 .flatMap(t -> {
-                    ActionStatus actionStatus = this.actionService.submitAction(t.getT1(),t.getT3(), t.getT4());
+                    ActionStatus actionStatus = this.actionService.submitAction(t.getT1(),t.getT2(),t.getT3(),t.getT4(),t.getT5(),t.getT6());
                     if (actionStatus != null) {
                         return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(actionStatus));
                     }
@@ -76,17 +76,23 @@ public class ActionRoutesConfig {
 
 
 
-    private Mono<Tuple4<String, String, String, String>> extractParameters(ServerRequest request) {
+    private Mono<Tuple6<String, String, String, String, String,String>> extractParameters(ServerRequest request) {
         String jwt = null;
         List<String> authorizations = request.headers().header("Authorization");
         if(authorizations.size()>0){
             jwt = authorizations.get(0).replaceAll("Bearer (.+)","$1");
 
         }
-        return Mono.just(Tuples.of(request.pathVariable("processInstanceId"),
+        final String finalJwt = jwt;
+        return request.bodyToMono(String.class)
+                .switchIfEmpty(Mono.just(""))
+                .map(body->Tuples.of(
+                request.pathVariable("publisher"),
+                request.pathVariable("processInstanceId"),
                 request.pathVariable("state"),
                 request.pathVariable("actionKey"),
-                jwt));
+                finalJwt,
+                body));
     }
 
     private HandlerFunction<ServerResponse> actionOptionRoute() {

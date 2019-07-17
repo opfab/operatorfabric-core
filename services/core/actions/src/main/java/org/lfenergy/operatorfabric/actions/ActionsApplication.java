@@ -9,7 +9,6 @@ package org.lfenergy.operatorfabric.actions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.actions.services.feign.CardConsultationServiceProxy;
-import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.EnableReactiveOperatorFabricOAuth2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +16,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 
 @SpringBootApplication
@@ -25,8 +23,8 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @RefreshScope
 @EnableDiscoveryClient
 @EnableReactiveOperatorFabricOAuth2
-@EnableOperatorFabricMongo
-@EnableReactiveMongoRepositories
+//@EnableOperatorFabricMongo
+//@EnableReactiveMongoRepositories
 @EnableFeignClients(basePackageClasses = CardConsultationServiceProxy.class)
 //@ImportResource("classpath:/amqp.xml")
 public class ActionsApplication {

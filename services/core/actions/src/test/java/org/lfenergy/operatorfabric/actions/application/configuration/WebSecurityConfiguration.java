@@ -14,8 +14,6 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
-import static org.lfenergy.operatorfabric.cards.consultation.configuration.webflux.WebSecurityConfiguration.configureCommon;
-
 
 /**
  * Configures web security
@@ -29,7 +27,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.configuration.webfl
 @Configuration
 @Slf4j
 @EnableWebFluxSecurity
-public class WebSecurityConfiguration {
+public class WebSecurityConfiguration extends org.lfenergy.operatorfabric.actions.configuration.webflux.WebSecurityConfiguration {
 
     /**
      * Secures access (all uris are secured)

@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.lfenergy.operatorfabric.cards.consultation.configuration.webflux;
+package org.lfenergy.operatorfabric.actions.configuration.webflux;
 
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
@@ -36,7 +36,7 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
         Throwable originThrowable = getError(request);
         map.put("origin",originThrowable);
         if(originThrowable instanceof ApiErrorException) {
-            map.put("status", ((ApiErrorException)originThrowable).getError().getStatus());
+            map.put("status", ((ApiErrorException)originThrowable).getError().getStatus().value());
             map.put("message", ((ApiErrorException)originThrowable).getError().getMessage());
         }
         return map;

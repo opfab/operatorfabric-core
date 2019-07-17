@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.lfenergy.operatorfabric.cards.consultation.configuration.webflux;
+package org.lfenergy.operatorfabric.actions.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +14,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,7 @@ import reactor.core.publisher.Mono;
 @Configuration
 @Slf4j
 @EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 public class WebSecurityConfiguration {
 
     /**
@@ -63,7 +65,7 @@ public class WebSecurityConfiguration {
                 .and()
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .pathMatchers("/process/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
+                .pathMatchers("/publisher/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
                 .anyExchange().authenticated();
 
     }

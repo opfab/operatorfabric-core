@@ -147,7 +147,7 @@ piece_of_data(){
     piece+="  \"publisherVersion\": \"1\", "$'\n'
     piece+="  \"process\": \"$2\", "$'\n'
     piece+="  \"processId\": \"$2$6\", "$'\n'
-#    piece+="  \"state\": \"firstState\", "$'\n'
+    piece+="  \"state\": \"firstState\", "$'\n'
 #    piece+="  \"startDate\": $3, "$'\n'
     piece+=$date
     piece+="  \"endDate\": $5, "$'\n'
