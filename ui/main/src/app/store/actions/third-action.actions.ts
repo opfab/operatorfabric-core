@@ -22,17 +22,18 @@ export class LoadThirdActionSuccess implements Action {
 
     constructor(public payload: { actions: Map<string, ThirdAction> }) {
     }
+
 }
 
 export class LoadThirdActionFailure implements Action {
     readonly type = ThirdActionTypes.LoadThirdActionFailure;
 
     constructor(public payload: { error: Error }) {
-
     }
+
 }
 
-export type ThirdActionsActions =
+export type ThirdActionActions =
     LoadThirdAction
     | LoadThirdActionSuccess
     | LoadThirdActionFailure;
