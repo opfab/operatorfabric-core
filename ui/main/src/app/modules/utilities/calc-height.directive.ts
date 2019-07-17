@@ -11,7 +11,7 @@ import {now} from "moment";
 })
 export class CalcHeightDirective {
 
-    //TODO Fix padding error
+    //TODO Get rid of cascading "style="height: 100%;"
 
     @Input()
     fixedHeightClass: any;
@@ -51,35 +51,16 @@ export class CalcHeightDirective {
 
         //Sum heights of fixed elements
         const sumFixElemHeights = Array.from(fixedElements)
-            .map(x => x.getBoundingClientRect().height).reduce((prev, curr) => {
+            .map(x => x.getBoundingClientRect().height).reduce((prev, curr) => { //TODO Find out if should be replaced by clientHeight or offsetHeight
                 return prev + curr;
             }, 0);
 
         // Calculate available height by subtracting the heights of fixed elements from the total window height
-
-        //const availableHeight = window.innerHeight - sumFixElemHeights;
-        //const availableHeight = parent.getElementsByTagName("body").item(0).getBoundingClientRect().height - sumFixElemHeights;
-        //const availableHeight = document.getElementsByTagName("body").item(0).getBoundingClientRect().height - sumFixElemHeights;
-        //const availableHeight = parent.getBoundingClientRect().height - sumFixElemHeights;
-        //TODO Find a better way to define total height depending on the calling element
-        let availableHeight = 0;
-        if(calcHeightClass == "calc-height-main-layout") {
-            availableHeight = document.getElementsByTagName("body").item(0).getBoundingClientRect().height - sumFixElemHeights;
-        } else if (calcHeightClass == "calc-height-feed-content") {
-            availableHeight = parent.getBoundingClientRect().height - sumFixElemHeights;
-        } else {
-            console.log("CalcHeightDirective - unexpected behaviour");
-        }
+        let availableHeight = parent.clientHeight - sumFixElemHeights;
 
         // Apply height and overflow
         Array.from(calcElements)
-            .forEach((x: HTMLElement) =>
-            {
-                x.style.height = `${availableHeight}px`;
-                x.style.overflowY = 'scroll'
-                x.style.overflowX = 'hidden';
-
-            });
-
+            .forEach((x: HTMLElement) => x.style.height = `${availableHeight}px`
+            );
     }
 }

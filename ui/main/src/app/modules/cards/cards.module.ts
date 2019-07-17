@@ -14,12 +14,14 @@ import {DetailComponent} from "./components/detail/detail.component";
 import {TranslateModule} from "@ngx-translate/core";
 import {ThirdsService} from "../../services/thirds.service";
 import {HandlebarsService} from "./services/handlebars.service";
+import {UtilitiesModule} from "../utilities/utilities.module";
 
 @NgModule({
   declarations: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
   imports: [
     CommonModule,
-      TranslateModule
+      TranslateModule,
+      UtilitiesModule
   ],
     exports: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
     providers: [HandlebarsService]

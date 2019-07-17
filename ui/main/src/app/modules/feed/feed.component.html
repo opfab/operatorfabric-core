@@ -14,8 +14,8 @@
         <div class="col-3" style="height: 100%">
             <of-card-list style="height: 100%" [lightCards]="lightCards$|async" [selection]="selection$"></of-card-list>
         </div>
-        <div class="col-9" style="height: 100%">
-            <router-outlet style="height: 100%"></router-outlet>
+        <div class="col-9" style="height: 100%" calcHeightDirective fixedHeightClass="fixed-height-details" calcHeightClass="calc-height-details">
+            <router-outlet></router-outlet>
         </div>
     </div>
 </div>
