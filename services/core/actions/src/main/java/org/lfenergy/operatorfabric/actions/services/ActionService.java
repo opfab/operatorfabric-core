@@ -32,12 +32,14 @@ public class ActionService {
     private final CardConsultationServiceProxy cardService;
     private final ThirdsServiceProxy thirdsService;
     private final ObjectMapper objectMapper;
+    private RestTemplate restTemplate;
 
     @Autowired
-    public ActionService(CardConsultationServiceProxy cardService, ThirdsServiceProxy thirdsService, ObjectMapper objectMapper) {
+    public ActionService(CardConsultationServiceProxy cardService, ThirdsServiceProxy thirdsService, ObjectMapper objectMapper, RestTemplate restTemplate) {
         this.cardService = cardService;
         this.thirdsService = thirdsService;
         this.objectMapper = objectMapper;
+        this.restTemplate = restTemplate;
     }
 
 
@@ -71,21 +73,25 @@ public class ActionService {
             Card card = this.cardService.fetchCard(publisher + "_" + process, "Bearer " + jwt);
             if (card != null) {
                 Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey, "Bearer " + jwt);
-                if (action != null && (action.getUpdateState() || action.getUpdateStateBeforeAction())) {
-
+                if (action != null) {
                     return sendAction(action, card, jwt, body);
                 }
             }
             return null;
         } catch (FeignException fe) {
-            throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_GATEWAY)
-                    .message("Error accessing remote service, no fallback behavior").build(), fe);
+            switch (fe.status()) {
+                case 404:
+                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+                            .message("No such card or action").build(), fe);
+                default:
+                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_GATEWAY)
+                            .message("Error accessing remote service, no fallback behavior").build(), fe);
+            }
         }
     }
 
     private ActionStatus sendAction(Action action, Card card, String jwt, String body) {
         String url = replaceTokens(action, card, jwt);
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> result = restTemplate.postForEntity(url, body, String.class);
 
         return extractStatus(result);
@@ -104,15 +110,14 @@ public class ActionService {
         }
     }
 
-    private ActionStatus updateAction(Action action, Card card, String jwt) {
+    ActionStatus updateAction(Action action, Card card, String jwt) {
         String url = replaceTokens(action, card, jwt);
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
 
         return extractStatus(result);
     }
 
-    private String replaceTokens(Action action, Card card, String jwt) {
+    String replaceTokens(Action action, Card card, String jwt) {
         Matcher urlMatcher = TOKEN_PATTERN.matcher(action.getUrl());
         StringBuffer sb = new StringBuffer((action.getUrl().length()));
         while (urlMatcher.find()) {
