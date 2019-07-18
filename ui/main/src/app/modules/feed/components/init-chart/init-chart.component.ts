@@ -133,7 +133,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
   setChartData(): void {
     this.subscription = this.data$.pipe(debounceTime(300), distinctUntilChanged())
         .subscribe(value => {
-      // console.log('init-chart subscribe');
       const chartData = _.cloneDeep(value);
       this.setArrayChartData(chartData);
     });
