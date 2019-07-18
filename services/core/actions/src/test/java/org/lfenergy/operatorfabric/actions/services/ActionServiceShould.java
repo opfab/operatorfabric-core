@@ -132,9 +132,23 @@ public class ActionServiceShould {
                 );
         assertException(ApiErrorException.class).isThrownBy(()-> {
             this.actionService.updateAction(this.action, this.card, "abc");
-        }).withMessage("Specified action was not handle by third party endpoint (not found)");
+        }).withMessage(ActionService.REMOTE_404_MESSAGE);
     }
 
+    @Test
+    void updateAction503() throws URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE)
+                );
+        assertException(ApiErrorException.class).isThrownBy(()-> {
+            this.actionService.updateAction(this.action, this.card, "abc");
+        }).withMessage(ActionService.UNEXPECTED_REMOTE_3RD_MESSAGE);
+    }
 
     @Test
     void sendAction() throws URISyntaxException, JsonProcessingException {
@@ -149,6 +163,36 @@ public class ActionServiceShould {
                         .body(mapper.writeValueAsString(actionStatus))
                 );
         assertThat(this.actionService.sendAction(this.action, this.card, "abc", null)).isEqualTo(actionStatus);
+    }
+
+    @Test
+    void sendAction404() throws URISyntaxException, JsonProcessingException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.NOT_FOUND)
+                );
+        assertException(ApiErrorException.class).isThrownBy(()-> {
+            this.actionService.sendAction(this.action, this.card, "abc", null);
+        }).withMessage(ActionService.REMOTE_404_MESSAGE);
+    }
+
+    @Test
+    void sendAction503() throws URISyntaxException, JsonProcessingException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE)
+                );
+        assertException(ApiErrorException.class).isThrownBy(()-> {
+            this.actionService.sendAction(this.action, this.card, "abc", null);
+        }).withMessage(ActionService.UNEXPECTED_REMOTE_3RD_MESSAGE);
     }
 
     @Test

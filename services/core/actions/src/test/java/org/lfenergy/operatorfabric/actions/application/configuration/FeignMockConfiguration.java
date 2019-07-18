@@ -47,8 +47,11 @@ public class FeignMockConfiguration {
         MockClient mockClient = new MockClient();
         mockClient = mockClient
                 .ok(HttpMethod.GET, "/cards/"+card.getPublisher()+"_"+card.getProcessId(), mapper.writeValueAsString(card))
+                .ok(HttpMethod.GET, "/cards/no_publisher_"+card.getProcessId(), "")
                 .ok(HttpMethod.POST, "/cards/"+card.getPublisher()+"_"+card.getProcessId(), mapper.writeValueAsString(card))
+                .ok(HttpMethod.POST, "/cards/no_publisher_"+card.getProcessId(), "")
                 .ok(HttpMethod.GET, "/thirds/"+card.getPublisher()+"/"+card.getProcess()+"/"+card.getState()+"/actions/action1", mapper.writeValueAsString(action))
+                .ok(HttpMethod.GET, "/thirds/no_publisher/"+card.getProcess()+"/"+card.getState()+"/actions/action1", "")
         ;
 
         return mockClient;

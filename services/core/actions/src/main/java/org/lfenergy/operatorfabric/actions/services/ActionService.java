@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -29,6 +30,9 @@ import java.util.regex.Pattern;
 public class ActionService {
 
     public static final String BEARER_PREFIX = "Bearer ";
+    static final String REMOTE_404_MESSAGE = "Specified action was not handle by third party endpoint (not found)";
+    static final String UNEXPECTED_REMOTE_3RD_MESSAGE = "Unexpected behaviour of third party handler endpoint";
+    static final String DELINEARIZING_ERROR_MESSAGE = "Exception delinearizing data from remote action url";
     private static Pattern TOKEN_PATTERN = Pattern.compile("\\{(.+?)\\}");
 
     private final CardConsultationServiceProxy cardService;
@@ -58,15 +62,25 @@ public class ActionService {
             }
             return null;
         } catch (FeignException fe) {
-            switch (fe.status()) {
-                case 404:
-                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
-                            .message("No such card or action").build(), fe);
-                default:
-                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_GATEWAY)
-                            .message("Error accessing remote service, no fallback behavior").build(), fe);
-            }
+            throw handleFeignException(fe);
 
+        }
+    }
+
+    private ApiErrorException handleFeignException(FeignException fe) {
+        switch (fe.status()) {
+            case 404:
+                return new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+                        .message("No such card or action").build(), fe);
+            case 401:
+                return new ApiErrorException(ApiError.builder().status(HttpStatus.UNAUTHORIZED)
+                        .message("Remote service returned 401(Unauthorized), authentication may have expired or remote service is incorrectly configured").build(), fe);
+            case 403:
+                return new ApiErrorException(ApiError.builder().status(HttpStatus.UNAUTHORIZED)
+                        .message("Remote service returned 403(Unauthorized), user not allowed to acces resource").build(), fe);
+            default:
+                return new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_GATEWAY)
+                        .message("Error accessing remote service, no fallback behavior").build(), fe);
         }
     }
 
@@ -81,20 +95,7 @@ public class ActionService {
             }
             return null;
         } catch (FeignException fe) {
-            switch (fe.status()) {
-                case 404:
-                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
-                            .message("No such card or action").build(), fe);
-                case 401:
-                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.UNAUTHORIZED)
-                            .message("Remote service returned 401(Unauthorized), authentication may have expired or remote service is incorrectly configured").build(), fe);
-                case 403:
-                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.UNAUTHORIZED)
-                            .message("Remote service returned 403(Unauthorized), user not allowed to acces resource").build(), fe);
-                default:
-                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_GATEWAY)
-                            .message("Error accessing remote service, no fallback behavior").build(), fe);
-            }
+            throw handleFeignException(fe);
         }
     }
 
@@ -102,17 +103,16 @@ public class ActionService {
         try {
             String url = replaceTokens(action, card, jwt);
             ResponseEntity<String> result = restTemplate.postForEntity(url, body, String.class);
-
             return extractStatus(result);
         } catch (HttpClientErrorException.NotFound ex) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_GATEWAY)
-                    .message("Specified action was not handle by third party endpoint (not found)")
+                    .message(REMOTE_404_MESSAGE)
                     .build());
-        } catch (HttpClientErrorException ex) {
+        } catch (HttpClientErrorException | HttpServerErrorException ex) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_GATEWAY)
-                    .message("Unexpected behaviour of rthird party handler endpoint")
+                    .message(UNEXPECTED_REMOTE_3RD_MESSAGE)
                     .build());
         }
     }
@@ -123,14 +123,14 @@ public class ActionService {
                 try {
                     return this.objectMapper.readValue(entity.getBody(), ActionStatusData.class);
                 } catch (IOException e) {
-                    log.warn("Exception delinearizing data from remote action url", e);
+                    log.warn(DELINEARIZING_ERROR_MESSAGE, e);
                 }
             case 204:
                 return null;
             default:
                 throw new ApiErrorException(ApiError.builder()
                         .status(HttpStatus.BAD_GATEWAY)
-                        .message("Unexpected behaviour of rthird party handler endpoint")
+                        .message(UNEXPECTED_REMOTE_3RD_MESSAGE)
                         .build());
         }
     }
@@ -143,12 +143,12 @@ public class ActionService {
         } catch (HttpClientErrorException.NotFound ex) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_GATEWAY)
-                    .message("Specified action was not handle by third party endpoint (not found)")
+                    .message(REMOTE_404_MESSAGE)
                     .build());
-        } catch (HttpClientErrorException ex) {
+        } catch (HttpClientErrorException | HttpServerErrorException ex) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_GATEWAY)
-                    .message("Unexpected behaviour of rthird party handler endpoint")
+                    .message(UNEXPECTED_REMOTE_3RD_MESSAGE)
                     .build());
         }
 
