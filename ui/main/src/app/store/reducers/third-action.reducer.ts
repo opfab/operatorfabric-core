@@ -4,7 +4,7 @@ import {ThirdActionActions, ThirdActionTypes} from "@ofActions/third-action.acti
 export function reducer(state=initialThirdActionState,
                         action:ThirdActionActions):ThirdActionState{
     switch (action.type) {
-        case ThirdActionTypes.LoadThirdAction:{
+        case ThirdActionTypes.LoadThirdActions:{
             return{...state}
         }
         default:{

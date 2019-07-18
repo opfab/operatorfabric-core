@@ -215,7 +215,7 @@ export class ThirdsService {
         return this.$injector.get(TranslateService);
     }
 
-    fetchActionsFromLightCard(card:LightCard):Observable<any>{
+    fetchActionsFromLightCard(card:LightCard):Observable<Map<string,Action>>{
         return this.fetchActions(card.publisher,card.process,card.state,card.publisherVersion);
     }
 
