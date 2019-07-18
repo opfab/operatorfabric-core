@@ -14,7 +14,6 @@ import org.lfenergy.operatorfabric.actions.model.ActionStatusData;
 import org.lfenergy.operatorfabric.actions.model.I18nData;
 import org.lfenergy.operatorfabric.cards.model.Card;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.test.AssertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
@@ -130,7 +129,7 @@ public class ActionServiceShould {
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withStatus(HttpStatus.NOT_FOUND)
                 );
-        assertException(ApiErrorException.class).isThrownBy(()-> {
+        assertException(ApiErrorException.class).isThrownBy(() -> {
             this.actionService.updateAction(this.action, this.card, "abc");
         }).withMessage(ActionService.REMOTE_404_MESSAGE);
     }
@@ -145,7 +144,7 @@ public class ActionServiceShould {
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE)
                 );
-        assertException(ApiErrorException.class).isThrownBy(()-> {
+        assertException(ApiErrorException.class).isThrownBy(() -> {
             this.actionService.updateAction(this.action, this.card, "abc");
         }).withMessage(ActionService.UNEXPECTED_REMOTE_3RD_MESSAGE);
     }
@@ -175,7 +174,7 @@ public class ActionServiceShould {
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(withStatus(HttpStatus.NOT_FOUND)
                 );
-        assertException(ApiErrorException.class).isThrownBy(()-> {
+        assertException(ApiErrorException.class).isThrownBy(() -> {
             this.actionService.sendAction(this.action, this.card, "abc", null);
         }).withMessage(ActionService.REMOTE_404_MESSAGE);
     }
@@ -190,7 +189,7 @@ public class ActionServiceShould {
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE)
                 );
-        assertException(ApiErrorException.class).isThrownBy(()-> {
+        assertException(ApiErrorException.class).isThrownBy(() -> {
             this.actionService.sendAction(this.action, this.card, "abc", null);
         }).withMessage(ActionService.UNEXPECTED_REMOTE_3RD_MESSAGE);
     }
@@ -211,6 +210,108 @@ public class ActionServiceShould {
     }
 
     @Test
+    void lookUpActionStatusWithEmptyCard() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.lookUpActionStatus("no_publisher", this.card.getProcessId(), this.card.getState(), "action1", "abc");
+        }).withMessage(ActionService.EMPTY_RESULT_MESSAGE);
+    }
+
+    @Test
+    void lookUpActionStatusWithCard404() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.lookUpActionStatus("unexisting", this.card.getProcessId(), this.card.getState(), "action1", "abc");
+        }).withMessage(ActionService.NO_SUCH_CARD_OR_ACTION_MESSAGE);
+    }
+
+    @Test
+    void lookUpActionStatusWithCard401() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.lookUpActionStatus("unauthorized", this.card.getProcessId(), this.card.getState(), "action1", "abc");
+        }).withMessage(ActionService.FEIGN_401_MESSAGE);
+    }
+
+    @Test
+    void lookUpActionStatusWithCard403() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.lookUpActionStatus("forbidden", this.card.getProcessId(), this.card.getState(), "action1", "abc");
+        }).withMessage(ActionService.FEIGN_403_MESSAGE);
+    }
+
+    @Test
+    void lookUpActionStatusWithEmptyAction() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.lookUpActionStatus(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "action_empty", "abc");
+        }).withMessage(ActionService.EMPTY_RESULT_MESSAGE);
+    }
+
+    @Test
+    void lookUpActionStatusWithAction404() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.lookUpActionStatus(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "unexisting", "abc");
+        }).withMessage(ActionService.NO_SUCH_CARD_OR_ACTION_MESSAGE);
+    }
+
+    @Test
     void submitAction() throws JsonProcessingException, URISyntaxException {
         ActionStatusData actionStatus = ActionStatusData.builder()
                 .label(I18nData.builder().key("new.label").build())
@@ -223,6 +324,142 @@ public class ActionServiceShould {
                         .body(mapper.writeValueAsString(actionStatus))
                 );
         assertThat(this.actionService.submitAction(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "action1", "abc", null)).isEqualTo(actionStatus);
+    }
+
+    @Test
+    void submitActionEmptyCard() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.submitAction("no_publisher", this.card.getProcessId(), this.card.getState(), "action1", "abc", null);
+        }).withMessage(ActionService.EMPTY_RESULT_MESSAGE);
+    }
+
+    @Test
+    void submitActionCard404() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.submitAction("unexisting", this.card.getProcessId(), this.card.getState(), "action1", "abc", null);
+        }).withMessage(ActionService.NO_SUCH_CARD_OR_ACTION_MESSAGE);
+    }
+
+    @Test
+    void submitActionCard401() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.submitAction("unauthorized", this.card.getProcessId(), this.card.getState(), "action1", "abc", null);
+        }).withMessage(ActionService.FEIGN_401_MESSAGE);
+    }
+
+    @Test
+    void submitActionCard403() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.submitAction("forbidden", this.card.getProcessId(), this.card.getState(), "action1", "abc", null);
+        }).withMessage(ActionService.FEIGN_403_MESSAGE);
+    }
+
+    @Test
+    void submitActionEmptyAction() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.submitAction(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "action_empty", "abc", null);
+        }).withMessage(ActionService.EMPTY_RESULT_MESSAGE);
+    }
+
+    @Test
+    void submitActionAction404() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.submitAction(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "unexisting", "abc", null);
+        }).withMessage(ActionService.NO_SUCH_CARD_OR_ACTION_MESSAGE);
+    }
+
+    @Test
+    void submitActionAction401() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.submitAction(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "unauthorized", "abc", null);
+        }).withMessage(ActionService.FEIGN_401_MESSAGE);
+    }
+
+    @Test
+    void submitActionAction403() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.submitAction(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "forbidden", "abc", null);
+        }).withMessage(ActionService.FEIGN_403_MESSAGE);
     }
 
     @Getter

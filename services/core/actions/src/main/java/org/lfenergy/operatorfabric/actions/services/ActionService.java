@@ -33,6 +33,11 @@ public class ActionService {
     static final String REMOTE_404_MESSAGE = "Specified action was not handle by third party endpoint (not found)";
     static final String UNEXPECTED_REMOTE_3RD_MESSAGE = "Unexpected behaviour of third party handler endpoint";
     static final String DELINEARIZING_ERROR_MESSAGE = "Exception delinearizing data from remote action url";
+    public static final String EMPTY_RESULT_MESSAGE = "Card or action was empty";
+    public static final String NO_SUCH_CARD_OR_ACTION_MESSAGE = "No such card or action";
+    public static final String FEIGN_401_MESSAGE = "Remote service returned 401(Unauthorized), authentication may have expired or remote service is incorrectly configured";
+    public static final String FEIGN_403_MESSAGE = "Remote service returned 403(Unauthorized), user not allowed to acces resource";
+    public static final String FEIGN_ERROR_MESSAGE = "Error accessing remote service, no fallback behavior";
     private static Pattern TOKEN_PATTERN = Pattern.compile("\\{(.+?)\\}");
 
     private final CardConsultationServiceProxy cardService;
@@ -58,9 +63,14 @@ public class ActionService {
                         || action.getUpdateStateBeforeAction() != null && action.getUpdateStateBeforeAction())) {
                     return updateAction(action, card, jwt);
                 }
-                return ActionStatusData.fromAction(action);
+                if(action!=null)
+                    return ActionStatusData.fromAction(action);
+                else
+                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+                            .message(EMPTY_RESULT_MESSAGE).build());
             }
-            return null;
+            throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+                    .message(EMPTY_RESULT_MESSAGE).build());
         } catch (FeignException fe) {
             throw handleFeignException(fe);
 
@@ -71,16 +81,16 @@ public class ActionService {
         switch (fe.status()) {
             case 404:
                 return new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
-                        .message("No such card or action").build(), fe);
+                        .message(NO_SUCH_CARD_OR_ACTION_MESSAGE).build(), fe);
             case 401:
                 return new ApiErrorException(ApiError.builder().status(HttpStatus.UNAUTHORIZED)
-                        .message("Remote service returned 401(Unauthorized), authentication may have expired or remote service is incorrectly configured").build(), fe);
+                        .message(FEIGN_401_MESSAGE).build(), fe);
             case 403:
                 return new ApiErrorException(ApiError.builder().status(HttpStatus.UNAUTHORIZED)
-                        .message("Remote service returned 403(Unauthorized), user not allowed to acces resource").build(), fe);
+                        .message(FEIGN_403_MESSAGE).build(), fe);
             default:
                 return new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_GATEWAY)
-                        .message("Error accessing remote service, no fallback behavior").build(), fe);
+                        .message(FEIGN_ERROR_MESSAGE).build(), fe);
         }
     }
 
@@ -91,9 +101,12 @@ public class ActionService {
                 Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey, BEARER_PREFIX + jwt);
                 if (action != null) {
                     return sendAction(action, card, jwt, body);
-                }
+                }else
+                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+                            .message(EMPTY_RESULT_MESSAGE).build());
             }
-            return null;
+            throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+                    .message(EMPTY_RESULT_MESSAGE).build());
         } catch (FeignException fe) {
             throw handleFeignException(fe);
         }

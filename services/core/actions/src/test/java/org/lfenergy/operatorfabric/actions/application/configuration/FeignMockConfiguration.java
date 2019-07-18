@@ -48,10 +48,17 @@ public class FeignMockConfiguration {
         mockClient = mockClient
                 .ok(HttpMethod.GET, "/cards/"+card.getPublisher()+"_"+card.getProcessId(), mapper.writeValueAsString(card))
                 .ok(HttpMethod.GET, "/cards/no_publisher_"+card.getProcessId(), "")
+                .add(HttpMethod.GET, "/cards/unexisting_"+card.getProcessId(), 404)
+                .add(HttpMethod.GET, "/cards/unauthorized_"+card.getProcessId(), 401)
+                .add(HttpMethod.GET, "/cards/forbidden_"+card.getProcessId(), 403)
+                .add(HttpMethod.GET, "/cards/server_error_"+card.getProcessId(), 500)
                 .ok(HttpMethod.POST, "/cards/"+card.getPublisher()+"_"+card.getProcessId(), mapper.writeValueAsString(card))
                 .ok(HttpMethod.POST, "/cards/no_publisher_"+card.getProcessId(), "")
                 .ok(HttpMethod.GET, "/thirds/"+card.getPublisher()+"/"+card.getProcess()+"/"+card.getState()+"/actions/action1", mapper.writeValueAsString(action))
-                .ok(HttpMethod.GET, "/thirds/no_publisher/"+card.getProcess()+"/"+card.getState()+"/actions/action1", "")
+                .ok(HttpMethod.GET, "/thirds/"+card.getPublisher()+"/"+card.getProcess()+"/"+card.getState()+"/actions/action_empty", "")
+                .add(HttpMethod.GET, "/thirds/"+card.getPublisher()+"/"+card.getProcess()+"/"+card.getState()+"/actions/unexisting", 404)
+                .add(HttpMethod.GET, "/thirds/"+card.getPublisher()+"/"+card.getProcess()+"/"+card.getState()+"/actions/unauthorized", 401)
+                .add(HttpMethod.GET, "/thirds/"+card.getPublisher()+"/"+card.getProcess()+"/"+card.getState()+"/actions/forbidden", 403)
         ;
 
         return mockClient;
