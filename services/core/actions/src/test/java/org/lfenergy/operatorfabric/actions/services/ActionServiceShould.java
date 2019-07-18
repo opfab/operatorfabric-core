@@ -13,6 +13,8 @@ import org.lfenergy.operatorfabric.actions.model.ActionData;
 import org.lfenergy.operatorfabric.actions.model.ActionStatusData;
 import org.lfenergy.operatorfabric.actions.model.I18nData;
 import org.lfenergy.operatorfabric.cards.model.Card;
+import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
+import org.lfenergy.operatorfabric.test.AssertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
@@ -28,6 +30,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -51,7 +54,6 @@ public class ActionServiceShould {
     private Card card;
     private Action action;
     private MockRestServiceServer mockServer;
-
 
 
     @BeforeEach
@@ -101,7 +103,36 @@ public class ActionServiceShould {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(mapper.writeValueAsString(actionStatus))
                 );
-        assertThat(this.actionService.updateAction(this.action,this.card,"abc")).isEqualTo(actionStatus);
+        assertThat(this.actionService.updateAction(this.action, this.card, "abc")).isEqualTo(actionStatus);
+    }
+
+    @Test
+    void updateActionEmpty() throws URISyntaxException, JsonProcessingException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.NO_CONTENT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                );
+        assertThat(this.actionService.updateAction(this.action, this.card, "abc")).isNull();
+    }
+
+    @Test
+    void updateAction404() throws URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.NOT_FOUND)
+                );
+        assertException(ApiErrorException.class).isThrownBy(()-> {
+            this.actionService.updateAction(this.action, this.card, "abc");
+        }).withMessage("Specified action was not handle by third party endpoint (not found)");
     }
 
 
@@ -117,7 +148,7 @@ public class ActionServiceShould {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(mapper.writeValueAsString(actionStatus))
                 );
-        assertThat(this.actionService.sendAction(this.action,this.card,"abc",null)).isEqualTo(actionStatus);
+        assertThat(this.actionService.sendAction(this.action, this.card, "abc", null)).isEqualTo(actionStatus);
     }
 
     @Test
@@ -132,7 +163,7 @@ public class ActionServiceShould {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(mapper.writeValueAsString(actionStatus))
                 );
-        assertThat(this.actionService.lookUpActionStatus(this.card.getPublisher(),this.card.getProcessId(),this.card.getState(),"action1","abc")).isEqualTo(actionStatus);
+        assertThat(this.actionService.lookUpActionStatus(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "action1", "abc")).isEqualTo(actionStatus);
     }
 
     @Test
@@ -147,7 +178,7 @@ public class ActionServiceShould {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(mapper.writeValueAsString(actionStatus))
                 );
-        assertThat(this.actionService.submitAction(this.card.getPublisher(),this.card.getProcessId(),this.card.getState(),"action1","abc",null)).isEqualTo(actionStatus);
+        assertThat(this.actionService.submitAction(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "action1", "abc", null)).isEqualTo(actionStatus);
     }
 
     @Getter

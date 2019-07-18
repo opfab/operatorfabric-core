@@ -82,7 +82,7 @@ public class ActionRoutesConfig {
     private Mono<Tuple6<String, String, String, String, String,String>> extractParameters(ServerRequest request) {
         String jwt = null;
         List<String> authorizations = request.headers().header("Authorization");
-        if(!authorizations.isEmpty(){
+        if(!authorizations.isEmpty()){
             jwt = authorizations.get(0).replaceAll("Bearer (.+)","$1");
 
         }

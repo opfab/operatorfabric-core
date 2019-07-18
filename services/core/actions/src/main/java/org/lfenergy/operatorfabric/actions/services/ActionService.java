@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -98,10 +99,22 @@ public class ActionService {
     }
 
     ActionStatus sendAction(Action action, Card card, String jwt, String body) {
-        String url = replaceTokens(action, card, jwt);
-        ResponseEntity<String> result = restTemplate.postForEntity(url, body, String.class);
+        try {
+            String url = replaceTokens(action, card, jwt);
+            ResponseEntity<String> result = restTemplate.postForEntity(url, body, String.class);
 
-        return extractStatus(result);
+            return extractStatus(result);
+        } catch (HttpClientErrorException.NotFound ex) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.BAD_GATEWAY)
+                    .message("Specified action was not handle by third party endpoint (not found)")
+                    .build());
+        } catch (HttpClientErrorException ex) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.BAD_GATEWAY)
+                    .message("Unexpected behaviour of rthird party handler endpoint")
+                    .build());
+        }
     }
 
     private ActionStatus extractStatus(ResponseEntity<String> entity) {
@@ -114,11 +127,6 @@ public class ActionService {
                 }
             case 204:
                 return null;
-            case 404:
-                throw new ApiErrorException(ApiError.builder()
-                        .status(HttpStatus.BAD_GATEWAY)
-                        .message("Specified action was not handle by third party endpoint (not found)")
-                        .build());
             default:
                 throw new ApiErrorException(ApiError.builder()
                         .status(HttpStatus.BAD_GATEWAY)
@@ -129,9 +137,21 @@ public class ActionService {
 
     ActionStatus updateAction(Action action, Card card, String jwt) {
         String url = replaceTokens(action, card, jwt);
-        ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
+        try {
+            ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
+            return extractStatus(result);
+        } catch (HttpClientErrorException.NotFound ex) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.BAD_GATEWAY)
+                    .message("Specified action was not handle by third party endpoint (not found)")
+                    .build());
+        } catch (HttpClientErrorException ex) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.BAD_GATEWAY)
+                    .message("Unexpected behaviour of rthird party handler endpoint")
+                    .build());
+        }
 
-        return extractStatus(result);
     }
 
     String replaceTokens(Action action, Card card, String jwt) {
