@@ -15,31 +15,31 @@ patchesJson6902:
 # Apply a node selector to all deployment
 - target:
     group: extensions
-    version: v1beta1
+    version: v1
     kind: Deployment
     name: cards-publication
   path: node_selector_patch.yaml
 - target:
     group: extensions
-    version: v1beta1
+    version: v1
     kind: Deployment
     name: cards-consultation
   path: node_selector_patch.yaml
 - target:
     group: extensions
-    version: v1beta1
+    version: v1
     kind: Deployment
     name: client-gateway
   path: node_selector_patch.yaml
 - target:
     group: extensions
-    version: v1beta1
+    version: v1
     kind: Deployment
     name: config
   path: node_selector_patch.yaml
 - target:
     group: extensions
-    version: v1beta1
+    version: v1
     kind: Deployment
     name: oauth2
   path: node_selector_patch.yaml
@@ -47,7 +47,7 @@ patchesJson6902:
     group: extensions
     version: v1beta1
     kind: Deployment
-    name: oauth2
+    name: thirds
   path: node_selector_patch.yaml
 - target:
     group: extensions
@@ -57,13 +57,13 @@ patchesJson6902:
   path: node_selector_patch.yaml
 - target:
     group: extensions
-    version: v1beta1
+    version: v1
     kind: Deployment
     name: users
   path: node_selector_patch.yaml
 - target:
     group: extensions
-    version: v1beta1
+    version: v1
     kind: Deployment
     name: web-ui
   path: node_selector_patch.yaml

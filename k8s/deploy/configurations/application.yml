@@ -6,7 +6,7 @@ management:
         include: '*'
 spring:
   rabbitmq:
-    host: rabbitmq
+    host: rabbitmq-ha
     port: 5672
     username: guest
     password: guest
@@ -26,6 +26,6 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://registry:8080/eureka
+      defaultZone: http://registry-0.registry:8080/eureka/,http://registry-1.registry:8080/eureka/
     region: default
   registryFetchIntervalSeconds: 5

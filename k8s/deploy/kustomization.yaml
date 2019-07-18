@@ -46,11 +46,11 @@ resources:
 configMapGenerator:
 - name: service-config
   files:
-  - ./docker-configurations/application.yml
-  - ./docker-configurations/cards-consultation.yml
-  - ./docker-configurations/cards-publication.yml
-  - ./docker-configurations/client-gateway.yml
-  - ./docker-configurations/registry.yml
-  - ./docker-configurations/thirds.yml
-  - ./docker-configurations/time.yml
-  - ./docker-configurations/users.yml
+  - ./configurations/application.yml
+  - ./configurations/cards-consultation.yml
+  - ./configurations/cards-publication.yml
+  - ./configurations/client-gateway.yml
+  - ./configurations/registry.yml
+  - ./configurations/thirds.yml
+  - ./configurations/time.yml
+  - ./configurations/users.yml

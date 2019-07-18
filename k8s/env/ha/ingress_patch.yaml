@@ -1,0 +1,4 @@
+# Replace "www.opfab.io" by the public FQDN used to access opfab services
+- op: replace
+  path: /spec/rules/0/host
+  value: www.opfab.io

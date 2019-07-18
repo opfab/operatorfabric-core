@@ -3,7 +3,7 @@
 Deploy Demo if needed
 
 ```sh
-kubectl.exe apply -f demo/
+kubectl.exe apply -f demo/dummy-card-daemon-deployment.yaml
 ```
 
 kubectl port-forward svc/cards-publication 2102:8080

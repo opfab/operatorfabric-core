@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -19,7 +19,7 @@ spec:
         - name : EUREKA_INSTANCE_HOSTNAME
           value: config
         - name: RABBITMQ_HOST
-          value: rabbitmq
+          value: rabbitmq-ha
         - name: RABBITMQ_PASSWORD
           value: guest
         - name: RABBITMQ_PORT

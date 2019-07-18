@@ -9,9 +9,6 @@ spec:
   ports:
   - name: "http"
     port: 8080
-    targetPort: 8080
-  - name: "4001"
-    port: 4001
-    targetPort: 5005
+  clusterIP: None # use for HA
   selector:
     service: registry
