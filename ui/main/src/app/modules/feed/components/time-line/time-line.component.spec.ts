@@ -69,6 +69,29 @@ describe('TimeLineComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should return a date formatted by domain Conf pass on parameter ' +
+    'from periodStartToEnd function', () => {
+    fixture.detectChanges();
+    const actualMoment = moment();
+    const oneWeekConf = {
+      week: 1,
+    };
+    const momentOnFuture = moment(actualMoment);
+    momentOnFuture.add(1, 'week');
+    // cause of execution time between declaration of actualMoment and periodStartToEnd
+    momentOnFuture.minute(0).second(0).millisecond(0);
+    const momentOnPast = moment(actualMoment);
+    momentOnPast.subtract(1, 'week');
+    momentOnPast.minute(0).second(0).millisecond(0);
+    const startDomain = component.periodStartToEnd(oneWeekConf, false);
+    startDomain.minute(0).second(0).millisecond(0);
+    const endDomain = component.periodStartToEnd(oneWeekConf, true);
+    endDomain.minute(0).second(0).millisecond(0);
+    expect(endDomain.valueOf()).toEqual(momentOnFuture.valueOf());
+    expect(startDomain.valueOf()).toEqual(momentOnPast.valueOf());
+    expect(component).toBeTruthy();
+  });
+
   it('should return a date formatted by a cluster level W ' +
     'from dateWithSpaceBeforeMom function', () => {
     const actualMoment = moment();
@@ -165,6 +188,7 @@ describe('TimeLineComponent', () => {
     const actionCard = getOneRandomLigthCard({severity: 'ACTION'});
     const alarmCard = getOneRandomLigthCard({severity: 'ALARM'});
     const notificationCard = getOneRandomLigthCard({severity: 'NOTIFICATION'});
+    // alarmCard.timeSpans = [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}];  // display is an enum normally
     const action = new LoadLightCardsSuccess({lightCards: [oneCard, actionCard, alarmCard, notificationCard] as LightCard[]});
     store.dispatch(action);
     const lightCards$ = store.select(fromStore.selectFeed);
@@ -173,6 +197,7 @@ describe('TimeLineComponent', () => {
       expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard].sort(compareBySeverityLttdPublishDate));
     });
     const dataCard = [{
+        // timeSpans: [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}],
         publishDate: alarmCard.publishDate,
         startDate: alarmCard.startDate,
         endDate: alarmCard.endDate,

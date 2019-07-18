@@ -82,18 +82,16 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             startOf: ['day'],
         };
 
-        let result = this.periodStartToEnd(domainWeekConf, 'W', true);
-        const startDomain = result[0];
-        const endDomain = result[1];
-        result = this.periodStartToEnd(domainMonthConf, 'M', true);
-        const startDomain2 = result[0];
-        const endDomain2 = result[1];
-        result = this.periodStartToEnd(domainYearConf, 'Y', true);
-        const startDomain3 = result[0];
-        const endDomain3 = result[1];
-        result = this.periodStartToEnd(domain7DayConf, '7D', true);
-        const startDomain4 = result[0];
-        const endDomain4 = result[1];
+        const currentMoment = moment();
+
+        const startDomain = this.dateWithSpaceBeforeMoment(moment(currentMoment), 'W');
+        const endDomain = this.periodStartToEnd(domainWeekConf, true);
+        const startDomain2 = this.dateWithSpaceBeforeMoment(moment(currentMoment), 'M');
+        const endDomain2 = this.periodStartToEnd(domainMonthConf, true);
+        const startDomain3 = this.dateWithSpaceBeforeMoment(moment(currentMoment), 'Y');
+        const endDomain3 = this.periodStartToEnd(domainYearConf, true);
+        const startDomain4 = this.dateWithSpaceBeforeMoment(moment(currentMoment), '7D');
+        const endDomain4 = this.periodStartToEnd(domain7DayConf, true);
 
         // FORWARD CONF (movement on domain)
 
@@ -321,23 +319,23 @@ export class TimeLineComponent implements OnInit, OnDestroy {
      * @param level
      * @param spaceBeforeMoment
      */
-    periodStartToEnd(conf, level: string, spaceBeforeMoment: boolean): [moment.Moment, moment.Moment] {
-        let tmpMoment = moment();
-        if (spaceBeforeMoment) {
-            tmpMoment = this.dateWithSpaceBeforeMoment(moment(tmpMoment), level);
-        }
-        const startDomain = tmpMoment;
-        const endDomain = _.cloneDeep(startDomain);
+    periodStartToEnd(conf, future: boolean): moment.Moment {
+        const tmpMoment = moment();
+        const newDate = _.cloneDeep(tmpMoment);
         Object.keys(conf).forEach(key => {
             if (key === 'startOf') {
                 conf[key].forEach(value => {
-                    endDomain.startOf(value);
+                    newDate.startOf(value);
                 });
             } else if (conf[key] > 0) {
-                endDomain.add(conf[key], key);
+                if (future) {
+                    newDate.add(conf[key], key);
+                } else {
+                    newDate.subtract(conf[key], key);
+                }
             }
         });
-        return [startDomain, endDomain];
+        return newDate;
     }
 
     /**
@@ -348,11 +346,6 @@ export class TimeLineComponent implements OnInit, OnDestroy {
     dateWithSpaceBeforeMoment(date, clusterLevel) {
         date.minutes(0).seconds(0).millisecond(0);
         switch (clusterLevel) {
-            case 'D' : {
-                // start 3 hours before date
-                date.subtract(3, 'hours');
-                return date;
-            }
             case 'W' : case '7D': {
                 // align date hours by subtract exceeded hours for stay on ticks (every 4 hours)
                 for (let i = 0; i < 10; i++) {
