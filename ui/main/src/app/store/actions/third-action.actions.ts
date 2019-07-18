@@ -7,7 +7,7 @@ export enum ThirdActionTypes {
     LoadThirdActionSuccess = '[Action] Third Actions successfully loaded',
     LoadThirdActionFailure = '[Action] Failed to load Third Actions',
     FetchOneThirdAction = '[Action] Fetch One Third Action',
-    FetchOneThirdActionSuccess = '[Action] Fetch successfylly one Third Action',
+    FetchOneThirdActionSuccess = '[Action] Fetch successfully one Third Action',
     FetchOneThirdActionFailure = '[Action] Failed to fetch one Third Action'
 }
 
