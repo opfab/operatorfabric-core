@@ -15,6 +15,7 @@ import {DraggableDirective} from '../time-line/app-draggable';
 import {MouseWheelDirective} from '../time-line/mouse-wheel.directive';
 import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
 import {TimeService} from "@ofServices/time.service";
+import * as moment from 'moment';
 
 describe('InitChartComponent', () => {
   let component: InitChartComponent;
@@ -66,16 +67,16 @@ describe('InitChartComponent', () => {
   it('should apply differents zoom levels on timeline' +
       'should verify domain value is changed after calling moveDomain & homeClick functions', () => {
     fixture.detectChanges();
-    const tmp = component.forwardButtonType;
+    const tmp = component.buttonTitle;
     component.applyNewZoom('drag');
-    expect(tmp).toEqual(component.forwardButtonType);
+    expect(tmp).toEqual(component.buttonTitle);
     expect(component.buttonHomeActive).toBeTruthy();
 
     component.homeClick(1, 2);
     expect(component.buttonHomeActive).toBeFalsy();
     expect(component.myDomain).toEqual([1, 2]);
 
-    // check domain change after call moveDomain function with any forwardButtonType
+    // check domain change after call moveDomain function with any buttonTitle
     let domain = component.myDomain;
     component.moveDomain(true);
     expect(domain).not.toEqual(component.myDomain);
@@ -83,31 +84,9 @@ describe('InitChartComponent', () => {
     component.moveDomain(false);
     expect(domain).not.toEqual(component.myDomain);
 
-    // move two times domain in same direction for
-    // increment continuousForward allowing a full condition coverage of moveDomainByDay
-    component.realCaseActivate = true;
+    component.followClockTick = true;
     domain = component.myDomain;
-    component.forwardButtonType = '7D';
-    component.moveDomain(true);
-    component.moveDomain(true);
-    expect(domain).not.toEqual(component.myDomain);
-    domain = component.myDomain;
-    component.moveDomain(false);
-    expect(domain).not.toEqual(component.myDomain);
-
-    // for D-7 two cases to test, we inverse boolean value passed at moveDomain function
-    domain = component.myDomain;
-    component.forwardButtonType = '7D';
-    component.moveDomain(false);
-    component.moveDomain(false);
-    expect(domain).not.toEqual(component.myDomain);
-    domain = component.myDomain;
-    component.moveDomain(true);
-    expect(domain).not.toEqual(component.myDomain);
-
-    component.realCaseActivate = true;
-    domain = component.myDomain;
-    component.forwardButtonType = 'M';
+    component.buttonTitle = 'M';
     component.moveDomain(true);
     expect(domain).not.toEqual(component.myDomain);
     domain = component.myDomain;
@@ -115,55 +94,160 @@ describe('InitChartComponent', () => {
     expect(domain).not.toEqual(component.myDomain);
 
     domain = component.myDomain;
-    component.forwardButtonType = 'Y';
+    component.buttonTitle = 'Y';
     component.moveDomain(true);
     expect(domain).not.toEqual(component.myDomain);
     domain = component.myDomain;
     component.moveDomain(false);
     expect(domain).not.toEqual(component.myDomain);
+    expect(component).toBeTruthy();
+  });
+
+
+
+  it('check moveDomain function :' +
+    'forward with different movements for start and end of domain' +
+    'backward with same movement for start and end of domain' +
+    'set to true firstMoveStartOfUnit and move forward and backward' +
+    'forward on weekDay Configuration', () => {
+    fixture.detectChanges();
+    let tmpStart = moment(component.myDomain[0]);
+    let tmpEnd = moment(component.myDomain[1]);
+    component.forwardConf = {
+      start: {
+        month: 0,
+        week: 2,
+      },
+      end: {
+        year: 0,
+        week: 1,
+      },
+    };
+    tmpStart.add(2, 'week');
+    tmpEnd.add(1, 'week');
+    component.moveDomain(true);
+    expect(tmpStart.valueOf()).toEqual(component.myDomain[0]);
+    expect(tmpEnd.valueOf()).toEqual(component.myDomain[1]);
+
+    tmpStart = moment(component.myDomain[0]);
+    tmpEnd = moment(component.myDomain[1]);
+    component.backwardConf = {
+      start: {
+        month: 0,
+        week: 2,
+        day: 1,
+      },
+    };
+    tmpStart.subtract(2, 'week').subtract(1, 'day');
+    tmpEnd.subtract(2, 'week').subtract(1, 'day');
+    component.moveDomain(false);
+    expect(tmpStart.valueOf()).toEqual(component.myDomain[0]);
+    expect(tmpEnd.valueOf()).toEqual(component.myDomain[1]);
+
+    tmpStart = moment(component.myDomain[0]);
+    tmpEnd = moment(component.myDomain[1]);
+    // every time start of domain don't be impacted by firstMoveStartOfUnit
+    tmpStart.startOf('week').startOf('day')
+        .subtract(2, 'week').subtract(1, 'day');
+    tmpEnd.startOf('week').startOf('day')
+        .subtract(2 + 1, 'week').subtract(1 + 1, 'day');
+    component.firstMoveStartOfUnit = true;
+    component.moveDomain(false);
+    expect(tmpStart.valueOf()).toEqual(component.myDomain[0]);
+    expect(tmpEnd.valueOf()).toEqual(component.myDomain[1]);
+
+    // using forwardConf set at begin ===> end: 1 week
+    tmpEnd = moment(component.myDomain[1]);
+    tmpEnd.startOf('week').add(1 - 1, 'week');
+    component.firstMoveStartOfUnit = true;
+    component.moveDomain(true);
+    expect(tmpEnd.valueOf()).toEqual(component.myDomain[1]);
+
+    component.forwardConf = {
+      start: {
+        weekDay: 1, // 1 = next Sunday
+        month: 0,
+        week: 2,
+      },
+      end: {
+        weekDay: 1,
+        year: 0,
+        week: 0,
+      },
+    };
+    component.moveDomain(true);
+    component.backwardConf = {
+      start: {
+        weekDay: 2,
+      },
+      end: {
+        weekDay: 1,
+        week: 1,
+      }
+    };
+    component.moveDomain(false);
+    expect(component).toBeTruthy();
+  });
+
+  it('check getWeekDayBalanceNumber return', () => {
+    fixture.detectChanges();
+    expect(component.getWeekDayBalanceNumber(0)).toEqual(0);
+    expect(component.getWeekDayBalanceNumber(1)).toEqual(0);
+    expect(component.getWeekDayBalanceNumber(2)).toEqual(2);
+    expect(component.getWeekDayBalanceNumber(3)).toEqual(4);
+    expect(component.getWeekDayBalanceNumber(4)).toEqual(6);
+    expect(component.getWeekDayBalanceNumber(5)).toEqual(8);
+    expect(component.getWeekDayBalanceNumber(6)).toEqual(10);
+    expect(component.getWeekDayBalanceNumber(7)).toEqual(12);
+    expect(component.getWeekDayBalanceNumber(8)).toEqual(0);
     expect(component).toBeTruthy();
   });
 
   it('check applyNewZoom function with only one button' +
       'forward level activated is different', () => {
     fixture.detectChanges();
-    component.forwardButtonType = 'W';
-    component.buttonList = [{forwardLevel: 'M'}];
-    const tmp = component.forwardButtonType;
+    component.buttonTitle = 'W';
+    component.buttonList = [{buttonTitle: 'M'}];
+    const tmp = component.buttonTitle;
     component.applyNewZoom('in');
-    // no change expected, cause button forwardLevel is not equal to forwardButtonType
-    expect(tmp).toEqual(component.forwardButtonType);
+    // no change expected, cause button buttonList is not equal to buttonTitle
+    expect(tmp).toEqual(component.buttonTitle);
     component.applyNewZoom('out');
-    expect(tmp).toEqual(component.forwardButtonType);
+    expect(tmp).toEqual(component.buttonTitle);
     expect(component).toBeTruthy();
   });
 
   it('check applyNewZoom function with only one button' +
       'forward level activated is same than one button', () => {
     fixture.detectChanges();
-    component.forwardButtonType = 'W';
-    component.buttonList = [{forwardLevel: 'W'}];
-    const tmp = component.forwardButtonType;
+    component.buttonTitle = 'W';
+    component.buttonList = [{buttonTitle: 'W'}];
+    const tmp = component.buttonTitle;
     component.applyNewZoom('in');
     // no change expected, cause buttonList got only one button
-    expect(tmp).toEqual(component.forwardButtonType);
+    expect(tmp).toEqual(component.buttonTitle);
     component.applyNewZoom('out');
-    expect(tmp).toEqual(component.forwardButtonType);
+    expect(tmp).toEqual(component.buttonTitle);
     expect(component).toBeTruthy();
   });
 
   it('check applyNewZoom function with two buttons' +
       'forward level activated is same than last button', () => {
     fixture.detectChanges();
-    component.forwardButtonType = 'W';
-    component.buttonList = [{forwardLevel: 'M'}, {forwardLevel: 'W'}];
+    component.buttonTitle = 'W';
+    component.buttonList = [{buttonTitle: 'M'}, {buttonTitle: 'W'}];
     component.applyNewZoom('in');
     // change expected, cause buttonList got two buttons :
-    //  - one is the same than actual forwardButtonType
-    //  - next one has forwardLevel differe
-    expect(component.forwardButtonType).toEqual('M');
+    //  - one is the same than actual buttonTitle
+    //  - next one has buttonList differe
+    expect(component.buttonTitle).toEqual('M');
+    expect(component.buttonList[0].selected).toBeTruthy();
+    expect(component.buttonList[1].selected).toBeFalsy();
     component.applyNewZoom('out');
-    expect(component.forwardButtonType).toEqual('W');
+    expect(component.buttonTitle).toEqual('W');
+    expect(component.buttonList[0].selected).toBeFalsy();
+    expect(component.buttonList[1].selected).toBeTruthy();
+
     expect(component).toBeTruthy();
   });
 
@@ -177,6 +261,21 @@ describe('InitChartComponent', () => {
     expect(component.getColorSeverity(null)).toEqual('white');
     component.changeGraphConf(null);
     expect(component).toBeTruthy();
+  });
+
+  it('should create timeline with another zoom conf, without zoom configuration', () => {
+    fixture.detectChanges();
+    const saveTitle = component.buttonTitle;
+    const fakeConf = {
+      formatTicks: 'DD/MM/YY',
+      formatTooltipsDate: 'DD/MM/YY',
+      buttonTitle: null, // nothing happened
+    };
+    component.readZoomConf(fakeConf);
+    fixture.detectChanges();
+    expect(component.formatTicks).toEqual('DD/MM/YY');
+    expect(component.formatTooltipsDate).toEqual('DD/MM/YY');
+    expect(component.buttonTitle).toEqual(saveTitle);
   });
 
   it('should create timeline with another conf', () => {

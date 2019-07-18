@@ -216,9 +216,10 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         myEnd4.seconds(0);
 
         result = this.periodStartToEnd(domain4YearConf, 'R', false);
-        const onlyWeekS = result[0]
+        const onlyWeekS = result[0];
         onlyWeekS.startOf('month');
         const onlyWeekE = result[1];
+
         // FORWARD CONF (movement on domain)
 
         const forwardYearConf = {
@@ -383,7 +384,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 minute: 0,
                 second: 0,
             }
-        },{ width: 1100,
+        }, { width: 1100,
             conf: {
                 year: 0,
                 month: 6,
@@ -557,7 +558,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         {
             startDomain: myStart4.valueOf(),
             endDomain: myEnd4.valueOf(),
-            buttonTitle: '5Mi',
+            buttonTitle: '5Min',
             forwardConf: forward5MinConf,
             ticksConf: ticks5secondsConf,
             followClockTick: true,
@@ -639,7 +640,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             followClockTick: true,
             firstMoveStartOfUnit: true,
         },
-        {
+      /*  {
             startDomain: myStart.valueOf(),
             endDomain: myEnd.valueOf(),
             buttonTitle: 'S',
@@ -647,7 +648,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             ticksConf: ticks4HoursConf,
             followClockTick: true,
             firstMoveStartOfUnit: false,
-        }];
+        }*/];
 
         // timeline state is same than feed state (not filtered Feed)
         // select all the feed
@@ -700,7 +701,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * return a array of two moments
+     * return an array of two moments
      * first moment equal to start of domain, second moment equal to end of domain
      * set spaceBeforeMoment to true for start the domain 4 ticks before the actual moment
      * @param level
@@ -720,55 +721,13 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 });
             } else if (conf[key] > 0) {
                 endDomain.add(conf[key], key);
-                // endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
             }
         });
-        // if (spaceBeforeMoment) {
-        //     tmpMoment = this.dateWithSpaceBeforeMoment(moment(tmpMoment), level);
-        // }
-
-        // switch (level) {
-        //     case 'D': {
-        //         // conf 5 === end of the actual day + 1 day
-        //         endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
-        //         endDomain.startOf('day');
-        //         endDomain.add(1 + number, 'days');
-        //         break;
-        //     }
-        //     case 'W': {
-        //         // conf 1 === end of the actual week + next week
-        //         endDomain.add(1 + number, 'weeks');
-        //         endDomain.startOf('week');
-        //         endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
-        //         break;
-        //     }
-        //     case '7D': {
-        //         // conf 4 === end of the actual day + 7 days
-        //         endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
-        //         endDomain.add(1 + number, 'days');
-        //         break;
-        //     }
-        //     case 'M': {
-        //         // conf 2 === actual month + next month
-        //         endDomain.add(1 + number, 'months');
-        //         endDomain.startOf('month');
-        //         break;
-        //     }
-        //     case 'Y': {
-        //         // conf 3 === from start of actual month to end of the year + 1 year
-        //         endDomain.add(1 + number, 'years');
-        //         endDomain.startOf('year'); // Voir avec Guillaume
-        //         break;
-        //     }
-        //     default: {
-        //         return [moment(), moment()];
-        //     }
-        // }
         return [startDomain, endDomain];
     }
 
     /**
-     * make start of domain begin 4 ticks before actual date (moment())
+     * make start of domain begins 4 ticks before actual date (moment())
      * each cluster level had a different treatment
      * @param clusterLevel
      */

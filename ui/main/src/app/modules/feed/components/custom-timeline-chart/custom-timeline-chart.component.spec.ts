@@ -55,24 +55,35 @@ describe('CustomTimelineChartComponent', () => {
 
   it('should call update() and create chart by calling updateYAxisWidth function', () => {
     fixture.detectChanges();
-    component.clusterLevel = 'W';
+    component.formatLevel = 'Hou'; // check diff par rapport au next test
+    component.clusterConf = {
+      hour: 4,
+    };
     component.realTimeBar = true;
     component.updateYAxisWidth({width: 1920});
     expect(component).toBeTruthy();
   });
 
-  it('should call update() and create chart by calling updateXAxisWidth function', () => {
+  it('should format dateFirsTick when the domain set is smaller than 1 day', () => {
     fixture.detectChanges();
-    component.clusterLevel = 'W';
-    component.realTimeBar = true;
-    component.updateXAxisHeight({height: 1024});
-    expect(component).toBeTruthy();
+    component.valueDomain = [0, 5000000];
+    expect(component.underDayPeriod).toBeTruthy();
   });
 
   it('should create', () => {
     fixture.detectChanges();
     component.realTimeBar = false;
     component.ngOnInit();
+    expect(component).toBeTruthy();
+  });
+
+  it('should call update() and create chart by calling updateXAxisWidth function', () => {
+    fixture.detectChanges();
+    component.clusterConf = {
+      hour: 4,
+    };
+    component.realTimeBar = true;
+    component.updateXAxisHeight({height: 1024});
     expect(component).toBeTruthy();
   });
 
@@ -122,32 +133,31 @@ describe('CustomTimelineChartComponent', () => {
   });
 
   it('should test checkFollowClockTick && updateRealTimeDate functions with : ' +
-    'an empty ticks list' +
-    'a ticks list of moment with a length biggest than 5' +
-    'realCaseActivate set to true', () => {
+    'an empty ticks list, ' +
+    'a ticks list of moment with a length biggest than 5, ' +
+    'followClockTick set to true', () => {
     fixture.detectChanges();
     expect(component.checkFollowClockTick()).toBeFalsy();
+    component.followClockTick = true;
+    component.updateRealTimeDate();
     component.xTicks = [];
-    component.xDomain = [0,1];
+    component.xDomain = [0, 1];
     const tmp = moment();
     tmp.millisecond(0);
     for (let i = 0; i < 6; i++) {
       component.xTicks.push(tmp);
     }
     expect(component.checkFollowClockTick()).toBeTruthy();
-
-    component.realCaseActivate = true;
-    component.updateRealTimeDate();
     expect(component).toBeTruthy();
   });
 
   it('should test checkFollowClockTick function with a ticks list ' +
-    'of moment (previous day) with a length biggest than 5', () => {
+    'of moment (next day) with a length biggest than 5', () => {
     fixture.detectChanges();
     component.xTicks = [];
-    component.xDomain = [0,1];
+    component.xDomain = [0, 1];
     const tmp = moment();
-    tmp.subtract(1, 'day');
+    tmp.add(1, 'day');
     for (let i = 0; i < 6; i++) {
       component.xTicks.push(tmp);
     }
@@ -182,32 +192,31 @@ describe('CustomTimelineChartComponent', () => {
 
   it('should return the param formatted by normal transform', () => {
     fixture.detectChanges();
-    component.clusterLevel = 'M';
+    component.formatLevel = 'Day';
     const test = moment();
     test.date(3).hours(0);
     expect(component.fctTickFormatting(test)).toEqual(test.format('ddd DD MMM'));
     expect(component.fctTickFormattingAdvanced(test)).toEqual(test.format('ddd DD MMM'));
-    component.clusterLevel = 'W';
+    component.formatLevel = 'Hou';
     expect(component.fctTickFormattingAdvanced(test)).toEqual(test.format('HH') + 'h');
   });
 
   it('check setXTicksValue function', () => {
     fixture.detectChanges();
     let tmp = _.cloneDeep(component.xTicks);
-    component.clusterLevel = 'M';
+    component.clusterLevel = {
+      month: 2,
+    };
     component.setXTicksValue([0, 2888000000]);
     expect(component.xTicks).not.toEqual(tmp);
 
     tmp = _.cloneDeep(component.xTicks);
-    component.clusterLevel = 'Y';
+    component.formatLevel = 'Dat';
+    component.clusterLevel = {
+      year: 2,
+    };
     component.setXTicksValue([10000000000, 44888000000]);
     expect(component.xTicks).not.toEqual(tmp);
-
-    tmp = _.cloneDeep(component.xTicks);
-    component.clusterLevel = 'R';
-    component.setXTicksValue([0, 1]);
-    expect(component.xTicks).toEqual(tmp);
-    expect(component).toBeTruthy();
   });
 
   it('check setYTicksValue function', () => {
@@ -220,6 +229,140 @@ describe('CustomTimelineChartComponent', () => {
     component.myData = [];
     component.setYTicks();
     expect(component.yTicks).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an object ' +
+    'with a date configuration ' +
+    'and formatTicks is an object', () => {
+    fixture.detectChanges();
+    component.clusterConf = {
+      month: 1,
+      date: [1, 16],
+    };
+    component.formatTicks = 'DD';
+    component.setTicksAndClusterize([0, 10000000000]);
+    expect(component.clusterLevel).toEqual({month: 1, date: [1, 16]});
+    expect(component.formatLevel).toEqual('DD');
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an array ' +
+    'and formatTicks is an array', () => {
+    fixture.detectChanges();
+    component.clusterConf = [ { width: 2200, conf: {
+        month: 1,
+      }
+    },
+      { width: 0, conf: {
+        year: 1,
+      }
+    }];
+    component.formatTicks = [{width: 1600, formatTicks: 'DD'},
+      {width: 0, formatTicks: 'hh:mm'}];
+    component.setTicksAndClusterize([0, 100000000000]);
+    expect(component.clusterLevel).toEqual({year: 1});
+    expect(component.formatLevel).toEqual('hh:mm');
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an object on date and month conf', () => {
+    fixture.detectChanges();
+    component.xTicks = [];
+    component.clusterConf = {
+      month: 1,
+      date: [1, 12, 23],
+    };
+    component.setTicksAndClusterize([0, 100000000000]);
+    expect(component.clusterLevel).toEqual({
+      month: 1,
+      date: [1, 12, 23]});
+    expect(component.formatLevel).toEqual('Dat');
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an object on year conf', () => {
+    fixture.detectChanges();
+    component.xTicks = [];
+    component.clusterConf = {
+      year: 1,
+    };
+    component.setTicksAndClusterize([0, 100000000000]);
+    expect(component.clusterLevel).toEqual({year: 1});
+    expect(component.formatLevel).toEqual('Yea');
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an object on month conf', () => {
+    fixture.detectChanges();
+    component.xTicks = [];
+    component.clusterConf = {
+        month: 1,
+    };
+    component.setTicksAndClusterize([0, 10000000000]);
+    expect(component.clusterLevel).toEqual({month: 1});
+    expect(component.formatLevel).toEqual('Mon');
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an object on day conf', () => {
+    fixture.detectChanges();
+    component.xTicks = [];
+    component.clusterConf = {
+        day: 2,
+    };
+    component.setTicksAndClusterize([0, 1000000000]);
+    expect(component.clusterLevel).toEqual({day: 2});
+    expect(component.formatLevel).toEqual('Day');
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an object on hour conf', () => {
+    fixture.detectChanges();
+    component.xTicks = [];
+    component.clusterConf = {
+        hour: 1,
+    };
+    component.setTicksAndClusterize([0, 100000000]);
+    expect(component.clusterLevel).toEqual({hour: 1});
+    expect(component.formatLevel).toEqual('Hou');
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an object on minute conf', () => {
+    fixture.detectChanges();
+    component.xTicks = [];
+    component.clusterConf = {
+        minute: 5,
+    };
+    component.setTicksAndClusterize([0, 10000000]);
+    expect(component.clusterLevel).toEqual({minute: 5});
+    expect(component.formatLevel).toEqual('Min');
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an object on second conf', () => {
+    fixture.detectChanges();
+    component.xTicks = [];
+    component.clusterConf = {
+        second: 5,
+    };
+    component.setTicksAndClusterize([0, 100000]);
+    expect(component.clusterLevel).toEqual({second: 5});
+    expect(component.formatLevel).toEqual('Sec');
+    expect(component).toBeTruthy();
+  });
+
+  it('check setTicksAndClusterize function when clusterConf is an object on weekNb conf', () => {
+    fixture.detectChanges();
+    component.xTicks = [];
+    component.clusterConf = {
+        week: 1,
+        weekNb: 1,
+    };
+    component.setTicksAndClusterize([0, 10000000000]);
+    expect(component.clusterLevel).toEqual({week: 1, weekNb: 1});
+    expect(component.formatLevel).toEqual('nbW');
     expect(component).toBeTruthy();
   });
 
@@ -241,7 +384,9 @@ describe('CustomTimelineChartComponent', () => {
       summary: 'test',
     };
     component.myData = [[tmpData]];
-    component.clusterLevel = 'M';
+    component.clusterConf = {
+      month: 2,
+    };
     component.setTicksAndClusterize([0, 1]);
     expect(component.dataClustered).toEqual([[]]);
 
@@ -329,6 +474,10 @@ describe('CustomTimelineChartComponent', () => {
     const tmp = component.circleHovered.period;
     component.feedCircleHovered(circleTestPeriod);
     expect(component.circleHovered.period).not.toEqual(tmp);
+
+    component.formatTooltipsDate = 'DD/MM';
+    const actualMoment = moment();
+    expect(component.fctHoveredCircleDateFormatting(actualMoment)).toEqual(actualMoment.format('DD/MM'));
     expect(component).toBeTruthy();
   });
 
@@ -362,7 +511,8 @@ describe('CustomTimelineChartComponent', () => {
     fixture.detectChanges();
     component.valueDomain = [0, 5];
     component.enableDrag = true;
-    component.timeScale = component.getTimeScale([0, 100000000], 1820);
+    // verifier si il n'y a pas de diff de couvrture sans le timeScale
+    // component.timeScale = component.getTimeScale([0, 100000000], 1820);
     inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
     const event = new PointerEvent('click', {
       clientX: 100,
@@ -391,6 +541,7 @@ describe('CustomTimelineChartComponent', () => {
     fixture.detectChanges();
     component.valueDomain = [0, 5];
     component.enableDrag = true;
+    // component.timeScale = component.getTimeScale([0, 100000000], 1820);
     inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
     const event = new PointerEvent('click', {
       clientX: 100,

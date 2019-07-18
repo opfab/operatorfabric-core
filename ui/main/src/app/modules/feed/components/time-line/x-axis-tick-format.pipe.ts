@@ -14,27 +14,37 @@ export class XAxisTickFormatPipe implements PipeTransform {
     if (typeof value === 'string') {
       return value;
     }
-    const date = moment(value);
-    switch (clusterLevel) {
-      case 'Min': case 'Sec': {
-        return date.format('ddd DD MMM HH') + 'h' + date.format('mm');
+    if (clusterLevel) {
+      const date = moment(value);
+      switch (clusterLevel) {
+        case 'Min':
+        case 'Sec': {
+          return date.format('ddd DD MMM HH') + 'h' + date.format('mm');
+        }
+        case 'Hou': {
+          return date.format('ddd DD MMM HH') + 'h';
+        }
+        case 'Day':
+        case 'Dat':
+        case 'Wee':
+        case 'Mon':
+        case 'Yea':
+        case 'nbW': {
+          return date.format('ddd DD MMM YYYY');
+        }
+        default: {
+          return date.format(clusterLevel);
+        }
       }
-      case 'W': case '7D': case 'D':{
-        return date.format('ddd DD MMM HH') + 'h';
-      }
-      case 'M': case 'Y': case 'RealW': case 'RealM': case 'RealY': case 'nbW': {
-        return date.format('ddd DD MMM YYYY');
-      }
-      default: {
-        return date.format(clusterLevel);
-      }
+    } else {
+      return '';
     }
   }
 
   /**
-   * special format function used for week ticks formatting, display only hours for each ticks
-   * if cluster level is W return a string formatted from value
-   * else return a empty string
+   * special format function used for wrote all ticks on one horizontal line
+   * if cluster level is correct return a string formatted from value
+   * else return an empty string
    * @param value
    * @param clusterLevel
    */
@@ -42,7 +52,7 @@ export class XAxisTickFormatPipe implements PipeTransform {
     if (clusterLevel) {
       const date = moment(value);
       if (date) {
-        if (clusterLevel === 'D') {
+        if (clusterLevel === 'Hou') {
           return date.format('HH') + 'h';
         } else if (clusterLevel === 'Min') {
           return date.format('mm');
@@ -58,81 +68,80 @@ export class XAxisTickFormatPipe implements PipeTransform {
 
   /**
    * return a string formatted from value by the according cluster level
+   * else return an empty string
    * @param value
    * @param clusterLevel
    */
   transform(value: any, clusterLevel: string): string {
-    // if (languageTag) {
-    /*if (value instanceof moment) {*/
-    // const datePipe = moment.locale(languageTag);
     if (typeof value === 'string') {
       return value;
     }
+    if (clusterLevel) {
     const date = moment(value);
     const startYear = moment(date).startOf('year');
-    switch (clusterLevel) {
-      case 'W' : case '7D': case 'D': {
-        if (date.valueOf() === startYear.valueOf()) {
-          return date.format('ddd DD MMM YYYY');
-        }
-        if (date.hours() === 0) {
-          return date.format('ddd DD MMM');
-        } else {
-          return date.format('HH');
-        }
-      }
-      case 'Min': {
-        if (date.minutes() === 0) {
-          if (date.hour() === 0) {
+      switch (clusterLevel) {
+        case 'Hou' : {
+          if (date.valueOf() === startYear.valueOf()) {
+            return date.format('ddd DD MMM YYYY');
+          }
+          if (date.hours() === 0) {
             return date.format('ddd DD MMM');
           } else {
             return date.format('HH');
           }
         }
-      }
-      case 'Sec': {
-        if (date.seconds() === 0) {
+        case 'Min': {
           if (date.minutes() === 0) {
             if (date.hour() === 0) {
               return date.format('ddd DD MMM');
             } else {
-              return date.format('HH') + 'h';
+              return date.format('HH');
             }
-          } else {
-            return date.format('mm');
           }
         }
-      }
-      case 'M': {
-        if (date.valueOf() === startYear.valueOf()) {
-          return date.format('DD MMM YY');
+        case 'Sec': {
+          if (date.seconds() === 0) {
+            if (date.minutes() === 0) {
+              if (date.hour() === 0) {
+                return date.format('ddd DD MMM');
+              } else {
+                return date.format('HH') + 'h';
+              }
+            } else {
+              return date.format('mm');
+            }
+          }
         }
-        return date.format('ddd DD MMM');
-      }
-      case 'Y': {
-        if (date.valueOf() === startYear.valueOf()) {
-          return date.format('D MMM YY');
+        case 'Day': {
+          if (date.valueOf() === startYear.valueOf()) {
+            return date.format('DD MMM YY');
+          }
+          return date.format('ddd DD MMM');
         }
-        return date.format('D MMM');
+        case 'Dat': {
+          if (date.valueOf() === startYear.valueOf()) {
+            return date.format('D MMM YY');
+          }
+          return date.format('D MMM');
+        }
+        case 'Wee': {
+          return date.format('DD/MM/YY');
+        }
+        case 'Mon': {
+          return date.format('MMM YY');
+        }
+        case 'Yea': {
+          return date.format('YYYY');
+        }
+        case 'nbW': {
+          return date.format('YYYY');
+        }
+        default: {
+          return date.format(clusterLevel);
+        }
       }
-      case 'RealW': {
-        return date.format('DD/MM/YY');
-      }
-      case 'RealM': {
-        return date.format('MMM YY');
-      }
-      case 'RealY': {
-        return date.format('YYYY');
-      }
-      case 'nbW': {
-        return date.format('YYYY');
-      }
-      default: {
-        return date.format(clusterLevel);
-      }
+    } else {
+      return '';
     }
-        // else {
-        // return value.toString();
-        // }
   }
 }

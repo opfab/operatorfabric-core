@@ -28,9 +28,9 @@ import {DraggableDirective} from './app-draggable';
 import {MouseWheelDirective} from './mouse-wheel.directive';
 import {XAxisTickFormatPipe} from './x-axis-tick-format.pipe';
 import * as moment from 'moment';
-import {debounceTime, distinctUntilChanged} from "rxjs/operators";
-import {compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
-import {TimeService} from "@ofServices/time.service";
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {compareBySeverityLttdPublishDate} from '@ofStates/feed.state';
+import {TimeService} from '@ofServices/time.service';
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
@@ -126,7 +126,7 @@ describe('TimeLineComponent', () => {
   });
 
   it('should create a list with one element when there is ' +
-      'only one card in the state', (done) => {
+    'only one card in the state', (done) => {
     fixture.detectChanges();
     const oneCard = getOneRandomLigthCard();
     const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
@@ -185,14 +185,14 @@ describe('TimeLineComponent', () => {
         severity: actionCard.severity,
         summary: actionCard.summary.parameters.value
     }, {
-      publishDate: oneCard.publishDate,
-      startDate: oneCard.startDate,
+        publishDate: oneCard.publishDate,
+        startDate: oneCard.startDate,
         endDate: oneCard.endDate,
         severity: oneCard.severity,
         summary: oneCard.summary.parameters.value
     }, {
-      publishDate: notificationCard.publishDate,
-      startDate: notificationCard.startDate,
+        publishDate: notificationCard.publishDate,
+        startDate: notificationCard.startDate,
         endDate: notificationCard.endDate,
         severity: notificationCard.severity,
         summary: notificationCard.summary.parameters.value

@@ -46,105 +46,173 @@ describe('Directive: XAxisTickFormatPipe', () => {
         expect(component).toBeTruthy();
     });
 
-    it('Check transform & transformHovered function : ' +
-        'return param when cluster level isnt identified ' +
-        'return nothing for transformAdvanced function', () => {
+    it('check three functions of transformation: ' +
+        'return an empty string when clusterLevel isnt precise', () => {
         fixture.detectChanges();
-        const start = moment();
-        // const startCopy = moment(start);
-        const tmp = start.format('M');
-        // console.log(tmp, startCopy.format('M'))
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        expect(formatPipe.transform(tmp, null)).toEqual(tmp);
-        expect(formatPipe.transformHovered(tmp, null)).toEqual(tmp);
-        expect(formatPipe.transformAdvanced(start, null)).toEqual('');
+        expect(formatPipe.transform(moment(), null)).toEqual('');
+        expect(formatPipe.transformAdvanced(moment(), null)).toEqual('');
+        expect(formatPipe.transformHovered(moment(), null)).toEqual('');
         expect(component).toBeTruthy();
     });
 
-    it('Check transform & transformHovered function : ' +
-        'return formatted date on Week Zoom configuration', () => {
+    it('Check transform & transformHovered functions: ' +
+        'return param received when its a string', () => {
         fixture.detectChanges();
-        const start = moment();
-        start.date(4).hours(0).minutes(0).seconds(0).millisecond(0);
-        const startCopy = moment(start);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        expect(formatPipe.transform(start, 'W')).toEqual(startCopy.format('ddd DD MMM'));
-        start.hours(4);
-        startCopy.hours(4);
-        expect(formatPipe.transform(start, 'W')).toEqual(startCopy.format('HH'));
+        expect(formatPipe.transform('test', null)).toEqual('test');
+        expect(formatPipe.transformHovered('test', null)).toEqual('test');
         expect(component).toBeTruthy();
     });
 
-    it('Check transform & transformHovered function : ' +
-        'return formatted date on Month Zoom configuration', () => {
+    it('Check transform & transformHovered functions: ' +
+        'return date formatted by the clusterLevel pass on param', () => {
         fixture.detectChanges();
         const start = moment();
-        start.date(3).startOf('day');
+        start.date(3);
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transformHovered(start, 'M');
-        expect(formatPipe.transform(start, 'M')).toEqual(startCopy.format('ddd DD MMM'));
+        expect(formatPipe.transform(start, 'DD MM YY')).toEqual(startCopy.format('DD MM YY'));
+        expect(formatPipe.transformHovered(start, 'DD MM YY')).toEqual(startCopy.format('DD MM YY'));
         expect(component).toBeTruthy();
     });
 
-    it('Check transform & transformHovered function : ' +
-        'return formatted date on Year Zoom configuration', () => {
+
+    it('Check transformHovered functions: ' +
+        'return formatted date on W Zoom configuration', () => {
+        fixture.detectChanges();
+        const start = moment();
+        start.date(3);
+        start.hours(0).minutes(0).seconds(0).millisecond(0);
+        const startCopy = moment(start);
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        expect(formatPipe.transformHovered(start, 'Hou')).toEqual(startCopy.format('ddd DD MMM HH') + 'h');
+        expect(formatPipe.transformHovered(start, 'Day')).toEqual(startCopy.format('ddd DD MMM YYYY'));
+        expect(formatPipe.transformHovered(start, 'Min')).toEqual(startCopy.format('ddd DD MMM HH')
+            + 'h' + startCopy.format('mm'));
+    });
+
+    it('Check transformAdvanced function: ' +
+        'return formatted date on Min, Sec and nbW Zoom configuration', () => {
         fixture.detectChanges();
         const start = moment();
         start.date(16).startOf('day');
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transformHovered(start, 'Y');
-        expect(formatPipe.transform(start, 'Y')).toEqual(startCopy.format('D MMM'));
+        expect(formatPipe.transformAdvanced(start, 'Min')).toEqual(startCopy.format('mm'));
+        expect(formatPipe.transformAdvanced(start, 'Sec')).toEqual(startCopy.format('ss'));
+        expect(formatPipe.transformAdvanced(start, 'nbW')).toEqual(startCopy.format('ww'));
         expect(component).toBeTruthy();
     });
 
-    it('Check transform & transformHovered function : ' +
-        'return formatted first day of year on Week Zoom configuration', () => {
+    it('Check transform functions: ' +
+        'return formatted date on W Zoom configuration', () => {
+        fixture.detectChanges();
+        const start = moment();
+        start.date(4).hours(0).minutes(0).seconds(0).millisecond(0);
+        const startCopy = moment(start);
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        expect(formatPipe.transform(start, 'Hou')).toEqual(startCopy.format('ddd DD MMM'));
+        start.hours(4);
+        startCopy.hours(4);
+        expect(formatPipe.transform(start, 'Hou')).toEqual(startCopy.format('HH'));
+        expect(component).toBeTruthy();
+    });
+
+    it('Check transform function: ' +
+        'return formatted date on M Zoom configuration', () => {
+        fixture.detectChanges();
+        const start = moment();
+        start.date(3).startOf('day');
+        start.hours(0).minutes(0).seconds(0).millisecond(0);
+        const startCopy = moment(start);
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        expect(formatPipe.transform(start, 'Day')).toEqual(startCopy.format('ddd DD MMM'));
+        expect(component).toBeTruthy();
+    });
+
+    it('Check transform function: ' +
+        'return formatted date on Y Zoom configuration', () => {
+        fixture.detectChanges();
+        const start = moment();
+        start.date(16).startOf('day');
+        start.hours(0).minutes(0).seconds(0).millisecond(0);
+        const startCopy = moment(start);
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        expect(formatPipe.transform(start, 'Dat')).toEqual(startCopy.format('D MMM'));
+        expect(component).toBeTruthy();
+    });
+
+    it('Check transform function: ' +
+        'return formatted date on RealW, RealM, RealY and nbW Zoom configuration', () => {
+        fixture.detectChanges();
+        const start = moment();
+        start.date(16).startOf('day');
+        start.hours(0).minutes(0).seconds(0).millisecond(0);
+        const startCopy = moment(start);
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        expect(formatPipe.transform(start, 'Wee')).toEqual(startCopy.format('DD/MM/YY'));
+        expect(formatPipe.transform(start, 'Mon')).toEqual(startCopy.format('MMM YY'));
+        expect(formatPipe.transform(start, 'Yea')).toEqual(startCopy.format('YYYY'));
+        expect(formatPipe.transform(start, 'nbW')).toEqual(startCopy.format('YYYY'));
+        expect(component).toBeTruthy();
+    });
+
+    it('Check transform function: ' +
+        'return formatted date on Min and Sec Zoom configuration', () => {
+        fixture.detectChanges();
+        const start = moment();
+        start.date(16).startOf('day');
+        start.hours(0).minutes(0).seconds(0).millisecond(0);
+        const startCopy = moment(start);
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        expect(formatPipe.transform(start, 'Min')).toEqual(startCopy.format('ddd DD MMM'));
+        expect(formatPipe.transform(start, 'Sec')).toEqual(startCopy.format('ddd DD MMM'));
+        start.hours(1);
+        startCopy.hours(1);
+        expect(formatPipe.transform(start, 'Min')).toEqual(startCopy.format('HH'));
+        expect(formatPipe.transform(start, 'Sec')).toEqual(startCopy.format('HH') + 'h');
+        start.minute(1);
+        startCopy.minutes(1);
+        expect(formatPipe.transform(start, 'Sec')).toEqual(startCopy.format('mm'));
+        expect(component).toBeTruthy();
+    });
+
+    it('Check transform function: ' +
+        'return formatted first day of year on W Zoom configuration', () => {
         fixture.detectChanges();
         const start = moment();
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const startCopy = moment(start);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        formatPipe.transformHovered(start, 'W');
-        expect(formatPipe.transform(start, 'W')).toEqual(startCopy.format('ddd DD MMM YYYY'));
+        expect(formatPipe.transform(start, 'Hou')).toEqual(startCopy.format('ddd DD MMM YYYY'));
         expect(component).toBeTruthy();
     });
 
-    it('Check transform function : ' +
-        'return formatted first day of year on Month Zoom configuration', () => {
+    it('Check transform function: ' +
+        'return formatted first day of year on M Zoom configuration', () => {
         fixture.detectChanges();
         const start = moment();
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const startCopy = moment(start);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        expect(formatPipe.transform(start, 'M')).toEqual(startCopy.format('DD MMM YY'));
+        expect(formatPipe.transform(start, 'Day')).toEqual(startCopy.format('DD MMM YY'));
         expect(component).toBeTruthy();
     });
 
-    it('Check transform function : ' +
-        'return formatted first day of year on Year Zoom configuration', () => {
+    it('Check transform function: ' +
+        'return formatted first day of year on Y Zoom configuration', () => {
         fixture.detectChanges();
         const start = moment();
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const startCopy = moment(start);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        expect(formatPipe.transform(start, 'Y')).toEqual(startCopy.format('D MMM YY'));
+        expect(formatPipe.transform(start, 'Dat')).toEqual(startCopy.format('D MMM YY'));
         expect(component).toBeTruthy();
     });
-
-   /* it('Check transformAdvanced function : ' +
-        'return empty string', () => {
-        fixture.detectChanges();
-        const start = moment();
-        start.hours(0).minutes(0).seconds(0).millisecond(0);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
-        expect(formatPipe.transformAdvanced(start, 'Y')).toEqual('00h');
-        expect(component).toBeTruthy();
-    });*/
 });
