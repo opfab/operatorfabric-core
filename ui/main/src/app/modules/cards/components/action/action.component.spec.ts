@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActionComponent } from './action.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
-describe('ActionComponent', () => {
+xdescribe('ActionComponent', () => {
   let component: ActionComponent;
   let fixture: ComponentFixture<ActionComponent>;
 

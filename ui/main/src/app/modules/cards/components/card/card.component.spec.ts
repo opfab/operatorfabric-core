@@ -27,7 +27,7 @@ import {ActionListComponent} from "../action-list/action-list.component";
 import {ActionComponent} from "../action/action.component";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
-fdescribe('CardComponent', () => {
+describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
     let fixture: ComponentFixture<CardComponent>;
     let store: Store<AppState>;

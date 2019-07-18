@@ -26,8 +26,9 @@ describe('ConfigSelectors', () => {
         menu: null,
         config: null,
         settings: null,
-        time: null,
-        archive: null
+        archive: null,
+        time:null,
+        thirdAction:null
     }
 
     let loadedConfigState: ConfigState = {
