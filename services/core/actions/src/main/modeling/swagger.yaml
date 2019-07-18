@@ -50,7 +50,9 @@ paths:
           schema:
             $ref: '#/definitions/ActionStatus'
         '404':
-          description: No such Process, State or Action
+          description: No such Process, State, Action or correctly responding third party endpoint
+        '502':
+          description: Error while accessing other business service or third party endpoint
         '401':
           description: Authentication required
     post:
@@ -84,7 +86,9 @@ paths:
           schema:
             $ref: '#/definitions/ActionStatus'
         '404':
-          description: No such Process, State or Action
+          description: No such Process, State, Action or correctly responding third party endpoint
+        '502':
+          description: Error while accessing other business service or third party endpoint
         '401':
           description: Authentication required
 

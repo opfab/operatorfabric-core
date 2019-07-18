@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ActionService {
 
+    public static final String BEARER_PREFIX = "Bearer ";
     private static Pattern TOKEN_PATTERN = Pattern.compile("\\{(.+?)\\}");
 
     private final CardConsultationServiceProxy cardService;
@@ -45,9 +46,9 @@ public class ActionService {
 
     public ActionStatus lookUpActionStatus(String publisher, String process, String state, String actionKey, String jwt) {
         try {
-            Card card = this.cardService.fetchCard(publisher + "_" + process, "Bearer " + jwt);
+            Card card = this.cardService.fetchCard(publisher + "_" + process, BEARER_PREFIX + jwt);
             if (card != null) {
-                Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey, "Bearer " + jwt);
+                Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey, BEARER_PREFIX + jwt);
                 if (action != null && (action.getUpdateState() != null && action.getUpdateState()
                         || action.getUpdateStateBeforeAction() != null && action.getUpdateStateBeforeAction())) {
                     return updateAction(action, card, jwt);
@@ -70,9 +71,9 @@ public class ActionService {
 
     public ActionStatus submitAction(String publisher, String process, String state, String actionKey, String jwt, String body) {
         try {
-            Card card = this.cardService.fetchCard(publisher + "_" + process, "Bearer " + jwt);
+            Card card = this.cardService.fetchCard(publisher + "_" + process, BEARER_PREFIX + jwt);
             if (card != null) {
-                Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey, "Bearer " + jwt);
+                Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey, BEARER_PREFIX + jwt);
                 if (action != null) {
                     return sendAction(action, card, jwt, body);
                 }
@@ -83,6 +84,12 @@ public class ActionService {
                 case 404:
                     throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
                             .message("No such card or action").build(), fe);
+                case 401:
+                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.UNAUTHORIZED)
+                            .message("Remote service returned 401(Unauthorized), authentication may have expired or remote service is incorrectly configured").build(), fe);
+                case 403:
+                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.UNAUTHORIZED)
+                            .message("Remote service returned 403(Unauthorized), user not allowed to acces resource").build(), fe);
                 default:
                     throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_GATEWAY)
                             .message("Error accessing remote service, no fallback behavior").build(), fe);
@@ -105,8 +112,18 @@ public class ActionService {
                 } catch (IOException e) {
                     log.warn("Exception delinearizing data from remote action url", e);
                 }
-            default:
+            case 204:
                 return null;
+            case 404:
+                throw new ApiErrorException(ApiError.builder()
+                        .status(HttpStatus.BAD_GATEWAY)
+                        .message("Specified action was not handle by third party endpoint (not found)")
+                        .build());
+            default:
+                throw new ApiErrorException(ApiError.builder()
+                        .status(HttpStatus.BAD_GATEWAY)
+                        .message("Unexpected behaviour of rthird party handler endpoint")
+                        .build());
         }
     }
 

@@ -16,12 +16,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
-import reactor.util.function.*;
+import reactor.util.function.Tuple6;
+import reactor.util.function.Tuples;
 
 import java.util.List;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
-import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
+import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Slf4j
@@ -29,6 +30,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 public class ActionRoutesConfig {
 
 
+    public static final String ACTION_ROUTE = "/publisher/{publisher}/process/{processInstanceId}/states/{state}/actions/{actionKey}";
     private final ActionService actionService;
 
     @Autowired
@@ -44,10 +46,9 @@ public class ActionRoutesConfig {
     @Bean
     public RouterFunction<ServerResponse> cardRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/test"),r->ok().build())
-                .andRoute(RequestPredicates.GET("/publisher/{publisher}/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionGetRoute())
-                .andRoute(RequestPredicates.POST("/publisher/{publisher}/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionPostRoute())
-                .andRoute(RequestPredicates.OPTIONS("/publisher/{publisher}/process/{processInstanceId}/states/{state}/actions/{actionKey}"), actionOptionRoute())
+                .route(RequestPredicates.GET(ACTION_ROUTE), actionGetRoute())
+                .andRoute(RequestPredicates.POST(ACTION_ROUTE), actionPostRoute())
+                .andRoute(RequestPredicates.OPTIONS(ACTION_ROUTE), actionOptionRoute())
                 ;
     }
 
@@ -58,8 +59,9 @@ public class ActionRoutesConfig {
                         ActionStatus actionStatus = this.actionService.lookUpActionStatus(t.getT1(),t.getT2(),t.getT3(),t.getT4(),t.getT5());
                     if (actionStatus != null) {
                             return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(actionStatus));
+                    }else{
+                        return noContent().build();
                     }
-                    return notFound().build();
                 });
     }
 
@@ -69,8 +71,9 @@ public class ActionRoutesConfig {
                     ActionStatus actionStatus = this.actionService.submitAction(t.getT1(),t.getT2(),t.getT3(),t.getT4(),t.getT5(),t.getT6());
                     if (actionStatus != null) {
                         return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(actionStatus));
+                    }else{
+                        return noContent().build();
                     }
-                    return ok().build();
                 });
     }
 
@@ -79,7 +82,7 @@ public class ActionRoutesConfig {
     private Mono<Tuple6<String, String, String, String, String,String>> extractParameters(ServerRequest request) {
         String jwt = null;
         List<String> authorizations = request.headers().header("Authorization");
-        if(authorizations.size()>0){
+        if(!authorizations.isEmpty(){
             jwt = authorizations.get(0).replaceAll("Bearer (.+)","$1");
 
         }

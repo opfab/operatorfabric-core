@@ -2,8 +2,6 @@ package org.lfenergy.operatorfabric.actions.model;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.web.reactive.function.BodyInserter;
 
 import java.util.List;
 
