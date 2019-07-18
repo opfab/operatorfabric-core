@@ -10,7 +10,13 @@ import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Observable, of} from "rxjs";
-import {ROUTER_NAVIGATION, ROUTER_REQUEST, RouterNavigationAction, RouterRequestAction} from "@ngrx/router-store";
+import {
+    ROUTER_NAVIGATED,
+    ROUTER_NAVIGATION,
+    ROUTER_REQUEST,
+    RouterNavigationAction,
+    RouterRequestAction
+} from "@ngrx/router-store";
 import {filter, map, switchMap, tap} from "rxjs/operators";
 import {LoadCard} from "@ofActions/card.actions";
 import {ClearLightCardSelection, SelectLightCard} from "@ofActions/light-card.actions";
@@ -59,6 +65,28 @@ export class CustomRouterEffects {
             ];
         })
     );
+
+    @Effect({dispatch: false})
+    navigateAndResize = this.actions$.pipe(
+        ofType(ROUTER_NAVIGATED),
+        //TODO On end of navigation? Only on certain paths ?
+        switchMap(action => {
+            //Trigger resize event
+                if (typeof(Event) === 'function') {
+                    // modern browsers
+                    window.dispatchEvent(new Event('resize'));
+                } else {
+                    // for IE and other old browsers
+                    // causes deprecation warning on modern browsers
+                    var evt = window.document.createEvent('UIEvents');
+                    evt.initUIEvent('resize', true, false, window, 0);
+                    window.dispatchEvent(evt);
+                }
+
+                return of({});
+            }
+        )
+    )
 
     @Effect()
     navigateAwayFromFeed: Observable<Action> = this.actions$.pipe(

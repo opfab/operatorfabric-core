@@ -9,7 +9,7 @@ import {now} from "moment";
 @Directive({
     selector: '[calcHeightDirective]'
 })
-export class CalcHeightDirective implements OnInit {
+export class CalcHeightDirective {
 
     //TODO Get rid of cascading "style="height: 100%;"
 
@@ -34,10 +34,6 @@ export class CalcHeightDirective implements OnInit {
 
         this._resizeSubject$.next(height); //TODO Do we really need height?
 
-    }
-
-    ngOnInit(): void {
-        this._resizeSubject$.next(0); //TODO find a way to bypass debounce
     }
 
     calcHeight(parent: HTMLElement, fixedHeightClass: string, calcHeightClass: string) {
