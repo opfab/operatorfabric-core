@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = {IntegrationTestApplication.class, ActionService.class})
 @Slf4j
 @ActiveProfiles("test")
-class ActionServiceShould {
+public class ActionServiceShould {
 
     @Autowired
     private ActionService actionService;
@@ -58,6 +58,7 @@ class ActionServiceShould {
     public void init() {
         this.mockServer = MockRestServiceServer.createServer(restTemplate);
         card = new Card();
+        card.setPublisher("publisher");
         card.setProcess("process");
         card.setProcessId("process-instance");
         card.setState("state");
@@ -101,6 +102,52 @@ class ActionServiceShould {
                         .body(mapper.writeValueAsString(actionStatus))
                 );
         assertThat(this.actionService.updateAction(this.action,this.card,"abc")).isEqualTo(actionStatus);
+    }
+
+
+    @Test
+    void sendAction() throws URISyntaxException, JsonProcessingException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertThat(this.actionService.sendAction(this.action,this.card,"abc",null)).isEqualTo(actionStatus);
+    }
+
+    @Test
+    void lookUpActionStatus() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertThat(this.actionService.lookUpActionStatus(this.card.getPublisher(),this.card.getProcessId(),this.card.getState(),"action1","abc")).isEqualTo(actionStatus);
+    }
+
+    @Test
+    void submitAction() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertThat(this.actionService.submitAction(this.card.getPublisher(),this.card.getProcessId(),this.card.getState(),"action1","abc",null)).isEqualTo(actionStatus);
     }
 
     @Getter

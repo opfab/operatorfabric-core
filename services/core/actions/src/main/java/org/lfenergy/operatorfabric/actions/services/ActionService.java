@@ -90,7 +90,7 @@ public class ActionService {
         }
     }
 
-    private ActionStatus sendAction(Action action, Card card, String jwt, String body) {
+    ActionStatus sendAction(Action action, Card card, String jwt, String body) {
         String url = replaceTokens(action, card, jwt);
         ResponseEntity<String> result = restTemplate.postForEntity(url, body, String.class);
 

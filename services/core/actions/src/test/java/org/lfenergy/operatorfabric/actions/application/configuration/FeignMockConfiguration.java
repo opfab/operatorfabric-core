@@ -8,6 +8,9 @@ import feign.mock.HttpMethod;
 import feign.mock.MockClient;
 import feign.mock.MockTarget;
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.actions.model.Action;
+import org.lfenergy.operatorfabric.actions.model.ActionData;
+import org.lfenergy.operatorfabric.actions.services.ActionServiceShould;
 import org.lfenergy.operatorfabric.actions.services.feign.CardConsultationServiceProxy;
 import org.lfenergy.operatorfabric.actions.services.feign.ThirdsServiceProxy;
 import org.lfenergy.operatorfabric.cards.model.Card;
@@ -17,7 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-;
 
 @Configuration
 @Slf4j
@@ -30,19 +32,23 @@ public class FeignMockConfiguration {
     public MockClient mockClient() throws JsonProcessingException {
 
         //Create MockClient and set behaviour
-        Card card1 = new Card();
-        card1.setId("id1");
-        card1.setStartDate(2300000l);
-        Card card2 = new Card();
-        card2.setId("id1");
-        card2.setStartDate(1300000l);
+        Card card = new Card();
+        card.setPublisher("publisher");
+        card.setProcess("process");
+        card.setProcessId("process-instance");
+        card.setState("state");
+        card.setData(new ActionServiceShould.TestClass1());
+
+        Action action = ActionData.builder()
+                .updateState(true)
+                .url("http://somewhere:111/{process}/{state}/action?access_token={jwt}")
+                .build();
 
         MockClient mockClient = new MockClient();
         mockClient = mockClient
-                .ok(HttpMethod.GET, "/1000000/next", mapper.writeValueAsString(card1))
-                .ok(HttpMethod.GET, "/1000000/previous", mapper.writeValueAsString(card2))
-                .add(HttpMethod.GET, "/2000000/next", 404)
-                .add(HttpMethod.GET, "/2000000/previous", 404)
+                .ok(HttpMethod.GET, "/cards/"+card.getPublisher()+"_"+card.getProcessId(), mapper.writeValueAsString(card))
+                .ok(HttpMethod.POST, "/cards/"+card.getPublisher()+"_"+card.getProcessId(), mapper.writeValueAsString(card))
+                .ok(HttpMethod.GET, "/thirds/"+card.getPublisher()+"/"+card.getProcess()+"/"+card.getState()+"/actions/action1", mapper.writeValueAsString(action))
         ;
 
         return mockClient;
