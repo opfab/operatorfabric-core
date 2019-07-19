@@ -14,8 +14,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'of-text-setting',
-    templateUrl: './text-setting.component.html',
-    styleUrls: ['./text-setting.component.css']
+    templateUrl: './text-setting.component.html'
 })
 export class TextSettingComponent extends BaseSettingComponent implements OnInit, OnDestroy {
 

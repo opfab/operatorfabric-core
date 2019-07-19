@@ -13,8 +13,7 @@ import {buildConfigSelector} from "@ofSelectors/config.selectors";
 
 @Component({
   selector: 'of-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  templateUrl: './settings.component.html'
 })
 export class SettingsComponent implements OnInit {
   locales$:Observable<string[]>;

@@ -13,8 +13,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'of-multi-settings',
-  templateUrl: './multi-settings.component.html',
-  styleUrls: ['./multi-settings.component.css']
+  templateUrl: './multi-settings.component.html'
 })
 export class MultiSettingsComponent extends BaseSettingComponent implements OnInit, OnDestroy {
 

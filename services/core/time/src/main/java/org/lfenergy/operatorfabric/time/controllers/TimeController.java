@@ -108,16 +108,15 @@ public class TimeController implements TimeApi {
     }
 
     private Void handleCardServiceErrors(FeignException fex) {
-        switch (fex.status()) {
-            case 404:
-                log.info(String.format(CARD_RESPONSE_MSG,
-                        404,
-                        NO_CARD)
-                        , fex);
-                throw new ApiErrorException(ApiError.builder()
-                        .status(HttpStatus.GONE)
-                        .message(NO_CARD).build());
-            default:
+        if(fex.status() == 404) {
+            log.info(String.format(CARD_RESPONSE_MSG,
+                    404,
+                    NO_CARD)
+                    , fex);
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.GONE)
+                    .message(NO_CARD).build());
+        }else{
                 log.error(CARD_UNEXPECTED_ERROR_MSG, fex);
                 throw new ApiErrorException(ApiError.builder()
                         .status(HttpStatus.SERVICE_UNAVAILABLE)

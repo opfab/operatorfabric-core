@@ -13,8 +13,7 @@ import {Validators} from "@angular/forms";
 
 @Component({
   selector: 'of-email-setting',
-  templateUrl: './email-setting.component.html',
-  styleUrls: ['./email-setting.component.css']
+  templateUrl: './email-setting.component.html'
 })
 export class EmailSettingComponent extends TextSettingComponent implements OnInit, OnDestroy {
 

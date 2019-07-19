@@ -31,7 +31,7 @@ export class CardDetailsComponent implements OnInit {
                 this.card = card;
                 if(card) {
                     if(card.details) {
-                        this.details = [...<Detail[]>card.details];
+                        this.details = [...card.details];
                     }else{
                         this.details = [];
                     }

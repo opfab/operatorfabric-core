@@ -16,8 +16,7 @@ import {Observable, of} from "rxjs";
 
 @Component({
     selector: 'of-list-setting',
-    templateUrl: './list-setting.component.html',
-    styleUrls: ['./list-setting.component.css']
+    templateUrl: './list-setting.component.html'
 })
 export class ListSettingComponent extends BaseSettingComponent implements OnInit, OnDestroy {
 
