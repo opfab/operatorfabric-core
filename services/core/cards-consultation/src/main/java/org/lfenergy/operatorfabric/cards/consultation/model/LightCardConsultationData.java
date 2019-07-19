@@ -61,6 +61,10 @@ public class LightCardConsultationData implements LightCard {
     @Singular("timeSpan")
     private Set<TimeSpanConsultationData> timeSpansSet;
 
+    /**
+     * return timespans, may return null
+     * @return
+     */
     @JsonProperty("timeSpans")
     @Override
     public List<TimeSpan> getTimeSpans() {

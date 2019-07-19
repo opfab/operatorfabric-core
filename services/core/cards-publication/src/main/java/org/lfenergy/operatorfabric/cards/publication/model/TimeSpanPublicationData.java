@@ -33,9 +33,7 @@ public class TimeSpanPublicationData implements TimeSpan{
     }
 
     void init(){
-        if(display == null && end != null)
-            display = TimeSpanDisplayModeEnum.BUBBLE;
-        else if(display == null)
+        if(display == null)
             display = TimeSpanDisplayModeEnum.BUBBLE;
     }
 }

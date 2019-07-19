@@ -26,6 +26,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 @Slf4j
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    public static final String ADMIN_ROLE = "ADMIN";
+    public static final String THIRDS_PATH = "/thirds/**";
     @Autowired
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
 
@@ -51,9 +53,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers(HttpMethod.POST,"/thirds/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT,"/thirds/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE,"/thirds/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, THIRDS_PATH).hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.PUT, THIRDS_PATH).hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.DELETE, THIRDS_PATH).hasRole(ADMIN_ROLE)
                 .anyRequest().permitAll(); //Needed to allow styles to be loaded without auth
     }
 
