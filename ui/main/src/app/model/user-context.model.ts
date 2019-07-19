@@ -6,5 +6,10 @@
  */
 
 export class UserContext{
-    constructor(){}
+    constructor(
+        readonly login:string,
+        readonly token:string,
+        readonly firstName:string,
+        readonly lastName:string,
+    ){}
 }

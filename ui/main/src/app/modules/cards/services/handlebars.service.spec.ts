@@ -80,7 +80,7 @@ describe('Handlebars Services', () => {
     });
 
     describe('#executeTemplate', () => {
-        let userContext = new UserContext();
+        let userContext = new UserContext('jdoe','token','John', 'Doe');
         let card = getOneRandomCard({data:{
             name:'something',
             numbers:[0,1,2,3,4,5],

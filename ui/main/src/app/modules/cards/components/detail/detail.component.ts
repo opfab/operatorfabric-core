@@ -13,6 +13,10 @@ import {DomSanitizer, SafeHtml, SafeResourceUrl} from "@angular/platform-browser
 import {Action, Third} from "@ofModel/thirds.model";
 import {zip} from "rxjs";
 import {DetailContext} from "@ofModel/detail-context.model";
+import {Store} from "@ngrx/store";
+import {AppState} from "@ofStore/index";
+import {selectAuthenticationState} from "@ofSelectors/authentication.selectors";
+import {UserContext} from "@ofModel/user-context.model";
 
 @Component({
     selector: 'of-detail',
@@ -24,16 +28,27 @@ export class DetailComponent implements OnInit {
     @Input() card: Card;
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _htmlContent: SafeHtml;
+    private userContext: UserContext;
 
     constructor(private element: ElementRef,
                 private thirds: ThirdsService,
                 private handlebars: HandlebarsService,
-                private sanitizer: DomSanitizer) {
+                private sanitizer: DomSanitizer,
+                private store: Store<AppState>) {
     }
 
     ngOnInit() {
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
+        this.store.select(selectAuthenticationState)
+            .subscribe(authState=>{
+                this.userContext = new UserContext(
+                    authState.identifier,
+                    authState.token,
+                    authState.firstName,
+                    authState.lastName
+                )
+            });
     }
 
     private initializeHrefsOfCssLink() {
