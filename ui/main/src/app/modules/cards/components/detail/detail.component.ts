@@ -12,6 +12,7 @@ import {HandlebarsService} from "../../services/handlebars.service";
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from "@angular/platform-browser";
 import {Action, Third} from "@ofModel/thirds.model";
 import {zip} from "rxjs";
+import {DetailContext} from "@ofModel/detail-context.model";
 
 @Component({
     selector: 'of-detail',
@@ -53,7 +54,7 @@ export class DetailComponent implements OnInit {
     private initializeHandlebarsTemplates() {
 
         zip(this.thirds.queryThird(this.card.publisher,this.card.publisherVersion),
-        this.handlebars.executeTemplate(this.detail.templateName, this.card))
+        this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card,null)))
             .subscribe(
                 ([third,html]) => {
                 this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);

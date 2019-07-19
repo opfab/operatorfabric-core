@@ -16,6 +16,7 @@ import {Observable, of} from "rxjs";
 import {map, tap} from "rxjs/operators";
 import {ThirdsService} from "../../../services/thirds.service";
 import {Guid} from "guid-typescript";
+import {DetailContext} from "@ofModel/detail-context.model";
 
 @Injectable()
 export class HandlebarsService {
@@ -41,9 +42,9 @@ export class HandlebarsService {
         this.registerNow();
     }
 
-    public executeTemplate(templateName: string, card: Card):Observable<string> {
-        return this.queryTemplate(card.publisher,card.publisherVersion,templateName).pipe(
-            map(t=>t(card)));
+    public executeTemplate(templateName: string, context: DetailContext):Observable<string> {
+        return this.queryTemplate(context.card.publisher,context.card.publisherVersion,templateName).pipe(
+            map(t=>t(context)));
     }
 
     private queryTemplate(publisher:string, version:string, name: string):Observable<Function> {
