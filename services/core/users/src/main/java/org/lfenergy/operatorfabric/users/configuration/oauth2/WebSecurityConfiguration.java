@@ -27,6 +27,12 @@ import org.springframework.security.oauth2.jwt.Jwt;
 @Slf4j
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    public static final String USER_PATH = "/users/{login}";
+    public static final String USERS_SETTINGS_PATH = "/users/{login}/settings";
+    public static final String USERS_PATH = "/users/**";
+    public static final String GROUPS_PATH = "/groups/**";
+    public static final String ADMIN_ROLE = "ADMIN";
+    public static final String IS_ADMIN_OR_OWNER = "hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)";
     @Autowired
     WebSecurityChecks webSecurityChecks;
 
@@ -49,13 +55,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
-                .antMatchers(HttpMethod.PUT,"/users/{login}").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
-                .antMatchers(HttpMethod.GET,"/users/{login}/settings").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
-                .antMatchers(HttpMethod.PUT,"/users/{login}/settings").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
-                .antMatchers(HttpMethod.PATCH,"/users/{login}/settings").access("hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)")
-                .antMatchers("/users/**").hasRole("ADMIN")
-                .antMatchers("/groups/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, USER_PATH).access(IS_ADMIN_OR_OWNER)
+                .antMatchers(HttpMethod.PUT, USER_PATH).access(IS_ADMIN_OR_OWNER)
+                .antMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
+                .antMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
+                .antMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
+                .antMatchers(USERS_PATH).hasRole(ADMIN_ROLE)
+                .antMatchers(GROUPS_PATH).hasRole(ADMIN_ROLE)
                 .anyRequest().permitAll();
     }
 

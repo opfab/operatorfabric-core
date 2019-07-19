@@ -26,6 +26,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 @Slf4j
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    public static final String TIME_PATH = "/time/**";
+    public static final String ADMIN_ROLE = "ADMIN";
     @Autowired
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
 
@@ -45,9 +47,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers(HttpMethod.POST,"/time/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT,"/time/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE,"/time/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, TIME_PATH).hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.PUT, TIME_PATH).hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.DELETE, TIME_PATH).hasRole(ADMIN_ROLE)
                 .anyRequest().authenticated();
     }
 

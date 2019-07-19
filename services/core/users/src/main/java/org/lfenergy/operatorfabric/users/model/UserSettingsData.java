@@ -47,17 +47,6 @@ public class UserSettingsData implements UserSettings {
         return defaultTagsSet;
     }
 
-//    public void addDefaultTag(String tag){
-//        if(this.defaultTagsSet == null)
-//            this.defaultTagsSet = new HashSet<>();
-//        this.defaultTagsSet.add(tag);
-//    }
-//
-//    public void deleteDefaultTag(String tag){
-//        if(this.defaultTagsSet!= null)
-//            this.defaultTagsSet.remove(tag);
-//    }
-
     @Override
     public List<String> getDefaultTags() {
         if (defaultTagsSet == null)
