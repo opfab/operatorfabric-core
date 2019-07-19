@@ -395,21 +395,21 @@ examples of template (i18n versions)
 ....
 
 <h2>Template Number One</h2>
-<div class="bundle-test">'{{data.level1.level1Prop}}'</div>
+<div class="bundle-test">'{{card.data.level1.level1Prop}}'</div>
 ....
 
 `/template/fr/template1.handlers`
 ....
 <h2>Patron numéro Un</h2>
-<div class="bundle-test">'{{data.level1.level1Prop}}'</div>
+<div class="bundle-test">'{{card.data.level1.level1Prop}}'</div>
 ....
-Those templates display a l10n title and an line containing the value of the card property `level1.level1Prop` which is `This is a root property`.
+Those templates display a l10n title and an line containing the value of the scope property `card.level1.level1Prop` which is `This is a root property`.
 
 `/template/en/template2.handelbars`
 ....
 <h2>Second Template</h2>
 <ul class="bundle-test-list">
-	{{#each data.level1.level1Array}}
+	{{#each card.data.level1.level1Array}}
 		<li class="bunle-test-list-item">{{this.level1ArrayProp}}</li>
 	{{/each}}
 </ul>
@@ -418,7 +418,7 @@ Those templates display a l10n title and an line containing the value of the car
 ....
 <h2>Second patron</h2>
 <ul class="bundle-test-list">
-	{{#each data.level1.level1Array}}
+	{{#each card.data.level1.level1Array}}
 		<li class="bunle-test-list-item">{{this.level1ArrayProp}}</li>
 	{{/each}}
 </ul>
@@ -449,10 +449,10 @@ As above, all parts of files unreleavant for our example are symbolise by a `…
 
 ....
 	…
-	<div class="bundle-test">'{{data.level1.level1Prop}}'</div>
+	<div class="bundle-test">'{{card.data.level1.level1Prop}}'</div>
 	…
 ....
-As seen abow, the value of `{{data.level1.level1Prop}}` of a test card is `This is a level1 property`
+As seen abow, the value of `{{card.data.level1.level1Prop}}` of a test card is `This is a level1 property`
 
 *Style declaration in `./css/bundleTest.css`*
 

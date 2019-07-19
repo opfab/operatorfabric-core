@@ -61,9 +61,14 @@ favor the lightest file formats (ogg,mp3, ...)
 ==== Templates
 
 Templates are https://handlebarsjs.com/[Handlebars] template files. Templates
-are fuelled with a data structure contained in the card data (See
-link:../api/#__Models[card
-data model] for more information)
+are fuelled with a scope structure composed of
+
+ * a *card* property (See link:../api/#__Models[card data model] for more information)
+ * a *userContext* :
+   ** *login*: user login
+   ** *token*: user jwt token
+   ** *firstName*: user first name
+   ** *lastName*: user last name
 
 In addition to Handlebars basic syntax and helpers, Operator Fabric defines the
 following helpers :
@@ -78,7 +83,7 @@ The locale used is the current user selected one, and options are passed as hash
 parameters (https://handlebarsjs.com/[see Handlebars doc Literals section]).
 
 ....
-{{numberFormat data.price style="currency" currency="EUR"}}
+{{numberFormat card.data.price style="currency" currency="EUR"}}
 ....
 
 [[dateformat]]
@@ -90,7 +95,7 @@ selected one, the format is "format" hash parameter
 (https://handlebarsjs.com/[see Handlebars doc Literals section]).
 
 ....
-{{dateFormat data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
+{{dateFormat card.data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
 ....
 
 [[slice]]
@@ -177,7 +182,7 @@ for a local set to `FR_fr`
 preserves space in parameter string to avoid html standard space trimming.
 
 ....
-{{preserveSpace data.businessId}}
+{{preserveSpace card.data.businessId}}
 ....
 
 [[bool]]
@@ -296,7 +301,7 @@ configuration :
 and an optional parameter field (map of parameterKey => value)
 +
 ....
-{{i18n data.i18nTitle}}
+{{i18n card.data.i18nTitle}}
 ....
 * Pass a string key as sole argument and use hash parameters
 (https://handlebarsjs.com/[see Handlebars doc Literals section]) for i18n string
