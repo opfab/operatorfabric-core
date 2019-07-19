@@ -1,4 +1,0 @@
-# Deploy only on nodes with roles "app"
-- op: add
-  path: /spec/template/spec/nodeSelector
-  value: {"kubernetes.io/role": "app" }
