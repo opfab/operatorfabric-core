@@ -18,10 +18,9 @@ import {configInitialState} from "@ofStates/config.state";
 import {authInitialState} from "@ofStates/authentication.state";
 import {PatchSettings} from "@ofActions/settings.actions";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
+import {I18n} from "@ofModel/i18n.model";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
-import {cold, hot} from "jasmine-marbles";
-import {I18n} from "@ofModel/i18n.model";
 
 describe('ListSettingComponent', () => {
     let component: ListSettingComponent;

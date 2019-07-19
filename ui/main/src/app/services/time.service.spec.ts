@@ -11,8 +11,8 @@ import {TimeService} from './time.service';
 
 import * as moment from 'moment';
 import {RouterTestingModule} from "@angular/router/testing";
-import {Store, StoreModule} from "@ngrx/store";
-import {appReducer, AppState} from "@ofStore/index";
+import {StoreModule} from "@ngrx/store";
+import {appReducer} from "@ofStore/index";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {TimeReference, TimeSpeed} from "@ofModel/time.model";
 

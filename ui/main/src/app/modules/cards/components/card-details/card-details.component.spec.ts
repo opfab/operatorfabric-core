@@ -23,7 +23,7 @@ import {HandlebarsService} from "../../services/handlebars.service";
 import {TimeService} from "@ofServices/time.service";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {of} from "rxjs";
-import {Action, ActionType, Process, State} from "@ofModel/thirds.model";
+import {Process, State} from "@ofModel/thirds.model";
 import {Detail} from "@ofModel/card.model";
 import {Map as OfMap} from "@ofModel/map";
 

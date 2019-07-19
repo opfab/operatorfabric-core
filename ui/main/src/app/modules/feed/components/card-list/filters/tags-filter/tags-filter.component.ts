@@ -16,7 +16,6 @@ import {debounce, distinctUntilChanged, first, takeUntil} from "rxjs/operators";
 import {Filter} from "@ofModel/feed-filter.model";
 import * as _ from "lodash";
 import {ApplyFilter} from "@ofActions/feed.actions";
-import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 
 @Component({
     selector: 'of-tags-filter',

@@ -14,17 +14,15 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
-import {of} from "rxjs";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 import {Router} from "@angular/router";
-import SpyObj = jasmine.SpyObj;
-import createSpyObj = jasmine.createSpyObj;
-import * as moment from "moment";
 import 'moment/locale/fr';
 import {TimeService} from "@ofServices/time.service";
 import {I18nService} from "@ofServices/i18n.service";
+import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;

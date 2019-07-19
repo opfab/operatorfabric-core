@@ -2,7 +2,6 @@ import {Action} from "@ngrx/store";
 import {TimeReference} from "@ofModel/time.model";
 import {Message} from "@ofModel/message.model";
 import * as moment from "moment-timezone";
-import {Guid} from "guid-typescript";
 
 export enum TimeActionTypes{
     Tick='[Time] tick',

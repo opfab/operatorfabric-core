@@ -13,9 +13,9 @@ import {of} from "rxjs";
 import {settingsInitialState} from "@ofStates/settings.state";
 import {map} from "rxjs/operators";
 import {TranslateModule} from "@ngx-translate/core";
+import {configInitialState} from "@ofStates/config.state";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
-import {configInitialState} from "@ofStates/config.state";
 
 describe('I18nService', () => {
 

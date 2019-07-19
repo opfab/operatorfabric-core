@@ -6,15 +6,8 @@
  */
 
 import {AppState} from "@ofStore/index";
-import {
-    buildSettingsSelector,
-    selectSettings,
-    selectSettingsData,
-    selectSettingsLoaded
-} from "@ofSelectors/settings.selectors";
 import {settingsInitialState, SettingsState} from "@ofStates/settings.state";
 import {configInitialState, ConfigState} from "@ofStates/config.state";
-import {initialState} from "@ofStates/router.state";
 import {buildSettingsOrConfigSelector, selectMergedSettings} from "@ofSelectors/settings.x.config.selectors";
 
 describe('SettingsXConfigSelectors', () => {

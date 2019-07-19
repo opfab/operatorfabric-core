@@ -11,7 +11,8 @@ import {hot} from 'jasmine-marbles';
 import {
     LoadSettings,
     LoadSettingsSuccess,
-    PatchSettings, PatchSettingsSuccess,
+    PatchSettings,
+    PatchSettingsSuccess,
     SettingsActions,
     SettingsActionTypes
 } from "@ofActions/settings.actions";

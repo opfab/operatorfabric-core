@@ -28,7 +28,7 @@ import {XAxisTickFormatPipe} from "./components/time-line/x-axis-tick-format.pip
 import {MouseWheelDirective} from "./components/time-line/mouse-wheel.directive";
 import {DraggableDirective} from "./components/time-line/app-draggable";
 import {InitChartComponent} from "./components/init-chart/init-chart.component";
-import {TagsFilterComponent } from './components/card-list/filters/tags-filter/tags-filter.component';
+import {TagsFilterComponent} from './components/card-list/filters/tags-filter/tags-filter.component';
 import {TypeaheadModule} from "ngx-type-ahead";
 import {TimeService} from "@ofServices/time.service";
 import {UtilitiesModule} from "../utilities/utilities.module";

@@ -12,9 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-
-import static org.jeasy.random.FieldPredicates.named;
-
 import org.jeasy.random.FieldPredicates;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
@@ -50,6 +47,7 @@ import java.util.stream.Collectors;
 import static java.nio.charset.Charset.forName;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.jeasy.random.FieldPredicates.named;
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 
 /**

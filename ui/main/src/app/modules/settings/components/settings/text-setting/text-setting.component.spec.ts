@@ -13,13 +13,12 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AppState} from "@ofStore/index";
 import {of} from "rxjs";
 import {settingsInitialState} from "@ofStates/settings.state";
-import {map, timeout} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {configInitialState} from "@ofStates/config.state";
+import {authInitialState} from "@ofStates/authentication.state";
+import {PatchSettings} from "@ofActions/settings.actions";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
-import {authInitialState} from "@ofStates/authentication.state";
-import {By} from "@angular/platform-browser";
-import {PatchSettings} from "@ofActions/settings.actions";
 
 describe('TextSettingComponent', () => {
     let component: TextSettingComponent;

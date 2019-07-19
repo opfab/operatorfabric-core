@@ -18,7 +18,6 @@ import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
 import {FilterService, FilterType} from "@ofServices/filter.service";
-import {PatchSettings} from "@ofActions/settings.actions";
 
 describe('TagsFilterComponent', () => {
     let component: TagsFilterComponent;

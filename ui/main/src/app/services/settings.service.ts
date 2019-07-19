@@ -5,10 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Injectable, Injector} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
-import {HttpClient, HttpParams, HttpUrlEncodingCodec} from "@angular/common/http";
-import {AuthenticationService} from "@ofServices/authentication.service";
+import {HttpClient} from "@angular/common/http";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {environment} from "@env/environment";

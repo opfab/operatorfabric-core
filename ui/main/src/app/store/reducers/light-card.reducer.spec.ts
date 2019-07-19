@@ -9,13 +9,10 @@ import {reducer} from './light-card.reducer';
 import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
 import {createEntityAdapter} from "@ngrx/entity";
 import {LightCard} from "@ofModel/light-card.model";
+import {getOneRandomLigthCard, getRandomAlphanumericValue, getSeveralRandomLightCards} from "@tests/helpers";
 import {
-    getOneRandomLigthCard,
-    getRandomAlphanumericValue,
-    getSeveralRandomLightCards
-} from "@tests/helpers";
-import {
-    AddLightCardFailure, ClearLightCardSelection,
+    AddLightCardFailure,
+    ClearLightCardSelection,
     EmptyLightCards,
     LoadLightCardsFailure,
     LoadLightCardsSuccess

@@ -5,9 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { IframeDisplayComponent } from './iframedisplay.component';
+import {IframeDisplayComponent} from './iframedisplay.component';
 import {By, DomSanitizer} from "@angular/platform-browser";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";

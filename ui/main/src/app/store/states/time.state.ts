@@ -1,5 +1,5 @@
 import * as moment from 'moment-timezone'
-import {neutralTimeReference, TimeReference, TimeSpeed} from "@ofModel/time.model";
+import {neutralTimeReference, TimeReference} from "@ofModel/time.model";
 import {Message} from "@ofModel/message.model";
 
 export interface TimeState {

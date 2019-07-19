@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import {EntityState} from '@ngrx/entity';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardAdapter} from "@ofStates/feed.state";
 

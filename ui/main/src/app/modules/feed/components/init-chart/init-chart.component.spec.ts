@@ -1,21 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { InitChartComponent } from './init-chart.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {InitChartComponent} from './init-chart.component';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { CustomTimelineChartComponent } from '../custom-timeline-chart/custom-timeline-chart.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Store, StoreModule } from '@ngrx/store';
-import { appReducer, AppState, storeConfig } from '@ofStore/index';
-import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
-import { CustomRouterStateSerializer } from '@ofStates/router.state';
-import { RouterTestingModule } from '@angular/router/testing';
-import { DraggableDirective } from '../time-line/app-draggable';
-import { MouseWheelDirective } from '../time-line/mouse-wheel.directive';
-import { XAxisTickFormatPipe } from '../time-line/x-axis-tick-format.pipe';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule} from '@angular/forms';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {CustomTimelineChartComponent} from '../custom-timeline-chart/custom-timeline-chart.component';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {Store, StoreModule} from '@ngrx/store';
+import {appReducer, AppState, storeConfig} from '@ofStore/index';
+import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
+import {CustomRouterStateSerializer} from '@ofStates/router.state';
+import {RouterTestingModule} from '@angular/router/testing';
+import {DraggableDirective} from '../time-line/app-draggable';
+import {MouseWheelDirective} from '../time-line/mouse-wheel.directive';
+import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
 import {TimeService} from "@ofServices/time.service";
-import {getOneRandomLigthCard} from "@tests/helpers";
 
 describe('InitChartComponent', () => {
   let component: InitChartComponent;

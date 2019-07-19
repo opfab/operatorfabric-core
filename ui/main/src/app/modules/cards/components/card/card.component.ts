@@ -11,10 +11,8 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {selectCardStateSelectedId} from "@ofSelectors/card.selectors";
 import {map} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
-import * as moment from "moment"
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
 

@@ -5,22 +5,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TypeAheadSettingsComponent } from './type-ahead-settings.component';
+import {TypeAheadSettingsComponent} from './type-ahead-settings.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Store} from "@ngrx/store";
-import {TextSettingComponent} from "../text-setting/text-setting.component";
-import createSpyObj = jasmine.createSpyObj;
 import {TypeaheadModule} from "ngx-type-ahead";
 import {AppState} from "@ofStore/index";
 import {authInitialState} from "@ofStates/authentication.state";
 import {configInitialState} from "@ofStates/config.state";
-import SpyObj = jasmine.SpyObj;
 import {of} from "rxjs";
 import {settingsInitialState} from "@ofStates/settings.state";
 import {map} from "rxjs/operators";
 import {PatchSettings} from "@ofActions/settings.actions";
+import createSpyObj = jasmine.createSpyObj;
+import SpyObj = jasmine.SpyObj;
 
 describe('TypeAheadSettingsComponent', () => {
   let component: TypeAheadSettingsComponent;

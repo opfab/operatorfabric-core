@@ -1,7 +1,4 @@
-import {
-    Directive, ElementRef,
-    Input, HostListener, OnInit
-} from '@angular/core';
+import {Directive, ElementRef, HostListener, Input, OnInit} from '@angular/core';
 import {debounceTime} from "rxjs/operators";
 import {Subject} from "rxjs";
 

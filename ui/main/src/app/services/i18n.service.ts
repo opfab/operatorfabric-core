@@ -11,8 +11,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
-import {withLatestFrom} from "rxjs/operators";
-import {combineLatest, zip} from "rxjs";
+import {combineLatest} from "rxjs";
 
 @Injectable()
 export class I18nService {

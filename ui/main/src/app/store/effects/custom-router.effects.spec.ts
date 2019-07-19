@@ -10,11 +10,11 @@ import {hot} from 'jasmine-marbles';
 import {async} from "@angular/core/testing";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
-import SpyObj = jasmine.SpyObj;
 import {CustomRouterEffects} from "@ofEffects/custom-router.effects";
 import {ROUTER_REQUEST} from "@ngrx/router-store";
 import {NavigationStart} from "@angular/router";
 import {ClearLightCardSelection} from "@ofActions/light-card.actions";
+import SpyObj = jasmine.SpyObj;
 
 describe('CustomRouterEffects', () => {
     let effects: CustomRouterEffects;

@@ -6,21 +6,14 @@
  */
 
 import {AppState} from "@ofStore/index";
-import {
-    buildConfigSelector,
-    selectConfig,
-    selectConfigData,
-    selectConfigLoaded,
-    selectConfigRetry,
-    selectMaxedRetries
-} from "@ofSelectors/config.selectors";
-import {configInitialState, ConfigState} from "@ofStates/config.state";
 import {authInitialState, AuthState} from "@ofStates/authentication.state";
 import {
     selectAuthenticationState,
     selectCode,
-    selectExpirationTime, selectIdentifier,
-    selectMessage, selectUserNameOrIdentifier
+    selectExpirationTime,
+    selectIdentifier,
+    selectMessage,
+    selectUserNameOrIdentifier
 } from "@ofSelectors/authentication.selectors";
 import {Message} from "@ofModel/message.model";
 import {Guid} from "guid-typescript";

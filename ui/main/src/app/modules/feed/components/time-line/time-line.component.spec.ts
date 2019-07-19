@@ -5,28 +5,28 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TimeLineComponent } from './time-line.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {TimeLineComponent} from './time-line.component';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { Store, StoreModule } from '@ngrx/store';
-import { appReducer, AppState, storeConfig } from '@ofStore/index';
-import { RouterTestingModule } from '@angular/router/testing';
-import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
-import { CustomTimelineChartComponent } from '../custom-timeline-chart/custom-timeline-chart.component';
-import { InitChartComponent } from '../init-chart/init-chart.component';
-import { CustomRouterStateSerializer } from '@ofStates/router.state';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { getOneRandomLigthCard } from '@tests/helpers';
-import { LoadLightCardsSuccess } from '@ofActions/light-card.actions';
-import { LightCard } from '@ofModel/light-card.model';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule} from '@angular/forms';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {Store, StoreModule} from '@ngrx/store';
+import {appReducer, AppState, storeConfig} from '@ofStore/index';
+import {RouterTestingModule} from '@angular/router/testing';
+import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
+import {CustomTimelineChartComponent} from '../custom-timeline-chart/custom-timeline-chart.component';
+import {InitChartComponent} from '../init-chart/init-chart.component';
+import {CustomRouterStateSerializer} from '@ofStates/router.state';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {getOneRandomLigthCard} from '@tests/helpers';
+import {LoadLightCardsSuccess} from '@ofActions/light-card.actions';
+import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '@ofSelectors/feed.selectors';
 import * as timelineSelectors from '@ofSelectors/timeline.selectors';
-import { DraggableDirective } from './app-draggable';
-import { MouseWheelDirective } from './mouse-wheel.directive';
-import { XAxisTickFormatPipe } from './x-axis-tick-format.pipe';
+import {DraggableDirective} from './app-draggable';
+import {MouseWheelDirective} from './mouse-wheel.directive';
+import {XAxisTickFormatPipe} from './x-axis-tick-format.pipe';
 import * as moment from 'moment';
 import {debounceTime, distinctUntilChanged} from "rxjs/operators";
 import {compareBySeverityLttdPublishDate} from "@ofStates/feed.state";

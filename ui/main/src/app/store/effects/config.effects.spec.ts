@@ -7,7 +7,7 @@
 
 import {ConfigEffects} from './config.effects';
 import {Actions} from '@ngrx/effects';
-import {cold, hot} from 'jasmine-marbles';
+import {hot} from 'jasmine-marbles';
 import {
     ConfigActions,
     ConfigActionTypes,
@@ -22,7 +22,6 @@ import {AppState} from "@ofStore/index";
 import {selectConfigRetry} from "@ofSelectors/config.selectors";
 import {of} from "rxjs";
 import SpyObj = jasmine.SpyObj;
-import {AcceptLogIn} from "@ofActions/authentication.actions";
 
 describe('ConfigEffects', () => {
     let effects: ConfigEffects;

@@ -1,13 +1,11 @@
 package org.lfenergy.operatorfabric.actions.model;
 
-import com.netflix.discovery.converters.jackson.builder.ApplicationsJacksonBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
 
 class ActionStatusDataShould {
 

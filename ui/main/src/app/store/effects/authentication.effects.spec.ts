@@ -26,16 +26,15 @@ import {Guid} from 'guid-typescript';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {Router} from "@angular/router";
-import {cold, hot} from "jasmine-marbles";
+import {hot} from "jasmine-marbles";
 import {LoadConfigSuccess} from "@ofActions/config.actions";
 import * as moment from 'moment';
 import {Message} from "@ofModel/message.model";
+import {CardService} from "@ofServices/card.service";
+import {EmptyLightCards} from "@ofActions/light-card.actions";
+import {ClearCard} from "@ofActions/card.actions";
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
-import {CardService} from "@ofServices/card.service";
-import {skip} from "rxjs/operators";
-import {EmptyLightCards, LightCardActionTypes} from "@ofActions/light-card.actions";
-import {ClearCard} from "@ofActions/card.actions";
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;

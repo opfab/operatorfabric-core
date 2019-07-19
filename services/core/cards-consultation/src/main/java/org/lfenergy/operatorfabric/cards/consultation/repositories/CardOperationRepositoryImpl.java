@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import reactor.core.publisher.Flux;
 
 import javax.annotation.PostConstruct;
-
 import java.time.Instant;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;

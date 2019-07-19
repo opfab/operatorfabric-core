@@ -14,7 +14,9 @@ import {AppState} from "@ofStore/index";
 import {
     LoadSettings,
     LoadSettingsFailure,
-    LoadSettingsSuccess, PatchSettings, PatchSettingsFailure,
+    LoadSettingsSuccess,
+    PatchSettings,
+    PatchSettingsFailure,
     PatchSettingsSuccess,
     SettingsActionTypes
 } from "@ofActions/settings.actions";

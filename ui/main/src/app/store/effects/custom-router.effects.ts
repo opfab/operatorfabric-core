@@ -17,11 +17,10 @@ import {
     RouterNavigationAction,
     RouterRequestAction
 } from "@ngrx/router-store";
-import {filter, map, switchMap, tap} from "rxjs/operators";
+import {filter, map, switchMap} from "rxjs/operators";
 import {LoadCard} from "@ofActions/card.actions";
 import {ClearLightCardSelection, SelectLightCard} from "@ofActions/light-card.actions";
 import {SelectMenuLink} from "@ofActions/menu.actions";
-import {AuthenticationActionTypes, TryToLogOut} from "@ofActions/authentication.actions";
 
 @Injectable()
 export class CustomRouterEffects {

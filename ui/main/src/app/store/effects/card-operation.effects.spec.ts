@@ -14,11 +14,11 @@ import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {getOneRandomLigthCard, getRandomIndex, getSeveralRandomLightCards} from "@tests/helpers";
 import {CardService} from "@ofServices/card.service";
 import {LoadCard} from "@ofActions/card.actions";
-import SpyObj = jasmine.SpyObj;
 import {MockStore, provideMockStore} from "@ngrx/store/testing";
 import {provideMockActions} from "@ngrx/effects/testing";
 import {Observable} from "rxjs";
 import {async, TestBed} from '@angular/core/testing';
+import SpyObj = jasmine.SpyObj;
 
 describe('CardOperationEffects', () => {
     let actions$: Observable<any>;

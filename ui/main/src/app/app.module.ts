@@ -21,11 +21,10 @@ import {LoginComponent} from "./components/login/login.component";
 import {IconComponent} from './components/icon/icon.component';
 import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "./translate.config";
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
-import { InfoComponent } from './components/navbar/info/info.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {faExternalLinkAlt, faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
+import {InfoComponent} from './components/navbar/info/info.component';
 import {UtilitiesModule} from "./modules/utilities/utilities.module";
 
 library.add(faExternalLinkAlt);

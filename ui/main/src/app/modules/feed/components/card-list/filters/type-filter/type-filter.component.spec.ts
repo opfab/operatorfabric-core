@@ -17,7 +17,7 @@ import {InitFilters} from "@ofActions/feed.actions";
 import {map} from "rxjs/operators";
 import {By} from "@angular/platform-browser";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
-import {addMatchers, cold, getTestScheduler, hot, initTestScheduler, resetTestScheduler} from "jasmine-marbles";
+import {cold} from "jasmine-marbles";
 
 describe('TypeFilterComponent', () => {
     let component: TypeFilterComponent;

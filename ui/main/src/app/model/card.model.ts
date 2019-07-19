@@ -7,7 +7,6 @@
 
 import {Severity} from "@ofModel/light-card.model";
 import {I18n} from "@ofModel/i18n.model";
-import {Map} from "@ofModel/map";
 
 export class Card {
     /* istanbul ignore next */

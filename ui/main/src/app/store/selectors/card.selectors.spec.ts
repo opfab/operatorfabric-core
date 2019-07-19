@@ -6,22 +6,13 @@
  */
 
 import {AppState} from "@ofStore/index";
-import {
-    buildConfigSelector,
-    selectConfig,
-    selectConfigData,
-    selectConfigLoaded,
-    selectConfigRetry,
-    selectMaxedRetries
-} from "@ofSelectors/config.selectors";
-import {configInitialState, ConfigState} from "@ofStates/config.state";
 import {cardInitialState, CardState} from "@ofStates/card.state";
 import {getOneRandomCard} from "@tests/helpers";
 import {
     selectCardState,
-    selectCardStateSelectedId,
     selectCardStateSelected,
-    selectCardStateSelectedDetails
+    selectCardStateSelectedDetails,
+    selectCardStateSelectedId
 } from "@ofSelectors/card.selectors";
 
 describe('ConfigSelectors', () => {

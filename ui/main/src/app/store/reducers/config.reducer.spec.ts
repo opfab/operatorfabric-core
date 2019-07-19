@@ -8,11 +8,7 @@
 import {reducer} from "@ofStore/reducers/config.reducer";
 import {configInitialState, ConfigState} from "@ofStates/config.state";
 import {getRandomAlphanumericValue} from "@tests/helpers";
-import {
-    LoadConfig,
-    LoadConfigFailure,
-    LoadConfigSuccess
-} from "@ofActions/config.actions";
+import {LoadConfig, LoadConfigFailure, LoadConfigSuccess} from "@ofActions/config.actions";
 
 describe('Config Reducer', () => {
     describe('unknown action', () => {

@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {ClearLightCardSelection, LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
+import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
 import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
 import {FeedActions, FeedActionTypes} from "@ofActions/feed.actions";
 

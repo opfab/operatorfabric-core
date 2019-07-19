@@ -1,19 +1,18 @@
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ViewEncapsulation,
-  ViewChild, ElementRef, NgZone, ChangeDetectorRef, OnInit
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    NgZone,
+    OnInit,
+    Output,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
-import { scaleLinear, scaleTime } from 'd3-scale';
+import {scaleLinear, scaleTime} from 'd3-scale';
 import * as _ from 'lodash';
-import {
-  BaseChartComponent,
-  calculateViewDimensions,
-  ChartComponent,
-  ViewDimensions
-} from '@swimlane/ngx-charts';
+import {BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions} from '@swimlane/ngx-charts';
 import * as moment from 'moment';
 import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
 import {TimeService} from "@ofServices/time.service";

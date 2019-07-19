@@ -11,9 +11,9 @@ import {DetailComponent} from './detail.component';
 import {
     getOneRandomCard,
     getOneRandomCardWithRandomDetails,
-    getOneRandomThird, getRandomI18nData,
-    getRandomIndex,
-    getRandomThird
+    getOneRandomThird,
+    getRandomI18nData,
+    getRandomIndex
 } from '@tests/helpers';
 import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
@@ -26,7 +26,7 @@ import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {environment} from "@env/environment";
 import {By} from "@angular/platform-browser";
 import {of} from "rxjs";
-import {Action, ActionType, Process, State, Third} from "@ofModel/thirds.model";
+import {Action, ActionType, Process, State} from "@ofModel/thirds.model";
 import {Map as OfMap} from "@ofModel/map";
 
 describe('DetailComponent', () => {

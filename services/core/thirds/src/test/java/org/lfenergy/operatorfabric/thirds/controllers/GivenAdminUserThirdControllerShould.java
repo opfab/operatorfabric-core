@@ -14,7 +14,6 @@ import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabU
 import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;

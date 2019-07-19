@@ -8,14 +8,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable} from 'rxjs';
-import {
-    concatMap,
-    filter,
-    map,
-    reduce,
-    tap, windowCount,
-    withLatestFrom
-} from 'rxjs/operators';
+import {filter, map, withLatestFrom} from 'rxjs/operators';
 import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
 import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";

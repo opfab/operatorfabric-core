@@ -17,13 +17,13 @@ import {FilterService, FilterType} from "@ofServices/filter.service";
 import {async, TestBed} from "@angular/core/testing";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
-import SpyObj = jasmine.SpyObj;
-import createSpyObj = jasmine.createSpyObj;
-import moment = require("moment-timezone");
 import {map} from "rxjs/operators";
 import {configInitialState} from "@ofStates/config.state";
 import {feedInitialState} from "@ofStates/feed.state";
 import {Tick, TickPayload} from "@ofActions/time.actions";
+import moment = require("moment-timezone");
+import createSpyObj = jasmine.createSpyObj;
+import SpyObj = jasmine.SpyObj;
 
 describe('FeedFilterEffects', () => {
     let effects: FeedFiltersEffects;

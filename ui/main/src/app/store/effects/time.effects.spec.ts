@@ -9,11 +9,11 @@ import {AcceptLogIn, PayloadForSuccessfulAuthentication} from "@ofActions/authen
 import {TimeReference, TimeSpeed} from "@ofModel/time.model";
 import {FailToUpdateTimeReference, Tick, UpdateTimeReference} from "@ofActions/time.actions";
 import {of} from "rxjs";
-import moment = require("moment-timezone");
-import SpyObj = jasmine.SpyObj;
 import {Message, MessageLevel} from "@ofModel/message.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
+import moment = require("moment-timezone");
+import SpyObj = jasmine.SpyObj;
 
 describe('TimeEffects', () => {
 

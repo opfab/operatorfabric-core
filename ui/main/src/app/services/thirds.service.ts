@@ -11,12 +11,12 @@ import {environment} from "../../environments/environment";
 import {AuthenticationService} from "@ofServices/authentication.service";
 import {EMPTY, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
-import {catchError, filter, map, mergeMap, reduce, switchMap, take, tap} from "rxjs/operators";
+import {catchError, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
-import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import {Third, ThirdMenu} from "@ofModel/thirds.model";
 
 @Injectable()
 export class ThirdsService {

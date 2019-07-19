@@ -24,7 +24,7 @@ import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import {EffectsModule} from "@ngrx/effects";
 import {LightCardEffects} from "@ofEffects/light-card.effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
-import {EMPTY, empty, from, merge, Observable, of, zip} from "rxjs";
+import {EMPTY, from, merge, Observable, of, zip} from "rxjs";
 import {switchMap} from "rxjs/operators";
 
 function createTranslationMap(menu: ThirdMenu[]) {

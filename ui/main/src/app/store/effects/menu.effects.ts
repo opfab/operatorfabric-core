@@ -17,7 +17,8 @@ import {
     LoadMenuFailure,
     LoadMenuSuccess,
     MenuActionTypes,
-    SelectMenuLink, SelectMenuLinkFailure,
+    SelectMenuLink,
+    SelectMenuLinkFailure,
     SelectMenuLinkSuccess
 } from "@ofActions/menu.actions";
 import {Router} from "@angular/router";

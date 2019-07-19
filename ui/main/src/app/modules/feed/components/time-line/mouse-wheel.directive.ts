@@ -1,4 +1,4 @@
-import { Directive, Output, HostListener, EventEmitter } from '@angular/core';
+import {Directive, EventEmitter, HostListener, Output} from '@angular/core';
 
 /**
  * Mousewheel directive
