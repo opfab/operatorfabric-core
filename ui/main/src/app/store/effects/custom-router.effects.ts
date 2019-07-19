@@ -68,7 +68,6 @@ export class CustomRouterEffects {
     @Effect({dispatch: false})
     navigateAndResize = this.actions$.pipe(
         ofType(ROUTER_NAVIGATED),
-        //TODO On end of navigation? Only on certain paths ?
         switchMap(action => {
             //Trigger resize event
                 if (typeof(Event) === 'function') {

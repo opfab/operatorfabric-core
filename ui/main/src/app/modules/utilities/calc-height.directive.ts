@@ -1,4 +1,14 @@
-import {Directive, ElementRef, HostListener, Input, OnInit} from '@angular/core';
+/* Copyright (c) 2018, RTE (http://www.rte-france.com)
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+import {
+    Directive, ElementRef,
+    Input, HostListener, OnInit
+} from '@angular/core';
 import {debounceTime} from "rxjs/operators";
 import {Subject} from "rxjs";
 
@@ -22,16 +32,16 @@ export class CalcHeightDirective implements OnInit {
 
         this._resizeSubject$ = new Subject<number>();
         this._resizeSubject$.asObservable().pipe(
-            debounceTime(500),
+            debounceTime(300),
         ).subscribe(x => this.calcHeight(this.parentId, this.fixedHeightClass, this.calcHeightClass));
 
     }
 
     ngOnInit(): void {
-        this._resizeSubject$.next(); //TODO This should bypass the debounce
+        this._resizeSubject$.next();
     }
 
-    @HostListener('window:resize', ['$event.target.innerHeight']) //TODO Remove height?
+    @HostListener('window:resize')
     onResize() {
         this._resizeSubject$.next();
     }
@@ -55,14 +65,15 @@ export class CalcHeightDirective implements OnInit {
         const fixedElements = parent.getElementsByClassName(fixedHeightClass);
 
         //Get elements that for which the height should be calculated
-        //TODO Decide what to do if several elements (same or divide)
+        //For now all elements bearing the calcHeightClass will have their height updated to the same calculated value
+        //Which makes sense if they're next to one another, but another option would be to divide the available height equally
         const calcElements = parent.getElementsByClassName(calcHeightClass);
 
         if (!calcElements) return;
 
         //Sum heights of fixed elements
         const sumFixElemHeights = Array.from(fixedElements)
-            .map(x => x.getBoundingClientRect().height).reduce((prev, curr) => { //TODO Find out if should be replaced by clientHeight or offsetHeight
+            .map(x => x.getBoundingClientRect().height).reduce((prev, curr) => {
                 return prev + curr;
             }, 0);
 
