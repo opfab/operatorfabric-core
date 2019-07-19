@@ -10,11 +10,11 @@
             <of-time-line></of-time-line>
         </div>
     </div>
-    <div class="row calc-height-main-layout">
-        <div class="col-3" style="height: 100%">
-            <of-card-list style="height: 100%" [lightCards]="lightCards$|async" [selection]="selection$"></of-card-list>
+    <div id="parentFeedContent" class="row calc-height-main-layout">
+        <div class="col-3">
+            <of-card-list [lightCards]="lightCards$|async" [selection]="selection$"></of-card-list>
         </div>
-        <div class="col-9" style="height: 100%">
+        <div class="col-9">
             <router-outlet></router-outlet>
         </div>
     </div>

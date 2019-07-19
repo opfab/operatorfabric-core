@@ -1,17 +1,17 @@
 import {
-    Directive, ElementRef, AfterViewChecked,
-    Input, HostListener, AfterViewInit, OnChanges, SimpleChanges, OnInit
+    Directive, ElementRef,
+    Input, HostListener, OnInit
 } from '@angular/core';
-import {debounceTime, distinctUntilChanged, tap, throttleTime} from "rxjs/operators";
-import {Observable, Subject} from "rxjs";
-import {now} from "moment";
+import {debounceTime} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Directive({
     selector: '[calcHeightDirective]'
 })
-export class CalcHeightDirective {
+export class CalcHeightDirective implements OnInit {
 
-    //TODO Get rid of cascading "style="height: 100%;"
+    @Input()
+    parentId: any;
 
     @Input()
     fixedHeightClass: any;
@@ -22,23 +22,37 @@ export class CalcHeightDirective {
     private _resizeSubject$: Subject<number>;
 
     constructor(private el: ElementRef) {
-           this._resizeSubject$ = new Subject<number>();
-           this._resizeSubject$.asObservable().pipe(
-               debounceTime(500),
-               //TODO distinctUntilChanged
-           ).subscribe(x => this.calcHeight(this.el.nativeElement, this.fixedHeightClass, this.calcHeightClass));
-    }
 
-    @HostListener('window:resize', ['$event.target.innerHeight'])
-    onResize(height: number) {
-
-        this._resizeSubject$.next(height); //TODO Do we really need height?
+        this._resizeSubject$ = new Subject<number>();
+        this._resizeSubject$.asObservable().pipe(
+            debounceTime(500),
+        ).subscribe(x => this.calcHeight(this.parentId, this.fixedHeightClass, this.calcHeightClass));
 
     }
 
-    calcHeight(parent: HTMLElement, fixedHeightClass: string, calcHeightClass: string) {
+    ngOnInit(): void {
+        this._resizeSubject$.next(); //TODO This should bypass the debounce
+    }
 
-        if (!parent) return;
+    @HostListener('window:resize', ['$event.target.innerHeight']) //TODO Remove height?
+    onResize() {
+        this._resizeSubject$.next();
+    }
+
+    private calcHeight(parentId: string, fixedHeightClass: string, calcHeightClass: string) {
+
+        let parent : HTMLElement;
+
+        parent = document.getElementById(this.parentId);
+
+        //If no parentId was provided or search didn't yield any element, fallback is element calling the directive
+        if(!parent){
+            parent = this.el.nativeElement;
+        }
+
+        if(!parent){
+            return;
+        }
 
         //Get elements that should be allowed to define their own height (based on content), which are then "fixed" for this calculation
         const fixedElements = parent.getElementsByClassName(fixedHeightClass);
@@ -57,6 +71,8 @@ export class CalcHeightDirective {
 
         // Calculate available height by subtracting the heights of fixed elements from the total window height
         let availableHeight = parent.clientHeight - sumFixElemHeights;
+
+        //console.log("CalcHeightDirective "+fixedHeightClass+" "+parent.clientHeight+" "+sumFixElemHeights+" "+availableHeight);
 
         // Apply height and overflow
         Array.from(calcElements)
