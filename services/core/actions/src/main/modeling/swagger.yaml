@@ -49,6 +49,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/ActionStatus'
+        '400':
+          description: Submitted data are incorrect.
         '404':
           description: No such Process, State, Action or correctly responding third party endpoint
         '502':
@@ -85,6 +87,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/ActionStatus'
+        '400':
+          description: Submitted data are incorrect.
         '404':
           description: No such Process, State, Action or correctly responding third party endpoint
         '502':

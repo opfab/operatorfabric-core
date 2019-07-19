@@ -38,6 +38,7 @@ public class ActionService {
     public static final String FEIGN_401_MESSAGE = "Remote service returned 401(Unauthorized), authentication may have expired or remote service is incorrectly configured";
     public static final String FEIGN_403_MESSAGE = "Remote service returned 403(Unauthorized), user not allowed to acces resource";
     public static final String FEIGN_ERROR_MESSAGE = "Error accessing remote service, no fallback behavior";
+    public static final String BAD_STATE_MESSAGE = "Submitted state does not match current card state";
     private static Pattern TOKEN_PATTERN = Pattern.compile("\\{(.+?)\\}");
 
     private final CardConsultationServiceProxy cardService;
@@ -58,6 +59,10 @@ public class ActionService {
         try {
             Card card = this.cardService.fetchCard(publisher + "_" + process, BEARER_PREFIX + jwt);
             if (card != null) {
+                if(!state.equals(card.getState())){
+                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_REQUEST)
+                            .message(BAD_STATE_MESSAGE).build());
+                }
                 Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey, BEARER_PREFIX + jwt);
                 if (action != null && (action.getUpdateState() != null && action.getUpdateState()
                         || action.getUpdateStateBeforeAction() != null && action.getUpdateStateBeforeAction())) {
@@ -98,6 +103,10 @@ public class ActionService {
         try {
             Card card = this.cardService.fetchCard(publisher + "_" + process, BEARER_PREFIX + jwt);
             if (card != null) {
+                if(!state.equals(card.getState())){
+                    throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_REQUEST)
+                            .message(BAD_STATE_MESSAGE).build());
+                }
                 Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey, BEARER_PREFIX + jwt);
                 if (action != null) {
                     return sendAction(action, card, jwt, body);

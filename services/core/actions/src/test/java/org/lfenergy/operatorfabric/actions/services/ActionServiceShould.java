@@ -208,6 +208,22 @@ public class ActionServiceShould {
                 );
         assertThat(this.actionService.lookUpActionStatus(this.card.getPublisher(), this.card.getProcessId(), this.card.getState(), "action1", "abc")).isEqualTo(actionStatus);
     }
+    @Test
+    void lookUpActionStatusWithWrongState() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.lookUpActionStatus(this.card.getPublisher(), this.card.getProcessId(), "foobar", "action1", "abc");
+        }).withMessage(ActionService.BAD_STATE_MESSAGE);
+    }
 
     @Test
     void lookUpActionStatusWithEmptyCard() throws JsonProcessingException, URISyntaxException {
@@ -341,6 +357,23 @@ public class ActionServiceShould {
         assertException(ApiErrorException.class).isThrownBy(() -> {
             this.actionService.submitAction("no_publisher", this.card.getProcessId(), this.card.getState(), "action1", "abc", null);
         }).withMessage(ActionService.EMPTY_RESULT_MESSAGE);
+    }
+
+    @Test
+    void submitActionWrongState() throws JsonProcessingException, URISyntaxException {
+        ActionStatusData actionStatus = ActionStatusData.builder()
+                .label(I18nData.builder().key("new.label").build())
+                .build();
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("http://somewhere:111/process/state/action?access_token=abc")))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(actionStatus))
+                );
+        assertException(ApiErrorException.class).isThrownBy(() -> {
+            this.actionService.submitAction(this.card.getPublisher(), this.card.getProcessId(), "foobar", "action1", "abc", null);
+        }).withMessage(ActionService.BAD_STATE_MESSAGE);
     }
 
     @Test
