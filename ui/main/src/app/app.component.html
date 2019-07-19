@@ -5,7 +5,7 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 
-<div style="height: 100%;" calcHeightDirective fixedHeightClass="fixed-height-main-layout" calcHeightClass="calc-height-main-layout">
+<div class="app-content" calcHeightDirective fixedHeightClass="fixed-height-main-layout" calcHeightClass="calc-height-main-layout">
     <of-navbar *ngIf="isAuthenticated$"></of-navbar>
     <router-outlet *ngIf="isAuthenticated$ && configLoaded" ></router-outlet>
     <of-login *ngIf="!isAuthenticated$ && configLoaded"></of-login>

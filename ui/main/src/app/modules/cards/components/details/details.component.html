@@ -4,7 +4,7 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<div style="height: 100%;" calcHeightDirective parentId="parentFeedContent" fixedHeightClass="fixed-height-details" calcHeightClass="calc-height-details">
+<div calcHeightDirective parentId="parentFeedContent" fixedHeightClass="fixed-height-details" calcHeightClass="calc-height-details">
   <ul class="nav nav-tabs fixed-height-details">
     <li *ngFor="let detailC of details" (click)="selectDetail(detailC)" [class.show]="detailC.active" class="nav-item" data-toggle="tab">
       <span class="nav-link" translate [translateParams]="detailC.detail.title.parameters">{{i18nPrefix+detailC.detail.title.key}}</span>
