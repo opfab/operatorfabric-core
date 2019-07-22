@@ -35,7 +35,7 @@ describe('TextSettingComponent', () => {
         settings: null,
         archive: null,
         time:null,
-        thirdAction:null
+        thirdActions:null
     }
     beforeEach(async(() => {
     const storeSpy = createSpyObj('Store', ['dispatch', 'select']);

@@ -106,6 +106,19 @@ export class Action {
     }
 }
 
+export class ActionStatus{
+    constructor(        readonly label: I18n,
+                        readonly buttonStyle: string = '',
+                        readonly contentStyle: string = '',
+                        readonly inputs: Input[] = [],
+                        readonly lockCard: boolean = false,
+                        readonly updateState: boolean = false,
+                        readonly updateStateBeforeAction: boolean = false,
+                        readonly needsConfirm: boolean = false,
+                        readonly lockAction: boolean = false,
+    ){}
+}
+
 export enum InputType {
     TEXT,
     LIST,

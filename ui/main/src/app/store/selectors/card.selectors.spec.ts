@@ -27,7 +27,7 @@ describe('ConfigSelectors', () => {
         settings: null,
         archive: null,
         time:null,
-        thirdAction:null
+        thirdActions:null
     }
 
     let selectedState: CardState = {

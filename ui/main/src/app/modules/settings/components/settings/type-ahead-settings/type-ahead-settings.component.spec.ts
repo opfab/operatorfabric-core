@@ -36,7 +36,7 @@ describe('TypeAheadSettingsComponent', () => {
         settings: null,
         archive: null,
         time:null,
-        thirdAction:null
+        thirdActions:null
     };
 
   beforeEach(async(() => {

@@ -1,14 +1,14 @@
 import {Action} from "@ngrx/store";
 import {LightCard} from "@ofModel/light-card.model";
-import {Action as ThirdAction, ThirdActionHolder} from "@ofModel/thirds.model";
+import {ActionStatus, ThirdActionHolder} from "@ofModel/thirds.model";
 
 export enum ThirdActionTypes {
     LoadThirdActions = '[Action] Load Third Actions for the given state of a given Process',
     LoadThirdActionSuccess = '[Action] Third Actions successfully loaded',
     LoadThirdActionFailure = '[Action] Failed to load Third Actions',
-    FetchOneThirdAction = '[Action] Fetch One Third Action',
-    FetchOneThirdActionSuccess = '[Action] Fetch successfully one Third Action',
-    FetchOneThirdActionFailure = '[Action] Failed to fetch one Third Action'
+    UpdateOneThirdAction = '[Action] Fetch One Third Action',
+    UpdateOneThirdActionSuccess = '[Action] Fetch successfully one Third Action',
+    UpdateOneThirdActionFailure = '[Action] Failed to fetch one Third Action'
 }
 
 export class LoadThirdActions implements Action {
@@ -35,22 +35,22 @@ export class LoadThirdActionFailure implements Action {
 
 }
 
-export class FetchOneThirdAction implements Action {
-    readonly type = ThirdActionTypes.FetchOneThirdAction;
+export class UpdateOneThirdAction implements Action {
+    readonly type = ThirdActionTypes.UpdateOneThirdAction;
 
-    constructor(public payload: { publisher: string, process: string, state: string, actionKey: string }) {
+    constructor(public payload: { thirdActionHolder: ThirdActionHolder, actionKey: string }) {
     }
 }
 
-export class FetchOneThirdActionSuccess implements Action {
-    readonly type = ThirdActionTypes.FetchOneThirdActionSuccess;
+export class UpdateOneThirdActionSuccess implements Action {
+    readonly type = ThirdActionTypes.UpdateOneThirdActionSuccess;
 
-    constructor(public payload: { thirdActionHolder: ThirdActionHolder, key:string }) {
+    constructor(public payload: { thirdActionHolder: ThirdActionHolder, key:string,status:ActionStatus}) {
     }
 }
 
-export class FetchOneThirdActionFailure implements Action {
-    readonly type = ThirdActionTypes.FetchOneThirdActionFailure;
+export class UpdateOneThirdActionFailure implements Action {
+    readonly type = ThirdActionTypes.UpdateOneThirdActionFailure;
 
     constructor(public payload: { error: Error }) {
     }
@@ -60,6 +60,6 @@ export type ThirdActionActions =
     LoadThirdActions
     | LoadThirdActionSuccess
     | LoadThirdActionFailure
-    | FetchOneThirdAction
-    | FetchOneThirdActionSuccess
-    | FetchOneThirdActionFailure;
+    | UpdateOneThirdAction
+    | UpdateOneThirdActionSuccess
+    | UpdateOneThirdActionFailure;

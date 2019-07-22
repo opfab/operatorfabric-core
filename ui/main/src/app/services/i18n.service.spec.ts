@@ -31,7 +31,7 @@ describe('I18nService', () => {
         settings: null,
         archive: null,
         time:null,
-        thirdAction:null
+        thirdActions:null
     }
 
     beforeEach(() => {

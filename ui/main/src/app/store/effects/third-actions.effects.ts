@@ -7,7 +7,7 @@ import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Observable, of} from "rxjs";
 import {catchError, flatMap, map, switchMap} from "rxjs/operators";
 import {
-    FetchOneThirdAction,
+    UpdateOneThirdAction,
     LoadThirdActionFailure,
     LoadThirdActions,
     LoadThirdActionSuccess,
@@ -49,10 +49,11 @@ export class ThirdActionsEffects{
             }));
 
     @Effect()
-    fetchOneThirdAction:Observable<Action> = this.action$
+    updateOneThirdAction:Observable<Action> = this.action$
         .pipe(
-            ofType(ThirdActionTypes.FetchOneThirdAction),
-            switchMap((fetchCardOrder:FetchOneThirdAction) => {
+            ofType(ThirdActionTypes.UpdateOneThirdAction),
+            switchMap((updateThirdActionOrder:UpdateOneThirdAction) => {
+
                 this.store.select(selectThirdActionList)
             return null;
             })

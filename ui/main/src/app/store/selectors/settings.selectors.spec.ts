@@ -26,7 +26,7 @@ describe('SettingsSelectors', () => {
         settings:null,
         archive: null,
         time:null,
-        thirdAction:null
+        thirdActions:null
     }
 
     let loadedSettingsState: SettingsState = {

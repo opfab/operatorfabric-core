@@ -1,10 +1,18 @@
 import {ThirdActionState} from "@ofStates/third-action.state";
-import {createSelector} from "@ngrx/store";
+import {createFeatureSelector, createSelector} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 
-const selectThirdActions = (state:AppState) => state.thirdAction;
+// const selectThirdActions = (state:AppState) => state.thirdActions;
+//
+// export const selectThirdActionList = createSelector(
+//     selectThirdActions,
+//     (state:ThirdActionState) => state.thirdActionHolder
+// );
+//
+// export const fetchSelectedThirdActionHolder = createSelector(
+//     selectThirdActions,
+//
+// )
 
-export const selectThirdActionList = createSelector(
-    selectThirdActions,
-    (state:ThirdActionState) => state.thirdActions
-);
+export const getThirdActionHolderSelector =
+    createFeatureSelector<ThirdActionState>('thirdActions')
