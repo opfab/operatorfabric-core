@@ -14,5 +14,9 @@ import {AppState} from "@ofStore/index";
 //
 // )
 
-export const getThirdActionHolderSelector =
-    createFeatureSelector<ThirdActionState>('thirdActions')
+export const getThirdActionHolderSelector =createFeatureSelector<ThirdActionState>('thirdActions');
+
+export const selectThirdActionList = createSelector(
+    getThirdActionHolderSelector,
+    (state:ThirdActionState) => state.thirdActionHolder
+);

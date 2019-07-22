@@ -54,7 +54,7 @@ export class ThirdActionsEffects{
             ofType(ThirdActionTypes.UpdateOneThirdAction),
             switchMap((updateThirdActionOrder:UpdateOneThirdAction) => {
 
-                this.store.select(selectThirdActionList)
+                this.store.select(selectThirdActionList).pipe();
             return null;
             })
         );
