@@ -32,4 +32,6 @@ public interface ArchivedCardRepository extends ReactiveMongoRepository<Archived
 
     public Flux<ArchivedCardConsultationData> findAll();
 
+    public Flux<ArchivedCardConsultationData> findByPublisherAndProcess(String publisher, String process);
+
 }
