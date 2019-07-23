@@ -65,6 +65,7 @@ public class WebSecurityConfiguration {
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers("/cards/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
                 .pathMatchers("/cardSubscription/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
+                .pathMatchers("/archives/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
                 .anyExchange().authenticated();
 
     }

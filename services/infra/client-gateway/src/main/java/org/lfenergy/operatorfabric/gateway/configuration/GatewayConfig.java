@@ -114,6 +114,12 @@ public class GatewayConfig {
                                 .filters(f->f.rewritePath("/ui/(?<path>.*)", "/$\\{path}"))
                                 .uri("lb://WEB-UI")
                 )
+                .route("archives",
+                        r-> r
+                                .path("/archives/**")
+                                .filters(f->f.rewritePath("/archives/(?<path>.*)", "/$\\{path}"))
+                                .uri("lb://CARDS-CONSULTATION")
+                )
                 .build();
     }
 }
