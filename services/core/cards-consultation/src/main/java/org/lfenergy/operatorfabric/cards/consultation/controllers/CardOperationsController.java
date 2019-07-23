@@ -121,7 +121,7 @@ public class CardOperationsController {
     }
 
     /**
-     * Fetching oldcard for subcription (with possible update)
+     * Fetching old cards for subscription (with possible update)
      *
      * @param subscription
      * @return

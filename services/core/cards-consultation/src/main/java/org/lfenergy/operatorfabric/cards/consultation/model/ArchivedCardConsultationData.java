@@ -34,7 +34,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Document(collection = "archivedCards")
-public class ArchivedConsultationCardData implements Card {
+public class ArchivedCardConsultationData implements Card {
 
     private String uid;
     @Id

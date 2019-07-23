@@ -73,7 +73,7 @@ public class CardRepositoryShould {
     @BeforeEach
     private void initCardData() {
         int processNo = 0;
-//create past cards
+        //create past cards
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, LOGIN, "rte", "operator"));
@@ -88,7 +88,7 @@ public class CardRepositoryShould {
         //card starts in past and never ends
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, null, LOGIN, "rte", "operator"));
 
-        //card starts in future and nerver ends
+        //card starts in future and never ends
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusThree, null, LOGIN, "rte", "operator"));
 
         //create later published cards in past
