@@ -11,13 +11,15 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
 import {ThirdsService} from "@ofServices/thirds.service";
-import {Action} from "@ofModel/thirds.model";
+import {Action as ThirdAction} from "@ofModel/thirds.model";
 import {Observable} from "rxjs";
+import {selectThirdAction, selectThirdActionFromCard} from "@ofSelectors/third-action.selectors";
+import {LoadThirdActions} from "@ofActions/third-action.actions";
 
 @Component({
     selector: 'of-card',
@@ -31,21 +33,25 @@ export class CardComponent implements OnInit {
     currentPath: any;
     private _i18nPrefix: string;
     dateToDisplay: string;
-    actions: Observable<Array<[string, Action]>>;
+    actions: Observable<Array<[string, ThirdAction]>>;
 
     /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>,
                 private translate: TranslateService,
                 private time: TimeService,
-                private third: ThirdsService
-    )
-    {
-
+    ){
     }
 
     public select() {
+        console.log('card clicked');
+        this.store.dispatch(new LoadThirdActions({card:this.lightCard}));
+        this.store.select(selectThirdActionFromCard(this.lightCard)).pipe(
+            tap(elem=>console.log(`This found: '${elem}`))
+        );
+        console.log('card clicked before navigate');
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
+        console.log('card clicked after navigate');
     }
 
     ngOnInit() {
@@ -58,11 +64,7 @@ export class CardComponent implements OnInit {
         // use configuration to compute date
             .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
-        this.actions = this.third.fetchActionsFromLightCard(this.lightCard)
-            .pipe(
-                map((actionMap:Map<string,Action>)=>{
-                            return Array.from(actionMap.entries());
-                        }));
+        this.actions = this.store.select(selectThirdActionFromCard(this.lightCard))
         }
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {

@@ -159,6 +159,6 @@ export class ThirdActionHolder{
     constructor(readonly publisher: string,
                 readonly processInstanceId: string,
                 readonly stateName: string,
-                readonly actions: Map<string, Action>) {
+                readonly actions: Map<string,Action>) {
     }
 }

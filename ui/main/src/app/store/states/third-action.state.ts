@@ -8,7 +8,8 @@ export interface ThirdActionState extends  EntityState<ThirdActionHolder>{
 
 }
 
-export const ThirdActionAdapter: EntityAdapter<ThirdActionHolder> = createEntityAdapter<ThirdActionHolder>({
+export const ThirdActionAdapter: EntityAdapter<ThirdActionHolder> =
+    createEntityAdapter<ThirdActionHolder>({
     selectId: (holder:ThirdActionHolder)=> `${holder.publisher}_${holder.processInstanceId}_${holder.stateName}`
 });
 

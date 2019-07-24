@@ -43,6 +43,7 @@ import {TimeEffects} from "@ofEffects/time.effects";
 import {ArchiveState} from "@ofStates/archive.state";
 import {ArchiveEffects} from "@ofEffects/archive.effects";
 import {ThirdActionState} from "@ofStates/third-action.state";
+import {ThirdActionsEffects} from "@ofEffects/third-actions.effects";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -70,7 +71,9 @@ export const appEffects = [
     LightCardEffects,
     FeedFiltersEffects,
     TimeEffects,
-    ArchiveEffects];
+    ArchiveEffects,
+    ThirdActionsEffects
+];
 
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
