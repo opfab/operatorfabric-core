@@ -91,7 +91,8 @@ export class Action {
         readonly updateStateBeforeAction: boolean = false,
         readonly called: boolean = false,
         readonly needsConfirm: boolean = false,
-        public key?:string
+        readonly actionRootKey?:string,
+        readonly key?:string
     ) {}
 
 }
@@ -174,8 +175,10 @@ export class ParameterListItem {
 
 export class ThirdActionHolder{
     constructor(readonly publisher: string,
+                readonly processName:string,
                 readonly processInstanceId: string,
+                readonly version:string,
                 readonly stateName: string,
-                readonly actions: Map<string,Action>) {
+                readonly actionIds: string[]) {
     }
 }

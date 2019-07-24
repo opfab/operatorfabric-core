@@ -15,10 +15,9 @@ import {map, tap} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
-import {ThirdsService} from "@ofServices/thirds.service";
 import {Action as ThirdAction} from "@ofModel/thirds.model";
 import {Observable} from "rxjs";
-import {selectThirdAction, selectThirdActionFromCard} from "@ofSelectors/third-action.selectors";
+import {selectThirdActionFromCard} from "@ofSelectors/third-action.selectors";
 import {LoadThirdActions} from "@ofActions/third-action.actions";
 
 @Component({
@@ -44,14 +43,9 @@ export class CardComponent implements OnInit {
     }
 
     public select() {
-        console.log('card clicked');
         this.store.dispatch(new LoadThirdActions({card:this.lightCard}));
-        this.store.select(selectThirdActionFromCard(this.lightCard)).pipe(
-            tap(elem=>console.log(`This found: '${elem}`))
-        );
-        console.log('card clicked before navigate');
+        this.actions=this.store.select(selectThirdActionFromCard(this.lightCard));
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
-        console.log('card clicked after navigate');
     }
 
     ngOnInit() {

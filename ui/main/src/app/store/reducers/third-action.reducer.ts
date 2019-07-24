@@ -6,7 +6,7 @@ export function reducer(state=initialThirdActionState,
     switch (action.type) {
         case ThirdActionTypes.LoadThirdActionSuccess:{
             return {
-                ...ThirdActionAdapter.addOne(action.payload.actions, state)
+                ...ThirdActionAdapter.upsertMany(action.payload.actions, state)
             }
         }
         default:{

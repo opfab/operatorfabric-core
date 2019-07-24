@@ -9,6 +9,7 @@ export enum ThirdActionTypes {
     UpdateOneThirdAction = '[Action] Fetch One Third Action',
     UpdateOneThirdActionSuccess = '[Action] Fetch successfully one Third Action',
     UpdateOneThirdActionFailure = '[Action] Failed to fetch one Third Action'
+
 }
 
 export class LoadThirdActions implements Action {
@@ -22,7 +23,7 @@ export class LoadThirdActions implements Action {
 export class LoadThirdActionSuccess implements Action {
     readonly type = ThirdActionTypes.LoadThirdActionSuccess;
 
-    constructor(public payload: { actions: Array<ThirdAction> }) {
+    constructor(public payload: { actions: Array<ThirdAction>, holder: ThirdActionHolder }) {
     }
 
 }
@@ -45,7 +46,7 @@ export class UpdateOneThirdAction implements Action {
 export class UpdateOneThirdActionSuccess implements Action {
     readonly type = ThirdActionTypes.UpdateOneThirdActionSuccess;
 
-    constructor(public payload: { thirdActionHolder: ThirdActionHolder, key:string,status:ActionStatus}) {
+    constructor(public payload: { thirdActionHolder: ThirdActionHolder, key: string, status: ActionStatus }) {
     }
 }
 

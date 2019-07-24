@@ -18,7 +18,7 @@ export const getThirdActionHolderSelector =createFeatureSelector<ThirdActionStat
 
 export const selectThirdActionList = createSelector(
     getThirdActionHolderSelector,
-    (state:ThirdActionState) => state.thirdActionHolder
+    (state:ThirdActionState) => state.thirdActions
 );
 
 export const selectThirdAction = id => createSelector(getThirdActionHolderSelector,
@@ -26,6 +26,6 @@ export const selectThirdAction = id => createSelector(getThirdActionHolderSelect
 
 export const selectThirdActionFromCard =(card:LightCard) => createSelector(getThirdActionHolderSelector,
     thirdActions =>{
-    const id = `${card.publisher}_${card.processId}_${card.state}`;
+    const id = `${card.publisher}_${card.processId}_${card.publisherVersion}_${card.state}`;
     return thirdActions[id];
     });

@@ -16,7 +16,7 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
-import {Action, Third, ThirdMenu} from "@ofModel/thirds.model";
+import {Action, Third, ThirdActionHolder, ThirdMenu} from "@ofModel/thirds.model";
 import {Card} from "@ofModel/card.model";
 
 @Injectable()
@@ -215,18 +215,19 @@ export class ThirdsService {
         return this.$injector.get(TranslateService);
     }
 
-    fetchActionsFromLightCard(card: LightCard): Observable<Array<Action>> {
+    fetchActionsFromLightCard(card: LightCard): Observable<[Array<Action>,ThirdActionHolder]> {
         return this.fetchActions(card.publisher,
             card.process,
             card.state,
-            card.publisherVersion);
+            card.publisherVersion,
+            card.processId);
     }
 
     fetchActions(publisher: string,
                  process: string,
                  state: string,
-                 version: string): Observable<Array<Action>> {
-        console.log(`third service try to load action ${publisher}_${process}_${state}`);
+                 version: string,
+                 processInstanceId:string): Observable<[Array<Action>,ThirdActionHolder]> {
         const params = new HttpParams().set("apiVersion", version);
         return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`, {
             params,
@@ -234,12 +235,15 @@ export class ThirdsService {
         }).pipe(
             map(json => {
                 const obj = JSON.parse(json);
-                console.error('our obj', obj);
                 const actionDictionary = new Map<string,Action>(Object.entries(obj));
                 const entries = Array.from(actionDictionary.entries()) as Array<[string,Action]>;
+                // clone action with a key set for id purpose
+                const actionRootKey =`${publisher}_${processInstanceId}_${version}_${state}`;
+                let actionId=[];
                 const thirdActions =
                     _.map(entries,
                     ([key, action]:[string,Action])=> {
+                        const actionKey = `${actionRootKey}_${key}`;
                     const withKey = new Action(null,
                         null
                         ,false,
@@ -249,12 +253,23 @@ export class ThirdsService {
                         false,
                         false,
                         false,
-                        false,false,false,key
+                        false,
+                        false,
+                        false,
+                        actionRootKey,
+                        actionKey
                         );
-                    return {...withKey,action};
+                    actionId.push(actionKey)
+                    return {...withKey,...action};
                 }
                     );
-                return thirdActions;
+
+                return [thirdActions,new ThirdActionHolder(publisher,
+                    process,
+                    processInstanceId,
+                    version,
+                    state,
+                    actionId)]as [Array<Action>,ThirdActionHolder];
 
             }));
     }

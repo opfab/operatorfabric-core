@@ -26,7 +26,7 @@ export class ThirdActionsEffects {
     }
 
     @Effect()
-    loadThirdActions: Observable<Action> = this.action$
+    loadThirdActions= this.action$
         .pipe(
             ofType(ThirdActionTypes.LoadThirdActions),
             tap(() => console.log('try to load third actions')),
@@ -34,8 +34,8 @@ export class ThirdActionsEffects {
                 const lightCard: LightCard = loadOrder.payload.card;
                 return this.thirdService.fetchActionsFromLightCard(lightCard)
                     .pipe(
-                        map((actions: Array<ThirdAction>) => {
-                            return new LoadThirdActionSuccess({actions: actions})
+                        map(([actions,holder]:[Array<ThirdAction>,ThirdActionHolder]) => {
+                            return new LoadThirdActionSuccess({actions: actions,holder:holder});
                         })
                     );
             }),
