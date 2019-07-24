@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -61,11 +62,10 @@ public class ArchivedCardConsultationData implements Card {
     private String media;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Singular
-    private List<String> tags;
+    private List<String> tags; //Todo removed @Singular to be consistent with Card. See if that's OK
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<? extends Detail> details;
+    private List<? extends Detail> details = Collections.emptyList(); //TODO Added to be consistent with Card. See if that's OK
     @JsonIgnore
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -75,10 +75,10 @@ public class ArchivedCardConsultationData implements Card {
     private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> userRecipients;
+    private List<String> userRecipients = Collections.emptyList(); //TODO Added to be consistent with Card. See if that's OK
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> groupRecipients;
+    private List<String> groupRecipients = Collections.emptyList();//TODO Added to be consistent with Card. See if that's OK
     @Transient
     @JsonIgnore
     private List<? extends TimeSpan> timeSpans;

@@ -29,6 +29,18 @@ public class TestUtilities {
 
     private static DateTimeFormatter ZONED_FORMATTER = DateTimeUtil.OUT_DATETIME_FORMAT.withZone(ZoneOffset.UTC);
 
+    @NotNull
+    public static String format(Instant now) {
+        return ZONED_FORMATTER.format(now);
+    }
+
+    @NotNull
+    public static String format(Long now) {
+        return ZONED_FORMATTER.format(Instant.ofEpochMilli(now));
+    }
+
+    /* Utilities regarding Cards */
+
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end) {
         return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null);
     }
@@ -105,20 +117,44 @@ public class TestUtilities {
         card.setShardKey(Math.toIntExact(card.getStartDate().toEpochMilli() % 24 * 1000));
     }
 
-    @NotNull
-    public static String format(Instant now) {
-        return ZONED_FORMATTER.format(now);
-    }
-
-    @NotNull
-    public static String format(Long now) {
-        return ZONED_FORMATTER.format(Instant.ofEpochMilli(now));
-    }
-
     public static void logCardOperation(CardOperation o) {
         log.info("op publication: " + format(o.getPublishDate()));
         for (LightCard c : o.getCards()) {
             log.info(String.format("card [%s]: %s", c.getId(), format(c.getStartDate())));
         }
     }
+
+    /* Utilities regarding archived Cards */
+
+    public static ArchivedCardConsultationData createSimpleArchivedCard(int processSuffix, Instant publication, Instant start, Instant end) {
+        return createSimpleArchivedCard(Integer.toString(processSuffix), publication, start, end, null);
+    }
+
+    public static ArchivedCardConsultationData createSimpleArchivedCard(String processSuffix, Instant publication, Instant start, Instant end, String login, String... groups) {
+        ArchivedCardConsultationData.ArchivedCardConsultationDataBuilder archivedCardBuilder = ArchivedCardConsultationData.builder()
+                .processId("PROCESS" + processSuffix)
+                .publisher("PUBLISHER")
+                .publisherVersion("0")
+                .startDate(start)
+                .endDate(end != null ? end : null)
+                .severity(SeverityEnum.ALARM)
+                .title(I18nConsultationData.builder().key("title").build())
+                .summary(I18nConsultationData.builder().key("summary").build())
+                .recipient(computeRecipient(login, groups));
+
+        if(groups!=null && groups.length>0)
+            archivedCardBuilder.groupRecipients(Arrays.asList(groups));
+        if(login!=null)
+            archivedCardBuilder.userRecipient(login);
+        ArchivedCardConsultationData archivedCard = archivedCardBuilder.build();
+        prepareArchivedCard(archivedCard, publication);
+        return archivedCard;
+    }
+
+    public static void prepareArchivedCard(ArchivedCardConsultationData archivedCard, Instant publishDate) {
+        archivedCard.setId(UUID.randomUUID().toString());
+        archivedCard.setPublishDate(publishDate);
+        archivedCard.setShardKey(Math.toIntExact(archivedCard.getStartDate().toEpochMilli() % 24 * 1000));
+    }
+
 }
