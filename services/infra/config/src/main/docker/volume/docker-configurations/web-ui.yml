@@ -12,18 +12,20 @@ operatorfabric:
       time:
         display: BUSINESS
   i10n.supported.time-zones:
-  - Europe/Paris
-  - Europe/London
-  - Europe/Dublin
-  - Europe/Brussel
-  - Europe/Berlin
-  - Europe/Rome
-  - Europe/Madrid
-  - Europe/Lisbon
-  - Europe/Amsterdam
-  - Europe/Athens
-  - Australia/Melbourne
-  - Pacific/Samoa
+    - value: "Europe/Paris"
+      label: "Headquarters timezone"
+    - value: "Australia/Melbourne"
+      label: "Down Under"
+    - Europe/London
+    - Europe/Dublin
+    - Europe/Brussel
+    - Europe/Berlin
+    - Europe/Rome
+    - Europe/Madrid
+    - Europe/Lisbon
+    - Europe/Amsterdam
+    - Europe/Athens
+    - Pacific/Samoa
   i18n.supported.locales:
   - fr
   - en
