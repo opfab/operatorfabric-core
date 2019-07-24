@@ -6,13 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuple6;
-import reactor.util.function.Tuples;
-
-import java.util.List;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
@@ -34,30 +30,38 @@ public class ArchivedCardRoutesConfig {
     @Bean
     public RouterFunction<ServerResponse> archivedCardRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/archives/**"),archivedCardGetRoute())
+                .route(RequestPredicates.GET("/archives/{id}"),archivedCardGetRoute())
+                .andRoute(RequestPredicates.GET("/archives/**"),archivedCardGetWithQueryRoute())
                 .andRoute(RequestPredicates.OPTIONS("/archives/**"),archivedCardOptionRoute());
     }
 
-    private HandlerFunction<ServerResponse> archivedCardGetRoute() {
+    private HandlerFunction<ServerResponse> archivedCardGetWithQueryRoute() {
         return request ->
                 extractParameters(request)
-                        .flatMap(t -> archivedCardRepository.findByPublisherAndProcess(t.getT1(),t.getT2())
+                        .flatMap(params -> archivedCardRepository.findWithParams(params)
                                 .collectList()
-                                .flatMap(archivedCards-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(archivedCards)))
+                                .flatMap(
+                                        archivedCards-> ok().contentType(MediaType.APPLICATION_JSON)
+                                                .body(fromObject(archivedCards)))
                         ).switchIfEmpty(notFound().build()); //TODO Does it still work ?
+    }
+
+    private HandlerFunction<ServerResponse> archivedCardGetRoute() {
+        return request -> archivedCardRepository.findById(request.pathVariable("id"))
+                .flatMap(card-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
+                .switchIfEmpty(notFound().build());
     }
 
     private HandlerFunction<ServerResponse> archivedCardOptionRoute() {
         return request -> ok().build();
     }
 
-    private Mono<Tuple2<String, String>> extractParameters(ServerRequest request) {
-        return request.bodyToMono(String.class)
+    //TODO Return Error if unknown query param
+
+    private Mono<MultiValueMap<String, String>> extractParameters(ServerRequest request) {
+        return request.bodyToMono(String.class) //TODO What is it for ?
                 .switchIfEmpty(Mono.just(""))
-                .map(body-> Tuples.of(
-                        request.queryParam("publisher").orElse("null"),
-                        request.queryParam("process").orElse("null")
-                ));
+                .map(body-> request.queryParams());
     }
 
 }

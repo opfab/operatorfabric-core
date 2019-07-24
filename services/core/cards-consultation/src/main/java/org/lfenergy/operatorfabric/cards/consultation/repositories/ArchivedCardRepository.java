@@ -8,7 +8,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
  * @author Alexandra Guironnet
  */
 @Repository
-public interface ArchivedCardRepository extends ReactiveMongoRepository<ArchivedCardConsultationData, String> {
+public interface ArchivedCardRepository extends ReactiveMongoRepository<ArchivedCardConsultationData, String>, ArchivedCardCustomRepository {
 
     /**
      * Finds card by processID (i.e. process current state)
@@ -30,8 +30,11 @@ public interface ArchivedCardRepository extends ReactiveMongoRepository<Archived
      */
     public Mono<ArchivedCardConsultationData> findByProcessId(String processId);
 
+    public Mono<ArchivedCardConsultationData> findById(String id);
+
     public Flux<ArchivedCardConsultationData> findAll();
 
     public Flux<ArchivedCardConsultationData> findByPublisherAndProcess(String publisher, String process);
+
 
 }
