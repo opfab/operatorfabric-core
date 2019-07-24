@@ -70,9 +70,9 @@ export class State{
 }
 
 export enum ActionType {
-    EXTERNAL,
-    JNLP,
-    URL
+    EXTERNAL='EXTERNAL',
+    JNLP='JNLP',
+    URL='URL'
 
 }
 
@@ -91,19 +91,9 @@ export class Action {
         readonly updateStateBeforeAction: boolean = false,
         readonly called: boolean = false,
         readonly needsConfirm: boolean = false,
-    ) {
-    }
+        public key?:string
+    ) {}
 
-    update(httpClient: HttpClient, url:string, params: HttpParams):Observable<Action>{
-        if(this.isUnlock()){
-            return  httpClient.get(url,{params,responseType: 'text'}).pipe(map(json=>JSON.parse(json)))
-        }
-        return of(null);
-    }
-
-    isUnlock():boolean{
-        return !this.lockAction;
-    }
 }
 
 export class ActionStatus{
@@ -118,6 +108,33 @@ export class ActionStatus{
                         readonly lockAction: boolean = false,
     ){}
 }
+
+// export function convertJsonToThirdAction(
+//     key:string,value:string
+// ) {
+//     if(value != null && value != undefined) {
+//         switch (key) {
+//             case 'type': {
+//                 return ActionType[value] as ActionType;
+//             }
+//             // case 'label': {
+//             //     return JSON.parse(value);
+//             // }
+//             case 'inputs': {
+//                 return JSON.parse(value, (key: string, value: string) => {
+//                     if (key === 'type') {
+//                         return InputType[value] as InputType;
+//                     }
+//                     return value;
+//                 })
+//             }
+//             default: {
+//                 return value;
+//             }
+//         }
+//     }
+//     return value;
+// }
 
 export enum InputType {
     TEXT,

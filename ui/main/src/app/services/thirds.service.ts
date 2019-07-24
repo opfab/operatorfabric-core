@@ -16,7 +16,7 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
-import {Action, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import {Action, Third, ThirdMenu} from "@ofModel/thirds.model";
 import {Card} from "@ofModel/card.model";
 
 @Injectable()
@@ -215,7 +215,7 @@ export class ThirdsService {
         return this.$injector.get(TranslateService);
     }
 
-    fetchActionsFromLightCard(card: LightCard): Observable<Map<string, Action>> {
+    fetchActionsFromLightCard(card: LightCard): Observable<Array<Action>> {
         return this.fetchActions(card.publisher,
             card.process,
             card.state,
@@ -225,17 +225,37 @@ export class ThirdsService {
     fetchActions(publisher: string,
                  process: string,
                  state: string,
-                 version: string): Observable<Map<string,Action>> {
+                 version: string): Observable<Array<Action>> {
         console.log(`third service try to load action ${publisher}_${process}_${state}`);
         const params = new HttpParams().set("apiVersion", version);
         return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`, {
             params,
             responseType: 'text'
         }).pipe(
-            tap(json => console.log(`what we got from third end point: '${json}`)),
             map(json => {
-                const obj = JSON.parse(json)
-                return new Map(Object.entries(obj))
+                const obj = JSON.parse(json);
+                console.error('our obj', obj);
+                const actionDictionary = new Map<string,Action>(Object.entries(obj));
+                const entries = Array.from(actionDictionary.entries()) as Array<[string,Action]>;
+                const thirdActions =
+                    _.map(entries,
+                    ([key, action]:[string,Action])=> {
+                    const withKey = new Action(null,
+                        null
+                        ,false,
+                        '',
+                        '',
+                        null,
+                        false,
+                        false,
+                        false,
+                        false,false,false,key
+                        );
+                    return {...withKey,action};
+                }
+                    );
+                return thirdActions;
+
             }));
     }
 

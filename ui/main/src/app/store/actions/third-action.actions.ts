@@ -1,6 +1,6 @@
 import {Action} from "@ngrx/store";
 import {LightCard} from "@ofModel/light-card.model";
-import {ActionStatus, ThirdActionHolder} from "@ofModel/thirds.model";
+import {ActionStatus, ThirdActionHolder, Action as ThirdAction} from "@ofModel/thirds.model";
 
 export enum ThirdActionTypes {
     LoadThirdActions = '[Action] Load Third Actions for the given state of a given Process',
@@ -22,7 +22,7 @@ export class LoadThirdActions implements Action {
 export class LoadThirdActionSuccess implements Action {
     readonly type = ThirdActionTypes.LoadThirdActionSuccess;
 
-    constructor(public payload: { actions: ThirdActionHolder }) {
+    constructor(public payload: { actions: Array<ThirdAction> }) {
     }
 
 }

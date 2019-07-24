@@ -34,16 +34,7 @@ export class ThirdActionsEffects {
                 const lightCard: LightCard = loadOrder.payload.card;
                 return this.thirdService.fetchActionsFromLightCard(lightCard)
                     .pipe(
-                        map((actionMap: Map<string, ThirdAction>) => {
-                            const actions = actionMap;
-                            const thirdActionHolder =
-                                new ThirdActionHolder(lightCard.publisher,
-                                    lightCard.processId,
-                                    lightCard.state,
-                                    actions);
-                            return thirdActionHolder;
-                        }),
-                        map((actions: ThirdActionHolder) => {
+                        map((actions: Array<ThirdAction>) => {
                             return new LoadThirdActionSuccess({actions: actions})
                         })
                     );
