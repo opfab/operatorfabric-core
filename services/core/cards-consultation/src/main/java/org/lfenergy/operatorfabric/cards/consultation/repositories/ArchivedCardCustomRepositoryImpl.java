@@ -28,17 +28,16 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public static final String ACTIVE_FROM_FIELD = "activeFrom";
     public static final String ACTIVE_TO_FIELD = "activeTo";
 
-    public static final List<String> specialParameters =Arrays.asList(
+    private static final List<String> specialParameters =Arrays.asList(
             PUBLISH_DATE_FROM_FIELD, PUBLISH_DATE_TO_FIELD, ACTIVE_FROM_FIELD, ACTIVE_TO_FIELD);
 
     private final ReactiveMongoTemplate template;
-    private final ObjectMapper mapper; //TODO Will we need methods returning JSON as strings instead of ArchivedCardConsultationData objects?
+    //TODO Will we need methods returning JSON as strings instead of ArchivedCardConsultationData objects?
     //TODO Return "light" ArchivedCards (projection) ?
 
     @Autowired
-    public ArchivedCardCustomRepositoryImpl(ReactiveMongoTemplate template, ObjectMapper mapper) {
+    public ArchivedCardCustomRepositoryImpl(ReactiveMongoTemplate template) {
         this.template = template;
-        this.mapper = mapper;
     }
 
     public Flux<ArchivedCardConsultationData> findWithParams(MultiValueMap<String, String> params) {
@@ -51,10 +50,10 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                 .include("process")
                 .include("processId")
                 .include("state")
-                .include("publishDate")
+                .include(PUBLISH_DATE_FIELD)
                 .include("lttd")
-                .include("startDate")
-                .include("endDate")
+                .include(START_DATE_FIELD)
+                .include(END_DATE_FIELD)
                 .include("severity")
                 .include("tags");
         return template.find(query,ArchivedCardConsultationData.class);
@@ -71,43 +70,14 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         //TODO Remove log
         params.forEach((key, values) -> {
-                    log.info("ArchivedCardRepo: key " + key);
-                    values.forEach(value -> log.info("ArchivedCardRepo: values " + value));
+            log.info("ArchivedCardRepo: key " + key);
+            values.forEach(value -> log.info("ArchivedCardRepo: values " + value));
         });
 
         /* Handle special parameters */
 
         // Publish date range
-        if(params.containsKey(PUBLISH_DATE_FROM_FIELD)){
-            if(params.get(PUBLISH_DATE_FROM_FIELD).size()>1) {
-                //TODO Throw Error
-            } else {
-                if(params.containsKey(PUBLISH_DATE_TO_FIELD)){
-                    if(params.get(PUBLISH_DATE_TO_FIELD).size()>1) {
-                        //TODO Throw Error
-                    } else {
-                        query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD)
-                                .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_FIELD))))
-                                .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_FIELD))))
-                        );
-                    }
-                } else {
-                    query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD)
-                            .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_FIELD))))
-                    );
-                }
-            }
-        } else {
-            if(params.containsKey(PUBLISH_DATE_TO_FIELD)){
-                if(params.get(PUBLISH_DATE_TO_FIELD).size()>1) {
-                    //TODO Throw Error
-                } else {
-                    query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD)
-                            .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_FIELD))))
-                    );
-                }
-            }
-        }
+        query.addCriteria(createPublishDateCriteria(params));
 
         // Active range
         //TODO
@@ -130,4 +100,29 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         return query;
     }
 
+    private Criteria createPublishDateCriteria(MultiValueMap<String, String> params) {
+
+        Criteria criteria = new Criteria();
+
+        if(params.get(PUBLISH_DATE_FROM_FIELD).size()>1||params.get(PUBLISH_DATE_TO_FIELD).size()>1) {
+            //TODO Throw Error
+        } else {
+            if(params.containsKey(PUBLISH_DATE_FROM_FIELD)&&params.containsKey(PUBLISH_DATE_TO_FIELD)) {
+                criteria = Criteria.where(PUBLISH_DATE_FIELD)
+                        .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_FIELD))))
+                        .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_FIELD))));
+            } else {
+                if(params.containsKey(PUBLISH_DATE_FROM_FIELD)) {
+                    criteria = Criteria.where(PUBLISH_DATE_FIELD)
+                            .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_FIELD))));
+                }
+                if(params.containsKey(PUBLISH_DATE_TO_FIELD)) {
+                    criteria = Criteria.where(PUBLISH_DATE_FIELD)
+                            .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_FIELD))));
+                }
+            }
+        }
+
+        return criteria;
+    }
 }
