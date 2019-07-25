@@ -3,28 +3,28 @@ apiVersion: apps/v1
 metadata:
   name: cards-publication
 spec:
-  replicas: 1
+  replicas: 2
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: cards-consultation
 spec:
-  replicas: 1
+  replicas: 2
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: client-gateway
 spec:
-  replicas: 1
+  replicas: 2
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: config
 spec:
-  replicas: 1
+  replicas: 2
 ---
 kind: StatefulSet
 apiVersion: apps/v1
@@ -38,21 +38,21 @@ apiVersion: apps/v1
 metadata:
   name: oauth2
 spec:
-  replicas: 1
+  replicas: 2
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: time
 spec:
-  replicas: 1
+  replicas: 2
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: users
 spec:
-  replicas: 1
+  replicas: 2
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -66,4 +66,4 @@ apiVersion: apps/v1
 metadata:
   name: web-ui
 spec:
-  replicas: 1
+  replicas: 2
