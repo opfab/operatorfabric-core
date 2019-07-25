@@ -32,6 +32,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleArchivedCard;
+import static org.lfenergy.operatorfabric.cards.consultation.repositories.ArchivedCardCustomRepositoryImpl.PUBLISH_DATE_FROM_FIELD;
+import static org.lfenergy.operatorfabric.cards.consultation.repositories.ArchivedCardCustomRepositoryImpl.PUBLISH_DATE_TO_FIELD;
 
 /**
  * @author Alexandra Guironnet
@@ -93,15 +95,15 @@ public class ArchivedCardRepositoryShould {
 
         //create later published cards in past
         persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
+        //persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
 
         //create later published cards in future
         persistCard(createSimpleArchivedCard(3, firstPublisher, nowPlusOne, nowPlusOne, nowPlusTwo, LOGIN, "rte", "operator"));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN, "rte", "operator"));
+        //persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN, "rte", "operator"));
 
         //create cards with different publishers
-        persistCard(createSimpleArchivedCard(1, secondPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
-        persistCard(createSimpleArchivedCard(2, secondPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(1, secondPublisher, now, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
+        //persistCard(createSimpleArchivedCard(2, secondPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
 
         persistCard(createSimpleArchivedCard(1, thirdPublisher, nowPlusTwo, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
 
@@ -173,5 +175,77 @@ public class ArchivedCardRepositoryShould {
                 .verify();
     }
 
+    @Test
+    public void fetchArchivedCardsWithPublishDateBetween() {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        //Find cards published between start and end (included)
+        Instant start = now;
+        Instant end = nowPlusOne;
+
+        params.add("publishDateFrom", Long.toString(start.toEpochMilli()));
+        params.add("publishDateTo",Long.toString(end.toEpochMilli()));
+
+        StepVerifier.create(repository.findWithParams(params))
+                .assertNext(card -> {
+                    assertThat(card.getPublishDate()).isBetween(start,end);
+                })
+                .assertNext(card -> {
+                    assertThat(card.getPublishDate()).isBetween(start,end);
+                })
+                .assertNext(card -> {
+                    assertThat(card.getPublisher()).isEqualTo(secondPublisher); //This one is last because it has the oldest publishDate
+                    //TODO Find a prettier way to check results are ordered by publishDate
+                    assertThat(card.getPublishDate()).isBetween(start,end);
+                })
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    public void fetchArchivedCardsWithPublishDateAfter() {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        //Find cards published after start (included)
+        Instant start = now;
+
+        params.add("publishDateFrom", Long.toString(start.toEpochMilli()));
+
+        StepVerifier.create(repository.findWithParams(params))
+                .assertNext(card -> {
+                    assertThat(card.getPublishDate()).isAfterOrEqualTo(start);
+                })
+                .assertNext(card -> {
+                    assertThat(card.getPublishDate()).isAfterOrEqualTo(start);
+                })
+                .assertNext(card -> {
+                    assertThat(card.getPublishDate()).isAfterOrEqualTo(start);
+                })
+                .assertNext(card -> {
+                    assertThat(card.getPublisher()).isEqualTo(secondPublisher); //This one is last because it has the oldest publishDate
+                    //TODO Find a prettier way to check results are ordered by publishDate
+                    assertThat(card.getPublishDate()).isAfterOrEqualTo(start);
+                })
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    public void fetchArchivedCardsWithPublishDateBefore() {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        //Find cards published before end (included)
+        Instant end = nowMinusTwo;
+
+        params.add("publishDateTo",Long.toString(end.toEpochMilli()));
+
+        StepVerifier.create(repository.findWithParams(params))
+                .expectNextCount(9)
+                .expectComplete()
+                .verify();
+    }
 
 }

@@ -12,6 +12,9 @@ import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepository {
@@ -25,6 +28,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public static final String ACTIVE_FROM_FIELD = "activeFrom";
     public static final String ACTIVE_TO_FIELD = "activeTo";
 
+    public static final List<String> specialParameters =Arrays.asList(
+            PUBLISH_DATE_FROM_FIELD, PUBLISH_DATE_TO_FIELD, ACTIVE_FROM_FIELD, ACTIVE_TO_FIELD);
 
     private final ReactiveMongoTemplate template;
     private final ObjectMapper mapper; //TODO Will we need methods returning JSON as strings instead of ArchivedCardConsultationData objects?
@@ -64,32 +69,63 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         //TODO Improvement: Pass sort order as param instead
         query.with(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)));
 
+        //TODO Remove log
         params.forEach((key, values) -> {
-            //TODO Remove log
-            log.info("ArchivedCardRepo: key "+key);
-            values.forEach(value -> log.info("ArchivedCardRepo: values "+value));
+                    log.info("ArchivedCardRepo: key " + key);
+                    values.forEach(value -> log.info("ArchivedCardRepo: values " + value));
+        });
 
-            switch(key) {
-                case PUBLISH_DATE_FROM_FIELD:
-                    //TODO Throw error if more than 1 value
-                    //TODO Throw error if value can't be parsed to long (catch NumberFormatException)
-                    log.info("ArchivedCardRepo: instant "+Instant.ofEpochMilli(Long.parseLong(values.get(0))));
-                    query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD).gte(Instant.ofEpochMilli(Long.parseLong(values.get(0))))); //TODO Should it be gt or gte?
-                    break;
-                case PUBLISH_DATE_TO_FIELD:
-                    //TODO Throw error if more than 1 value
-                    //TODO Throw error if value can't be parsed to long
-                    log.info("ArchivedCardRepo: instant "+Instant.ofEpochMilli(Long.parseLong(values.get(0))));
-                    query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD).lte(Instant.ofEpochMilli(Long.parseLong(values.get(0)))));
-                    break;
-                default:
-                    //TODO Check whether the provided query param key does exist in the card data model (or in a pre-defined list)
-                    // to be able to throw error if it's not the case
-                    query.addCriteria(Criteria.where(key).in(values));
+        /* Handle special parameters */
+
+        // Publish date range
+        if(params.containsKey(PUBLISH_DATE_FROM_FIELD)){
+            if(params.get(PUBLISH_DATE_FROM_FIELD).size()>1) {
+                //TODO Throw Error
+            } else {
+                if(params.containsKey(PUBLISH_DATE_TO_FIELD)){
+                    if(params.get(PUBLISH_DATE_TO_FIELD).size()>1) {
+                        //TODO Throw Error
+                    } else {
+                        query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD)
+                                .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_FIELD))))
+                                .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_FIELD))))
+                        );
+                    }
+                } else {
+                    query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD)
+                            .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_FIELD))))
+                    );
+                }
             }
+        } else {
+            if(params.containsKey(PUBLISH_DATE_TO_FIELD)){
+                if(params.get(PUBLISH_DATE_TO_FIELD).size()>1) {
+                    //TODO Throw Error
+                } else {
+                    query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD)
+                            .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_FIELD))))
+                    );
+                }
+            }
+        }
+
+        // Active range
+        //TODO
+
+        /* Handle regular parameters */
+        params.forEach((key, values) -> {
+
+            if(!specialParameters.contains(key)) {
+                query.addCriteria(Criteria.where(key).in(values));
+            }
+
+            //TODO Check whether the provided query param key does exist in the card data model (or in a pre-defined list)
+            // to be able to throw error if it's not the case
 
 
         });
+
+        log.info("ArchivedCardRepo: "+query.toString());
 
         return query;
     }
