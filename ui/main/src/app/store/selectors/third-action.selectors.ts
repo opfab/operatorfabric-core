@@ -1,19 +1,18 @@
-import {ThirdActionState} from "@ofStates/third-action.state";
+import {ThirdActionHolderState, ThirdActionState} from "@ofStates/third-action.state";
 import {createFeatureSelector, createSelector} from "@ngrx/store";
-import {LightCard} from "@ofModel/light-card.model";
+import {AppState} from "@ofStore/index";
 
-export const getThirdActionHolderSelector =createFeatureSelector<ThirdActionState>('thirdActions');
+export const getThirdActionSelector =createFeatureSelector<AppState,ThirdActionState>('thirdActions');
 
-export const selectThirdActionList = createSelector(
+export const getThirdActionHolderSelector = createFeatureSelector<AppState,ThirdActionHolderState>('thirdActionHolders');
+
+export const selectThirdActionFromCard = createSelector(
     getThirdActionHolderSelector,
-    (state:ThirdActionState) => state.thirdActions
+    getThirdActionSelector,
+    (thirdActionHolderState,thirdActionState)=>{
+        const id = thirdActionHolderState.selectedThirdActionHolderId;
+        const holders = thirdActionHolderState.entities;
+        const currentThirdActionHolder = holders[id];
+        return currentThirdActionHolder.actionIds.map(tAId=>thirdActionState[tAId])
+    }
 );
-
-export const selectThirdAction = id => createSelector(getThirdActionHolderSelector,
-    thirdActions => thirdActions[id]);
-
-export const selectThirdActionFromCard =(card:LightCard) => createSelector(getThirdActionHolderSelector,
-    thirdActions =>{
-    const id = `${card.publisher}_${card.processId}_${card.publisherVersion}_${card.state}`;
-    return thirdActions[id];
-    });

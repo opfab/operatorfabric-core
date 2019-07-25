@@ -25,12 +25,12 @@ export const thirdActionHolderAdapter: EntityAdapter<ThirdActionHolder> =
         });
 
 export interface ThirdActionHolderState extends EntityState<ThirdActionHolder> {
-    thirdActionHolders: ThirdActionHolder[];
+    selectedThirdActionHolderId:string;
     error: string;
 };
 
 export const initialThirdActionHolderState: ThirdActionHolderState = thirdActionHolderAdapter.getInitialState({
-    thirdActionHolders: [],
+    selectedThirdActionHolderId:'',
     error: ''
 });
 

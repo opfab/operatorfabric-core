@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {map, tap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
@@ -32,7 +32,7 @@ export class CardComponent implements OnInit {
     currentPath: any;
     private _i18nPrefix: string;
     dateToDisplay: string;
-    actions: Observable<Array<[string, ThirdAction]>>;
+    actions: Observable<Array<ThirdAction>>;
 
     /* istanbul ignore next */
     constructor(private router: Router,
@@ -44,8 +44,9 @@ export class CardComponent implements OnInit {
 
     public select() {
         this.store.dispatch(new LoadThirdActions({card:this.lightCard}));
-        this.actions=this.store.select(selectThirdActionFromCard(this.lightCard));
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
+        this.actions=this.store.select(selectThirdActionFromCard);
+
     }
 
     ngOnInit() {
@@ -58,8 +59,8 @@ export class CardComponent implements OnInit {
         // use configuration to compute date
             .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
-        this.actions = this.store.select(selectThirdActionFromCard(this.lightCard))
-        }
+
+    }
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {
         switch (config) {
