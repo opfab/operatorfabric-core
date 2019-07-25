@@ -25,7 +25,7 @@ import {reducer as settingsReducer} from '@ofStore/reducers/settings.reducer';
 import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
 import {reducer as timeReducer} from '@ofStore/reducers/time.reducer';
 import {reducer as archiveReducer} from '@ofStore/reducers/archive.reducer';
-import {reducer as thirdActionReducer} from '@ofStore/reducers/third-action.reducer';
+import {thirdActionHolderReducer, thirdActionReducer} from '@ofStore/reducers/third-action.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 import {CardState} from "@ofStates/card.state";
 import {CustomRouterEffects} from "@ofEffects/custom-router.effects";
@@ -42,7 +42,7 @@ import {TimeState} from "@ofStates/time.state";
 import {TimeEffects} from "@ofEffects/time.effects";
 import {ArchiveState} from "@ofStates/archive.state";
 import {ArchiveEffects} from "@ofEffects/archive.effects";
-import {ThirdActionState} from "@ofStates/third-action.state";
+import {ThirdActionState,ThirdActionHolderState} from "@ofStates/third-action.state";
 import {ThirdActionsEffects} from "@ofEffects/third-actions.effects";
 
 export interface AppState {
@@ -57,6 +57,7 @@ export interface AppState {
     time: TimeState;
     archive: ArchiveState;
     thirdAction: ThirdActionState;
+    thirdActionHolders: ThirdActionHolderState;
 }
 
 export const appEffects = [
@@ -86,7 +87,8 @@ export const appReducer: ActionReducerMap<AppState> = {
     settings: settingsReducer,
     time: timeReducer,
     archive: archiveReducer,
-    thirdAction: thirdActionReducer
+    thirdActions: thirdActionReducer,
+    thirdActionHolders:thirdActionHolderReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production

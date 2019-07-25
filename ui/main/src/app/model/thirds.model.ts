@@ -110,33 +110,6 @@ export class ActionStatus{
     ){}
 }
 
-// export function convertJsonToThirdAction(
-//     key:string,value:string
-// ) {
-//     if(value != null && value != undefined) {
-//         switch (key) {
-//             case 'type': {
-//                 return ActionType[value] as ActionType;
-//             }
-//             // case 'label': {
-//             //     return JSON.parse(value);
-//             // }
-//             case 'inputs': {
-//                 return JSON.parse(value, (key: string, value: string) => {
-//                     if (key === 'type') {
-//                         return InputType[value] as InputType;
-//                     }
-//                     return value;
-//                 })
-//             }
-//             default: {
-//                 return value;
-//             }
-//         }
-//     }
-//     return value;
-// }
-
 export enum InputType {
     TEXT,
     LIST,
