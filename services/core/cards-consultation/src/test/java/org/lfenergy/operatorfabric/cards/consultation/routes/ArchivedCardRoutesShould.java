@@ -42,6 +42,8 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.creat
 @Slf4j
 public class ArchivedCardRoutesShould {
 
+    private static String publisher = "PUBLISHER";
+
     @Autowired
     private WebTestClient webTestClient;
     @Autowired
@@ -75,7 +77,7 @@ public class ArchivedCardRoutesShould {
 
         @Test
         public void findArchivedCardById() {
-            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
+            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
                     .expectComplete()
@@ -102,7 +104,7 @@ public class ArchivedCardRoutesShould {
 
         @Test
         public void findOutCard(){
-            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
+            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
                     .expectComplete()

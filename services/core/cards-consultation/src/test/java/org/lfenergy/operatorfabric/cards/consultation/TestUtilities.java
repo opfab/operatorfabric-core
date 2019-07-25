@@ -126,14 +126,18 @@ public class TestUtilities {
 
     /* Utilities regarding archived Cards */
 
-    public static ArchivedCardConsultationData createSimpleArchivedCard(int processSuffix, Instant publication, Instant start, Instant end) {
-        return createSimpleArchivedCard(Integer.toString(processSuffix), publication, start, end, null);
+    public static ArchivedCardConsultationData createSimpleArchivedCard(int processSuffix, String publisher, Instant publication, Instant start, Instant end) {
+        return createSimpleArchivedCard(Integer.toString(processSuffix), publisher, publication, start, end, null);
     }
 
-    public static ArchivedCardConsultationData createSimpleArchivedCard(String processSuffix, Instant publication, Instant start, Instant end, String login, String... groups) {
+    public static ArchivedCardConsultationData createSimpleArchivedCard(int processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String... groups) {
+        return createSimpleArchivedCard(Integer.toString(processSuffix), publisher, publication, start, end, login, groups);
+    }
+
+    public static ArchivedCardConsultationData createSimpleArchivedCard(String processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String... groups) {
         ArchivedCardConsultationData.ArchivedCardConsultationDataBuilder archivedCardBuilder = ArchivedCardConsultationData.builder()
                 .processId("PROCESS" + processSuffix)
-                .publisher("PUBLISHER")
+                .publisher(publisher)
                 .publisherVersion("0")
                 .startDate(start)
                 .endDate(end != null ? end : null)

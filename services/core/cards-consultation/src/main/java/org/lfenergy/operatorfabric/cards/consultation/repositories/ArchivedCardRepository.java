@@ -22,19 +22,6 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface ArchivedCardRepository extends ReactiveMongoRepository<ArchivedCardConsultationData, String>, ArchivedCardCustomRepository {
 
-    /**
-     * Finds card by processID (i.e. process current state)
-     *
-     * @param processId for which we want to find card
-     * @return card with given processId
-     */
-    public Mono<ArchivedCardConsultationData> findByProcessId(String processId);
-
     public Mono<ArchivedCardConsultationData> findById(String id);
-
-    public Flux<ArchivedCardConsultationData> findAll();
-
-    public Flux<ArchivedCardConsultationData> findByPublisherAndProcess(String publisher, String process);
-
 
 }
