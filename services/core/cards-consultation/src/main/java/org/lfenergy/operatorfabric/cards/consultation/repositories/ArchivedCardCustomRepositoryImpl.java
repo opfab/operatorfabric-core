@@ -104,24 +104,32 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         Criteria criteria = new Criteria();
 
-        if(params.get(PUBLISH_DATE_FROM_FIELD).size()>1||params.get(PUBLISH_DATE_TO_FIELD).size()>1) {
-            //TODO Throw Error
-        } else {
-            if(params.containsKey(PUBLISH_DATE_FROM_FIELD)&&params.containsKey(PUBLISH_DATE_TO_FIELD)) {
+        if(params.containsKey(PUBLISH_DATE_FROM_FIELD)&&params.containsKey(PUBLISH_DATE_TO_FIELD)) {
+            if(params.get(PUBLISH_DATE_FROM_FIELD).size()>1||params.get(PUBLISH_DATE_TO_FIELD).size()>1) {
+                //TODO Throw Error
+            } else {
                 criteria = Criteria.where(PUBLISH_DATE_FIELD)
                         .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_FIELD))))
-                        .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_FIELD))));
-            } else {
-                if(params.containsKey(PUBLISH_DATE_FROM_FIELD)) {
+                        .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_FIELD)))); }
+        } else {
+            if(params.containsKey(PUBLISH_DATE_FROM_FIELD)) {
+                if(params.get(PUBLISH_DATE_FROM_FIELD).size()>1) {
+                    //TODO Throw Error
+                } else {
                     criteria = Criteria.where(PUBLISH_DATE_FIELD)
                             .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_FIELD))));
                 }
-                if(params.containsKey(PUBLISH_DATE_TO_FIELD)) {
+            }
+            if(params.containsKey(PUBLISH_DATE_TO_FIELD)) {
+                if(params.get(PUBLISH_DATE_TO_FIELD).size()>1) {
+                    //TODO Throw Error
+                } else {
                     criteria = Criteria.where(PUBLISH_DATE_FIELD)
                             .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_FIELD))));
                 }
             }
         }
+
 
         return criteria;
     }
