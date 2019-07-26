@@ -18,12 +18,18 @@ import {PatchSettings} from "@ofActions/settings.actions";
 import {emptyAppState4Test} from "@tests/helpers";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
+import {authInitialState} from "@ofStates/authentication.state";
+import {configInitialState} from "@ofStates/config.state";
 
 describe('TextSettingComponent', () => {
     let component: TextSettingComponent;
     let fixture: ComponentFixture<TextSettingComponent>;
     let mockStore: SpyObj<Store<AppState>>;
-    let emptyAppState: AppState = emptyAppState4Test;
+    let emptyAppState: AppState = {
+        ...emptyAppState4Test,
+        authentication: {...authInitialState, identifier: 'test'},
+        config: configInitialState
+    };
     beforeEach(async(() => {
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
 

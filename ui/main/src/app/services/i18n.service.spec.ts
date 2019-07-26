@@ -16,11 +16,15 @@ import {TranslateModule} from "@ngx-translate/core";
 import {emptyAppState4Test} from "@tests/helpers";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
+import {configInitialState} from "@ofStates/config.state";
 
 describe('I18nService', () => {
 
     let mockStore: SpyObj<Store<AppState>>;
-    let emptyAppState: AppState = emptyAppState4Test;
+    let emptyAppState: AppState = {
+        ...emptyAppState4Test,
+        config: configInitialState
+    };
 
     beforeEach(() => {
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
