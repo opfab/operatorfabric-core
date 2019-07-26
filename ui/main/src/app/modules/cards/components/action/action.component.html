@@ -1,4 +1,4 @@
-<ng-template #testPopContent>This is '{{action.label}}'<br>
+<ng-template translate [translateParams]="action.label.parameters" #testPopContent>This is '{{i18nPrefix+action.label.key}}'<br>
     <button type="button" class="btn btn-outline-secondary" (click)="submit()" >ok</button>
 </ng-template>
 <ng-template #testPopTitle>Action !</ng-template>

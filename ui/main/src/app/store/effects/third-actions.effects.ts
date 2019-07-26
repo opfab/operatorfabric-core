@@ -4,7 +4,7 @@ import {AppState} from "@ofStore/index";
 import {Store} from "@ngrx/store";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {of} from "rxjs";
-import {catchError, map, switchMap, tap} from "rxjs/operators";
+import {catchError, map, mergeMap, tap} from "rxjs/operators";
 import {
     LoadThirdActionFailure,
     LoadThirdActions,
@@ -28,7 +28,7 @@ export class ThirdActionsEffects {
         .pipe(
             ofType(ThirdActionTypes.LoadThirdActions),
             tap(() => console.log('try to load third actions')),
-            switchMap((loadOrder: LoadThirdActions) => {
+            mergeMap((loadOrder: LoadThirdActions) => {
                 const lightCard: LightCard = loadOrder.payload.card;
                 return this.thirdService.fetchActionsFromLightCard(lightCard)
                     .pipe(

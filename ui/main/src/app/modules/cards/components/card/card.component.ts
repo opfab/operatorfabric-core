@@ -43,7 +43,6 @@ export class CardComponent implements OnInit {
     }
 
     public select() {
-        this.store.dispatch(new LoadThirdActions({card:this.lightCard}));
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
         this.actions=this.store.pipe(select(selectThirdAction));
 
@@ -59,7 +58,7 @@ export class CardComponent implements OnInit {
         // use configuration to compute date
             .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
-
+        this.store.dispatch(new LoadThirdActions({card:this.lightCard}));
     }
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {
