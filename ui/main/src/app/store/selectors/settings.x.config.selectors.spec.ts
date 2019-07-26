@@ -9,21 +9,10 @@ import {AppState} from "@ofStore/index";
 import {settingsInitialState, SettingsState} from "@ofStates/settings.state";
 import {configInitialState, ConfigState} from "@ofStates/config.state";
 import {buildSettingsOrConfigSelector, selectMergedSettings} from "@ofSelectors/settings.x.config.selectors";
+import {emptyAppState4Test} from "@tests/helpers";
 
 describe('SettingsXConfigSelectors', () => {
-    let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: null,
-        card: null,
-        menu: null,
-        config: null,
-        settings: null,
-        archive: null,
-        time:null,
-        thirdActions:null
-    }
+    let emptyAppState: AppState = emptyAppState4Test;
 
     let loadedSettingsState: SettingsState = {
         ...settingsInitialState,

@@ -7,7 +7,7 @@
 
 import {AppState} from "@ofStore/index";
 import {cardInitialState, CardState} from "@ofStates/card.state";
-import {getOneRandomCard} from "@tests/helpers";
+import {emptyAppState4Test , getOneRandomCard} from "@tests/helpers";
 import {
     selectCardState,
     selectCardStateSelected,
@@ -15,20 +15,11 @@ import {
     selectCardStateSelectedId
 } from "@ofSelectors/card.selectors";
 
+
+
+
 describe('ConfigSelectors', () => {
-    let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: null,
-        card: null,
-        menu: null,
-        config: null,
-        settings: null,
-        archive: null,
-        time:null,
-        thirdActions:null
-    }
+    let emptyAppState: AppState = emptyAppState4Test;
 
     let selectedState: CardState = {
         ...cardInitialState,

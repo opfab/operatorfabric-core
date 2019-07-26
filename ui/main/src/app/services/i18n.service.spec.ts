@@ -13,26 +13,14 @@ import {of} from "rxjs";
 import {settingsInitialState} from "@ofStates/settings.state";
 import {map} from "rxjs/operators";
 import {TranslateModule} from "@ngx-translate/core";
-import {configInitialState} from "@ofStates/config.state";
+import {emptyAppState4Test} from "@tests/helpers";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 
 describe('I18nService', () => {
 
     let mockStore: SpyObj<Store<AppState>>;
-    let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: null,
-        card: null,
-        menu: null,
-        config: configInitialState,
-        settings: null,
-        archive: null,
-        time:null,
-        thirdActions:null
-    }
+    let emptyAppState: AppState = emptyAppState4Test;
 
     beforeEach(() => {
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);

@@ -14,11 +14,10 @@ import {AppState} from "@ofStore/index";
 import {of, zip} from "rxjs";
 import {settingsInitialState} from "@ofStates/settings.state";
 import {map} from "rxjs/operators";
-import {configInitialState} from "@ofStates/config.state";
-import {authInitialState} from "@ofStates/authentication.state";
 import {PatchSettings} from "@ofActions/settings.actions";
 import {TranslateModule, TranslateService} from "@ngx-translate/core";
 import {I18n} from "@ofModel/i18n.model";
+import {emptyAppState4Test} from "@tests/helpers";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 
@@ -27,19 +26,7 @@ describe('ListSettingComponent', () => {
     let fixture: ComponentFixture<ListSettingComponent>;
     let mockStore: SpyObj<Store<AppState>>;
     let translateService: TranslateService;
-    let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: {...authInitialState, identifier: 'test'},
-        card: null,
-        menu: null,
-        config: configInitialState,
-        settings: null,
-        archive: null,
-        time:null,
-        thirdActions:null
-    }
+    let emptyAppState: AppState = emptyAppState4Test;
     beforeEach(async(() => {
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
 
@@ -74,7 +61,7 @@ describe('ListSettingComponent', () => {
         });
         fixture = TestBed.createComponent(ListSettingComponent);
         component = fixture.componentInstance;
-        translateService.setTranslation('en',{neww:{value:'v1',value2:'v2'}});
+        translateService.setTranslation('en', {neww: {value: 'v1', value2: 'v2'}});
         translateService.use('en');
     });
 
@@ -98,8 +85,8 @@ describe('ListSettingComponent', () => {
         fixture.detectChanges();
         expect(component.preparedList[0].value).toEqual('new-value');
         expect(component.preparedList[1].value).toEqual('new-value2');
-        zip(component.preparedList[0].label,component.preparedList[1].label)
-            .subscribe(([l1,l2])=>{
+        zip(component.preparedList[0].label, component.preparedList[1].label)
+            .subscribe(([l1, l2]) => {
                 expect(l1).toEqual('new-value');
                 expect(l2).toEqual('new-value2');
                 done();
@@ -108,12 +95,12 @@ describe('ListSettingComponent', () => {
 
     it('should compute correct value/label list : {value:string,label:string}', (done) => {
         component.settingPath = 'test';
-        component.values = [{value:'0',label:'new-value'}, {value:'1',label:'new-value2'}];
+        component.values = [{value: '0', label: 'new-value'}, {value: '1', label: 'new-value2'}];
         fixture.detectChanges();
         expect(component.preparedList[0].value).toEqual('0');
         expect(component.preparedList[1].value).toEqual('1');
-        zip(component.preparedList[0].label,component.preparedList[1].label)
-            .subscribe(([l1,l2])=>{
+        zip(component.preparedList[0].label, component.preparedList[1].label)
+            .subscribe(([l1, l2]) => {
                 expect(l1).toEqual('new-value');
                 expect(l2).toEqual('new-value2');
                 done();
@@ -122,12 +109,12 @@ describe('ListSettingComponent', () => {
 
     it('should compute correct value/label list : {value:string,label:I18n}', (done) => {
         component.settingPath = 'test';
-        component.values = [{value:'0',label:new I18n('neww.value')}, {value:'1',label:new I18n('neww.value2')}];
+        component.values = [{value: '0', label: new I18n('neww.value')}, {value: '1', label: new I18n('neww.value2')}];
         fixture.detectChanges();
         expect(component.preparedList[0].value).toEqual('0');
         expect(component.preparedList[1].value).toEqual('1');
-        zip(component.preparedList[0].label,component.preparedList[1].label)
-            .subscribe(([l1,l2])=>{
+        zip(component.preparedList[0].label, component.preparedList[1].label)
+            .subscribe(([l1, l2]) => {
                 expect(l1).toEqual('v1');
                 expect(l2).toEqual('v2');
                 done();

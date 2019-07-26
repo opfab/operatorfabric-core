@@ -13,39 +13,26 @@ import {AppState} from "@ofStore/index";
 import {of} from "rxjs";
 import {settingsInitialState} from "@ofStates/settings.state";
 import {map} from "rxjs/operators";
-import {configInitialState} from "@ofStates/config.state";
-import {authInitialState} from "@ofStates/authentication.state";
 import {PatchSettings} from "@ofActions/settings.actions";
 import {EmailSettingComponent} from "./email-setting.component";
+import {emptyAppState4Test} from "@tests/helpers";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 
 describe('EmailSettingComponent', () => {
     let component: EmailSettingComponent;
     let fixture: ComponentFixture<EmailSettingComponent>;
-    let mockStore:SpyObj<Store<AppState>>;
-    let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: {...authInitialState, identifier: 'test'},
-        card: null,
-        menu: null,
-        config: configInitialState,
-        settings: null,
-        archive: null,
-        time: null,
-        thirdAction:null
-    }
+    let mockStore: SpyObj<Store<AppState>>;
+    let emptyAppState: AppState = emptyAppState4Test;
     beforeEach(async(() => {
-    const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
+        const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
 
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
                 ReactiveFormsModule,
             ],
-            providers:[{provide: Store, useValue: storeSpy}],
+            providers: [{provide: Store, useValue: storeSpy}],
             declarations: [EmailSettingComponent]
         })
             .compileComponents();
@@ -53,7 +40,7 @@ describe('EmailSettingComponent', () => {
 
     beforeEach(() => {
         mockStore = TestBed.get(Store);
-        mockStore.select.and.callFake(selector=>{
+        mockStore.select.and.callFake(selector => {
             return of({
                 ...emptyAppState, settings: {
                     ...settingsInitialState,
@@ -80,7 +67,7 @@ describe('EmailSettingComponent', () => {
         component.settingPath = 'test';
         fixture.detectChanges();
         expect(component).toBeTruthy();
-        setTimeout(()=>{
+        setTimeout(() => {
             expect(component.form.get('setting').value).toEqual('old.adress@test.org');
             done();
         });
@@ -91,13 +78,13 @@ describe('EmailSettingComponent', () => {
         // const settingInput = fixture.debugElement.queryAll(By.css('input'))[0];
         // settingInput.nativeElement.value = 'new-value';
         component.form.get('setting').setValue('new.adress@test.org');
-        setTimeout(()=> {
+        setTimeout(() => {
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
-            const settings = {login:'test'};
+            const settings = {login: 'test'};
             settings[component.settingPath] = 'new.adress@test.org';
             expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
             done();
-        },1000);
+        }, 1000);
 
     });
 
@@ -108,10 +95,10 @@ describe('EmailSettingComponent', () => {
         // const settingInput = fixture.debugElement.queryAll(By.css('input'))[0];
         // settingInput.nativeElement.value = 'new-value';
         component.form.get('setting').setValue('');
-        setTimeout(()=> {
+        setTimeout(() => {
             expect(mockStore.dispatch).toHaveBeenCalledTimes(0);
             done();
-        },1000);
+        }, 1000);
 
     });
 
@@ -120,11 +107,11 @@ describe('EmailSettingComponent', () => {
         component.pattern = '.+@test.org';
         fixture.detectChanges();
         component.form.get('setting').setValue('john.doe@dummy.org');
-        setTimeout(()=> {
+        setTimeout(() => {
             expect(component.form.valid).toBeFalsy();
             expect(mockStore.dispatch).toHaveBeenCalledTimes(0);
             done();
-        },1000);
+        }, 1000);
 
     });
 
@@ -133,14 +120,14 @@ describe('EmailSettingComponent', () => {
         component.pattern = '.+@test.org';
         fixture.detectChanges();
         component.form.get('setting').setValue('john.doe@test.org');
-        setTimeout(()=> {
+        setTimeout(() => {
             expect(component.form.valid).toBeTruthy();
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
-            const settings = {login:'test'};
+            const settings = {login: 'test'};
             settings[component.settingPath] = 'john.doe@test.org';
             expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
             done();
-        },1000);
+        }, 1000);
 
     });
 });
