@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Action} from "@ofModel/thirds.model";
+import {I18n} from "@ofModel/i18n.model";
 
 @Component({
   selector: 'of-action-list',
@@ -8,8 +9,8 @@ import {Action} from "@ofModel/thirds.model";
 })
 export class ActionListComponent implements OnInit {
 
-  @Input()public actions:Array<[string, Action]>
-  
+  @Input()public actions:Action[];
+  @Input() readonly i18nPrefix:I18n;
   constructor() { }
 
   ngOnInit() {

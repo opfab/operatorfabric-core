@@ -1,4 +1,3 @@
-<br>
 <ng-template #testPopContent>This is '{{action.label}}'<br>
     <button type="button" class="btn btn-outline-secondary" (click)="submit()" >ok</button>
 </ng-template>
@@ -6,6 +5,8 @@
 <button type="button"
         class="btn btn-primary btn-sm mr-2"
         placement="auto"
+        translate
+        [translateParams]="action.label.parameters"
         [ngbPopover]="testPopContent"
         [popoverTitle]="testPopTitle"
-        >Click</button>
+        >{{i18nPrefix+action.label.key}}</button>

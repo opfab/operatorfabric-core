@@ -1,1 +1,3 @@
-<of-action *ngFor="let action of actions" [action]="action[1]"></of-action>
+<div>
+    <of-action *ngFor="let action of actions" [action]="action"  [i18nPrefix]="i18nPrefix" ></of-action>
+</div>

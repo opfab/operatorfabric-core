@@ -9,15 +9,15 @@ import {Component, Input, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {Store} from '@ngrx/store';
+import {Store,select} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
 import {Action as ThirdAction} from "@ofModel/thirds.model";
 import {Observable} from "rxjs";
-import {selectThirdActionFromCard} from "@ofSelectors/third-action.selectors";
+import {selectThirdAction} from "@ofSelectors/third-action.selectors";
 import {LoadThirdActions} from "@ofActions/third-action.actions";
 
 @Component({
@@ -30,7 +30,7 @@ export class CardComponent implements OnInit {
     @Input() public open: boolean = false;
     @Input() public lightCard: LightCard;
     currentPath: any;
-    private _i18nPrefix: string;
+    protected _i18nPrefix: string;
     dateToDisplay: string;
     actions: Observable<Array<ThirdAction>>;
 
@@ -45,7 +45,7 @@ export class CardComponent implements OnInit {
     public select() {
         this.store.dispatch(new LoadThirdActions({card:this.lightCard}));
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
-        this.actions=this.store.select(selectThirdActionFromCard);
+        this.actions=this.store.pipe(select(selectThirdAction));
 
     }
 

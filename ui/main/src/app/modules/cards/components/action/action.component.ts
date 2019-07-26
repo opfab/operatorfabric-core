@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Action} from "@ofModel/thirds.model";
+import {I18nService} from "@ofServices/i18n.service";
+import {I18n} from "@ofModel/i18n.model";
 
 @Component({
   selector: 'of-action',
@@ -10,7 +12,8 @@ import {Action} from "@ofModel/thirds.model";
 export class ActionComponent implements OnInit {
 
   @Input() readonly action:Action;
-  constructor(private httpClient: HttpClient) { }
+  @Input() readonly i18nPrefix:I18n;
+  constructor(private httpClient: HttpClient, private i18n: I18nService) { }
 
   ngOnInit() {
   }
