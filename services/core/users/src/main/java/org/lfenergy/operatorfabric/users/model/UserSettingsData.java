@@ -26,6 +26,8 @@ public class UserSettingsData implements UserSettings {
     @Singular("defaultTag")
     private Set<String> defaultTagsSet;
 
+    private TimeLineFormats timeLineFormats;
+
     public UserSettingsData(UserSettings settings) {
         this.login = settings.getLogin();
         this.description = settings.getDescription();
@@ -39,6 +41,8 @@ public class UserSettingsData implements UserSettings {
         else
             this.defaultTagsSet = null;
         this.email = settings.getEmail();
+        if(settings.getTimeLineFormats()!=null)
+            this.timeLineFormats = ((TimeLineFormatsData)settings.getTimeLineFormats()).copy();
     }
 
     public Set<String> getDefaultTagsSet() {

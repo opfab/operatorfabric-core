@@ -70,7 +70,58 @@ definitions:
     example:
       name: Wanda
       description: They were not as successful in Fierce Creatures.
-
+  TimeLineFormats:
+    type: object
+    description: Timeline rendered date / time formats
+    properties:
+      dateInsideTooltipsWeek:
+        type: string
+        description: format
+      dateInsideTooltipsMonth:
+        type: string
+        description: format
+      dateOnDay:
+        type: string
+        description: format
+      dateOnWeek:
+        type: string
+        description: format
+      dateOnMonth:
+        type: string
+        description: format
+      dateOnYear:
+        type: string
+        description: format
+      titleDateInsideTooltips:
+        type: string
+        description: format
+      titleHourInsideTooltips:
+        type: string
+        description: format
+      dateOnDayNewYear:
+        type: string
+        description: format
+      realTimeBarFormat:
+        type: string
+        description: format
+      dateSimplifliedOnDayNewYear:
+        type: string
+        description: format
+      dateSimplifliedOnDay:
+        type: string
+        description: format
+      hoursOnly:
+        type: string
+        description: format
+      minutesOnly:
+        type: string
+        description: format
+      secondedsOnly:
+        type: string
+        description: format
+      weekNumberOnly:
+        type: string
+        description: format
   UserSettings:
     type: object
     description: User associated settings. Note that the current supported locales are en and fr. Date and time formats use Moment.js formats.
@@ -105,6 +156,8 @@ definitions:
         items:
           type: string
           uniqueItems: true
+      timeLineFormats:
+        $ref: '#/definitions/TimeLineFormats'
     required:
       - login
     example:
