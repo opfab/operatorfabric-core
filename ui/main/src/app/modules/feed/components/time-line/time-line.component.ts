@@ -219,12 +219,12 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             animations: false,
             showGridLines: true,
             realTimeBar: true,
-            centeredOnTicks: true,
-            clusterTicksToTicks: true,
         };
         this.confZoom = [{
             startDomain: startDomain.valueOf(),
             endDomain: endDomain.valueOf(),
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
             buttonTitle: 'W',
             forwardConf: forwardWeekConf,
             backwardConf: forwardWeekConf,
@@ -235,6 +235,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         {
             startDomain: startDomain4.valueOf(),
             endDomain: endDomain4.valueOf(),
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
             buttonTitle: '7D',
             forwardConf: forwardDayConf,
             ticksConf: ticks4HoursConf,
@@ -244,6 +246,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         {
             startDomain: startDomain2.valueOf(),
             endDomain: endDomain2.valueOf(),
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
             buttonTitle: 'M',
             forwardConf: forwardMonthConf,
             ticksConf: ticksDayConf,
@@ -255,6 +259,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         {
             startDomain: startDomain3.valueOf(),
             endDomain: endDomain3.valueOf(),
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
             buttonTitle: 'Y',
             forwardConf: forwardYearConf,
             ticksConf: ticksHalfMonthConf,

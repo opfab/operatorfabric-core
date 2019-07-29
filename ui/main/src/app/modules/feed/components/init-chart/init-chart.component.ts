@@ -259,12 +259,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
       if (this.conf.realTimeBar) {
         this.realTimeBar = true;
       }
-      if (this.conf.centeredOnTicks) {
-        this.centeredOnTicks = true;
-      }
-      if (this.conf.clusterTicksToTicks) {
-        this.clusterTicksToTicks = true;
-      }
       if (this.conf.circleDiameter) {
         this.circleDiameter = this.conf.circleDiameter;
       }
@@ -318,6 +312,12 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * @param conf
    */
   readZoomConf(conf: any): void {
+    if (conf.centeredOnTicks) {
+      this.centeredOnTicks = true;
+    }
+    if (conf.clusterTicksToTicks) {
+      this.clusterTicksToTicks = true;
+    }
     if (conf.followClockTick) {
       this.followClockTick = true;
     }
