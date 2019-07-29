@@ -35,6 +35,7 @@ export class TimeService {
     private currentTimeReference: TimeReference=neutralTimeReference;
     private beatDurationInMilliseconds: number;
     private timeAtLastHeartBeat: Moment;
+    private timeLineFormats: any;
 
     constructor(private store: Store<AppState>) {
         this.initializeTimeFormat();
@@ -54,6 +55,26 @@ export class TimeService {
             .subscribe(next => this.dateFormat = next);
         this.store.select(buildSettingsOrConfigSelector('dateTimeFormat'))
             .subscribe(next => this.dateTimeFormat = next);
+        this.store.select(buildSettingsOrConfigSelector('timeLineFormats',
+            {
+                dateInsideTooltipsWeek: "ddd DD MMM HH",
+                dateInsideTooltipsMonth: "ddd DD MMM YYYY",
+                dateOnDay: "ddd DD MMM",
+                dateOnWeek: "DD/MM/YY",
+                dateOnMonth: "MMM YY",
+                dateOnYear: "YYYY",
+                titleDateInsideTooltips: "DD/MM",
+                titleHourInsideTooltips: "HH:mm",
+                dateOnDayNewYear: "DD MMM YY",
+                realTimeBarFormat: "DD/MM/YY HH:mm",
+                dateSimplifliedOnDayNewYear: "D MMM YY",
+                dateSimplifliedOnDay: "D MMM",
+                hoursOnly: "HH",
+                minutesOnly: "mm",
+                secondedsOnly: "ss",
+                weekNumberOnly: "ww"
+            }))
+            .subscribe(next => this.timeLineFormats = next);
     }
 
 
@@ -195,6 +216,20 @@ export class TimeService {
 
     private static isMoment(arg: Date | number | Moment): arg is Moment { //magic happens here
         return (<Moment>arg).format !== undefined && (<Moment>arg).toISOString !== undefined;
+    }
+
+    public predefinedFormat(date: Date, formatKey:string);
+    public predefinedFormat(timestamp: number, formatKey:string);
+    public predefinedFormat(m: Moment, formatKey:string);
+    public predefinedFormat(arg:Date | number | Moment, formatKey:string){
+        let m = null;
+        if (!arg)
+            return '';
+        if (isMoment(arg))
+            m = arg;
+        else
+            m = moment(arg);
+        return m.format(this.timeLineFormats[formatKey]);
     }
 
 

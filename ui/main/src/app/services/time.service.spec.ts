@@ -75,6 +75,17 @@ describe('TimeService', () => {
 expect(service.formatDate(moment(new Date(1559721634989)))).toEqual('06/05/2019');
     });
 
+    it('should format timestamp, date and moment to predefined timeline formats', () => {
+        moment.locale('en');
+        expect(service).toBeTruthy();
+        expect(service.predefinedFormat(1559721634989,'dateOnWeek')).toEqual('05/06/19');
+        expect(service.predefinedFormat(new Date(1559721634989),'dateOnWeek')).toEqual('05/06/19');
+        expect(service.predefinedFormat(moment(new Date(1559721634989)),'dateOnWeek')).toEqual('05/06/19');
+        expect(service.predefinedFormat(1559721634989,'realTimeBarFormat')).toEqual('05/06/19 10:00');
+        expect(service.predefinedFormat(new Date(1559721634989),'realTimeBarFormat')).toEqual('05/06/19 10:00');
+        expect(service.predefinedFormat(moment(new Date(1559721634989)),'realTimeBarFormat')).toEqual('05/06/19 10:00');
+    });
+
 
     it('should return now given as argument when compute the correct time for a X1 virtual time speed',()=>{
         const testedNow = moment();
