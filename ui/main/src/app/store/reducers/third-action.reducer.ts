@@ -45,6 +45,7 @@ export function thirdActionHolderReducer(state=initialThirdActionHolderState,
         case ThirdActionTypes.LoadThirdActionFailure:{
             return {
                 ...state,
+                selectedThirdActionHolderId: '',
                 error:action.payload.error.message
             }
         }
