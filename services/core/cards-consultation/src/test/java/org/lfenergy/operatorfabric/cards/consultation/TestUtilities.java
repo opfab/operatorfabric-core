@@ -14,6 +14,7 @@ import org.lfenergy.operatorfabric.cards.consultation.model.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
+import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Slf4j
 public class TestUtilities {
@@ -159,6 +161,29 @@ public class TestUtilities {
         archivedCard.setId(UUID.randomUUID().toString());
         archivedCard.setPublishDate(publishDate);
         archivedCard.setShardKey(Math.toIntExact(archivedCard.getStartDate().toEpochMilli() % 24 * 1000));
+    }
+
+    public static boolean checkIfCardActiveInRange(ArchivedCardConsultationData card, Instant rangeStart, Instant rangeEnd) {
+
+        Instant cardStart = card.getStartDate();
+        Instant cardEnd = card.getEndDate();
+
+        boolean result = true;
+
+        if (rangeStart!=null && rangeEnd!=null) {
+            result = (
+                    //Case 1: Card start date is included in query filter range
+                    (cardStart.compareTo(rangeStart)>=0&&cardStart.compareTo(rangeEnd)<=0) ||
+                    //Case 2: Card start date is before start of query filter range
+                    (cardStart.compareTo(rangeStart)<=0&&(cardEnd==null||cardEnd.compareTo(rangeStart)>=0))
+                    );
+        } else if (rangeStart!=null) {
+            result = ((cardEnd==null)||cardEnd.compareTo(rangeStart)>=0);
+        } else if (rangeEnd!=null) {
+            result = cardStart.compareTo(rangeEnd)<=0;
+        }
+
+        return result;
     }
 
 }

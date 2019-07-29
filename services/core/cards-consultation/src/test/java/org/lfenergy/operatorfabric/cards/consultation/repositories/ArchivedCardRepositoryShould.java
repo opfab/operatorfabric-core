@@ -9,7 +9,6 @@ package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -27,13 +26,10 @@ import reactor.test.StepVerifier;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.checkIfCardActiveInRange;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleArchivedCard;
-import static org.lfenergy.operatorfabric.cards.consultation.repositories.ArchivedCardCustomRepositoryImpl.PUBLISH_DATE_FROM_FIELD;
-import static org.lfenergy.operatorfabric.cards.consultation.repositories.ArchivedCardCustomRepositoryImpl.PUBLISH_DATE_TO_FIELD;
 
 /**
  * @author Alexandra Guironnet
@@ -50,6 +46,8 @@ public class ArchivedCardRepositoryShould {
 
     public static final String LOGIN = "admin";
     private static Instant now = Instant.now();
+    private static Instant nowPlusHalf = now.plus(30, ChronoUnit.MINUTES);
+    private static Instant nowMinusHalf = now.minus(30, ChronoUnit.MINUTES);
     private static Instant nowPlusOne = now.plus(1, ChronoUnit.HOURS);
     private static Instant nowPlusTwo = now.plus(2, ChronoUnit.HOURS);
     private static Instant nowPlusThree = now.plus(3, ChronoUnit.HOURS);
@@ -95,17 +93,14 @@ public class ArchivedCardRepositoryShould {
 
         //create later published cards in past
         persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
-        //persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
 
         //create later published cards in future
         persistCard(createSimpleArchivedCard(3, firstPublisher, nowPlusOne, nowPlusOne, nowPlusTwo, LOGIN, "rte", "operator"));
-        //persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN, "rte", "operator"));
 
         //create cards with different publishers
         persistCard(createSimpleArchivedCard(1, secondPublisher, now, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
-        //persistCard(createSimpleArchivedCard(2, secondPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
 
-        persistCard(createSimpleArchivedCard(1, thirdPublisher, nowPlusTwo, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(1, thirdPublisher, nowPlusTwo, now, null, LOGIN, "rte", "operator"));
 
     }
 
@@ -248,4 +243,86 @@ public class ArchivedCardRepositoryShould {
                 .verify();
     }
 
+    @Test void fetchArchivedCardsActiveBetween() {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        //Find cards with an active period that overlaps the [start,end] range (bounds included)
+        Instant start = nowMinusHalf;
+        Instant end = nowPlusHalf;
+
+        params.add("activeFrom", Long.toString(start.toEpochMilli()));
+        params.add("activeTo", Long.toString(end.toEpochMilli()));
+
+        StepVerifier.create(repository.findWithParams(params))
+                .expectNextCount(5)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(repository.findWithParams(params))
+                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,end))
+                .verifyComplete();
+    }
+
+    @Test void fetchArchivedCardsActiveFrom() {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        //Find cards with an active period that is at least partly after start
+        Instant start = nowPlusTwo;
+
+        params.add("activeFrom", Long.toString(start.toEpochMilli()));
+
+        StepVerifier.create(repository.findWithParams(params))
+                .expectNextCount(7)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(repository.findWithParams(params))
+                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,null))
+                .verifyComplete();
+    }
+
+    @Test void fetchArchivedCardsActiveTo() {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        //Find cards with an active period that is at least partly before end
+        Instant end = nowMinusTwo;
+
+        params.add("activeTo", Long.toString(end.toEpochMilli()));
+
+        StepVerifier.create(repository.findWithParams(params))
+                .expectNextCount(6)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(repository.findWithParams(params))
+                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,null,end))
+                .verifyComplete();
+    }
+
+    @Test void fetchArchivedCardsMixParams() {
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        //Regular params
+        params.add("publisher",firstPublisher);
+
+        //Active period
+        Instant start = nowMinusHalf;
+        Instant end = nowPlusHalf;
+        params.add("activeFrom", Long.toString(start.toEpochMilli()));
+        params.add("activeTo", Long.toString(end.toEpochMilli()));
+
+        //Publication date
+        Instant publishTo = now;
+        params.add("publishDateTo",Long.toString(publishTo.toEpochMilli()));
+
+        StepVerifier.create(repository.findWithParams(params))
+                .expectNextCount(4)
+                .expectComplete()
+                .verify();
+
+    }
 }

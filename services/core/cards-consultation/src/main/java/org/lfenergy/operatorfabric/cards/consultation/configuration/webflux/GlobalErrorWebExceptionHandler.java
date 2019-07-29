@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * <p>Configure error handling for routes which match predicate "all"</p>
  * <p>Add logs and forward error data in http response json body unless underlying exception is
- * {@link ApiErrorException}. In this case froward its associated
+ * {@link ApiErrorException}. In this case forward its associated
  * {@link org.lfenergy.operatorfabric.springtools.error.model.ApiError} object</p>
  *
  * @author David Binder

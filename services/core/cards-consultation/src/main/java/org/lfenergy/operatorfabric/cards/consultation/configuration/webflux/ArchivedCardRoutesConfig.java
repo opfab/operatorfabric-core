@@ -42,8 +42,7 @@ public class ArchivedCardRoutesConfig {
                                 .collectList()
                                 .flatMap(
                                         archivedCards-> ok().contentType(MediaType.APPLICATION_JSON)
-                                                .body(fromObject(archivedCards)))
-                        ).switchIfEmpty(notFound().build()); //TODO Does it still work ?
+                                                .body(fromObject(archivedCards))));
     }
 
     private HandlerFunction<ServerResponse> archivedCardGetRoute() {
@@ -55,8 +54,6 @@ public class ArchivedCardRoutesConfig {
     private HandlerFunction<ServerResponse> archivedCardOptionRoute() {
         return request -> ok().build();
     }
-
-    //TODO Return Error if unknown query param
 
     private Mono<MultiValueMap<String, String>> extractParameters(ServerRequest request) {
         return request.bodyToMono(String.class) //TODO What is it for ?
