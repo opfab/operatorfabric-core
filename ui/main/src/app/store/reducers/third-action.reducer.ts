@@ -1,7 +1,9 @@
 import {
     initialThirdActionHolderState,
     initialThirdActionState,
-    ThirdActionAdapter, thirdActionHolderAdapter, ThirdActionHolderState,
+    ThirdActionAdapter,
+    thirdActionHolderAdapter,
+    ThirdActionHolderState,
     ThirdActionState
 } from "@ofStates/third-action.state";
 import {ThirdActionActions, ThirdActionTypes} from "@ofActions/third-action.actions";
@@ -24,9 +26,24 @@ export function thirdActionHolderReducer(state=initialThirdActionHolderState,
     switch (action.type) {
         case ThirdActionTypes.LoadThirdActionSuccess:{
             const holder=action.payload.holder;
+            const holderId = `${holder.publisher}_${holder.processInstanceId}_${holder.version}_${holder.stateName}`;
             return {
                 ...thirdActionHolderAdapter.upsertOne(holder, state),
-                selectedThirdActionHolderId:`${holder.publisher}_${holder.processInstanceId}_${holder.version}_${holder.stateName}`,
+                selectedThirdActionHolderId: holderId,
+            }
+        }
+        case ThirdActionTypes.FetchCurrentThirdAction:{
+            const card = action.paydoad.card;
+            const holderId = `${card.publisher}_${card.processId}_${card.publisherVersion}_${card.state}`;
+            return {
+                ...state,
+                selectedThirdActionHolderId:holderId
+            }
+        }
+        case ThirdActionTypes.LoadThirdActionFailure:{
+            return {
+                ...state,
+                error:action.payload.error.message
             }
         }
         default:{

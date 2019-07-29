@@ -18,7 +18,7 @@ import {TimeService} from "@ofServices/time.service";
 import {Action as ThirdAction} from "@ofModel/thirds.model";
 import {Observable} from "rxjs";
 import {selectThirdAction} from "@ofSelectors/third-action.selectors";
-import {LoadThirdActions} from "@ofActions/third-action.actions";
+import {FetchCurrentThirdAction, LoadThirdActions} from "@ofActions/third-action.actions";
 
 @Component({
     selector: 'of-card',
@@ -44,8 +44,8 @@ export class CardComponent implements OnInit {
 
     public select() {
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
+        this.store.dispatch(new FetchCurrentThirdAction({card:this.lightCard}));
         this.actions=this.store.pipe(select(selectThirdAction));
-
     }
 
     ngOnInit() {

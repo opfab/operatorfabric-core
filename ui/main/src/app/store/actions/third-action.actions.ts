@@ -8,7 +8,8 @@ export enum ThirdActionTypes {
     LoadThirdActionFailure = '[Action] Failed to load Third Actions',
     UpdateOneThirdAction = '[Action] Fetch One Third Action',
     UpdateOneThirdActionSuccess = '[Action] Fetch successfully one Third Action',
-    UpdateOneThirdActionFailure = '[Action] Failed to fetch one Third Action'
+    UpdateOneThirdActionFailure = '[Action] Failed to fetch one Third Action',
+    FetchCurrentThirdAction = '[Action] try to select Third Action Holder for current card if exists'
 
 }
 
@@ -57,10 +58,19 @@ export class UpdateOneThirdActionFailure implements Action {
     }
 }
 
+export class FetchCurrentThirdAction implements Action {
+    readonly  type = ThirdActionTypes.FetchCurrentThirdAction;
+
+    constructor(public paydoad: {card:LightCard}){
+    }
+
+}
+
 export type ThirdActionActions =
     LoadThirdActions
     | LoadThirdActionSuccess
     | LoadThirdActionFailure
     | UpdateOneThirdAction
     | UpdateOneThirdActionSuccess
-    | UpdateOneThirdActionFailure;
+    | UpdateOneThirdActionFailure
+    | FetchCurrentThirdAction;

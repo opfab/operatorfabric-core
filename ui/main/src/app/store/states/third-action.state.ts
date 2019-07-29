@@ -3,7 +3,6 @@ import {createEntityAdapter, EntityAdapter, EntityState} from "@ngrx/entity";
 
 export interface ThirdActionState extends EntityState<ThirdAction> {
     selectedThirdActionId: string;
-    thirdActions: ThirdAction[];
     error: string;
 }
 
@@ -14,7 +13,6 @@ export const ThirdActionAdapter: EntityAdapter<ThirdAction> =
 
 export const initialThirdActionState: ThirdActionState = ThirdActionAdapter.getInitialState({
     selectedThirdActionId: null,
-    thirdActions: [],
     error: ''
 });
 
