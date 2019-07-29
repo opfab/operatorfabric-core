@@ -48,8 +48,8 @@ export class ThirdsService {
         }
         return this.fetchThird(thirdName, version)
             .pipe(
-                tap(t => Object.setPrototypeOf(t, Third.prototype)),
-                tap(t => this.thirdCache.set(key, t))
+                tap(t => { if(t) Object.setPrototypeOf(t, Third.prototype)} ),
+                tap(t => { if (t) this.thirdCache.set(key, t)} )
             );
     }
 
