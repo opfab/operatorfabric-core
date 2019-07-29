@@ -30,6 +30,7 @@ export function thirdActionHolderReducer(state=initialThirdActionHolderState,
             return {
                 ...thirdActionHolderAdapter.upsertOne(holder, state),
                 selectedThirdActionHolderId: holderId,
+                error:null
             }
         }
         case ThirdActionTypes.FetchCurrentThirdAction:{
@@ -37,7 +38,8 @@ export function thirdActionHolderReducer(state=initialThirdActionHolderState,
             const holderId = `${card.publisher}_${card.processId}_${card.publisherVersion}_${card.state}`;
             return {
                 ...state,
-                selectedThirdActionHolderId:holderId
+                selectedThirdActionHolderId:holderId,
+                error:null
             }
         }
         case ThirdActionTypes.LoadThirdActionFailure:{
