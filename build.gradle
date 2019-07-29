@@ -108,7 +108,7 @@ licenseReport {
 
 asciidoctor {
     sources {
-        include 'architecture/index.adoc','start/index.adoc','user_guide/index.adoc'
+        include 'architecture/index.adoc','start/index.adoc','user_guide/index.adoc','developper_guide/index.adoc'
     }
     resources {
         from('src/docs/asciidoc') {
