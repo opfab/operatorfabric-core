@@ -477,7 +477,7 @@ It's possible for test purposes to use the swagger documentation of the Operator
 Example :
 ....
 cd $BUNDLE_FOLDER
-curl -X POST "http://localhost:2100/thirds/TEST" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "file=@bundle-test.tar.gz;type=application/gzip"
+curl -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "file=@bundle-test.tar.gz;type=application/gzip"
 ....
 
 Where:

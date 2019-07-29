@@ -507,10 +507,10 @@ tar -czvf bundle-test.tar.gz config.json css/ template/ i18n/
 ==== Load a card format configuration
 
 Now we can upload our bundle to the OperatorFabric server using link:http://localhost:2100/swagger-ui.html#/thirds/uploadBundle[the `tryout` of the Swagger API description of the bundle upload action], your preferred REST client or using cURL.
-In summary, the upload method is a POST request to `http://localhost:2100/thirds/TSO1` with an attached file (our bundle). As you can see we are using the name of the `TSO1` to upload our bundle on the local operatorFabric.
+In summary, the upload method is a POST request to `http://localhost:2100/thirds` with an attached file (our bundle). As you can see we are using the name of the `TSO1` to upload our bundle on the local operatorFabric.
 we could use the following command:
 ....
-curl -X POST "http://localhost:2100/thirds/TSO1" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "file=@bundle.tar.gz;type=application/gzip"
+curl -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "file=@bundle.tar.gz;type=application/gzip"
 ....
 
 The server should send us a 200 http status along with a summary of our `config.json file` such as:
