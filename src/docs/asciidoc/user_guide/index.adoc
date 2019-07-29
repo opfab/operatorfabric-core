@@ -6,7 +6,7 @@
 
 = OperatorFabric User Guide
 :author: David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: 0.6.1.RELEASE
+:revnumber: 0.7.1.SNAPSHOT
 :revdate: July 8, 2019
 :imagesdir: images
 :sectnums:
