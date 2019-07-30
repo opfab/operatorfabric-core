@@ -97,6 +97,22 @@ export class Action {
 
 }
 
+export const emptyAction:Action = new Action(null,
+    null
+    ,false,
+    '',
+    '',
+    null,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    '',
+    ''
+);
+
 export class ActionStatus{
     constructor(        readonly label: I18n,
                         readonly buttonStyle: string = '',
