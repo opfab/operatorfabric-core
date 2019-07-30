@@ -24,7 +24,7 @@ import {selectIdentifier} from "@ofSelectors/authentication.selectors";
 export class BaseSettingComponent implements OnInit, OnDestroy {
 
     @Input() public settingPath: string;
-    @Input() public messagePlaceOlder: string;
+    @Input() public messagePlaceholder: string;
     @Input() public requiredField: boolean;
     private ngUnsubscribe$ = new Subject<void>();
     protected setting$;
