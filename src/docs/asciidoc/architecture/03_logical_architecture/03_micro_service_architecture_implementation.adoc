@@ -6,4 +6,4 @@
 
 ifndef::imagesdir[:imagesdir: ../images]
 
-=== Business Target Architecture
+=== Micro-Service Architecture Implementation
