@@ -16,7 +16,7 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
-import {Action, Third, ThirdActionHolder, ThirdMenu} from "@ofModel/thirds.model";
+import {Action, Third, ThirdMenu} from "@ofModel/thirds.model";
 import {Card} from "@ofModel/card.model";
 
 @Injectable()
@@ -218,45 +218,6 @@ export class ThirdsService {
     private translate(): TranslateService {
         return this.$injector.get(TranslateService);
     }
-
-    fetchActionsFromLightCard(card: LightCard): Observable<[Array<Action>, ThirdActionHolder]> {
-        return this.fetchActions(card.publisher,
-            card.process,
-            card.state,
-            card.publisherVersion,
-            card.processId);
-    }
-
-    fetchActions(publisher: string,
-                 process: string,
-                 state: string,
-                 version: string,
-                 processInstanceId: string): Observable<[Array<Action>, ThirdActionHolder]> {
-        return this.fetchActionMap(publisher, process, state,version)
-            .pipe(map((actionDictionary: Map<string, Action>) => {
-                const entries = Array.from(actionDictionary.entries()) as Array<[string, Action]>;
-                // clone action with a key set for id purpose
-                const actionRootKey = `${publisher}_${processInstanceId}_${version}_${state}`;
-                let actionId = [];
-                const thirdActions =
-                    _.map(entries,
-                        ([key, action]: [string, Action]) => {
-                            const actionKey = `${actionRootKey}_${key}`;
-                            actionId.push(actionKey)
-                            return {...action, actionRootKey: actionRootKey, key: actionKey};
-                        }
-                    );
-
-                return [thirdActions, new ThirdActionHolder(publisher,
-                    process,
-                    processInstanceId,
-                    version,
-                    state,
-                    actionId)] as [Array<Action>, ThirdActionHolder];
-
-            }));
-    }
-
 
     fetchActionMapFromLightCard(card:LightCard){
         return this.fetchActionMap(card.publisher,card.process,card.state,card.publisherVersion);

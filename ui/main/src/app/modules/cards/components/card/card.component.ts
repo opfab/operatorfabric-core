@@ -9,19 +9,15 @@ import {Component, Input, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {Store,select} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {map, tap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
-import {Action, Action as ThirdAction} from "@ofModel/thirds.model";
-import {Observable} from "rxjs";
-import {selectThirdAction} from "@ofSelectors/third-action.selectors";
-import {FetchCurrentThirdAction, LoadThirdActions} from "@ofActions/third-action.actions";
+import {Action} from "@ofModel/thirds.model";
 import {ThirdsService} from "@ofServices/thirds.service";
 import {AddThirdActions} from "@ofActions/light-card.actions";
-import {keyframes} from "@angular/animations";
 
 @Component({
     selector: 'of-card',
