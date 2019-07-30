@@ -11,9 +11,15 @@ import {Action, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
-import {LightCardActionTypes, LoadLightCardsExtendedData, LoadLightCardsSuccess} from "@ofActions/light-card.actions";
+import {
+    AddThirdActions,
+    LightCardActionTypes,
+    LoadLightCardsExtendedData,
+    LoadLightCardsSuccess, UpdateALightCard
+} from "@ofActions/light-card.actions";
 import {ThirdsService} from "@ofServices/thirds.service";
 import {tap} from "rxjs/internal/operators/tap";
+import {LightCard} from "@ofModel/light-card.model";
 
 // those effects are unused for the moment
 @Injectable()
@@ -30,21 +36,33 @@ export class LightCardEffects {
     loadById: Observable<Action> = this.actions$
         .pipe(
             ofType<LoadLightCardsSuccess>(LightCardActionTypes.LoadLightCardsSuccess),
-            switchMap((action:LoadLightCardsSuccess)=>
-                    this.thirdService.loadI18nForLightCards(action.payload.lightCards)
-                        .pipe(
-                            tap(test=>console.log(`loaded lightCards:${test}`)),
-                            catchError((err,caught)=>{
-                                console.error(`i18 loading failed for card publishers`);
-                                console.error(err);
-                                return of(false);
-                            })
-                        )),
+            switchMap((action: LoadLightCardsSuccess) =>
+                this.thirdService.loadI18nForLightCards(action.payload.lightCards)
+                    .pipe(
+                        catchError((err, caught) => {
+                            console.error(`i18 loading failed for card publishers`, err);
+                            return of(false);
+                        })
+                    )),
             map(
-                ()=>{
+                () => {
                     return new LoadLightCardsExtendedData();
                 }
             )
+        );
+    @Effect()
+    updateThirdActions: Observable<Action> = this.actions$
+        .pipe(
+            ofType<AddThirdActions>(LightCardActionTypes.AddThirdActions),
+            map((action: AddThirdActions) => {
+                const card = action.payload.card;
+                const actions = action.payload.actions;
+                const updateCard = {
+                    id: card.id,
+                    changes:{actions:actions}
+                }
+                return new UpdateALightCard({card: updateCard});
+            })
         );
 
 }

@@ -7,6 +7,8 @@
 
 import {Action} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
+import {Action as ThirdAction} from '@ofModel/thirds.model';
+import {Update} from "@ngrx/entity";
 
 export enum LightCardActionTypes {
     LoadLightCards = '[LCard] Load',
@@ -20,7 +22,8 @@ export enum LightCardActionTypes {
     UpdatedSubscription = '[LCard] UpdateSubscription',
     HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
     RemoveLightCard = '[LCard] Remove a card',
-    AddThirdActions ='[LCard] Adds some Third Actions to existing card'
+    AddThirdActions ='[LCard] Adds some Third Actions to existing card',
+    UpdateALightCard = '[LCard] Update a Light Card'
 }
 
 // needed by NGRX entities
@@ -94,21 +97,25 @@ export class HandleUnexpectedError implements Action {
     readonly type = LightCardActionTypes.HandleUnexpectedError;
     /* istanbul ignore next */
     constructor(public payload: {error: Error}) {
-
     }
-
-
 }
 
 export class RemoveLightCard implements Action {
-
     readonly  type = LightCardActionTypes.RemoveLightCard;
-
     constructor(public  payload: {cards: string[]}){
-
     }
 }
 
+export class AddThirdActions implements Action {
+    readonly type = LightCardActionTypes.AddThirdActions;
+    constructor(public payload:{card:LightCard,actions:Map<string,ThirdAction>}){}
+
+}
+
+export class UpdateALightCard implements Action{
+    readonly type = LightCardActionTypes.UpdateALightCard;
+    constructor(public payload:{ card: Update<LightCard>}){}
+}
 
 export type LightCardActions =
     LoadLightCards
@@ -120,4 +127,6 @@ export type LightCardActions =
     | UpdatedSubscription
     | HandleUnexpectedError
     | EmptyLightCards
+    | AddThirdActions
+    | UpdateALightCard
     | RemoveLightCard;

@@ -28,8 +28,7 @@ export class LightCard {
         readonly timeSpans?: TimeSpan[],
         readonly process?: string,
         readonly state?: string,
-        readonly action?:Map<string,Action>
-
+        readonly actions?:Map<string,Action>
     ) {
     }
 }

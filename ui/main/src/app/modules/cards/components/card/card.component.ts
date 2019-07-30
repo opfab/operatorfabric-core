@@ -15,11 +15,13 @@ import {map, tap} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
-import {Action as ThirdAction} from "@ofModel/thirds.model";
+import {Action, Action as ThirdAction} from "@ofModel/thirds.model";
 import {Observable} from "rxjs";
 import {selectThirdAction} from "@ofSelectors/third-action.selectors";
 import {FetchCurrentThirdAction, LoadThirdActions} from "@ofActions/third-action.actions";
 import {ThirdsService} from "@ofServices/thirds.service";
+import {AddThirdActions} from "@ofActions/light-card.actions";
+import {keyframes} from "@angular/animations";
 
 @Component({
     selector: 'of-card',
@@ -33,7 +35,6 @@ export class CardComponent implements OnInit {
     currentPath: any;
     protected _i18nPrefix: string;
     dateToDisplay: string;
-    actions: Observable<Array<ThirdAction>>;
 
     /* istanbul ignore next */
     constructor(private router: Router,
@@ -46,19 +47,27 @@ export class CardComponent implements OnInit {
 
     public select() {
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
-        console.log('#################### before setting action in light card');
         if(!this.lightCard.actions){
             this.third.fetchActionMapFromLightCard(this.lightCard)
-                .pipe(tap(elem =>console.error('####################',elem)))
                 .subscribe(actions => {
-                    actions.forEach(function(value,key){this.lightCard.actions.set(key,value)})
+                    const card = this.lightCard;
+                    this.store.dispatch(new AddThirdActions({card,actions}))
                     },
                 error=>console.error(error));
         }
-        console.log('#################### after setting action in light card');
-        this.store.dispatch(new LoadThirdActions({card:this.lightCard}));
-        this.actions=this.store.pipe(select(selectThirdAction));
     }
+
+    transformAction(){
+        const actions = this.lightCard.actions;
+        if(actions){
+            const entries = Array.from(actions.entries())
+            return entries.map<Action>(([key,action]:[string,Action])=>{
+                return {...action,key:key}
+            });
+        }
+            return [];
+    }
+
 
     ngOnInit() {
         this._i18nPrefix = this.lightCard.publisher + '.' + this.lightCard.publisherVersion + '.'

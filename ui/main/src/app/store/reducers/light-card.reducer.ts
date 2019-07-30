@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
+import {LightCardActions, LightCardActionTypes, UpdateALightCard} from '@ofActions/light-card.actions';
 import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
 import {FeedActions, FeedActionTypes} from "@ofActions/feed.actions";
 
@@ -91,6 +91,9 @@ export function reducer(
                 loading: false,
                 filters: action.payload.filters
             };
+        }
+        case LightCardActionTypes.UpdateALightCard:{
+            return LightCardAdapter.updateOne(action.payload.card,state);
         }
 
         default: {
