@@ -23,9 +23,7 @@ export const emptyAppState4Test:AppState = {
     menu: null,
     config: null,
     settings: null,
-    time:null,
-    thirdActions:null,
-    thirdActionHolders:null
+    time:null
 };
 
 export function getRandomMenu(): ThirdMenu[] {

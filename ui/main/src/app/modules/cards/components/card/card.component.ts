@@ -31,7 +31,7 @@ export class CardComponent implements OnInit {
     currentPath: any;
     protected _i18nPrefix: string;
     dateToDisplay: string;
-
+    actionsUrlPath:string;
     /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>,
@@ -75,6 +75,9 @@ export class CardComponent implements OnInit {
         // use configuration to compute date
             .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
+
+        const c=this.lightCard;
+        this.actionsUrlPath = `/publisher/${c.publisher}/process/${c.processId}/states/${c.state}/actions`;
     }
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {

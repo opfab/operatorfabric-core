@@ -13,7 +13,10 @@ export class ActionComponent implements OnInit {
 
   @Input() readonly action:Action;
   @Input() readonly i18nPrefix:I18n;
-  constructor(private httpClient: HttpClient, private i18n: I18nService) { }
+  @Input() readonly actionUrlPath:string;
+  constructor(private httpClient: HttpClient, private i18n: I18nService) {
+
+  }
 
   ngOnInit() {
   }
@@ -22,11 +25,9 @@ export class ActionComponent implements OnInit {
     const protocol = 'http://';
     const domain = 'localhost';
     const port = '8080';
-    const instanceProcessId='TEST_process1';
-    const state = 'firstState';
-    const actionId = 'action1';
-    const resource = `/process/${instanceProcessId}/states/${state}/actions/${actionId}`
-    const url = `${protocol}${domain}:${port}/soapui-mock/test-process`;
+    const actionId = this.action.key;
+    const resource = `${this.actionUrlPath}/${actionId}`
+    const url = `${protocol}${domain}:${port}${resource}`;
 
 this.httpClient.post(url
 ,this.action

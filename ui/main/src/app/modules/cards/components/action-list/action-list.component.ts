@@ -11,6 +11,7 @@ export class ActionListComponent implements OnInit {
 
   @Input()public actions:Action[];
   @Input() readonly i18nPrefix:I18n;
+  @Input() readonly actionsUrlPath:string;
   constructor() { }
 
   ngOnInit() {
