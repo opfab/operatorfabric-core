@@ -19,7 +19,8 @@ export enum LightCardActionTypes {
     AddLightCardFailure = '[LCard] Add Light Card Fail',
     UpdatedSubscription = '[LCard] UpdateSubscription',
     HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
-    RemoveLightCard = '[LCard] Remove a card'
+    RemoveLightCard = '[LCard] Remove a card',
+    AddThirdActions ='[LCard] Adds some Third Actions to existing card'
 }
 
 // needed by NGRX entities

@@ -19,6 +19,7 @@ import {Action as ThirdAction} from "@ofModel/thirds.model";
 import {Observable} from "rxjs";
 import {selectThirdAction} from "@ofSelectors/third-action.selectors";
 import {FetchCurrentThirdAction, LoadThirdActions} from "@ofActions/third-action.actions";
+import {ThirdsService} from "@ofServices/thirds.service";
 
 @Component({
     selector: 'of-card',
@@ -39,11 +40,22 @@ export class CardComponent implements OnInit {
                 private store: Store<AppState>,
                 private translate: TranslateService,
                 private time: TimeService,
+                private third:ThirdsService
     ){
     }
 
     public select() {
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
+        console.log('#################### before setting action in light card');
+        if(!this.lightCard.actions){
+            this.third.fetchActionMapFromLightCard(this.lightCard)
+                .pipe(tap(elem =>console.error('####################',elem)))
+                .subscribe(actions => {
+                    actions.forEach(function(value,key){this.lightCard.actions.set(key,value)})
+                    },
+                error=>console.error(error));
+        }
+        console.log('#################### after setting action in light card');
         this.store.dispatch(new LoadThirdActions({card:this.lightCard}));
         this.actions=this.store.pipe(select(selectThirdAction));
     }

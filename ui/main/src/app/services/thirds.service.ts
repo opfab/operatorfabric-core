@@ -258,7 +258,11 @@ export class ThirdsService {
     }
 
 
-    private fetchActionMap(publisher: string, process: string, state: string, apiVersion?:string) {
+    fetchActionMapFromLightCard(card:LightCard){
+        return this.fetchActionMap(card.publisher,card.process,card.state,card.publisherVersion);
+    }
+
+    fetchActionMap(publisher: string, process: string, state: string, apiVersion?:string) {
 
        let params:HttpParams;
         if(apiVersion) params = new HttpParams().set("apiVersion", apiVersion);
