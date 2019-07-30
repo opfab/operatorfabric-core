@@ -97,22 +97,6 @@ export class Action {
 
 }
 
-export const emptyAction:Action = new Action(null,
-    null
-    ,false,
-    '',
-    '',
-    null,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    '',
-    ''
-);
-
 export class ActionStatus{
     constructor(        readonly label: I18n,
                         readonly buttonStyle: string = '',
@@ -159,15 +143,5 @@ export class ParameterListItem {
         readonly label: I18n,
         readonly value: string,
     ) {
-    }
-}
-
-export class ThirdActionHolder{
-    constructor(readonly publisher: string,
-                readonly processName:string,
-                readonly processInstanceId: string,
-                readonly version:string,
-                readonly stateName: string,
-                readonly actionIds: string[]) {
     }
 }
