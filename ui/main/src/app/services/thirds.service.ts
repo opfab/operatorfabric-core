@@ -16,7 +16,7 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {AppState} from "../store/index";
 import {LightCard} from "../model/light-card.model";
-import {Action, emptyAction, Third, ThirdActionHolder, ThirdMenu} from "@ofModel/thirds.model";
+import {Action, Third, ThirdActionHolder, ThirdMenu} from "@ofModel/thirds.model";
 import {Card} from "@ofModel/card.model";
 
 @Injectable()
@@ -232,42 +232,45 @@ export class ThirdsService {
                  state: string,
                  version: string,
                  processInstanceId: string): Observable<[Array<Action>, ThirdActionHolder]> {
-        const params = new HttpParams().set("apiVersion", version);
-        const op2 = map((actionDictionary: Map<string, Action>) => {
-            const entries = Array.from(actionDictionary.entries()) as Array<[string, Action]>;
-            // clone action with a key set for id purpose
-            const actionRootKey = `${publisher}_${processInstanceId}_${version}_${state}`;
-            let actionId = [];
-            const thirdActions =
-                _.map(entries,
-                    ([key, action]: [string, Action]) => {
-                        const actionKey = `${actionRootKey}_${key}`;
-                        actionId.push(actionKey)
-                        return {...action, actionRootKey: actionRootKey, key: actionKey};
-                    }
-                );
+        return this.fetchActionMap(publisher, process, state,version)
+            .pipe(map((actionDictionary: Map<string, Action>) => {
+                const entries = Array.from(actionDictionary.entries()) as Array<[string, Action]>;
+                // clone action with a key set for id purpose
+                const actionRootKey = `${publisher}_${processInstanceId}_${version}_${state}`;
+                let actionId = [];
+                const thirdActions =
+                    _.map(entries,
+                        ([key, action]: [string, Action]) => {
+                            const actionKey = `${actionRootKey}_${key}`;
+                            actionId.push(actionKey)
+                            return {...action, actionRootKey: actionRootKey, key: actionKey};
+                        }
+                    );
 
-            return [thirdActions, new ThirdActionHolder(publisher,
-                process,
-                processInstanceId,
-                version,
-                state,
-                actionId)] as [Array<Action>, ThirdActionHolder];
+                return [thirdActions, new ThirdActionHolder(publisher,
+                    process,
+                    processInstanceId,
+                    version,
+                    state,
+                    actionId)] as [Array<Action>, ThirdActionHolder];
 
-        });
-        const op1 = map((json:string) => {
-            const obj = JSON.parse(json);
-            return new Map<string, Action>(Object.entries(obj));
-        });
-        const observable = this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`, {
-            params,
-            responseType: 'text'
-        }).pipe(
-            op1,
-            op2);
-        return observable;
+            }));
     }
 
+
+    private fetchActionMap(publisher: string, process: string, state: string, apiVersion?:string) {
+
+       let params:HttpParams;
+        if(apiVersion) params = new HttpParams().set("apiVersion", apiVersion);
+
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`, {
+            params,
+            responseType: 'text'
+        }).pipe(map((json: string) => {
+            const obj = JSON.parse(json);
+            return new Map<string, Action>(Object.entries(obj));
+        }));
+    }
 }
 
 export class ThirdsI18nLoader implements TranslateLoader {
