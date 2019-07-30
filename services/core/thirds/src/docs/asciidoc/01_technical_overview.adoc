@@ -254,7 +254,7 @@ example:
 
 ....
 <ul>
-{{#each (split 'my.example.string' '.')]]
+{{#each (split 'my.example.string' '.')}}
   <li>{{this}}</li>
 {{/each}}
 </ul>

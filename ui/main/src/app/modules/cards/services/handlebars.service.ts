@@ -96,8 +96,11 @@ export class HandlebarsService {
     }
 
     private registerSplit() {
-        Handlebars.registerHelper('split', function (value, splitValue, index, options) {
-            return value.split(splitValue)[index];
+        Handlebars.registerHelper('split', function (...args: any[]) {
+            if(args.length === 3)
+                return args[0].split(args[1]);
+            if(args.length === 4)
+                return args[0].split(args[1])[args[2]];
         });
     }
 
