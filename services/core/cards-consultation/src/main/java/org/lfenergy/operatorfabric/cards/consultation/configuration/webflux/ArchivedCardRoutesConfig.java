@@ -2,6 +2,8 @@ package org.lfenergy.operatorfabric.cards.consultation.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.ArchivedCardRepository;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,10 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import static reactor.util.function.Tuples.of;
 
 @Slf4j
 @Configuration
@@ -38,7 +42,7 @@ public class ArchivedCardRoutesConfig {
     private HandlerFunction<ServerResponse> archivedCardGetWithQueryRoute() {
         return request ->
                 extractParameters(request)
-                        .flatMap(params -> archivedCardRepository.findWithParams(params)
+                        .flatMap(params -> archivedCardRepository.findWithUserAndParams(params)
                                 .collectList()
                                 .flatMap(
                                         archivedCards-> ok().contentType(MediaType.APPLICATION_JSON)
@@ -55,10 +59,18 @@ public class ArchivedCardRoutesConfig {
         return request -> ok().build();
     }
 
-    private Mono<MultiValueMap<String, String>> extractParameters(ServerRequest request) {
-        return request.bodyToMono(String.class) //TODO What is it for ?
-                .switchIfEmpty(Mono.just(""))
-                .map(body-> request.queryParams());
+    /**
+     * Extracts request parameters from Authentication and Query parameters
+     * @param request the http request
+     * @return a Tuple containing the principal as a {@link User} and query parameters as a {@link MultiValueMap}
+     */
+    private Mono<Tuple2<User,MultiValueMap<String, String>>> extractParameters(ServerRequest request) {
+        return request.principal()
+                .map( principal ->  {
+                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+                    User user = (User) jwtPrincipal.getPrincipal();
+                    return of(user,request.queryParams());
+                });
     }
 
 }

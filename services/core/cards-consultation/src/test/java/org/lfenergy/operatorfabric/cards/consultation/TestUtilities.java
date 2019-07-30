@@ -14,7 +14,6 @@ import org.lfenergy.operatorfabric.cards.consultation.model.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
-import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -24,7 +23,6 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Slf4j
 public class TestUtilities {
@@ -151,7 +149,7 @@ public class TestUtilities {
         if(groups!=null && groups.length>0)
             archivedCardBuilder.groupRecipients(Arrays.asList(groups));
         if(login!=null)
-            archivedCardBuilder.userRecipient(login);
+            archivedCardBuilder.orphanedUser(login);
         ArchivedCardConsultationData archivedCard = archivedCardBuilder.build();
         prepareArchivedCard(archivedCard, publication);
         return archivedCard;

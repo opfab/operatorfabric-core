@@ -2,6 +2,7 @@ package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -9,8 +10,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
+import reactor.util.function.Tuple2;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,8 +46,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         this.template = template;
     }
 
-    public Flux<ArchivedCardConsultationData> findWithParams(MultiValueMap<String, String> params) {
-        Query query = createQueryFromParams(params);
+    public Flux<ArchivedCardConsultationData> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
+        Query query = createQueryFromUserAndParams(params);
         //TODO Replace it with proper archivedLightCard
         query.fields()
                 .include("_id")
@@ -59,91 +62,107 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                 .include(END_DATE_FIELD)
                 .include("severity")
                 .include("tags");
+
+        log.info("ArchivedCardRepo: query " + query);
+
         return template.find(query,ArchivedCardConsultationData.class);
     }
 
     //TODO Is there a point in returning a mono instead ? To handle null using switchifempty ?
 
-    private Query createQueryFromParams(MultiValueMap<String, String> params) {
+    private Query createQueryFromUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
 
         Query query = new Query();
 
-        //TODO Improvement: Pass sort order as param instead
+        List<Criteria> criteria = new ArrayList<>();
+
+        User user = params.getT1();
+        MultiValueMap<String, String> queryParams = params.getT2();
+
         query.with(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)));
 
         //TODO Remove log
-        params.forEach((key, values) -> {
+        queryParams.forEach((key, values) -> {
             log.info("ArchivedCardRepo: key " + key);
             values.forEach(value -> log.info("ArchivedCardRepo: values " + value));
         });
 
         //TODO Improvement Pass only items from params that are interesting to each method, not the whole map (split it)..
-
         /* Check that parameters that should be unique are */
         uniqueParameters.forEach(param_key -> {
-            if(params.containsKey(param_key)) {
-                if(params.get(param_key).size()>1) {
+            if(queryParams.containsKey(param_key)) {
+                if(queryParams.get(param_key).size()>1) {
                     //TODO THROW ERROR
                 }
             }
         });
 
-        //TODO Check whether the provided query param key does exist in the card data model (or in a pre-defined list)
-        // to be able to throw error if it's not the case
+        //TODO Explain in doc that not checks are made against exotic params (ex: typos), they just won't do anything
 
         /* Handle special parameters */
 
         // Publish date range
-        query = addPublishDateCriteria(query, params);
+        criteria.addAll(publishDateCriteria(queryParams));
 
         // Active range
-        query = addActiveRangeCriteria(query, params);
+        criteria.addAll(activeRangeCriteria(queryParams));
 
         /* Handle regular parameters */
-        query = addRegularParameters(query, params);
+        criteria.addAll(regularParametersCriteria(queryParams));
 
-        log.info("ArchivedCardRepo: "+query.toString());
+        /* Add user criteria */
+        criteria.addAll(userCriteria(user));
 
-        return query;
-    }
-
-    private Query addRegularParameters(Query query, MultiValueMap<String, String> params) {
-
-        params.forEach((key, values) -> {
-
-            if(!specialParameters.contains(key)) {
-                query.addCriteria(Criteria.where(key).in(values));
-            }
-
-        });
-
-        return query;
-    }
-
-    //TODO Note in doc that this assumes params to be unique, otherwise will take first occurrence
-    private Query addPublishDateCriteria(Query query, MultiValueMap<String, String> params) {
-
-        if(params.containsKey(PUBLISH_DATE_FROM_PARAM)&&params.containsKey(PUBLISH_DATE_TO_PARAM)) {
-            query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD)
-                    .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_PARAM))))
-                    .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_PARAM)))));
-        } else if(params.containsKey(PUBLISH_DATE_FROM_PARAM)) {
-            query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD)
-                    .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_PARAM)))));
-        } else if(params.containsKey(PUBLISH_DATE_TO_PARAM)) {
-            query.addCriteria(Criteria.where(PUBLISH_DATE_FIELD)
-                    .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_PARAM)))));
+        if(!criteria.isEmpty()){
+            query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
         }
 
         return query;
     }
 
-    private Query addActiveRangeCriteria(Query query, MultiValueMap<String, String> params) {
+    private List<Criteria> regularParametersCriteria(MultiValueMap<String, String> params) {
+
+        List<Criteria> criteria = new ArrayList<>();
+
+        params.forEach((key, values) -> {
+
+            if(!specialParameters.contains(key)) {
+                criteria.add(Criteria.where(key).in(values));
+            }
+
+        });
+
+        return criteria;
+    }
+
+    //TODO Note in doc that this assumes params to be unique, otherwise will take first occurrence
+    private List<Criteria> publishDateCriteria(MultiValueMap<String, String> params) {
+
+        List<Criteria> criteria = new ArrayList<>();
+
+        if(params.containsKey(PUBLISH_DATE_FROM_PARAM)&&params.containsKey(PUBLISH_DATE_TO_PARAM)) {
+            criteria.add(Criteria.where(PUBLISH_DATE_FIELD)
+                    .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_PARAM))))
+                    .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_PARAM)))));
+        } else if(params.containsKey(PUBLISH_DATE_FROM_PARAM)) {
+            criteria.add(Criteria.where(PUBLISH_DATE_FIELD)
+                    .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_PARAM)))));
+        } else if(params.containsKey(PUBLISH_DATE_TO_PARAM)) {
+            criteria.add(Criteria.where(PUBLISH_DATE_FIELD)
+                    .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_PARAM)))));
+        }
+
+        return criteria;
+    }
+
+    private List<Criteria> activeRangeCriteria(MultiValueMap<String, String> params) {
+
+        List<Criteria> criteria = new ArrayList<>();
 
         if (params.containsKey(ACTIVE_FROM_PARAM) && params.containsKey(ACTIVE_TO_PARAM)) {
             Instant activeFrom = Instant.ofEpochMilli(Long.parseLong(params.getFirst(ACTIVE_FROM_PARAM)));
             Instant activeTo = Instant.ofEpochMilli(Long.parseLong(params.getFirst(ACTIVE_TO_PARAM)));
-            query.addCriteria(new Criteria().orOperator(
+            criteria.add(new Criteria().orOperator(
                     //Case 1: Card start date is included in query filter range
                     where(START_DATE_FIELD).gte(activeFrom).lte(activeTo),
                     //Case 2: Card start date is before start of query filter range
@@ -157,16 +176,38 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             ));
         } else if (params.containsKey(ACTIVE_FROM_PARAM)) {
             Instant activeFrom = Instant.ofEpochMilli(Long.parseLong(params.getFirst(ACTIVE_FROM_PARAM)));
-            query.addCriteria(new Criteria().orOperator(
+            criteria.add(new Criteria().orOperator(
                     where(END_DATE_FIELD).is(null),
                     where(END_DATE_FIELD).gte(activeFrom)
             ));
         } else if (params.containsKey(ACTIVE_TO_PARAM)) {
             Instant activeTo = Instant.ofEpochMilli(Long.parseLong(params.getFirst(ACTIVE_TO_PARAM)));
-            query.addCriteria(Criteria.where(START_DATE_FIELD).lte(activeTo));
+            criteria.add(Criteria.where(START_DATE_FIELD).lte(activeTo));
         }
 
-        return query;
+        return criteria;
 
     }
+
+    private List<Criteria> userCriteria(User user) {
+
+        List<Criteria> criteria = new ArrayList<>();
+
+        String login = user.getLogin();
+        List<String> groups = user.getGroups();
+
+        if(login!=null&&!(groups==null||groups.isEmpty())) {
+            criteria.add(new Criteria().orOperator(
+                    where("orphanedUsers").in(user.getLogin()),
+                    where("groupRecipients").in(user.getGroups())));
+        } else if (login!=null) {
+            criteria.add(where("orphanedUsers").in(user.getLogin()));
+        } else if (!(groups==null||groups.isEmpty())) {
+            criteria.add(where("groupRecipients").in(user.getGroups()));
+        }
+
+        return criteria;
+
+    }
+
 }

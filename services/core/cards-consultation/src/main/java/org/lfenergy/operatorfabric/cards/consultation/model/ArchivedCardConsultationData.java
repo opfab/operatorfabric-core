@@ -58,7 +58,7 @@ public class ArchivedCardConsultationData implements Card {
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String media;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -79,9 +79,9 @@ public class ArchivedCardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> groupRecipients = Collections.emptyList();//TODO Added to be consistent with Card. See if that's OK
-    @Transient
     @JsonIgnore
+    @Singular
+    private List<String> orphanedUsers = Collections.emptyList();
+    @Singular
     private List<? extends TimeSpan> timeSpans;
-
-
 }
