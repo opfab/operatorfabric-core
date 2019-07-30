@@ -26,15 +26,15 @@ export class ThirdActionsService implements OnInit {
         this.heartBeats = this.store.select(selectCurrentDate);
     }
 
-    fetchActionsUsingLightCard(card: LightCard,thirdAction:Action): Observable<Map<string, Action>> {
-        return this.fetchActions(card.publisher, card.process, card.state, card.publisherVersion);
+    fetchActionsUsingLightCard(card: LightCard, thirdAction: Action): Observable<Map<string, Action>> {
+        return this.fetchActions(card.publisher, card.process, card.state, card.publisherVersion,thirdAction.key);
     }
 
-    fetchActions(publisher: string, process: string, state: string, version: string, thirdAction?:Action) :Observable<Map<string, Action>> {
+    fetchActions(publisher: string, process: string, state: string, version: string, thirdActionKey: string): Observable<Map<string, Action>> {
         const params = new HttpParams().set("apiVersion", version);
 
         return this.heartBeats.pipe(flatMap(date => {
-            return this.httpClient.get(`${this.actionsUrl}/${publisher}/${process}/${state}/actions`, {
+            return this.httpClient.get(`${this.actionsUrl}/publisher/${publisher}/process/${process}/state/${state}/actions/${thirdActionKey}`, {
                 params,
                 responseType: 'text'
             }).pipe(map(json => {
