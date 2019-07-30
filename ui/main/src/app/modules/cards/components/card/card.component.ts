@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {map} from "rxjs/operators";
+import {map, take, tap} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
@@ -32,6 +32,7 @@ export class CardComponent implements OnInit {
     protected _i18nPrefix: string;
     dateToDisplay: string;
     actionsUrlPath:string;
+    actions:Action[];
     /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>,
@@ -44,6 +45,7 @@ export class CardComponent implements OnInit {
     public select() {
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
         if(!this.lightCard.actions){
+            console.log('select on current if no actions')
             this.third.fetchActionMapFromLightCard(this.lightCard)
                 .subscribe(actions => {
                     const card = this.lightCard;
@@ -51,6 +53,7 @@ export class CardComponent implements OnInit {
                     },
                 error=>console.error(error));
         }
+        this.actions = this.transformAction();
     }
 
     transformAction(){

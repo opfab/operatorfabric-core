@@ -19,6 +19,7 @@ export class ActionComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(`init of '${this.action.key}'`);
   }
 
   submit(){

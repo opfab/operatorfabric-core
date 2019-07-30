@@ -1,12 +1,11 @@
-<ng-template translate [translateParams]="action.label.parameters" #testPopContent>This is '{{i18nPrefix+action.label.key}}'<br>
+<ng-template  #testPopContent>This is '{{i18nPrefix+action.label.key}}'<br>
     <button type="button" class="btn btn-outline-secondary" (click)="submit()" >ok</button>
 </ng-template>
 <ng-template #testPopTitle>Action !</ng-template>
 <button type="button"
         class="btn btn-primary btn-sm mr-2"
         placement="auto"
-        translate
-        [translateParams]="action.label.parameters"
         [ngbPopover]="testPopContent"
         [popoverTitle]="testPopTitle"
+        (click)="submit()"
         >{{i18nPrefix+action.label.key}}</button>
