@@ -44,22 +44,26 @@ export class CardComponent implements OnInit {
 
     public select() {
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
-        if(!this.lightCard.actions){
-            console.log('select on current if no actions')
+        this.initActions();
+    }
+
+    private initActions() {
+        if (!this.lightCard.actions) {
             this.third.fetchActionMapFromLightCard(this.lightCard)
                 .subscribe(actions => {
-                    const card = this.lightCard;
-                    this.store.dispatch(new AddThirdActions({card,actions}))
+                        const card = this.lightCard;
+                        this.store.dispatch(new AddThirdActions({card, actions}))
                     },
-                error=>{
-                    if(error.status && error.status == 404){
-                        console.log(`no actions available for ${this.lightCard.id}`);
-                    }else{
-                        console.error(error);
-                    }
-                });
+                    error => {
+                        if (error.status && error.status == 404) {
+                            console.log(`no actions available for ${this.lightCard.id}`);
+                        } else {
+                            console.error(error);
+                        }
+                    });
         }
     }
+
     /* necessary otherwise action buttons are weirdly refresh */
     getActions(){
         if(!this.actions){
@@ -83,13 +87,12 @@ getSummary(){
             return [];
     }
 
-
-
     ngOnInit() {
         this._i18nPrefix = this.lightCard.publisher + '.' + this.lightCard.publisherVersion + '.'
         this.store.select(selectCurrentUrl).subscribe(url => {
             if (url)
                 this.currentPath = url.split('/')[1];
+                this.initActions();
         });
         this.store.select(buildConfigSelector('feed.card.time.display'))
         // use configuration to compute date
