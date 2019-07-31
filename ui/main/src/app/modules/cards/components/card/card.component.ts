@@ -72,10 +72,6 @@ export class CardComponent implements OnInit {
         return this.actions;
     }
 
-getSummary(){
-        return `${this.i18nPrefix}${this.lightCard.summary.key}`
-}
-
     transformActionMapToArray(){
         const actions = this.lightCard.actions;
         if(actions){
@@ -88,7 +84,8 @@ getSummary(){
     }
 
     ngOnInit() {
-        this._i18nPrefix = this.lightCard.publisher + '.' + this.lightCard.publisherVersion + '.'
+        const card=this.lightCard;
+        this._i18nPrefix = card.publisher + '.' + card.publisherVersion + '.'
         this.store.select(selectCurrentUrl).subscribe(url => {
             if (url)
                 this.currentPath = url.split('/')[1];
@@ -96,11 +93,11 @@ getSummary(){
         });
         this.store.select(buildConfigSelector('feed.card.time.display'))
         // use configuration to compute date
-            .pipe(map(config => this.computeDisplayedDates(config, this.lightCard)))
+            .pipe(map(config => this.computeDisplayedDates(config, card)))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
 
-        const c=this.lightCard;
-        this.actionsUrlPath = `/publisher/${c.publisher}/process/${c.processId}/states/${c.state}/actions`;
+
+        this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processId}/states/${card.state}/actions`;
     }
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {
