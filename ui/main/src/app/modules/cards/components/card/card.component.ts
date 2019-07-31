@@ -42,9 +42,21 @@ export class CardComponent implements OnInit {
     ){
     }
 
-    public select() {
-        this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
-        this.initActions();
+     ngOnInit() {
+        const card=this.lightCard;
+        this._i18nPrefix = card.publisher + '.' + card.publisherVersion + '.'
+        this.store.select(selectCurrentUrl).subscribe(url => {
+            if (url)
+                this.currentPath = url.split('/')[1];
+                this.initActions();
+        });
+        this.store.select(buildConfigSelector('feed.card.time.display'))
+        // use configuration to compute date
+            .pipe(map(config => this.computeDisplayedDates(config, card)))
+            .subscribe(computedDate => this.dateToDisplay = computedDate);
+
+
+        this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processId}/states/${card.state}/actions`;
     }
 
     private initActions() {
@@ -63,43 +75,6 @@ export class CardComponent implements OnInit {
                     });
         }
     }
-
-    /* necessary otherwise action buttons are weirdly refresh */
-    getActions(){
-        if(!this.actions){
-            this.actions=this.transformActionMapToArray();
-        }
-        return this.actions;
-    }
-
-    transformActionMapToArray(){
-        const actions = this.lightCard.actions;
-        if(actions){
-            const entries = Array.from(actions.entries())
-            return entries.map<Action>(([key,action]:[string,Action])=>{
-                return {...action,key:key}
-            });
-        }
-            return [];
-    }
-
-    ngOnInit() {
-        const card=this.lightCard;
-        this._i18nPrefix = card.publisher + '.' + card.publisherVersion + '.'
-        this.store.select(selectCurrentUrl).subscribe(url => {
-            if (url)
-                this.currentPath = url.split('/')[1];
-                this.initActions();
-        });
-        this.store.select(buildConfigSelector('feed.card.time.display'))
-        // use configuration to compute date
-            .pipe(map(config => this.computeDisplayedDates(config, card)))
-            .subscribe(computedDate => this.dateToDisplay = computedDate);
-
-
-        this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processId}/states/${card.state}/actions`;
-    }
-
     computeDisplayedDates(config: string, lightCard: LightCard): string {
         switch (config) {
             case 'NONE':
@@ -117,6 +92,31 @@ export class CardComponent implements OnInit {
 
     handleDate(timeStamp: number): string {
         return this.time.formatDateTime(timeStamp);
+    }
+
+    public select() {
+        this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
+        this.initActions();
+    }
+
+
+    /* necessary otherwise action buttons are weirdly refresh */
+    getActions(){
+        if(!this.actions){
+            this.actions=this.transformActionMapToArray();
+        }
+        return this.actions;
+    }
+
+    transformActionMapToArray(){
+        const actions = this.lightCard.actions;
+        if(actions){
+            const entries = Array.from(actions.entries())
+            return entries.map<Action>(([key,action]:[string,Action])=>{
+                return {...action,key:key}
+            });
+        }
+        return [];
     }
 
     get i18nPrefix(): string {
