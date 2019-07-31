@@ -29,7 +29,8 @@ describe('I18nService', () => {
         menu: null,
         config: configInitialState,
         settings: null,
-        time:null
+        time: null,
+        archive: null
     }
 
     beforeEach(() => {

@@ -38,7 +38,8 @@ describe('FeedFilterEffects', () => {
         menu: null,
         config: null,
         settings: null,
-        time:null
+        time: null,
+        archive: null
     };
 
     beforeEach(async(() => {

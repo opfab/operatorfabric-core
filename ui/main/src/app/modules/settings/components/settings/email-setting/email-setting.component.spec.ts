@@ -33,7 +33,8 @@ describe('EmailSettingComponent', () => {
         menu: null,
         config: configInitialState,
         settings: null,
-        time:null
+        time: null,
+        archive: null
     }
     beforeEach(async(() => {
     const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
