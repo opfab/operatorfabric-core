@@ -13,6 +13,16 @@ operatorfabric:
     card:
       time:
         display: BUSINESS
+  archive:
+    filters:
+      publisher.list:
+        - value: "TEST"
+          label: "Test Publisher"
+        - value: "TEST2"
+          label: "Test Publisher 2"
+      process.list:
+        - process
+        - someOtherProcess
   i10n.supported.time-zones:
     - value: "Europe/Paris"
       label: "Headquarters timezone"

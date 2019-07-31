@@ -1,0 +1,23 @@
+<!-- Copyright (c) 2018, RTE (http://www.rte-france.com)                 -->
+<!--                                                                     -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+
+<div class="container-fluid">
+  <div class="form-row">
+    <div class="col-md-2">
+      <of-list-filter filterPath="publisher" [values]="publishers$|async" ></of-list-filter>
+    </div>
+    <div class="col-md-2">
+      <of-list-filter filterPath="process" [values]="processes$|async" ></of-list-filter>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group login-form">
+        <div class="form-group">
+          <button type="button" class="btn btn-primary" (click)="sendQuery()" translate >archive.search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

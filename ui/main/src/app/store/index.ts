@@ -24,6 +24,7 @@ import {reducer as configReducer} from '@ofStore/reducers/config.reducer';
 import {reducer as settingsReducer} from '@ofStore/reducers/settings.reducer';
 import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
 import {reducer as timeReducer} from '@ofStore/reducers/time.reducer';
+import {reducer as archiveReducer} from '@ofStore/reducers/archive.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 import {CardState} from "@ofStates/card.state";
 import {CustomRouterEffects} from "@ofEffects/custom-router.effects";
@@ -38,6 +39,8 @@ import {SettingsState} from "@ofStates/settings.state";
 import {SettingsEffects} from "@ofEffects/settings.effects";
 import {TimeState} from "@ofStates/time.state";
 import {TimeEffects} from "@ofEffects/time.effects";
+import {ArchiveState} from "@ofStates/archive.state";
+import {ArchiveEffects} from "@ofEffects/archive.effects";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -49,6 +52,7 @@ export interface AppState {
     config: ConfigState;
     settings: SettingsState;
     time: TimeState;
+    archive: ArchiveState;
 }
 
 export const appEffects = [
@@ -62,7 +66,8 @@ export const appEffects = [
     MenuEffects,
     LightCardEffects,
     FeedFiltersEffects,
-    TimeEffects];
+    TimeEffects,
+    ArchiveEffects];
 
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
@@ -73,7 +78,8 @@ export const appReducer: ActionReducerMap<AppState> = {
     menu: menuReducer,
     config: configReducer,
     settings: settingsReducer,
-    time: timeReducer
+    time: timeReducer,
+    archive: archiveReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production

@@ -7,15 +7,25 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ArchivesRoutingModule} from './archives-routing.module';
 import {ArchivesComponent} from "./archives.component";
+import {ArchiveListComponent} from "./components/archive-list/archive-list.component";
+import {CardsModule} from "../cards/cards.module";
+import {BaseFilterComponent} from "./components/archive-list/filters/base-filter/base-filter.component";
+import {ListFilterComponent} from "./components/archive-list/filters/list-filter/list-filter.component";
+import { ArchiveFiltersComponent } from './components/archive-list/filters/archive-filters.component';
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   imports: [
     CommonModule,
-    ArchivesRoutingModule
+    FormsModule,
+    ReactiveFormsModule,
+    ArchivesRoutingModule,
+    CardsModule,
+    TranslateModule,
   ],
-  declarations: [ArchivesComponent]
+  declarations: [ArchivesComponent,ArchiveListComponent, BaseFilterComponent, ListFilterComponent, ArchiveFiltersComponent]
 })
 export class ArchivesModule { }

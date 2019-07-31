@@ -60,6 +60,13 @@
     "dateTimeFormat": "Format date et heure/minute",
     "defaultTags": "Tags par défaut"
   },
+  "archive": {
+    "filters": {
+      "publisher": "Emetteur",
+      "process": "Processus"
+    },
+    "search": "Rechercher"
+  },
   "time": {
     "error": "La mise-à-jour du temps de référence a échoué pour la raison suivante: {{error}}"
   }

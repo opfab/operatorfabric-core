@@ -60,6 +60,13 @@
     "dateTimeFormat": "Date Time format",
     "defaultTags": "Default tags"
   },
+  "archive": {
+    "filters": {
+      "publisher": "Publisher",
+      "process": "Process"
+    },
+    "search": "Search"
+  },
   "time": {
     "error": "time reference update failed for following reason: {{error}}"
   }
