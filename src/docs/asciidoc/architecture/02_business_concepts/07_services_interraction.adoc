@@ -7,8 +7,9 @@
 ifndef::imagesdir[:imagesdir: ../images]
 === Services Interaction
 
-==== Process Interaction Flow
+image::02_07_services_interaction/Service_Interaction_Component_Diagram.jpg[Business Services and Actors inetrractions]
 
-==== Third Party Service Interaction Flow
+Note that in the above diagram some links between services are purposedly ignored to optimize readability:
 
-==== User Management Service Interaction Flow
+* All components have access to UserServiceClientInterface to consult connected Operator user data
+* All components have access to TimeClientInterface to consult virtual application time

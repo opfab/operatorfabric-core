@@ -13,6 +13,14 @@ Technical services are non business automated services that intervene into busin
 
 Responsible for data persistence / data retrieval.
 
+==== Asynchronous Communication Service
+
+Responsible for service asynchronous communication.
+
+==== Synchronous Communication Service
+
+Responsible for service asynchronous communication.
+
 ==== Authentication Service
 
 Responsible for user authentication and authorization.
