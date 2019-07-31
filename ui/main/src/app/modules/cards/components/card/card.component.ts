@@ -60,15 +60,15 @@ export class CardComponent implements OnInit {
     }
 
     private initActions() {
-        if (!this.lightCard.actions) {
-            this.third.fetchActionMapFromLightCard(this.lightCard)
+        const card = this.lightCard;
+        if (!card.actions && !this.actions) {
+            this.third.fetchActionMapFromLightCard(card)
                 .subscribe(actions => {
-                        const card = this.lightCard;
                         this.store.dispatch(new AddThirdActions({card, actions}))
                     },
                     error => {
                         if (error.status && error.status == 404) {
-                            console.log(`no actions available for ${this.lightCard.id}`);
+                            console.log(`no actions available for ${card.id}`);
                         } else {
                             console.error(error);
                         }
