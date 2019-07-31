@@ -7,9 +7,15 @@
 ifndef::imagesdir[:imagesdir: ../images]
 === Services Interaction
 
+==== Business Services
+
 image::02_07_services_interaction/Service_Interaction_Component_Diagram.jpg[Business Services and Actors inetrractions]
 
 Note that in the above diagram some links between services are purposedly ignored to optimize readability:
 
 * All components have access to UserServiceClientInterface to consult connected Operator user data
 * All components have access to TimeClientInterface to consult virtual application time
+
+==== Information Services
+
+image::02_07_services_interaction/Information_Service_Interaction_Component_Diagram.jpg[Business Services and Actors inetrractions]

@@ -13,21 +13,9 @@ Technical services are non business automated services that intervene into busin
 
 Responsible for data persistence / data retrieval.
 
-==== Asynchronous Communication Service
-
-Responsible for service asynchronous communication.
-
-==== Synchronous Communication Service
-
-Responsible for service asynchronous communication.
-
 ==== Authentication Service
 
 Responsible for user authentication and authorization.
-
-==== User Management Service
-
-Responsible for user management and user personal settings.
 
 ==== Monitoring Service
 
@@ -36,3 +24,7 @@ Responsible for global system monitoring.
 ==== Backup Restore Service
 
 Responsible for backup and restore of system persisted data.
+
+==== Micro service infrastructure services
+
+These services are very specific as they are declined from peculiar architectural choices and will be later in depth described.
