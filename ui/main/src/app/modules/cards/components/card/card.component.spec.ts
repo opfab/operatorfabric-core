@@ -15,17 +15,16 @@ import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
+import {ThirdsI18nLoaderFactory, ThirdsService} from "@ofServices/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
 import {Router} from "@angular/router";
 import 'moment/locale/fr';
 import {TimeService} from "@ofServices/time.service";
 import {I18nService} from "@ofServices/i18n.service";
-import SpyObj = jasmine.SpyObj;
-import createSpyObj = jasmine.createSpyObj;
-import {ActionListComponent} from "../action-list/action-list.component";
 import {ActionComponent} from "../action/action.component";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
@@ -54,7 +53,7 @@ describe('CardComponent', () => {
                     useDefaultLang: false
                 }),
             NgbModule],
-            declarations: [CardComponent,ActionListComponent,ActionComponent],
+            declarations: [CardComponent,ActionComponent],
             providers: [{provide: store, useClass: Store},
                 {provide: Router, useValue: routerSpy},
                 ThirdsService,
