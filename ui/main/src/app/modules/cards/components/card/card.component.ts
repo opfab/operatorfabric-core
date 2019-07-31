@@ -32,7 +32,7 @@ export class CardComponent implements OnInit {
     protected _i18nPrefix: string;
     dateToDisplay: string;
     actionsUrlPath:string;
-    actions:Action[];
+    private actions:Action[];
     /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>,
@@ -51,12 +51,28 @@ export class CardComponent implements OnInit {
                     const card = this.lightCard;
                     this.store.dispatch(new AddThirdActions({card,actions}))
                     },
-                error=>console.error(error));
+                error=>{
+                    if(error.status && error.status == 404){
+                        console.log(`no actions available for ${this.lightCard.id}`);
+                    }else{
+                        console.error(error);
+                    }
+                });
         }
-        this.actions = this.transformAction();
+    }
+    /* necessary otherwise action buttons are weirdly refresh */
+    getActions(){
+        if(!this.actions){
+            this.actions=this.transformActionMapToArray();
+        }
+        return this.actions;
     }
 
-    transformAction(){
+getSummary(){
+        return `${this.i18nPrefix}${this.lightCard.summary.key}`
+}
+
+    transformActionMapToArray(){
         const actions = this.lightCard.actions;
         if(actions){
             const entries = Array.from(actions.entries())
@@ -66,6 +82,7 @@ export class CardComponent implements OnInit {
         }
             return [];
     }
+
 
 
     ngOnInit() {

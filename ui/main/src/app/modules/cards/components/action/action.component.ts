@@ -14,25 +14,21 @@ export class ActionComponent implements OnInit {
   @Input() readonly action:Action;
   @Input() readonly i18nPrefix:I18n;
   @Input() readonly actionUrlPath:string;
-  constructor(private httpClient: HttpClient, private i18n: I18nService) {
+  private url:string;
+  constructor(private httpClient: HttpClient, private i18n: I18nService) { }
 
-  }
-
-  ngOnInit() {
-    console.log(`init of '${this.action.key}'`);
-  }
-
-  submit(){
-    const protocol = 'http://';
+  ngOnInit() {    const protocol = 'http://';
     const domain = 'localhost';
     const port = '8080';
     const actionId = this.action.key;
     const resource = `${this.actionUrlPath}/${actionId}`
-    const url = `${protocol}${domain}:${port}${resource}`;
+    this.url = `${protocol}${domain}:${port}${resource}`;
+  }
 
-this.httpClient.post(url
-,this.action
-    ).subscribe();
+  submit(){
+    console.log(`submit clicked ${this.action.label}  for '${this.url}'`);
+
+this.httpClient.post(this.url,this.action).subscribe();
   }
 
 }
