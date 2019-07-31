@@ -166,7 +166,6 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findById(id))
                 .assertNext(card -> {
-                    log.info("Coucou "+card.getOrphanedUsers());
                     assertThat(card.getId()).isEqualTo(id);
                     assertThat(card.getPublisher()).isEqualTo("PUBLISHER");
                     assertThat(card.getProcessId()).isEqualTo("PROCESS1");

@@ -199,9 +199,12 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         if(login!=null&&!(groups==null||groups.isEmpty())) {
             criteria.add(new Criteria().orOperator(
                     where("orphanedUsers").in(user.getLogin()),
+                    where("userRecipients").in(user.getLogin()),
                     where("groupRecipients").in(user.getGroups())));
         } else if (login!=null) {
-            criteria.add(where("orphanedUsers").in(user.getLogin()));
+            criteria.add(new Criteria().orOperator(
+                    where("orphanedUsers").in(user.getLogin()),
+                    where("userRecipients").in(user.getLogin())));
         } else if (!(groups==null||groups.isEmpty())) {
             criteria.add(where("groupRecipients").in(user.getGroups()));
         }

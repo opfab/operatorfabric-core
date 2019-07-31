@@ -129,7 +129,6 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
         ));
         TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class, queryStage, sortStage1, groupStage, projectStage, sortStage2);
         aggregation.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
-        log.info("Coucou "+query);
         return template.aggregate(aggregation, clazz);
     }
 

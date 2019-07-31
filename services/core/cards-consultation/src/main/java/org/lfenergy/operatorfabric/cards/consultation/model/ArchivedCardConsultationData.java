@@ -79,7 +79,6 @@ public class ArchivedCardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> groupRecipients = Collections.emptyList();//TODO Added to be consistent with Card. See if that's OK
-    @JsonIgnore
     @Singular
     private List<String> orphanedUsers = Collections.emptyList();
     @Singular
