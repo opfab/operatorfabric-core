@@ -15,7 +15,7 @@ import {Subject} from "rxjs";
 @Directive({
     selector: '[calcHeightDirective]'
 })
-export class CalcHeightDirective implements OnInit {
+export class CalcHeightDirective {
 
     @Input()
     parentId: any;
@@ -35,10 +35,6 @@ export class CalcHeightDirective implements OnInit {
             debounceTime(300),
         ).subscribe(x => this.calcHeight(this.parentId, this.fixedHeightClass, this.calcHeightClass));
 
-    }
-
-    ngOnInit(): void {
-        this._resizeSubject$.next();
     }
 
     @HostListener('window:resize')

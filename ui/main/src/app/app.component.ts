@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -63,4 +63,5 @@ export class AppComponent implements OnInit {
         // First Action send by the application, is the user currently authenticated ?
         this.store.dispatch(new LoadConfig());
     }
+
 }
