@@ -25,10 +25,6 @@ export class ActionComponent implements OnInit {
     this.url = `${protocol}${domain}:${port}${resource}`;
   }
 
-  submit(){
-    console.log(`submit clicked ${this.action.label}  for '${this.url}'`);
-
-this.httpClient.post(this.url,this.action).subscribe();
-  }
+  submit(){this.httpClient.post(this.url,this.action).subscribe(); }
 
 }
