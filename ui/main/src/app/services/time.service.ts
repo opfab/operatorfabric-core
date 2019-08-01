@@ -55,7 +55,7 @@ export class TimeService {
             .subscribe(next => this.dateFormat = next);
         this.store.select(buildSettingsOrConfigSelector('dateTimeFormat'))
             .subscribe(next => this.dateTimeFormat = next);
-        this.store.select(buildSettingsOrConfigSelector('timeLineFormats',
+        this.store.select(buildSettingsOrConfigSelector('timeLineDefaultClusteringFormats',
             {
                 dateInsideTooltipsWeek: "ddd DD MMM HH",
                 dateInsideTooltipsMonth: "ddd DD MMM YYYY",

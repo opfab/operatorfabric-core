@@ -65,23 +65,23 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
 |operatorfabric.settings.locale|LT|no|Default user locale (use browser if not set)
 |operatorfabric.settings.default-tags||no|Default user list of filtered in tags
-|operatorfabric.settings.timeLineFormats.dateInsideTooltipsWeek||no|
-|operatorfabric.settings.timeLineFormats.dateInsideTooltipsWeek|ddd DD MMM HH|no|
-|operatorfabric.settings.timeLineFormats.dateInsideTooltipsMonth|ddd DD MMM YYYY|no|
-|operatorfabric.settings.timeLineFormats.dateOnDay|ddd DD MMM|no|
-|operatorfabric.settings.timeLineFormats.dateOnWeek|DD/MM/YY|no|
-|operatorfabric.settings.timeLineFormats.dateOnMonth|MMM YY|no|
-|operatorfabric.settings.timeLineFormats.dateOnYear|YYYY|no|
-|operatorfabric.settings.timeLineFormats.titleDateInsideTooltips|DD/MM|no|
-|operatorfabric.settings.timeLineFormats.titleHourInsideTooltips|HH:mm|no|
-|operatorfabric.settings.timeLineFormats.dateOnDayNewYear|DD MMM YY|no|
-|operatorfabric.settings.timeLineFormats.realTimeBarFormat|DD/MM/YY HH:mm|no|
-|operatorfabric.settings.timeLineFormats.dateSimplifliedOnDayNewYear|D MMM YY|no|
-|operatorfabric.settings.timeLineFormats.dateSimplifliedOnDay|D MMM|no|
-|operatorfabric.settings.timeLineFormats.hoursOnly|HH|no|
-|operatorfabric.settings.timeLineFormats.minutesOnly|mm|no|
-|operatorfabric.settings.timeLineFormats.secondedsOnly|ss|no|
-|operatorfabric.settings.timeLineFormats.weekNumberOnly|ww|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsWeek||no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsWeek|ddd DD MMM HH|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsMonth|ddd DD MMM YYYY|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnDay|ddd DD MMM|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnWeek|DD/MM/YY|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnMonth|MMM YY|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnYear|YYYY|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.titleDateInsideTooltips|DD/MM|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.titleHourInsideTooltips|HH:mm|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnDayNewYear|DD MMM YY|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.realTimeBarFormat|DD/MM/YY HH:mm|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateSimplifliedOnDayNewYear|D MMM YY|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateSimplifliedOnDay|D MMM|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.hoursOnly|HH|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.minutesOnly|mm|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.secondedsOnly|ss|no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.weekNumberOnly|ww|no|
 
 |===
 
