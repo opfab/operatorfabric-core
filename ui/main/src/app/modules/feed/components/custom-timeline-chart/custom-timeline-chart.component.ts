@@ -67,7 +67,7 @@ import {TimeService} from '@ofServices/time.service';
             [attr.y]="-10" stroke="'grey'"
             [attr.fill]="'grey'"
             text-anchor="middle" stroke-width="1px"
-            [attr.font-size]="11" dy=".3em"> {{xRealTimeLine.format('DD/MM/YY HH:mm')}}</text>
+            [attr.font-size]="11" dy=".3em"> {{timeService.predefinedFormat(xRealTimeLine, 'realTimeBarFormat')}}</text>
       <text *ngIf="underDayPeriod"
             [attr.x]="50"
             [attr.y]="-10" stroke="'black'"
@@ -122,7 +122,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * @param cd
    * @param time
    */
-  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, private time: TimeService) {
+  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, private timeService: TimeService) {
     super(chartElement, zone, cd);
     this.xTicks = [];
     this.xTicksOne = [];
@@ -138,9 +138,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       summary: []
     };
     this.underDayPeriod = false;
-
-    // waiting time service format functions
-    console.log('En attente de time service', this.time.formatDate(100));
   }
 
   // Domain
@@ -155,7 +152,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.dateFirstTick = moment(value[0]).format('ddd DD MMM YYYY HH') + 'h';
     } else if (millisecondsDomain < 86400000) { // 1 Day
       this.underDayPeriod = true;
-      this.dateFirstTick = moment(value[0]).format('ddd DD MMM YYYY');
+      this.dateFirstTick = this.timeService.predefinedFormat(moment(value[0]), 'dateInsideTooltipsMonth');
     }
   }
   get valueDomain() {
@@ -478,7 +475,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * format the ticks string (ex: 04/07/19)
    */
   fctTickFormatting = (e): string => {
-    const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+    const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(this.timeService);
     return formatPipe.transform(e, this.formatLevel);
   }
 
@@ -487,7 +484,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * in special zoom level (D, Min...) format differently the ticks string
    */
   fctTickFormattingAdvanced = (e): string => {
-    const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+    const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(this.timeService);
     if (this.formatLevel === 'Hou' || this.formatLevel === 'Min' ||
         this.formatLevel === 'Sec' || this.formatLevel === 'nbW') {
       return formatPipe.transformAdvanced(e, this.formatLevel);
@@ -499,7 +496,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * format the date of the hovered circle
    */
   fctHoveredCircleDateFormatting(e): string {
-    const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+    const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(this.timeService);
     // when formatTooltipsDate is init, it will format the date with his own value
     if (this.formatTooltipsDate) {
         return formatPipe.transformHovered(e, this.formatTooltipsDate);
@@ -1019,8 +1016,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               feedIt = true;
               newCircle.count = newValue;
               newCircle.end = array[j].date;
-              const summaryDate = moment(array[j].date).format('DD/MM') +
-                  ' - ' + moment(array[j].date).format('HH:mm') + ' : ' + array[j].summary;
+              const summaryDate = this.timeService.predefinedFormat(moment(array[j].date), 'titleDateInsideTooltips') +
+                  ' - ' + this.timeService.predefinedFormat(moment(array[j].date), 'titleHourInsideTooltips') + ' : ' + array[j].summary;
               newCircle.summary.push(summaryDate);
               j++;
             }

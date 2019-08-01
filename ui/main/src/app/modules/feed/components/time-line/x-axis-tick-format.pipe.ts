@@ -1,10 +1,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import * as moment from 'moment';
+import {TimeService} from "@ofServices/time.service";
 
 @Pipe({
   name: 'xAxisTickFormat'
 })
 export class XAxisTickFormatPipe implements PipeTransform {
+  constructor(private timeService: TimeService) {
+  }
   /**
    * return a string formatted from value by the according cluster level
    * @param value
@@ -19,10 +22,11 @@ export class XAxisTickFormatPipe implements PipeTransform {
       switch (clusterLevel) {
         case 'Min':
         case 'Sec': {
-          return date.format('ddd DD MMM HH') + 'h' + date.format('mm');
+          return this.timeService.predefinedFormat(date, 'dateInsideTooltipsWeek') +
+              'h' + this.timeService.predefinedFormat(date, 'minutesOnly');
         }
         case 'Hou': {
-          return date.format('ddd DD MMM HH') + 'h';
+          return this.timeService.predefinedFormat(date, 'dateInsideTooltipsWeek') + 'h';
         }
         case 'Day':
         case 'Dat':
@@ -30,7 +34,7 @@ export class XAxisTickFormatPipe implements PipeTransform {
         case 'Mon':
         case 'Yea':
         case 'nbW': {
-          return date.format('ddd DD MMM YYYY');
+          return this.timeService.predefinedFormat(date, 'dateInsideTooltipsMonth');
         }
         default: {
           return date.format(clusterLevel);
@@ -53,13 +57,13 @@ export class XAxisTickFormatPipe implements PipeTransform {
       const date = moment(value);
       if (date) {
         if (clusterLevel === 'Hou') {
-          return date.format('HH') + 'h';
+          return this.timeService.predefinedFormat(date, 'hoursOnly') + 'h';
         } else if (clusterLevel === 'Min') {
-          return date.format('mm');
+          return this.timeService.predefinedFormat(date, 'minutesOnly');
         } else if (clusterLevel === 'Sec') {
-          return date.format('ss');
+          return this.timeService.predefinedFormat(date, 'secondedsOnly');
         } else if (clusterLevel === 'nbW') {
-          return date.format('ww');
+          return this.timeService.predefinedFormat(date, 'weekNumberOnly');
         }
       }
     }
@@ -82,20 +86,20 @@ export class XAxisTickFormatPipe implements PipeTransform {
       switch (clusterLevel) {
         case 'Hou' : {
           if (date.valueOf() === startYear.valueOf()) {
-            return date.format('ddd DD MMM YYYY');
+            return this.timeService.predefinedFormat(date, 'dateInsideTooltipsMonth');
           }
           if (date.hours() === 0) {
-            return date.format('ddd DD MMM');
+            return this.timeService.predefinedFormat(date, 'dateOnDay');
           } else {
-            return date.format('HH');
+            return this.timeService.predefinedFormat(date, 'hoursOnly');
           }
         }
         case 'Min': {
           if (date.minutes() === 0) {
             if (date.hour() === 0) {
-              return date.format('ddd DD MMM');
+              return this.timeService.predefinedFormat(date, 'dateOnDay');
             } else {
-              return date.format('HH');
+              return this.timeService.predefinedFormat(date, 'hoursOnly');
             }
           }
         }
@@ -103,38 +107,38 @@ export class XAxisTickFormatPipe implements PipeTransform {
           if (date.seconds() === 0) {
             if (date.minutes() === 0) {
               if (date.hour() === 0) {
-                return date.format('ddd DD MMM');
+                return this.timeService.predefinedFormat(date, 'dateOnDay');
               } else {
-                return date.format('HH') + 'h';
+                return this.timeService.predefinedFormat(date, 'hoursOnly') + 'h';
               }
             } else {
-              return date.format('mm');
+              return this.timeService.predefinedFormat(date, 'minutesOnly');
             }
           }
         }
         case 'Day': {
           if (date.valueOf() === startYear.valueOf()) {
-            return date.format('DD MMM YY');
+            return this.timeService.predefinedFormat(date, 'dateOnDayNewYear');
           }
-          return date.format('ddd DD MMM');
+          return this.timeService.predefinedFormat(date, 'dateOnDay');
         }
         case 'Dat': {
           if (date.valueOf() === startYear.valueOf()) {
-            return date.format('D MMM YY');
+            return this.timeService.predefinedFormat(date, 'dateSimplifliedOnDayNewYear');
           }
-          return date.format('D MMM');
+          return this.timeService.predefinedFormat(date, 'dateSimplifliedOnDay');
         }
         case 'Wee': {
-          return date.format('DD/MM/YY');
+          return this.timeService.predefinedFormat(date, 'dateOnWeek');
         }
         case 'Mon': {
-          return date.format('MMM YY');
+          return this.timeService.predefinedFormat(date, 'dateOnMonth');
         }
         case 'Yea': {
-          return date.format('YYYY');
+          return this.timeService.predefinedFormat(date, 'dateOnYear');
         }
         case 'nbW': {
-          return date.format('YYYY');
+          return this.timeService.predefinedFormat(date, 'dateOnYear');
         }
         default: {
           return date.format(clusterLevel);

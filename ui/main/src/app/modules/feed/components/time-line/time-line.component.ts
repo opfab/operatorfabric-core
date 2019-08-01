@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {Observable, of, Subscription} from 'rxjs';
-import {LightCard} from '@ofModel/light-card.model';
-import {select, Store} from '@ngrx/store';
+import { LightCard } from '@ofModel/light-card.model';
+import { select, Store } from '@ngrx/store';
 import {catchError, debounceTime, distinctUntilChanged} from 'rxjs/operators';
-import {AppState} from '@ofStore/index';
+import { AppState } from '@ofStore/index';
 import {InitTimeline, SetCardDataTimeline} from '@ofActions/timeline.actions';
 import * as _ from 'lodash';
 import * as moment from 'moment';

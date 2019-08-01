@@ -544,6 +544,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     // For the first step, set currentMoment to start of the unit (Let's Co)
     if (this.firstMoveStartOfUnit) {
       if (unit !== 'weekDay') {
+        // set hours to 0 for Let's Co
         currentMoment.startOf(unit).hours(0);
       }
     }
