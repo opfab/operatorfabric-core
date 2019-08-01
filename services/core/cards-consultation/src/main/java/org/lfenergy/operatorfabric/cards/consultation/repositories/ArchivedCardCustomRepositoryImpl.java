@@ -39,7 +39,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM);
 
     private final ReactiveMongoTemplate template;
-    //TODO Will we need methods returning JSON as strings instead of ArchivedCardConsultationData objects?
     //TODO Return "light" ArchivedCards (projection) ?
 
     @Autowired
@@ -66,7 +65,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public Flux<ArchivedCardConsultationData> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
         Query query = createQueryFromUserAndParams(params);
         //TODO Replace it with proper archivedLightCard
-        query.fields()
+        /*query.fields()
                 .include("_id")
                 .include("publisher")
                 .include("publisherVersion")
@@ -78,14 +77,10 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                 .include(START_DATE_FIELD)
                 .include(END_DATE_FIELD)
                 .include("severity")
-                .include("tags");
-
-        log.info("ArchivedCardRepo: query " + query);
+                .include("tags");*/
 
         return template.find(query,ArchivedCardConsultationData.class);
     }
-
-    //TODO Is there a point in returning a mono instead ? To handle null using switchifempty ?
 
     private Query createQueryFromUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
 
@@ -97,12 +92,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         MultiValueMap<String, String> queryParams = params.getT2();
 
         query.with(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)));
-
-        //TODO Remove log
-        queryParams.forEach((key, values) -> {
-            log.info("ArchivedCardRepo: key " + key);
-            values.forEach(value -> log.info("ArchivedCardRepo: values " + value));
-        });
 
         //TODO Improvement Pass only items from params that are interesting to each method, not the whole map (split it)..
         /* Check that parameters that should be unique are */

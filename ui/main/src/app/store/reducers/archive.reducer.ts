@@ -7,6 +7,7 @@
 
 import {archiveInitialState, ArchiveState} from "@ofStates/archive.state";
 import {ArchiveActions, ArchiveActionTypes} from "@ofActions/archive.actions";
+import {LightCardAdapter} from "@ofStates/feed.state";
 
 export function reducer(
     state = archiveInitialState,
@@ -21,6 +22,13 @@ export function reducer(
                 ...state,
                 filters: filters
             };
+        }
+
+        case ArchiveActionTypes.ArchiveQuerySuccess : {
+            return {
+                ...LightCardAdapter.upsertMany(action.payload.lightCards, state), //TODO Will it remove cards that are no longer there ?
+                lastCards: action.payload.lightCards
+            }
         }
 
         default: {

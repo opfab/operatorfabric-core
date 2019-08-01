@@ -17,7 +17,7 @@ import {selectArchiveFilters} from "@ofSelectors/archive.selectors";
 @Component({
   selector: 'of-archive-filters',
   templateUrl: './archive-filters.component.html',
-  styleUrls: ['./archive-filters.component.css']
+  styleUrls: ['./archive-filters.component.scss']
 })
 export class ArchiveFiltersComponent implements OnInit {
 

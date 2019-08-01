@@ -33,7 +33,7 @@ export class ArchiveEffects {
     queryArchivedCards: Observable<Action> = this.actions$
         .pipe(
             ofType(ArchiveActionTypes.SendArchiveQuery),
-            switchMap((action: SendArchiveQuery) => this.service.fetchArchivedCards(action.payload.params)), //TODO Pass action payload
+            switchMap((action: SendArchiveQuery) => this.service.fetchArchivedCards(action.payload.params)),
             map((lightCards: LightCard[]) => {
                 return new ArchiveQuerySuccess({lightCards: lightCards});
             }),
