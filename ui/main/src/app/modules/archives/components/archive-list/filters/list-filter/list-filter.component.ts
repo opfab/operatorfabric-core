@@ -80,5 +80,3 @@ export class ListFilterComponent extends BaseFilterComponent implements OnInit {
   }
 
 }
-
-//TODO Check that all new files have copyright

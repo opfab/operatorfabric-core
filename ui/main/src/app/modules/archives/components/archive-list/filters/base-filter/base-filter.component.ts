@@ -54,7 +54,7 @@ export class BaseFilterComponent implements OnInit, OnDestroy {
                     )
                     .subscribe(next=>this.dispatch(this.convert(next)))
             );
-        this.placeholder$ = this.store.select(buildConfigSelector(`archive.filters.${this.filterPath}`)) //TODO Reads default value from config if exists
+        this.placeholder$ = this.store.select(buildConfigSelector(`archive.filters.default.${this.filterPath}`)) //TODO Reads default value from config if exists
             .pipe(takeUntil(this.ngUnsubscribe$));
 
     }

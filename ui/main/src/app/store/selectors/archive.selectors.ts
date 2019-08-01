@@ -20,7 +20,12 @@ export const selectArchiveLightCardSelection = createSelector(selectArchive, (ar
 
 export function buildArchiveFilterSelector(path:string, fallback: any = null){
     return createSelector(selectArchiveFilters,(filters)=>{
-        let result = _.get(filters,path,null);
+        let result: string[];
+        if(filters.has(path)) {
+            result = filters.get(path);
+        } else {
+            result = null;
+        }
         if(!result && fallback)
             return fallback;
         return result;
