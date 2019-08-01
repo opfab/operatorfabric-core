@@ -122,7 +122,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * @param cd
    * @param time
    */
-  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, private timeService: TimeService) {
+  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, public timeService: TimeService) {
     super(chartElement, zone, cd);
     this.xTicks = [];
     this.xTicksOne = [];

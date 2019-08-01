@@ -49,7 +49,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
     it('check three functions of transformation: ' +
         'return an empty string when clusterLevel isnt precise', () => {
         fixture.detectChanges();
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(moment(), null)).toEqual('');
         expect(formatPipe.transformAdvanced(moment(), null)).toEqual('');
         expect(formatPipe.transformHovered(moment(), null)).toEqual('');
@@ -59,7 +59,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
     it('Check transform & transformHovered functions: ' +
         'return param received when its a string', () => {
         fixture.detectChanges();
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform('test', null)).toEqual('test');
         expect(formatPipe.transformHovered('test', null)).toEqual('test');
         expect(component).toBeTruthy();
@@ -72,7 +72,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.date(3);
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'DD MM YY')).toEqual(startCopy.format('DD MM YY'));
         expect(formatPipe.transformHovered(start, 'DD MM YY')).toEqual(startCopy.format('DD MM YY'));
         expect(component).toBeTruthy();
@@ -86,7 +86,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.date(3);
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transformHovered(start, 'Hou')).toEqual(startCopy.format('ddd DD MMM HH') + 'h');
         expect(formatPipe.transformHovered(start, 'Day')).toEqual(startCopy.format('ddd DD MMM YYYY'));
         expect(formatPipe.transformHovered(start, 'Min')).toEqual(startCopy.format('ddd DD MMM HH')
@@ -100,7 +100,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.date(16).startOf('day');
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transformAdvanced(start, 'Min')).toEqual(startCopy.format('mm'));
         expect(formatPipe.transformAdvanced(start, 'Sec')).toEqual(startCopy.format('ss'));
         expect(formatPipe.transformAdvanced(start, 'nbW')).toEqual(startCopy.format('ww'));
@@ -113,7 +113,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         const start = moment();
         start.date(4).hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'Hou')).toEqual(startCopy.format('ddd DD MMM'));
         start.hours(4);
         startCopy.hours(4);
@@ -128,7 +128,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.date(3).startOf('day');
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'Day')).toEqual(startCopy.format('ddd DD MMM'));
         expect(component).toBeTruthy();
     });
@@ -140,7 +140,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.date(16).startOf('day');
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'Dat')).toEqual(startCopy.format('D MMM'));
         expect(component).toBeTruthy();
     });
@@ -152,7 +152,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.date(16).startOf('day');
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'Wee')).toEqual(startCopy.format('DD/MM/YY'));
         expect(formatPipe.transform(start, 'Mon')).toEqual(startCopy.format('MMM YY'));
         expect(formatPipe.transform(start, 'Yea')).toEqual(startCopy.format('YYYY'));
@@ -167,7 +167,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.date(16).startOf('day');
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'Min')).toEqual(startCopy.format('ddd DD MMM'));
         expect(formatPipe.transform(start, 'Sec')).toEqual(startCopy.format('ddd DD MMM'));
         start.hours(1);
@@ -187,7 +187,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'Hou')).toEqual(startCopy.format('ddd DD MMM YYYY'));
         expect(component).toBeTruthy();
     });
@@ -199,7 +199,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'Day')).toEqual(startCopy.format('DD MMM YY'));
         expect(component).toBeTruthy();
     });
@@ -211,7 +211,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         start.startOf('year');
         const startCopy = moment(start);
-        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe();
+        const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'Dat')).toEqual(startCopy.format('D MMM YY'));
         expect(component).toBeTruthy();
     });
