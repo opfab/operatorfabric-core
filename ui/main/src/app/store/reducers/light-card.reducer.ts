@@ -93,7 +93,8 @@ export function reducer(
             };
         }
         case LightCardActionTypes.UpdateALightCard:{
-            return LightCardAdapter.updateOne(action.payload.card,state);
+            const cardFeedState = LightCardAdapter.updateOne(action.payload.card,state);
+            return cardFeedState;
         }
 
         default: {

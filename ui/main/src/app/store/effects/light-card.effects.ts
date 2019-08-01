@@ -15,11 +15,12 @@ import {
     AddThirdActions,
     LightCardActionTypes,
     LoadLightCardsExtendedData,
-    LoadLightCardsSuccess, UpdateALightCard
+    LoadLightCardsSuccess, UpdateALightCard, UpdateAnAction, UpdateAnActionFailure
 } from "@ofActions/light-card.actions";
 import {ThirdsService} from "@ofServices/thirds.service";
 import {tap} from "rxjs/internal/operators/tap";
 import {LightCard} from "@ofModel/light-card.model";
+import {selectCardStateSelected} from "@ofSelectors/card.selectors";
 
 // those effects are unused for the moment
 @Injectable()
@@ -62,6 +63,34 @@ export class LightCardEffects {
                     changes:{actions:actions}
                 }
                 return new UpdateALightCard({card: updateCard});
+            })
+        );
+
+    @Effect()
+    updateAThirdAction:Observable<Action> = this.actions$
+        .pipe(
+            ofType<UpdateAnAction>(LightCardActionTypes.UpdateAnAction),
+            switchMap((action:UpdateAnAction)=>{
+                const thirdActionKey = action.payload.actionKey;
+                const thirdActionStatus=action.payload.status;
+                return this.store.select(selectCardStateSelected).pipe(
+                    map((card:LightCard)=>{
+                        console.log('LightCard currently selected:',card);
+                        const thirdActions=card.actions;
+                        if(thirdActions) {
+                            const thirdActionToUpdate = thirdActions.get(thirdActionKey);
+                            const actualizedAction = {...thirdActionToUpdate, ...thirdActionStatus};
+                            thirdActions.set(thirdActionKey, actualizedAction);
+                            const updateCard = {
+                                id: card.id,
+                                changes: {actions: thirdActions}
+                            }
+                            return new UpdateALightCard({card: updateCard})
+                        }else{
+                            return new UpdateAnActionFailure();
+                        }
+                    })
+                );
             })
         );
 

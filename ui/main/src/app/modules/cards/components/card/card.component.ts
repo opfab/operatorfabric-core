@@ -44,6 +44,7 @@ export class CardComponent implements OnInit {
 
      ngOnInit() {
         const card=this.lightCard;
+        console.log('is this card containing actions ?',card);
         this._i18nPrefix = card.publisher + '.' + card.publisherVersion + '.'
         this.store.select(selectCurrentUrl).subscribe(url => {
             if (url)
@@ -61,7 +62,7 @@ export class CardComponent implements OnInit {
 
     private initActions() {
         const card = this.lightCard;
-        if (!card.actions && !this.actions) {
+        if (!this.actions && !card.actions) {
             this.third.fetchActionMapFromLightCard(card)
                 .subscribe(actions => {
                         this.store.dispatch(new AddThirdActions({card, actions}))
@@ -109,6 +110,8 @@ export class CardComponent implements OnInit {
     }
 
     transformActionMapToArray(){
+
+        console.log('try to load actions from card',this.lightCard.actions);
         const actions = this.lightCard.actions;
         if(actions){
             const entries = Array.from(actions.entries())

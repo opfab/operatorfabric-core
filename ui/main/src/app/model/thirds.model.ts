@@ -8,9 +8,6 @@
 import {Card, Detail} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap} from "@ofModel/map";
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {EMPTY, Observable, of} from "rxjs";
-import {map} from "rxjs/operators";
 
 export class Third{
     /* istanbul ignore next */
@@ -91,14 +88,18 @@ export class Action {
         readonly updateStateBeforeAction: boolean = false,
         readonly called: boolean = false,
         readonly needsConfirm: boolean = false,
-        readonly actionRootKey?:string,
         readonly key?:string
     ) {}
 
 }
 
+export const emptyAction=new Action(null,null);
+
+type Omit<T, K extends keyof T> = Pick<T,Exclude<keyof T,K>>;
+
 export class ActionStatus{
-    constructor(        readonly label: I18n,
+    constructor(
+                        readonly label: I18n,
                         readonly buttonStyle: string = '',
                         readonly contentStyle: string = '',
                         readonly inputs: Input[] = [],
@@ -109,6 +110,8 @@ export class ActionStatus{
                         readonly lockAction: boolean = false,
     ){}
 }
+
+export const emptyActionStatus = new ActionStatus(null);
 
 export enum InputType {
     TEXT,
