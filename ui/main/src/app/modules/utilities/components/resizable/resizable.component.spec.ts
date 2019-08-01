@@ -20,10 +20,6 @@ describe('ResizableComponent', () => {
     fixture.detectChanges();
   });
 
-  it('shoud test if the height of the component is available', () => {
-    const spyOnResize = spyOn(window, 'onresize');
-    expect(spyOnResize).toHaveBeenCalled();
-  })
   it('should create', () => {
     expect(component).toBeTruthy();
   });
