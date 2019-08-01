@@ -23,10 +23,6 @@ export function reducer(
             };
         }
 
-        case ArchiveActionTypes.SendArchiveQuery : {
-            return state; //TODO call service to do http get
-        }
-
         default: {
             return state;
         }
