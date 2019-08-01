@@ -77,7 +77,7 @@ public class ArchivedCardRoutesShould {
 
         @Test
         public void findArchivedCardById() {
-            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
+            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600),"userWithGroup");
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
                     .expectComplete()

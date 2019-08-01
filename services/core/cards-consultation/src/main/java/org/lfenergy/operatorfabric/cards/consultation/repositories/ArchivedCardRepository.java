@@ -20,9 +20,5 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface ArchivedCardRepository extends ReactiveMongoRepository<ArchivedCardConsultationData, String>, ArchivedCardCustomRepository {
 
-    public Mono<ArchivedCardConsultationData> findById(String id);
-    //TODO Restrict query results based on calling user
-
-
 
 }

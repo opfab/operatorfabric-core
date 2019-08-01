@@ -44,15 +44,16 @@ public class ArchivedCardRoutesConfig {
                 extractParameters(request)
                         .flatMap(params -> archivedCardRepository.findWithUserAndParams(params)
                                 .collectList()
-                                .flatMap(
-                                        archivedCards-> ok().contentType(MediaType.APPLICATION_JSON)
+                                .flatMap(archivedCards-> ok().contentType(MediaType.APPLICATION_JSON)
                                                 .body(fromObject(archivedCards))));
     }
 
     private HandlerFunction<ServerResponse> archivedCardGetRoute() {
-        return request -> archivedCardRepository.findById(request.pathVariable("id"))
-                .flatMap(card-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
-                .switchIfEmpty(notFound().build());
+        return request ->
+                extractUser(request)
+                        .flatMap(user -> archivedCardRepository.findByIdWithUser(request.pathVariable("id"),user))
+                        .flatMap(card-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
+                        .switchIfEmpty(notFound().build());
     }
 
     private HandlerFunction<ServerResponse> archivedCardOptionRoute() {
@@ -71,6 +72,20 @@ public class ArchivedCardRoutesConfig {
                     User user = (User) jwtPrincipal.getPrincipal();
                     return of(user,request.queryParams());
                 });
+    }    /**
+     * Extracts User from Authentication request parameters
+     * @param request the http request
+     * @return a {@link User}
+     */
+    private Mono<User> extractUser(ServerRequest request) {
+        return request.principal()
+                .map( principal ->  {
+                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+                    User user = (User) jwtPrincipal.getPrincipal();
+                    return user;
+                });
     }
+
+
 
 }

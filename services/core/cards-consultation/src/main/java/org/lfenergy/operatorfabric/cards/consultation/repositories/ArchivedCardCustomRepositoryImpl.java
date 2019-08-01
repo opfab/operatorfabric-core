@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
 import java.time.Instant;
@@ -44,6 +45,22 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     @Autowired
     public ArchivedCardCustomRepositoryImpl(ReactiveMongoTemplate template) {
         this.template = template;
+    }
+
+    public Mono<ArchivedCardConsultationData> findByIdWithUser(String id, User user) {
+        Query query = new Query();
+
+        List<Criteria> criteria = new ArrayList<>();
+
+        criteria.add(Criteria.where("_id").is(id));
+        criteria.addAll(userCriteria(user));
+
+        if(!criteria.isEmpty()){
+            query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
+        }
+
+        return template.findOne(query,ArchivedCardConsultationData.class);
+
     }
 
     public Flux<ArchivedCardConsultationData> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {

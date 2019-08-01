@@ -157,14 +157,14 @@ public class ArchivedCardRepositoryShould {
         return predicate;
     }
 
-    @Test void fetchArchivedCardById() {
+    @Test void fetchArchivedCardByIdWithUserWhoIsARecipient() {
 
         ArchivedCardConsultationData archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, "rte", "operator");
         String id = archivedCard.getId();
 
         persistCard(archivedCard);
 
-        StepVerifier.create(repository.findById(id))
+        StepVerifier.create(repository.findByIdWithUser(id, user1))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(id);
                     assertThat(card.getPublisher()).isEqualTo("PUBLISHER");
@@ -172,6 +172,18 @@ public class ArchivedCardRepositoryShould {
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                     assertThat(card.getEndDate()).isEqualTo(nowMinusOne);
                 })
+                .expectComplete()
+                .verify();
+    }
+
+    @Test void fetchArchivedCardByIdWithUserWhoIsNotARecipient() {
+
+        ArchivedCardConsultationData archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, "someGroup", "operator");
+        String id = archivedCard.getId();
+
+        persistCard(archivedCard);
+
+        StepVerifier.create(repository.findByIdWithUser(id, user2))
                 .expectComplete()
                 .verify();
     }
