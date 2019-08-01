@@ -15,7 +15,7 @@ export class ActionComponent implements OnInit {
   @Input() readonly i18nPrefix:I18n;
   @Input() readonly actionUrlPath:string;
   private url:string;
-  constructor(private httpClient: HttpClient, private i18n: I18nService) { }
+  constructor(private httpClient: HttpClient) { }
 
   ngOnInit() {    const protocol = 'http://';
     const domain = 'localhost';
@@ -25,6 +25,12 @@ export class ActionComponent implements OnInit {
     this.url = `${protocol}${domain}:${port}${resource}`;
   }
 
-  submit(){this.httpClient.post(this.url,this.action).subscribe(); }
+  submit(){
+    if(this.action.updateState){
+      this.httpClient.get(this.url).subscribe();
+    }else{
+      console.log('updateState set to false.');
+    }
+    this.httpClient.post(this.url,this.action).subscribe(); }
 
 }

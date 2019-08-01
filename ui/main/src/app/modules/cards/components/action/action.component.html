@@ -1,5 +1,6 @@
-<button type="button"
-        class="btn btn-primary btn-sm mr-2 {{this.action.buttonStyle}}"
+<button *ngIf="!action.hidden"
+        type="button"
+        class="btn btn-primary btn-sm mr-2 {{action.buttonStyle}}"
         placement="auto"
         (click)="submit()"
         translate
