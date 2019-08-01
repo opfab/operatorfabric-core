@@ -5,26 +5,23 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AfterViewInit, Component, Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
-import {Observable} from "rxjs";
-import { InitResize } from 'app/util/init-resize';
+import {Observable} from 'rxjs';
+import { ResizableComponent } from 'app/modules/utilities/components/resizable/resizable.component';
 
 @Component({
   selector: 'of-card-list',
   templateUrl: './card-list.component.html',
   styleUrls: ['./card-list.component.scss']
 })
-export class CardListComponent implements AfterViewInit {
+export class CardListComponent extends ResizableComponent {
 
   @Input() public lightCards: LightCard[];
   @Input() public selection: Observable<string>;
 
-  constructor() { }
-
-
-  ngAfterViewInit() {
-    new InitResize().initResizeHeight();
+  constructor() {
+    super();
   }
 
 }

@@ -19,6 +19,8 @@ getTestBed().initTestEnvironment(
   platformBrowserDynamicTesting()
 );
 // Then we find all the tests.
+// To test only one component (ex: resizable)
+// const context = require.context('./', true, /resizable\.component\.spec\.ts$/);
 const context = require.context('./', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

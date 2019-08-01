@@ -11,19 +11,17 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
 import {ThirdsService} from "@ofServices/thirds.service";
-import {ResizableComponent} from "../../../../util/resizable.component";
 
 @Component({
     selector: 'of-card-details',
     templateUrl: './card-details.component.html',
 })
-export class CardDetailsComponent extends ResizableComponent implements OnInit {
+export class CardDetailsComponent implements OnInit {
 
     card: Card;
     details: Detail[];
 
     constructor(private store: Store<AppState>, private thirdsService: ThirdsService) {
-
     }
 
     ngOnInit() {
