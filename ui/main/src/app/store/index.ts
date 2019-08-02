@@ -66,7 +66,8 @@ export const appEffects = [
     MenuEffects,
     LightCardEffects,
     FeedFiltersEffects,
-    TimeEffects
+    TimeEffects,
+    ArchiveEffects
 ];
 
 export const appReducer: ActionReducerMap<AppState> = {
@@ -78,7 +79,8 @@ export const appReducer: ActionReducerMap<AppState> = {
     menu: menuReducer,
     config: configReducer,
     settings: settingsReducer,
-    time: timeReducer
+    time: timeReducer,
+    archive:archiveReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production
