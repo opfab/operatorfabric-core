@@ -7,6 +7,7 @@ import { Component, AfterViewInit, HostListener } from '@angular/core';
 })
 export class ResizableComponent implements AfterViewInit {
 
+  resized: boolean;
   constructor() { }
   ngAfterViewInit() {
     // Trigger resize event to make sure that height is calculated once parent height is available (see OC-362)
@@ -24,7 +25,7 @@ export class ResizableComponent implements AfterViewInit {
 
   @HostListener('window:resize')
   onResize() {
-    console.log('------------------');
+    this.resized = true;
   }
 
 }

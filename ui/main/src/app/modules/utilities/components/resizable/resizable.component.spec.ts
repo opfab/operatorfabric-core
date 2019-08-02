@@ -20,7 +20,10 @@ describe('ResizableComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create resizable component', () => {
     expect(component).toBeTruthy();
+  });
+  it('shoud test if the height of the resize is invoked after', () => {
+    expect(component.resized).toBeTruthy();
   });
 });
