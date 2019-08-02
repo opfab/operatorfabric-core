@@ -5,26 +5,27 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {map, take, tap} from "rxjs/operators";
+import {map, take, takeUntil, tap} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
 import {Action} from "@ofModel/thirds.model";
 import {ThirdsService} from "@ofServices/thirds.service";
-import {AddThirdActions} from "@ofActions/light-card.actions";
+import {AddThirdActions, UpdateALightCard} from "@ofActions/light-card.actions";
+import {Subject} from "rxjs";
 
 @Component({
     selector: 'of-card',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss']
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements OnInit,OnDestroy {
 
     @Input() public open: boolean = false;
     @Input() public lightCard: LightCard;
@@ -33,6 +34,9 @@ export class CardComponent implements OnInit {
     dateToDisplay: string;
     actionsUrlPath:string;
     private actions:Action[];
+
+    private ngUnsubscribe: Subject<void> = new Subject<void>();
+
     /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>,
@@ -44,26 +48,31 @@ export class CardComponent implements OnInit {
 
      ngOnInit() {
         const card=this.lightCard;
-        console.log('is this card containing actions ?',card);
         this._i18nPrefix = card.publisher + '.' + card.publisherVersion + '.'
         this.store.select(selectCurrentUrl).subscribe(url => {
-            if (url)
-                this.currentPath = url.split('/')[1];
-                this.initActions();
+            if (url) {
+                console.log(`url: `, url);
+                const urlParts = url.split('/');
+                this.currentPath = urlParts[1];
+                console.log(`current remaining of the url:`, this.currentPath)
+                const lastElement = urlParts[urlParts.length-1]
+                console.log(`last part of url is '${lastElement}`);
+            }
         });
         this.store.select(buildConfigSelector('feed.card.time.display'))
         // use configuration to compute date
             .pipe(map(config => this.computeDisplayedDates(config, card)))
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
-
-
+        
         this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processId}/states/${card.state}/actions`;
     }
 
     private initActions() {
         const card = this.lightCard;
-        if (!this.actions && !card.actions) {
+        if (!this.actions) {
             this.third.fetchActionMapFromLightCard(card)
+                .pipe(takeUntil(this.ngUnsubscribe))
                 .subscribe(actions => {
                         this.store.dispatch(new AddThirdActions({card, actions}))
                     },
@@ -126,4 +135,8 @@ export class CardComponent implements OnInit {
         return this._i18nPrefix;
     }
 
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
 }

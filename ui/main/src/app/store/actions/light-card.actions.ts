@@ -123,14 +123,14 @@ export class AddThirdActions implements Action {
 
 export class UpdateALightCard implements Action {
     readonly type = LightCardActionTypes.UpdateALightCard;
-    constructor(public payload: { card: Update<LightCard> }) {
+    constructor(public payload: { card: LightCard }) {
     }
 }
 
 export class UpdateAnAction implements Action {
     readonly type = LightCardActionTypes.UpdateAnAction;
 
-    constructor(public payload: {actionKey: string, status: ActionStatus}) {
+    constructor(public payload: {cardId:string,actionKey: string, status: ActionStatus}) {
     }
 }
 

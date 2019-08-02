@@ -21,7 +21,9 @@
             {{i18nPrefix + lightCard.summary.key}}
             <div>
                 <of-action *ngFor="let action of getActions()" [action]="action" [i18nPrefix]="i18nPrefix"
-                           [actionUrlPath]="actionsUrlPath"></of-action>
+                           [actionUrlPath]="actionsUrlPath"
+                [lightCardId]="lightCard.id"
+                ></of-action>
             </div>
         </div>
     </div>

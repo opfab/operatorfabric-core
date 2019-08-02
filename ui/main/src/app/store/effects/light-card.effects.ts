@@ -9,7 +9,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, delay, map, switchMap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
 import {
     AddThirdActions,
@@ -21,6 +21,7 @@ import {ThirdsService} from "@ofServices/thirds.service";
 import {tap} from "rxjs/internal/operators/tap";
 import {LightCard} from "@ofModel/light-card.model";
 import {selectCardStateSelected} from "@ofSelectors/card.selectors";
+import {fetchLightCard} from "@ofSelectors/feed.selectors";
 
 // those effects are unused for the moment
 @Injectable()
@@ -59,8 +60,8 @@ export class LightCardEffects {
                 const card = action.payload.card;
                 const actions = action.payload.actions;
                 const updateCard = {
-                    id: card.id,
-                    changes:{actions:actions}
+                     ...card,
+                    actions:actions
                 }
                 return new UpdateALightCard({card: updateCard});
             })
@@ -71,9 +72,10 @@ export class LightCardEffects {
         .pipe(
             ofType<UpdateAnAction>(LightCardActionTypes.UpdateAnAction),
             switchMap((action:UpdateAnAction)=>{
+                const lightCardId= action.payload.cardId;
                 const thirdActionKey = action.payload.actionKey;
                 const thirdActionStatus=action.payload.status;
-                return this.store.select(selectCardStateSelected).pipe(
+                return this.store.select(fetchLightCard(lightCardId)).pipe(
                     map((card:LightCard)=>{
                         console.log('LightCard currently selected:',card);
                         const thirdActions=card.actions;
@@ -82,14 +84,16 @@ export class LightCardEffects {
                             const actualizedAction = {...thirdActionToUpdate, ...thirdActionStatus};
                             thirdActions.set(thirdActionKey, actualizedAction);
                             const updateCard = {
-                                id: card.id,
-                                changes: {actions: thirdActions}
+                                ...card,
+                                actions:thirdActions
                             }
                             return new UpdateALightCard({card: updateCard})
                         }else{
+                            console.log(`no actions for ${card.id}`, card);
                             return new UpdateAnActionFailure();
                         }
                     })
+                    ,                    delay(500)
                 );
             })
         );

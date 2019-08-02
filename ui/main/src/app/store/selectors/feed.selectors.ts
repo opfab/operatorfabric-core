@@ -11,6 +11,7 @@ import {AppState} from "@ofStore/index";
 import {Filter} from "@ofModel/feed-filter.model";
 import {LightCard} from "@ofModel/light-card.model";
 import {FilterType} from "@ofServices/filter.service";
+import {getSelectedId} from "@ofStore/reducers/card.reducer";
 
 export const selectLightCardsState = (state:AppState) => state.feed;
 
@@ -48,4 +49,6 @@ export function buildFilterSelector(name:FilterType){
         return filters.get(name);
     });
 }
+
+export const fetchLightCard = lightCardId =>(state:AppState) => selecteFeedCardEntities(state)[lightCardId]
 
