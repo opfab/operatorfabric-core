@@ -6,13 +6,13 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Observable, of} from "rxjs";
-import {LightCard} from "@ofModel/light-card.model";
-import {select, Store} from "@ngrx/store";
-import * as feedSelectors from "@ofSelectors/feed.selectors";
-import {catchError} from "rxjs/operators";
-import {AppState} from "@ofStore/index";
-import {selectArchiveLightCards, selectArchiveLightCardSelection} from "@ofSelectors/archive.selectors";
+import {Observable, of} from 'rxjs';
+import {LightCard} from '@ofModel/light-card.model';
+import {select, Store} from '@ngrx/store';
+import * as feedSelectors from '@ofSelectors/feed.selectors';
+import {catchError} from 'rxjs/operators';
+import {AppState} from '@ofStore/index';
+import {selectArchiveLightCards, selectArchiveLightCardSelection} from '@ofSelectors/archive.selectors';
 
 @Component({
   selector: 'of-archives',

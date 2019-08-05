@@ -6,35 +6,37 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {BaseFilterComponent} from "../base-filter/base-filter.component";
-import {I18n} from "@ofModel/i18n.model";
-import {Observable, of} from "rxjs";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {TranslateService} from "@ngx-translate/core";
-import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
+import {I18n} from '@ofModel/i18n.model';
+import {Observable, of} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {TranslateService} from '@ngx-translate/core';
+// import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'of-list-filter',
   templateUrl: './list-filter.component.html',
   styleUrls: ['./list-filter.component.scss']
 })
-export class ListFilterComponent extends BaseFilterComponent implements OnInit {
+export class ListFilterComponent implements OnInit {
+
+  @Input() filterType: string;
+  @Input() filterPath: string;
+
 
   @Input() values: ({ value: string, label: (I18n | string) } | string)[];
   preparedList: { value: string, label: Observable<string> }[];
 
   constructor(protected store: Store<AppState>, private translateService: TranslateService) {
-    super(store);
   }
 
   ngOnInit() {
     this.preparedList = [];
     if (this.values) {
-      for (let v of this.values) {
-        if (typeof v == 'string') {
+      for (const v of this.values) {
+        if (typeof v === 'string') {
           this.preparedList.push({value: v, label: of(v)});
-        } else if (typeof v.label == 'string') {
+        } else if (typeof v.label === 'string') {
           this.preparedList.push({value: v.value, label: of(v.label)});
         } else {
           this.preparedList.push({
@@ -44,11 +46,13 @@ export class ListFilterComponent extends BaseFilterComponent implements OnInit {
         }
       }
     }
-    super.ngOnInit();
   }
 
+
+  /*
+
   initFormGroup() {
-    let validators = this.computeListValidators();
+    const validators = this.computeListValidators();
     validators.push(this.valueInListValidator());
     return new FormGroup({
       filter: new FormControl('', validators)
@@ -56,14 +60,14 @@ export class ListFilterComponent extends BaseFilterComponent implements OnInit {
   }
 
   protected computeListValidators() {
-    let validators = [];
+    const validators = [];
     if (this.requiredField)
       validators.push(Validators.required);
     return validators;
   }
 
   updateValue(value) {
-    this.form.get('filter').setValue(value?value:'', {emitEvent: false});
+    this.form.get('filter').setValue(value ? value : '', {emitEvent: false});
   }
 
   protected isEqual(formA, formB): boolean {
@@ -78,5 +82,6 @@ export class ListFilterComponent extends BaseFilterComponent implements OnInit {
       return null;
     }
   }
+  */
 
 }

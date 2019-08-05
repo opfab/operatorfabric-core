@@ -1,0 +1,51 @@
+<!-- Copyright (c) 2018, RTE (http://www.rte-france.com)                 -->
+<!--                                                                     -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+<form [formGroup]="archiveForm">
+  <div class="container-fluid">
+    <div class="form-row">
+      <div class="col-md-2">
+        <of-multi-filter [parentForm]="archiveForm" filterPath="publisher" [values]="publishers$|async"></of-multi-filter>
+      </div>
+      <div class="col-md-2">
+        <of-multi-filter [parentForm]="archiveForm" filterPath="process" [values]="processes$|async"></of-multi-filter>
+      </div>
+
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="time-start" translate>feed.filters.time.start.label</label>
+          <input type="datetime-local" class="form-control" id="time-start-notification" formControlName="startNotification">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="time-end" translate>feed.filters.time.end.label</label>
+          <input type="datetime-local" class="form-control" id="time-end-notification" formControlName="endNotification">
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="time-start" translate>feed.filters.time.start.label</label>
+          <input type="datetime-local" class="form-control" id="time-start-business" formControlName="startBusiness">
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="form-group">
+          <label for="time-end" translate>feed.filters.time.end.label</label>
+          <input type="datetime-local" class="form-control" id="time-end-business" formControlName="endBusiness">
+        </div>
+      </div>
+      
+      <div class="col-md-1" style="margin-top:30px;">
+        <div class="form-group login-form">
+          <div class="form-group">
+            <button type="button" class="btn btn-primary w-100" (click)="sendQuery()" translate >archive.search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

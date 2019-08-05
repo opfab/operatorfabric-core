@@ -7,16 +7,17 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ArchivesRoutingModule} from './archives-routing.module';
-import {ArchivesComponent} from "./archives.component";
-import {ArchiveListComponent} from "./components/archive-list/archive-list.component";
-import {CardsModule} from "../cards/cards.module";
-import {BaseFilterComponent} from "./components/archive-list/filters/base-filter/base-filter.component";
-import {ListFilterComponent} from "./components/archive-list/filters/list-filter/list-filter.component";
-import { ArchiveFiltersComponent } from './components/archive-list/filters/archive-filters.component';
-import {TranslateModule} from "@ngx-translate/core";
 import { ArchiveListPageComponent } from './components/archive-list/archive-list-page/archive-list-page.component';
+import {ArchivesComponent} from './archives.component';
+import {ArchiveListComponent} from './components/archive-list/archive-list.component';
+import {CardsModule} from '../cards/cards.module';
+import {ListFilterComponent} from './components/archive-filters/list-filter/list-filter.component';
+import { ArchiveFiltersComponent } from './components/archive-filters/archive-filters.component';
+import {TranslateModule} from '@ngx-translate/core';
+import { ArchiveService } from '@ofServices/archive.service';
+import { MultiFilterComponent } from './components/archive-filters/multi-filter/multi-filter.component';
 
 @NgModule({
   imports: [
@@ -27,6 +28,16 @@ import { ArchiveListPageComponent } from './components/archive-list/archive-list
     CardsModule,
     TranslateModule,
   ],
-  declarations: [ArchivesComponent,ArchiveListComponent, BaseFilterComponent, ListFilterComponent, ArchiveFiltersComponent, ArchiveListPageComponent]
+  declarations: [
+    ArchivesComponent,
+    ArchiveListComponent,
+    ListFilterComponent,
+    ArchiveFiltersComponent,
+    MultiFilterComponent,
+    ArchiveListPageComponent
+  ],
+  providers: [
+    ArchiveService
+  ]
 })
 export class ArchivesModule { }

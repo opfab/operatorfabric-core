@@ -1,0 +1,8 @@
+
+<div class="form-group" [formGroup]="parentForm">
+  <label for="filter" translate>archive.filters.{{filterPath}}</label>
+  <select multiple class="form-control" [formControlName]="filterPath" id="publisher" [attr.required]="requiredField">
+    <option value=""></option>
+    <option *ngFor="let v of preparedList" value="{{v.value}}">{{v.label|async}}</option>
+  </select>
+</div>
