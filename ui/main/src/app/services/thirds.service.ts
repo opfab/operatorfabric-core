@@ -14,8 +14,8 @@ import {TranslateLoader, TranslateService} from "@ngx-translate/core";
 import {catchError, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
-import {AppState} from "../store/index";
-import {LightCard} from "../model/light-card.model";
+import {AppState} from "@ofStore/index";
+import {LightCard} from "@ofModel/light-card.model";
 import {Action, Third, ThirdMenu} from "@ofModel/thirds.model";
 import {Card} from "@ofModel/card.model";
 
@@ -67,7 +67,6 @@ export class ThirdsService {
 
     queryMenuEntryURL(thirdMenuId: string, thirdMenuVersion: string, thirdMenuEntryId: string): Observable<string> {
         return this.queryThird(thirdMenuId, thirdMenuVersion).pipe(
-            //filter((third :Third)=>!(!third.menuEntries)),
             switchMap(third => {
                 const entry = third.menuEntries.filter(entry => entry.id === thirdMenuEntryId)
                 if (entry.length == 1) {

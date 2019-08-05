@@ -11,13 +11,11 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {map, take, takeUntil, tap} from "rxjs/operators";
+import {map, takeUntil} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {TranslateService} from "@ngx-translate/core";
 import {TimeService} from "@ofServices/time.service";
 import {Action} from "@ofModel/thirds.model";
-import {ThirdsService} from "@ofServices/thirds.service";
-import {AddThirdActions, UpdateALightCard} from "@ofActions/light-card.actions";
 import {Subject} from "rxjs";
 
 @Component({
@@ -41,22 +39,17 @@ export class CardComponent implements OnInit,OnDestroy {
     constructor(private router: Router,
                 private store: Store<AppState>,
                 private translate: TranslateService,
-                private time: TimeService,
-                private third:ThirdsService
+                private time: TimeService
     ){
     }
 
      ngOnInit() {
         const card=this.lightCard;
-        this._i18nPrefix = card.publisher + '.' + card.publisherVersion + '.'
+            this._i18nPrefix = `${card.publisher}.${card.publisherVersion}.`;
         this.store.select(selectCurrentUrl).subscribe(url => {
             if (url) {
-                console.log(`url: `, url);
                 const urlParts = url.split('/');
                 this.currentPath = urlParts[1];
-                console.log(`current remaining of the url:`, this.currentPath)
-                const lastElement = urlParts[urlParts.length-1]
-                console.log(`last part of url is '${lastElement}`);
             }
         });
         this.store.select(buildConfigSelector('feed.card.time.display'))
@@ -68,23 +61,6 @@ export class CardComponent implements OnInit,OnDestroy {
         this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processId}/states/${card.state}/actions`;
     }
 
-    private initActions() {
-        const card = this.lightCard;
-        if (!this.actions) {
-            this.third.fetchActionMapFromLightCard(card)
-                .pipe(takeUntil(this.ngUnsubscribe))
-                .subscribe(actions => {
-                        this.store.dispatch(new AddThirdActions({card, actions}))
-                    },
-                    error => {
-                        if (error.status && error.status == 404) {
-                            console.log(`no actions available for ${card.id}`);
-                        } else {
-                            console.error(error);
-                        }
-                    });
-        }
-    }
     computeDisplayedDates(config: string, lightCard: LightCard): string {
         switch (config) {
             case 'NONE':
@@ -106,9 +82,7 @@ export class CardComponent implements OnInit,OnDestroy {
 
     public select() {
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
-        this.initActions();
     }
-
 
     /* necessary otherwise action buttons are weirdly refresh */
     getActions(){
@@ -119,11 +93,9 @@ export class CardComponent implements OnInit,OnDestroy {
     }
 
     transformActionMapToArray(){
-
-        console.log('try to load actions from card',this.lightCard.actions);
         const actions = this.lightCard.actions;
         if(actions){
-            const entries = Array.from(actions.entries())
+            const entries = Array.from(actions.entries());
             return entries.map<Action>(([key,action]:[string,Action])=>{
                 return {...action,key:key}
             });

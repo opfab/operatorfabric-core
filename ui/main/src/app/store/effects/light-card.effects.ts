@@ -13,17 +13,24 @@ import {catchError, delay, map, switchMap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
 import {
     AddThirdActions,
+    DelayedLightCardUpdate,
     LightCardActionTypes,
+    LightCardAlreadyUpdated,
     LoadLightCardsExtendedData,
-    LoadLightCardsSuccess, UpdateALightCard, UpdateAnAction, UpdateAnActionFailure
+    LoadLightCardsSuccess,
+    ThirdActionAlreadyLoaded,
+    ThirdActionAlreadyUpdated,
+    UpdateALightCard,
+    UpdateAnAction,
+    UpdateAnActionFailure
 } from "@ofActions/light-card.actions";
 import {ThirdsService} from "@ofServices/thirds.service";
-import {tap} from "rxjs/internal/operators/tap";
 import {LightCard} from "@ofModel/light-card.model";
-import {selectCardStateSelected} from "@ofSelectors/card.selectors";
 import {fetchLightCard} from "@ofSelectors/feed.selectors";
+import {CardActionTypes, LoadCard} from "@ofActions/card.actions";
+import {Action as ThirdAction, ActionStatus} from "@ofModel/thirds.model";
+import * as _ from 'lodash';
 
-// those effects are unused for the moment
 @Injectable()
 export class LightCardEffects {
 
@@ -41,7 +48,7 @@ export class LightCardEffects {
             switchMap((action: LoadLightCardsSuccess) =>
                 this.thirdService.loadI18nForLightCards(action.payload.lightCards)
                     .pipe(
-                        catchError((err, caught) => {
+                        catchError(err => {
                             console.error(`i18 loading failed for card publishers`, err);
                             return of(false);
                         })
@@ -57,45 +64,94 @@ export class LightCardEffects {
         .pipe(
             ofType<AddThirdActions>(LightCardActionTypes.AddThirdActions),
             map((action: AddThirdActions) => {
-                const card = action.payload.card;
-                const actions = action.payload.actions;
                 const updateCard = {
-                     ...card,
-                    actions:actions
-                }
+                    ...(action.payload.card),
+                    actions: action.payload.actions
+                };
                 return new UpdateALightCard({card: updateCard});
             })
         );
 
     @Effect()
-    updateAThirdAction:Observable<Action> = this.actions$
+    updateAThirdAction: Observable<Action> = this.actions$
         .pipe(
             ofType<UpdateAnAction>(LightCardActionTypes.UpdateAnAction),
-            switchMap((action:UpdateAnAction)=>{
-                const lightCardId= action.payload.cardId;
+            switchMap((action: UpdateAnAction) => {
+                const lightCardId = action.payload.cardId;
                 const thirdActionKey = action.payload.actionKey;
-                const thirdActionStatus=action.payload.status;
+                const thirdActionStatus = action.payload.status as ActionStatus;
                 return this.store.select(fetchLightCard(lightCardId)).pipe(
-                    map((card:LightCard)=>{
-                        console.log('LightCard currently selected:',card);
-                        const thirdActions=card.actions;
-                        if(thirdActions) {
+                    map((card: LightCard) => {
+                        const thirdActions = card.actions;
+                        if (thirdActions) {
                             const thirdActionToUpdate = thirdActions.get(thirdActionKey);
-                            const actualizedAction = {...thirdActionToUpdate, ...thirdActionStatus};
-                            thirdActions.set(thirdActionKey, actualizedAction);
-                            const updateCard = {
-                                ...card,
-                                actions:thirdActions
+                            const st = thirdActionToUpdate as ActionStatus;
+                            if (_.isEqual(thirdActionToUpdate, st)) {
+                                return new ThirdActionAlreadyUpdated();
+                            } else {
+                                const actualizedAction = {...thirdActionToUpdate, ...thirdActionStatus};
+                                thirdActions.set(thirdActionKey, actualizedAction);
+                                const updateCard = {
+                                    ...card,
+                                    actions: thirdActions
+                                };
+                                return new UpdateALightCard({card: updateCard})
                             }
-                            return new UpdateALightCard({card: updateCard})
-                        }else{
+
+                        } else {
                             console.log(`no actions for ${card.id}`, card);
                             return new UpdateAnActionFailure();
                         }
                     })
-                    ,                    delay(500)
                 );
             })
         );
+
+    @Effect()
+    uploadActions: Observable<Action> = this.actions$
+        .pipe(
+            ofType<LoadCard>(CardActionTypes.LoadCard),
+            switchMap(action => {
+                const lightCardId = action.payload.id;
+                return this.store.select(fetchLightCard(lightCardId))
+            }),
+            switchMap((lightCard: LightCard) => {
+                if (lightCard.actions) {
+                    return of(new ThirdActionAlreadyLoaded());
+                }
+                return this.thirdService.fetchActionMapFromLightCard(lightCard)
+                    .pipe(map((actions: Map<string, ThirdAction>) => {
+                        return new AddThirdActions({card: lightCard, actions: actions}) as Action
+                    }));
+            })
+            , catchError((error, caught) => {
+                if (error.status && error.status == 404) {
+                    console.log(`no actions available`);
+                } else {
+                    console.log(error);
+                }
+                return caught;
+            })
+        );
+    @Effect()
+    delayUpdateLightCard: Observable<Action> = this.actions$
+        .pipe(
+            ofType<DelayedLightCardUpdate>(LightCardActionTypes.DelayedLightCardUpdate),
+            switchMap((action: DelayedLightCardUpdate) => {
+                    const receivedCard = action.payload.card;
+                    return this.store.select(fetchLightCard(receivedCard.id)).pipe(
+                        map((storedCard: LightCard) => {
+                            if (receivedCard === storedCard) {
+                                return new LightCardAlreadyUpdated();
+                            }
+                            return new UpdateALightCard({card: action.payload.card})
+
+                        })
+                    );
+                }
+            ),
+            delay(500)
+        );
+
 
 }

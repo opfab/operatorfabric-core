@@ -25,7 +25,11 @@ export enum LightCardActionTypes {
     AddThirdActions = '[LCard] Adds some Third Actions to existing card',
     UpdateALightCard = '[LCard] Update a Light Card',
     UpdateAnAction = '[LCard] Update one Action of a LightCard',
-    UpdateAnActionFailure = '[LCard] No actions where available to update for the current selected card in the state'
+    UpdateAnActionFailure = '[LCard] No actions where available to update for the current selected card in the state',
+    ThirdActionAlreadyLoaded = '[LCard] Light Card contains actions',
+    ThirdActionAlreadyUpdated = '[LCard] Third Action unchanged',
+    DelayedLightCardUpdate = '[LCard] update Light Card actions later',
+    LightCardAlreadyUpdated = '[LCard] Light Card already Updated'
 }
 
 // needed by NGRX entities
@@ -140,6 +144,28 @@ export class UpdateAnActionFailure implements Action{
     constructor(){}
 }
 
+export class ThirdActionAlreadyLoaded implements Action{
+    readonly  type = LightCardActionTypes.ThirdActionAlreadyLoaded;
+    constructor(){}
+}
+
+export class ThirdActionAlreadyUpdated implements Action{
+    readonly  type = LightCardActionTypes.ThirdActionAlreadyUpdated;
+    constructor(){}
+}
+
+export class DelayedLightCardUpdate implements Action{
+    readonly  type = LightCardActionTypes.DelayedLightCardUpdate;
+    constructor(public payload:{card:LightCard}){
+
+    }
+}
+
+export class LightCardAlreadyUpdated implements Action{
+    readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
+    constructor(){}
+}
+
 export type LightCardActions =
     LoadLightCards
     | LoadLightCardsSuccess
@@ -154,4 +180,8 @@ export type LightCardActions =
     | UpdateALightCard
     | UpdateAnAction
     | UpdateAnActionFailure
+    | ThirdActionAlreadyLoaded
+    | ThirdActionAlreadyUpdated
+    | DelayedLightCardUpdate
+    | LightCardAlreadyUpdated
     | RemoveLightCard;
