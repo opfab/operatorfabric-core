@@ -28,8 +28,7 @@ export class UpdateArchiveFilter implements Action {
 
 export class SendArchiveQuery implements Action {
     readonly type = ArchiveActionTypes.SendArchiveQuery;
-    /* istanbul ignore next */
-    constructor(public payload:{params: Map<string,string[]>}){}
+    constructor(public payload: {params: string}) {}
 }
 
 export class HandleUnexpectedError implements Action {

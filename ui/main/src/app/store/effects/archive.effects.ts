@@ -26,9 +26,7 @@ import {Page} from "@ofModel/page.model";
 export class ArchiveEffects {
 
     /* istanbul ignore next */
-    constructor(private store: Store<AppState>,
-                private actions$: Actions,
-                private service: CardService) {
+    constructor(private store: Store<AppState>, private actions$: Actions, private service: CardService) {
     }
 
     @Effect()
