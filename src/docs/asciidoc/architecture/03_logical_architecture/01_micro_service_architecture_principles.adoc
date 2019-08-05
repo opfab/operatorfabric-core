@@ -36,3 +36,8 @@ operation from static content serving
 ==== Asynchronous messaging
 
 Use to share information asynchronously across the whole services
+
+==== Authentication
+
+The architecture does not include an authentication service but delegates it's authentication needs to a provided
+authentication service see <<Micro-Service Architecture Implementation>>
