@@ -30,7 +30,6 @@ export function reducer(
                 loading: false
             };
         }
-
         case CardActionTypes.LoadCardFailure: {
             return {
                 ...state,
@@ -39,6 +38,28 @@ export function reducer(
                 error: `error while loading a Card: '${action.payload.error}'`
             };
         }
+        case CardActionTypes.LoadArchivedCard: {
+            return {
+                ...state,
+                loading: true
+            };
+        }
+        case CardActionTypes.LoadArchivedCardSuccess: {
+            return {
+                ...state,
+                selected: action.payload.card,
+                loading: false
+            };
+        }
+        case CardActionTypes.LoadArchivedCardFailure: {
+            return {
+                ...state,
+                selected:null,
+                loading: false,
+                error: `error while loading a Card: '${action.payload.error}'`
+            };
+        }
+
         default: {
             return state;
         }

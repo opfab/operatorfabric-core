@@ -41,5 +41,4 @@ export class ArchiveEffects {
                 this.store.dispatch(new HandleUnexpectedError({error: error}));
                 return caught;
             }));
-
 }

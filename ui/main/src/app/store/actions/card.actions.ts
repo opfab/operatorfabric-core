@@ -13,6 +13,9 @@ export enum CardActionTypes {
     LoadCard = '[Card] Load Card',
     LoadCardSuccess = '[Card] Load Card Success',
     LoadCardFailure = '[Card] Load Card Fail',
+    LoadArchivedCard = '[Card] Load Archived Card',
+    LoadArchivedCardSuccess = '[Card] Load Archived Card Success',
+    LoadArchivedCardFailure = '[Card] Load Archived Card Fail',
     HandleUnexpectedError = '[Card] Handle unexpected error related to card issue'
 }
 // needed by NGRX entities
@@ -39,6 +42,26 @@ export class LoadCardSuccess implements Action {
     constructor(public payload: { card: Card }) {}
 }
 
+export class LoadArchivedCard implements Action {
+    readonly type = CardActionTypes.LoadArchivedCard;
+
+    /* istanbul ignore next */
+    constructor(public payload: { id: string }) {}
+}
+export class LoadArchivedCardFailure implements Action {
+    readonly type = CardActionTypes.LoadArchivedCardFailure;
+
+    /* istanbul ignore next */
+    constructor(public payload: { error: Error }) {}
+}
+
+export class LoadArchivedCardSuccess implements Action {
+    readonly type = CardActionTypes.LoadArchivedCardSuccess;
+
+    /* istanbul ignore next */
+    constructor(public payload: { card: Card }) {}
+}
+
 export class HandleUnexpectedError implements Action {
     /* istanbul ignore next */
     readonly type = CardActionTypes.HandleUnexpectedError;
@@ -52,4 +75,7 @@ export type CardActions =
     | LoadCard
     | LoadCardSuccess
     | LoadCardFailure
+    | LoadArchivedCard
+    | LoadArchivedCardSuccess
+    | LoadArchivedCardFailure
     | HandleUnexpectedError;

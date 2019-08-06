@@ -6,14 +6,16 @@
  */
 
 import {Action} from '@ngrx/store';
-import {CardActionTypes} from "@ofActions/card.actions";
 import {LightCard} from "@ofModel/light-card.model";
+import {LightCardActionTypes} from "@ofActions/light-card.actions";
 
 export enum ArchiveActionTypes {
     UpdateArchiveFilter = '[Archive] Update Filter',
     SendArchiveQuery = '[Archive] Send Query',
     ArchiveQuerySuccess = '[Archive] Query was successful',
-    HandleUnexpectedError = '[Card] Handle unexpected error related to archived card issue'
+    HandleUnexpectedError = '[Archive] Handle unexpected error related to archived card issue',
+    SelectArchivedLightCard = '[Archive] Select one archived light card'
+
 }
 
 export class UpdateArchiveFilter implements Action {
@@ -42,8 +44,20 @@ export class ArchiveQuerySuccess implements Action {
     constructor(public payload:{lightCards: LightCard[]}){}
 }
 
+export class SelectArchivedLightCard implements Action {
+    /* istanbul ignore next */
+    readonly type = ArchiveActionTypes.SelectArchivedLightCard;
+    /* istanbul ignore next */
+    constructor(public payload: {selectedCardId:string}){}
+
+}
+
+
+
+
 export type ArchiveActions =
     UpdateArchiveFilter
     | SendArchiveQuery
     | HandleUnexpectedError
-    | ArchiveQuerySuccess;
+    | ArchiveQuerySuccess
+    |SelectArchivedLightCard;

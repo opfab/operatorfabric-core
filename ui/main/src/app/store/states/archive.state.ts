@@ -5,26 +5,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {createEntityAdapter, EntityAdapter, EntityState} from "@ngrx/entity";
 import {LightCard} from "@ofModel/light-card.model";
 
-export interface ArchiveState extends EntityState<LightCard> {
+export interface ArchiveState {
     selectedCardId: string;
-    lastCards: LightCard[];
+    lightCards: LightCard[];
     filters: Map<string,string[]>; //TODO Explain path/values or create data type
+    loading: boolean
 }
 
-export function compareByPublishDate(card1: LightCard, card2: LightCard){
-    return card1.publishDate - card2.publishDate;
-}
-
-export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<LightCard>({
-    sortComparer:compareByPublishDate
-});
-
-export const archiveInitialState: ArchiveState = LightCardAdapter.getInitialState(
-    {
+export const archiveInitialState: ArchiveState = {
         selectedCardId: null,
-        lastCards: [],
-        filters: new Map()
-    });
+        lightCards:[],
+        filters: new Map(),
+        loading: false
+}

@@ -12,7 +12,14 @@ import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {CardService} from '@ofServices/card.service';
 import {AppState} from "@ofStore/index";
-import {CardActionTypes, LoadCard, LoadCardFailure, LoadCardSuccess} from "@ofActions/card.actions";
+import {
+    CardActionTypes,
+    LoadArchivedCard, LoadArchivedCardFailure,
+    LoadArchivedCardSuccess,
+    LoadCard,
+    LoadCardFailure,
+    LoadCardSuccess
+} from "@ofActions/card.actions";
 import {Card} from "@ofModel/card.model";
 
 // those effects are unused for the moment
@@ -36,6 +43,20 @@ export class CardEffects {
             }),
             catchError((err, caught) => {
                 this.store.dispatch(new LoadCardFailure(err));
+                return caught;
+            })
+        );
+
+    @Effect()
+    loadArchivedById: Observable<Action> = this.actions$
+        .pipe(
+            ofType<LoadArchivedCard>(CardActionTypes.LoadArchivedCard),
+            switchMap(action => this.service.loadArchivedCard(action.payload.id)),
+            map((card: Card) => {
+                return new LoadArchivedCardSuccess({card: card});
+            }),
+            catchError((err, caught) => {
+                this.store.dispatch(new LoadArchivedCardFailure(err));
                 return caught;
             })
         );

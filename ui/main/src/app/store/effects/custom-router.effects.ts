@@ -18,9 +18,10 @@ import {
     RouterRequestAction
 } from "@ngrx/router-store";
 import {filter, map, switchMap} from "rxjs/operators";
-import {LoadCard} from "@ofActions/card.actions";
+import {LoadArchivedCard, LoadCard} from "@ofActions/card.actions";
 import {ClearLightCardSelection, SelectLightCard} from "@ofActions/light-card.actions";
 import {SelectMenuLink} from "@ofActions/menu.actions";
+import {SelectArchivedLightCard} from "@ofActions/archive.actions";
 
 @Injectable()
 export class CustomRouterEffects {
@@ -40,6 +41,21 @@ export class CustomRouterEffects {
             return [
                 new LoadCard({id: routerState.params['cid']}),
                 new SelectLightCard({selectedCardId: routerState.params['cid']})
+            ];
+        })
+    );
+
+    @Effect()
+    navigateToArchivedCard: Observable<Action> = this.actions$.pipe(
+        ofType(ROUTER_NAVIGATION),
+        filter((action: RouterNavigationAction, index)=> {
+            return action.payload.event.url.indexOf("/archives/cards/")>=0;
+        }),
+        switchMap(action=>{
+            const routerState:any = action.payload.routerState;
+            return [
+                new LoadArchivedCard({id: routerState.params['cid']}),
+                new SelectArchivedLightCard({selectedCardId: routerState.params['cid']})
             ];
         })
     );
