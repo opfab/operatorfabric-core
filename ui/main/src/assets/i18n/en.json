@@ -63,7 +63,8 @@
   "archive": {
     "filters": {
       "publisher": "Publisher",
-      "process": "Process"
+      "process": "Process",
+      "tags": "Tags"
     },
     "search": "Search"
   },

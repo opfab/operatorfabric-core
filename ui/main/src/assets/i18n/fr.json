@@ -63,7 +63,8 @@
   "archive": {
     "filters": {
       "publisher": "Emetteur",
-      "process": "Processus"
+      "process": "Processus",
+      "tags": "Etiquettes"
     },
     "search": "Rechercher"
   },

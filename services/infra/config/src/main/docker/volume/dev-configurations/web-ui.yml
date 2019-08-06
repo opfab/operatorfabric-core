@@ -21,8 +21,13 @@ operatorfabric:
         - value: "TEST2"
           label: "Test Publisher 2"
       process.list:
-        - process
-        - someOtherProcess
+            - process
+            - someOtherProcess
+      tags.list:
+        - value: "tag1"
+          label: "Label for tag 1"
+        - value: "tag2"
+          label: "Label for tag 2"
   i10n.supported.time-zones:
     - value: "Europe/Paris"
       label: "Headquarters timezone"
