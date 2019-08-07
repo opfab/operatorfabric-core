@@ -39,9 +39,9 @@ ext {
 
     spring = [
             securityJwt    : "org.springframework.security:spring-security-jwt:${versions['spring.security.jwt']}",
-            securityOauthResource: "org.springframework.security:spring-security-oauth2-resource-server:${versions['spring']}",
-            securityOauthJose: "org.springframework.security:spring-security-oauth2-jose:${versions['spring']}",
-            securityTest: "org.springframework.security:spring-security-test:${versions['spring']}",
+            securityOauthResource: "org.springframework.security:spring-security-oauth2-resource-server:${versions['spring.security']}",
+            securityOauthJose: "org.springframework.security:spring-security-oauth2-jose:${versions['spring.security']}",
+            securityTest: "org.springframework.security:spring-security-test:${versions['spring.security']}",
             webflux: "org.springframework:spring-webflux:${versions['spring']}",
             retry: "org.springframework.retry:spring-retry:1.2.2.RELEASE"
     ]
@@ -62,7 +62,7 @@ ext {
     testing = [
             junit5Api: "org.junit.jupiter:junit-jupiter-api:${versions['junit5']}",
             junit5Engine: "org.junit.jupiter:junit-jupiter-engine:${versions['junit5']}",
-            junit5Plugin: "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
+//            junit5Plugin: "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
             assertJ     : "org.assertj:assertj-core:${versions['assertj']}",
             reactor     : "io.projectreactor:reactor-test",
             awaitility  : "org.awaitility:awaitility-kotlin:${versions['awaitility']}"

@@ -12,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath testing.junit5Plugin
+        //classpath testing.junit5Plugin
         classpath boot.springBootPlugin
     }
 }
@@ -34,8 +34,9 @@ subprojects {
         annotationProcessor misc.lombok
         implementation misc.lombok
         // compileOnly misc.lombok
-        testRuntime testing.junit5Engine
-        testCompile testing.junit5Api, boot.starterTest, testing.assertJ, misc.lombok
+        testRuntimeOnly testing.junit5Engine
+        testImplementation testing.junit5Api
+        testCompile boot.starterTest, testing.assertJ, misc.lombok
     }
 
     configurations {
