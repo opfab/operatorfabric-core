@@ -9,7 +9,8 @@
     "headless": "ng test --browsers ChromeHeadless --watch=false --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "compodoc": "npx compodoc -p src/tsconfig.app.json"
+    "compodoc": "npx compodoc -p src/tsconfig.app.json",
+    "audit": "npm audit --json | npm-audit-html --output report.html"
   },
   "private": true,
   "dependencies": {
@@ -79,6 +80,7 @@
     "karma-junit-reporter": "^1.2.0",
     "karma-mocha-reporter": "^2.2.5",
     "ngrx-store-freeze": "^0.2.4",
+    "npm-audit-html": "^1.3.3",
     "ts-mockito": "^2.3.1",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",

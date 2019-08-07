@@ -5,6 +5,7 @@ plugins {
     id "org.asciidoctor.convert" version "1.5.9.2"
     id "maven-publish"
     id "signing"
+    id "org.owasp.dependencycheck" version "5.2.0"
 }
 
 ext.versions = new Properties()
@@ -127,12 +128,26 @@ asciidoctor {
 //    }
 //}
 
+//dependencyCheck {
+//    analyzers {
+//        assemblyEnabled=false
+//    }
+//}
+
 
 subprojects {
 
     group operatorfabric.group
     version operatorfabric.version
     apply plugin: "com.github.jk1.dependency-license-report"
+    apply plugin: 'org.owasp.dependencycheck'
+
+    if (project.name != 'main-user-interface') {
+        task securityReport {
+            dependsOn 'dependencyCheckAnalyze'
+        }
+    }
+    
 
     licenseReport {
         renderers = [new InventoryHtmlReportRenderer()]

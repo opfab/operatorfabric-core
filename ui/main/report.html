@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+
+    <title>NPM Audit Report</title>
+    <meta name="description" content="2 known vulnerabilities found.">
+
+    <style>
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md text-center">
+                <h1>NPM Audit Report</h1>
+
+                <h2>2 known vulnerabilities | 30890 dependencies |
+                    August 7th 2019, 10:59:30 am</h2>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">
+                            <span class="badge badge-primary">low</span>
+                            Regular Expression Denial of Service
+                        </h1>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li>Module:
+                                        <a href="https://npmjs.com/package/braces">braces</a>
+                                    </li>
+                                    <li>Published: February 15th 2019 </li>
+                                    <li>Reported by: Santosh Rao</li>
+                                    <li>CWE-185</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li>Vulnerable: &lt;2.3.1</li>
+                                    <li>Patched: &gt;&#x3D;2.3.1</li>
+                                    <li>CVSS: 4</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h3>Overview</h3>
+                        <p class="card-text"><p>Versions of <code>braces</code> prior to 2.3.1 are vulnerable to Regular Expression Denial of Service (ReDoS). Untrusted input may cause catastrophic backtracking while matching regular expressions. This can cause the application to be unresponsive leading to Denial of Service.</p>
+</p>
+
+                        <h3>Findings</h3>
+							<ul>
+								<li>@angular/compiler-cli&gt;chokidar&gt;anymatch&gt;micromatch&gt;braces </li>
+							</ul>
+
+                        <h3>Remediation</h3>
+                        <p class="card-text"><p>Upgrade to version 2.3.1 or higher.</p>
+</p>
+                         
+                        <h3>References</h3>
+                        <p class="card-text"><ul>
+<li><a href="https://github.com/micromatch/braces/commit/abdafb0cae1e0c00f184abbadc692f4eaa98f451">GitHub Commit</a></li>
+</ul>
+</p>
+                         
+                        <a href="https://npmjs.com/advisories/786" class="btn btn-primary">More about this vulnerability</a>
+                    </div>
+                </div>
+            </div>            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">
+                            <span class="badge badge-secondary">moderate</span>
+                            Command Injection
+                        </h1>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li>Module:
+                                        <a href="https://npmjs.com/package/dot">dot</a>
+                                    </li>
+                                    <li>Published: April 4th 2019 </li>
+                                    <li>Reported by: Cristian-Alexandru Staicu</li>
+                                    <li>CWE-20</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li>Vulnerable: &gt;&#x3D;0</li>
+                                    <li>Patched: &lt;0.0.0</li>
+                                    <li>CVSS: 3</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h3>Overview</h3>
+                        <p class="card-text"><p>All versions of <code>dot</code> are vulnerable to Command Injection. The template compilation may execute arbitrary commands if an attacker can inject code in the template or if a Prototype Pollution-like vulnerability can be exploited to alter an Object&#39;s prototype.</p>
+</p>
+
+                        <h3>Findings</h3>
+							<ul>
+								<li>@compodoc/compodoc&gt;@compodoc/ngd-transformer&gt;dot </li>
+							</ul>
+
+                        <h3>Remediation</h3>
+                        <p class="card-text"><p>No fix is currently available. Consider using an alternative module until a fix is made available.</p>
+</p>
+                         
+                        <h3>References</h3>
+                        <p class="card-text"><ul>
+<li>(HackerOne report)[<a href="https://hackerone.com/reports/390929%5D">https://hackerone.com/reports/390929]</a></li>
+</ul>
+</p>
+                         
+                        <a href="https://npmjs.com/advisories/798" class="btn btn-primary">More about this vulnerability</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
