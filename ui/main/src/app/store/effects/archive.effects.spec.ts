@@ -21,7 +21,7 @@ describe('ArchiveEffects', () => {
 
         const localMockCardService = jasmine.createSpyObj('CardService', ['fetchArchivedCards']);
 
-        const mockStore = jasmine.createSpyObj('Store',['dispatch']);
+        const mockStore = jasmine.createSpyObj('Store',['dispatch','select']);
 
         localMockCardService.fetchArchivedCards.and.returnValue(hot('---b', {b: expectedLightCards}));
         const expectedAction = new ArchiveQuerySuccess({lightCards: expectedLightCards});

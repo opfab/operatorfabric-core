@@ -23,7 +23,7 @@ export class ArchiveFiltersComponent implements OnInit {
 
   publishers$:Observable<string []>;
   processes$:Observable<string []>;
-  tags$:Observable<string []>; //TODO Not necessarily strings, could be value/ labels or i18n but it doesn't seem to be a problem
+  tags$:Observable<string []>; //TODO Not necessarily strings, could be value/labels or i18n but it doesn't seem to be a problem
 
   filters: Map<string,string[]>;
 
@@ -38,8 +38,12 @@ export class ArchiveFiltersComponent implements OnInit {
     this.store.select(selectArchiveFilters).subscribe( next => this.filters = next);
   }
 
-  sendQuery(): void{
-    this.store.dispatch(new SendArchiveQuery({params: this.filters}));
+  performNewSearch(): void{
+    //TODO Clear currently selected card (from path and state), clear lightCards list
+    let params = this.filters;
+    params.set("page",["0"]);
+    this.store.dispatch(new SendArchiveQuery({params: params}));
+    //TODO Find out number of pages to create page list
   }
 
 }

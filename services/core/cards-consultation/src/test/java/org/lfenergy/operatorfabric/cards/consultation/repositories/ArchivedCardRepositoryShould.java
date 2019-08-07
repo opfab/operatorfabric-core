@@ -355,6 +355,54 @@ public class ArchivedCardRepositoryShould {
     }
 
     @Test
+    public void fetchArchivedCardsActiveFromWithPaging() {
+
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+
+        //Find cards with an active period that is at least partly after start
+        Instant start = nowPlusTwo;
+
+        queryParams.add("activeFrom", Long.toString(start.toEpochMilli()));
+
+        //Page 1
+        queryParams.add("page","0");
+        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+
+        StepVerifier.create(repository.findWithUserAndParams(params))
+                .expectNextCount(3)
+                .expectComplete()
+                .verify();
+        StepVerifier.create(repository.findWithUserAndParams(params))
+                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,null))
+                .verifyComplete();
+
+        //Page 2
+        queryParams.set("page","1");
+        params = of(user1,queryParams);
+        StepVerifier.create(repository.findWithUserAndParams(params))
+                .expectNextCount(3)
+                .expectComplete()
+                .verify();
+        StepVerifier.create(repository.findWithUserAndParams(params))
+                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,null))
+                .verifyComplete();
+
+        //Page 3
+        queryParams.set("page","2");
+        params = of(user1,queryParams);
+        StepVerifier.create(repository.findWithUserAndParams(params))
+                .expectNextCount(1)
+                .expectComplete()
+                .verify();
+        StepVerifier.create(repository.findWithUserAndParams(params))
+                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,null))
+                .verifyComplete();
+
+    }
+
+
+
+    @Test
     public void fetchArchivedCardsActiveTo() {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();

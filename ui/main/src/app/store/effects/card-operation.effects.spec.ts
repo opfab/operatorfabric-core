@@ -35,7 +35,7 @@ describe('CardOperationEffects', () => {
     } as AppState;
 
     beforeEach(async(() => {
-        cardServiceSpy = jasmine.createSpyObj('CardService', ['loadCard']); //TODO the "spy" isn't really needed, see if we can make it simpler
+        cardServiceSpy = jasmine.createSpyObj('CardService', ['loadCard']);
         TestBed.configureTestingModule({
             providers: [
                 CardOperationEffects,

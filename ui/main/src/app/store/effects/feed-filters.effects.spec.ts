@@ -74,7 +74,7 @@ describe('FeedFilterEffects', () => {
             const expectedAction = new InitFilters({filters: localMockFeedFilterService.defaultFilters()});
             const localExpected = hot('c', {c: expectedAction});
 
-            mockStore.select.and.returnValue(of(null)); //needed otherwise "TypeError: Cannot read property 'pipe' of undefined" //TODO Find out why
+            mockStore.select.and.returnValue(of(null)); //needed otherwise "TypeError: Cannot read property 'pipe' of undefined"
 
             effects = new FeedFiltersEffects(mockStore, localActions$, localMockFeedFilterService);
 

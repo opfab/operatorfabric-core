@@ -4,10 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,11 +36,15 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public static final String ACTIVE_FROM_PARAM = "activeFrom";
     public static final String ACTIVE_TO_PARAM = "activeTo";
 
+    public static final String PAGE_PARAM = "page";
+
+    public static int PAGE_SIZE = 3; //TODO Make it configurable at least for tests, make 10 the default
+
     private static final List<String> specialParameters =Arrays.asList(
-            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM);
+            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM);
 
     private static final List<String> uniqueParameters = Arrays.asList(
-            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM);
+            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM);
 
     private final ReactiveMongoTemplate template;
     //TODO Return "light" ArchivedCards (projection) ?
@@ -60,6 +68,11 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         return template.findOne(query,ArchivedCardConsultationData.class);
 
+    }
+
+    public Mono<Long> countWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
+        Query query = createQueryFromUserAndParams(params);
+        return template.count(query,ArchivedCardConsultationData.class);
     }
 
     public Flux<ArchivedCardConsultationData> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
@@ -123,8 +136,17 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
         }
 
+        /* Handle paging */
+        if(queryParams.containsKey(PAGE_PARAM)) {
+            log.info("ArchivedCardRepo: Paging is applied");
+            Pageable pageableRequest = PageRequest.of(Integer.parseInt(queryParams.getFirst(PAGE_PARAM)), PAGE_SIZE);
+            query.with(pageableRequest);
+        }
+
         return query;
     }
+    //TODO Catch errors if dates or page param are not parseable as Int?
+
 
     private List<Criteria> regularParametersCriteria(MultiValueMap<String, String> params) {
 

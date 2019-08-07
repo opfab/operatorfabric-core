@@ -16,6 +16,7 @@ import {BaseFilterComponent} from "./components/archive-list/filters/base-filter
 import {ListFilterComponent} from "./components/archive-list/filters/list-filter/list-filter.component";
 import { ArchiveFiltersComponent } from './components/archive-list/filters/archive-filters.component';
 import {TranslateModule} from "@ngx-translate/core";
+import { ArchiveListPageComponent } from './components/archive-list/archive-list-page/archive-list-page.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,6 @@ import {TranslateModule} from "@ngx-translate/core";
     CardsModule,
     TranslateModule,
   ],
-  declarations: [ArchivesComponent,ArchiveListComponent, BaseFilterComponent, ListFilterComponent, ArchiveFiltersComponent]
+  declarations: [ArchivesComponent,ArchiveListComponent, BaseFilterComponent, ListFilterComponent, ArchiveFiltersComponent, ArchiveListPageComponent]
 })
 export class ArchivesModule { }

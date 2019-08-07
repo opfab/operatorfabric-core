@@ -13,6 +13,7 @@ export enum ArchiveActionTypes {
     UpdateArchiveFilter = '[Archive] Update Filter',
     SendArchiveQuery = '[Archive] Send Query',
     ArchiveQuerySuccess = '[Archive] Query was successful',
+    UpdateArchivePage = '[Archive] Update query result page',
     HandleUnexpectedError = '[Archive] Handle unexpected error related to archived card issue',
     SelectArchivedLightCard = '[Archive] Select one archived light card'
 
@@ -44,20 +45,23 @@ export class ArchiveQuerySuccess implements Action {
     constructor(public payload:{lightCards: LightCard[]}){}
 }
 
+export class UpdateArchivePage implements Action {
+    readonly type = ArchiveActionTypes.UpdateArchivePage;
+    /* istanbul ignore next */
+    constructor(public payload:{pageNumber: number}){}
+}
+
 export class SelectArchivedLightCard implements Action {
     /* istanbul ignore next */
     readonly type = ArchiveActionTypes.SelectArchivedLightCard;
     /* istanbul ignore next */
     constructor(public payload: {selectedCardId:string}){}
-
 }
-
-
-
 
 export type ArchiveActions =
     UpdateArchiveFilter
     | SendArchiveQuery
     | HandleUnexpectedError
     | ArchiveQuerySuccess
+    | UpdateArchivePage
     |SelectArchivedLightCard;

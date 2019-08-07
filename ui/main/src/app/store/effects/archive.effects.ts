@@ -9,16 +9,17 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {CardService} from '@ofServices/card.service';
 import {Observable} from 'rxjs';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {
     ArchiveActionTypes,
     ArchiveQuerySuccess,
     HandleUnexpectedError,
-    SendArchiveQuery
+    SendArchiveQuery, UpdateArchivePage
 } from "@ofActions/archive.actions";
 import {LightCard} from "@ofModel/light-card.model";
+import {selectArchiveFilters} from "@ofSelectors/archive.selectors";
 
 @Injectable()
 export class ArchiveEffects {
@@ -41,4 +42,21 @@ export class ArchiveEffects {
                 this.store.dispatch(new HandleUnexpectedError({error: error}));
                 return caught;
             }));
+
+    @Effect()
+    queryArchivedCardsPage: Observable<Action> = this.actions$
+        .pipe(
+            ofType<UpdateArchivePage>(ArchiveActionTypes.UpdateArchivePage),
+            withLatestFrom(this.store.select(selectArchiveFilters)),
+            map(([action,filters]) => {
+                filters.set("page",[(action.payload.pageNumber).toString()]);
+                return new SendArchiveQuery({params: filters});
+            }),
+            //
+            catchError((error, caught) => {
+                this.store.dispatch(new HandleUnexpectedError({error: error}));
+                return caught;
+            }));
+
+
 }

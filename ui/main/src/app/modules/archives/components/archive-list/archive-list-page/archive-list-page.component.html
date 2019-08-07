@@ -1,0 +1,27 @@
+<!-- Copyright (c) 2018, RTE (http://www.rte-france.com)                 -->
+<!--                                                                     -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+
+<nav aria-label="Archive Page Navigation">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" (click)="updateResultPage(0)">1</a></li>
+    <li class="page-item"><a class="page-link" (click)="updateResultPage(1)">2</a></li>
+    <li class="page-item"><a class="page-link" (click)="updateResultPage(2)">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- <ng-container *ngFor="let i of [].constructor(20)">bla</ng-container>-->
