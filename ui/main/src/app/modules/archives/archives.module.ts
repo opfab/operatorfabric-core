@@ -12,13 +12,14 @@ import {ArchivesRoutingModule} from './archives-routing.module';
 import { ArchiveListPageComponent } from './components/archive-list/archive-list-page/archive-list-page.component';
 import {ArchivesComponent} from './archives.component';
 import {ArchiveListComponent} from './components/archive-list/archive-list.component';
-import {CardsModule} from '../cards/cards.module';
 import {ListFilterComponent} from './components/archive-filters/list-filter/list-filter.component';
 import { ArchiveFiltersComponent } from './components/archive-filters/archive-filters.component';
-import {TranslateModule} from '@ngx-translate/core';
-import { ArchiveService } from '@ofServices/archive.service';
 import { MultiFilterComponent } from './components/archive-filters/multi-filter/multi-filter.component';
-
+import { DatetimeFilterComponent } from './components/archive-filters/datetime-filter/datetime-filter.component';
+import {CardsModule} from '../cards/cards.module';
+import {TranslateModule} from '@ngx-translate/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ArchiveService } from '@ofServices/archive.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -27,6 +28,7 @@ import { MultiFilterComponent } from './components/archive-filters/multi-filter/
     ArchivesRoutingModule,
     CardsModule,
     TranslateModule,
+    NgbModule
   ],
   declarations: [
     ArchivesComponent,
@@ -34,7 +36,8 @@ import { MultiFilterComponent } from './components/archive-filters/multi-filter/
     ListFilterComponent,
     ArchiveFiltersComponent,
     MultiFilterComponent,
-    ArchiveListPageComponent
+    ArchiveListPageComponent,
+    DatetimeFilterComponent
   ],
   providers: [
     ArchiveService

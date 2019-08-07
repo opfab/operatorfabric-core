@@ -5,17 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Component, OnInit, Input } from '@angular/core';
-import {Observable} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import {Observable, combineLatest} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {buildConfigSelector} from '@ofSelectors/config.selectors';
-import {TryToLogIn} from '@ofActions/authentication.actions';
-import {SendArchiveQuery} from '@ofActions/archive.actions';
-import {selectArchiveFilters} from '@ofSelectors/archive.selectors';
-import { ArchiveService } from '@ofServices/archive.service';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { I18n } from '@ofModel/i18n.model';
+import { TimeService } from '@ofServices/time.service';
 
 @Component({
   selector: 'of-archive-filters',
@@ -27,66 +23,53 @@ export class ArchiveFiltersComponent implements OnInit {
   publishers$: Observable<string []>;
   processes$: Observable<string []>;
 
-  preparedList: { value: string, label: Observable<string> }[];
-  @Input() values: ({ value: string, label: (I18n | string) } | string)[];
-
-  // filters: Map<string, string[]>;
   archiveForm: FormGroup;
-  
-  // @Input() values: ({ value: string, label: (I18n | string) } | string)[];
 
   constructor(private store: Store<AppState>,
-    private archiveService: ArchiveService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private timeService: TimeService) { }
 
 
   ngOnInit() {
     this.publishers$ = this.store.select(buildConfigSelector('archive.filters.publisher.list'));
     this.processes$ = this.store.select(buildConfigSelector('archive.filters.process.list'));
-
-    this.publishers$.subscribe(data =>  console.log(data));
-
-    
-
-    this.archiveForm = new FormGroup({
+    this.archiveForm = this.fb.group({
       publisher: new FormControl(),
       process: new FormControl(),
-      startNotification: new FormControl(),
-      endNotification: new FormControl(),
-      startBusiness: new FormControl(),
-      endBusiness: new FormControl()
-    }, {updateOn: 'change'});
-
-    /*
-    this.preparedList = [];
-    if (this.values) {
-      for (const v of this.values) {
-        if (typeof v === 'string') {
-          this.preparedList.push({value: v, label: of(v)});
-        } else if (typeof v.label === 'string') {
-          this.preparedList.push({value: v.value, label: of(v.label)});
-        } else {
-          this.preparedList.push({
-            value: v.value,
-            label: this.translateService.get(v.label.key, v.label.parameters)
-          });
-        }
-      }
-    }
-    */
-    
-    // this.store.select(selectArchiveFilters).subscribe( next => this.filters = next);
+      startNotificationd: '',
+      startNotificationt: '',
+      endNotificationd: '',
+      endNotificationt: '',
+      startBusinessd: '',
+      startBusinesst: '',
+      endBusinessd: '',
+      endBusinesst: ''
+    });
   }
 
-  // (filters: Map<string, string[]>): Observable<LightCard[]>
   sendQuery(): void {
     console.log(this.archiveForm.value);
-    const params = new Map();
-    params.set('publisher', ['TEST1']);
-    const params1 = 'publisher=TEST1';
-    this.store.dispatch(new SendArchiveQuery({params: params1}));
-    // this.archiveService.fetchArchivedCards(params).subscribe(data => console.log(data));
+    const sNd = this.archiveForm.controls['startNotificationd'].value;
+    const sNt = this.archiveForm.controls['startNotificationt'].value;
+    const eNd = this.archiveForm.controls['endNotificationd'].value;
+    const eNt = this.archiveForm.controls['endNotificationt'].value;
+    const sBd = this.archiveForm.controls['startBusinessd'].value;
+    const sBt = this.archiveForm.controls['startBusinesst'].value;
+    const eBd = this.archiveForm.controls['endBusinessd'].value;
+    const eBt = this.archiveForm.controls['endBusinesst'].value;
+    // 'YYYY-MM-DDTHH:mm'
+    const startNotif = `${sNd.year}-${sNd.month - 1}-${sNd.day}T${sNt.hour}:${sNt.minute}`;
+    const endNotif = `${eNd.year}-${eNd.month - 1}-${eNd.day}T${eNt.hour}:${eNt.minute}`;
+    const startBusn = `${sBd.year}-${sBd.month - 1}-${sBd.day}T${sBt.hour}:${sBt.minute}`;
+    const endBusn = `${eBd.year}-${eBd.month - 1}-${eBd.day}T${eBt.hour}:${eBt.minute}`;
+    console.log(this.timeService.parseString(startNotif).valueOf(), endNotif, startBusn, endBusn);
 
+
+    // console.log(this.timeService.parseString(stringTime).valueOf());
+    // this.store.dispatch(new SendArchiveQuery(params1));
+    // this.archiveService.fetchArchivedCards(params).subscribe(data => console.log(data));
   }
+
+  
 
 }

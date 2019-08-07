@@ -19,7 +19,7 @@ export class MultiFilterComponent implements OnInit {
   constructor(private translateService: TranslateService) {
     this.parentForm = new FormGroup({
       publisher: new FormControl()
-   });
+    });
   }
 
   ngOnInit() {

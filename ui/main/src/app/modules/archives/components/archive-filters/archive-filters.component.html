@@ -6,40 +6,56 @@
 <form [formGroup]="archiveForm">
   <div class="container-fluid">
     <div class="form-row">
-      <div class="col-md-2">
+      <div class="col-md-3">
         <of-multi-filter [parentForm]="archiveForm" filterPath="publisher" [values]="publishers$|async"></of-multi-filter>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-3">
         <of-multi-filter [parentForm]="archiveForm" filterPath="process" [values]="processes$|async"></of-multi-filter>
       </div>
 
-      <div class="col-md-2">
+      
+      <div class="col-md-3">
         <div class="form-group">
-          <label for="time-start" translate>feed.filters.time.start.label</label>
-          <input type="datetime-local" class="form-control" id="time-start-notification" formControlName="startNotification">
+          <label for="time-start-notification" translate>feed.filters.time.start.label</label>
+          <input class="form-control" type="text" ngbDatepicker #nsd="ngbDatepicker" id="time-start-notification" formControlName="startNotificationd"/>
+          <button (click)="nsd.toggle()">Toggle</button>
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-3">
+        <ngb-timepicker formControlName="startNotificationt"></ngb-timepicker>
+      </div>
+      <div class="col-md-3">
         <div class="form-group">
-          <label for="time-end" translate>feed.filters.time.end.label</label>
-          <input type="datetime-local" class="form-control" id="time-end-notification" formControlName="endNotification">
+          <label for="time-end-notification" translate>feed.filters.time.end.label</label>
+          <input type="text" class="form-control" ngbDatepicker #ned="ngbDatepicker" id="time-end-notification" formControlName="endNotificationd"/>
+          <button (click)="ned.toggle()">Toggle</button>
         </div>
       </div>
-
-      <div class="col-md-2">
+      <div class="col-md-3">
+        <ngb-timepicker formControlName="endNotificationt"></ngb-timepicker>
+      </div>
+      <div class="col-md-3">
         <div class="form-group">
-          <label for="time-start" translate>feed.filters.time.start.label</label>
-          <input type="datetime-local" class="form-control" id="time-start-business" formControlName="startBusiness">
+          <label for="time-start-business" translate>feed.filters.time.start.label</label>
+          <input type="text" class="form-control" ngbDatepicker #bsd="ngbDatepicker" id="time-end-business" formControlName="startBusinessd"/>
+          <button (click)="bsd.toggle()">Toggle</button>
         </div>
       </div>
-      <div class="col-md-1">
+      <div class="col-md-3">
+        <ngb-timepicker formControlName="startBusinesst"></ngb-timepicker>
+      </div>
+      <div class="col-md-3">
         <div class="form-group">
-          <label for="time-end" translate>feed.filters.time.end.label</label>
-          <input type="datetime-local" class="form-control" id="time-end-business" formControlName="endBusiness">
+          <label for="time-end-business" translate>feed.filters.time.end.label</label>
+          <input type="text" class="form-control" ngbDatepicker #bed="ngbDatepicker" id="time-end-business" formControlName="endBusinessd"/>
+          <button (click)="bed.toggle()">Toggle</button>
         </div>
+      </div>
+      <div class="col-md-3">
+        <ngb-timepicker formControlName="endBusinesst"></ngb-timepicker>
       </div>
       
-      <div class="col-md-1" style="margin-top:30px;">
+      <div class="col-md-3" style="margin-top:30px;">
         <div class="form-group login-form">
           <div class="form-group">
             <button type="button" class="btn btn-primary w-100" (click)="sendQuery()" translate >archive.search</button>

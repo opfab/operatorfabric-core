@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MultiFilterComponent } from './multi-filter.component';
+import { DatetimeFilterComponent } from './datetime-filter.component';
 
-xdescribe('MultiFilterComponent', () => {
-  let component: MultiFilterComponent;
-  let fixture: ComponentFixture<MultiFilterComponent>;
+describe('DatetimeFilterComponent', () => {
+  let component: DatetimeFilterComponent;
+  let fixture: ComponentFixture<DatetimeFilterComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MultiFilterComponent ]
+      declarations: [ DatetimeFilterComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MultiFilterComponent);
+    fixture = TestBed.createComponent(DatetimeFilterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
