@@ -12,3 +12,5 @@ Our Front-end application is an Angular 7 SPA (Single Page Application/
 
 Asside from modularization consideration, the application architecture is described by the following diagram.
 
+image::image::03_01_microservice_architecture_principles/WebUI Architecture.png[Angular With Redux Architecture]
+
