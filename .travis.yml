@@ -71,6 +71,7 @@ cache:
     # caches gradle caches
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/dependency-check-data/
     # caches docker images
     #- $HOME/docker
     # cache ui dependencies

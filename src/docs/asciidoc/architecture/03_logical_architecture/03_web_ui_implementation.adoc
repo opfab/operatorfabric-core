@@ -7,3 +7,5 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
 === Business Target Architecture
+
+Our Frint-end application is an Angular 7 SPA (Single Page Application

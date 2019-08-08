@@ -12,10 +12,6 @@ Our global microservices enforces Spring technologies.
 
 Infrastructure services are based on Spring Cloud, they are Springboot services with specific enablements.
 
-Business services are based on Spring, they are Springboot services with specific enablements. Business services exposes
-interfaces as REST endpoints either leveraging Spring MVC or Spring Webflux.
-
-
 ==== Spring Cloud Eureka (Registry)
 
 Spring Cloud Eureka allows to setup a Netflix Eureka v1 server to use as a Registry/Discovery server using Springboot
@@ -31,17 +27,27 @@ is setup using Springboot enabler, property file and part of the route business 
 Spring Cloud configuration allows to share configuration between different services and service instances. It
 is setup using Springboot enabler and spring property file.
 
-==== RabbitMQ (Asynchronous Messaging)
+==== RabbitMQ (Asynchronous Messaging) - To provide
 
 Rabbitmq is an implementation of AMQP specification. From Spring services, Rabbitmq is accessed throught two layers of
 technology: Spring AMQP and Spring Cloud Bus. The later delivers higher level concepts of events for microservices
 synchronization
 
-==== Mongo DB
+==== Mongo DB - To provide
 
 MongoDB is our persistence layer. MngoDB is a document oriented NoSql database that suits our business data model whose
-models are either highly coupled (data has no meaning without some other data) or loosely coupled (pices of data are completely independent
+models are either highly coupled (data has no meaning without some other data) or loosely coupled (pices of data are
+completely independent
 
-==== Oauth2 - OpenID connect (Supported authentication services)
+==== Oauth2 - OpenID connect (Supported authentication services) - To provide
+
+We support authentication through the use of an external Oauth2 - Open Id connect server. Two flow of authentication are
+supportted: Password and Authentication Code Flow.
+
+==== Business Services
+
+Business services are based on Spring, they are Springboot services with specific enablements. Business services exposes
+interfaces as REST endpoints either leveraging Spring MVC or Spring Webflux.
+
 
 
