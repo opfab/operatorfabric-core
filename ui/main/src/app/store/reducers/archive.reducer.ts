@@ -28,7 +28,7 @@ export function reducer(
         case ArchiveActionTypes.ArchiveQuerySuccess : {
             return {
                 ...state,
-                lightCards: action.payload.lightCards
+                resultPage: action.payload.resultPage
             }
         }
 

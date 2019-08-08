@@ -16,6 +16,8 @@ import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsulta
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,8 +30,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.checkIfCardActiveInRange;
-import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleArchivedCard;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.*;
 import static reactor.util.function.Tuples.of;
 
 /**
@@ -138,7 +140,7 @@ public class ArchivedCardRepositoryShould {
         repository.deleteAll().subscribe();
 
         ArchivedCardConsultationData card =
-              createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login1, "rte", "operator");
+                createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login1, "rte", "operator");
         StepVerifier.create(repository.save(card))
                 .expectNextMatches(computeCardPredicate())
                 .expectComplete()
@@ -202,13 +204,13 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 //The card from thirdPublisher is returned first because it has the latest publication date
-                .assertNext(card -> {
-                    assertThat(card.getPublisher()).isEqualTo(thirdPublisher);
-                    assertThat(card.getProcessId()).isEqualTo("PROCESS1");
-                })
-                .assertNext(card -> {
-                    assertThat(card.getPublisher()).isEqualTo(secondPublisher);
-                    assertThat(card.getProcessId()).isEqualTo("PROCESS1");
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(2);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.getContent().get(0).getPublisher()).isEqualTo(thirdPublisher);
+                    assertThat(page.getContent().get(0).getProcessId()).isEqualTo("PROCESS1");
+                    assertThat(page.getContent().get(1).getPublisher()).isEqualTo(secondPublisher);
+                    assertThat(page.getContent().get(1).getProcessId()).isEqualTo("PROCESS1");
                 })
                 .expectComplete()
                 .verify();
@@ -225,6 +227,11 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(0L);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.getContent().size()).isEqualTo(0);
+                })
                 .expectComplete()
                 .verify();
     }
@@ -244,16 +251,15 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .assertNext(card -> {
-                    assertThat(card.getPublishDate()).isBetween(start,end);
-                })
-                .assertNext(card -> {
-                    assertThat(card.getPublishDate()).isBetween(start,end);
-                })
-                .assertNext(card -> {
-                    assertThat(card.getPublisher()).isEqualTo(secondPublisher); //This one is last because it has the oldest publishDate
-                    //TODO Find a prettier way to check results are ordered by publishDate
-                    assertThat(card.getPublishDate()).isBetween(start,end);
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(3);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> (card.getPublishDate().compareTo(start)>=0)&&(card.getPublishDate().compareTo(end)<=0))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
                 .verify();
@@ -272,19 +278,15 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .assertNext(card -> {
-                    assertThat(card.getPublishDate()).isAfterOrEqualTo(start);
-                })
-                .assertNext(card -> {
-                    assertThat(card.getPublishDate()).isAfterOrEqualTo(start);
-                })
-                .assertNext(card -> {
-                    assertThat(card.getPublishDate()).isAfterOrEqualTo(start);
-                })
-                .assertNext(card -> {
-                    assertThat(card.getPublisher()).isEqualTo(secondPublisher); //This one is last because it has the oldest publishDate
-                    //TODO Find a prettier way to check results are ordered by publishDate
-                    assertThat(card.getPublishDate()).isAfterOrEqualTo(start);
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(4);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> (card.getPublishDate().compareTo(start) >= 0))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
                 })
                 .expectComplete()
                 .verify();
@@ -303,7 +305,16 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(9)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(9);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> (card.getPublishDate().compareTo(end) <= 0))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
     }
@@ -323,13 +334,18 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(5)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(5);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> checkIfCardActiveInRange(card, start, end))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
-
-        StepVerifier.create(repository.findWithUserAndParams(params))
-                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,end))
-                .verifyComplete();
     }
 
     @Test
@@ -345,14 +361,21 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(7)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(7);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> checkIfCardActiveInRange(card, start, null))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
-
-        StepVerifier.create(repository.findWithUserAndParams(params))
-                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,null))
-                .verifyComplete();
     }
+
+
 
     @Test
     public void fetchArchivedCardsActiveFromWithPaging() {
@@ -363,44 +386,64 @@ public class ArchivedCardRepositoryShould {
         Instant start = nowPlusTwo;
 
         queryParams.add("activeFrom", Long.toString(start.toEpochMilli()));
+        queryParams.add("size","3");
 
         //Page 1
         queryParams.add("page","0");
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(3)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(7);
+                    assertThat(page.getTotalPages()).isEqualTo(3);
+                    assertThat(page.getContent().size()).isEqualTo(3);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> checkIfCardActiveInRange(card, start, null))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findWithUserAndParams(params))
-                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,null))
-                .verifyComplete();
 
         //Page 2
         queryParams.set("page","1");
         params = of(user1,queryParams);
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(3)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(7);
+                    assertThat(page.getTotalPages()).isEqualTo(3);
+                    assertThat(page.getContent().size()).isEqualTo(3);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> checkIfCardActiveInRange(card, start, null))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findWithUserAndParams(params))
-                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,null))
-                .verifyComplete();
 
         //Page 3
         queryParams.set("page","2");
         params = of(user1,queryParams);
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(1)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(7);
+                    assertThat(page.getTotalPages()).isEqualTo(3);
+                    assertThat(page.getContent().size()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> checkIfCardActiveInRange(card, start, null))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findWithUserAndParams(params))
-                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,start,null))
-                .verifyComplete();
 
     }
-
-
 
     @Test
     public void fetchArchivedCardsActiveTo() {
@@ -415,13 +458,18 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(6)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(6);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> checkIfCardActiveInRange(card, null, end))
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
-
-        StepVerifier.create(repository.findWithUserAndParams(params))
-                .thenConsumeWhile(card -> checkIfCardActiveInRange(card,null,end))
-                .verifyComplete();
     }
 
     @Test
@@ -445,7 +493,19 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(4)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(4);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> (card.getPublisher().equals(firstPublisher)
+                                    &&checkIfCardActiveInRange(card, start, end)
+                                    &&card.getPublishDate().compareTo(publishTo)<=0)
+                            )
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
 
@@ -460,7 +520,19 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(13)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(13);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> (
+                                    card.getOrphanedUsers().contains(user1.getLogin())
+                                            ||card.getUserRecipients().contains(user1.getLogin())) //TODO Check whether we need both
+                            )
+                    );
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
 
@@ -475,7 +547,16 @@ public class ArchivedCardRepositoryShould {
         Tuple2<User, MultiValueMap<String, String>> params = of(user2,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                .expectNextCount(14)
+                .assertNext(page -> {
+                    assertThat(page.getTotalElements()).isEqualTo(14);
+                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    //Check criteria are matched
+                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
+                            card -> checkIfContainsAny(card.getGroupRecipients(),user2.getGroups())
+                    ));
+                    //Check sort order
+                    assertTrue(checkIfPageIsSorted(page));
+                })
                 .expectComplete()
                 .verify();
 
@@ -495,4 +576,7 @@ public class ArchivedCardRepositoryShould {
                 .verify();
 
     }
+
+    //TODO Add test to make sure results are ordered between pages
+
 }

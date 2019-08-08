@@ -10,12 +10,15 @@ import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
 import {ArchiveEffects} from "@ofEffects/archive.effects";
 import {ArchiveQuerySuccess, SendArchiveQuery} from "@ofActions/archive.actions";
+import {LightCard} from "@ofModel/light-card.model";
+import {Page} from "@ofModel/page.model";
 
 describe('ArchiveEffects', () => {
     let effects: ArchiveEffects;
 
-    it('should return an ArchiveQuerySuccess after SendArchiveQuery triggers query through cardService ', () => {
+    it('should return an ArchiveQuerySuccess after SendArchiveQuery triggers query through cardService (no paging) ', () => {
         const expectedLightCards =  getSeveralRandomLightCards();
+        const expectedPage = new Page<LightCard>(1,expectedLightCards.length,expectedLightCards);
 
         const localActions$ = new Actions(hot('-a--', {a: new SendArchiveQuery({params: new Map<string, string[]>()})}));
 
@@ -23,8 +26,8 @@ describe('ArchiveEffects', () => {
 
         const mockStore = jasmine.createSpyObj('Store',['dispatch','select']);
 
-        localMockCardService.fetchArchivedCards.and.returnValue(hot('---b', {b: expectedLightCards}));
-        const expectedAction = new ArchiveQuerySuccess({lightCards: expectedLightCards});
+        localMockCardService.fetchArchivedCards.and.returnValue(hot('---b', {b: expectedPage}));
+        const expectedAction = new ArchiveQuerySuccess({resultPage: expectedPage});
         const localExpected = hot('---c', {c: expectedAction});
 
         effects = new ArchiveEffects(mockStore, localActions$, localMockCardService);

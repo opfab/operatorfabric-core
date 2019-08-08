@@ -16,6 +16,8 @@ import {environment} from "@env/environment";
 import {GuidService} from "@ofServices/guid.service";
 import {LightCard} from "@ofModel/light-card.model";
 import {forEach} from "@angular/router/src/utils/collection";
+import {Page} from "@ofModel/page.model";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class CardService {
@@ -84,7 +86,7 @@ export class CardService {
         return this.httpClient.get<Card>(`${this.archivesUrl}/${id}`);
     }
 
-    fetchArchivedCards(filters: Map<string,string[]>):Observable<LightCard[]> {
+    fetchArchivedCards(filters: Map<string,string[]>):Observable<Page<LightCard>> {
 
         let params = new HttpParams();
 
@@ -97,8 +99,6 @@ export class CardService {
         }
         );
 
-        console.log("Send request ");
-
-        return this.httpClient.get<LightCard[]>(`${this.archivesUrl}/`,{params: params});
+        return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`,{params: params});
     }
 }

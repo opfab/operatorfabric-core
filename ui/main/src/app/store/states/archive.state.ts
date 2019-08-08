@@ -6,17 +6,18 @@
  */
 
 import {LightCard} from "@ofModel/light-card.model";
+import {Page} from "@ofModel/page.model";
 
 export interface ArchiveState {
     selectedCardId: string;
-    lightCards: LightCard[];
+    resultPage: Page<LightCard>;
     filters: Map<string,string[]>; //TODO Explain path/values or create data type
     loading: boolean
 }
 
 export const archiveInitialState: ArchiveState = {
         selectedCardId: null,
-        lightCards:[],
+        resultPage: new Page<LightCard>(1,0,[]),
         filters: new Map(),
         loading: false
 }

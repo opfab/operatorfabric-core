@@ -43,7 +43,6 @@ public class ArchivedCardRoutesConfig {
         return request ->
                 extractParameters(request)
                         .flatMap(params -> archivedCardRepository.findWithUserAndParams(params)
-                                .collectList()
                                 .flatMap(archivedCards-> ok().contentType(MediaType.APPLICATION_JSON)
                                                 .body(fromObject(archivedCards))));
     }

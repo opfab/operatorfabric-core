@@ -42,6 +42,7 @@ export class ArchiveFiltersComponent implements OnInit {
     //TODO Clear currently selected card (from path and state), clear lightCards list
     let params = this.filters;
     params.set("page",["0"]);
+    params.set("size",["3"]); //TODO Make page size a UI config property
     this.store.dispatch(new SendArchiveQuery({params: params}));
     //TODO Find out number of pages to create page list
   }

@@ -8,6 +8,7 @@
 import {Action} from '@ngrx/store';
 import {LightCard} from "@ofModel/light-card.model";
 import {LightCardActionTypes} from "@ofActions/light-card.actions";
+import {Page} from "@ofModel/page.model";
 
 export enum ArchiveActionTypes {
     UpdateArchiveFilter = '[Archive] Update Filter',
@@ -42,7 +43,7 @@ export class HandleUnexpectedError implements Action {
 export class ArchiveQuerySuccess implements Action {
     readonly type = ArchiveActionTypes.ArchiveQuerySuccess;
     /* istanbul ignore next */
-    constructor(public payload:{lightCards: LightCard[]}){}
+    constructor(public payload:{resultPage: Page<LightCard>}){}
 }
 
 export class UpdateArchivePage implements Action {

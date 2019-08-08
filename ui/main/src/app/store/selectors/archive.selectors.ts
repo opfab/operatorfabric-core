@@ -14,7 +14,7 @@ import {ArchiveState} from "@ofStates/archive.state";
 export const selectArchive = (state:AppState) => state.archive;
 export const selectArchiveFilters =  createSelector(selectArchive, (archiveState:ArchiveState)=> archiveState.filters);
 
-export const selectArchiveLightCards = createSelector(selectArchive, (archiveState:ArchiveState)=> archiveState.lightCards);
+export const selectArchiveLightCards = createSelector(selectArchive, (archiveState:ArchiveState)=> archiveState.resultPage.content);
 
 export const selectArchiveLightCardSelection = createSelector(selectArchive, (archiveState:ArchiveState)=> archiveState.selectedCardId);
 

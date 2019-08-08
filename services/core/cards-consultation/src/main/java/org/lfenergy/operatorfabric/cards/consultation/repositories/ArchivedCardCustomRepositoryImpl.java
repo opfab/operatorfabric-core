@@ -4,16 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.util.MultiValueMap;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
@@ -37,14 +32,13 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public static final String ACTIVE_TO_PARAM = "activeTo";
 
     public static final String PAGE_PARAM = "page";
-
-    public static int PAGE_SIZE = 3; //TODO Make it configurable at least for tests, make 10 the default
+    public static final String PAGE_SIZE_PARAM = "size";
 
     private static final List<String> specialParameters =Arrays.asList(
-            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM);
+            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
 
     private static final List<String> uniqueParameters = Arrays.asList(
-            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM);
+            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
 
     private final ReactiveMongoTemplate template;
     //TODO Return "light" ArchivedCards (projection) ?
@@ -70,12 +64,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
     }
 
-    public Mono<Long> countWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
-        Query query = createQueryFromUserAndParams(params);
-        return template.count(query,ArchivedCardConsultationData.class);
-    }
-
-    public Flux<ArchivedCardConsultationData> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
+    public Mono<Page<ArchivedCardConsultationData>> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
         Query query = createQueryFromUserAndParams(params);
         //TODO Replace it with proper archivedLightCard
         /*query.fields()
@@ -92,7 +81,33 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                 .include("severity")
                 .include("tags");*/
 
-        return template.find(query,ArchivedCardConsultationData.class);
+
+        //Handle Paging
+
+        Pageable pageableRequest = createPageableFromParams(params.getT2());
+        if(pageableRequest.isPaged()) {
+            return template.find(query.with(pageableRequest),ArchivedCardConsultationData.class).collectList()
+                    .zipWith(template.count(query,ArchivedCardConsultationData.class))
+                    .map(tuple -> new PageImpl<>(tuple.getT1(),pageableRequest,tuple.getT2()));
+        } else {
+            return template.find(query,ArchivedCardConsultationData.class)
+                    .collectList()
+                    .map(results ->  new PageImpl<>(results));
+        }
+
+        //TODO Remove extra page fields
+
+    }
+
+    private Pageable createPageableFromParams(MultiValueMap<String, String> queryParams) {
+        if(queryParams.containsKey(PAGE_PARAM)&&queryParams.containsKey(PAGE_SIZE_PARAM)) {
+            return PageRequest.of(Integer.parseInt(queryParams.getFirst(PAGE_PARAM)), Integer.parseInt(queryParams.getFirst(PAGE_SIZE_PARAM)));
+        } else if (queryParams.containsKey(PAGE_PARAM)||queryParams.containsKey(PAGE_SIZE_PARAM)) {
+            //TODO Throw bad request: need either both page and size or none
+            return null;
+        } else {
+            return Pageable.unpaged();
+        }
     }
 
     private Query createQueryFromUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
@@ -134,13 +149,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         if(!criteria.isEmpty()){
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
-        }
-
-        /* Handle paging */
-        if(queryParams.containsKey(PAGE_PARAM)) {
-            log.info("ArchivedCardRepo: Paging is applied");
-            Pageable pageableRequest = PageRequest.of(Integer.parseInt(queryParams.getFirst(PAGE_PARAM)), PAGE_SIZE);
-            query.with(pageableRequest);
         }
 
         return query;

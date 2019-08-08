@@ -14,13 +14,17 @@ import org.lfenergy.operatorfabric.cards.consultation.model.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
+import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
 
@@ -96,8 +100,8 @@ public class TestUtilities {
             return groupRecipient;
 
         return RecipientConsultationData.builder()
-                    .type(RecipientEnum.DEADEND)
-                    .build();
+                .type(RecipientEnum.DEADEND)
+                .build();
     }
 
     public static CardOperation readCardOperation(ObjectMapper mapper, String s) {
@@ -172,9 +176,9 @@ public class TestUtilities {
             result = (
                     //Case 1: Card start date is included in query filter range
                     (cardStart.compareTo(rangeStart)>=0&&cardStart.compareTo(rangeEnd)<=0) ||
-                    //Case 2: Card start date is before start of query filter range
-                    (cardStart.compareTo(rangeStart)<=0&&(cardEnd==null||cardEnd.compareTo(rangeStart)>=0))
-                    );
+                            //Case 2: Card start date is before start of query filter range
+                            (cardStart.compareTo(rangeStart)<=0&&(cardEnd==null||cardEnd.compareTo(rangeStart)>=0))
+            );
         } else if (rangeStart!=null) {
             result = ((cardEnd==null)||cardEnd.compareTo(rangeStart)>=0);
         } else if (rangeEnd!=null) {
@@ -183,5 +187,58 @@ public class TestUtilities {
 
         return result;
     }
+
+    public static boolean checkIfPageIsSorted(Page<ArchivedCardConsultationData> page) {
+
+        if(page.getContent() == null || page.getContent().isEmpty()) {
+            return true;
+        } else if (page.getContent().size()==1) {
+            return true;
+        } else {
+            for(int i= 1 ;i < page.getContent().size(); i++) {
+                if(page.getContent().get(i-1).getPublishDate().isBefore(page.getContent().get(i).getPublishDate())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+    }
+
+    public static boolean checkIfCardsFromPageMeetCriteria(Page<ArchivedCardConsultationData> page, Predicate<ArchivedCardConsultationData> criteria){
+
+        if (page.getContent() == null || page.getContent().isEmpty()) {
+            return true;
+        } else {
+            for (int i = 0; i < page.getContent().size(); i++) {
+                if (criteria.negate().test(page.getContent().get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Returns true if <code>listA</code> contains any of the items in <code>listB</code> :
+     *
+     * @param listA only cards published earlier than this will be fetched
+     * @param listB       start of search range
+     * @return boolean indicating whether listA contains any of the items in listB
+     */
+    public static boolean checkIfContainsAny(List<String> listA, List<String> listB) {
+        if(listA == null || listA.isEmpty()|| listB == null || listB.isEmpty()) {
+            return false;
+        }
+        for(int i = 0; i < listB.size(); i++) {
+            if(listA.contains(listB.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+//TODO Method to check if a flux of pages are sorted
 
 }

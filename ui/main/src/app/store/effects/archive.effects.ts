@@ -20,6 +20,7 @@ import {
 } from "@ofActions/archive.actions";
 import {LightCard} from "@ofModel/light-card.model";
 import {selectArchiveFilters} from "@ofSelectors/archive.selectors";
+import {Page} from "@ofModel/page.model";
 
 @Injectable()
 export class ArchiveEffects {
@@ -35,8 +36,8 @@ export class ArchiveEffects {
         .pipe(
             ofType(ArchiveActionTypes.SendArchiveQuery),
             switchMap((action: SendArchiveQuery) => this.service.fetchArchivedCards(action.payload.params)),
-            map((lightCards: LightCard[]) => {
-                return new ArchiveQuerySuccess({lightCards: lightCards});
+            map((resultPage: Page<LightCard>) => {
+                return new ArchiveQuerySuccess({resultPage: resultPage});
             }),
             catchError((error, caught) => {
                 this.store.dispatch(new HandleUnexpectedError({error: error}));
@@ -44,7 +45,7 @@ export class ArchiveEffects {
             }));
 
     @Effect()
-    queryArchivedCardsPage: Observable<Action> = this.actions$
+    queryArchivedCardsPage: Observable<Action> = this.actions$ //TODO Maybe it's not necessary anymore to have a distinct action for the page button, search & pages trigger the same
         .pipe(
             ofType<UpdateArchivePage>(ArchiveActionTypes.UpdateArchivePage),
             withLatestFrom(this.store.select(selectArchiveFilters)),
