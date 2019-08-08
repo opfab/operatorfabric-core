@@ -12,11 +12,13 @@ cd $OF_HOME
 for prj in "${OF_REL_COMPONENTS[@]}"; do
   echo "copying $prj documentation"
   mkdir -p $HOME/documentation/projects/$prj/$version/
+  mkdir -p $HOME/reports/projects/$prj/$version/
   rm -r $HOME/documentation/projects/$prj/$version/*
   cp -r $prj/build/docs/* $HOME/documentation/projects/$prj/$version/.
   cp -r $prj/build/reports/* $HOME/reports/projects/$prj/$version/.
 done
 mkdir -p -p $HOME/documentation/projects/ui/main/$version/compodoc/
+mkdir -p -p $HOME/reports/projects/ui/main/$version/
 mkdir -p $HOME/documentation/documentation/$version/
 rm -r $HOME/documentation/projects/ui/main/$version/compodoc/*
 rm -r $HOME/documentation/documentation/$version/*
