@@ -128,13 +128,6 @@ asciidoctor {
 //    }
 //}
 
-//dependencyCheck {
-//    analyzers {
-//        assemblyEnabled=false
-//    }
-//}
-
-
 subprojects {
 
     group operatorfabric.group
