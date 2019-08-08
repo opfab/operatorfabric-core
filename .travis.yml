@@ -11,6 +11,7 @@ env:
   - NODE_VERSION="v10.10.0"
 language: java
 before_install:
+  - npm i -g npm@6.4.1
   - sudo apt-get install realpath
   - export OF_VERSION=$(cat VERSION)
   # Load cached docker images
