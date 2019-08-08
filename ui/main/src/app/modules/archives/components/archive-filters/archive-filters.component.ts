@@ -23,7 +23,14 @@ export class ArchiveFiltersComponent implements OnInit {
   publishers$: Observable<string []>;
   processes$: Observable<string []>;
 
-  archiveForm: FormGroup;
+  public archiveForm: FormGroup = new FormGroup({
+    publisher: new FormControl(''),
+    process: new FormControl(),
+    startNotifDate: new FormControl(''),
+    endNotifDate: new FormControl(''),
+    startBusnDate: new FormControl(''),
+    endBusnDate: new FormControl(''),
+  });
 
   constructor(private store: Store<AppState>,
     private fb: FormBuilder,
@@ -33,22 +40,12 @@ export class ArchiveFiltersComponent implements OnInit {
   ngOnInit() {
     this.publishers$ = this.store.select(buildConfigSelector('archive.filters.publisher.list'));
     this.processes$ = this.store.select(buildConfigSelector('archive.filters.process.list'));
-    this.archiveForm = this.fb.group({
-      publisher: new FormControl(),
-      process: new FormControl(),
-      startNotificationd: '',
-      startNotificationt: '',
-      endNotificationd: '',
-      endNotificationt: '',
-      startBusinessd: '',
-      startBusinesst: '',
-      endBusinessd: '',
-      endBusinesst: ''
-    });
   }
 
   sendQuery(): void {
     console.log(this.archiveForm.value);
+    
+    /*
     const sNd = this.archiveForm.controls['startNotificationd'].value;
     const sNt = this.archiveForm.controls['startNotificationt'].value;
     const eNd = this.archiveForm.controls['endNotificationd'].value;
@@ -63,6 +60,7 @@ export class ArchiveFiltersComponent implements OnInit {
     const startBusn = `${sBd.year}-${sBd.month - 1}-${sBd.day}T${sBt.hour}:${sBt.minute}`;
     const endBusn = `${eBd.year}-${eBd.month - 1}-${eBd.day}T${eBt.hour}:${eBt.minute}`;
     console.log(this.timeService.parseString(startNotif).valueOf(), endNotif, startBusn, endBusn);
+    */
 
 
     // console.log(this.timeService.parseString(stringTime).valueOf());
