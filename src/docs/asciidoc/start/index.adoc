@@ -442,13 +442,13 @@ In each folder we create a file named `template.handlebars` containing:
 - `en/template.handlebars`
 
 ....
-<h2>Hello World from {{data.greetings}}!</h2>
+<h2>Hello World from {{card.data.greetings}}!</h2>
 ....
 
 - `fr/template.handlebars`
 
 ....
-<h2>Bonjour à tous de la part de {{data.greetings}} !</h2>
+<h2>Bonjour à tous de la part de {{card.data.greetings}} !</h2>
 ....
 
 ===== Style
