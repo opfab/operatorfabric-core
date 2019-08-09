@@ -10,7 +10,8 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 Our global microservices enforces Spring technologies.
 
-Infrastructure services are based on Spring Cloud, they are Springboot services with specific enablements.
+Infrastructure services are based on Spring Cloud, they are Springboot services with specific enablements. Springboot
+services are servlets running in embedded servlet container.
 
 ==== Spring Cloud Eureka (Registry)
 
