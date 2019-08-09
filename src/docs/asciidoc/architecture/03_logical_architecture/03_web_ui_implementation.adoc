@@ -12,7 +12,7 @@ Our Front-end application is an Angular 7 SPA (Single Page Application/
 
 Aside from modularization consideration, the application architecture is described by the following diagram.
 
-image::image::03_03_web_ui_implementation/WebUI Architecture.png[Angular With Redux Architecture]
+image::03_03_web_ui_implementation/WebUI Architecture.png[Angular With Redux Architecture]
 
 The Web UI architecture is a combination of the standard Angular Architecture and NGRX framework structure,
 a simplified implementation of the Redux pattern. On the above diagram green components are provide by Angular and NGRX

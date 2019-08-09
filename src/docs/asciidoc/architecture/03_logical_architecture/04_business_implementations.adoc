@@ -33,7 +33,7 @@ To modulate card input capacity, we have two levers:
 
 ===== Service level optimization
 
-image::image::03_04_business_implementation/card_publication_schematic.png[Card publication]
+image::03_04_business_implementation/card_publication_schematic.png[Card publication]
 
 In addition to some business specific manipulation and validation of data, the input life cycle of card is as follow
 
