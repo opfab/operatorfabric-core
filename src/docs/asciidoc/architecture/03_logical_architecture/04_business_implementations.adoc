@@ -1,0 +1,38 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Business Implementation
+
+This section focuses on some implementation aspects of Business Services and provide some thoughts on the furture
+developements of these services
+
+
+==== Card Publication
+
+Card publication is the central functionality of Operator Fabric. It serves two business purpose:
+
+* Ensure that incoming cards are correctly persisted;
+* Ensure that card arrivals are notified to relevant connected users.
+
+In a more technical respect, this service must be scalable to ensure massive volume of cards can be processed.
+
+There are two dimensions to address to scale incoming cards treatment :
+
+* Massive volume of cards;
+* Massive simultaneous connection by Thirds;
+
+To modulate card input capacity, we have two levers:
+
+* Optimize card treatment at service level
+* Run multiple instances of service
+
+===== Service level optimization
+
+===== Multiple service instances
+
+Running multiple service instances

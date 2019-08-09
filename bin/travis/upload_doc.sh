@@ -11,16 +11,15 @@ cd $OF_HOME
 ./gradlew generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
 for prj in "${OF_REL_COMPONENTS[@]}"; do
   echo "copying $prj documentation"
-  mkdir -p $HOME/documentation/projects/$prj/$version/reports/
   rm -r $HOME/documentation/projects/$prj/$version/*
+  mkdir -p $HOME/documentation/projects/$prj/$version/reports/
   cp -r $prj/build/docs/* $HOME/documentation/projects/$prj/$version/.
   cp -r $prj/build/reports/* $HOME/documentation/projects/$prj/$version/reports/.
 done
+rm -r $HOME/documentation/projects/ui/main/$version/*
 mkdir -p -p $HOME/documentation/projects/ui/main/$version/compodoc/
-mkdir -p -p $HOME/reports/projects/ui/main/$version/
+mkdir -p -p $HOME/documentation/projects/ui/main/$version/reports
 mkdir -p $HOME/documentation/documentation/$version/
-rm -r $HOME/documentation/projects/ui/main/$version/compodoc/*
-rm -r $HOME/documentation/documentation/$version/*
 cp -r $OF_HOME/ui/main/documentation/* $HOME/documentation/projects/ui/main/$version/compodoc/.
 cp -r $OF_HOME/ui/main/reports/* $HOME/documentation/projects/ui/main/$version/reports/.
 cp -r $OF_HOME/build/asciidoc/html5/* $HOME/documentation/documentation/$version/.
