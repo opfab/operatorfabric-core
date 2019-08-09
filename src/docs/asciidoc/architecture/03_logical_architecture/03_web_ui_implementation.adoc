@@ -12,12 +12,13 @@ Our Front-end application is an Angular 7 SPA (Single Page Application/
 
 Aside from modularization consideration, the application architecture is described by the following diagram.
 
-image::image::03_01_microservice_architecture_principles/WebUI Architecture.png[Angular With Redux Architecture]
+image::image::03_03_web_ui_implementation/WebUI Architecture.png[Angular With Redux Architecture]
 
 The Web UI architecture is a combination of the standard Angular Architecture and NGRX framework structure,
-a simplified implementation of the Redux pattern.
+a simplified implementation of the Redux pattern. On the above diagram green components are provide by Angular and NGRX
+frameworks, yellow components are implemented as needed following the rules of these frameworks.
 
-==== Architecture Components
+==== Angular Architecture Components
 
 ===== Components
 
@@ -25,7 +26,54 @@ Components are angular basic unit of UX representation, they allow interaction w
 NGRX State through action dispatch (state mutation) and selector observables (state consultation/state change
 notification)
 
-====
+===== Views
 
-====
+Views are Components themselves, they agregate components are target  of Routes (Router)
 
+===== Router
+
+The Angular Router allows to configure Navigation through router modules (modules that declare routes and allow for
+lazy loading). Routes msut be kept resource compatible as needed. The Angular Router is coupled with NGRX State so that
+route change dispatch actions that can be captured by NGRX Effects and special routing actions can be dispatched to
+trigger Angular Router.
+
+==== Service
+
+Business or Technical services for UX these are singletons injected into Components, Effects and other Services
+
+==== NGRX Architecture Components
+
+Aside from provided NGRX components, one NGRX component is implemented for each relevant business domain. For instance
+considering Feed, ther is one feed State, one Feed Reducer, one Feed Action enumeration, a collection of Feed Selectors
+and a collection of Feed Effects.
+
+===== Store
+
+The Store is the global entry to manipulate NGRX components.
+
+===== State
+
+The State aggregates the data manipulated by the application.
+
+===== Dispatcher
+
+Accessed thought Store this NGRX provided component controls the State mutations. It allows to emit Actions
+
+===== Reducer
+
+Controls how to update the application State for corresponding Actions
+
+===== Selector
+
+Extract slice of data from State. Combined with Store methods, allows to generate Observable for constant notification
+of State updates.
+
+===== Effects
+
+Effects are combination of Action detection, decisions regarding input Action, calls to Services, decision regarding
+Services call results and new Action emission as result of the effect. They allow to chain actions between them with
+more or less complex decision and operation in between.
+
+===== Remote APIs
+
+These are our backend REST Apis
