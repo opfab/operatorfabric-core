@@ -10,7 +10,22 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 Our Front-end application is an Angular 7 SPA (Single Page Application/
 
-Asside from modularization consideration, the application architecture is described by the following diagram.
+Aside from modularization consideration, the application architecture is described by the following diagram.
 
 image::image::03_01_microservice_architecture_principles/WebUI Architecture.png[Angular With Redux Architecture]
+
+The Web UI architecture is a combination of the standard Angular Architecture and NGRX framework structure,
+a simplified implementation of the Redux pattern.
+
+==== Architecture Components
+
+===== Components
+
+Components are angular basic unit of UX representation, they allow interaction with Angular Services through calls and
+NGRX State through action dispatch (state mutation) and selector observables (state consultation/state change
+notification)
+
+====
+
+====
 

@@ -23,7 +23,7 @@ mkdir -p $HOME/documentation/documentation/$version/
 rm -r $HOME/documentation/projects/ui/main/$version/compodoc/*
 rm -r $HOME/documentation/documentation/$version/*
 cp -r $OF_HOME/ui/main/documentation/* $HOME/documentation/projects/ui/main/$version/compodoc/.
-cp -r $OF_HOME/ui/main/reports/* $HOME/reports/projects/ui/main/$version/.
+cp -r $OF_HOME/ui/main/build/reports/* $HOME/reports/projects/ui/main/$version/.
 cp -r $OF_HOME/build/asciidoc/html5/* $HOME/documentation/documentation/$version/.
 cd $HOME/documentation
 if [ -n "$(git status --porcelain)" ]; then
