@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DatetimeFilterComponent } from './datetime-filter.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 describe('DatetimeFilterComponent', () => {
   let component: DatetimeFilterComponent;
@@ -8,6 +10,11 @@ describe('DatetimeFilterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        NgbModule
+      ],
       declarations: [ DatetimeFilterComponent ]
     })
     .compileComponents();
@@ -19,7 +26,7 @@ describe('DatetimeFilterComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create datetime-filter component', () => {
     expect(component).toBeTruthy();
   });
 });

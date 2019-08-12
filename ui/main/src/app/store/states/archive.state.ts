@@ -7,17 +7,22 @@
 
 import {LightCard} from "@ofModel/light-card.model";
 import {Page} from "@ofModel/page.model";
+// import { IArchiveFilter } from '@ofModel/archive-filter.model';
 
 export interface ArchiveState {
     selectedCardId: string;
     resultPage: Page<LightCard>;
     filters: Map<string,string[]>; //TODO Explain path/values or create data type
+    // filters: IArchiveFilter;
     loading: boolean
 }
+
+
 
 export const archiveInitialState: ArchiveState = {
         selectedCardId: null,
         resultPage: new Page<LightCard>(1,0,[]),
         filters: new Map(),
+        // filters: {},
         loading: false
 }

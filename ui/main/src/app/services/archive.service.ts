@@ -6,43 +6,39 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
-import {CardOperation} from '@ofModel/card-operation.model';
-import {EventSourcePolyfill} from 'ng-event-source';
+import {Observable} from 'rxjs';
 import {AuthenticationService} from './authentication.service';
 import {Card} from '@ofModel/card.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
 import {LightCard} from '@ofModel/light-card.model';
-import {forEach} from '@angular/router/src/utils/collection';
+import { AppState } from '../store';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class ArchiveService {
-    readonly unsubscribe$ = new Subject<void>();
-    readonly cardOperationsUrl: string;
-    readonly cardsUrl: string;
     readonly archivesUrl: string;
 
 
-    constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService, private guidService: GuidService) {
-        const clientId = this.guidService.getCurrentGuidString();
-        this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
-        this.cardsUrl = `${environment.urls.cards}/cards`;
+    constructor(private httpClient: HttpClient,  private store: Store<AppState>) {
         this.archivesUrl = `${environment.urls.cards}/archives`;
     }
 
     loadArchivedCard(id: string): Observable<Card> {
         return this.httpClient.get<Card>(`${this.archivesUrl}/${id}`);
     }
-
-    fetchArchivedCards(filters: Map<string, string[]>): Observable<LightCard[]> {
+/*
+    fetchArchivedCards(filters: {label: string, values: any}): Observable<LightCard[]> {
         let params = new HttpParams();
+
+        
         filters.forEach((values, key) => {
             values.forEach(value => params = params.append(key, value));
         });
-        console.log('Send request ');
-
-        return this.httpClient.get<LightCard[]>(`${this.archivesUrl}/`, {params: params});
+        
+       const params1 = 'publisher=TEST1'
+        return this.httpClient.get<LightCard[]>(`${this.archivesUrl}/`, {params: params1});
     }
+    */
 }

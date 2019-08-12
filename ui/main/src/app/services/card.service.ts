@@ -18,6 +18,9 @@ import {LightCard} from "@ofModel/light-card.model";
 import {forEach} from "@angular/router/src/utils/collection";
 import {Page} from "@ofModel/page.model";
 import {map} from "rxjs/operators";
+import { IArchiveFilter } from '@ofModel/archive-filter.model';
+import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
+import { TimeService } from './time.service';
 
 @Injectable()
 export class CardService {
@@ -27,7 +30,8 @@ export class CardService {
     readonly archivesUrl: string;
 
 
-    constructor(private httpClient:HttpClient, private authenticationService: AuthenticationService,private guidService: GuidService) {
+    constructor(private httpClient: HttpClient,
+        private guidService: GuidService, private timeService: TimeService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -73,7 +77,7 @@ export class CardService {
                     eventSource.close();
                 }
             };
-        })
+        });
     }
 
     public updateCardSubscriptionWithDates(rangeStart:number,rangeEnd:number):Observable<any>{
@@ -102,3 +106,22 @@ export class CardService {
         return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`,{params: params});
     }
 }
+        /*
+    fetchArchivedCards(filters: IArchiveFilter): Observable<LightCard[]> {
+
+        const params = new HttpParams();
+
+        
+        const {publisher, process, endBusnDate, endNotifDate, startBusnDate, startNotifDate} = filters;
+        publisher.forEach(pub => params.set('publisher', pub));
+        process.forEach(pro => params.set('process', pro));
+        params.set('endBusnDate', this.timeService.toNgBTimestamp(endBusnDate).toString());
+        params.set('endNotifDate', this.timeService.toNgBTimestamp(endNotifDate).toString());
+        params.set('startBusnDate', this.timeService.toNgBTimestamp(startBusnDate).toString());
+        params.set('startNotifDate', this.timeService.toNgBTimestamp(startNotifDate).toString());
+        const tmp = new HttpParams().set('publisher', 'AMINE');
+        return this.httpClient.get<LightCard[]>(`${this.archivesUrl}/`, { params: tmp });
+>>>>>>> [OC-44] Adding more modifications in archive
+    }
+}
+*/

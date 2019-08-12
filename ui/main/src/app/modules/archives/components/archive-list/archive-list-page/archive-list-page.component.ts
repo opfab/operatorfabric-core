@@ -6,7 +6,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import {SendArchiveQuery, UpdateArchivePage} from "@ofActions/archive.actions";
+import {UpdateArchivePage} from "@ofActions/archive.actions";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 
@@ -17,12 +17,13 @@ import {AppState} from "@ofStore/index";
 })
 export class ArchiveListPageComponent implements OnInit {
 
-  constructor(private store:Store<AppState>) { }
+  page = 4;
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
   }
 
-  updateResultPage(pageNumber: number): void{
+  updateResultPage(pageNumber: number): void {
     this.store.dispatch(new UpdateArchivePage({pageNumber: pageNumber}));
   }
 }

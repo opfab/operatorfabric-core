@@ -12,7 +12,6 @@ import {ArchivesRoutingModule} from './archives-routing.module';
 import { ArchiveListPageComponent } from './components/archive-list/archive-list-page/archive-list-page.component';
 import {ArchivesComponent} from './archives.component';
 import {ArchiveListComponent} from './components/archive-list/archive-list.component';
-import {ListFilterComponent} from './components/archive-filters/list-filter/list-filter.component';
 import { ArchiveFiltersComponent } from './components/archive-filters/archive-filters.component';
 import { MultiFilterComponent } from './components/archive-filters/multi-filter/multi-filter.component';
 import { DatetimeFilterComponent } from './components/archive-filters/datetime-filter/datetime-filter.component';
@@ -33,7 +32,6 @@ import { ArchiveService } from '@ofServices/archive.service';
   declarations: [
     ArchivesComponent,
     ArchiveListComponent,
-    ListFilterComponent,
     ArchiveFiltersComponent,
     MultiFilterComponent,
     ArchiveListPageComponent,

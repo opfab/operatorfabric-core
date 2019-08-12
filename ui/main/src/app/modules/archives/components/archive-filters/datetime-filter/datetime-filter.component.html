@@ -1,12 +1,11 @@
 <ng-container [formGroup]="datetimeForm">
-    <div class="col-md-3">
-        <div class="form-group">
+    <div class="form-row">
+        <div class="form-group col-md-8">
             <label for="date" translate>feed.filters.time.start.label</label>
             <input class="form-control" type="text" ngbDatepicker #nsd="ngbDatepicker" id="date" formControlName="date" (focus)="nsd.toggle()"
             placeholder="YYYY-MM-DD"/>
         </div>
-        </div>
-        <div class="col-md-1">
-        <ngb-timepicker formControlName="time" size='small'></ngb-timepicker>
+
+    <ngb-timepicker class="col-md-4" formControlName="time" size='small'></ngb-timepicker>
     </div>
 </ng-container>

@@ -10,8 +10,8 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {CardService} from '@ofServices/card.service';
 import {Observable} from 'rxjs';
 import {catchError, map, switchMap, withLatestFrom} from 'rxjs/operators';
-import {Action, Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
+import {Action, Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
 import {
     ArchiveActionTypes,
     ArchiveQuerySuccess,
@@ -21,6 +21,7 @@ import {
 import {LightCard} from "@ofModel/light-card.model";
 import {selectArchiveFilters} from "@ofSelectors/archive.selectors";
 import {Page} from "@ofModel/page.model";
+import { UpdateArchiveFilter } from '../actions/archive.actions';
 
 @Injectable()
 export class ArchiveEffects {
@@ -47,9 +48,9 @@ export class ArchiveEffects {
         .pipe(
             ofType<UpdateArchivePage>(ArchiveActionTypes.UpdateArchivePage),
             withLatestFrom(this.store.select(selectArchiveFilters)),
-            map(([action,filters]) => {
-                filters.set("page",[(action.payload.pageNumber).toString()]);
-                return new SendArchiveQuery({params: filters});
+            map(([action, filters]) => {
+                filters.pageNumber = (action.payload.pageNumber).toString();
+                return new UpdateArchiveFilter({filters});
             }),
             //
             catchError((error, caught) => {

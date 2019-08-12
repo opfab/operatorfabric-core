@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MultiFilterComponent } from './multi-filter.component';
 
-xdescribe('MultiFilterComponent', () => {
+describe('MultiFilterComponent', () => {
   let component: MultiFilterComponent;
   let fixture: ComponentFixture<MultiFilterComponent>;
 

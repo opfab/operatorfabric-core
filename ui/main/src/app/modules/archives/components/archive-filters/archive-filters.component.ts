@@ -10,8 +10,10 @@ import {Observable, combineLatest} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {buildConfigSelector} from '@ofSelectors/config.selectors';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { TimeService } from '@ofServices/time.service';
+import { FormGroup, FormControl } from '@angular/forms';
+import { UpdateArchiveFilter } from '@ofStore/actions/archive.actions';
+import { IArchiveFilter } from '@ofModel/archive-filter.model';
+
 
 @Component({
   selector: 'of-archive-filters',
@@ -23,18 +25,18 @@ export class ArchiveFiltersComponent implements OnInit {
   publishers$: Observable<string []>;
   processes$: Observable<string []>;
 
-  public archiveForm: FormGroup = new FormGroup({
-    publisher: new FormControl(''),
-    process: new FormControl(),
-    startNotifDate: new FormControl(''),
-    endNotifDate: new FormControl(''),
-    startBusnDate: new FormControl(''),
-    endBusnDate: new FormControl(''),
-  });
+  archiveForm: FormGroup;
 
-  constructor(private store: Store<AppState>,
-    private fb: FormBuilder,
-    private timeService: TimeService) { }
+  constructor(private store: Store<AppState>) {
+    this.archiveForm = new FormGroup({
+      publisher: new FormControl(''),
+      process: new FormControl(),
+      startNotifDate: new FormControl(''),
+      endNotifDate: new FormControl(''),
+      startBusnDate: new FormControl(''),
+      endBusnDate: new FormControl(''),
+    });
+  }
 
 
   ngOnInit() {
@@ -42,32 +44,9 @@ export class ArchiveFiltersComponent implements OnInit {
     this.processes$ = this.store.select(buildConfigSelector('archive.filters.process.list'));
   }
 
-  sendQuery(): void {
-    console.log(this.archiveForm.value);
-    
-    /*
-    const sNd = this.archiveForm.controls['startNotificationd'].value;
-    const sNt = this.archiveForm.controls['startNotificationt'].value;
-    const eNd = this.archiveForm.controls['endNotificationd'].value;
-    const eNt = this.archiveForm.controls['endNotificationt'].value;
-    const sBd = this.archiveForm.controls['startBusinessd'].value;
-    const sBt = this.archiveForm.controls['startBusinesst'].value;
-    const eBd = this.archiveForm.controls['endBusinessd'].value;
-    const eBt = this.archiveForm.controls['endBusinesst'].value;
-    // 'YYYY-MM-DDTHH:mm'
-    const startNotif = `${sNd.year}-${sNd.month - 1}-${sNd.day}T${sNt.hour}:${sNt.minute}`;
-    const endNotif = `${eNd.year}-${eNd.month - 1}-${eNd.day}T${eNt.hour}:${eNt.minute}`;
-    const startBusn = `${sBd.year}-${sBd.month - 1}-${sBd.day}T${sBt.hour}:${sBt.minute}`;
-    const endBusn = `${eBd.year}-${eBd.month - 1}-${eBd.day}T${eBt.hour}:${eBt.minute}`;
-    console.log(this.timeService.parseString(startNotif).valueOf(), endNotif, startBusn, endBusn);
-    */
+  sendQuery(filters: IArchiveFilter): void {
 
-
-    // console.log(this.timeService.parseString(stringTime).valueOf());
-    // this.store.dispatch(new SendArchiveQuery(params1));
-    // this.archiveService.fetchArchivedCards(params).subscribe(data => console.log(data));
+    this.store.dispatch(new UpdateArchiveFilter({filters}));
   }
-
-  
 
 }

@@ -4,7 +4,7 @@ import { ControlValueAccessor, FormGroup, FormControl,
   AbstractControl,
   ValidationErrors,
   NG_VALUE_ACCESSOR,
-  NG_VALIDATORS, 
+  NG_VALIDATORS,
   Validator} from '@angular/forms';
 
 @Component({
@@ -33,7 +33,6 @@ export class DatetimeFilterComponent implements ControlValueAccessor, Validator 
   public onTouched: () => void = () => {};
 
   writeValue(val: any): void {
-    console.log(val);
     val && this.datetimeForm.setValue(val, { emitEvent: false });
   }
   registerOnChange(fn: any): void {

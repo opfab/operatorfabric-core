@@ -184,6 +184,13 @@ export class TimeService {
         return '';
     }
 
+    public toNgBTimestamp(date): number {
+        const sNd = date.date;
+        const sNt = date.time;
+        const startNotif = `${sNd.year}-${sNd.month - 1}-${sNd.day}T${sNt.hour}:${sNt.minute}`;
+        return this.parseString(startNotif).valueOf();
+    }
+
     public formatDateTime(timestamp: number): string;
     public formatDateTime(date: Date): string;
     public formatDateTime(m: Moment): string;

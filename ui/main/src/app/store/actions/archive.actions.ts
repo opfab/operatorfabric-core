@@ -9,6 +9,7 @@ import {Action} from '@ngrx/store';
 import {LightCard} from "@ofModel/light-card.model";
 import {LightCardActionTypes} from "@ofActions/light-card.actions";
 import {Page} from "@ofModel/page.model";
+import { IArchiveFilter } from '@ofModel/archive-filter.model';
 
 export enum ArchiveActionTypes {
     UpdateArchiveFilter = '[Archive] Update Filter',
@@ -23,12 +24,12 @@ export enum ArchiveActionTypes {
 export class UpdateArchiveFilter implements Action {
     readonly type = ArchiveActionTypes.UpdateArchiveFilter;
     /* istanbul ignore next */
-    constructor(public payload:{filterPath: string, filterValues: string[]}){}
+    constructor(public payload: {filters: IArchiveFilter}) {}
 }
 
 export class SendArchiveQuery implements Action {
     readonly type = ArchiveActionTypes.SendArchiveQuery;
-    constructor(public payload: {params: string}) {}
+    constructor(public payload: {params: Map<string, string[]>}) {}
 }
 
 export class HandleUnexpectedError implements Action {
@@ -55,7 +56,7 @@ export class SelectArchivedLightCard implements Action {
     /* istanbul ignore next */
     readonly type = ArchiveActionTypes.SelectArchivedLightCard;
     /* istanbul ignore next */
-    constructor(public payload: {selectedCardId:string}){}
+    constructor(public payload: {selectedCardId: string}){}
 }
 
 export type ArchiveActions =
