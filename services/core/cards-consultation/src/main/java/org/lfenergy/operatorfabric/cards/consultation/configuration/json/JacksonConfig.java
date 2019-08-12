@@ -41,6 +41,7 @@ public class JacksonConfig {
     objectMapper.registerModule(new JavaTimeModule());
     objectMapper.registerModule(new CardsModule());
     objectMapper.registerModule(new InstantModule());
+    objectMapper.registerModule(new PagedResultsModule());
     return objectMapper;
   }
 }
