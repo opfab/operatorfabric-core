@@ -9,7 +9,6 @@ package org.lfenergy.operatorfabric.cards.consultation.configuration.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Sort;
 
 
 /**
