@@ -153,7 +153,7 @@ public class TestUtilities {
         if(groups!=null && groups.length>0)
             archivedCardBuilder.groupRecipients(Arrays.asList(groups));
         if(login!=null)
-            archivedCardBuilder.orphanedUser(login);
+            archivedCardBuilder.userRecipient(login);
         ArchivedCardConsultationData archivedCard = archivedCardBuilder.build();
         prepareArchivedCard(archivedCard, publication);
         return archivedCard;

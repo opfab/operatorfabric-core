@@ -153,7 +153,9 @@ public class ArchivedCardRepositoryShould {
     private Predicate<ArchivedCardConsultationData> computeCardPredicate() {
         Predicate<ArchivedCardConsultationData> predicate = c -> !(c.getId()==null);
         predicate = predicate.and(c -> firstPublisher.equals(c.getPublisher()));
-        predicate = predicate.and(c -> c.getOrphanedUsers().contains(login1));
+        predicate = predicate.and(c -> c.getUserRecipients().contains(login1));
+        predicate = predicate.and(c -> c.getGroupRecipients().contains("rte"));
+        predicate = predicate.and(c -> c.getGroupRecipients().contains("operator"));
         return predicate;
     }
 
@@ -524,8 +526,7 @@ public class ArchivedCardRepositoryShould {
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> (
-                                    card.getOrphanedUsers().contains(user1.getLogin())
-                                            ||card.getUserRecipients().contains(user1.getLogin())) //TODO Check whether we need both
+                                card.getUserRecipients().contains(user1.getLogin()))
                             )
                     );
                     //Check sort order

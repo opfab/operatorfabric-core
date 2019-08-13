@@ -80,7 +80,5 @@ public class ArchivedCardConsultationData implements Card {
     @Singular
     private List<String> groupRecipients = Collections.emptyList();//TODO Added to be consistent with Card. See if that's OK
     @Singular
-    private List<String> orphanedUsers = Collections.emptyList();
-    @Singular
     private List<? extends TimeSpan> timeSpans;
 }
