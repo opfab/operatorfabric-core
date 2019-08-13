@@ -2,6 +2,8 @@ package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
+import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -43,7 +45,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
 
     private final ReactiveMongoTemplate template;
-    //TODO Return "light" ArchivedCards (projection) ?
 
     @Autowired
     public ArchivedCardCustomRepositoryImpl(ReactiveMongoTemplate template) {
@@ -66,36 +67,24 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
     }
 
-    public Mono<Page<ArchivedCardConsultationData>> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
+    public Mono<Page<LightCardConsultationData>> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
         Query query = createQueryFromUserAndParams(params);
-        //TODO Replace it with proper archivedLightCard
-        /*query.fields()
-                .include("_id")
-                .include("publisher")
-                .include("publisherVersion")
-                .include("process")
-                .include("processId")
-                .include("state")
-                .include(PUBLISH_DATE_FIELD)
-                .include("lttd")
-                .include(START_DATE_FIELD)
-                .include(END_DATE_FIELD)
-                .include("severity")
-                .include("tags");*/
-
 
         //Handle Paging
         Pageable pageableRequest = createPageableFromParams(params.getT2());
         if(pageableRequest.isPaged()) {
-            return template.find(query.with(pageableRequest),ArchivedCardConsultationData.class).collectList()
-                    .zipWith(template.count(query,ArchivedCardConsultationData.class))
+            return template.find(query.with(pageableRequest),LightCard.class,"archivedCards")
+                    .map(lightCard -> (LightCardConsultationData) lightCard)
+                    .collectList()
+                    .zipWith(template.count(query,LightCard.class,"archivedCards"))
                     .map(tuple -> new PageImpl<>(tuple.getT1(),pageableRequest,tuple.getT2()));
         } else {
-            return template.find(query,ArchivedCardConsultationData.class)
+            return template.find(query,LightCard.class,"archivedCards")
+                    .map(lightCard -> (LightCardConsultationData) lightCard)
                     .collectList()
                     .map(results ->  new PageImpl<>(results));
         }
-
+        //The class used as a parameter for the find & count methods is LightCard (and not LightCardConsultationData) to make use of the existing LightCardReadConverter
     }
 
     private Pageable createPageableFromParams(MultiValueMap<String, String> queryParams) {
@@ -124,6 +113,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         query.with(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)));
 
         //TODO Improvement Pass only items from params that are interesting to each method, not the whole map (split it)..
+
         /* Check that parameters that should be unique are */
         uniqueParameters.forEach(param_key -> {
             if(queryParams.containsKey(param_key)) {

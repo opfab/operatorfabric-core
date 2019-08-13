@@ -124,6 +124,7 @@ public class ArchivedCardRepositoryShould {
 
         //create card sent to user3
         persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login3, "rte", "operator"));
+
     }
 
     private void persistCard(ArchivedCardConsultationData simpleArchivedCard) {
@@ -523,12 +524,6 @@ public class ArchivedCardRepositoryShould {
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(13);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check criteria are matched
-                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> (
-                                card.getUserRecipients().contains(user1.getLogin()))
-                            )
-                    );
                     //Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
@@ -549,10 +544,6 @@ public class ArchivedCardRepositoryShould {
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(14);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    //Check criteria are matched
-                    assertTrue(checkIfCardsFromPageMeetCriteria(page,
-                            card -> checkIfContainsAny(card.getGroupRecipients(),user2.getGroups())
-                    ));
                     //Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
