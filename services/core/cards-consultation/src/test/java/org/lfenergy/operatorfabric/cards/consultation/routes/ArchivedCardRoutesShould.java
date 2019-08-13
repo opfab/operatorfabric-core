@@ -18,6 +18,7 @@ import org.lfenergy.operatorfabric.cards.consultation.configuration.webflux.Arch
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.ArchivedCardRepository;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
+import org.lfenergy.operatorfabric.test.EmptyListComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -86,7 +87,10 @@ public class ArchivedCardRoutesShould {
             webTestClient.get().uri("/archives/{id}", simpleCard.getId()).exchange()
                     .expectStatus().isOk()
                     .expectBody(ArchivedCardConsultationData.class).value(card -> {
-                assertThat(card).isEqualToComparingFieldByFieldRecursively(simpleCard);
+                assertThat(card)
+                        //This is necessary because empty lists are ignored in the returned JSON
+                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients")
+                        .isEqualToComparingFieldByFieldRecursively(simpleCard);
             });
         }
     }

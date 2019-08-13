@@ -60,10 +60,11 @@ public class CardConsultationData implements Card {
     private String media;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
     private List<String> tags;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<? extends Detail> details = Collections.emptyList();
+    private List<? extends Detail> details;
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
@@ -72,13 +73,13 @@ public class CardConsultationData implements Card {
     private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> userRecipients = Collections.emptyList();
+    private List<String> userRecipients;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> groupRecipients = Collections.emptyList();
+    private List<String> groupRecipients;
     @JsonIgnore
     @Singular
-    private List<String> orphanedUsers = Collections.emptyList();
+    private List<String> orphanedUsers;
     @Singular
     private List<? extends TimeSpan> timeSpans;
 }

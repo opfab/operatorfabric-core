@@ -62,10 +62,11 @@ public class ArchivedCardConsultationData implements Card {
     private String media;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<String> tags; //Todo removed @Singular to be consistent with Card. See if that's OK
+    @Singular
+    private List<String> tags;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<? extends Detail> details = Collections.emptyList(); //TODO Added to be consistent with Card. See if that's OK
+    private List<? extends Detail> details;
     @JsonIgnore
     private Recipient recipient;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -75,10 +76,10 @@ public class ArchivedCardConsultationData implements Card {
     private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> userRecipients = Collections.emptyList(); //TODO Added to be consistent with Card. See if that's OK
+    private List<String> userRecipients;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
-    private List<String> groupRecipients = Collections.emptyList();//TODO Added to be consistent with Card. See if that's OK
+    private List<String> groupRecipients;
     @Singular
     private List<? extends TimeSpan> timeSpans;
 }
