@@ -80,8 +80,7 @@ public class ArchivedCardRoutesConfig {
         return request.principal()
                 .map( principal ->  {
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-                    User user = (User) jwtPrincipal.getPrincipal();
-                    return user;
+                    return (User) jwtPrincipal.getPrincipal();
                 });
     }
 

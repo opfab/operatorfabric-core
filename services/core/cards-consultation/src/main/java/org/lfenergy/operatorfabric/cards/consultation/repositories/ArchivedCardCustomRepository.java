@@ -4,7 +4,6 @@ import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsulta
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.util.MultiValueMap;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 

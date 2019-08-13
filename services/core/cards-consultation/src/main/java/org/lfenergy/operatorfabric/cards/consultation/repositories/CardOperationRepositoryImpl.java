@@ -112,21 +112,6 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
                         )
                 )
         ));
-        Query query = new Query().addCriteria(new Criteria().andOperator(
-                publishDateCriteria(latestPublication),
-                userCriteria(login,groups),
-                new Criteria().orOperator(
-                        where(START_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
-                        where(END_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
-                        new Criteria().andOperator(
-                                where(START_DATE_FIELD).lt(rangeStart),
-                                new Criteria().orOperator(
-                                        where(END_DATE_FIELD).is(null),
-                                        where(END_DATE_FIELD).gt(rangeEnd)
-                                )
-                        )
-                )
-        ));
         TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class, queryStage, sortStage1, groupStage, projectStage, sortStage2);
         aggregation.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
         return template.aggregate(aggregation, clazz);
