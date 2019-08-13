@@ -34,6 +34,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     public static final String PAGE_PARAM = "page";
     public static final String PAGE_SIZE_PARAM = "size";
 
+    public static final int DEFAULT_PAGE_SIZE = 10;
+
     private static final List<String> specialParameters =Arrays.asList(
             PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
 
@@ -83,7 +85,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
 
         //Handle Paging
-
         Pageable pageableRequest = createPageableFromParams(params.getT2());
         if(pageableRequest.isPaged()) {
             return template.find(query.with(pageableRequest),ArchivedCardConsultationData.class).collectList()
@@ -95,16 +96,17 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                     .map(results ->  new PageImpl<>(results));
         }
 
-        //TODO Remove extra page fields
-
     }
 
     private Pageable createPageableFromParams(MultiValueMap<String, String> queryParams) {
         if(queryParams.containsKey(PAGE_PARAM)&&queryParams.containsKey(PAGE_SIZE_PARAM)) {
             return PageRequest.of(Integer.parseInt(queryParams.getFirst(PAGE_PARAM)), Integer.parseInt(queryParams.getFirst(PAGE_SIZE_PARAM)));
-        } else if (queryParams.containsKey(PAGE_PARAM)||queryParams.containsKey(PAGE_SIZE_PARAM)) {
-            //TODO Throw bad request: need either both page and size or none
-            return null;
+        } else if (queryParams.containsKey(PAGE_PARAM)) {
+            //If page number is specified but not size, use default size
+            return PageRequest.of(Integer.parseInt(queryParams.getFirst(PAGE_PARAM)), DEFAULT_PAGE_SIZE);
+        } else if (queryParams.containsKey(PAGE_SIZE_PARAM)) {
+            //If page size is specified but not page number, return first page by default
+            return PageRequest.of(0, Integer.parseInt(queryParams.getFirst(PAGE_SIZE_PARAM)));
         } else {
             return Pageable.unpaged();
         }
