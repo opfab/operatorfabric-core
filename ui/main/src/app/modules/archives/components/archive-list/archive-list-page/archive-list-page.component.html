@@ -3,7 +3,7 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
-
+<!--
 <nav aria-label="Archive Page Navigation">
   <ul class="pagination">
     <li class="page-item">
@@ -23,8 +23,13 @@
     </li>
   </ul>
 </nav>
+-->
 
-<ngb-pagination [collectionSize]="70" [(page)]="page" aria-label="Default pagination"></ngb-pagination>
+<ngb-pagination 
+  [collectionSize]="70" 
+  [(page)]="pageNumber"
+  (pageChange)="updateResultPage()">
+</ngb-pagination>
 <pre>Current page: {{page}}</pre>
 
 

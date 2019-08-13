@@ -24,4 +24,4 @@ export class ArchiveListComponent  {
 
 }
 
-//TODO pages should only be displayed if card list isn't empty (or even better, if there are several pages)
+// TODO pages should only be displayed if card list isn't empty (or even better, if there are several pages)

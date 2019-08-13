@@ -6,9 +6,9 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import {UpdateArchivePage} from "@ofActions/archive.actions";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
+import {UpdateArchivePage} from '@ofActions/archive.actions';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
 
 @Component({
   selector: 'of-archive-list-page',
@@ -17,18 +17,15 @@ import {AppState} from "@ofStore/index";
 })
 export class ArchiveListPageComponent implements OnInit {
 
-  page = 4;
+  pageNumber: number;
   constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
   }
 
-  updateResultPage(pageNumber: number): void {
-    this.store.dispatch(new UpdateArchivePage({pageNumber: pageNumber}));
+  updateResultPage(): void {
+    const {pageNumber} = this;
+    console.log(pageNumber);
+    this.store.dispatch(new UpdateArchivePage({pageNumber}));
   }
 }
-
-//TODO Highlight selected page
-//TODO Disable previous/next when reaching start or end. Do we really need previous/next ?
-//TODO What happens if huge number of pages ?
-//TODO Switch to dark colours

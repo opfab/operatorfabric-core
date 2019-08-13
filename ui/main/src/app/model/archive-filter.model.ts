@@ -10,4 +10,5 @@ export interface IArchiveFilter {
     startBusnDate?: DateTimeNgb;
     endBusnDate?: DateTimeNgb;
     pageNumber?: string;
+    totalNumber?: string;
 }

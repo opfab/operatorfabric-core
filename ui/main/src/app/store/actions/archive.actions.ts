@@ -44,6 +44,7 @@ export class ArchiveQuerySuccess implements Action {
     readonly type = ArchiveActionTypes.ArchiveQuerySuccess;
     /* istanbul ignore next */
     constructor(public payload:{resultPage: Page<LightCard>}){}
+
 }
 
 export class UpdateArchivePage implements Action {

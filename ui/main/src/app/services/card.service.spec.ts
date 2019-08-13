@@ -14,8 +14,6 @@ import {StoreModule} from "@ngrx/store";
 import {appReducer} from "@ofStore/index";
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
-import { IArchiveFilter } from '@ofModel/archive-filter.model';
-import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
 
 
 describe('CardService', () => {
@@ -41,22 +39,4 @@ describe('CardService', () => {
         httpMock = TestBed.get(HttpTestingController);
         authenticationService = TestBed.get(AuthenticationService);
     });
-
-
-    it('should construct a query string from IArchiveFilter', inject([CardService], (service: CardService) => {
-
-        let archiveFilter: IArchiveFilter;
-
-        archiveFilter = {
-            endBusnDate: new DateTimeNgb({day: 14, month: 8, year: 2019}, {hour: 1, minute: 1, second: 0}),
-            endNotifDate: new DateTimeNgb({day: 15, month: 9, year: 2019}, {hour: 1, minute: 11, second: 0}),
-            process: ['122', 'Amine'],
-            publisher: ['122'],
-            startBusnDate: new DateTimeNgb({day: 14, month: 8, year: 2019}, {hour: 1, minute: 1, second: 0}),
-            startNotifDate: new DateTimeNgb({day: 24, month: 8, year: 2014}, {hour: 1, minute: 1, second: 0})
-        };
-        
-        expect('filters').toEqual('filters');
-
-    }));
 });

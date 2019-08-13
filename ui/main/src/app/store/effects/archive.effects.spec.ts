@@ -16,7 +16,7 @@ import { UpdateArchiveFilter } from '../actions/archive.actions';
 import { IArchiveFilter } from '@ofModel/archive-filter.model';
 import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
 
-fdescribe('ArchiveEffects', () => {
+describe('ArchiveEffects', () => {
     let effects: ArchiveEffects;
 
     it('should return an ArchiveQuerySuccess after SendArchiveQuery triggers query through cardService (no paging) ', () => {

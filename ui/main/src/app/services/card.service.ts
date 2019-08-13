@@ -119,7 +119,7 @@ export class CardService {
         params.set('endNotifDate', this.timeService.toNgBTimestamp(endNotifDate).toString());
         params.set('startBusnDate', this.timeService.toNgBTimestamp(startBusnDate).toString());
         params.set('startNotifDate', this.timeService.toNgBTimestamp(startNotifDate).toString());
-        const tmp = new HttpParams().set('publisher', 'AMINE');
+        const tmp = new HttpParams().set('publisher', 'defaultPublisher');
         return this.httpClient.get<LightCard[]>(`${this.archivesUrl}/`, { params: tmp });
 >>>>>>> [OC-44] Adding more modifications in archive
     }

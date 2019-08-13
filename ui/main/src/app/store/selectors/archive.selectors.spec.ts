@@ -7,7 +7,7 @@
 
 import {AppState} from '@ofStore/index';
 import {archiveInitialState, ArchiveState} from '@ofStates/archive.state';
-import {buildArchiveFilterSelector, selectArchiveFilters} from '@ofSelectors/archive.selectors';
+import { selectArchiveFilters} from '@ofSelectors/archive.selectors';
 import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
 
 describe('ArchiveSelectors', () => {
@@ -39,17 +39,17 @@ describe('ArchiveSelectors', () => {
     it('manage empty filters', () => {
         const testAppState = {...emptyAppState, archive: archiveInitialState};
         expect(selectArchiveFilters(testAppState)).toEqual(archiveInitialState.filters);
-        expect(buildArchiveFilterSelector('someFilter')(testAppState)).toEqual(null);
-        expect(buildArchiveFilterSelector('someFilter', 'fallback')(testAppState)).toEqual('fallback');
+        // expect(buildArchiveFilterSelector('someFilter')(testAppState)).toEqual(null);
+        // expect(buildArchiveFilterSelector('someFilter', 'fallback')(testAppState)).toEqual('fallback');
     });
 
 
     it('return archive  and specific filter', () => {
         const testAppState = {...emptyAppState, archive: existingFilterState};
         expect(selectArchiveFilters(testAppState)).toEqual(existingFilterState.filters);
-        expect(buildArchiveFilterSelector('someFilter')(testAppState)).toEqual(['filterValue1', 'filterValue2']);
-        expect(buildArchiveFilterSelector('someFilter','fallback')(testAppState)).toEqual(['filterValue1', 'filterValue2']);
-        expect(buildArchiveFilterSelector('someOtherFilterThatDoesntExist', 'fallback')(testAppState)).toEqual('fallback');
+        //expect(buildArchiveFilterSelector('someFilter')(testAppState)).toEqual(['filterValue1', 'filterValue2']);
+        //expect(buildArchiveFilterSelector('someFilter','fallback')(testAppState)).toEqual(['filterValue1', 'filterValue2']);
+        //expect(buildArchiveFilterSelector('someOtherFilterThatDoesntExist', 'fallback')(testAppState)).toEqual('fallback');
     });
 
 
