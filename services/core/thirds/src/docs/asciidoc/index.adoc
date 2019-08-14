@@ -6,8 +6,8 @@
 
 = OperatorFabric Third service
 :author: David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: 0.7.1.SNAPSHOT
-:revdate: July 8, 2019
+:revnumber: 0.7.1.RELEASE
+:revdate: August 14, 2019
 :imagesdir: images
 :sectnums:
 :toc: left

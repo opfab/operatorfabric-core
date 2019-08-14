@@ -6,11 +6,12 @@
 * 0.4.1.RELEASE
 * 0.5.1.RELEASE
 * 0.6.1.RELEASE
+* 0.7.1.RELEASE
 ## Snapshot
 * 0.7.1.SNAPSHOT
-## Short cuts
+## Shortcuts
 * snapshot -> 0.7.1.SNAPSHOT
-* latest -> 0.6.1.RELEASE
+* latest -> 0.7.1.RELEASE
 # References
 * **[OperatorFabric Website](https://opfab.github.io/)**
 * **supported docker version:**

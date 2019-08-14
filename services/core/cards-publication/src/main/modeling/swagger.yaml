@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
-  version: 0.7.1.SNAPSHOT
+  version: 0.7.1.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -836,7 +836,7 @@ definitions:
       numberOfElements:
         type: number
         description: >-
-          Number of elements in the current page (<= size)
+          Number of elements in the current page
       size:
         type: number
         description: >-
