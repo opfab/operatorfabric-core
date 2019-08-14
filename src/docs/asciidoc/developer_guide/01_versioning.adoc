@@ -25,13 +25,19 @@ To release a version we use some Travis dedicated jobs. Before releasing a versi
 
 Considering a version X.X.X.SNAPSHOT.
 
-*In operatorfabric-core:*
+==== In the source repository (operatorfabric-core)
 
 * replace X.X.X.SNAPSHOT with X.X.X.RELEASE
 
 IMPORTANT: In the dockerhub documentation (src/docs/dockerhub/service_template.md), no replacement should be made.
 Instead, the X.X.X.RELEASE version should be added to the "RELEASES" list, and under "shortcuts" the "latest" tag
 should be updated to X.X.X.RELEASE.
+
+* Update the revision date in *.adoc files:
+
+```
+:revdate: August 14, 2019
+```
 
 * commit with the model message:
 ```
@@ -52,7 +58,10 @@ The commit comment leverages three keywords to trigger the delivery of documenta
 * ci_latest: associate the latest alias to the current versioned docker images
 * ci_documentation: triggers the build and upload of the current documentation
 
-*In operatorfabric documentation project _data/versions.yml file*:
+
+==== In the documentation repository (opfab.github.io)
+
+*In the _data/versions.yml file*:
 
 * Change:
 

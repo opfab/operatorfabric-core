@@ -89,7 +89,7 @@ public class ArchivedCardRoutesShould {
                     .expectBody(ArchivedCardConsultationData.class).value(card -> {
                 assertThat(card)
                         //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients")
+                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
                         .isEqualToComparingFieldByFieldRecursively(simpleCard);
             });
         }

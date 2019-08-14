@@ -1,6 +1,0 @@
-== Archived Cards
-
-Every time a card is published, in addition to being delivered to the users
-and persisted as a "current" card in MongoDB, it is also immediately
-persisted in the archived cards.
-

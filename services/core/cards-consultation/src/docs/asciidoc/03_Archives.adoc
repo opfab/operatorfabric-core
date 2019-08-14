@@ -1,0 +1,33 @@
+== Archived Cards
+
+=== Key concepts
+
+Every time a card is published, in addition to being delivered to the users
+and persisted as a "current" card in MongoDB, it is also immediately
+persisted in the archived cards.
+
+Archived cards are similar in structure to current cards, but they are managed differently.
+Current cards are uniquely identified by their id (made up of the publisher and the process id).
+That is because if a new card is published with id as an existing card, it will replace it in the
+card collection. This way, the current card reflects the current state of a process instance.
+In the archived cards collection however, both cards will be kept, so that the archived cards
+show all the states that a given process instance went through.
+
+//TODO Card examples
+
+=== Archives screen in the UI
+
+The Archives screen in the UI allows the users to query these archives with different filters.
+The layout of this screen is very similar to the Feed screen: the results are displayed in a
+(paginated) card list, and the user can display the associated card details by clicking a card in the list.
+
+IMPORTANT: The results of these queries are limited to cards that the user is allowed to see, either
+because they are direct recipient of the card or because they belong to a group that is a recipient
+of the card.
+
+//TODO Add screenshot
+
+=== Archive endpoints in the card-consultation API
+
+This Archives screen relies on dedicated endpoints in the card-consultation API, as described
+link:https://opfab.github.io/projects/services/core/cards-consultation/0.8.1.SNAPSHOT/api/#Archives[here].

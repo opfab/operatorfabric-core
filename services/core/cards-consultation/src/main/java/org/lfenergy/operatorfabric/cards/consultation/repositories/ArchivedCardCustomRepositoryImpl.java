@@ -44,6 +44,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     private static final List<String> UNIQUE_PARAMETERS = Arrays.asList(
             PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
 
+    private static final String ARCHIVED_CARDS_COLLECTION = "archivedCards";
+
     private final ReactiveMongoTemplate template;
 
     @Autowired
@@ -73,13 +75,13 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         //Handle Paging
         Pageable pageableRequest = createPageableFromParams(params.getT2());
         if(pageableRequest.isPaged()) {
-            return template.find(query.with(pageableRequest),LightCard.class,"archivedCards")
+            return template.find(query.with(pageableRequest),LightCard.class,ARCHIVED_CARDS_COLLECTION)
                     .map(lightCard -> (LightCardConsultationData) lightCard)
                     .collectList()
-                    .zipWith(template.count(query,LightCard.class,"archivedCards"))
+                    .zipWith(template.count(query,LightCard.class,ARCHIVED_CARDS_COLLECTION))
                     .map(tuple -> new PageImpl<>(tuple.getT1(),pageableRequest,tuple.getT2()));
         } else {
-            return template.find(query,LightCard.class,"archivedCards")
+            return template.find(query,LightCard.class,ARCHIVED_CARDS_COLLECTION)
                     .map(lightCard -> (LightCardConsultationData) lightCard)
                     .collectList()
                     .map(results ->  new PageImpl<>(results));
@@ -115,15 +117,13 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         //TODO Improvement Pass only items from params that are interesting to each method, not the whole map (split it)..
 
         /* Check that parameters that should be unique are */
-        UNIQUE_PARAMETERS.forEach(param_key -> {
-            if(queryParams.containsKey(param_key)) {
-                if(queryParams.get(param_key).size()>1) {
+        UNIQUE_PARAMETERS.forEach(paramKey -> {
+            if(queryParams.containsKey(paramKey)) {
+                if(queryParams.get(paramKey).size()>1) {
                     //TODO THROW ERROR
                 }
             }
         });
-
-        //TODO Explain in doc that not checks are made against exotic params (ex: typos), they just won't do anything
 
         /* Handle special parameters */
 
