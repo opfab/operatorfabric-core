@@ -38,10 +38,10 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
     public static final int DEFAULT_PAGE_SIZE = 10;
 
-    private static final List<String> specialParameters =Arrays.asList(
+    private static final List<String> SPECIAL_PARAMETERS = Arrays.asList(
             PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
 
-    private static final List<String> uniqueParameters = Arrays.asList(
+    private static final List<String> UNIQUE_PARAMETERS = Arrays.asList(
             PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
 
     private final ReactiveMongoTemplate template;
@@ -115,7 +115,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         //TODO Improvement Pass only items from params that are interesting to each method, not the whole map (split it)..
 
         /* Check that parameters that should be unique are */
-        uniqueParameters.forEach(param_key -> {
+        UNIQUE_PARAMETERS.forEach(param_key -> {
             if(queryParams.containsKey(param_key)) {
                 if(queryParams.get(param_key).size()>1) {
                     //TODO THROW ERROR
@@ -154,7 +154,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         params.forEach((key, values) -> {
 
-            if(!specialParameters.contains(key)) {
+            if(!SPECIAL_PARAMETERS.contains(key)) {
                 criteria.add(Criteria.where(key).in(values));
             }
 

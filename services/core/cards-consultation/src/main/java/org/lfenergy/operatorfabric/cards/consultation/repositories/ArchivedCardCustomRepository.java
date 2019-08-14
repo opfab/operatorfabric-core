@@ -1,7 +1,6 @@
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.data.domain.Page;

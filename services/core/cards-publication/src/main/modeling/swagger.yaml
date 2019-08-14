@@ -5,7 +5,7 @@ info:
   title: Card Management API
   termsOfService: ''
   contact:
-    email: boris.dolley_AT_rte-france.com
+    email: opfab-maintainers_AT_rte-france.com
     url: 'https://opfab.github.io/'
   license:
     name: Mozilla Public License V2.0
@@ -23,6 +23,8 @@ tags:
     description: Everything concerning resource creation
   - name: deletion
     description: Everything concerning resource deletion
+  - name: archives
+    description: Everything concerning archived cards
 schemes:
   - http
 definitions:
@@ -803,6 +805,46 @@ definitions:
           EN: Summary of card content
           FR: Resume du contenu de la carte
       mainRecipient: givenUser
+  LightCardPage:
+    type: object
+    description: >-
+      This object contains the result of a paginated query returning LightCards: a list of LightCards
+      as well as additional information on the result: total number of items, page number, page size, etc.
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/LightCard'
+        description: >-
+          LightCard objects making up the required result page
+      first:
+        type: boolean
+        description: >-
+          Is true for the first page (page number = 0)
+      last:
+        type: boolean
+        description: >-
+          Is true for the last page
+      totalPages:
+        type: number
+        description: >-
+          Total number of pages returned by the query
+      totalElements:
+        type: number
+        description: >-
+          Total number of elements returned by the query
+      numberOfElements:
+        type: number
+        description: >-
+          Number of elements in the current page (<= size)
+      size:
+        type: number
+        description: >-
+          Page size (max number of items in page)
+      number:
+        type: number
+        description: >-
+          Page number
 paths:
   /async/cards:
     post:
@@ -933,6 +975,121 @@ paths:
           description: erroneous payload
           schema:
             $ref: '#/definitions/CardCreationReport'
+  /archives:
+    get:
+      tags:
+        - archives
+        - read
+      summary: get archived cards matching given criteria
+      description: >-
+        get archived cards matching the criteria given as parameters. Results are limited to the cards that
+        the calling user is allowed to see (based on the card recipients).
+      operationId: fetchArchivedCardsWithParams
+      consumes:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          type: number
+          required: false
+          description: >-
+            Page number of the page to retrieve.
+            If "size" is set but "page" isn't, the default page returned will be the first (number 0).
+            If "page" is set but "size" isn't, the default size will be 10 items.
+            If neither "page" nor "size" is set, the response will contain a single page containing all matching cards.
+            This parameter should be unique or a BAD REQUEST will be returned.
+        - in: query
+          name: size
+          type: number
+          required: false
+          description: >-
+            Size of the results pages.
+            If "size" is set but "page" isn't, the default page returned will be the first (number 0).
+            If "page" is set but "size" isn't, the default size will be 10 items.
+            If neither "page" nor "size" is set, the response will contain a single page containing all matching cards.
+            This parameter should be unique or a BAD REQUEST will be returned.
+        - in: query
+          name: publishDateFrom
+          type: number
+          required: false
+          description: >-
+            Date as number of milliseconds since epoch. If this query parameter is set, only cards
+            with a publishDate that is after this date will be returned.
+            This parameter should be unique or a BAD REQUEST will be returned.
+        - in: query
+          name: publishDateTo
+          type: number
+          required: false
+          description: >-
+            Date as number of milliseconds since epoch. If this query parameter is set, only cards
+            with a publishDate that is before this date will be returned.
+            This parameter should be unique or a BAD REQUEST will be returned.
+        - in: query
+          name: activeFrom
+          type: number
+          required: false
+          description: >-
+            Date as number of milliseconds since epoch. If this query parameter is set, only cards
+            with an active period (as defined by their startDate and endDate properties) that
+            overlaps the range [activeFrom, activeTo] will be returned. If no parameter activeTo is set,
+            only cards with at least part of their active period after activeFrom will be returned.
+            This parameter should be unique or a BAD REQUEST will be returned.
+        - in: query
+          name: activeTo
+          type: number
+          required: false
+          description: >-
+            Date as number of milliseconds since epoch. If this query parameter is set, only cards
+            with an active period (as defined by their startDate and endDate properties) that
+            overlaps the range [activeFrom, activeTo] will be returned. If no parameter activeFrom is set,
+            only cards with at least part of their active period before activeTo will be returned.
+            This parameter should be unique or a BAD REQUEST will be returned.
+        - in: query
+          name: publisher
+          type: string
+          required: false
+          description: >-
+            If this parameter is set, results will be limited to cards from this publisher.
+            This parameter can be set multiple times to filter cards from several publishers,
+            using the following syntax: ?publisher=publisher1&publisher=publisher2
+        - in: query
+          name: process
+          type: string
+          required: false
+          description: >-
+            If this parameter is set, results will be limited to cards from this process.
+            This parameter can be set multiple times to filter cards from several processes,
+            using the following syntax: ?process=process1&process=process2
+        - in: query
+          name: tags
+          type: string
+          required: false
+          description: >-
+            If this parameter is set, results will be limited to cards containing this tag.
+            This parameter can be set multiple times to filter cards with several tags,
+            using the following syntax: ?tags=tag1&tags=tag2. In this example, cards bearing
+            either tag1 or tag2 (or both) will be returned.
+        - in: query
+          name: XXXX
+          type: string
+          required: false
+          description: >-
+            In addition to the query parameters described above, any query parameter of the form
+            ?key=value, where "key" is the name of a card field, will filter cards to return
+            only cards where the field "key" is either equal to the string "value" or to an array
+            containing "value".
+            If key isn't a card property, the filter will have no effect.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/LightCardPage'
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - User doesn't have any group
   '/{millisTime}/next':
     parameters:
       - in: path
@@ -975,29 +1132,19 @@ paths:
             $ref: '#/definitions/Card'
         '404':
           description: no card found
-  '/cards/{processId}':
+  '/archives/{id}':
     parameters:
       - in: path
-        name: processId
+        name: id
         type: string
         required: true
-    delete:
-      operationId: deleteProcessCard
-      tags:
-        - cards
-        - deletion
-      summary: delete current card
-      description: delete current card for process id
-      responses:
-        '200':
-          description: OK
     get:
-      operationId: fetchProcessCard
+      operationId: fetchArchivedCard
       tags:
-        - cards
+        - archives
         - read
-      summary: fetch current card
-      description: fetch current card for process id
+      summary: fetch archived card
+      description: fetch archived card with the given id
       responses:
         '200':
           description: OK
@@ -1007,6 +1154,38 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
+  '/cards/{processId}':
+            parameters:
+              - in: path
+                name: processId
+                type: string
+                required: true
+            delete:
+              operationId: deleteProcessCard
+              tags:
+                - cards
+                - deletion
+              summary: delete current card
+              description: delete current card for process id
+              responses:
+                '200':
+                  description: OK
+            get:
+              operationId: fetchProcessCard
+              tags:
+                - cards
+                - read
+              summary: fetch current card
+              description: fetch current card for process id
+              responses:
+                '200':
+                  description: OK
+                  schema:
+                    $ref: '#/definitions/Card'
+                '401':
+                  description: Authentication required
+                '403':
+                  description: Forbidden - User doesn't have any group
   '/cards/{processId}/actions/{actionKey}':
     parameters:
       - in: path

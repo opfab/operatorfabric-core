@@ -16,4 +16,6 @@
 :icons: font
 :hide-uri-scheme:
 
-Work in progress
+WORK in progress
+
+include::01_Archives.adoc[]

@@ -46,7 +46,7 @@ or every Y milliseconds)
 ===== Multiple service instances (thoughts on future needs)
 
 Running multiple service instances. In a multiple service environment problems should arise when multiple cards for
-same process are submited. This may impact both persistence and notification.
+same process are submitted. This may impact both persistence and notification.
 
 ====== Persistence
 
