@@ -5,19 +5,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {LightCard} from "@ofModel/light-card.model";
-import {Page} from "@ofModel/page.model";
+import {LightCard} from '@ofModel/light-card.model';
+import {Page} from '@ofModel/page.model';
+// import { IArchiveFilter } from '@ofModel/archive-filter.model';
 
 export interface ArchiveState {
     selectedCardId: string;
     resultPage: Page<LightCard>;
-    filters: Map<string,string[]>; //TODO Explain path/values or create data type
-    loading: boolean
+    filters: Map<string, string[]>;
+    loading: boolean;
 }
 
 export const archiveInitialState: ArchiveState = {
         selectedCardId: null,
-        resultPage: new Page<LightCard>(1,0,[]),
+        resultPage: new Page<LightCard>(1, 0 , []),
         filters: new Map(),
         loading: false
-}
+};

@@ -11,6 +11,7 @@ import {Card, Detail, TitlePosition} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap} from "@ofModel/map";
 import {Action, ActionType, Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import { Page } from '@ofModel/page.model';
 
 export function getRandomMenu(): ThirdMenu[] {
     let result: ThirdMenu[] = [];
@@ -143,6 +144,11 @@ export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
         lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null
     );
     return oneCard;
+}
+export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCard> {
+    const lightCards = getSeveralRandomLightCards(totalElements);
+    const randomPage = new Page<LightCard>(totalPages, totalElements, lightCards);
+    return randomPage;
 }
 
 export function getRandomActions() {

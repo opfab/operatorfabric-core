@@ -10,14 +10,13 @@ import {Observable, of, Subject} from 'rxjs';
 import {CardOperation} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication.service';
-import {Card} from "@ofModel/card.model";
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {environment} from "@env/environment";
-import {GuidService} from "@ofServices/guid.service";
-import {LightCard} from "@ofModel/light-card.model";
-import {forEach} from "@angular/router/src/utils/collection";
-import {Page} from "@ofModel/page.model";
-import {map} from "rxjs/operators";
+import {Card} from '@ofModel/card.model';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {environment} from '@env/environment';
+import {GuidService} from '@ofServices/guid.service';
+import {LightCard} from '@ofModel/light-card.model';
+import {Page} from '@ofModel/page.model';
+import { TimeService } from './time.service';
 
 @Injectable()
 export class CardService {
@@ -27,7 +26,8 @@ export class CardService {
     readonly archivesUrl: string;
 
 
-    constructor(private httpClient:HttpClient, private authenticationService: AuthenticationService,private guidService: GuidService) {
+    constructor(private httpClient: HttpClient,
+        private guidService: GuidService, private timeService: TimeService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -73,7 +73,7 @@ export class CardService {
                     eventSource.close();
                 }
             };
-        })
+        });
     }
 
     public updateCardSubscriptionWithDates(rangeStart:number,rangeEnd:number):Observable<any>{
@@ -86,19 +86,11 @@ export class CardService {
         return this.httpClient.get<Card>(`${this.archivesUrl}/${id}`);
     }
 
-    fetchArchivedCards(filters: Map<string,string[]>):Observable<Page<LightCard>> {
-
+    fetchArchivedCards(filters: Map<string, string[]>): Observable<Page<LightCard>> {
         let params = new HttpParams();
-
-        filters.forEach((values, key) => {
-            values.forEach(
-                value => {
-                    params = params.append(key,value);
-                }
-            );
-        }
-        );
-
-        return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`,{params: params});
+        filters.forEach((values, key) => values.forEach(value => params = params.append(key, value)));
+        console.log(params);
+        // const tmp = new HttpParams().set('publisher', 'defaultPublisher').set('size', '10');
+        return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
     }
 }

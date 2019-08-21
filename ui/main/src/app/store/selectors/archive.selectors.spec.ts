@@ -5,20 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AppState} from "@ofStore/index";
-import {
-    buildSettingsSelector,
-    selectSettings,
-    selectSettingsData,
-    selectSettingsLoaded
-} from "@ofSelectors/settings.selectors";
-import {settingsInitialState, SettingsState} from "@ofStates/settings.state";
-import {archiveInitialState, ArchiveState} from "@ofStates/archive.state";
-import {buildArchiveFilterSelector, selectArchiveFilters} from "@ofSelectors/archive.selectors";
-import {arch} from "os";
+import {AppState} from '@ofStore/index';
+import {archiveInitialState, ArchiveState} from '@ofStates/archive.state';
+import { selectArchiveFilters} from '@ofSelectors/archive.selectors';
 
 describe('ArchiveSelectors', () => {
-    let emptyAppState: AppState = {
+    const emptyAppState: AppState = {
         router: null,
         feed: null,
         timeline: null,
@@ -26,30 +18,24 @@ describe('ArchiveSelectors', () => {
         card: null,
         menu: null,
         config: null,
-        settings:null,
+        settings: null,
         time: null,
         archive: null
-    }
-
-    let existingFilterState: ArchiveState = {
+    };
+    const filters = new Map<string, string[]>();
+    filters.set('endBusnDate', ['1566303137']);
+    const existingFilterState: ArchiveState = {
         ...archiveInitialState,
-        filters: new Map<string, string[]>().set("someFilter",["filterValue1","filterValue2"])
+        filters
     };
 
     it('manage empty filters', () => {
-        let testAppState = {...emptyAppState, archive: archiveInitialState};
+        const testAppState = {...emptyAppState, archive: archiveInitialState};
         expect(selectArchiveFilters(testAppState)).toEqual(archiveInitialState.filters);
-        expect(buildArchiveFilterSelector('someFilter')(testAppState)).toEqual(null);
-        expect(buildArchiveFilterSelector('someFilter','fallback')(testAppState)).toEqual('fallback');
     });
-
-
     it('return archive  and specific filter', () => {
-        let testAppState = {...emptyAppState, archive: existingFilterState};
+        const testAppState = {...emptyAppState, archive: existingFilterState};
         expect(selectArchiveFilters(testAppState)).toEqual(existingFilterState.filters);
-        expect(buildArchiveFilterSelector('someFilter')(testAppState)).toEqual(["filterValue1","filterValue2"]);
-        expect(buildArchiveFilterSelector('someFilter','fallback')(testAppState)).toEqual(["filterValue1","filterValue2"]);
-        expect(buildArchiveFilterSelector('someOtherFilterThatDoesntExist','fallback')(testAppState)).toEqual("fallback");
     });
 
 

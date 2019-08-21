@@ -184,6 +184,10 @@ export class TimeService {
         return '';
     }
 
+    public toNgBTimestamp(date): string {
+        return this.parseString(date).valueOf().toString();
+    }
+
     public formatDateTime(timestamp: number): string;
     public formatDateTime(date: Date): string;
     public formatDateTime(m: Moment): string;

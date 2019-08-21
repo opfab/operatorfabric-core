@@ -11,7 +11,8 @@ import {
     getOneRandomCardDetail,
     getOneRandomCardWithRandomDetails,
     getRandomAlphanumericValue,
-    pickARandomItemOfAnEnum
+    pickARandomItemOfAnEnum,
+    getRandomPage
 } from './helpers';
 import {TitlePosition} from "@ofModel/card.model";
 
@@ -103,5 +104,13 @@ describe('Tests Helpers', () => {
 
        }
        ) ;
+    });
+    describe('getRandomPage', () => {
+        it('should get a random archive page', () => {
+            const randomPage = getRandomPage(3, 30);
+            expect(randomPage.totalPages).toBe(3);
+            expect(randomPage.totalElements).toBe(30);
+            expect(randomPage.content.length).toBe(30);
+        });
     });
 });

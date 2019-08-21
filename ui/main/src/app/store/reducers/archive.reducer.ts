@@ -5,9 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {archiveInitialState, ArchiveState} from "@ofStates/archive.state";
-import {ArchiveActions, ArchiveActionTypes} from "@ofActions/archive.actions";
-import {LightCardActionTypes} from "@ofActions/light-card.actions";
+import {archiveInitialState, ArchiveState} from '@ofStates/archive.state';
+import {ArchiveActions, ArchiveActionTypes} from '@ofActions/archive.actions';
 
 
 export function reducer(
@@ -17,28 +16,28 @@ export function reducer(
     switch (action.type) {
 
         case ArchiveActionTypes.UpdateArchiveFilter : {
-            const filters = new Map(state.filters);
-            filters.set(action.payload.filterPath, action.payload.filterValues);
+            const filters = new Map(action.payload.filters);
             return {
                 ...state,
-                filters: filters
+                filters: filters,
+                loading: true
             };
         }
 
         case ArchiveActionTypes.ArchiveQuerySuccess : {
+            const {resultPage} = action.payload;
             return {
                 ...state,
-                resultPage: action.payload.resultPage
-            }
+                resultPage: resultPage,
+                loading: false
+            };
         }
-
         case ArchiveActionTypes.SelectArchivedLightCard: {
             return {
                 ...state,
                 ...action.payload
-            }
+            };
         }
-
         default: {
             return state;
         }

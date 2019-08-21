@@ -5,29 +5,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AppState} from "@ofStore/index";
-import {createSelector} from "@ngrx/store";
-import {SettingsState} from "@ofStates/settings.state";
+import {AppState} from '@ofStore/index';
+import {createSelector} from '@ngrx/store';
 import * as _ from 'lodash';
-import {ArchiveState} from "@ofStates/archive.state";
+import {ArchiveState} from '@ofStates/archive.state';
 
-export const selectArchive = (state:AppState) => state.archive;
-export const selectArchiveFilters =  createSelector(selectArchive, (archiveState:ArchiveState)=> archiveState.filters);
+export const selectArchive = (state: AppState) => state.archive;
+export const selectArchiveFilters =  createSelector(selectArchive, (archiveState: ArchiveState) => archiveState.filters);
 
-export const selectArchiveLightCards = createSelector(selectArchive, (archiveState:ArchiveState)=> archiveState.resultPage.content);
+export const selectArchiveLightCards = createSelector(selectArchive, (archiveState: ArchiveState) => archiveState.resultPage.content);
+export const selectArchiveCount = createSelector(selectArchive, (archiveState: ArchiveState) => archiveState.resultPage.totalElements);
 
-export const selectArchiveLightCardSelection = createSelector(selectArchive, (archiveState:ArchiveState)=> archiveState.selectedCardId);
 
-export function buildArchiveFilterSelector(path:string, fallback: any = null){
-    return createSelector(selectArchiveFilters,(filters)=>{
-        let result: string[];
-        if(filters.has(path)) {
-            result = filters.get(path);
-        } else {
-            result = null;
-        }
-        if(!result && fallback)
-            return fallback;
-        return result;
-    });
-}
+export const selectArchiveLightCardSelection = createSelector(selectArchive, (archiveState: ArchiveState) => archiveState.selectedCardId);

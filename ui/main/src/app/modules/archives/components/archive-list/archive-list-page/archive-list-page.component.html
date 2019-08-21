@@ -3,7 +3,7 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
-
+<!--
 <nav aria-label="Archive Page Navigation">
   <ul class="pagination">
     <li class="page-item">
@@ -23,5 +23,15 @@
     </li>
   </ul>
 </nav>
+-->
+
+
+<ngb-pagination *ngIf="(collectionSize$ | async) > 0"
+  [collectionSize]="collectionSize$ | async" 
+  [(page)]="page"
+  (pageChange)="updateResultPage()">
+</ngb-pagination>
+
+
 
 <!-- <ng-container *ngFor="let i of [].constructor(20)">bla</ng-container>-->
