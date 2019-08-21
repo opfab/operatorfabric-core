@@ -26,3 +26,13 @@ body {
   background-color: $dark;
   height: 100vh;
 }
+.archives-page .form-control {
+  border-radius: 1px;
+}
+.ngb-tp-spacer {
+  width: 0.3em!important;
+}
+.ngb-tp-input-container button {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}

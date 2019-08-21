@@ -1,4 +1,15 @@
-.no-padding-row {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
+.nomarginrow {
+    margin-left:0;
+    margin-right:0;
+  }
+  .nopaddingrow {
+    padding-right:0;
+    padding-left:0;
+  }
+  .archive-filter {
+    padding-right:7px;
+    padding-left:0;
+  }
+  .archive-radius {
+    border-radius:1px;
+  }
