@@ -15,7 +15,7 @@ export function isNumber(value: any): value is number {
 }
 export class DateTimeNgb extends NgbDateParserFormatter {
 
-  // Transform a date to ngdatestruct date (ex: dd/mm/yyyy)
+  /* istanbul ignore next */
   constructor(readonly date?: NgbDateStruct, private time?: NgbTimeStruct) {
     super();
   }
