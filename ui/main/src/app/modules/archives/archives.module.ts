@@ -18,7 +18,6 @@ import { DatetimeFilterComponent } from './components/archive-filters/datetime-f
 import {CardsModule} from '../cards/cards.module';
 import {TranslateModule} from '@ngx-translate/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ArchiveService } from '@ofServices/archive.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -36,9 +35,6 @@ import { ArchiveService } from '@ofServices/archive.service';
     MultiFilterComponent,
     ArchiveListPageComponent,
     DatetimeFilterComponent
-  ],
-  providers: [
-    ArchiveService
   ]
 })
 export class ArchivesModule { }

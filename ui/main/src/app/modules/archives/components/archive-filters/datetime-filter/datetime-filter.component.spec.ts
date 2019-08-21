@@ -4,7 +4,7 @@ import { DatetimeFilterComponent } from './datetime-filter.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-describe('DatetimeFilterComponent', () => {
+fdescribe('DatetimeFilterComponent', () => {
   let component: DatetimeFilterComponent;
   let fixture: ComponentFixture<DatetimeFilterComponent>;
 

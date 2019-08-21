@@ -24,11 +24,15 @@ import { ControlValueAccessor, FormGroup, FormControl,
 })
 export class DatetimeFilterComponent implements ControlValueAccessor, Validator {
 
+  readonlyInputs: boolean;
+  @Input() filterPath: string;
   public datetimeForm: FormGroup = new FormGroup({
-    date: new FormControl('', [Validators.required]),
-    time: new FormControl('', [Validators.required])
+    date: new FormControl(),
+    time: new FormControl()
   });
-  constructor() {}
+  constructor() {
+    this.readonlyInputs = false;
+  }
 
   public onTouched: () => void = () => {};
 

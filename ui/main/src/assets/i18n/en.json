@@ -64,7 +64,11 @@
     "filters": {
       "publisher": "Publisher",
       "process": "Process",
-      "tags": "Tags"
+      "tags": "Tags",
+      "publishDateFrom": "Publish Date From",
+      "publishDateTo": "Publish Date To",
+      "activeFrom": "Active From",
+      "activeTo": "Active To"
     },
     "search": "Search"
   },

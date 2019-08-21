@@ -16,12 +16,13 @@ import {
     ArchiveActionTypes,
     ArchiveQuerySuccess,
     HandleUnexpectedError,
-    SendArchiveQuery, UpdateArchivePage
-} from "@ofActions/archive.actions";
-import {LightCard} from "@ofModel/light-card.model";
-import {selectArchiveFilters} from "@ofSelectors/archive.selectors";
-import {Page} from "@ofModel/page.model";
-import { UpdateArchiveFilter } from '../actions/archive.actions';
+    SendArchiveQuery,
+    UpdateArchivePage
+} from '@ofActions/archive.actions';
+import {LightCard} from '@ofModel/light-card.model';
+import {selectArchiveFilters} from '@ofSelectors/archive.selectors';
+import {Page} from '@ofModel/page.model';
+import {UpdateArchiveFilter} from '../actions/archive.actions';
 
 @Injectable()
 export class ArchiveEffects {
@@ -31,32 +32,36 @@ export class ArchiveEffects {
     }
 
     @Effect()
-    queryArchivedCards: Observable<Action> = this.actions$
-        .pipe(
-            ofType(ArchiveActionTypes.SendArchiveQuery),
-            switchMap((action: SendArchiveQuery) => this.service.fetchArchivedCards(action.payload.params)),
-            map((resultPage: Page<LightCard>) => {
-                return new ArchiveQuerySuccess({resultPage: resultPage});
-            }),
-            catchError((error, caught) => {
-                this.store.dispatch(new HandleUnexpectedError({error: error}));
-                return caught;
-            }));
-
+    queryArchivedCards: Observable<Action> = this.actions$.pipe(
+        ofType(ArchiveActionTypes.SendArchiveQuery),
+        // update the filter state and the archive list
+        switchMap((action: SendArchiveQuery) => {
+            const {params} = action.payload;
+            this.store.dispatch(new UpdateArchiveFilter({filters: params}));
+            return this.service.fetchArchivedCards(new Map(params));
+        }),
+        map((resultPage: Page<LightCard>) => new ArchiveQuerySuccess({resultPage})),
+        catchError((error, caught) => {
+            this.store.dispatch(new HandleUnexpectedError({error: error}));
+            return caught;
+        })
+    );
     @Effect()
-    queryArchivedCardsPage: Observable<Action> = this.actions$ //TODO Maybe it's not necessary anymore to have a distinct action for the page button, search & pages trigger the same
-        .pipe(
-            ofType<UpdateArchivePage>(ArchiveActionTypes.UpdateArchivePage),
-            withLatestFrom(this.store.select(selectArchiveFilters)),
-            map(([action, filters]) => {
-                filters.pageNumber = (action.payload.pageNumber).toString();
-                return new UpdateArchiveFilter({filters});
-            }),
-            //
-            catchError((error, caught) => {
-                this.store.dispatch(new HandleUnexpectedError({error: error}));
-                return caught;
-            }));
+    queryArchivedCardsPage: Observable<Action> = this.actions$.pipe(
+        ofType(ArchiveActionTypes.UpdateArchivePage),
+        withLatestFrom(this.store.select(selectArchiveFilters)),
+        map(([action, filters]) => {
+            // get the current page
+            const page = (action as UpdateArchivePage).payload.page;
+            // modify the filters page
+            filters.set('page', [page.toString()]);
+            return new SendArchiveQuery({params: filters});
+        }),
+        catchError((error, caught) => {
+            this.store.dispatch(new HandleUnexpectedError({error: error}));
+            return caught;
+        })
+    );
 
 
 }

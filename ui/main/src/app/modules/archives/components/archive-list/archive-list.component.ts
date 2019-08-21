@@ -5,23 +5,28 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
-import {Observable} from "rxjs";
+import {Observable, of} from 'rxjs';
+import { AppState } from '@ofStore/index';
+import { Store, select } from '@ngrx/store';
+import { catchError, tap } from 'rxjs/operators';
+import { selectArchiveLightCards } from '@ofStore/selectors/archive.selectors';
 
 @Component({
   selector: 'of-archive-list',
   templateUrl: './archive-list.component.html',
   styleUrls: ['./archive-list.component.scss']
 })
-export class ArchiveListComponent  {
+export class ArchiveListComponent implements OnInit {
 
   @Input() public lightCards: LightCard[];
   @Input() public selection: Observable<string>;
 
-  constructor() { }
+  constructor(private store: Store<AppState>) { }
+
+  ngOnInit(): void {
+  }
 
 
 }
-
-// TODO pages should only be displayed if card list isn't empty (or even better, if there are several pages)

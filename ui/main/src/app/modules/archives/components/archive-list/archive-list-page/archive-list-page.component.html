@@ -25,12 +25,12 @@
 </nav>
 -->
 
-<ngb-pagination 
-  [collectionSize]="70" 
-  [(page)]="pageNumber"
+
+<ngb-pagination *ngIf="(collectionSize$ | async) > 0"
+  [collectionSize]="collectionSize$ | async" 
+  [(page)]="page"
   (pageChange)="updateResultPage()">
 </ngb-pagination>
-<pre>Current page: {{page}}</pre>
 
 
 

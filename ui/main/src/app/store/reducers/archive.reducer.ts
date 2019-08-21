@@ -16,29 +16,28 @@ export function reducer(
     switch (action.type) {
 
         case ArchiveActionTypes.UpdateArchiveFilter : {
-            const {filters} = action.payload;
+            const filters = new Map(action.payload.filters);
             return {
                 ...state,
-                filters,
+                filters: filters,
                 loading: true
             };
         }
 
         case ArchiveActionTypes.ArchiveQuerySuccess : {
+            const {resultPage} = action.payload;
             return {
                 ...state,
-                resultPage: action.payload.resultPage,
+                resultPage: resultPage,
                 loading: false
-            }
+            };
         }
-
         case ArchiveActionTypes.SelectArchivedLightCard: {
             return {
                 ...state,
                 ...action.payload
-            }
+            };
         }
-
         default: {
             return state;
         }

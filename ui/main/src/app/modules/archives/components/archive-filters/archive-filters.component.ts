@@ -11,9 +11,30 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {buildConfigSelector} from '@ofSelectors/config.selectors';
 import { FormGroup, FormControl } from '@angular/forms';
-import { UpdateArchiveFilter } from '@ofStore/actions/archive.actions';
-import { IArchiveFilter } from '@ofModel/archive-filter.model';
+import { SendArchiveQuery } from '@ofStore/actions/archive.actions';
+import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
+import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
+import { TimeService } from '@ofServices/time.service';
 
+export enum FilterDateTypes {
+  PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
+  PUBLISH_DATE_TO_PARAM = 'publishDateTo',
+  ACTIVE_FROM_PARAM = 'activeFrom',
+  ACTIVE_TO_PARAM = 'activeTo'
+
+}
+
+export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
+  let result = false;
+  if (Object.values(enumeration).includes(value)) {
+    result = true;
+  }
+  return result;
+};
+
+export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): string => {
+  return new DateTimeNgb(date, time).formatDateTime();
+};
 
 @Component({
   selector: 'of-archive-filters',
@@ -22,31 +43,59 @@ import { IArchiveFilter } from '@ofModel/archive-filter.model';
 })
 export class ArchiveFiltersComponent implements OnInit {
 
-  publishers$: Observable<string []>;
+  tags$: Observable<string []>;
   processes$: Observable<string []>;
 
   archiveForm: FormGroup;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private timeService: TimeService) {
     this.archiveForm = new FormGroup({
-      publisher: new FormControl(''),
+      tags: new FormControl(''),
       process: new FormControl(),
-      startNotifDate: new FormControl(''),
-      endNotifDate: new FormControl(''),
-      startBusnDate: new FormControl(''),
-      endBusnDate: new FormControl(''),
+      publishDateFrom: new FormControl(''),
+      publishDateTo: new FormControl(''),
+      activeFrom: new FormControl(''),
+      activeTo: new FormControl(''),
     });
   }
 
 
   ngOnInit() {
-    this.publishers$ = this.store.select(buildConfigSelector('archive.filters.publisher.list'));
+    this.tags$ = this.store.select(buildConfigSelector('archive.filters.tags.list'));
     this.processes$ = this.store.select(buildConfigSelector('archive.filters.process.list'));
   }
 
-  sendQuery(filters: IArchiveFilter): void {
+  /**
+   * Transorm the filters list to Map
+   */
+  filtersToMap = (filters: any): Map<string, string[]> => {
+    const params = new Map();
+    Object.keys(filters).forEach(key => {
+      const element = filters[key];
+        // if the form element is date
+      if (element) {
+        if (checkElement(FilterDateTypes, key)) {
+          const {date, time} = element;
+          const dateString = transformToTimestamp(date, time);
+          params.set(key, [this.timeService.toNgBTimestamp(dateString)]);
+        } else {
+          if(element.length) {
+            params.set(key, element);
+          }
+        }
+      }
+    });
+    return params;
+  }
 
-    this.store.dispatch(new UpdateArchiveFilter({filters}));
+  sendQuery(): void {
+    const {value} = this.archiveForm;
+    const params = this.filtersToMap(value);
+    params.set('page', ['1']);
+    params.set('size', ['10']);
+    console.log(params);
+    this.store.dispatch(new SendArchiveQuery({params}));
   }
 
 }
+

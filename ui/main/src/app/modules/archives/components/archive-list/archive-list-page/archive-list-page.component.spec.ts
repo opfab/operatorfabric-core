@@ -1,30 +1,53 @@
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState, appReducer, storeConfig } from '@ofStore/index';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+
 import { ArchiveListPageComponent } from './archive-list-page.component';
 
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {appReducer, AppState, storeConfig} from '@ofStore/index';
+import {Store, StoreModule} from '@ngrx/store';
+import {RouterTestingModule} from '@angular/router/testing';
+import {HttpClientModule} from '@angular/common/http';
+import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
+import {CustomRouterStateSerializer} from '@ofStates/router.state';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {ServicesModule} from '@ofServices/services.module';
 
-xdescribe('AtchiveListpageComponent', () => {
+
+describe('AtchiveListpageComponent', () => {
   let component: ArchiveListPageComponent;
   let store: Store<AppState>;
   let fixture: ComponentFixture<ArchiveListPageComponent>;
-
+  let compiled: any;
+  beforeEach(async(() => {
+      TestBed.configureTestingModule({
+          imports: [
+              ServicesModule,
+              StoreModule.forRoot(appReducer, storeConfig),
+              RouterTestingModule,
+              StoreRouterConnectingModule,
+              HttpClientModule],
+          declarations: [
+            ArchiveListPageComponent
+          ],
+          providers: [
+              {provide: Store, useClass: Store},
+              {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}
+          ],
+          schemas: [ NO_ERRORS_SCHEMA ]
+      }).compileComponents();
+  }));
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        StoreModule.forRoot(appReducer, storeConfig),
-      ],
-      providers: [Store]
-    }).compileComponents();
-    store = TestBed.get(Store);
-    spyOn(store, 'dispatch').and.callThrough();
-    // avoid exceptions during construction and init of the component
-    // spyOn(store, 'pipe').and.callFake(() => of('/test/url'));
-    fixture = TestBed.createComponent(ArchiveListPageComponent);
-    component = fixture.componentInstance;
+      store = TestBed.get(Store);
+      spyOn(store, 'dispatch').and.callThrough();
+      // avoid exceptions during construction and init of the component
+      // spyOn(store, 'pipe').and.callFake(() => of('/test/url'));
+      fixture = TestBed.createComponent(ArchiveListPageComponent);
+      component = fixture.componentInstance;
+      compiled = fixture.debugElement.nativeElement;
+      fixture.detectChanges();
+
   });
 
-  it('sould create component', () => {
-    expect(component).toBeTruthy();
+  it('should create an the app-archives component', () => {
+      expect(component).toBeTruthy();
   });
-})
+});

@@ -5,10 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {UpdateArchivePage} from '@ofActions/archive.actions';
-import {Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
+import { selectArchiveCount } from '@ofStore/selectors/archive.selectors';
+import { tap, catchError } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
 
 @Component({
   selector: 'of-archive-list-page',
@@ -17,15 +20,20 @@ import {AppState} from '@ofStore/index';
 })
 export class ArchiveListPageComponent implements OnInit {
 
-  pageNumber: number;
-  constructor(private store: Store<AppState>) { }
-
-  ngOnInit() {
+  page: number;
+  collectionSize$: Observable<number>;
+  constructor(private store: Store<AppState>) {}
+  ngOnInit(): void {
+    this.page = 1;
+    this.collectionSize$ = this.store.pipe(
+      select(selectArchiveCount),
+      catchError(err => of(0))
+    );
+    this.collectionSize$.subscribe(d => console.log(d));
   }
 
   updateResultPage(): void {
-    const {pageNumber} = this;
-    console.log(pageNumber);
-    this.store.dispatch(new UpdateArchivePage({pageNumber}));
+    const {page} = this;
+    this.store.dispatch(new UpdateArchivePage({page}));
   }
 }

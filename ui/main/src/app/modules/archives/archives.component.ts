@@ -9,7 +9,7 @@ import {Component, OnInit} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {select, Store} from '@ngrx/store';
-import {catchError} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {AppState} from '@ofStore/index';
 import {selectArchiveLightCards, selectArchiveLightCardSelection} from '@ofSelectors/archive.selectors';
 

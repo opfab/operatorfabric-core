@@ -43,6 +43,10 @@ describe('Ngb Datetime modal', () => {
     const date = {day: 12, month: 6, year: 2010};
     const customDateFormatter = new DateTimeNgb(date, time);
     expect(customDateFormatter.formatDateTime()).toEqual('2010-06-12T03:03');
+    // if date and time are both null should return empty string
+    expect(new DateTimeNgb(null, null).formatDateTime()).toEqual('');
+    // if date is set but time null we set the time to zero
+    expect(new DateTimeNgb({day: 1, month: 1, year: 2019}, null).formatDateTime()).toEqual('2019-01-01T00:00');
   });
 });
 

@@ -16,7 +16,7 @@ export function isNumber(value: any): value is number {
 export class DateTimeNgb extends NgbDateParserFormatter {
 
   // Transform a date to ngdatestruct date (ex: dd/mm/yyyy)
-  constructor(readonly date?: NgbDateStruct, readonly time?: NgbTimeStruct) {
+  constructor(readonly date?: NgbDateStruct, private time?: NgbTimeStruct) {
     super();
   }
   parse(value: string): NgbDateStruct {
@@ -47,7 +47,16 @@ export class DateTimeNgb extends NgbDateParserFormatter {
   }
 
   formatDateTime() {
-    return `${this.format()}T${this.formatTime()}`;
+    let result = '';
+    const {date, time} = this;
+    // if date is present
+    if (date) {
+      if (!time) {
+        this.time = {hour: 0, minute: 0, second: 0};
+      }
+      result = `${this.format()}T${this.formatTime()}`;
+    }
+    return result;
   }
 
 }
