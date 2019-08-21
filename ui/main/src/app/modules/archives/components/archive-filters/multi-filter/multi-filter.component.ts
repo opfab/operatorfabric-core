@@ -17,8 +17,8 @@ export class MultiFilterComponent implements OnInit {
 
   @Input() filterPath: string;
   constructor(private translateService: TranslateService) {
-    this.parentForm = new FormGroup({
-      publisher: new FormControl()
+    this.parentForm = new   FormGroup({
+      [this.filterPath]: new FormControl()
     });
   }
 

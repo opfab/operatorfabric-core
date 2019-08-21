@@ -17,8 +17,11 @@ import { I18nService } from '@ofServices/i18n.service';
 import { ServicesModule } from '@ofServices/services.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import createSpyObj = jasmine.createSpyObj;
+import { getRandomPage } from '@tests/helpers';
+import * as fromStore from '@ofStore/selectors/archive.selectors';
+import { ArchiveQuerySuccess } from '@ofStore/actions/archive.actions';
 
-describe('ArchiveFiltersComponent', () => {
+fdescribe('ArchiveFiltersComponent', () => {
   let component: ArchiveFiltersComponent;
   let fixture: ComponentFixture<ArchiveFiltersComponent>;
   let store: Store<AppState>;
@@ -101,8 +104,11 @@ describe('ArchiveFiltersComponent', () => {
   it('should check if element is in enum', () => {
     const enumTypes = FilterDateTypes;
     const toCheck = 'publishDateFrom';
-    const notExisted = 'notExisted';
     expect(checkElement(enumTypes, toCheck)).toEqual(true);
+  });
+  it('should check if element is in enum', () => {
+    const enumTypes = FilterDateTypes;
+    const notExisted = 'notExisted';
     expect(checkElement(enumTypes, notExisted)).toEqual(false);
   });
   it('should transform ngb bootstrap date to string', () => {
@@ -111,5 +117,29 @@ describe('ArchiveFiltersComponent', () => {
     const expected = transformToTimestamp(date, time);
     expect(expected).toEqual('2010-06-12T03:03');
   });
+  it('should test transformToTimestamp', () => {
+    const time = {hour: 3, minute: null, second: 0};
+    const date = {day: 12, month: 6, year: 2010};
+    const expected = transformToTimestamp(date, time);
+    expect(expected).toEqual('2010-06-12T03:');
+  });
+  it('should test transformToTimestamp', () => {
+    const time = {hour: null, minute: null, second: 0};
+    const date = {day: 12, month: 6, year: 2010};
+    const expected = transformToTimestamp(date, time);
+    expect(expected).toEqual('2010-06-12T:');
+  });
+  it('should create a list with one element when there are ' +
+        'only one card in the state', () => {
+        const resultPage = getRandomPage(1, 10);
+        const action = new ArchiveQuerySuccess({resultPage});
+        store.dispatch(action);
+        // select the archive from the store
+        const archive$ = store.select(fromStore.selectArchive);
+        archive$.subscribe(archive => {
+            expect(archive.resultPage).toEqual(resultPage);
+        });
+        expect(store.dispatch).toHaveBeenCalledWith(action);
+    });
 
 });

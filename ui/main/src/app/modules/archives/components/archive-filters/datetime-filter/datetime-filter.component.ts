@@ -33,22 +33,25 @@ export class DatetimeFilterComponent implements ControlValueAccessor, Validator 
   constructor() {
     this.readonlyInputs = false;
   }
-
+  /* istanbul ignore next */
   public onTouched: () => void = () => {};
-
+  /* istanbul ignore next */
   writeValue(val: any): void {
     val && this.datetimeForm.setValue(val, { emitEvent: false });
   }
+  /* istanbul ignore next */
   registerOnChange(fn: any): void {
     this.datetimeForm.valueChanges.subscribe(fn);
   }
+  /* istanbul ignore next */
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+  /* istanbul ignore next */
   setDisabledState?(isDisabled: boolean): void {
     isDisabled ? this.datetimeForm.disable() : this.datetimeForm.enable();
   }
-
+  /* istanbul ignore next */
   validate(c: AbstractControl): ValidationErrors | null {
     return this.datetimeForm.valid ? null : { invalidForm: {valid: false, message: 'datetimeForm fields are invalid'}};
   }
