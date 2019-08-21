@@ -1,6 +1,6 @@
 import { DateTimeNgb, padNumber, toInteger, isNumber } from './datetime-ngb.model';
 
-fdescribe('Ngb Datetime modal', () => {
+describe('Ngb Datetime modal', () => {
 
 
   it('should parse a string date', () => {

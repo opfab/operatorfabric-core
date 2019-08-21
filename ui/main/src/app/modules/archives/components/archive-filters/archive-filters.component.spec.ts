@@ -21,7 +21,7 @@ import { getRandomPage } from '@tests/helpers';
 import * as fromStore from '@ofStore/selectors/archive.selectors';
 import { ArchiveQuerySuccess } from '@ofStore/actions/archive.actions';
 
-fdescribe('ArchiveFiltersComponent', () => {
+describe('ArchiveFiltersComponent', () => {
   let component: ArchiveFiltersComponent;
   let fixture: ComponentFixture<ArchiveFiltersComponent>;
   let store: Store<AppState>;

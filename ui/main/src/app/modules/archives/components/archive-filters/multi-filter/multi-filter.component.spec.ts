@@ -7,7 +7,7 @@ import { translateConfig } from 'app/translate.config';
 import { HttpClientModule } from '@angular/common/http';
 import { zip } from 'rxjs';
 
-fdescribe('MultiFilterComponent', () => {
+describe('MultiFilterComponent', () => {
   let component: MultiFilterComponent;
   let fixture: ComponentFixture<MultiFilterComponent>;
 
