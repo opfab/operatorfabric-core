@@ -76,10 +76,12 @@ export class ArchiveFiltersComponent implements OnInit {
       if (element) {
         if (checkElement(FilterDateTypes, key)) {
           const {date, time} = element;
-          const dateString = transformToTimestamp(date, time);
-          params.set(key, [this.timeService.toNgBTimestamp(dateString)]);
+          if (date) {
+            const dateString = transformToTimestamp(date, time);
+            params.set(key, [this.timeService.toNgBTimestamp(dateString)]);
+          }
         } else {
-          if(element.length) {
+          if (element.length) {
             params.set(key, element);
           }
         }
@@ -93,7 +95,6 @@ export class ArchiveFiltersComponent implements OnInit {
     const params = this.filtersToMap(value);
     params.set('page', ['1']);
     params.set('size', ['10']);
-    console.log(params);
     this.store.dispatch(new SendArchiveQuery({params}));
   }
 

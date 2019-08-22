@@ -24,14 +24,15 @@ import { ControlValueAccessor, FormGroup, FormControl,
 })
 export class DatetimeFilterComponent implements ControlValueAccessor, Validator {
 
-  readonlyInputs: boolean;
+  disabled = true;
+  time = {hour: 0, minute: 0};
   @Input() filterPath: string;
   public datetimeForm: FormGroup = new FormGroup({
     date: new FormControl(),
     time: new FormControl()
   });
   constructor() {
-    this.readonlyInputs = false;
+    this.onChanges();
   }
   /* istanbul ignore next */
   public onTouched: () => void = () => {};
@@ -54,6 +55,21 @@ export class DatetimeFilterComponent implements ControlValueAccessor, Validator 
   /* istanbul ignore next */
   validate(c: AbstractControl): ValidationErrors | null {
     return this.datetimeForm.valid ? null : { invalidForm: {valid: false, message: 'datetimeForm fields are invalid'}};
+  }
+
+  onChanges(): void {
+    this.datetimeForm.get('date').valueChanges.subscribe(val => {
+      if (val) {
+        this.disabled = false;
+      }
+    });
+  }
+
+  onChange(event): void {
+    if (event.target.value === '') {
+      this.disabled = true;
+      this.time = {hour: 0, minute: 0};
+    }
   }
 
 }

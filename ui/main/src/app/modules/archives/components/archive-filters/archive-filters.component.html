@@ -5,33 +5,33 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 <form [formGroup]="archiveForm">
   <div class="container-fluid">
-    <div class="form-row">
-      <div class="col-md-3 pr-1">
-        <div class="row">
-          <div class="col-md-6 pr-1">
+    <div class="form-row nomarginrow">
+      <div class="col-md-3 nopaddingrow">
+        <div class="row" style='margin-right:0;margin-left:0;'>
+          <div class="col-md-6 archive-filter">
             <of-multi-filter [parentForm]="archiveForm" filterPath="tags" [values]="tags$|async"></of-multi-filter>
           </div>
-          <div class="col-md-6 pl-1">
+          <div class="col-md-6 archive-filter">
             <of-multi-filter [parentForm]="archiveForm" filterPath="process" [values]="processes$|async"></of-multi-filter>
           </div>
         </div>
       </div>
-      <div class="col-md-2 pr-1">
+      <div class="col-md-2 archive-filter">
         <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"></of-datetime-filter>
       </div>
-      <div class="col-md-2 pr-1">
+      <div class="col-md-2 archive-filter">
         <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"></of-datetime-filter>
       </div>
-      <div class="col-md-2 pr-1">
+      <div class="col-md-2 archive-filter">
         <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"></of-datetime-filter>
       </div>
-      <div class="col-md-2 pr-1">
+      <div class="col-md-2 archive-filter">
         <of-datetime-filter filterPath="activeTo" formControlName="activeTo"></of-datetime-filter>
       </div>
-      <div class="col-md-1 pr-1" style="margin-top:30px;">
+      <div class="col-md-1 nopaddingrow" style="margin-top:30px;">
         <div class="form-group login-form">
           <div class="form-group">
-            <button type="button" class="btn btn-primary w-100" (click)="sendQuery()" translate >archive.search</button>
+            <button type="button" class="btn btn-primary w-100 archive-radius" (click)="sendQuery()" translate>archive.search</button>
           </div>
         </div>
       </div>
