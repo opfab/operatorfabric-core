@@ -244,9 +244,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    *  - set xTicks for rotate it, and set a variable inside library
    */
   ngOnInit(): void {
-    if (this.realTimeBar || this.followClockTick) {
-      this.updateRealTimeDate();
-    }
+    this.updateRealTimeDate();
     // set inside ngx-charts library verticalSpacing variable to 10
     // Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks
     for (let i = 0; i < 100; i++) {

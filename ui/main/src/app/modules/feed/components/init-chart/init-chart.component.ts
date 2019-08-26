@@ -60,8 +60,13 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public forwardConf: any; // could make interface
   public backwardConf: any; // could make interface
   public followClockTick: boolean;
+  public followClockTickMode: boolean;
   public firstMoveStartOfUnit: boolean;
-  private continuousForward: number;
+
+  // 3 ticks add before domain on the visualization define by the conf
+  public firstMove: boolean;
+  public startDomainWith3Ticks: boolean;
+  public startDomainWith3TicksMode: boolean;
 
   // ticks
   public formatTicks: any;
@@ -87,8 +92,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.forwardConf = undefined;
     this.backwardConf = undefined;
     this.ticksConf = undefined;
-    this.continuousForward = 0;
-
     // options
     this.myDomain = undefined;
     this.enableDrag = false;
@@ -311,7 +314,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * set timeline ticks, zoom and movement options from conf zoom selected
    * @param conf
    */
-  readZoomConf(conf: any): void {
+    readZoomConf(conf: any): void {
     if (conf.centeredOnTicks) {
       this.centeredOnTicks = true;
     }
@@ -320,6 +323,11 @@ export class InitChartComponent implements OnInit, OnDestroy {
     }
     if (conf.followClockTick) {
       this.followClockTick = true;
+      this.followClockTickMode = true;
+    }
+    if (conf.startDomainWith3Ticks) {
+      this.startDomainWith3Ticks = true;
+      this.startDomainWith3TicksMode = true;
     }
     if (conf.formatTicks) {
       this.formatTicks = _.cloneDeep(conf.formatTicks);
@@ -353,16 +361,19 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * @param conf
    */
   changeGraphConf(conf: any): void {
+    this.firstMove = true;
     this.followClockTick = false;
+    this.followClockTickMode = false;
     this.firstMoveStartOfUnit = false;
+    this.startDomainWith3Ticks = false;
+    this.startDomainWith3TicksMode = false;
     this.backwardConf = undefined;
     this.formatTicks = undefined;
     this.formatTooltipsDate = undefined;
     if (conf) {
       this.buttonHomeActive = false;
-      this.continuousForward = 0;
-      this.setStartAndEndDomain(conf.startDomain, conf.endDomain);
       this.readZoomConf(conf);
+      this.setStartAndEndDomain(conf.startDomain, conf.endDomain);
       this.buttonHome = [conf.startDomain, conf.endDomain];
       this.buttonList.forEach(button => {
         if (button.buttonTitle === conf.buttonTitle) {
@@ -376,7 +387,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
 
   /**
    * 2 cases :
-   *  - apply arrow button clicked : switch the graph configuration with the zoom button configuration
+   *  - apply arrow button clicked : switch the graph context with the zoom level configurated
    * at the left or right of our actual button selected
    *  - display home button
    * @param direction receive by child component custom-timeline-chart
@@ -412,24 +423,115 @@ export class InitChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * change timeline domain (start and end)
+   * change timeline domain
    * deactivate the home button display
-   * @param startDomain
-   * @param endDomain
+   * activate first move boolean, on first move make by clicking a button the home domain will be used 
+   * activate followClockTick if the zoom level has this mode activated
+   * @param startDomain new start of domain
+   * @param endDomain new end of domain
    */
   homeClick(startDomain: number, endDomain: number): void {
+    // startDomainWith3TicksMode is define on the zoom level
+    if (this.startDomainWith3TicksMode) {
+      this.startDomainWith3Ticks = true;
+    }
     this.setStartAndEndDomain(startDomain, endDomain);
     this.buttonHomeActive = false;
+    this.firstMove = true;
+    // followClockTickMode is define on the zoom level
+    if (this.followClockTickMode) {
+      this.followClockTick = true;
+    }
   }
 
   /**
-   * Apply new timeline domain
-   * feed state dispatch a change on filter, with the new filter start and end
-   * @param startDomain
-   * @param endDomain
+   * return the domain start value after subtract 4 ticks
+   * on the ticks conf the property date have the list of number defining the ticks position (day's number)
+   * @param newStart domain start
+   */
+  get3TicksBeforeOnArrayDate(newStart: number): number {
+    let tmp = moment(newStart);
+    let dateStartDomain = _.cloneDeep(tmp.valueOf());
+    let count = 0;
+    const arrayDate = _.cloneDeep(this.ticksConf['date']);
+    arrayDate.reverse();
+    let nbDate = _.cloneDeep(tmp.date());
+    while (count < 5) {
+      if (arrayDate && arrayDate.length > 0) {
+        arrayDate.forEach(nb => {
+          if (nb < nbDate) {
+            count++;
+            tmp.date(nb);
+            nbDate = nb;
+            if (count === 4) {
+              dateStartDomain = _.cloneDeep(tmp.valueOf());
+            }
+          }
+        });
+        tmp.subtract(1, 'months');
+        nbDate = arrayDate[0] + 1;
+      }
+    }
+    return dateStartDomain;
+  }
+
+  /**
+   * parse ticks conf and subtract each unit's value defined
+   * special case for the unit date
+   * return a new domain start value with 3 ticks subtracted to home domain
+   * @param newStart domain start
+   */
+  subtract3Ticks(newStart: number): number {
+    let tmp = moment(newStart);
+    if (this.ticksConf) {
+      // Step 1
+      Object.keys(this.ticksConf).forEach(key => {
+        if (key === 'date') {
+          // return final tmp value used for domain start
+          tmp = moment(this.get3TicksBeforeOnArrayDate(newStart));
+        } else if (this.ticksConf[key] > 0) {
+          if (key === 'hour') {
+            // subtract hour excess define by value on ticks conf
+            for (let i = 0; i < 24; i++) {
+              if (((tmp.hours() - i) % this.ticksConf[key]) === 0) {
+                  tmp.subtract(i, 'hours');
+                  break;
+              }
+            }
+          }
+        }
+      });
+      // Step 2
+      // loop 3 times each unit define on ticks conf
+      for (let i = 0; i < 3; i++) {
+        Object.keys(this.ticksConf).forEach(key => {
+          if (key !== 'date') {
+            if (this.ticksConf[key] > 0) {
+              tmp = moment(this.getDomainByUnit(false, key, this.ticksConf[key], tmp, false));
+            }
+          }
+        });
+      }
+    }
+    this.startDomainWith3Ticks = false;
+    const startDomain = tmp.valueOf();
+    return startDomain;
+  }
+
+  /**
+   * apply new timeline domain
+   * feed state dispatch a change on filter, provide the new filter start and end
+   * @param startDomain new start of domain
+   * @param endDomain new end of domain
    */
   setStartAndEndDomain(startDomain: number, endDomain: number): void {
-    const valueStart = startDomain;
+    let valueStart = startDomain;
+
+    // set domain start value 3 ticks
+    if (this.startDomainWith3Ticks) {
+      valueStart = this.subtract3Ticks(startDomain);
+    }
+
     const valueEnd = endDomain;
     this.myDomain = [valueStart, valueEnd];
     // apply zoom on feed
@@ -441,13 +543,26 @@ export class InitChartComponent implements OnInit, OnDestroy {
 
   /**
    * select the movement applied on domain : forward or backward
-   * parse the conf object dedicated for movement
+   * parse the conf object dedicated for movement, parse it two time when end property is present
    * each object's keys add time precision on start or end of domain
-   * @param moveForward
+   * apply a special treatment when the moment is end of domain and firstMoveStartOfUnit is active
+   * @param moveForward direction: add or subtract conf object
    */
   moveDomain(moveForward: boolean): void {
     let startDomain = moment(this.myDomain[0]);
     let endDomain = moment(this.myDomain[1]);
+
+    // Move from main visualisation, now domain stop to move
+    if (this.followClockTick) {
+      this.followClockTick = false;
+    }
+    if (this.firstMove) {
+      if (this.startDomainWith3TicksMode) {
+        startDomain = moment(this.buttonHome[0]);
+        endDomain = moment(this.buttonHome[1]);
+      }
+      this.firstMove = false;
+    }
     let movementConf = _.cloneDeep(this.forwardConf);
     // backward movement use backward configuration if it's set
     if (moveForward === false) {
@@ -468,7 +583,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
           }
         }
       });
-    } else { // new start and end of domain are define by 2 conf object: start and end
+    } else { // new start and end of domain are set by 2 conf object: start and end
       Object.keys(movementConf.start).forEach(key => {
         if (movementConf.start[key] > 0) {
           startDomain = moment(this.getDomainByUnit(moveForward, key, movementConf.start[key], startDomain, false));
@@ -492,8 +607,8 @@ export class InitChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * return a number corresponding to the number of day
-   * needed to subtract for move to previous week day number pass by parameter
+   * return a number corresponding to the number of day needed
+   * to subtract for move to previous week day number pass by parameter
    * @param dayNumber
    */
   getWeekDayBalanceNumber(dayNumber: number): number {
@@ -528,24 +643,20 @@ export class InitChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * define the actual domain received
-   * move domain 1 unit before or after the unit selected
-   * example of unit : days, weeks, months, years...
-   * @param forward direction: false = backward, true = forward
+   * return the moment received after treatment, each params define this treatment
+   * @param forward direction: false = subtract, true = add
    * @param unit unit of time
    * @param ops number of unit
+   * @param currentMoment moment
+   * @param speCase when firstMoveStartOfUnit is true and the moment received is the end of domain, subtract 1 unit more
    */
     getDomainByUnit(forward: boolean, unit, ope,
                     currentMoment: moment.Moment, speCase: boolean): number {
-    // Move from main visualisation, so domain stop to move
-    if (this.followClockTick) {
-      this.followClockTick = false;
-    }
-    // For the first step, set currentMoment to start of the unit (Let's Co)
+    // For the first step, set unit of currentMoment to its start (Let's Co)
     if (this.firstMoveStartOfUnit) {
       if (unit !== 'weekDay') {
-        // set hours to 0 for Let's Co
-        currentMoment.startOf(unit).hours(0);
+        // Let's Co mandatory
+        currentMoment.startOf(unit);
       }
     }
     if (forward) {
@@ -553,7 +664,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
         // add 6 for target one week after
         currentMoment.day(ope + 6);
       } else if (speCase) {
-        // For let's Co subtract 1 unit when it is first move
+        // For let's Co at first move subtract 1 unit
         currentMoment.add(ope - 1, unit);
       } else {
         currentMoment.add(ope, unit);
@@ -564,7 +675,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
         // remove 6 for target one week before
         currentMoment.day(-ope - 6 + weekDayBalance);
       } else if (speCase) {
-        // For let's Co subtract 1 unit more when it is first move
+        // For let's Co at first move subtract 1 unit more
         currentMoment.subtract(ope + 1, unit);
       } else {
         currentMoment.subtract(ope, unit);
@@ -575,18 +686,16 @@ export class InitChartComponent implements OnInit, OnDestroy {
 
   /**
    * return true for display home button
-   * compare domain and buttonHome landmark
+   * compare domain and buttonHome landmark, return true when they differe
    */
   checkButtonHomeDisplay(): boolean {
-    // buttonHomeActive = true when drag movement started
+    // buttonHomeActive is true when drag movement started
     if (this.buttonHomeActive) {
       return true;
     }
     // compare the current domain with the initial domain of zoom selected
-    if (this.buttonHome) {
-      if (this.buttonHome[0] !== this.myDomain[0] || this.buttonHome[1] !== this.myDomain[1]) {
+    if (!this.firstMove) {
         return true;
-      }
     }
     return false;
   }

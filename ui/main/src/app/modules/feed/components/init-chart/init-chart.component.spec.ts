@@ -58,10 +58,35 @@ describe('InitChartComponent', () => {
     expect(component.checkButtonHomeDisplay()).toBeTruthy();
   });
 
-  it('should not create button home cause is undefined', () => {
+  it('should not create button home cause firstMove is true', () => {
     fixture.detectChanges();
-    component.buttonHome = null;
+    component.firstMove = true;
     expect(component.checkButtonHomeDisplay()).toBeFalsy();
+  });
+
+  it('should test homeClick & subtract3Ticks functions with a date conf', () => {
+    fixture.detectChanges();
+    component.startDomainWith3TicksMode = true;
+    component.ticksConf = {date: [1,16]};
+    const tmp = moment();
+    tmp.date(18);
+    component.homeClick(tmp.valueOf(), tmp.valueOf());
+    tmp.date(1);
+    tmp.subtract(1, 'month');
+    expect(component.myDomain[0]).toEqual(tmp.valueOf());
+    expect(component).toBeTruthy();    
+  });
+
+  it('should test homeClick & subtract3Ticks functions with a hour conf', () => {
+    fixture.detectChanges();
+    component.startDomainWith3TicksMode = true;
+    component.ticksConf = {hour: 2};
+    const tmp = moment();
+    tmp.date(4).hour(0);
+    const tmp3TicksBefore = moment(tmp);
+    tmp3TicksBefore.subtract(3 * 2, 'hour');
+    expect(component.subtract3Ticks(tmp.valueOf())).toEqual(tmp3TicksBefore.valueOf());
+    expect(component).toBeTruthy();    
   });
 
   it('should apply differents zoom levels on timeline' +
@@ -72,6 +97,7 @@ describe('InitChartComponent', () => {
     expect(tmp).toEqual(component.buttonTitle);
     expect(component.buttonHomeActive).toBeTruthy();
 
+    component.followClockTickMode = true;
     component.homeClick(1, 2);
     expect(component.buttonHomeActive).toBeFalsy();
     expect(component.myDomain).toEqual([1, 2]);
@@ -188,6 +214,28 @@ describe('InitChartComponent', () => {
     component.moveDomain(false);
     expect(component).toBeTruthy();
   });
+
+  it('check moveDomain function, test when first move is used with 4 ticks preview option', () => {
+    fixture.detectChanges();
+    component.startDomainWith3TicksMode = true;
+    component.firstMove = true;
+    const tmpStart = moment(component.myDomain[0]);
+    const tmpEnd = moment(component.myDomain[1]);
+    component.buttonHome[0] = tmpStart.valueOf();
+    component.buttonHome[1] = tmpEnd.valueOf();
+    component.forwardConf = {
+      start: {
+        month: 0,
+        day: 2,
+      },
+    };
+    tmpStart.subtract(2, 'day');
+    tmpEnd.subtract(2, 'day');
+    component.moveDomain(false);
+    expect(tmpStart.valueOf()).toEqual(component.myDomain[0]);
+    expect(tmpEnd.valueOf()).toEqual(component.myDomain[1]);
+    }
+  );
 
   it('check getWeekDayBalanceNumber return', () => {
     fixture.detectChanges();

@@ -92,62 +92,6 @@ describe('TimeLineComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return a date formatted by a cluster level W ' +
-    'from dateWithSpaceBeforeMom function', () => {
-    const actualMoment = moment();
-    actualMoment.hours(0);
-    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), 'W');
-    const dateMoment = moment(actualMoment);
-    dateMoment.minutes(0).seconds(0).millisecond(0);
-    dateMoment.subtract(3 * 4, 'hours');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
-  });
-
-
-  it('should return a date formatted by a cluster level D-7 ' +
-    'from dateWithSpaceBeforeMom function', () => {
-    const actualMoment = moment();
-    actualMoment.hours(1);
-    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), '7D');
-    const dateMoment = moment(actualMoment);
-    dateMoment.minutes(0).seconds(0).millisecond(0);
-    dateMoment.subtract(13, 'hours');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
-  });
-
-
-  it('should return a date formatted by a cluster level M ' +
-    'from dateWithSpaceBeforeMom function', () => {
-    const actualMoment = moment();
-    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), 'M');
-    const dateMoment = moment(actualMoment);
-    dateMoment.startOf('day');
-    dateMoment.subtract(3, 'days');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
-  });
-
-
-  it('should return a date formatted by a cluster level Y ' +
-    'from dateWithSpaceBeforeMom function', () => {
-    // referenceMoment date is after the half of the Month
-    const referenceMoment = moment();
-    referenceMoment.date(17);
-    let date = component.dateWithSpaceBeforeMoment(moment(referenceMoment), 'Y');
-    let dateMoment = moment(referenceMoment);
-    dateMoment.startOf('day');
-    dateMoment.startOf('month');
-    dateMoment.subtract(1, 'months');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
-    // referenceMoment date is before the half of the Month
-    referenceMoment.date(4);
-    date = component.dateWithSpaceBeforeMoment(moment(referenceMoment), 'Y');
-    dateMoment = moment(referenceMoment);
-    dateMoment.startOf('day');
-    dateMoment.date(16);
-    dateMoment.subtract(2, 'months');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
-  });
-
   it('should create a list with one element when there is ' +
     'only one card in the state', (done) => {
     fixture.detectChanges();

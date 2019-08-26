@@ -31,10 +31,11 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         // set start of Week to saturday on moment locale used
-        moment.updateLocale('en', { week: {
+        /*moment.updateLocale('en', { week: {
                 dow: 6, // First day of week is Saturday
                 doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
             }});
+            */
 
         // DOMAIN CONF from moment() to our conf
 
@@ -83,14 +84,20 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         };
 
         const currentMoment = moment();
-
-        const startDomain = this.dateWithSpaceBeforeMoment(moment(currentMoment), 'W');
+        const startDomain = moment(currentMoment);
+        startDomain.minutes(0).second(0).millisecond(0);
         const endDomain = this.periodStartToEnd(domainWeekConf, true);
-        const startDomain2 = this.dateWithSpaceBeforeMoment(moment(currentMoment), 'M');
+
+        const startDomain2 = moment(currentMoment);
+        startDomain2.minutes(0).second(0).millisecond(0);
         const endDomain2 = this.periodStartToEnd(domainMonthConf, true);
-        const startDomain3 = this.dateWithSpaceBeforeMoment(moment(currentMoment), 'Y');
+
+        const startDomain3 = moment(currentMoment);
+        startDomain3.hour(0).minutes(0).second(0).millisecond(0);
         const endDomain3 = this.periodStartToEnd(domainYearConf, true);
-        const startDomain4 = this.dateWithSpaceBeforeMoment(moment(currentMoment), '7D');
+        
+        const startDomain4 = moment(currentMoment);
+        startDomain4.minutes(0).second(0).millisecond(0);
         const endDomain4 = this.periodStartToEnd(domain7DayConf, true);
 
         // FORWARD CONF (movement on domain)
@@ -231,6 +238,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             ticksConf: ticks4HoursConf,
             followClockTick: true,
             firstMoveStartOfUnit: true,
+            startDomainWith3Ticks: true,
         },
         {
             startDomain: startDomain4.valueOf(),
@@ -242,6 +250,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             ticksConf: ticks4HoursConf,
             followClockTick: true,
             firstMoveStartOfUnit: true,
+            startDomainWith3Ticks: true,
         },
         {
             startDomain: startDomain2.valueOf(),
@@ -255,6 +264,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             // formatTooltipsDate: 'DD/MM',
             followClockTick: true,
             firstMoveStartOfUnit: true,
+            startDomainWith3Ticks: true,
         },
         {
             startDomain: startDomain3.valueOf(),
@@ -266,6 +276,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             ticksConf: ticksHalfMonthConf,
             followClockTick: true,
             firstMoveStartOfUnit: true,
+            startDomainWith3Ticks: true,
         }];
 
         // timeline state is same than feed state (not filtered Feed)
@@ -319,14 +330,20 @@ export class TimeLineComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * return an array of two moments
-     * first moment equal to start of domain, second moment equal to end of domain
-     * set spaceBeforeMoment to true for start the domain 4 ticks before the actual moment
-     * @param level
-     * @param spaceBeforeMoment
+     * return a moment
+     * add time to moment depending of configue object when future is true
+     * subtract time when future is false
+     * use startOf function on each time's unit pass in list
+     * @param conf
+     * @param future
      */
     periodStartToEnd(conf, future: boolean): moment.Moment {
         const tmpMoment = moment();
+        
+        // Test bug
+        // tmpMoment.date(2);
+        
+        
         const newDate = _.cloneDeep(tmpMoment);
         Object.keys(conf).forEach(key => {
             if (key === 'startOf') {
@@ -342,48 +359,6 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             }
         });
         return newDate;
-    }
-
-    /**
-     * make start of domain begins 4 ticks before actual date (moment())
-     * each cluster level had a different treatment
-     * @param clusterLevel
-     */
-    dateWithSpaceBeforeMoment(date, clusterLevel) {
-        date.minutes(0).seconds(0).millisecond(0);
-        switch (clusterLevel) {
-            case 'W' : case '7D': {
-                // align date hours by subtract exceeded hours for stay on ticks (every 4 hours)
-                for (let i = 0; i < 10; i++) {
-                    if (((date.hours() - i) % 4) === 0) {
-                        date.subtract(i, 'hours');
-                        break;
-                    }
-                }
-                // start 12 hours before date
-                date.subtract(3 * 4, 'hours');
-                return date;
-            }
-            case 'M': {
-                // start 3 days before moment()
-                date.startOf('day');
-                date.subtract(3, 'days');
-                return date;
-            }
-            case 'Y': {
-                date.startOf('day');
-                // start at begin of month
-                if (date.date() >= 16) {
-                    date.startOf('month');
-                        date.subtract(1, 'months');
-                } else {
-                    // start at middle of month (16th)
-                    date.date(16);
-                    date.subtract(2, 'months');
-                }
-                return date;
-            }
-        }
     }
 
     ngOnDestroy() {
