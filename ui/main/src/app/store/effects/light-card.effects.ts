@@ -86,7 +86,7 @@ export class LightCardEffects {
                         if (thirdActions) {
                             const thirdActionToUpdate = thirdActions.get(thirdActionKey);
                             const st = thirdActionToUpdate as ActionStatus;
-                            if (_.isEqual(thirdActionToUpdate, st)) {
+                            if (_.isEqual(thirdActionStatus, st)) {
                                 return new ThirdActionAlreadyUpdated();
                             } else {
                                 const actualizedAction = {...thirdActionToUpdate, ...thirdActionStatus};
