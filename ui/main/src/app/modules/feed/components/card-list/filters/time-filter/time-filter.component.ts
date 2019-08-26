@@ -45,7 +45,6 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._filter$ = this.store.select(buildFilterSelector(FilterType.TIME_FILTER));
-        console.log(moment("2016-10-11 18:06:03").tz("Europe/Paris").format());
 
         //Update the values of the filter form if the state of the filter has been changed by other means (timeline, followClockTick, etc.)
         //With {emitEvent:false}, this update won't trigger a valueChanges, so no ApplyFilter action will be dispatched
