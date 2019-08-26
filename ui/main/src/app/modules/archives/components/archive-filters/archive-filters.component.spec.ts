@@ -21,7 +21,7 @@ import { getRandomPage } from '@tests/helpers';
 import * as fromStore from '@ofStore/selectors/archive.selectors';
 import { ArchiveQuerySuccess } from '@ofStore/actions/archive.actions';
 
-describe('ArchiveFiltersComponent', () => {
+fdescribe('ArchiveFiltersComponent', () => {
   let component: ArchiveFiltersComponent;
   let fixture: ComponentFixture<ArchiveFiltersComponent>;
   let store: Store<AppState>;
@@ -125,6 +125,12 @@ describe('ArchiveFiltersComponent', () => {
   });
   it('should test transformToTimestamp', () => {
     const time = {hour: null, minute: null, second: 0};
+    const date = {day: 12, month: 6, year: 2010};
+    const expected = transformToTimestamp(date, time);
+    expect(expected).toEqual('2010-06-12T:');
+  });
+  it('should test transformToTimestamp', () => {
+    const time = {hour: null, minute: null, second: null};
     const date = {day: 12, month: 6, year: 2010};
     const expected = transformToTimestamp(date, time);
     expect(expected).toEqual('2010-06-12T:');

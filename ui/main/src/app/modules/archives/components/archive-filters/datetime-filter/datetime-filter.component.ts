@@ -56,7 +56,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, Validator 
   validate(c: AbstractControl): ValidationErrors | null {
     return this.datetimeForm.valid ? null : { invalidForm: {valid: false, message: 'datetimeForm fields are invalid'}};
   }
-
+  /* istanbul ignore next */
   onChanges(): void {
     this.datetimeForm.get('date').valueChanges.subscribe(val => {
       if (val) {
@@ -64,7 +64,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, Validator 
       }
     });
   }
-
+  /* istanbul ignore next */
   onChange(event): void {
     if (event.target.value === '') {
       this.disabled = true;
