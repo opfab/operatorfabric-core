@@ -45,6 +45,8 @@ export class ArchiveFiltersComponent implements OnInit {
 
   tags$: Observable<string []>;
   processes$: Observable<string []>;
+  size$: Observable<number>;
+  first$: Observable<number>;
 
   archiveForm: FormGroup;
 
@@ -63,6 +65,8 @@ export class ArchiveFiltersComponent implements OnInit {
   ngOnInit() {
     this.tags$ = this.store.select(buildConfigSelector('archive.filters.tags.list'));
     this.processes$ = this.store.select(buildConfigSelector('archive.filters.process.list'));
+    this.size$ = this.store.select(buildConfigSelector('archive.filters.page.size'));
+    this.first$ = this.store.select(buildConfigSelector('archive.filters.page.first'));
   }
 
   /**
@@ -93,8 +97,8 @@ export class ArchiveFiltersComponent implements OnInit {
   sendQuery(): void {
     const {value} = this.archiveForm;
     const params = this.filtersToMap(value);
-    params.set('page', ['1']);
-    params.set('size', ['10']);
+    this.size$.subscribe(size => params.set('size', [size.toString()]));
+    this.first$.subscribe(first => params.set('page', [first.toString()]));
     this.store.dispatch(new SendArchiveQuery({params}));
   }
 

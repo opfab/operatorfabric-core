@@ -123,4 +123,7 @@ expect(service.formatDate(moment(new Date(1559721634989)))).toEqual('06/05/2019'
        expect(tested.valueOf).toEqual(expectedMoment.valueOf);
     });
 
+    it('should convert date string to timestamp', () => {
+        expect(service.toNgBTimestamp('2019-05-24T10:25').valueOf()).toEqual('1558686300');
+    });
 });

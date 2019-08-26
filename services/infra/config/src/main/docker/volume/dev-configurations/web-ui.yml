@@ -15,6 +15,10 @@ operatorfabric:
         display: BUSINESS
   archive:
     filters:
+      page.size:
+        - "10"
+      page.first:
+        - "0"
       publisher.list:
         - value: "TEST"
           label: "Test Publisher"

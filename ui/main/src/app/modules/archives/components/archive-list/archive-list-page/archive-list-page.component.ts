@@ -12,6 +12,7 @@ import {AppState} from '@ofStore/index';
 import { selectArchiveCount } from '@ofStore/selectors/archive.selectors';
 import { tap, catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
+import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 
 @Component({
   selector: 'of-archive-list-page',
@@ -20,20 +21,20 @@ import { of, Observable } from 'rxjs';
 })
 export class ArchiveListPageComponent implements OnInit {
 
-  page: number;
   collectionSize$: Observable<number>;
+  first$: Observable<number>;
+  size$: Observable<number>;
   constructor(private store: Store<AppState>) {}
   ngOnInit(): void {
-    this.page = 1;
     this.collectionSize$ = this.store.pipe(
       select(selectArchiveCount),
       catchError(err => of(0))
     );
-    this.collectionSize$.subscribe(d => console.log(d));
+    this.size$ = this.store.select(buildConfigSelector('archive.filters.page.size'));
+    this.first$ = this.store.select(buildConfigSelector('archive.filters.page.first'));
   }
 
-  updateResultPage(): void {
-    const {page} = this;
-    this.store.dispatch(new UpdateArchivePage({page}));
+  updateResultPage(currentPage): void {
+    this.store.dispatch(new UpdateArchivePage({page: currentPage - 1}));
   }
 }

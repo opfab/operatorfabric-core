@@ -27,7 +27,11 @@ body {
   height: 100vh;
 }
 .archives-page .form-control {
-  border-radius: 1px;
+  border-radius: 5px;
+  padding: 5px;
+}
+select.form-control[multiple] {
+  height: calc(1.5em + 0.75rem + 2px);
 }
 .ngb-tp-spacer {
   width: 0.3em!important;
@@ -35,4 +39,7 @@ body {
 .ngb-tp-input-container button {
   padding-top: 3px;
   padding-bottom: 3px;
+}
+.pagination {
+  margin-top: 5px;
 }

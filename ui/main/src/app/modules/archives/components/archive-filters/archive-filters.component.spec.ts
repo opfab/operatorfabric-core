@@ -129,6 +129,12 @@ describe('ArchiveFiltersComponent', () => {
     const expected = transformToTimestamp(date, time);
     expect(expected).toEqual('2010-06-12T:');
   });
+  it('should test transformToTimestamp', () => {
+    const time = {hour: null, minute: null, second: null};
+    const date = {day: 12, month: 6, year: 2010};
+    const expected = transformToTimestamp(date, time);
+    expect(expected).toEqual('2010-06-12T:');
+  });
   it('should create a list with one element when there are ' +
         'only one card in the state', () => {
         const resultPage = getRandomPage(1, 10);
