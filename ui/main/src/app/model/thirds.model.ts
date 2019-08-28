@@ -100,6 +100,7 @@ type Omit<T, K extends keyof T> = Pick<T,Exclude<keyof T,K>>;
 export class ActionStatus{
     constructor(
                         readonly label: I18n,
+                        readonly hidden:boolean=false,
                         readonly buttonStyle: string = '',
                         readonly contentStyle: string = '',
                         readonly inputs: Input[] = [],
@@ -112,6 +113,26 @@ export class ActionStatus{
 }
 
 export const emptyActionStatus = new ActionStatus(null);
+
+/*
+for some reasons lodash equals take attribute order declaration in account to compute object equality
+needed by LightCardEffects updateAThirdAction Effect.
+ */
+export function extractActionStatusFromPseudoActionStatus(tAction:ActionStatus):ActionStatus{
+    const result = new ActionStatus(tAction.label
+        , tAction.hidden
+        ,tAction.buttonStyle
+        ,tAction.contentStyle
+        ,tAction.inputs
+        , tAction.lockCard
+        , tAction.updateState
+        , tAction.updateStateBeforeAction
+        , tAction.needsConfirm
+        , tAction.lockAction
+    );
+    return result;
+}
+
 
 export enum InputType {
     TEXT,

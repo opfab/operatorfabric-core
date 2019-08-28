@@ -28,7 +28,10 @@ import {ThirdsService} from "@ofServices/thirds.service";
 import {LightCard} from "@ofModel/light-card.model";
 import {fetchLightCard} from "@ofSelectors/feed.selectors";
 import {CardActionTypes, LoadCard} from "@ofActions/card.actions";
-import {Action as ThirdAction, ActionStatus} from "@ofModel/thirds.model";
+import {
+    Action as ThirdAction, ActionStatus,
+    extractActionStatusFromPseudoActionStatus
+} from "@ofModel/thirds.model";
 import * as _ from 'lodash';
 
 @Injectable()
@@ -79,13 +82,13 @@ export class LightCardEffects {
             switchMap((action: UpdateAnAction) => {
                 const lightCardId = action.payload.cardId;
                 const thirdActionKey = action.payload.actionKey;
-                const thirdActionStatus = action.payload.status as ActionStatus;
+                const thirdActionStatus = extractActionStatusFromPseudoActionStatus(action.payload.status);
                 return this.store.select(fetchLightCard(lightCardId)).pipe(
                     map((card: LightCard) => {
                         const thirdActions = card.actions;
                         if (thirdActions) {
                             const thirdActionToUpdate = thirdActions.get(thirdActionKey);
-                            const st = thirdActionToUpdate as ActionStatus;
+                            const st = extractActionStatusFromPseudoActionStatus(thirdActionToUpdate as ActionStatus);
                             if (_.isEqual(thirdActionStatus, st)) {
                                 return new ThirdActionAlreadyUpdated();
                             } else {
