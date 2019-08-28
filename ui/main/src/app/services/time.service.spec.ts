@@ -16,7 +16,7 @@ import {appReducer} from "@ofStore/index";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {TimeReference, TimeSpeed} from "@ofModel/time.model";
 
-describe('TimeService', () => {
+fdescribe('TimeService', () => {
 
     let service: TimeService;
     let httpMock: HttpTestingController;
@@ -124,6 +124,6 @@ expect(service.formatDate(moment(new Date(1559721634989)))).toEqual('06/05/2019'
     });
 
     it('should convert date string to timestamp', () => {
-        expect(service.toNgBTimestamp('2019-05-24T10:25').valueOf()).toEqual('1558686300');
+        expect(service.toNgBTimestamp('2019-05-24T10:25').valueOf()).toEqual('1558686300000');
     });
 });
