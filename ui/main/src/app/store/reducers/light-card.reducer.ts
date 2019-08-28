@@ -95,7 +95,6 @@ export function reducer(
         case LightCardActionTypes.UpdateALightCard:{
             return LightCardAdapter.upsertOne(action.payload.card, state);
         }
-
         default: {
             return state;
         }

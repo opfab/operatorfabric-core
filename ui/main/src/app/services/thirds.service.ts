@@ -218,15 +218,13 @@ export class ThirdsService {
         return this.$injector.get(TranslateService);
     }
 
-    fetchActionMapFromLightCard(card:LightCard){
-        return this.fetchActionMap(card.publisher,card.process,card.state,card.publisherVersion);
+    fetchActionMapFromLightCard(card: LightCard) {
+        return this.fetchActionMap(card.publisher, card.process, card.state, card.publisherVersion);
     }
 
-    fetchActionMap(publisher: string, process: string, state: string, apiVersion?:string) {
-
-       let params:HttpParams;
-        if(apiVersion) params = new HttpParams().set("apiVersion", apiVersion);
-
+    fetchActionMap(publisher: string, process: string, state: string, apiVersion?: string) {
+        let params: HttpParams;
+        if (apiVersion) params = new HttpParams().set("apiVersion", apiVersion);
         return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`, {
             params,
             responseType: 'text'

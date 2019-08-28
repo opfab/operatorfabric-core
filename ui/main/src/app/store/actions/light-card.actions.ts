@@ -122,7 +122,6 @@ export class AddThirdActions implements Action {
 
     constructor(public payload: { card: LightCard, actions: Map<string, ThirdAction> }) {
     }
-
 }
 
 export class UpdateALightCard implements Action {
@@ -156,9 +155,7 @@ export class ThirdActionAlreadyUpdated implements Action{
 
 export class DelayedLightCardUpdate implements Action{
     readonly  type = LightCardActionTypes.DelayedLightCardUpdate;
-    constructor(public payload:{card:LightCard}){
-
-    }
+    constructor(public payload:{card:LightCard}){}
 }
 
 export class LightCardAlreadyUpdated implements Action{
