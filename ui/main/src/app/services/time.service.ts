@@ -185,7 +185,7 @@ export class TimeService {
     }
 
     public toNgBTimestamp(date): string {
-        return (this.parseString(date).valueOf() / 1000).toString();
+        return (this.parseString(date).valueOf()).toString();
     }
 
     public formatDateTime(timestamp: number): string;
