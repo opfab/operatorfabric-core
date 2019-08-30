@@ -5,4 +5,5 @@
         (click)="submit()"
         translate
         [translateParams]="action.label.parameters"
+        [disabled]="action.lockAction"
 >{{i18nPrefix + action.label.key}}</button>
