@@ -23,15 +23,15 @@ import {Subject} from "rxjs";
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss']
 })
-export class CardComponent implements OnInit,OnDestroy {
+export class CardComponent implements OnInit, OnDestroy {
 
     @Input() public open: boolean = false;
     @Input() public lightCard: LightCard;
     currentPath: any;
     protected _i18nPrefix: string;
     dateToDisplay: string;
-    actionsUrlPath:string;
-    private actions:Action[];
+    actionsUrlPath: string;
+    private actions: Action[];
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -40,12 +40,12 @@ export class CardComponent implements OnInit,OnDestroy {
                 private store: Store<AppState>,
                 private translate: TranslateService,
                 private time: TimeService
-    ){
+    ) {
     }
 
-     ngOnInit() {
-        const card=this.lightCard;
-            this._i18nPrefix = `${card.publisher}.${card.publisherVersion}.`;
+    ngOnInit() {
+        const card = this.lightCard;
+        this._i18nPrefix = `${card.publisher}.${card.publisherVersion}.`;
         this.store.select(selectCurrentUrl).subscribe(url => {
             if (url) {
                 const urlParts = url.split('/');
@@ -57,7 +57,7 @@ export class CardComponent implements OnInit,OnDestroy {
             .pipe(map(config => this.computeDisplayedDates(config, card)))
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
-        
+
         this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processId}/states/${card.state}/actions`;
     }
 
@@ -85,19 +85,19 @@ export class CardComponent implements OnInit,OnDestroy {
     }
 
     /* necessary otherwise action buttons are weirdly refresh */
-    getActions(){
-        if(!this.actions){
-            this.actions=this.transformActionMapToArray();
+    getActions() {
+        if (!this.actions) {
+            this.actions = this.transformActionMapToArray();
         }
         return this.actions;
     }
 
-    transformActionMapToArray(){
+    transformActionMapToArray() {
         const actions = this.lightCard.actions;
-        if(actions){
+        if (actions) {
             const entries = Array.from(actions.entries());
-            return entries.map<Action>(([key,action]:[string,Action])=>{
-                return {...action,key:key}
+            return entries.map<Action>(([key, action]: [string, Action]) => {
+                return {...action, key: key}
             });
         }
         return [];
