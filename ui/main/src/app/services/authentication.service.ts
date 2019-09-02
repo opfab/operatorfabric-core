@@ -42,6 +42,8 @@ export class AuthenticationService {
     private loginClaim: string;
     private expireClaim: string;
     private delegateUrl: string;
+    private givenNameClaim: string;
+    private familyNameClaim: string;
 
     /**
      * @constructor
@@ -62,6 +64,8 @@ export class AuthenticationService {
         this.clientSecret = _.get(oauth2Conf, 'oauth2.client-secret', null);
         this.delegateUrl = _.get(oauth2Conf, 'oauth2.flow.delagate-url', null);
         this.loginClaim = _.get(oauth2Conf, 'jwt.login-claim', 'sub');
+        this.givenNameClaim = _.get(oauth2Conf, 'jwt.given-name-claim', 'given_name');
+        this.familyNameClaim = _.get(oauth2Conf, 'jwt.family-name-claim', 'family_name');
         this.expireClaim = _.get(oauth2Conf, 'jwt.expire-claim', 'exp');
     }
 
@@ -245,7 +249,9 @@ export class AuthenticationService {
         return new PayloadForSuccessfulAuthentication(jwt[this.loginClaim],
             payload.clientId,
             payload.access_token,
-            new Date(expirationDate)
+            new Date(expirationDate),
+            jwt[this.givenNameClaim],
+            jwt[this.familyNameClaim]
         );
     }
 

@@ -42,6 +42,10 @@ import {TimeEffects} from "@ofEffects/time.effects";
 import {ArchiveState} from "@ofStates/archive.state";
 import {ArchiveEffects} from "@ofEffects/archive.effects";
 
+import {reducer as userReducer} from '@ofStore/reducers/user.reducer';
+import {UserState} from "@ofStates/user.state";
+import {UserEffects} from "@ofEffects/user.effects";
+
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
     feed: CardFeedState;
@@ -53,6 +57,7 @@ export interface AppState {
     settings: SettingsState;
     time: TimeState;
     archive: ArchiveState;
+    user : UserState;
 }
 
 export const appEffects = [
@@ -67,7 +72,9 @@ export const appEffects = [
     LightCardEffects,
     FeedFiltersEffects,
     TimeEffects,
-    ArchiveEffects];
+    ArchiveEffects,
+    UserEffects
+];
 
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
@@ -79,7 +86,8 @@ export const appReducer: ActionReducerMap<AppState> = {
     config: configReducer,
     settings: settingsReducer,
     time: timeReducer,
-    archive: archiveReducer
+    archive: archiveReducer,
+    user : userReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production

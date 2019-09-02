@@ -18,6 +18,7 @@ import {FilterService} from "@ofServices/filter.service";
 import {ConfigService} from "@ofServices/config.service";
 import {I18nService} from "@ofServices/i18n.service";
 import {SettingsService} from "@ofServices/settings.service";
+import { UserService } from './user.service';
 
 @NgModule({
     imports: [
@@ -37,7 +38,8 @@ import {SettingsService} from "@ofServices/settings.service";
         }   ,
         GuidService,
         FilterService,
-        I18nService
+        I18nService,
+        UserService
 
     ]
 })
