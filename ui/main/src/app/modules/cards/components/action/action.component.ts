@@ -12,7 +12,7 @@ import {I18n} from "@ofModel/i18n.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {UpdateAnAction} from "@ofActions/light-card.actions";
-import {map, switchMap, takeUntil} from "rxjs/operators";
+import {map, mergeMap, switchMap, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import * as _ from "lodash";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -62,16 +62,24 @@ export class ActionComponent implements OnInit, OnDestroy {
             return [hasChanged, currentStatus];
         });
 
+        const postAction = this.httpClient.post(this.url, this.action).pipe(
+            takeUntil(this.ngUnsubscribe),
+            checkIfReceivedStatusIsDifferentFromCurrentOne,
+            map(([hasChanged,currentStatus]:[boolean,ActionStatus])=>{
+                if(hasChanged)this.updateThirdAction(currentStatus)
+            })
+        );
+
+
         const dispatchStateActionOnStatusChanges = map(([hasChanged, currentStatus]: [boolean, ActionStatus]) => {
             let shouldPostAction = false;
             if (hasChanged) {
                 this._modalService
                     .open(ConfirmModalComponent)
                     .result
-                    .then(result => {
-                        if (result) {
-                            console.log('here is a result');
-                            shouldPostAction=true;
+                    .then(performPost => {
+                        if (performPost) {
+                            postAction.subscribe();
                         }
                     })
                     .catch(error => {
@@ -93,28 +101,17 @@ export class ActionComponent implements OnInit, OnDestroy {
             return shouldPostAction;
         });
 
-        const postAction = this.httpClient.post(this.url, this.action).pipe(
-            takeUntil(this.ngUnsubscribe),
-            checkIfReceivedStatusIsDifferentFromCurrentOne,
-            map(([hasChanged,currentStatus]:[boolean,ActionStatus])=>{
-                if(hasChanged)this.updateThirdAction(currentStatus)
-            })
-        );
 
         if (this.action.updateStateBeforeAction) {
             this.httpClient.get(this.url).pipe(
                 takeUntil(this.ngUnsubscribe),
                 checkIfReceivedStatusIsDifferentFromCurrentOne,
-                dispatchStateActionOnStatusChanges,
-                switchMap((shouldPostAction:boolean)=>{
-                    if(shouldPostAction) return postAction;
-                })
+                dispatchStateActionOnStatusChanges
             ).subscribe();
         } else {
             postAction.subscribe();
         }
     }
-
 
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
