@@ -34,7 +34,8 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
                 .publisher(source.getString("publisher"))
                 .publisherVersion(source.getString("publisherVersion"))
                 .uid(source.getString("uid"))
-                .id(source.getString("_id"))
+                // key "_id" return an ObjectId, not a String, otherwise raise a lassCastException
+                .id(source.getObjectId("_id").toString())
                 .processId(source.getString("processId"))
                 .lttd(source.getDate("lttd") == null ? null : source.getDate("lttd").toInstant())
                 .startDate(source.getDate("startDate") == null ? null : source.getDate("startDate").toInstant())
