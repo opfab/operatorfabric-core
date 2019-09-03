@@ -5,117 +5,39 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Action, ActionStatus, Third} from "@ofModel/thirds.model";
+import {Component, Input, OnInit} from '@angular/core';
+import {Action} from "@ofModel/thirds.model";
 import {I18n} from "@ofModel/i18n.model";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {UpdateAnAction} from "@ofActions/light-card.actions";
-import {map, mergeMap, switchMap, takeUntil} from "rxjs/operators";
-import {Subject} from "rxjs";
-import * as _ from "lodash";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ConfirmModalComponent, ThirdActionComporentModalReturn} from "./confirm-modal/confirm-modal.component";
+import {ThirdActionService} from "@ofServices/third-action.service";
 
 @Component({
     selector: 'of-action',
     templateUrl: './action.component.html',
     styleUrls: ['./action.component.scss']
 })
-export class ActionComponent implements OnInit, OnDestroy {
+export class ActionComponent implements OnInit {
 
     @Input() readonly action: Action;
     @Input() readonly i18nPrefix: I18n;
     @Input() readonly lightCardId: string;
     @Input() readonly actionUrlPath: string;
-    private url: string;
-    private ngUnsubscribe: Subject<void> = new Subject<void>();
-
-    constructor(private httpClient: HttpClient
-        , private store: Store<AppState>
-        , private _modalService: NgbModal) {
+    private currentActionPath: string;
+    /* istanbul ignore next */
+    constructor(
+        private _modalService: NgbModal
+        , private actionService: ThirdActionService) {
     }
 
-    ngOnInit() {
-        //TODO config || env || hard coded ????
-        const protocol = 'http://';
-        const domain = 'localhost';
-        const port = '8080';
-        const resource = `${this.actionUrlPath}/${(this.action.key)}`;
-        this.url = `${protocol}${domain}:${port}${resource}`;
-    }
-
-    updateThirdAction(currentStatus: ActionStatus) {
-        this.store.dispatch(
-            new UpdateAnAction({
-                cardId: this.lightCardId
-                , actionKey: this.action.key
-                , status: currentStatus
-            }));
+    ngOnInit(): void {
+        this.currentActionPath = `${this.actionUrlPath}/${this.action.key}`;
     }
 
     submit() {
-        const status = this.action as ActionStatus;
-        const checkIfReceivedStatusIsDifferentFromCurrentOne = map((currentStatus: ActionStatus) => {
-            const hasChanged = !_.isEqual(status, currentStatus);
-            return [hasChanged, currentStatus];
-        });
-
-        const postAction = this.httpClient.post(this.url, this.action).pipe(
-            takeUntil(this.ngUnsubscribe),
-            checkIfReceivedStatusIsDifferentFromCurrentOne,
-            map(([hasChanged,currentStatus]:[boolean,ActionStatus])=>{
-                if(hasChanged)this.updateThirdAction(currentStatus)
-            })
-        );
-
-
-        const dispatchStateActionOnStatusChanges = map(([hasChanged, currentStatus]: [boolean, ActionStatus]) => {
-            let shouldPostAction = false;
-            if (hasChanged) {
-                this._modalService
-                    .open(ConfirmModalComponent)
-                    .result
-                    .then(performPost => {
-                        if (performPost) {
-                            postAction.subscribe();
-                        }
-                    })
-                    .catch(error => {
-                        switch (error) {
-                            case ThirdActionComporentModalReturn.CANCEL: {
-                                console.log('save the new version of the third action');
-                                this.updateThirdAction(currentStatus);
-                                break;
-                            }
-                            case ThirdActionComporentModalReturn.DISMISS: {
-                                console.log('dismiss, third action leave untouched');
-                                break;
-                            }
-                            default:
-                                console.log('unknown error from modal',error);
-                        }
-                    });
-            }
-            return shouldPostAction;
-        });
-
-
-        if (this.action.updateStateBeforeAction) {
-            this.httpClient.get(this.url).pipe(
-                takeUntil(this.ngUnsubscribe),
-                checkIfReceivedStatusIsDifferentFromCurrentOne,
-                dispatchStateActionOnStatusChanges
-            ).subscribe();
-        } else {
-            postAction.subscribe();
-        }
+        this.actionService.submit(
+            this.lightCardId
+            , this.currentActionPath
+            , this.action
+            , this._modalService);
     }
-
-    ngOnDestroy(): void {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
-    }
-
 }

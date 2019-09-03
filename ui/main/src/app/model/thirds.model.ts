@@ -116,7 +116,7 @@ export const emptyActionStatus = new ActionStatus(null);
 
 /*
 for some reasons lodash equals take attribute order declaration in account to compute object equality
-needed by LightCardEffects updateAThirdAction Effect.
+needed by LightCardEffects updateAThirdAction Effect and by checkIfReceivedStatusIsDifferentFromCurrentOne method of ThirdActionService .
  */
 export function extractActionStatusFromPseudoActionStatus(tAction:ActionStatus):ActionStatus{
     const result = new ActionStatus(tAction.label

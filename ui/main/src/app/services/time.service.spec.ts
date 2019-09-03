@@ -16,7 +16,7 @@ import {appReducer} from "@ofStore/index";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {TimeReference, TimeSpeed} from "@ofModel/time.model";
 
-fdescribe('TimeService', () => {
+describe('TimeService', () => {
 
     let service: TimeService;
     let httpMock: HttpTestingController;
