@@ -16,7 +16,7 @@ import {ThirdsService} from "../../services/thirds.service";
 import {HandlebarsService} from "./services/handlebars.service";
 import {UtilitiesModule} from "../utilities/utilities.module";
 import {ActionComponent} from './components/action/action.component';
-import {NgbModal, NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {ConfirmModalComponent} from "./components/action/confirm-modal/confirm-modal.component";
 
 @NgModule({
