@@ -65,8 +65,8 @@
       "publisher": "Emetteur",
       "process": "Processus",
       "tags": "Etiquettes",
-      "publishDateFrom": "Date de publication à partir de",
-      "publishDateTo": "Date de publication jusqu'à",
+      "publishDateFrom": "Publication à partir de",
+      "publishDateTo": "Publication jusqu'à",
       "activeFrom": "Active à partir de",
       "activeTo": "Active jusqu'à"
     },
