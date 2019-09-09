@@ -43,65 +43,77 @@ export class ThirdActionService {
         return this.httpClient.post(`${this.actionUrl}${currentActionPath}`, action).pipe(
             this.checkIfReceivedStatusIsDifferentFromCurrentOne(action as ActionStatus),
             map(([hasChanged, currentStatus]: [boolean, ActionStatus]) => {
-                if (hasChanged) this.updateThirdAction(lightCardId, action.key, currentStatus);
+                if (hasChanged) {
+                    const updateThirdActionAction = new UpdateAnAction({
+                        cardId: lightCardId,
+                        actionKey: action.key
+                        , status: currentStatus
+                    });
+                    this.dispatchUpdateThirdAction(updateThirdActionAction);
+                }
             })
         );
     }
 
-    callModalIfNecessary(lightCardId:string,actionKey:string,modalService:NgbModal,postAction$:Observable<void >){
+    callModalIfNecessary(lightCardId: string, actionKey: string, modalService: NgbModal, postAction$: Observable<void>) {
         return map(([hasChanged, currentStatus]: [boolean, ActionStatus]) => {
-        if (hasChanged) {
-            modalService
-                .open(ConfirmModalComponent)
-                .result
-                .then(performPost => {
-                    if (performPost) postAction$.subscribe()
-                })
-                .catch(error => {
-                    switch (error) {
-                        case ThirdActionComporentModalReturn.CANCEL: {
-                            // save new status of action and do nothing
-                            this.updateThirdAction(lightCardId, actionKey, currentStatus);
-                            break;
-                        }
-                        case ThirdActionComporentModalReturn.DISMISS: {
-                            // do nothing leaves the former action status untouched
-                            break;
-                        }
-                        default:
-                            console.log('unknown error from update action status modal', error);
-                    }
+            if (hasChanged) {
+                const updateThirdAction = new UpdateAnAction({
+                    cardId: lightCardId
+                    , actionKey: actionKey
+                    , status: currentStatus
                 });
-        } else {
-            postAction$.subscribe();
-        }
-    });}
+                this.callModalAndHandleResponse(modalService, postAction$, updateThirdAction);
+            } else {
+                postAction$.subscribe();
+            }
+        });
+    }
+
+    callModalAndHandleResponse(modalService: NgbModal, postAction$: Observable<void>, updateThirdAction: UpdateAnAction) {
+        modalService
+            .open(ConfirmModalComponent)
+            .result
+            .then(performPost => {
+                if (performPost) postAction$.subscribe()
+            })
+            .catch(error => {
+                switch (error) {
+                    case ThirdActionComporentModalReturn.CANCEL: {
+                        // save new status of action and do nothing
+                        this.dispatchUpdateThirdAction(updateThirdAction);
+                        break;
+                    }
+                    case ThirdActionComporentModalReturn.DISMISS: {
+                        // do nothing leaves the former action status untouched
+                        break;
+                    }
+                    default:
+                        console.log('unknown error from update action status modal', error);
+                }
+            });
+    }
 
     submit(lightCardId: string
         , currentActionPath: string
         , action: Action
         , modalService: NgbModal) {
 
-        const postAction$ = this.postActionAndUpdateIfNecessary(lightCardId,currentActionPath,action);
+        const postAction$ = this.postActionAndUpdateIfNecessary(lightCardId, currentActionPath, action);
 
         if (action.updateStateBeforeAction) {
             this.httpClient.get(`${this.actionUrl}${currentActionPath}`).pipe(
                 this.checkIfReceivedStatusIsDifferentFromCurrentOne(action as ActionStatus),
-                this.callModalIfNecessary(lightCardId,action.key,modalService,postAction$)
+                this.callModalIfNecessary(lightCardId, action.key, modalService, postAction$)
             ).subscribe();
         } else {
             postAction$.subscribe();
         }
     }
 
-    updateThirdAction(lightCardId: string, actionKey: string, currentStatus: ActionStatus) {
-        this.store.dispatch(
-            new UpdateAnAction({
-                cardId: lightCardId
-                , actionKey: actionKey
-                , status: currentStatus
-            }));
+    /* istanbul ignore next */
+    dispatchUpdateThirdAction(updateThirdAction: UpdateAnAction) {
+        this.store.dispatch(updateThirdAction);
     }
-
 
 }

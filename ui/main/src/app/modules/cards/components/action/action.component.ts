@@ -18,10 +18,10 @@ import {ThirdActionService} from "@ofServices/third-action.service";
 })
 export class ActionComponent implements OnInit {
 
-    @Input() readonly action: Action;
-    @Input() readonly i18nPrefix: I18n;
-    @Input() readonly lightCardId: string;
-    @Input() readonly actionUrlPath: string;
+    @Input()  action: Action;
+    @Input()  i18nPrefix: I18n;
+    @Input()  lightCardId: string;
+    @Input()  actionUrlPath: string;
     private currentActionPath: string;
     /* istanbul ignore next */
     constructor(

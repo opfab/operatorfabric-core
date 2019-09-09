@@ -1,0 +1,337 @@
+import {async, getTestBed, TestBed,} from "@angular/core/testing";
+import {Store} from "@ngrx/store";
+import {AppState} from "@ofStore/index";
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {environment} from "@env/environment";
+import {ThirdActionService} from "@ofServices/third-action.service";
+import {Action, ActionStatus, ActionType, emptyAction, emptyActionStatus} from "@ofModel/thirds.model";
+import {hot} from "jasmine-marbles";
+import {getRandomAlphanumericValue, getRandomI18nData} from "@tests/helpers";
+import {ThirdActionComporentModalReturn} from "../modules/cards/components/action/confirm-modal/confirm-modal.component";
+import {UpdateAnAction} from "@ofActions/light-card.actions";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import createSpyObj = jasmine.createSpyObj;
+
+describe('ThirdActionService', () => {
+
+    class truc {
+        dispatch() {
+        }
+    }
+
+    let injector: TestBed;
+    let store: Store<AppState>;
+    let httpClientMock: HttpTestingController;
+    const url = `${environment.urls.actions}`;
+    let thirdActionService: ThirdActionService;
+    let bobo: Store<AppState>;
+    beforeEach(async(() => {
+        bobo = createSpyObj<Store<AppState>>('store', ['dispatch']);
+        TestBed.configureTestingModule({
+            imports: [
+                // StoreModule.forRoot(appReducer),
+                HttpClientTestingModule
+            ],
+            providers: [
+                ThirdActionService,
+                {
+                    provide: Store
+                    , useValue: bobo
+                    // ,useClass:truc
+                }]
+        });
+        injector = getTestBed();
+        store = injector.get(Store);
+        httpClientMock = injector.get(HttpTestingController);
+        thirdActionService = injector.get(ThirdActionService);
+
+    }));
+    afterEach(() => {
+        httpClientMock.verify();
+    });
+
+    it('should notify no changes in Action Status', () => {
+        const actionStatusTested = emptyActionStatus;
+        const checkerOperator = thirdActionService.checkIfReceivedStatusIsDifferentFromCurrentOne(actionStatusTested);
+        expect(checkerOperator).toBeTruthy();
+        const requestedActionStatus = hot('-a', {a: emptyActionStatus});
+        const expectedObservable = hot('-b', {b: [false, emptyActionStatus]});
+        const observable = requestedActionStatus.pipe(checkerOperator);
+        expect(observable).toBeObservable(expectedObservable);
+    });
+
+    it('should post  if  changes exist in Action Status', () => {
+        const actionStatusTested = new ActionStatus(getRandomI18nData());
+        const checkerOperator = thirdActionService.checkIfReceivedStatusIsDifferentFromCurrentOne(actionStatusTested);
+        expect(checkerOperator).toBeTruthy();
+        const requestedActionStatus = hot('-a', {a: emptyActionStatus});
+        const expectedObservable = hot('-b', {b: [true, emptyActionStatus]});
+        const observable = requestedActionStatus.pipe(checkerOperator);
+        expect(observable).toBeObservable(expectedObservable);
+    });
+
+    it(`shouldn't call modal when Action Status stays unchanged` +
+        ` and posts action`, () => {
+        const lightCardId = getRandomAlphanumericValue(12);
+        const actionKey = getRandomAlphanumericValue(12);
+        const currentAction = emptyAction;
+        const modalServiceMock = createSpyObj('NgbModal', ['open']);
+        const postActionMock = hot('-a', {a: 'ok'});
+        const modalCallOperator = thirdActionService.callModalIfNecessary(lightCardId
+            , actionKey
+            , modalServiceMock
+            , postActionMock);
+        const actionStatusVerification$ = hot('-b', {b: [false, currentAction]});
+        const observable = actionStatusVerification$.pipe(modalCallOperator);
+        const expected = hot('-c', {});
+
+        expect(observable).toBeObservable(expected);
+        // one action posted ?
+        expect(postActionMock.getSubscriptions().length).toEqual(1);
+    })
+
+    it(`should call a modal when action status changed and post action if user chooses ok`, () => {
+        const lightCardId = getRandomAlphanumericValue(12);
+        const actionKey = getRandomAlphanumericValue(12);
+        const currentAction = emptyAction;
+        // the user click on OK
+        const promiseOKMock = new Promise(() => true);
+        const modalServiceMock = createSpyObj('NgbModal', ['open']);
+        (<jasmine.Spy>modalServiceMock.open).and.returnValue(promiseOKMock);
+        const postActionMock = hot('-a', {a: 'nothing'});
+        const modalCallOperator = thirdActionService.callModalIfNecessary(lightCardId
+            , actionKey
+            , modalServiceMock
+            , postActionMock);
+        const actionStatusVerification$ = hot('-b', {
+            b: [false
+                , new Action(ActionType.EXTERNAL, getRandomI18nData())
+            ]
+        });
+        const observable = actionStatusVerification$.pipe(modalCallOperator);
+        const expected = hot('-c', {});
+        expect(observable).toBeObservable(expected);
+        // one action posted ?
+        expect(postActionMock.getSubscriptions().length).toEqual(1);
+    });
+
+    it(`should call a modal when action status changed and do nothing if ` +
+        `user dismisses the modal`, () => {
+        const lightCardId = getRandomAlphanumericValue(12);
+        const actionKey = getRandomAlphanumericValue(12);
+        const modalServiceMock = createSpyObj('NgbModal', ['open']);
+        (<jasmine.Spy>modalServiceMock.open).and.returnValue({result: Promise.reject(ThirdActionComporentModalReturn.DISMISS)});
+        const postActionMock = hot('-a', {a: 'nothing'});
+        const modalCallOperator = thirdActionService.callModalIfNecessary(lightCardId
+            , actionKey
+            , modalServiceMock
+            , postActionMock);
+        const actionStatusVerification$ = hot('-b', {
+            b: [true
+                , new Action(ActionType.EXTERNAL, getRandomI18nData())
+            ]
+        });
+        actionStatusVerification$.pipe(modalCallOperator).subscribe();
+        expect(postActionMock.getSubscriptions().length).toEqual(0);
+    });
+
+    xit('should update third action if action has changed and if user accept to save action',
+        async () => {
+            let storeDispatchCalled = false;
+            createSpyObj<Store<AppState>>('store', ['dispatch']);
+            (<jasmine.Spy>store.dispatch).and.callFake(() => {
+                console.log('fake dispatch call - begin');
+                storeDispatchCalled = true;
+                console.log('fake dispatch call - end');
+            });
+
+            const modalServiceMock = createSpyObj('NgbModal', ['open']);
+            console.log('2');
+
+            (<jasmine.Spy>modalServiceMock.open).and.callFake(() => {
+                return {result: Promise.reject(ThirdActionComporentModalReturn.CANCEL)}
+            });
+            const postActionMock = hot('a', {a: 'nothing'});
+            const modalCallOperator = thirdActionService.callModalIfNecessary(getRandomAlphanumericValue(12)
+                , getRandomAlphanumericValue(12)
+                , modalServiceMock
+                , postActionMock);
+            const actionStatusVerification$ = hot('b', {
+                b: [true
+                    , new Action(ActionType.EXTERNAL, getRandomI18nData())
+                ]
+            });
+            console.log('3');
+
+//             setTimeout(() => {
+//                 console.log('beginning of set time out');
+//
+//
+//                 console.log('end of set time out');
+// // done();
+//             },3000);
+//             tick();
+
+            const observable = actionStatusVerification$.pipe(modalCallOperator);
+
+            const expected = hot('c', {});
+            expect(observable).toBeObservable(expected);
+            console.log('4');
+            expect(postActionMock.getSubscriptions().length).toEqual(0);
+            //     // expect(thirdActionService.updateThirdAction).toHaveBeenCalled();
+            //     // expect(<jasmine.Spy>store.dispatch).toHaveBeenCalled();
+            expect(storeDispatchCalled).toBe(true);
+            expect(store.dispatch).toHaveBeenCalled();
+
+
+            console.log('5');
+        });
+
+    it('should call modal service when actionStatus has changed', () => {
+
+        // instantiate observable that should not be called
+        const postAction$ = hot('x', {x: 'nothing'});
+
+        // get an operator to test behavior
+        const operatorCallingModal = thirdActionService.callModalIfNecessary(
+            getRandomAlphanumericValue(12)
+            , getRandomAlphanumericValue(12)
+            , createSpyObj('NgbModal', ['open'])
+            , postAction$
+        );
+        // here create a spy 4 ThirdActionService to
+        const modalCalls = spyOn(thirdActionService, 'callModalAndHandleResponse');
+
+        // here create the input observable
+        const changedActionStatus = new ActionStatus(getRandomI18nData());
+        const actionStatusHasChanged = true;
+        const changedActionStatus$ = hot('a', {a: [actionStatusHasChanged, changedActionStatus]})
+
+        // here specify the expected (or like so) observable
+        const expected$ = hot('b', {b: undefined})
+
+        // Check if all behave as expected
+        const underScrutiny = operatorCallingModal(changedActionStatus$);
+
+        expect(underScrutiny).toBeObservable(expected$);
+        expect(modalCalls).toHaveBeenCalled();
+        // has the real modal service call didn't occurs there mustn't be any post performed
+        expect(postAction$.getSubscriptions().length).toEqual(0);
+    });
+
+    describe('when an action is perform by the user', () => {
+        let modalServiceMock: NgbModal;
+        let updateAThirdActionAction: UpdateAnAction;
+        let postAction$: Observable<any>;
+        let promise: Promise<any>;
+        let dispatch: jasmine.Spy;
+
+        beforeAll(() => {
+            updateAThirdActionAction = new UpdateAnAction({
+                cardId: getRandomAlphanumericValue(12)
+                , actionKey: getRandomAlphanumericValue(3)
+                , status: new ActionStatus(getRandomI18nData())
+            });
+        });
+        beforeEach(() => {
+            modalServiceMock = createSpyObj('NgbModal', ['open']);
+            (<jasmine.Spy>modalServiceMock.open).and.callFake(() => {
+                return {result: promise};
+            });
+            postAction$ = createSpyObj('Obsertable', ['subscribe']);
+
+            dispatch = spyOn(thirdActionService, "dispatchUpdateThirdAction");
+
+        });
+
+        it('should perform a post on a confirmation of continuing the action of the modal', (done) => {
+            const keepPerformThePost = true;
+            promise = Promise.resolve(keepPerformThePost);
+            const verifyExpectations = () => {
+                expect(modalServiceMock.open).toHaveBeenCalled();
+                expect(postAction$.subscribe).toHaveBeenCalled();
+                expect(dispatch).not.toHaveBeenCalled();
+                done();
+            };
+            thirdActionService.callModalAndHandleResponse(modalServiceMock, postAction$, updateAThirdActionAction);
+            promise.then(verifyExpectations);
+        });
+        it('should not perform a post on a confirmation with false value of continuing the action of the modal', (done) => {
+            const keepPerformThePost = false;
+            promise = Promise.resolve(keepPerformThePost);
+            const verifyExpectations = () => {
+                expect(modalServiceMock.open).toHaveBeenCalled();
+                expect(postAction$.subscribe).not.toHaveBeenCalled();
+                expect(dispatch).not.toHaveBeenCalled();
+                done();
+            };
+            thirdActionService.callModalAndHandleResponse(modalServiceMock, postAction$, updateAThirdActionAction);
+            promise.then(verifyExpectations);
+        });
+
+        it('should dispatch an action to update third action on Cancel of the modal', (done) => {
+            promise = Promise.reject(ThirdActionComporentModalReturn.CANCEL);
+            const verifyExpectations = () => {
+                expect(modalServiceMock.open).toHaveBeenCalled();
+                expect(postAction$.subscribe).not.toHaveBeenCalled();
+                expect(dispatch).toHaveBeenCalled();
+                done();
+            };
+            thirdActionService.callModalAndHandleResponse(modalServiceMock, postAction$, updateAThirdActionAction);
+            promise.then().catch(verifyExpectations);
+        });
+
+        it('should do nothing on dismiss of the modal', (done) => {
+            promise = Promise.reject(ThirdActionComporentModalReturn.DISMISS);
+            const verifyExpectations = () => {
+                expect(modalServiceMock.open).toHaveBeenCalled();
+                expect(postAction$.subscribe).not.toHaveBeenCalled();
+                expect(dispatch).not.toHaveBeenCalled();
+                done();
+            };
+            thirdActionService.callModalAndHandleResponse(modalServiceMock, postAction$, updateAThirdActionAction);
+            promise.then().catch(verifyExpectations);
+        });
+
+        it('should do nothing when modal fail for an unknown reason', (done) => {
+            promise = Promise.reject(new Error());
+            const verifyExpectations = () => {
+                expect(modalServiceMock.open).toHaveBeenCalled();
+                expect(dispatch).not.toHaveBeenCalled();
+                expect(postAction$.subscribe).not.toHaveBeenCalled();
+                done();
+            };
+            thirdActionService.callModalAndHandleResponse(modalServiceMock, postAction$, updateAThirdActionAction);
+            promise.then().catch(verifyExpectations);
+        });
+
+
+    });
+
+
+    fdescribe( 'when the post of an third action is performed', ()=>{
+        
+        let httpClientSpy: HttpClient;
+        let postResponse:Observable<any>;
+        let dispatch: jasmine.Spy;
+
+        beforeEach(()=>{
+            (thirdActionService)
+            httpClientSpy = createSpyObj('HttpClient',['post','get']);
+            (<jasmine.Spy>httpClientSpy.post).and.callFake(()=>postResponse);
+            dispatch = spyOn(thirdActionService, 'dispatchUpdateThirdAction');
+        });
+
+        it('should not update the third action if no changed occurs', () =>{
+            postResponse = hot('a',{a:[false,new ActionStatus(getRandomI18nData())]});
+
+            const expected$ = hot('b',{b:{}});
+            expect(thirdActionService.postActionAndUpdateIfNecessary(getRandomAlphanumericValue(12),
+                getRandomAlphanumericValue(10),new Action(ActionType.EXTERNAL, getRandomI18nData()))).toBeObservable(expected$);
+            }
+        );
+    });
+})
+;
