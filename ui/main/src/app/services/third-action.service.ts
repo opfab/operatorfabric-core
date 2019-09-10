@@ -31,17 +31,18 @@ export class ThirdActionService {
     }
 
     checkIfReceivedStatusIsDifferentFromCurrentOne(formerStatus: ActionStatus) {
-        return map((currentStatus: ActionStatus) => {
+        return map((currentStatus: string) => {
             const status = extractActionStatusFromPseudoActionStatus(formerStatus);
-            const normalizedCurrentStatus = extractActionStatusFromPseudoActionStatus(currentStatus);
+            const intermediate = JSON.parse(currentStatus);
+            const normalizedCurrentStatus = extractActionStatusFromPseudoActionStatus(intermediate);
             const hasChanged = !_.isEqual(status, normalizedCurrentStatus);
-            return [hasChanged, currentStatus];
+            return [hasChanged, intermediate];
         });
     }
 
     postActionAndUpdateIfNecessary(lightCardId: string, currentActionPath: string, action: Action) {
         return this.httpClient.post(`${this.actionUrl}${currentActionPath}`, action).pipe(
-            this.checkIfReceivedStatusIsDifferentFromCurrentOne(action as ActionStatus),
+            this.checkIfReceivedStatusIsDifferentFromCurrentOne(action),
             map(([hasChanged, currentStatus]: [boolean, ActionStatus]) => {
                 if (hasChanged) {
                     const updateThirdActionAction = new UpdateAnAction({

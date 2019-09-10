@@ -1,17 +1,23 @@
 import {async, getTestBed, TestBed,} from "@angular/core/testing";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {HttpClientTestingModule, HttpTestingController, TestRequest} from "@angular/common/http/testing";
 import {environment} from "@env/environment";
 import {ThirdActionService} from "@ofServices/third-action.service";
-import {Action, ActionStatus, ActionType, emptyAction, emptyActionStatus} from "@ofModel/thirds.model";
+import {
+    Action,
+    ActionStatus,
+    ActionType,
+    emptyAction,
+    emptyActionStatus,
+    extractActionStatusFromPseudoActionStatus
+} from "@ofModel/thirds.model";
 import {hot} from "jasmine-marbles";
 import {getRandomAlphanumericValue, getRandomI18nData} from "@tests/helpers";
 import {ThirdActionComporentModalReturn} from "../modules/cards/components/action/confirm-modal/confirm-modal.component";
 import {UpdateAnAction} from "@ofActions/light-card.actions";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
 import createSpyObj = jasmine.createSpyObj;
 
 describe('ThirdActionService', () => {
@@ -50,26 +56,6 @@ describe('ThirdActionService', () => {
     }));
     afterEach(() => {
         httpClientMock.verify();
-    });
-
-    it('should notify no changes in Action Status', () => {
-        const actionStatusTested = emptyActionStatus;
-        const checkerOperator = thirdActionService.checkIfReceivedStatusIsDifferentFromCurrentOne(actionStatusTested);
-        expect(checkerOperator).toBeTruthy();
-        const requestedActionStatus = hot('-a', {a: emptyActionStatus});
-        const expectedObservable = hot('-b', {b: [false, emptyActionStatus]});
-        const observable = requestedActionStatus.pipe(checkerOperator);
-        expect(observable).toBeObservable(expectedObservable);
-    });
-
-    it('should post  if  changes exist in Action Status', () => {
-        const actionStatusTested = new ActionStatus(getRandomI18nData());
-        const checkerOperator = thirdActionService.checkIfReceivedStatusIsDifferentFromCurrentOne(actionStatusTested);
-        expect(checkerOperator).toBeTruthy();
-        const requestedActionStatus = hot('-a', {a: emptyActionStatus});
-        const expectedObservable = hot('-b', {b: [true, emptyActionStatus]});
-        const observable = requestedActionStatus.pipe(checkerOperator);
-        expect(observable).toBeObservable(expectedObservable);
     });
 
     it(`shouldn't call modal when Action Status stays unchanged` +
@@ -136,58 +122,6 @@ describe('ThirdActionService', () => {
         actionStatusVerification$.pipe(modalCallOperator).subscribe();
         expect(postActionMock.getSubscriptions().length).toEqual(0);
     });
-
-    xit('should update third action if action has changed and if user accept to save action',
-        async () => {
-            let storeDispatchCalled = false;
-            createSpyObj<Store<AppState>>('store', ['dispatch']);
-            (<jasmine.Spy>store.dispatch).and.callFake(() => {
-                console.log('fake dispatch call - begin');
-                storeDispatchCalled = true;
-                console.log('fake dispatch call - end');
-            });
-
-            const modalServiceMock = createSpyObj('NgbModal', ['open']);
-            console.log('2');
-
-            (<jasmine.Spy>modalServiceMock.open).and.callFake(() => {
-                return {result: Promise.reject(ThirdActionComporentModalReturn.CANCEL)}
-            });
-            const postActionMock = hot('a', {a: 'nothing'});
-            const modalCallOperator = thirdActionService.callModalIfNecessary(getRandomAlphanumericValue(12)
-                , getRandomAlphanumericValue(12)
-                , modalServiceMock
-                , postActionMock);
-            const actionStatusVerification$ = hot('b', {
-                b: [true
-                    , new Action(ActionType.EXTERNAL, getRandomI18nData())
-                ]
-            });
-            console.log('3');
-
-//             setTimeout(() => {
-//                 console.log('beginning of set time out');
-//
-//
-//                 console.log('end of set time out');
-// // done();
-//             },3000);
-//             tick();
-
-            const observable = actionStatusVerification$.pipe(modalCallOperator);
-
-            const expected = hot('c', {});
-            expect(observable).toBeObservable(expected);
-            console.log('4');
-            expect(postActionMock.getSubscriptions().length).toEqual(0);
-            //     // expect(thirdActionService.updateThirdAction).toHaveBeenCalled();
-            //     // expect(<jasmine.Spy>store.dispatch).toHaveBeenCalled();
-            expect(storeDispatchCalled).toBe(true);
-            expect(store.dispatch).toHaveBeenCalled();
-
-
-            console.log('5');
-        });
 
     it('should call modal service when actionStatus has changed', () => {
 
@@ -310,28 +244,56 @@ describe('ThirdActionService', () => {
 
     });
 
-
-    fdescribe( 'when the post of an third action is performed', ()=>{
-        
-        let httpClientSpy: HttpClient;
-        let postResponse:Observable<any>;
+    describe('when the post of an third action is performed', () => {
+        let postResponse: Observable<any>;
         let dispatch: jasmine.Spy;
-
-        beforeEach(()=>{
-            (thirdActionService)
-            httpClientSpy = createSpyObj('HttpClient',['post','get']);
-            (<jasmine.Spy>httpClientSpy.post).and.callFake(()=>postResponse);
+        let actionPath:string;
+        let expectedUrl: string;
+        let currentAction: Action;
+        beforeEach(() => {
+            actionPath = getRandomAlphanumericValue(10);
+            expectedUrl = `${environment.urls.actions}` + actionPath;
+            currentAction = new Action(ActionType.EXTERNAL
+                , getRandomI18nData()
+                ,true
+                ,getRandomAlphanumericValue(3)
+                ,getRandomAlphanumericValue(12)
+            );
             dispatch = spyOn(thirdActionService, 'dispatchUpdateThirdAction');
         });
 
-        it('should not update the third action if no changed occurs', () =>{
-            postResponse = hot('a',{a:[false,new ActionStatus(getRandomI18nData())]});
+        it('should not update the third action if no changed occurs', () => {
+                thirdActionService.postActionAndUpdateIfNecessary(
+                    getRandomAlphanumericValue(12)
+                    , actionPath
+                    , currentAction
+                ).subscribe(() => {
+                    expect(dispatch).not.toHaveBeenCalled();
+                });
 
-            const expected$ = hot('b',{b:{}});
-            expect(thirdActionService.postActionAndUpdateIfNecessary(getRandomAlphanumericValue(12),
-                getRandomAlphanumericValue(10),new Action(ActionType.EXTERNAL, getRandomI18nData()))).toBeObservable(expected$);
+                const calls = httpClientMock.match(req => req.url == expectedUrl);
+                expect(calls.length).toEqual(1);
+            const currentActionStatus = extractActionStatusFromPseudoActionStatus(currentAction);
+            const jsonOfCurrentActionStatus = JSON.stringify(currentActionStatus);
+            calls[0].flush(jsonOfCurrentActionStatus);
             }
         );
+
+        it('should update the third action if a changed occurs', () =>{
+            thirdActionService.postActionAndUpdateIfNecessary(
+                getRandomAlphanumericValue(12)
+                , actionPath
+                , currentAction
+            ).subscribe(() => {
+                expect(dispatch).toHaveBeenCalled();
+            });
+
+            const calls = httpClientMock.match(req => req.url == expectedUrl);
+            expect(calls.length).toEqual(1);
+            const newActionStatus = new ActionStatus(getRandomI18nData());
+            calls[0].flush(JSON.stringify(newActionStatus));
+
+        })
     });
 })
 ;

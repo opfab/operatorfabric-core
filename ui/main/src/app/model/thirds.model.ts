@@ -118,17 +118,20 @@ export const emptyActionStatus = new ActionStatus(null);
 for some reasons lodash equals take attribute order declaration in account to compute object equality
 needed by LightCardEffects updateAThirdAction Effect and by checkIfReceivedStatusIsDifferentFromCurrentOne method of ThirdActionService .
  */
-export function extractActionStatusFromPseudoActionStatus(tAction:ActionStatus):ActionStatus{
-    const result = new ActionStatus(tAction.label
-        , tAction.hidden
-        ,tAction.buttonStyle
-        ,tAction.contentStyle
-        ,tAction.inputs
-        , tAction.lockCard
-        , tAction.updateState
-        , tAction.updateStateBeforeAction
-        , tAction.needsConfirm
-        , tAction.lockAction
+export function extractActionStatusFromPseudoActionStatus(tAction:object):ActionStatus{
+    const params = tAction['label']['parameters'];
+    if(params) Object.setPrototypeOf(params,OfMap.prototype);
+    const result = new ActionStatus(
+        new I18n(tAction['label']['key'],params)
+        , tAction['hidden']
+        ,tAction['buttonStyle']
+        ,tAction['contentStyle']
+        ,tAction['inputs']//TODO Need proper prototype handling
+        , tAction['lockCard']
+        , tAction['updateState']
+        , tAction['updateStateBeforeAction']
+        , tAction['needsConfirm']
+        , tAction['lockAction']
     );
     return result;
 }
