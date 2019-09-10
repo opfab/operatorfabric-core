@@ -6,6 +6,7 @@
  */
 
 import {Injectable} from "@angular/core";
+import {Card} from "@ofModel/card.model";
 import * as Handlebars from "handlebars/dist/handlebars.js"
 import {TimeService} from "@ofServices/time.service";
 import {TranslateService} from "@ngx-translate/core";
@@ -60,7 +61,7 @@ export class HandlebarsService {
     }
 
     private registerBool() {
-        Handlebars.registerHelper('bool', function (v1, operator?, v2?) {
+        Handlebars.registerHelper('bool', function (v1, operator, v2, options) {
             switch (operator) {
                 case '==':
                     return (v1 == v2);
@@ -83,8 +84,7 @@ export class HandlebarsService {
                 case '||':
                     return (v1 || v2);
                 default:
-                    // emulate unary operator
-                    return v1 != null && v1 != undefined && v1 != 0 && v1 != '' && v1 != false;
+                    return true;
             }
         });
     }
