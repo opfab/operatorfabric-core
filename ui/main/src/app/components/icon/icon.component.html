@@ -4,9 +4,14 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<svg x="0px" y="0px"
+<div *ngIf="base64; else opFabLogo">
+  <img [attr.width]="size" [attr.height]="size" [src]="_DomSanitizationService.bypassSecurityTrustUrl(base64)"/>
+</div>
+<ng-template #opFabLogo>
+    <svg x="0px" y="0px"
       [attr.width]="size" [attr.height]="size"
       [class.dark]="dark" [class.light]="light"
       viewBox="0 0 64 64" preserveAspectRatio="xMidYMin meet">
-  <use [attr.xlink:href]="iconPath+sprites+'#'+icon"></use>
-</svg>
+      <use [attr.xlink:href]="iconPath+sprites+'#'+icon"></use>
+    </svg>
+</ng-template>
