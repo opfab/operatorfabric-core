@@ -6,7 +6,7 @@
 <form [formGroup]="archiveForm">
   <div class="container-fluid">
     <div class="form-row nomarginrow">
-      <div class="col-md-3 nopaddingrow">
+      <div class="col-lg-3 col-md-4 nopaddingrow">
         <div class="row" style='margin-right:0;margin-left:0;'>
           <div class="col-md-6 archive-filter">
             <of-multi-filter [parentForm]="archiveForm" filterPath="tags" [values]="tags$|async"></of-multi-filter>
@@ -16,19 +16,19 @@
           </div>
         </div>
       </div>
-      <div class="col-md-2 archive-filter">
+      <div class="col-lg-2 col-md-4 archive-filter">
         <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"></of-datetime-filter>
       </div>
-      <div class="col-md-2 archive-filter">
+      <div class="col-lg-2 col-md-4 archive-filter">
         <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"></of-datetime-filter>
       </div>
-      <div class="col-md-2 archive-filter">
+      <div class="col-lg-2 col-md-4 archive-filter">
         <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"></of-datetime-filter>
       </div>
-      <div class="col-md-2 archive-filter">
+      <div class="col-lg-2 col-md-4 archive-filter">
         <of-datetime-filter filterPath="activeTo" formControlName="activeTo"></of-datetime-filter>
       </div>
-      <div class="col-md-1 nopaddingrow" style="margin-top:30px;">
+      <div class="col-lg-1 col-md-1 nopaddingrow" style="margin-top:30px;">
         <div class="form-group login-form">
           <div class="form-group">
             <button type="button" class="btn btn-primary w-100 archive-radius" (click)="sendQuery()" translate>archive.search</button>

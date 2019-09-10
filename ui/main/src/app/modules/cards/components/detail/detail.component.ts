@@ -17,6 +17,7 @@ import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {selectAuthenticationState} from "@ofSelectors/authentication.selectors";
 import {UserContext} from "@ofModel/user-context.model";
+import * as cardSelectors from '@ofStore/selectors/card.selectors';
 
 @Component({
     selector: 'of-detail',
@@ -39,16 +40,17 @@ export class DetailComponent implements OnInit {
 
     ngOnInit() {
         this.initializeHrefsOfCssLink();
-        this.initializeHandlebarsTemplates();
-        this.store.select(selectAuthenticationState)
-            .subscribe(authState=>{
-                this.userContext = new UserContext(
-                    authState.identifier,
-                    authState.token,
-                    authState.firstName,
-                    authState.lastName
-                )
-            });
+        this.store.select(cardSelectors.selectCardStateSelected).subscribe(() => {
+            this.initializeHandlebarsTemplates();
+        });
+        this.store.select(selectAuthenticationState).subscribe(authState => {
+            this.userContext = new UserContext(
+                authState.identifier,
+                authState.token,
+                authState.firstName,
+                authState.lastName
+            );
+        });
     }
 
     private initializeHrefsOfCssLink() {
