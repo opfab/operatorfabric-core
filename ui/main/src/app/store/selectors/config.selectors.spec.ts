@@ -15,21 +15,10 @@ import {
     selectMaxedRetries
 } from "@ofSelectors/config.selectors";
 import {configInitialState, ConfigState} from "@ofStates/config.state";
+import {emptyAppState4Test} from "@tests/helpers";
 
 describe('ConfigSelectors', () => {
-    let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: null,
-        card: null,
-        menu: null,
-        config: null,
-        settings: null,
-        time: null,
-        archive: null,
-        user: null
-    }
+    let emptyAppState: AppState = emptyAppState4Test;
 
     let loadedConfigState: ConfigState = {
         ...configInitialState,

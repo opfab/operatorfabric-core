@@ -84,6 +84,8 @@ public class LightCardConsultationData implements LightCard {
         LightCardConsultationDataBuilder builder = builder()
                 .uid(other.getUid())
                 .id(other.getId())
+                .process(other.getProcess())
+                .state(other.getState())
                 .processId(other.getProcessId())
                 .lttd(other.getLttd())
                 .startDate(other.getStartDate())

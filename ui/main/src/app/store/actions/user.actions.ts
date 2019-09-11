@@ -6,7 +6,7 @@ import { PayloadForSuccessfulAuthentication } from './authentication.actions';
 
 export enum UserActionsTypes {
 
-    UserApplicationRegisterd =          '[User] User application registered',
+    UserApplicationRegistered =         '[User] User application registered',
     UserApplicationNotRegistered =      '[User] User application not registered',
     CreateUserApplication =             '[User] Create the User in the application',
     CreateUserApplicationOnSuccess =    '[User] Create the User in the application on success',
@@ -16,7 +16,7 @@ export enum UserActionsTypes {
 
 export class UserApplicationRegistered implements Action {
     /* istanbul ignore next */ 
-    readonly type = UserActionsTypes.UserApplicationRegisterd;
+    readonly type = UserActionsTypes.UserApplicationRegistered;
     constructor(public payload : {user : User}) {}
 }
 

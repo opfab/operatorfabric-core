@@ -6,27 +6,9 @@
  */
 
 import {I18n} from "@ofModel/i18n.model";
+import {Action} from "@ofModel/thirds.model";
 
-export interface LightCard {
-    readonly uid: string;
-    readonly id: string;
-    readonly publisher: string;
-    readonly publisherVersion: string;
-    readonly mainRecipient: string;
-    readonly publishDate: number;
-    readonly startDate: number;
-    readonly endDate: number;
-    readonly severity: Severity;
-    readonly processId?: string;
-    readonly lttd?: number;
-    readonly title?: I18n;
-    readonly summary?: I18n;
-    readonly tags?: string[];
-    readonly timeSpans?: TimeSpan[];
-
-}
-
-export class LightCard implements LightCard {
+export class LightCard {
     /* istanbul ignore next */
     constructor(
         readonly uid: string,
@@ -43,7 +25,10 @@ export class LightCard implements LightCard {
         readonly title?: I18n,
         readonly summary?: I18n,
         readonly tags?: string[],
-        readonly timeSpans?: TimeSpan[]
+        readonly timeSpans?: TimeSpan[],
+        readonly process?: string,
+        readonly state?: string,
+        readonly actions?:Map<string,Action>
     ) {
     }
 }

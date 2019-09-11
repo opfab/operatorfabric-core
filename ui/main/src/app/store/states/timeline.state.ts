@@ -28,14 +28,6 @@ export interface TimelineState extends EntityState<LightCard> {
     data: any[];
 }
 
-/*export function compareByStartDate(card1: LightCard, card2: LightCard){
-    return card1.startDate - card2.startDate;
-}
-
-export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<LightCard>({
-    sortComparer:compareByStartDate
-});*/
-
 export const timelineInitialState: TimelineState = LightCardAdapter.getInitialState(
     {
         selectedCardId: null,

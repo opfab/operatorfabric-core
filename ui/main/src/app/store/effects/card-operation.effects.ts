@@ -19,7 +19,6 @@ import {
     RemoveLightCard,
     UpdatedSubscription
 } from '@ofActions/light-card.actions';
-import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
 import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {ApplyFilter, FeedActionTypes} from "@ofActions/feed.actions";
@@ -27,6 +26,7 @@ import {FilterType} from "@ofServices/filter.service";
 import {selectCardStateSelectedId} from "@ofSelectors/card.selectors";
 import {LoadCard} from "@ofActions/card.actions";
 import {CardOperationType} from "@ofModel/card-operation.model";
+import { UserActionsTypes } from '@ofStore/actions/user.actions';
 
 @Injectable()
 export class CardOperationEffects {
@@ -41,7 +41,7 @@ export class CardOperationEffects {
     subscribe: Observable<LightCardActions> = this.actions$
         .pipe(
             // loads card operations only after authentication of a default user ok.
-            ofType(AuthenticationActionTypes.AcceptLogIn),
+            ofType(UserActionsTypes.UserApplicationRegistered),
             switchMap(() => this.service.getCardOperation()
                 .pipe(
                     takeUntil(this.service.unsubscribe$),

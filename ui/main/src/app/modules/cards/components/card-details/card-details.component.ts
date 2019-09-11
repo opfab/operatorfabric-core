@@ -36,10 +36,14 @@ export class CardDetailsComponent implements OnInit {
                     }
                     this.thirdsService.queryThird(this.card.publisher, this.card.publisherVersion)
                         .subscribe(third => {
-                            const state = third.extractState(this.card)
-                            if (state != null)
-                                this.details.push(...state.details);
-                        });
+                            if(third){
+                                const state = third.extractState(this.card)
+                                if (state != null)
+                                    this.details.push(...state.details);
+                            }
+                        },
+                            error => console.log(`something went wrong while trying to fetch third for ${this.card.publisher} with ${this.card.publisherVersion} version.`))
+                    ;
                 }
             });
     }

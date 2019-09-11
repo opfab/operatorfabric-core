@@ -14,6 +14,8 @@ import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
 import moment = require("moment-timezone");
 import SpyObj = jasmine.SpyObj;
+import { UserApplicationRegistered } from '@ofStore/actions/user.actions';
+import { User } from '@ofModel/user.model';
 
 describe('TimeEffects', () => {
 
@@ -37,16 +39,13 @@ describe('TimeEffects', () => {
 
 
         localAction$ = new Actions(hot('a-----', {
-            a: new AcceptLogIn(
-                new PayloadForSuccessfulAuthentication('test-user', null, null, null))
+            a: new UserApplicationRegistered({user: new User("userRegisterd", "aa", "bb")})
         }));
 
 
     }));
     describe('heartBeat', () => {
         it('should emit (clock) tick actions after the user is logged in', () => {
-
-            const localAction$ = new Actions(hot('a---', {a: new AcceptLogIn(new PayloadForSuccessfulAuthentication(null, null, null, null))}));
 
             timeService.pulsate.and.returnValue(hot('-bcd', {
                 b: {currentTime: momentForTesting, elapsedSinceLast: 1},

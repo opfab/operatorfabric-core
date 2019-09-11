@@ -6,8 +6,8 @@
 
 = Client Card Data Model Reference Documentation
 David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: 0.8.1.SNAPSHOT
-:revdate: August 14, 2019
+:revnumber: 0.9.1.SNAPSHOT
+:revdate: September 11, 2019
 :imagesdir: images
 :sectnums:
 :toc: left

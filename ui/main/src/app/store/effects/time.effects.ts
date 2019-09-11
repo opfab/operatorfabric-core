@@ -12,6 +12,7 @@ import {selectTimeReference} from "@ofSelectors/time.selectors";
 import {Message, MessageLevel} from "@ofModel/message.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
+import { UserActionsTypes } from '@ofStore/actions/user.actions';
 
 @Injectable()
 export class TimeEffects {
@@ -34,7 +35,7 @@ export class TimeEffects {
     @Effect()
     heartBeat: Observable<Action> = this.actions$
         .pipe(
-            ofType(AuthenticationActionTypes.AcceptLogIn),
+            ofType(UserActionsTypes.UserApplicationRegistered),
             switchMap(() => this.service.pulsate()
                 .pipe(map(pulse => {
                         return new Tick(pulse);
@@ -48,7 +49,7 @@ export class TimeEffects {
     @Effect()
     stickToVirtualTime: Observable<Action> = this.actions$
         .pipe(
-            ofType(AuthenticationActionTypes.AcceptLogIn),
+            ofType(UserActionsTypes.UserApplicationRegistered),
             switchMap(
                 () => this.service.fetchTimeReferences().pipe(
                     map(timeRef => new UpdateTimeReference({timeReference: timeRef})),

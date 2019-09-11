@@ -12,6 +12,21 @@ import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap} from "@ofModel/map";
 import {Action, ActionType, Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import { Page } from '@ofModel/page.model';
+import {AppState} from "@ofStore/index";
+
+export const emptyAppState4Test:AppState = {
+    router: null,
+    feed: null,
+    timeline: null,
+    authentication: null,
+    card: null,
+    menu: null,
+    config: null,
+    settings: null,
+    archive:null,
+    time:null,
+    user:null
+};
 
 export function getRandomMenu(): ThirdMenu[] {
     let result: ThirdMenu[] = [];

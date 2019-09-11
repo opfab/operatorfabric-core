@@ -95,8 +95,5 @@ export const appMetaReducers: MetaReducer<AppState>[] = !environment.production
     : [];
 
 export const storeConfig = {
-    metaReducers: appMetaReducers,
-    // initialState: {
-    //     router: routerInitialState,
-    // }
+    metaReducers: appMetaReducers
 }

@@ -49,7 +49,7 @@ export function reducer(
         case LightCardActionTypes.SelectLightCard: {
             return {
                 ...state,
-                ...action.payload,
+                selectedCardId: action.payload.selectedCardId,
                 lastCards: []
             }
         }
@@ -92,7 +92,9 @@ export function reducer(
                 filters: action.payload.filters
             };
         }
-
+        case LightCardActionTypes.UpdateALightCard:{
+            return LightCardAdapter.upsertOne(action.payload.card, state);
+        }
         default: {
             return state;
         }

@@ -17,18 +17,22 @@ export class UserEffects {
 
     constructor(private store: Store<AppState>, private actions$:Actions, private userService: UserService) {}
 
+    /**
+     * after that the user is authentificated throught the token, 
+     * detect if the user is already registered in the application and raise the UserApplicationRegistered action 
+     * if not, set the creation user workflow
+     */
     @Effect()
     checkUserApplication: Observable<UserActions> = this.actions$
         .pipe(
             ofType(AuthenticationActionTypes.AcceptLogIn), 
             switchMap((action: AcceptLogIn) => {
                 const userPayload = action.payload;
-                console.log(userPayload);
                 return this.userService.askUserApplicationRegistered(userPayload.identifier)
                     .pipe(
                         map((user: User) => new UserApplicationRegistered({user})),
                         catchError((error, caught) => {
-                            console.log("askUserApplicationRegistered ---------", error, "caught : " + caught, "payload.identifier : " + userPayload.identifier);
+                            // console.log("askUserApplicationRegistered ---------", error, "caught : " + caught, "payload.identifier : " + userPayload.identifier);
                             const userData : User = new User(userPayload.identifier, userPayload.firstName, userPayload.lastName);
                             this.store.dispatch(new UserApplicationNotRegistered({error :error, user : userData }));
                             return caught;
@@ -38,17 +42,24 @@ export class UserEffects {
             })            
         ); 
 
+    /**
+     * transition to the creation user application workflow
+     */   
     @Effect()
-    transitionCreateUserApplication: Observable<UserActions> = this.actions$
+    transition2CreateUserApplication: Observable<UserActions> = this.actions$
         .pipe(
             ofType(UserActionsTypes.UserApplicationNotRegistered), 
             map((action: UserApplicationNotRegistered) => {
                 const userDataPayload = action.payload.user;
-                console.log("transitionCreateUserApplication userPayload : " + userDataPayload);
+                // console.log("transitionCreateUserApplication userPayload : " + userDataPayload);
                 return new CreateUserApplication({user: userDataPayload});
             })
         ); 
 
+    /**
+     * create the user application (first time in the application)
+     * raise an CreateUserApplicationOnSuccess action or CreateUserApplicationOnFailure action.
+     */
     @Effect()
     CreateUserApplication: Observable<UserActions> = this.actions$
         .pipe(
@@ -58,17 +69,29 @@ export class UserEffects {
                 return this.userService.askCreateUser(user)
                     .pipe(
                         map(user => {
-                            console.log("ok creation user " + user.login);
+                            // console.log("ok creation user " + user.login);
                             return new CreateUserApplicationOnSuccess({user})
                         }),
                         catchError((error, caught) => {
-                            console.log(error, caught, "error on creation user application for the user ")
+                            // console.log(error, caught, "error on creation user application for the user ")
                             this.store.dispatch(new CreateUserApplicationOnFailure({error:error}));
                             return caught;
                         })
                     );
-            }),
-            
+            }), 
         );
+
+    /**
+     * transition to the userApplicationRegistered action after an CreateUserApplicationOnSuccess action
+     */   
+    @Effect()
+    transition2UserApplicationRegistered: Observable<UserActions> = this.actions$
+        .pipe(
+            ofType(UserActionsTypes.CreateUserApplicationOnSuccess), 
+            map((action: CreateUserApplicationOnSuccess) => {
+                const userDataPayload = action.payload.user;
+                return new UserApplicationRegistered({user:userDataPayload});
+            })
+        );    
         
 }

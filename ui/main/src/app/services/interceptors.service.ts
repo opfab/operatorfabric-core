@@ -12,8 +12,7 @@ import {AuthenticationService} from './authentication.service';
 
 @Injectable()
 export class TokenInjector implements HttpInterceptor {
-    /* istanbul ignore next */
-    constructor(private authenticationService: AuthenticationService) {
+    constructor() {
     }
 
     /* istanbul ignore next */

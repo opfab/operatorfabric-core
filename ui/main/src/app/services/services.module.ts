@@ -19,6 +19,8 @@ import {ConfigService} from "@ofServices/config.service";
 import {I18nService} from "@ofServices/i18n.service";
 import {SettingsService} from "@ofServices/settings.service";
 import { UserService } from './user.service';
+import {ThirdActionService} from "@ofServices/third-action.service";
+import {ConfirmModalComponent} from "../modules/cards/components/action/confirm-modal/confirm-modal.component";
 
 @NgModule({
     imports: [
@@ -39,8 +41,8 @@ import { UserService } from './user.service';
         GuidService,
         FilterService,
         I18nService,
-        UserService
-
+        UserService,
+        ThirdActionService
     ]
 })
 export class ServicesModule {

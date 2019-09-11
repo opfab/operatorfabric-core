@@ -9,7 +9,6 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable} from 'rxjs';
 import {filter, map, withLatestFrom} from 'rxjs/operators';
-import {AuthenticationActionTypes} from '@ofActions/authentication.actions';
 import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {FilterService, FilterType} from "@ofServices/filter.service";
@@ -18,6 +17,7 @@ import {LoadSettingsSuccess, SettingsActionTypes} from "@ofActions/settings.acti
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {Tick, TimeActionTypes} from "@ofActions/time.actions";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
+import { UserActionsTypes } from '@ofStore/actions/user.actions';
 
 @Injectable()
 export class FeedFiltersEffects {
@@ -45,7 +45,7 @@ export class FeedFiltersEffects {
         .pipe(
             // loads card operations only after authentication of a default user ok.
             // tap(v=>console.log("loadFeedFilterOnAuthenticationSuccess: action start", v)),
-            ofType(AuthenticationActionTypes.AcceptLogIn),
+            ofType(UserActionsTypes.UserApplicationRegistered),
             map((action) => {
                 return new InitFilters({filters:this.service.defaultFilters()});
             }));

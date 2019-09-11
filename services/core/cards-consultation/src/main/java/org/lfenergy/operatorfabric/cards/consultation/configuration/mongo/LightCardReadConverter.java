@@ -35,6 +35,8 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
                 .publisherVersion(source.getString("publisherVersion"))
                 .uid(source.getString("uid"))
                 .id(source.getString("_id"))
+                .process(source.getString("process"))
+                .state(source.getString("state"))
                 .processId(source.getString("processId"))
                 .lttd(source.getDate("lttd") == null ? null : source.getDate("lttd").toInstant())
                 .startDate(source.getDate("startDate") == null ? null : source.getDate("startDate").toInstant())
