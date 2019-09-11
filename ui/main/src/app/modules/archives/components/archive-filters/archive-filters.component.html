@@ -6,12 +6,12 @@
 <form [formGroup]="archiveForm">
   <div class="container-fluid">
     <div class="form-row nomarginrow">
-      <div class="col-lg-3 col-md-4 nopaddingrow">
+      <div class="col-lg-3 col-md-4 nopaddingrow" *ngIf="(tags$|async) || (processes$|async)">
         <div class="row" style='margin-right:0;margin-left:0;'>
-          <div class="col-md-6 archive-filter">
+          <div *ngIf="tags$|async" [ngClass]="{'col-md-6': ((tags$|async) && (processes$|async)), 'col-md-12': ((tags$|async) && !(processes$|async)), 'archive-filter': true}">
             <of-multi-filter [parentForm]="archiveForm" filterPath="tags" [values]="tags$|async"></of-multi-filter>
           </div>
-          <div class="col-md-6 archive-filter">
+          <div *ngIf="processes$|async" [ngClass]="{'col-md-6': ((tags$|async) && (processes$|async)), 'col-md-12': (!(tags$|async) && (processes$|async)), 'archive-filter': true}">
             <of-multi-filter [parentForm]="archiveForm" filterPath="process" [values]="processes$|async"></of-multi-filter>
           </div>
         </div>
@@ -36,10 +36,5 @@
         </div>
       </div>
     </div>
-    
-
-
-
-    
   </div>
 </form>

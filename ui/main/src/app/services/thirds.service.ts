@@ -14,9 +14,10 @@ import {TranslateLoader, TranslateService} from "@ngx-translate/core";
 import {catchError, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
-import {AppState} from "../store/index";
-import {LightCard} from "../model/light-card.model";
-import {Third, ThirdMenu} from "@ofModel/thirds.model";
+import {AppState} from "@ofStore/index";
+import {LightCard} from "@ofModel/light-card.model";
+import {Action, Third, ThirdMenu} from "@ofModel/thirds.model";
+import {Card} from "@ofModel/card.model";
 
 @Injectable()
 export class ThirdsService {
@@ -35,33 +36,40 @@ export class ThirdsService {
         this.thirdsUrl = `${environment.urls.thirds}`;
     }
 
-    queryThird(thirdName:string, version:string):Observable<Third> {
+    queryThirdFromCard(card: Card): Observable<Third> {
+        return this.queryThird(card.publisher, card.publisherVersion);
+    }
+
+    queryThird(thirdName: string, version: string): Observable<Third> {
         const key = `${thirdName}.${version}`;
         let third = this.thirdCache.get(key);
-        if(third){
+        if (third) {
             return of(third);
         }
-        return this.fetchThird(thirdName,version)
+        return this.fetchThird(thirdName, version)
             .pipe(
-                tap(t=>Object.setPrototypeOf(t,Third.prototype)),
-                tap(t=>this.thirdCache.set(key,t))
+                tap(t => {
+                    if (t) Object.setPrototypeOf(t, Third.prototype)
+                }),
+                tap(t => {
+                    if (t) this.thirdCache.set(key, t)
+                })
             );
     }
 
     private fetchThird(publisher: string, version: string): Observable<Third> {
         const params = new HttpParams()
             .set("version", version);
-        return this.httpClient.get<Third>(`${this.thirdsUrl}/${publisher}/`,{
+        return this.httpClient.get<Third>(`${this.thirdsUrl}/${publisher}/`, {
             params
         });
     }
 
     queryMenuEntryURL(thirdMenuId: string, thirdMenuVersion: string, thirdMenuEntryId: string): Observable<string> {
-        return this.queryThird(thirdMenuId,thirdMenuVersion).pipe(
-            //filter((third :Third)=>!(!third.menuEntries)),
+        return this.queryThird(thirdMenuId, thirdMenuVersion).pipe(
             switchMap(third => {
                 const entry = third.menuEntries.filter(entry => entry.id === thirdMenuEntryId)
-                if(entry.length==1){
+                if (entry.length == 1) {
                     return entry;
                 } else {
                     throwError(new Error('No such menu entry.'))
@@ -71,7 +79,7 @@ export class ThirdsService {
                 console.log(err)
                 return throwError(err);
             }),
-            map( menuEntry => menuEntry.url)
+            map(menuEntry => menuEntry.url)
         )
     }
 
@@ -79,16 +87,16 @@ export class ThirdsService {
         const params = new HttpParams()
             .set("locale", locale)
             .set("version", version);
-        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/templates/${name}`,{
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/templates/${name}`, {
             params,
             responseType: 'text'
         });
     }
 
-    computeThirdCssUrl(publisher: string, styleName: string, version: string){
+    computeThirdCssUrl(publisher: string, styleName: string, version: string) {
         //manage url character encoding
         const resourceUrl = this.urlCleaner.encodeValue(`${this.thirdsUrl}/${publisher}/css/${styleName}`);
-        const versionParam = new HttpParams().set('version',version);
+        const versionParam = new HttpParams().set('version', version);
         return `${resourceUrl}?${versionParam.toString()}`;
     }
 
@@ -119,35 +127,35 @@ export class ThirdsService {
             return EMPTY;
         }
         const result = previous.pipe(
-            reduce((acc, val) => _.merge(acc,val))
+            reduce((acc, val) => _.merge(acc, val))
         );
 
         return result;
     }
 
-    computeThirdsMenu(): Observable<ThirdMenu[]>{
+    computeThirdsMenu(): Observable<ThirdMenu[]> {
         return this.httpClient.get<Third[]>(`${this.thirdsUrl}/`).pipe(
-            switchMap(ts=>from(ts)),
-            filter((t:Third)=>!(!t.menuEntries)),
-            map(t=>
+            switchMap(ts => from(ts)),
+            filter((t: Third) => !(!t.menuEntries)),
+            map(t =>
                 new ThirdMenu(t.name, t.version, t.i18nLabelKey, t.menuEntries)
             ),
-            reduce((menus:ThirdMenu[],menu:ThirdMenu)=>{
+            reduce((menus: ThirdMenu[], menu: ThirdMenu) => {
                 menus.push(menu);
                 return menus;
-            },[])
+            }, [])
         );
     }
 
-    loadI18nForLightCards(cards:LightCard[]){
+    loadI18nForLightCards(cards: LightCard[]) {
         let observable = from(cards).pipe(
-            map(card=> card.publisher + '###' + card.publisherVersion));
+            map(card => card.publisher + '###' + card.publisherVersion));
         return this.subscribeToLoadI18n(observable);
     }
 
-    loadI18nForMenuEntries(menus:ThirdMenu[]){
+    loadI18nForMenuEntries(menus: ThirdMenu[]) {
         const observable = from(menus).pipe(
-            map(menu=> menu.id + '###' + menu.version)
+            map(menu => menu.id + '###' + menu.version)
         );
         return this.subscribeToLoadI18n(observable);
     }
@@ -159,7 +167,7 @@ export class ThirdsService {
                     ids.push(id);
                     return ids;
                 }, []),
-                switchMap((ids:string[]) => {
+                switchMap((ids: string[]) => {
                     let work = _.uniq(ids);
                     work = _.difference<string>(work, this.loadingI18n)
                     return from(_.difference<string>(work, this.loadedI18n))
@@ -180,9 +188,9 @@ export class ThirdsService {
                             })
                         );
                 }),
-                reduce((acc, val) => _.merge(acc,val)),
+                reduce((acc, val) => _.merge(acc, val)),
                 map(
-                    (result:any) => {
+                    (result: any) => {
                         const langs = this.translate().getLangs();
                         const currentLang = this.translate().currentLang;
                         for (let lang of langs) {
@@ -199,8 +207,8 @@ export class ThirdsService {
                         return true;
                     }
                 ),
-                catchError((error,caught )=>{
-                    console.error('something went wrong during translation',error);
+                catchError((error, caught) => {
+                    console.error('something went wrong during translation', error);
                     return caught;
                 })
             )
@@ -209,11 +217,28 @@ export class ThirdsService {
     private translate(): TranslateService {
         return this.$injector.get(TranslateService);
     }
+
+    fetchActionMapFromLightCard(card: LightCard) {
+        return this.fetchActionMap(card.publisher, card.process, card.state, card.publisherVersion);
+    }
+
+    fetchActionMap(publisher: string, process: string, state: string, apiVersion?: string) {
+        let params: HttpParams;
+        if (apiVersion) params = new HttpParams().set("apiVersion", apiVersion);
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`, {
+            params,
+            responseType: 'text'
+        }).pipe(map((json: string) => {
+            const obj = JSON.parse(json);
+            return new Map<string, Action>(Object.entries(obj));
+        }));
+    }
 }
 
 export class ThirdsI18nLoader implements TranslateLoader {
 
-    constructor(thirdsService: ThirdsService) {}
+    constructor(thirdsService: ThirdsService) {
+    }
 
     getTranslation(lang: string): Observable<any> {
         return of({});

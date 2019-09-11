@@ -7,7 +7,7 @@
 
 import {Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
-import {ThirdsService} from "../../../../services/thirds.service";
+import {ThirdsService} from "@ofServices/thirds.service";
 import {HandlebarsService} from "../../services/handlebars.service";
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from "@angular/platform-browser";
 import {Action, Third} from "@ofModel/thirds.model";
@@ -18,6 +18,8 @@ import {AppState} from "@ofStore/index";
 import {selectAuthenticationState} from "@ofSelectors/authentication.selectors";
 import {UserContext} from "@ofModel/user-context.model";
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
+import {TranslateService} from "@ngx-translate/core";
+import {I18n} from "@ofModel/i18n.model";
 
 @Component({
     selector: 'of-detail',
@@ -35,7 +37,8 @@ export class DetailComponent implements OnInit {
                 private thirds: ThirdsService,
                 private handlebars: HandlebarsService,
                 private sanitizer: DomSanitizer,
-                private store: Store<AppState>) {
+                private store: Store<AppState>,
+                private translate: TranslateService ) {
     }
 
     ngOnInit() {
@@ -70,7 +73,7 @@ export class DetailComponent implements OnInit {
 
     private initializeHandlebarsTemplates() {
 
-        zip(this.thirds.queryThird(this.card.publisher,this.card.publisherVersion),
+        zip(this.thirds.queryThirdFromCard(this.card),
         this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card,null)))
             .subscribe(
                 ([third,html]) => {
@@ -135,9 +138,25 @@ export class DetailComponent implements OnInit {
         } else {
             button.children[0].classList.add('fa', 'fa-warning', 'text-dark');
         }
+
+        button.children[0].textContent=this.handelActionButtonText(action.label);
+
         button.addEventListener('click', (event: Event) => {
             alert(`${actionId} was triggered.\nAction handling is not yet implemented`);
         });
     }
 
+    private handelActionButtonText(label: I18n) {
+        if (label) {
+            if(this.card){
+                console.log('card exists!');
+            }else{
+                console.log(`card doesn't exist yet`);
+            }
+           return this.translate.instant(
+               `${this.card.publisher}.${this.card.publisherVersion}.${label.key}`
+               , label.parameters);
+        }
+        return 'Undefined';
+    }
 }

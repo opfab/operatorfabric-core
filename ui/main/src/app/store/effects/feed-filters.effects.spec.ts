@@ -21,6 +21,7 @@ import {map} from "rxjs/operators";
 import {configInitialState} from "@ofStates/config.state";
 import {feedInitialState} from "@ofStates/feed.state";
 import {Tick, TickPayload} from "@ofActions/time.actions";
+import {emptyAppState4Test} from "@tests/helpers";
 import moment = require("moment-timezone");
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
@@ -29,19 +30,7 @@ describe('FeedFilterEffects', () => {
     let effects: FeedFiltersEffects;
     let localMockFeedFilterService:SpyObj<FilterService>;
     let mockStore:SpyObj<Store<AppState>>;
-    let emptyAppState: AppState = {
-        router: null,
-        feed: feedInitialState,
-        timeline: null,
-        authentication: null,
-        card: null,
-        menu: null,
-        config: null,
-        settings: null,
-        time: null,
-        archive: null,
-        user: null
-    };
+    let emptyAppState: AppState = emptyAppState4Test;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

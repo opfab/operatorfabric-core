@@ -17,23 +17,12 @@ import {
 } from "@ofSelectors/authentication.selectors";
 import {Message} from "@ofModel/message.model";
 import {Guid} from "guid-typescript";
+import {emptyAppState4Test} from "@tests/helpers";
 
 describe('AuthenticationSelectors', () => {
 
     const referenceDate = new Date();
-    let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: null,
-        card: null,
-        menu: null,
-        config: null,
-        settings: null,
-        time: null,
-        archive: null,
-        user: null
-    }
+    let emptyAppState: AppState = emptyAppState4Test;
 
     let loadedConfigState: AuthState = {
         ...authInitialState,
@@ -63,7 +52,7 @@ describe('AuthenticationSelectors', () => {
     });
 
     describe('manage loaded auth', () => {
-        it('with names',()=> {
+        it('with names', () => {
             let testAppState = {...emptyAppState, authentication: loadedConfigState};
             expect(selectAuthenticationState(testAppState)).toEqual(loadedConfigState);
             expect(selectExpirationTime(testAppState)).toEqual(referenceDate.getTime());
@@ -73,9 +62,9 @@ describe('AuthenticationSelectors', () => {
             expect(selectUserNameOrIdentifier(testAppState)).toEqual('John Doe');
         });
 
-        it('without names',()=> {
-            let testAppState = {...emptyAppState, authentication: {...loadedConfigState,firstName:null}};
-            expect(selectAuthenticationState(testAppState)).toEqual({...loadedConfigState,firstName:null});
+        it('without names', () => {
+            let testAppState = {...emptyAppState, authentication: {...loadedConfigState, firstName: null}};
+            expect(selectAuthenticationState(testAppState)).toEqual({...loadedConfigState, firstName: null});
             expect(selectExpirationTime(testAppState)).toEqual(referenceDate.getTime());
             expect(selectCode(testAppState)).toEqual('test-code');
             expect(selectMessage(testAppState)).toEqual(null);
