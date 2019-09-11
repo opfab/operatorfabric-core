@@ -6,7 +6,7 @@
 
 = OperatorFabric Authentication Service
 David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: 0.8.1.RELEASE
+:revnumber: 0.9.1.SNAPSHOT
 :revdate: September 11, 2019
 :imagesdir: images
 :sectnums:
