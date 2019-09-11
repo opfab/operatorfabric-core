@@ -24,23 +24,8 @@ export class UserService {
         return this.httpClient.get<User>(`${this.userUrl}/users/${user}`);
     }
 
-    askCreateUser(token : string, userData : User) : Observable<User> {
+    askCreateUser(userData : User) : Observable<User> {
         console.log("user in askCreateUser service : " + userData.login);
-
-        if (!!token) {
-            // const postData = new FormData();
-            const postData = new URLSearchParams();
-            postData.append('token', token);
-
-
-            console.log("userData : " + userData);
-
-
-            const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
-
-            // return this.httpClient.put<User>(`${this.userUrl}/users/${user}`, userData, {headers: headers});
-            return this.httpClient.put<User>(`${this.userUrl}/users/${userData.login}`, userData);
-        }
-        return of(null);
+        return this.httpClient.put<User>(`${this.userUrl}/users/${userData.login}`, userData);
     }
 }

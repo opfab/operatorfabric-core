@@ -27,7 +27,8 @@ describe('ConfigSelectors', () => {
         config: null,
         settings: null,
         time: null,
-        archive: null
+        archive: null,
+        user: null
     }
 
     let loadedConfigState: ConfigState = {

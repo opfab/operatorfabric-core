@@ -32,48 +32,11 @@ export class UserEffects {
                             const userData : User = new User(userPayload.identifier, userPayload.firstName, userPayload.lastName);
                             this.store.dispatch(new UserApplicationNotRegistered({error :error, user : userData }));
                             return caught;
-                            // return new UserApplicationNotRegistered({error :error, user : userPayload.identifier });
                         })    
-                        // catchError((error) => {
-                        //     console.log("askUserApplicationRegistered ---------", error, "payload.identifier : " + userPayload.identifier);
-                        //     // this.store.dispatch(new UserApplicationNotRegistered({error :error, user : userPayload.identifier }));
-                        //     // return caught;
-                        //     return new UserApplicationNotRegistered({error :error, user : userPayload.identifier });
-                        // })                    
+            
                     );
             })            
         ); 
-
-
-    // code à refactorer
-    // map((user: User) => new UserApplicationRegistered({user})),
-    //         catchError((httpResponse, caught) => {
-    //             let message, key;
-    //             let params = new Map<string>()
-    //             let isFirstTime = false;
-    //             switch (httpResponse.status) {
-    //                 case 401:
-    //                     isFirstTime = true;
-    //                     message = 'error 401 : in this case, the user is not registered';
-    //                     break;
-    //                 case 0:
-    //                 case 500:
-    //                     message = 'User service currently unavailable';
-    //                     key = 'user.service.error.unavailable';
-    //                     break;
-    //                 default:
-    //                     message = 'Unexpected error';
-    //                     key = 'user.service.error.unexpected';
-    //                     params['error'] = httpResponse.message;
-    //             }
-    //             console.error(message, httpResponse);
-    //             if (isFirstTime) {
-    //                 const user = new User(payload.identifier, payload.firstName, payload.lastName);
-    //                 return of(new CreateUserApplication({user}));
-    //             }
-    //             return of(new RejectLogIn({ error: new Message(message, MessageLevel.ERROR, new I18n(key, params)) }));            
-    //         })
-
 
     @Effect()
     transitionCreateUserApplication: Observable<UserActions> = this.actions$
@@ -92,7 +55,7 @@ export class UserEffects {
             ofType(UserActionsTypes.CreateUserApplication), 
             switchMap((action: CreateUserApplication) => {
                 const user = action.payload.user;
-                return this.userService.askCreateUser(AuthenticationService.extractToken(), user)
+                return this.userService.askCreateUser(user)
                     .pipe(
                         map(user => {
                             console.log("ok creation user " + user.login);

@@ -35,7 +35,8 @@ describe('TypeAheadSettingsComponent', () => {
         config: configInitialState,
         settings: null,
         time: null,
-        archive: null
+        archive: null,
+        user: null
     };
 
   beforeEach(async(() => {

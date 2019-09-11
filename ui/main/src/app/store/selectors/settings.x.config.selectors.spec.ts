@@ -21,8 +21,8 @@ describe('SettingsXConfigSelectors', () => {
         config: null,
         settings: null,
         time: null,
-        archive: null
-
+        archive: null,
+        user: null
     }
 
     let loadedSettingsState: SettingsState = {
