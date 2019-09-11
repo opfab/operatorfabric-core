@@ -247,7 +247,7 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  xit('check setTicksAndClusterize function when clusterConf is an array ' +
+  it('check setTicksAndClusterize function when clusterConf is an array ' +
     'and formatTicks is an array', () => {
     fixture.detectChanges();
     component.clusterConf = [ { width: 2200, conf: {
