@@ -18,6 +18,7 @@ import {FilterService} from "@ofServices/filter.service";
 import {ConfigService} from "@ofServices/config.service";
 import {I18nService} from "@ofServices/i18n.service";
 import {SettingsService} from "@ofServices/settings.service";
+import { UserService } from './user.service';
 import {ThirdActionService} from "@ofServices/third-action.service";
 import {ConfirmModalComponent} from "../modules/cards/components/action/confirm-modal/confirm-modal.component";
 
@@ -40,8 +41,8 @@ import {ConfirmModalComponent} from "../modules/cards/components/action/confirm-
         GuidService,
         FilterService,
         I18nService,
+        UserService,
         ThirdActionService
-
     ]
 })
 export class ServicesModule {

@@ -20,8 +20,9 @@ import {
     PatchSettingsSuccess,
     SettingsActionTypes
 } from "@ofActions/settings.actions";
-import {AcceptLogIn, AuthenticationActionTypes} from "@ofActions/authentication.actions";
 import {SettingsService} from "@ofServices/settings.service";
+import { UserActionsTypes } from '@ofStore/actions/user.actions';
+import { AcceptLogIn } from '@ofStore/actions/authentication.actions';
 
 // those effects are unused for the moment
 @Injectable()
@@ -51,7 +52,7 @@ export class SettingsEffects {
 
     @Effect()
     loadSettingsOnLogin: Observable<Action> = this.actions$.pipe(
-      ofType<AcceptLogIn>(AuthenticationActionTypes.AcceptLogIn),
+      ofType<AcceptLogIn>(UserActionsTypes.UserApplicationRegistered),
       map(a=>new LoadSettings())
     );
 

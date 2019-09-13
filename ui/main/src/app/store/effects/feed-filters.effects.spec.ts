@@ -9,7 +9,6 @@ import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
 import {FeedFiltersEffects} from "@ofEffects/feed-filters.effects";
 import {Filter} from "@ofModel/feed-filter.model";
-import {AcceptLogIn, PayloadForSuccessfulAuthentication} from "@ofActions/authentication.actions";
 import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
 import {LoadSettingsSuccess} from "@ofActions/settings.actions";
 import {of} from "rxjs";
@@ -25,6 +24,8 @@ import {emptyAppState4Test} from "@tests/helpers";
 import moment = require("moment-timezone");
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
+import { User } from '@ofModel/user.model';
+import { UserApplicationRegistered } from '@ofStore/actions/user.actions';
 
 describe('FeedFilterEffects', () => {
     let effects: FeedFiltersEffects;
@@ -49,7 +50,7 @@ describe('FeedFilterEffects', () => {
     describe('loadFeedFilterOnAuthenticationSuccess', () => {
 
         it('should return a InitFilter Action', () => {
-            const localActions$ = new Actions(hot('a', {a: new AcceptLogIn(new PayloadForSuccessfulAuthentication(null, null, null, null))}));
+            const localActions$ = new Actions(hot('a', {a: new UserApplicationRegistered({user: new User("userRegisterd", "aa", "bb")})}));
 
             const defaultFilters= new Map();
             defaultFilters.set('testFilter',

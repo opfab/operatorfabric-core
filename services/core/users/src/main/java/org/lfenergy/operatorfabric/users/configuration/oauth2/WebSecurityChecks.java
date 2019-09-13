@@ -7,10 +7,12 @@
 
 package org.lfenergy.operatorfabric.users.configuration.oauth2;
 
-import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * WebSecurityChecks
@@ -24,8 +26,13 @@ import org.springframework.stereotype.Component;
 public class WebSecurityChecks {
 
     public boolean checkUserLogin(Authentication authentication, String login) {
+    	
         User user = (User) authentication.getPrincipal();
+    	
+    	if (log.isDebugEnabled())
+    		log.debug("login from the principal " + user.getLogin() + " login parameter " + login); 
+    	
         return user.getLogin().equals(login);
     }
-
+      
 }

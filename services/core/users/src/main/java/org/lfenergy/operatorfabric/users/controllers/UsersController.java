@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -31,11 +33,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UsersController implements UsersApi {
 
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
     public static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
     public static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
+    
+    public static final String USER_CREATED = "User %s is created";
+    public static final String USER_UPDATED = "User %s is updated";
+    
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -52,14 +59,21 @@ public class UsersController implements UsersApi {
     @Override
     public SimpleUser createUser(HttpServletRequest request, HttpServletResponse response, SimpleUser user) throws Exception {
         boolean created = false;
+        String login = user.getLogin();
+        
         if(userRepository.findById(user.getLogin()).orElse(null)==null){
             response.addHeader("Location", request.getContextPath() + "/users/" + user.getLogin());
             response.setStatus(201);
             created = true;
+            log.debug(String.format(USER_CREATED, login));
+        } else {
+        	log.debug(String.format(USER_UPDATED, login));
         }
+        
         userRepository.save(new UserData(user));
         if(!created)
-            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),user.getLogin()));
+            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),login));
+        
         return user;
     }
 

@@ -20,7 +20,8 @@ describe('ArchiveSelectors', () => {
         config: null,
         settings: null,
         time: null,
-        archive: null
+        archive: null,
+        user: null
     };
     const filters = new Map<string, string[]>();
     filters.set('endBusnDate', ['1566303137']);
