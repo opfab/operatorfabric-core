@@ -138,6 +138,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       summary: []
     };
     this.underDayPeriod = false;
+    this.oldWidth = 0;
   }
 
   // Domain
@@ -200,6 +201,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   // Circle
   @Input() circleDiameter;
   // TICKS
+  @Output() widthChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() centeredOnTicks;
   @Input() clusterTicksToTicks;
   @Input() formatTicks;
@@ -211,6 +213,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public formatLevel: string;
   public underDayPeriod: boolean;
   public dateFirstTick: string;
+  public oldWidth: number;
   // MUST
   @ViewChild(ChartComponent, { read: ElementRef }) chart: ElementRef;
   public dims: ViewDimensions;
@@ -278,6 +281,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.yScale = this.getYScale(this.yDomain, this.dims.height);
     this.transform = `translate(${ this.dims.xOffset } , ${ this.margin[0] })`;
     this.transform2 = `translate(0, ${ this.dims.height + 15})`;
+    if (this.oldWidth !== this.dims.width) {
+      this.oldWidth = this.dims.width;
+      this.widthChange.emit(true);
+    }
     console.log('update');
   }
 
@@ -1018,6 +1025,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                   ' - ' + this.timeService.predefinedFormat(moment(array[j].date), 'titleHourInsideTooltips') + ' : ' + array[j].summary;
               newCircle.summary.push(summaryDate);
               j++;
+              console.log('KKK')
             }
             if (feedIt) {
               this.dataClustered[y].push(_.cloneDeep(newCircle));

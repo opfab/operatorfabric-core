@@ -54,7 +54,7 @@
                              [valueDomain]="myDomain"
                              [showGridLines]="showGridLines"
                              [enableZoom]="enableZoom"
-                             [zoomOnButton]="true"
+                             [zoomOnButton]="zoomOnButton"
                              [enableDrag]="enableDrag"
                              [realTimeBar]="realTimeBar"
                              [clusterConf]="ticksConf"
@@ -64,6 +64,7 @@
                              [followClockTick]="followClockTick"
                              [formatTicks]="formatTicks"
                              [formatTooltipsDate]="formatTooltipsDate"
-                             (zoomChange)="applyNewZoom($event)">
+                             (zoomChange)="applyNewZoom($event)"
+                             (widthChange)="autonomousTicksConf($event)">
   </of-custom-timeline-chart>
 </div>

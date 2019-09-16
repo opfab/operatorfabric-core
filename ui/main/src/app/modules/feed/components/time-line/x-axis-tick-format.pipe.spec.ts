@@ -172,7 +172,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         expect(formatPipe.transform(start, 'Sec')).toEqual(startCopy.format('ddd DD MMM'));
         start.hours(1);
         startCopy.hours(1);
-        expect(formatPipe.transform(start, 'Min')).toEqual(startCopy.format('HH'));
+        expect(formatPipe.transform(start, 'Min')).toEqual(startCopy.format('HH') + 'h');
         expect(formatPipe.transform(start, 'Sec')).toEqual(startCopy.format('HH') + 'h');
         start.minute(1);
         startCopy.minutes(1);

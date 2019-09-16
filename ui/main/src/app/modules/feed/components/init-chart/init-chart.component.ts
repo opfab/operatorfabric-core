@@ -48,6 +48,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
   // options of Timeline
   public enableDrag: boolean;
   public enableZoom: boolean;
+  public zoomOnButton: boolean;
   public autoScale: boolean;
   public animations: boolean;
   public showGridLines: boolean;
@@ -63,15 +64,16 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public followClockTickMode: boolean;
   public firstMoveStartOfUnit: boolean;
 
-  // 3 ticks add before domain on the visualization define by the conf
+  // 3 ticks added before domain start on the visualization define by the conf
   public firstMove: boolean;
-  public startDomainWith3Ticks: boolean;
-  public startDomainWith3TicksMode: boolean;
+  public homeDomainExtraTicks: boolean;
+  public homeDomainExtraTicksMode: boolean;
 
   // ticks
   public formatTicks: any;
   public ticksConf: any; // could make interface
   public formatTooltipsDate: string; // could make interface
+  public autonomousTicks: boolean;
 
   // buttons
   public buttonTitle: string;
@@ -96,6 +98,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.myDomain = undefined;
     this.enableDrag = false;
     this.enableZoom = false;
+    this.zoomOnButton = false;
     this.autoScale = false;
     this.animations = false;
     this.showGridLines = false;
@@ -250,6 +253,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
       if (this.conf.enableZoom) {
         this.enableZoom = true;
       }
+      if (this.conf.zoomOnButton) {
+        this.zoomOnButton = true;
+      }
       if (this.conf.autoScale) {
         this.autoScale = true;
       }
@@ -279,7 +285,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
 
     // Feed zoom buttons Array by the conf received
     this.buttonList = [];
-    if (this.confZoom) {
+    if (this.confZoom && this.confZoom.length > 0) {
       for (const elem of this.confZoom) {
         const tmp = _.cloneDeep(elem);
         this.buttonList.push(tmp);
@@ -289,10 +295,8 @@ export class InitChartComponent implements OnInit, OnDestroy {
       this.buttonTitle = 'W';
       // forward configuration object
       this.forwardConf = forwardWeekConf;
-      // ticks configuration object
-      this.ticksConf = {
-        hour: 4,
-      };
+      // use autonomous ticks conf
+      this.autonomousTicks = true;
       // manual conf : create two moment for define start and end of domain
       this.zoomButtonsActive = true;
       const startDomain = moment();
@@ -325,18 +329,23 @@ export class InitChartComponent implements OnInit, OnDestroy {
       this.followClockTick = true;
       this.followClockTickMode = true;
     }
-    if (conf.startDomainWith3Ticks) {
-      this.startDomainWith3Ticks = true;
-      this.startDomainWith3TicksMode = true;
+    if (conf.homeDomainExtraTicks) {
+      this.homeDomainExtraTicks = true;
+      this.homeDomainExtraTicksMode = true;
+    }
+    if (conf.firstMoveStartOfUnit) {
+      this.firstMoveStartOfUnit = true;
+    }
+    if (conf.ticksConf) {
+      this.ticksConf = _.cloneDeep(conf.ticksConf);
+    } else if (conf.autonomousTicks) {
+      this.autonomousTicks = true;
     }
     if (conf.formatTicks) {
       this.formatTicks = _.cloneDeep(conf.formatTicks);
     }
     if (conf.formatTooltipsDate) {
       this.formatTooltipsDate = conf.formatTooltipsDate;
-    }
-    if (conf.firstMoveStartOfUnit) {
-      this.firstMoveStartOfUnit = true;
     }
     if (conf.buttonTitle) {
       this.buttonTitle = conf.buttonTitle;
@@ -346,9 +355,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
     }
     if (conf.backwardConf) {
       this.backwardConf = _.cloneDeep(conf.backwardConf);
-    }
-    if (conf.ticksConf) {
-      this.ticksConf = _.cloneDeep(conf.ticksConf);
     }
   }
 
@@ -365,9 +371,10 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.followClockTick = false;
     this.followClockTickMode = false;
     this.firstMoveStartOfUnit = false;
-    this.startDomainWith3Ticks = false;
-    this.startDomainWith3TicksMode = false;
+    this.homeDomainExtraTicks = false;
+    this.homeDomainExtraTicksMode = false;
     this.backwardConf = undefined;
+    this.autonomousTicks = false;
     this.formatTicks = undefined;
     this.formatTooltipsDate = undefined;
     if (conf) {
@@ -383,6 +390,139 @@ export class InitChartComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  /**
+   * calculate the domain in second
+   * optain unit and value suits for actual domain and screen size
+   * set the ticksConf with the unit and value
+   */
+  autonomousTicksConf(): void {
+    if (this.autonomousTicks) {
+      const domainInSecond = (this.myDomain[1] - this.myDomain[0]) / 1000;
+      const screenMultiplier = this.getScreenMultiplier();
+      const domainInUnit = this.getDomainInUnit(domainInSecond, screenMultiplier);
+      const unit = domainInUnit[0];
+      let unitValue = 1;
+      if (unit === 'second' || unit === 'day' || unit === 'week') {
+        unitValue = this.calculationUnitValue(domainInUnit, false);
+      } else {
+        unitValue = this.calculationUnitValue(domainInUnit, true);
+      }
+      this.ticksConf = {};
+      // Final ticks conf
+      this.ticksConf[unit] = unitValue;
+    }
+  }
+
+  /**
+   * calculate a screen multiplier
+   * return the number of loop need for obtain a screen size inferior to 550 by subtracting 100
+   */
+  getScreenMultiplier(): number {
+    let screenMultiplier = 0;
+    // get current window size
+    let screenSize = window.innerWidth;
+    while(550 < screenSize) {
+      screenMultiplier++;
+      screenSize = screenSize - 100;
+    }
+    return screenMultiplier
+  }
+
+  /**
+   * define list for each time unit corresponding to their:
+   * names, unit on seconds, maximal number unit accepted, number of unit multipled by screenMultiplier
+   * return unit and domain value on this unit
+   * @param domainInSecond domain value in second
+   * @param screenMultiplier screen multiplier value
+   */
+  getDomainInUnit(domainInSecond: number, screenMultiplier: number): object {
+    const unitList = ['second', 'minute', 'hour', 'day', 'week', 'month', 'year'];
+    const unitsOnSecond = [1, 60, 3600, 86400, 604800, 2629746, 31536000];
+    // limit define by unit
+    const unitOnMax = [180, 180, 72, 105, 70, 72, 100];
+    // booster for add unit
+    const unitToAdd = [60, 60, 24, 1, 4, 10, 1];
+    let domainInUnit = ['year', 1000];
+    let first = true;
+    for (let i = 0; i < unitsOnSecond.length; i++) {
+      // find the right unit 
+      if (first && domainInSecond / unitsOnSecond[i] < unitOnMax[i] + (screenMultiplier * unitToAdd[i])) {
+        const unit = unitList[i];
+        domainInUnit = [
+          unit,
+          domainInSecond/unitsOnSecond[i]
+        ];
+        first = false;
+      }
+    }
+    return domainInUnit;
+  }
+
+  /**
+   * return value corresponding to the closest step of this unit time
+   * @param domainInUnit unit and domain value in this unit
+   * @param half divise by half the final value
+   */
+  calculationUnitValue(domainInUnit: Object, half: boolean): number {
+    let divisor = 16;
+    if (half) {
+      divisor = 32;
+    }
+    let value = 2 * (domainInUnit[1] / (window.innerWidth / 1000)) / divisor;
+    value = this.roundByUnitStep(value, domainInUnit[0]);
+    return value;
+  }
+
+  /**
+   * each time unit has a list of numbers corresponding to values addable on this unit
+   * return the closest step value
+   * @param value result optained
+   * @param unit time unit
+   */
+  roundByUnitStep(value: number, unit: string): number {
+    let unitStep = [];
+    switch (unit)  {
+      case 'second': {
+        unitStep = [1, 2, 5, 10, 15, 20, 30];
+        break;
+      }
+      case 'minute': {
+        unitStep = [1, 2, 5, 10, 15, 20, 30];
+        break;
+      }
+      case 'hour': {
+        unitStep = [1, 2, 3, 6, 12];
+        break;
+      }
+      case 'day': {
+        unitStep = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+        break;
+      }
+      case 'week': {
+        unitStep = [1, 2, 4, 6, 8];
+        break;
+      }
+      case 'month': {
+        unitStep = [1, 2, 3, 4, 6, 12];
+        break;
+      }
+      case 'year': {
+        unitStep = [1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 50, 100];
+        break;
+      }
+    }
+    let stepValue = 1;
+    let absMin = Math.abs(value - unitStep[0]);
+    for (let i = 1; i < unitStep.length; i++) {
+      const tmp = Math.abs(value - unitStep[i]);
+      if (absMin > tmp) {
+        absMin = tmp
+        stepValue = unitStep[i];
+      }
+    }
+    return stepValue;
   }
 
   /**
@@ -431,9 +571,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * @param endDomain new end of domain
    */
   homeClick(startDomain: number, endDomain: number): void {
-    // startDomainWith3TicksMode is define on the zoom level
-    if (this.startDomainWith3TicksMode) {
-      this.startDomainWith3Ticks = true;
+    // homeDomainExtraTicksMode is define on the zoom level
+    if (this.homeDomainExtraTicksMode) {
+      this.homeDomainExtraTicks = true;
     }
     this.setStartAndEndDomain(startDomain, endDomain);
     this.buttonHomeActive = false;
@@ -478,7 +618,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
   /**
    * parse ticks conf and subtract each unit's value defined
    * special case for the unit date
-   * return a new domain start value with 3 ticks subtracted to home domain
+   * return a new domain start value with 3 ticks added at begin of home domain
    * @param newStart domain start
    */
   subtract3Ticks(newStart: number): number {
@@ -513,7 +653,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
         });
       }
     }
-    this.startDomainWith3Ticks = false;
+    this.homeDomainExtraTicks = false;
     const startDomain = tmp.valueOf();
     return startDomain;
   }
@@ -526,14 +666,14 @@ export class InitChartComponent implements OnInit, OnDestroy {
    */
   setStartAndEndDomain(startDomain: number, endDomain: number): void {
     let valueStart = startDomain;
-
-    // set domain start value 3 ticks
-    if (this.startDomainWith3Ticks) {
+    // set domain start value 3 ticks before
+    if (this.homeDomainExtraTicks && !this.autonomousTicks) {
       valueStart = this.subtract3Ticks(startDomain);
     }
 
     const valueEnd = endDomain;
     this.myDomain = [valueStart, valueEnd];
+    this.autonomousTicksConf();
     // apply zoom on feed
     this.store.dispatch(new ApplyFilter({
       name: FilterType.TIME_FILTER, active: true,
@@ -557,7 +697,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
       this.followClockTick = false;
     }
     if (this.firstMove) {
-      if (this.startDomainWith3TicksMode) {
+      if (this.homeDomainExtraTicksMode) {
         startDomain = moment(this.buttonHome[0]);
         endDomain = moment(this.buttonHome[1]);
       }

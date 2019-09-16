@@ -99,7 +99,7 @@ export class XAxisTickFormatPipe implements PipeTransform {
             if (date.hour() === 0) {
               return this.timeService.predefinedFormat(date, 'dateOnDay');
             } else {
-              return this.timeService.predefinedFormat(date, 'hoursOnly');
+              return this.timeService.predefinedFormat(date, 'hoursOnly') + 'h';
             }
           }
         }

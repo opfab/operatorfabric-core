@@ -13,6 +13,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {catchError} from "rxjs/operators";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
+import * as moment from 'moment';
 
 @Component({
     selector: 'of-cards',
@@ -36,6 +37,12 @@ export class FeedComponent implements OnInit, AfterViewInit {
         this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);
         this.store.select(buildConfigSelector('feed.timeline.hide'))
             .subscribe(v=>this.hideTimeLine = v);
+    
+            moment.updateLocale('en', { week: {
+                dow: 6, // First day of week is Saturday
+                doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
+            }});
+    
     }
 
 

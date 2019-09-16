@@ -66,7 +66,9 @@ describe('InitChartComponent', () => {
 
   it('should test homeClick & subtract3Ticks functions with a date conf', () => {
     fixture.detectChanges();
-    component.startDomainWith3TicksMode = true;
+    component.homeDomainExtraTicksMode = true;
+    // autonomousTicks was set to true cause confZoom wasn't initialized
+    component.autonomousTicks = false;
     component.ticksConf = {date: [1,16]};
     const tmp = moment();
     tmp.date(18);
@@ -79,7 +81,7 @@ describe('InitChartComponent', () => {
 
   it('should test homeClick & subtract3Ticks functions with a hour conf', () => {
     fixture.detectChanges();
-    component.startDomainWith3TicksMode = true;
+    component.homeDomainExtraTicksMode = true;
     component.ticksConf = {hour: 2};
     const tmp = moment();
     tmp.date(4).hour(0);
@@ -217,7 +219,7 @@ describe('InitChartComponent', () => {
 
   it('check moveDomain function, test when first move is used with 4 ticks preview option', () => {
     fixture.detectChanges();
-    component.startDomainWith3TicksMode = true;
+    component.homeDomainExtraTicksMode = true;
     component.firstMove = true;
     const tmpStart = moment(component.myDomain[0]);
     const tmpEnd = moment(component.myDomain[1]);
@@ -324,6 +326,42 @@ describe('InitChartComponent', () => {
     expect(component.formatTicks).toEqual('DD/MM/YY');
     expect(component.formatTooltipsDate).toEqual('DD/MM/YY');
     expect(component.buttonTitle).toEqual(saveTitle);
+  });
+/*
+  // domain duration equal to 7 days, and screen width = 1027
+  it('should create timeline with another conf, ' +
+    'with autonomous ticks positionning', () => {
+    fixture.detectChanges();
+    console.log(component.myDomain, 'width', window.innerWidth);
+    const fakeConf = {
+      centeredOnTicks: true,
+      clusterTicksToTicks: true,
+      buttonTitle: 'USE',
+      autonomousTicks: true,
+      followClockTick: false,
+      firstMoveStartOfUnit: false,
+      homeDomainExtraTicks: false,
+    };
+    component.readZoomConf(fakeConf);
+    component.autonomousTicksConf();
+    fixture.detectChanges();
+    expect(component.ticksConf).toEqual({hour: 12});
+  });
+*/
+  it('should create timeline with another conf', () => {
+    fixture.detectChanges();
+    const fakeConf = {
+      centeredOnTicks: true,
+      clusterTicksToTicks: true,
+      buttonTitle: 'W',
+      ticksConf: {hour:4},
+      followClockTick: true,
+      firstMoveStartOfUnit: true,
+      homeDomainExtraTicks: true,
+    };
+    component.readZoomConf(fakeConf);
+    fixture.detectChanges();
+    expect(component).toBeTruthy();
   });
 
   it('should create timeline with another conf', () => {
