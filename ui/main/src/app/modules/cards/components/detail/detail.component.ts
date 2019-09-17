@@ -40,8 +40,7 @@ export class DetailComponent implements OnInit {
 
     ngOnInit() {
         this.initializeHrefsOfCssLink();
-        this.store.select(cardSelectors.selectCardStateSelected).subscribe((card) => {
-            this.card = card;
+        this.store.select(cardSelectors.selectCardStateSelected).subscribe(() => {
             this.initializeHandlebarsTemplates();
         });
         this.store.select(selectAuthenticationState).subscribe(authState => {
