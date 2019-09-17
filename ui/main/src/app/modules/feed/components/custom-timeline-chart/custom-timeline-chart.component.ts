@@ -249,8 +249,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   ngOnInit(): void {
     this.updateRealTimeDate();
     // set inside ngx-charts library verticalSpacing variable to 10
-    // Library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks
-    for (let i = 0; i < 100; i++) {
+    // library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks
+    // Divided by 4, but can be another value
+    // searching to loop lessiest time possible but loop enough time for use more than usable space
+    for (let i = 0; i < (window.innerWidth / 50); i++) {
       this.xTicksOne.push(moment(i));
       this.xTicksTwo.push(moment(i));
     }
@@ -548,7 +550,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * - push the end of domain
    * @param domain
    */
-  setXTicksValue(domain): void { // add width and make différent treatment (responsive) +l'autre
+  setXTicksValue(domain): void {
     const startDomain = moment(domain[0]);
     this.xTicks.push(startDomain);
     const nextUnit = moment(startDomain);
@@ -817,7 +819,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   /**
    * set format level by configuration passed on formatTicks:
    * when formatTicks is an Array, formatLevel become format value of the more
-   * hight width property smaller than window width
+   * hight width_min property smaller than window width
    * other case just use formatTicks (string)
    */
   selectFormatTicks() {
@@ -825,13 +827,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     if (Array.isArray(this.formatTicks)) {
       this.formatTicks.forEach(oneSet => {
         if (keepGoing) {
-          if (oneSet.width <= window.innerWidth) {
+          if (oneSet.width_min <= window.innerWidth) {
             this.formatLevel = _.cloneDeep(oneSet.formatTicks);
             keepGoing = false;
           }
         }
       });
-      // if width: 0 wasn't set and screen width is more little than smallest width configuration
+      // if width_min: 0 wasn't set and screen width is more little than smallest width_min configuration
       if (keepGoing) {
         this.formatLevel = _.cloneDeep(this.formatTicks[this.formatTicks.length - 1].formatTicks);
       }
@@ -843,7 +845,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   /**
    * set cluster level by configuration passed on clusterConf:
    * when clusterConf is an Array, clusterLevel become the tick conf of the more
-   * hight width property smaller than window width
+   * hight width_min property smaller than window width
    * other case just use clusterConf (Object)
    * @param domain
    */
@@ -853,13 +855,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     if (this.clusterConf && Array.isArray(this.clusterConf)) {
       this.clusterConf.forEach(oneSet => {
         if (keepGoing) {
-          if (oneSet.width <= window.innerWidth) {
+          if (oneSet.width_min <= window.innerWidth) {
             this.clusterLevel = _.cloneDeep(oneSet.conf);
             keepGoing = false;
           }
         }
       });
-      // if width: 0 wasn't set and screen width is more little than smallest width configuration
+      // if width_min: 0 wasn't set and screen width is more little than smallest width_min configuration
       if (keepGoing) {
         this.clusterLevel = _.cloneDeep(this.clusterConf[this.clusterConf.length - 1].conf);
       }
@@ -1025,7 +1027,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                   ' - ' + this.timeService.predefinedFormat(moment(array[j].date), 'titleHourInsideTooltips') + ' : ' + array[j].summary;
               newCircle.summary.push(summaryDate);
               j++;
-              console.log('KKK')
             }
             if (feedIt) {
               this.dataClustered[y].push(_.cloneDeep(newCircle));

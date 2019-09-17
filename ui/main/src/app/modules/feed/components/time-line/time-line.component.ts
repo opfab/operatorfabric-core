@@ -194,8 +194,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
         // TICKS CONF
 
-
-        const myticksResponsiveConf = [{ width: 1400,
+        const myticksResponsiveConf = [{ width_min: 1400,
             conf: {
                 year: 0,
                 month: 0,
@@ -205,7 +204,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 minute: 0,
                 second: 0,
             }
-        },{ width: 1100,
+        }, { width_min: 1100,
             conf: {
                 year: 0,
                 month: 0,
@@ -216,7 +215,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 second: 0,
             }
         }, {
-            width: 800,
+            width_min: 0,
             conf: {
                 year: 0,
                 month: 0,
@@ -286,7 +285,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             buttonTitle: 'USE',
             forwardConf: forwardDayConf,
             backwardConf: forwardDayConf,
-            //ticksConf: ticksInUseConf,
+            // ticksConf: ticksInUseConf,
             autonomousTicks: true,
             followClockTick: false,
             firstMoveStartOfUnit: false,
@@ -315,8 +314,19 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             ticksConf: ticks4HoursConf,
             followClockTick: true,
             firstMoveStartOfUnit: true,
-            startDomainWith3Ticks: true,
-        },
+            homeDomainExtraTicks: true,
+            },
+        /*{
+            startDomain: startDomain.valueOf(),
+            endDomain: endDomain.valueOf(),
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
+            buttonTitle: 'USE',
+            forwardConf: forwardDayConf,
+            ticksConf: myticksResponsiveConf, // myticksYearConf,
+            followClockTick: false,
+            firstMoveStartOfUnit: false,
+        },*/
         {
             startDomain: startDomain2.valueOf(),
             endDomain: endDomain2.valueOf(),
@@ -407,8 +417,6 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
         // Test bug
         // tmpMoment.date(2);
-
-
         const newDate = _.cloneDeep(tmpMoment);
         Object.keys(conf).forEach(key => {
             if (key === 'startOf') {

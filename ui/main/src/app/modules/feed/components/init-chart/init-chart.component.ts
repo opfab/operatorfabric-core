@@ -293,12 +293,13 @@ export class InitChartComponent implements OnInit, OnDestroy {
     } else {
       // Default domain set (week)
       this.buttonTitle = 'W';
+      this.firstMove = true;
+      this.zoomButtonsActive = true;
       // forward configuration object
       this.forwardConf = forwardWeekConf;
       // use autonomous ticks conf
       this.autonomousTicks = true;
-      // manual conf : create two moment for define start and end of domain
-      this.zoomButtonsActive = true;
+      // create two moment for define start and end of domain
       const startDomain = moment();
       startDomain.startOf('week');
       startDomain.hours(0).minutes(0).seconds(0).millisecond(0);
@@ -423,11 +424,11 @@ export class InitChartComponent implements OnInit, OnDestroy {
     let screenMultiplier = 0;
     // get current window size
     let screenSize = window.innerWidth;
-    while(550 < screenSize) {
+    while (550 < screenSize) {
       screenMultiplier++;
       screenSize = screenSize - 100;
     }
-    return screenMultiplier
+    return screenMultiplier;
   }
 
   /**
@@ -447,12 +448,12 @@ export class InitChartComponent implements OnInit, OnDestroy {
     let domainInUnit = ['year', 1000];
     let first = true;
     for (let i = 0; i < unitsOnSecond.length; i++) {
-      // find the right unit 
+      // find the right unit
       if (first && domainInSecond / unitsOnSecond[i] < unitOnMax[i] + (screenMultiplier * unitToAdd[i])) {
         const unit = unitList[i];
         domainInUnit = [
           unit,
-          domainInSecond/unitsOnSecond[i]
+          domainInSecond / unitsOnSecond[i]
         ];
         first = false;
       }
@@ -518,7 +519,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     for (let i = 1; i < unitStep.length; i++) {
       const tmp = Math.abs(value - unitStep[i]);
       if (absMin > tmp) {
-        absMin = tmp
+        absMin = tmp;
         stepValue = unitStep[i];
       }
     }
@@ -565,7 +566,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
   /**
    * change timeline domain
    * deactivate the home button display
-   * activate first move boolean, on first move make by clicking a button the home domain will be used 
+   * activate first move boolean, on first move make by clicking a button the home domain will be used
    * activate followClockTick if the zoom level has this mode activated
    * @param startDomain new start of domain
    * @param endDomain new end of domain
@@ -590,7 +591,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * @param newStart domain start
    */
   get3TicksBeforeOnArrayDate(newStart: number): number {
-    let tmp = moment(newStart);
+    const tmp = moment(newStart);
     let dateStartDomain = _.cloneDeep(tmp.valueOf());
     let count = 0;
     const arrayDate = _.cloneDeep(this.ticksConf['date']);
