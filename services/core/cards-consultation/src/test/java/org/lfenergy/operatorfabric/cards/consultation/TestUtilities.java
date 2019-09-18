@@ -23,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
