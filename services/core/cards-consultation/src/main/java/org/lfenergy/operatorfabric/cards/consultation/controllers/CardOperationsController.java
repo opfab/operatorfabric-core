@@ -139,6 +139,7 @@ public class CardOperationsController {
     }
 
     private Flux<String> fetchOldCards0(Instant referencePublishDate, Instant start, Instant end, User user) {
+        cardRepository.deleteAll().subscribe();
         Flux<String> oldCards;
         referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow() : referencePublishDate;
         String login = user.getLogin();
