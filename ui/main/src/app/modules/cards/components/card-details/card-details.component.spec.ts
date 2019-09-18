@@ -8,24 +8,24 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {CardDetailsComponent} from './card-details.component';
-import {DetailsComponent} from "../details/details.component";
-import {DetailComponent} from "../detail/detail.component";
-import {Store, StoreModule} from "@ngrx/store";
-import {appReducer, AppState} from "@ofStore/index";
-import {RouterTestingModule} from "@angular/router/testing";
-import {LoadCardSuccess} from "@ofActions/card.actions";
-import {getOneRandomCard, getOneRandomThird, getRandomI18nData} from "@tests/helpers";
-import {By} from "@angular/platform-browser";
-import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
-import {ServicesModule} from "@ofServices/services.module";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {HandlebarsService} from "../../services/handlebars.service";
-import {TimeService} from "@ofServices/time.service";
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {of} from "rxjs";
-import {Process, State} from "@ofModel/thirds.model";
-import {Detail} from "@ofModel/card.model";
-import {Map as OfMap} from "@ofModel/map";
+import {DetailsComponent} from '../details/details.component';
+import {DetailComponent} from '../detail/detail.component';
+import {Store, StoreModule} from '@ngrx/store';
+import {appReducer, AppState} from '@ofStore/index';
+import {RouterTestingModule} from '@angular/router/testing';
+import {LoadCardSuccess} from '@ofActions/card.actions';
+import {getOneRandomCard, getOneRandomThird, getRandomI18nData} from '@tests/helpers';
+import {By} from '@angular/platform-browser';
+import {ThirdsI18nLoaderFactory, ThirdsService} from '../../../../services/thirds.service';
+import {ServicesModule} from '@ofServices/services.module';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {HandlebarsService} from '../../services/handlebars.service';
+import {TimeService} from '@ofServices/time.service';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {of} from 'rxjs';
+import {Process, State} from '@ofModel/thirds.model';
+import {Detail} from '@ofModel/card.model';
+import {Map as OfMap} from '@ofModel/map';
 
 describe('CardDetailsComponent', () => {
     let component: CardDetailsComponent;
@@ -50,9 +50,12 @@ describe('CardDetailsComponent', () => {
                 })
             ],
             declarations: [CardDetailsComponent, DetailsComponent, DetailComponent],
-            providers: [ThirdsService, HandlebarsService,
-                {provide:'TimeEventSource',useValue:null},
-                TimeService]
+            providers: [
+                ThirdsService,
+                HandlebarsService,
+                {provide: 'TimeEventSource', useValue: null},
+                TimeService
+            ]
         })
             .compileComponents();
     }));
@@ -69,78 +72,81 @@ describe('CardDetailsComponent', () => {
         fixture.detectChanges();
         const child = fixture.debugElement.children[0];
         expect(component).toBeTruthy();
-        expect(child.name).toEqual("of-details")
+        expect(child.name).toEqual('of-details')
     });
 
     it('should create with card selected', () => {
         spyOn(thirdsService, 'queryThird').and.returnValue(of(getOneRandomThird()));
         fixture.detectChanges();
         expect(component).toBeTruthy();
-        expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(0);
+        expect(fixture.debugElement.queryAll(By.css('of-detail')).length).toEqual(0);
         store.dispatch(new LoadCardSuccess({card: getOneRandomCard()}));
         fixture.detectChanges();
         const child = fixture.debugElement.children[0];
-        expect(child.name).toEqual("of-details")
-        expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(2);
+        expect(child.name).toEqual('of-details')
+        expect(fixture.debugElement.queryAll(By.css('of-detail')).length).toEqual(2);
     });
     it('should create with card selected without details and third with details', () => {
-        const processesMap= new OfMap();
+        const processesMap = new OfMap();
         const statesMap = new OfMap();
-        const details = [new Detail(null, getRandomI18nData(),null,"template3",null),
-            new Detail(null, getRandomI18nData(),null,"template4",null),];
-        statesMap['state01']=new State(details);
-        processesMap['process01']=new Process(statesMap);
+        const details = [new Detail(null, getRandomI18nData(), null, 'template3', null),
+            new Detail(null, getRandomI18nData(), null, 'template4', null)];
+        statesMap['state01'] = new State(details);
+        processesMap['process01'] = new Process(statesMap);
         const third = getOneRandomThird({
-            processes:processesMap
+            processes: processesMap
         });
         spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
         fixture.detectChanges();
         expect(component).toBeTruthy();
-        expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(0);
-        let testCard = getOneRandomCard(
-            {
-                process: 'process01',
-                processId: 'process01_01',
-                state: 'state01',
-                details:[]
-            });
+        expect(fixture.debugElement.queryAll(By.css('of-detail')).length).toEqual(0);
+        let testCard = getOneRandomCard({
+            process: 'process01',
+            processId: 'process01_01',
+            state: 'state01',
+            details: []
+        });
         store.dispatch(new LoadCardSuccess({card: testCard}));
         fixture.detectChanges();
         let child = fixture.debugElement.children[0];
-        expect(child.name).toEqual("of-details")
-        expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(2);
-        testCard ={...testCard, details: null};
+        expect(child.name).toEqual('of-details')
+        expect(fixture.debugElement.queryAll(By.css('of-detail')).length).toEqual(2);
+        testCard = {...testCard, details: null};
         store.dispatch(new LoadCardSuccess({card: testCard}));
         fixture.detectChanges();
         child = fixture.debugElement.children[0];
-        expect(child.name).toEqual("of-details")
-        expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(2);
+        expect(child.name).toEqual('of-details')
+        expect(fixture.debugElement.queryAll(By.css('of-detail')).length).toEqual(2);
     });
     it('should create with card selected with details and third with details', () => {
-        const processesMap= new OfMap();
+        const processesMap = new OfMap();
         const statesMap = new OfMap();
-        const details = [new Detail(null, getRandomI18nData(),null,"template3",null),
-            new Detail(null, getRandomI18nData(),null,"template4",null),];
-        statesMap['state01']=new State(details);
-        processesMap['process01']=new Process(statesMap);
+        const details = [new Detail(null, getRandomI18nData(), null, 'template3', null),
+            new Detail(null, getRandomI18nData(), null, 'template4', null)];
+        statesMap['state01'] = new State(details);
+        processesMap['process01'] = new Process(statesMap);
         const third = getOneRandomThird({
-            processes:processesMap
+            processes: processesMap
         });
 
         spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
         fixture.detectChanges();
         expect(component).toBeTruthy();
-        expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(0);
-        const testCard = getOneRandomCard(
-            {
-                process: 'process01',
-                processId: 'process01_01',
-                state: 'state01',
-            });
+        expect(fixture.debugElement.queryAll(By.css('of-detail')).length).toEqual(0);
+        const testCard = getOneRandomCard({
+            process: 'process01',
+            processId: 'process01_01',
+            state: 'state01',
+        });
         store.dispatch(new LoadCardSuccess({card: testCard}));
         fixture.detectChanges();
         const child = fixture.debugElement.children[0];
-        expect(child.name).toEqual("of-details")
-        expect(fixture.debugElement.queryAll(By.css("of-detail")).length).toEqual(4);
+        expect(child.name).toEqual('of-details');
+        expect(fixture.debugElement.queryAll(By.css('of-detail')).length).toEqual(4);
+    });
+
+    it('should sipatch an event', () => {
+        component.closeDetails();
+        expect(fixture.debugElement.queryAll(By.css('of-detail')).length).toEqual(0);
     });
 });
