@@ -27,7 +27,7 @@
     <div class="col-md-6">
       <of-text-setting settingPath="dateTimeFormat"></of-text-setting>
     </div>
-    <div class="col-md-6" [style.display]="'none'">
+    <div class="col-md-6" *ngIf="!(hideTags$|async)">
       <of-type-ahead-settings settingPath="defaultTags"></of-type-ahead-settings>
     </div>
   </div>
