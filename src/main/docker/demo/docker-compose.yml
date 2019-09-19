@@ -140,15 +140,6 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-  dummy-card-daemon:
-    depends_on:
-    - cards-publication
-    image: "lfeoperatorfabric/of-dummy-card-daemon:0.9.1.SNAPSHOT"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CARDS-PUBLICATION
-
   web-ui:
     depends_on:
     - registry
@@ -160,3 +151,11 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
+  dummy-card-daemon:
+    depends_on:
+    - cards-publication
+    image: "lfeoperatorfabric/of-dummy-card-daemon:0.9.1.SNAPSHOT"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CARDS-PUBLICATION
