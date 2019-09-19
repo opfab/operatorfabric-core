@@ -8,5 +8,7 @@
     <of-type-filter></of-type-filter>
     <of-time-filter></of-time-filter>
     </div>
-    <div><of-tags-filter></of-tags-filter></div>
+    <div *ngIf="!(hideTags$|async)">
+        <of-tags-filter></of-tags-filter>
+    </div>
 </div>
