@@ -4,7 +4,6 @@ import {Action, Store} from "@ngrx/store";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Observable, of} from "rxjs";
 import {TimeService} from "@ofServices/time.service";
-import {AuthenticationActionTypes} from "@ofActions/authentication.actions";
 import {catchError, map, switchMap} from "rxjs/operators";
 import {TimeReference} from "@ofModel/time.model";
 import {FailToUpdateTimeReference, Tick, UpdateTimeReference} from "@ofActions/time.actions";
@@ -12,7 +11,7 @@ import {selectTimeReference} from "@ofSelectors/time.selectors";
 import {Message, MessageLevel} from "@ofModel/message.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
-import { UserActionsTypes } from '@ofStore/actions/user.actions';
+import {UserActionsTypes} from '@ofStore/actions/user.actions';
 
 @Injectable()
 export class TimeEffects {

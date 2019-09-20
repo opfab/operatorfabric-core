@@ -13,8 +13,6 @@ import {EMPTY, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
 import {catchError, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
 import {LightCard} from "@ofModel/light-card.model";
 import {Action, Third, ThirdMenu} from "@ofModel/thirds.model";
 import {Card} from "@ofModel/card.model";
@@ -29,7 +27,6 @@ export class ThirdsService {
 
     constructor(private httpClient: HttpClient,
                 private authenticationService: AuthenticationService,
-                private store: Store<AppState>,
                 private $injector: Injector,
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();

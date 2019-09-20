@@ -8,21 +8,11 @@
 import {AppState} from '@ofStore/index';
 import {archiveInitialState, ArchiveState} from '@ofStates/archive.state';
 import { selectArchiveFilters} from '@ofSelectors/archive.selectors';
+import {emptyAppState4Test} from "@tests/helpers";
 
 describe('ArchiveSelectors', () => {
-    const emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: null,
-        card: null,
-        menu: null,
-        config: null,
-        settings: null,
-        time: null,
-        archive: null,
-        user: null
-    };
+    const emptyAppState: AppState = emptyAppState4Test;
+
     const filters = new Map<string, string[]>();
     filters.set('endBusnDate', ['1566303137']);
     const existingFilterState: ArchiveState = {
