@@ -153,7 +153,6 @@ public class CardOperationsController {
             log.info("Not loading published cards as no range is provided");
             oldCards = Flux.empty();
         }
-        // cardRepository.deleteAll().subscribe();
         return oldCards;
     }
 
