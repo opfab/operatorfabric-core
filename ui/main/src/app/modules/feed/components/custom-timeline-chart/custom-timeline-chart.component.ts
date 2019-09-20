@@ -252,7 +252,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     // library need to rotate ticks one time for set verticalSpacing to 10 on ngx-charts-x-axis-ticks
     // Divided by 4, but can be another value
     // searching to loop lessiest time possible but loop enough time for use more than usable space
-    for (let i = 0; i < (window.innerWidth / 50); i++) {
+    const limit = window.innerWidth / 10; // 10 px for one tick
+      for (let i = 0; i < limit; i++) {
       this.xTicksOne.push(moment(i));
       this.xTicksTwo.push(moment(i));
     }

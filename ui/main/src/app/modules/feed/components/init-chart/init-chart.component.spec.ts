@@ -14,12 +14,11 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {DraggableDirective} from '../time-line/app-draggable';
 import {MouseWheelDirective} from '../time-line/mouse-wheel.directive';
 import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
-import {TimeService} from "@ofServices/time.service";
+import {TimeService} from '@ofServices/time.service';
 import * as moment from 'moment';
 
 describe('InitChartComponent', () => {
   let component: InitChartComponent;
-  let store: Store<AppState>;
   let fixture: ComponentFixture<InitChartComponent>;
 
   beforeEach(async(() => {
@@ -37,11 +36,9 @@ describe('InitChartComponent', () => {
         {provide: Store, useClass: Store},
         {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
         {provide: TimeService, useClass: TimeService}],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();
-    store = TestBed.get(Store);
-    spyOn(store, 'dispatch').and.callThrough();
     fixture = TestBed.createComponent(InitChartComponent);
     component = fixture.componentInstance;
   }));
@@ -52,9 +49,9 @@ describe('InitChartComponent', () => {
     expect(component.checkButtonHomeDisplay()).toBeTruthy();
   });
 
-  it('should create button home cause domains differs', () => {
+  it('should create button home cause first move was made', () => {
     fixture.detectChanges();
-    component.buttonHome = [4, 5];
+    component.firstMove = false;
     expect(component.checkButtonHomeDisplay()).toBeTruthy();
   });
 
@@ -64,19 +61,42 @@ describe('InitChartComponent', () => {
     expect(component.checkButtonHomeDisplay()).toBeFalsy();
   });
 
+  it('should create button list', () => {
+    fixture.detectChanges();
+    const startDomain = moment();
+    const endDomain = moment().add(7, 'day');
+    const forwardConf = { day: 1};
+    component.confZoom = [{
+      startDomain: startDomain.valueOf(),
+      endDomain: endDomain.valueOf(),
+      centeredOnTicks: true,
+      clusterTicksToTicks: true,
+      buttonTitle: '7D',
+      forwardConf: forwardConf,
+      backwardConf: forwardConf,
+      autonomousTicks: true,
+      followClockTick: true,
+      firstMoveStartOfUnit: true,
+      homeDomainExtraTicks: true,
+    }];
+    component.confContextGraph();
+    expect(component.buttonList.length).toEqual(1);
+    expect(component).toBeTruthy();
+  });
+
   it('should test homeClick & subtract3Ticks functions with a date conf', () => {
     fixture.detectChanges();
     component.homeDomainExtraTicksMode = true;
     // autonomousTicks was set to true cause confZoom wasn't initialized
     component.autonomousTicks = false;
-    component.ticksConf = {date: [1,16]};
+    component.ticksConf = {date: [1, 16]};
     const tmp = moment();
     tmp.date(18);
     component.homeClick(tmp.valueOf(), tmp.valueOf());
     tmp.date(1);
     tmp.subtract(1, 'month');
     expect(component.myDomain[0]).toEqual(tmp.valueOf());
-    expect(component).toBeTruthy();    
+    expect(component).toBeTruthy();
   });
 
   it('should test homeClick & subtract3Ticks functions with a hour conf', () => {
@@ -88,10 +108,10 @@ describe('InitChartComponent', () => {
     const tmp3TicksBefore = moment(tmp);
     tmp3TicksBefore.subtract(3 * 2, 'hour');
     expect(component.subtract3Ticks(tmp.valueOf())).toEqual(tmp3TicksBefore.valueOf());
-    expect(component).toBeTruthy();    
+    expect(component).toBeTruthy();
   });
 
-  it('should apply differents zoom levels on timeline' +
+  it('should apply differents zoom movements on timeline' +
       'should verify domain value is changed after calling moveDomain & homeClick functions', () => {
     fixture.detectChanges();
     const tmp = component.buttonTitle;
@@ -102,11 +122,13 @@ describe('InitChartComponent', () => {
     component.followClockTickMode = true;
     component.homeClick(1, 2);
     expect(component.buttonHomeActive).toBeFalsy();
+    expect(component.followClockTick).toBeTruthy();
     expect(component.myDomain).toEqual([1, 2]);
 
     // check domain change after call moveDomain function with any buttonTitle
     let domain = component.myDomain;
     component.moveDomain(true);
+    expect(component.followClockTick).toBeFalsy();
     expect(domain).not.toEqual(component.myDomain);
     domain = component.myDomain;
     component.moveDomain(false);
@@ -116,6 +138,7 @@ describe('InitChartComponent', () => {
     domain = component.myDomain;
     component.buttonTitle = 'M';
     component.moveDomain(true);
+    expect(component.followClockTick).toBeFalsy();
     expect(domain).not.toEqual(component.myDomain);
     domain = component.myDomain;
     component.moveDomain(false);
@@ -302,8 +325,9 @@ describe('InitChartComponent', () => {
   });
 
   it('check getCircleValue & getColorSeverity functions' +
-      'on switch default case (unused normally)' +
-      'and with null params', () => {
+      'on switch default case (unused)' +
+      'and with null params' +
+      'check changeGraphConf with null params', () => {
     fixture.detectChanges();
     expect(component.getCircleValue('0')).toEqual(5);
     expect(component.getColorSeverity('NO')).toEqual('white');
@@ -327,8 +351,8 @@ describe('InitChartComponent', () => {
     expect(component.formatTooltipsDate).toEqual('DD/MM/YY');
     expect(component.buttonTitle).toEqual(saveTitle);
   });
-/*
-  // domain duration equal to 7 days, and screen width = 1027
+
+  // domain duration equal to 7 days, and screen width = 1027 12 hours  width = 770 1 day
   it('should create timeline with another conf, ' +
     'with autonomous ticks positionning', () => {
     fixture.detectChanges();
@@ -345,16 +369,34 @@ describe('InitChartComponent', () => {
     component.readZoomConf(fakeConf);
     component.autonomousTicksConf();
     fixture.detectChanges();
-    expect(component.ticksConf).toEqual({hour: 12});
+    const screenSize = window.innerWidth;
+    switch (true) {
+      case (screenSize < 584): {
+        expect(component.ticksConf).toEqual({day: 2});
+        break;
+      }
+      case (screenSize < 951): {
+        expect(component.ticksConf).toEqual({day: 1});
+        break;
+      }
+      case (screenSize < 1167): {
+        expect(component.ticksConf).toEqual({hour: 12});
+        break;
+      }
+      default: {
+        expect(component.ticksConf).not.toEqual({hour: 12});
+        break;
+      }
+    }
   });
-*/
+
   it('should create timeline with another conf', () => {
     fixture.detectChanges();
     const fakeConf = {
       centeredOnTicks: true,
       clusterTicksToTicks: true,
       buttonTitle: 'W',
-      ticksConf: {hour:4},
+      ticksConf: {hour: 4},
       followClockTick: true,
       firstMoveStartOfUnit: true,
       homeDomainExtraTicks: true,
