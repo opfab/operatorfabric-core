@@ -130,6 +130,26 @@ export class ThirdsService {
         return result;
     }
 
+    requestI18json(publisher: string, version: string, locales: string[]):Observable<any>{
+        const requests = locales.map(locale =>{
+            const params = new HttpParams()
+                .set("locale", locale)
+                .set("version", version);
+            return  this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {
+                params
+            }).pipe(
+                map(r => {
+                        const object = {};
+                        object[locale] = {};
+                        object[locale][publisher] = {};
+                        object[locale][publisher][version] = r;
+                        return object;
+                    }
+                ));
+            
+        });
+    }
+
     computeThirdsMenu(): Observable<ThirdMenu[]> {
         return this.httpClient.get<Third[]>(`${this.thirdsUrl}/`).pipe(
             switchMap(ts => from(ts)),

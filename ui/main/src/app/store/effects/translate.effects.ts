@@ -8,7 +8,7 @@ import {LightCardActionTypes, LoadLightCardsSuccess} from "@ofActions/light-card
 import {map, switchMap, tap} from "rxjs/operators";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {
-    TranslateActions,
+    TranslateActions, TranslateActionsTypes,
     TranslationUpToDate,
     UpdateTranslation,
     UpdateTranslationSuccessful
@@ -17,6 +17,7 @@ import {LightCard} from "@ofModel/light-card.model";
 import {Map} from "@ofModel/map";
 import * as _ from 'lodash';
 import {selectI18nUpLoaded, selectTranslation} from "@ofSelectors/translation.selectors";
+import {ThirdsService} from "@ofServices/thirds.service";
 
 @Injectable()
 export class TranslateEffects {
@@ -24,6 +25,7 @@ export class TranslateEffects {
     constructor(private store: Store<AppState>
         , private actions$: Actions
         , private translate: TranslateService
+        , private thirdService: ThirdsService
         , private httpClient: HttpClient
     ) {
     }
@@ -31,8 +33,13 @@ export class TranslateEffects {
     @Effect()
     updateTranslateService: Observable<TranslateActions> = this.actions$
         .pipe(
-            ofType(LightCardActionTypes.LoadLightCardsSuccess),
-            switchMap((action: LoadLightCardsSuccess) => {
+            ofType(TranslateActionsTypes.UpdateTranslation),
+            switchMap((action: UpdateTranslation) => {
+
+                const extract = action.payload.versions;
+
+
+
                 const locale = 'fr';
                 const publisher = 'TWOSTATES';
                 const version = '1';
@@ -56,13 +63,6 @@ export class TranslateEffects {
             })
         );
 
-    /*
-        extract publisher and version from cards
-        reduce to unicity
-        check vs state
-        if some or all publisher+version not uploaded => uploadaction
-        otherwise send action to indicaten every thing is already loaded (need to indicates it ?)
-     */
     @Effect()
     verifyTranslationNeeded: Observable<TranslateActions> = this.actions$
         .pipe(
@@ -73,10 +73,11 @@ export class TranslateEffects {
             , map((cards: LightCard[]) => TranslateEffects.extractPublisherAssociatedWithDistinctVersions(cards))
             // extract version needing to be updated
             , switchMap((versions: Map<Set<string>>) => {
-                return this.store.select(selectI18nUpLoaded).pipe(
+                const result = this.store.select(selectI18nUpLoaded).pipe(
                     map((referencedTranslation: Map<Set<string>>) =>{
                         return TranslateEffects.extractThirdToUpdate(versions, referencedTranslation)
                     }));
+                return result;
             })
             // send action accordingly
             , map((publisherAndVersion: Map<Set<string>>) => {

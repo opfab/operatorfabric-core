@@ -13,6 +13,7 @@ import {Map as OfMap} from "@ofModel/map";
 import {Action, ActionType, Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import { Page } from '@ofModel/page.model';
 import {AppState} from "@ofStore/index";
+import {Map} from "@ofModel/map";
 
 export const emptyAppState4Test:AppState = {
     router: null,
@@ -316,4 +317,29 @@ export function appendFixedLengthAlphanumericValue(length = 1, base = ''): strin
         const nextLength = finalLength - stringSize;
         return base + appendFixedLengthAlphanumericValue(nextLength, intermediateResult);
     }
+}
+
+export function shuffleArrayContentByFisherYatesLike<T>(array: Array<T>): Array<T> {
+    let workingArray = Object.assign([], array);
+    let currentLengthOfRemainingArrayToShuffle = array.length;
+    let valueHolderForPermutation: T;
+    let currentIndex: number;
+    // need a new array other wise the old one behave weirdly
+    const result = Array<T>(currentLengthOfRemainingArrayToShuffle);
+    while (currentLengthOfRemainingArrayToShuffle) {
+        currentIndex = Math.floor(Math.random() * currentLengthOfRemainingArrayToShuffle--);
+        valueHolderForPermutation = workingArray[currentLengthOfRemainingArrayToShuffle];
+        result[currentLengthOfRemainingArrayToShuffle] = workingArray[currentIndex];
+        workingArray[currentIndex] = valueHolderForPermutation;
+    }
+    return result;
+}
+
+export function generateThirdWithVersion(thirdName?: string, versions?: Set<string>): Map<Set<string>> {
+    const result = new Map<Set<string>>();
+    const third = (thirdName) ? thirdName : getRandomAlphanumericValue(3, 5);
+    function getSomeVersions(){return getRandomAlphanumericValue(3,8)};
+    const versionValues = (versions) ? versions : new Set( generateRandomArray(3, 6, getSomeVersions));
+    result[third] = versionValues;
+    return result;
 }
