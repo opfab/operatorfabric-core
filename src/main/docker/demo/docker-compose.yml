@@ -77,7 +77,7 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-  operatorfabric.thirds:
+  thirds:
     depends_on:
      - registry
     image: "lfeoperatorfabric/of-thirds-business-service:0.8.1.RELEASE"
