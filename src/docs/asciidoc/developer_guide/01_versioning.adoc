@@ -58,7 +58,6 @@ The commit comment leverages three keywords to trigger the delivery of documenta
 * ci_latest: associate the latest alias to the current versioned docker images
 * ci_documentation: triggers the build and upload of the current documentation
 
-
 ==== In the documentation repository (opfab.github.io)
 
 *In the _data/versions.yml file*:
@@ -104,9 +103,9 @@ To prepare a next version you simply need to increment the version after a relea
 
 *In operatorfabric-core*
 
-* Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT.
+* Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT
 
-* In the dockerhub documentation (src/docs/dockerhub/service_template.md), replace the two occurences of X.X.X.SNAPSHOT
+* In the dockerhub documentation (src/docs/dockerhub/service_template.md), replace the two occurrences of X.X.X.SNAPSHOT
 by Y.Y.Y.RELEASE.
 
 * Commit changes for the following message:
@@ -132,3 +131,18 @@ Add the Y.Y.Y.SNAPSHOT version
 *In Jira*
 
 * In the "Releases" screen create a  Y.Y.Y.RELEASE version.
+
+=== Updating demonstration docker-compose files (operatorfabric-core repository)
+
+The demo and deploy docker-compose files should always rely on the latest RELEASE version
+available on DockerHub. Once the CI pipeline triggered by the previous steps has completed successfully,
+and you can see X.X.X.RELEASE images for all services on DockerHub, you should update the following files
+by replacing all occurrences of W.W.W.RELEASE (the previous release version) by X.X.X.RELEASE:
+
+* src/main/docker/demo/docker-compose.yml
+* src/main/docker/deploy/docker-compose.yml
+
+Remove your locally built X.X.X.RELEASE images if any, then run each of the two docker-compose files
+to make sure they pull the images from DockerHub and behave as intended.
+
+Then, commit and push changes.
