@@ -9,7 +9,6 @@ package org.lfenergy.operatorfabric.users.configuration.oauth2;
 
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;

@@ -49,9 +49,6 @@ public class OAuth2UsersConfiguration {
 	public static final String CLAIM_GIVEN_NAME = "given_name";
 	public static final String CLAIM_FAMILY_NAME = "family_name";
 
-		
-	public String role;
-	
 	/**
 	 * Generates a converter that converts {@link Jwt} to
 	 * {@link OpFabJwtAuthenticationToken} whose principal is a {@link User} model

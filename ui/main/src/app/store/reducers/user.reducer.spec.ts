@@ -20,7 +20,7 @@ describe('User Reducer', () => {
             const userApplicationNonRegistered = new UserApplicationNotRegistered({ error: new Error(), user : new User("userNotRegistered", "aaa", "bbb" )});
             const actualState = reducer(userInitialState, userApplicationNonRegistered);
 
-            expect(actualState.registered).toEqual(true);
+            expect(actualState.registered).toEqual(false);
             expect(actualState.group).toBeNull();
         });
     })
