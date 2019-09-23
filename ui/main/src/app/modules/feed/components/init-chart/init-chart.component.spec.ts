@@ -383,6 +383,10 @@ describe('InitChartComponent', () => {
         expect(component.ticksConf).toEqual({hour: 12});
         break;
       }
+      case (screenSize < 2334): {
+        expect(component.ticksConf).toEqual({hour: 6});
+        break;
+      }
       default: {
         expect(component.ticksConf).not.toEqual({hour: 12});
         break;
