@@ -9,9 +9,9 @@ import {Injectable, Injector} from '@angular/core';
 import {HttpClient, HttpParams, HttpUrlEncodingCodec} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {AuthenticationService} from "@ofServices/authentication.service";
-import {EMPTY, from, merge, Observable, of, throwError} from "rxjs";
+import {EMPTY, forkJoin, from, merge, Observable, of, throwError} from "rxjs";
 import {TranslateLoader, TranslateService} from "@ngx-translate/core";
-import {catchError, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
+import {catchError, concatAll, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
 import * as _ from 'lodash';
 import {LightCard} from "@ofModel/light-card.model";
 import {Action, Third, ThirdMenu} from "@ofModel/thirds.model";
@@ -130,25 +130,50 @@ export class ThirdsService {
         return result;
     }
 
-    requestI18json(publisher: string, version: string, locales: string[]):Observable<any>{
-        const requests = locales.map(locale =>{
-            const params = new HttpParams()
-                .set("locale", locale)
-                .set("version", version);
-            return  this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {
-                params
-            }).pipe(
-                map(r => {
-                        const object = {};
-                        object[locale] = {};
-                        object[locale][publisher] = {};
-                        object[locale][publisher][version] = r;
-                        return object;
-                    }
-                ));
-            
-        });
+    // requestI18json(publisher: string, version: string, locales: string[]):Observable<any>{
+    //     const requests = locales.map(locale =>{
+    //         const params = new HttpParams()
+    //             .set("locale", locale)
+    //             .set("version", version);
+    //         return  this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {
+    //             params
+    //         }).pipe(
+    //             map(this.convertJsoToI18NObject(locale, publisher, version)
+    //             ));
+    //
+    //     });
+    // }
+
+    private convertJsoToI18NObject(locale, publisher: string, version: string) {
+        return r => {
+            const object = {};
+            object[locale] = {};
+            object[locale][publisher] = {};
+            object[locale][publisher][version] = r;
+            return object;
+        };
     }
+
+    grepAllI18n(publisher:string,version?:string):Observable<any>{
+        const locales = this.translate().getLangs();
+        return forkJoin(locales.map(locale=>{
+            return this.askForI18nJson(publisher,locale,version)
+        })).pipe(
+            concatAll(),
+            this.catchError()
+        );
+    }
+
+    askForI18nJson(publisher:string, locale:string, version?:string):Observable<any>{
+        const params = new HttpParams().set('locale',locale);
+        if(version) params.set('version',version);
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {params})
+            .pipe( map(this.convertJsoToI18NObject(locale, publisher, version))
+            , this.catchError()
+        );
+    }
+
+    private catchError(){    return catchError((err, caught) => caught);}
 
     computeThirdsMenu(): Observable<ThirdMenu[]> {
         return this.httpClient.get<Third[]>(`${this.thirdsUrl}/`).pipe(

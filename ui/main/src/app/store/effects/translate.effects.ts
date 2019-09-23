@@ -3,7 +3,7 @@ import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {TranslateService} from "@ngx-translate/core";
-import {Observable} from "rxjs";
+import {forkJoin, Observable, pipe} from "rxjs";
 import {LightCardActionTypes, LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {map, switchMap, tap} from "rxjs/operators";
 import {HttpClient, HttpParams} from "@angular/common/http";
@@ -35,33 +35,15 @@ export class TranslateEffects {
         .pipe(
             ofType(TranslateActionsTypes.UpdateTranslation),
             switchMap((action: UpdateTranslation) => {
-
                 const extract = action.payload.versions;
-
-
-
-                const locale = 'fr';
-                const publisher = 'TWOSTATES';
-                const version = '1';
-
-                const cards = action.payload.lightCards;
-                const params = new HttpParams().set('locale', locale).set('version', version);
-                return this.httpClient.get(`http://localhost:2002/thirds/${publisher}/i18n`, {params})
-                    .pipe(map(val => {
-                            console.log('****************************************>>>>>>>»»»»', val);
-                            const object = {};
-                            object[publisher] = {};
-                            object[publisher][version] = val;
-                            return object
-                        })
-                        , map(trad => {
-                            this.translate.setTranslation(locale, trad, true);
-                            this.translate.use('fr');
-                            return new UpdateTranslationSuccessful({lang: 'fr'});
-                        })
-                    );
-            })
-        );
+                const publishers = Object.keys(extract);
+                return forkJoin(publishers.map(publisher=>{
+                    const versions = extract[publisher];
+                    return Array.from(versions.values()).map(version=>{
+                        return this.thirdService.grepAllI18n(publisher,version);
+                    });
+                })).pipe();
+            }));
 
     @Effect()
     verifyTranslationNeeded: Observable<TranslateActions> = this.actions$
