@@ -104,6 +104,7 @@ describe('TimeLineComponent', () => {
       expect(lightCard).toEqual([oneCard]);
     });
     const dataCard = [{
+      displayDate: oneCard.startDate,
       publishDate: oneCard.publishDate,
       startDate: oneCard.startDate,
       endDate: oneCard.endDate,
@@ -142,24 +143,28 @@ describe('TimeLineComponent', () => {
     });
     const dataCard = [{
         // timeSpans: [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}],
+        displayDate: oneCard.startDate,
         publishDate: alarmCard.publishDate,
         startDate: alarmCard.startDate,
         endDate: alarmCard.endDate,
         severity: alarmCard.severity,
         summary: alarmCard.summary.parameters.value
     }, {
+        displayDate: oneCard.startDate,
         publishDate: actionCard.publishDate,
         startDate: actionCard.startDate,
         endDate: actionCard.endDate,
         severity: actionCard.severity,
         summary: actionCard.summary.parameters.value
     }, {
+        displayDate: oneCard.startDate,
         publishDate: oneCard.publishDate,
         startDate: oneCard.startDate,
         endDate: oneCard.endDate,
         severity: oneCard.severity,
         summary: oneCard.summary.parameters.value
     }, {
+        displayDate: oneCard.startDate,
         publishDate: notificationCard.publishDate,
         startDate: notificationCard.startDate,
         endDate: notificationCard.endDate,

@@ -378,7 +378,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 if (val.timeSpans && val.timeSpans.length > 0) {
                     val.timeSpans.forEach(d => {
                         const myCardTimelineTimespans = {
-                            publishDate: d.start,
+                            displayDate: d.start,
+                            publishDate: d.start, // useless
                             startDate: d.start, // useless
                             endDate: d.end, // useless
                             severity: val.severity,
@@ -389,7 +390,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 } else {
                     // val.endDate val.startDate val.severity
                     const myCardTimeline = {
-                        publishDate: val.publishDate,
+                        displayDate: val.startDate,
+                        publishDate: val.publishDate, // useless
                         startDate: val.startDate, // useless
                         endDate: val.endDate, // useless
                         severity: val.severity,

@@ -150,14 +150,14 @@ export class InitChartComponent implements OnInit, OnDestroy {
    */
   setArrayChartData(array: any[]): void {
     array.sort((val1, val2) => {
-      return val1.publishDate - val2.publishDate;
+      return val1.displayDate - val2.displayDate;
     });
 
     const arraySeverity = [];
     this.arrayChartData = [];
     for (const value of array) {
       const obj = _.cloneDeep(value);
-      obj.date = obj.publishDate;
+      obj.date = obj.displayDate;
       obj.r = 20;
       obj.stroke = 'stroke';
       obj.count = 1;
