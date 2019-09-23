@@ -678,7 +678,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     // apply zoom on feed
     this.store.dispatch(new ApplyFilter({
       name: FilterType.TIME_FILTER, active: true,
-      status: {start: startDomain, end: endDomain}
+      status: {start: valueStart, end: valueEnd}
     }));
   }
 

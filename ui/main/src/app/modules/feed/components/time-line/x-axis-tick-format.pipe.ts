@@ -86,7 +86,8 @@ export class XAxisTickFormatPipe implements PipeTransform {
       switch (clusterLevel) {
         case 'Hou' : {
           if (date.valueOf() === startYear.valueOf()) {
-            return this.timeService.predefinedFormat(date, 'dateInsideTooltipsMonth');
+            return date.format( 'DD MMM YY');
+            // return this.timeService.predefinedFormat(date, 'dateInsideTooltipsMonth');
           }
           if (date.hours() === 0) {
             return this.timeService.predefinedFormat(date, 'dateOnDay');
