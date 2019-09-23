@@ -3,14 +3,15 @@ import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {TranslateService} from "@ngx-translate/core";
-import {forkJoin, Observable, pipe} from "rxjs";
+import {forkJoin, Observable, of, pipe} from "rxjs";
 import {LightCardActionTypes, LoadLightCardsSuccess} from "@ofActions/light-card.actions";
-import {map, switchMap, tap} from "rxjs/operators";
+import {catchError, map, switchMap, tap} from "rxjs/operators";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {
+    RefreshTranslation,
     TranslateActions, TranslateActionsTypes,
     TranslationUpToDate,
-    UpdateTranslation,
+    UpdateTranslation, UpdateTranslationFailed,
     UpdateTranslationSuccessful
 } from "@ofActions/translate.actions";
 import {LightCard} from "@ofModel/light-card.model";
@@ -37,13 +38,41 @@ export class TranslateEffects {
             switchMap((action: UpdateTranslation) => {
                 const extract = action.payload.versions;
                 const publishers = Object.keys(extract);
-                return forkJoin(publishers.map(publisher=>{
+                return forkJoin(publishers.map(publisher => {
                     const versions = extract[publisher];
-                    return Array.from(versions.values()).map(version=>{
-                        return this.thirdService.grepAllI18n(publisher,version);
+                    return Array.from(versions.values()).map(version => {
+                        return this.thirdService.grepAllI18n(publisher, version);
                     });
-                })).pipe();
+                })).pipe(
+                    map(result => {
+                            const languages = this.translate.getLangs();
+                            languages.map(language => {
+                                let dictionary = result[language];
+                                if (dictionary) {
+                                    this.translate.setTranslation(language, dictionary, true)
+                                }
+                            });
+                            return new UpdateTranslationSuccessful({language: this.translate.currentLang});
+                        }
+                    ),
+                    catchError((error,caught)=>{
+                        console.error('Something went wrong during translation',error);
+                        return of(new UpdateTranslationFailed({error:error}))
+                    }))
             }));
+
+
+    // effect update lang use by translate service
+
+    @Effect()
+    refreshLanguageUsedByTranslation:Observable<TranslateActions> = this.actions$
+        .pipe(
+          ofType(TranslateActionsTypes.UpdateTranslation),
+          map((action:UpdateTranslationSuccessful)=>{
+              this.translate.use(action.payload.language);
+              return new RefreshTranslation();
+          })
+        );
 
     @Effect()
     verifyTranslationNeeded: Observable<TranslateActions> = this.actions$
@@ -56,7 +85,7 @@ export class TranslateEffects {
             // extract version needing to be updated
             , switchMap((versions: Map<Set<string>>) => {
                 const result = this.store.select(selectI18nUpLoaded).pipe(
-                    map((referencedTranslation: Map<Set<string>>) =>{
+                    map((referencedTranslation: Map<Set<string>>) => {
                         return TranslateEffects.extractThirdToUpdate(versions, referencedTranslation)
                     }));
                 return result;
