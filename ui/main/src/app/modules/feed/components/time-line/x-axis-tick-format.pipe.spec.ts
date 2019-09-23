@@ -188,7 +188,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.startOf('year');
         const startCopy = moment(start);
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
-        expect(formatPipe.transform(start, 'Hou')).toEqual(startCopy.format('ddd DD MMM YYYY'));
+        expect(formatPipe.transform(start, 'Hou')).toEqual(startCopy.format('DD MMM YY'));
         expect(component).toBeTruthy();
     });
 
