@@ -19,13 +19,15 @@ export class SettingsComponent implements OnInit {
   locales$: Observable<string[]>;
   timeZones$: Observable<string[]>;
   hideTags$: Observable<boolean>;
+  disableInfos$: Observable<boolean>;
 
   constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
     this.locales$ = this.store.select(buildConfigSelector('i18n.supported.locales'));
     this.timeZones$ = this.store.select(buildConfigSelector('i10n.supported.time-zones'));
-    this.hideTags$ = this.store.select(buildConfigSelector('settings.hideTags'));
+    this.hideTags$ = this.store.select(buildConfigSelector('settings.tags.hide'));
+    this.disableInfos$ = this.store.select(buildConfigSelector('settings.infos.disable'));
   }
 
 }

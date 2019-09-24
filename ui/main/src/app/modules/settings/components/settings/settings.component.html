@@ -7,10 +7,10 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-6">
-      <of-email-setting settingPath="email"></of-email-setting>
+      <of-email-setting settingPath="email" [disabled]="(disableInfos$|async)"></of-email-setting>
     </div>
     <div class="col-md-6">
-      <of-text-setting settingPath="description"></of-text-setting>
+      <of-text-setting settingPath="description" [disabled]="(disableInfos$|async)"></of-text-setting>
     </div>
     <div class="col-md-6">
       <of-list-setting settingPath="locale" [values]="locales$|async" ></of-list-setting>

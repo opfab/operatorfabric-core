@@ -57,7 +57,8 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |operatorfabric.archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
 |operatorfabric.archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
 |operatorfabric.logo.base64||no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg
-|operatorfabric.settings.hideTags||no|Control if you want to show or hide the tags filter in settings and feed page
+|operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page
+|operatorfabric.settings.infos.disable||no|Control if we want to disable/enable editing user email, description in the settings page
 |===
 
 *User Settings default values*
