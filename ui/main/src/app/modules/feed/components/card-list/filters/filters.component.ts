@@ -22,7 +22,7 @@ export class FiltersComponent implements OnInit {
   constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
-    this.hideTags$ = this.store.select(buildConfigSelector('settings.hideTags'));
+    this.hideTags$ = this.store.select(buildConfigSelector('settings.tags.hide'));
   }
 
 }
