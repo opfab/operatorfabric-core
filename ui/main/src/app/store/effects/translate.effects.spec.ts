@@ -2,7 +2,8 @@ import {
     generateRandomArray,
     generateThirdWithVersion,
     getOneRandomCard,
-    getRandomAlphanumericValue, shuffleArrayContentByFisherYatesLike
+    getRandomAlphanumericValue,
+    shuffleArrayContentByFisherYatesLike
 } from "@tests/helpers";
 import {TranslateEffects} from "@ofEffects/translate.effects";
 import {LightCard} from "@ofModel/light-card.model";
@@ -15,10 +16,9 @@ import {Actions} from "@ngrx/effects";
 import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {hot} from "jasmine-marbles";
 import {TranslateService} from "@ngx-translate/core";
-import {HttpClient} from "@angular/common/http";
 import {selectI18nUpLoaded} from "@ofSelectors/translation.selectors";
-import SpyObj = jasmine.SpyObj;
 import {ThirdsService} from "@ofServices/thirds.service";
+import SpyObj = jasmine.SpyObj;
 
 // useful to generate some random version or publisher names
 function getRandomStringOf8max() {
@@ -32,7 +32,7 @@ describe('Translation effect when extracting publisher and their version from Li
         const testACard = getOneRandomCard(cardTemplate);
         const publisher = testACard.publisher;
         const version = new Set([testACard.publisherVersion]);
-        const result = TranslateEffects.extractPublisherAssociatedWithDistinctVersions([testACard]);
+        const result = TranslateEffects.extractPublisherAssociatedWithDistinctVersionsFromCards([testACard]);
         expect(result).toBeTruthy();
         expect(result[publisher]).toEqual(version);
 
@@ -60,7 +60,7 @@ describe('Translation effect when extracting publisher and their version from Li
             cards.push(getOneRandomCard(templateCard1FixedVersion));
         }
 
-        const underTest = TranslateEffects.extractPublisherAssociatedWithDistinctVersions(cards);
+        const underTest = TranslateEffects.extractPublisherAssociatedWithDistinctVersionsFromCards(cards);
 
         const OneCommonVersion = 1;
         const firstThird = underTest[third0];
@@ -194,11 +194,9 @@ describe('Translation effect reacting to successfully loaded Light Cards', () =>
     let localAction$: Actions;
     let translateServMock: SpyObj<TranslateService>;
     let thirdServMock: SpyObj<ThirdsService>;
-    let httpMock: SpyObj<HttpClient>;
 
     beforeEach(() => {
         storeMock = jasmine.createSpyObj('Store', ['select', 'dispatch']);
-        underTest = new TranslateEffects(storeMock, localAction$, translateServMock, thirdServMock, httpMock);
 
     });
 
@@ -209,17 +207,25 @@ describe('Translation effect reacting to successfully loaded Light Cards', () =>
         const loadedLightCardSuccess = new LoadLightCardsSuccess({lightCards: lightCards});
         localAction$ = new Actions(hot('a', {a: loadedLightCardSuccess}));
 
+        underTest = new TranslateEffects(storeMock, localAction$, translateServMock, thirdServMock);
+
+
+
         // there is no i18n file referenced in the store
-        const cachedI18n$ = hot('-b', {b: new Map<Set<string>>()});
+        const cachedI18n$ = hot('-b', {b:new Map<Set<string>>()});
         storeMock.select.withArgs(selectI18nUpLoaded).and.returnValue(cachedI18n$);
 
 
         expect(underTest).toBeTruthy();
 
-        // an UpdateTransaltion is expected
+
+
+        // an UpdateTranslation is expected
+        const expectedVersions=new Set(lightCards.map(card=>card.publisherVersion));
+        const expectedThirdAndVersion=generateThirdWithVersion('testPublisher',expectedVersions);
         const expectedEmittedActions = hot('-c'
             , {
-                c: new UpdateTranslation({versions: null})
+                c: new UpdateTranslation({versions: expectedThirdAndVersion})
             });
         expect(underTest.verifyTranslationNeeded).toBeObservable(expectedEmittedActions);
     });
@@ -239,6 +245,7 @@ describe('Translation effect reacting to successfully loaded Light Cards', () =>
 
         const lightCards = generateRandomArray(2, 7, randomCardWith1AsPublisherVersion);
         localAction$ = new Actions(hot('b', {b: new LoadLightCardsSuccess({lightCards: lightCards})}))
+        underTest = new TranslateEffects(storeMock, localAction$, translateServMock, thirdServMock);
 
         // verification
         expect(underTest).toBeTruthy();

@@ -1,7 +1,7 @@
 import {async, getTestBed, TestBed,} from "@angular/core/testing";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
-import {HttpClientTestingModule, HttpTestingController, TestRequest} from "@angular/common/http/testing";
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {environment} from "@env/environment";
 import {ThirdActionService} from "@ofServices/third-action.service";
 import {
@@ -9,7 +9,6 @@ import {
     ActionStatus,
     ActionType,
     emptyAction,
-    emptyActionStatus,
     extractActionStatusFromPseudoActionStatus
 } from "@ofModel/thirds.model";
 import {hot} from "jasmine-marbles";
@@ -22,30 +21,22 @@ import createSpyObj = jasmine.createSpyObj;
 
 describe('ThirdActionService', () => {
 
-    class truc {
-        dispatch() {
-        }
-    }
-
     let injector: TestBed;
     let store: Store<AppState>;
     let httpClientMock: HttpTestingController;
-    const url = `${environment.urls.actions}`;
     let thirdActionService: ThirdActionService;
-    let bobo: Store<AppState>;
+    let actioStore: Store<AppState>;
     beforeEach(async(() => {
-        bobo = createSpyObj<Store<AppState>>('store', ['dispatch']);
+        actioStore = createSpyObj<Store<AppState>>('store', ['dispatch']);
         TestBed.configureTestingModule({
             imports: [
-                // StoreModule.forRoot(appReducer),
                 HttpClientTestingModule
             ],
             providers: [
                 ThirdActionService,
                 {
                     provide: Store
-                    , useValue: bobo
-                    // ,useClass:truc
+                    , useValue: actioStore
                 }]
         });
         injector = getTestBed();

@@ -247,7 +247,7 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('check setTicksAndClusterize function when clusterConf is an array ' +
+  xit('check setTicksAndClusterize function when clusterConf is an array ' +
     'and formatTicks is an array', () => {
     fixture.detectChanges();
     component.clusterConf = [ { width: 2200, conf: {
@@ -366,7 +366,7 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('check clusterize functions : ' +
+  xit('check clusterize functions : ' +
     'two algos create circle when detect one data in the scope of xTicks ' +
     'this test doesnt look the date assigned', () => {
     fixture.detectChanges();
@@ -454,7 +454,7 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('simulate circle hovered', () => {
+  xit('simulate circle hovered', () => {
     fixture.detectChanges();
     const circleTest = {
       start: moment(),
