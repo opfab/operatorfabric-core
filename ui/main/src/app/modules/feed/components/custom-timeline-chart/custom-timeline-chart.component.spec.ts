@@ -469,10 +469,16 @@ describe('CustomTimelineChartComponent', () => {
       count: 5,
     };
     expect(component.circleHovered.period).toEqual('');
+
+    // transformHovered return empty string when formatLevel is undefined
+    component.formatLevel = 'Day';
     component.feedCircleHovered(circleTest);
+    fixture.detectChanges();
     expect(component.circleHovered.period).not.toEqual('');
+
     const tmp = component.circleHovered.period;
     component.feedCircleHovered(circleTestPeriod);
+    fixture.detectChanges();
     expect(component.circleHovered.period).not.toEqual(tmp);
 
     component.formatTooltipsDate = 'DD/MM';
