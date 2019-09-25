@@ -143,14 +143,14 @@ describe('TimeLineComponent', () => {
     });
     const dataCard = [{
         // timeSpans: [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}],
-        displayDate: oneCard.startDate,
+        displayDate: alarmCard.startDate,
         publishDate: alarmCard.publishDate,
         startDate: alarmCard.startDate,
         endDate: alarmCard.endDate,
         severity: alarmCard.severity,
         summary: alarmCard.summary.parameters.value
     }, {
-        displayDate: oneCard.startDate,
+        displayDate: actionCard.startDate,
         publishDate: actionCard.publishDate,
         startDate: actionCard.startDate,
         endDate: actionCard.endDate,
@@ -164,7 +164,7 @@ describe('TimeLineComponent', () => {
         severity: oneCard.severity,
         summary: oneCard.summary.parameters.value
     }, {
-        displayDate: oneCard.startDate,
+        displayDate: notificationCard.startDate,
         publishDate: notificationCard.publishDate,
         startDate: notificationCard.startDate,
         endDate: notificationCard.endDate,
