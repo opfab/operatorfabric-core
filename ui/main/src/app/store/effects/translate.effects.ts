@@ -81,11 +81,7 @@ export class TranslateEffects {
                 .pipe(map(i18n => {
                     this.translate.setTranslation(locale, i18n, true);
                     return true;
-                }),
-                    catchError((error, caught)=>{
-                        console.error('error while trying to fetch i18n and push it into translation',error);
-                        return of(false);
-                    }));
+                }));
         });
     }
 

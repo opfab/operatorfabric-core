@@ -101,19 +101,23 @@ export class ThirdsService {
     }
 
     askForI18nJson(publisher: string, locale: string, version?: string): Observable<any> {
-        const params = new HttpParams().set('locale', locale);
-        if (version) params.set('version', version);
+        let params = new HttpParams().set('locale', locale);
+        if (version) {
+            /*
+            `params` override needed otherwise only locale is use in the request.
+            It's so because HttpParams.set(...) return a new HttpParams,
+            and basically that's why HttpParams can be set with fluent API...
+             */
+            params = params.set('version', version);
+        }
         return this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {params})
             .pipe(
                 map(this.convertJsonToI18NObject(locale, publisher, version))
-                , this.catchError()
+                , catchError(error=>{
+                    console.error(`error trying fetch i18n of '${publisher}' version:'${version}' for locale: '${locale}'`);
+                    return error;
+                })
             );
-    }
-
-    private catchError() {
-        return catchError((error, caught) => {
-            return caught;
-        });
     }
 
     computeThirdsMenu(): Observable<ThirdMenu[]> {
