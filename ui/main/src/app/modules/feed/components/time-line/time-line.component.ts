@@ -273,7 +273,6 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             enableZoom: true,
             zoomOnButton: true,
             autoScale: false,
-            animations: false,
             showGridLines: true,
             realTimeBar: true,
         };

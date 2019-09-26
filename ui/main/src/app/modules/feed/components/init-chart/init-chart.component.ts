@@ -50,7 +50,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public enableZoom: boolean;
   public zoomOnButton: boolean;
   public autoScale: boolean;
-  public animations: boolean;
   public showGridLines: boolean;
   public realTimeBar: boolean;
   public centeredOnTicks: boolean;
@@ -100,7 +99,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.enableZoom = false;
     this.zoomOnButton = false;
     this.autoScale = false;
-    this.animations = false;
     this.showGridLines = false;
     this.centeredOnTicks = false;
     this.clusterTicksToTicks = false;
@@ -258,9 +256,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
       }
       if (this.conf.autoScale) {
         this.autoScale = true;
-      }
-      if (this.conf.animations) {
-        this.animations = true;
       }
       if (this.conf.showGridLines) {
         this.showGridLines = true;

@@ -46,7 +46,6 @@
   -->
   <of-custom-timeline-chart class="of-custom-timeline-chart"
                               *ngIf="arrayChartData"
-                             [animations]="animations"
                              [autoScale]="autoScale"
                              [myData]="arrayChartData"
                              [xAxis]="true"
@@ -65,6 +64,6 @@
                              [formatTicks]="formatTicks"
                              [formatTooltipsDate]="formatTooltipsDate"
                              (zoomChange)="applyNewZoom($event)"
-                             (widthChange)="autonomousTicksConf($event)">
+                             (widthChange)="autonomousTicksConf()">
   </of-custom-timeline-chart>
 </div>

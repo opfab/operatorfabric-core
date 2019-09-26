@@ -22,7 +22,6 @@ import {TimeService} from '@ofServices/time.service';
   template: `<ngx-charts-chart
     [view]="[width, height]" xmlns:svg="http://www.w3.org/1999/svg"
     [showLegend]="false"
-    [animations]="animations"
     appMouseWheel
     (mouseWheelUp)="onZoom($event, 'in')"
     (mouseWheelDown)="onZoom($event, 'out')"
@@ -181,7 +180,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Input() showGridLines;
   // Unknown yet
   @Input() gradient;
-  @Input() animations;
   // Zoom
   @Input() enableZoom;
   @Input() zoomOnButton;
