@@ -1,0 +1,446 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+= OperatorFabric Timeline
+David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall; Baptiste Julien
+v0.5.1, June 14, 2019
+:imagesdir: images
+:sectnums:
+:toc: left
+:toclevels: 2
+:toc-title: Timeline
+:icons: font
+:hide-uri-scheme:
+
+== Requirements
+
+All steps to install, build and test `OperatorFabric` into a Linux environment after clones repository.
+
+== Timeline Fundamental
+
+The timeline was created for a specific goal, give mandatory information quickly, permitting to operators to stay informed about the global situation during OperatorFabric use.
+
+The timeline is composed of 4 important parts:
+
+- The y-axis, a vertical axis: contains Y coordinates (hide), distinguish by their values (Severity).
+- The x-axis, a horizontal axis: represent a time scale, giving information on the time taken by a process or a sequence of events, distinguish by their date.
+
+.X-axis ticks
+[#img-ticks]
+[caption="Image 1: ", file:images/label-timeline.png]
+image::file:images/label-timeline.png[Labels]
+
+- Bubbles: show the number of events between a length of time, its color depends on its value (Severity).
+image:file:images/bubble-timeline.png[Bubble]
+- Menu buttons: only on the top part, composed by zooming buttons, forward/backward buttons and a home button.
+image:file:images/homeButton-timeline.png[Home button]
+
+.Menu buttons
+[#img-menu]
+[caption="Image 2: ", file:images/menuButton-timeline.png]
+image::file:images/menuButton-timeline.png[Menu buttons]
+
+A fast summary: x-axis shows the time information, y-axis show the severity, bubbles show the number of processes at a specific range of time and the buttons menu allow user to interact with the timeline.
+
+[.text-center]
+.Timeline overview
+[#img-timeline-overview]
+[caption="Image 3: ", link=file:images/timeline-overview.png]
+image::file:images/timeline-overview.png[timeline overview]
+
+== Timeline Description
+
+This timeline is drawn by two axes and lines crossing space until graduation. Ticks are the marks of graduation, only x-axis ticks are visible.
+Ticks are used like landmark on a lot of functionality.
+
+A domain is an area of value delimited by two dates. The y-axis is x-axis' first tick visualization, it starts the domain until the last tick of x-axis. Inside this domain the bubbles (information) are drawn at precise place depending on their dates and their severity. Bubble's X position is a representation of its date on the time scale (x-axis). Bubble's Y position is the representation of its value (severity) on the y-axis (linear scale).
+
+A Timescale data detection system is provided by moment library, moment is configured and used inside operatorfabric. Moment is a very powerful library allowing to use an object containing a date and handling this object. The major function used from moment is a formatting function transforming a date display. It requires only a string key and return the same key's disposition with date's values.
+
+== Data Structure
+
+The feed (cf OperatorFrabric doc) is made from an array of light card, timeline use light card for creating its own data card structure.
+This actual structure is simple, after timeline evolving this structure will change.
+
+Data Card Structure:
+
+- displayDate: card date used
+- publishDate: card publish date
+- startDate: card start's date
+- endDate: card end's date
+- severity: card's severity
+- summary: card title
+
+== Technical Data Stockage
+
+A state is defined as stored inputs in a computer program, there are stored as variables or constants. Their values can change during software used, and will be automatically refreshed in all the software.
+
+Timeline data are linked at the cards reception feed, when the feed received a light card it's automatically parse and save a data card on timeline state.
+Timeline state was created by precognition of future features.
+Actually timeline state is composed of one array (called data) composed by data card object describe above.
+
+== Clustering
+
+For dodge overloading of chart, a clustering function is used at every new cards reception or on every domain movement.
+
+The algo is a loop on x Axis ticks, from the start of ticks to their end, each bubble between two ticks are grouped together in an unique bubble.
+
+.Timeline with ticks every day
+[#img-timeline-september-month]
+[caption="Image 4: ", link=file:images/timeline-september-month.png]
+image::file:images/timeline-september-month.png[timeline september 2019]
+
+.Timeline with ticks every 1st and 16th of the month
+[#img-timeline-august19-january21]
+[caption="Image 5: ", link=file:images/timeline-september-month.png]
+image::file:images/timeline-august19-january21.png[timeline august 2019 to january 2021]
+
+Above for pictures, events were grouped by ticks positioning. On first timeline screen, ticks are every day, by counting each bubble of the same severity from 1st September to 16th September,  you got the result write inside the bubble on the second timeline screen, having ticks every 1st and 16th of the month.
+
+A bubble is composed of:
+
+- a date: circle position date (in middle of ticks)
+- a count: sum of each circle count
+- a start date: the earliest start date from merged circles
+- an end date: the later start date from merged circles
+
+IMPORTANT: on the chart configuration you can change the active algo for merging circles on half interval ticks to next half interval ticks.
+
+== Menu buttons
+
+Timeline menu is composed of zoom level at the top-right corner, configured at start of application. Select a zoom level by click the respective button, the visualization will move to its respective home domain and load all its chart context. The active zoom level is toggled, its have a black background and white font.
+
+Around zoom level buttons, two movement buttons are represented by arrow buttons. They are called forward and backward buttons, in normal case one move the domain forward and the other backward in the time. Each one can be configured independently. As well as the movement from the start and the movement from the end can be configured separatly.
+
+When the domain got moved by clicking movement buttons or using drag feature, the home button appears at charts' top-left corner. By clicking home button, it's same behavior than click it's own zoom level button, back the domain to start and end value passed at begin of the configuration.
+
+== Circle Hovered
+
+The tooltip is activated on a bubble when user cursor overhead it. Its display is composed of:
+
+- the period (start - end) of merged circles
+- the count of circles inside itself
+- the list of each circle summary
+
+== Structure of Commune Timeline Configuration Objects (conf objects)
+
+Timeline's main strength is the possibility to configure it before application start. A commune object structure was created for simplified configuration called conf object. Inspired by unit of time used on moment functions, object's goal is to easily give a time duration. You need to choose for each unit the quantity with a number. Application functions will parsed conf object, each unit set will be treat with its value. List of time's unit:
+
+- year
+- month
+- week
+- day
+- hour
+- minute
+- second
+
+The current visualization on timeline called domain, can be set before launching the application. You just need to give 2 values on milliseconds, delimiting the start and end of the domain. A function was made for help to set the two values wanted, domain start and domain end. This function is using a conf object.
+It's similar, on x-axi's ticks you can choose the time separation between each ticks due to its own conf object. It's same, for movement, you decide how much time will be added or removed to start and end domain limits, again thanks to conf object.
+
+The object structure has some keys which aren't unit of time, they get their own use case. I will list these special keys: 
+
+- On domain conf object 'startOf' key attending a list of time's unit. From moment library using startOf function for each unit on the list. (cf moment doc)
+- On forward or backward conf object 'weekDay' key waiting a number between 1 to 7. 1 is Sunday, then follow week order. The move will be until the next day targetted. (It's possible to cumulate it with time's unit week, allowing to move focus on the week day selected n weeks after)
+- On ticks conf object 'date' key attending a list of numbers between 1 to 31. For each month, loops on the number's list and add a tick on month day precised by a number. (It's possible to cumulate it with time's unit, applied for all month day on the list)
+- On ticks conf object 'weekNb' key is activated only by passing its value to 1, ticks format displayed corresponding to week number and year.
+
+To facilitate some cases:
+When the domain duration is smaller than 24 hours the date of first tick is displayed on the timeline's top-left corner.
+When the domain duration is smaller than 1 hour, hour is added to the date display at the top-left corner.
+
+== Main Timeline Configuration
+
+Actually timeline gets its configuration from two objects, received by input between components.
+One of them has few conf object. A precise composition of each one will be explain in the next parts.
+You choice to use or don't use them before application start.
+
+- The first object is the chart configuration for timeline entirety, its control the majority of the main timeline's behaviors.
+- The second object is the zoom configuration a list of zoom Level Configuration. A zoom Level Configuration is an object composed of specific properties defining graph context of this zoom button.
+
+In future we are thinking to pass configuration from an external file, deviating even further from development.
+
+== Chart Configuration
+
+You can choose a lot of timeline options, many global features can be disabled.
+
+By default all features are deactivated. For use one feature you need to set its key to true when the object is set.
+
+```
+	this.conf = {
+            enableDrag: true,
+            enableZoom: true,
+	    	zoomOnButton: true,
+            showGridLines: true,
+            realTimeBar: true,
+        };
+```
+
+These choices are made at startup of the application.
+List of features:
+
+- Real time bar: display a vertical grey bar following the current time systeme
+- Show grid lines: display perpendicular lines for each ticks of axis (X and Y)
+- Auto scale: y axis automatically size itself according to data passed on chart
+- Enable drag: allow the chart to treat mouse continuous click to move on the left or right the domain
+- Enable zoom: allow the chart to treat mouse wheel movement for change domain scale
+- Zoom on button: define the type of zoom make by the mouse wheel, zooming only on zoom button conf or zoom on the mouse position (static zoom vector)
+
+[%header,format=csv]
+|===
+Property,Type,True,False (default)
+realTimeBar,boolean,the real time bar is displayed and follow current time,real time bar isn't displayed
+showGridLines,boolean,continuous lines from each ticks are displayed,lines from ticks aren't displayed
+autoScale,boolean,display horizontal lines equal to the subtraction of maximal and minimal value find in data,display 4 horizontal lines in the chart (values: 0-5)
+enableDrag,boolean,active drag functionality on the chart (mouse effect),drag deactivated
+enableZoom,boolean,active zoom functionality on the chart (mouse effect),zoom deactivated
+zoomOnButton,boolean,wheel movement from mouse will move on zoom levels configured (mouse effect),zoom will follow wheel movement at the current mouse position (mouse effect)
+|===
+
+== Zoom Configuration
+
+You can personalize your own zoom level and obtained the zoom level wanted, with many extra options.
+
+By default timeline is on a week zoom configuration. The movements buttons are always used for move domain ahead time or behind time.
+
+At application startup, we can provide zoom levels in an ordered array.
+Each zoom level is displayed with a button in same order.
+
+```
+	const forwardMonthConf = {
+            start: {
+                month: 1,
+        	}
+	};
+	const startDomain = moment().hour(0).minutes(0).second(0).millisecond;
+	const endDomain = moment().hour(0).minutes(0).second(0).millisecond;
+	endDomain.add(3, 'month');
+
+    this.confZoom = [{
+            startDomain: startDomain.valueOf(),
+            endDomain: endDomain.valueOf(),
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
+            buttonTitle: 'W',
+            forwardConf: forwardMonthConf,
+            backwardConf: forwardMonthConf,
+	        autonomousTicks: true,
+            followClockTick: true,
+            firstMoveStartOfUnit: true
+        },
+		{
+		    startDomain: 1569328748,
+		    endDomain: 1579328748,
+		    buttonTitle: 'N',
+		    fowardConf: forwardMonthConf,
+		    autonomousTicks: true
+		}]
+```
+
+A zoom level is composed of mandatory properties:
+
+- Start Domain: define start home domain's date
+- End Domain: define end home domain's date
+- Centered on ticks: define the bubble position after clustering, bubble centered on ticks or on middle of ticks intervals
+- Cluster ticks to ticks: define cluster algo used on bubbles to group them, grouped by tick to tick or on middle of ticks intervals to next one
+- Autonomous ticks: ticks conf is calculated depending on the screen and the domain size (dynamic behavior) 
+- Button title: precise the name writes on button
+- Forward Configuration: give a conf object for forward movement
+- Backward Configuration: give a conf object for backward movement
+- Ticks Configuration: give a conf ticks object, definined time interval between ticks. A list of objects composed by width_min and ticks conf object can be given too
+- Format ticks: precise label format applied on each ticks. A list of objects composed by width_min and label format can be given too
+- Format tooltips Date: precise label format applied on date inside tooltips
+- Follow clock tick: on home domain when actual date is later than 4 ticks interval from the start, timeline move by one tick each second
+- First move start of unit: on home domain when user click on the forward or backward button for the first time, make a startOf of unit set on its own conf object and set hour to 0
+- Home Domain Extra Ticks: on home domain adding 4 ticks interval of selected conf on the domain begin (Autonomous  ticks not compatible)
+
+[%header,format=csv]
+|===
+Property,Type,Description,Default value
+startDomain,number,value in miliseconds setting a date with moment, actual moment
+endDomain,number,value in miliseconds setting a date with moment, actual moment + 7 days
+buttonTitle,string,value display on the button, W
+forwardConf,object,object of 2 properties 'start' and 'end': each one composed by one conf object for define its movement on the domain,{ start: { week: 1 } end: { week: 1 } }
+backwardConf,object,object of 2 properties 'start' and 'end': each one composed by one conf object for define its movement on the domain,undefined
+|===
+
+
+[%header,format=csv]
+|===
+Property,Type,Description,Exemple
+ticksConf,object or Array<object>,object compose by key relative to time unit. Defining the value add between each ticks,{ hour: 1 } or [{ width_min: 1200. conf: {minute: 30}}. { width_min: 0. conf: { hour: 1}}]
+formatTicks,string or Array<object>,value used for format x-axis label,DD/MM/YY or [{width_min: 1200. formatTicks: DD/MM/YY}. { width_min: 0. formatTicks: MM/YY}]
+formatTooltips,string,value used for format date inside the tooltips,D MMM YY HH
+|===
+
+
+IMPORTANT: ticksConf and formatTicks list must be order from the highest width_min conf to the smallest.
+
+[%header,format=csv]
+|===
+Property,Type,True,False (default)
+centeredOnTicks,boolean,bubble have positioned on tick,bubble position in the middle of two ticks
+clusterTicksToTicks,boolean,grouped data tick to tick,an interval of two ticks to the next interval
+autonomousTicks,boolean,use handmade ticks conf [big red]#(True by default)#, use ticks conf defined
+followClockTick,boolean,visualization follow actual date,no effect
+firstMoveStartOfUnit,boolean,special move on first movement click,no effect
+homeDomainExtraTicks,boolean, subtract 4 ticks intervals of the zoom selected on the home domain, no effect
+|===
+
+Like said above, a function is used for help to define the start and end of the domain:
+
+-periodStartToEnd: This function have two parameters a boolean and a conf object and return a moment. This conf object called domain Conf is parsed to add or subtract a time value at the current time. To add time, set the second param to true, otherwise the time value will be subtract.
+
+exemple: 
+
+```
+const domainWeekConf = {
+            week: 2,
+            startOf: ['week'],
+        };
+const startDomain = moment();
+startDomain.minutes(0).second(0).millisecond(0);
+const endDomain = this.periodStartToEnd(domainWeekConf, true);
+```
+
+== Format Ticks
+
+The tick formatting will take the format pass by formatTicks property only when is set. Otherwise the timeline got predefined format value.
+One of them will be choosen according to the most precise unit of time given inside the conf ticks object.
+
+Show basic display top or bottom lines, one on two:
+
+[%header,format=csv]
+|===
+Unit of time,Format apply,Monday 29 July 2019
+Year,YYYY,2019
+Month,MMM YY,Jul 19
+Week,DD/MM/YY,29/07/19
+Day,ddd DD MMM,Mon 29 Jul
+Date,D MMM,29 Jul
+|===
+
+For a more precise unit of time another implementation is used.
+The top line shows the precise unit, and the bottom line displays a global information, less frequently.
+With this special display it easier to locate a bubble time position.
+
+[%header,format=csv]
+|===
+Unit of time,Top line format apply,Bottom line format apply,Top line: Monday 05:30 00s,Bottom line: Monday 05:30 00s
+Hour,HH,ddd DD MMM,05,nothing
+Minute,mm,HH,30,05
+Seconde,ss,mm,00,30
+|===
+
+If it's day's begin, hour 0, and unit of time used is equal to 0, the day's date is displayed on "ddd DD MMM" format.
+
+In the year's first day the year is displayed with 'YY' at the end of ordinary display.
+
+== Let's Co example
+
+Let's Co project is the first application to use a specific timeline configuration. It's using the realtime bar display and active zoom only on the buttons.
+
+On all their zooms level: followClockTicks, clusterTicksToTicks, centeredOnTicks and startDomainWith3Ticks are true.
+As well as property firstMoveStartOfUnit, allowing to pass the visualization from 2 units of time to 1 and stay with it.
+
+They made 4 zooms level:
+
+- 7 days zoom: domain begins at actual day, and closes at the end of 7 days after.
+Its 7 days visualization when you move domain, and you move by one day.
+
+- Week zoom : domain begins at actual day, and closes at the end of next week.
+Its weekly visualization when you move domain, and you move by one week.
+
+- Month zoom : domain begins at actual day, and closes at the end of next month.
+Its monthly visualization when you move domain, and you move by one month.
+
+- Year zoom : domain begins at actual month, and closes at the end of next year.
+Its yearly visualization when you move domain, and you move by one year.
+
+
+Below the code show, configures the timeline and only the Week zoom level:
+
+Firstly, you define the conf object for the domain and you use dateWithSpaceBeforeMoment and periodStartToEnd for obtains the start and the end home date of this zoom level visualization.
+
+```
+	const domainWeekConf = {
+            year: 0,
+            month: 0,
+            week: 2,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            startOf: ['week'],
+        };
+
+	const currentMoment = moment();
+	const startDomain = this.dateWithSpaceBeforeMoment(moment(currentMoment), 'W');
+	const endDomain = this.periodStartToEnd(domainWeekConf, true);
+```
+
+After this, you define the conf object for the movements buttons.
+
+```
+        const forwardWeekConf = {
+            start: {
+                year: 0,
+                month: 0,
+                week: 1,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+            end: {
+                year: 0,
+                month: 0,
+                week: 1,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+        };
+```
+
+Missing only the conf ticks object to define, it's the most important conf object.
+
+```
+        const ticks4HoursConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 4,
+            minute: 0,
+            second: 0,
+        };
+```
+
+Finally set the two objects with the data prepared and their booleans to configures timeline.
+
+```
+	this.conf = {
+            enableDrag: false,
+            enableZoom: true,
+	    zoomOnButton: true,
+            autoScale: false,
+            showGridLines: true,
+            realTimeBar: true,
+        };
+        this.confZoom = [{
+            startDomain: startDomain.valueOf(),
+            endDomain: endDomain.valueOf(),
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
+            buttonTitle: 'W',
+            forwardConf: forwardWeekConf,
+            backwardConf: forwardWeekConf,
+            ticksConf: ticks4HoursConf,
+            followClockTick: true,
+            firstMoveStartOfUnit: true,
+        }]
+```
