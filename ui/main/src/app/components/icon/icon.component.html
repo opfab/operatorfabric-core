@@ -5,7 +5,7 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 <div *ngIf="base64; else opFabLogo">
-  <img [attr.width]="size" [attr.height]="size" [src]="_DomSanitizationService.bypassSecurityTrustUrl(base64)"/>
+  <img [attr.width]="size" [attr.height]="size" [src]="_DomSanitizationService.bypassSecurityTrustUrl(base64)" alt="logo"/>
 </div>
 <ng-template #opFabLogo>
     <svg x="0px" y="0px"
