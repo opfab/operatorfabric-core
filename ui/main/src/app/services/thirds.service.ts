@@ -5,16 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Injectable, Injector} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams, HttpUrlEncodingCodec} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {AuthenticationService} from "@ofServices/authentication.service";
-import {EMPTY, from, merge, Observable, of, throwError} from "rxjs";
-import {TranslateLoader, TranslateService} from "@ngx-translate/core";
-import {catchError, filter, map, mergeMap, reduce, switchMap, tap} from "rxjs/operators";
-import * as _ from 'lodash';
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
+import {environment} from "@env/environment";
+import {from, Observable, of, throwError} from "rxjs";
+import {TranslateLoader} from "@ngx-translate/core";
+import {catchError, filter, map, reduce, switchMap, tap} from "rxjs/operators";
 import {LightCard} from "@ofModel/light-card.model";
 import {Action, Third, ThirdMenu} from "@ofModel/thirds.model";
 import {Card} from "@ofModel/card.model";
@@ -22,15 +18,10 @@ import {Card} from "@ofModel/card.model";
 @Injectable()
 export class ThirdsService {
     readonly thirdsUrl: string;
-    private loadedI18n: string[] = [];
-    private loadingI18n: string[] = [];
     private urlCleaner: HttpUrlEncodingCodec;
     private thirdCache = new Map();
 
     constructor(private httpClient: HttpClient,
-                private authenticationService: AuthenticationService,
-                private store: Store<AppState>,
-                private $injector: Injector,
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.thirdsUrl = `${environment.urls.thirds}`;
@@ -100,37 +91,33 @@ export class ThirdsService {
         return `${resourceUrl}?${versionParam.toString()}`;
     }
 
-    fetchI18nJson(publisher: string, version: string, locales: string[]): Observable<any> {
-        let previous: Observable<any>;
-        for (let locale of locales) {
-            const params = new HttpParams()
-                .set("locale", locale)
-                .set("version", version);
-            const httpCall = this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {
-                params
-            }).pipe(
-                map(r => {
-                        const object = {};
-                        object[locale] = {};
-                        object[locale][publisher] = {};
-                        object[locale][publisher][version] = r;
-                        return object;
-                    }
-                ));
-            if (previous) {
-                previous = merge(previous, httpCall);
-            } else {
-                previous = httpCall;
-            }
-        }
-        if (previous == null) {
-            return EMPTY;
-        }
-        const result = previous.pipe(
-            reduce((acc, val) => _.merge(acc, val))
-        );
+    private convertJsonToI18NObject(locale, publisher: string, version: string) {
+        return r => {
+            const object = {};
+            object[publisher] = {};
+            object[publisher][version] = r;
+            return object;
+        };
+    }
 
-        return result;
+    askForI18nJson(publisher: string, locale: string, version?: string): Observable<any> {
+        let params = new HttpParams().set('locale', locale);
+        if (version) {
+            /*
+            `params` override needed otherwise only locale is use in the request.
+            It's so because HttpParams.set(...) return a new HttpParams,
+            and basically that's why HttpParams can be set with fluent API...
+             */
+            params = params.set('version', version);
+        }
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {params})
+            .pipe(
+                map(this.convertJsonToI18NObject(locale, publisher, version))
+                , catchError(error=>{
+                    console.error(`error trying fetch i18n of '${publisher}' version:'${version}' for locale: '${locale}'`);
+                    return error;
+                })
+            );
     }
 
     computeThirdsMenu(): Observable<ThirdMenu[]> {
@@ -147,76 +134,6 @@ export class ThirdsService {
         );
     }
 
-    loadI18nForLightCards(cards: LightCard[]) {
-        let observable = from(cards).pipe(
-            map(card => card.publisher + '###' + card.publisherVersion));
-        return this.subscribeToLoadI18n(observable);
-    }
-
-    loadI18nForMenuEntries(menus: ThirdMenu[]) {
-        const observable = from(menus).pipe(
-            map(menu => menu.id + '###' + menu.version)
-        );
-        return this.subscribeToLoadI18n(observable);
-    }
-
-    private subscribeToLoadI18n(observable) {
-        return observable
-            .pipe(
-                reduce((ids: string[], id: string) => {
-                    ids.push(id);
-                    return ids;
-                }, []),
-                switchMap((ids: string[]) => {
-                    let work = _.uniq(ids);
-                    work = _.difference<string>(work, this.loadingI18n)
-                    return from(_.difference<string>(work, this.loadedI18n))
-                }),
-                mergeMap((id: string) => {
-                    this.loadingI18n.push(id);
-                    const input = id.split('###');
-
-                    let publisher = input[0];
-                    let version = input[1];
-                    return this.fetchI18nJson(publisher, version, this.translate().getLangs())
-                        .pipe(map(trans => {
-                                return {id: id, translation: trans};
-                            }),
-                            catchError(err => {
-                                _.remove(this.loadingI18n, id);
-                                return throwError(err);
-                            })
-                        );
-                }),
-                reduce((acc, val) => _.merge(acc, val)),
-                map(
-                    (result: any) => {
-                        const langs = this.translate().getLangs();
-                        const currentLang = this.translate().currentLang;
-                        for (let lang of langs) {
-                            let translationElement = result.translation[lang];
-                            if (translationElement) {
-                                this.translate().setTranslation(lang, translationElement, true);
-                                // needed otherwise only one translation apply
-                                this.translate().use(lang);
-                            }
-                        }
-                        this.translate().use(currentLang);
-                        _.remove(this.loadingI18n, result.id);
-                        this.loadedI18n.push(result.id);
-                        return true;
-                    }
-                ),
-                catchError((error, caught) => {
-                    console.error('something went wrong during translation', error);
-                    return caught;
-                })
-            )
-    }
-
-    private translate(): TranslateService {
-        return this.$injector.get(TranslateService);
-    }
 
     fetchActionMapFromLightCard(card: LightCard) {
         return this.fetchActionMap(card.publisher, card.process, card.state, card.publisherVersion);

@@ -1,8 +1,5 @@
-import { User } from '@ofModel/user.model';
-import { Action } from '@ngrx/store';
-import { PayloadForSuccessfulAuthentication } from './authentication.actions';
-
-
+import {User} from '@ofModel/user.model';
+import {Action} from '@ngrx/store';
 
 export enum UserActionsTypes {
 

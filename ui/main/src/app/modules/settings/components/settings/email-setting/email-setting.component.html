@@ -7,7 +7,8 @@
 <form [formGroup]="form">
   <div class="form-group">
     <label for="setting" translate>settings.{{settingPath}}</label>
-    <input type="email" class="form-control" id="setting" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
+    <input type="email" *ngIf="disabled" class="form-control" id="setting" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField" disabled>
+    <input type="email" *ngIf="!disabled" class="form-control" id="setting" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
     <span class="text-danger" *ngIf="!form.valid">Incorrect submission</span>
   </div>
 </form>

@@ -1,15 +1,21 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from "@ofStore/index";
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { UserService } from '@ofServices/user.service';
-import { Observable } from 'rxjs';
-import { UserActions, UserActionsTypes, CreateUserApplicationOnSuccess, CreateUserApplicationOnFailure, UserApplicationRegistered, UserApplicationNotRegistered,  CreateUserApplication } from '@ofStore/actions/user.actions';
-import { AuthenticationActionTypes, AcceptLogIn } from '@ofStore/actions/authentication.actions';
-// import { UserActionsTypes } from '@ofStore/actions/user.actions';
-import { tap, switchMap, map, catchError } from 'rxjs/operators';
-import { User } from '@ofModel/user.model';
-import { AuthenticationService } from '@ofServices/authentication.service';
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from "@ofStore/index";
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {UserService} from '@ofServices/user.service';
+import {Observable} from 'rxjs';
+import {
+    CreateUserApplication,
+    CreateUserApplicationOnFailure,
+    CreateUserApplicationOnSuccess,
+    UserActions,
+    UserActionsTypes,
+    UserApplicationNotRegistered,
+    UserApplicationRegistered
+} from '@ofStore/actions/user.actions';
+import {AcceptLogIn, AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {User} from '@ofModel/user.model';
 
 
 @Injectable()
@@ -32,7 +38,6 @@ export class UserEffects {
                     .pipe(
                         map((user: User) => new UserApplicationRegistered({user})),
                         catchError((error, caught) => {
-                            // console.log("askUserApplicationRegistered ---------", error, "caught : " + caught, "payload.identifier : " + userPayload.identifier);
                             const userData : User = new User(userPayload.identifier, userPayload.firstName, userPayload.lastName);
                             this.store.dispatch(new UserApplicationNotRegistered({error :error, user : userData }));
                             return caught;

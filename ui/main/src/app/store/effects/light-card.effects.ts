@@ -16,8 +16,6 @@ import {
     DelayedLightCardUpdate,
     LightCardActionTypes,
     LightCardAlreadyUpdated,
-    LoadLightCardsExtendedData,
-    LoadLightCardsSuccess,
     ThirdActionAlreadyLoaded,
     ThirdActionAlreadyUpdated,
     UpdateALightCard,
@@ -28,10 +26,7 @@ import {ThirdsService} from "@ofServices/thirds.service";
 import {LightCard} from "@ofModel/light-card.model";
 import {fetchLightCard} from "@ofSelectors/feed.selectors";
 import {CardActionTypes, LoadCard} from "@ofActions/card.actions";
-import {
-    Action as ThirdAction, ActionStatus,
-    extractActionStatusFromPseudoActionStatus
-} from "@ofModel/thirds.model";
+import {Action as ThirdAction, ActionStatus, extractActionStatusFromPseudoActionStatus} from "@ofModel/thirds.model";
 import * as _ from 'lodash';
 
 @Injectable()
@@ -44,24 +39,6 @@ export class LightCardEffects {
     ) {
     }
 
-    @Effect()
-    loadById: Observable<Action> = this.actions$
-        .pipe(
-            ofType<LoadLightCardsSuccess>(LightCardActionTypes.LoadLightCardsSuccess),
-            switchMap((action: LoadLightCardsSuccess) =>
-                this.thirdService.loadI18nForLightCards(action.payload.lightCards)
-                    .pipe(
-                        catchError(err => {
-                            console.error(`i18 loading failed for card publishers`, err);
-                            return of(false);
-                        })
-                    )),
-            map(
-                () => {
-                    return new LoadLightCardsExtendedData();
-                }
-            )
-        );
     @Effect()
     updateThirdActions: Observable<Action> = this.actions$
         .pipe(

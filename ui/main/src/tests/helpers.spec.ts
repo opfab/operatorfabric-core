@@ -12,7 +12,7 @@ import {
     getOneRandomCardWithRandomDetails,
     getRandomAlphanumericValue,
     pickARandomItemOfAnEnum,
-    getRandomPage
+    getRandomPage, shuffleArrayContentByFisherYatesLike, generateRandomArray
 } from './helpers';
 import {TitlePosition} from "@ofModel/card.model";
 
@@ -111,6 +111,24 @@ describe('Tests Helpers', () => {
             expect(randomPage.totalPages).toBe(3);
             expect(randomPage.totalElements).toBe(30);
             expect(randomPage.content.length).toBe(30);
+        });
+    });
+
+    describe(' shuffle array by FisherYates',()=>{
+        it(' should shuffle elements of an array so it has at least two elements switch in it', () => {
+            function getRandomStringOf12LengthMax(){
+                return getRandomAlphanumericValue(12)
+            }
+            const inputArray = generateRandomArray(5, 8, getRandomStringOf12LengthMax);
+            const shuffledArray = shuffleArrayContentByFisherYatesLike(inputArray);
+            expect(shuffledArray.length).toEqual(inputArray.length);
+// verify that at least two elements have been permuted
+            const test = Array.from(Array(inputArray.length).keys())
+            let nbOfDifferentElementAtSameIndex = 0;
+            test.forEach(elem => {
+                if (shuffledArray[elem] != inputArray[elem]) ++nbOfDifferentElementAtSameIndex;
+            });
+            expect(nbOfDifferentElementAtSameIndex).toBeGreaterThanOrEqual(2);
         });
     });
 });
