@@ -33,6 +33,7 @@
    [showGridLines] allow to show grid and ticks Label automatic
    [enableZoom] allow to zoom on timeline
    [zoomOnButton] if zoom is allowed, mouse wheel movements follow zoom buttons
+   [zoomLevel] if zoom is allowed and zoomOnButton false define by a number the intensity of zoom
    [enableDrag] allow to drag on timeline
    [realTimeBar] show vertical blue bar at currently time
    [clusterConf] define the clusterConf (zoomLevel list) of timeline
@@ -63,6 +64,7 @@
                              [followClockTick]="followClockTick"
                              [formatTicks]="formatTicks"
                              [formatTooltipsDate]="formatTooltipsDate"
+                             [zoomLevel]="1.4"
                              (zoomChange)="applyNewZoom($event)"
                              (widthChange)="autonomousTicksConf()">
   </of-custom-timeline-chart>

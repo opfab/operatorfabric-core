@@ -382,6 +382,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
           myDomain2 = [newStart, newEnd];
         }
       }
+      // Add an output for send the new xDomain to init-chart if you want to got autonomousTicks treatment used
       this.xDomain = [myDomain2[0], myDomain2[1]];
       // change the domain on xAxis
       this.timeScale = this.getTimeScale(this.xDomain, this.dims.width);*/
