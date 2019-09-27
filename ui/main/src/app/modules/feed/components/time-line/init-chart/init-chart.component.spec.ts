@@ -11,9 +11,9 @@ import {appReducer, AppState, storeConfig} from '@ofStore/index';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {RouterTestingModule} from '@angular/router/testing';
-import {DraggableDirective} from '../time-line/app-draggable';
-import {MouseWheelDirective} from '../time-line/mouse-wheel.directive';
-import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
+import {DraggableDirective} from '../directives/app-draggable';
+import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
+import {XAxisTickFormatPipe} from '../tick-format-pipe/x-axis-tick-format.pipe';
 import {TimeService} from '@ofServices/time.service';
 import * as moment from 'moment';
 

@@ -3,7 +3,7 @@ import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
-import {TimeLineComponent} from './time-line.component';
+import {TimeLineComponent} from '../time-line.component';
 import {CustomTimelineChartComponent} from '../custom-timeline-chart/custom-timeline-chart.component';
 import {InitChartComponent} from '../init-chart/init-chart.component';
 import {NO_ERRORS_SCHEMA} from '@angular/core';

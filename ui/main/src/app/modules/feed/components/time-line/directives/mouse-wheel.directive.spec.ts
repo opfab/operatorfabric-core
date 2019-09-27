@@ -3,12 +3,12 @@ import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
-import {TimeLineComponent} from './time-line.component';
+import {TimeLineComponent} from '../time-line.component';
 import {CustomTimelineChartComponent} from '../custom-timeline-chart/custom-timeline-chart.component';
 import {InitChartComponent} from '../init-chart/init-chart.component';
 import {DebugElement, NO_ERRORS_SCHEMA} from '@angular/core';
+import {MouseWheelDirective} from './mouse-wheel.directive';
 import {By} from '@angular/platform-browser';
-import {DraggableDirective} from './app-draggable';
 import {TimeService} from "@ofServices/time.service";
 import {Store, StoreModule} from "@ngrx/store";
 import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
@@ -30,7 +30,7 @@ describe('Directive: AppMouseWheel', () => {
                 RouterTestingModule,
                 StoreRouterConnectingModule,
                 NgxChartsModule ],
-            declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent, DraggableDirective ],
+            declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent, MouseWheelDirective ],
             providers: [{provide: APP_BASE_HREF, useValue: '/'},
                 {provide: Store, useClass: Store},
                 {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
@@ -43,20 +43,50 @@ describe('Directive: AppMouseWheel', () => {
         inputEl = fixture.debugElement.query(By.css('ngx-charts-chart'));
     }));
 
-    it('simulate the combination of events when we make a drag on the chart ' +
-        'emit all draggable directive signal', () => {
-        // expect(component.onDragMove)
-        inputEl.triggerEventHandler('pointerdown', null);
-        inputEl.triggerEventHandler('pointermove', null);
-        inputEl.triggerEventHandler('pointerup', null);
+    it('Mouse wheel event mousewheel', () => {
+        inputEl.triggerEventHandler('mousewheel', null);
         fixture.detectChanges();
         expect(component).toBeTruthy();
     });
 
-    it('simulate the combination of events : mouse move & mouse release ' +
-        'on the chart, nothing happen', () => {
-        inputEl.triggerEventHandler('pointermove', null);
-        inputEl.triggerEventHandler('pointerup', null);
+    it('Mouse wheel event DOMMouseScroll', () => {
+        inputEl.triggerEventHandler('DOMMouseScroll', null);
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
+    });
+
+    it('Mouse wheel event onmousewheel', () => {
+        inputEl.triggerEventHandler('onmousewheel', null);
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
+    });
+
+    /*fit('event not window.event & not preventDefault' +
+        'event.wheelDelta > 0', () => {
+        const event = new WheelEvent('mouseup', {
+            deltaX: -200,
+            deltaY: -200,
+            deltaZ: -200,
+        });
+        const event2 = new MouseEvent('mouseup', {
+            detail: 200,
+        });
+        inputEl.triggerEventHandler('mousewheel', event);
+        inputEl.triggerEventHandler('mousewheel', event2);
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
+    });
+*/
+    it('event not window.event & not preventDefault' +
+        'event.wheelDelta > 0', () => {
+        inputEl.triggerEventHandler('mousewheel', {wheelDelta: 50});
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
+    });
+
+    it('event not window.event & not preventDefault' +
+        'event.wheelDelta < 0', () => {
+        inputEl.triggerEventHandler('mousewheel', {wheelDelta: -50});
         fixture.detectChanges();
         expect(component).toBeTruthy();
     });

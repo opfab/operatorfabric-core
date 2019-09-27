@@ -14,7 +14,7 @@ import {scaleLinear, scaleTime} from 'd3-scale';
 import * as _ from 'lodash';
 import {BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions} from '@swimlane/ngx-charts';
 import * as moment from 'moment';
-import {XAxisTickFormatPipe} from '../time-line/x-axis-tick-format.pipe';
+import {XAxisTickFormatPipe} from '../tick-format-pipe/x-axis-tick-format.pipe';
 import {TimeService} from '@ofServices/time.service';
 
 @Component({
