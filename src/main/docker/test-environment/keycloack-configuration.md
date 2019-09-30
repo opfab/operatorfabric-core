@@ -4,7 +4,7 @@ Go to [host]:89/auth/admin
 
 ## Add Realm
 
-* Click top Lleft down arrow next to Master
+* Click top left down arrow next to Master
 * Add Realm
 * Name it dev (or whatever)
 
