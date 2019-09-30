@@ -5,30 +5,30 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Component, ElementRef, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, SimpleChanges, OnChanges} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
-import {ThirdsService} from "@ofServices/thirds.service";
-import {HandlebarsService} from "../../services/handlebars.service";
-import {DomSanitizer, SafeHtml, SafeResourceUrl} from "@angular/platform-browser";
-import {Action, Third} from "@ofModel/thirds.model";
-import {zip} from "rxjs";
-import {DetailContext} from "@ofModel/detail-context.model";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {selectAuthenticationState} from "@ofSelectors/authentication.selectors";
-import {UserContext} from "@ofModel/user-context.model";
-import * as cardSelectors from '@ofStore/selectors/card.selectors';
-import {TranslateService} from "@ngx-translate/core";
-import {I18n} from "@ofModel/i18n.model";
+import {ThirdsService} from '@ofServices/thirds.service';
+import {HandlebarsService} from '../../services/handlebars.service';
+import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
+import {Action, Third} from '@ofModel/thirds.model';
+import {zip} from 'rxjs';
+import {DetailContext} from '@ofModel/detail-context.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
+import {UserContext} from '@ofModel/user-context.model';
+import {TranslateService} from '@ngx-translate/core';
+import {I18n} from '@ofModel/i18n.model';
 
 @Component({
     selector: 'of-detail',
     templateUrl: './detail.component.html',
 })
-export class DetailComponent implements OnInit {
+export class DetailComponent implements OnInit, OnChanges {
     public active = false;
     @Input() detail: Detail;
     @Input() card: Card;
+    currentCard: Card;
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _htmlContent: SafeHtml;
     private userContext: UserContext;
@@ -43,9 +43,7 @@ export class DetailComponent implements OnInit {
 
     ngOnInit() {
         this.initializeHrefsOfCssLink();
-        this.store.select(cardSelectors.selectCardStateSelected).subscribe(() => {
-            this.initializeHandlebarsTemplates();
-        });
+        this.initializeHandlebarsTemplates();
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this.userContext = new UserContext(
                 authState.identifier,
@@ -55,6 +53,10 @@ export class DetailComponent implements OnInit {
             );
         });
     }
+    ngOnChanges(): void {
+        this.initializeHrefsOfCssLink();
+        this.initializeHandlebarsTemplates();
+    }
 
     private initializeHrefsOfCssLink() {
         if (this.detail && this.detail.styles) {
@@ -62,11 +64,12 @@ export class DetailComponent implements OnInit {
             const publisherVersion = this.card.publisherVersion;
             this.detail.styles.forEach(style => {
                 const cssUrl = this.thirds.computeThirdCssUrl(publisher, style, publisherVersion);
-                //needed to instantiate href of link for css in component rendering
+                // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
                 this.hrefsOfCssLink.push(safeCssUrl);
 
-                console.log(`this is the safe resource Url for css '${safeCssUrl.toString()}' and with local version '${safeCssUrl.toLocaleString()}'`)
+                console.log(`this is the safe resource Url for css '${safeCssUrl.toString()}'
+                and with local version '${safeCssUrl.toLocaleString()}'`);
             });
         }
     }
@@ -76,7 +79,7 @@ export class DetailComponent implements OnInit {
         zip(this.thirds.queryThirdFromCard(this.card),
         this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card,null)))
             .subscribe(
-                ([third,html]) => {
+                ([third, html]) => {
                 this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                 setTimeout(() => { // wait for DOM rendering
                     this.reinsertScripts();
@@ -110,13 +113,14 @@ export class DetailComponent implements OnInit {
         // lookup buttons
         const buttons = <HTMLButtonElement[]>this.element.nativeElement.getElementsByTagName('button');
 
-        for (let button of buttons) {
+        for (const button of buttons) {
             if (button.attributes['action-id']) {
                 const actionId = button.attributes['action-id'].nodeValue;
                 if (actionId) {
                     const state = third.extractState(this.card);
-                    if(!!state && !!state.actions[actionId])
+                    if (!!state && !!state.actions[actionId]) {
                         this.attachAction(button, state.actions[actionId], actionId);
+                    }
                 }
             }
         }
@@ -125,7 +129,7 @@ export class DetailComponent implements OnInit {
     attachAction(button: HTMLButtonElement, action: Action, actionId: string) {
         button.classList.add('btn');
         if (action.buttonStyle) {
-            for (let c of action.buttonStyle.split(' ')) {
+            for (const c of action.buttonStyle.split(' ')) {
                 button.classList.add(c);
             }
         } else {
@@ -139,7 +143,7 @@ export class DetailComponent implements OnInit {
             button.children[0].classList.add('fa', 'fa-warning', 'text-dark');
         }
 
-        button.children[0].textContent=this.handelActionButtonText(action.label);
+        button.children[0].textContent = this.handelActionButtonText(action.label);
 
         button.addEventListener('click', (event: Event) => {
             alert(`${actionId} was triggered.\nAction handling is not yet implemented`);
@@ -148,14 +152,12 @@ export class DetailComponent implements OnInit {
 
     private handelActionButtonText(label: I18n) {
         if (label) {
-            if(this.card){
+            if (this.card) {
                 console.log('card exists!');
-            }else{
+            } else {
                 console.log(`card doesn't exist yet`);
             }
-           return this.translate.instant(
-               `${this.card.publisher}.${this.card.publisherVersion}.${label.key}`
-               , label.parameters);
+            return this.translate.instant(`${this.card.publisher}.${this.card.publisherVersion}.${label.key}`, label.parameters);
         }
         return 'Undefined';
     }
