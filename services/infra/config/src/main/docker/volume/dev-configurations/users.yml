@@ -24,4 +24,13 @@ operatorfabric.users.default:
   user-settings:
     - login: rte-operator
       description: Da Operator Rulez
-#logging.level.root: DEBUG
+operatorfabric:
+  groups:
+    mode: TOKEN # value possible TOKEN | OPERATOR_FABRIC
+    uniqueValueClaim:
+      - path: eicCode
+      - path: resource_access/opfab-client/roles
+    multipleValuesClaim:
+      - path:
+        separator:
+logging.level.root: DEBUG

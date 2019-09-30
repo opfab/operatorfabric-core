@@ -5,3 +5,14 @@ operatorfabric.users.default:
   groups:
     - name: ADMIN
       description: The admin group
+operatorfabric:
+  groups:
+    mode: TOKEN # value possible TOKEN | OPERATOR_FABRIC
+    uniqueValueClaim:
+      - path: "roleClaim"
+      - path: "pathA1/pathA2/roleClaim"
+    multipleValuesClaim:
+      - path: "pathB1/pathB2/pathB3/listRoleClaim"
+        separator: ";"
+      - path: "pathC1/listRoleClaim"
+        separator: ","
