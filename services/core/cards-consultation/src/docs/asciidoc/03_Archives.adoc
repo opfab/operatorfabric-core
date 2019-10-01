@@ -30,4 +30,4 @@ of the card.
 === Archive endpoints in the card-consultation API
 
 This Archives screen relies on dedicated endpoints in the card-consultation API, as described
-link:https://opfab.github.io/projects/services/core/cards-consultation/0.9.1.SNAPSHOT/api/#Archives[here].
+link:https://opfab.github.io/projects/services/core/cards-consultation/0.9.1.RELEASE/api/#Archives[here].
