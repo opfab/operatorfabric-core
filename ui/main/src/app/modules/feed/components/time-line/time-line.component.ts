@@ -382,7 +382,9 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                             startDate: d.start, // useless
                             endDate: d.end, // useless
                             severity: val.severity,
-                            summary: val.title.parameters.value,
+                            publisher: val.publisher,
+                            publisherVersion: val.publisherVersion,
+                            summary: val.title,
                         };
                         myCardsTimeline.push(myCardTimelineTimespans);
                     });
@@ -394,7 +396,9 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                         startDate: val.startDate, // useless
                         endDate: val.endDate, // useless
                         severity: val.severity,
-                        summary: val.title.parameters.value,
+                        publisher: val.publisher,
+                        publisherVersion: val.publisherVersion,
+                        summary: val.title,
                     };
                     myCardsTimeline.push(myCardTimeline);
                 }

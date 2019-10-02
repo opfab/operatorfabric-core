@@ -45,7 +45,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.circleHovered = {
       period: '',
       count: 0,
-      summary: []
+      summary: [],
     };
     this.underDayPeriod = false;
     this.oldWidth = 0;
@@ -151,6 +151,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public dragDirection;
   private previousXPos;
 
+  public test;
+  public i18nPrefix;
   /**
    *  - call loop function for update real time bar value
    *  - set xTicks for rotate it, and set a variable inside library
@@ -166,7 +168,19 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.xTicksOne.push(moment(i));
       this.xTicksTwo.push(moment(i));
     }
+
+    this.test = {};
+    this.test['title'] = {};
+    this.test.title.parameters = '4';
+    this.test.title.keys = 'process.title';
+    this.i18nPrefix = 'test' + '.' + '1' + '.'; // publisher et publisherVersion
+    console.log('o', this.test);
+
   }
+
+ // <span class="nav-link" translate [translateParams]="detailC.detail.title.parameters">
+ // {{i18nPrefix+detailC.detail.title.key}}</span>
+
 
   /**
    * Main function for ngx-charts
@@ -935,8 +949,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               newCircle.count = newValue;
               newCircle.end = array[j].date;
               const summaryDate = this.timeService.predefinedFormat(moment(array[j].date), 'titleDateInsideTooltips') +
-                  ' - ' + this.timeService.predefinedFormat(moment(array[j].date), 'titleHourInsideTooltips') + ' : ' + array[j].summary;
-              newCircle.summary.push(summaryDate);
+                  ' - ' + this.timeService.predefinedFormat(moment(array[j].date), 'titleHourInsideTooltips') + ' : ';
+              const objSummary = { parameters: array[i].summary.parameters, keys: array[i].summary.keys,
+                summaryDate: summaryDate, i18nPrefix: array[i].publisher + '.' + array[i].publisherVersion + '.'};
+              newCircle.summary.push(objSummary);
               j++;
             }
             if (feedIt) {
