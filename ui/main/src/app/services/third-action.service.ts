@@ -31,12 +31,11 @@ export class ThirdActionService {
     }
 
     checkIfReceivedStatusIsDifferentFromCurrentOne(formerStatus: ActionStatus) {
-        return map((currentStatus: string) => {
-            const status = extractActionStatusFromPseudoActionStatus(formerStatus);
-            const intermediate = JSON.parse(currentStatus);
-            const normalizedCurrentStatus = extractActionStatusFromPseudoActionStatus(intermediate);
+        const status = extractActionStatusFromPseudoActionStatus(formerStatus);
+        return map(currentStatus => {
+            const normalizedCurrentStatus = extractActionStatusFromPseudoActionStatus(currentStatus);
             const hasChanged = !_.isEqual(status, normalizedCurrentStatus);
-            return [hasChanged, intermediate];
+            return [hasChanged, currentStatus];
         });
     }
 
