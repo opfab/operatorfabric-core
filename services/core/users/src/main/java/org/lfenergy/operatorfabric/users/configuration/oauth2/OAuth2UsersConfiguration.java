@@ -13,9 +13,9 @@ import java.util.Optional;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2GenericConfiguration;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.lfenergy.operatorfabric.users.configuration.groups.GroupsProperties;
-import org.lfenergy.operatorfabric.users.configuration.groups.GroupsUtils;
 import org.lfenergy.operatorfabric.users.configuration.jwt.JwtProperties;
+import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsProperties;
+import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsUtils;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
@@ -94,7 +94,7 @@ public class OAuth2UsersConfiguration {
 					case OPERATOR_FABRIC : 
 						authorities = computeAuthorities(user);
 						break;
-					case TOKEN :
+					case JWT :
 						authorities = computeAuthorities(jwt);
 						break;
 					default : authorities = null;	

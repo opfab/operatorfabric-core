@@ -25,12 +25,20 @@ operatorfabric.users.default:
     - login: rte-operator
       description: Da Operator Rulez
 operatorfabric:
-  groups:
-    mode: TOKEN # value possible TOKEN | OPERATOR_FABRIC
-    uniqueValueClaim:
-      - path: eicCode
-      - path: resource_access/opfab-client/roles
-    multipleValuesClaim:
-      - path:
-        separator:
-logging.level.root: DEBUG
+  security:
+    jwt:      
+      groups:
+        mode: JWT # value possible JWT | OPERATOR_FABRIC
+        rolesClaim:
+         - path: eicCode
+           singleValue: true
+           mandatory: true
+         - path: resource_access/opfab-client/roles
+           singleValue: false
+           separator: ","
+           mandatory: true
+         - path: "resource_access/STA"
+           mandatory: false  
+         - path: "resource_access/OPC"
+           mandatory: false    
+#logging.level.root: DEBUG
