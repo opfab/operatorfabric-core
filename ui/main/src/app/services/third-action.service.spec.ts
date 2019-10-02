@@ -265,8 +265,7 @@ describe('ThirdActionService', () => {
                 const calls = httpClientMock.match(req => req.url == expectedUrl);
                 expect(calls.length).toEqual(1);
             const currentActionStatus = extractActionStatusFromPseudoActionStatus(currentAction);
-            const jsonOfCurrentActionStatus = JSON.stringify(currentActionStatus);
-            calls[0].flush(jsonOfCurrentActionStatus);
+            calls[0].flush(currentActionStatus);
             }
         );
 
