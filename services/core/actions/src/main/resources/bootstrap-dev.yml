@@ -10,7 +10,7 @@ spring:
       discovery:
         service-id: config
         enabled: true
-logging.level.root: debyg
+logging.level.root: debug
 eureka:
   client:
     service-url:
