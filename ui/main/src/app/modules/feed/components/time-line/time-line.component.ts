@@ -276,7 +276,9 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             showGridLines: true,
             realTimeBar: true,
         };
-        this.confZoom = [{
+        this.confZoom = [
+            /*
+            {
             startDomain: startDomainUSE.valueOf(),
             endDomain: endDomainUSE.valueOf(),
             centeredOnTicks: true,
@@ -290,6 +292,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             firstMoveStartOfUnit: false,
             homeDomainExtraTicks: false,
             },
+            */
             {
             startDomain: startDomain4.valueOf(),
             endDomain: endDomain4.valueOf(),
