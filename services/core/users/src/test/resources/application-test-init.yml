@@ -15,7 +15,7 @@ operatorfabric:
             singleValue: true
           - path: "pathA1/pathA2/roleClaim"
             singleValue: true 
-          - path: "pathF1/pathF2/roleClaim"
+          - path: "pathF1/pathF2/listRoleClaim"
             singleValue: false
           - path: "pathB1/pathB2/pathB3/listRoleClaim"
             singleValue: false

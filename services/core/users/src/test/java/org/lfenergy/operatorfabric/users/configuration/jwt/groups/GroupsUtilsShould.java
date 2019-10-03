@@ -79,7 +79,7 @@ public class GroupsUtilsShould {
 		String rolesTab[] = { "F1", "F2", "F3" };
  		JSONArray jsonArray = new JSONArray(Arrays.asList(rolesTab));
 		JSONObject pathF2 = new JSONObject();
-		pathF2.put("roleClaim", jsonArray);
+		pathF2.put("listRoleClaim", jsonArray);
 		JSONObject pathF1 = new JSONObject();
 		pathF1.put("pathF2", pathF2);				
 		claims.put("pathF1", pathF1);

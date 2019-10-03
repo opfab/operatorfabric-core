@@ -3,7 +3,6 @@ package org.lfenergy.operatorfabric.users.configuration.jwt.groups;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,7 +108,12 @@ public class GroupsUtils {
 						isDone = true;
 					} else {
 						valueTempResult = jwt.getClaimAsString(pathEltSplited[position]);
-						jsonObjectTemp = new JSONObject(valueTempResult);
+						if (null == valueTempResult) {
+							// stop the process, can't retrieve the next element 
+							isDone = true;
+						} else {
+							jsonObjectTemp = new JSONObject(valueTempResult);
+						}						
 					}
 					isFirstElement = false;
 				} else {
@@ -125,7 +129,7 @@ public class GroupsUtils {
 				position++;
 			};
 		} catch (JSONException err) {
-		    log.warn("Error ", err.toString());
+		    log.debug("error : " + err.getMessage());
 		    rolesResult = null;
 		}
 
