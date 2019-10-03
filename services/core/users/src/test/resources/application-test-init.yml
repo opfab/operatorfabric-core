@@ -13,24 +13,18 @@ operatorfabric:
         rolesClaim:       
           - path: "roleClaim"
             singleValue: true
-            mandatory: true
           - path: "pathA1/pathA2/roleClaim"
             singleValue: true 
-            mandatory: true
+          - path: "pathF1/pathF2/roleClaim"
+            singleValue: false
           - path: "pathB1/pathB2/pathB3/listRoleClaim"
             singleValue: false
             separator: ";"
-            mandatory: true
           - path: "pathC1/listRoleClaim"
             singleValue: false
             separator: "," 
-            mandatory: true     
-          - path: "pathD1/RoleClaimOptional1"
-            mandatory: false
-          - path: "pathE1/pathE2/RoleClaimOptional2"
-            mandatory: false
-          - path: "pathF1/pathF2/roleClaim"
-            singleValue: false 
-            separator: "," 
-            mandatory: true    
-
+          - path: "pathD1/RoleClaimOptionalD1"
+            checkExistPath: true 
+          - path: "pathE1/pathE2/RoleClaimOptionalE1"
+            checkExistPath: true
+            roleValue: "RoleClaimOptionalE1"

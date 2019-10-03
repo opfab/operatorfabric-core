@@ -125,8 +125,7 @@ public class OAuth2UsersConfiguration {
 	 * @param user user model data
 	 * @return list of authority
 	 */
-//	public static List<GrantedAuthority> computeAuthorities(User user) {
-	public List<GrantedAuthority> computeAuthorities(User user) {
+	public static List<GrantedAuthority> computeAuthorities(User user) {
 		return AuthorityUtils
 				.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size -> new String[size]));
 	}

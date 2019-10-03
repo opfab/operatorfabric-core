@@ -5,6 +5,12 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
+/**
+ * define the jwt properties
+ * @author chengyli
+ *
+ */
+
 @ConfigurationProperties("operatorfabric.security.jwt")
 @Component
 @Data
