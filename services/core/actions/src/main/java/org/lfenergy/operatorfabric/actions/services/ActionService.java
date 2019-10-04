@@ -14,6 +14,8 @@ import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.utilities.ArrayUtils;
 import org.lfenergy.operatorfabric.utilities.IntrospectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -124,7 +126,13 @@ public class ActionService {
     ActionStatus sendAction(Action action, Card card, String jwt, String body) {
         try {
             String url = replaceTokens(action, card, jwt);
-            ResponseEntity<String> result = restTemplate.postForEntity(url, body, String.class);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(jwt);// belt and braces for jwt
+
+            HttpEntity<String> request = new HttpEntity<>(body,headers);
+
+            ResponseEntity<String> result = restTemplate.postForEntity(url, request, String.class);
             return extractStatus(result);
         } catch (HttpClientErrorException.NotFound ex) {
             throw new ApiErrorException(ApiError.builder()
