@@ -13,11 +13,13 @@ import java.util.Optional;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2GenericConfiguration;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.lfenergy.operatorfabric.users.configuration.jwt.JwtProperties;
+import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsProperties;
+import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsUtils;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -39,15 +41,19 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author Alexandra Guironnet
  */
-@ConfigurationProperties("oauth2.application.user")
 @Configuration
 @Slf4j
 @Data
 public class OAuth2UsersConfiguration {
 
-	public static final String CLAIM_SUB = "sub";
-	public static final String CLAIM_GIVEN_NAME = "given_name";
-	public static final String CLAIM_FAMILY_NAME = "family_name";
+	@Autowired
+	private JwtProperties jwtProperties;
+	
+	@Autowired
+	private GroupsProperties groupsProperties;
+	
+	@Autowired
+	private GroupsUtils groupsUtils;
 
 	/**
 	 * Generates a converter that converts {@link Jwt} to
@@ -63,24 +69,37 @@ public class OAuth2UsersConfiguration {
 
 			@Override
 			public AbstractAuthenticationToken convert(Jwt jwt) {
-			String principalId = jwt.getClaimAsString(CLAIM_SUB);
+				String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
 
 				if (log.isDebugEnabled())
-					log.debug("jwt : " + jwt.getTokenValue());
+					log.debug("\n\nUSER " + principalId + " with the token : \n" + jwt.getTokenValue()+"\n\n");
 
 				OAuth2JwtProcessingUtilities.token.set(jwt);
-
+				
 				Optional<UserData> optionalUser = userRepository.findById(principalId);
 				
 				UserData user;
 				if (!optionalUser.isPresent()) {
 					user = createUserDataVirtualFromJwt(jwt);
+					if (log.isDebugEnabled())
+						log.debug("user virtual(non existed in opfab) : " + user.toString());
 				} else {
 					user = optionalUser.get();
 				}
 				
 				OAuth2JwtProcessingUtilities.token.remove();
-				List<GrantedAuthority> authorities = computeAuthorities(user);
+				
+				List<GrantedAuthority> authorities = null;
+				switch (groupsProperties.getMode()) {
+					case OPERATOR_FABRIC : 
+						authorities = computeAuthorities(user);
+						break;
+					case JWT :
+						authorities = computeAuthorities(jwt);
+						break;
+					default : authorities = null;	
+				}
+								
 				return new OpFabJwtAuthenticationToken(jwt, user, authorities);
 			}
 
@@ -91,9 +110,9 @@ public class OAuth2UsersConfiguration {
 			 * @return UserData
 			 */
 			private UserData createUserDataVirtualFromJwt(Jwt jwt) {
-				String principalId = jwt.getClaimAsString(CLAIM_SUB);
-				String givenName = jwt.getClaimAsString(CLAIM_GIVEN_NAME);
-				String familyName = jwt.getClaimAsString(CLAIM_FAMILY_NAME);
+				String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
+				String givenName = jwt.getClaimAsString(jwtProperties.getGivenNameClaim());
+				String familyName = jwt.getClaimAsString(jwtProperties.getFamilyNameClaim());
 								
 				return new UserData(principalId, givenName, familyName, null);				
 			}
@@ -109,5 +128,15 @@ public class OAuth2UsersConfiguration {
 	public static List<GrantedAuthority> computeAuthorities(User user) {
 		return AuthorityUtils
 				.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size -> new String[size]));
+	}
+	
+	/**
+	 * Creates Authority list from a jwt
+	 * 
+	 * @param jwt user's token
+	 * @return list of authority
+	 */
+	public List<GrantedAuthority> computeAuthorities(Jwt jwt) {
+		return groupsUtils.createAuthorityList(jwt);
 	}
 }
