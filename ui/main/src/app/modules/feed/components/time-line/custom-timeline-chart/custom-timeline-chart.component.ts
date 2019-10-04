@@ -95,11 +95,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Input() enableZoom;
   @Input() zoomOnButton;
   @Input()
-  set zoomLevel(level) {
-    this._zoomLevel = Number(level);
+  set zoomVector(level) {
+    this._zoomVector = Number(level);
   }
-  get zoomLevel() {
-    return this._zoomLevel;
+  get zoomVector() {
+    return this._zoomVector;
   }
   // manage home btn when domain change inside this component
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
@@ -144,15 +144,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   // ZOOM
   private maxZoom;
   private minZoom;
-  private _zoomLevel;
+  private _zoomVector;
   // DRAG
   private startDragX;
   private setDragDirection;
   public dragDirection;
   private previousXPos;
 
-  public test;
-  public i18nPrefix;
   /**
    *  - call loop function for update real time bar value
    *  - set xTicks for rotate it, and set a variable inside library
@@ -168,19 +166,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.xTicksOne.push(moment(i));
       this.xTicksTwo.push(moment(i));
     }
-
-    this.test = {};
-    this.test['title'] = {};
-    this.test.title.parameters = '4';
-    this.test.title.keys = 'process.title';
-    this.i18nPrefix = 'test' + '.' + '1' + '.'; // publisher et publisherVersion
-    console.log('o', this.test);
-
   }
-
- // <span class="nav-link" translate [translateParams]="detailC.detail.title.parameters">
- // {{i18nPrefix+detailC.detail.title.key}}</span>
-
 
   /**
    * Main function for ngx-charts
@@ -383,16 +369,16 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       //                           ==> new End of domain = x + (domain[1] - x) / 2
       if (direction === 'in') {
         if ((myDomain2[1] - myDomain2[0]) > this.maxZoom) {
-          const newStart = cursorXTime - ((cursorXTime - myDomain2[0]) / this.zoomLevel);
-          const newEnd = cursorXTime + ((myDomain2[1] - cursorXTime) / this.zoomLevel);
+          const newStart = cursorXTime - ((cursorXTime - myDomain2[0]) / this.zoomVector);
+          const newEnd = cursorXTime + ((myDomain2[1] - cursorXTime) / this.zoomVector);
           myDomain2 = [newStart, newEnd];
         }
       }
       // same mathematic function: only change division by multiplication
       if (direction === 'out') {
         if ((myDomain2[1] - myDomain2[0]) < this.minZoom) {
-          const newStart = cursorXTime - ((cursorXTime - myDomain2[0]) * this.zoomLevel);
-          const newEnd = cursorXTime + ((myDomain2[1] - cursorXTime) * this.zoomLevel);
+          const newStart = cursorXTime - ((cursorXTime - myDomain2[0]) * this.zoomVector);
+          const newEnd = cursorXTime + ((myDomain2[1] - cursorXTime) * this.zoomVector);
           myDomain2 = [newStart, newEnd];
         }
       }
@@ -950,8 +936,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               newCircle.end = array[j].date;
               const summaryDate = this.timeService.predefinedFormat(moment(array[j].date), 'titleDateInsideTooltips') +
                   ' - ' + this.timeService.predefinedFormat(moment(array[j].date), 'titleHourInsideTooltips') + ' : ';
-              const objSummary = { parameters: array[i].summary.parameters, keys: array[i].summary.keys,
-                summaryDate: summaryDate, i18nPrefix: array[i].publisher + '.' + array[i].publisherVersion + '.'};
+              const objSummary = { parameters: array[j].summary.parameters, key: array[j].summary.key,
+                summaryDate: summaryDate, i18nPrefix: array[j].publisher + '.' + array[j].publisherVersion + '.'};
               newCircle.summary.push(objSummary);
               j++;
             }

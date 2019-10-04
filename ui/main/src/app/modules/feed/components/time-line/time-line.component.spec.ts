@@ -109,7 +109,9 @@ describe('TimeLineComponent', () => {
       startDate: oneCard.startDate,
       endDate: oneCard.endDate,
       severity: oneCard.severity,
-      summary: oneCard.summary.parameters.value
+      publisher: oneCard.publisher,
+      publisherVersion: oneCard.publisherVersion,
+      summary: oneCard.title
     }];
     const data$ = store.select((timelineSelectors.selectTimelineSelection));
     data$.pipe(debounceTime(300), distinctUntilChanged())
@@ -148,28 +150,36 @@ describe('TimeLineComponent', () => {
         startDate: alarmCard.startDate,
         endDate: alarmCard.endDate,
         severity: alarmCard.severity,
-        summary: alarmCard.summary.parameters.value
+        publisher: alarmCard.publisher,
+        publisherVersion: alarmCard.publisherVersion,
+        summary: alarmCard.title
     }, {
         displayDate: actionCard.startDate,
         publishDate: actionCard.publishDate,
         startDate: actionCard.startDate,
         endDate: actionCard.endDate,
         severity: actionCard.severity,
-        summary: actionCard.summary.parameters.value
+        publisher: actionCard.publisher,
+        publisherVersion: actionCard.publisherVersion,
+        summary: actionCard.title
     }, {
         displayDate: oneCard.startDate,
         publishDate: oneCard.publishDate,
         startDate: oneCard.startDate,
         endDate: oneCard.endDate,
         severity: oneCard.severity,
-        summary: oneCard.summary.parameters.value
+        publisher: oneCard.publisher,
+        publisherVersion: oneCard.publisherVersion,
+        summary: oneCard.title
     }, {
         displayDate: notificationCard.startDate,
         publishDate: notificationCard.publishDate,
         startDate: notificationCard.startDate,
         endDate: notificationCard.endDate,
         severity: notificationCard.severity,
-        summary: notificationCard.summary.parameters.value
+        publisher: notificationCard.publisher,
+        publisherVersion: notificationCard.publisherVersion,
+        summary: notificationCard.title
     }];
     const data$ = store.select((timelineSelectors.selectTimelineSelection));
     data$.pipe(debounceTime(300), distinctUntilChanged())

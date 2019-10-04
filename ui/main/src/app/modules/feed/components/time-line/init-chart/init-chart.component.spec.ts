@@ -352,7 +352,6 @@ describe('InitChartComponent', () => {
     expect(component.buttonTitle).toEqual(saveTitle);
   });
 
-  // domain duration equal to 7 days, and screen width = 1027 12 hours  width = 770 1 day
   it('should create timeline with another conf, ' +
     'with autonomous ticks positionning', () => {
     fixture.detectChanges();

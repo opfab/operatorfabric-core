@@ -143,7 +143,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * sort by publish date the array received on param
+   * sort by display date the array received on param
    * set an list of arrays for each severity of Cards
    */
   setArrayChartData(array: any[]): void {

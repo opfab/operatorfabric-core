@@ -46,10 +46,10 @@ describe('CustomTimelineChartComponent', () => {
     component = fixture.componentInstance;
   }));
 
-  it('init myData & get zoomLevel', () => {
+  it('init myData & get zoomVector', () => {
     fixture.detectChanges();
     component.myData = [];
-    const tmp = component.zoomLevel;
+    const tmp = component.zoomVector;
     expect(component).toBeTruthy();
   });
 
@@ -184,9 +184,9 @@ describe('CustomTimelineChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set zoomLevel', () => {
+  it('should set zoomVector', () => {
     fixture.detectChanges();
-    component.zoomLevel = 2;
+    component.zoomVector = 2;
     expect(component).toBeTruthy();
   });
 
@@ -381,7 +381,9 @@ describe('CustomTimelineChartComponent', () => {
       count: 1,
       cy: 0,
       value: 4,
-      summary: 'test',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '1',
     };
     component.myData = [[tmpData]];
     component.clusterConf = {
@@ -397,7 +399,9 @@ describe('CustomTimelineChartComponent', () => {
       count: 1,
       cy: 0,
       value: 3,
-      summary: 'test2',
+      summary: {parameters: 'param2', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '2',
     };
     component.centeredOnTicks = true;
     component.clusterTicksToTicks = false;
@@ -410,8 +414,11 @@ describe('CustomTimelineChartComponent', () => {
     expect(component.dataClustered[0][0].color).toEqual('red');
     expect(component.dataClustered[0][0].cy).toEqual(0);
     expect(component.dataClustered[0][0].value).toEqual(4);
-    expect(component.dataClustered[0][0].summary).toEqual([tmpMoment.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
-    ' : ' + 'test']);
+    expect(component.dataClustered[0][0].summary[0].summaryDate).toEqual(tmpMoment.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
+    ' : ');
+    expect(component.dataClustered[0][0].summary[0].i18nPrefix).toEqual('TEST.1.');
+    expect(component.dataClustered[0][0].summary[0].parameters).toEqual('param');
+    expect(component.dataClustered[0][0].summary[0].key).toEqual('process');
     expect(component.dataClustered[0][0].r).toEqual(10);
     expect(component.dataClustered[0][2]).toEqual(undefined);
 
@@ -423,7 +430,9 @@ describe('CustomTimelineChartComponent', () => {
       count: 1,
       cy: 0,
       value: 2,
-      summary: 'test3',
+      summary: {parameters: 'param3', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '3',
     };
     tmpData2.date.add(3, 'days');
     tmpData3.date.subtract(3, 'days');
@@ -436,8 +445,11 @@ describe('CustomTimelineChartComponent', () => {
     expect(component.dataClustered[0][0].color).toEqual('red');
     expect(component.dataClustered[0][0].cy).toEqual(0);
     expect(component.dataClustered[0][0].value).toEqual(4);
-    expect(component.dataClustered[0][0].summary).toEqual([tmpMoment.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
-    ' : ' + 'test']);
+    expect(component.dataClustered[0][0].summary[0].summaryDate).toEqual(tmpMoment.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
+    ' : ');
+    expect(component.dataClustered[0][0].summary[0].i18nPrefix).toEqual('TEST.1.');
+    expect(component.dataClustered[0][0].summary[0].parameters).toEqual('param');
+    expect(component.dataClustered[0][0].summary[0].key).toEqual('process');
     expect(component.dataClustered[0][0].r).toEqual(10);
     // Second Circle
     expect(component.dataClustered[0][1].start).toEqual(tmpData2.date);
@@ -446,8 +458,11 @@ describe('CustomTimelineChartComponent', () => {
     expect(component.dataClustered[0][1].color).toEqual('orange');
     expect(component.dataClustered[0][1].cy).toEqual(0);
     expect(component.dataClustered[0][1].value).toEqual(3);
-    expect(component.dataClustered[0][1].summary).toEqual([tmpData2.date.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
-    ' : ' + 'test2']);
+    expect(component.dataClustered[0][1].summary[0].summaryDate).toEqual(tmpData2.date.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
+    ' : ');
+    expect(component.dataClustered[0][1].summary[0].i18nPrefix).toEqual('TEST.2.');
+    expect(component.dataClustered[0][1].summary[0].parameters).toEqual('param2');
+    expect(component.dataClustered[0][1].summary[0].key).toEqual('process');
     expect(component.dataClustered[0][1].r).toEqual(10);
     // Third circle isn't in the scope of ticks
     expect(component.dataClustered[0][3]).toEqual(undefined);

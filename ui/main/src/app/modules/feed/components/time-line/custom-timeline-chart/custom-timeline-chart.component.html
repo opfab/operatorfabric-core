@@ -84,9 +84,7 @@
     </svg:g>
     <ng-template #tooltipTemplate2>
         {{circleHovered.period}} <br/>
-        <span class="nav-link" translate >{{i18nPrefix+test.title.key}}</span>
         Count: {{circleHovered.count}} <br/>
-        <!--<span class="nav-link" translate [translateParams]="title.parameters">{{i18nPrefix+title.summary}}</span>-->
-        Summary: <p *ngFor="let title of circleHovered.summary"style="padding: 0px;margin: 0px;line-height: 10px">{{title.summaryDate}}TTT{{title.i18nPrefix}}</p>
+        Summary: <p *ngFor="let title of circleHovered.summary"style="padding: 0px;margin: 0px;line-height: 10px">{{title.summaryDate}}<span class="nav-link" translate [translateParams]="title.parameters">{{title.i18nPrefix + title.key}}</span></p>
     </ng-template>
 </ngx-charts-chart>
