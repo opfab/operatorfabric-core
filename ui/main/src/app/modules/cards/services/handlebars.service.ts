@@ -40,6 +40,7 @@ export class HandlebarsService {
         this.registerArrayAtIndexLength();
         this.registerBool();
         this.registerNow();
+        this.registerJson();
     }
 
     public executeTemplate(templateName: string, context: DetailContext):Observable<string> {
@@ -58,6 +59,12 @@ export class HandlebarsService {
             map(s=>Handlebars.compile(s)),
             tap(t=>this.templateCache[key]=t)
         );
+    }
+
+    private registerJson() {
+        Handlebars.registerHelper('json', function (obj) {
+            return new Handlebars.SafeString(JSON.stringify(obj))
+        });
     }
 
     private registerBool() {
