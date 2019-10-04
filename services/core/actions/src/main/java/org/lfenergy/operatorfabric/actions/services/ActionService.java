@@ -177,12 +177,14 @@ public class ActionService {
     }
 
     String replaceTokens(Action action, Card card, String jwt) {
-        Matcher urlMatcher = TOKEN_PATTERN.matcher(action.getUrl());
-        StringBuffer sb = new StringBuffer((action.getUrl().length()));
+        String actionUrl = action.getUrl();
+        Matcher urlMatcher = TOKEN_PATTERN.matcher(actionUrl);
+        StringBuffer sb = new StringBuffer((actionUrl.length()));
         while (urlMatcher.find()) {
             urlMatcher.appendReplacement(sb, Matcher.quoteReplacement(extractToken(card, urlMatcher.group(1), jwt)));
         }
-        return sb.toString();
+        if(sb.length()>0) return sb.toString();
+        return actionUrl;
     }
 
     String extractToken(Card card, String token, String jwt) {

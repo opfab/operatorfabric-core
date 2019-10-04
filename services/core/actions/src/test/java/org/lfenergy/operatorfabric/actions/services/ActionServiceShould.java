@@ -91,6 +91,16 @@ public class ActionServiceShould {
     }
 
     @Test
+    void leaveUrlWithCurlyBracesUntouch(){
+        String urlWithoutCurlyBraces = "http://url-of-test-without-curly-braces/need/to/stay/untouched";
+        this.action= ActionData.builder()
+                    .url(urlWithoutCurlyBraces)
+                    .build();
+        assertThat(this.actionService.replaceTokens(this.action,this.card,"")).isEqualTo(urlWithoutCurlyBraces);
+
+    }
+
+    @Test
     void updateAction() throws URISyntaxException, JsonProcessingException {
         ActionStatusData actionStatus = ActionStatusData.builder()
                 .label(I18nData.builder().key("new.label").build())
