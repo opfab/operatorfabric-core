@@ -38,7 +38,7 @@ public class GroupsUtils {
 	/**
 	 * get a GrantedAuthority list from the Jwt 
 	 * @param jwt
-	 * @return List<GrantedAuthority>
+	 * @return  a list of {@link GrantedAuthority}
 	 */
 	public List<GrantedAuthority> createAuthorityList(Jwt jwt) {
 		
@@ -51,7 +51,7 @@ public class GroupsUtils {
 	/**
 	 * get a GrantedAuthority list from a groups list
 	 * @param listGroups
-	 * @return List<GrantedAuthority>
+	 * @return  a list of {@link GrantedAuthority}
 	 */
 	public List<GrantedAuthority> computeAuthorities(List<String> listGroups) {
 		return AuthorityUtils
