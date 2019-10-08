@@ -18,5 +18,8 @@
   "menu":{
     "first":"Premier item",
     "second":"Deuxieme item"
+  },
+  "template": {
+    "title": "Onglet TEST"
   }
 }

@@ -14,6 +14,8 @@ import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.utilities.ArrayUtils;
 import org.lfenergy.operatorfabric.utilities.IntrospectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,10 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,7 +130,15 @@ public class ActionService {
     ActionStatus sendAction(Action action, Card card, String jwt, String body) {
         try {
             String url = replaceTokens(action, card, jwt);
-            ResponseEntity<String> result = restTemplate.postForEntity(url, body, String.class);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(jwt);
+            // need to remove accepted charSet header otherwise 413 Full Header arise
+            List<Charset> acceptCharset = Collections.singletonList(StandardCharsets.UTF_8);
+            headers.setAcceptCharset(acceptCharset);
+            HttpEntity<String> request = new HttpEntity<>(body,headers);
+
+            ResponseEntity<String> result = restTemplate.postForEntity(url, request, String.class);
             return extractStatus(result);
         } catch (HttpClientErrorException.NotFound ex) {
             throw new ApiErrorException(ApiError.builder()
