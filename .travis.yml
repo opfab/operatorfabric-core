@@ -21,6 +21,8 @@ jobs:
   include:
   - stage: test-assemble
     script:
+      - echo ${DOCKER_CLOUD_USER}
+      - echo ${DOCKER_CLOUD_PWD}
 #      - rm -rf  $HOME/.gradle/caches/build-cache-*
 #      - ./gradlew --build-cache clean
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
