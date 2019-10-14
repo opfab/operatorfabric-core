@@ -1,9 +1,9 @@
-package org.lfenergy.operatorfabric.users.configuration.jwt.groups;
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups;
 
 import java.util.List;
 
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.roles.RoleClaimCheckExistPath;
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.roles.RoleClaimStandard;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaimCheckExistPath;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaimStandard;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

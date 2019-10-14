@@ -1,0 +1,31 @@
+#spring.cloud.discovery.enabled: false
+#eureka.client.enabled: false
+
+operatorfabric:
+  security:
+    jwt:
+      sub-claim: sub
+      given-name-claim: given_name
+      family-name-claim: family_name
+      groups:
+        mode: JWT # value possible JWT | OPERATOR_FABRIC
+        rolesClaim:
+          rolesClaimStandard:       
+           - path: "roleClaim"
+             singleValue: true
+           - path: "pathA1/pathA2/roleClaim"
+             singleValue: true 
+           - path: "pathF1/pathF2/listRoleClaim"
+             singleValue: false
+           - path: "pathB1/pathB2/pathB3/listRoleClaim"
+             singleValue: false
+             separator: ";"
+           - path: "pathC1/listRoleClaim"
+             singleValue: false
+             separator: "," 
+          rolesClaimCheckExistPath:   
+           - path: "pathD1/RoleClaimOptionalD1"
+           - path: "pathE1/pathE2/RoleClaimOptionalE1"
+             roleValue: "RoleClaimOptionalE1"  
+          
+      

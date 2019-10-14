@@ -1,4 +1,4 @@
-package org.lfenergy.operatorfabric.users.configuration.jwt;
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

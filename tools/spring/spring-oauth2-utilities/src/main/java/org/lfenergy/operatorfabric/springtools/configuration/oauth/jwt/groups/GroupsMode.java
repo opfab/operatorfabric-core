@@ -1,4 +1,4 @@
-package org.lfenergy.operatorfabric.users.configuration.jwt.groups;
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups;
 
 /**
  * Define the 2 modes how to retrieve the user role : OPERATOR_FABRIC or JWT mode.

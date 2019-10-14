@@ -1,4 +1,4 @@
-package org.lfenergy.operatorfabric.users.configuration.jwt.groups;
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -13,8 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
-import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.application.UserServiceCacheTestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,8 +26,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = UnitTestApplication.class)
-@ActiveProfiles(profiles = {"default", "test-init"})
+@SpringBootTest(classes = UserServiceCacheTestApplication.class)
+@ActiveProfiles(profiles = {"test"})
 @WebAppConfiguration
 @Slf4j
 public class GroupsUtilsWithApplicationFileConfigShould {
@@ -126,7 +125,5 @@ public class GroupsUtilsWithApplicationFileConfigShould {
         assertThat("must contains the ROLE_RoleB", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_F3")));
           
     }
-	
-	
 		
 }

@@ -1,11 +1,11 @@
-package org.lfenergy.operatorfabric.users.configuration.jwt.groups;
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.roles.RoleClaim;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

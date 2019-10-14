@@ -13,15 +13,16 @@ import java.util.Optional;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2GenericConfiguration;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.lfenergy.operatorfabric.users.configuration.jwt.JwtProperties;
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsProperties;
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsUtils;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Alexandra Guironnet
  */
 @Configuration
+@Import({GroupsProperties.class, GroupsUtils.class, JwtProperties.class})
 @Slf4j
 @Data
 public class OAuth2UsersConfiguration {

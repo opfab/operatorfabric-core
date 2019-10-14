@@ -8,11 +8,11 @@
 package org.lfenergy.operatorfabric.users.application;
 
 import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperatorFabricMongo;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.lfenergy.operatorfabric.users.configuration.DataInitComponent;
 import org.lfenergy.operatorfabric.users.configuration.json.JacksonConfig;
-import org.lfenergy.operatorfabric.users.configuration.jwt.JwtProperties;
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsProperties;
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsUtils;
 import org.lfenergy.operatorfabric.users.configuration.mongo.LocalMongoConfiguration;
 import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
 import org.lfenergy.operatorfabric.users.controllers.CustomExceptionHandler;

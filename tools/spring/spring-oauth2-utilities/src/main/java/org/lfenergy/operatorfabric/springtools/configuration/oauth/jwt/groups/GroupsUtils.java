@@ -1,9 +1,9 @@
-package org.lfenergy.operatorfabric.users.configuration.jwt.groups;
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.roles.RoleClaim;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -62,3 +62,4 @@ public class GroupsUtils {
 	}
 	
 }
+

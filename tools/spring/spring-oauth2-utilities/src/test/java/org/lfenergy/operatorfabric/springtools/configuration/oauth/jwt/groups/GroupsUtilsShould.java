@@ -1,4 +1,4 @@
-package org.lfenergy.operatorfabric.users.configuration.jwt.groups;
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -15,14 +15,11 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.application.UserServiceCacheTestApplication;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsMode;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaimCheckExistPath;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaimStandard;
-import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,8 +34,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = UnitTestApplication.class)
-@ActiveProfiles(profiles = {"default"})
+@SpringBootTest(classes = UserServiceCacheTestApplication.class)
+@ActiveProfiles(profiles = {"test"})
 @WebAppConfiguration
 @Slf4j
 public class GroupsUtilsShould {

@@ -1,4 +1,4 @@
-package org.lfenergy.operatorfabric.users.configuration.jwt.groups.roles;
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,4 +75,3 @@ public class RoleClaimStandard extends RoleClaim {
 	}
 	 
 }
-
