@@ -1,29 +1,25 @@
 package org.lfenergy.operatorfabric.users.configuration.jwt.groups;
 
-import javax.validation.constraints.NotBlank;
+import java.util.List;
+
+import org.lfenergy.operatorfabric.users.configuration.jwt.groups.roles.RoleClaimCheckExistPath;
+import org.lfenergy.operatorfabric.users.configuration.jwt.groups.roles.RoleClaimStandard;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Define the parameters to get a role value in the JWT mode
+ * Contains all type of RoleClaim (RoleClaimStandard or RoleClaimCheckExistPath for instance)
  * @author chengyli
  *
  */
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RolesClaim {
-	
-	@NotBlank
-	public String path;
-	
-	public Boolean singleValue = Boolean.TRUE;
-	public String separator;
-	
-	public Boolean checkExistPath = Boolean.FALSE;
-	public String roleValue;
-	
+
+	private List<RoleClaimStandard> rolesClaimStandard;
+	private List<RoleClaimCheckExistPath> rolesClaimCheckExistPath;
+
 }

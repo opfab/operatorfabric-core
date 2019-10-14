@@ -1,9 +1,11 @@
 package org.lfenergy.operatorfabric.users.configuration.jwt.groups;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 
+import org.lfenergy.operatorfabric.users.configuration.jwt.groups.roles.RoleClaim;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +23,27 @@ import lombok.Data;
 public class GroupsProperties {
 		
 	@NotBlank
-	public GroupsMode mode;
+	private GroupsMode mode;
 	
-	public List<RolesClaim> rolesClaim;
+	private RolesClaim rolesClaim;
+	
+	/**
+	 * retrieve all the RolesClaimStandard and all the RolesClaimCheckExistPath converted into a generic RoleClaim.
+	 * @return a list of generic roleClaim 
+	 */
+	public List<RoleClaim> getListRoleClaim() {
+		List<RoleClaim> listRoleClaimResult = rolesClaim.getRolesClaimStandard()
+			.stream()
+			.map(roleClaimStandard -> (RoleClaim) roleClaimStandard)
+			.collect(Collectors.toList());
+		
+		listRoleClaimResult.addAll(
+				rolesClaim.getRolesClaimCheckExistPath()
+				.stream()
+				.map(roleClaimCheckExistPath -> (RoleClaim) roleClaimCheckExistPath)
+				.collect(Collectors.toList()));
+		
+		return listRoleClaimResult;
+	}
 	
 }
