@@ -461,12 +461,12 @@ describe('Handlebars Services', () => {
                 call.flush('{{i18n card.data.i18n}}');
             });
         });
-        it('compile numberFormat', (done) => {
+        it('compile numberFormat using en locale fallback', (done) => {
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
                 .subscribe((result) => {
                     expect(result)
-                        .toEqual(new Intl.NumberFormat(translate.getBrowserLang(), {style: "currency", currency: "EUR"})
+                        .toEqual(new Intl.NumberFormat('en', {style: "currency", currency: "EUR"})
                             .format(5));
                     done();
                 });
@@ -477,9 +477,9 @@ describe('Handlebars Services', () => {
                 call.flush('{{numberFormat card.data.numbers.[5] style="currency" currency="EUR"}}');
             });
         });
-        it('compile dateFormat now', (done) => {
+        it('compile dateFormat now (using en locale fallback)', (done) => {
             const nowMoment = moment(new Date(now));
-            nowMoment.locale(translate.getBrowserLang())
+            nowMoment.locale('en')
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
                 .subscribe((result) => {
