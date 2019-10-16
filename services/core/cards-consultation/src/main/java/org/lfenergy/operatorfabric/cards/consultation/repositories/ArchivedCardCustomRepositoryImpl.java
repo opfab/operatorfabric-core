@@ -1,6 +1,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.cards.consultation.configuration.mongo.CriteriaFactory;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
@@ -59,7 +60,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         List<Criteria> criteria = new ArrayList<>();
 
         criteria.add(Criteria.where("_id").is(id));
-        criteria.addAll(userCriteria(user));
+        criteria.addAll(CriteriaFactory.computeCriteria(user));
 
         if(!criteria.isEmpty()){
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
@@ -137,7 +138,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         criteria.addAll(regularParametersCriteria(queryParams));
 
         /* Add user criteria */
-        criteria.addAll(userCriteria(user));
+        criteria.addAll(CriteriaFactory.computeCriteria(user));
 
         if(!criteria.isEmpty()){
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
