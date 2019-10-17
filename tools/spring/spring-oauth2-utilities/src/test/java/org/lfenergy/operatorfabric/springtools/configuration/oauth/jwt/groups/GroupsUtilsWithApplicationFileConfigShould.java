@@ -8,9 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.assertj.core.util.Arrays;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.application.UserServiceCacheTestApplication;
@@ -23,107 +21,107 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import lombok.extern.slf4j.Slf4j;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = UserServiceCacheTestApplication.class)
 @ActiveProfiles(profiles = {"test"})
 @WebAppConfiguration
-@Slf4j
 public class GroupsUtilsWithApplicationFileConfigShould {
 	
 	@Autowired
 	private GroupsUtils groupsUtils;
 	
+	public String tokenEncoded = null;
+	
+	@BeforeEach
+	public void before() {
+		String jwtHeader = "{\"alg\":\"HS256\",\"typ\":\"JWT\",\"kid\":\"RmqNU3K7LxrNRFkHU2qq6Yq12kTCismFL9ScpnCOx0c\"}";
+		String jwtBody = "{ \n" + 
+				"    \"jti\": \"ebf36450-e18c-490b-9a68-feef8dfab1c1\",\n" + 
+				"    \"exp\": 1571170078,\n" + 
+				"    \"nbf\": 0,\n" + 
+				"    \"iat\": 1571152078,\n" + 
+				"    \"iss\": \"http://localhost:89/auth/realms/dev\",\n" + 
+				"    \"aud\": \"account\",\n" + 
+				"    \"sub\": \"user_not_opfab\",\n" + 
+				"    \"typ\": \"Bearer\",\n" + 
+				"    \"azp\": \"opfab-client\",\n" + 
+				"    \"acr\": \"1\",\n" + 
+				"    \"roleClaim\":\"RoleClaimValue\",\n" + 
+				"    \"pathA1\": {\n" + 
+				"        \"pathA2\": {\n" + 
+				"            \"roleClaim\":\"ADMIN\"    \n" + 
+				"        }\n" + 
+				"    },\n" + 
+				"    \"pathB1\": {\n" + 
+				"        \"pathB2\": {\n" + 
+				"            \"pathB3\": {\n" + 
+				"                \"listRoleClaim\":\"RoleB1;RoleB2;RoleB3\"    \n" + 
+				"            }   \n" + 
+				"        }\n" + 
+				"    },\n" + 
+				"    \"pathC1\": {\n" + 
+				"        \"listRoleClaim\":\"RoleC1,RoleC2\"\n" + 
+				"    },\n" + 
+				"    \"pathF1\": {\n" + 
+				"        \"pathF2\": {\n" + 
+				"            \"listRoleClaim\": [\n" + 
+				"                \"F1\", \n" + 
+				"                \"F2\", \n" + 
+				"                \"F3\"\n" + 
+				"            ]\n" + 
+				"        }\n" + 
+				"    },\n" + 
+				"    \"pathD1\": {\n" + 
+				"        \"RoleClaimOptionalD1\": {\n" + 
+				"            \"othersD2\": \"Value not important\"\n" + 
+				"        }\n" + 
+				"    },\n" + 
+				"    \"pathE1\": {\n" + 
+				"        \"pathE2\": {\n" + 
+				"            \"RoleClaimOptionalE1\": \"Value not important\"\n" + 
+				"        }\n" + 
+				"    }\n" + 
+				"}";
+		
+		tokenEncoded = ToolsGeneratorTokenHelper.getTokenEncoded(jwtHeader, jwtBody);
+	}
+	
 	@Test
     public void createAuthorityListFromListRolesClaim(){
 		
 		// Given
-		String tokenValue = "valueGeneratedByTheOAuthServer";
+		String tokenValue = tokenEncoded;
 		
+		// headers and claims can't be null or empty
+		// set dummy values, all matter is the token value
 		Map<String, Object> headers = new HashMap<String, Object>();
-		headers.put("alg", "RS256");
-		headers.put("typ", "JWT");
-		headers.put("kid", "RmqNU3K7LxrNRFkHU2qq6Yq12kTCismFL9ScpnCOx0c");
-		
+		headers.put("dummy1", null);
 		Map<String, Object> claims = new HashMap<String, Object>();
-		// user data
-		claims.put("sub", "testSub");
-		claims.put("given_name", "Richard");
-		claims.put("family_name", "HeartLion");	
+		claims.put("dummy2", null);
 				
-		// groups data
-		// test single value claim
-		claims.put("roleClaim", "RoleClaimValue");	
-		
-		JSONObject pathA2 = new JSONObject();
-		pathA2.put("roleClaim", "ADMIN");
-		JSONObject pathA1 = new JSONObject();
-		pathA1.put("pathA2", pathA2);
-		claims.put("pathA1", pathA1);
-		
-		// test multiple values claim
-		JSONObject pathB3 = new JSONObject();
-		pathB3.put("listRoleClaim", "RoleB1;RoleB2;RoleB3"); 		// test the separator ";"
-		JSONObject pathB2 = new JSONObject();
-		pathB2.put("pathB3", pathB3);
-		JSONObject pathB1 = new JSONObject();
-		pathB1.put("pathB2", pathB2);
-		claims.put("pathB1", pathB1);
-		
-		JSONObject pathC1 = new JSONObject();
-		pathC1.put("listRoleClaim", "RoleC1,RoleC2");				// test the separator ",'
-		claims.put("pathC1", pathC1);
-		
-		String rolesTab[] = { "F1", "F2", "F3" };
- 		JSONArray jsonArray = new JSONArray(Arrays.asList(rolesTab));
-		JSONObject pathF2 = new JSONObject();
-		pathF2.put("listRoleClaim", jsonArray);
-		JSONObject pathF1 = new JSONObject();
-		pathF1.put("pathF2", pathF2);				
-		claims.put("pathF1", pathF1);
-		
-		// test no mandatory claim
-		// test if the path "pathD1/roleClaimOptional1" exists, after roleClaimOptional1, it doesn't matter
-		// case the value of roleClaimOptional1 is a JSONObject 
-		// test implicit value
-		JSONObject othersD2 = new JSONObject();
-		othersD2.put("othersD2", "Value not important");
-		JSONObject pathD1 = new JSONObject();
-		pathD1.put("RoleClaimOptionalD1", othersD2);				
-		claims.put("pathD1", pathD1);
-		
-		// test if the path exists in "pathE1/pathE2/roleClaimOptional2", after roleClaimOptional2, it doesn't matter
-		// case the value of roleClaimOptional1 is a value
-		// test explicit value
-		JSONObject pathE2 = new JSONObject();
-		pathE2.put("RoleClaimOptionalE1", "Value not important");
-		JSONObject pathE1 = new JSONObject();
-		pathE1.put("pathE2", pathE2);				
-		claims.put("pathE1", pathE1);
-		
 		Jwt jwt = new Jwt(tokenValue, Instant.ofEpochMilli(0), Instant.now(), headers, claims);
 		
 		// Test
 		List<GrantedAuthority> listGrantedAuthorityActual = groupsUtils.createAuthorityList(jwt);
 		
 		// Result
-		log.info(listGrantedAuthorityActual.toString());
-		
         assertThat(listGrantedAuthorityActual, hasSize(12));
+        // check Standard claims
         assertThat("must contains the ROLE_RoleClaimValue", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleClaimValue")));
         assertThat("must contains the ROLE_ADMIN", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
-        assertThat("must contains the ROLE_Role1", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleB1")));
-        assertThat("must contains the ROLE_Role2", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleB2")));
-        assertThat("must contains the ROLE_Role3", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleB3")));
-        assertThat("must contains the ROLE_RoleA", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleC1")));
-        assertThat("must contains the ROLE_RoleB", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleC2")));
-        assertThat("must contains the ROLE_RoleA", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleClaimOptionalD1")));
-        assertThat("must contains the ROLE_RoleB", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleClaimOptionalE1")));
-        assertThat("must contains the ROLE_RoleB", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_F1")));
-        assertThat("must contains the ROLE_RoleB", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_F2")));
-        assertThat("must contains the ROLE_RoleB", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_F3")));
-          
-    }
+        // check Standard list claims 
+        assertThat("must contains the ROLE_RoleB1", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleB1")));
+        assertThat("must contains the ROLE_RoleB2", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleB2")));
+        assertThat("must contains the ROLE_RoleB3", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleB3")));
+        assertThat("must contains the ROLE_RoleC1", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleC1")));
+        assertThat("must contains the ROLE_RoleC2", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleC2")));
+        // check Standard Array claims
+        assertThat("must contains the ROLE_F1", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_F1")));
+        assertThat("must contains the ROLE_F2", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_F2")));
+        assertThat("must contains the ROLE_F3", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_F3")));
+        // check CheckExistPath claims 
+        assertThat("must contains the ROLE_RoleClaimOptionalD1", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleClaimOptionalD1")));
+        assertThat("must contains the ROLE_RoleClaimOptionalE1", listGrantedAuthorityActual.contains(new SimpleGrantedAuthority("ROLE_RoleClaimOptionalE1")));
+	}
 		
 }

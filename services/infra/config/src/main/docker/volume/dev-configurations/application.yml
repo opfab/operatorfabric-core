@@ -43,11 +43,4 @@ operatorfabric:
       expire-claim: exp
       groups:
         mode: OPERATOR_FABRIC # value possible JWT | OPERATOR_FABRIC
-        rolesClaim:
-          rolesClaimStandard:
-            - path: "eicCode"
-            - path: "resource_access/opfab-client/roles"
-              singleValue: false
-          rolesClaimCheckExistPath: 
-            - path: "resource_access/STA"         
-            - path: "resource_access/OPC"  
+#logging.level.root: DEBUG              

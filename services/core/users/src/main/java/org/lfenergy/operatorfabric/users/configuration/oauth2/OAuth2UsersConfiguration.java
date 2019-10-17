@@ -73,8 +73,7 @@ public class OAuth2UsersConfiguration {
 			public AbstractAuthenticationToken convert(Jwt jwt) {
 				String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
 
-				if (log.isDebugEnabled())
-					log.debug("\n\nUSER " + principalId + " with the token : \n" + jwt.getTokenValue()+"\n\n");
+				log.debug("USER " + principalId + " with the token : \n" + jwt.getTokenValue());
 
 				OAuth2JwtProcessingUtilities.token.set(jwt);
 				
@@ -83,8 +82,7 @@ public class OAuth2UsersConfiguration {
 				UserData user;
 				if (!optionalUser.isPresent()) {
 					user = createUserDataVirtualFromJwt(jwt);
-					if (log.isDebugEnabled())
-						log.debug("user virtual(non existed in opfab) : " + user.toString());
+					log.debug("user virtual(non existed in opfab) : " + user.toString());
 				} else {
 					user = optionalUser.get();
 				}
@@ -101,11 +99,13 @@ public class OAuth2UsersConfiguration {
 						break;
 					default : authorities = null;	
 				}
+				
+				log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
 								
 				return new OpFabJwtAuthenticationToken(jwt, user, authorities);
 			}
-
-						
+			
+            	
 			/**
 			 * create a temporal User from the jwt information without any group
 			 * @param jwt jwt
@@ -113,8 +113,13 @@ public class OAuth2UsersConfiguration {
 			 */
 			private UserData createUserDataVirtualFromJwt(Jwt jwt) {
 				String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
-				String givenName = jwt.getClaimAsString(jwtProperties.getGivenNameClaim());
-				String familyName = jwt.getClaimAsString(jwtProperties.getFamilyNameClaim());
+				String givenName = null;
+				String familyName = null;
+				
+				if (null != jwtProperties.getGivenNameClaim())
+					givenName = jwt.getClaimAsString(jwtProperties.getGivenNameClaim());
+				if (null != jwtProperties.getFamilyNameClaim())
+					familyName = jwt.getClaimAsString(jwtProperties.getFamilyNameClaim());
 								
 				return new UserData(principalId, givenName, familyName, null);				
 			}

@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GroupsUtils {
 	
-	public static final String PATH_CLAIM_SEPARATOR = "/";
 	public static final String PREFIX_ROLE = "ROLE_";
 	
 	@Autowired

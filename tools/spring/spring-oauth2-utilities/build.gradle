@@ -8,5 +8,4 @@ dependencies{
     compile spring.webflux
     compile project(":client:users-client-data")
     compile project(":tools:generic:utilities")
-    compile("org.json:json:20190722")
 }

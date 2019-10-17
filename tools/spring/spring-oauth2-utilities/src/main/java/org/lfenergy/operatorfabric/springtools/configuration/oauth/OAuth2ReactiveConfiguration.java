@@ -7,7 +7,8 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
-import feign.FeignException;
+import java.util.List;
+
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +16,10 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
-import reactor.core.publisher.Mono;
 
-import java.util.List;
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 /**
  * <p>Authentication configuration for webflux</p>
@@ -26,6 +28,7 @@ import java.util.List;
  *
  * @author David Binder
  */
+@Slf4j
 @Configuration
 public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{
 
@@ -43,8 +46,21 @@ public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{
                 String principalId = jwt.getClaimAsString("sub");
                 OAuth2JwtProcessingUtilities.token.set(jwt);
                 User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
-                OAuth2JwtProcessingUtilities.token.remove();
-                List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
+				OAuth2JwtProcessingUtilities.token.remove();
+                
+				List<GrantedAuthority> authorities = null;
+				switch (groupsProperties.getMode()) {
+					case OPERATOR_FABRIC : 
+						authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
+						break;
+					case JWT :
+						authorities = computeAuthorities(jwt);
+						break;
+					default : authorities = null;	
+				}
+				
+				log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
+
                 return Mono.just(new OpFabJwtAuthenticationToken(jwt, user, authorities));
             }
         };

@@ -24,9 +24,4 @@ operatorfabric.users.default:
   user-settings:
     - login: rte-operator
       description: Da Operator Rulez
-#operatorfabric:
-#  security:
-#    jwt:      
-#      groups:
-#        mode: OPERATOR_FABRIC # value possible JWT | OPERATOR_FABRIC        
 #logging.level.root: DEBUG
