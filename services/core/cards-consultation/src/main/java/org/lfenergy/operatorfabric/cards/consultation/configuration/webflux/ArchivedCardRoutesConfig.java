@@ -20,7 +20,7 @@ import static reactor.util.function.Tuples.of;
 
 @Slf4j
 @Configuration
-public class ArchivedCardRoutesConfig {
+public class ArchivedCardRoutesConfig implements UserExtractor {
 
     private final ArchivedCardRepository archivedCardRepository;
 
@@ -49,7 +49,7 @@ public class ArchivedCardRoutesConfig {
 
     private HandlerFunction<ServerResponse> archivedCardGetRoute() {
         return request ->
-                extractUser(request)
+                extractUserFromJwtToken(request)
                         .flatMap(user -> archivedCardRepository.findByIdWithUser(request.pathVariable("id"),user))
                         .flatMap(card-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
                         .switchIfEmpty(notFound().build());
@@ -76,13 +76,13 @@ public class ArchivedCardRoutesConfig {
      * @param request the http request
      * @return a {@link User}
      */
-    private Mono<User> extractUser(ServerRequest request) {
-        return request.principal()
-                .map( principal ->  {
-                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-                    return (User) jwtPrincipal.getPrincipal();
-                });
-    }
+//    private Mono<User> extractUser(ServerRequest request) {
+//        return request.principal()
+//                .map( principal ->  {
+//                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+//                    return (User) jwtPrincipal.getPrincipal();
+//                });
+//    }
 
 
 

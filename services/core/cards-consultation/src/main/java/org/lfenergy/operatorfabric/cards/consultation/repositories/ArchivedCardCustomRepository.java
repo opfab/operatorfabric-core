@@ -8,10 +8,8 @@ import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-public interface ArchivedCardCustomRepository {
+public interface ArchivedCardCustomRepository extends UserUtilitiesCommonToCardRepository<ArchivedCardConsultationData> {
 
-    public Mono<Page<LightCardConsultationData>> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params);
-
-    public Mono<ArchivedCardConsultationData> findByIdWithUser(String id, User user);
+    Mono<Page<LightCardConsultationData>> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params);
 
 }

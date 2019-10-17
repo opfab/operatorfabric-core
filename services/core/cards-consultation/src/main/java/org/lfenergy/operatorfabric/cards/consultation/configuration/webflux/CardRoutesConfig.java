@@ -21,34 +21,38 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 
 @Slf4j
 @Configuration
-public class CardRoutesConfig {
+public class CardRoutesConfig implements UserExtractor {
 
     private final CardRepository cardRepository;
 
     @Autowired
-    public CardRoutesConfig(CardRepository cardRepository){
+    public CardRoutesConfig(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
     }
 
     /**
      * Card route configuration
+     *
      * @return route
      */
     @Bean
     public RouterFunction<ServerResponse> cardRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/cards/{id}"),cardGetRoute())
-                .andRoute(RequestPredicates.OPTIONS("/cards/{id}"),cardOptionRoute());
+                .route(RequestPredicates.GET("/cards/{id}"), cardGetRoute())
+                .andRoute(RequestPredicates.OPTIONS("/cards/{id}"), cardOptionRoute());
     }
 
 
     private HandlerFunction<ServerResponse> cardGetRoute() {
-        return request -> cardRepository.findById(request.pathVariable("id"))
-                    .flatMap(card-> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
-                    .switchIfEmpty(notFound().build());
+        return request ->
+                extractUserFromJwtToken(request)
+                        .flatMap(user -> cardRepository.findByIdWithUser(request.pathVariable("id"),user))
+                        .flatMap(card -> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
+                        .switchIfEmpty(notFound().build());
     }
 
     private HandlerFunction<ServerResponse> cardOptionRoute() {
         return request -> ok().build();
     }
+
 }
