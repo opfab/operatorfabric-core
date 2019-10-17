@@ -71,19 +71,6 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
                     User user = (User) jwtPrincipal.getPrincipal();
                     return of(user,request.queryParams());
                 });
-    }    /**
-     * Extracts User from Authentication request parameters
-     * @param request the http request
-     * @return a {@link User}
-     */
-//    private Mono<User> extractUser(ServerRequest request) {
-//        return request.principal()
-//                .map( principal ->  {
-//                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-//                    return (User) jwtPrincipal.getPrincipal();
-//                });
-//    }
-
-
+    }
 
 }

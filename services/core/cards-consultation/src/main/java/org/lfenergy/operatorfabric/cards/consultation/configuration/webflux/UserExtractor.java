@@ -6,7 +6,11 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.core.publisher.Mono;
 
 public interface UserExtractor {
-
+    /**
+     * Extracts User from Authentication request parameters
+     * @param request the http request
+     * @return a {@link User}
+     */
     default Mono<User> extractUserFromJwtToken(ServerRequest request){
         return request.principal()
                 .map( principal ->  {

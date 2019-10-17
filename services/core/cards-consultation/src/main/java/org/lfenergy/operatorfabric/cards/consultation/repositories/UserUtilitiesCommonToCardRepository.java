@@ -26,11 +26,11 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
     default List<Criteria> computeCriteriaToFindCardByProcessIdWithUser(String processId, User user){
         List<Criteria> criteria = new ArrayList<>();
         criteria.add(Criteria.where("_id").is(processId));
-        criteria.addAll(computeCriteria(user));
+        criteria.addAll(computeUserCriteria(user));
         return criteria;
     }
 
-    default List<Criteria> computeCriteria(User user){
+    default List<Criteria> computeUserCriteria(User user){
         List<Criteria> criteria = new ArrayList<>();
         String login = user.getLogin();
         List<String> groups = user.getGroups();
