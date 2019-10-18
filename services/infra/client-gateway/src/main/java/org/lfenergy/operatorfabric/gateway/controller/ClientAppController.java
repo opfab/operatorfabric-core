@@ -23,21 +23,6 @@ import reactor.core.publisher.Mono;
 @Controller
 public class ClientAppController {
     /**
-     * Forward to home/index.html file
-     *
-     * @param exchange http request/response
-     * @return nothing aside from completion
-     */
-//    @GetMapping(value = "/home")
-//    public String index() {
-////        ServerHttpResponse response = exchange.getResponse();
-////        response.setStatusCode(HttpStatus.SEE_OTHER);
-////        response.getHeaders().add(HttpHeaders.LOCATION, "/home/index.html");
-////        return response.setComplete();
-//        return "forward:/index.html";
-//    }
-
-    /**
      * Forward to login/index.html file
      *
      * @param exchange http request/response
