@@ -24,14 +24,6 @@ import java.time.Instant;
 public interface CardRepository extends ReactiveMongoRepository<CardConsultationData, String>, CardOperationRepository, CardCustomRepository {
 
     /**
-     * Finds card by processID (i.e. process current state)
-     *
-     * @param processId for which we want to find card
-     * @return card with given processId
-     */
-//    Mono<CardConsultationData> findByProcessId(String processId);
-
-    /**
      * Finds next card if any whose startDate is before a specified date
      * @param pivotalInstant specified reference date
      * @return Card result or empty Mono
