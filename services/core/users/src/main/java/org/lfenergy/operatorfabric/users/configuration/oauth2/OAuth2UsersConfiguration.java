@@ -91,15 +91,15 @@ public class OAuth2UsersConfiguration {
 				
 				List<GrantedAuthority> authorities = null;
 				switch (groupsProperties.getMode()) {
+					case JWT :
+						// override the groups list from JWT mode
+						user.setGroups(getGroupsList(jwt));
 					case OPERATOR_FABRIC : 
 						authorities = computeAuthorities(user);
-						break;
-					case JWT :
-						authorities = computeAuthorities(jwt);
-						break;
+						break;	
 					default : authorities = null;	
 				}
-				
+					
 				log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
 								
 				return new OpFabJwtAuthenticationToken(jwt, user, authorities);
@@ -137,13 +137,17 @@ public class OAuth2UsersConfiguration {
 				.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size -> new String[size]));
 	}
 	
-	/**
-	 * Creates Authority list from a jwt
-	 * 
-	 * @param jwt user's token
-	 * @return list of authority
-	 */
-	public List<GrantedAuthority> computeAuthorities(Jwt jwt) {
-		return groupsUtils.createAuthorityList(jwt);
+//	/**
+//	 * Creates Authority list from a jwt
+//	 * 
+//	 * @param jwt user's token
+//	 * @return list of authority
+//	 */
+//	public List<GrantedAuthority> computeAuthorities(Jwt jwt) {
+//		return groupsUtils.createAuthorityList(jwt);
+//	}
+   
+	public List<String> getGroupsList(Jwt jwt) {
+		return groupsUtils.createGroupsList(jwt);
 	}
 }

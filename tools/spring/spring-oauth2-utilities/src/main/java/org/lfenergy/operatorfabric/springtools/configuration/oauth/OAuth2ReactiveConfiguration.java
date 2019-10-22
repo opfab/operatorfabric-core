@@ -50,11 +50,11 @@ public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{
                 
 				List<GrantedAuthority> authorities = null;
 				switch (groupsProperties.getMode()) {
+					case JWT :
+						// override the groups list from JWT mode
+						user.setGroups(getGroupsList(jwt));
 					case OPERATOR_FABRIC : 
 						authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
-						break;
-					case JWT :
-						authorities = computeAuthorities(jwt);
 						break;
 					default : authorities = null;	
 				}

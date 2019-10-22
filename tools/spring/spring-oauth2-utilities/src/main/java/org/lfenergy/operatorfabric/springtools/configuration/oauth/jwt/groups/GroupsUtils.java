@@ -30,13 +30,18 @@ public class GroupsUtils {
 	 * @return List<GrantedAuthority>
 	 */
 	public List<GrantedAuthority> createAuthorityList(Jwt jwt) {
-		
-		List<RoleClaim> listRoleClaim = groupsProperties.getListRoleClaim();
-		List<String> listGroupsFromListRolesClaim = getGroupsFromListRolesClaim(jwt, listRoleClaim);
+		List<String> listGroupsFromListRolesClaim = createGroupsList(jwt);
 		List<GrantedAuthority> listGrantedAuthority = computeAuthorities(listGroupsFromListRolesClaim);
 		
 		return listGrantedAuthority;
 	}
+	
+	public List<String> createGroupsList(Jwt jwt) {
+		
+		List<RoleClaim> listRoleClaim = groupsProperties.getListRoleClaim();
+		List<String> listGroupsFromListRolesClaim = getGroupsFromListRolesClaim(jwt, listRoleClaim);
+		return listGroupsFromListRolesClaim;
+	} 
 	
 	/**
 	 * get a groups list from the jwt through a roles claims list defined

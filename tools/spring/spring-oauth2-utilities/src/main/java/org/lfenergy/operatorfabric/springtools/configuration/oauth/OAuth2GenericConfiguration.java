@@ -94,11 +94,11 @@ public class OAuth2GenericConfiguration {
                 
 				List<GrantedAuthority> authorities = null;
 				switch (groupsProperties.getMode()) {
+					case JWT :
+						// override the groups list from JWT mode
+						user.setGroups(getGroupsList(jwt));
 					case OPERATOR_FABRIC : 
 						authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
-						break;
-					case JWT :
-						authorities = computeAuthorities(jwt);
 						break;
 					default : authorities = null;	
 				}
@@ -128,17 +128,17 @@ public class OAuth2GenericConfiguration {
                 .contract(new SpringMvcContract())
                 .requestInterceptor(new OAuth2FeignRequestInterceptor())
                 .target(UserServiceProxy.class,"http://USERS");
-
     }
     
+
 	/**
-	 * Creates Authority list from a jwt
+	 * Creates group list from a jwt
 	 * 
 	 * @param jwt user's token
-	 * @return list of authority
+	 * @return a group list
 	 */
-	public List<GrantedAuthority> computeAuthorities(Jwt jwt) {
-		return groupsUtils.createAuthorityList(jwt);
+	public List<String> getGroupsList(Jwt jwt) {
+		return groupsUtils.createGroupsList(jwt);
 	}
 
 }
