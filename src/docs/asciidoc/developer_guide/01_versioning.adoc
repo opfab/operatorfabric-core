@@ -161,7 +161,9 @@ To prepare a next version you simply need to increment the version after a relea
 
 ==== In the source repository (operatorfabric-core)
 
-. Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT **EXCEPT in src/docs/dockerhub/service_template.md**
+. Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT **EXCEPT**
+.. In the DockerHub documentation (src/docs/dockerhub/service_template.md)
+.. In the demonstration docker-compose files (src/main/docker/demo/docker-compose.yml and src/main/docker/deploy/docker-compose.yml)
 
 . In the DockerHub documentation (src/docs/dockerhub/service_template.md), replace the two occurrences of X.X.X.SNAPSHOT
 by Y.Y.Y.RELEASE.
