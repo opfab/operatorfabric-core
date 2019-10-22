@@ -71,6 +71,9 @@ public class OAuth2GenericConfiguration {
 	protected GroupsProperties groupsProperties;
 	
 	@Autowired
+	protected JwtProperties jwtProperties;
+	
+	@Autowired
 	protected GroupsUtils groupsUtils;
 
     /**
@@ -85,27 +88,8 @@ public class OAuth2GenericConfiguration {
         return new Converter<Jwt, AbstractAuthenticationToken>(){
             @Override
             public AbstractAuthenticationToken convert(Jwt jwt) throws FeignException {
-                String principalId = jwt.getClaimAsString("sub");
-                OAuth2JwtProcessingUtilities.token.set(jwt);
-                
-                // what if the user doesn't exist in OPFAB, what to do next ?? 
-                User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
-				OAuth2JwtProcessingUtilities.token.remove();
-                
-				List<GrantedAuthority> authorities = null;
-				switch (groupsProperties.getMode()) {
-					case JWT :
-						// override the groups list from JWT mode
-						user.setGroups(getGroupsList(jwt));
-					case OPERATOR_FABRIC : 
-						authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
-						break;
-					default : authorities = null;	
-				}
-				
-				log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
-                
-                return new OpFabJwtAuthenticationToken(jwt, user, authorities);
+            	AbstractAuthenticationToken authenticationToken = generateOpFabJwtAuthenticationToken(jwt);
+                return authenticationToken;
             }
         };
     }
@@ -128,6 +112,32 @@ public class OAuth2GenericConfiguration {
                 .contract(new SpringMvcContract())
                 .requestInterceptor(new OAuth2FeignRequestInterceptor())
                 .target(UserServiceProxy.class,"http://USERS");
+    }
+    
+    
+    public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) {
+    	
+    	String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
+        OAuth2JwtProcessingUtilities.token.set(jwt);
+        
+        // what if the user doesn't exist in OPFAB, what to do next ?? 
+        User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
+		OAuth2JwtProcessingUtilities.token.remove();
+        
+		List<GrantedAuthority> authorities = null;
+		switch (groupsProperties.getMode()) {
+			case JWT :
+				// override the groups list from JWT mode
+				user.setGroups(getGroupsList(jwt));
+			case OPERATOR_FABRIC : 
+				authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
+				break;
+			default : authorities = null;	
+		}
+		
+		log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
+        
+        return new OpFabJwtAuthenticationToken(jwt, user, authorities);
     }
     
 
