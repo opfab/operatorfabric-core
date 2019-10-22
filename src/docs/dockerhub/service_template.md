@@ -8,7 +8,7 @@
 * 0.6.1.RELEASE
 * 0.7.1.RELEASE
 * 0.8.1.RELEASE
-* 0.9.1.RELEASE
+* ~~0.9.1.RELEASE~~ These images were not working properly due to missing configuration (see #99)
 * 0.10.1.RELEASE
 ## Snapshot
 * 0.11.1.SNAPSHOT

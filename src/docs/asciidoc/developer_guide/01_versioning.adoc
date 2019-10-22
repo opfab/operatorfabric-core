@@ -161,12 +161,12 @@ To prepare a next version you simply need to increment the version after a relea
 
 ==== In the source repository (operatorfabric-core)
 
-. Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT
+. Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT **EXCEPT in src/docs/dockerhub/service_template.md**
 
 . In the DockerHub documentation (src/docs/dockerhub/service_template.md), replace the two occurrences of X.X.X.SNAPSHOT
 by Y.Y.Y.RELEASE.
 
-. Commit changes with the following message:
+. Commit and push changes with the following message:
 +
 ```
 [PREPARE] next version: Y.Y.Y.SNAPSHOT
