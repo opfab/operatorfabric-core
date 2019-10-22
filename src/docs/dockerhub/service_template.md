@@ -11,9 +11,9 @@
 * 0.9.1.RELEASE
 * 0.10.1.RELEASE
 ## Snapshot
-* 0.10.1.SNAPSHOT
+* 0.11.1.SNAPSHOT
 ## Shortcuts
-* snapshot -> 0.10.1.SNAPSHOT
+* snapshot -> 0.11.1.SNAPSHOT
 * latest -> 0.10.1.RELEASE
 # References
 * **[OperatorFabric Website](https://opfab.github.io/)**
