@@ -8,7 +8,6 @@
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
-import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;

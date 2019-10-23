@@ -76,7 +76,7 @@ public class CardRoutesShould {
 
         @Test
         public void findOutCard() {
-            CardConsultationData simpleCard = createSimpleCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
+            CardConsultationData simpleCard = createSimpleCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600),"userWithGroup","SOME_GROUP");
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
                     .expectComplete()
@@ -87,7 +87,7 @@ public class CardRoutesShould {
                     .expectBody(CardConsultationData.class).value(card -> {
                 assertThat(card)
                         //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "orphanedUsers")
+                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients")
                         .isEqualToComparingFieldByFieldRecursively(simpleCard);
             });
         }

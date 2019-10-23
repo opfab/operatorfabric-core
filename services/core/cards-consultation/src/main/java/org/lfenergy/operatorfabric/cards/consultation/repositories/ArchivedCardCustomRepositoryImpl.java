@@ -125,7 +125,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         criteria.addAll(regularParametersCriteria(queryParams));
 
         /* Add user criteria */
-        criteria.addAll(computeUserCriteria(user));
+        criteria.addAll(computeCriteriaList4User(user));
 
         if (!criteria.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));

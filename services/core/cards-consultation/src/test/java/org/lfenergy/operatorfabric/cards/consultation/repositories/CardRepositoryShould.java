@@ -21,14 +21,19 @@ import org.lfenergy.operatorfabric.cards.consultation.model.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.test.StepVerifier;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -135,6 +140,26 @@ public class CardRepositoryShould {
 
     @Test
     public void fetchNext() {
+        User tempUserForTestPurpose = new User();
+        tempUserForTestPurpose.setLogin("userLogin");
+
+        List<String> groups = new ArrayList<>();
+        groups.add("USER_GROUP");
+        tempUserForTestPurpose.setGroups(groups);
+
+        List<Criteria> criteria1 = repository.computeCriteriaList4User(tempUserForTestPurpose);
+        Query query1 = new Query();
+        query1.addCriteria(new Criteria().andOperator(criteria1.toArray(new Criteria[criteria1.size()])));
+        log.info("==============> '{}' ",query1.toString());
+
+
+        Criteria criteria = repository.computeUserCriteria(tempUserForTestPurpose);
+        Query query = new Query();
+        query.addCriteria(new Criteria().andOperator(criteria));
+        log.info("==============> '{}' ",query.toString());
+
+
+
         StepVerifier.create(repository.findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(nowMinusTwo))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
