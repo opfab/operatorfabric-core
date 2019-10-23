@@ -14,7 +14,7 @@ services:
       - "15672:15672"
 #      - "15674:15674"
   keycloak:
-    image: jboss/keycloak
+    image: jboss/keycloak:6.0.1
     command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/realms/export
     environment:
     - KEYCLOAK_USER=admin
@@ -42,7 +42,7 @@ services:
      - REGISTRY_HOST=registry
      - REGISTRY_PORT=8080
     volumes:
-     - "../../../../services/infra/config/build/docker-volume/docker-configurations:/service-config"
+     - "../../../../services/infra/config/src/main/docker/volume/docker-configurations:/service-config"
   registry:
     depends_on:
      - config
@@ -89,7 +89,7 @@ services:
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
     volumes:
-     - "../../../../services/core/thirds/build/docker-volume/thirds-storage:/thirds-storage"
+     - "../../../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
   time:
     depends_on:
      - registry
