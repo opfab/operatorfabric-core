@@ -1,3 +1,8 @@
-<div>Template 1 en français {{data.rootProp}}</div>
+<div>Template 1 en français {{card.data.rootProp}}</div>
 <div>{{{svg "/assets/images/icons/operator-fabric.svg"}}}</div>
 <div>{{{action "first_action"}}}</div>
+<ul>
+    {{#each (split 'my.example.string' '.')}}
+        <li>{{this}}</li>
+    {{/each}}
+</ul>

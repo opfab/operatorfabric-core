@@ -857,3 +857,18 @@ link:LICENSE.txt[LICENSE.txt]
 
 Read our link:CONTRIBUTING.adoc[CONTRIBUTING] file for more information on
 how to contribute to the project.
+
+//+++ <details><summary> +++
+//**Error summary**
+//+++ </summary><div> +++
+//
+//.Error message
+//[source]
+//----
+//Paste error message
+//----
+//
+//.Possible causes & resolution
+//Describe possible causes and resolutions
+//
+//+++ </div></details> +++

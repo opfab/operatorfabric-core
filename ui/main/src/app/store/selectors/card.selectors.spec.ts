@@ -5,58 +5,40 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {AppState} from "@ofStore/index";
-import {
-    buildConfigSelector,
-    selectConfig,
-    selectConfigData,
-    selectConfigLoaded,
-    selectConfigRetry,
-    selectMaxedRetries
-} from "@ofSelectors/config.selectors";
-import {configInitialState, ConfigState} from "@ofStates/config.state";
-import {cardInitialState, CardState} from "@ofStates/card.state";
-import {getOneRandomCard} from "@tests/helpers";
+import {AppState} from '@ofStore/index';
+import {cardInitialState, CardState} from '@ofStates/card.state';
+import {emptyAppState4Test , getOneRandomCard} from '@tests/helpers';
 import {
     selectCardState,
-    selectCardStateSelectedId,
     selectCardStateSelected,
-    selectCardStateSelectedDetails
-} from "@ofSelectors/card.selectors";
+    selectCardStateSelectedDetails,
+    selectCardStateSelectedId,
+    selectCardActionsAppearState
+} from '@ofSelectors/card.selectors';
 
 describe('ConfigSelectors', () => {
-    let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: null,
-        card: null,
-        menu: null,
-        config: null,
-        settings: null,
-        time:null
-    }
-
-    let selectedState: CardState = {
+    const emptyAppState: AppState = emptyAppState4Test;
+    const selectedState: CardState = {
         ...cardInitialState,
         selected: getOneRandomCard()
     };
 
-
     it('manage empty card state', () => {
-        let testAppState = {...emptyAppState, card: cardInitialState};
+        const testAppState = {...emptyAppState, card: cardInitialState};
         expect(selectCardState(testAppState)).toEqual(cardInitialState);
         expect(selectCardStateSelected(testAppState)).toBeNull();
         expect(selectCardStateSelectedDetails(testAppState)).toBeNull();
         expect(selectCardStateSelectedId(testAppState)).toBeNull();
     });
-
     it('manage slected card state', () => {
-        let testAppState = {...emptyAppState, card: selectedState};
+        const testAppState = {...emptyAppState, card: selectedState};
         expect(selectCardState(testAppState)).toEqual(selectedState);
         expect(selectCardStateSelected(testAppState)).toEqual(selectedState.selected);
         expect(selectCardStateSelectedDetails(testAppState)).toEqual(selectedState.selected.details);
         expect(selectCardStateSelectedId(testAppState)).toEqual(selectedState.selected.id);
     });
-
+    it('should select the card appear array', () => {
+        const testAppState = {...emptyAppState, card: selectedState};
+        expect(selectCardActionsAppearState(testAppState)).toEqual(selectedState.actionsAppear);
+    });
 });

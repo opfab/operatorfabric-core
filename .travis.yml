@@ -11,6 +11,7 @@ env:
   - NODE_VERSION="v10.10.0"
 language: java
 before_install:
+  - npm i -g npm@6.4.1
   - sudo apt-get install realpath
   - export OF_VERSION=$(cat VERSION)
   # Load cached docker images
@@ -23,6 +24,7 @@ jobs:
 #      - rm -rf  $HOME/.gradle/caches/build-cache-*
 #      - ./gradlew --build-cache clean
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
+      - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
       - ./gradlew --build-cache copyDependencies test jacocoTestReport && sonar-scanner
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
 #      - ./gradlew --build-cache assemble -x test
@@ -30,13 +32,15 @@ jobs:
     script:
     - echo preparing image for version $OF_VERSION
     - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
-    - ./gradlew --build-cache copyWorkingDir dockerPush${OF_VERSION} -x test -x :docker-standalone-images:dummy-card-daemon:dockerPush${OF_VERSION}
-    - "[[ $OF_VERSION =~ .+SNAPSHOT$ ]] && ./gradlew --build-cache copyWorkingDir dockerPushSnapshot -x test -x :docker-standalone-images:dummy-card-daemon:dockerPushSnapshot || echo not publishing docker snapshot tag"
-    - "[[ $OF_VERSION =~ .+RELEASE$ ]] && [[ $TRAVIS_COMMIT_MESSAGE =~ .+ci_latest ]] && ./gradlew --build-cache copyWorkingDir dockerPushLatest -x test --x :docker-standalone-images:dummy-card-daemon:dockerPushLatest || echo not publishing docker latest tag"
+    - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
+    - ./gradlew --build-cache copyWorkingDir dockerPush${OF_VERSION} -x test
+    - "[[ $OF_VERSION =~ .+SNAPSHOT$ ]] && ./gradlew --build-cache copyWorkingDir dockerPushSnapshot -x test || echo not publishing docker snapshot tag"
+    - "[[ $OF_VERSION =~ .+RELEASE$ ]] && [[ $TRAVIS_COMMIT_MESSAGE =~ .+ci_latest ]] && ./gradlew --build-cache copyWorkingDir dockerPushLatest -x test || echo not publishing docker latest tag"
     - docker image ls -a|grep lfeoperatorfabric
   - stage: doc
     script:
-      - ./gradlew --build-cache generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
+      - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
+      - ./gradlew --build-cache generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc securityReport
       - ./bin/travis/upload_doc.sh
 stages:
   - test-assemble
@@ -68,6 +72,7 @@ cache:
     # caches gradle caches
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/dependency-check-data/
     # caches docker images
     #- $HOME/docker
     # cache ui dependencies

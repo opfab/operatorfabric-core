@@ -5,11 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
-import {LightCardAdapter} from '@ofStates/feed.state';
+import {LightCardActions} from '@ofActions/light-card.actions';
 import {TimelineActions, TimelineActionTypes} from "@ofActions/timeline.actions";
 import {timelineInitialState, TimelineState} from "@ofStates/timeline.state";
-import {map} from "rxjs/operators";
 import * as _ from 'lodash';
 
 export function reducer(

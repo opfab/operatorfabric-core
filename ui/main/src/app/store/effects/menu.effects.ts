@@ -17,7 +17,8 @@ import {
     LoadMenuFailure,
     LoadMenuSuccess,
     MenuActionTypes,
-    SelectMenuLink, SelectMenuLinkFailure,
+    SelectMenuLink,
+    SelectMenuLinkFailure,
     SelectMenuLinkSuccess
 } from "@ofActions/menu.actions";
 import {Router} from "@angular/router";
@@ -38,15 +39,8 @@ export class MenuEffects {
         .pipe(
             ofType<LoadMenu>(MenuActionTypes.LoadMenu),
             switchMap(action =>  this.service.computeThirdsMenu()),
-            switchMap(menu=>zip(of(menu),this.service.loadI18nForMenuEntries(menu)
-                .pipe(
-                    catchError((err,caught)=>{
-                        console.error(err);
-                        return of(false);
-                    })
-                ))),
-            map(array =>
-                new LoadMenuSuccess({menu: array[0]})
+            map(menu =>
+                new LoadMenuSuccess({menu: menu})
             ),
             catchError((err, caught) => {
                 console.error(err);

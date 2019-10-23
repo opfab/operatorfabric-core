@@ -9,7 +9,11 @@ import {reducer} from "@ofStore/reducers/settings.reducer";
 import {getRandomAlphanumericValue} from "@tests/helpers";
 import {
     LoadSettings,
-    LoadSettingsFailure, LoadSettingsSuccess, PatchSettings, PatchSettingsFailure, PatchSettingsSuccess
+    LoadSettingsFailure,
+    LoadSettingsSuccess,
+    PatchSettings,
+    PatchSettingsFailure,
+    PatchSettingsSuccess
 } from "@ofActions/settings.actions";
 import {settingsInitialState, SettingsState} from "@ofStates/settings.state";
 

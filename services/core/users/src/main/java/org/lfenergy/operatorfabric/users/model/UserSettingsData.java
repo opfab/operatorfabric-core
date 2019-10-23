@@ -26,6 +26,8 @@ public class UserSettingsData implements UserSettings {
     @Singular("defaultTag")
     private Set<String> defaultTagsSet;
 
+    private TimeLineFormats timeLineDefaultClusteringFormats;
+
     public UserSettingsData(UserSettings settings) {
         this.login = settings.getLogin();
         this.description = settings.getDescription();
@@ -39,6 +41,8 @@ public class UserSettingsData implements UserSettings {
         else
             this.defaultTagsSet = null;
         this.email = settings.getEmail();
+        if(settings.getTimeLineDefaultClusteringFormats()!=null)
+            this.timeLineDefaultClusteringFormats = ((TimeLineFormatsData)settings.getTimeLineDefaultClusteringFormats()).copy();
     }
 
     public Set<String> getDefaultTagsSet() {
@@ -46,17 +50,6 @@ public class UserSettingsData implements UserSettings {
             return Collections.emptySet();
         return defaultTagsSet;
     }
-
-//    public void addDefaultTag(String tag){
-//        if(this.defaultTagsSet == null)
-//            this.defaultTagsSet = new HashSet<>();
-//        this.defaultTagsSet.add(tag);
-//    }
-//
-//    public void deleteDefaultTag(String tag){
-//        if(this.defaultTagsSet!= null)
-//            this.defaultTagsSet.remove(tag);
-//    }
 
     @Override
     public List<String> getDefaultTags() {

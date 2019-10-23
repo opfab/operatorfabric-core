@@ -51,7 +51,7 @@
     }
   },
   "settings":{
-    "email": "Email adress",
+    "email": "Email address",
     "description": "Description",
     "locale": "Language",
     "timeZone": "Time zone",
@@ -59,6 +59,18 @@
     "dateFormat": "Date format",
     "dateTimeFormat": "Date Time format",
     "defaultTags": "Default tags"
+  },
+  "archive": {
+    "filters": {
+      "publisher": "Publisher",
+      "process": "Process",
+      "tags": "Tags",
+      "publishDateFrom": "Publish Date From",
+      "publishDateTo": "Publish Date To",
+      "activeFrom": "Active From",
+      "activeTo": "Active To"
+    },
+    "search": "Search"
   },
   "time": {
     "error": "time reference update failed for following reason: {{error}}"

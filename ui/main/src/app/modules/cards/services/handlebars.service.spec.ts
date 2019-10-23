@@ -22,6 +22,8 @@ import {Guid} from "guid-typescript";
 import {TimeService} from "@ofServices/time.service";
 import {I18n} from "@ofModel/i18n.model";
 import * as moment from "moment";
+import {UserContext} from "@ofModel/user-context.model";
+import {DetailContext} from "@ofModel/detail-context.model";
 
 function computeTemplateUri(templateName) {
     return `${environment.urls.thirds}/testPublisher/templates/${templateName}`;
@@ -52,7 +54,7 @@ describe('Handlebars Services', () => {
                 })
             ],
             providers: [
-                {provide:'TimeEventSource',useValue:null},
+                {provide: 'TimeEventSource', useValue: null},
                 {provide: store, useClass: Store},
                 {provide: time, useClass: TimeService},
                 ThirdsService, HandlebarsService
@@ -78,48 +80,58 @@ describe('Handlebars Services', () => {
     });
 
     describe('#executeTemplate', () => {
-        let card = getOneRandomCard({data:{
-            name:'something',
-            numbers:[0,1,2,3,4,5],
-            unsortedNumbers:[2, 1, 4, 0, 5, 3],
-            numberStrings:['0','1','2','3','4','5'],
-            arrays:[[],[0,1,2],['0','1','2','3']],
-            booleans: [false,true],
-            splitString: 'a.split.string',
-            pythons: {john: { firstName: "John", lastName: "Cleese"},
-                graham: { firstName: "Graham", lastName: "Chapman"},
-                terry1: { firstName: "Terry", lastName: "Gillian"},
-                eric: { firstName: "Eric", lastName: "Idle"},
-                terry2: { firstName: "Terry", lastName: "Jones"},
-                michael: { firstName: "Michael", lastName: "Palin"}},
-            pythons2: {john: "Cleese",
-                graham:  "Chapman",
-                terry1:  "Gillian",
-                eric:  "Idle",
-                terry2:  "Jones",
-                michael:  "Palin"},
-            i18n: new I18n("value",{param: "BAR"})
-        }});
-        const simpleTemplate = 'English template {{data.name}}';
-       it('compile simple template',()=>{
-           handlebarsService.executeTemplate('testTemplate',card)
-               .subscribe((result)=>expect(result).toEqual('English template something'));
-           let calls = httpMock.match(req => req.url == computeTemplateUri('testTemplate'));
-           expect(calls.length).toEqual(1);
-           calls.forEach(call=>{
-               expect(call.request.method).toBe('GET');
-               call.flush(simpleTemplate);
-           });
-           handlebarsService.executeTemplate('testTemplate',card)
-               .subscribe((result)=>expect(result).toEqual('English template something'));
+        let userContext = new UserContext('jdoe', 'token', 'John', 'Doe');
+        let card = getOneRandomCard({
+            data: {
+                name: 'something',
+                numbers: [0, 1, 2, 3, 4, 5],
+                unsortedNumbers: [2, 1, 4, 0, 5, 3],
+                numberStrings: ['0', '1', '2', '3', '4', '5'],
+                arrays: [[], [0, 1, 2], ['0', '1', '2', '3']],
+                booleans: [false, true],
+                splitString: 'a.split.string',
+                pythons: {
+                    john: {firstName: "John", lastName: "Cleese"},
+                    graham: {firstName: "Graham", lastName: "Chapman"},
+                    terry1: {firstName: "Terry", lastName: "Gillian"},
+                    eric: {firstName: "Eric", lastName: "Idle"},
+                    terry2: {firstName: "Terry", lastName: "Jones"},
+                    michael: {firstName: "Michael", lastName: "Palin"}
+                },
+                pythons2: {
+                    john: "Cleese",
+                    graham: "Chapman",
+                    terry1: "Gillian",
+                    eric: "Idle",
+                    terry2: "Jones",
+                    michael: "Palin"
+                },
+                i18n: new I18n("value", {param: "BAR"})
+            }
+        });
+        const simpleTemplate = 'English template {{card.data.name}}';
+        it('compile simple template', (done) => {
+            handlebarsService.executeTemplate('testTemplate', new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('English template something');
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri('testTemplate'));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush(simpleTemplate);
+            });
         })
-        function expectIfCond(card, v1, cond, v2, expectedResult:string) {
+
+        function expectIfCond(card, v1, cond, v2, expectedResult: string, done) {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, card)
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
                 .subscribe((result) => {
                     console.debug(`testing [${v1} ${cond} ${v2}], result ${result}, expected ${expectedResult}`);
                     expect(result).toEqual(expectedResult,
                         `Expected result to be ${expectedResult} when testing [${v1} ${cond} ${v2}]`);
+                    done();
                 });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
@@ -128,335 +140,402 @@ describe('Handlebars Services', () => {
                 call.flush(`{{#if (bool ${v1} "${cond}" ${v2})}}true{{else}}false{{/if}}`);
             });
         }
-        it('complile polyIf helper ==',()=>{
-            expectIfCond(card, 'data.numbers.[0]', '==', 'data.numbers.[0]', 'true');
-            expectIfCond(card, 'data.numbers.[0]', '==', 'data.numbers.[1]', 'false');
-            expectIfCond(card, 'data.numbers.[0]', '==', 'data.numberStrings.[0]', 'true');
+
+        it('complile polyIf helper ==', (done) => {
+            expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numbers.[0]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numbers.[1]', 'false', done);
+            expectIfCond(card, 'card.data.numbers.[0]', '==', 'card.data.numberStrings.[0]', 'true', done);
         });
-        it('complile polyIf helper ===',()=>{
-            expectIfCond(card, 'data.numbers.[0]', '===', 'data.numbers.[0]', 'true');
-            expectIfCond(card, 'data.numbers.[0]', '===', 'data.numberStrings.[0]', 'false');
+        it('complile polyIf helper ===', (done) => {
+            expectIfCond(card, 'card.data.numbers.[0]', '===', 'card.data.numbers.[0]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[0]', '===', 'card.data.numberStrings.[0]', 'false', done);
         });
-        it('complile polyIf helper <',()=>{
-            // expectIfCond(card, 'data.numbers.[0]', '<', 'data.numbers.[1]', 'true');
-            expectIfCond(card, 'data.numbers.[0]', '<', 'data.numberStrings.[1]', 'true');
-            expectIfCond(card, 'data.numbers.[1]', '<', 'data.numbers.[0]', 'false');
-            expectIfCond(card, 'data.numbers.[1]', '<', 'data.numbers.[1]', 'false');
+        it('complile polyIf helper <', (done) => {
+            // expectIfCond(card, 'card.data.numbers.[0]', '<', 'card.data.numbers.[1]', 'true');
+            expectIfCond(card, 'card.data.numbers.[0]', '<', 'card.data.numberStrings.[1]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[0]', 'false', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '<', 'card.data.numbers.[1]', 'false', done);
         });
-        it('complile polyIf helper >',()=>{
-            expectIfCond(card, 'data.numbers.[1]', '>', 'data.numbers.[0]', 'true');
-            expectIfCond(card, 'data.numbers.[1]', '>', 'data.numberStrings.[0]', 'true');
-            expectIfCond(card, 'data.numbers.[0]', '>', 'data.numbers.[1]', 'false');
-            expectIfCond(card, 'data.numbers.[1]', '>', 'data.numbers.[1]', 'false');
+        it('complile polyIf helper >', (done) => {
+            expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numbers.[0]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numberStrings.[0]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[0]', '>', 'card.data.numbers.[1]', 'false', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '>', 'card.data.numbers.[1]', 'false', done);
         });
-        it('complile polyIf helper <=',()=>{
-            expectIfCond(card, 'data.numbers.[0]', '<=', 'data.numbers.[1]', 'true');
-            expectIfCond(card, 'data.numbers.[0]', '<=', 'data.numberStrings.[1]', 'true');
-            expectIfCond(card, 'data.numbers.[1]', '<=', 'data.numbers.[0]', 'false');
-            expectIfCond(card, 'data.numbers.[1]', '<=', 'data.numbers.[1]', 'true');
-            expectIfCond(card, 'data.numbers.[1]', '<=', 'data.numberStrings.[1]', 'true');
+        it('complile polyIf helper <=', (done) => {
+            expectIfCond(card, 'card.data.numbers.[0]', '<=', 'card.data.numbers.[1]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[0]', '<=', 'card.data.numberStrings.[1]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numbers.[0]', 'false', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numbers.[1]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '<=', 'card.data.numberStrings.[1]', 'true', done);
         });
-        it('complile polyIf helper >=',()=>{
-            expectIfCond(card, 'data.numbers.[1]', '>=', 'data.numbers.[0]', 'true');
-            expectIfCond(card, 'data.numbers.[1]', '>=', 'data.numberStrings.[0]', 'true');
-            expectIfCond(card, 'data.numbers.[0]', '>=', 'data.numbers.[1]', 'false');
-            expectIfCond(card, 'data.numbers.[1]', '>=', 'data.numbers.[1]', 'true');
-            expectIfCond(card, 'data.numbers.[1]', '>=', 'data.numberStrings.[1]', 'true');
+        it('complile polyIf helper >=', (done) => {
+            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numbers.[0]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numberStrings.[0]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[0]', '>=', 'card.data.numbers.[1]', 'false', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numbers.[1]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[1]', '>=', 'card.data.numberStrings.[1]', 'true', done);
         });
-        it('complile polyIf helper !=',()=>{
-            expectIfCond(card, 'data.numbers.[0]', '!=', 'data.numbers.[0]', 'false');
-            expectIfCond(card, 'data.numbers.[0]', '!=', 'data.numbers.[1]', 'true');
-            expectIfCond(card, 'data.numbers.[0]', '!=', 'data.numberStrings.[0]', 'false');
+        it('complile polyIf helper !=', (done) => {
+            expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numbers.[0]', 'false', done);
+            expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numbers.[1]', 'true', done);
+            expectIfCond(card, 'card.data.numbers.[0]', '!=', 'card.data.numberStrings.[0]', 'false', done);
         });
-        it('complile polyIf helper !==',()=>{
-            expectIfCond(card, 'data.numbers.[0]', '!==', 'data.numbers.[0]', 'false');
-            expectIfCond(card, 'data.numbers.[0]', '!==', 'data.numberStrings.[0]', 'true');
+        it('complile polyIf helper !==', (done) => {
+            expectIfCond(card, 'card.data.numbers.[0]', '!==', 'card.data.numbers.[0]', 'false', done);
+            expectIfCond(card, 'card.data.numbers.[0]', '!==', 'card.data.numberStrings.[0]', 'true', done);
         });
-        it('complile polyIf helper &&',()=>{
-            expectIfCond(card, 'data.booleans.[0]', '&&', 'data.booleans.[0]', 'false');
-            expectIfCond(card, 'data.booleans.[0]', '&&', 'data.numbers.[0]', 'false');
-            expectIfCond(card, 'data.booleans.[0]', '&&', 'data.numberStrings.[0]', 'false');
-            expectIfCond(card, 'data.booleans.[0]', '&&', 'data.booleans.[1]', 'false');
-            expectIfCond(card, 'data.booleans.[1]', '&&', 'data.booleans.[1]', 'true');
-            expectIfCond(card, 'data.booleans.[1]', '&&', 'data.numbers.[2]', 'true');
-            expectIfCond(card, 'data.booleans.[1]', '&&', 'data.numberStrings.[3]', 'true');
+        it('complile polyIf helper &&', (done) => {
+            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.booleans.[0]', 'false', done);
+            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.numbers.[0]', 'false', done);
+            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.numberStrings.[0]', 'false', done);
+            expectIfCond(card, 'card.data.booleans.[0]', '&&', 'card.data.booleans.[1]', 'false', done);
+            expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.booleans.[1]', 'true', done);
+            expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.numbers.[2]', 'true', done);
+            expectIfCond(card, 'card.data.booleans.[1]', '&&', 'card.data.numberStrings.[3]', 'true', done);
         });
-        it('complile polyIf helper ||',()=>{
-            expectIfCond(card, 'data.booleans.[0]', '||', 'data.booleans.[0]', 'false');
-            expectIfCond(card, 'data.booleans.[0]', '||', 'data.numbers.[0]', 'false');
-            expectIfCond(card, 'data.booleans.[0]', '||', 'data.numberStrings.[0]', 'true');
-            expectIfCond(card, 'data.booleans.[0]', '||', 'data.booleans.[1]', 'true');
-            expectIfCond(card, 'data.booleans.[0]', '||', 'data.numberStrings.[1]', 'true');
-            expectIfCond(card, 'data.booleans.[1]', '||', 'data.booleans.[1]', 'true');
-            expectIfCond(card, 'data.booleans.[1]', '||', 'data.numbers.[2]', 'true');
-            expectIfCond(card, 'data.booleans.[1]', '||', 'data.numberStrings.[3]', 'true');
+        it('complile polyIf helper ||', (done) => {
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.booleans.[0]', 'false', done);
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numbers.[0]', 'false', done);
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numberStrings.[0]', 'true', done);
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.booleans.[1]', 'true', done);
+            expectIfCond(card, 'card.data.booleans.[0]', '||', 'card.data.numberStrings.[1]', 'true', done);
+            expectIfCond(card, 'card.data.booleans.[1]', '||', 'card.data.booleans.[1]', 'true', done);
+            expectIfCond(card, 'card.data.booleans.[1]', '||', 'card.data.numbers.[2]', 'true', done);
+            expectIfCond(card, 'card.data.booleans.[1]', '||', 'card.data.numberStrings.[3]', 'true', done);
         });
-        it('compile arrayAtIndexLength', ()=>{
+        it('compile arrayAtIndexLength', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('3'));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('3');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{arrayAtIndexLength data.arrays 1}}');
+                call.flush('{{arrayAtIndexLength card.data.arrays 1}}');
             });
         })
-        it('compile arrayAtIndexLength Alt', ()=>{
+        it('compile arrayAtIndexLength Alt', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('3'));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('3');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{data.arrays.1.length}}');
+                call.flush('{{card.data.arrays.1.length}}');
             });
         });
-        it('compile split', ()=>{
+        it('compile split', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('split'));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('split');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{split data.splitString "." 1}}');
+                call.flush('{{split card.data.splitString "." 1}}');
             });
         });
-        function expectMath(v1,op,v2,expectedResult){
+        it('compile split for each', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual(`${expectedResult}`));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('-a-split-string');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush('{{#each (split card.data.splitString ".")}}-{{this}}{{/each}}');
+            });
+        });
+
+        function expectMath(v1, op, v2, expectedResult, done) {
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual(`${expectedResult}`);
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush(`{{math ${v1} "${op}" ${v2}}}`);
             });
         }
-        it('compile math +', ()=>{
-            expectMath('data.numbers.[1]','+','data.numbers.[2]','3');
+
+        it('compile math +', (done) => {
+            expectMath('card.data.numbers.[1]', '+', 'card.data.numbers.[2]', '3', done);
         });
-        it('compile math -', ()=>{
-            expectMath('data.numbers.[1]','-','data.numbers.[2]','-1');
+        it('compile math -', (done) => {
+            expectMath('card.data.numbers.[1]', '-', 'card.data.numbers.[2]', '-1', done);
         });
-        it('compile math *', ()=>{
-            expectMath('data.numbers.[1]','*','data.numbers.[2]','2');
+        it('compile math *', (done) => {
+            expectMath('card.data.numbers.[1]', '*', 'card.data.numbers.[2]', '2', done);
         });
-        it('compile math /', ()=>{
-            expectMath('data.numbers.[1]','/','data.numbers.[2]','0.5');
+        it('compile math /', (done) => {
+            expectMath('card.data.numbers.[1]', '/', 'card.data.numbers.[2]', '0.5', done);
         });
-        it('compile math %', ()=>{
-            expectMath('data.numbers.[1]','%','data.numbers.[2]','1');
+        it('compile math %', (done) => {
+            expectMath('card.data.numbers.[1]', '%', 'card.data.numbers.[2]', '1', done);
         });
-        it('compile arrayAtIndex', ()=>{
+        it('compile arrayAtIndex', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('2'));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('2');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{arrayAtIndex data.numbers 2}}');
+                call.flush('{{arrayAtIndex card.data.numbers 2}}');
             });
         });
-        it('compile arrayAtIndex alt', ()=>{
+        it('compile arrayAtIndex alt', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('2'));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('2');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{data.numbers.[2]}}');
+                call.flush('{{card.data.numbers.[2]}}');
             });
         });
-        it('compile slice', ()=>{
+        it('compile slice', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('2 3 '));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('2 3 ');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{#each (slice data.numbers 2 4)}}{{this}} {{/each}}');
+                call.flush('{{#each (slice card.data.numbers 2 4)}}{{this}} {{/each}}');
             });
         });
 
-        it('compile slice to end', ()=>{
+        it('compile slice to end', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('2 3 4 5 '));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('2 3 4 5 ');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{#each (slice data.numbers 2)}}{{this}} {{/each}}');
+                call.flush('{{#each (slice card.data.numbers 2)}}{{this}} {{/each}}');
             });
         });
 
-        it('compile each sort no field', ()=>{
+        it('compile each sort no field', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('Idle Chapman Cleese Palin Gillian Jones '));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('Idle Chapman Cleese Palin Gillian Jones ');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{#each (sort data.pythons)}}{{lastName}} {{/each}}');
+                call.flush('{{#each (sort card.data.pythons)}}{{lastName}} {{/each}}');
             });
         });
-        it('compile each sort primitive properties', ()=>{
+        it('compile each sort primitive properties', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('Idle Chapman Cleese Palin Gillian Jones '));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('Idle Chapman Cleese Palin Gillian Jones ');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{#each (sort data.pythons2)}}{{value}} {{/each}}');
-            });
-        });
-
-        it('compile each sort primitive array', ()=>{
-            const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('0 1 2 3 4 5 '));
-            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
-            expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
-                expect(call.request.method).toBe('GET');
-                call.flush('{{#each (sort data.unsortedNumbers)}}{{this}} {{/each}}');
+                call.flush('{{#each (sort card.data.pythons2)}}{{value}} {{/each}}');
             });
         });
 
-        it('compile each sort', ()=>{
+        it('compile each sort primitive array', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('Chapman Cleese Gillian Idle Jones Palin '));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('0 1 2 3 4 5 ');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{#each (sort data.pythons "lastName")}}{{lastName}} {{/each}}');
+                call.flush('{{#each (sort card.data.unsortedNumbers)}}{{this}} {{/each}}');
             });
         });
-        it('compile i18n', ()=>{
-            translate.setTranslation("en",{
+
+        it('compile each sort', (done) => {
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('Chapman Cleese Gillian Idle Jones Palin ');
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush('{{#each (sort card.data.pythons "lastName")}}{{lastName}} {{/each}}');
+            });
+        });
+        it('compile i18n', (done) => {
+            translate.setTranslation("en", {
                 value: {subValue: "English value"}
             });
             translate.use("en");
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('English value'));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('English value');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush('{{i18n "value" "subValue"}}');
             });
         });
-        it('compile i18n with parameters', ()=>{
-            translate.setTranslation("en",{
+        it('compile i18n with parameters', (done) => {
+            translate.setTranslation("en", {
                 value: "English value: {{param}}"
             });
             translate.use("en");
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('English value: FOO'));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('English value: FOO');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush('{{i18n "value" param="FOO"}}');
             });
         });
-        it('compile i18n with i18n object', ()=>{
-            translate.setTranslation("en",{
+        it('compile i18n with i18n object', (done) => {
+            translate.setTranslation("en", {
                 value: "English value: {{param}}"
             });
             translate.use("en");
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>expect(result).toEqual('English value: BAR'));
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('English value: BAR');
+                    done();
+                });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{i18n data.i18n}}');
+                call.flush('{{i18n card.data.i18n}}');
             });
         });
-        it('compile numberFormat', ()=>{
+        it('compile numberFormat using en locale fallback', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>{
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
                     expect(result)
-                        .toEqual(new Intl.NumberFormat(translate.getBrowserLang(), {style:"currency", currency:"EUR"})
-                            .format(5))
+                        .toEqual(new Intl.NumberFormat('en', {style: "currency", currency: "EUR"})
+                            .format(5));
+                    done();
                 });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{numberFormat data.numbers.[5] style="currency" currency="EUR"}}');
+                call.flush('{{numberFormat card.data.numbers.[5] style="currency" currency="EUR"}}');
             });
         });
-        it('compile dateFormat now', ()=>{
+        it('compile dateFormat now (using en locale fallback)', (done) => {
             const nowMoment = moment(new Date(now));
-            nowMoment.locale(translate.getBrowserLang())
+            nowMoment.locale('en')
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>{
-                    expect(result).toEqual(nowMoment.format('MMMM Do YYYY, h:mm:ss a'))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual(nowMoment.format('MMMM Do YYYY, h:mm:ss a'));
+                    done();
                 });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush('{{dateFormat (now "") format="MMMM Do YYYY, h:mm:ss a"}}');
             });
         });
-        it('compile preserveSpace', ()=>{
+        it('compile preserveSpace', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>{
-                    expect(result).toEqual('\u00A0\u00A0\u00A0')
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
+                    expect(result).toEqual('\u00A0\u00A0\u00A0');
+                    done();
                 });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush('{{preserveSpace "   "}}');
             });
         });
-        it('compile svg', ()=>{
+        it('compile svg', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>{
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
                     const lines = result.split('\n');
                     expect(lines.length).toEqual(4);
                     expect(lines[0]).toMatch(/<embed type="image\/svg\+xml" src="\/some\/where" id=".+" \/>/);
                     expect(lines[1]).toMatch(/         <script>document\.getElementById\('.+'\).addEventListener\('load', function\(\){/);
                     expect(lines[2]).toMatch(/                 svgPanZoom\(document\.getElementById\('.+'\)\);}\);/);
                     expect(lines[3]).toMatch(/         <\/script>/);
+                    done();
                 });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush('{{{svg "/some" "/where"}}}');
             });
         });
-        it('compile action', ()=>{
+        it('compile action', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName,card)
-                .subscribe((result)=>{
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+                .subscribe((result) => {
                     expect(result).toEqual('<button action-id="action-id"><i></i></button>');
+                    done();
                 });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
-            calls.forEach(call=>{
+            calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush('{{{action "action-id"}}}');
             });

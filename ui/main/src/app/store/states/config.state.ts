@@ -5,8 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Card} from "@ofModel/card.model";
-
 export const CONFIG_LOAD_MAX_RETRIES = 5;
 
 export interface ConfigState{

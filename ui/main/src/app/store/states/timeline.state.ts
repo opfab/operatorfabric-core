@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import {EntityState} from '@ngrx/entity';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardAdapter} from "@ofStates/feed.state";
 
@@ -27,14 +27,6 @@ export interface TimelineState extends EntityState<LightCard> {
     error: string;
     data: any[];
 }
-
-/*export function compareByStartDate(card1: LightCard, card2: LightCard){
-    return card1.startDate - card2.startDate;
-}
-
-export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<LightCard>({
-    sortComparer:compareByStartDate
-});*/
 
 export const timelineInitialState: TimelineState = LightCardAdapter.getInitialState(
     {

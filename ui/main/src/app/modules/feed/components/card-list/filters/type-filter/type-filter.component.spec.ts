@@ -17,7 +17,7 @@ import {InitFilters} from "@ofActions/feed.actions";
 import {map} from "rxjs/operators";
 import {By} from "@angular/platform-browser";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
-import {addMatchers, cold, getTestScheduler, hot, initTestScheduler, resetTestScheduler} from "jasmine-marbles";
+import {cold} from "jasmine-marbles";
 
 describe('TypeFilterComponent', () => {
     let component: TypeFilterComponent;
@@ -55,7 +55,7 @@ describe('TypeFilterComponent', () => {
         expect(component.typeFilterForm.get('alarm').value).toBe(true);
         expect(component.typeFilterForm.get('action').value).toBe(true);
         expect(component.typeFilterForm.get('question').value).toBe(true);
-        expect(component.typeFilterForm.get('notification').value).toBe(false);
+        expect(component.typeFilterForm.get('notification').value).toBe(true);
         //dom structure
         let debugElement = fixture.debugElement;
         expect(debugElement.queryAll(By.css('.btn'))).toBeTruthy();
@@ -77,8 +77,8 @@ describe('TypeFilterComponent', () => {
         expect(formQuery.length).toBe(1);
         expect(formDivQuery).toBeTruthy();
         expect(formDivQuery.length).toBe(4);
-        expect(checkedQuery.length).toBe(3);
-        expect(uncheckedQuery.length).toBe(1);
+        expect(checkedQuery.length).toBe(4);
+        expect(uncheckedQuery.length).toBe(0);
     });
     it('should update filter', (done) => {
         //component state
@@ -92,9 +92,9 @@ describe('TypeFilterComponent', () => {
         // notificationCheckboxQuery[0].triggerEventHandler('click',null);
         notificationCheckboxQuery[0].nativeElement.click();
         fixture.detectChanges();
-        expect(component.typeFilterForm.get('notification').value).toBe(true);
+        expect(component.typeFilterForm.get('notification').value).toBe(false);
         setTimeout(() => {
-            const expectedObs = cold('b', {b: {alarm: true, action: true, question: true, notification: true}});
+            const expectedObs = cold('b', {b: {alarm: true, action: true, question: true, notification: false}});
 
             const selectTypeFilter = store.select(buildFilterSelector(FilterType.TYPE_FILTER));
             expect(selectTypeFilter.pipe(map((filter => filter.status)))).toBeObservable(expectedObs);

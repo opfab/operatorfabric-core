@@ -33,3 +33,7 @@ if(project.hasProperty('uiDebug'))
     build.dependsOn(npmBuildDebug)
 else
     build.dependsOn(npm_run_build)
+
+task securityReport {
+    dependsOn 'npm_run_audit'
+}

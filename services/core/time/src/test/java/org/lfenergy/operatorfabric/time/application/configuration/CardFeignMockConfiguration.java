@@ -8,7 +8,7 @@ import feign.mock.HttpMethod;
 import feign.mock.MockClient;
 import feign.mock.MockTarget;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.model.Card;;
+import org.lfenergy.operatorfabric.cards.model.Card;
 import org.lfenergy.operatorfabric.time.services.feign.CardConsultationServiceProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import java.time.Instant;
+;
 
 @Configuration
 @Slf4j

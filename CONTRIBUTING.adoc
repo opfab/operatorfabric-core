@@ -22,7 +22,7 @@ toc::[]
 == Code of Conduct
 
 This project and everyone participating in it is governed by the link:CODE_OF_CONDUCT.adoc[OperatorFabric Code of Conduct]. By participating, you are expected to uphold this code.
-Please report unacceptable behavior to mailto:boris.dolley_AT_rte-france.com[boris.dolley_AT_rte-france.com].
+Please report unacceptable behavior to mailto:opfab-maintainers_AT_rte-france.com[opfab-maintainers_AT_rte-france.com].
 
 == License and Developer Certificate of Origin
 

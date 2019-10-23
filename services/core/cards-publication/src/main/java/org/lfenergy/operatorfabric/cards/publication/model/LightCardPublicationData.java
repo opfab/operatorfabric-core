@@ -65,6 +65,10 @@ public class LightCardPublicationData implements LightCard {
     @Singular("timeSpan")
     private Set<TimeSpanPublicationData> timeSpansSet;
 
+    /**
+     * return timespans, may be null
+     * @return
+     */
     @Override
     public List<TimeSpan> getTimeSpans() {
         if(this.timeSpansSet!=null)

@@ -1,0 +1,43 @@
+// Copyright (c) 2018, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Micro-Service Architecture Principles
+
+image::03_01_microservice_architecture_principles/Microservices_Theorical_Architecture.jpg[Global Microservice Architecture]
+
+NB: Blue colored component should be naturally redundable in a micro service architecture other components redeundancy
+may be subject to implementation choices.
+
+==== Registry
+
+Is the central component where all services are registred. It serves as a reference point for the gateway and other
+services to find information about the running services instance and allow for local load balancing of accesses.
+
+==== Gateway
+
+Provides a filtered view of the APIS and static served pages for external access through browsers or other http
+complient accesses (e.g. REST, SOAP).
+
+==== Configuration
+
+A configuration service is not mandatory in a microservice but may allows for better sharing of common configuration and
+to dispatch global configuration changes to all services.
+
+==== Business Services & Web UI (Micro Services)
+
+Are both business services registred within the microservice registry. We distinguish both only to separate business
+operation from static content serving
+
+==== Asynchronous messaging
+
+Use to share information asynchronously across the whole services
+
+==== Authentication
+
+The architecture does not include an authentication service but delegates it's authentication needs to a provided
+authentication service see <<Micro-Service Architecture Implementation>>

@@ -32,19 +32,11 @@ describe('CardService', () => {
             imports: [HttpClientTestingModule,
                 StoreModule.forRoot(appReducer)],
             providers: [CardService
-                ,AuthenticationService
+                , AuthenticationService
                 ,GuidService
             ]
         });
         httpMock = TestBed.get(HttpTestingController);
         authenticationService = TestBed.get(AuthenticationService);
     });
-
-
-    it('should be created', inject([CardService], (service: CardService) => {
-
-        expect(service).toBeTruthy();
-
-    }));
 });
-

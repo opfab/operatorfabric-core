@@ -12,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath testing.junit5Plugin
+        //classpath testing.junit5Plugin
         classpath boot.springBootPlugin
         classpath misc.palantir
     }

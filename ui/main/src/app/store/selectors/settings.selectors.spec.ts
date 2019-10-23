@@ -13,19 +13,10 @@ import {
     selectSettingsLoaded
 } from "@ofSelectors/settings.selectors";
 import {settingsInitialState, SettingsState} from "@ofStates/settings.state";
+import {emptyAppState4Test} from "@tests/helpers";
 
 describe('SettingsSelectors', () => {
-    let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
-        authentication: null,
-        card: null,
-        menu: null,
-        config: null,
-        settings:null,
-        time:null
-    }
+    let emptyAppState: AppState = emptyAppState4Test;
 
     let loadedSettingsState: SettingsState = {
         ...settingsInitialState,

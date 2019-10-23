@@ -16,10 +16,11 @@ import {environment} from '@env/environment';
 import {neutralTimeReference, TimeReference} from "@ofModel/time.model";
 import {interval, Observable, of} from "rxjs";
 import {EventSourceInit, EventSourcePolyfill} from "ng-event-source";
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import {selectTimeReference} from "@ofSelectors/time.selectors";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {AuthenticationService} from "@ofServices/authentication.service";
+import {TickPayload} from "@ofActions/time.actions";
 
 @Injectable()
 export class TimeService {
@@ -33,6 +34,8 @@ export class TimeService {
     private timeReference$: Observable<TimeReference>;
     private currentTimeReference: TimeReference=neutralTimeReference;
     private beatDurationInMilliseconds: number;
+    private timeAtLastHeartBeat: Moment;
+    private timeLineFormats: any;
 
     constructor(private store: Store<AppState>) {
         this.initializeTimeFormat();
@@ -52,6 +55,26 @@ export class TimeService {
             .subscribe(next => this.dateFormat = next);
         this.store.select(buildSettingsOrConfigSelector('dateTimeFormat'))
             .subscribe(next => this.dateTimeFormat = next);
+        this.store.select(buildSettingsOrConfigSelector('timeLineDefaultClusteringFormats',
+            {
+                dateInsideTooltipsWeek: "ddd DD MMM HH",
+                dateInsideTooltipsMonth: "ddd DD MMM YYYY",
+                dateOnDay: "ddd DD MMM",
+                dateOnWeek: "DD/MM/YY",
+                dateOnMonth: "MMM YY",
+                dateOnYear: "YYYY",
+                titleDateInsideTooltips: "DD/MM",
+                titleHourInsideTooltips: "HH:mm",
+                dateOnDayNewYear: "DD MMM YY",
+                realTimeBarFormat: "DD/MM/YY HH:mm",
+                dateSimplifliedOnDayNewYear: "D MMM YY",
+                dateSimplifliedOnDay: "D MMM",
+                hoursOnly: "HH",
+                minutesOnly: "mm",
+                secondedsOnly: "ss",
+                weekNumberOnly: "ww"
+            }))
+            .subscribe(next => this.timeLineFormats = next);
     }
 
 
@@ -88,13 +111,26 @@ export class TimeService {
             .subscribe(timeRef => this.currentTimeReference = timeRef);
     }
 
-    public pulsate(): Observable<moment.Moment> {
+    /**
+     * Emits a pulse every beatDurationInMilliseconds, containing the current virtual time as well as the
+     * elapsed time (milliseconds) since the previous pulse
+     * */
+    public pulsate(): Observable<TickPayload> {
         return this.heartBeat(this.beatDurationInMilliseconds);
     }
 
-    public heartBeat(interValDurationInMilliseconds: number): Observable<moment.Moment> {
+    private heartBeat(interValDurationInMilliseconds: number): Observable<TickPayload> {
         return interval(interValDurationInMilliseconds)
-            .pipe(map(n => this.currentTime()));
+            .pipe(
+                map(n => this.currentTime()),
+                map(heartBeat => {
+                    return {
+                        currentTime: heartBeat,
+                        elapsedSinceLast: this.timeAtLastHeartBeat ? heartBeat.diff(this.timeAtLastHeartBeat) : 0
+                    };
+                }),
+                tap(heartBeat => this.timeAtLastHeartBeat = heartBeat.currentTime) // update timeAtLastHeartBeat with the emitted value
+            );
     }
 
     fetchVirtualTime(eventSource: EventSourcePolyfill): Observable<TimeReference> {
@@ -148,6 +184,10 @@ export class TimeService {
         return '';
     }
 
+    public toNgBTimestamp(date): string {
+        return (this.parseString(date).valueOf()).toString();
+    }
+
     public formatDateTime(timestamp: number): string;
     public formatDateTime(date: Date): string;
     public formatDateTime(m: Moment): string;
@@ -180,6 +220,20 @@ export class TimeService {
 
     private static isMoment(arg: Date | number | Moment): arg is Moment { //magic happens here
         return (<Moment>arg).format !== undefined && (<Moment>arg).toISOString !== undefined;
+    }
+
+    public predefinedFormat(date: Date, formatKey:string);
+    public predefinedFormat(timestamp: number, formatKey:string);
+    public predefinedFormat(m: Moment, formatKey:string);
+    public predefinedFormat(arg:Date | number | Moment, formatKey:string){
+        let m = null;
+        if (!arg)
+            return '';
+        if (isMoment(arg))
+            m = arg;
+        else
+            m = moment(arg);
+        return m.format(this.timeLineFormats[formatKey]);
     }
 
 

@@ -7,9 +7,10 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
-import feign.*;
-import feign.codec.Decoder;
-import feign.codec.Encoder;
+import feign.Client;
+import feign.Feign;
+import feign.FeignException;
+import feign.RequestInterceptor;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.lfenergy.operatorfabric.users.model.User;
@@ -22,7 +23,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

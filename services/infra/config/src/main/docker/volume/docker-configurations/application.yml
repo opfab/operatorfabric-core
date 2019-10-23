@@ -37,4 +37,7 @@ operatorfabric:
       client-secret: opfab-keycloak-secret
     jwt:
       login-claim: preferred_username
+      sub-claim: sub
+      given-name-claim: given_name
+      family-name-claim: family_name
       expire-claim: exp

@@ -17,6 +17,7 @@ import {debounce, distinctUntilChanged, first, takeUntil} from "rxjs/operators";
 import * as _ from "lodash";
 import {ApplyFilter} from "@ofActions/feed.actions";
 import {TimeService} from "@ofServices/time.service";
+import * as moment from "moment";
 
 @Component({
     selector: 'of-time-filter',
@@ -44,27 +45,32 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._filter$ = this.store.select(buildFilterSelector(FilterType.TIME_FILTER));
+
+        //Update the values of the filter form if the state of the filter has been changed by other means (timeline, followClockTick, etc.)
+        //With {emitEvent:false}, this update won't trigger a valueChanges, so no ApplyFilter action will be dispatched
         this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
             if (next) {
                 if (this.timeService.parseString(this.timeFilterForm.get('start').value).valueOf() != next.status.start) {
                     if(!!next.status.start)
-                        this.timeFilterForm.get('start').setValue(this.timeService.asInputString(next.status.start));
+                        this.timeFilterForm.get('start').setValue(this.timeService.asInputString(next.status.start), {emitEvent:false});
                     else
-                        this.timeFilterForm.get('start').setValue(null);
+                        this.timeFilterForm.get('start').setValue(null, {emitEvent: false});
                 }
                 if (this.timeService.parseString(this.timeFilterForm.get('end').value).valueOf() != next.status.end) {
-                    if(!!next.status.end)
-                        this.timeFilterForm.get('end').setValue(this.timeService.asInputString(next.status.end));
+                    if(!!next.status.end) {
+                        this.timeFilterForm.get('end').setValue(this.timeService.asInputString(next.status.end), {emitEvent: false});
+                    }
                     else
-                        this.timeFilterForm.get('end').setValue(null);
+                        this.timeFilterForm.get('end').setValue(null, {emitEvent: false});
                 }
             } else {
                 if (!!this.timeFilterForm.get('start').value)
-                    this.timeFilterForm.get('start').setValue(null);
+                    this.timeFilterForm.get('start').setValue(null, {emitEvent: false});
                 if (!!this.timeFilterForm.get('end').value)
-                    this.timeFilterForm.get('end').setValue(null);
+                    this.timeFilterForm.get('end').setValue(null, {emitEvent: false});
             }
         });
+
         this._filter$.pipe(first(), takeUntil(this.ngUnsubscribe$)).subscribe(() => {
             this.timeFilterForm
                 .valueChanges

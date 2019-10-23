@@ -11,6 +11,24 @@ import {Card, Detail, TitlePosition} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap} from "@ofModel/map";
 import {Action, ActionType, Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import { Page } from '@ofModel/page.model';
+import {AppState} from "@ofStore/index";
+import {Map} from "@ofModel/map";
+
+export const emptyAppState4Test:AppState = {
+    router: null,
+    feed: null,
+    timeline: null,
+    authentication: null,
+    card: null,
+    menu: null,
+    config: null,
+    settings: null,
+    archive:null,
+    time:null,
+    user:null,
+    translation:null
+};
 
 export function getRandomMenu(): ThirdMenu[] {
     let result: ThirdMenu[] = [];
@@ -144,13 +162,18 @@ export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
     );
     return oneCard;
 }
+export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCard> {
+    const lightCards = getSeveralRandomLightCards(totalElements);
+    const randomPage = new Page<LightCard>(totalPages, totalElements, lightCards);
+    return randomPage;
+}
 
 export function getRandomActions() {
     let actions:OfMap<Action> = new OfMap();
-    actions['visible1']=new Action(ActionType.URI, getRandomI18nData());
-    actions['visible2']=new Action(ActionType.URI, getRandomI18nData());
-    actions['hidden1']= new Action(ActionType.URI, getRandomI18nData(), true, 'buttonStyle', 'contentStyle');
-    actions['hidden2']= new Action(ActionType.URI, getRandomI18nData(), true);
+    actions['visible1']=new Action(ActionType.URL, getRandomI18nData());
+    actions['visible2']=new Action(ActionType.URL, getRandomI18nData());
+    actions['hidden1']= new Action(ActionType.URL, getRandomI18nData(), true, 'buttonStyle', 'contentStyle');
+    actions['hidden2']= new Action(ActionType.URL, getRandomI18nData(), true);
     return actions;
 }
 
@@ -294,4 +317,29 @@ export function appendFixedLengthAlphanumericValue(length = 1, base = ''): strin
         const nextLength = finalLength - stringSize;
         return base + appendFixedLengthAlphanumericValue(nextLength, intermediateResult);
     }
+}
+
+export function shuffleArrayContentByFisherYatesLike<T>(array: Array<T>): Array<T> {
+    let workingArray = Object.assign([], array);
+    let currentLengthOfRemainingArrayToShuffle = array.length;
+    let valueHolderForPermutation: T;
+    let currentIndex: number;
+    // need a new array other wise the old one behave weirdly
+    const result = Array<T>(currentLengthOfRemainingArrayToShuffle);
+    while (currentLengthOfRemainingArrayToShuffle) {
+        currentIndex = Math.floor(Math.random() * currentLengthOfRemainingArrayToShuffle--);
+        valueHolderForPermutation = workingArray[currentLengthOfRemainingArrayToShuffle];
+        result[currentLengthOfRemainingArrayToShuffle] = workingArray[currentIndex];
+        workingArray[currentIndex] = valueHolderForPermutation;
+    }
+    return result;
+}
+
+export function generateThirdWithVersion(thirdName?: string, versions?: Set<string>): Map<Set<string>> {
+    const result = new Map<Set<string>>();
+    const third = (thirdName) ? thirdName : getRandomAlphanumericValue(3, 5);
+    function getSomeVersions(){return getRandomAlphanumericValue(3,8)};
+    const versionValues = (versions) ? versions : new Set( generateRandomArray(3, 6, getSomeVersions));
+    result[third] = versionValues;
+    return result;
 }

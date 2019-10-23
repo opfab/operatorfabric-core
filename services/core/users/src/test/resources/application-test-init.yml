@@ -5,3 +5,26 @@ operatorfabric.users.default:
   groups:
     - name: ADMIN
       description: The admin group
+operatorfabric:
+  security:
+    jwt:
+      groups:
+        mode: JWT # value possible JWT | OPERATOR_FABRIC
+        rolesClaim:       
+          - path: "roleClaim"
+            singleValue: true
+          - path: "pathA1/pathA2/roleClaim"
+            singleValue: true 
+          - path: "pathF1/pathF2/listRoleClaim"
+            singleValue: false
+          - path: "pathB1/pathB2/pathB3/listRoleClaim"
+            singleValue: false
+            separator: ";"
+          - path: "pathC1/listRoleClaim"
+            singleValue: false
+            separator: "," 
+          - path: "pathD1/RoleClaimOptionalD1"
+            checkExistPath: true 
+          - path: "pathE1/pathE2/RoleClaimOptionalE1"
+            checkExistPath: true
+            roleValue: "RoleClaimOptionalE1"

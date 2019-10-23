@@ -18,8 +18,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.TestUtilities;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.cards.consultation.model.*;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
-import org.lfenergy.operatorfabric.cards.model.*;
+import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
+import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -72,7 +73,7 @@ public class CardRepositoryShould {
     @BeforeEach
     private void initCardData() {
         int processNo = 0;
-//create past cards
+        //create past cards
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, LOGIN, "rte", "operator"));
@@ -87,7 +88,7 @@ public class CardRepositoryShould {
         //card starts in past and never ends
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, null, LOGIN, "rte", "operator"));
 
-        //card starts in future and nerver ends
+        //card starts in future and never ends
         persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusThree, null, LOGIN, "rte", "operator"));
 
         //create later published cards in past

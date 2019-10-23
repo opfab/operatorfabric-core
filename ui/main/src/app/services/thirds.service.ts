@@ -5,63 +5,62 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Injectable, Injector} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams, HttpUrlEncodingCodec} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {AuthenticationService} from "@ofServices/authentication.service";
-import {EMPTY, from, merge, Observable, of, throwError} from "rxjs";
-import {TranslateLoader, TranslateService} from "@ngx-translate/core";
-import {catchError, filter, map, mergeMap, reduce, switchMap, take, tap} from "rxjs/operators";
-import * as _ from 'lodash';
-import {Store} from "@ngrx/store";
-import {AppState} from "../store/index";
-import {LightCard} from "../model/light-card.model";
-import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import {environment} from "@env/environment";
+import {from, Observable, of, throwError} from "rxjs";
+import {TranslateLoader} from "@ngx-translate/core";
+import {catchError, filter, map, reduce, switchMap, tap} from "rxjs/operators";
+import {LightCard} from "@ofModel/light-card.model";
+import {Action, Third, ThirdMenu} from "@ofModel/thirds.model";
+import {Card} from "@ofModel/card.model";
 
 @Injectable()
 export class ThirdsService {
     readonly thirdsUrl: string;
-    private loadedI18n: string[] = [];
-    private loadingI18n: string[] = [];
     private urlCleaner: HttpUrlEncodingCodec;
     private thirdCache = new Map();
 
     constructor(private httpClient: HttpClient,
-                private authenticationService: AuthenticationService,
-                private store: Store<AppState>,
-                private $injector: Injector,
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.thirdsUrl = `${environment.urls.thirds}`;
     }
 
-    queryThird(thirdName:string, version:string):Observable<Third> {
+    queryThirdFromCard(card: Card): Observable<Third> {
+        return this.queryThird(card.publisher, card.publisherVersion);
+    }
+
+    queryThird(thirdName: string, version: string): Observable<Third> {
         const key = `${thirdName}.${version}`;
         let third = this.thirdCache.get(key);
-        if(third){
+        if (third) {
             return of(third);
         }
-        return this.fetchThird(thirdName,version)
+        return this.fetchThird(thirdName, version)
             .pipe(
-                tap(t=>Object.setPrototypeOf(t,Third.prototype)),
-                tap(t=>this.thirdCache.set(key,t))
+                tap(t => {
+                    if (t) Object.setPrototypeOf(t, Third.prototype)
+                }),
+                tap(t => {
+                    if (t) this.thirdCache.set(key, t)
+                })
             );
     }
 
     private fetchThird(publisher: string, version: string): Observable<Third> {
         const params = new HttpParams()
             .set("version", version);
-        return this.httpClient.get<Third>(`${this.thirdsUrl}/${publisher}/`,{
+        return this.httpClient.get<Third>(`${this.thirdsUrl}/${publisher}/`, {
             params
         });
     }
 
     queryMenuEntryURL(thirdMenuId: string, thirdMenuVersion: string, thirdMenuEntryId: string): Observable<string> {
-        return this.queryThird(thirdMenuId,thirdMenuVersion).pipe(
-            //filter((third :Third)=>!(!third.menuEntries)),
+        return this.queryThird(thirdMenuId, thirdMenuVersion).pipe(
             switchMap(third => {
                 const entry = third.menuEntries.filter(entry => entry.id === thirdMenuEntryId)
-                if(entry.length==1){
+                if (entry.length == 1) {
                     return entry;
                 } else {
                     throwError(new Error('No such menu entry.'))
@@ -71,7 +70,7 @@ export class ThirdsService {
                 console.log(err)
                 return throwError(err);
             }),
-            map( menuEntry => menuEntry.url)
+            map(menuEntry => menuEntry.url)
         )
     }
 
@@ -79,141 +78,84 @@ export class ThirdsService {
         const params = new HttpParams()
             .set("locale", locale)
             .set("version", version);
-        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/templates/${name}`,{
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/templates/${name}`, {
             params,
             responseType: 'text'
         });
     }
 
-    computeThirdCssUrl(publisher: string, styleName: string, version: string){
+    computeThirdCssUrl(publisher: string, styleName: string, version: string) {
         //manage url character encoding
         const resourceUrl = this.urlCleaner.encodeValue(`${this.thirdsUrl}/${publisher}/css/${styleName}`);
-        const versionParam = new HttpParams().set('version',version);
+        const versionParam = new HttpParams().set('version', version);
         return `${resourceUrl}?${versionParam.toString()}`;
     }
 
-    fetchI18nJson(publisher: string, version: string, locales: string[]): Observable<any> {
-        let previous: Observable<any>;
-        for (let locale of locales) {
-            const params = new HttpParams()
-                .set("locale", locale)
-                .set("version", version);
-            const httpCall = this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {
-                params
-            }).pipe(
-                map(r => {
-                        const object = {};
-                        object[locale] = {};
-                        object[locale][publisher] = {};
-                        object[locale][publisher][version] = r;
-                        return object;
-                    }
-                ));
-            if (previous) {
-                previous = merge(previous, httpCall);
-            } else {
-                previous = httpCall;
-            }
-        }
-        if (previous == null) {
-            return EMPTY;
-        }
-        const result = previous.pipe(
-            reduce((acc, val) => _.merge(acc,val))
-        );
-
-        return result;
+    private convertJsonToI18NObject(locale, publisher: string, version: string) {
+        return r => {
+            const object = {};
+            object[publisher] = {};
+            object[publisher][version] = r;
+            return object;
+        };
     }
 
-    computeThirdsMenu(): Observable<ThirdMenu[]>{
+    askForI18nJson(publisher: string, locale: string, version?: string): Observable<any> {
+        let params = new HttpParams().set('locale', locale);
+        if (version) {
+            /*
+            `params` override needed otherwise only locale is use in the request.
+            It's so because HttpParams.set(...) return a new HttpParams,
+            and basically that's why HttpParams can be set with fluent API...
+             */
+            params = params.set('version', version);
+        }
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {params})
+            .pipe(
+                map(this.convertJsonToI18NObject(locale, publisher, version))
+                , catchError(error=>{
+                    console.error(`error trying fetch i18n of '${publisher}' version:'${version}' for locale: '${locale}'`);
+                    return error;
+                })
+            );
+    }
+
+    computeThirdsMenu(): Observable<ThirdMenu[]> {
         return this.httpClient.get<Third[]>(`${this.thirdsUrl}/`).pipe(
-            switchMap(ts=>from(ts)),
-            filter((t:Third)=>!(!t.menuEntries)),
-            map(t=>
+            switchMap(ts => from(ts)),
+            filter((t: Third) => !(!t.menuEntries)),
+            map(t =>
                 new ThirdMenu(t.name, t.version, t.i18nLabelKey, t.menuEntries)
             ),
-            reduce((menus:ThirdMenu[],menu:ThirdMenu)=>{
+            reduce((menus: ThirdMenu[], menu: ThirdMenu) => {
                 menus.push(menu);
                 return menus;
-            },[])
+            }, [])
         );
     }
 
-    loadI18nForLightCards(cards:LightCard[]){
-        let observable = from(cards).pipe(
-            map(card=> card.publisher + '###' + card.publisherVersion));
-        return this.subscribeToLoadI18n(observable);
+
+    fetchActionMapFromLightCard(card: LightCard) {
+        return this.fetchActionMap(card.publisher, card.process, card.state, card.publisherVersion);
     }
 
-    loadI18nForMenuEntries(menus:ThirdMenu[]){
-        const observable = from(menus).pipe(
-            map(menu=> menu.id + '###' + menu.version)
-        );
-        return this.subscribeToLoadI18n(observable);
-    }
-
-    private subscribeToLoadI18n(observable) {
-        return observable
-            .pipe(
-                reduce((ids: string[], id: string) => {
-                    ids.push(id);
-                    return ids;
-                }, []),
-                switchMap((ids:string[]) => {
-                    let work = _.uniq(ids);
-                    work = _.difference<string>(work, this.loadingI18n)
-                    return from(_.difference<string>(work, this.loadedI18n))
-                }),
-                mergeMap((id: string) => {
-                    this.loadingI18n.push(id);
-                    const input = id.split('###');
-
-                    let publisher = input[0];
-                    let version = input[1];
-                    return this.fetchI18nJson(publisher, version, this.translate().getLangs())
-                        .pipe(map(trans => {
-                                return {id: id, translation: trans};
-                            }),
-                            catchError(err => {
-                                _.remove(this.loadingI18n, id);
-                                return throwError(err);
-                            })
-                        );
-                }),
-                reduce((acc, val) => _.merge(acc,val)),
-                map(
-                    (result:any) => {
-                        const langs = this.translate().getLangs();
-                        const currentLang = this.translate().currentLang;
-                        for (let lang of langs) {
-                            let translationElement = result.translation[lang];
-                            if (translationElement) {
-                                this.translate().setTranslation(lang, translationElement, true);
-                                // needed otherwise only one translation apply
-                                this.translate().use(lang);
-                            }
-                        }
-                        this.translate().use(currentLang);
-                        _.remove(this.loadingI18n, result.id);
-                        this.loadedI18n.push(result.id);
-                        return true;
-                    }
-                ),
-                catchError((error,caught )=>{
-                    console.error('something went wrong during translation',error);
-                    return caught;
-                })
-            )
-    }
-
-    private translate(): TranslateService {
-        return this.$injector.get(TranslateService);
+    fetchActionMap(publisher: string, process: string, state: string, apiVersion?: string) {
+        let params: HttpParams;
+        if (apiVersion) params = new HttpParams().set("apiVersion", apiVersion);
+        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`, {
+            params,
+            responseType: 'text'
+        }).pipe(map((json: string) => {
+            const obj = JSON.parse(json);
+            return new Map<string, Action>(Object.entries(obj));
+        }));
     }
 }
 
 export class ThirdsI18nLoader implements TranslateLoader {
 
-    constructor(thirdsService: ThirdsService) {}
+    constructor(thirdsService: ThirdsService) {
+    }
 
     getTranslation(lang: string): Observable<any> {
         return of({});

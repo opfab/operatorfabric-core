@@ -10,6 +10,7 @@ package org.lfenergy.operatorfabric.cards.consultation.application;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.configuration.json.JacksonConfig;
 import org.lfenergy.operatorfabric.cards.consultation.configuration.mongo.LocalMongoConfiguration;
+import org.lfenergy.operatorfabric.cards.consultation.repositories.ArchivedCardRepository;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.springframework.boot.SpringApplication;
@@ -30,7 +31,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @Slf4j
 @RefreshScope
 @EnableOperatorFabricMongo
-@EnableReactiveMongoRepositories(basePackageClasses = CardRepository.class)
+@EnableReactiveMongoRepositories(basePackageClasses = {CardRepository.class, ArchivedCardRepository.class})
 @ImportResource("classpath:/amqp.xml")
 @Import({JacksonConfig.class, LocalMongoConfiguration.class})
 public class IntegrationTestApplication {

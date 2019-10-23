@@ -2,17 +2,16 @@ import {Injectable} from "@angular/core";
 import {AppState} from "@ofStore/index";
 import {Action, Store} from "@ngrx/store";
 import {Actions, Effect, ofType} from "@ngrx/effects";
-import {Observable, of, throwError} from "rxjs";
+import {Observable, of} from "rxjs";
 import {TimeService} from "@ofServices/time.service";
-import {AuthenticationActionTypes} from "@ofActions/authentication.actions";
 import {catchError, map, switchMap} from "rxjs/operators";
 import {TimeReference} from "@ofModel/time.model";
 import {FailToUpdateTimeReference, Tick, UpdateTimeReference} from "@ofActions/time.actions";
-import * as moment from 'moment-timezone';
 import {selectTimeReference} from "@ofSelectors/time.selectors";
 import {Message, MessageLevel} from "@ofModel/message.model";
 import {I18n} from "@ofModel/i18n.model";
-import {Map} from "@ofModel/map" ;
+import {Map} from "@ofModel/map";
+import {UserActionsTypes} from '@ofStore/actions/user.actions';
 
 @Injectable()
 export class TimeEffects {
@@ -32,14 +31,13 @@ export class TimeEffects {
      *This Observable send a tick corresponding to the heart beat of the application.
      *
      */
-
     @Effect()
     heartBeat: Observable<Action> = this.actions$
         .pipe(
-            ofType(AuthenticationActionTypes.AcceptLogIn),
+            ofType(UserActionsTypes.UserApplicationRegistered),
             switchMap(() => this.service.pulsate()
-                .pipe(map(() => {
-                        return new Tick({currentTime: this.currentTimeReference.computeNow(moment())});
+                .pipe(map(pulse => {
+                        return new Tick(pulse);
                     })
                 ))
         );
@@ -50,7 +48,7 @@ export class TimeEffects {
     @Effect()
     stickToVirtualTime: Observable<Action> = this.actions$
         .pipe(
-            ofType(AuthenticationActionTypes.AcceptLogIn),
+            ofType(UserActionsTypes.UserApplicationRegistered),
             switchMap(
                 () => this.service.fetchTimeReferences().pipe(
                     map(timeRef => new UpdateTimeReference({timeReference: timeRef})),

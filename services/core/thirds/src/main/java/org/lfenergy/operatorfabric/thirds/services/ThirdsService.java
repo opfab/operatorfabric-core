@@ -339,7 +339,6 @@ public class ThirdsService implements ResourceLoaderAware {
             try (Stream<Path> pathStream = Files.walk(PathUtils.getPath(file), 1)) {
                 pathStream
                         .forEach(PathUtils::silentDelete);
-//            loadCacheSafe();
             }finally {
                 this.completeCache = null;
                 this.defaultCache = null;

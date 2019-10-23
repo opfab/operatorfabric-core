@@ -8,8 +8,14 @@
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.RandomStringUtils;
 import org.assertj.core.api.Assertions;
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,9 +36,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
+import java.time.DateTimeException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import static java.nio.charset.Charset.forName;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
@@ -60,9 +73,11 @@ class CardControllerShould {
     @Autowired
     private WebTestClient webTestClient;
 
+
+
     @AfterEach
     public void cleanAfter() {
-//        cardRepository.deleteAll().subscribe();
+        cardRepository.deleteAll().subscribe();
         archiveRepository.deleteAll().subscribe();
     }
 
@@ -80,6 +95,13 @@ class CardControllerShould {
 
     private Flux<CardPublicationData> generateCards() {
         return Flux.just(
+                getCardPublicationData()
+        );
+    }
+
+    @NotNull
+    private CardPublicationData[] getCardPublicationData() {
+        return new CardPublicationData[]{
                 CardPublicationData.builder()
                         .publisher("PUBLISHER_1")
                         .publisherVersion("O")
@@ -129,7 +151,92 @@ class CardControllerShould {
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .build()
+                        .build()};
+    }
+
+    // removes cards
+    @Test
+    void deleteSynchronously_An_ExistingCard_whenT_ItSProcessIdIsProvided() {
+
+        EasyRandom randomGenerator = instantiateEasyRandom();
+
+        int numberOfCards = 10;
+        List<CardPublicationData> cardsInRepository = instantiateCardPublicationData(randomGenerator, numberOfCards);
+
+        cardRepository.saveAll(cardsInRepository).subscribe();
+
+
+        String existingId = cardsInRepository.get(0).getId();
+
+
+        String testedId = existingId;
+        this.webTestClient.delete().uri("/cards/" + testedId).accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk();
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> Assertions.assertThat(cardRepository.count().block()).isEqualTo(numberOfCards - 1));
+
+    }
+
+    @Test
+    void keepTheCardRepository_Untouched_when_ARandomProcessId_isGiven() {
+
+        EasyRandom randomGenerator = instantiateEasyRandom();
+
+        int cardNumber = 10;
+        List<CardPublicationData> cardsInRepository = instantiateCardPublicationData(randomGenerator, cardNumber);
+
+        cardRepository.saveAll(cardsInRepository).subscribe();
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(
+                () -> {
+                    Long block = cardRepository.count().block();
+                    Assertions.assertThat(block)
+                            .withFailMessage("The number of registered cards should be %d but is %d"
+                                    , cardNumber
+                                    , block)
+                            .isEqualTo(cardNumber);
+                }
         );
+
+        String testedId = randomGenerator.nextObject(String.class);
+        this.webTestClient.delete().uri("/cards/" + testedId).accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk();
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> Assertions.assertThat(cardRepository.count().block()).isEqualTo(
+                cardNumber
+
+        ));
+
+    }
+
+    private List<CardPublicationData> instantiateCardPublicationData(EasyRandom randomGenerator, int cardNumber) {
+        return randomGenerator.objects(CardPublicationData.class, cardNumber).collect(Collectors.toList());
+    }
+
+    @NotNull
+    private EasyRandom instantiateEasyRandom() {
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plus(1, ChronoUnit.DAYS);
+
+        LocalTime nine = LocalTime.of(9, 0);
+        LocalTime fifteen = LocalTime.of(17, 0);
+
+        EasyRandomParameters parameters = new EasyRandomParameters()
+                .seed(5467L)
+                .objectPoolSize(100)
+                .randomizationDepth(3)
+                .charset(forName("UTF-8"))
+                .timeRange(nine, fifteen)
+                .dateRange(today, tomorrow)
+                .stringLengthRange(5, 50)
+                .collectionSizeRange(1, 10)
+                .excludeField(FieldPredicates.named("data"))
+                .scanClasspathForConcreteTypes(true)
+                .overrideDefaultInitialization(false)
+                .ignoreRandomizationErrors(true);
+
+        return new EasyRandom(parameters);
     }
 }

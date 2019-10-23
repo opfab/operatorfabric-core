@@ -7,18 +7,18 @@
 
 import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {CardOperationEffects} from "@ofEffects/card-operation.effects";
-import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
-import {getOneRandomLigthCard, getRandomIndex, getSeveralRandomLightCards} from "@tests/helpers";
-import {CardService} from "@ofServices/card.service";
-import {LoadCard} from "@ofActions/card.actions";
-import SpyObj = jasmine.SpyObj;
-import {MockStore, provideMockStore} from "@ngrx/store/testing";
-import {provideMockActions} from "@ngrx/effects/testing";
-import {Observable} from "rxjs";
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {CardOperationEffects} from '@ofEffects/card-operation.effects';
+import {LoadLightCardsSuccess} from '@ofActions/light-card.actions';
+import {getOneRandomLigthCard, getRandomIndex, getSeveralRandomLightCards} from '@tests/helpers';
+import {CardService} from '@ofServices/card.service';
+import {LoadCard} from '@ofActions/card.actions';
+import {MockStore, provideMockStore} from '@ngrx/store/testing';
+import {provideMockActions} from '@ngrx/effects/testing';
+import {Observable} from 'rxjs';
 import {async, TestBed} from '@angular/core/testing';
+import SpyObj = jasmine.SpyObj;
 
 describe('CardOperationEffects', () => {
     let actions$: Observable<any>;
@@ -35,7 +35,7 @@ describe('CardOperationEffects', () => {
     } as AppState;
 
     beforeEach(async(() => {
-        cardServiceSpy = jasmine.createSpyObj('CardService', ['loadCard']); //TODO the "spy" isn't really needed, see if we can make it simpler
+        cardServiceSpy = jasmine.createSpyObj('CardService', ['loadCard']);
         TestBed.configureTestingModule({
             providers: [
                 CardOperationEffects,
@@ -61,14 +61,15 @@ describe('CardOperationEffects', () => {
                 card: {
                     selected: selectedLightCard,
                     loading: false,
-                    error: null
+                    error: null,
+                    actionsAppear: []
                 }
-            })
+            });
 
             const localActions$ = new Actions(hot('-a-', {a: new LoadLightCardsSuccess({lightCards: severalRandomLightCards})}));
 
             const expectedAction = new LoadCard({id: selectedLightCard.id});
-            //const localExpected = hot('--b', {b: expectedAction});
+            // const localExpected = hot('--b', {b: expectedAction});
 
             const localExpected = hot('-b-', {b: expectedAction});
 
@@ -89,18 +90,19 @@ describe('CardOperationEffects', () => {
                 card: {
                     selected: selectedLightCard,
                     loading: false,
-                    error: null
+                    error: null,
+                    actionsAppear: []
                 }
-            })
+            });
 
             const localActions$ = new Actions(hot('-a-', {a: new LoadLightCardsSuccess({lightCards: severalRandomLightCards})}));
 
             effects = new CardOperationEffects(store, localActions$, cardServiceSpy);
 
             expect(effects).toBeTruthy();
-            effects.refreshIfSelectedCard.subscribe( x => fail("Unexpected action emitted."))
+            effects.refreshIfSelectedCard.subscribe( x => fail('Unexpected action emitted.'));
 
         });
 
-    })
+    });
 });

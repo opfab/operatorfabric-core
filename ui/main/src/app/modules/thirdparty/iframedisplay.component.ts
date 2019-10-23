@@ -5,10 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Component, OnInit } from '@angular/core';
-import {
-  selectMenuStateSelectedIframeURL,
-} from "@ofSelectors/menu.selectors";
+import {Component, OnInit} from '@angular/core';
+import {selectMenuStateSelectedIframeURL,} from "@ofSelectors/menu.selectors";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";

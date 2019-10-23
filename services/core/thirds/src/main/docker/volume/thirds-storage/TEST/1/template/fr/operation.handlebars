@@ -25,7 +25,7 @@
             <label for="acc-details-operation" class="acc-label">Liste des opérations</label>
             <div class="acc-panel">
                 {{i18n data.operationStatus}}<br>
-                {{data.computationNetworkName}}
+                {{card.data.computationNetworkName}}
                 <div class="table-responsive">
                     <table class="table table-hover table-condensed">
                         <thead>
@@ -112,19 +112,19 @@
                         <tr>
                             <td>{{i18n requestedActionMessage}}</td>
                             <td>
-                                {{#ifEquals active false}}
+                                {{#if (bool active '===' false)}}
                                     Plus d'actualité
                                 {{else}}
-                                    {{#ifEquals state "VALID"}}
+                                    {{#if (bool state '===' "VALID")}}
                                         Action effectuée ({{dateFormat validationDate format="HH:mm:ss"}})
                                     {{else}}
-                                        {{#ifEquals areActionsStillPossible true}}
-                                            {{{cardAction "PREREQUISITE_" id}}}
+                                        {{#if areActionsStillPossible}}
+                                            {{{action "action" id}}}
                                         {{else}}
                                             Action non effectuée
-                                        {{/ifEquals}}
-                                    {{/ifEquals}}
-                                {{/ifEquals}}
+                                        {{/if}}
+                                    {{/if}}
+                                {{/if}}
                             </td>
                         </tr>
                     {{/with}}
@@ -151,7 +151,7 @@
                 </thead>
                 {{#each data.interruptions.detectedAtPlanification}}
                         <tr>
-                            <th class="{{#ifEquals this.effectiveAtRefTime true}}danger{{/ifEquals}}">{{#ifEquals this.effectiveAtRefTime true}}✔{{/ifEquals}}</th>
+                            <th class="{{#if this.effectiveAtRefTime}}danger{{/if}}">{{#if this.effectiveAtRefTime}}✔{{/if}}</th>
                             <td></td>
                             <td>{{i18n "card.interruption.type" this.type}}</td>
                             <td>{{this.assetName}}</td>
@@ -174,7 +174,7 @@
                 </thead>
                 {{#each data.interruptions.detectedAtExecution}}
                     <tr>
-                        <th class="{{#ifEquals this.effectiveAtRefTime true}}danger{{/ifEquals}}">{{#ifEquals this.effectiveAtRefTime true}}✔{{/ifEquals}}</th>
+                        <th class="{{#if this.effectiveAtRefTime}}danger{{/if}}">{{#if this.effectiveAtRefTime}}✔{{/if}}</th>
                         <td>{{this.startTime}}</td>
                         <td>{{i18n "card.interruption.type" this.type}}</td>
                         <td>{{this.assetName}}</td>
@@ -196,19 +196,19 @@
                         <tr>
                             <td>{{i18n requestedActionMessage}}</td>
                             <td>
-                            {{#ifEquals active false}}
+                            {{#if (bool active '===' false)}}
                                 Plus d'actualité
                             {{else}}
-                                {{#ifEquals state "VALID"}}
+                                {{#if (bool state '===' "VALID")}}
                                     Action effectuée ({{dateFormat validationDate format="HH:mm:ss"}})
                                 {{else}}
-                                    {{#ifEquals areActionsStillPossible true}}
-                                        {{{cardAction "PREREQUISITE_" id}}}
+                                    {{#if areActionsStillPossible}}
+                                        {{{action "action" id}}}
                                     {{else}}
                                         Action non effectuée
-                                    {{/ifEquals}}
-                                {{/ifEquals}}
-                            {{/ifEquals}}
+                                    {{/if}}
+                                {{/if}}
+                            {{/if}}
                             </td>
                         </tr>
                     {{/with}}
@@ -239,7 +239,7 @@
                             <td>{{origin}}</td>
                             <td>{{preserveSpace label}}</td>
                             <td>
-                                {{#ifEquals forceable true}}Oui{{else}}Non{{/ifEquals}}
+                                {{#if forceable}}Oui{{else}}Non{{/if}}
                             </td>
                             <td>
                                 {{#if state}}{{i18n state}}{{/if}}
@@ -263,19 +263,19 @@
                             <tr>
                                 <td>{{i18n requestedActionMessage}}</td>
                                 <td>
-                                    {{#ifEquals active false}}
+                                    {{#if (bool active '===' false)}}
                                         Plus d'actualité
                                     {{else}}
-                                        {{#ifEquals state "VALID"}}
+                                        {{#if (bool state '===' "VALID")}}
                                             Action effectuée ({{dateFormat validationDate format="HH:mm:ss"}})
                                         {{else}}
-                                            {{#ifEquals areActionsStillPossible true}}
-                                                {{{cardAction "PREREQUISITE_" id}}}
+                                            {{#if areActionsStillPossible}}
+                                                {{{action "action" id}}}
                                             {{else}}
                                                 Action non effectuée
-                                            {{/ifEquals}}
-                                        {{/ifEquals}}
-                                    {{/ifEquals}}
+                                            {{/if}}
+                                        {{/if}}
+                                    {{/if}}
                                 </td>
                             </tr>
                         {{/with}}
@@ -326,13 +326,13 @@
                         <th>OC</th>
                         <th>Ouvrages</th>
                         <th>Conséquence</th>
-                        {{#ifEquals data.failureModes.withTelesignals true}}
+                        {{#if data.failureModes.withTelesignals}}
                             <th>Télésignalisation</th>
-                        {{/ifEquals}}
+                        {{/if}}
                     </tr>
                     </thead>
                     {{#each data.failureModes.values}}
-                        {{#ifEquals this.hasPrerequisite false}}
+                        {{#if (bool this.hasPrerequisite '===' false)}}
                         {{#with this}}
                             <tr>
                                 <td>
@@ -377,12 +377,12 @@
                                     {{/if}}
                                 </td>
                                 <td>{{#if consequenceSummary}}{{i18n "card.periodicOperation.tab.failureMode.consequenceEnum" consequenceSummary}}{{/if}}</td>
-                                {{#ifEquals data.failureModes.withTelesignals true}}
+                                {{#if data.failureModes.withTelesignals}}
                                     <td>{{#if telesignalsSummary}}{{telesignalsSummary}}{{/if}}</td>
-                                {{/ifEquals}}
+                                {{/if}}
                             </tr>
                         {{/with}}
-                        {{/ifEquals}}
+                        {{/if}}
                     {{/each}}
                 </table>
             </div>
@@ -397,13 +397,13 @@
                         <th>OC</th>
                         <th>Ouvrages</th>
                         <th>Conséquence</th>
-                        {{#ifEquals data.failureModes.withTelesignals true}}
+                        {{#if data.failureModes.withTelesignals}}
                             <th>Télésignalisation</th>
-                        {{/ifEquals}}
+                        {{/if}}
                     </tr>
                     </thead>
                     {{#each data.failureModes.values}}
-                        {{#ifEquals this.hasPrerequisite true}}
+                        {{#if this.hasPrerequisite}}
                             {{#with this}}
                                 <tr>
                                     <td>
@@ -448,12 +448,12 @@
                                         {{/if}}
                                     </td>
                                     <td>{{#if consequenceSummary}}{{i18n "card.periodicOperation.tab.failureMode.consequenceEnum" consequenceSummary}}{{/if}}</td>
-                                    {{#ifEquals data.failureModes.withTelesignals true}}
+                                    {{#if data.failureModes.withTelesignals}}
                                         <td>{{#if telesignalsSummary}}{{telesignalsSummary}}{{/if}}</td>
-                                    {{/ifEquals}}
+                                    {{/if}}
                                 </tr>
                             {{/with}}
-                        {{/ifEquals}}
+                        {{/if}}
                     {{/each}}
                 </table>
             </div>
@@ -478,36 +478,36 @@
                         <tr>
                             <td>{{i18n requestedActionMessage}}</td>
                             <td>
-                                {{#ifEquals type "INTERRUPTIONS"}}
+                                {{#if (bool type '===' "INTERRUPTIONS")}}
                                     Coupures détectées
-                                {{/ifEquals}}
-                                {{#ifEquals type "CONTACT_TO_NOTIFY"}}
+                                {{/if}}
+                                {{#if (bool type '===' "CONTACT_TO_NOTIFY")}}
                                     Contacts
-                                {{/ifEquals}}
-                                {{#ifEquals type "SCADA_CONFIRMATION"}}
+                                {{/if}}
+                                {{#if (bool type '===' "SCADA_CONFIRMATION")}}
                                     Télésignalisations
-                                {{/ifEquals}}
-                                {{#ifEquals type "SCADA_FORCEABLE"}}
+                                {{/if}}
+                                {{#if (bool type '===' "SCADA_FORCEABLE")}}
                                     Télésignalisations
-                                {{/ifEquals}}
-                                {{#ifEquals type "SCADA_FAILURE"}}
+                                {{/if}}
+                                {{#if (bool type '===' "SCADA_FAILURE")}}
                                     -
-                                {{/ifEquals}}
+                                {{/if}}
                             </td>
                             <td>
-                                {{#ifEquals active false}}
+                                {{#if (bool active '===' false)}}
                                     Plus d'actualité
                                 {{else}}
-                                    {{#ifEquals state "VALID"}}
+                                    {{#if (bool state '===' "VALID")}}
                                         Action effectuée ({{dateFormat validationDate format="HH:mm:ss"}})
                                     {{else}}
-                                        {{#ifEquals areActionsStillPossible true}}
-                                            {{{cardAction "PREREQUISITE_" id}}}
+                                        {{#if areActionsStillPossible}}
+                                            {{{action "action" id}}}
                                         {{else}}
                                             Action non effectuée
-                                        {{/ifEquals}}
-                                    {{/ifEquals}}
-                                {{/ifEquals}}
+                                        {{/if}}
+                                    {{/if}}
+                                {{/if}}
                             </td>
                         </tr>
                         {{/with}}

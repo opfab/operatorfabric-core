@@ -17,6 +17,7 @@ import {Observable} from "rxjs";
 import {ThirdMenu} from "@ofModel/thirds.model";
 import {tap} from "rxjs/operators";
 import * as _ from 'lodash';
+import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 
 @Component({
   selector: 'of-navbar',
@@ -31,6 +32,7 @@ export class NavbarComponent implements OnInit {
     private _thirdMenus: Observable<ThirdMenu[]>;
     expandedMenu:boolean[]=[];
     expandedUserMenu=false;
+    customLogo: string;
 
     constructor(private store: Store<AppState>) {
     }
@@ -46,6 +48,11 @@ export class NavbarComponent implements OnInit {
                 _.fill(this.expandedMenu,false);
             }));
         this.store.dispatch(new LoadMenu());
+        this.store.select(buildConfigSelector('logo.base64')).subscribe(
+            data => {
+              if (data) this.customLogo = `data:image/svg+xml;base64,${data}`
+            }
+        );
     }
 
 

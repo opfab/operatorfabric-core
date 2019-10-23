@@ -12,7 +12,7 @@ import {
     LoadMenu,
     LoadMenuFailure,
     LoadMenuSuccess,
-    SelectMenuLink, SelectMenuLinkFailure,
+    SelectMenuLinkFailure,
     SelectMenuLinkSuccess
 } from "@ofActions/menu.actions";
 

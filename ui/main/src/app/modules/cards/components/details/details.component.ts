@@ -8,18 +8,21 @@
 import {AfterViewInit, Component, ContentChildren, Input, OnChanges, QueryList, SimpleChanges} from '@angular/core';
 import {DetailComponent} from "../detail/detail.component";
 import {Card} from "@ofModel/card.model";
+import { ResizableComponent } from 'app/modules/utilities/components/resizable/resizable.component';
 
 @Component({
     selector: 'of-details',
     templateUrl: './details.component.html',
+    styleUrls: ['./details.component.scss']
 })
-export class DetailsComponent implements AfterViewInit, OnChanges {
+export class DetailsComponent extends ResizableComponent implements AfterViewInit, OnChanges {
 
     @ContentChildren(DetailComponent) details: QueryList<DetailComponent>;
     @Input() card: Card;
     private _i18nPrefix: string;
 
     constructor() {
+        super();
     }
 
     ngAfterViewInit(): void {

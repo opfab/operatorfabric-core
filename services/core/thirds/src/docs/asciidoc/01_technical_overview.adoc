@@ -1,6 +1,7 @@
 == Technical overview
 
-See link:../api/#__Models[the model section of the swagger generated documentation] for data layout
+See link:../api/#__Models[the model section of the swagger generated 
+documentation] for data layout
 
 [[resource-serving]]
 === Resource serving
@@ -16,7 +17,8 @@ selector
 ==== Internationalization
 
 Internationalization (i18n) files are json file (JavaScript Object Notation).
-One file must be defined by module supported language. See link:../api/#__Models[the model section of the swagger
+One file must be defined by module supported language. See 
+link:../api/#__Models[the model section of the swagger
 generated documentation] for data layout.
 
 Sample json i18n file
@@ -59,9 +61,14 @@ favor the lightest file formats (ogg,mp3, ...)
 ==== Templates
 
 Templates are https://handlebarsjs.com/[Handlebars] template files. Templates
-are fuelled with a data structure contained in the card data (See
-link:../api/#__Models[card
-data model] for more information)
+are fuelled with a scope structure composed of
+
+ * a *card* property (See link:../api/#__Models[card data model] for more information)
+ * a *userContext* :
+   ** *login*: user login
+   ** *token*: user jwt token
+   ** *firstName*: user first name
+   ** *lastName*: user last name
 
 In addition to Handlebars basic syntax and helpers, Operator Fabric defines the
 following helpers :
@@ -70,12 +77,13 @@ following helpers :
 ===== numberFormat
 
 formats a number parameter using
-https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/NumberFormat[Intl.NumberFormat].
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Nu
+mberFormat[Intl.NumberFormat].
 The locale used is the current user selected one, and options are passed as hash
 parameters (https://handlebarsjs.com/[see Handlebars doc Literals section]).
 
 ....
-{{numberFormat data.price style="currency" currency="EUR"}}
+{{numberFormat card.data.price style="currency" currency="EUR"}}
 ....
 
 [[dateformat]]
@@ -87,7 +95,7 @@ selected one, the format is "format" hash parameter
 (https://handlebarsjs.com/[see Handlebars doc Literals section]).
 
 ....
-{{dateFormat data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
+{{dateFormat card.data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
 ....
 
 [[slice]]
@@ -174,7 +182,7 @@ for a local set to `FR_fr`
 preserves space in parameter string to avoid html standard space trimming.
 
 ....
-{{preserveSpace data.businessId}}
+{{preserveSpace card.data.businessId}}
 ....
 
 [[bool]]
@@ -205,7 +213,7 @@ boolean operators:
 examples:
 
 ....
-{{#if (bool v1 '<' v2}}
+{{#if (bool v1 '<' v2)}}
   v1 is strictly lower than v2
 {{else}}
  V2 is lower or equal to v1
@@ -246,7 +254,7 @@ example:
 
 ....
 <ul>
-{{#each (split 'my.example.string' '.')]]
+{{#each (split 'my.example.string' '.')}}
   <li>{{this}}</li>
 {{/each}}
 </ul>
@@ -263,13 +271,13 @@ outputs
 ....
 
 [[cardaction]]
-===== cardAction
+===== action
 
 outputs a card action button whose card action id is the concatenation of an
 arbitrary number of helper arguments
 
 ....
-{{{cardAction "PREREQUISITE_" id}}}
+{{{action "PREREQUISITE_" id}}}
 ....
 
 [[svg]]
@@ -279,7 +287,8 @@ outputs a svg tag with lazy loading, and missing image replacement message. The
 image url is the concatenation of an arbitrary number of helper arguments
 
 ....
-{{{svg baseUri scheduledOpId "/" substation "/before/" computationPhaseOrdinal}}}
+{{{svg baseUri scheduledOpId "/" substation "/before/" 
+computationPhaseOrdinal}}}
 ....
 
 [[i18n]]
@@ -292,7 +301,7 @@ configuration :
 and an optional parameter field (map of parameterKey => value)
 +
 ....
-{{i18n data.i18nTitle}}
+{{i18n card.data.i18nTitle}}
 ....
 * Pass a string key as sole argument and use hash parameters
 (https://handlebarsjs.com/[see Handlebars doc Literals section]) for i18n string

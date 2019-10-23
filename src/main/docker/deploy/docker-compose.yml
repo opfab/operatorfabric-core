@@ -1,7 +1,6 @@
 version: '2.1'
 services:
   mongodb:
-    container_name: mongodb
     image: mongo:4.1.1-xenial
     ports:
       - "27017:27017"
@@ -9,15 +8,13 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
   rabbitmq:
-    container_name: rabbitmq
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "15672:15672"
 #      - "15674:15674"
   keycloak:
-    container_name: keycloak
-    image: jboss/keycloak
+    image: jboss/keycloak:6.0.1
     command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/realms/export
     environment:
     - KEYCLOAK_USER=admin
@@ -31,8 +28,7 @@ services:
   config:
     depends_on:
      - rabbitmq
-    container_name: config
-    image: "lfeoperatorfabric/of-configuration-cloud-service:0.5.1.SNAPSHOT"
+    image: "lfeoperatorfabric/of-configuration-cloud-service:0.10.1.RELEASE"
     ports:
      - "2000:8080"
      - "4000:5005"
@@ -46,12 +42,11 @@ services:
      - REGISTRY_HOST=registry
      - REGISTRY_PORT=8080
     volumes:
-     - "../../../../services/infra/config/build/docker-volume/docker-configurations:/service-config"
+     - "../../../../services/infra/config/src/main/docker/volume/docker-configurations:/service-config"
   registry:
     depends_on:
      - config
-    container_name: registry
-    image: "lfeoperatorfabric/of-registry-cloud-service:0.5.1.SNAPSHOT"
+    image: "lfeoperatorfabric/of-registry-cloud-service:0.10.1.RELEASE"
     ports:
      - "2001:8080"
      - "4001:5005"
@@ -63,7 +58,7 @@ services:
   client_gateway:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-client-gateway-cloud-service:0.5.1.SNAPSHOT"
+    image: "lfeoperatorfabric/of-client-gateway-cloud-service:0.10.1.RELEASE"
     ports:
      - "2002:8080"
      - "4002:5005"
@@ -74,7 +69,7 @@ services:
   users:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-users-business-service:0.5.1.SNAPSHOT"
+    image: "lfeoperatorfabric/of-users-business-service:0.10.1.RELEASE"
     ports:
      - "2103:8080"
      - "4103:5005"
@@ -82,10 +77,10 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-  operatorfabric.thirds:
+  thirds:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-thirds-business-service:0.5.1.SNAPSHOT"
+    image: "lfeoperatorfabric/of-thirds-business-service:0.10.1.RELEASE"
     ports:
      - "2100:8080"
      - "4100:5005"
@@ -94,11 +89,11 @@ services:
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
     volumes:
-     - "../../../../services/core/thirds/build/docker-volume/thirds-storage:/thirds-storage"
+     - "../../../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
   time:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-time-business-service:0.5.1.SNAPSHOT"
+    image: "lfeoperatorfabric/of-time-business-service:0.10.1.RELEASE"
     ports:
      - "2101:8080"
      - "4101:5005"
@@ -107,10 +102,9 @@ services:
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
   cards-publication:
-    container_name: cards-publication
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-cards-publication-business-service:0.5.1.SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-publication-business-service:0.10.1.RELEASE"
     ports:
      - "2102:8080"
      - "4102:5005"
@@ -121,7 +115,7 @@ services:
   cards-consultation:
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-cards-consultation-business-service:0.5.1.SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-consultation-business-service:0.10.1.RELEASE"
     ports:
      - "2104:8080"
      - "4104:5005"
@@ -129,10 +123,21 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
+  actions:
+    depends_on:
+    - registry
+    image: "lfeoperatorfabric/of-actions-business-service:0.10.1.RELEASE"
+    ports:
+    - "2105:8080"
+    - "4105:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
   web-ui:
     depends_on:
     - registry
-    image: "lfeoperatorfabric/of-web-ui:0.5.1.SNAPSHOT"
+    image: "lfeoperatorfabric/of-web-ui:0.10.1.RELEASE"
     ports:
     - "2200:8080"
     - "4200:5005"
@@ -140,5 +145,3 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
-
-

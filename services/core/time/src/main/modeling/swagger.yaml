@@ -1,11 +1,11 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Time Management API
-  version: 0.5.1.SNAPSHOT
+  version: 0.9.1.SNAPSHOT
   title: Time Management
   termsOfService: ''
   contact:
-    email: boris.dolley_AT_rte-france.com
+    email: opfab-maintainers_AT_rte-france.com
     url: 'https://opfab.github.io/'
   license:
     name: Mozilla Public License V2.0

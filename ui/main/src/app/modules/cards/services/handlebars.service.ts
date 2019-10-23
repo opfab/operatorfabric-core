@@ -16,15 +16,21 @@ import {Observable, of} from "rxjs";
 import {map, tap} from "rxjs/operators";
 import {ThirdsService} from "../../../services/thirds.service";
 import {Guid} from "guid-typescript";
+import {DetailContext} from "@ofModel/detail-context.model";
+import {Store} from "@ngrx/store";
+import {AppState} from "@ofStore/index";
+import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 
 @Injectable()
 export class HandlebarsService {
 
     private templateCache:Map<Function> = new Map();
+    private _locale:string;
 
     constructor(private time:TimeService,
                 private translate: TranslateService,
-                private thirds: ThirdsService){
+                private thirds: ThirdsService,
+                private store: Store<AppState>){
         this.registerPreserveSpace();
         this.registerNumberFormat();
         this.registerDateFormat();
@@ -39,15 +45,27 @@ export class HandlebarsService {
         this.registerArrayAtIndexLength();
         this.registerBool();
         this.registerNow();
+        this.registerJson();
+        this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale))
     }
 
-    public executeTemplate(templateName: string, card: Card):Observable<string> {
-        return this.queryTemplate(card.publisher,card.publisherVersion,templateName).pipe(
-            map(t=>t(card)));
+    public changeLocale(locale:string){ //TODO Refactor as common with i18n service ? Common fallback handling ?
+        if(locale) {
+            this._locale = locale;
+        }else{
+            this._locale = 'en';
+        }
+        moment.locale(this._locale);
+        this.translate.use(this._locale);
+    }
+
+    public executeTemplate(templateName: string, context: DetailContext):Observable<string> {
+        return this.queryTemplate(context.card.publisher,context.card.publisherVersion,templateName).pipe(
+            map(t=>t(context)));
     }
 
     private queryTemplate(publisher:string, version:string, name: string):Observable<Function> {
-        const locale = this.translate.getBrowserLang();
+        const locale = this._locale;
         const key = `${publisher}.${version}.${name}.${locale}`;
         let template = this.templateCache[key];
         if(template){
@@ -57,6 +75,12 @@ export class HandlebarsService {
             map(s=>Handlebars.compile(s)),
             tap(t=>this.templateCache[key]=t)
         );
+    }
+
+    private registerJson() {
+        Handlebars.registerHelper('json', function (obj) {
+            return new Handlebars.SafeString(JSON.stringify(obj))
+        });
     }
 
     private registerBool() {
@@ -95,8 +119,11 @@ export class HandlebarsService {
     }
 
     private registerSplit() {
-        Handlebars.registerHelper('split', function (value, splitValue, index, options) {
-            return value.split(splitValue)[index];
+        Handlebars.registerHelper('split', function (...args: any[]) {
+            if(args.length === 3)
+                return args[0].split(args[1]);
+            if(args.length === 4)
+                return args[0].split(args[1])[args[2]];
         });
     }
 
@@ -240,14 +267,14 @@ export class HandlebarsService {
     private registerDateFormat() {
         Handlebars.registerHelper('dateFormat', (value, options) => {
             const m = moment(new Date(value));
-            m.locale(this.translate.getBrowserLang());
+            m.locale(this._locale);
             return m.format(options.hash.format);
         });
     }
 
     private registerNumberFormat() {
         Handlebars.registerHelper('numberFormat', (value, options) => {
-            const formatter = new Intl.NumberFormat(this.translate.getBrowserLang(), options.hash);
+            const formatter = new Intl.NumberFormat(this._locale, options.hash);
             return formatter.format(value);
         });
     }

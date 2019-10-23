@@ -37,12 +37,12 @@
     "password": "Mot de passe",
     "submit":{
       "password":"Se connecter",
-      "code": "Se connecter avec{{name}}"
+      "code": "Se connecter avec {{name}}"
     },
     "error":{
       "authenticate":"Identifiant ou mot de passe incorrect",
       "code":"Mauvais code d'authentification",
-      "unavailable":"ALe service d'authentification n'est pas disponnible",
+      "unavailable":"Le service d'authentification n'est pas disponible",
       "unexpected":"Une erreur inattendue a été détectée : {{error}}",
       "token": {
         "invalid": "Le jeton conservé est invalide",
@@ -51,7 +51,7 @@
     }
   },
   "settings":{
-    "email": "Adresse mel",
+    "email": "Adresse email",
     "description": "Description",
     "locale": "Langue",
     "timeZone": "Zone horaire",
@@ -59,6 +59,18 @@
     "dateFormat": "Format de date",
     "dateTimeFormat": "Format date et heure/minute",
     "defaultTags": "Tags par défaut"
+  },
+  "archive": {
+    "filters": {
+      "publisher": "Emetteur",
+      "process": "Processus",
+      "tags": "Etiquettes",
+      "publishDateFrom": "Publication à partir de",
+      "publishDateTo": "Publication jusqu'à",
+      "activeFrom": "Active à partir de",
+      "activeTo": "Active jusqu'à"
+    },
+    "search": "Rechercher"
   },
   "time": {
     "error": "La mise-à-jour du temps de référence a échoué pour la raison suivante: {{error}}"

@@ -19,7 +19,7 @@ import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
 import {Filter} from "@ofModel/feed-filter.model";
 import {tap} from "rxjs/operators";
 import {FilterType} from "@ofServices/filter.service";
-import {compareByLttd, compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
+import {compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
 
 describe('Feed store', () => {
     let store: Store<AppState>;

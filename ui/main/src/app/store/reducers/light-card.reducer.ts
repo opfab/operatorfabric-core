@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {ClearLightCardSelection, LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
+import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
 import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
 import {FeedActions, FeedActionTypes} from "@ofActions/feed.actions";
 
@@ -30,6 +30,13 @@ export function reducer(
             };
         }
 
+        case LightCardActionTypes.RemoveLightCard:{
+            return {
+                ...LightCardAdapter.removeMany(action.payload.cards,state),
+                loading:false,
+                lastCards:[]
+            }
+        }
         case LightCardActionTypes.LoadLightCardsFailure: {
             return {
                 ...state,
@@ -42,7 +49,7 @@ export function reducer(
         case LightCardActionTypes.SelectLightCard: {
             return {
                 ...state,
-                ...action.payload,
+                selectedCardId: action.payload.selectedCardId,
                 lastCards: []
             }
         }
@@ -85,7 +92,9 @@ export function reducer(
                 filters: action.payload.filters
             };
         }
-
+        case LightCardActionTypes.UpdateALightCard:{
+            return LightCardAdapter.upsertOne(action.payload.card, state);
+        }
         default: {
             return state;
         }

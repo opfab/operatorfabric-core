@@ -15,7 +15,7 @@ import {FilterType} from "@ofServices/filter.service";
  *  * EntityState of LightCard
  *  * selectedCardId: the currently selected card id
  *  * lastCards the last cards added / updated to the feed
- *  * loading: weather there is an ongoing state modification
+ *  * loading: whether there is an ongoing state modification
  *  * message: last message during state processing
  *  * filters: a collection of filter to apply to the rendered feed
  */

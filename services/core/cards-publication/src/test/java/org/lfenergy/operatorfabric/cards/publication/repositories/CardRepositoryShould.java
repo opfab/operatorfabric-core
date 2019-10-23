@@ -7,13 +7,15 @@
 
 package org.lfenergy.operatorfabric.cards.publication.repositories;
 
-import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.cards.model.*;
+import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
+import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum;
+import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ import java.time.Instant;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * <p></p>
@@ -107,7 +109,7 @@ public class CardRepositoryShould {
                 .assertNext(c->{
                     computeCardAssertion(card).accept(c);
                     assertThat(c.getTimeSpans().get(0).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.BUBBLE);
-                    assertThat(c.getTimeSpans().get(1).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.LINE);
+                    assertThat(c.getTimeSpans().get(1).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.BUBBLE);
                     assertThat(c.getTimeSpans().get(2).getDisplay()).isEqualTo(TimeSpanDisplayModeEnum.BUBBLE);
                 })
                 .expectComplete()

@@ -6,25 +6,32 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {CardOperation} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication.service';
-import {Card} from "@ofModel/card.model";
-import {HttpClient} from "@angular/common/http";
-import {environment} from "@env/environment";
-import {GuidService} from "@ofServices/guid.service";
+import {Card} from '@ofModel/card.model';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {environment} from '@env/environment';
+import {GuidService} from '@ofServices/guid.service';
+import {LightCard} from '@ofModel/light-card.model';
+import {Page} from '@ofModel/page.model';
+import { TimeService } from './time.service';
 
 @Injectable()
 export class CardService {
     readonly unsubscribe$ = new Subject<void>();
     readonly cardOperationsUrl: string;
     readonly cardsUrl: string;
+    readonly archivesUrl: string;
 
-    constructor(private httpClient:HttpClient, private authenticationService: AuthenticationService,private guidService: GuidService) {
+
+    constructor(private httpClient: HttpClient,
+        private guidService: GuidService, private timeService: TimeService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
+        this.archivesUrl = `${environment.urls.cards}/archives`;
     }
 
     loadCard(id: string): Observable<Card> {
@@ -41,6 +48,8 @@ export class CardService {
                 heartbeatTimeout: 600000}));
     }
 
+
+
     unsubscribeCardOperation(){
         this.unsubscribe$.next();
     }
@@ -52,7 +61,7 @@ export class CardService {
                     if (!message) {
                         return observer.error(message);
                     }
-                    return observer.next(JSON.parse(message.data));
+                    return observer.next(JSON.parse(message.data,CardOperation.convertTypeIntoEnum));
                 };
                 eventSource.onerror = error => {
                     console.error(`error occurred from ES: ${error.toString()}`)
@@ -66,12 +75,23 @@ export class CardService {
                     eventSource.close();
                 }
             };
-        })
+        });
     }
 
     public updateCardSubscriptionWithDates(rangeStart:number,rangeEnd:number):Observable<any>{
         return this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
             {rangeStart:rangeStart,rangeEnd: rangeEnd});
+    }
+
+    loadArchivedCard(id: string): Observable<Card> {
+        return this.httpClient.get<Card>(`${this.archivesUrl}/${id}`);
+    }
+
+    fetchArchivedCards(filters: Map<string, string[]>): Observable<Page<LightCard>> {
+        let params = new HttpParams();
+        filters.forEach((values, key) => values.forEach(value => params = params.append(key, value)));
+        // const tmp = new HttpParams().set('publisher', 'defaultPublisher').set('size', '10');
+        return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
     }
 }

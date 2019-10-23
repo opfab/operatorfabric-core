@@ -5,12 +5,12 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 <div class="container-fluid">
-    <div class="row" *ngIf="!hideTimeLine">
+    <div class="row fixed-height-main-layout" *ngIf="!hideTimeLine">
         <div class="col-12" style="margin-bottom: 1rem;">
             <of-time-line></of-time-line>
         </div>
     </div>
-    <div class="row">
+    <div id="parentFeedContent" class="row calc-height-main-layout">
         <div class="col-3">
             <of-card-list [lightCards]="lightCards$|async" [selection]="selection$"></of-card-list>
         </div>

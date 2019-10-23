@@ -18,4 +18,6 @@ This chapter describes:
 All automated features identified during the definition phase of the conceptual
 architecture must be broken down into application modules.
 
-include::01_business_target.adoc[]
+include::01_micro_service_architecture_principles.adoc[]
+include::02_micro_service_architecture_implementation.adoc[]
+include::03_web_ui_implementation.adoc[]

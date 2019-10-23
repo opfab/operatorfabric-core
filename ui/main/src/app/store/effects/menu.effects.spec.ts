@@ -9,17 +9,9 @@ import {MenuEffects} from './menu.effects';
 import {getRandomAlphanumericValue, getRandomMenu} from '@tests/helpers';
 import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
-import {
-    LoadMenu,
-    LoadMenuSuccess,
-    SelectMenuLink,
-    SelectMenuLinkFailure,
-    SelectMenuLinkSuccess
-} from "@ofActions/menu.actions";
+import {LoadMenu, LoadMenuSuccess, SelectMenuLink, SelectMenuLinkSuccess} from "@ofActions/menu.actions";
 import {of} from "rxjs";
 import {Router} from "@angular/router";
-import SpyObj = jasmine.SpyObj;
-import createSpyObj = jasmine.createSpyObj;
 
 describe('MenuEffects', () => {
     let effects: MenuEffects;

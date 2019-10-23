@@ -6,8 +6,8 @@
 
 = Card Consultation Service Reference Documentation
 :author: David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: v0.1.1
-:revdate: April 15, 2019
+:revnumber: 0.11.1.SNAPSHOT
+:revdate: October 21, 2019
 :imagesdir: images
 :sectnums:
 :toc: left
@@ -16,4 +16,6 @@
 :icons: font
 :hide-uri-scheme:
 
-Work in progress
+WORK in progress
+
+include::03_Archives.adoc[]

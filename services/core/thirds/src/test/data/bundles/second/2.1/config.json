@@ -33,7 +33,7 @@
           ],
           "actions": {
             "action1": {
-              "type": "URI",
+              "type": "URL",
               "label": {
                 "key": "my.card.my.action.label"
               }

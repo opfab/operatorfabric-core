@@ -14,7 +14,7 @@ Registry.
 
 == Mandatory configuration, Profiles and default properties
 
-The service has no mandatory configuration besside global configuration and
+The service has no mandatory configuration beside global configuration and
 usual bootstrap configuration.
 
 For other configuration see:

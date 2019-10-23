@@ -4,6 +4,16 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<p>
-  archives works!
-</p>
+<div class="row archives-page">
+    <div class="col-12">
+        <of-archive-filters></of-archive-filters>
+    </div>
+</div>
+<div class="row">
+    <div class="col-3">
+        <of-archive-list [lightCards]="lightCards$|async" [selection]="selection$"></of-archive-list>
+    </div>
+    <div class="col-9">
+        <router-outlet></router-outlet>
+    </div>
+</div>

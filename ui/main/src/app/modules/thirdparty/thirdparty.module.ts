@@ -5,9 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IframeDisplayComponent } from './iframedisplay.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {IframeDisplayComponent} from './iframedisplay.component';
 import {ThirdpartyRoutingModule} from "./thirdparty-routing.module";
 
 @NgModule({

@@ -14,7 +14,6 @@ import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabU
 import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -182,7 +181,60 @@ class GivenAdminUserThirdControllerShould {
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.testAction.type", is("URI")))
+                .andExpect(jsonPath("$.testAction.type", is("URL")))
+        ;
+    }
+
+    @Test
+    void fetchActions404() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/testFakeProcess/testState/actions")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
+        ;
+
+        result = mockMvc.perform(
+                get("/thirds/first/testProcess/testFakeState/actions")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
+        ;
+    }
+
+    @Test
+    void fetchAction() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/testProcess/testState/actions/testAction")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.type", is("URL")))
+        ;
+    }
+
+    @Test
+    void fetchAction404() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/thirds/first/testProcess/testState/actions/testFakeAction")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
+        ;
+
+        result = mockMvc.perform(
+                get("/thirds/first/testProcess/testFakeState/actions/testFakeAction")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
+        ;
+
+        result = mockMvc.perform(
+                get("/thirds/first/testFakeProcess/testState/actions/testFakeAction")
+                        .accept("application/json"));
+        result
+                .andExpect(status().isNotFound())
         ;
     }
 

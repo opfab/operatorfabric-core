@@ -8,6 +8,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -60,6 +61,11 @@ public class LightCardConsultationData implements LightCard {
     @Singular("timeSpan")
     private Set<TimeSpanConsultationData> timeSpansSet;
 
+    /**
+     * return timespans, may return null
+     * @return
+     */
+    @JsonProperty("timeSpans")
     @Override
     public List<TimeSpan> getTimeSpans() {
         if(this.timeSpansSet!=null)
@@ -78,6 +84,8 @@ public class LightCardConsultationData implements LightCard {
         LightCardConsultationDataBuilder builder = builder()
                 .uid(other.getUid())
                 .id(other.getId())
+                .process(other.getProcess())
+                .state(other.getState())
                 .processId(other.getProcessId())
                 .lttd(other.getLttd())
                 .startDate(other.getStartDate())

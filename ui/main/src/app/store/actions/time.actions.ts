@@ -5,16 +5,27 @@ import * as moment from "moment-timezone";
 
 export enum TimeActionTypes{
     Tick='[Time] tick',
-    UpdateTimeReference='[Time] try to upadate the time reference',
+    UpdateTimeReference='[Time] try to update the time reference',
     FailToUpdateTimeReference='[Time] fail to update the time reference'
 }
 
 /**
  * Heart beat of the application change current date
+ * Contains the elapsed virtual time since the previous heart beat so any components following the clock
+ * can shift their timespan accordingly
  */
 export class Tick implements  Action{
     readonly type=TimeActionTypes.Tick;
-    constructor(public payload:{currentTime:moment.Moment}){}
+    constructor(public payload:TickPayload){}
+}
+
+/**
+ * Clock tick (heart beat) payload
+ */
+export class TickPayload {
+    constructor(public currentTime: moment.Moment,
+                public elapsedSinceLast: number) {
+    }
 }
 
 /**
@@ -28,7 +39,7 @@ export class UpdateTimeReference implements Action{
 
 
 /**
- * Notify thate something went wrong while changing the virtual time.
+ * Notify that something went wrong while changing the virtual time.
  * Nothing has been done and an error is reported
  */
 export class FailToUpdateTimeReference implements Action{

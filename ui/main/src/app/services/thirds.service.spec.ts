@@ -9,36 +9,22 @@ import {getTestBed, TestBed} from '@angular/core/testing';
 
 import {ThirdsI18nLoaderFactory, ThirdsService} from './thirds.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
-import {environment} from '../../environments/environment';
+import {environment} from '@env/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
-import {appReducer, AppState} from "../store/index";
-import {getOneRandomLigthCard, getRandomAlphanumericValue, getRandomMenu} from "../../tests/helpers";
+import {appReducer, AppState} from "@ofStore/index";
+import {generateThirdWithVersion, getOneRandomLigthCard, getRandomAlphanumericValue} from "@tests/helpers";
 import * as _ from 'lodash';
-import {LoadLightCardsSuccess} from "../store/actions/light-card.actions";
-import {LightCard} from "../model/light-card.model";
+import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
+import {LightCard} from "@ofModel/light-card.model";
 import {AuthenticationService} from "@ofServices/authentication.service";
 import {GuidService} from "@ofServices/guid.service";
 import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import {EffectsModule} from "@ngrx/effects";
-import {LightCardEffects} from "@ofEffects/light-card.effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
-import {EMPTY, empty, from, merge, Observable, of, zip} from "rxjs";
-import {switchMap} from "rxjs/operators";
-
-function createTranslationMap(menu: ThirdMenu[]) {
-    let i18n = {}
-    for (let i in menu) {
-        _.set(i18n, `en.${menu[i].id}.${menu[i].version}.${menu[i].label}`, `${i} Third`);
-        _.set(i18n, `fr.${menu[i].id}.${menu[i].version}.${menu[i].label}`, `Tier ${i}`);
-        for (let j in menu[i].entries) {
-            _.set(i18n, `en.${menu[i].id}.${menu[i].version}.${menu[i].entries[j].label}`, `${i} Third, ${j} menu`);
-            _.set(i18n, `fr.${menu[i].id}.${menu[i].version}.${menu[i].entries[j].label}`, `Tier ${i}, menu ${j}`);
-        }
-    }
-    return i18n;
-}
+import {UpdateTranslation} from "@ofActions/translate.actions";
+import {TranslateEffects} from "@ofEffects/translate.effects";
 
 describe('Thirds Services', () => {
     let injector: TestBed;
@@ -50,7 +36,7 @@ describe('Thirds Services', () => {
         TestBed.configureTestingModule({
             imports: [
                 StoreModule.forRoot(appReducer),
-                EffectsModule.forRoot([LightCardEffects, MenuEffects]),
+                EffectsModule.forRoot([MenuEffects, TranslateEffects]),
                 HttpClientTestingModule,
                 RouterTestingModule,
                 TranslateModule.forRoot({
@@ -150,110 +136,6 @@ describe('Thirds Services', () => {
             })
         })
     });
-    describe('#fetchI18nJson', () => {
-        it('should return json object with single en language', () => {
-            thirdsService.fetchI18nJson('testPublisher', '0', ['en'])
-                .subscribe(result => {
-                    expect(result.en.testPublisher['0'].menu.feed).toEqual('Feed')
-                    expect(result.en.testPublisher['0'].menu.archives).toEqual('Archives')
-                });
-
-            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/i18n`)
-            expect(calls.length).toEqual(1);
-            expect(calls[0].request.method).toBe('GET');
-            calls[0].flush({
-                menu: {
-                    feed: 'Feed',
-                    archives: 'Archives'
-                }
-            });
-        });
-        it('should return json object with multiple languages', () => {
-            thirdsService.fetchI18nJson('testPublisher', '0', ['en', 'fr'])
-                .subscribe(result => {
-                    expect(result.en.testPublisher['0'].menu.feed).toEqual('Feed')
-                    expect(result.en.testPublisher['0'].menu.archives).toEqual('Archives')
-                    expect(result.fr.testPublisher['0'].menu.feed).toEqual('Flux de Cartes')
-                    expect(result.fr.testPublisher['0'].menu.archives).toEqual('Archives')
-                });
-
-            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/i18n`)
-            expect(calls.length).toEqual(2);
-
-            expect(calls[0].request.method).toBe('GET');
-            expect(calls[0].request.params.get('locale')).toEqual('en');
-            calls[0].flush({
-                menu: {
-                    feed: 'Feed',
-                    archives: 'Archives'
-                }
-            });
-            // req = httpMock.expectOne(`${environment.urls.thirds}/thirds/testPublisher/i18n`)
-            expect(calls[1].request.method).toBe('GET');
-            expect(calls[1].request.params.get('locale')).toEqual('fr');
-            calls[1].flush({
-                menu: {
-                    feed: 'Flux de Cartes',
-                    archives: 'Archives'
-                }
-            });
-        });
-    });
-
-    it('should update translate service upon menu update', (done) => {
-        let menu: ThirdMenu[] = getRandomMenu();
-
-        const i18n = createTranslationMap(menu);
-        const fetchI18nJsonSpy = spyOn(thirdsService, 'fetchI18nJson').and.callFake((publisher: string, version: string, locales: string[]) =>
-            of(_.pick(i18n, locales.map((item) => `${item}.${publisher}.${version}`)))
-        );
-        thirdsService.loadI18nForMenuEntries(menu)
-            .pipe(
-                switchMap(() => {
-                    function extractAllKeys(t: ThirdMenu) {
-                        let keys = [`${thirdPrefix(t)}${t.label}`];
-                        for (let e of t.entries)
-                            keys.push(`${thirdPrefix(t)}${e.label}`);
-                        return keys;
-                    }
-
-                    let previous:Observable<[string,string,string]> = EMPTY;
-                    for (let m of menu) {
-                        const keys = extractAllKeys(m);
-                        previous = merge(previous, from(keys)
-                            .pipe(
-                                switchMap(k => {
-                                    translateService.use('fr');
-                                    return zip(of('fr'), of(k), translateService.get(k));
-                                })
-                            ));
-                        previous = merge(previous, from(keys)
-                            .pipe(
-                                switchMap(k => {
-                                    translateService.use('en');
-                                    return zip(of('en'), of(k), translateService.get(k));
-                                })
-                            ));
-                    }
-                    return previous;
-                })
-            )
-            .subscribe(array =>{
-                    const resultingTranslation = array[2];
-                    const locale = array[0];
-                    const i18nKey = array[1];
-                    const expectedTranslation = _.get(i18n, `${locale}.${i18nKey}`);
-                    return expect(resultingTranslation).toBe(expectedTranslation)
-                },
-                () => {
-                    fail();
-                    done();
-                },
-                () => {
-                    expect(fetchI18nJsonSpy.calls.count()).toBe(menu.length);
-                    done();
-                });
-    });
     it('should update translate service upon new card arrival', (done) => {
         let card = getOneRandomLigthCard();
         let i18n = {}
@@ -263,7 +145,10 @@ describe('Thirds Services', () => {
         _.set(i18n, `fr.${card.summary.key}`, 'résumé fr');
         const setTranslationSpy = spyOn(translateService, "setTranslation").and.callThrough();
         const getLangsSpy = spyOn(translateService, "getLangs").and.callThrough();
-        store.dispatch(new LoadLightCardsSuccess({lightCards: [card]}));
+        const translationToUpdate = generateThirdWithVersion(card.publisher, new Set([card.publisherVersion]));
+        store.dispatch(
+            new UpdateTranslation({versions: translationToUpdate})
+        );
         let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/i18n`);
         expect(calls.length).toEqual(2);
 
@@ -322,43 +207,43 @@ describe('Thirds Services', () => {
     });
     it('should compute url with encoding special characters', () => {
         const urlFromPublishWithSpaces = thirdsService.computeThirdCssUrl('publisher with spaces'
-            , getRandomAlphanumericValue(3,12)
-            ,getRandomAlphanumericValue(2.5));
+            , getRandomAlphanumericValue(3, 12)
+            , getRandomAlphanumericValue(2.5));
         expect(urlFromPublishWithSpaces.includes(' ')).toEqual(false);
         let dico = new Map();
-        dico.set('À','%C3%80');
-        dico.set('à','%C3%A0');
-        dico.set('É','%C3%89');
-        dico.set('é','%C3%A9');
-        dico.set('È','%C3%88');
-        dico.set('è','%C3%A8');
-        dico.set('Â','%C3%82');
-        dico.set('â','%C3%A2');
-        dico.set('Ô','%C3%94');
-        dico.set('ô','%C3%B4');
-        dico.set('Ù','%C3%99');
-        dico.set('ù','%C3%B9');
-        dico.set('Ï','%C3%8F');
-        dico.set('ï','%C3%AF');
-        let stringToTest="";
-        for(let char of dico.keys()){
-            stringToTest +=char;
+        dico.set('À', '%C3%80');
+        dico.set('à', '%C3%A0');
+        dico.set('É', '%C3%89');
+        dico.set('é', '%C3%A9');
+        dico.set('È', '%C3%88');
+        dico.set('è', '%C3%A8');
+        dico.set('Â', '%C3%82');
+        dico.set('â', '%C3%A2');
+        dico.set('Ô', '%C3%94');
+        dico.set('ô', '%C3%B4');
+        dico.set('Ù', '%C3%99');
+        dico.set('ù', '%C3%B9');
+        dico.set('Ï', '%C3%8F');
+        dico.set('ï', '%C3%AF');
+        let stringToTest = "";
+        for (let char of dico.keys()) {
+            stringToTest += char;
         }
         const urlFromPublishWithAccentuatedChar = thirdsService.computeThirdCssUrl(`publisherWith${stringToTest}`
-            , getRandomAlphanumericValue(3,12)
-            ,getRandomAlphanumericValue(3,4));
-        dico.forEach((value,key)=>{
-                expect(urlFromPublishWithAccentuatedChar.includes(key)).toEqual(false);
-                //`should normally contain '${value}'`
-                expect(urlFromPublishWithAccentuatedChar.includes(value)).toEqual(true);
+            , getRandomAlphanumericValue(3, 12)
+            , getRandomAlphanumericValue(3, 4));
+        dico.forEach((value, key) => {
+            expect(urlFromPublishWithAccentuatedChar.includes(key)).toEqual(false);
+            //`should normally contain '${value}'`
+            expect(urlFromPublishWithAccentuatedChar.includes(value)).toEqual(true);
         });
-        const urlWithSpacesInVersion=thirdsService.computeThirdCssUrl(getRandomAlphanumericValue(5,12),getRandomAlphanumericValue(5.12),
+        const urlWithSpacesInVersion = thirdsService.computeThirdCssUrl(getRandomAlphanumericValue(5, 12), getRandomAlphanumericValue(5.12),
             'some spaces in version');
         expect(urlWithSpacesInVersion.includes(' ')).toEqual(false);
 
-        const urlWithAccentuatedCharsInVersion=thirdsService.computeThirdCssUrl(getRandomAlphanumericValue(5,12),getRandomAlphanumericValue(5.12)
-            ,`${stringToTest}InVersion`);
-        dico.forEach((value,key)=>{
+        const urlWithAccentuatedCharsInVersion = thirdsService.computeThirdCssUrl(getRandomAlphanumericValue(5, 12), getRandomAlphanumericValue(5.12)
+            , `${stringToTest}InVersion`);
+        dico.forEach((value, key) => {
             expect(urlWithAccentuatedCharsInVersion.includes(key)).toEqual(false);
             //`should normally contain '${value}'`
             expect(urlWithAccentuatedCharsInVersion.includes(value)).toEqual(true);
@@ -366,7 +251,7 @@ describe('Thirds Services', () => {
 
     });
     describe('#queryThird', () => {
-        const third = new Third('testPublisher','0','third.label');
+        const third = new Third('testPublisher', '0', 'third.label');
         it('should load third from remote server', () => {
             thirdsService.queryThird('testPublisher', '0',)
                 .subscribe((result) => expect(result).toEqual(third))
@@ -379,7 +264,7 @@ describe('Thirds Services', () => {
         })
     });
     describe('#queryThird', () => {
-        const third = new Third('testPublisher','0','third.label');
+        const third = new Third('testPublisher', '0', 'third.label');
         it('should load and cache third from remote server', () => {
             thirdsService.queryThird('testPublisher', '0',)
                 .subscribe((result) => {
@@ -396,17 +281,18 @@ describe('Thirds Services', () => {
         })
     });
 
-    describe('#queryMenuEntryURL', ()=> {
+    describe('#queryMenuEntryURL', () => {
 
-        it('should retrieve menu entry url if provided parameters are correct', () => {
+        it('should retrieve menu entry url if provided parameters are correct', (done) => {
             const third = new Third(
                 't1', '', 'tLabel1', [], [], [],
                 [new ThirdMenuEntry('id1', 'label1', 'link1'),
                     new ThirdMenuEntry('id2', 'label2', 'link2')]
             )
-            thirdsService.queryMenuEntryURL('t1','1','id2').subscribe(
+            thirdsService.queryMenuEntryURL('t1', '1', 'id2').subscribe(
                 result => {
                     expect(result).toBe('link2');
+                    done();
                 }
             )
             let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/t1/`);

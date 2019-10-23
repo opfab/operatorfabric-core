@@ -4,11 +4,16 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark ">
   <a class="navbar-brand">
+    <div *ngIf="this.customLogo; else opFabLogo">
+      <of-icon icon="custom-logo" medium [base64]="customLogo"></of-icon>
+    </div>
+    <ng-template #opFabLogo>
     <div class="brand-bg-light">
       <of-icon icon="operator-fabric" medium></of-icon>
     </div>
+    </ng-template>
   </a>
   <button class="navbar-toggler" type="button" (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed"
           aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">

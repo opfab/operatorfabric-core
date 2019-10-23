@@ -9,7 +9,8 @@ import {getExpirationTime, reducer} from './authentication.reducer';
 import {authInitialState, AuthState} from '@ofStates/authentication.state';
 import {
     AcceptLogIn,
-    AcceptLogOut, InitAuthStatus,
+    AcceptLogOut,
+    InitAuthStatus,
     PayloadForSuccessfulAuthentication,
     RejectLogIn
 } from "@ofActions/authentication.actions";

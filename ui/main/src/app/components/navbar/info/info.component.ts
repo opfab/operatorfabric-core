@@ -9,7 +9,7 @@ import {Component, OnInit} from '@angular/core';
 import {AppState} from "@ofStore/index";
 import {Store} from "@ngrx/store";
 import {selectUserNameOrIdentifier} from "@ofSelectors/authentication.selectors";
-import {combineLatest, Observable, of} from "rxjs";
+import {combineLatest, Observable} from "rxjs";
 import {buildSettingsSelector} from "@ofSelectors/settings.selectors";
 import {TimeService} from "@ofServices/time.service";
 import {map} from "rxjs/operators";

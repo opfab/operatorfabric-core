@@ -5,15 +5,16 @@ import {Store} from "@ngrx/store";
 import {async} from "@angular/core/testing";
 import {hot} from "jasmine-marbles";
 import {Actions} from "@ngrx/effects";
-import {AcceptLogIn, PayloadForSuccessfulAuthentication} from "@ofActions/authentication.actions";
 import {TimeReference, TimeSpeed} from "@ofModel/time.model";
 import {FailToUpdateTimeReference, Tick, UpdateTimeReference} from "@ofActions/time.actions";
 import {of} from "rxjs";
-import moment = require("moment-timezone");
-import SpyObj = jasmine.SpyObj;
 import {Message, MessageLevel} from "@ofModel/message.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
+import {UserApplicationRegistered} from '@ofStore/actions/user.actions';
+import {User} from '@ofModel/user.model';
+import moment = require("moment-timezone");
+import SpyObj = jasmine.SpyObj;
 
 describe('TimeEffects', () => {
 
@@ -37,25 +38,23 @@ describe('TimeEffects', () => {
 
 
         localAction$ = new Actions(hot('a-----', {
-            a: new AcceptLogIn(
-                new PayloadForSuccessfulAuthentication('test-user', null, null, null))
+            a: new UserApplicationRegistered({user: new User("userRegisterd", "aa", "bb")})
         }));
 
 
     }));
     describe('heartBeat', () => {
-        it('should emit an action containing an instant after the user is logged in', () => {
+        it('should emit (clock) tick actions after the user is logged in', () => {
 
-            timeService.pulsate.and.returnValue(hot('abcd', {a: 1, b: 2, c: 3, d: 4}));
+            timeService.pulsate.and.returnValue(hot('-bcd', {
+                b: {currentTime: momentForTesting, elapsedSinceLast: 1},
+                c: {currentTime: momentForTesting, elapsedSinceLast: 1},
+                d: {currentTime: momentForTesting, elapsedSinceLast: 1}}));
 
-            timeRef.computeNow.and.returnValue(momentForTesting);
-
-            const localExpected = hot('abcd'
-                , {
-                    a: new Tick({currentTime: momentForTesting})
-                    , b: new Tick({currentTime: momentForTesting})
-                    , c: new Tick({currentTime: momentForTesting})
-                    , d: new Tick({currentTime: momentForTesting})
+            const localExpected = hot('-bcd'
+                , { b: new Tick({currentTime: momentForTesting, elapsedSinceLast: 1})
+                    , c: new Tick({currentTime: momentForTesting, elapsedSinceLast: 1})
+                    , d: new Tick({currentTime: momentForTesting, elapsedSinceLast: 1})
                 }
             );
 

@@ -8,9 +8,9 @@
 package org.lfenergy.operatorfabric.cards.consultation.configuration.mongo;
 
 import org.bson.Document;
-import org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum;
 import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpan;
 import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpanConsultationData;
+import org.lfenergy.operatorfabric.cards.model.TimeSpanDisplayModeEnum;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.Instant;

@@ -1,0 +1,71 @@
+<div class="timeline">
+  <div class="menu-timeline">
+    <button class="home-btn" *ngIf="checkButtonHomeDisplay()" (click)="homeClick(buttonHome[0], buttonHome[1])">
+      <em class="fas fa-home"></em>
+    </button>
+    <div id="btn-menu-timeline">
+      <ul *ngIf="zoomButtonsActive">
+        <li style="margin-right: 1rem;">
+          <button class="circle-btn" (click)="moveDomain(false)">
+            <em class="fas fa-angle-double-left"></em>
+          </button>
+        </li>
+        <li *ngFor="let button of buttonList">
+          <button [ngClass]="button.selected ? 'btn-selected' : 'btn-unselect'" (click)="changeGraphConf(button)">
+            {{button.buttonTitle}}
+          </button>
+        </li>
+        <li style="margin-left: 1rem">
+          <button class="circle-btn" (click)="moveDomain(true)">
+            <em class="fas fa-angle-double-right"></em>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!--
+   [results] is the basic input for data on ngx-charts
+   [autoScale] make the yScale start at 0 ( and end at 5 if the value is not higher)
+   [myData] is the data used by our timeline
+   [xAxis] allow to show xAxis (xAxis show the vertical line of the grid)
+   [yAxis] allow to show yAxis (yAxis show the horizontal line of the grid)
+   [valueDomain] preDefine the Domain of timeline
+   [showGridLines] allow to show grid and ticks Label automatic
+   [enableZoom] allow to zoom on timeline
+   [zoomOnButton] if zoom is allowed, mouse wheel movements follow zoom buttons
+   [zoomLevel] if zoom is allowed and zoomOnButton false define by a number the intensity of zoom
+   [enableDrag] allow to drag on timeline
+   [realTimeBar] show vertical blue bar at currently time
+   [clusterConf] define the clusterConf (zoomLevel list) of timeline
+   [centeredOnTicks] position of circle centered on Ticks' timeline
+   [clusterTicksToTicks] algo used for group circles
+   [circleDiameter] circle diameter size
+   [followClockTick] allow timeline to move by its self until to had 4 ticks before current moment
+   [formatTicks] define a format apply on ticks, its an array of object when you have a responsive ticks configuration
+   [formatTooltipsDate] define a format apply on the date showed on tooltips box
+   (zoomChange) call when custom timeline chart change his domain
+  -->
+  <of-custom-timeline-chart class="of-custom-timeline-chart"
+                              *ngIf="arrayChartData"
+                             [autoScale]="autoScale"
+                             [myData]="arrayChartData"
+                             [xAxis]="true"
+                             [yAxis]="true"
+                             [valueDomain]="myDomain"
+                             [showGridLines]="showGridLines"
+                             [enableZoom]="enableZoom"
+                             [zoomOnButton]="zoomOnButton"
+                             [enableDrag]="enableDrag"
+                             [realTimeBar]="realTimeBar"
+                             [clusterConf]="ticksConf"
+                             [centeredOnTicks]="centeredOnTicks"
+                             [clusterTicksToTicks]="clusterTicksToTicks"
+                             [circleDiameter]="circleDiameter"
+                             [followClockTick]="followClockTick"
+                             [formatTicks]="formatTicks"
+                             [formatTooltipsDate]="formatTooltipsDate"
+                             [zoomVector]="1.4"
+                             (zoomChange)="applyNewZoom($event)"
+                             (widthChange)="autonomousTicksConf()">
+  </of-custom-timeline-chart>
+</div>

@@ -11,7 +11,8 @@ import {hot} from 'jasmine-marbles';
 import {
     LoadSettings,
     LoadSettingsSuccess,
-    PatchSettings, PatchSettingsSuccess,
+    PatchSettings,
+    PatchSettingsSuccess,
     SettingsActions,
     SettingsActionTypes
 } from "@ofActions/settings.actions";
@@ -19,8 +20,9 @@ import {async} from "@angular/core/testing";
 import {SettingsService} from "@ofServices/settings.service";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
-import {AcceptLogIn} from "@ofActions/authentication.actions";
 import SpyObj = jasmine.SpyObj;
+import { UserApplicationRegistered } from '@ofStore/actions/user.actions';
+import { User } from '@ofModel/user.model';
 
 describe('SettingsEffects', () => {
     let effects: SettingsEffects;
@@ -62,7 +64,7 @@ describe('SettingsEffects', () => {
     describe('loadSettingsOnLogin', () => {
         it('should return a LoadSettings Action', () => {
 
-            const localActions$ = new Actions(hot('-a--', {a: new AcceptLogIn(null)}));
+            const localActions$ = new Actions(hot('-a--', {a: new UserApplicationRegistered({user: new User("userRegisterd", "aa", "bb")})}));
 
             const expectedAction = new LoadSettings();
             const localExpected = hot('-c--', {c: expectedAction});

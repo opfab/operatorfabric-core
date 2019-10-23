@@ -7,12 +7,11 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
+import com.mongodb.client.result.DeleteResult;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.lfenergy.operatorfabric.utilities.VirtualTime;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,7 +154,7 @@ public class CardWriteService {
      */
     private Flux<CardPublicationData> registerTolerantValidationProcess(Flux<CardPublicationData> cards, Instant publishDate) {
         return cards
-                // prepare card computed data (id, shardkey)
+                // prepare card computed data (id, shardKey)
                 .flatMap(ignoreErrorFlatMap(c -> c.prepare(publishDate)))
                 // JSR303 bean validation of card
                 .flatMap(ignoreErrorFlatMap(this::validate));
@@ -185,10 +184,19 @@ public class CardWriteService {
      */
     private Mono<Integer> registerPersistenceAndNotificationProcess(Flux<CardPublicationData> cards, long windowStart) {
         // this reduce function removes CardPublicationData "duplicates" (based on id) but leaves ArchivedCard as is
-        BiFunction<Tuple2<LinkedList<CardPublicationData>, ArrayList<ArchivedCardPublicationData>>,
+        BiFunction<
+                Tuple2<
+                        LinkedList<CardPublicationData>,
+                        ArrayList<ArchivedCardPublicationData>
+                        >,
                 Tuple2<CardPublicationData, ArchivedCardPublicationData>,
-                Tuple2<LinkedList<CardPublicationData>, ArrayList<ArchivedCardPublicationData>>>
-                fct = (tuple, item) -> {
+
+                Tuple2<
+                        LinkedList<CardPublicationData>
+                        , ArrayList<ArchivedCardPublicationData>
+                        >
+                >
+                removeDuplicates = (tuple, item) -> {
             tuple.getT1().add(item.getT1());
             tuple.getT2().add(item.getT2());
             return tuple;
@@ -198,7 +206,7 @@ public class CardWriteService {
                 // creating archived card
                 .map(card -> Tuples.of(card, new ArchivedCardPublicationData(card)))
                 // removing duplicates and assembling card data in collections
-                .reduce(Tuples.of(new LinkedList<>(), new ArrayList<>()), fct)
+                .reduce(Tuples.of(new LinkedList<>(), new ArrayList<>()), removeDuplicates)
                 // switch to blockable thread before sync treatments (mongo writes)
                 .publishOn(Schedulers.immediate())
                 .flatMap(cardsAndArchivedCards ->
@@ -209,7 +217,7 @@ public class CardWriteService {
                         })
                                 .then(Mono.just(Tuples.of(cardsAndArchivedCards.getT1(), cardsAndArchivedCards.getT2().size())))
                 )
-                .doOnNext(t -> notifyCards(t.getT1()))
+                .doOnNext(t -> notifyAddingCards(t.getT1()))
                 .doOnNext(t -> {
                     if (t.getT2() > 0 && log.isDebugEnabled()) {
                         logMeasures(windowStart, t.getT2());
@@ -223,8 +231,16 @@ public class CardWriteService {
      *
      * @param cards
      */
-    private void notifyCards(Collection<CardPublicationData> cards) {
-        cardNotificationService.notifyCards(cards, CardOperationTypeEnum.ADD);
+    private void notifyAddingCards(Collection<CardPublicationData> cards) {
+        this.notifyActionOnCards(cards, CardOperationTypeEnum.ADD);
+    }
+
+    private void notifyActionOnCards(Collection<CardPublicationData> cards, CardOperationTypeEnum operation){
+        cardNotificationService.notifyCards(cards,operation);
+    }
+
+    private void notifyRemovingACard(CardPublicationData card){
+        this.notifyActionOnCards(Collections.singleton(card),CardOperationTypeEnum.DELETE);
     }
 
     /**
@@ -239,7 +255,7 @@ public class CardWriteService {
                 onNext.accept(c);
                 return Mono.just(c);
             } catch (Exception e) {
-                log.warn("Error aarose and will be ignored", e);
+                log.warn("Error arose and will be ignored", e);
                 return Mono.empty();
             }
         };
@@ -250,7 +266,7 @@ public class CardWriteService {
             try {
                 onNext.accept(c);
             } catch (Exception e) {
-                log.warn("Error aarose and will be ignored", e);
+                log.warn("Error arose and will be ignored", e);
             }
         };
     }
@@ -305,6 +321,34 @@ public class CardWriteService {
                             ()));
                 });
 
+    }
+
+    /**
+     * Synchronize card removal in the persisting/notification process
+     */
+
+    public DeleteResult deleteCard(String processId) {
+
+        CardPublicationData cardToDelete = findCardToDelete(processId);
+
+        if(null!=cardToDelete){
+            notifyRemovingACard(cardToDelete);
+            return this.template.remove(cardToDelete);
+        }
+
+        return DeleteResult.acknowledged(0);
+    }
+
+    protected CardPublicationData findCardToDelete(String processId) {
+        /**
+         * Uses a projection instead the default 'findById' method.
+         * This projection excludes data which can be unpredictably huge depending on publisher needs.
+         */
+        Query findCardByIdWithoutDataField = new Query();
+        findCardByIdWithoutDataField.fields().exclude("data");
+        findCardByIdWithoutDataField.addCriteria(Criteria.where("Id").is(processId));
+
+        return this.template.findOne(findCardByIdWithoutDataField, CardPublicationData.class);
     }
 
     /**

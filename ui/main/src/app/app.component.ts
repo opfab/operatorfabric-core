@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -13,7 +13,6 @@ import {InitAuthStatus} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors';
 import {selectExpirationTime} from '@ofSelectors/authentication.selectors';
-import {TranslateService} from "@ngx-translate/core";
 import {isInTheFuture} from "@ofServices/authentication.service";
 import {LoadConfig} from "@ofActions/config.actions";
 import {selectConfigLoaded, selectMaxedRetries} from "@ofSelectors/config.selectors";
@@ -64,4 +63,5 @@ export class AppComponent implements OnInit {
         // First Action send by the application, is the user currently authenticated ?
         this.store.dispatch(new LoadConfig());
     }
+
 }

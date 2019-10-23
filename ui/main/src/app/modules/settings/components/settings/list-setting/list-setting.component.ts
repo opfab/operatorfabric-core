@@ -16,8 +16,7 @@ import {Observable, of} from "rxjs";
 
 @Component({
     selector: 'of-list-setting',
-    templateUrl: './list-setting.component.html',
-    styleUrls: ['./list-setting.component.css']
+    templateUrl: './list-setting.component.html'
 })
 export class ListSettingComponent extends BaseSettingComponent implements OnInit, OnDestroy {
 
@@ -62,15 +61,12 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
         return validators;
     }
 
-// ngOnInit() {
-    // }
-
     updateValue(value) {
         this.form.get('setting').setValue(value?value:'', {emitEvent: false});
     }
 
     protected isEqual(formA, formB): boolean {
-        console.log('TextSettingComponent.isEqual called')
+        console.log('ListSettingComponent.isEqual called')
         return formA.setting === formB.setting;
     }
 

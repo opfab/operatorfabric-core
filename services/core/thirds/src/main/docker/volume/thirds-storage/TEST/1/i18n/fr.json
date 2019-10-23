@@ -9,7 +9,7 @@
       }
     },
     "action":{
-      "first": "Première action"
+      "first": "Action {{value}}"
     }
   },
   "third":{
@@ -18,5 +18,8 @@
   "menu":{
     "first":"Premier item",
     "second":"Deuxieme item"
+  },
+  "template": {
+    "title": "Onglet TEST"
   }
 }

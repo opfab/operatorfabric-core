@@ -1,0 +1,11 @@
+subprojects {
+    dependencies {
+        testAnnotationProcessor misc.lombok
+        testCompileOnly misc.lombok
+        testRuntimeOnly testing.junit5Engine
+        testImplementation testing.junit5Api
+        testCompile testing.assertJ
+        testCompile project(':tools:generic:test-utilities')
+        testCompile testing.awaitility
+    }
+}

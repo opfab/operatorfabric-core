@@ -1,0 +1,475 @@
+swagger: '2.0'
+info:
+  description: OperatorFabric ThirdParty Management API
+  version: 0.9.1.SNAPSHOT
+  title: Action handling
+  termsOfService: ''
+  contact:
+    email: opfab-maintainers_AT_rte-france.com
+    url: 'https://opfab.github.io/'
+  license:
+    name: Mozilla Public License V2.0
+    url: 'http://mozilla.org/MPL/2.0/'
+host: localhost
+basePath: /apis
+tags:
+  - name: actions
+    description: Everything concerning specified Action
+schemes:
+  - http
+paths:
+  '/publisher/{publisher}/process/{processInstanceId}/states/{state}/actions/{actionKey}':
+    get:
+      tags:
+        - actions
+      summary: Get action associated to process with updated status
+      description: >-
+        Get action associated with Third+process+state, returns an array of actions (application/json)
+      operationId: getAction
+      produces:
+        - application/json
+      parameters:
+        - name: processInstanceId
+          in: path
+          description: Process instance unique id
+          required: true
+          type: string
+        - name: state
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: actionKey
+          in: path
+          description: key of action (unique for state)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ActionStatus'
+        '400':
+          description: Submitted data are incorrect.
+        '404':
+          description: No such Process, State, Action or correctly responding third party endpoint
+        '502':
+          description: Error while accessing other business service or third party endpoint
+        '401':
+          description: Authentication required
+    post:
+      tags:
+      - actions
+      summary: Post action associated to process
+      description: >-
+        Post action associated with process and state return action with updated status
+      operationId: triggerAction
+      produces:
+      - application/json
+      parameters:
+      - name: processInstanceId
+        in: path
+        description: Process instance unique id
+        required: true
+        type: string
+      - name: state
+        in: path
+        description: Name of state
+        required: true
+        type: string
+      - name: actionKey
+        in: path
+        description: key of action (unique for state)
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ActionStatus'
+        '400':
+          description: Submitted data are incorrect.
+        '404':
+          description: No such Process, State, Action or correctly responding third party endpoint
+        '502':
+          description: Error while accessing other business service or third party endpoint
+        '401':
+          description: Authentication required
+
+definitions:
+
+  ActionEnum:
+    type: string
+    description: |-
+      Action type >
+      * INTERNAL - Internal OperatorFabric action
+      * URL - Uri based action
+      * JNLP - Uri based jnlp action
+    enum:
+      - INTERNAL
+      - URL
+      - JNLP
+    example: URL
+  InputEnum:
+    type: string
+    description: |-
+      Input type >
+      * TEXT - A simple text input (size not limited)
+      * LONGTEXT - A long text input (size not limited)
+      * BOOLEAN - A boolean input
+      * LIST - A list with one selectable value
+      * MULTI_LIST - A list with multiple selectable values
+      * SWITCH_LIST - Two lists with exchangeable values
+      * STATIC - A static non editable parameter
+    enum:
+      - TEXT
+      - LONGTEXT
+      - BOOLEAN
+      - LIST
+      - MULTI_LIST
+      - SWITCH_LIST
+      - STATIC
+    example: TEXT
+  
+  I18n:
+    type: object
+    description: describes an i18n label
+    properties:
+      key:
+        type: string
+        description: i18n client side key
+      parameters:
+        type: object
+        description: Optional parameters
+        additionalProperties:
+          type: string
+    example:
+      key: title
+      parameters:
+        EN: My Title
+        FR: Mon Titre
+  Action:
+    description: defines an action on the business process associated to the card
+    type: object
+    properties:
+      type:
+        description: Action type
+        $ref: '#/definitions/ActionEnum'
+      url:
+        description: Url of remtote service entry point
+        type: string
+      lockAction:
+        type: boolean
+        default: false
+        description: 'if true, action will be locked after clicked client-side'
+      lockCard:
+        type: boolean
+        default: false
+        description: 'if true, all card action will be locked after clicked client-side'
+      needsConfirm:
+        type: boolean
+        default: false
+        description: 'if true, a confirmation will be asked before execution client-side'
+      called:
+        type: boolean
+        default: false
+        readOnly: true
+        description: True if action has already been called at least once
+      updateState:
+        type: boolean
+        default: false
+        description: >-
+          If true, client will attempt an update of ActionStatus before
+          rendering
+      updateStateBeforeAction:
+        type: boolean
+        default: false
+        description: >-
+          if true, client will attempt an update of ActionStatus before
+          execution
+      hidden:
+        type: boolean
+        default: false
+        description: This action is hidden from card and is only available to details;
+      contentStyle:
+        type: string
+        description: css classes of action button content (a &lt;i&gt; tag)
+      buttonStyle:
+        type: string
+        description: css classes of action button
+      label:
+        description: 'button default label, appears as a tooltip'
+        $ref: '#/definitions/I18n'
+      inputs:
+        description: >-
+          list of action input parameters, generate a popup form upon action
+          call
+        type: array
+        items:
+          $ref: '#/definitions/Input'
+    required:
+    - type
+    - label
+    example:
+      type: URL
+      lockAction: true
+      lockCard: true
+      needsConfirm: false
+      called: false
+      updateState: false
+      updateStateBeforeAction: false
+      hidden: true
+      contentStyle: buttonContentClass
+      buttonStyle: buttonClass
+      label:
+        key: myCard.myAction.label
+        parameters:
+          EN: Choose colour
+          FR: Choisir une couleur
+      inputs:
+      - type: LIST
+        label:
+          key: myCard.myAction.myInput1.label
+          parameters:
+            EN: Colours
+            FR: Couleurs
+        mandatory: true
+        name: selectedColour
+        value:
+          value: '#000000'
+          label:
+            key: black
+            parameters:
+              EN: Paint It Black
+              FR: Broyer du noir
+        values:
+        - value: '#000000'
+          label:
+            key: black
+            parameters:
+              EN: Paint It Black
+              FR: Broyer du noir
+        - value: '#51CE1E'
+          label:
+            key: green
+            parameters:
+              EN: Go Green
+              FR: Se mettre au vert
+      - type: LONGTEXT
+        label:
+          key: myCard.myAction.myInput2.label
+          parameters:
+            EN: Comment
+            FR: Commentaire
+        mandatory: false
+        name: comment
+        value: ''
+        maxLength: 250
+        rows: 10
+  ActionStatus:
+    description: a refined view of an action to update its client side behavior
+    type: object
+    properties:
+      lockAction:
+        type: boolean
+        default: false
+        description: 'if true, action will be locked after clicked client-side'
+      lockCard:
+        type: boolean
+        default: false
+        description: 'if true, all card action will be locked after clicked client-side'
+      needsConfirm:
+        type: boolean
+        default: false
+        description: 'if true, a confirmation will be asked before execution client-side'
+      updateState:
+        type: boolean
+        default: false
+        description: >-
+          If true, client will attempt an update of ActionStatus before
+          rendering
+      updateStateBeforeAction:
+        type: boolean
+        default: false
+        description: >-
+          if true, client will attempt an update of ActionStatus before
+          execution
+      contentStyle:
+        type: string
+        description: css classes of action button content (a &lt;i&gt; tag)
+      buttonStyle:
+        type: string
+        description: css classes of action button
+      label:
+        description: 'button default label, appears as a tooltip'
+        $ref: '#/definitions/I18n'
+      inputs:
+        description: >-
+          list of action input parameters, generate a popup form upon action
+          call
+        type: array
+        items:
+          $ref: '#/definitions/Input'
+    required:
+      - type
+      - label
+    example:
+      lockAction: true
+      lockCard: true
+      needsConfirm: false
+      updateState: false
+      updateStateBeforeAction: false
+      hidden: true
+      contentStyle: buttonContentClass
+      buttonStyle: buttonClass
+      label:
+        key: myCard.myAction.label
+        parameters:
+          EN: Choose colour
+          FR: Choisir une couleur
+      inputs:
+        - type: LIST
+          label:
+            key: myCard.myAction.myInput1.label
+            parameters:
+              EN: Colours
+              FR: Couleurs
+          mandatory: true
+          name: selectedColour
+          value:
+            value: '#000000'
+            label:
+              key: black
+              parameters:
+                EN: Paint It Black
+                FR: Broyer du noir
+          values:
+            - value: '#000000'
+              label:
+                key: black
+                parameters:
+                  EN: Paint It Black
+                  FR: Broyer du noir
+            - value: '#51CE1E'
+              label:
+                key: green
+                parameters:
+                  EN: Go Green
+                  FR: Se mettre au vert
+        - type: LONGTEXT
+          label:
+            key: myCard.myAction.myInput2.label
+            parameters:
+              EN: Comment
+              FR: Commentaire
+          mandatory: false
+          name: comment
+          value: ''
+          maxLength: 250
+          rows: 10
+          
+          
+  Input:
+    description: Describe an input parameter for an Action
+    type: object
+    properties:
+      type:
+        $ref: '#/definitions/InputEnum'
+        description: 'Parameter type, may imply some mandatory attributes, see description'
+      label:
+        $ref: '#/definitions/I18n'
+        description: internationalized label
+      mandatory:
+        type: boolean
+        default: false
+        description: Is the parameter required
+      name:
+        type: string
+        description: Parameter name (unique in action scope)
+      value:
+        type: string
+        description: Parameter default value
+      maxLength:
+        type: integer
+        description: >-
+          Only for TEXT and LONGTEXT parameters. Specifies the maximum allowed
+          character count
+      rows:
+        type: integer
+        description: LONGTEXT parameter. Specifies the maximum number of displayed rows
+      values:
+        type: array
+        description: >-
+          Only for LIST,MULTI_LIST and SWITCH_LIST parameters. Specifies the
+          selectable items in a list
+        items:
+          $ref: '#/definitions/ParameterListItem'
+      selectedValues:
+        type: array
+        description: >-
+          Only for MULTI_LIST and SWITCH_LIST parameters. List selected value.
+          Order matters.
+        items:
+          type: string
+      unSelectedValues:
+        type: array
+        description: >-
+          Only for SWITCH_LIST parameters. List unselected values. Order
+          matters.
+        items:
+          type: string
+    required:
+      - type
+      - label
+      - name
+    example:
+      type: LIST
+      label:
+        key: myCard.myAction.myInput.label
+        parameters:
+          EN: Colours
+          FR: Couleurs
+      mandatory: true
+      name: selectedColour
+      value:
+        value: '#000000'
+        label:
+          key: black
+          parameters:
+            EN: Paint It Black
+            FR: Broyer du noir
+      values:
+        - value: '#000000'
+          label:
+            key: black
+            parameters:
+              EN: Paint It Black
+              FR: Broyer du noir
+        - value: '#51CE1E'
+          label:
+            key: green
+            parameters:
+              EN: Go Green
+              FR: Se mettre au vert
+              
+  ParameterListItem:
+    description: An item of list input parameter
+    type: object
+    properties:
+      value:
+        type: string
+        description: parameter technical value
+      label:
+        $ref: '#/definitions/I18n'
+        description: Value i18n label
+    required:
+      - value
+    example:
+      value: 42
+      label:
+        key: the.answer
+        parameters:
+          EN: >-
+            the Answer to the Ultimate Question of Life, the Universe, and
+            Everything
+          FR: 'la Réponse à la Grande Question sur la vie, l''Univers et le Reste'

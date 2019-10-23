@@ -14,15 +14,32 @@ import {DetailComponent} from "./components/detail/detail.component";
 import {TranslateModule} from "@ngx-translate/core";
 import {ThirdsService} from "../../services/thirds.service";
 import {HandlebarsService} from "./services/handlebars.service";
+import {UtilitiesModule} from "../utilities/utilities.module";
+import {ActionComponent} from './components/action/action.component';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {ConfirmModalComponent} from "./components/action/confirm-modal/confirm-modal.component";
 
 @NgModule({
-  declarations: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
+  declarations: [CardComponent
+      , CardDetailsComponent
+      , DetailsComponent
+      , DetailComponent
+      , ActionComponent
+      , ConfirmModalComponent],
   imports: [
     CommonModule,
-      TranslateModule
+      TranslateModule,
+      UtilitiesModule,
+      NgbModule
   ],
-    exports: [CardComponent, CardDetailsComponent, DetailsComponent, DetailComponent],
-    providers: [HandlebarsService]
+    exports: [CardComponent
+        , CardDetailsComponent
+        , DetailsComponent
+        , DetailComponent
+        , ConfirmModalComponent
+    ],
+    providers: [HandlebarsService],
+    entryComponents: [ConfirmModalComponent]
 })
 export class CardsModule {
     static forRoot(): ModuleWithProviders{

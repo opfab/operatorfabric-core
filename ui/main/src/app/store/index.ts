@@ -24,6 +24,7 @@ import {reducer as configReducer} from '@ofStore/reducers/config.reducer';
 import {reducer as settingsReducer} from '@ofStore/reducers/settings.reducer';
 import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
 import {reducer as timeReducer} from '@ofStore/reducers/time.reducer';
+import {reducer as archiveReducer} from '@ofStore/reducers/archive.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 import {CardState} from "@ofStates/card.state";
 import {CustomRouterEffects} from "@ofEffects/custom-router.effects";
@@ -38,6 +39,16 @@ import {SettingsState} from "@ofStates/settings.state";
 import {SettingsEffects} from "@ofEffects/settings.effects";
 import {TimeState} from "@ofStates/time.state";
 import {TimeEffects} from "@ofEffects/time.effects";
+import {ArchiveState} from "@ofStates/archive.state";
+import {ArchiveEffects} from "@ofEffects/archive.effects";
+
+import {reducer as userReducer} from '@ofStore/reducers/user.reducer';
+import {UserState} from "@ofStates/user.state";
+import {UserEffects} from "@ofEffects/user.effects";
+
+import {reducer as translationReducer} from "@ofStore/reducers/translation.reducer";
+import {TranslateEffects} from "@ofEffects/translate.effects";
+import {TranslationState} from "@ofStates/translation.state";
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -49,6 +60,9 @@ export interface AppState {
     config: ConfigState;
     settings: SettingsState;
     time: TimeState;
+    archive: ArchiveState;
+    user: UserState;
+    translation: TranslationState;
 }
 
 export const appEffects = [
@@ -62,7 +76,11 @@ export const appEffects = [
     MenuEffects,
     LightCardEffects,
     FeedFiltersEffects,
-    TimeEffects];
+    TimeEffects,
+    ArchiveEffects,
+    UserEffects,
+    TranslateEffects
+];
 
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
@@ -73,7 +91,10 @@ export const appReducer: ActionReducerMap<AppState> = {
     menu: menuReducer,
     config: configReducer,
     settings: settingsReducer,
-    time: timeReducer
+    time: timeReducer,
+    archive: archiveReducer,
+    user: userReducer,
+    translation: translationReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production
@@ -81,8 +102,5 @@ export const appMetaReducers: MetaReducer<AppState>[] = !environment.production
     : [];
 
 export const storeConfig = {
-    metaReducers: appMetaReducers,
-    // initialState: {
-    //     router: routerInitialState,
-    // }
+    metaReducers: appMetaReducers
 }

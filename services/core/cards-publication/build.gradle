@@ -2,6 +2,8 @@ dependencies {
     compile boot.starterWebflux
     compile project(':client:cards-client-data')
     compile project(':tools:spring:spring-amqp-time-utilities'), project(':tools:spring:spring-mongo-utilities')
+    
+    testCompile group:'org.jeasy', name: 'easy-random-core', version: '4.0.0'
 
     testCompile testing.reactor
 }

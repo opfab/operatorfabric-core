@@ -17,7 +17,7 @@ describe('Time reference', () => {
         }
     );
 
-    it('should  leave a key named differently than speed withe the value X1 as a string with the value X1',
+    it('should  leave a key named differently than speed with the value X1 as a string with the value X1',
         () => {
             let testedKey = null;
             while (testedKey === 'speed' || testedKey === null) {

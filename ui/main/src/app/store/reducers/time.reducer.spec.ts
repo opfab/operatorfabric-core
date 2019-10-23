@@ -2,10 +2,10 @@ import {reducer} from "@ofStore/reducers/time.reducer"
 import {timeInitialState} from "@ofStates/time.state";
 import {FailToUpdateTimeReference, Tick, UpdateTimeReference} from "@ofActions/time.actions";
 import {neutralTimeReference, TimeReference, TimeSpeed} from "@ofModel/time.model";
-import moment = require("moment-timezone");
 import {Message, MessageLevel} from "@ofModel/message.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
+import moment = require("moment-timezone");
 
 describe('TimeReducer', () => {
 
@@ -21,7 +21,7 @@ describe('TimeReducer', () => {
             it('should update currentDate', () => {
                 const testedTime = moment();
 
-                const tick = new Tick({currentTime: testedTime});
+                const tick = new Tick({currentTime: testedTime, elapsedSinceLast: 10});
                 const actualState = reducer(timeInitialState, tick);
                 const initialTime=timeInitialState.currentDate.valueOf();
                 const actual = actualState.currentDate.valueOf();

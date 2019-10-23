@@ -19,13 +19,12 @@ import {selectIdentifier} from "@ofSelectors/authentication.selectors";
 
 @Component({
     selector: 'of-base-setting',
-    templateUrl: './base-setting.component.html',
-    styleUrls: ['./base-setting.component.css']
+    templateUrl: './base-setting.component.html'
 })
 export class BaseSettingComponent implements OnInit, OnDestroy {
 
     @Input() public settingPath: string;
-    @Input() public messagePlaceOlder: string;
+    @Input() public messagePlaceholder: string;
     @Input() public requiredField: boolean;
     private ngUnsubscribe$ = new Subject<void>();
     protected setting$;

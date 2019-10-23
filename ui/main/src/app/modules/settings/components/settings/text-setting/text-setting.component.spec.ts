@@ -13,38 +13,32 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AppState} from "@ofStore/index";
 import {of} from "rxjs";
 import {settingsInitialState} from "@ofStates/settings.state";
-import {map, timeout} from "rxjs/operators";
-import {configInitialState} from "@ofStates/config.state";
+import {map} from "rxjs/operators";
+import {PatchSettings} from "@ofActions/settings.actions";
+import {emptyAppState4Test} from "@tests/helpers";
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 import {authInitialState} from "@ofStates/authentication.state";
-import {By} from "@angular/platform-browser";
-import {PatchSettings} from "@ofActions/settings.actions";
+import {configInitialState} from "@ofStates/config.state";
 
 describe('TextSettingComponent', () => {
     let component: TextSettingComponent;
     let fixture: ComponentFixture<TextSettingComponent>;
-    let mockStore:SpyObj<Store<AppState>>;
+    let mockStore: SpyObj<Store<AppState>>;
     let emptyAppState: AppState = {
-        router: null,
-        feed: null,
-        timeline: null,
+        ...emptyAppState4Test,
         authentication: {...authInitialState, identifier: 'test'},
-        card: null,
-        menu: null,
-        config: configInitialState,
-        settings: null,
-        time:null
-    }
+        config: configInitialState
+    };
     beforeEach(async(() => {
-    const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
+        const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
 
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
                 ReactiveFormsModule,
             ],
-            providers:[{provide: Store, useValue: storeSpy}],
+            providers: [{provide: Store, useValue: storeSpy}],
             declarations: [TextSettingComponent]
         })
             .compileComponents();
@@ -52,7 +46,7 @@ describe('TextSettingComponent', () => {
 
     beforeEach(() => {
         mockStore = TestBed.get(Store);
-        mockStore.select.and.callFake(selector=>{
+        mockStore.select.and.callFake(selector => {
             return of({
                 ...emptyAppState, settings: {
                     ...settingsInitialState,
@@ -79,7 +73,7 @@ describe('TextSettingComponent', () => {
         component.settingPath = 'test';
         fixture.detectChanges();
         expect(component).toBeTruthy();
-        setTimeout(()=>{
+        setTimeout(() => {
             expect(component.form.get('setting').value).toEqual('old-value');
             done();
         });
@@ -90,14 +84,14 @@ describe('TextSettingComponent', () => {
         // const settingInput = fixture.debugElement.queryAll(By.css('input'))[0];
         // settingInput.nativeElement.value = 'new-value';
         component.form.get('setting').setValue('new-value');
-        setTimeout(()=> {
+        setTimeout(() => {
             expect(component.form.valid).toBeTruthy();
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
-            const settings = {login:'test'};
+            const settings = {login: 'test'};
             settings[component.settingPath] = 'new-value';
             expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
             done();
-        },1000);
+        }, 1000);
 
     });
 
@@ -106,11 +100,11 @@ describe('TextSettingComponent', () => {
         component.requiredField = true;
         fixture.detectChanges();
         component.form.get('setting').setValue(null);
-        setTimeout(()=> {
+        setTimeout(() => {
             expect(component.form.valid).toBeFalsy();
             expect(mockStore.dispatch).toHaveBeenCalledTimes(0);
             done();
-        },1000);
+        }, 1000);
 
     });
 
@@ -119,11 +113,11 @@ describe('TextSettingComponent', () => {
         component.pattern = 'fr|en';
         fixture.detectChanges();
         component.form.get('setting').setValue('de');
-        setTimeout(()=> {
+        setTimeout(() => {
             expect(component.form.valid).toBeFalsy();
             expect(mockStore.dispatch).toHaveBeenCalledTimes(0);
             done();
-        },1000);
+        }, 1000);
 
     });
 
@@ -132,14 +126,14 @@ describe('TextSettingComponent', () => {
         component.pattern = 'fr|en';
         fixture.detectChanges();
         component.form.get('setting').setValue('fr');
-        setTimeout(()=> {
+        setTimeout(() => {
             expect(component.form.valid).toBeTruthy();
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
-            const settings = {login:'test'};
+            const settings = {login: 'test'};
             settings[component.settingPath] = 'fr';
             expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
             done();
-        },1000);
+        }, 1000);
 
     });
 });

@@ -1,11 +1,13 @@
 .navbar-info-block {
   display: inline-block;
-  > .user-name {
-
-  }
+  line-height: 90%;
 
   > .time {
-font-size: small;
+    font-size: small;
+  }
+
+  > .user-description {
+    font-size: small;
   }
 
 }

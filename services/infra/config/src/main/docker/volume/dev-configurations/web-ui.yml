@@ -13,34 +13,44 @@ operatorfabric:
     card:
       time:
         display: BUSINESS
+  archive:
+    filters:
+      page.size:
+        - "10"
+      page.first:
+        - "0"
+      publisher.list:
+        - value: "TEST"
+          label: "Test Publisher"
+        - value: "TEST2"
+          label: "Test Publisher 2"
+      process.list:
+            - process
+            - someOtherProcess
+      tags.list:
+        - value: "tag1"
+          label: "Label for tag 1"
+        - value: "tag2"
+          label: "Label for tag 2"
   i10n.supported.time-zones:
-  - Europe/Paris
-  - Europe/London
-  - Europe/Dublin
-  - Europe/Brussel
-  - Europe/Berlin
-  - Europe/Rome
-  - Europe/Madrid
-  - Europe/Lisbon
-  - Europe/Amsterdam
-  - Europe/Athens
-  - BST
-  - CEST
-  - CET
-  - EEST
-  - EET
-  - FET
-  - GMT
-  - IST
-  - KUYT
-  - MSD
-  - MSK
-  - SAMT
-  - TRT
-  - WEST
-  - WET
+    - value: "Europe/Paris"
+      label: "Headquarters timezone"
+    - value: "Australia/Melbourne"
+      label: "Down Under"
+    - Europe/London
+    - Europe/Dublin
+    - Europe/Brussel
+    - Europe/Berlin
+    - Europe/Rome
+    - Europe/Madrid
+    - Europe/Lisbon
+    - Europe/Amsterdam
+    - Europe/Athens
+    - Pacific/Samoa
   i18n.supported.locales:
     - fr
     - en
+  settings:
+    locale: en
   time:
     pulse: 5000

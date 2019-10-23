@@ -60,15 +60,15 @@ export class TypeFilterComponent implements OnInit, OnDestroy {
         this._filter$ = this.store.select(buildFilterSelector(FilterType.TYPE_FILTER));
         this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
             if (next) {
-                this.typeFilterForm.get('alarm').setValue(!next.active || next.status.alarm);
-                this.typeFilterForm.get('action').setValue(!next.active || next.status.action);
-                this.typeFilterForm.get('question').setValue(!next.active || next.status.question);
-                this.typeFilterForm.get('notification').setValue(!next.active || next.status.notification);
+                this.typeFilterForm.get('alarm').setValue(!next.active || next.status.alarm, {emitEvent: false});
+                this.typeFilterForm.get('action').setValue(!next.active || next.status.action, {emitEvent: false});
+                this.typeFilterForm.get('question').setValue(!next.active || next.status.question, {emitEvent: false});
+                this.typeFilterForm.get('notification').setValue(!next.active || next.status.notification, {emitEvent: false});
             } else {
-                this.typeFilterForm.get('alarm').setValue(true);
-                this.typeFilterForm.get('action').setValue(true);
-                this.typeFilterForm.get('question').setValue(true);
-                this.typeFilterForm.get('notification').setValue(true);
+                this.typeFilterForm.get('alarm').setValue(true,{emitEvent: false});
+                this.typeFilterForm.get('action').setValue(true,{emitEvent: false});
+                this.typeFilterForm.get('question').setValue(true,{emitEvent: false});
+                this.typeFilterForm.get('notification').setValue(true,{emitEvent: false});
             }
         });
         this._filter$.pipe(first(),takeUntil(this.ngUnsubscribe$)).subscribe(()=>{

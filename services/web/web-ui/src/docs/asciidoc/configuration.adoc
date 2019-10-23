@@ -14,7 +14,7 @@ Registry.
 
 == Mandatory configuration, Profiles and default properties
 
-The service has no mandatory configuration besside global configuration and
+The service has no mandatory configuration beside global configuration and
 usual bootstrap configuration.
 
 For other configuration see:
@@ -40,19 +40,56 @@ a|card time display mode in the feed. Values :
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
 |operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen
-|operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en are choosable)
-|operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'
+|operatorfabric.feed.timeFilter.followClockTick|false|no|If set to true, the time filter on the feed will shift
+to reflect elapsed time
+|operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en so far)
+|operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
+Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
+|operatorfabric.settings.timeZone||no|Default user time zone for users (use browser time zone if not set)
+|operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
+|operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
+|operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
+|operatorfabric.settings.locale|en|no|Default user locale (use en if not set)
+|operatorfabric.settings.default-tags||no|Default user list of filtered in tags
+|operatorfabric.time.pulse|5000|no|Duration between two ticks of the internal state of the User Interface
+|operatorfabric.archive.filters.page.size||no|The page size of archive filters
+|operatorfabric.archive.filters.page.first||no|The first page start of archiving module
+|operatorfabric.archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
+|operatorfabric.archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
+|operatorfabric.logo.base64||no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg
+|operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page
+|operatorfabric.settings.infos.disable||no|Control if we want to disable/enable editing user email, description in the settings page
+|===
+
+*User Settings default values*
+
+|===
+|name|default|mandatory?|Description
 |operatorfabric.settings.timeZone||no|Default user time zone for users (use browser time zone if not set)
 |operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
 |operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
 |operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
 |operatorfabric.settings.locale|LT|no|Default user locale (use browser if not set)
 |operatorfabric.settings.default-tags||no|Default user list of filtered in tags
-|operatorfabric.time.pluse|5000|no|Duration between two ticks of the internal state of the User Interface
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsWeek||no|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsWeek|ddd DD MMM HH|Default format use on date inside tooltips for time's unit lower than hour|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsMonth|ddd DD MMM YYYY|Default format use on date inside tooltips for other case|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnDay|ddd DD MMM|Default format use for display a day and month informations with day name, number, and month|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnWeek|DD/MM/YY|Default format use for display a week information with day number, month number and two last year's number|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnMonth|MMM YY|Default format use for display a month information with month name and two last year's number|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnYear|YYYY|Default format use for display a year information|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.titleDateInsideTooltips|DD/MM|Default format use on first part of title inside tooltips showing day number and month number of its date|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.titleHourInsideTooltips|HH:mm|Default format use on second part of title inside tooltips showing hours and minutes of its date|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateOnDayNewYear|DD MMM YY|Default format use for display first year's day on a day configuration display day number, month name and two last year's number|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.realTimeBarFormat|DD/MM/YY HH:mm|Default format use on real time bar date, show minutes, hours, day number, month number and two last year's number|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateSimplifliedOnDayNewYear|D MMM YY|Default format use on date configuration for first year's day, show simplified day number, month name and last two year's number|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.dateSimplifliedOnDay|D MMM|Default format use on date configuration, show simplified day number and month name|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.hoursOnly|HH|Default format for show only hours|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.minutesOnly|mm|Default format for show only minutes|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.secondedsOnly|ss|Default format for show only seconds|
+|operatorfabric.settings.timeLineDefaultClusteringFormats.weekNumberOnly|ww|Default format for show only week number|
 
 |===
-
-NB: operatorfabric.settings are default values for user settings (See User Service)
 
 === default properties
 
@@ -85,7 +122,7 @@ The above embedded configurations are the basic settings of the application:
 * it sets the configuration name to use (which configuration file to retrieve)
 * it must set the registry service (example in bootstrap-docker.yml)
 
-=== Sample developpement configuration
+=== Sample development configuration
 
 ```
 include::../../../../../infra/config/src/main/docker/volume/dev-configurations/web-ui.yml[]

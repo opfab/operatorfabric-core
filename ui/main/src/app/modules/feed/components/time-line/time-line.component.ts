@@ -31,86 +31,329 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         // set start of Week to saturday on moment locale used
-        moment.updateLocale('en', { week: {
+        /*moment.updateLocale('en', { week: {
                 dow: 6, // First day of week is Saturday
                 doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
             }});
+            */
 
-        const actualMoment = moment();
+        // DOMAIN CONF from moment() to our conf
 
-        // conf 1 === end of the actual week + next week
-        /*const startDomain = moment();
-        startDomain.hours(0).minutes(0).seconds(0).millisecond(0);*/
-        const startDomain = this.dateWithSpaceBeforeMoment(moment(actualMoment), 'W');
-        const endDomain = _.cloneDeep(startDomain);
-        endDomain.add(1, 'week');
-        endDomain.startOf('week');
-        endDomain.hours(0).minutes(0).seconds(0).millisecond(0);
-        endDomain.add(7, 'days');
-        // endDomain.add(5, 'days'); // example
+        const domainYearConf = {
+            year: 2,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            startOf: ['year'],
+        };
 
-        // conf 4 === end of the actual day + 7 days
-        /*const startDomain4 = moment();
-        startDomain4.hours(0).minutes(0).seconds(0).millisecond(0);*/
-        const startDomain4 = this.dateWithSpaceBeforeMoment(moment(actualMoment), 'W');
-        const endDomain4 = _.cloneDeep(startDomain4);
-        endDomain4.hours(0).minutes(0).seconds(0).millisecond(0);
-        endDomain4.add(8, 'days');
-        // endDomain.add(5, 'days'); // example
+        const domainMonthConf = {
+            year: 0,
+            month: 2,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            startOf: ['month'],
+        };
 
-        // conf 2 === actual month + next month
-        /*const startDomain2 = moment();
-        startDomain2.hours(0).minutes(0).seconds(0).millisecond(0);*/
-        const startDomain2 = this.dateWithSpaceBeforeMoment(moment(actualMoment), 'M');
-        const endDomain2 = _.cloneDeep(startDomain2);
-        endDomain2.startOf('month');
-        endDomain2.add(2, 'months');
-        // endDomain2.add(1, 'months'); // example
-        // endDomain2.date(15); // example
+        const domainWeekConf = {
+            year: 0,
+            month: 0,
+            week: 2,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            startOf: ['week'],
+        };
 
-        // conf 3 === from start of actual month to end of the year + 1 year
-        /*const startDomain3 = moment();
-        startDomain3.startOf('month');
-        startDomain3.hours(0);*/
-        const startDomain3 = this.dateWithSpaceBeforeMoment(moment(actualMoment), 'Y');
-        const endDomain3 = _.cloneDeep(startDomain3);
-        endDomain3.add(2, 'years');
-        endDomain3.startOf('year'); // Voir avec Guillaume
-        // endDomain3.add(1, 'years'); // example
-        // endDomain3.month(10); // example
+        const domain7DayConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 8,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            startOf: ['day'],
+        };
+
+        const currentMoment = moment();
+        const startDomain = moment(currentMoment);
+        startDomain.minutes(0).second(0).millisecond(0);
+        const endDomain = this.periodStartToEnd(domainWeekConf, true);
+
+        const startDomainUSE = moment(currentMoment);
+        startDomainUSE.date(4);
+        startDomainUSE.hour(0).minutes(0).second(0).millisecond(0);
+        const endDomainUSE = moment(startDomainUSE);
+        endDomainUSE.add(16, 'week');
+
+        const startDomain2 = moment(currentMoment);
+        startDomain2.minutes(0).second(0).millisecond(0);
+        const endDomain2 = this.periodStartToEnd(domainMonthConf, true);
+
+        const startDomain3 = moment(currentMoment);
+        startDomain3.hour(0).minutes(0).second(0).millisecond(0);
+        const endDomain3 = this.periodStartToEnd(domainYearConf, true);
+
+        const startDomain4 = moment(currentMoment);
+        startDomain4.minutes(0).second(0).millisecond(0);
+        const endDomain4 = this.periodStartToEnd(domain7DayConf, true);
+
+        // FORWARD CONF (movement on domain)
+
+        const forwardYearConf = {
+            start: {
+                year: 1,
+                month: 0,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+            end: {
+                year: 1,
+                month: 0,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+        };
+
+        const forwardMonthConf = {
+            start: {
+                year: 0,
+                month: 1,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+            end: {
+                year: 0,
+                month: 1,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+        };
+
+        const forwardWeekConf = {
+            start: {
+                year: 0,
+                month: 0,
+                week: 1,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+            end: {
+                year: 0,
+                month: 0,
+                week: 1,
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+        };
+
+        const forwardDayConf = {
+            start: {
+                year: 0,
+                month: 0,
+                week: 0,
+                day: 1,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+            end: {
+                year: 0,
+                month: 0,
+                week: 0,
+                day: 1,
+                hour: 0,
+                minute: 0,
+                second: 0,
+            },
+        };
+
+        // TICKS CONF
+
+        const myticksResponsiveConf = [{ width_min: 1400,
+            conf: {
+                year: 0,
+                month: 0,
+                week: 0,
+                day: 0,
+                hour: 4,
+                minute: 0,
+                second: 0,
+            }
+        }, { width_min: 1100,
+            conf: {
+                year: 0,
+                month: 0,
+                week: 0,
+                day: 0,
+                hour: 1,
+                minute: 0,
+                second: 0,
+            }
+        }, {
+            width_min: 0,
+            conf: {
+                year: 0,
+                month: 0,
+                week: 0,
+                day: 0,
+                hour: 0,
+                minute: 20,
+                second: 0,
+            }
+        }];
+
+        const ticks4HoursConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 4,
+            minute: 0,
+            second: 0,
+        };
+
+        const ticksDayConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 1,
+            hour: 0,
+            minute: 0,
+            second: 0,
+        };
+
+        const ticksHalfMonthConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            date: [1, 16],
+        };
+
+        const ticksInUseConf = {
+            year: 0,
+            month: 0,
+            week: 0,
+            day: 0,
+            hour: 6,
+            minute: 0,
+            second: 0,
+        };
+
         this.conf = {
             enableDrag: false,
             enableZoom: true,
+            zoomOnButton: true,
             autoScale: false,
-            animations: false,
             showGridLines: true,
             realTimeBar: true,
+        };
+        this.confZoom = [
+            /*
+            {
+            startDomain: startDomainUSE.valueOf(),
+            endDomain: endDomainUSE.valueOf(),
             centeredOnTicks: true,
             clusterTicksToTicks: true,
-        };
-        this.confZoom = [{
-            startDomain: startDomain.valueOf(),
-            endDomain: endDomain.valueOf(),
-            forwardLevel: 'W',
-            followCloackTick: false,
-        },
-        {
+            buttonTitle: 'USE',
+            forwardConf: forwardDayConf,
+            backwardConf: forwardDayConf,
+            // ticksConf: ticksInUseConf,
+            autonomousTicks: true,
+            followClockTick: false,
+            firstMoveStartOfUnit: false,
+            homeDomainExtraTicks: false,
+            },
+            */
+            {
             startDomain: startDomain4.valueOf(),
             endDomain: endDomain4.valueOf(),
-            forwardLevel: '7D',
-            followCloackTick: true,
-        },
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
+            buttonTitle: '7D',
+            forwardConf: forwardDayConf,
+            ticksConf: ticks4HoursConf,
+            followClockTick: true,
+            firstMoveStartOfUnit: true,
+            homeDomainExtraTicks: true,
+            },
+        {
+            startDomain: startDomain.valueOf(),
+            endDomain: endDomain.valueOf(),
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
+            buttonTitle: 'W',
+            forwardConf: forwardWeekConf,
+            backwardConf: forwardWeekConf,
+            ticksConf: ticks4HoursConf,
+            followClockTick: true,
+            firstMoveStartOfUnit: true,
+            homeDomainExtraTicks: true,
+            },
+        /*{
+            startDomain: startDomain.valueOf(),
+            endDomain: endDomain.valueOf(),
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
+            buttonTitle: 'USE',
+            forwardConf: forwardDayConf,
+            ticksConf: myticksResponsiveConf, // myticksYearConf,
+            followClockTick: false,
+            firstMoveStartOfUnit: false,
+        },*/
         {
             startDomain: startDomain2.valueOf(),
             endDomain: endDomain2.valueOf(),
-            forwardLevel: 'M',
-            followCloackTick: false,
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
+            buttonTitle: 'M',
+            forwardConf: forwardMonthConf,
+            ticksConf: ticksDayConf,
+            // formatTicks: 'DD',
+            // formatTooltipsDate: 'DD/MM',
+            followClockTick: true,
+            firstMoveStartOfUnit: true,
+            homeDomainExtraTicks: true,
         },
         {
             startDomain: startDomain3.valueOf(),
             endDomain: endDomain3.valueOf(),
-            forwardLevel: 'Y',
-            followCloackTick: false,
+            centeredOnTicks: true,
+            clusterTicksToTicks: true,
+            buttonTitle: 'Y',
+            forwardConf: forwardYearConf,
+            ticksConf: ticksHalfMonthConf,
+            followClockTick: true,
+            firstMoveStartOfUnit: true,
+            homeDomainExtraTicks: true,
         }];
 
         // timeline state is same than feed state (not filtered Feed)
@@ -128,99 +371,75 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         // add a card data to the timeline state for each new card received
         this.subscription = this.lightCards$.pipe(debounceTime(300), distinctUntilChanged())
             .subscribe(value => {
-            // console.log('timeline subscribe');
             const tmp = _.cloneDeep(value);
             this.store.dispatch(new InitTimeline({
                 data: [],
             }));
-            /*for (const val of tmp) {
-                // val.endDate val.startDate val.severity
-                const myCardTimeline = {
-                    startDate: val.startDate,
-                    endDate: val.endDate,
-                    severity: val.severity
-                };
-                this.store.dispatch(new AddCardDataTimeline({
-
-                    cardTimeline: myCardTimeline,
-                }));
-                // console.log('timeline subscribe');
-            }*/
             const myCardsTimeline = [];
             for (const val of tmp) {
-                // val.endDate val.startDate val.severity
-                const myCardTimeline = {
-                    startDate: val.startDate,
-                    endDate: val.endDate,
-                    severity: val.severity,
-                    summary: val.summary.parameters.value
-                };
-                myCardsTimeline.push(myCardTimeline);
+                if (val.timeSpans && val.timeSpans.length > 0) {
+                    val.timeSpans.forEach(d => {
+                        const myCardTimelineTimespans = {
+                            displayDate: d.start,
+                            publishDate: d.start, // useless
+                            startDate: d.start, // useless
+                            endDate: d.end, // useless
+                            severity: val.severity,
+                            publisher: val.publisher,
+                            publisherVersion: val.publisherVersion,
+                            summary: val.title,
+                        };
+                        myCardsTimeline.push(myCardTimelineTimespans);
+                    });
+                } else {
+                    // val.endDate val.startDate val.severity
+                    const myCardTimeline = {
+                        displayDate: val.startDate,
+                        publishDate: val.publishDate, // useless
+                        startDate: val.startDate, // useless
+                        endDate: val.endDate, // useless
+                        severity: val.severity,
+                        publisher: val.publisher,
+                        publisherVersion: val.publisherVersion,
+                        summary: val.title,
+                    };
+                    myCardsTimeline.push(myCardTimeline);
+                }
             }
             this.store.dispatch(new SetCardDataTimeline({
                 cardsTimeline: myCardsTimeline,
             }));
         });
-
-        // this.lastCards$ = this.store.select(timelineSelectors.selectLastCardsSelection);
-        /* // TRY ON TIMELINE
-         this.lightCards$ = this.store.pipe(
-             select(timelineSelectors.selectFeed),
-             catchError(err => of([]))
-         );*/
-        /* // TRY ON FEED
-        this.lightCards$ = this.store.pipe(
-            select(feedSelectors.selectFeed),
-            catchError(err => of([]))
-        );*/
-
-        /*
-        // TRY selectUnFilteredFeed
-        this.lightCards$ = this.store.pipe(
-            select(feedSelectors.selectUnFilteredFeed),
-            catchError(err => of([]))
-        );*/
     }
 
     /**
-     * make start of domain begin 4 ticks before actual date (moment())
-     * each cluster level had a different treatment
-     * @param clusterLevel
+     * return a moment
+     * add time to moment depending of configue object when future is true
+     * subtract time when future is false
+     * use startOf function on each time's unit pass in list
+     * @param conf
+     * @param future
      */
-    dateWithSpaceBeforeMoment(date, clusterLevel) {
-        date.minutes(0).seconds(0).millisecond(0);
-        switch (clusterLevel) {
-            case 'W' : case '7D': {
-                for (let i = 0; i < 35; i++) {
-                    if (((date.hours() - i) % 4) === 0) {
-                        date.subtract(i, 'hours');
-                        break;
-                    }
-                }
-                // start 12 hours before date
-                date.subtract(3 * 4, 'hours');
-                return date;
-            }
-            case 'M': {
-                // start 3 days before moment()
-                date.startOf('day');
-                date.subtract(3, 'days');
-                return date;
-            }
-            case 'Y': {
-                date.startOf('day');
-                // start at begin of month
-                if (date.date() >= 16) {
-                    date.startOf('month');
-                    date.subtract(1, 'months');
+    periodStartToEnd(conf, future: boolean): moment.Moment {
+        const tmpMoment = moment();
+
+        // Test bug
+        // tmpMoment.date(2);
+        const newDate = _.cloneDeep(tmpMoment);
+        Object.keys(conf).forEach(key => {
+            if (key === 'startOf') {
+                conf[key].forEach(value => {
+                    newDate.startOf(value);
+                });
+            } else if (conf[key] > 0) {
+                if (future) {
+                    newDate.add(conf[key], key);
                 } else {
-                    // start at middle of month (16th)
-                    date.date(16);
-                    date.subtract(2, 'months');
+                    newDate.subtract(conf[key], key);
                 }
-                return date;
             }
-        }
+        });
+        return newDate;
     }
 
     ngOnDestroy() {

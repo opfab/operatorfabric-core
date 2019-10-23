@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpan;
 import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpanConsultationData;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.core.convert.converter.Converter;
@@ -36,6 +35,8 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
                 .publisherVersion(source.getString("publisherVersion"))
                 .uid(source.getString("uid"))
                 .id(source.getString("_id"))
+                .process(source.getString("process"))
+                .state(source.getString("state"))
                 .processId(source.getString("processId"))
                 .lttd(source.getDate("lttd") == null ? null : source.getDate("lttd").toInstant())
                 .startDate(source.getDate("startDate") == null ? null : source.getDate("startDate").toInstant())

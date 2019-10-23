@@ -6,3 +6,10 @@ spring:
       database: operator-fabric-test
 spring.cloud.discovery.enabled: false
 eureka.client.enabled: false
+
+operatorfabric:
+  security:
+    jwt:
+      sub-claim: sub
+      given-name-claim: given_name
+      family-name-claim: family_name

@@ -1,11 +1,11 @@
 swagger: '2.0'
 info:
   description: OperatorFabric ThirdParty Management API
-  version: 0.5.1.SNAPSHOT
+  version: 0.9.1.SNAPSHOT
   title: Thirds Management
   termsOfService: ''
   contact:
-    email: boris.dolley_AT_rte-france.com
+    email: opfab-maintainers_AT_rte-france.com
     url: 'https://opfab.github.io/'
   license:
     name: Mozilla Public License V2.0
@@ -381,6 +381,51 @@ paths:
           description: No such third
         '401':
           description: Authentication required
+  '/thirds/{thirdName}/{process}/{state}/actions/{actionKey}':
+    get:
+      tags:
+        - thirds
+      summary: Get actions associated to thirds
+      description: >-
+        Get actions associated with Third+process+state, returns an array of actions (application/json)
+      operationId: getAction
+      produces:
+        - application/json
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to retrieve
+          required: true
+          type: string
+        - name: process
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: state
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: actionKey
+          in: path
+          description: Name of state
+          required: true
+          type: string
+        - name: apiVersion
+          in: query
+          required: false
+          description: Expected version of third
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Action'
+        '404':
+          description: No such third
+        '401':
+          description: Authentication required
 definitions:
 
   ActionEnum:
@@ -388,13 +433,13 @@ definitions:
     description: |-
       Action type >
       * INTERNAL - Internal OperatorFabric action
-      * URI - Uri based action
+      * URL - Uri based action
       * JNLP - Uri based jnlp action
     enum:
       - INTERNAL
-      - URI
+      - URL
       - JNLP
-    example: URI
+    example: URL
   InputEnum:
     type: string
     description: |-
@@ -430,6 +475,8 @@ definitions:
         description: >-
           i18n key for the label of this menu item.
           The value attached to this key should be defined in each XX.json file in the i18n folder of the bundle (where XX stands for the locale iso code, for example 'EN')
+
+
   Third:
     type: object
     description: >-
@@ -543,7 +590,7 @@ definitions:
                 templateName: template1
             actions:
               action1:
-                type: URI
+                type: URL
                 lockAction: true
                 lockCard: true
                 needsConfirm: false
@@ -684,6 +731,9 @@ definitions:
       type:
         description: Action type
         $ref: '#/definitions/ActionEnum'
+      url:
+        description: Url of remtote service entry point
+        type: string
       lockAction:
         type: boolean
         default: false
@@ -691,7 +741,7 @@ definitions:
       lockCard:
         type: boolean
         default: false
-        description: 'if true, all card actions will be locked after clicked client-side'
+        description: 'if true, all card action will be locked after clicked client-side'
       needsConfirm:
         type: boolean
         default: false
@@ -737,7 +787,7 @@ definitions:
       - type
       - label
     example:
-      type: URI
+      type: URL
       lockAction: true
       lockCard: true
       needsConfirm: false

@@ -35,10 +35,12 @@
           ],
           "actions": {
             "action1": {
-              "type": "URI",
+              "type": "URL",
               "label": {
                 "key": "my.card.my.action.label"
-              }
+              },
+              "url":"http://localhost:3000/{process}/{state}/action1?access_token={jwt}",
+              "updateState":true
             }
           }
         }

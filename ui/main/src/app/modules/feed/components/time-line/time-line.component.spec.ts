@@ -5,32 +5,32 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TimeLineComponent } from './time-line.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {TimeLineComponent} from './time-line.component';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { Store, StoreModule } from '@ngrx/store';
-import { appReducer, AppState, storeConfig } from '@ofStore/index';
-import { RouterTestingModule } from '@angular/router/testing';
-import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
-import { CustomTimelineChartComponent } from '../custom-timeline-chart/custom-timeline-chart.component';
-import { InitChartComponent } from '../init-chart/init-chart.component';
-import { CustomRouterStateSerializer } from '@ofStates/router.state';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { getOneRandomLigthCard } from '@tests/helpers';
-import { LoadLightCardsSuccess } from '@ofActions/light-card.actions';
-import { LightCard } from '@ofModel/light-card.model';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule} from '@angular/forms';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {Store, StoreModule} from '@ngrx/store';
+import {appReducer, AppState, storeConfig} from '@ofStore/index';
+import {RouterTestingModule} from '@angular/router/testing';
+import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
+import {CustomTimelineChartComponent} from './custom-timeline-chart/custom-timeline-chart.component';
+import {InitChartComponent} from './init-chart/init-chart.component';
+import {CustomRouterStateSerializer} from '@ofStates/router.state';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {getOneRandomLigthCard} from '@tests/helpers';
+import {LoadLightCardsSuccess} from '@ofActions/light-card.actions';
+import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '@ofSelectors/feed.selectors';
 import * as timelineSelectors from '@ofSelectors/timeline.selectors';
-import { DraggableDirective } from './app-draggable';
-import { MouseWheelDirective } from './mouse-wheel.directive';
-import { XAxisTickFormatPipe } from './x-axis-tick-format.pipe';
+import {DraggableDirective} from './directives/app-draggable';
+import {MouseWheelDirective} from './directives/mouse-wheel.directive';
+import {XAxisTickFormatPipe} from './tick-format-pipe/x-axis-tick-format.pipe';
 import * as moment from 'moment';
-import {debounceTime, distinctUntilChanged} from "rxjs/operators";
-import {compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
-import {TimeService} from "@ofServices/time.service";
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {compareBySeverityLttdPublishDate} from '@ofStates/feed.state';
+import {TimeService} from '@ofServices/time.service';
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
@@ -69,64 +69,31 @@ describe('TimeLineComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return a date formatted by a cluster level W ' +
-    'from dateWithSpaceBeforeMom function', () => {
+  it('should return a date formatted by domain Conf pass on parameter ' +
+    'from periodStartToEnd function', () => {
+    fixture.detectChanges();
     const actualMoment = moment();
-    actualMoment.hours(0);
-    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), 'W');
-    const dateMoment = moment(actualMoment);
-    dateMoment.minutes(0).seconds(0).millisecond(0);
-    dateMoment.subtract(3 * 4, 'hours');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
-  });
-
-
-  it('should return a date formatted by a cluster level D-7 ' +
-    'from dateWithSpaceBeforeMom function', () => {
-    const actualMoment = moment();
-    actualMoment.hours(1);
-    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), '7D');
-    const dateMoment = moment(actualMoment);
-    dateMoment.minutes(0).seconds(0).millisecond(0);
-    dateMoment.subtract(13, 'hours');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
-  });
-
-
-  it('should return a date formatted by a cluster level M ' +
-    'from dateWithSpaceBeforeMom function', () => {
-    const actualMoment = moment();
-    const date = component.dateWithSpaceBeforeMoment(moment(actualMoment), 'M');
-    const dateMoment = moment(actualMoment);
-    dateMoment.startOf('day');
-    dateMoment.subtract(3, 'days');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
-  });
-
-
-  it('should return a date formatted by a cluster level Y ' +
-    'from dateWithSpaceBeforeMom function', () => {
-    // referenceMoment date is after the half of the Month
-    const referenceMoment = moment();
-    referenceMoment.date(17);
-    let date = component.dateWithSpaceBeforeMoment(moment(referenceMoment), 'Y');
-    let dateMoment = moment(referenceMoment);
-    dateMoment.startOf('day');
-    dateMoment.startOf('month');
-    dateMoment.subtract(1, 'months');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
-    // referenceMoment date is before the half of the Month
-    referenceMoment.date(4);
-    date = component.dateWithSpaceBeforeMoment(moment(referenceMoment), 'Y');
-    dateMoment = moment(referenceMoment);
-    dateMoment.startOf('day');
-    dateMoment.date(16);
-    dateMoment.subtract(2, 'months');
-    expect(date.valueOf()).toEqual(dateMoment.valueOf());
+    const oneWeekConf = {
+      week: 1,
+    };
+    const momentOnFuture = moment(actualMoment);
+    momentOnFuture.add(1, 'week');
+    // cause of execution time between declaration of actualMoment and periodStartToEnd
+    momentOnFuture.minute(0).second(0).millisecond(0);
+    const momentOnPast = moment(actualMoment);
+    momentOnPast.subtract(1, 'week');
+    momentOnPast.minute(0).second(0).millisecond(0);
+    const startDomain = component.periodStartToEnd(oneWeekConf, false);
+    startDomain.minute(0).second(0).millisecond(0);
+    const endDomain = component.periodStartToEnd(oneWeekConf, true);
+    endDomain.minute(0).second(0).millisecond(0);
+    expect(endDomain.valueOf()).toEqual(momentOnFuture.valueOf());
+    expect(startDomain.valueOf()).toEqual(momentOnPast.valueOf());
+    expect(component).toBeTruthy();
   });
 
   it('should create a list with one element when there is ' +
-      'only one card in the state', (done) => {
+    'only one card in the state', (done) => {
     fixture.detectChanges();
     const oneCard = getOneRandomLigthCard();
     const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
@@ -137,10 +104,14 @@ describe('TimeLineComponent', () => {
       expect(lightCard).toEqual([oneCard]);
     });
     const dataCard = [{
+      displayDate: oneCard.startDate,
+      publishDate: oneCard.publishDate,
       startDate: oneCard.startDate,
       endDate: oneCard.endDate,
       severity: oneCard.severity,
-      summary: oneCard.summary.parameters.value
+      publisher: oneCard.publisher,
+      publisherVersion: oneCard.publisherVersion,
+      summary: oneCard.title
     }];
     const data$ = store.select((timelineSelectors.selectTimelineSelection));
     data$.pipe(debounceTime(300), distinctUntilChanged())
@@ -164,6 +135,7 @@ describe('TimeLineComponent', () => {
     const actionCard = getOneRandomLigthCard({severity: 'ACTION'});
     const alarmCard = getOneRandomLigthCard({severity: 'ALARM'});
     const notificationCard = getOneRandomLigthCard({severity: 'NOTIFICATION'});
+    // alarmCard.timeSpans = [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}];  // display is an enum normally
     const action = new LoadLightCardsSuccess({lightCards: [oneCard, actionCard, alarmCard, notificationCard] as LightCard[]});
     store.dispatch(action);
     const lightCards$ = store.select(fromStore.selectFeed);
@@ -172,25 +144,42 @@ describe('TimeLineComponent', () => {
       expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard].sort(compareBySeverityLttdPublishDate));
     });
     const dataCard = [{
+        // timeSpans: [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}],
+        displayDate: alarmCard.startDate,
+        publishDate: alarmCard.publishDate,
         startDate: alarmCard.startDate,
         endDate: alarmCard.endDate,
         severity: alarmCard.severity,
-        summary: oneCard.summary.parameters.value
+        publisher: alarmCard.publisher,
+        publisherVersion: alarmCard.publisherVersion,
+        summary: alarmCard.title
     }, {
+        displayDate: actionCard.startDate,
+        publishDate: actionCard.publishDate,
         startDate: actionCard.startDate,
         endDate: actionCard.endDate,
         severity: actionCard.severity,
-        summary: oneCard.summary.parameters.value
+        publisher: actionCard.publisher,
+        publisherVersion: actionCard.publisherVersion,
+        summary: actionCard.title
     }, {
+        displayDate: oneCard.startDate,
+        publishDate: oneCard.publishDate,
         startDate: oneCard.startDate,
         endDate: oneCard.endDate,
         severity: oneCard.severity,
-        summary: oneCard.summary.parameters.value
+        publisher: oneCard.publisher,
+        publisherVersion: oneCard.publisherVersion,
+        summary: oneCard.title
     }, {
+        displayDate: notificationCard.startDate,
+        publishDate: notificationCard.publishDate,
         startDate: notificationCard.startDate,
         endDate: notificationCard.endDate,
         severity: notificationCard.severity,
-        summary: oneCard.summary.parameters.value
+        publisher: notificationCard.publisher,
+        publisherVersion: notificationCard.publisherVersion,
+        summary: notificationCard.title
     }];
     const data$ = store.select((timelineSelectors.selectTimelineSelection));
     data$.pipe(debounceTime(300), distinctUntilChanged())

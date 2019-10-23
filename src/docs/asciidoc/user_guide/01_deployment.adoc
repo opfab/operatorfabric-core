@@ -33,3 +33,32 @@ In Progress
 === Kubernetes deployment
 
 In Progress
+
+=== Administration
+
+Some operations are restricted to users with the **ADMIN** role, either because they are administration
+operations with the potential to impact the OperatorFabric instance as a whole, or because they
+give access to information that should be private to a user.
+
+Below is a quick recap of these restricted operations.
+
+.Users Service
+Any action (read, create/update or delete) regarding a single user's data (their personal info such as their first and
+last name, as well as their settings) can be performed either by the user in question or by a user with the ADMIN role.
+
+Any action on a list of users or on the groups (if authorization is managed in OperatorFabric) can only be performed by
+a user with the ADMIN role.
+
+.Thirds Service
+Any write (create, update or delete) action on bundles can only be performed by a user with the ADMIN role. As such,
+administrators are responsible for the quality and security of the provided bundles.
+In particular, as it is possible to use scripts in templates, they should perform a security check to make sure that
+there is no XSS risk.
+
+.Time Service (for demonstration purposes only)
+Any user can get the current state of simulated time but acting on it (changing the speed of time flow, setting
+the reference for simulated time or resetting it entirely) requires the ADMIN role.
+
+IMPORTANT: The ADMIN role doesn't grant any special privileges when it comes to card consultation (be they current or
+archived), so an user with the ADMIN role will only see cards that have been addressed to them or to one of their
+groups), just like any other user.

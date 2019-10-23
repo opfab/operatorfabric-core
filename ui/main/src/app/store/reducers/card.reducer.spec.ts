@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {reducer} from "@ofStore/reducers/card.reducer";
-import {cardInitialState, CardState} from "@ofStates/card.state";
-import {getOneRandomCard, getRandomAlphanumericValue} from "@tests/helpers";
-import {ClearCard, LoadCard, LoadCardFailure, LoadCardSuccess} from "@ofActions/card.actions";
+import {reducer} from '@ofStore/reducers/card.reducer';
+import {cardInitialState, CardState} from '@ofStates/card.state';
+import {getOneRandomCard, getRandomAlphanumericValue} from '@tests/helpers';
+import {ClearCard, LoadCard, LoadCardFailure, LoadCardSuccess, AddActionsAppear} from '@ofActions/card.actions';
 
 describe('Card Reducer', () => {
     describe('unknown action', () => {
@@ -23,8 +23,9 @@ describe('Card Reducer', () => {
             const previousState: CardState = {
                 selected: getOneRandomCard(),
                 loading: false,
-                error: getRandomAlphanumericValue(5, 12)
-            }
+                error: getRandomAlphanumericValue(5, 12),
+                actionsAppear: []
+            };
             const actualState = reducer(previousState, unknowAction);
             expect(actualState).toBe(previousState);
         });
@@ -41,7 +42,8 @@ describe('Card Reducer', () => {
             const previousState: CardState = {
                 selected: null,
                 loading: true,
-                error: null
+                error: null,
+                actionsAppear: []
             }
             const actualState = reducer(previousState,
                 new LoadCard({id: getRandomAlphanumericValue(5, 12)}));
@@ -55,7 +57,8 @@ describe('Card Reducer', () => {
             const previousState: CardState = {
                 selected: actualCard,
                 loading: true,
-                error: null
+                error: null,
+                actionsAppear: []
             };
             const actualState = reducer(previousState,
                 new LoadCardFailure({error: new Error(getRandomAlphanumericValue(5, 12))}));
@@ -72,7 +75,8 @@ describe('Card Reducer', () => {
             const previousState: CardState = {
                 selected: previousCard,
                 loading: true,
-                error: getRandomAlphanumericValue(5, 12)
+                error: getRandomAlphanumericValue(5, 12),
+                actionsAppear: []
             };
 
             const actualCard = getOneRandomCard();
@@ -91,7 +95,8 @@ describe('Card Reducer', () => {
             const previousState: CardState = {
                 selected: previousCard,
                 loading: true,
-                error: getRandomAlphanumericValue(5, 12)
+                error: getRandomAlphanumericValue(5, 12),
+                actionsAppear: []
             };
 
             const actualState = reducer(previousState, new ClearCard());
@@ -100,6 +105,23 @@ describe('Card Reducer', () => {
             expect(actualState.error).toBeNull();
             expect(actualState.loading).toBeFalsy();
             expect(actualState.selected).toBeNull();
+        });
+    });
+
+    describe('AddActionsAppear', () => {
+        it('should add action appear to array of one element', () => {
+            const previousCard = getOneRandomCard();
+            const previousState: CardState = {
+                selected: previousCard,
+                loading: true,
+                error: getRandomAlphanumericValue(5, 12),
+                actionsAppear: []
+            };
+            const actualState = reducer(previousState, new AddActionsAppear('RANDOMCARDID'));
+            expect(actualState).not.toBe(previousState);
+            expect(actualState).not.toEqual(previousState);
+            expect(actualState.actionsAppear).toEqual(['RANDOMCARDID']);
+            expect(actualState.actionsAppear.length).toBe(1);
         });
     });
 });

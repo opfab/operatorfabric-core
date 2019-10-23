@@ -15,7 +15,7 @@
 @import "popover.scss";
 
 $top-padding: 80px ;
-$bottom-padding: 10px ;
+$bottom-padding: 30px ;
 $body-padding: $top-padding 20px $bottom-padding 20px ;
 $total-vertical-padding: $top-padding + $bottom-padding ;
 
@@ -24,11 +24,22 @@ body {
   padding: $body-padding;
   min-width: 500px;
   background-color: $dark;
+  height: 100vh;
 }
-
-
-.global-view{
-  height: -webkit-calc(100vh - #{$total-vertical-padding});
-  height: -moz-calc(100vh - #{$total-vertical-padding});
-  height: calc(100vh - #{$total-vertical-padding});
+.archives-page .form-control {
+  border-radius: 5px;
+  padding: 5px;
+}
+select.form-control[multiple] {
+  height: calc(1.5em + 0.75rem + 2px);
+}
+.ngb-tp-spacer {
+  width: 0.3em!important;
+}
+.ngb-tp-input-container button {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+.pagination {
+  margin-top: 5px;
 }

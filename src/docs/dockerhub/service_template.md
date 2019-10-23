@@ -4,16 +4,22 @@
 * 0.2.1.RELEASE
 * 0.3.1.RELEASE
 * 0.4.1.RELEASE
-* 0.5.1.SNAPSHOT
+* 0.5.1.RELEASE
+* 0.6.1.RELEASE
+* 0.7.1.RELEASE
+* 0.8.1.RELEASE
+* ~~0.9.1.RELEASE~~ These images were not working properly due to missing configuration (see #99)
+* 0.10.1.RELEASE
 ## Snapshot
-## Short cuts
-* snaphot -> 0.5.1.SNAPSHOT
-* latest -> 0.5.1.RELEASE
+* 0.11.1.SNAPSHOT
+## Shortcuts
+* snapshot -> 0.11.1.SNAPSHOT
+* latest -> 0.10.1.RELEASE
 # References
-* **[Operator Fabric Website](https://opfab.github.io/)**
+* **[OperatorFabric Website](https://opfab.github.io/)**
 * **supported docker version:**
   \>18.09
 
 # Basic Usage
-This image is not intended to use independently of Operator Fabric global deployments. 
+This image is not intended to use independently of OperatorFabric global deployments. 
 Please refer to [documentation](https://opfab.github.io/documentation/) for sample usages.

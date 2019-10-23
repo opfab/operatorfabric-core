@@ -13,8 +13,6 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {AuthenticationService} from "@ofServices/authentication.service";
 import {LoginComponent} from "./login.component";
-import SpyObj = jasmine.SpyObj;
-import createSpyObj = jasmine.createSpyObj;
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "../../translate.config";
@@ -23,6 +21,8 @@ import {RejectLogIn, TryToLogIn} from "@ofActions/authentication.actions";
 import {Message, MessageLevel} from "@ofModel/message.model";
 import {I18n} from "@ofModel/i18n.model";
 import {By} from "@angular/platform-browser";
+import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
 
 describe('LoginComponent', () => {
 

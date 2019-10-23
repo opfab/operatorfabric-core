@@ -9,7 +9,6 @@ package org.lfenergy.operatorfabric.gateway.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +19,6 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -105,11 +102,23 @@ public class GatewayConfig {
                                 .filters(f->f.rewritePath("/cards/(?<path>.*)", "/$\\{path}"))
                                 .uri("lb://CARDS-CONSULTATION")
                 )
+                .route("actions",
+                        r-> r
+                                .path("/actions/**")
+                                .filters(f->f.rewritePath("/actions/(?<path>.*)", "/$\\{path}"))
+                                .uri("lb://ACTIONS")
+                )
                 .route("web-ui",
                         r-> r
                                 .path("/ui/**")
                                 .filters(f->f.rewritePath("/ui/(?<path>.*)", "/$\\{path}"))
                                 .uri("lb://WEB-UI")
+                )
+                .route("archives",
+                        r-> r
+                                .path("/archives/**")
+                                .filters(f->f.rewritePath("/archives/(?<path>.*)", "/$\\{path}"))
+                                .uri("lb://CARDS-CONSULTATION")
                 )
                 .build();
     }

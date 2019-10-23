@@ -7,6 +7,8 @@
 
 import {Action} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
+import {Action as ThirdAction, ActionStatus} from '@ofModel/thirds.model';
+import {Update} from "@ngrx/entity";
 
 export enum LightCardActionTypes {
     LoadLightCards = '[LCard] Load',
@@ -19,7 +21,17 @@ export enum LightCardActionTypes {
     AddLightCardFailure = '[LCard] Add Light Card Fail',
     UpdatedSubscription = '[LCard] UpdateSubscription',
     HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
+    RemoveLightCard = '[LCard] Remove a card',
+    AddThirdActions = '[LCard] Adds some Third Actions to existing card',
+    UpdateALightCard = '[LCard] Update a Light Card',
+    UpdateAnAction = '[LCard] Update one Action of a LightCard',
+    UpdateAnActionFailure = '[LCard] No actions where available to update for the current selected card in the state',
+    ThirdActionAlreadyLoaded = '[LCard] Light Card contains actions',
+    ThirdActionAlreadyUpdated = '[LCard] Third Action unchanged',
+    DelayedLightCardUpdate = '[LCard] update Light Card actions later',
+    LightCardAlreadyUpdated = '[LCard] Light Card already Updated'
 }
+
 // needed by NGRX entities
 export class LoadLightCards implements Action {
     /* istanbul ignore next */
@@ -58,14 +70,17 @@ export class LoadLightCardsFailure implements Action {
 export class SelectLightCard implements Action {
     /* istanbul ignore next */
     readonly type = LightCardActionTypes.SelectLightCard;
+
     /* istanbul ignore next */
-    constructor(public payload: {selectedCardId:string}){}
+    constructor(public payload: { selectedCardId: string }) {
+    }
 
 }
 
 export class ClearLightCardSelection implements Action {
 
     readonly type = LightCardActionTypes.ClearLightCardSelection;
+
     constructor() {
     }
 }
@@ -89,10 +104,63 @@ export class UpdatedSubscription implements Action {
 export class HandleUnexpectedError implements Action {
     /* istanbul ignore next */
     readonly type = LightCardActionTypes.HandleUnexpectedError;
-    /* istanbul ignore next */
-    constructor(public payload: {error: Error}) {
 
+    /* istanbul ignore next */
+    constructor(public payload: { error: Error }) {
     }
+}
+
+export class RemoveLightCard implements Action {
+    readonly type = LightCardActionTypes.RemoveLightCard;
+
+    constructor(public  payload: { cards: string[] }) {
+    }
+}
+
+export class AddThirdActions implements Action {
+    readonly type = LightCardActionTypes.AddThirdActions;
+
+    constructor(public payload: { card: LightCard, actions: Map<string, ThirdAction> }) {
+    }
+}
+
+export class UpdateALightCard implements Action {
+    readonly type = LightCardActionTypes.UpdateALightCard;
+    constructor(public payload: { card: LightCard }) {
+    }
+}
+
+export class UpdateAnAction implements Action {
+    readonly type = LightCardActionTypes.UpdateAnAction;
+
+    constructor(public payload: {cardId:string,actionKey: string, status: ActionStatus}) {
+    }
+}
+
+export class UpdateAnActionFailure implements Action{
+    readonly type = LightCardActionTypes.UpdateAnActionFailure;
+
+    constructor(){}
+}
+
+export class ThirdActionAlreadyLoaded implements Action{
+    readonly  type = LightCardActionTypes.ThirdActionAlreadyLoaded;
+    constructor(){}
+}
+
+export class ThirdActionAlreadyUpdated implements Action{
+    readonly  type = LightCardActionTypes.ThirdActionAlreadyUpdated;
+    constructor(){}
+}
+
+export class DelayedLightCardUpdate implements Action{
+    readonly  type = LightCardActionTypes.DelayedLightCardUpdate;
+    constructor(public payload:{card:LightCard}){}
+}
+
+export class LightCardAlreadyUpdated implements Action{
+    readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
+    constructor(){}
 }
 
 export type LightCardActions =
@@ -104,4 +172,13 @@ export type LightCardActions =
     | AddLightCardFailure
     | UpdatedSubscription
     | HandleUnexpectedError
-    | EmptyLightCards;
+    | EmptyLightCards
+    | AddThirdActions
+    | UpdateALightCard
+    | UpdateAnAction
+    | UpdateAnActionFailure
+    | ThirdActionAlreadyLoaded
+    | ThirdActionAlreadyUpdated
+    | DelayedLightCardUpdate
+    | LightCardAlreadyUpdated
+    | RemoveLightCard;

@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -97,28 +98,35 @@ public class CardPublicationData implements Card {
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
         this.id = publisher + "_" + processId;
+        if (null == this.uid)
+        	this.uid = UUID.randomUUID().toString();
         this.setShardKey(Math.toIntExact(this.getStartDate().toEpochMilli() % 24 * 1000));
+        if(this.getTimeSpans()!=null)
+            for(TimeSpan ts:this.getTimeSpans())
+                ((TimeSpanPublicationData)ts).init();
     }
 
     public LightCardPublicationData toLightCard() {
-        return LightCardPublicationData.builder()
-            .id(this.getId())
-            .uid(this.getUid())
-            .publisher(this.getPublisher())
-            .publisherVersion(this.getPublisherVersion())
-            .process(this.getProcess())
-            .processId(this.getProcessId())
-            .state(this.getState())
-            .lttd(this.getLttd())
-            .startDate(this.getStartDate())
-            .endDate(this.getEndDate())
-            .publishDate(this.getPublishDate())
-            .severity(this.getSeverity())
-            .media(this.getMedia())
-            .tags(this.getTags())
-            .mainRecipient(this.getMainRecipient())
-            .title(((I18nPublicationData) this.getTitle()).copy())
-            .summary(((I18nPublicationData) this.getSummary()).copy())
-            .build();
+        LightCardPublicationData.LightCardPublicationDataBuilder result = LightCardPublicationData.builder()
+                .id(this.getId())
+                .uid(this.getUid())
+                .publisher(this.getPublisher())
+                .publisherVersion(this.getPublisherVersion())
+                .process(this.getProcess())
+                .processId(this.getProcessId())
+                .state(this.getState())
+                .lttd(this.getLttd())
+                .startDate(this.getStartDate())
+                .endDate(this.getEndDate())
+                .publishDate(this.getPublishDate())
+                .severity(this.getSeverity())
+                .media(this.getMedia())
+                .tags(this.getTags())
+                .mainRecipient(this.getMainRecipient())
+                .title(((I18nPublicationData) this.getTitle()).copy())
+                .summary(((I18nPublicationData) this.getSummary()).copy());
+        if(this.getTimeSpans()!=null)
+            result.timeSpansSet(new HashSet(this.getTimeSpans()));
+        return result.build();
     }
 }

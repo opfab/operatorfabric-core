@@ -6,6 +6,12 @@
  */
 
 import {Component, OnInit} from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {LightCard} from '@ofModel/light-card.model';
+import {select, Store} from '@ngrx/store';
+import {catchError, map, tap} from 'rxjs/operators';
+import {AppState} from '@ofStore/index';
+import {selectArchiveLightCards, selectArchiveLightCardSelection} from '@ofSelectors/archive.selectors';
 
 @Component({
   selector: 'of-archives',
@@ -14,9 +20,17 @@ import {Component, OnInit} from '@angular/core';
 })
 export class ArchivesComponent implements OnInit {
 
-  constructor() { }
+  lightCards$: Observable<LightCard[]>;
+  selection$: Observable<string>;
+
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
+    this.lightCards$ = this.store.pipe(
+        select(selectArchiveLightCards),
+        catchError(err => of([]))
+    );
+    this.selection$ = this.store.select(selectArchiveLightCardSelection);
   }
 
 }

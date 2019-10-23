@@ -11,9 +11,9 @@ import {DetailComponent} from './detail.component';
 import {
     getOneRandomCard,
     getOneRandomCardWithRandomDetails,
-    getOneRandomThird, getRandomI18nData,
-    getRandomIndex,
-    getRandomThird
+    getOneRandomThird,
+    getRandomI18nData,
+    getRandomIndex
 } from '@tests/helpers';
 import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
 import {ServicesModule} from "@ofServices/services.module";
@@ -26,7 +26,7 @@ import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {environment} from "@env/environment";
 import {By} from "@angular/platform-browser";
 import {of} from "rxjs";
-import {Action, ActionType, Process, State, Third} from "@ofModel/thirds.model";
+import {Action, ActionType, Process, State} from "@ofModel/thirds.model";
 import {Map as OfMap} from "@ofModel/map";
 
 describe('DetailComponent', () => {
@@ -96,8 +96,8 @@ describe('DetailComponent', () => {
         const processesMap:OfMap<Process> = new OfMap();
         const statesMap:OfMap<State> = new OfMap();
         const actionMap:OfMap<Action> = new OfMap();
-        actionMap['hidden2']=new Action(ActionType.URI, getRandomI18nData(), true,'btn-light','fa fa-warning text-dark');
-        actionMap['hidden1']=new Action(ActionType.URI, getRandomI18nData(), true,'buttonStyle','contentStyle');
+        actionMap['hidden2']=new Action(ActionType.URL, getRandomI18nData(), true,'btn-light','fa fa-warning text-dark');
+        actionMap['hidden1']=new Action(ActionType.URL, getRandomI18nData(), true,'buttonStyle','contentStyle');
         statesMap['state01']=new State(null,actionMap);
         processesMap['process01']=new Process(statesMap);
         const third = getOneRandomThird({
