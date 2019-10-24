@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.NotBlank;
-
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -24,8 +22,8 @@ import lombok.Data;
 @Data
 public class GroupsProperties {
 
-	@NotBlank
-	private GroupsMode mode;
+	// mandatory : default mode 
+	private GroupsMode mode = GroupsMode.OPERATOR_FABRIC;
 
 	private RolesClaim rolesClaim;
 
