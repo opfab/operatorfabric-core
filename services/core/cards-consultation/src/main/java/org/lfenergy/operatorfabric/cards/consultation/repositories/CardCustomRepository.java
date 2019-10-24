@@ -11,5 +11,8 @@ import java.time.Instant;
 * */
 public interface CardCustomRepository extends UserUtilitiesCommonToCardRepository<CardConsultationData> {
 
-    public Mono<CardConsultationData> trucTestMachin(Instant pivotalInstant, User user);
+    Mono<CardConsultationData> trucTestMachinNext(Instant pivotalInstant, User user);
+    Mono<CardConsultationData> trucTestMachinPrevious(Instant pivotalInstant
+                                                  ,User user
+    );
 }

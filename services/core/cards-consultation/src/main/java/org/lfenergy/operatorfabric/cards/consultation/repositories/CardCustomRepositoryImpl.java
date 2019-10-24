@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -26,11 +27,27 @@ public class CardCustomRepositoryImpl implements  CardCustomRepository {
         return findByIdWithUser(template,processId,user,CardConsultationData.class);
     }
 
-    public  Mono<CardConsultationData> trucTestMachin(Instant pivotalInstant, User user){
+    public  Mono<CardConsultationData> trucTestMachinNext(Instant pivotalInstant
+            , User user
+    ){
         Query query = new Query();
-        List<Criteria> withUser = this.computeCriteriaList4User(user);
-        query.addCriteria(withUser.get(0));
+        Criteria criteria = new Criteria().where("startDate").gte(pivotalInstant);
+        query.addCriteria(criteria
+                .andOperator(this.computeUserCriteria(user))
+        );
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC,"startDate")));
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC,"_id")));
         return template.findOne(query,CardConsultationData.class);
     }
-
-}
+    public  Mono<CardConsultationData> trucTestMachinPrevious(Instant pivotalInstant
+            , User user
+    ){
+        Query query = new Query();
+        Criteria criteria = new Criteria().where("startDate").lte(pivotalInstant);
+        query.addCriteria(criteria
+                .andOperator(this.computeUserCriteria(user))
+        );
+        query.with(new Sort(new Sort.Order(Sort.Direction.DESC,"startDate")));
+        query.with(new Sort(new Sort.Order(Sort.Direction.ASC,"_id")));
+        return template.findOne(query,CardConsultationData.class);
+    }}
