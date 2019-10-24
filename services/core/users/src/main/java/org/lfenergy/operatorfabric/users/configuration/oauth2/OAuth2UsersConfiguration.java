@@ -7,6 +7,7 @@
 
 package org.lfenergy.operatorfabric.users.configuration.oauth2;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,7 +90,7 @@ public class OAuth2UsersConfiguration {
 				
 				OAuth2JwtProcessingUtilities.token.remove();
 				
-				List<GrantedAuthority> authorities = null;
+				List<GrantedAuthority> authorities = new ArrayList<>();
 				switch (groupsProperties.getMode()) {
 					case JWT :
 						// override the groups list from JWT mode
@@ -97,7 +98,6 @@ public class OAuth2UsersConfiguration {
 					case OPERATOR_FABRIC : 
 						authorities = computeAuthorities(user);
 						break;	
-					default : authorities = null;	
 				}
 					
 				log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
@@ -137,16 +137,13 @@ public class OAuth2UsersConfiguration {
 				.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size -> new String[size]));
 	}
 	
-//	/**
-//	 * Creates Authority list from a jwt
-//	 * 
-//	 * @param jwt user's token
-//	 * @return list of authority
-//	 */
-//	public List<GrantedAuthority> computeAuthorities(Jwt jwt) {
-//		return groupsUtils.createAuthorityList(jwt);
-//	}
-   
+
+	/**
+	 * Creates group list from a jwt
+	 * 
+	 * @param jwt user's token
+	 * @return a group list
+	 */
 	public List<String> getGroupsList(Jwt jwt) {
 		return groupsUtils.createGroupsList(jwt);
 	}
