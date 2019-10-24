@@ -23,7 +23,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 
 @Slf4j
 @Configuration
-public class CardByTimeRoutesConfig implements UserExtractor{
+public class CardByTimeRoutesConfig implements UserExtractor {
 
     private final CardRepository cardRepository;
 
@@ -40,54 +40,28 @@ public class CardByTimeRoutesConfig implements UserExtractor{
     @Bean
     public RouterFunction<ServerResponse> cardTimeRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/{millisTime}/next"), cardByNextTimeGetRoute())
+                .route(RequestPredicates.GET("/{millisTime}/next"), cardByPreviousTimeGetRoute())
                 .andRoute(RequestPredicates.OPTIONS("/{millisTime}/next"), cardByNextTimeOptionRoute())
-                .andRoute(RequestPredicates.GET("/{millisTime}/previous"), cardByPreviousTimeGetRoute())
-                .andRoute(RequestPredicates.OPTIONS("/{millisTime}/previous"), cardByPreviousTimeOptionRoute())
-                .andRoute(RequestPredicates.GET("/{millisTime}/suite"), cardBySuiteTimeGetRoute())
-                .andRoute(RequestPredicates.OPTIONS("/{millisTime}/suite"), cardByNextTimeOptionRoute())
-                .andRoute(RequestPredicates.GET("/{millisTime}/avant"), cardByAvantTimeGetRoute())
-                .andRoute(RequestPredicates.OPTIONS("/{millisTime}/avant"), cardByPreviousTimeOptionRoute());
+                .andRoute(RequestPredicates.GET("/{millisTime}/previous"), cardByNextTimeGetRoute())
+                .andRoute(RequestPredicates.OPTIONS("/{millisTime}/previous"), cardByPreviousTimeOptionRoute());
     }
-
 
     private HandlerFunction<ServerResponse> cardByNextTimeGetRoute() {
-        return request ->
-                cardRepository
-                        .findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc
-                                (parseAsInstant(request.pathVariable("millisTime")))
-                        .flatMap(card -> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
-                        .switchIfEmpty(notFound().build());
-    }
-
-    private HandlerFunction<ServerResponse> cardBySuiteTimeGetRoute() {
-        return request ->
-                extractUserFromJwtToken(request).flatMap(user ->cardRepository
-                        .trucTestMachinNext
-                                (parseAsInstant(request.pathVariable("millisTime")),user)
-                        .flatMap(card -> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
-                        .switchIfEmpty(notFound().build())
-                );
+        return request -> extractUserFromJwtToken(request).flatMap(user -> cardRepository
+                .findNextCardWithUser
+                        (parseAsInstant(request.pathVariable("millisTime")), user)
+                .flatMap(card -> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
+                .switchIfEmpty(notFound().build()));
     }
 
     private HandlerFunction<ServerResponse> cardByPreviousTimeGetRoute() {
-        return request ->
+        return request -> extractUserFromJwtToken(request).flatMap(user ->
                 cardRepository
-                        .findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc
-                                (parseAsInstant(request.pathVariable("millisTime")))
-                        .flatMap(card -> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
-                        .switchIfEmpty(notFound().build());
-    }
-
-    private HandlerFunction<ServerResponse> cardByAvantTimeGetRoute() {
-        return request ->extractUserFromJwtToken(request).flatMap(user ->
-                cardRepository
-                        .trucTestMachinPrevious
-                                (parseAsInstant(request.pathVariable("millisTime")),user)
+                        .findPreviousCardWithUser
+                                (parseAsInstant(request.pathVariable("millisTime")), user)
                         .flatMap(card -> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
                         .switchIfEmpty(notFound().build()));
     }
-
 
     private HandlerFunction<ServerResponse> cardByNextTimeOptionRoute() {
         return request -> ok().build();
