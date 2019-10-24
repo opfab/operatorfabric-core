@@ -119,8 +119,7 @@ public class OAuth2GenericConfiguration {
     	
     	String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
         OAuth2JwtProcessingUtilities.token.set(jwt);
-        
-        // what if the user doesn't exist in OPFAB, what to do next ?? 
+       
         User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
 		OAuth2JwtProcessingUtilities.token.remove();
         
