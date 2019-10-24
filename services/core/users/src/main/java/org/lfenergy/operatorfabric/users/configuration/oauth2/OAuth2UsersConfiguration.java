@@ -15,6 +15,7 @@ import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2Generic
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.lfenergy.operatorfabric.users.model.User;
@@ -90,15 +91,11 @@ public class OAuth2UsersConfiguration {
 				
 				OAuth2JwtProcessingUtilities.token.remove();
 				
-				List<GrantedAuthority> authorities = new ArrayList<>();
-				switch (groupsProperties.getMode()) {
-					case JWT :
-						// override the groups list from JWT mode
-						user.setGroups(getGroupsList(jwt));
-					case OPERATOR_FABRIC : 
-						authorities = computeAuthorities(user);
-						break;	
-				}
+				if (groupsProperties.getMode() == GroupsMode.JWT) {
+					// override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
+					user.setGroups(getGroupsList(jwt));
+				}				
+				List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);	
 					
 				log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
 								
