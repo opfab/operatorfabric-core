@@ -73,7 +73,7 @@ public class OAuth2UsersConfiguration {
 
 			@Override
 			public AbstractAuthenticationToken convert(Jwt jwt) {
-				String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
+				String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
 
 				log.debug("USER " + principalId + " with the token : \n" + jwt.getTokenValue());
 
@@ -84,7 +84,7 @@ public class OAuth2UsersConfiguration {
 				UserData user;
 				if (!optionalUser.isPresent()) {
 					user = createUserDataVirtualFromJwt(jwt);
-					log.debug("user virtual(non existed in opfab) : " + user.toString());
+					log.warn("user virtual(non existed in opfab) : " + user.toString());
 				} else {
 					user = optionalUser.get();
 				}
@@ -95,7 +95,7 @@ public class OAuth2UsersConfiguration {
 					// override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
 					user.setGroups(getGroupsList(jwt));
 				}				
-				List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);	
+				List<GrantedAuthority> authorities = computeAuthorities(user);	
 					
 				log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
 								
@@ -109,7 +109,7 @@ public class OAuth2UsersConfiguration {
 			 * @return UserData
 			 */
 			private UserData createUserDataVirtualFromJwt(Jwt jwt) {
-				String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
+				String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
 				String givenName = null;
 				String familyName = null;
 				

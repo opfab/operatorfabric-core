@@ -47,7 +47,7 @@ public class GroupsUtilsShould {
 	
 	@BeforeEach
 	public void setUp() {
-	    Mockito.when(jwtProperties.getSubClaim()).thenReturn("sub");
+	    Mockito.when(jwtProperties.getLoginClaim()).thenReturn("sub");
 	    
 	    Mockito.when(groupsProperties.getMode()).thenReturn(GroupsMode.JWT);
 	    
