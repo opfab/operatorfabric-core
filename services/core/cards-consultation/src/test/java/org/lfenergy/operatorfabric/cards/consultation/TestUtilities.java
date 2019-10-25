@@ -23,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
@@ -53,7 +52,11 @@ public class TestUtilities {
         return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups);
     }
 
-    public static CardConsultationData createSimpleCard(String processSuffix, Instant publication, Instant start, Instant end, String login, String... groups) {
+    public static CardConsultationData createSimpleCard(String processSuffix
+            , Instant publication
+            , Instant start
+            , Instant end
+            , String login, String... groups) {
         CardConsultationData.CardConsultationDataBuilder cardBuilder = CardConsultationData.builder()
                 .processId("PROCESS" + processSuffix)
                 .publisher("PUBLISHER")
