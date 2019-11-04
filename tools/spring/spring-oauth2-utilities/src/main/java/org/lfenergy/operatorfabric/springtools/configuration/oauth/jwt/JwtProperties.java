@@ -20,7 +20,7 @@ public class JwtProperties {
 	public String loginClaim = "sub";
 	
 	// optional claims
-	public String givenNameClaim;
-	public String familyNameClaim;
+	public String givenNameClaim = "given-name";
+	public String familyNameClaim = "family-name";
 
 }
