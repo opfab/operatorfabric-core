@@ -40,9 +40,9 @@ public class CardByTimeRoutesConfig implements UserExtractor {
     @Bean
     public RouterFunction<ServerResponse> cardTimeRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/{millisTime}/next"), cardByPreviousTimeGetRoute())
+                .route(RequestPredicates.GET("/{millisTime}/next"), cardByNextTimeGetRoute())
                 .andRoute(RequestPredicates.OPTIONS("/{millisTime}/next"), cardByNextTimeOptionRoute())
-                .andRoute(RequestPredicates.GET("/{millisTime}/previous"), cardByNextTimeGetRoute())
+                .andRoute(RequestPredicates.GET("/{millisTime}/previous"), cardByPreviousTimeGetRoute())
                 .andRoute(RequestPredicates.OPTIONS("/{millisTime}/previous"), cardByPreviousTimeOptionRoute());
     }
 
