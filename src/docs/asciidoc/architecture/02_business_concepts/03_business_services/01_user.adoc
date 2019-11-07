@@ -29,15 +29,14 @@ Description:: Create User
 Pre requisite:: User must be defined in provided authentication service
 
 .Nominal Scenario
- . User succeed in connecting for the first time (See To Authenticate)
- . A user is registred in the system
+ . Automation creation user when an user succeed in authenticating and connecting for the first time (See <<To Authenticate>>)
 
 .Alternative scenario
- . Administrator creates a user directly
+ . Administrator creates an user directly
 
 .Error scenario
- * If user is not registred in authentication provider when an Administrator creates it, raise an error
- * If user already exist when an Administrator creates it, raise an error
+ * If an user is not registered in authentication provider when an Administrator creates it, raise an error
+ * If an user already exists when an Administrator creates it, raise an error
 
 ===== To Create a Group
 
