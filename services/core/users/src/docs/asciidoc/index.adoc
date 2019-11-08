@@ -6,8 +6,8 @@
 
 = OperatorFabric User Service
 :author: David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: 0.10.1.SNAPSHOT
-:revdate: September 30, 2019
+:revnumber: 0.11.1.SNAPSHOT
+:revdate: October 21, 2019
 :imagesdir: images
 :sectnums:
 :toc: left

@@ -19,3 +19,8 @@ operatorfabric.users.default:
     description: TSO 2 Group
   - name: TRANS
     description: Transnationnal Group
+operatorfabric:
+  security:
+    jwt:
+      groups:
+        mode: OPERATOR_FABRIC

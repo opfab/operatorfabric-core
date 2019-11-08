@@ -49,7 +49,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
 |operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
 |operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
-|operatorfabric.settings.locale|LT|no|Default user locale (use browser if not set)
+|operatorfabric.settings.locale|en|no|Default user locale (use en if not set)
 |operatorfabric.settings.default-tags||no|Default user list of filtered in tags
 |operatorfabric.time.pulse|5000|no|Duration between two ticks of the internal state of the User Interface
 |operatorfabric.archive.filters.page.size||no|The page size of archive filters

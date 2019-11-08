@@ -36,7 +36,7 @@ should be updated to X.X.X.RELEASE.
 . Update the revision date in *.adoc files:
 +
 ```
-:revdate: September 30, 2019
+:revdate: October 21, 2019
 ```
 
 . Commit with the model message:
@@ -161,12 +161,14 @@ To prepare a next version you simply need to increment the version after a relea
 
 ==== In the source repository (operatorfabric-core)
 
-. Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT
+. Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT **EXCEPT**
+.. In the DockerHub documentation (src/docs/dockerhub/service_template.md)
+.. In the demonstration docker-compose files (src/main/docker/demo/docker-compose.yml and src/main/docker/deploy/docker-compose.yml)
 
 . In the DockerHub documentation (src/docs/dockerhub/service_template.md), replace the two occurrences of X.X.X.SNAPSHOT
 by Y.Y.Y.RELEASE.
 
-. Commit changes with the following message:
+. Commit and push changes with the following message:
 +
 ```
 [PREPARE] next version: Y.Y.Y.SNAPSHOT

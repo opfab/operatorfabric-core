@@ -44,3 +44,5 @@ operatorfabric:
   i18n.supported.locales:
   - fr
   - en
+  settings:
+    locale: en

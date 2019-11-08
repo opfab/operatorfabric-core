@@ -12,15 +12,22 @@
 :icons: font
 :hide-uri-scheme:
 
-image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0 License,link=https://www.mozilla.org/en-US/MPL/2.0/]
-image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master[Build Status,link=https://travis-ci.org/opfab/operatorfabric-core]
-image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status[Quality Gate,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
+image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0
+License,link=https://www.mozilla.org/en-US/MPL/2.0/]
+image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master[Build
+Status,link=https://travis-ci.org/opfab/operatorfabric-core]
+image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status[Quality
+Gate,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=coverage[Coverage,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Coverage]
-image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=code_smells[Code Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
-image:https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg[Website opfab.github.io,link=http://opfab.github.io/]
-image:https://img.shields.io/badge/Join%20us%20on-Mattermost-%237473C0.svg[Join us on Mattermost,link=https://team.opfab.org/signup_user_complete/?id=7nhtz5psobgpud6yqzrbibmdtw]
+image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=code_smells[Code
+Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
+image:https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg[Website
+opfab.github.io,link=http://opfab.github.io/]
+image:https://img.shields.io/badge/Join%20us%20on-Mattermost-%237473C0.svg[Join
+us on Mattermost,link=https://team.opfab.org/signup_user_complete/?id=7nhtz5psobgpud6yqzrbibmdtw]
 
-OperatorFabric is a modular, extensible, industrial-strength and field-tested platform for use in electricity, water, and other utility operations.
+OperatorFabric is a modular, extensible, industrial-strength and field-tested
+platform for use in electricity, water, and other utility operations.
 
 * System visualization and console integration
 * Precise alerting
@@ -28,58 +35,72 @@ OperatorFabric is a modular, extensible, industrial-strength and field-tested pl
 * Historian
 * Scripting (ex: Python, JavaScript)
 
-It is an open source project initiated by http://www.rte-france.com/[RTE] with https://www.lfenergy.org/[LF Energy].
+It is an open source project initiated by http://www.rte-france.com/[RTE]
+with https://www.lfenergy.org/[LF Energy].
 
 toc::[]
 
 == What does OperatorFabric do in practice?
 
-To perform their duties, an operator has to interact with multiple applications (perform actions, watch for alerts, etc.), which can prove difficult if there are too many of them.
+To perform their duties, an operator has to interact with multiple applications
+(perform actions, watch for alerts, etc.), which can prove difficult if
+there are too many of them.
 
-The idea is to aggregate all the notifications from all these applications into a single screen, and to allow the operator to act on them if needed.
+The idea is to aggregate all the notifications from all these applications
+into a single screen, and to allow the operator to act on them if needed.
 
 image:feed_details_1.png[Feed screen layout,450,300,align="center"]
 
-These notifications are materialized by *cards* sorted in a *feed* according to their period of relevance and their severity.
-When a card is selected in the feed, the right-hand pane displays the *details* of the card: information about the state of the parent process instance in the third-party application that published it, available actions, etc.
+These notifications are materialized by *cards* sorted in a *feed* according
+to their period of relevance and their severity.
+When a card is selected in the feed, the right-hand pane displays the *details*
+of the card: information about the state of the parent process instance in
+the third-party application that published it, available actions, etc.
 
-In addition, the cards will also translate as events displayed on a *timeline* (its design is still under discussion) at the top of the screen.
-This view will be complimentary to the card feed in that it will allow the operator to see at a glance the status of processes for a given period, when the feed is more like a "To Do" list.
+In addition, the cards will also translate as events displayed on a *timeline*
+(its design is still under discussion) at the top of the screen.
+This view will be complimentary to the card feed in that it will allow the
+operator to see at a glance the status of processes for a given period,
+when the feed is more like a "To Do" list.
 
-Part of the value of OperatorFabric is that it makes the integration very simple on the part of the third-party applications.
-To start publishing cards to users in an Opera,torFabric instance, all they have to do is:
+Part of the value of OperatorFabric is that it makes the integration very
+simple on the part of the third-party applications.
+To start publishing cards to users in an Opera,torFabric instance, all they
+have to do is:
 
-* Register as a publisher through the "Thirds" service and provide a "bundle" containing handlebars templates defining how cards should be rendered, i18n info etc.
+* Register as a publisher through the "Thirds" service and provide a "bundle"
+containing handlebars templates defining how cards should be rendered,
+i18n info etc.
 * Publish cards as json containing card data through the card publication API
 
 OperatorFabric will then:
 
-* Dispatch the cards to the appropriate users (by computing the actual users who should receive the card from the recipients rules defined in the card)
-* Take care of the rendering of the cards, displaying details, actions, inputs etc.
+* Dispatch the cards to the appropriate users (by computing the actual users
+who should receive the card from the recipients rules defined in the card)
+* Take care of the rendering of the cards, displaying details, actions,
+inputs etc.
 * Display relevant information from the cards in the timeline
 
-Another aim of OperatorFabric is to make cooperation easier by letting operators forward or send cards to other operators, for example:
+Another aim of OperatorFabric is to make cooperation easier by letting
+operators forward or send cards to other operators, for example:
 
 * If they need an input from another operator
-* If they can't handle a given card for lack of time or because the necessary action is out of their scope
+* If they can't handle a given card for lack of time or because the necessary
+action is out of their scope
 
-This will replace phone calls or emails, making cooperation more efficient and traceable.
+This will replace phone calls or emails, making cooperation more efficient
+and traceable.
 
-For instance, operators might be interested in knowing why a given decision was made in the past:
-the cards detailing the decision process steps will be accessible through the Archives screen, showing how the
+For instance, operators might be interested in knowing why a given decision
+was made in the past:
+the cards detailing the decision process steps will be accessible through
+the Archives screen, showing how the
 operators reached this agreement.
-
-== Licensing
-
-This project and all its sub-projects are licensed under https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2.0]. See link:LICENSE.txt[LICENSE.txt]
-
-== Contributing
-
-Read our link:CONTRIBUTING.adoc[CONTRIBUTING] file for more information on how to contribute to the project.
 
 == Requirements
 
-IMPORTANT: This section describes the projects requirements regardless of installation options.
+IMPORTANT: This section describes the projects requirements regardless of
+installation options.
 Please see <<Getting Started>> below for details on:
 
 * setting up a development environment with these prerequisites
@@ -94,12 +115,15 @@ Please see <<Getting Started>> below for details on:
 * Docker Compose with 2.1+ file format support
 * Chrome (needed for UI tests in build)
 
-NOTE: Java 8.0.163-zulu is no longer available for security reasons, the next version is Java 8.0.192-zulu.
+NOTE: Java 8.0.163-zulu is no longer available for security reasons, the
+next version is Java 8.0.192-zulu.
 
 IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
 https://github.com/creationix/nvm[nvm] to manage tools versions.
 
-Once you have installed sdkman and nvm, you can **source** the following script to set up your development environment (appropriate versions of Gradle, Java, Maven and project variables set):
+Once you have installed sdkman and nvm, you can **source** the following
+script to set up your development environment (appropriate versions of Gradle,
+Java, Maven and project variables set):
 
 .Set up development environment (using sdkman and nvm)
 [source]
@@ -109,7 +133,8 @@ source bin/load_environment_light.sh
 
 === Software
 
-* link:RABBITMQ.md[RabbitMQ 3.7.6 +]: AMQP messaging layer allows inter service communication
+* link:RABBITMQ.md[RabbitMQ 3.7.6 +]: AMQP messaging layer allows inter
+service communication
 * MongoDB 4.0 +: Card persistent storage
 
 RabbitMQ is required for :
@@ -124,90 +149,93 @@ MongoDB is required for :
 * Archived Card storage
 * User Storage
 
-IMPORTANT: Installing MongoDB and RabbitMQ is not necessary as preconfigured MongoDB and RabbitMQ are available in the form of docker-compose configuration files at
+IMPORTANT: Installing MongoDB and RabbitMQ is not necessary as preconfigured
+MongoDB and RabbitMQ are available in the form of docker-compose configuration
+files at
 link:src/main/docker[src/main/docker]
 
 === Browser support
 
-We currently use Firefox (63.0.3). Automatic tests for the UI rely on Chrome (73.0.3683.86).
+We currently use Firefox (63.0.3). Automatic tests for the UI rely on Chrome
+(73.0.3683.86).
 
 == Getting Started
 
-WARNING: The steps below assume that you are using https://sdkman.io/[sdkman] and
-https://github.com/creationix/nvm[nvm] to manage tools versions and that you have already installed them.
+WARNING: The steps below assume that you have installed and are using
+https://sdkman.io/[sdkman] and
+https://github.com/creationix/nvm[nvm] to manage tool versions ( for java,
+gradle, node and npm).
 
-WARNING: Before running containers with docker-compose, it is required to configure a docker network for them using `docker network create opfabnet`. You can also use the bin/setup_dockerized_environment which builds the services images ant sets up the `opfabnet` network.
+WARNING: Before running containers with docker-compose, it is required to
+configure a docker network for them using `docker network create opfabnet`. You
+can also use the bin/setup_dockerized_environment which builds the services
+images ant sets up the `opfabnet` network.
 
-There are several ways to get started with OperatorFabric. Please look into the section that best fits your needs.
+There are several ways to get started with OperatorFabric. Please look into
+the section that best fits your needs.
 
-TIP: If you encounter any issue, see <<Troubleshooting>> below. In particular, a command that hangs then fails is often a proxy issue.
-
-//+++ <details><summary> +++
-//**Error summary**
-//+++ </summary><div> +++
-//
-//.Error message
-//[source]
-//----
-//Paste error message
-//----
-//
-//.Possible causes & resolution
-//Describe possible causes and resolutions
-//
-//+++ </div></details> +++
+TIP: If you encounter any issue, see <<Troubleshooting>> below. In particular,
+a command that hangs then fails is often a proxy issue.
 
 === Build and run using script
 
-+++ <details><summary> +++
-**See detailed steps**
-+++ </summary><div> +++
+The following steps describe how to launch MongoDB, RabbitMQ and SonarQube
+using Docker,  build OperatorFabric using gradle and run it using the
+`run_all.sh` script.
 
-These steps describe how to use dockerized Mongo, RabbitMQ and SonarQube and build and run OperatorFabric using the `run_all.sh` script.
-
-.Clone repository
+==== Clone repository
 ----
 git clone https://github.com/opfab/operatorfabric-core.git
 cd operatorfabric-core
 ----
 
-.Set up your environment (environment variables & appropriate versions of gradle, maven, etc.)
+==== Set up your environment (environment variables & appropriate versions
+of gradle, maven, etc…)
 ----
-source ./bin/load_environment_light.sh
+source bin/load_environment_light.sh
 ----
 
-TIP: From now on, you can use environment variable $OF_HOME to get back to the repository home.
+TIP: From now on, you can use environment variable $OF_HOME to go back to
+the home repository of OperatorFabric.
 
-.Deploy dockerized MongoDB, RabbitMQ and SonarQube
-MongoDB, RabbitMQ and SonarQube are needed for the build so tests can be run.
+==== Deploy dockerized MongoDB, RabbitMQ and SonarQube
+MongoDB, RabbitMQ and SonarQube are needed for the tests to be run so the
+build can be done.
 
-A docker-compose file with properly configured containers is available link:src/main/docker/test-quality-environment/[there].
+A docker-compose file with properly configured containers is available
+link:src/main/docker/test-quality-environment/[there].
 
-If you haven't done so before, you will need to configure a docker network for the containers:
+If it hasn't be done before, a docker network need to be configured for the
+containers using the following command:
 ----
 docker network create opfabnet
 ----
 
-Then run the docker-compose in detached mode:
+Then `docker-compose` can be run in detached mode:
 ----
 cd src/main/docker/test-quality-environment/
 docker-compose up -d
 ----
 
-.Build and run OperatorFabric Services using the `run_all.sh` script
+==== Build OperatorFabric with Gradle
 ----
 cd $OF_HOME
-./bin/run_all.sh -s users,time,cards-publication,cards-consultation,thirds -b true start
+gradle assemble
 ----
 
-TIP: See `run_all.sh -h` for details.
-
-.Check services status
+==== Run OperatorFabric Services using the `run_all.sh` script
 ----
-./bin/run_all.sh -s users,time,cards-publication,cards-consultation,thirds status
+bin/run_all.sh start
 ----
 
-.Log into the UI
+TIP: See `bin/run_all.sh -h` for details.
+
+==== Check services status
+----
+bin/run_all.sh status
+----
+
+==== Log into the UI
 
 URL: localhost:2002/ui/
 
@@ -215,29 +243,35 @@ login: admin
 
 password: test
 
-WARNING: It might take a little while for the UI to load even after all services are running.
+WARNING: It might take a little while for the UI to load even after all
+services are running.
 
 WARNING: Don't forget the *final slash* in the URL or you will get an error.
 
-.Push cards to the feed
+==== Push cards to the feed
 
-You can check that you see cards into the feed by running the `push_card_loop.sh` script.
+You can check that you see cards into the feed by running the
+`push_card_loop.sh` script.
 ----
-./services/core/cards-publication/src/main/bin/push_card_loop.sh
+services/core/cards-publication/src/main/bin/push_card_loop.sh
 ----
-
-+++ </div></details> +++
 
 === Demonstration mode
 
-If you only want a quick demonstration of what OperatorFabric looks like and what it can do, use our standalone docker demo.
-See <<Docker Demo>> for details.
+If you only want a quick demonstration of what OperatorFabric looks like
+and what it can do, use our standalone docker demo.
+See <<Docker demo>> for details.
 
 === Going Further
 
-When you feel ready to experiment with the project, or if the steps above don't quite cover what you're planning to do, please look into the <<Recipes>> section.
+When you feel ready to experiment with the project, or if the steps above
+don't quite cover what you're planning to do, please look into the <<Recipes>>
+section.
 
-TIP: In addition, we now have a link:https://opfab.github.io/documentation/0.1.1.RELEASE/start/[Getting Started guide on our website], check it out.
+TIP: In addition, a
+link:https://opfab.github.io/documentation/0.1.1.RELEASE/start/[Getting
+Started guide on our website] exists.
+Check it out !
 
 == Project Contents
 
@@ -295,51 +329,81 @@ project
 ==== Content Details
 
 * link:bin[bin]: contains useful scripts
-** link:bin/travis[travis]: travis script for documentation generation and upload to opfab.github.io repository
-* link:client[client]: contains REST APIs simple beans definition, may be used by external projects
+** link:bin/travis[travis]: travis script for documentation generation and
+upload to opfab.github.io repository
+* link:client[client]: contains REST APIs simple beans definition, may be
+used by external projects
 ** link:client/cards[cards (cards-client-data)]: simple beans regarding cards
-** link:client/src[src]: contains swagger templates for link:client[client] code generation
+** link:client/src[src]: contains swagger templates for link:client[client]
+code generation
 ** link:client/time[time (time-client-data)]: simple beans regarding time
 ** link:client/users[users (users-client-data)]: simple beans regarding users
-* link:docker-standalone-images[docker-standalone-images]: contains a standalone docker image for demonstration purposes
-* link:services[services]: contains the microservices that make up OperatorFabric
+* link:docker-standalone-images[docker-standalone-images]: contains a
+standalone docker image for demonstration purposes
+* link:services[services]: contains the microservices that make up
+OperatorFabric
 ** link:services/core[core]: contains core business microservices
-*** link:services/core/cards-consultation[cards-consultation (cards-consultation-business-service)]: Card consultation service
-*** link:services/core/cards-publication[cards-publication (cards-publication-business-service)]: Card publication service
-*** link:services/core/src[src]: contains swagger templates for core business microservices
-*** link:services/core/thirds[thirds (third-party-business-service)]: Third-party information management service
-*** link:services/core/time[time (time-business-service)]: Time management service
-*** link:services/core/users[users (users-business-service)]: Users management service
+*** link:services/core/cards-consultation[cards-consultation
+(cards-consultation-business-service)]: Card consultation service
+*** link:services/core/cards-publication[cards-publication
+(cards-publication-business-service)]: Card publication service
+*** link:services/core/src[src]: contains swagger templates for core business
+microservices
+*** link:services/core/thirds[thirds (third-party-business-service)]:
+Third-party information management service
+*** link:services/core/time[time (time-business-service)]: Time management
+service
+*** link:services/core/users[users (users-business-service)]: Users management
+service
 ** link:services/infra[infra]: contains infrastructure microservices
-*** link:services/infra/auth[auth (OAuth2-dev-server)]: Auth is a dummy development spring-oauth2 server used for testing and debugging other services
-*** link:services/infra/client-gateway[client-gateway (client-gateway-cloud-service)]: spring-gateway client side only gateway microservice, used to serve public apis and web ui
-*** link:services/infra/config[config (configuration-cloud-service)]: spring-configuration centralized configuration microservice
-*** link:services/infra/registry[registry (registry-cloud-service)]: eureka microservice registry
+*** link:services/infra/auth[auth (OAuth2-dev-server)]: Auth is a dummy
+development spring-oauth2 server used for testing and debugging other services
+*** link:services/infra/client-gateway[client-gateway
+(client-gateway-cloud-service)]: spring-gateway client side only gateway
+microservice, used to serve public apis and web ui
+*** link:services/infra/config[config (configuration-cloud-service)]:
+spring-configuration centralized configuration microservice
+*** link:services/infra/registry[registry (registry-cloud-service)]: eureka
+microservice registry
 ** link:services/web[web]: contains web pages and application services
 *** link:services/web/web-ui[web-ui]: Main OperatorFabric SPA
 * link:src[src]
 ** link:src/docs[docs]
-*** link:src/docs/asciidoc[asciidoc]: General documentation (Architecture, Getting Started Guide, etc.)
+*** link:src/docs/asciidoc[asciidoc]: General documentation (Architecture,
+Getting Started Guide, etc.)
 *** link:src/docs/modelio[modelio]: Archive containing documentation diagrams
 ** link:src/main[main]
-*** link:src/main/docker[docker]: contains docker-compose files to help with tests and demonstrations
+*** link:src/main/docker[docker]: contains docker-compose files to help with
+tests and demonstrations
 *** link:src/main/headers[headers]: contains license header files
 * link:tools[tools]
-** link:tools/generic[generic]: Generic (as opposed to Spring-related) utility code
-*** link:tools/generic/test-utilities[test-utilities]: Test-specific utility code
+** link:tools/generic[generic]: Generic (as opposed to Spring-related)
+utility code
+*** link:tools/generic/test-utilities[test-utilities]: Test-specific
+utility code
 *** link:tools/generic/utilities[utilities]: Utility code
 ** link:tools/spring[spring]: Spring-related utility code
-*** link:tools/spring/spring-amqp-time-utilities[spring-amqp-time-utilities] : Utility code with Spring-AMQP-specific dependencies, used to share common features across AMQP-dependent services
-*** link:tools/spring/spring-mongo-utilities[spring-mongo-utilities] : Utility code with Spring-specific dependencies, used to share common features across MongoDB-dependent services
-*** link:tools/spring/spring-oauth2-utilities[spring-oauth2-utilities] : Utility code with Spring-specific dependencies, used to share common features across OAuth2-dependent services
-*** link:tools/spring/spring-test-utilities[spring-test-utilities] : Utility code with Spring-specific dependencies for testing purposes
-*** link:tools/spring/spring-utilities[spring-utilities] : Utility code with Spring-specific dependencies
-** link:tools/swagger-spring-generators[swagger-spring-generators] : Spring Boot generator for swagger, tailored for OperatorFabric needs
+*** link:tools/spring/spring-amqp-time-utilities[spring-amqp-time-utilities]
+: Utility code with Spring-AMQP-specific dependencies, used to share common
+features across AMQP-dependent services
+*** link:tools/spring/spring-mongo-utilities[spring-mongo-utilities] : Utility
+code with Spring-specific dependencies, used to share common features across
+MongoDB-dependent services
+*** link:tools/spring/spring-oauth2-utilities[spring-oauth2-utilities] :
+Utility code with Spring-specific dependencies, used to share common features
+across OAuth2-dependent services
+*** link:tools/spring/spring-test-utilities[spring-test-utilities] : Utility
+code with Spring-specific dependencies for testing purposes
+*** link:tools/spring/spring-utilities[spring-utilities] : Utility code with
+Spring-specific dependencies
+** link:tools/swagger-spring-generators[swagger-spring-generators] : Spring
+Boot generator for swagger, tailored for OperatorFabric needs
 * link:ui[ui]: Angular sources for the UI
 
 === Conventions regarding project structure and configuration
 
-Sub-projects must conform to a few rules in order for the configured Gradle tasks to work:
+Sub-projects must conform to a few rules in order for the configured Gradle
+tasks to work:
 
 ==== Java
 
@@ -351,7 +415,8 @@ Sub-projects must conform to a few rules in order for the configured Gradle task
 
 ==== Modeling
 
-Core services projects declaring REST APIS that use Swagger for their definition must declare two files:
+Core services projects declaring REST APIS that use Swagger for their
+definition must declare two files:
 
 [horizontal]
 [sub-project]/src/main/modeling/swagger.yaml:: Swagger API definition
@@ -359,7 +424,8 @@ Core services projects declaring REST APIS that use Swagger for their definition
 
 ==== Docker
 
-Services project all have docker image generated in their build cycle (See <<Gradle Tasks>>).
+Services project all have docker image generated in their build cycle (See
+<<Gradle Tasks>>).
 
 Per project configuration :
 
@@ -372,10 +438,14 @@ can then be mounted as volume in docker containers.
 === Scripts (bin)
 
 [horizontal]
-bin/build_all.sh:: builds all artifacts as gradle is not able to manage inter project dependencies
-bin/clean_all.sh:: remove IDE data (project configuration, build output directory) - idea, vsc
-bin/load_environment_light.sh:: sets up environment when *sourced* (java version, gradle version, maven version, node version)
-bin/load_environment_ramdisk.sh:: sets up environment and links build subdirectories to a ramdisk when *sourced* at ~/tmp
+bin/build_all.sh:: builds all artifacts as gradle is not able to manage
+inter project dependencies
+bin/clean_all.sh:: remove IDE data (project configuration, build output
+directory) - idea, vsc
+bin/load_environment_light.sh:: sets up environment when *sourced* (java
+version, gradle version, maven version, node version)
+bin/load_environment_ramdisk.sh:: sets up environment and links build
+subdirectories to a ramdisk when *sourced* at ~/tmp
 bin/run_all.sh:: runs all all services (see below)
 bin/setup_dockerized_environment.sh:: generate docker images for all services
 
@@ -397,33 +467,34 @@ Prerequisites
 * mongo running on port 27017 with user "root" and password "password"
 (See src/main/docker/mongodb/docker-compose.yml for a pre configured instance).
 * rabbitmq running on port 5672 with user "guest" and password "guest"
-(See src/main/docker/rabbitmq/docker-compose.yml for a pre configured instance).
+(See src/main/docker/rabbitmq/docker-compose.yml for a pre configured
+instance).
 
 +++ <details><summary> +++
 **Ports configuration**
 +++ </summary><div> +++
 
 |===
-|Port | | 
+|Port | |
 
-|2000 |config |Configuration service http (REST) 
-|2001 |registry |Registry service http (REST) 
-|2002 |gateway |Gateway service http (REST+html) 
-|2100 |thirds |Third party management service http (REST) 
-|2101 |time |Time management service http (REST) 
-|2102 |cards-publication |card publication service http (REST) 
-|2103 |users |Users management service http (REST) 
-|2104 |cards-consultation |card consultation service http (REST) 
-|3000 |oauth |Oauth development service http (REST) 
-|4000 |config |java debug port 
-|4001 |registry |java debug port 
-|4002 |gateway |java debug port 
-|4100 |thirds |java debug port 
-|4101 |time |java debug port 
-|4102 |cards-publication |java debug port 
-|4103 |users |java debug port 
-|4103 |cards-consultation |java debug port 
-|5000 |oauth |java debug port 
+|2000 |config |Configuration service http (REST)
+|2001 |registry |Registry service http (REST)
+|2002 |gateway |Gateway service http (REST+html)
+|2100 |thirds |Third party management service http (REST)
+|2101 |time |Time management service http (REST)
+|2102 |cards-publication |card publication service http (REST)
+|2103 |users |Users management service http (REST)
+|2104 |cards-consultation |card consultation service http (REST)
+|3000 |oauth |Oauth development service http (REST)
+|4000 |config |java debug port
+|4001 |registry |java debug port
+|4002 |gateway |java debug port
+|4100 |thirds |java debug port
+|4101 |time |java debug port
+|4102 |cards-publication |java debug port
+|4103 |users |java debug port
+|4103 |cards-consultation |java debug port
+|5000 |oauth |java debug port
 |===
 
 +++ </div></details> +++
@@ -432,11 +503,13 @@ Prerequisites
 
 Please see `setup_dockerized_environment.sh -h` usage before running.
 
-Builds all sub-projects, generate docker images and volumes for docker-compose, also sets up docker network "opfabnet" if needed.
+Builds all sub-projects, generate docker images and volumes for docker-compose,
+also sets up docker network "opfabnet" if needed.
 
 == Environment variables
 
-These variables are loaded by bin/load_environment_light.sh bin/load_environment_ramdisk.sh
+These variables are loaded by bin/load_environment_light.sh
+bin/load_environment_ramdisk.sh
 
 * OF_HOME: OperatorFabric root dir
 * OF_CORE: OperatorFabric business services subroot dir
@@ -446,7 +519,8 @@ These variables are loaded by bin/load_environment_light.sh bin/load_environment
 
 Additionally, you may want to configure the following variables
 
-* Docker build proxy configuration (used to configure alpine apk proxy settings)
+* Docker build proxy configuration (used to configure alpine apk proxy
+settings)
 ** APK_PROXY_URI
 ** APK_PROXY_HTTPS_URI
 ** APK_PROXY_USER
@@ -457,7 +531,8 @@ Additionally, you may want to configure the following variables
 == Custom tasks
 
 In this section only custom tasks are described. For more
-information on tasks, refer to the output of the "tasks" gradle task and to gradle
+information on tasks, refer to the output of the "tasks" gradle task and
+to gradle
 and plugins official documentation.
 
 ==== Services
@@ -467,52 +542,68 @@ and plugins official documentation.
 * Test tasks
 ** unitTest: runs unit tests
 * Other:
-** copyWorkingDir: copies [sub-project]/src/main/docker/volume to [sub-project]/build/
-** copyDependencies: copy dependencies to build/libs ###
+** copyWorkingDir: copies [sub-project]/src/main/docker/volume to
+[sub-project]/build/
+** copyDependencies: copy dependencies to build/libs
 
 ===== Core
 
 * Swagger Generator tasks
-** debugSwaggerOperations: generate swagger code from /src/main/modeling/config.json to build/swagger-analyse
+** debugSwaggerOperations: generate swagger code from
+/src/main/modeling/config.json to build/swagger-analyse
 ** swaggerHelp: display help regarding swagger configuration options for java
 
 ===== Third Party Service
 
 * Test tasks
 ** prepareTestDataDir: prepare directory (build/test-data) for test data
-** compressBundle1Data, compressBundle2Data: generate tar.gz third party configuration data for tests in build/test-data
+** compressBundle1Data, compressBundle2Data: generate tar.gz third party
+configuration data for tests in build/test-data
 ** prepareDevDataDir: prepare directory (build/dev-data) for bootRun task
-** createDevData: prepare data in build/test-data for running bootRun task during development
+** createDevData: prepare data in build/test-data for running bootRun task
+during development
 * Other tasks
-** copyCompileClasspathDependencies: copy compile classpath dependencies, catching lombok that must be sent for sonarqube
+** copyCompileClasspathDependencies: copy compile classpath dependencies,
+catching lombok that must be sent for sonarqube
 
 ===== infra/config
 
 * Test tasks
-** createDevData: prepare data in build/test-data for running bootRun task during development
+** createDevData: prepare data in build/test-data for running bootRun task
+during development
 
 ===== tools/generic
 
 * Test tasks
-** prepareTestData: copy test data from src/test/data/simple to build/test-data/
-** compressTestArchive: compress the contents of /src/test/data/archive to /build/test-data/archive.tar.gz
+** prepareTestData: copy test data from src/test/data/simple to
+build/test-data/
+** compressTestArchive: compress the contents of /src/test/data/archive to
+/build/test-data/archive.tar.gz
 
 ==== Gradle Plugins
 
-In addition to these custom tasks and standard Gradle tasks, OperatorFabric uses several Gradle plugins, among which:
+In addition to these custom tasks and standard Gradle tasks, OperatorFabric
+uses several Gradle plugins, among which:
 
-* link:https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/[Spring Boot Gradle Plugin]
+*
+link:https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/[Spring
+Boot Gradle Plugin]
 * link:https://github.com/palantir/gradle-docker[Palantir Docker Gradle Plugin]
-* link:https://github.com/avast/gradle-docker-compose-plugin/[Docker Compose Plugin]
-* link:https://github.com/int128/gradle-swagger-generator-plugin[Gradle Swagger Generator Plugin]
-* link:https://github.com/asciidoctor/asciidoctor-gradle-plugin[Gradle Asciidoctor Plugin]
+* link:https://github.com/avast/gradle-docker-compose-plugin/[Docker Compose
+Plugin]
+* link:https://github.com/int128/gradle-swagger-generator-plugin[Gradle
+Swagger Generator Plugin]
+* link:https://github.com/asciidoctor/asciidoctor-gradle-plugin[Gradle
+Asciidoctor Plugin]
 
 == Docker demo
 
 Global docker compose files for demonstration purposes are available at :
 
-* link:src/main/docker/demo[src/main/docker/demo] : sets up all services, generate a dummy card every 5 seconds
-* link:src/main/docker/deploy[src/main/docker/deploy] : sets up all services, ready for card reception
+* link:src/main/docker/demo[src/main/docker/demo] : sets up all services,
+generate a dummy card every 5 seconds
+* link:src/main/docker/deploy[src/main/docker/deploy] : sets up all services,
+ready for card reception
 
 *These demo setups expose the application UI at localhost:2002/ui/*
 
@@ -563,11 +654,15 @@ For debugging purpose the following ports are also exposed:
 To Generate all docker images run `bin/setup_dockerized_environment`,
 it will generate all images and also generate an opfabnet docker network
 
-INFORMATION: If you work behind a proxy you need to specify the following properties to
+INFORMATION: If you work behind a proxy you need to specify the following
+properties to
 configure alpine apk package manager:
 
-* apk.proxy.uri: proxy http uri ex: "http://somewhere:3128[http://somewhere:3128]" (defaults to blank)
-* apk.proxy.httpsuri: proxy http uri ex: "http://somewhere:3128[http://somewhere:3128]" (defaults to apk.proxy.uri value)
+* apk.proxy.uri: proxy http uri ex:
+"http://somewhere:3128[http://somewhere:3128]" (defaults to blank)
+* apk.proxy.httpsuri: proxy http uri ex:
+"http://somewhere:3128[http://somewhere:3128]" (defaults to apk.proxy.uri
+value)
 * apk.proxy.user: proxy user
 * apk.proxy.password: proxy *unescaped* password
 
@@ -588,8 +683,10 @@ example for the third-party-service service :
 gradle :services:core:third-party-service:composeUp
 `
 * To tear down a service run `gradle :[subprojectPath]:composeDown`
-* To start an already containerized service run `gradle :[subprojectPath]:composeStart`
-* To stop an already containerized service run `gradle :[subprojectPath]:composeStop`
+* To start an already containerized service run `gradle
+:[subprojectPath]:composeStart`
+* To stop an already containerized service run `gradle
+:[subprojectPath]:composeStop`
 * To follow logs of a running service run `gradle :[subprojectPath]:composeLog`
 
 === Running sub-project from jar file
@@ -599,41 +696,47 @@ gradle :services:core:third-party-service:composeUp
 
 === Overriding properties when running from jar file
 
-* java -jar [sub-projectPath]/build/libs/[sub-project].jar –spring.config.additional-location=file:[filepath]
-NB : properties may be set using ".properties" file or ".yml" file. See https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[Spring Boot configuration] for more info.
+* java -jar [sub-projectPath]/build/libs/[sub-project].jar
+–spring.config.additional-location=file:[filepath]
+NB : properties may be set using ".properties" file or ".yml" file. See
+https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[Spring
+Boot configuration] for more info.
 * Generic property list extract :
 ** server.port (defaults to 8080) : embedded server port
 * :services:core:third-party-service properties list extract :
-** operatorfabric.thirds.storage.path (defaults to &quot;&quot;) : where to save/load OperatorFabric Third Party data
+** operatorfabric.thirds.storage.path (defaults to &quot;&quot;) : where to
+save/load OperatorFabric Third Party data
 
 === Service port table
 
-By default all service built artifacts are configured with server.port set to 8080
+By default all service built artifacts are configured with server.port set
+to 8080
 
-If you run the services using `bootRun` Gradle task or the provided docker-compose files (see [prj]/src/main/docker) the ports used are
+If you run the services using `bootRun` Gradle task or the provided
+docker-compose files (see [prj]/src/main/docker) the ports used are
 
 [cols="<,>,>,>"]
 |===
-|Service |bootRun port |docker-compose mapping |docker-compose debug mapping 
+|Service |bootRun port |docker-compose mapping |docker-compose debug mapping
 
-|registry |2001 |2001 |2001 
-|gateway |2002 |2002 |2002 
-|thirds |2100 |2100 |2100 
-|time |2101 |2101 |2101 
-|cards-publication |2102 |2102 |2102 
-|users |2103 |2103 |2103 
-|cards-consultation |2104 |2104 |2104 
-|oauth |3000 |3000 |3000 
-|config |4000 |4000 |4000 
-|registry |4001 |4001 |4001 
-|gateway |4002 |4002 |4002 
-|thirds |4100 |4100 |4100 
-|time |4101 |4101 |4101 
-|cards-publication |4102 |4102 |4102 
-|users |4103 |4103 |4103 
-|cards-consultation |4103 |4103 |4103 
-|oauth |5000 |5000 |5000 
-|oauth |5000 |5000 |5000 
+|registry |2001 |2001 |2001
+|gateway |2002 |2002 |2002
+|thirds |2100 |2100 |2100
+|time |2101 |2101 |2101
+|cards-publication |2102 |2102 |2102
+|users |2103 |2103 |2103
+|cards-consultation |2104 |2104 |2104
+|oauth |3000 |3000 |3000
+|config |4000 |4000 |4000
+|registry |4001 |4001 |4001
+|gateway |4002 |4002 |4002
+|thirds |4100 |4100 |4100
+|time |4101 |4101 |4101
+|cards-publication |4102 |4102 |4102
+|users |4103 |4103 |4103
+|cards-consultation |4103 |4103 |4103
+|oauth |5000 |5000 |5000
+|oauth |5000 |5000 |5000
 |===
 
 == Troubleshooting
@@ -650,10 +753,13 @@ ERROR: Get https://registry-1.docker.io/v2/: Proxy Authentication Required
 ----
 
 .Possible causes & resolution
-When running docker-compose files using third-party images(such as rabbitmq, mongodb etc.) the first time, docker will need to pull these images from their repositories.
+When running docker-compose files using third-party images(such as rabbitmq,
+mongodb etc.) the first time, docker will need to pull these images from
+their repositories.
 If the docker proxy isn't set properly, you will see the above message.
 
-To set the proxy, follow https://docs.docker.com/config/daemon/systemd/[these steps from the docker documentation].
+To set the proxy, follow https://docs.docker.com/config/daemon/systemd/[these
+steps from the docker documentation].
 
 If your proxy needs authentication, add your user and password as follows:
 ----
@@ -678,14 +784,16 @@ Metaspace
 ----
 
 .Possible causes & resolution
-Issue with the Gradle daemon. Stopping the daemon using `gradle --stop` and re-launching the build should solve this issue.
+Issue with the Gradle daemon. Stopping the daemon using `gradle --stop`
+and re-launching the build should solve this issue.
 
 +++ </div></details> +++
 
 +++ <details><summary> +++
 **Java version not available when setting up environment**
 +++ </summary><div> +++
-When sourcing the link:bin/load_environment_light.sh[load_environment_light] script to set up your environment, you might get the following error message:
+When sourcing the link:bin/load_environment_light.sh[load_environment_light]
+script to set up your environment, you might get the following error message:
 
 .Error message
 [source]
@@ -696,12 +804,17 @@ Stop! java 8.0.192-zulu is not available. Possible causes:
  * java has not been released yet
 ----
 
-Select the next available version and update link:bin/load_environment_light.sh[load_environment_light] accordingly before sourcing it again.
+Select the next available version and update
+link:bin/load_environment_light.sh[load_environment_light] accordingly before
+sourcing it again.
 
 .Possible causes & resolution
-The java version currently listed in the script might have been deprecated (for security reasons) or might not be available for your operating system (for example, 8.0.192-zulu wasn't available for Ubuntu).
+The java version currently listed in the script might have been deprecated
+(for security reasons) or might not be available for your operating system
+(for example, 8.0.192-zulu wasn't available for Ubuntu).
 
-Run `sdk list java` to find out which versions are available. You will get this kind of output:
+Run `sdk list java` to find out which versions are available. You will get
+this kind of output:
 
 [source]
 ----
@@ -733,6 +846,17 @@ Available Java Versions
 
 
 +++ </div></details> +++
+
+== Licensing
+
+This project and all its sub-projects are licensed under
+https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2.0]. See
+link:LICENSE.txt[LICENSE.txt]
+
+== Contributing
+
+Read our link:CONTRIBUTING.adoc[CONTRIBUTING] file for more information on
+how to contribute to the project.
 
 //+++ <details><summary> +++
 //**Error summary**

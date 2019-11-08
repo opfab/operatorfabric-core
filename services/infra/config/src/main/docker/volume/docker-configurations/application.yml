@@ -36,6 +36,14 @@ operatorfabric:
       client-id: opfab-client
       client-secret: opfab-keycloak-secret
     jwt:
+<<<<<<< HEAD
       login-claim: preferred_username    
       expire-claim: exp
 #logging.level.root: DEBUG     
+=======
+      login-claim: preferred_username
+      sub-claim: sub
+      given-name-claim: given_name
+      family-name-claim: family_name
+      expire-claim: exp
+>>>>>>> master
