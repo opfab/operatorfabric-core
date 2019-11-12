@@ -20,28 +20,16 @@ import java.time.Instant;
  * @author David Binder
  */
 @Repository
-public interface CardRepository extends ReactiveMongoRepository<CardConsultationData, String>, CardOperationRepository {
+public interface CardRepository extends ReactiveMongoRepository<CardConsultationData, String>, CardOperationRepository, CardCustomRepository {
 
-    /**
-     * Finds card by processID (i.e. process current state)
-     *
-     * @param processId for which we want to find card
-     * @return card with given processId
-     */
-    public Mono<CardConsultationData> findByProcessId(String processId);
+//    /**
+//     * Finds next card if any whose startDate is before a specified date
+//     * @param pivotalInstant specified reference date
+//     * @return Card result or empty Mono
+//     */
+//    Mono<CardConsultationData> findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(Instant pivotalInstant);
+//
 
-    /**
-     * Finds next card if any whose startDate is before a specified date
-     * @param pivotalInstant specified reference date
-     * @return Card result or empty Mono
-     */
-    public Mono<CardConsultationData> findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(Instant pivotalInstant);
-
-    /**
-     * Finds next card if any whose startDate is after a specified date
-     * @param pivotalInstant specified reference date
-     * @return Card result or empty Mono
-     */
-    public Mono<CardConsultationData> findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(Instant pivotalInstant);
+//    Mono<CardConsultationData> findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(Instant pivotalInstant);
 
 }

@@ -9,6 +9,9 @@ package org.lfenergy.operatorfabric.cards.consultation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
 import org.jetbrains.annotations.NotNull;
 import org.lfenergy.operatorfabric.cards.consultation.model.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
@@ -18,14 +21,18 @@ import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import static java.nio.charset.Charset.forName;
 import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
 
 @Slf4j
@@ -53,7 +60,11 @@ public class TestUtilities {
         return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups);
     }
 
-    public static CardConsultationData createSimpleCard(String processSuffix, Instant publication, Instant start, Instant end, String login, String... groups) {
+    public static CardConsultationData createSimpleCard(String processSuffix
+            , Instant publication
+            , Instant start
+            , Instant end
+            , String login, String... groups) {
         CardConsultationData.CardConsultationDataBuilder cardBuilder = CardConsultationData.builder()
                 .processId("PROCESS" + processSuffix)
                 .publisher("PUBLISHER")
@@ -65,9 +76,9 @@ public class TestUtilities {
                 .summary(I18nConsultationData.builder().key("summary").build())
                 .recipient(computeRecipient(login, groups));
 
-        if(groups!=null && groups.length>0)
+        if (groups != null && groups.length > 0)
             cardBuilder.groupRecipients(Arrays.asList(groups));
-        if(login!=null)
+        if (login != null)
             cardBuilder.orphanedUser(login);
         CardConsultationData card = cardBuilder.build();
         prepareCard(card, publication);
@@ -77,26 +88,26 @@ public class TestUtilities {
     private static Recipient computeRecipient(String login, String... groups) {
         Recipient userRecipient = null;
         Recipient groupRecipient = null;
-        if (login != null){
+        if (login != null) {
             userRecipient = RecipientConsultationData.builder()
                     .type(USER)
                     .identity(login)
                     .build();
         }
 
-        if(groups!=null && groups.length>0){
+        if (groups != null && groups.length > 0) {
             RecipientConsultationData.RecipientConsultationDataBuilder groupRecipientBuilder = RecipientConsultationData.builder()
                     .type(UNION);
-            for(String group:groups)
+            for (String group : groups)
                 groupRecipientBuilder.recipient(RecipientConsultationData.builder().type(GROUP).identity(group).build());
             groupRecipient = groupRecipientBuilder.build();
         }
 
-        if(userRecipient!=null && groupRecipient!=null)
+        if (userRecipient != null && groupRecipient != null)
             return RecipientConsultationData.builder().type(UNION).recipient(userRecipient).recipient(groupRecipient).build();
-        else if (userRecipient!=null)
+        else if (userRecipient != null)
             return userRecipient;
-        else if (groupRecipient!=null)
+        else if (groupRecipient != null)
             return groupRecipient;
 
         return RecipientConsultationData.builder()
@@ -150,9 +161,9 @@ public class TestUtilities {
                 .summary(I18nConsultationData.builder().key("summary").build())
                 .recipient(computeRecipient(login, groups));
 
-        if(groups!=null && groups.length>0)
+        if (groups != null && groups.length > 0)
             archivedCardBuilder.groupRecipients(Arrays.asList(groups));
-        if(login!=null)
+        if (login != null)
             archivedCardBuilder.userRecipient(login);
         ArchivedCardConsultationData archivedCard = archivedCardBuilder.build();
         prepareArchivedCard(archivedCard, publication);
@@ -172,17 +183,17 @@ public class TestUtilities {
 
         boolean result = true;
 
-        if (rangeStart!=null && rangeEnd!=null) {
+        if (rangeStart != null && rangeEnd != null) {
             result = (
                     //Case 1: Card start date is included in query filter range
-                    (cardStart.compareTo(rangeStart)>=0&&cardStart.compareTo(rangeEnd)<=0) ||
+                    (cardStart.compareTo(rangeStart) >= 0 && cardStart.compareTo(rangeEnd) <= 0) ||
                             //Case 2: Card start date is before start of query filter range
-                            (cardStart.compareTo(rangeStart)<=0&&(cardEnd==null||cardEnd.compareTo(rangeStart)>=0))
+                            (cardStart.compareTo(rangeStart) <= 0 && (cardEnd == null || cardEnd.compareTo(rangeStart) >= 0))
             );
-        } else if (rangeStart!=null) {
-            result = ((cardEnd==null)||cardEnd.compareTo(rangeStart)>=0);
-        } else if (rangeEnd!=null) {
-            result = cardStart.compareTo(rangeEnd)<=0;
+        } else if (rangeStart != null) {
+            result = ((cardEnd == null) || cardEnd.compareTo(rangeStart) >= 0);
+        } else if (rangeEnd != null) {
+            result = cardStart.compareTo(rangeEnd) <= 0;
         }
 
         return result;
@@ -190,13 +201,13 @@ public class TestUtilities {
 
     public static boolean checkIfPageIsSorted(Page<LightCardConsultationData> page) {
 
-        if(page.getContent() == null || page.getContent().isEmpty()) {
+        if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;
-        } else if (page.getContent().size()==1) {
+        } else if (page.getContent().size() == 1) {
             return true;
         } else {
-            for(int i= 1 ;i < page.getContent().size(); i++) {
-                if(page.getContent().get(i-1).getPublishDate().isBefore(page.getContent().get(i).getPublishDate())) {
+            for (int i = 1; i < page.getContent().size(); i++) {
+                if (page.getContent().get(i - 1).getPublishDate().isBefore(page.getContent().get(i).getPublishDate())) {
                     return false;
                 }
             }
@@ -206,7 +217,7 @@ public class TestUtilities {
 
     }
 
-    public static boolean checkIfCardsFromPageMeetCriteria(Page<LightCardConsultationData> page, Predicate<LightCardConsultationData> criteria){
+    public static boolean checkIfCardsFromPageMeetCriteria(Page<LightCardConsultationData> page, Predicate<LightCardConsultationData> criteria) {
 
         if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;
@@ -224,21 +235,66 @@ public class TestUtilities {
      * Returns true if <code>listA</code> contains any of the items in <code>listB</code> :
      *
      * @param listA only cards published earlier than this will be fetched
-     * @param listB       start of search range
+     * @param listB start of search range
      * @return boolean indicating whether listA contains any of the items in listB
      */
     public static boolean checkIfContainsAny(List<String> listA, List<String> listB) {
-        if(listA == null || listA.isEmpty()|| listB == null || listB.isEmpty()) {
+        if (listA == null || listA.isEmpty() || listB == null || listB.isEmpty()) {
             return false;
         }
-        for(int i = 0; i < listB.size(); i++) {
-            if(listA.contains(listB.get(i))) {
+        for (int i = 0; i < listB.size(); i++) {
+            if (listA.contains(listB.get(i))) {
                 return true;
             }
         }
         return false;
     }
 
-//TODO Method to check if a flux of pages are sorted
+    //TODO Method to check if a flux of pages are sorted
+//
+    public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card, String user, Instant startDate, String... groups) {
+        card.setStartDate(startDate);
+        card.setGroupRecipients(Arrays.asList(groups));
+        card.setUserRecipients(Arrays.asList(user));
+        return card;
+    }
 
+    public static List<CardConsultationData> instantiateCardConsultationData(EasyRandom generator,
+                                                               int cardNumber) {
+        return generator.objects(CardConsultationData.class, cardNumber).collect(Collectors.toList());
+    }
+
+    public static List<CardConsultationData> instantiateSeveralCardConsultationData(int cardNumber){
+        return instantiateCardConsultationData(instantiateEasyRandom(),cardNumber);
+    }
+
+    public static CardConsultationData instantiateOneCardConsultationData(){
+        return instantiateSeveralCardConsultationData(1).get(0);
+    }
+
+    @NotNull
+    public static EasyRandom instantiateEasyRandom() {
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plus(1, ChronoUnit.DAYS);
+
+        LocalTime nine = LocalTime.of(9, 0);
+        LocalTime fifteen = LocalTime.of(17, 0);
+
+        EasyRandomParameters parameters = new EasyRandomParameters()
+                .seed(5467L)
+                .objectPoolSize(100)
+                .randomizationDepth(3)
+                .charset(forName("UTF-8"))
+                .timeRange(nine, fifteen)
+                .dateRange(today, tomorrow)
+                .stringLengthRange(5, 50)
+                .collectionSizeRange(1, 10)
+                .excludeField(FieldPredicates.named("data"))
+                .excludeField(FieldPredicates.named("orphanedUsers"))
+                .scanClasspathForConcreteTypes(true)
+                .overrideDefaultInitialization(false)
+                .ignoreRandomizationErrors(true);
+
+        return new EasyRandom(parameters);
+    }
 }

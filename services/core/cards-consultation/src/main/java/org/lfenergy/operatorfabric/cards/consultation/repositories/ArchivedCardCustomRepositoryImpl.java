@@ -54,43 +54,31 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     }
 
     public Mono<ArchivedCardConsultationData> findByIdWithUser(String id, User user) {
-        Query query = new Query();
-
-        List<Criteria> criteria = new ArrayList<>();
-
-        criteria.add(Criteria.where("_id").is(id));
-        criteria.addAll(userCriteria(user));
-
-        if(!criteria.isEmpty()){
-            query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
-        }
-
-        return template.findOne(query,ArchivedCardConsultationData.class);
-
+        return findByIdWithUser(template, id, user, ArchivedCardConsultationData.class);
     }
 
-    public Mono<Page<LightCardConsultationData>> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
+    public Mono<Page<LightCardConsultationData>> findWithUserAndParams(Tuple2<User, MultiValueMap<String, String>> params) {
         Query query = createQueryFromUserAndParams(params);
 
         //Handle Paging
         Pageable pageableRequest = createPageableFromParams(params.getT2());
-        if(pageableRequest.isPaged()) {
-            return template.find(query.with(pageableRequest),LightCard.class,ARCHIVED_CARDS_COLLECTION)
+        if (pageableRequest.isPaged()) {
+            return template.find(query.with(pageableRequest), LightCard.class, ARCHIVED_CARDS_COLLECTION)
                     .map(lightCard -> (LightCardConsultationData) lightCard)
                     .collectList()
-                    .zipWith(template.count(query,LightCard.class,ARCHIVED_CARDS_COLLECTION))
-                    .map(tuple -> new PageImpl<>(tuple.getT1(),pageableRequest,tuple.getT2()));
+                    .zipWith(template.count(query, LightCard.class, ARCHIVED_CARDS_COLLECTION))
+                    .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, tuple.getT2()));
         } else {
-            return template.find(query,LightCard.class,ARCHIVED_CARDS_COLLECTION)
+            return template.find(query, LightCard.class, ARCHIVED_CARDS_COLLECTION)
                     .map(lightCard -> (LightCardConsultationData) lightCard)
                     .collectList()
-                    .map(results ->  new PageImpl<>(results));
+                    .map(results -> new PageImpl<>(results));
         }
         //The class used as a parameter for the find & count methods is LightCard (and not LightCardConsultationData) to make use of the existing LightCardReadConverter
     }
 
     private Pageable createPageableFromParams(MultiValueMap<String, String> queryParams) {
-        if(queryParams.containsKey(PAGE_PARAM)&&queryParams.containsKey(PAGE_SIZE_PARAM)) {
+        if (queryParams.containsKey(PAGE_PARAM) && queryParams.containsKey(PAGE_SIZE_PARAM)) {
             return PageRequest.of(Integer.parseInt(queryParams.getFirst(PAGE_PARAM)), Integer.parseInt(queryParams.getFirst(PAGE_SIZE_PARAM)));
         } else if (queryParams.containsKey(PAGE_PARAM)) {
             //If page number is specified but not size, use default size
@@ -103,7 +91,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         }
     }
 
-    private Query createQueryFromUserAndParams(Tuple2<User,MultiValueMap<String, String>> params) {
+    private Query createQueryFromUserAndParams(Tuple2<User, MultiValueMap<String, String>> params) {
 
         Query query = new Query();
 
@@ -118,8 +106,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         /* Check that parameters that should be unique are */
         UNIQUE_PARAMETERS.forEach(paramKey -> {
-            if(queryParams.containsKey(paramKey)) {
-                if(queryParams.get(paramKey).size()>1) {
+            if (queryParams.containsKey(paramKey)) {
+                if (queryParams.get(paramKey).size() > 1) {
                     //TODO THROW ERROR
                 }
             }
@@ -137,9 +125,9 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         criteria.addAll(regularParametersCriteria(queryParams));
 
         /* Add user criteria */
-        criteria.addAll(userCriteria(user));
+        criteria.addAll(computeCriteriaList4User(user));
 
-        if(!criteria.isEmpty()){
+        if (!criteria.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
         }
 
@@ -154,7 +142,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         params.forEach((key, values) -> {
 
-            if(!SPECIAL_PARAMETERS.contains(key)) {
+            if (!SPECIAL_PARAMETERS.contains(key)) {
                 criteria.add(Criteria.where(key).in(values));
             }
 
@@ -168,14 +156,14 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         List<Criteria> criteria = new ArrayList<>();
 
-        if(params.containsKey(PUBLISH_DATE_FROM_PARAM)&&params.containsKey(PUBLISH_DATE_TO_PARAM)) {
+        if (params.containsKey(PUBLISH_DATE_FROM_PARAM) && params.containsKey(PUBLISH_DATE_TO_PARAM)) {
             criteria.add(Criteria.where(PUBLISH_DATE_FIELD)
                     .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_PARAM))))
                     .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_PARAM)))));
-        } else if(params.containsKey(PUBLISH_DATE_FROM_PARAM)) {
+        } else if (params.containsKey(PUBLISH_DATE_FROM_PARAM)) {
             criteria.add(Criteria.where(PUBLISH_DATE_FIELD)
                     .gte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_FROM_PARAM)))));
-        } else if(params.containsKey(PUBLISH_DATE_TO_PARAM)) {
+        } else if (params.containsKey(PUBLISH_DATE_TO_PARAM)) {
             criteria.add(Criteria.where(PUBLISH_DATE_FIELD)
                     .lte(Instant.ofEpochMilli(Long.parseLong(params.getFirst(PUBLISH_DATE_TO_PARAM)))));
         }
@@ -211,28 +199,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         } else if (params.containsKey(ACTIVE_TO_PARAM)) {
             Instant activeTo = Instant.ofEpochMilli(Long.parseLong(params.getFirst(ACTIVE_TO_PARAM)));
             criteria.add(Criteria.where(START_DATE_FIELD).lte(activeTo));
-        }
-
-        return criteria;
-
-    }
-
-    private List<Criteria> userCriteria(User user) {
-
-        List<Criteria> criteria = new ArrayList<>();
-
-        String login = user.getLogin();
-        List<String> groups = user.getGroups();
-
-        if(login!=null&&!(groups==null||groups.isEmpty())) {
-            criteria.add(new Criteria().orOperator(
-                    where("userRecipients").in(user.getLogin()),
-                    where("groupRecipients").in(user.getGroups())));
-        } else if (login!=null) {
-            criteria.add(new Criteria().orOperator(
-                    where("userRecipients").in(user.getLogin())));
-        } else if (!(groups==null||groups.isEmpty())) {
-            criteria.add(where("groupRecipients").in(user.getGroups()));
         }
 
         return criteria;

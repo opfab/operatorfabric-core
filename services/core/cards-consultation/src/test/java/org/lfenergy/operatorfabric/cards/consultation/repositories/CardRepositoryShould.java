@@ -21,6 +21,7 @@ import org.lfenergy.operatorfabric.cards.consultation.model.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,6 +30,8 @@ import reactor.test.StepVerifier;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -110,21 +113,26 @@ public class CardRepositoryShould {
 
     @Test
     public void fetchPrevious() {
-        StepVerifier.create(repository.findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(nowMinusTwo))
+        User currentUser = new User();
+        currentUser.setLogin("rte");
+        List<String> groups = new ArrayList<>();
+        groups.add("operator");
+        currentUser.setGroups(groups);
+        StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo,currentUser))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(nowMinusTwo.minusMillis(1000)))
+        StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo.minusMillis(1000),currentUser))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findFirstByStartDateGreaterThanEqualOrderByStartDateAscIdAsc(nowMinusTwo.plusMillis(1000)))
+        StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo.plusMillis(1000),currentUser))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS2");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusOne);
@@ -135,21 +143,26 @@ public class CardRepositoryShould {
 
     @Test
     public void fetchNext() {
-        StepVerifier.create(repository.findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(nowMinusTwo))
+        User currentUser = new User();
+        currentUser.setLogin("rte");
+        List<String> groups = new ArrayList<>();
+        groups.add("operator");
+        currentUser.setGroups(groups);
+        StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo,currentUser))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(nowMinusTwo.plusMillis(1000)))
+        StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo.plusMillis(1000),currentUser))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findFirstByStartDateLessThanEqualOrderByStartDateDescIdAsc(nowMinusTwo.minusMillis(1000)))
+        StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo.minusMillis(1000),currentUser))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS6");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusThree);

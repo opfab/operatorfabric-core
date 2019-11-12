@@ -1,0 +1,4 @@
+spring:
+  application:
+    name: cards-consultation
+logging.level.root: trace

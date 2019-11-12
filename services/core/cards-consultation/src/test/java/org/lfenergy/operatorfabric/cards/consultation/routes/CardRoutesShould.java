@@ -30,9 +30,11 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.test.StepVerifier;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardRoutesConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -53,7 +55,6 @@ public class CardRoutesShould {
     @AfterEach
     public  void cleanCardRepository(){
         repository.deleteAll().subscribe();
-
     }
 
     @Nested
@@ -76,7 +77,13 @@ public class CardRoutesShould {
 
         @Test
         public void findOutCard() {
-            CardConsultationData simpleCard = createSimpleCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
+            int oneHourInSeconds = 3600;
+            Instant now = Instant.now();
+            List<String> groups = Arrays.asList("SOME_GROUP");
+
+            CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard,"userWithGroup",now,"SOME_GROUP");
+
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
                     .expectComplete()
@@ -87,7 +94,8 @@ public class CardRoutesShould {
                     .expectBody(CardConsultationData.class).value(card -> {
                 assertThat(card)
                         //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "orphanedUsers")
+                        .usingComparatorForFields(new EmptyListComparator<String>(),
+                                "tags", "details", "userRecipients","orphanedUsers")
                         .isEqualToComparingFieldByFieldRecursively(simpleCard);
             });
         }
