@@ -135,10 +135,50 @@ sub-sections.
 
 |operatorfabric.security.oauth2.client-id|null|yes| Oauth2 client id used by operator fabric may be specific for each service
 |operatorfabric.security.oauth2.client-secret|null|yes| Oauth2 client secret used by operator fabric may be specific for each service
-|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim to use as user login or id
-|operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim to use as token expiration timestamp
+|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as an user login or id
+|operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim is used as a token expiration timestamp
+|===
+
+
+===== Creation user
+
+Setting the automation creation user. Creation user requires an user id. Given name and family name are optional.
 
 |===
+|name|default|mandatory?|Description
+
+|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as an user login or id
+|operatorfabric.security.jwt.given-name-claim|given-name|no| Jwt claim is used to set the user's given name
+|operatorfabric.security.jwt.family-name-claim|family-name|no| Jwt claim is used to set the user's family name
+|===
+
+
+===== Alternative way to manage groups
+
+By default, `Operator-Fabric` manage groups through the user's group. Another mode can be defined, the JWT mode. The groups come from the authentication token. The administrator of the authentication service has to set what claims define a group. In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve thoses groups.
+  
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.security.jwt.groups.mode|OPERATOR_FABRIC|no| Set the group mode, possible values JWT or OPERATOR_FABRIC 
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandard-claim.path||no| path in the JWT to retrieve the claim that defines a group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardArray.path||no| path in the JWT to retrieve the claim that defines an array of groups
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.path||no| path in the JWT to retrieve the claim that defines a list of group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.separator||no| set the separator value of the list of group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.path||no| path in the JWT to check if that path does exist, if it does, use the roleValue as a group 
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.roleValue||no| set the value of the group if the path exists
+|===
+
+_application.yml_
+```
+include::./example/application_JWT_group_config.yml[] 
+```
+_JWT example_
+```
+include::./example/jwt_example.json[]
+```
+
+As the result, the group will be [ATTR1, ATTR2, roleA, roleB, roleC, USER, roleBBB, roleAAA]
 
 === Per service Configuration Guides
 

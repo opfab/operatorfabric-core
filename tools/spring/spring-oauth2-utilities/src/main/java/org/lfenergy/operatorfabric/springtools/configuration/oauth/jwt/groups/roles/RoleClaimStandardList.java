@@ -1,0 +1,55 @@
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+/**
+ * Define the structure of the RoleClaimStandardList, an extension of RoleClaimStandard 
+ * that dealts the case of key/value whose the value is a list of roles separated by a separator.
+ * @author chengyli
+ *
+ */
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper=true)
+public class RoleClaimStandardList extends RoleClaimStandard {
+	
+	@NotNull
+	protected String separator;
+	
+	public RoleClaimStandardList(String path, String separator) {
+		this(path);
+		this.separator = separator;
+	}
+	
+	public RoleClaimStandardList(String path) {
+		super(path);
+	}
+
+	/**
+	 * The value is a list of roles separated by a separator.
+	 */	
+	@Override
+	public List<String> computeNodeElementRole(JsonNode jsonNodeElement) {
+		List<String> listGroupsResult = new ArrayList<>();
+		listGroupsResult.addAll(Arrays.asList((jsonNodeElement.asText()).split(separator)));	
+		return listGroupsResult;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("RoleClaimStandardList(path="+path+", separator=" + separator+")");
+		return sb.toString();
+	}
+	 
+}

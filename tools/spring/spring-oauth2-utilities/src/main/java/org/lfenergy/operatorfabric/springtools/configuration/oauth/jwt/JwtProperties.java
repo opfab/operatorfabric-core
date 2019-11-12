@@ -1,4 +1,4 @@
-package org.lfenergy.operatorfabric.users.configuration.jwt;
+package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,11 @@ import lombok.Data;
 @Data
 public class JwtProperties {
 	
-	public String subClaim;
-	public String givenNameClaim;
-	public String familyNameClaim;
+	// mandatory claim, default value
+	public String loginClaim = "sub";
+	
+	// optional claims
+	public String givenNameClaim = "given-name";
+	public String familyNameClaim = "family-name";
 
 }

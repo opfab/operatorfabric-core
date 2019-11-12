@@ -8,21 +8,26 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth.application;
 
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.UserServiceCache;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.UserServiceProxy;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.openfeign.support.SpringMvcContract;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.mock.HttpMethod;
 import feign.mock.MockClient;
 import feign.mock.MockTarget;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.UserServiceCache;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.UserServiceProxy;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.support.SpringMvcContract;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 
 /**
  * <p></p>
@@ -31,8 +36,9 @@ import org.springframework.context.annotation.Primary;
  * @author Alexandra Guironnet
  */
 @SpringBootApplication
+@EnableConfigurationProperties
 @Slf4j
-@Import({UserServiceCache.class})
+@Import({UserServiceCache.class, GroupsProperties.class, GroupsUtils.class, JwtProperties.class})
 public class UserServiceCacheTestApplication {
 
     public static void main(String[] args) {

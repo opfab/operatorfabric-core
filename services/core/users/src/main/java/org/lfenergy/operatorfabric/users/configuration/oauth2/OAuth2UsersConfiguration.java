@@ -7,21 +7,24 @@
 
 package org.lfenergy.operatorfabric.users.configuration.oauth2;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2GenericConfiguration;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.lfenergy.operatorfabric.users.configuration.jwt.JwtProperties;
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsProperties;
-import org.lfenergy.operatorfabric.users.configuration.jwt.groups.GroupsUtils;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsMode;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,6 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Alexandra Guironnet
  */
 @Configuration
+@Import({GroupsProperties.class, GroupsUtils.class, JwtProperties.class})
 @Slf4j
 @Data
 public class OAuth2UsersConfiguration {
@@ -69,10 +73,9 @@ public class OAuth2UsersConfiguration {
 
 			@Override
 			public AbstractAuthenticationToken convert(Jwt jwt) {
-				String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
+				String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
 
-				if (log.isDebugEnabled())
-					log.debug("\n\nUSER " + principalId + " with the token : \n" + jwt.getTokenValue()+"\n\n");
+				log.debug("USER " + principalId + " with the token : \n" + jwt.getTokenValue());
 
 				OAuth2JwtProcessingUtilities.token.set(jwt);
 				
@@ -81,38 +84,39 @@ public class OAuth2UsersConfiguration {
 				UserData user;
 				if (!optionalUser.isPresent()) {
 					user = createUserDataVirtualFromJwt(jwt);
-					if (log.isDebugEnabled())
-						log.debug("user virtual(non existed in opfab) : " + user.toString());
+					log.warn("user virtual(non existed in opfab) : " + user.toString());
 				} else {
 					user = optionalUser.get();
 				}
 				
 				OAuth2JwtProcessingUtilities.token.remove();
 				
-				List<GrantedAuthority> authorities = null;
-				switch (groupsProperties.getMode()) {
-					case OPERATOR_FABRIC : 
-						authorities = computeAuthorities(user);
-						break;
-					case JWT :
-						authorities = computeAuthorities(jwt);
-						break;
-					default : authorities = null;	
-				}
+				if (groupsProperties.getMode() == GroupsMode.JWT) {
+					// override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
+					user.setGroups(getGroupsList(jwt));
+				}				
+				List<GrantedAuthority> authorities = computeAuthorities(user);	
+					
+				log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
 								
 				return new OpFabJwtAuthenticationToken(jwt, user, authorities);
 			}
-
-						
+			
+            	
 			/**
 			 * create a temporal User from the jwt information without any group
 			 * @param jwt jwt
 			 * @return UserData
 			 */
 			private UserData createUserDataVirtualFromJwt(Jwt jwt) {
-				String principalId = jwt.getClaimAsString(jwtProperties.getSubClaim());
-				String givenName = jwt.getClaimAsString(jwtProperties.getGivenNameClaim());
-				String familyName = jwt.getClaimAsString(jwtProperties.getFamilyNameClaim());
+				String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
+				String givenName = null;
+				String familyName = null;
+				
+				if (null != jwtProperties.getGivenNameClaim())
+					givenName = jwt.getClaimAsString(jwtProperties.getGivenNameClaim());
+				if (null != jwtProperties.getFamilyNameClaim())
+					familyName = jwt.getClaimAsString(jwtProperties.getFamilyNameClaim());
 								
 				return new UserData(principalId, givenName, familyName, null);				
 			}
@@ -130,13 +134,14 @@ public class OAuth2UsersConfiguration {
 				.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size -> new String[size]));
 	}
 	
+
 	/**
-	 * Creates Authority list from a jwt
+	 * Creates group list from a jwt
 	 * 
 	 * @param jwt user's token
-	 * @return list of authority
+	 * @return a group list
 	 */
-	public List<GrantedAuthority> computeAuthorities(Jwt jwt) {
-		return groupsUtils.createAuthorityList(jwt);
+	public List<String> getGroupsList(Jwt jwt) {
+		return groupsUtils.createGroupsList(jwt);
 	}
 }
