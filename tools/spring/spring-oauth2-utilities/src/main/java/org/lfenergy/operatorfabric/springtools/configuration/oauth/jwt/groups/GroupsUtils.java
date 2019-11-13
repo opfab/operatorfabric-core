@@ -3,6 +3,7 @@ package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +28,7 @@ public class GroupsUtils {
 	/**
 	 * get a GrantedAuthority list from the Jwt 
 	 * @param jwt
-	 * @return List<GrantedAuthority>
+	 * @return List {@link GrantedAuthority}
 	 */
 	public List<GrantedAuthority> createAuthorityList(Jwt jwt) {
 		List<String> listGroupsFromListRolesClaim = createGroupsList(jwt);
@@ -58,7 +59,7 @@ public class GroupsUtils {
 	/**
 	 * get a GrantedAuthority list from a groups list
 	 * @param listGroups
-	 * @return List<GrantedAuthority>
+	 * @return List {@link GrantedAuthority}
 	 */
 	public List<GrantedAuthority> computeAuthorities(List<String> listGroups) {
 		return AuthorityUtils
