@@ -36,7 +36,7 @@ should be updated to X.X.X.RELEASE.
 . Update the revision date in *.adoc files:
 +
 ```
-:revdate: October 21, 2019
+:revdate: November 13, 2019
 ```
 
 . Commit with the model message:
