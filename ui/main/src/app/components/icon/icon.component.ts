@@ -23,9 +23,14 @@ export class IconComponent implements OnInit {
   @Input() dark:boolean;
   @Input() light:boolean;
   @Input() base64: string;
+  @Input() height:string;
+  @Input() width:string;
+  @Input() limitSize:boolean;
+
   size:string;
   sprites:string;
   iconPath:string;
+
   constructor(platformLocation: PlatformLocation, public _DomSanitizationService: DomSanitizer) {
       let baseHref = platformLocation.getBaseHrefFromDOM();
       this.iconPath = (baseHref?baseHref:'/')+'assets/images/icons/'
@@ -35,24 +40,52 @@ export class IconComponent implements OnInit {
     this.big = this.big != undefined;
     this.medium = this.medium != undefined && !this.big;
     this.small = this.small != undefined && !this.medium;
+    
     this.dark = this.dark != undefined;
     this.light = this.light != undefined && ! this.dark;
-    let size = this.big?'big':this.medium?'medium':'small'
-    switch (size) {
+
+    this.setWitdhAndHeight();
+
+    if(this.dark||this.light){
+      this.sprites='sprites-mono.svg'
+    }else{
+      this.sprites='sprites.svg'
+    }
+  }
+
+  private setWitdhAndHeight() {
+    // define height and witdh from properties, if not defined, set default values defined by the size string (small/medium/big)
+    if (this.height==undefined && this.width==undefined) {
+      let sizeTemp = this.big?'big':this.medium?'medium':'small'
+      switch (sizeTemp) {
         case 'big':
           this.size = '64px';
           break;
         case 'medium':
           this.size = '32px';
           break;
-         default:
+        case 'small':
           this.size = '16px';
+          break;
+        default:
+          this.size = '32px'  
+      }
+      this.height = this.size;
+      this.width = this.size;
     }
-    if(this.dark||this.light){
-      this.sprites='sprites-mono.svg'
-    }else{
-      this.sprites='sprites.svg'
+
+    // in case, we want to limit the icon size. By default, it is not limited.
+    if (this.limitSize) {
+      // max height equals to 32px
+      let heightTemp = Number(this.height.replace('px',''));
+      if (heightTemp > 32) 
+        this.height = '32px';
+
+      let witdhTemp = Number(this.width.replace('px',''));
+        if (witdhTemp > 200) 
+          this.width = '200px';
     }
+    
   }
 
 }
