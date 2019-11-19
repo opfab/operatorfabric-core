@@ -25,11 +25,15 @@ export class IconComponent implements OnInit {
   @Input() base64: string;
   @Input() height:string;
   @Input() width:string;
-  @Input() limitSize:boolean;
+  // default value, Administrator has to change explicitly
+  @Input() limitSize:boolean = true; 
 
   size:string;
   sprites:string;
   iconPath:string;
+
+  HEIGHT_MAX:Number =64;
+  WIDTH_MAX:Number = 200;
 
   constructor(platformLocation: PlatformLocation, public _DomSanitizationService: DomSanitizer) {
       let baseHref = platformLocation.getBaseHrefFromDOM();
@@ -56,7 +60,9 @@ export class IconComponent implements OnInit {
   private setWitdhAndHeight() {
     // define height and witdh from properties, if not defined, set default values defined by the size string (small/medium/big)
     if (this.height==undefined && this.width==undefined) {
-      let sizeTemp = this.big?'big':this.medium?'medium':'small'
+
+      let sizeTemp = this.big?'big':this.medium?'medium':this.small?'small':null;
+      console.log(sizeTemp, "resultat1");
       switch (sizeTemp) {
         case 'big':
           this.size = '64px';
@@ -68,23 +74,29 @@ export class IconComponent implements OnInit {
           this.size = '16px';
           break;
         default:
-          this.size = '32px'  
+          this.size = '16px'  
+        
       }
+      console.log(this.size, "resultat2");
+
       this.height = this.size;
       this.width = this.size;
     }
 
+    console.log(this.limitSize, "resultat3");
+
     // in case, we want to limit the icon size. By default, it is not limited.
     if (this.limitSize) {
-      // max height equals to 32px
       let heightTemp = Number(this.height.replace('px',''));
-      if (heightTemp > 32) 
-        this.height = '32px';
+      if (heightTemp > this.HEIGHT_MAX) 
+        this.height = this.HEIGHT_MAX+"px";
 
       let witdhTemp = Number(this.width.replace('px',''));
-        if (witdhTemp > 200) 
-          this.width = '200px';
+        if (witdhTemp > this.WIDTH_MAX) 
+          this.width = this.WIDTH_MAX+"px";
     }
+
+    console.log(this.height, "height, ", this.width, "width");
     
   }
 
