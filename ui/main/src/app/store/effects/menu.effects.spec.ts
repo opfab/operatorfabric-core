@@ -6,7 +6,7 @@
  */
 
 import {MenuEffects} from './menu.effects';
-import {getRandomAlphanumericValue, getRandomMenu} from '@tests/helpers';
+import {getRandomAlphanumericValue, getRandomMenus} from '@tests/helpers';
 import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
 import {LoadMenu, LoadMenuSuccess, SelectMenuLink, SelectMenuLinkSuccess} from "@ofActions/menu.actions";
@@ -17,7 +17,7 @@ describe('MenuEffects', () => {
     let effects: MenuEffects;
 
     it('should return a LoadLightMenusSuccess when the menuService serve an array of menus', () => {
-        const expectedMenu =  getRandomMenu();
+        const expectedMenu =  getRandomMenus();
 
         const localActions$ = new Actions(hot('-a--', {a: new LoadMenu()}));
 

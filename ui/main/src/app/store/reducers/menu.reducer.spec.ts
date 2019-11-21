@@ -7,7 +7,7 @@
 
 import {reducer} from "@ofStore/reducers/menu.reducer";
 import {menuInitialState, MenuState} from "@ofStates/menu.state";
-import {getRandomAlphanumericValue, getRandomMenu} from "@tests/helpers";
+import {getRandomAlphanumericValue, getRandomMenus} from "@tests/helpers";
 import {
     LoadMenu,
     LoadMenuFailure,
@@ -27,7 +27,7 @@ describe('Menu Reducer', () => {
         it('should return the previous state on living state', () => {
             const unknowAction = {} as any;
             const previousState: MenuState = {
-                menu: getRandomMenu(),
+                menu: getRandomMenus(),
                 loading: false,
                 error: getRandomAlphanumericValue(5, 12),
                 selected_iframe_url: getRandomAlphanumericValue(3,10)
@@ -59,7 +59,7 @@ describe('Menu Reducer', () => {
     });
     describe('LoadMenuFailure', () => {
         it('should set loading to false and message to specific message', () => {
-            const actualMenu = getRandomMenu();
+            const actualMenu = getRandomMenus();
             const previousState: MenuState = {
                 menu: actualMenu,
                 loading: true,
@@ -77,14 +77,14 @@ describe('Menu Reducer', () => {
     });
     describe('LoadMenuSuccess', () => {
         it('should set loading to false and selected to corresponding payload', () => {
-            const previousMenu = getRandomMenu();
+            const previousMenu = getRandomMenus();
             const previousState: MenuState = {
                 menu: previousMenu,
                 loading: true,
                 error: getRandomAlphanumericValue(5, 12),
                 selected_iframe_url:getRandomAlphanumericValue(5, 12)
             };
-            const actualMenu = getRandomMenu();
+            const actualMenu = getRandomMenus();
             const actualState = reducer(previousState, new LoadMenuSuccess({menu: actualMenu}));
             expect(actualState).not.toBe(previousState);
             expect(actualState).not.toEqual(previousState);
@@ -97,7 +97,7 @@ describe('Menu Reducer', () => {
     describe('SelectMenuLinkSuccess', () => {
         it('should set selected_iframe_url to corresponding payload', () => {
             const previousState: MenuState = {
-                menu: getRandomMenu(),
+                menu: getRandomMenus(),
                 loading: true,
                 error: getRandomAlphanumericValue(5, 12),
                 selected_iframe_url:getRandomAlphanumericValue(5, 12)
@@ -117,7 +117,7 @@ describe('Menu Reducer', () => {
     describe('SelectMenuLinkFailure', () => {
         it('should set error to specific message', () => {
             const previousState: MenuState = {
-                menu: getRandomMenu(),
+                menu: getRandomMenus(),
                 loading: true,
                 error: getRandomAlphanumericValue(5, 12),
                 selected_iframe_url:getRandomAlphanumericValue(5, 12)
