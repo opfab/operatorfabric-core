@@ -45,6 +45,16 @@ to reflect elapsed time
 |operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 |operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
+|operatorfabric.thirds.menus|BOTH|no
+a|Defines how thirdparty menu links are displayed in the navigation bar and how
+they open. Possible values:
+
+- TAB: Only a text link is displayed, and clicking it opens the link in a new tab.
+- IFRAME: Only a text link is displayed, and clicking it opens the link in an iframe in the main content zone below
+the navigation bar.
+- BOTH: Both a text link and a little arrow icon are displayed. Clicking the text link opens the link in an iframe
+while clicking the icon opens in a new tab.
+
 |operatorfabric.settings.timeZone||no|Default user time zone for users (use browser time zone if not set)
 |operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
 |operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
