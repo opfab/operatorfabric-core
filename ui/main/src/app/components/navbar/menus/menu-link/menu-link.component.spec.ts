@@ -13,6 +13,10 @@ import {of} from "rxjs";
 import {configInitialState} from "@ofStates/config.state";
 import {map} from "rxjs/operators";
 import {By} from "@angular/platform-browser";
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {faExternalLinkAlt} from "@fortawesome/free-solid-svg-icons";
+
+library.add(faExternalLinkAlt);
 
 describe('MenuLinkComponent', () => {
   let component: MenuLinkComponent;

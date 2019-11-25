@@ -23,7 +23,10 @@ import {InfoComponent} from "./info/info.component";
 import {TimeService} from "@ofServices/time.service";
 import clock = jasmine.clock;
 import {MenuLinkComponent} from "./menus/menu-link/menu-link.component";
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 
+library.add(faSignOutAlt);
 
 describe('NavbarComponent', () => {
 
