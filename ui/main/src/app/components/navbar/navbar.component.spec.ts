@@ -68,10 +68,10 @@ describe('NavbarComponent', () => {
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
         expect(rootElement.queryAll(By.css('li > div.nav-link')).length).toBe(1)
-        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > a')).length).toBe(2) //Because there is two <a> for each menu entry: text link and icon
-        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/thirdparty,t2,1,id3") //As defined in ThirdsServiceMock
-        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > a > fa-icon')).length).toBe(1)
-        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link3") //As defined in ThirdsServiceMock
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a')).length).toBe(2) //Because there is two <a> for each menu entry: text link and icon
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/thirdparty,t2,1,id3") //As defined in ThirdsServiceMock
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a > fa-icon')).length).toBe(1)
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link3") //As defined in ThirdsServiceMock
     });
     it('should create menu', () => {
         const rootElement = fixture.debugElement;
