@@ -108,15 +108,10 @@ describe('MenuLinkComponent', () => {
   }
 
   function defineFakeState(thirdmenusType : string): void {
-    spyOn(store, 'select').and.callFake(buildFn =>
-    {
-      if(!thirdmenusType) {
-        return of (            {...emptyAppState,
-              config: {
-                ...configInitialState}
-            }
-        );
-      } else {
+    if(!thirdmenusType) {
+      spyOn(store, 'select').and.callThrough();
+    } else {
+      spyOn(store, 'select').and.callFake(buildFn => {
         return of({
               ...emptyAppState,
               config: {
@@ -134,8 +129,8 @@ describe('MenuLinkComponent', () => {
         ).pipe(
             map(v => buildFn(v))
         )}
-
-    }  );
+      );
+    }
     fixture.detectChanges();
   }
 
