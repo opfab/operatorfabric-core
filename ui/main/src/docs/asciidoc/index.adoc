@@ -350,13 +350,13 @@ They made 4 zooms level:
 - 7 days zoom: domain begins at actual day, and closes at the end of 7 days after.
 Its 7 days visualization when you move domain, and you move by one day.
 
-- Week zoom : domain begins at actual day, and closes at the end of next week.
+- Week zoom : domain begins at the start day of the week regarding the current time, and closes at the end of next week.
 Its weekly visualization when you move domain, and you move by one week.
 
-- Month zoom : domain begins at actual day, and closes at the end of next month.
+- Month zoom : domain begins at actual of the month regarding the current time, and closes at the end of next month.
 Its monthly visualization when you move domain, and you move by one month.
 
-- Year zoom : domain begins at actual month, and closes at the end of next year.
+- Year zoom : domain begins at actual year regarding the current time, and closes at the end of next year.
 Its yearly visualization when you move domain, and you move by one year.
 
 
@@ -376,7 +376,7 @@ Firstly, you define the conf object for the domain and you use dateWithSpaceBefo
             startOf: ['week'],
         };
 
-	const currentMoment = moment();
+	const currentMoment = moment().startOf('week');
 	const startDomain = this.dateWithSpaceBeforeMoment(moment(currentMoment), 'W');
 	const endDomain = this.periodStartToEnd(domainWeekConf, true);
 ```
