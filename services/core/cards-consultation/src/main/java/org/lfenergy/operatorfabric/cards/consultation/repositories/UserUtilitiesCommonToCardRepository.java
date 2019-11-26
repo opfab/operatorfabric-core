@@ -23,8 +23,6 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         return template.findOne(query, clazz);
     }
 
-    ;
-
     default List<Criteria> computeCriteriaToFindCardByProcessIdWithUser(String processId, User user) {
         List<Criteria> criteria = new ArrayList<>();
         criteria.add(Criteria.where("_id").is(processId));
