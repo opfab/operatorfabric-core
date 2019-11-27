@@ -62,7 +62,6 @@ export class IconComponent implements OnInit {
     if (this.height==undefined && this.width==undefined) {
 
       let sizeTemp = this.big?'big':this.medium?'medium':this.small?'small':null;
-      console.log(sizeTemp, "resultat1");
       switch (sizeTemp) {
         case 'big':
           this.size = '64px';
@@ -77,13 +76,10 @@ export class IconComponent implements OnInit {
           this.size = '16px'  
         
       }
-      console.log(this.size, "resultat2");
 
       this.height = this.size;
       this.width = this.size;
     }
-
-    console.log(this.limitSize, "resultat3");
 
     // in case, we want to limit the icon size. By default, it is not limited.
     if (this.limitSize) {
@@ -94,10 +90,7 @@ export class IconComponent implements OnInit {
       let witdhTemp = Number(this.width.replace('px',''));
         if (witdhTemp > this.WIDTH_MAX) 
           this.width = this.WIDTH_MAX+"px";
-    }
-
-    console.log(this.height, "height, ", this.width, "width");
-    
+    }    
   }
-
+  
 }
