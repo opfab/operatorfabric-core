@@ -49,7 +49,6 @@ describe('NavbarComponent', () => {
         TestBed.configureTestingModule({
             imports: [NgbModule.forRoot(),
                 RouterTestingModule,
-                // StoreModule.forRoot(appReducer, storeConfig),
                 StoreModule.forRoot(appReducer, storeConfig),
                 EffectsModule.forRoot([MenuEffects]),
                 HttpClientTestingModule, 
@@ -57,8 +56,6 @@ describe('NavbarComponent', () => {
             ],
             declarations: [NavbarComponent, IconComponent, InfoComponent],
             providers: [
-                // {provide: store, useClass: Store},
-                // {provide: ThirdsService, useClass: ThirdsServiceMock},
                 Store,
                 ThirdsService, 
                 TimeService]
@@ -79,7 +76,6 @@ describe('NavbarComponent', () => {
 
     it('should create with a configuration no setted', () => {
         defineFakeState('HAS_NO_CONFIG');   
-        // fixture.detectChanges();
 
         expect(component).toBeTruthy();
         expect(component.customLogo).toBe(undefined);
@@ -90,7 +86,6 @@ describe('NavbarComponent', () => {
 
     it('should create with a configuration setted', () => {
         defineFakeState('HAS_CONFIG');   
-        // fixture.detectChanges();
 
         expect(component).toBeTruthy();
         expect(component.customLogo).toBe("data:image/svg+xml;base64,abcde64");
@@ -101,7 +96,6 @@ describe('NavbarComponent', () => {
 
     it('should create plain link for single-entry third-party menu', () => {
         defineFakeState('HAS_CONFIG');   
-        // fixture.detectChanges();
 
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
@@ -114,7 +108,6 @@ describe('NavbarComponent', () => {
 
     it('should create menu', () => {
         defineFakeState('HAS_CONFIG');   
-        // fixture.detectChanges();
 
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
@@ -127,8 +120,7 @@ describe('NavbarComponent', () => {
     });
 
     it('should toggle menu ', (done) => {
-        defineFakeState('HAS_CONFIG');  
-        // fixture.detectChanges(); 
+        defineFakeState('HAS_CONFIG'); 
 
         clock().install();
         const rootElement = fixture.debugElement;
@@ -215,7 +207,6 @@ describe('NavbarComponent', () => {
                     map(v => buildFn(v))
                 )
             } // end if 
-
         });
 
         fixture.detectChanges();
