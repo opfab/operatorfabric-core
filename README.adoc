@@ -23,8 +23,8 @@ image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.oper
 Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
 image:https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg[Website
 opfab.github.io,link=http://opfab.github.io/]
-image:https://img.shields.io/badge/Join%20us%20on-Mattermost-%237473C0.svg[Join
-us on Mattermost,link=https://team.opfab.org/signup_user_complete/?id=7nhtz5psobgpud6yqzrbibmdtw]
+image:https://img.shields.io/badge/Join%20us%20on-Spectrum-%237473C0.svg[Join
+us on Spectrum,link=https://spectrum.chat/opfab]
 
 OperatorFabric is a modular, extensible, industrial-strength and field-tested
 platform for use in electricity, water, and other utility operations.
