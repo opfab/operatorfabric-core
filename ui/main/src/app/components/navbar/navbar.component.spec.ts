@@ -37,7 +37,7 @@ import { Component, ɵConsole } from '@angular/core';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
 
 
-fdescribe('NavbarComponent', () => {
+describe('NavbarComponent', () => {
 
     let store: Store<AppState>;
     let emptyAppState: AppState = emptyAppState4Test;
