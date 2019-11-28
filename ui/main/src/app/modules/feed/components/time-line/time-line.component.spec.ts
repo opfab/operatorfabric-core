@@ -32,7 +32,7 @@ import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {compareBySeverityLttdPublishDate} from '@ofStates/feed.state';
 import {TimeService} from '@ofServices/time.service';
 
-fdescribe('TimeLineComponent', () => {
+describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
   let store: Store<AppState>;
   let fixture: ComponentFixture<TimeLineComponent>;
