@@ -68,10 +68,10 @@ while clicking the icon opens in a new tab.
 |operatorfabric.archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
 |operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page
 |operatorfabric.settings.infos.disable||no|Control if we want to disable/enable editing user email, description in the settings page
-|operatorfabric.logo.base64||no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg
-|operatorfabric.logo.height||no|The height of the logo (px)
+|operatorfabric.logo.base64|medium OperatorFabric icon|no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg. If it is not set, a medium (32px) OperatorFabric icon is displayed.
+|operatorfabric.logo.height|16|no|The height of the logo (px) (only taken into account if operatorfabric.logo.base64 is set).
 |operatorfabric.logo.width||no|The width of the logo (px)
-|operatorfabric.logo.limitSize||no|True by default. If it is true, the height limit is 64px and the width limit is 200px, it means that if the height is over than 64px, it will be set to 64px, if the width is over than 200px, it is set to 200px. If it is false, no limit restriction for the height and the width. 
+|operatorfabric.logo.limitSize|true|no|If it is true, the height limit is 64px and the width limit is 200px, it means that if the height is over than 64px, it will be set to 64px, if the width is over than 200px, it is set to 200px. If it is false, no limit restriction for the height and the width. 
 |===
 
 *User Settings default values*
