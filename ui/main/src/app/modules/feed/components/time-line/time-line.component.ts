@@ -28,245 +28,53 @@ export class TimeLineComponent implements OnInit, OnDestroy {
     public confZoom: any;
 
     constructor(private store: Store<AppState>) {}
-
     ngOnInit() {
-        // set start of Week to saturday on moment locale used
-        /*moment.updateLocale('en', { week: {
-                dow: 6, // First day of week is Saturday
-                doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
-            }});
-            */
-
         // DOMAIN CONF from moment() to our conf
-
-        const domainYearConf = {
-            year: 2,
-            month: 0,
-            week: 0,
-            day: 0,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            startOf: ['year'],
-        };
-
-        const domainMonthConf = {
-            year: 0,
-            month: 2,
-            week: 0,
-            day: 0,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            startOf: ['month'],
-        };
-
-        const domainWeekConf = {
-            year: 0,
-            month: 0,
-            week: 2,
-            day: 0,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            startOf: ['week'],
-        };
-
-        const domain7DayConf = {
-            year: 0,
-            month: 0,
-            week: 0,
-            day: 8,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            startOf: ['day'],
-        };
-
+        const domain7DayConf = this.constructMomentObj([0, 0, 0, 8, 0, 0, 0], ['day'], null);
+        const domainWeekConf = this.constructMomentObj([0, 0, 1, 0, 0, 0, 0], ['week'], null);
+        
+        const domainMonthConf = this.constructMomentObj([0, 1, 0, 0, 0, 0, 0], ['month'], null);
+        const domainYearConf = this.constructMomentObj([1, 0, 0, 0, 0, 0, 0], ['year'], null);
         const currentMoment = moment();
-        const startDomain = moment(currentMoment);
-        startDomain.minutes(0).second(0).millisecond(0);
-        const endDomain = this.periodStartToEnd(domainWeekConf, true);
 
-        const startDomainUSE = moment(currentMoment);
-        startDomainUSE.date(4);
-        startDomainUSE.hour(0).minutes(0).second(0).millisecond(0);
-        const endDomainUSE = moment(startDomainUSE);
-        endDomainUSE.add(16, 'week');
+        const startDomain7Day = moment(currentMoment);
+        startDomain7Day.minutes(0).second(0).millisecond(0);
+        const endDomain7Day = this.periodStartToEnd(domain7DayConf, true);
 
-        const startDomain2 = moment(currentMoment);
-        startDomain2.minutes(0).second(0).millisecond(0);
-        const endDomain2 = this.periodStartToEnd(domainMonthConf, true);
+        const startDomainWeek = moment(currentMoment.startOf('week'));
+        startDomainWeek.minutes(0).second(0).millisecond(0);
+        const endDomainWeek = this.periodStartToEnd(domainWeekConf, true);
 
-        const startDomain3 = moment(currentMoment);
-        startDomain3.hour(0).minutes(0).second(0).millisecond(0);
-        const endDomain3 = this.periodStartToEnd(domainYearConf, true);
+        const startDomainMonth = moment(currentMoment.startOf('month'));
+        startDomainMonth.minutes(0).second(0).millisecond(0);
+        const endDomainMonth = this.periodStartToEnd(domainMonthConf, true);
 
-        const startDomain4 = moment(currentMoment);
-        startDomain4.minutes(0).second(0).millisecond(0);
-        const endDomain4 = this.periodStartToEnd(domain7DayConf, true);
+        const startDomainYear = moment(currentMoment.startOf('year'));
+        startDomainYear.hour(0).minutes(0).second(0).millisecond(0);
+        const endDomainYear = this.periodStartToEnd(domainYearConf, true);
 
         // FORWARD CONF (movement on domain)
-
         const forwardYearConf = {
-            start: {
-                year: 1,
-                month: 0,
-                week: 0,
-                day: 0,
-                hour: 0,
-                minute: 0,
-                second: 0,
-            },
-            end: {
-                year: 1,
-                month: 0,
-                week: 0,
-                day: 0,
-                hour: 0,
-                minute: 0,
-                second: 0,
-            },
+            start: this.constructMomentObj([1, 0, 0, 0, 0, 0, 0]),
+            end: this.constructMomentObj([1, 0, 0, 0, 0, 0, 0]),
         };
-
         const forwardMonthConf = {
-            start: {
-                year: 0,
-                month: 1,
-                week: 0,
-                day: 0,
-                hour: 0,
-                minute: 0,
-                second: 0,
-            },
-            end: {
-                year: 0,
-                month: 1,
-                week: 0,
-                day: 0,
-                hour: 0,
-                minute: 0,
-                second: 0,
-            },
+            start: this.constructMomentObj([0, 1, 0, 0, 0, 0, 0]),
+            end: this.constructMomentObj([0, 1, 0, 0, 0, 0, 0])
         };
-
         const forwardWeekConf = {
-            start: {
-                year: 0,
-                month: 0,
-                week: 1,
-                day: 0,
-                hour: 0,
-                minute: 0,
-                second: 0,
-            },
-            end: {
-                year: 0,
-                month: 0,
-                week: 1,
-                day: 0,
-                hour: 0,
-                minute: 0,
-                second: 0,
-            },
+            start: this.constructMomentObj([0, 0, 1, 0, 0, 0, 0]),
+            end: this.constructMomentObj([0, 0, 1, 0, 0, 0, 0]),
         };
-
         const forwardDayConf = {
-            start: {
-                year: 0,
-                month: 0,
-                week: 0,
-                day: 1,
-                hour: 0,
-                minute: 0,
-                second: 0,
-            },
-            end: {
-                year: 0,
-                month: 0,
-                week: 0,
-                day: 1,
-                hour: 0,
-                minute: 0,
-                second: 0,
-            },
+            start: this.constructMomentObj([0, 0, 0, 1, 0, 0, 0]),
+            end: this.constructMomentObj([0, 0, 0, 1, 0, 0, 0]),
         };
 
-        // TICKS CONF
+        const ticks4HoursConf = this.constructMomentObj([0, 0, 0, 0, 4, 0, 0]);
 
-        const myticksResponsiveConf = [{ width_min: 1400,
-            conf: {
-                year: 0,
-                month: 0,
-                week: 0,
-                day: 0,
-                hour: 4,
-                minute: 0,
-                second: 0,
-            }
-        }, { width_min: 1100,
-            conf: {
-                year: 0,
-                month: 0,
-                week: 0,
-                day: 0,
-                hour: 1,
-                minute: 0,
-                second: 0,
-            }
-        }, {
-            width_min: 0,
-            conf: {
-                year: 0,
-                month: 0,
-                week: 0,
-                day: 0,
-                hour: 0,
-                minute: 20,
-                second: 0,
-            }
-        }];
-
-        const ticks4HoursConf = {
-            year: 0,
-            month: 0,
-            week: 0,
-            day: 0,
-            hour: 4,
-            minute: 0,
-            second: 0,
-        };
-
-        const ticksDayConf = {
-            year: 0,
-            month: 0,
-            week: 0,
-            day: 1,
-            hour: 0,
-            minute: 0,
-            second: 0,
-        };
-
-        const ticksHalfMonthConf = {
-            year: 0,
-            month: 0,
-            week: 0,
-            day: 0,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            date: [1, 16],
-        };
-
-        const ticksInUseConf = {
-            year: 0,
-            month: 0,
-            week: 0,
-            day: 0,
-            hour: 6,
-            minute: 0,
-            second: 0,
-        };
+        const ticksDayConf = this.constructMomentObj([0, 0, 0, 1, 0, 0, 0]);
+        const ticksHalfMonthConf = this.constructMomentObj([0, 0, 0, 0, 0, 0, 0], null, [1, 16]);
 
         this.conf = {
             enableDrag: false,
@@ -276,90 +84,58 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             showGridLines: true,
             realTimeBar: true,
         };
-        this.confZoom = [
-            /*
-            {
-            startDomain: startDomainUSE.valueOf(),
-            endDomain: endDomainUSE.valueOf(),
-            centeredOnTicks: true,
-            clusterTicksToTicks: true,
-            buttonTitle: 'USE',
-            forwardConf: forwardDayConf,
-            backwardConf: forwardDayConf,
-            // ticksConf: ticksInUseConf,
-            autonomousTicks: true,
-            followClockTick: false,
-            firstMoveStartOfUnit: false,
-            homeDomainExtraTicks: false,
-            },
-            */
-            {
-            startDomain: startDomain4.valueOf(),
-            endDomain: endDomain4.valueOf(),
-            centeredOnTicks: true,
-            clusterTicksToTicks: true,
-            buttonTitle: '7D',
-            forwardConf: forwardDayConf,
-            ticksConf: ticks4HoursConf,
-            followClockTick: true,
-            firstMoveStartOfUnit: true,
-            homeDomainExtraTicks: true,
-            },
-        {
-            startDomain: startDomain.valueOf(),
-            endDomain: endDomain.valueOf(),
-            centeredOnTicks: true,
-            clusterTicksToTicks: true,
-            buttonTitle: 'W',
-            forwardConf: forwardWeekConf,
-            backwardConf: forwardWeekConf,
-            ticksConf: ticks4HoursConf,
-            followClockTick: true,
-            firstMoveStartOfUnit: true,
-            homeDomainExtraTicks: true,
-            },
-        /*{
-            startDomain: startDomain.valueOf(),
-            endDomain: endDomain.valueOf(),
-            centeredOnTicks: true,
-            clusterTicksToTicks: true,
-            buttonTitle: 'USE',
-            forwardConf: forwardDayConf,
-            ticksConf: myticksResponsiveConf, // myticksYearConf,
-            followClockTick: false,
-            firstMoveStartOfUnit: false,
-        },*/
-        {
-            startDomain: startDomain2.valueOf(),
-            endDomain: endDomain2.valueOf(),
-            centeredOnTicks: true,
-            clusterTicksToTicks: true,
-            buttonTitle: 'M',
-            forwardConf: forwardMonthConf,
-            ticksConf: ticksDayConf,
-            // formatTicks: 'DD',
-            // formatTooltipsDate: 'DD/MM',
-            followClockTick: true,
-            firstMoveStartOfUnit: true,
-            homeDomainExtraTicks: true,
-        },
-        {
-            startDomain: startDomain3.valueOf(),
-            endDomain: endDomain3.valueOf(),
-            centeredOnTicks: true,
-            clusterTicksToTicks: true,
-            buttonTitle: 'Y',
-            forwardConf: forwardYearConf,
-            ticksConf: ticksHalfMonthConf,
-            followClockTick: true,
-            firstMoveStartOfUnit: true,
-            homeDomainExtraTicks: true,
+        this.confZoom = [{
+                startDomain: startDomain7Day.valueOf(),
+                endDomain: endDomain7Day.valueOf(),
+                centeredOnTicks: true,
+                clusterTicksToTicks: true,
+                buttonTitle: '7D',
+                forwardConf: forwardDayConf,
+                ticksConf: ticks4HoursConf,
+                followClockTick: true,
+                firstMoveStartOfUnit: true,
+                homeDomainExtraTicks: true
+            }, {
+                startDomain: startDomainWeek.valueOf(),
+                endDomain: endDomainWeek.valueOf(),
+                centeredOnTicks: true,
+                clusterTicksToTicks: true,
+                buttonTitle: 'W',
+                forwardConf: forwardWeekConf,
+                backwardConf: forwardWeekConf,
+                ticksConf: ticks4HoursConf,
+                followClockTick: false,
+                firstMoveStartOfUnit: false,
+                homeDomainExtraTicks: false
+            }, {
+                startDomain: startDomainMonth.valueOf(),
+                endDomain: endDomainMonth.valueOf(),
+                centeredOnTicks: true,
+                clusterTicksToTicks: true,
+                buttonTitle: 'M',
+                forwardConf: forwardMonthConf,
+                ticksConf: ticksDayConf,
+                // formatTicks: 'DD',
+                // formatTooltipsDate: 'DD/MM',
+                followClockTick: false,
+                firstMoveStartOfUnit: false,
+                homeDomainExtraTicks: false
+            }, {
+                startDomain: startDomainYear.valueOf(),
+                endDomain: endDomainYear.valueOf(),
+                centeredOnTicks: true,
+                clusterTicksToTicks: true,
+                buttonTitle: 'Y',
+                forwardConf: forwardYearConf,
+                ticksConf: ticksHalfMonthConf,
+                followClockTick: false,
+                firstMoveStartOfUnit: false,
+                homeDomainExtraTicks: false
         }];
 
         // timeline state is same than feed state (not filtered Feed)
         // select all the feed
-        this.lightCards$ = this.store.pipe(
-            select(feedSelectors.selectFeed),
+        this.lightCards$ = this.store.pipe(select(feedSelectors.selectFeed),
             catchError(err => of([]))
         );
 
@@ -369,25 +145,19 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         }));
 
         // add a card data to the timeline state for each new card received
-        this.subscription = this.lightCards$.pipe(debounceTime(300), distinctUntilChanged())
-            .subscribe(value => {
+        this.subscription = this.lightCards$.pipe(debounceTime(300), distinctUntilChanged()).subscribe(value => {
             const tmp = _.cloneDeep(value);
-            this.store.dispatch(new InitTimeline({
-                data: [],
-            }));
+            this.store.dispatch(new InitTimeline({data: []}));
             const myCardsTimeline = [];
             for (const val of tmp) {
                 if (val.timeSpans && val.timeSpans.length > 0) {
                     val.timeSpans.forEach(d => {
                         const myCardTimelineTimespans = {
-                            displayDate: d.start,
-                            publishDate: d.start, // useless
+                            displayDate: d.start, publishDate: d.start, // useless
                             startDate: d.start, // useless
                             endDate: d.end, // useless
-                            severity: val.severity,
-                            publisher: val.publisher,
-                            publisherVersion: val.publisherVersion,
-                            summary: val.title,
+                            severity: val.severity, publisher: val.publisher,
+                            publisherVersion: val.publisherVersion, summary: val.title
                         };
                         myCardsTimeline.push(myCardTimelineTimespans);
                     });
@@ -398,23 +168,36 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                         publishDate: val.publishDate, // useless
                         startDate: val.startDate, // useless
                         endDate: val.endDate, // useless
-                        severity: val.severity,
-                        publisher: val.publisher,
-                        publisherVersion: val.publisherVersion,
-                        summary: val.title,
+                        severity: val.severity, publisher: val.publisher,
+                        publisherVersion: val.publisherVersion, summary: val.title
                     };
                     myCardsTimeline.push(myCardTimeline);
                 }
             }
-            this.store.dispatch(new SetCardDataTimeline({
-                cardsTimeline: myCardsTimeline,
-            }));
+            this.store.dispatch(new SetCardDataTimeline({cardsTimeline: myCardsTimeline}));
         });
     }
 
+    constructMomentObj(mommentOjb: Array<number>, startOf?: Array<string>, date?: Array<number>) {
+        const obj: any = {};
+        obj.year = mommentOjb[0];
+        obj.month = mommentOjb[1];
+        obj.week = mommentOjb[2];
+        obj.day = mommentOjb[3];
+        obj.hour = mommentOjb[4];
+        obj.minute = mommentOjb[5];
+        obj.second = mommentOjb[6];
+        if (startOf) {
+            obj.startOf = startOf;
+        }
+        if (date) {
+            obj.date = date;
+        }
+        return obj;
+    }
     /**
      * return a moment
-     * add time to moment depending of configue object when future is true
+     * add time to moment depending of configue object when future is true. compute a domain end
      * subtract time when future is false
      * use startOf function on each time's unit pass in list
      * @param conf
@@ -422,7 +205,6 @@ export class TimeLineComponent implements OnInit, OnDestroy {
      */
     periodStartToEnd(conf, future: boolean): moment.Moment {
         const tmpMoment = moment();
-
         // Test bug
         // tmpMoment.date(2);
         const newDate = _.cloneDeep(tmpMoment);
