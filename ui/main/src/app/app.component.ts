@@ -6,6 +6,7 @@
  */
 
 import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
+import {Title} from '@angular/platform-browser';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -17,6 +18,7 @@ import {isInTheFuture} from "@ofServices/authentication.service";
 import {LoadConfig} from "@ofActions/config.actions";
 import {selectConfigLoaded, selectMaxedRetries} from "@ofSelectors/config.selectors";
 import {I18nService} from "@ofServices/i18n.service";
+import {buildConfigSelector} from '@ofSelectors/config.selectors';
 
 @Component({
     selector: 'of-root',
@@ -24,7 +26,7 @@ import {I18nService} from "@ofServices/i18n.service";
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    title = 'OperatorFabric';
+    readonly title = 'OperatorFabric';
     getRoutePE: Observable<any>;
     currentPath: any;
     isAuthenticated$: boolean = false;
@@ -36,8 +38,14 @@ export class AppComponent implements OnInit {
      * @param store
      * @param i18nService
      */
-    constructor(private store: Store<AppState>,private i18nService:I18nService) {
+    constructor(private store: Store<AppState>,
+                private i18nService:I18nService,
+                private titleService:Title) {
         this.getRoutePE = this.store.pipe(select(selectRouterState));
+    }
+
+    public setTitle(newTitle:string) {
+        this.titleService.setTitle(newTitle);
     }
 
     /**
@@ -62,6 +70,10 @@ export class AppComponent implements OnInit {
             .subscribe((maxedRetries=>this.maxedRetries=maxedRetries));
         // First Action send by the application, is the user currently authenticated ?
         this.store.dispatch(new LoadConfig());
-    }
 
+        const sTitle = this.store.select(buildConfigSelector('title', this.title));
+        sTitle.subscribe(data => {
+            this.setTitle(data);
+        })
+    }
 }

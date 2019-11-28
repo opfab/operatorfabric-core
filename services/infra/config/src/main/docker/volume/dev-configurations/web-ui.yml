@@ -54,3 +54,4 @@ operatorfabric:
     locale: en
   time:
     pulse: 5000
+  title: MyOpFabTitle

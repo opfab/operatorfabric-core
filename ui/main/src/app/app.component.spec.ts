@@ -19,6 +19,11 @@ import {IconComponent} from "./components/icon/icon.component";
 import {TranslateModule} from "@ngx-translate/core";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {I18nService} from "@ofServices/i18n.service";
+import {Title} from "@angular/platform-browser";
+import createSpyObj = jasmine.createSpyObj;
+import {MockStore, provideMockStore} from "@ngrx/store/testing";
+import {emptyAppState4Test} from "@tests/helpers";
+import {authInitialState} from "@ofStates/authentication.state";
 
 
 describe('AppComponent', () => {
@@ -65,16 +70,102 @@ describe('AppComponent', () => {
         expect(app).toBeTruthy();
     }));
 
-    it(`should have as title 'OperatorFabric'`, async(() => {
+    it(`should have the title 'OperatorFabric' by default`, async(() => {
       const app = fixture.debugElement.componentInstance;
       expect(app.title).toEqual('OperatorFabric');
     }));
 
     it('should init the app', async(() => {
         const app = fixture.debugElement.componentInstance;
-        app.ngOnInit()
+        app.ngOnInit();
         fixture.detectChanges();
         expect(app).toBeTruthy();
     }));
 
 });
+
+fdescribe('AppComponent', () => {
+
+    let store: MockStore<AppState>;
+    let fixture;
+    const i18nServiceSpy = createSpyObj('i18NService', ['changeLocale']);
+
+    let titleService: Title;
+
+    const initialState = {
+        ...emptyAppState4Test
+        , authentication: {...authInitialState}
+    };
+    beforeEach(async(() => {
+        TestBed.resetTestEnvironment();
+        TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
+
+        TestBed.configureTestingModule({
+            imports: [
+                NgbModule.forRoot(),
+                // solution 4 RouterTestingModule: https://github.com/coreui/coreui-free-bootstrap-admin-template/issues/202
+                RouterTestingModule
+            ],
+            declarations: [AppComponent],
+            providers: [
+                provideMockStore({initialState}),
+                {provide: I18nService, useValue: i18nServiceSpy}
+                , Title],
+            schemas: [NO_ERRORS_SCHEMA]
+        }).compileComponents();
+        store = TestBed.get(Store);
+        fixture = TestBed.createComponent(AppComponent);
+        titleService = TestBed.get(Title);
+    }));
+
+    it(`should have the title 'toto' as setted in Config microservice`, async(() => {
+
+        store.setState({
+            ...initialState
+            , config: {
+                loading: false,
+                loaded: false,
+                error: null,
+                retry: 0,
+                config: {title: 'toto'}
+            }
+        });
+        fixture.detectChanges();
+        expect(titleService.getTitle()).toEqual('toto');
+    }));
+
+    it(`should have the default title 'OperatorFabric' (because of '' setted as title in Config microservice)`,
+        async(() => {
+
+        store.setState({
+            ...initialState
+            , config: {
+                loading: false,
+                loaded: false,
+                error: null,
+                retry: 0,
+                config: {title: ''}
+            }
+        });
+        fixture.detectChanges();
+        expect(titleService.getTitle()).toEqual('OperatorFabric');
+    }));
+
+    it(`should have the default title 'OperatorFabric' (because of title parameter not present in Config microservice)`,
+        async(() => {
+
+            store.setState({
+                ...initialState
+                , config: {
+                    loading: false,
+                    loaded: false,
+                    error: null,
+                    retry: 0,
+                    config: {}
+                }
+            });
+            fixture.detectChanges();
+            expect(titleService.getTitle()).toEqual('OperatorFabric');
+        }));
+});
+
