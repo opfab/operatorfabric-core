@@ -32,7 +32,7 @@ import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {compareBySeverityLttdPublishDate} from '@ofStates/feed.state';
 import {TimeService} from '@ofServices/time.service';
 
-describe('TimeLineComponent', () => {
+fdescribe('TimeLineComponent', () => {
   let component: TimeLineComponent;
   let store: Store<AppState>;
   let fixture: ComponentFixture<TimeLineComponent>;
@@ -196,5 +196,42 @@ describe('TimeLineComponent', () => {
     const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
     const numberOfCardsInTheActionPayload = 2;
     expect(listElements.length).toEqual(numberOfCardsInTheActionPayload);*/
+  });
+
+  it('sould test constructMomentObj return an obj', () => {
+    const result = component.constructMomentObj([0, 0, 1, 1, 2, 4, 0]);
+    expect(result).toEqual({
+      year: 0,
+      month: 0,
+      week: 1,
+      day: 1,
+      hour: 2,
+      minute: 4,
+      second: 0
+    });
+
+    const result1 = component.constructMomentObj([0, 0, 1, 1, 2, 4, 0], ['week']);
+    expect(result1).toEqual({
+      year: 0,
+      month: 0,
+      week: 1,
+      day: 1,
+      hour: 2,
+      minute: 4,
+      second: 0,
+      startOf: ['week']
+    });
+
+    const result2 = component.constructMomentObj([0, 0, 1, 1, 2, 4, 0], null, [1, 15]);
+    expect(result2).toEqual({
+      year: 0,
+      month: 0,
+      week: 1,
+      day: 1,
+      hour: 2,
+      minute: 4,
+      second: 0,
+      date: [1, 15]
+    });
   });
 });
