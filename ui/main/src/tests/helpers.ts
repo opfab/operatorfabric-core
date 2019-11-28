@@ -30,25 +30,29 @@ export const emptyAppState4Test:AppState = {
     translation:null
 };
 
-export function getRandomMenu(): ThirdMenu[] {
+export function getOneRandomMenu(): ThirdMenu {
+    let entries: ThirdMenuEntry[]=[];
+    let entryCount = getPositiveRandomNumberWithinRange(2,5);
+    for(let j=0;j<entryCount;j++){
+        entries.push(new ThirdMenuEntry(
+            getRandomAlphanumericValue(3,10),
+            getRandomAlphanumericValue(3,10),
+            getRandomAlphanumericValue(3,10)
+            )
+        )
+    }
+    return new ThirdMenu(
+        getRandomAlphanumericValue(3,10),
+        getRandomAlphanumericValue(3,10),
+        getRandomAlphanumericValue(3,10),
+        entries);
+}
+
+export function getRandomMenus(): ThirdMenu[] {
     let result: ThirdMenu[] = [];
     let menuCount = getPositiveRandomNumberWithinRange(2,4);
     for (let i=0;i<menuCount;i++){
-        let entries:ThirdMenuEntry[]=[];
-        let entryCount = getPositiveRandomNumberWithinRange(2,5);
-        for(let j=0;j<entryCount;j++){
-            entries.push(new ThirdMenuEntry(
-                getRandomAlphanumericValue(3,10),
-                getRandomAlphanumericValue(3,10),
-                getRandomAlphanumericValue(3,10)
-                )
-            )
-        }
-        result.push(new ThirdMenu(
-            getRandomAlphanumericValue(3,10),
-            getRandomAlphanumericValue(3,10),
-            getRandomAlphanumericValue(3,10),
-            entries))
+        result.push(getOneRandomMenu())
     }
     return result;
 }

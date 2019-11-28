@@ -20,7 +20,7 @@ import {TitlePosition} from "@ofModel/card.model";
 
 describe('Tests Helpers', () => {
 
-    describe(' appenFixedLenghtAlphanumericValue', () => {
+    describe(' appendFixedLengthAlphanumericValue', () => {
         it('should generate a string with one character at least', () => {
             const result = appendFixedLengthAlphanumericValue();
             expect(result.length).toEqual(1);
