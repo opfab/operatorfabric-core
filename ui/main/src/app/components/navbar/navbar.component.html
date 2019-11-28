@@ -47,22 +47,12 @@
              *ngIf="tMenu.entries.length>1"
              [ngbCollapse]="!expandedMenu[index]">
           <div class="dropdown-item" *ngFor="let entry of tMenu.entries">
-            <a class="text-dark text-decoration-none" [routerLink]="['/thirdparty',tMenu.id,tMenu.version,entry.id]" translate>
-              {{tMenu.id}}.{{tMenu.version}}.{{entry.label}}</a>
-            <a class="dropdown-item-external-link" [href]="entry.url" target="_blank">
-              <fa-icon icon="external-link-alt"></fa-icon>
-            </a>
+            <of-menu-link [menu]="tMenu" [menuEntry]="entry"></of-menu-link>
           </div>
         </div>
         <!-- Navbar link if only one entry -->
-        <div class="nav-link single-third-menu-entry" *ngIf="tMenu.entries.length==1">
-          <a class="dropdown-item-internal-link" [routerLink]="['/thirdparty',tMenu.id,tMenu.version,tMenu.entries[0].id]"
-                routerLinkActive #rla="routerLinkActive"
-                translate
-          >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.entries[0].label}}</a>
-          <a class="dropdown-item-external-link" [href]="tMenu.entries[0].url" target="_blank">
-            <fa-icon icon="external-link-alt"></fa-icon>
-          </a>
+        <div class="nav-link" *ngIf="tMenu.entries.length==1">
+          <of-menu-link [menu]="tMenu" [menuEntry]="tMenu.entries[0]"></of-menu-link>
         </div>
       </li>
     </ul>

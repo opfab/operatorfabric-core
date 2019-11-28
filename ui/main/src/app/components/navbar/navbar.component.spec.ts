@@ -17,7 +17,6 @@ import {EffectsModule} from "@ngrx/effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {ThirdsService} from "@ofServices/thirds.service";
 import {By} from "@angular/platform-browser";
-import {ThirdsServiceMock} from "@tests/mocks/thirds.service.mock";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {InfoComponent} from "./info/info.component";
 import {TimeService} from "@ofServices/time.service";
@@ -27,15 +26,21 @@ import { configInitialState } from '@ofStore/states/config.state';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { menuInitialState } from '@ofStore/states/menu.state';
-import { HttpClient, HttpHandler, HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { settingsInitialState } from '@ofStore/states/settings.state';
 import { authInitialState } from '@ofStore/states/authentication.state';
-import { time } from 'jasmine-marbles';
 import { timeInitialState } from '@ofStore/states/time.state';
-import { Component, ɵConsole } from '@angular/core';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
+import {MenuLinkComponent} from "./menus/menu-link/menu-link.component";
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 
+library.add(faSignOutAlt);
+
+enum MODE {
+    HAS_CONFIG = 'HAS_CONFIG',
+    HAS_NO_CONFIG = 'HAS_NO_CONFIG'
+}
 
 describe('NavbarComponent', () => {
 
@@ -54,10 +59,11 @@ describe('NavbarComponent', () => {
                 HttpClientTestingModule, 
                 FontAwesomeModule
             ],
-            declarations: [NavbarComponent, IconComponent, InfoComponent],
+            declarations: [NavbarComponent, IconComponent, InfoComponent, MenuLinkComponent],
             providers: [
                 Store,
                 ThirdsService, 
+
                 TimeService]
         })
             .compileComponents();
@@ -75,7 +81,7 @@ describe('NavbarComponent', () => {
     });
 
     it('should create with a configuration no setted', () => {
-        defineFakeState('HAS_NO_CONFIG');   
+        defineFakeState(MODE.HAS_NO_CONFIG);   
 
         expect(component).toBeTruthy();
         expect(component.customLogo).toBe(undefined);
@@ -85,7 +91,7 @@ describe('NavbarComponent', () => {
     });
 
     it('should create with a configuration setted', () => {
-        defineFakeState('HAS_CONFIG');   
+        defineFakeState(MODE.HAS_CONFIG);   
 
         expect(component).toBeTruthy();
         expect(component.customLogo).toBe("data:image/svg+xml;base64,abcde64");
@@ -95,19 +101,19 @@ describe('NavbarComponent', () => {
     });
 
     it('should create plain link for single-entry third-party menu', () => {
-        defineFakeState('HAS_CONFIG');   
+        defineFakeState(MODE.HAS_CONFIG);   
 
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
         expect(rootElement.queryAll(By.css('li > div.nav-link')).length).toBe(1)
-        expect(rootElement.queryAll(By.css('li > div.nav-link > a')).length).toBe(2) //Because there is two <a> for each menu entry: text link and icon
-        expect(rootElement.queryAll(By.css('li > div.nav-link > a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/thirdparty,t2,1,id3") //As defined in ThirdsServiceMock
-        expect(rootElement.queryAll(By.css('li > div.nav-link > a > fa-icon')).length).toBe(1)
-        expect(rootElement.queryAll(By.css('li > div.nav-link > a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link3") //As defined in ThirdsServiceMock
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a')).length).toBe(2) //Because there is two <a> for each menu entry: text link and icon
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/thirdparty,t2,1,id3") //As defined in ThirdsServiceMock
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a > fa-icon')).length).toBe(1)
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link3") //As defined in ThirdsServiceMock
     });
 
     it('should create menu', () => {
-        defineFakeState('HAS_CONFIG');   
+        defineFakeState(MODE.HAS_CONFIG);   
 
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
@@ -120,7 +126,7 @@ describe('NavbarComponent', () => {
     });
 
     it('should toggle menu ', (done) => {
-        defineFakeState('HAS_CONFIG'); 
+        defineFakeState(MODE.HAS_CONFIG); 
 
         clock().install();
         const rootElement = fixture.debugElement;
@@ -151,7 +157,8 @@ describe('NavbarComponent', () => {
                 return of('/test/url');
             } 
 
-            if (mode === "HAS_NO_CONFIG") {
+            switch (mode) {
+            case MODE.HAS_NO_CONFIG:
                 return of ({
                     ...emptyAppState,
                     authentication: { ...authInitialState },
@@ -162,7 +169,8 @@ describe('NavbarComponent', () => {
                 }).pipe(
                     map(v => buildFn(v))
                 )
-            } else if (mode === "HAS_CONFIG") {
+                break;
+            case MODE.HAS_CONFIG:
                 return of ({
                     ...emptyAppState,
                     authentication: { ...authInitialState },
@@ -201,12 +209,13 @@ describe('NavbarComponent', () => {
                         height: '64px',
                         width: '400px',
                         limitSize: true
-                    }
+                        }
                     }}
                 }).pipe(
                     map(v => buildFn(v))
                 )
-            } // end if 
+                break;
+            }
         });
 
         fixture.detectChanges();
