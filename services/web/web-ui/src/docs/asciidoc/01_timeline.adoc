@@ -4,17 +4,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= OperatorFabric Timeline
-David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall; Baptiste Julien
-v0.5.1, June 14, 2019
-:imagesdir: images
-:sectnums:
-:toc: left
-:toclevels: 2
-:toc-title: Timeline
-:icons: font
-:hide-uri-scheme:
-
 == Requirements
 
 All steps to install, build and test `OperatorFabric` into a Linux environment after clones repository.

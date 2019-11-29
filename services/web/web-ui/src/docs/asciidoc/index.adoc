@@ -4,18 +4,16 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Card Consultation Service Reference Documentation
-:author: David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
+= OperatorFabric Web UI Reference Documentation
+David Binder; Boris Dolley; Alexandra Guironnet; Baptiste Julien; Ronan Le Gall;
 :revnumber: 0.12.1.SNAPSHOT
 :revdate: November 13, 2019
 :imagesdir: images
 :sectnums:
 :toc: left
 :toclevels: 2
-:toc-title: Card Consultation Service
+:toc-title: Web UI Service
 :icons: font
 :hide-uri-scheme:
 
-WORK in progress
-
-include::03_Archives.adoc[]
+include::01_timeline.adoc[]
