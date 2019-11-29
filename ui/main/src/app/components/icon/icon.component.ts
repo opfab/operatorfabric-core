@@ -81,7 +81,7 @@ export class IconComponent implements OnInit {
       this.width = this.size;
     }
 
-    // in case, we want to limit the icon size. By default, it is not limited.
+    // in case, we want to limit the icon size. By default, it is limited.
     if (this.limitSize) {
       let heightTemp = Number(this.height.replace('px',''));
       if (heightTemp > this.HEIGHT_MAX) 
