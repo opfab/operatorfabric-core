@@ -72,6 +72,7 @@ while clicking the icon opens in a new tab.
 |operatorfabric.logo.height|16|no|The height of the logo (px) (only taken into account if operatorfabric.logo.base64 is set).
 |operatorfabric.logo.width||no|The width of the logo (px)
 |operatorfabric.logo.limitSize|true|no|If it is true, the height limit is 64px and the width limit is 200px, it means that if the height is over than 64px, it will be set to 64px, if the width is over than 200px, it is set to 200px. If it is false, no limit restriction for the height and the width. 
+|operatorfabric.title|OperatorFabric|no|Title of the application, displayed on the browser
 |===
 
 *User Settings default values*

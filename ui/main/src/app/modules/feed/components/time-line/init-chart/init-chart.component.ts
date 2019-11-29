@@ -10,24 +10,8 @@ import {FilterType} from '@ofServices/filter.service';
 import {ApplyFilter} from '@ofActions/feed.actions';
 
 const forwardWeekConf = {
-  start: {
-    year: 0,
-    month: 0,
-    week: 1,
-    day: 0,
-    hour: 0,
-    minute: 0,
-    second: 0,
-  },
-  end: {
-    year: 0,
-    month: 0,
-    week: 1,
-    day: 0,
-    hour: 0,
-    minute: 0,
-    second: 0,
-  },
+  start: {year: 0, month: 0, week: 1, day: 0, hour: 0, minute: 0, second: 0},
+  end: {year: 0, month: 0, week: 1, day: 0, hour: 0, minute: 0, second: 0}
 };
 
 @Component({
@@ -80,14 +64,12 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public buttonHomeActive: boolean;
   public zoomButtonsActive: boolean;
   public buttonList;
-  private buttonListWidth: number;
 
 
   constructor(private store: Store<AppState>) {
     this.buttonHome = undefined;
     this.buttonHomeActive = false;
     this.buttonList = undefined;
-    this.buttonListWidth = 0;
     this.zoomButtonsActive = false;
     this.buttonTitle = undefined;
     this.forwardConf = undefined;
@@ -135,8 +117,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * feed arrayChartData with values from data Observable
    */
   setChartData(): void {
-    this.subscription = this.data$.pipe(debounceTime(300), distinctUntilChanged())
-        .subscribe(value => {
+    this.subscription = this.data$.pipe(debounceTime(300), distinctUntilChanged()).subscribe(value => {
       const chartData = _.cloneDeep(value);
       this.setArrayChartData(chartData);
     });
