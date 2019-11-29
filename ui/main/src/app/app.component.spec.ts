@@ -84,7 +84,7 @@ describe('AppComponent', () => {
 
 });
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
 
     let store: MockStore<AppState>;
     let fixture;
