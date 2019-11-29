@@ -94,8 +94,11 @@ describe('AppComponent', () => {
 
     const initialState = {
         ...emptyAppState4Test
-        , authentication: {...authInitialState}
-    };
+        , authentication: { expirationDate: null}
+    } as AppState;
+    /* Using authInitialState to declare expirationDate (required) caused an error because it is not
+    * defined in this scope.*/
+
     beforeEach(async(() => {
         TestBed.resetTestEnvironment();
         TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
@@ -118,7 +121,7 @@ describe('AppComponent', () => {
         titleService = TestBed.get(Title);
     }));
 
-    it(`should have the title 'toto' as setted in Config microservice`, async(() => {
+    it(`should have the title 'toto' as set in Config microservice`, async(() => {
 
         store.setState({
             ...initialState
@@ -134,7 +137,7 @@ describe('AppComponent', () => {
         expect(titleService.getTitle()).toEqual('toto');
     }));
 
-    it(`should have the default title 'OperatorFabric' (because of '' setted as title in Config microservice)`,
+    it(`should have the default title 'OperatorFabric' (because of '' set as title in Config microservice)`,
         async(() => {
 
         store.setState({
