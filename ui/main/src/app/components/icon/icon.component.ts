@@ -23,9 +23,18 @@ export class IconComponent implements OnInit {
   @Input() dark:boolean;
   @Input() light:boolean;
   @Input() base64: string;
+  @Input() height:string;
+  @Input() width:string;
+  // default value, Administrator has to change explicitly
+  @Input() limitSize:boolean = true; 
+
   size:string;
   sprites:string;
   iconPath:string;
+
+  HEIGHT_MAX:Number =64;
+  WIDTH_MAX:Number = 200;
+
   constructor(platformLocation: PlatformLocation, public _DomSanitizationService: DomSanitizer) {
       let baseHref = platformLocation.getBaseHrefFromDOM();
       this.iconPath = (baseHref?baseHref:'/')+'assets/images/icons/'
@@ -35,19 +44,12 @@ export class IconComponent implements OnInit {
     this.big = this.big != undefined;
     this.medium = this.medium != undefined && !this.big;
     this.small = this.small != undefined && !this.medium;
+    
     this.dark = this.dark != undefined;
     this.light = this.light != undefined && ! this.dark;
-    let size = this.big?'big':this.medium?'medium':'small'
-    switch (size) {
-        case 'big':
-          this.size = '64px';
-          break;
-        case 'medium':
-          this.size = '32px';
-          break;
-         default:
-          this.size = '16px';
-    }
+
+    this.setWitdhAndHeight();
+
     if(this.dark||this.light){
       this.sprites='sprites-mono.svg'
     }else{
@@ -55,4 +57,40 @@ export class IconComponent implements OnInit {
     }
   }
 
+  private setWitdhAndHeight() {
+    // define height and witdh from properties, if not defined, set default values defined by the size string (small/medium/big)
+    if (this.height==undefined && this.width==undefined) {
+
+      let sizeTemp = this.big?'big':this.medium?'medium':this.small?'small':null;
+      switch (sizeTemp) {
+        case 'big':
+          this.size = '64px';
+          break;
+        case 'medium':
+          this.size = '32px';
+          break;
+        case 'small':
+          this.size = '16px';
+          break;
+        default:
+          this.size = '16px'  
+        
+      }
+
+      this.height = this.size;
+      this.width = this.size;
+    }
+
+    // in case, we want to limit the icon size. By default, it is limited.
+    if (this.limitSize) {
+      let heightTemp = Number(this.height.replace('px',''));
+      if (heightTemp > this.HEIGHT_MAX) 
+        this.height = this.HEIGHT_MAX+"px";
+
+      let witdhTemp = Number(this.width.replace('px',''));
+        if (witdhTemp > this.WIDTH_MAX) 
+          this.width = this.WIDTH_MAX+"px";
+    }    
+  }
+  
 }
