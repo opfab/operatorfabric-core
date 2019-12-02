@@ -11,11 +11,12 @@
 * ~~0.9.1.RELEASE~~ These images were not working properly due to missing configuration (see #99)
 * 0.10.1.RELEASE
 * 0.11.1.RELEASE
+* 0.12.1.RELEASE
 ## Snapshot
-* 0.12.1.SNAPSHOT
+* 0.13.1.SNAPSHOT
 ## Shortcuts
-* snapshot -> 0.12.1.SNAPSHOT
-* latest -> 0.11.1.RELEASE
+* snapshot -> 0.13.1.SNAPSHOT
+* latest -> 0.12.1.RELEASE
 # References
 * **[OperatorFabric Website](https://opfab.github.io/)**
 * **supported docker version:**
