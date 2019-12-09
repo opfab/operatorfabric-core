@@ -17,7 +17,7 @@ is the sole responsibility of the third party services
 
 == Rest Endpoints and Data Model
 
-See https://opfab.github.io/projects/services/core/time/0.1.1.RELEASE/api/index.html[swagger generated documentation]
+See https://opfab.github.io/projects/services/core/time/0.13.1.SNAPSHOT/api/index.html[swagger generated documentation]
 
 == Disclaimer
 
