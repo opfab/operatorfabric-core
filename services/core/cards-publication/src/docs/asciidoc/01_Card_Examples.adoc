@@ -102,7 +102,7 @@ This card contains some data but when selected in the feed nothing more than the
 
 ==== Fully useful
 
-When a card is selected in the feed (of the GUI), the data is display in the detail panel. The way details are formatted depends on template uploaded by Third parties as link:https://opfab.github.io/projects/services/core/thirds/0.1.1.RELEASE/reference/#_bundle[describe here]. To have an effective example without to many actions to performed, the following example will use an alerady existing configuration.The one presents in the developpement version of OperatorFabric, for test purpose(`TEST` bundle).
+When a card is selected in the feed (of the GUI), the data is display in the detail panel. The way details are formatted depends on template uploaded by Third parties as link:https://opfab.github.io/projects/services/core/thirds/0.13.1.SNAPSHOT/reference/#_bundle[describe here]. To have an effective example without to many actions to performed, the following example will use an alerady existing configuration.The one presents in the developpement version of OperatorFabric, for test purpose(`TEST` bundle).
 
 At the card level, the attribtues in the card telling OperatorFabric which template to use is the `details` attributes.
 
