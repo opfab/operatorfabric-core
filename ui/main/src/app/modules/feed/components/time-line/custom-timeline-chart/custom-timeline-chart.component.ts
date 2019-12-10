@@ -197,7 +197,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.oldWidth = this.dims.width;
       this.widthChange.emit(true);
     }
-    console.log('update');
   }
 
   /**
