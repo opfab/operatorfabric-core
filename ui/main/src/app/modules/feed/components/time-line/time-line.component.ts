@@ -53,6 +53,12 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         startDomainYear.hour(0).minutes(0).second(0).millisecond(0);
         const endDomainYear = this.periodStartToEnd(domainYearConf, true);
 
+        // Adding two domaines required by SEA Team
+        const startDomainTR = moment().minutes(0).second(0).millisecond(0).subtract(2, 'hours');
+        const endDomainTR = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
+
+        const startDomainJ = moment().hours(0).minutes(0).second(0).millisecond(0);
+        const endDomainJ = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
         // FORWARD CONF (movement on domain)
         const forwardYearConf = {
             start: this.constructMomentObj([1, 0, 0, 0, 0, 0, 0]),
@@ -70,12 +76,18 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             start: this.constructMomentObj([0, 0, 0, 1, 0, 0, 0]),
             end: this.constructMomentObj([0, 0, 0, 1, 0, 0, 0]),
         };
+        const forwardTRConf = {
+            start: this.constructMomentObj([0, 0, 0, 0, 2, 0, 0]),
+            end: this.constructMomentObj([0, 0, 0, 0, 2, 0, 0]),
+        };
 
         const ticks4HoursConf = this.constructMomentObj([0, 0, 0, 0, 4, 0, 0]);
 
         const ticksDayConf = this.constructMomentObj([0, 0, 0, 1, 0, 0, 0]);
         const ticksHalfMonthConf = this.constructMomentObj([0, 0, 0, 0, 0, 0, 0], null, [1, 16]);
 
+        const ticks30minConf = this.constructMomentObj([0, 0, 0, 0, 0, 30, 0]);
+        const ticks1hConf = this.constructMomentObj([0, 0, 0, 0, 1, 0, 0]);
         this.conf = {
             enableDrag: false,
             enableZoom: true,
@@ -85,6 +97,26 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             realTimeBar: true,
         };
         this.confZoom = [{
+                startDomain: startDomainJ.valueOf(),
+                endDomain: endDomainJ.valueOf(),
+                centeredOnTicks: true,
+                clusterTicksToTicks: true,
+                buttonTitle: 'J',
+                forwardConf: forwardDayConf,
+                backwardConf: forwardDayConf,
+                ticksConf: ticks1hConf,
+                formatTicks: 'dd - h:mm a'
+            }, {
+                startDomain: startDomainTR.valueOf(),
+                endDomain: endDomainTR.valueOf(),
+                centeredOnTicks: true,
+                clusterTicksToTicks: true,
+                buttonTitle: 'TR',
+                forwardConf: forwardTRConf,
+                backwardConf: forwardTRConf,
+                ticksConf: ticks30minConf,
+                formatTicks: 'dd - h:mm a'
+            }, {
                 startDomain: startDomain7Day.valueOf(),
                 endDomain: endDomain7Day.valueOf(),
                 centeredOnTicks: true,
