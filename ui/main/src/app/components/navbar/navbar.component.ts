@@ -32,10 +32,11 @@ export class NavbarComponent implements OnInit {
     private _thirdMenus: Observable<ThirdMenu[]>;
     expandedMenu:boolean[]=[];
     expandedUserMenu=false;
+
     customLogo: string;
-    height: string;
-    width: string;
-    limitSize: boolean;
+    height: Number;
+    width: Number;
+    limitSize: Boolean;
 
     constructor(private store: Store<AppState>) {
     }
@@ -51,28 +52,31 @@ export class NavbarComponent implements OnInit {
                 _.fill(this.expandedMenu,false);
             }));
         this.store.dispatch(new LoadMenu());
+
         this.store.select(buildConfigSelector('logo.base64')).subscribe(
             data => {
               if (data) this.customLogo = `data:image/svg+xml;base64,${data}`
             }
         );
+
         this.store.select(buildConfigSelector('logo.height')).subscribe(
             height => {
               if (height) this.height = height;
             }
         );
+
         this.store.select(buildConfigSelector('logo.width')).subscribe(
             width => {
               if (width) this.width = width;
             }
         );
         this.store.select(buildConfigSelector('logo.limitSize')).subscribe(
-            limitSize => {
-              if (limitSize) this.limitSize = limitSize;
+            (limitSize:boolean) => {
+                // BE CAREFUL, as a boolean it has to be test with undefined value to know if it has been setted.
+              if (limitSize!=undefined && typeof(limitSize) =='boolean') this.limitSize = limitSize;
             }
         );
     }
-
 
     logOut(){
         this.store.dispatch(new TryToLogOut());

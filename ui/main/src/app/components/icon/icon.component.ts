@@ -7,7 +7,6 @@
 
 import {Component, Input, OnInit} from '@angular/core';
 import {PlatformLocation} from "@angular/common";
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'of-icon',
@@ -24,7 +23,7 @@ export class IconComponent implements OnInit {
   sprites:string;
   iconPath:string;
 
-  constructor(platformLocation: PlatformLocation, public _DomSanitizationService: DomSanitizer) {
+  constructor(platformLocation: PlatformLocation) {
       let baseHref = platformLocation.getBaseHrefFromDOM();
       this.iconPath = (baseHref?baseHref:'/')+'assets/images/icons/'
   }
