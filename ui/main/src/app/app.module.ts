@@ -27,10 +27,11 @@ import {faExternalLinkAlt, faSignOutAlt} from '@fortawesome/free-solid-svg-icons
 import {InfoComponent} from './components/navbar/info/info.component';
 import {UtilitiesModule} from './modules/utilities/utilities.module';
 import {MenuLinkComponent} from './components/navbar/menus/menu-link/menu-link.component';
-import { CustomLogoComponent } from './components/navbar/custom-logo/custom-logo.component';
+import {CustomLogoComponent} from './components/navbar/custom-logo/custom-logo.component';
+import {OAuthModule} from 'angular-oauth2-oidc';
 
 library.add(faExternalLinkAlt);
-library.add(faSignOutAlt)
+library.add(faSignOutAlt);
 
 @NgModule({
     imports: [
@@ -39,17 +40,24 @@ library.add(faSignOutAlt)
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        AppRoutingModule,
+        OAuthModule.forRoot(),
         HttpClientModule,
         StateModule.forRoot(),
         ServicesModule.forRoot(),
         NgbModule,
         TranslateModule.forRoot(translateConfig),
         FontAwesomeModule,
-        UtilitiesModule
+        UtilitiesModule,
+        AppRoutingModule
     ],
-    declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent, InfoComponent, MenuLinkComponent, CustomLogoComponent],
-    providers: [ { provide: LocationStrategy, useClass: HashLocationStrategy }],
+    declarations: [AppComponent,
+        NavbarComponent,
+        LoginComponent,
+        IconComponent,
+        InfoComponent,
+        MenuLinkComponent,
+        CustomLogoComponent],
+    providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
     bootstrap: [AppComponent]
 })
 export class AppModule {

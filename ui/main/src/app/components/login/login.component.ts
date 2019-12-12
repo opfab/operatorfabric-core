@@ -13,9 +13,10 @@ import {AppState} from '@ofStore/index';
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {filter, map} from "rxjs/operators";
 import {Observable} from "rxjs";
-import {AuthenticationService} from "@ofServices/authentication.service";
+import {AuthenticationService} from "@ofServices/authentication/authentication.service";
 import {selectMessage} from "@ofSelectors/authentication.selectors";
 import {Message, MessageLevel} from "@ofModel/message.model";
+import {OAuthService} from "angular-oauth2-oidc";
 
 @Component({
     selector: 'of-login',
@@ -26,20 +27,20 @@ export class LoginComponent implements OnInit {
 
     hide: boolean;
     userForm: FormGroup;
-    useCodeFlow$: Observable<boolean>;
+    useCodeOrImplicitFlow: boolean;
     loginMessage: Message;
-    // codeProvider$: Observable<any>;
     codeProvider: any;
+
     /* istanbul ignore next */
-    constructor( private store: Store<AppState>, private service: AuthenticationService) {}
+    constructor(private store: Store<AppState>, private service: AuthenticationService) {
+    }
 
     ngOnInit() {
-        this.useCodeFlow$ = this.store.select(buildConfigSelector('security.oauth2.flow.mode'))
-            .pipe(map(flowMode=>flowMode === 'CODE'));
-        this.store.select(selectMessage).pipe(filter(m=>m!=null && m.level==MessageLevel.ERROR))
-            .subscribe(m=>this.loginMessage=m);
+        this.useCodeOrImplicitFlow = this.service.isAuthModeCodeOrImplicitFlow();
+        this.store.select(selectMessage).pipe(filter(m => m != null && m.level === MessageLevel.ERROR))
+            .subscribe(m => this.loginMessage = m);
         this.store.select(buildConfigSelector('security.oauth2.flow.provider'))
-            .subscribe(provider=>this.codeProvider={name:provider});
+            .subscribe(provider => this.codeProvider = {name: provider});
         this.hide = true;
         this.userForm = new FormGroup({
                 identifier: new FormControl(''),
@@ -60,8 +61,8 @@ export class LoginComponent implements OnInit {
         this.userForm.reset();
     }
 
-    codeFlow(): void{
-        this.service.moveToCodeFlowLoginPage();
+    codeFlow(): void {
+        this.service.move();
     }
 
 }

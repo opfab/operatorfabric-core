@@ -24,6 +24,7 @@ import {I18n} from "@ofModel/i18n.model";
 import * as moment from "moment";
 import {UserContext} from "@ofModel/user-context.model";
 import {DetailContext} from "@ofModel/detail-context.model";
+import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
 
 function computeTemplateUri(templateName) {
     return `${environment.urls.thirds}/testPublisher/templates/${templateName}`;
@@ -36,7 +37,7 @@ describe('Handlebars Services', () => {
     let store: Store<AppState>;
     let time: TimeService;
     let translate: TranslateService;
-    const now = Date.now();
+    const now = moment(Date.now());
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -57,7 +58,9 @@ describe('Handlebars Services', () => {
                 {provide: 'TimeEventSource', useValue: null},
                 {provide: store, useClass: Store},
                 {provide: time, useClass: TimeService},
-                ThirdsService, HandlebarsService
+                ThirdsService,
+                HandlebarsService,
+                AuthenticationImportHelperForSpecs
             ]
         });
         injector = getTestBed();
@@ -478,12 +481,11 @@ describe('Handlebars Services', () => {
             });
         });
         it('compile dateFormat now (using en locale fallback)', (done) => {
-            const nowMoment = moment(new Date(now));
-            nowMoment.locale('en')
+            now.locale('en')
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
                 .subscribe((result) => {
-                    expect(result).toEqual(nowMoment.format('MMMM Do YYYY, h:mm:ss a'));
+                    expect(result).toEqual(now.format('MMMM Do YYYY, h:mm:ss a'));
                     done();
                 });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));

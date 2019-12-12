@@ -22,3 +22,5 @@ export const selectUserNameOrIdentifier = createSelector(selectAuthenticationSta
     }
     return authState.identifier
 });
+export const  selectIsImplicitallyAuthenticated = createSelector(selectAuthenticationState
+    , (authState) => authState.isImplicitlyAuthenticated)

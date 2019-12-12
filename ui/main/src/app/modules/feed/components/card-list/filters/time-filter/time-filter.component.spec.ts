@@ -24,6 +24,7 @@ import {TimeService} from "@ofServices/time.service";
 import {I18nService} from "@ofServices/i18n.service";
 import {TranslateModule} from "@ngx-translate/core";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
 
 describe('TimeFilterComponent', () => {
     let component: TimeFilterComponent;
@@ -47,8 +48,9 @@ describe('TimeFilterComponent', () => {
             ],
             declarations: [TimeFilterComponent],
             providers:[ I18nService,
-            {provide:'TimeEventSource',useValue:null},
-                TimeService]
+                {provide: 'TimeEventSource', useValue: null},
+                TimeService,
+                AuthenticationImportHelperForSpecs]
         })
             .compileComponents();
         httpMock = TestBed.get(HttpTestingController);

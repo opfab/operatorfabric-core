@@ -17,6 +17,7 @@ export interface AuthState {
     message: Message;
     firstName: string;
     lastName: string;
+    isImplicitlyAuthenticated: boolean;
 }
 
 export const authInitialState: AuthState = {
@@ -27,5 +28,6 @@ export const authInitialState: AuthState = {
     expirationDate: new Date(0),
     message: null,
     firstName: null,
-    lastName: null
+    lastName: null,
+    isImplicitlyAuthenticated: false
 };

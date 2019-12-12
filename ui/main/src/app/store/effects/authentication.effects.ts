@@ -7,7 +7,7 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Observable, of} from 'rxjs';
+import {from, Observable, of} from 'rxjs';
 import {Action, Store} from '@ngrx/store';
 import {
     AcceptLogIn,
@@ -16,15 +16,15 @@ import {
     AuthenticationActions,
     AuthenticationActionTypes,
     CheckAuthenticationStatus,
+    CheckImplicitFlowAuthenticationStatus,
     RejectLogIn,
     TryToLogIn,
-    TryToLogOut
 } from '@ofActions/authentication.actions';
-import {AuthenticationService} from '../../services/authentication.service';
-import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {AuthenticationService} from '@ofServices/authentication/authentication.service';
+import {catchError, flatMap, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '@ofStore/index';
 import {Router} from '@angular/router';
-import {ConfigActionTypes} from '@ofActions/config.actions';
+import {ConfigActionTypes, LoadConfigSuccess} from '@ofActions/config.actions';
 import {selectCode} from '@ofSelectors/authentication.selectors';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
@@ -42,11 +42,12 @@ import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 export class AuthenticationEffects {
 
     /**
-     * @constructor
+     * @constructorCheckImplicitFlowAuthenticationStatus
      * @param store - {Store<AppState>} state manager
      * @param actions$ - {Action} {Observable} of Action of the Application
      * @param authService - service implementing the authentication business rules
      * @param router - router service to redirect user accordingly to the user authentication status or variation of it.
+     * @param cardService - service handling request of cards
      *
      * istanbul ignore next */
     constructor(private store: Store<AppState>,
@@ -64,7 +65,13 @@ export class AuthenticationEffects {
         this.actions$
             .pipe(
                 ofType(ConfigActionTypes.LoadConfigSuccess),
-                map(() => new CheckAuthenticationStatus())
+                map((loadConfigSuccess: LoadConfigSuccess) => {
+                    const flowMode = loadConfigSuccess.payload.config.security.oauth2.flow.mode;
+                    if (flowMode && flowMode === 'IMPLICIT') {
+                        return new CheckImplicitFlowAuthenticationStatus();
+                    }
+                    return new CheckAuthenticationStatus();
+                })
             );
 
     /**
@@ -78,7 +85,7 @@ export class AuthenticationEffects {
      * on the login button.
      *
      * @member
-     * @name TryToLogin
+     * @name TryToLogIn
      * @typedef {Observable<AuthenticationActions>}
      */
     @Effect()
@@ -91,7 +98,7 @@ export class AuthenticationEffects {
                     return this.authService.askTokenFromPassword(payload.username, payload.password).pipe(
                         map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
                         catchError(errorResponse => {
-                            return this.handleErrorOnTokenGeneration(errorResponse,'authenticate');
+                                return this.handleErrorOnTokenGeneration(errorResponse, 'authenticate');
                             }
                         ));
                 })
@@ -112,23 +119,11 @@ export class AuthenticationEffects {
     TryToLogOut: Observable<Action> =
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.TryToLogOut),
-            switchMap((action: TryToLogOut) => {
+            switchMap(() => {
                 this.resetState();
-                return of(new EmptyLightCards(),new ClearCard(), new AcceptLogOut());
+                return of(new EmptyLightCards(), new ClearCard(), new AcceptLogOut());
             })
         );
-
-    private resetState() {
-        AuthenticationService.clearAuthenticationInformation();
-        this.store.select(buildConfigSelector('keycloak.realm')).subscribe(realm => {
-            if (realm) {
-                const redirect = AuthenticationService.computeRedirectUri();
-                window.location.href = `${environment.urls.auth}/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
-            }
-        });
-
-        this.cardService.unsubscribeCardOperation();
-    }
 
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.AcceptLogOut} type.
@@ -137,7 +132,7 @@ export class AuthenticationEffects {
      * This {Effect} should be called as a consequence of a {TryLogOut} action
      *
      * @member
-     * @name AcceptLogOut
+     * @name AcceptLogOut flow on demand
      * @typedef {Observable<AuthenticationActions>}
      *
      */
@@ -145,8 +140,8 @@ export class AuthenticationEffects {
     AcceptLogOut: Observable<AuthenticationActions> =
         this.actions$.pipe(
             ofType(AuthenticationActionTypes.AcceptLogOut),
-            map((action: AcceptLogOut) => {
-                this.router.navigate(['/login'])
+            map(() => {
+                this.router.navigate(['/login']);
                 return new AcceptLogOutSuccess();
             })
         );
@@ -164,9 +159,9 @@ export class AuthenticationEffects {
     RejectLogInAttempt: Observable<AuthenticationActions> =
         this.actions$.pipe(ofType(AuthenticationActionTypes.RejectLogIn),
             tap(() => {
-                AuthenticationService.clearAuthenticationInformation();
+                this.authService.clearAuthenticationInformation();
             }),
-            map(action => new AcceptLogOut()));
+            map(() => new AcceptLogOut()));
 
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.CheckAuthenticationStatus} type.
@@ -190,27 +185,31 @@ export class AuthenticationEffects {
             .pipe(
                 ofType(AuthenticationActionTypes.CheckAuthenticationStatus),
                 switchMap(() => {
-                    return this.authService.checkAuthentication(AuthenticationService.extractToken())
+                    return this.authService.checkAuthentication(this.authService.extractToken())
                         .pipe(catchError(() => of(null)));
 
                 }),
                 withLatestFrom(this.store.select(selectCode)),
                 switchMap(([payload, code]) => {
-                        //no token stored or token invalid
+                        // no token stored or token invalid
                         if (!payload) {
-                            if (!!code)
+                            if (!!code) {
                                 return this.authService.askTokenFromCode(code).pipe(
+                                    tap(() => {
+                                        this.router.navigate(['/feed']);
+                                    }),
                                     map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
                                     catchError(errorResponse => {
-                                            return this.handleErrorOnTokenGeneration(errorResponse,'code');
+                                            return this.handleErrorOnTokenGeneration(errorResponse, 'code');
                                         }
                                     ));
+                            }
                             return of(this.handleRejectedLogin(new Message('The stored token is invalid',
                                 MessageLevel.ERROR,
                                 new I18n('login.error.token.invalid'))));
                         } else {
-                            if (!AuthenticationService.isExpirationDateOver()) {
-                                const authInfo = AuthenticationService.extractIdentificationInformation();
+                            if (!this.authService.isExpirationDateOver()) {
+                                const authInfo = this.authService.extractIdentificationInformation();
                                 return this.authService.loadUserData(authInfo)
                                     .pipe(
                                         map(auth => new AcceptLogIn(auth))
@@ -223,7 +222,7 @@ export class AuthenticationEffects {
                         }
                     }
                 ),
-                catchError((err, caught) => {
+                catchError(err => {
                     console.error(err);
                     const parameters = new Map<string>();
                     parameters['message'] = err;
@@ -234,9 +233,28 @@ export class AuthenticationEffects {
                 })
             );
 
-    handleErrorOnTokenGeneration(errorResponse,category:string) {
+
+    @Effect()
+    CheckImplicitFlowAuthentication: Observable<AuthenticationActions> =
+        this.actions$
+            .pipe(ofType(AuthenticationActionTypes.CheckImplicitFlowAuthenticationStatus),
+                flatMap(() => from(this.authService.initAndLoadAuth()).pipe(
+                    map ( response => {
+                        return response ;
+                    }),
+                    catchError( error => {
+                        return of(error);
+                    })
+                )),
+                // due to implicit flow mode an explicit rerouting to `/feed` is needed once authenticated
+                tap ( () => this.router.navigate(['/feed'])),
+                map(() => {
+                    return new  AcceptLogIn(this.authService.providePayloadForSuccessfulAuthenticationFromImplicitFlow());
+                }));
+
+    handleErrorOnTokenGeneration(errorResponse, category: string) {
         let message, key;
-        let params = new Map<string>()
+        const params = new Map<string>();
         switch (errorResponse.status) {
             case 401:
                 message = 'Unable to authenticate the user';
@@ -257,19 +275,20 @@ export class AuthenticationEffects {
     }
 
     handleRejectedLogin(errorMsg: Message): AuthenticationActions {
-        AuthenticationService.clearAuthenticationInformation();
+        this.authService.clearAuthenticationInformation();
         return new RejectLogIn({error: errorMsg});
 
     }
 
-    // handleLogInAttempt(payload: CheckTokenResponse): AuthenticationActions {
-    //     if (payload) {
-    //         const authInfo = this.authService.extractIdentificationInformation();
-    //         return new AcceptLogIn(authInfo);
-    //
-    //     }
-    //     return this.handleRejectedLogin('invalid token');
-    // }
-
+    private resetState() {
+        this.authService.clearAuthenticationInformation();
+        this.store.select(buildConfigSelector('keycloak.realm')).subscribe(realm => {
+            if (realm) {
+                const redirect = this.authService.computeRedirectUri();
+                window.location.href = `${environment.urls.auth}/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
+            }
+        });
+        this.cardService.unsubscribeCardOperation();
+    }
 
 }

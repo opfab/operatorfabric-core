@@ -15,19 +15,20 @@ import {
     getRandomI18nData,
     getRandomIndex
 } from '@tests/helpers';
-import {ThirdsI18nLoaderFactory, ThirdsService} from "../../../../services/thirds.service";
-import {ServicesModule} from "@ofServices/services.module";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {StoreModule} from "@ngrx/store";
-import {appReducer} from "@ofStore/index";
-import {HandlebarsService} from "../../services/handlebars.service";
-import {TimeService} from "@ofServices/time.service";
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {environment} from "@env/environment";
-import {By} from "@angular/platform-browser";
-import {of} from "rxjs";
-import {Action, ActionType, Process, State} from "@ofModel/thirds.model";
-import {Map as OfMap} from "@ofModel/map";
+import {ThirdsI18nLoaderFactory, ThirdsService} from '../../../../services/thirds.service';
+import {ServicesModule} from '@ofServices/services.module';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {StoreModule} from '@ngrx/store';
+import {appReducer} from '@ofStore/index';
+import {HandlebarsService} from '../../services/handlebars.service';
+import {TimeService} from '@ofServices/time.service';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {environment} from '@env/environment';
+import {By} from '@angular/platform-browser';
+import {of} from 'rxjs';
+import {Action, ActionType, Process, State} from '@ofModel/thirds.model';
+import {Map as OfMap} from '@ofModel/map';
+import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 describe('DetailComponent', () => {
     let component: DetailComponent;
@@ -54,7 +55,8 @@ describe('DetailComponent', () => {
             declarations: [DetailComponent],
             providers: [ThirdsService, HandlebarsService,
                 {provide:'TimeEventSource',useValue:null},
-                TimeService]
+                TimeService,
+            AuthenticationImportHelperForSpecs]
         })
             .compileComponents();
         injector = getTestBed();

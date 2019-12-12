@@ -10,11 +10,12 @@ import {TestBed} from '@angular/core/testing';
 import {TimeService} from './time.service';
 
 import * as moment from 'moment';
-import {RouterTestingModule} from "@angular/router/testing";
-import {StoreModule} from "@ngrx/store";
-import {appReducer} from "@ofStore/index";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {TimeReference, TimeSpeed} from "@ofModel/time.model";
+import {RouterTestingModule} from '@angular/router/testing';
+import {StoreModule} from '@ngrx/store';
+import {appReducer} from '@ofStore/index';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {TimeReference, TimeSpeed} from '@ofModel/time.model';
+import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 describe('TimeService', () => {
 
@@ -26,7 +27,7 @@ describe('TimeService', () => {
     });
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [TimeService],
+            providers: [TimeService, AuthenticationImportHelperForSpecs],
             imports:[  HttpClientTestingModule,
                         RouterTestingModule,
                         StoreModule.forRoot(appReducer)

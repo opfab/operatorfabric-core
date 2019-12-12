@@ -8,6 +8,7 @@
 import {Action} from '@ngrx/store';
 import {Guid} from 'guid-typescript';
 import {Message} from "@ofModel/message.model";
+import {ExtractI18nBuilderOptions} from "@angular-devkit/build-angular";
 
 export enum AuthenticationActionTypes {
     InitAuthStatus = '[Authentication] Init Authentication Status',
@@ -18,6 +19,11 @@ export enum AuthenticationActionTypes {
     TryToLogOut = '[Authentication] Try to log the user out',
     AcceptLogOut = '[Authentication] Accept the user log out attempt',
     AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt',
+    CheckImplicitFlowAuthenticationStatus = '[Authentication] Check Authentication Status specifically for the Implicit Flow',
+    UselessAuthAction = '[Authentication] test purpose action'
+    // TODO the following actions should be merge with password and code flow management of authentication
+    , ImplicitallyAuthenticated = '[Authentication] user is authentication using Implicit Flow' //
+    , UnAuthenticationFromImplicitFlow = '[Authentication[ user is log out by implicit Flow internal managment'
 }
 
 /**
@@ -144,6 +150,22 @@ export class AcceptLogOutSuccess implements Action {
     readonly type = AuthenticationActionTypes.AcceptLogOutSuccess;
 }
 
+export class CheckImplicitFlowAuthenticationStatus implements Action {
+    readonly type = AuthenticationActionTypes.CheckImplicitFlowAuthenticationStatus;
+}
+
+export class UselessAuthAction implements  Action{
+    readonly type = AuthenticationActionTypes.UselessAuthAction;
+
+}
+
+export class ImplicitallyAuthenticated implements Action {
+    readonly type = AuthenticationActionTypes.ImplicitallyAuthenticated;
+}
+
+export class UnAuthenticationFromImplicitFlow implements Action {
+    readonly type = AuthenticationActionTypes.UnAuthenticationFromImplicitFlow;
+}
 export type AuthenticationActions =
     InitAuthStatus
     | AcceptLogIn
@@ -152,4 +174,8 @@ export type AuthenticationActions =
     | TryToLogOut
     | CheckAuthenticationStatus
     | AcceptLogOut
-    | AcceptLogOutSuccess;
+    | AcceptLogOutSuccess
+    | CheckImplicitFlowAuthenticationStatus
+    | UselessAuthAction
+    | ImplicitallyAuthenticated
+    |UnAuthenticationFromImplicitFlow;

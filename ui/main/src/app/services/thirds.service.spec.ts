@@ -18,7 +18,7 @@ import {generateThirdWithVersion, getOneRandomLigthCard, getRandomAlphanumericVa
 import * as _ from 'lodash';
 import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {LightCard} from "@ofModel/light-card.model";
-import {AuthenticationService} from "@ofServices/authentication.service";
+import {AuthenticationService} from "@ofServices/authentication/authentication.service";
 import {GuidService} from "@ofServices/guid.service";
 import {Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import {EffectsModule} from "@ngrx/effects";

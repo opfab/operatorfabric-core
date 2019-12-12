@@ -8,7 +8,7 @@
 export const environment = {
   production: true,
     urls: {
-        authentication: '',
+        authentication: '/ui/',
         auth: '/auth',
         cards: '/cards',
         users: '/users',

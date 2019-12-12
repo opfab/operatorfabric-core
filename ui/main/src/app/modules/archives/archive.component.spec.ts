@@ -12,17 +12,18 @@ import {appReducer, AppState, storeConfig} from '@ofStore/index';
 import {Store, StoreModule} from '@ngrx/store';
 import * as fromStore from '@ofStore/selectors/archive.selectors';
 import {RouterTestingModule} from '@angular/router/testing';
-import {HttpClientModule} from '@angular/common/http';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {TranslateModule} from '@ngx-translate/core';
 import {translateConfig} from '../../translate.config';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ServicesModule} from '@ofServices/services.module';
-import { ArchiveQuerySuccess } from '@ofStore/actions/archive.actions';
-import { ArchiveListComponent } from './components/archive-list/archive-list.component';
-import { ArchiveFiltersComponent } from './components/archive-filters/archive-filters.component';
-import { getRandomPage } from '@tests/helpers';
+import {ArchiveQuerySuccess} from '@ofStore/actions/archive.actions';
+import {ArchiveListComponent} from './components/archive-list/archive-list.component';
+import {ArchiveFiltersComponent} from './components/archive-filters/archive-filters.component';
+import {getRandomPage} from '@tests/helpers';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 describe('ArchivesComponent', () => {
     let component: ArchivesComponent;
@@ -36,7 +37,7 @@ describe('ArchivesComponent', () => {
                 StoreModule.forRoot(appReducer, storeConfig),
                 RouterTestingModule,
                 StoreRouterConnectingModule,
-                HttpClientModule,
+                HttpClientTestingModule,
                 TranslateModule.forRoot(translateConfig)],
             declarations: [
                 ArchivesComponent,
@@ -45,7 +46,8 @@ describe('ArchivesComponent', () => {
             ],
             providers: [
                 {provide: Store, useClass: Store},
-                {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}
+                {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
+                AuthenticationImportHelperForSpecs
             ],
             schemas: [ NO_ERRORS_SCHEMA ]
         }).compileComponents();
