@@ -6,6 +6,7 @@ CURRENT_PATH=$(pwd)
 GH_REPO=github.com/opfab/operatorfabric.git
 HTTP_REPO="https://davidbinderRTE:${GH_DOC_TOKEN}@${GH_REPO}"
 git clone $HTTP_REPO $HOME/documentation
+# TODO Find out what sed below is for (as we don't have - in our version tags)
 version=$(echo "$OF_VERSION"| sed s/-SNAPSHOT//)
 cd $OF_HOME
 ./gradlew generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
