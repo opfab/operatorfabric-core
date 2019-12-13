@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CustomLogoComponent } from './custom-logo.component';
 
-fdescribe('CustomLogoComponent', () => {
+describe('CustomLogoComponent', () => {
   let component: CustomLogoComponent;
   let fixture: ComponentFixture<CustomLogoComponent>;
 
@@ -26,7 +26,7 @@ fdescribe('CustomLogoComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges(); 
     
-    fakeImageBase64 = 'abcde64';
+    fakeImageBase64 = 'abcdeBase64';
 
     randomUnderMaxheight = Math.floor(Math.random() * component.MAX_HEIGHT);
     randomUnderMaxWidth = Math.floor(Math.random() * component.MAX_WIDTH);

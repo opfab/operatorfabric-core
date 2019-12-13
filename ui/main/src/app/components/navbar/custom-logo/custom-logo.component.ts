@@ -40,9 +40,7 @@ export class CustomLogoComponent implements OnInit {
     if (this.limitSize == undefined)
       this.limitSize = true;   
 
-    console.log("AVANT SETTAGE, les valeurs de height et de width et limitSize : ", this.height, this.width, this.limitSize);
     this.setHeightAndWidth();
-    console.log("APRES SETTAGE, les valeurs de height et de width et limitSize : ", this.height, this.width, this.limitSize);
   }
 
   private setHeightAndWidth() {
@@ -52,9 +50,7 @@ export class CustomLogoComponent implements OnInit {
         this.height = this.MAX_HEIGHT;
       if (this.width > this.MAX_WIDTH)
         this.width = this.MAX_WIDTH;
-    } else {
-      console.log("limitsize à false");
-    }
+    } 
   }
 
   public getImage(): SafeUrl {
