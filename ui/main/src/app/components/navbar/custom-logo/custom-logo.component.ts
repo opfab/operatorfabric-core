@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'of-custom-logo',
@@ -11,19 +11,28 @@ export class CustomLogoComponent implements OnInit {
   @Input() base64: string;
 
   @Input() limitSize: boolean;
-  @Input() height: Number;
-  @Input() width: Number;
+  @Input() height: number;
+  @Input() width: number;
 
-  DEFAULT_HEIGHT: Number = 32;
-  DEFAULT_WIDTH: Number = 150;
+  DEFAULT_HEIGHT: number;
+  DEFAULT_WIDTH: number;
 
-  MAX_HEIGHT: Number = 32;
-  MAX_WIDTH: Number = 200;
+  MAX_HEIGHT: number;
+  MAX_WIDTH: number;
 
-  constructor(public _DomSanitizationService: DomSanitizer) { }
+  constructor(public domSanitizationService: DomSanitizer) { 
+    this.DEFAULT_HEIGHT = 32;
+    this.DEFAULT_WIDTH = 150;
+  
+    this.MAX_HEIGHT = 32;
+    this.MAX_WIDTH = 200;
+  }
 
   ngOnInit() {
     // default value, Administrator has to change explicitly
+    if (this.base64 == undefined || this.base64 == '') {
+      console.error("no custom-logo base64 configured, no picture loaded");
+    }
     if (this.height == undefined)
       this.height = this.DEFAULT_HEIGHT;
     if (this.width == undefined)
@@ -46,6 +55,10 @@ export class CustomLogoComponent implements OnInit {
     } else {
       console.log("limitsize à false");
     }
+  }
+
+  public getImage(): SafeUrl {
+    return this.domSanitizationService.bypassSecurityTrustUrl(this.base64);
   }
 
 }
