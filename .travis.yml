@@ -25,7 +25,7 @@ jobs:
 #      - ./gradlew --build-cache clean
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
       - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
-      - ./gradlew --build-cache copyDependencies test jacocoTestReport && sonar-scanner -X
+      - ./gradlew --build-cache copyDependencies test jacocoTestReport && sonar-scanner
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
 #      - ./gradlew --build-cache assemble -x test
   - stage: docker-images
