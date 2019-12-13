@@ -12,7 +12,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState, storeConfig} from '@ofStore/index';
-import {IconComponent} from "../icon/icon.component";
+import { IconComponent } from './icon/icon.component';
 import {EffectsModule} from "@ngrx/effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {ThirdsService} from "@ofServices/thirds.service";
