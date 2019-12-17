@@ -15,7 +15,7 @@ import {of} from 'rxjs';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
-import {IconComponent} from "./components/icon/icon.component";
+import {IconComponent} from "./components/navbar/icon/icon.component";
 import {TranslateModule} from "@ngx-translate/core";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {I18nService} from "@ofServices/i18n.service";

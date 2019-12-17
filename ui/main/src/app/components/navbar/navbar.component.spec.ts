@@ -12,7 +12,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState, storeConfig} from '@ofStore/index';
-import {IconComponent} from "../icon/icon.component";
+import { IconComponent } from './icon/icon.component';
 import {EffectsModule} from "@ngrx/effects";
 import {MenuEffects} from "@ofEffects/menu.effects";
 import {ThirdsService} from "@ofServices/thirds.service";
@@ -34,12 +34,17 @@ import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
 import {MenuLinkComponent} from "./menus/menu-link/menu-link.component";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
+import { CustomLogoComponent } from './custom-logo/custom-logo.component';
 
 library.add(faSignOutAlt);
 
 enum MODE {
-    HAS_CONFIG = 'HAS_CONFIG',
-    HAS_NO_CONFIG = 'HAS_NO_CONFIG'
+    HAS_NO_CONFIG,
+    HAS_CONFIG_WITH_MENU,
+    HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_TRUE,
+    HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_FALSE,
+    HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_WRONG_VALUE,
+    HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_NOT_DEFINED
 }
 
 describe('NavbarComponent', () => {
@@ -59,11 +64,10 @@ describe('NavbarComponent', () => {
                 HttpClientTestingModule, 
                 FontAwesomeModule
             ],
-            declarations: [NavbarComponent, IconComponent, InfoComponent, MenuLinkComponent],
+            declarations: [NavbarComponent, IconComponent, CustomLogoComponent, InfoComponent, MenuLinkComponent],
             providers: [
                 Store,
                 ThirdsService, 
-
                 TimeService]
         })
             .compileComponents();
@@ -80,7 +84,7 @@ describe('NavbarComponent', () => {
 
     });
 
-    it('should create with a configuration no setted', () => {
+    it('should create with a configuration no set', () => {
         defineFakeState(MODE.HAS_NO_CONFIG);   
 
         expect(component).toBeTruthy();
@@ -90,18 +94,48 @@ describe('NavbarComponent', () => {
         expect(component.limitSize).toBe(undefined);
     });
 
-    it('should create with a configuration setted', () => {
-        defineFakeState(MODE.HAS_CONFIG);   
+    it('should create with the custom logo configuration set to true', () => {
+        defineFakeState(MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_TRUE);   
 
         expect(component).toBeTruthy();
         expect(component.customLogo).toBe("data:image/svg+xml;base64,abcde64");
-        expect(component.height).toBe("64px");
-        expect(component.width).toBe("400px");
+        expect(component.height).toBe(64);
+        expect(component.width).toBe(400);
         expect(component.limitSize).toBe(true);
     });
 
+    it('should create with the custom logo configuration with limitSize to false', () => {
+        defineFakeState(MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_FALSE);   
+
+        expect(component).toBeTruthy();
+        expect(component.customLogo).toBe("data:image/svg+xml;base64,abcde64");
+        expect(component.height).toBe(32);
+        expect(component.width).toBe(200);
+        expect(component.limitSize).toBe(false);
+    });
+
+    it('should create with the custom logo configuration with limitSize set to wrong value', () => {
+        defineFakeState(MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_WRONG_VALUE);   
+
+        expect(component).toBeTruthy();
+        expect(component.customLogo).toBe("data:image/svg+xml;base64,abcde64");
+        expect(component.height).toBe(32);
+        expect(component.width).toBe(200);
+        expect(component.limitSize).toBe(undefined);
+    });
+
+    it('should create with the custom logo configuration with limitSize not defined', () => {
+        defineFakeState(MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_NOT_DEFINED);   
+
+        expect(component).toBeTruthy();
+        expect(component.customLogo).toBe("data:image/svg+xml;base64,abcde64");
+        expect(component.height).toBe(16);
+        expect(component.width).toBe(100);
+        expect(component.limitSize).toBe(undefined);
+    });
+
     it('should create plain link for single-entry third-party menu', () => {
-        defineFakeState(MODE.HAS_CONFIG);   
+        defineFakeState(MODE.HAS_CONFIG_WITH_MENU);   
 
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
@@ -113,7 +147,7 @@ describe('NavbarComponent', () => {
     });
 
     it('should create menu', () => {
-        defineFakeState(MODE.HAS_CONFIG);   
+        defineFakeState(MODE.HAS_CONFIG_WITH_MENU);   
 
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
@@ -126,7 +160,7 @@ describe('NavbarComponent', () => {
     });
 
     it('should toggle menu ', (done) => {
-        defineFakeState(MODE.HAS_CONFIG); 
+        defineFakeState(MODE.HAS_CONFIG_WITH_MENU); 
 
         clock().install();
         const rootElement = fixture.debugElement;
@@ -151,7 +185,7 @@ describe('NavbarComponent', () => {
     });
 
 
-    function defineFakeState(mode:string): void {
+    function defineFakeState(mode:MODE): void {
         spyOn(store, 'select').and.callFake(buildFn => {
             if (buildFn === selectCurrentUrl) {
                 return of('/test/url');
@@ -170,12 +204,13 @@ describe('NavbarComponent', () => {
                     map(v => buildFn(v))
                 )
                 break;
-            case MODE.HAS_CONFIG:
+            case MODE.HAS_CONFIG_WITH_MENU:
                 return of ({
                     ...emptyAppState,
                     authentication: { ...authInitialState },
                     settings: {...settingsInitialState },
                     time: {...timeInitialState },
+                    config: { ...configInitialState }, 
                     menu: {
                         ...menuInitialState,
                         menu: [{
@@ -201,20 +236,89 @@ describe('NavbarComponent', () => {
                             url: 'link3'
                         }]
                     }]},
-                    config: {
-                    ...configInitialState,
-                    config: {
-                        logo: {
-                        base64: 'abcde64', 
-                        height: '64px',
-                        width: '400px',
-                        limitSize: true
-                        }
-                    }}
                 }).pipe(
                     map(v => buildFn(v))
                 )
                 break;
+                case MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_TRUE:
+                    return of ({
+                        ...emptyAppState,
+                        authentication: { ...authInitialState },
+                        settings: {...settingsInitialState },
+                        time: {...timeInitialState },
+                        menu: {...menuInitialState },
+                        config: {...configInitialState,
+                            config: {
+                                logo: {
+                                    base64: 'abcde64', 
+                                    height: 64,
+                                    width: 400,
+                                    limitSize: true
+                                }
+                            }}
+                    }).pipe(
+                        map(v => buildFn(v))
+                    )
+                break;
+                case MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_FALSE:
+                    return of ({
+                        ...emptyAppState,
+                        authentication: { ...authInitialState },
+                        settings: {...settingsInitialState },
+                        time: {...timeInitialState },
+                        menu: {...menuInitialState },
+                        config: {...configInitialState,
+                            config: {
+                                logo: {
+                                    base64: 'abcde64', 
+                                    height: 32,
+                                    width: 200,
+                                    limitSize: false
+                                }
+                            }}
+                    }).pipe(
+                        map(v => buildFn(v))
+                    )
+                break;
+                case MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_WRONG_VALUE:
+                    return of ({
+                        ...emptyAppState,
+                        authentication: { ...authInitialState },
+                        settings: {...settingsInitialState },
+                        time: {...timeInitialState },
+                        menu: {...menuInitialState },
+                        config: {...configInitialState,
+                            config: {
+                                logo: {
+                                    base64: 'abcde64', 
+                                    height: 32,
+                                    width: 200,
+                                    limitSize: 'NEITHER_FALSE_NEITHER_TRUE'
+                                }
+                            }}
+                    }).pipe(
+                        map(v => buildFn(v))
+                    )
+                break;
+                case MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_NOT_DEFINED:
+                    return of ({
+                        ...emptyAppState,
+                        authentication: { ...authInitialState },
+                        settings: {...settingsInitialState },
+                        time: {...timeInitialState },
+                        menu: {...menuInitialState },
+                        config: {...configInitialState,
+                            config: {
+                                logo: {
+                                    base64: 'abcde64', 
+                                    height: 16,
+                                    width: 100
+                                }
+                            }}
+                    }).pipe(
+                        map(v => buildFn(v))
+                    )
+                break;            
             }
         });
 

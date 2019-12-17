@@ -18,7 +18,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {LoginComponent} from "./components/login/login.component";
-import {IconComponent} from './components/icon/icon.component';
+import {IconComponent} from './components/navbar/icon/icon.component';
 import {TranslateModule} from "@ngx-translate/core";
 import {translateConfig} from "./translate.config";
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
@@ -27,6 +27,7 @@ import {faExternalLinkAlt, faSignOutAlt} from '@fortawesome/free-solid-svg-icons
 import {InfoComponent} from './components/navbar/info/info.component';
 import {UtilitiesModule} from "./modules/utilities/utilities.module";
 import {MenuLinkComponent} from './components/navbar/menus/menu-link/menu-link.component';
+import { CustomLogoComponent } from './components/navbar/custom-logo/custom-logo.component';
 
 library.add(faExternalLinkAlt);
 library.add(faSignOutAlt)
@@ -47,7 +48,7 @@ library.add(faSignOutAlt)
         FontAwesomeModule,
         UtilitiesModule
     ],
-    declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent, InfoComponent, MenuLinkComponent],
+    declarations: [AppComponent, NavbarComponent, LoginComponent, IconComponent, InfoComponent, MenuLinkComponent, CustomLogoComponent],
     providers: [ { provide: LocationStrategy, useClass: HashLocationStrategy }],
     bootstrap: [AppComponent]
 })
