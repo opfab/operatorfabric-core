@@ -30,7 +30,7 @@ export class IconComponent implements OnInit {
 
   ngOnInit() {
     this.setSize();
-    this.setSprintes();
+    this.setSprites();
   }
 
   private setSize() {
@@ -49,11 +49,11 @@ export class IconComponent implements OnInit {
     }   
   }
 
-  private setSprintes() {
+  private setSprites() {
     if (this.bright == 'dark' || this.bright == 'light') {
       this.sprites='sprites-mono.svg'
     } else {
-      this.bright = undefined; // wrong value setted by the user
+      this.bright = undefined; // wrong value set by the user
       this.sprites='sprites.svg'
     }
   }

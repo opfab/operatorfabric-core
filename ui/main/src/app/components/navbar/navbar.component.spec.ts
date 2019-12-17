@@ -84,7 +84,7 @@ describe('NavbarComponent', () => {
 
     });
 
-    it('should create with a configuration no setted', () => {
+    it('should create with a configuration no set', () => {
         defineFakeState(MODE.HAS_NO_CONFIG);   
 
         expect(component).toBeTruthy();
@@ -94,7 +94,7 @@ describe('NavbarComponent', () => {
         expect(component.limitSize).toBe(undefined);
     });
 
-    it('should create with the custom logo configuration setted to true', () => {
+    it('should create with the custom logo configuration set to true', () => {
         defineFakeState(MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_TRUE);   
 
         expect(component).toBeTruthy();
@@ -114,7 +114,7 @@ describe('NavbarComponent', () => {
         expect(component.limitSize).toBe(false);
     });
 
-    it('should create with the custom logo configuration with limitSize setted to wrong value', () => {
+    it('should create with the custom logo configuration with limitSize set to wrong value', () => {
         defineFakeState(MODE.HAS_CONFIG_FOR_CONFIGURATION_WITH_LIMITSIZE_WRONG_VALUE);   
 
         expect(component).toBeTruthy();

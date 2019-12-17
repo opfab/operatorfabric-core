@@ -25,7 +25,7 @@ describe('IconComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create, sizeIcon not defined, default size is setted, W*H => 32px*32px', () => {
+  it('should create, sizeIcon not defined, default size is set, W*H => 32px*32px', () => {
     component.icon = 'icon';
     fixture.detectChanges();
     expect(component).toBeTruthy();
@@ -82,7 +82,7 @@ describe('IconComponent', () => {
     expect(htmlElement.querySelector('svg').getAttribute('height')).toEqual('32px');
   });
 
-  it('default color mode : should adjust attributes on the sprites.svg if bright is not setted', () => {
+  it('default color mode : should adjust attributes on the sprites.svg if bright is not set', () => {
     component.icon = 'icon';
 
     fixture.detectChanges();
@@ -93,7 +93,7 @@ describe('IconComponent', () => {
       .toEqual('/assets/images/icons/sprites.svg#icon');
   });
 
-  it('default color mode : should adjust attributes on the sprites.svg if bright is setted with wrong value (different from {light, dark})', () => {
+  it('default color mode : should adjust attributes on the sprites.svg if bright is set with wrong value (different from {light, dark})', () => {
     component.icon = 'icon';
     component.bright = 'wrong_parameter_not_dark_or_not_light';
     fixture.detectChanges();

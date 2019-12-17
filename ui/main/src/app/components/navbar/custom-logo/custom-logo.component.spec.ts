@@ -76,7 +76,7 @@ describe('CustomLogoComponent', () => {
     expect(component.width).toBeTruthy(component.MAX_WIDTH);
   });
 
-  it('[limitSize = true], should create the custom-logo with height defined and width not defined, the width will be setted to the DEFAULT_WIDTH value', () => {
+  it('[limitSize = true], should create the custom-logo with height defined and width not defined, the width will be set to the DEFAULT_WIDTH value', () => {
 
     component.base64 = fakeImageBase64;
     component.limitSize = true;
@@ -91,7 +91,7 @@ describe('CustomLogoComponent', () => {
     expect(component.width).toBeTruthy(component.DEFAULT_WIDTH);
   });
 
-  it('[limitSize = true], should create the custom-logo with width defined and height not defined, the height will be setted to the DEFAULT_HEIGHT value', () => {
+  it('[limitSize = true], should create the custom-logo with width defined and height not defined, the height will be set to the DEFAULT_HEIGHT value', () => {
 
     component.base64 = fakeImageBase64;
     component.limitSize = true;
@@ -106,7 +106,7 @@ describe('CustomLogoComponent', () => {
     expect(component.width).toBeTruthy(randomUnderMaxWidth);
   });
 
-  it('[limitSize = true], should create the custom-logo with width defined over the MAX_WIDTH and height not defined, the width will be setted to MAX_WIDTH value and the height will be setted to the DEFAULT_HEIGHT value', () => {
+  it('[limitSize = true], should create the custom-logo with width defined over the MAX_WIDTH and height not defined, the width will be set to MAX_WIDTH value and the height will be set to the DEFAULT_HEIGHT value', () => {
 
     component.base64 = fakeImageBase64;
     component.limitSize = true;
@@ -154,7 +154,7 @@ describe('CustomLogoComponent', () => {
     expect(component.width).toBeTruthy(randomOverMaxWidth);
   });
 
-  it('[limitSize = false], should create the custom-logo with height defined and width not defined, the width will be setted to the DEFAULT_WIDTH value', () => {
+  it('[limitSize = false], should create the custom-logo with height defined and width not defined, the width will be set to the DEFAULT_WIDTH value', () => {
 
     component.base64 = fakeImageBase64;
     component.limitSize = false;
@@ -169,7 +169,7 @@ describe('CustomLogoComponent', () => {
     expect(component.width).toBeTruthy(component.DEFAULT_WIDTH);
   });
 
-  it('[limitSize = false], should create the custom-logo with width defined and height not defined, the height will be setted to the DEFAULT_HEIGHT value', () => {
+  it('[limitSize = false], should create the custom-logo with width defined and height not defined, the height will be set to the DEFAULT_HEIGHT value', () => {
 
     component.base64 = fakeImageBase64;
     component.limitSize = false;
@@ -184,7 +184,7 @@ describe('CustomLogoComponent', () => {
     expect(component.width).toBeTruthy(randomUnderMaxWidth);
   });
 
-  it('[limitSize = false], should create the custom-logo with width defined over the MAX_WIDTH and height not defined, the width is not affected by the limitSize and the height will be setted to the DEFAULT_HEIGHT value', () => {
+  it('[limitSize = false], should create the custom-logo with width defined over the MAX_WIDTH and height not defined, the width is not affected by the limitSize and the height will be set to the DEFAULT_HEIGHT value', () => {
 
     component.base64 = fakeImageBase64;
     component.limitSize = false;

@@ -72,7 +72,7 @@ export class NavbarComponent implements OnInit {
         );
         this.store.select(buildConfigSelector('logo.limitSize')).subscribe(
             (limitSize:boolean) => {
-                // BE CAREFUL, as a boolean it has to be test with undefined value to know if it has been setted.
+                // BE CAREFUL, as a boolean it has to be test with undefined value to know if it has been set.
               if (limitSize!=undefined && typeof(limitSize) =='boolean') this.limitSize = limitSize;
             }
         );
