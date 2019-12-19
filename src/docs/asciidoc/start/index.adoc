@@ -26,12 +26,12 @@ To use OperatorFabric, you need a linux OS with the following :
 
 == Install and run server
 
-To start OperatorFabric , you first need to clone  the getting started git 
+To start OperatorFabric, you first need to clone the getting started git 
 
 ----
  git clone https://github.com/opfab/operatorfabric-getting-started.git
 ----
-Launch docker-compose up in the server directory. You need to wait for all the services to start, it is done when no more logs are written on the output.
+Launch docker-compose up in the server directory. You need to wait for all the services to start (it usally takes one minute to start),it is done when no more logs are written on the output(It could continue to log  but slowly).
 
 ----
 docker-compose up & 
@@ -174,7 +174,7 @@ The bundle is structured as follow :
 config.json : process description and global configuration 
 ----
 
-The bundle is provide in the bundle directory of example3. It contains a new version of the bundle used in example1 . 
+The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1 . 
 
 We just change the template and the stylesheet instead of displaying : 
 ----
@@ -264,7 +264,7 @@ Your token is the access_token value in the JSON. The token will be valid for 10
 ==== Send the bundle 
 
 
-Add the token to the sendBundle.sh script :
+Replace the value "THE TOKEN" with the token in the sendBundle.sh script :
 
 ----
 token=THE TOKEN
@@ -485,7 +485,7 @@ And for the second
 date -d "+ 900 minutes" +%s%N | cut -b1-13
 ----
 
-To send the card use the provide script in example4 directory 
+To send the card use the provided script in example4 directory 
 
 ----
 ./sendCard.sh card.json
