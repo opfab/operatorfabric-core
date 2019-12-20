@@ -62,7 +62,7 @@ describe('CustomLogoComponent', () => {
     expect(component.width).toBe(randomUnderMaxWidth);
   });
 
-  it(count++ + '[limitSize = true], should create the custom-logo with height and width defined but redefined with the limitSize', () => {
+  it('[limitSize = true], should create the custom-logo with height and width defined but redefined with the limitSize', () => {
 
     component.base64 = fakeImageBase64;
     component.limitSize = true;
