@@ -24,7 +24,6 @@ describe('CustomLogoComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CustomLogoComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); 
     
     fakeImageBase64 = 'abcdeBase64';
 
@@ -36,11 +35,14 @@ describe('CustomLogoComponent', () => {
   });
 
   it('should create the custom-logo with default values', () => {
+
+    fixture.detectChanges();
+
     expect(component).toBeTruthy();
     expect(component.base64).toBe(undefined);
     expect(component.limitSize).toBeTruthy(); // default value 
-    expect(component.height).toBeTruthy(component.DEFAULT_HEIGHT);
-    expect(component.width).toBeTruthy(component.DEFAULT_WIDTH);
+    expect(component.height).toBe(component.DEFAULT_HEIGHT);
+    expect(component.width).toBe(component.DEFAULT_WIDTH);
   });
 
   // LIMITSIZE = TRUE
@@ -56,11 +58,11 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeTruthy();
-    expect(component.height).toBeTruthy(randomUnderMaxheight);
-    expect(component.width).toBeTruthy(randomUnderMaxWidth);
+    expect(component.height).toBe(randomUnderMaxheight);
+    expect(component.width).toBe(randomUnderMaxWidth);
   });
 
-  it('[limitSize = true], should create the custom-logo with height and width defined but redefined with the limitSize', () => {
+  it(count++ + '[limitSize = true], should create the custom-logo with height and width defined but redefined with the limitSize', () => {
 
     component.base64 = fakeImageBase64;
     component.limitSize = true;
@@ -72,8 +74,8 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeTruthy();
-    expect(component.height).toBeTruthy(component.MAX_HEIGHT);
-    expect(component.width).toBeTruthy(component.MAX_WIDTH);
+    expect(component.height).toBe(component.MAX_HEIGHT);
+    expect(component.width).toBe(component.MAX_WIDTH);
   });
 
   it('[limitSize = true], should create the custom-logo with height defined and width not defined, the width will be set to the DEFAULT_WIDTH value', () => {
@@ -87,8 +89,8 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeTruthy();
-    expect(component.height).toBeTruthy(randomUnderMaxheight);
-    expect(component.width).toBeTruthy(component.DEFAULT_WIDTH);
+    expect(component.height).toBe(randomUnderMaxheight);
+    expect(component.width).toBe(component.DEFAULT_WIDTH);
   });
 
   it('[limitSize = true], should create the custom-logo with width defined and height not defined, the height will be set to the DEFAULT_HEIGHT value', () => {
@@ -102,8 +104,8 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeTruthy();
-    expect(component.height).toBeTruthy(component.DEFAULT_HEIGHT);
-    expect(component.width).toBeTruthy(randomUnderMaxWidth);
+    expect(component.height).toBe(component.DEFAULT_HEIGHT);
+    expect(component.width).toBe(randomUnderMaxWidth);
   });
 
   it('[limitSize = true], should create the custom-logo with width defined over the MAX_WIDTH and height not defined, the width will be set to MAX_WIDTH value and the height will be set to the DEFAULT_HEIGHT value', () => {
@@ -117,8 +119,8 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeTruthy();
-    expect(component.height).toBeTruthy(component.DEFAULT_HEIGHT);
-    expect(component.width).toBeTruthy(component.MAX_WIDTH);
+    expect(component.height).toBe(component.DEFAULT_HEIGHT);
+    expect(component.width).toBe(component.MAX_WIDTH);
   });
 
   // LIMITSIZE = FALSE
@@ -134,8 +136,8 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeFalsy();
-    expect(component.height).toBeTruthy(randomUnderMaxheight);
-    expect(component.width).toBeTruthy(randomUnderMaxWidth);
+    expect(component.height).toBe(randomUnderMaxheight);
+    expect(component.width).toBe(randomUnderMaxWidth);
   });
 
   it('[limitSize = false], should create the custom-logo with height and width defined, height and width are over the limitSize but are not affected', () => {
@@ -150,8 +152,8 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeFalsy();
-    expect(component.height).toBeTruthy(randomOverMaxHeight);
-    expect(component.width).toBeTruthy(randomOverMaxWidth);
+    expect(component.height).toBe(randomOverMaxHeight);
+    expect(component.width).toBe(randomOverMaxWidth);
   });
 
   it('[limitSize = false], should create the custom-logo with height defined and width not defined, the width will be set to the DEFAULT_WIDTH value', () => {
@@ -165,8 +167,8 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeFalsy();
-    expect(component.height).toBeTruthy(randomUnderMaxheight);
-    expect(component.width).toBeTruthy(component.DEFAULT_WIDTH);
+    expect(component.height).toBe(randomUnderMaxheight);
+    expect(component.width).toBe(component.DEFAULT_WIDTH);
   });
 
   it('[limitSize = false], should create the custom-logo with width defined and height not defined, the height will be set to the DEFAULT_HEIGHT value', () => {
@@ -180,8 +182,8 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeFalsy();
-    expect(component.height).toBeTruthy(component.DEFAULT_HEIGHT);
-    expect(component.width).toBeTruthy(randomUnderMaxWidth);
+    expect(component.height).toBe(component.DEFAULT_HEIGHT);
+    expect(component.width).toBe(randomUnderMaxWidth);
   });
 
   it('[limitSize = false], should create the custom-logo with width defined over the MAX_WIDTH and height not defined, the width is not affected by the limitSize and the height will be set to the DEFAULT_HEIGHT value', () => {
@@ -195,8 +197,8 @@ describe('CustomLogoComponent', () => {
     expect(component).toBeTruthy();
     expect(component.base64).toBe(fakeImageBase64);
     expect(component.limitSize).toBeFalsy();
-    expect(component.height).toBeTruthy(component.DEFAULT_HEIGHT);
-    expect(component.width).toBeTruthy(randomOverMaxWidth);
+    expect(component.height).toBe(component.DEFAULT_HEIGHT);
+    expect(component.width).toBe(randomOverMaxWidth);
   });
 
 });
