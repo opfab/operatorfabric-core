@@ -1,13 +1,50 @@
 #!/usr/bin/env bash
 
-OLD_RELEASE=0.12.1.RELEASE
-NEW_DATE="December 20, 2019"
-# TODO Replace with parameters
+# Default values
+revisionDate="$(LC_ALL=en_GB.utf8 date +'%d %B %Y')"
+
+display_usage() {
+	echo "This script makes the necessary changes to version controlled files to prepare for a RELEASE version."
+	echo -e "Usage:\n"
+	echo -e "\tprepare_release_version.sh [OPTIONS] \n"
+	echo -e "options:\n"
+	echo -e "\t-d, --date  : string. Revision date (please use %d %B %Y format). Defaults to today ($revisionDate)"
+}
+
+# Read parameters
+while [[ $# -gt 0 ]]
+do
+key="$1"
+# echo $key
+case $key in
+    -d|--date)
+    revisionDate="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -h|--help)
+    shift # past argument
+display_usage
+    exit 0
+    ;;
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+
+
 
 # Get current (SNAPSHOT) version from VERSION file
 OLD_VERSION=$(cat VERSION)
 echo "Current version is $OLD_VERSION (based on VERSION file)"
-# TODO Check that it is a SNAPSHOT version
+
+# Check that current version is a SNAPSHOT version as expected
+if [[ $OLD_VERSION != *.SNAPSHOT* ]]; then
+  echo "Current version is not a SNAPSHOT version, this script shouldn't be used."
+  exit 1;
+fi
 
 # Determine RELEASE version
 NEW_VERSION=$(cat VERSION | sed 's/SNAPSHOT/RELEASE/' )
@@ -29,7 +66,7 @@ echo "Replacing $OLD_VERSION with $NEW_VERSION in links in adoc files"
 find . -name "*.adoc" | xargs sed -i "s/\/$OLD_VERSION\//\/$NEW_VERSION\//g";
 
 echo "Updating revision date in adoc files"
-find . -name "*.adoc" | xargs sed -i "s/^:revdate:\(.*\)$/:revdate: $NEW_DATE/g";
+find . -name "*.adoc" | xargs sed -i "s/^:revdate:\(.*\)$/:revdate: $revisionDate/g";
 
 # TODO Make sure examples from src/docs/asciidoc/developer_guide/01_versioning.adoc are excluded
 
@@ -37,17 +74,11 @@ find . -name "*.adoc" | xargs sed -i "s/^:revdate:\(.*\)$/:revdate: $NEW_DATE/g"
 # TODO Instead of having each command list changes we can have tests on git status (cf upload_doc.sh)
 # TODO Updating :revdate: (param or now)
 
-# echo "Replacing $OLD_RELEASE with $NEW_VERSION in demo/deploy docker-compose files"
-# sed -i "s/$OLD_RELEASE/$NEW_VERSION/g" ./src/main/docker/demo/docker-compose.yml;
-# sed -i "s/$OLD_RELEASE/$NEW_VERSION/g" ./src/main/docker/deploy/docker-compose.yml;
 echo "Using $NEW_VERSION for lfeoperatorfabric images in  demo/deploy docker-compose files"
 sed -i "s/image\( *\):\( *\)/image: $NEW_VERSION/g" ./src/main/docker/demo/docker-compose.yml;
 # image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
 # TODO Add regexp so we're sure we only update lfeoperatorfabric images
 
-# TODO Echo changes made or at least modified files -> git status
-# TODO Do a display usage function
-
-# TODO Check that there is no reference to the old version left (limited to version-controlled files)
-# echo "Checking that there are no references to $OLD_VERSION left"
+echo "The following files have been updated: "
+echo | git status --porcelain
 
