@@ -34,50 +34,46 @@ display_usage
 esac
 done
 
-
+echo "Revision date: $revisionDate"
 
 # Get current (SNAPSHOT) version from VERSION file
-OLD_VERSION=$(cat VERSION)
-echo "Current version is $OLD_VERSION (based on VERSION file)"
+oldVersion=$(cat VERSION)
+echo "Current version is $oldVersion (based on VERSION file)"
 
 # Check that current version is a SNAPSHOT version as expected
-if [[ $OLD_VERSION != *.SNAPSHOT* ]]; then
+if [[ $oldVersion != *.SNAPSHOT* ]]; then
   echo "Current version is not a SNAPSHOT version, this script shouldn't be used."
   exit 1;
 fi
 
 # Determine RELEASE version
-NEW_VERSION=$(cat VERSION | sed 's/SNAPSHOT/RELEASE/' )
-echo "Preparing $NEW_VERSION"
+newVersion=$(cat VERSION | sed 's/SNAPSHOT/RELEASE/' )
+echo "Preparing $newVersion"
 
 # Replace SNAPSHOT with RELEASE
 echo "Updating version for pipeline in VERSION file"
-sed -i "s/$OLD_VERSION/$NEW_VERSION/g" VERSION;
+sed -i "s/$oldVersion/$newVersion/g" VERSION;
 
-echo "Replacing $OLD_VERSION with $NEW_VERSION in swagger.yaml files"
-echo find . -name swagger.yaml | sed -n "/version: $OLD_VERSION/p";
-find . -name swagger.yaml | xargs sed -i "s/version: $OLD_VERSION/version: $NEW_VERSION/g";
-# TODO How can we detect if the previous version wasn't changed correctly?
+echo "Replacing $oldVersion with $newVersion in swagger.yaml files"
+find . -name swagger.yaml | xargs sed -i "s/\(version: *\)$oldVersion/\1$newVersion/g";
+# With the current commmand, if the "version" key appears somewhere else in the file it will be affected as well.
+# That's why oldVersion is part of the pattern, as it is less likely that another version key would appear with the exact same value.
+# The issue is that if the value has been mistakenly modified and is not $oldVersion, it won't be updated
+# TODO Find a better solution or add a check
 
-echo "Replacing $OLD_VERSION with $NEW_VERSION in :revnumber in adoc files"
-find . -name "*.adoc" | xargs sed -i "s/:revnumber: $OLD_VERSION/:revnumber: $NEW_VERSION/g";
+echo "Replacing $oldVersion with $newVersion in :revnumber in adoc files"
+find . -name "*.adoc" | xargs sed -i "s/\(:revnumber: *\)$oldVersion/\1$newVersion/g";
 
-echo "Replacing $OLD_VERSION with $NEW_VERSION in links in adoc files"
-find . -name "*.adoc" | xargs sed -i "s/\/$OLD_VERSION\//\/$NEW_VERSION\//g";
+echo "Replacing $oldVersion with $newVersion in links in adoc files"
+find . -name "*.adoc" | xargs sed -i "s/\/$oldVersion\//\/$newVersion\//g";
 
 echo "Updating revision date in adoc files"
-find . -name "*.adoc" | xargs sed -i "s/^:revdate:\(.*\)$/:revdate: $revisionDate/g";
+find . -name "*.adoc" | xargs sed -i "s/\(:revdate: \)\(.*\)$/\1 $revisionDate/g";
 
-# TODO Make sure examples from src/docs/asciidoc/developer_guide/01_versioning.adoc are excluded
-
-# TODO Replace with regexp so it works with or without spaces (for all commands)
-# TODO Instead of having each command list changes we can have tests on git status (cf upload_doc.sh)
-# TODO Updating :revdate: (param or now)
-
-echo "Using $NEW_VERSION for lfeoperatorfabric images in  demo/deploy docker-compose files"
-sed -i "s/image\( *\):\( *\)/image: $NEW_VERSION/g" ./src/main/docker/demo/docker-compose.yml;
-# image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
-# TODO Add regexp so we're sure we only update lfeoperatorfabric images
+echo "Using $newVersion for lfeoperatorfabric images in  demo/deploy docker-compose files"
+# String example for regexp: image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
+sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./src/main/docker/demo/docker-compose.yml;
+sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./src/main/docker/deploy/docker-compose.yml;
 
 echo "The following files have been updated: "
 echo | git status --porcelain
