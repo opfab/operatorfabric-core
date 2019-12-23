@@ -4,8 +4,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= OperatorFabric Get Started
-David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
+
+
 :revnumber: 0.14.1.SNAPSHOT
 :revdate: 23 December 2019
 :imagesdir: images
@@ -16,525 +16,487 @@ David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
 :icons: font
 :hide-uri-scheme:
 
-== Requirements
+= OperatorFabric Get Started
 
-All steps above describe how to install, build and test `OperatorFabric` into a Linux environment.
+== Prerequisites 
+To use OperatorFabric, you need a linux OS with the following :
+  
+- Docker install with 4Gb of space 
+- 16Gb of RAM minimal ,32 Gb recommended  
 
-The following software are needed to perform those steps(https://github.com/opfab/operatorfabric-core#4-requirements[see Requirement in the `OperatorFabric` README for more details]):
+== Install and run server
 
-1. https://git-scm.com/[git] (to clone the source code);
-2. https://sdkman.io/[sdkman] (to manage the correct version of https://www.azul.com/products/zulu-enterprise/[zulu JVM] and https://gradle.org/[Gradle]);
-3. https://github.com/creationix/nvm[nvm] (to manage the correct version of https://nodejs.org[node] and https://www.npmjs.com/[npm]);
-4. https://www.docker.com/[docker];
-
-
-== Cloning the project
-
-The simplest way is to use git to get all source code of OperatorFabric by using the following command:
+To start OperatorFabric, you first need to clone the getting started git 
 
 ----
-git clone https://github.com/opfab/operatorfabric-core.git
-cd operatorfabric-core
+ git clone https://github.com/opfab/operatorfabric-getting-started.git
 ----
-
-== Building the project
-
-=== Set up your building environment
-
-For a linux shell session, the following command set environment variables & appropriate versions of gradle, maven, etc.
+Launch docker-compose up in the server directory. You need to wait for all the services to start (it usually takes one minute to start),it is done when no more logs are written on the output(It could continue to log  but slowly).
 
 ----
-source ./bin/load_environment_light.sh
+docker-compose up & 
 ----
 
-TIP: From now on, you can use environment variable $OF_HOME to get back to the repository home.
+Test the connection to the UI : To connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use tso1-operator as login and test as password. 
 
-=== Assemble the project
+If you are not accessing the server from localhost, there is a bug with authentication redirection. Your must use the following URL ,replacing SERVER_IP by the IP adress of your server :
 
-----
-gradle assemble
-----
-
-The first run of this command download `operatorfabric` dependencies and can take a while.
-
-
-.Assembly options
-|===
-|Option |Default value |Description
-
-|--PuiDebug|false|Force debug mode for web client
-|===
-
-
-== Run the project
-
-=== Set up your running environment
-
-Deploy dockerized MongoDB, RabbitMQ and SonarQube
-MongoDB, RabbitMQ and SonarQube are needed for the build so tests can be run.
-
-A docker-compose file with properly configured containers is available link:src/main/docker/test-quality-environment/[there].
-
-If you haven't done so before, you will need to configure a docker network for the containers:
-----
-docker network create opfabnet
+---- 
+http://SERVER_IP:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&redirect_uri=http://SERVER_IP:2002/ui/
 ----
 
-Then run the docker-compose in detached mode:
-----
-cd src/main/docker/test-quality-environment/
-docker-compose up -d
-----
+After connection your shoud see the following screen
 
-=== Run the micro-services
+image::empty-opfab-page.jpg[empty opfab screenshot]
 
-There is a script to launch the different micro-services of `OperatorFabric` in the right order. It's used with the following command:
+To stop the server , use : 
 
 ----
-bin/run_all.sh start
+docker-compose down & 
 ----
 
-In the terminal, the script should display some alike messages:
-----
-OPERATORFABRIC ENVIRONMENT VARIABLES
-OF_HOME=/home/developer/projects/operatorfabric-core
-OF_CORE=/home/developer/projects/operatorfabric-core/services/core
-OF_CLIENT=/home/developer/projects/operatorfabric-core/client
-OF_TOOLS=/home/developer/projects/operatorfabric-core/tools
-OF_INFRA=/home/developer/projects/operatorfabric-core/services/infra
 
-OperatorFabric version is XXXXXXX
-OF_COMPONENTS[0]=/home/developer/projects/operatorfabric-core/tools/swagger-spring-generators
-OF_COMPONENTS[1]=/home/developer/projects/operatorfabric-core/tools/generic/utilities
-OF_COMPONENTS[2]=/home/developer/projects/operatorfabric-core/tools/generic/test-utilities
-OF_COMPONENTS[3]=/home/developer/projects/operatorfabric-core/tools/spring/spring-utilities
-OF_COMPONENTS[4]=/home/developer/projects/operatorfabric-core/tools/spring/spring-amqp-time-utilities
-OF_COMPONENTS[5]=/home/developer/projects/operatorfabric-core/tools/spring/spring-mongo-utilities
-OF_COMPONENTS[6]=/home/developer/projects/operatorfabric-core/tools/spring/spring-oauth2-utilities
-OF_COMPONENTS[7]=/home/developer/projects/operatorfabric-core/services/infra/config
-OF_COMPONENTS[8]=/home/developer/projects/operatorfabric-core/services/infra/auth
-OF_COMPONENTS[9]=/home/developer/projects/operatorfabric-core/services/infra/registry
-OF_COMPONENTS[10]=/home/developer/projects/operatorfabric-core/services/infra/client-gateway
-OF_COMPONENTS[11]=/home/developer/projects/operatorfabric-core/client/time
-OF_COMPONENTS[12]=/home/developer/projects/operatorfabric-core/client/cards
-OF_COMPONENTS[13]=/home/developer/projects/operatorfabric-core/client/users
-OF_COMPONENTS[14]=/home/developer/projects/operatorfabric-core/services/core/thirds
-OF_COMPONENTS[15]=/home/developer/projects/operatorfabric-core/services/core/time
-OF_COMPONENTS[16]=/home/developer/projects/operatorfabric-core/services/core/cards-publication
-OF_COMPONENTS[17]=/home/developer/projects/operatorfabric-core/services/core/cards-consultation
-OF_COMPONENTS[18]=/home/developer/projects/operatorfabric-core/services/core/users
-#### Preparing runtime data ####
-## Preparing business runtime data
-Starting a Gradle Daemon (subsequent builds will be faster)
+== Examples 
 
-BUILD SUCCESSFUL in 18s
-3 actionable tasks: 3 up-to-date
-## Preparing infrastucture runtime data
+For each example, useful files and scripts are in the directory "client/exampleX".
 
-BUILD SUCCESSFUL in 10s
-2 actionable tasks: 2 up-to-date
-##########################################################
-Starting configuration-cloud-service, debug port: 5005
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/infra/config/build/PIDFILE
-Started with pid: 20616
 
-##########################################################
-Starting OAuth2-dev-server, debug port: 5006
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/infra/auth/build/PIDFILE
-Started with pid: 20620
+All examples assume you connect to the server from localhost (if not, you will need to change the provided scripts)
+ 
+=== Example 1 : Send and update a basic card 
 
-##########################################################
-Starting registry-cloud-service, debug port: 5007
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/infra/registry/build/PIDFILE
-Started with pid: 20625
-
-Registry is not available at http://localhost:2001, retry in 5s (0)
-Registry is not available at http://localhost:2001, retry in 5s (1)
-Registry is not available at http://localhost:2001, retry in 5s (3)
-Registry is ready, now waiting for CONFIG to be ready
-Config is declared in Registry, now Starting other services
-##########################################################
-Starting client-gateway-cloud-service, debug port: 5008
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/infra/client-gateway/build/PIDFILE
-Started with pid: 20866
-
-##########################################################
-Starting users-business-service, debug port: 5009
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/core/users/build/PIDFILE
-Started with pid: 20870
-
-##########################################################
-Starting time-business-service, debug port: 5010
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/core/time/build/PIDFILE
-Started with pid: 20875
-
-##########################################################
-Starting cards-consultation-business-service, debug port: 5011
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/core/cards-consultation/build/PIDFILE
-Started with pid: 20880
-
-##########################################################
-Starting cards-publication-business-service, debug port: 5012
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/core/cards-publication/build/PIDFILE
-Started with pid: 20894
-
-##########################################################
-Starting thirds-business-service, debug port: 5013
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/core/thirds/build/PIDFILE
-Started with pid: 20899
-
-##########################################################
-Starting web-ui, debug port: 5014
-##########################################################
-pid file: /home/developer/projects/operatorfabric-core/services/web/web-ui/build/PIDFILE
-Started with pid: 20913
-----
-
-The `pids` and the path beginning with `/home/developer` will vary from machine to machine and from time to time.
-
-Once the micro-services launched, to verify if all services are running  the following command is used:
+Go in directory "client/example1" and send a card :  
 
 ----
-bin/run_all.sh status
+curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @card.json
 ----
-
-With following prompts:
-
-----
-OPERATORFABRIC ENVIRONMENT VARIABLES
-OF_HOME=/home/developer/projects/operatorfabric-core
-OF_CORE=/home/developer/projects/operatorfabric-core/services/core
-OF_CLIENT=/home/developer/projects/operatorfabric-core/client
-OF_TOOLS=/home/developer/projects/operatorfabric-core/tools
-OF_INFRA=/home/developer/projects/operatorfabric-core/services/infra
-
-OperatorFabric version is XXXXXXXX
-OF_COMPONENTS[0]=/home/developer/projects/operatorfabric-core/tools/swagger-spring-generators
-OF_COMPONENTS[1]=/home/developer/projects/operatorfabric-core/tools/generic/utilities
-OF_COMPONENTS[2]=/home/developer/projects/operatorfabric-core/tools/generic/test-utilities
-OF_COMPONENTS[3]=/home/developer/projects/operatorfabric-core/tools/spring/spring-utilities
-OF_COMPONENTS[4]=/home/developer/projects/operatorfabric-core/tools/spring/spring-amqp-time-utilities
-OF_COMPONENTS[5]=/home/developer/projects/operatorfabric-core/tools/spring/spring-mongo-utilities
-OF_COMPONENTS[6]=/home/developer/projects/operatorfabric-core/tools/spring/spring-oauth2-utilities
-OF_COMPONENTS[7]=/home/developer/projects/operatorfabric-core/services/infra/config
-OF_COMPONENTS[8]=/home/developer/projects/operatorfabric-core/services/infra/auth
-OF_COMPONENTS[9]=/home/developer/projects/operatorfabric-core/services/infra/registry
-OF_COMPONENTS[10]=/home/developer/projects/operatorfabric-core/services/infra/client-gateway
-OF_COMPONENTS[11]=/home/developer/projects/operatorfabric-core/client/time
-OF_COMPONENTS[12]=/home/developer/projects/operatorfabric-core/client/cards
-OF_COMPONENTS[13]=/home/developer/projects/operatorfabric-core/client/users
-OF_COMPONENTS[14]=/home/developer/projects/operatorfabric-core/services/core/thirds
-OF_COMPONENTS[15]=/home/developer/projects/operatorfabric-core/services/core/time
-OF_COMPONENTS[16]=/home/developer/projects/operatorfabric-core/services/core/cards-publication
-OF_COMPONENTS[17]=/home/developer/projects/operatorfabric-core/services/core/cards-consultation
-OF_COMPONENTS[18]=/home/developer/projects/operatorfabric-core/services/core/users
-##########################################################
-configuration-cloud-service (pid: 20616) : RUNNING
-OAuth2-dev-server (pid: 20620) : RUNNING
-registry-cloud-service (pid: 20625) : RUNNING
-client-gateway-cloud-service (pid: 20866) : RUNNING
-users-business-service (pid: 20870) : RUNNING
-time-business-service (pid: 20875) : RUNNING
-cards-consultation-business-service (pid: 20880) : RUNNING
-cards-publication-business-service (pid: 20894) : RUNNING
-thirds-business-service (pid: 20899) : RUNNING
-web-ui (pid: 20913) : RUNNING
-##########################################################
-----
-
-To stop all the micro services, if needed, the command is simply:
+or use provided script 
 
 ----
-bin/run_all.sh stop
+./sendCard.sh card.json 
 ----
 
-== Using OperatorFabric
+The result should be a 200 Http status and a json object such as:
 
-Once an operatorFabric instance is fully running, the main goal here is to send cards to a user of OperatorFabric and to display their details in a neat way.
+----
+{"count":1,"message":"All pushedCards were successfully handled"}
+----
 
-The user used here, is one of the existing users of OperatorFabric (developer version): `tso1-operator`. To manage users and groups please to refer to link:https://opfab.github.io/projects/services/core/users/0.14.1.SNAPSHOT/reference[the reference documentation of the User services].
+See the result in the UI , you should see a card , if you click on it you'll see the detail 
 
-=== Connection to the GUI
 
-To connect to OperatorFabric, open in a browser the following page: link:http://localhost:2002/ui/[`http://localhost:2002/ui/`] and use `tso1-operator` as login and `test` as password.
+image::formated-card-details.jpg[detail card screenshot]
 
-The login page should look like this screenshot.
+==== Anatomy of the card : 
+A card is containing information regarding the publisher, the recipients , the process , the data to show ... 
 
-image::login-screenshot.png[login page screenshot]
+More information can be found on the user guide : https://opfab.github.io/documentation/0.13.1.SNAPSHOT/user_guide/#_card_anatomy
 
-Once logged, the site should look like this (if there is no card in the system for `tso1-operator`):
-
-image::empty-opfab-page.png[empty operatorFabric page screenshot]
-
-=== Card : creation and sending
-
-OperatorFabric receive cards as json object(link:https://opfab.github.io/projects/services/core/cards-publication/0.14.1.SNAPSHOT/api/#Card[specified in the cards publication service API]) in the body of an http POST request to this `URL`:link:http://localhost:2102[`http://localhost:2102/cards`]
-
-==== Create a card
-
-As an example, let's send an `Hello World` card to `tso1-operator`.
-
-The card content is :
-....
+----
 {
-	"groupRecipients" : [
-		"TSO1"
-	],
-	"processId" : "hello-world-process-id",
-	"publisher" : "defaultPublisher",
+	"publisher" : "message-publisher",
 	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "hello-world-1",
+	"state": "messageState",
 	"recipient" : {
-		"type" : "UNION",
-		"recipients" : [
-			{
 				"type" : "GROUP",
 				"identity" : "TSO1"
 			},
-			{
-				"type" : "USER",
-				"identity" : "admin"
-			}
-		]
-	},
-	"severity" : "ACTION",
+	"severity" : "NOTIFICATION",
 	"startDate" : 1553186770681,
-	"summary" : {
-		"key" : "defaultProcess.summary"
-	},
-	"tags" : [
-		"helloWorld",
-		"greetings"
-	],
-	"title" : {
-		"key" : "defaultProcess.title"
-	},
-	"userRecipients" : [
-		"tso1-operator"
-	],
-	"data" : {
-		"greetings-from":"TSO-1"
-	},
-	"details" : [
-		{
-			"title" : {
-				"key" : "defaultProcess.detail.tab.first"
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"Hello World !!! That's my first message"}
+}
+
+----
+
+==== Update the card 
+
+We can send a new version of the card (updateCard.json) :
+
+- change the message , field data.message in the JSON File 
+- the severity  , field severity in the JSON File 
+
+
+----
+{
+	"publisher" : "message-publisher",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "hello-world-1",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
 			},
-			"templateName" : "template"
-		}
-	],
-	"timeSpans" : [
-	    {
-	        "start" : 1553186770681
-        },
-        {
-            "start" : 1553186780681,
-            "end" : 1553186790681
-        },
-        {
-            "start" : 1553186800681,
-            "end" : 1553186810681,
-            "display" : "BUBBLE"
-        }
-	]
+	"severity" : "ALARM",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":":That's my second message"}
 }
-....
-As you can see there is a `startDate` in the card. It's the number of millisecond since EPOCH when the card is beginning to be active. This value must be adapted to fit your needs in the card you will send to `tso1-operator`.
+----
 
-In a linux environment, if we want such a value for two minutes from now, using the command `date -d "+ 2 minutes" +%s%N | cut -b1-13` can be useful.
+You can send the updated card with :
 
-==== Send a Card
+----
+./sendCard.sh cardUpdate.json
+----
 
-Now this freshly updated card need to be send to our operator to see it in the browser. As write down earlier this json representing a card has to be send with a POST method to the running OperatorFabric instance. This request need to carry this header: "Content-Type:application/json". Use your perfered tool to achive this. If you're using linux you can use the following set of instruction, given the fact that our card is saved in a file name `card.json` in the present working directory:
-....
-curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @card.json
-....
-The result should be a 200 Http status and a json object such as:
-....
-{"count":1,"message":"All pushedCards were successfully handled"}
-....
-The operator should have the following result in the page:
+The card should be updated on the UI.
 
-image::raw-light-card-without-details.png[light card without details and without l10]
+==== Delete the card 
 
-This result is not pretty. There are several missing things such a s a correct title for the summary card in the feed and details in the right zone. When the operator clicks on the card in the feed (card on the left side of the page, called here **DEFAULTPUBLISHER.1.DEFAULTPROCESS.TITLE**), there is no details shows on the right side of the page. In order to prettify all of this, as card provider we need to upload a bundle containing the configuration required by OperatorFabric to beautify the rendering of our card.
+You can delete the card using DELETE HTTP code with reference to publisher and processId
+----
+curl -s -X DELETE http://localhost:2102/cards/message-publisher_hello-world-1 -H "Content-type:application/json"
+---- 
 
-== Card: formatting
+or use provided script:
+----
+./deleteCard.sh
+----
 
-To format the card rendering, such as details, details and so on, the third party, which is here `TSO1`, create a specific configuration file named in OperatorFabric as bundle. If you're only interested result you could use this bundle and go directly to this section where it's uploaded to the server.
+=== Example 2 : Publish a new bundle 
 
-=== Configure a card formatting
+The way the card is display in the UI is defined via a Bundle containing templates and process description .
 
-The formatting of cards is configured inside a bundle.  A bundle is an archive uploaded by a Third party into the OperatorFabric server. The server will use the configuration provided by the bundle to localize card item or to format details for example.
-This archive is a `tar.gz` file often called a `tarball`. For our needs we will defined some `i18n` resources, some `css` and a template to render details. There are more possibilities describe in details by link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/thirds[the Third service README] and in link:https://opfab.github.io/projects/services/core/thirds/0.14.1.SNAPSHOT/reference/#_customization_example[the Third Service Reference Documentation]. OperatorFabric use link:https://handlebarsjs.com/[Handlebars templates] to format and render cards details.
-All bundle resources are contain in sub folders and a metadata file named `config.json` declares what resources are available and need to be used in the bundle.
+The bundle is structured as follow : 
 
-==== create a workspace
+----
+├── css : stylesheets files
+├── i18n :   internalization files 
+└── template : 
+    ├── en : handlebar templates for detail card rendering
+    ├── ....
+config.json : process description and global configuration 
+----
 
-The easiest way to create our bundle is to create somewhere a directory where will be created all needed files.
+The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1 . 
 
-We will create a folder named `bundle` in which we will create our `i18n` resources, our `css` files and our `handlebars` templates. Each of these are contain in subdirectories properly named.
+We just change the template and the stylesheet instead of displaying : 
+----
+Message :  The message
+----
+we display :
+----
+You received the following message
 
-In linux we could do so by using the CLI:
-....
-# create our working directory
-mkdir bundle
-# move into our newly created directory
-cd bundle
-# create the directory for i18n
- mkdir i18n
-# create the directory for style
-mkdir css
-# create the template directory
-mkdir template
-....
+The message 
+----
 
-result
-....
-bundle
-├── css
-├── i18n
-└── template
-....
+If you look at the template file (template/en/template.handlebars): 
+----
+<h2> You received the following message </h2>
 
+{{card.data.message}} 
+----
 
-===== i18n
-
-First of all, the title needs to be meaningful, in English and in French (for example). In the `i18n` folder, create two files: a `en.json` and a `fr.json`. In those files, translate the title key with a meaningful value such as:
-
-- `en.json`
-
-....
-{
-	"defaultProcess":{
-		"title":"Greetings",
-		"summary":"This is a test card"
-	}
-}
-....
-
-- `fr.json`
-
-....
-{
-	"defaultProcess":{
-		"title":"Salutations",
-		"summary":"Ceci est une carte de test"
-	}
-}
-....
-
-As in the card, we define several keys, one for the title: `defaultProcess.title` and one for the summary `defaultProcess.summary` and give them an expected value.
-
-==== Template
-
-In the `template` folder, as we have two `i18n` we need to create two folders, `en` and `fr`.
-In each folder we create a file named `template.handlebars` containing:
-
-- `en/template.handlebars`
-
-....
-<h2>Hello World from {{card.data.greetings}}!</h2>
-....
-
-- `fr/template.handlebars`
-
-....
-<h2>Bonjour à tous de la part de {{card.data.greetings}} !</h2>
-....
-
-===== Style
-
-In the `css` directory we create a file containing our style definition for the `h2` html tag:
-
-- `style.css`
-
-....
-.h2{
-	color:#fd9312;
+In the stylesheet css/style.css we just change the color value to red (#ff0000):
+----
+h2{
+	color:#ff0000;
 	font-weight: bold;
 }
-....
 
-===== Metadata
+----
 
-In a file name `config.json` we write the following information:
+The global configuration is defined in config.json :
 
-....
+----
 {
-	"name":"TSO1",
-	"version":"1",
+	"name":"message-publisher",
+	"version":"2",
 	"templates":["template"],
-	"csses":["style"]
+	"csses":["style"],
+	"processes" : {
+		"defaultProcess" : {
+			"states":{
+				"messageState" : {
+					"details" : [{
+						"title" : { "key" : "defaultProcess.title"},
+						"templateName" : "template",
+						"styles" : [ "style.css" ]
+					}]
+				}
+			}
+		}
+	}
 }
-....
 
-Here we will endorse the role of the `TSO1` party, and we have to declare the `template` name and the `style` file name to used. Here there are *template* and *style*.
 
-==== Packaging
+----
+To keep the old bundle , we create a new version by setting version to 2.
 
-So far we have this file structure:
+==== Package you bundle 
 
-....
-bundle/
-├── config.json
-├── css
-│   └── style.css
-├── i18n
-│   ├── en.json
-│   └── fr.json
-└── template
-    ├── en
-    │   └── template.handlebars
-    └── fr
-        └── template.handlebars
-....
+Your bundle need to be package in a tar.gz file, a script is available 
+----
+./packageBundle.sh
+---- 
 
-All we need to do is to create an archive from this structure. This archive can be called `bundle.tar.gz` by example and can be created with the following command as long as we are in the `bundle` folder:
+A file name bundle.tar.gz will be created.
 
-....
-tar -czvf bundle-test.tar.gz config.json css/ template/ i18n/
-....
+==== Get a Token 
 
-==== Load a card format configuration
+To send the bundle you need to be authentified . To do that you need to get a token with the following commande :
 
-Now we can upload our bundle to the OperatorFabric server using link:http://localhost:2100/swagger-ui.html#/thirds/uploadBundle[the `tryout` of the Swagger API description of the bundle upload action], your preferred REST client or using cURL.
-In summary, the upload method is a POST request to `http://localhost:2100/thirds` with an attached file (our bundle). As you can see we are using the name of the `TSO1` to upload our bundle on the local operatorFabric.
-we could use the following command:
-....
-curl -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "file=@bundle.tar.gz;type=application/gzip"
-....
+----
+curl -s -X POST -d "username=admin&password=test&grant_type=password&client_id=opfab-client" http://localhost:2002/auth/token
+----
 
-The server should send us a 200 http status along with a summary of our `config.json file` such as:
+or use the provided script
 
-....
+----
+./getToken.sh
+----
+
+You should received JSON a reponse like this : 
+
+----
+{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSbXFOVTNLN0x4ck5SRmtIVTJxcTZZcTEya1RDaXNtRkw5U2NwbkNPeDBjIn0.eyJqdGkiOiIzZDhlODY3MS1jMDhjLTQ3NDktOTQyOC1hZTdhOTE5OWRmNjIiLCJleHAiOjE1NzU1ODQ0NTYsIm5iZiI6MCwiaWF0IjoxNTc1NTQ4NDU2LCJpc3MiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9hdXRoL3JlYWxtcy9kZXYiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYTNhM2IxYTYtMWVlYi00NDI5LWE2OGItNWQ1YWI1YjNhMTI5IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoib3BmYWItY2xpZW50IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiODc3NzZjOTktYjA1MC00NmQxLTg5YjYtNDljYzIxNTQyMDBhIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwic3ViIjoiYWRtaW4iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIn0.XMLjdOJV-A-iZrtq7sobcvU9XtJVmKKv9Tnv921PjtvJ85CnHP-qXp2hYf5D8TXnn32lILVD3g8F9iXs0otMAbpA9j9Re2QPadwRnGNLIzmD5pLzjJ7c18PWZUVscbaqdP5PfVFA67-j-YmQBwxiys8psF8keJFvmg-ExOGh66lCayClceQaUUdxpeuKFDxOSkFVEJcVxdelFtrEbpoq0KNPtYk7vtoG74zO3KjNGrzLkSE_e4wR6MHVFrZVJwG9cEPd_dLGS-GmkYjB6lorXPyJJ9WYvig56CKDaFry3Vn8AjX_SFSgTB28WkWHYZknTwm9EKeRCsBQlU6MLe4Sng","expires_in":36000,"refresh_expires_in":1800,"refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIzZjdkZTM0OC05N2Q5LTRiOTUtYjViNi04MjExYTI3YjdlNzYifQ.eyJqdGkiOiJhZDY4ODQ4NS1hZGE0LTQwNWEtYjQ4MS1hNmNkMTM2YWY0YWYiLCJleHAiOjE1NzU1NTAyNTYsIm5iZiI6MCwiaWF0IjoxNTc1NTQ4NDU2LCJpc3MiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9hdXRoL3JlYWxtcy9kZXYiLCJhdWQiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9hdXRoL3JlYWxtcy9kZXYiLCJzdWIiOiJhM2EzYjFhNi0xZWViLTQ0MjktYTY4Yi01ZDVhYjViM2ExMjkiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoib3BmYWItY2xpZW50IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiODc3NzZjOTktYjA1MC00NmQxLTg5YjYtNDljYzIxNTQyMDBhIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUifQ.sHskPtatqlU9Z8Sfq6yvzUP_L6y-Rv26oPpykyPgzmk","token_type":"bearer","not-before-policy":0,"session_state":"87776c99-b050-46d1-89b6-49cc2154200a","scope":"email profile"}
+----
+
+Your token is the access_token value in the JSON. The token will be valid for 10 hours , after you will need to ask for a new one.
+
+==== Send the bundle 
+
+
+Replace the value "THE TOKEN" with the token in the sendBundle.sh script :
+
+----
+token=THE TOKEN
+curl -s -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -H "Authorization:Bearer $token" -F "file=@bundle.tar.gz;type=application/gzip"
+----
+
+You can now execute the script, it will send the bundle. 
+
+----
+./sendBundle.sh
+----
+
+You should received the following JSON in response , describing your bundle.
+
+----
+{"name":"message-publisher","version":"2","templates":["template"],"csses":["style"],"i18nLabelKey":null,"processes":{"defaultProcess":{"statesData":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actionsData":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actions":null}},"states":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actionsData":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actions":null}}}},"medias":null,"menuEntries":null}
+----
+
+==== Send a card 
+
+You can send the following card to test your new bundle :
+
+
+----
 {
-  "mediasData": null,
-  "menuEntriesData": null,
-  "name": "TSO1",
-  "version": "1",
-  "templates": [
-    "template"
-  ],
-  "csses": [
-    "style"
-  ],
-  "i18nLabelKey": null,
-  "medias": null,
-  "menuEntries": null
+	"publisher" : "message-publisher",
+	"publisherVersion" : "2",
+	"process"  :"defaultProcess",
+	"processId" : "hello-world-1",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"severity" : "NOTIFICATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"Hello world in new version"}
 }
-....
+----
 
-=== Card: view
+To use the new bundle , we set publisherVersion to "2"
 
-Now when our operator clicks on the card the page should look like the following screenshot(here localized in french):
+To send the card :
 
-image::formated-card-details.png[formated card detail in french l10n]
+----
+./sendCard.sh
+----
+You should see in the UI the detail card with the new template.
+
+==== Internationalization
+If you switch langage to french in the UI (Settings menu on the top rigth of the screen), you should see the cards in french.
+
+Operator fabric will use templates define in repository "template/fr" and keys define in "i18n/fr.json".
+
+=== Example 3 : Process with state
+
+For this example , we will set the following process :
+
+- Step 1 : A critical situation arise on the HightVoltage grid 
+- Step 2 : The critical situation evolve
+- Step 3 : The critical situation ended 
+
+To modelise this process in operator fabric, we will use a "Process" with "States"  , we will modelize this in the config.json of the bundle :
+
+----
+{
+  "name":"alert-publisher",
+  "version":"1",
+  "templates":["criticalSituationTemplate","endCriticalSituationTemplate"],
+  "csses":["style"],
+  "processes" : {
+    "criticalSituation" : {
+	  "states":{
+		"criticalSituation-begin" : {
+		  "details" : [{
+		    "title" : { "key" : "criticalSituation-begin.title"},
+			  "templateName" : "criticalSituationTemplate",
+			  "styles" : [ "style.css" ]
+			}]
+		},
+		"criticalSituation-update" : {
+		  "details" : [{
+		    "title" : { "key" : "criticalSituation-update.title"},
+			  "templateName" : "criticalSituationTemplate",
+			  "styles" : [ "style.css" ]
+			}]
+		},
+		"criticalSituation-end" : {
+		  "details" : [{
+		    "title" : { "key" : "criticalSituation-end.title"},
+			"templateName" : "endCriticalSituationTemplate",
+			"styles" : [ "style.css" ]
+		  }]
+		}
+	  }
+	}
+  }
+}
+
+----
+
+You can see in the JSON we define a process name "criticalSituation" with 3 states : criticalSituation-begin , criticalSituation-update and criticalSituation-end . For each state we define a title for the card and the template an stylesheets to use . 
+
+The title is a key which refer to a i18n found in the coresponding i18n respository : 
+
+----
+{
+	"criticalSituation-begin":{
+		"title":"CRITICAL SITUATION",
+		"summary":" CRITICAL SITUATION ON THE GRID , SEE DETAIL FOR INSTRUCTION"
+	},
+        "criticalSituation-update":{
+                "title":"CRITICAL SITUATION - UPDATE",
+                "summary":" CRITICAL SITUATION ON THE GRID , SEE DETAIL FOR INSTRUCTION"
+        },
+        "criticalSituation-end":{
+                "title":"CRITICAL SITUATION - END",
+                "summary":" CRITICAL SITUATION ENDED"
+	}
+
+}
+---- 
+
+The templates can be found in the template directory.
+
+We can now send cards and simulate the process, first we send a card at the beginning of the critical situation : 
+
+----
+{
+	"publisher" : "alert-publisher",
+	"publisherVersion" : "1",
+	"process"  :"criticalSituation",
+	"processId" : "alert1",
+	"state": "criticalSituation-begin",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"severity" : "ALARM",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "criticalSituation-begin.summary"},
+	"title" : {"key" : "criticalSituation-begin.title"},
+	"data" : {"instruction":"Critical situation on the grid : stop immediatly all maintenance on the grid"}
+}
+----
+
+The card refer to the process "criticalSituation" as defined in the config.json, the state attribute is put to "criticalSituation-begin" which is the first step of the process, again as defined in the config.json. The card can be send via provided script :
+
+----
+./sendCard.sh card.json
+----
+
+
+Two other card have be provided to continu the process
+
+- cardUpdate.json : the state is criticalSituation-update
+- cardEnd.json : the state is criticalSituation-end and severity set to "notification"
+
+
+You can send these cards : 
+----
+./sendCard.sh cardUpdate.json
+----
+
+----
+./sendCard.sh cardEnd.json
+----
+
+=== Example 4 : Time Line 
+
+To view the card in the time line , you need to set times in the card using timeSpans attributes as in the following card : 
+
+
+----
+ {
+	"publisher" : "scheduledMaintenance-publisher",
+	"publisherVersion" : "1",
+	"process"  :"maintenanceProcess",
+	"processId" : "maintenance-1",
+	"state": "planned",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"severity" : "NOTIFICATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "maintenanceProcess.summary"},
+	"title" : {"key" : "maintenanceProcess.title"},
+	"data" : {
+		"operationDescription":"Maintenance operation on the International France England (IFA) Hight Voltage line ",
+		"operationResponsible":"RTE",
+		"contactPoint":"By Phone : +33 1 23 45 67 89 ",
+		"comment":"Operation has no impact on service"
+		},
+	"timeSpans" : [
+        {"start" : 1576080876779},
+        {"start" : 1576104912066}
+    	]
+}
+----
+
+For this example, we set a new process called "maintenanceProcess" , the corresponding bundle has already been set in the getting started server instance.
+
+Before sending the card provide , you need to set the good time values as epoch (ms)  (https://en.wikipedia.org/wiki/Epoch_(computing)) in the json . For each value you set , you will have a point in the timeline . In our example , the first point represent the beginning of the maintenance operation and the second the end of the maintenance operation. 
+
+
+To get the dates in epoch , you can use the following  commandes 
+
+For the first date: 
+---- 
+date -d "+ 600 minutes" +%s%N | cut -b1-13
+----
+
+And for the second 
+---- 
+date -d "+ 900 minutes" +%s%N | cut -b1-13
+----
+
+To send the card use the provided script in example4 directory 
+
+----
+./sendCard.sh card.json
+----
+
+A second card (card2.json) is provided as example, you need again to set times values in the json file and then send it 
+
+
+----
+./sendCard.sh card2.json
+----
+This time the criticity of the card is ALERT, you should see the point in red in the timeline 
+
+image::example4.jpg[example 4 screenshot]
