@@ -6,8 +6,8 @@
 
 
 
-:revnumber: 
-:revdate: 
+:revnumber: 0.14.1.SNAPSHOT
+:revdate: 23 December 2019
 :imagesdir: images
 :sectnums:
 :toc: left
@@ -31,7 +31,7 @@ To start OperatorFabric, you first need to clone the getting started git
 ----
  git clone https://github.com/opfab/operatorfabric-getting-started.git
 ----
-Launch docker-compose up in the server directory. You need to wait for all the services to start (it usally takes one minute to start),it is done when no more logs are written on the output(It could continue to log  but slowly).
+Launch docker-compose up in the server directory. You need to wait for all the services to start (it usually takes one minute to start),it is done when no more logs are written on the output(It could continue to log  but slowly).
 
 ----
 docker-compose up & 
@@ -39,7 +39,7 @@ docker-compose up &
 
 Test the connection to the UI : To connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use tso1-operator as login and test as password. 
 
-If you are not accessing the server from localhost, there is a bug with authentification redirection. Your must use the following URL ,replacing SERVER_IP by the IP adress of your server :
+If you are not accessing the server from localhost, there is a bug with authentication redirection. Your must use the following URL ,replacing SERVER_IP by the IP adress of your server :
 
 ---- 
 http://SERVER_IP:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&redirect_uri=http://SERVER_IP:2002/ui/
@@ -161,7 +161,7 @@ or use provided script:
 
 === Example 2 : Publish a new bundle 
 
-The way the card is display in the UI is defined via a Bundle containg templates and process description .
+The way the card is display in the UI is defined via a Bundle containing templates and process description .
 
 The bundle is structured as follow : 
 
