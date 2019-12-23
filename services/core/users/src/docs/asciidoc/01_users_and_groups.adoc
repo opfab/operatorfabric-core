@@ -17,7 +17,7 @@ The administration of the groups is dealt by the administrator manually. More de
 
 === Groups
 
-The notion of group is loose and can be used to simulate role in `OpertaroFabric`. Groups are used to send cards to several users without name them specifically. The information about membership to a group is stored in the user information. The rules used to send cards are describe in the link:https://opfab.github.io/projects/services/core/cards-publication/0.13.1.SNAPSHOT/reference/#_card_recipients[Card Publication Service].
+The notion of group is loose and can be used to simulate role in `OpertaroFabric`. Groups are used to send cards to several users without name them specifically. The information about membership to a group is stored in the user information. The rules used to send cards are describe in the link:https://opfab.github.io/projects/services/core/cards-publication/0.13.1.RELEASE/reference/#_card_recipients[Card Publication Service].
 
 ==== Alternative way to manage groups
 

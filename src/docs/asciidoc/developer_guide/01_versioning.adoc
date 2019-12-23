@@ -39,7 +39,7 @@ IMPORTANT: The VERSION file is particularly important as the CI/CD pipeline task
 . Update the revision date in *.adoc files:
 +
 ```
-:revdate: December 2, 2019
+:revdate: 23 December 2019
 ```
 
 . Commit with the template message:
