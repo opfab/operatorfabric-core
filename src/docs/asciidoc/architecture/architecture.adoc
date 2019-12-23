@@ -1,0 +1,158 @@
+// Copyright (c) 2019, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+:revnumber: 
+:revdate: 
+:imagesdir: images
+:sectnums:
+:toc: left
+:toclevels: 2
+:toc-title: Architecture
+:icons: font
+:hide-uri-scheme:
+
+
+= Operator Fabric Architecture
+
+== Introduction
+
+
+=== A Smart Assistant For System Operators
+
+OperatorFabric is a modular, extensible, industrial-strength and field-tested
+platform for use in electricity, water, and other utility operations.
+
+OperatorFabric provides a notification GUI with strong added value and powerful
+backend modules:
+
+* System visualization and console integration
+* Precise alerting
+* Workflow scheduling
+* Historical browsing
+* Scripting (ex: Python, JavaScript)
+
+NOTE: Workflow Scheduling could be addressed either as an internal module or
+through simplified and standardized (BPMN) integration with external workflow
+engines, we're still weighing the pros and cons of the two options._
+
+=== Open source
+
+OperatorFabric is part of the https://www.lfenergy.org/[LF Energy] coalition,
+a project of The Linux Foundation that supports open source innovation projects
+within the energy and electricity sectors.
+
+OperatorFabric is an open source platform licensed under
+https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2].
+The source code is hosted on GitHub in this repository:
+https://github.com/opfab/operatorfabric-core[operatorfabric-core].
+
+=== Where does the name come from ?
+
+[horizontal]
+Operator:: represents the human being at the center of the platform, whether
+he's working in a control room or in the field
+Fabric:: from a modern digital perspective, is used as a metaphor to
+illustrate the idea of a simple work to create and weave together powerful
+software
+
+That's why when we started this project it felt kind of natural to call it
+**OperatorFabric**, or **"OpFab"** for short (there's no need to explain it,
+is there? :-) ).
+And in the end, in emails and presentations and such, we started referring to
+it as just **"OF"**.
+
+=== What is the present document ?
+
+The present document describes the architecture of the solution
+
+== Business Architecture
+
+Operator Fabric is based on the concept of cards which contains data regarding events relevant for the operator. A third party tool publish cards and the cards are received on the screen of the operators. Depending on the typology of the cards, the operator  can send back information to the third party via an "action".  
+
+
+=== Business components
+
+image::FunctionalDiagram.jpg[functional diagram]
+
+
+To do the job, the following business components are defined:  
+
+- Card Publication : this component receive the cards form third party tools
+- Card Consultation : this component deliver the cards to the operators and provide access to all cards exchanged (archives)
+- Actions : this component receive the action from the operator and send it to the third party tool
+- Card layout and process definition : this component store the layout of the card (templates , internationalization , ... ) and a light description of the process associate(states , actions, ...) . This configuration data can be provided either by an administrator or by a third party tool.
+- User Management : this component is used to manage users and groups 
+
+=== Business objects 
+
+The business objects can be represented as follow:
+
+image::BusinessObjects.jpg[business objects diagram]
+
+* Card : the core business object which contains the data to show to the user(or operator) 
+* Publisher : the third party that publishes cards
+* User : the operator receiving cards and responding via actions
+* Group : a group of users
+* Process : the process the card is dealing with 
+* State : the step in the process
+* Card Layout : data for card rendering 
+* Action : a list of possible actions for a specific state in a process
+
+
+
+
+== Technical Architecture
+
+The architecture is based on micro-services. All business services are accessible via REST API.
+
+image::LogicalDiagram.jpg[functional diagram]
+
+=== Business components
+
+We find here the business component seen before:
+
+* We have a "UI" component that store the static pages and the UI code that is downloaded by the browser. The UI is based an https://angular.io/[Angular] and  https://handlebarsjs.com/[Handlebars] for card templating.
+* The business component named  "Card layout and process definition" is at the technical level known as "Third service". This service receive card layout and process definition as a bundle. The bundle is a tar.gz file containing
+	** json process configuration file (containings states & actions)
+	** templates for rendering
+	** stylesheets 
+	** internationalization information
+ 
+ 
+All business components are based on https://spring.io/projects/spring-boot[SpringBoot] and packaged via https://www.docker.com/[Docker]. 
+
+https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html[Spring WebFlux] is used to provide the card in a fluid way.
+
+=== Technical components 
+ 
+==== Registry
+
+It is the central component where all services are registered. It serves as a reference point for the gateway and other
+services to find information about the running services instance and allow for local load balancing of accesses. It is implemented by https://spring.io/projects/spring-cloud-netflix[Spring Cloud Netflix] . 
+
+==== Gateway
+
+It provides a filtered view of the APIS and static served pages for external access through browsers or other http
+compliant accesses. It provide the rooting and load balancing for accessing the micro-services from outside. It is implemented by https://cloud.spring.io/spring-cloud-gateway/reference/html/[Spring Cloud Gateway].
+
+==== Configuration
+
+A configuration service is not mandatory in a micro-services architecture but may allow for better sharing of common configuration and
+to dispatch global configuration changes to all services. It is implemented via https://cloud.spring.io/spring-cloud-config/reference/html/[Spring Cloud Config].
+
+
+==== Broker
+
+The broker is used to share information asynchronously across the whole services. It is implemented via https://www.rabbitmq.com/[RabbitMQ]
+
+==== Authentication
+
+The architecture provide a default authentication service via https://www.keycloak.org/[KeyCloak] but it can delegates it to an external provider. Authentication is done through the use of  Oauth2, three flows are supported: implicit, authorization code and password. 
+
+==== Database 
+
+The cards are store in a https://www.mongodb.com/[MongoDb] database. The bundles are stored in a file system 
