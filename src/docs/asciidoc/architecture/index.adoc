@@ -81,8 +81,8 @@ image::FunctionalDiagram.jpg[functional diagram]
 
 To do the job, the following business components are defined:  
 
-- Card Publication : this component receive the cards form third party tools
-- Card Consultation : this component deliver the cards to the operators and provide access to all cards exchanged (archives)
+- Card Publication : this component receive the cards from third party tools
+- Card Consultation : this component delivers the cards to the operators and provide access to all cards exchanged (archives)
 - Actions : this component receive the action from the operator and send it to the third party tool
 - Card layout and process definition : this component store the layout of the card (templates , internationalization , ... ) and a light description of the process associate(states , actions, ...) . This configuration data can be provided either by an administrator or by a third party tool.
 - User Management : this component is used to manage users and groups 
@@ -155,4 +155,4 @@ The architecture provide a default authentication service via https://www.keyclo
 
 ==== Database 
 
-The cards are store in a https://www.mongodb.com/[MongoDb] database. The bundles are stored in a file system 
+The cards are stored in a https://www.mongodb.com/[MongoDb] database. The bundles are stored in a file system. 
