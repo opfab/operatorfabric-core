@@ -6,7 +6,7 @@
 
 = OperatorFabric Get Started
 David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: 0.13.1.RELEASE
+:revnumber: 0.14.1.SNAPSHOT
 :revdate: 23 December 2019
 :imagesdir: images
 :sectnums:
@@ -261,7 +261,7 @@ bin/run_all.sh stop
 
 Once an operatorFabric instance is fully running, the main goal here is to send cards to a user of OperatorFabric and to display their details in a neat way.
 
-The user used here, is one of the existing users of OperatorFabric (developer version): `tso1-operator`. To manage users and groups please to refer to link:https://opfab.github.io/projects/services/core/users/0.13.1.RELEASE/reference[the reference documentation of the User services].
+The user used here, is one of the existing users of OperatorFabric (developer version): `tso1-operator`. To manage users and groups please to refer to link:https://opfab.github.io/projects/services/core/users/0.14.1.SNAPSHOT/reference[the reference documentation of the User services].
 
 === Connection to the GUI
 
@@ -277,7 +277,7 @@ image::empty-opfab-page.png[empty operatorFabric page screenshot]
 
 === Card : creation and sending
 
-OperatorFabric receive cards as json object(link:https://opfab.github.io/projects/services/core/cards-publication/0.13.1.RELEASE/api/#Card[specified in the cards publication service API]) in the body of an http POST request to this `URL`:link:http://localhost:2102[`http://localhost:2102/cards`]
+OperatorFabric receive cards as json object(link:https://opfab.github.io/projects/services/core/cards-publication/0.14.1.SNAPSHOT/api/#Card[specified in the cards publication service API]) in the body of an http POST request to this `URL`:link:http://localhost:2102[`http://localhost:2102/cards`]
 
 ==== Create a card
 
@@ -374,7 +374,7 @@ To format the card rendering, such as details, details and so on, the third part
 === Configure a card formatting
 
 The formatting of cards is configured inside a bundle.  A bundle is an archive uploaded by a Third party into the OperatorFabric server. The server will use the configuration provided by the bundle to localize card item or to format details for example.
-This archive is a `tar.gz` file often called a `tarball`. For our needs we will defined some `i18n` resources, some `css` and a template to render details. There are more possibilities describe in details by link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/thirds[the Third service README] and in link:https://opfab.github.io/projects/services/core/thirds/0.13.1.RELEASE/reference/#_customization_example[the Third Service Reference Documentation]. OperatorFabric use link:https://handlebarsjs.com/[Handlebars templates] to format and render cards details.
+This archive is a `tar.gz` file often called a `tarball`. For our needs we will defined some `i18n` resources, some `css` and a template to render details. There are more possibilities describe in details by link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/thirds[the Third service README] and in link:https://opfab.github.io/projects/services/core/thirds/0.14.1.SNAPSHOT/reference/#_customization_example[the Third Service Reference Documentation]. OperatorFabric use link:https://handlebarsjs.com/[Handlebars templates] to format and render cards details.
 All bundle resources are contain in sub folders and a metadata file named `config.json` declares what resources are available and need to be used in the bundle.
 
 ==== create a workspace
