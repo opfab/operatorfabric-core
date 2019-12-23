@@ -6,7 +6,7 @@
 
 = Client Users Data Model Reference Documentation
 David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: 0.14.1.SNAPSHOT
+:revnumber: 0.13.1.RELEASE
 :revdate: 23 December 2019
 :imagesdir: images
 :sectnums:

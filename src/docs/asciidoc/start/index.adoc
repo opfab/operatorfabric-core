@@ -4,9 +4,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
-
-:revnumber: 0.14.1.SNAPSHOT
+= OperatorFabric Get Started
+David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
+:revnumber: 0.13.1.RELEASE
 :revdate: 23 December 2019
 :imagesdir: images
 :sectnums:
@@ -18,15 +18,15 @@
 
 = OperatorFabric Get Started
 
-== Prerequisites 
+== Prerequisites
 To use OperatorFabric, you need a linux OS with the following :
-  
-- Docker install with 4Gb of space 
-- 16Gb of RAM minimal ,32 Gb recommended  
+
+- Docker install with 4Gb of space
+- 16Gb of RAM minimal ,32 Gb recommended
 
 == Install and run server
 
-To start OperatorFabric, you first need to clone the getting started git 
+To start OperatorFabric, you first need to clone the getting started git
 
 ----
  git clone https://github.com/opfab/operatorfabric-getting-started.git
@@ -34,14 +34,14 @@ To start OperatorFabric, you first need to clone the getting started git
 Launch docker-compose up in the server directory. You need to wait for all the services to start (it usually takes one minute to start),it is done when no more logs are written on the output(It could continue to log  but slowly).
 
 ----
-docker-compose up & 
+docker-compose up &
 ----
 
-Test the connection to the UI : To connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use tso1-operator as login and test as password. 
+Test the connection to the UI : To connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use tso1-operator as login and test as password.
 
 If you are not accessing the server from localhost, there is a bug with authentication redirection. Your must use the following URL ,replacing SERVER_IP by the IP adress of your server :
 
----- 
+----
 http://SERVER_IP:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&redirect_uri=http://SERVER_IP:2002/ui/
 ----
 
@@ -49,31 +49,31 @@ After connection your shoud see the following screen
 
 image::empty-opfab-page.jpg[empty opfab screenshot]
 
-To stop the server , use : 
+To stop the server , use :
 
 ----
-docker-compose down & 
+docker-compose down &
 ----
 
 
-== Examples 
+== Examples
 
 For each example, useful files and scripts are in the directory "client/exampleX".
 
 
 All examples assume you connect to the server from localhost (if not, you will need to change the provided scripts)
- 
-=== Example 1 : Send and update a basic card 
 
-Go in directory "client/example1" and send a card :  
+=== Example 1 : Send and update a basic card
+
+Go in directory "client/example1" and send a card :
 
 ----
 curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @card.json
 ----
-or use provided script 
+or use provided script
 
 ----
-./sendCard.sh card.json 
+./sendCard.sh card.json
 ----
 
 The result should be a 200 Http status and a json object such as:
@@ -82,13 +82,13 @@ The result should be a 200 Http status and a json object such as:
 {"count":1,"message":"All pushedCards were successfully handled"}
 ----
 
-See the result in the UI , you should see a card , if you click on it you'll see the detail 
+See the result in the UI , you should see a card , if you click on it you'll see the detail
 
 
 image::formated-card-details.jpg[detail card screenshot]
 
-==== Anatomy of the card : 
-A card is containing information regarding the publisher, the recipients , the process , the data to show ... 
+==== Anatomy of the card :
+A card is containing information regarding the publisher, the recipients , the process , the data to show ...
 
 More information can be found on the user guide : https://opfab.github.io/documentation/0.13.1.SNAPSHOT/user_guide/#_card_anatomy
 
@@ -112,12 +112,12 @@ More information can be found on the user guide : https://opfab.github.io/docume
 
 ----
 
-==== Update the card 
+==== Update the card
 
 We can send a new version of the card (updateCard.json) :
 
-- change the message , field data.message in the JSON File 
-- the severity  , field severity in the JSON File 
+- change the message , field data.message in the JSON File
+- the severity  , field severity in the JSON File
 
 
 ----
@@ -147,36 +147,36 @@ You can send the updated card with :
 
 The card should be updated on the UI.
 
-==== Delete the card 
+==== Delete the card
 
 You can delete the card using DELETE HTTP code with reference to publisher and processId
 ----
 curl -s -X DELETE http://localhost:2102/cards/message-publisher_hello-world-1 -H "Content-type:application/json"
----- 
+----
 
 or use provided script:
 ----
 ./deleteCard.sh
 ----
 
-=== Example 2 : Publish a new bundle 
+=== Example 2 : Publish a new bundle
 
 The way the card is display in the UI is defined via a Bundle containing templates and process description .
 
-The bundle is structured as follow : 
+The bundle is structured as follow :
 
 ----
 ├── css : stylesheets files
-├── i18n :   internalization files 
-└── template : 
+├── i18n :   internalization files
+└── template :
     ├── en : handlebar templates for detail card rendering
     ├── ....
-config.json : process description and global configuration 
+config.json : process description and global configuration
 ----
 
-The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1 . 
+The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1 .
 
-We just change the template and the stylesheet instead of displaying : 
+We just change the template and the stylesheet instead of displaying :
 ----
 Message :  The message
 ----
@@ -184,14 +184,14 @@ we display :
 ----
 You received the following message
 
-The message 
+The message
 ----
 
-If you look at the template file (template/en/template.handlebars): 
+If you look at the template file (template/en/template.handlebars):
 ----
 <h2> You received the following message </h2>
 
-{{card.data.message}} 
+{{card.data.message}}
 ----
 
 In the stylesheet css/style.css we just change the color value to red (#ff0000):
@@ -230,16 +230,16 @@ The global configuration is defined in config.json :
 ----
 To keep the old bundle , we create a new version by setting version to 2.
 
-==== Package you bundle 
+==== Package you bundle
 
-Your bundle need to be package in a tar.gz file, a script is available 
+Your bundle need to be package in a tar.gz file, a script is available
 ----
 ./packageBundle.sh
----- 
+----
 
 A file name bundle.tar.gz will be created.
 
-==== Get a Token 
+==== Get a Token
 
 To send the bundle you need to be authentified . To do that you need to get a token with the following commande :
 
@@ -253,7 +253,7 @@ or use the provided script
 ./getToken.sh
 ----
 
-You should received JSON a reponse like this : 
+The user used here, is one of the existing users of OperatorFabric (developer version): `tso1-operator`. To manage users and groups please to refer to link:https://opfab.github.io/projects/services/core/users/0.13.1.RELEASE/reference[the reference documentation of the User services].
 
 ----
 {"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSbXFOVTNLN0x4ck5SRmtIVTJxcTZZcTEya1RDaXNtRkw5U2NwbkNPeDBjIn0.eyJqdGkiOiIzZDhlODY3MS1jMDhjLTQ3NDktOTQyOC1hZTdhOTE5OWRmNjIiLCJleHAiOjE1NzU1ODQ0NTYsIm5iZiI6MCwiaWF0IjoxNTc1NTQ4NDU2LCJpc3MiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9hdXRoL3JlYWxtcy9kZXYiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYTNhM2IxYTYtMWVlYi00NDI5LWE2OGItNWQ1YWI1YjNhMTI5IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoib3BmYWItY2xpZW50IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiODc3NzZjOTktYjA1MC00NmQxLTg5YjYtNDljYzIxNTQyMDBhIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwic3ViIjoiYWRtaW4iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIn0.XMLjdOJV-A-iZrtq7sobcvU9XtJVmKKv9Tnv921PjtvJ85CnHP-qXp2hYf5D8TXnn32lILVD3g8F9iXs0otMAbpA9j9Re2QPadwRnGNLIzmD5pLzjJ7c18PWZUVscbaqdP5PfVFA67-j-YmQBwxiys8psF8keJFvmg-ExOGh66lCayClceQaUUdxpeuKFDxOSkFVEJcVxdelFtrEbpoq0KNPtYk7vtoG74zO3KjNGrzLkSE_e4wR6MHVFrZVJwG9cEPd_dLGS-GmkYjB6lorXPyJJ9WYvig56CKDaFry3Vn8AjX_SFSgTB28WkWHYZknTwm9EKeRCsBQlU6MLe4Sng","expires_in":36000,"refresh_expires_in":1800,"refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIzZjdkZTM0OC05N2Q5LTRiOTUtYjViNi04MjExYTI3YjdlNzYifQ.eyJqdGkiOiJhZDY4ODQ4NS1hZGE0LTQwNWEtYjQ4MS1hNmNkMTM2YWY0YWYiLCJleHAiOjE1NzU1NTAyNTYsIm5iZiI6MCwiaWF0IjoxNTc1NTQ4NDU2LCJpc3MiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9hdXRoL3JlYWxtcy9kZXYiLCJhdWQiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9hdXRoL3JlYWxtcy9kZXYiLCJzdWIiOiJhM2EzYjFhNi0xZWViLTQ0MjktYTY4Yi01ZDVhYjViM2ExMjkiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoib3BmYWItY2xpZW50IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiODc3NzZjOTktYjA1MC00NmQxLTg5YjYtNDljYzIxNTQyMDBhIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUifQ.sHskPtatqlU9Z8Sfq6yvzUP_L6y-Rv26oPpykyPgzmk","token_type":"bearer","not-before-policy":0,"session_state":"87776c99-b050-46d1-89b6-49cc2154200a","scope":"email profile"}
@@ -261,7 +261,7 @@ You should received JSON a reponse like this :
 
 Your token is the access_token value in the JSON. The token will be valid for 10 hours , after you will need to ask for a new one.
 
-==== Send the bundle 
+==== Send the bundle
 
 
 Replace the value "THE TOKEN" with the token in the sendBundle.sh script :
@@ -271,11 +271,12 @@ token=THE TOKEN
 curl -s -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -H "Authorization:Bearer $token" -F "file=@bundle.tar.gz;type=application/gzip"
 ----
 
-You can now execute the script, it will send the bundle. 
+You can now execute the script, it will send the bundle.
 
 ----
 ./sendBundle.sh
 ----
+OperatorFabric receive cards as json object(link:https://opfab.github.io/projects/services/core/cards-publication/0.13.1.RELEASE/api/#Card[specified in the cards publication service API]) in the body of an http POST request to this `URL`:link:http://localhost:2102[`http://localhost:2102/cards`]
 
 You should received the following JSON in response , describing your bundle.
 
@@ -283,7 +284,7 @@ You should received the following JSON in response , describing your bundle.
 {"name":"message-publisher","version":"2","templates":["template"],"csses":["style"],"i18nLabelKey":null,"processes":{"defaultProcess":{"statesData":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actionsData":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actions":null}},"states":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actionsData":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actions":null}}}},"medias":null,"menuEntries":null}
 ----
 
-==== Send a card 
+==== Send a card
 
 You can send the following card to test your new bundle :
 
@@ -325,9 +326,9 @@ Operator fabric will use templates define in repository "template/fr" and keys d
 
 For this example , we will set the following process :
 
-- Step 1 : A critical situation arise on the HightVoltage grid 
+- Step 1 : A critical situation arise on the HightVoltage grid
 - Step 2 : The critical situation evolve
-- Step 3 : The critical situation ended 
+- Step 3 : The critical situation ended
 
 To modelise this process in operator fabric, we will use a "Process" with "States"  , we will modelize this in the config.json of the bundle :
 
@@ -368,9 +369,9 @@ To modelise this process in operator fabric, we will use a "Process" with "State
 
 ----
 
-You can see in the JSON we define a process name "criticalSituation" with 3 states : criticalSituation-begin , criticalSituation-update and criticalSituation-end . For each state we define a title for the card and the template an stylesheets to use . 
+You can see in the JSON we define a process name "criticalSituation" with 3 states : criticalSituation-begin , criticalSituation-update and criticalSituation-end . For each state we define a title for the card and the template an stylesheets to use .
 
-The title is a key which refer to a i18n found in the coresponding i18n respository : 
+The title is a key which refer to a i18n found in the coresponding i18n respository :
 
 ----
 {
@@ -388,11 +389,11 @@ The title is a key which refer to a i18n found in the coresponding i18n resposit
 	}
 
 }
----- 
+----
 
 The templates can be found in the template directory.
 
-We can now send cards and simulate the process, first we send a card at the beginning of the critical situation : 
+We can now send cards and simulate the process, first we send a card at the beginning of the critical situation :
 
 ----
 {
@@ -426,7 +427,7 @@ Two other card have be provided to continu the process
 - cardEnd.json : the state is criticalSituation-end and severity set to "notification"
 
 
-You can send these cards : 
+You can send these cards :
 ----
 ./sendCard.sh cardUpdate.json
 ----
@@ -435,9 +436,9 @@ You can send these cards :
 ./sendCard.sh cardEnd.json
 ----
 
-=== Example 4 : Time Line 
+=== Example 4 : Time Line
 
-To view the card in the time line , you need to set times in the card using timeSpans attributes as in the following card : 
+To view the card in the time line , you need to set times in the card using timeSpans attributes as in the following card :
 
 
 ----
@@ -466,37 +467,153 @@ To view the card in the time line , you need to set times in the card using time
         {"start" : 1576104912066}
     	]
 }
-----
+....
+As you can see there is a `startDate` in the card. It's the number of millisecond since EPOCH when the card is beginning to be active. This value must be adapted to fit your needs in the card you will send to `tso1-operator`.
+
+In a linux environment, if we want such a value for two minutes from now, using the command `date -d "+ 2 minutes" +%s%N | cut -b1-13` can be useful.
+
+==== Send a Card
+
+Now this freshly updated card need to be send to our operator to see it in the browser. As write down earlier this json representing a card has to be send with a POST method to the running OperatorFabric instance. This request need to carry this header: "Content-Type:application/json". Use your perfered tool to achive this. If you're using linux you can use the following set of instruction, given the fact that our card is saved in a file name `card.json` in the present working directory:
+....
+curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @card.json
+....
+The result should be a 200 Http status and a json object such as:
+....
+{"count":1,"message":"All pushedCards were successfully handled"}
+....
+The operator should have the following result in the page:
+
+image::raw-light-card-without-details.png[light card without details and without l10]
+
+This result is not pretty. There are several missing things such a s a correct title for the summary card in the feed and details in the right zone. When the operator clicks on the card in the feed (card on the left side of the page, called here **DEFAULTPUBLISHER.1.DEFAULTPROCESS.TITLE**), there is no details shows on the right side of the page. In order to prettify all of this, as card provider we need to upload a bundle containing the configuration required by OperatorFabric to beautify the rendering of our card.
+
+== Card: formatting
+
+To format the card rendering, such as details, details and so on, the third party, which is here `TSO1`, create a specific configuration file named in OperatorFabric as bundle. If you're only interested result you could use this bundle and go directly to this section where it's uploaded to the server.
+
+=== Configure a card formatting
+
+The formatting of cards is configured inside a bundle.  A bundle is an archive uploaded by a Third party into the OperatorFabric server. The server will use the configuration provided by the bundle to localize card item or to format details for example.
+This archive is a `tar.gz` file often called a `tarball`. For our needs we will defined some `i18n` resources, some `css` and a template to render details. There are more possibilities describe in details by link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/thirds[the Third service README] and in link:https://opfab.github.io/projects/services/core/thirds/0.13.1.RELEASE/reference/#_customization_example[the Third Service Reference Documentation]. OperatorFabric use link:https://handlebarsjs.com/[Handlebars templates] to format and render cards details.
+All bundle resources are contain in sub folders and a metadata file named `config.json` declares what resources are available and need to be used in the bundle.
+
+==== create a workspace
+
+The easiest way to create our bundle is to create somewhere a directory where will be created all needed files.
+
+We will create a folder named `bundle` in which we will create our `i18n` resources, our `css` files and our `handlebars` templates. Each of these are contain in subdirectories properly named.
+
+In linux we could do so by using the CLI:
+....
+# create our working directory
+mkdir bundle
+# move into our newly created directory
+cd bundle
+# create the directory for i18n
+ mkdir i18n
+# create the directory for style
+mkdir css
+# create the template directory
+mkdir template
+....
+
+result
+....
+bundle
+├── css
+├── i18n
+└── template
+....
+
+
+===== i18n
+
+First of all, the title needs to be meaningful, in English and in French (for example). In the `i18n` folder, create two files: a `en.json` and a `fr.json`. In those files, translate the title key with a meaningful value such as:
+
+- `en.json`
+
+....
+{
+	"defaultProcess":{
+		"title":"Greetings",
+		"summary":"This is a test card"
+	}
+}
+....
+
+- `fr.json`
+
+....
+{
+	"defaultProcess":{
+		"title":"Salutations",
+		"summary":"Ceci est une carte de test"
+	}
+}
+....
+
+As in the card, we define several keys, one for the title: `defaultProcess.title` and one for the summary `defaultProcess.summary` and give them an expected value.
+
+==== Template
+
+In the `template` folder, as we have two `i18n` we need to create two folders, `en` and `fr`.
+In each folder we create a file named `template.handlebars` containing:
+
+- `en/template.handlebars`
+
+....
+<h2>Hello World from {{card.data.greetings}}!</h2>
+....
+
+- `fr/template.handlebars`
+
+....
+<h2>Bonjour à tous de la part de {{card.data.greetings}} !</h2>
+....
+
+===== Style
+
+In the `css` directory we create a file containing our style definition for the `h2` html tag:
+
+- `style.css`
+
+....
+.h2{
+	color:#fd9312;
+	font-weight: bold;
+}
+....
 
 For this example, we set a new process called "maintenanceProcess" , the corresponding bundle has already been set in the getting started server instance.
 
-Before sending the card provide , you need to set the good time values as epoch (ms)  (https://en.wikipedia.org/wiki/Epoch_(computing)) in the json . For each value you set , you will have a point in the timeline . In our example , the first point represent the beginning of the maintenance operation and the second the end of the maintenance operation. 
+Before sending the card provide , you need to set the good time values as epoch (ms)  (https://en.wikipedia.org/wiki/Epoch_(computing)) in the json . For each value you set , you will have a point in the timeline . In our example , the first point represent the beginning of the maintenance operation and the second the end of the maintenance operation.
 
 
-To get the dates in epoch , you can use the following  commandes 
+To get the dates in epoch , you can use the following  commandes
 
-For the first date: 
----- 
+For the first date:
+----
 date -d "+ 600 minutes" +%s%N | cut -b1-13
 ----
 
-And for the second 
----- 
+And for the second
+----
 date -d "+ 900 minutes" +%s%N | cut -b1-13
 ----
 
-To send the card use the provided script in example4 directory 
+To send the card use the provided script in example4 directory
 
 ----
 ./sendCard.sh card.json
 ----
 
-A second card (card2.json) is provided as example, you need again to set times values in the json file and then send it 
+A second card (card2.json) is provided as example, you need again to set times values in the json file and then send it
 
 
 ----
 ./sendCard.sh card2.json
 ----
-This time the criticity of the card is ALERT, you should see the point in red in the timeline 
+This time the criticity of the card is ALERT, you should see the point in red in the timeline
 
 image::example4.jpg[example 4 screenshot]
