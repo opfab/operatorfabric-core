@@ -24,7 +24,7 @@ image::file:images/label-timeline.png[Labels]
 
 - Bubbles: show the number of events between a length of time, its color depends on its value (Severity).
 image:file:images/bubble-timeline.png[Bubble]
-- Menu buttons: only on the top part, composed by zooming buttons, forward/backward buttons and a home button.
+- Menu buttons: only on the top part, composed by zooming buttons (the number and what buttons to display are configured), forward/backward buttons and a home button.
 image:file:images/homeButton-timeline.png[Home button]
 
 .Menu buttons
@@ -433,3 +433,14 @@ Finally set the two objects with the data prepared and their booleans to configu
             firstMoveStartOfUnit: true,
         }]
 ```
+
+== SEA Domain (TR and J)
+
+In the case of SEA Team, we need to create two new domains TR and J.
+For instance, today is 9th Dec, 10:44 (H:10 and J: 9th Dec)
+[%header,format=csv]
+|===
+Domain Name,Start Domain,End Domain,Graduation,Forward,Backward
+TR,9 Dec 8:00,10 Dec 00:00,30min,+2h(9 Dec 10:00 to 10 Dec 2:00),-2h(9 Dec 6:00 to 9 Dec 10:00)
+J,9 Dec 00:00,11 Dec 00:00,1h,+1J(10 Dec 00:00 to 12 Dec 00:00),-1J(8 Dec 00:00 to 10 Dec 00:00)
+|===
