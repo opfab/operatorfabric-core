@@ -91,6 +91,44 @@ describe('TimeLineComponent', () => {
     expect(startDomain.valueOf()).toEqual(momentOnPast.valueOf());
     expect(component).toBeTruthy();
   });
+  it('should give the end of TR config domain', () => {
+    fixture.detectChanges();
+    const actualMoment = moment();
+    const twoHoursConf = {
+      hours: 2,
+    };
+    const momentOnFuture = moment(actualMoment);
+    momentOnFuture.add(2, 'hours');
+    // cause of execution time between declaration of actualMoment and periodStartToEnd
+    momentOnFuture.minute(0).second(0).millisecond(0);
+    const endDomain = component.periodStartToEnd(twoHoursConf, true);
+    endDomain.minute(0).second(0).millisecond(0);
+    expect(endDomain.valueOf()).toEqual(momentOnFuture.valueOf());
+    expect(component).toBeTruthy();
+  });
+
+  it('should return a date formatted by domain Conf pass on parameter ' +
+    'from periodStartToEnd function', () => {
+    fixture.detectChanges();
+    const actualMoment = moment();
+    const oneWeekConf = {
+      week: 1,
+    };
+    const momentOnFuture = moment(actualMoment);
+    momentOnFuture.add(1, 'week');
+    // cause of execution time between declaration of actualMoment and periodStartToEnd
+    momentOnFuture.minute(0).second(0).millisecond(0);
+    const momentOnPast = moment(actualMoment);
+    momentOnPast.subtract(1, 'week');
+    momentOnPast.minute(0).second(0).millisecond(0);
+    const startDomain = component.periodStartToEnd(oneWeekConf, false);
+    startDomain.minute(0).second(0).millisecond(0);
+    const endDomain = component.periodStartToEnd(oneWeekConf, true);
+    endDomain.minute(0).second(0).millisecond(0);
+    expect(endDomain.valueOf()).toEqual(momentOnFuture.valueOf());
+    expect(startDomain.valueOf()).toEqual(momentOnPast.valueOf());
+    expect(component).toBeTruthy();
+  });
 
   it('should create a list with one element when there is ' +
     'only one card in the state', (done) => {
