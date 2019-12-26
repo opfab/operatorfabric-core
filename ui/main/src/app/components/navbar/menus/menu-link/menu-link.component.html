@@ -1,5 +1,5 @@
 <div *ngIf=menusOpenInTabs>
-  <a class="text-link" [href]="menuEntry.url" target="_blank" translate>
+  <a class="text-link" [href]="menuEntry.url" target="_blank" rel="noopener noreferrer" translate>
     {{menu.id}}.{{menu.version}}.{{menuEntry.label}}</a>
 </div>
 <div *ngIf=menusOpenInIframes>
@@ -9,11 +9,7 @@
 <div *ngIf=menusOpenInBoth>
   <a class="text-link" [routerLink]="['/thirdparty',menu.id,menu.version,menuEntry.id]" translate>
     {{menu.id}}.{{menu.version}}.{{menuEntry.label}}</a>
-  <a class="icon-link" [href]="menuEntry.url" target="_blank">
+  <a class="icon-link" [href]="menuEntry.url" rel="noopener noreferrer" target="_blank">
     <fa-icon icon="external-link-alt"></fa-icon>
   </a>
 </div>
-
-
-
-
