@@ -4,11 +4,11 @@
 
 As <<_publish_card, seen here>> the main publication method is to post Card using an http `POST` method to the endpoint `/cards` with a card as `json` object in the body of the request.
 
-There is an asynchrone metho available whom end-point is `/async/cards`. The response for this method is always a `201` status, no matter what the card is accepted or not.
+There is an asynchronous method available whom end-point is `/async/cards`. The response for this method is always a `201` status, no matter what the card is accepted or not.
 
 === Delete Cards
 
-For a given `process id` it's possible to delete the current card (not the archived ones), using the `DELETE` http method with the following end-point `/cards/{processId}` where `processId` is the id of the choosen process. In `OperatorFabric` calling this method will trigger a `DELETE CardOperation` with the `id` of the current card linked to the request process.
+For a given `process id` it's possible to delete the current card (not the archived ones), using the `DELETE` http method with the following end-point `/cards/{processId}` where `processId` is the id of the chosen process. In `OperatorFabric` calling this method will trigger a `DELETE CardOperation` with the `id` of the current card linked to the request process.
 
 === Other methods 
 
