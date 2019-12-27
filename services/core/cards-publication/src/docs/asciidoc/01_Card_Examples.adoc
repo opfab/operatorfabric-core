@@ -4,7 +4,7 @@ Before detailing the content of cards, let's show you what cards look like throu
 
 === Minimal Card
 
-The OperatorFabric Card specification defines 7 mandatory attributes, but some optional attributes are needed for cards to be useful in OperatorFabric. Let's clarify those point through few examples of minimal cards and what happens when they're used as if.
+The OperatorFabric Card specification defines 8 mandatory attributes, but some optional attributes are needed for cards to be useful in OperatorFabric. Let's clarify those point through few examples of minimal cards and what happens when they're used as if.
 
 ==== Send to One User
 The following card contains only the mandatory attributes.
