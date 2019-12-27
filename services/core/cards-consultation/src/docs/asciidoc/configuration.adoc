@@ -57,7 +57,7 @@ The above embedded configurations are the basic settings of the application:
 * it sets the configuration name to use (which configuration file to retrieve)
 * it must set the registry service (example in bootstrap-docker.yml)
 
-=== Sample developpement configuration
+=== Sample development configuration
 
 ```
 include::../../../../../infra/config/src/main/docker/volume/dev-configurations/cards-Consultation.yml[]
@@ -69,7 +69,7 @@ include::../../../../../infra/config/src/main/docker/volume/dev-configurations/c
 include::../../../../../infra/config/src/main/docker/volume/docker-configurations/cards-Consultation.yml[]
 ```
 
-== Specifying external configuration properties when lauching a jar file
+== Specifying external configuration properties when launching a jar file
 
 See {springboot_doc}/reference/htmlsingle/#boot-features-external-config-application-property-files[Application Property Files]
 on how to setup an external spring properties or yml file.
@@ -77,7 +77,7 @@ on how to setup an external spring properties or yml file.
 See {springboot_doc}/reference/htmlsingle/#howto-set-active-spring-profiles[Set the Active Spring Profiles] for specifying alternate profile.
 
 
-== Specifying configuration properties when lauching a docker image
+== Specifying configuration properties when launching a docker image
 
 Our docker image expects optional property file to be stored in the container
 /service-config folder. You can bind so docker volume to this path to make
@@ -92,7 +92,7 @@ The default profiles activated are docker and native.
 * REGISTRY_PORT: Registry service port
 * JAVA_OPTIONS: Additional java options
 
-== Specifying configuration properties when lauching on Kubernetes
+== Specifying configuration properties when launching on Kubernetes
 
 In progress
 
