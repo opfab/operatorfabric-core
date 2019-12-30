@@ -1,7 +1,7 @@
 == Cookbook
 
-A new operator call John Doe, who has OAuth granted right to connect ot current `OperatorFabric` instance, need to receive cards within current `OperatorFabric` instance. As a user of OperatorFabric, he needes to be added to the system with a `login` (john-doe-opertaor), his `firstName` (John) and his `lastName` (Doe).
-opertaor
+A new operator call John Doe, who has OAuth granted right to connect ot current `OperatorFabric` instance, need to receive cards within current `OperatorFabric` instance. As a user of OperatorFabric, he needs to be added to the system with a `login` (john-doe-operator), his `firstName` (John) and his `lastName` (Doe).
+operator
 As there is no `Administration GUI` for the moment, it must be performed through command line, as specify link:https://opfab.github.io/projects/services/core/users/0.14.1.SNAPSHOT/api/#SimpleUser[here].
 
 === List all users
@@ -10,7 +10,7 @@ First of all, list the users (who are the recipients in OperatorFabric) of the s
 
 Httpie
 ....
-http http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/type"
+http http://localhost:2103/users "Authorization:Bearer $token" "Content-Type:application/type"
 ....
 cURL
 ....
@@ -103,7 +103,7 @@ HTTP/1.1 200 OK
 
 === Fetch user details
 
-It's always a good thing to verify if all the information has been correctely recorded in the system:
+It's always a good thing to verify if all the information has been correctly recorded in the system:
 
 with httpie:
 ....
@@ -112,7 +112,7 @@ http -b http://localhost:2103/users/john-doe-operator "Authorization:Bearer $tok
 
 or with cURL:
 ....
-http://localhost:2103/users/test-login-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json"
+curl http://localhost:2103/users/john-doe-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json"
 ....
 
 response
@@ -129,7 +129,7 @@ HTTP/1.1 200 OK
 
 === Update user details
 
-As shown by this result, the firstName of the new operator has been mispelled.We need link:https://opfab.github.io/projects/services/core/users/0.14.1.SNAPSHOT/api/#updateUser[to update the existing user] with `john-doe-operator` login. To correct this mistake, the following commands can be used :
+As shown by this result, the firstName of the new operator has been misspelled.We need link:https://opfab.github.io/projects/services/core/users/0.14.1.SNAPSHOT/api/#updateUser[to update the existing user] with `john-doe-operator` login. To correct this mistake, the following commands can be used :
 
 with httpie:
 ....
@@ -213,7 +213,7 @@ echo '{"name":"OPERATORS","decription":"This is the brand new  group of operator
 
 using cURL:
 ....
-curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","decription":"This is the brand new  group of operator"}' 
+curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","decription":"This is the brand new  group of operator"}'
 ....
 
 response
@@ -252,7 +252,7 @@ HTTP/1.1 200 OK
 
 === Update details of a group
 
-The description is really null. After verification, in our first command used to create the group, the attribut for the description is misspelled. Using the following command link:https://opfab.github.io/projects/services/core/users/0.14.1.SNAPSHOT/api/#updateGroup[to update the group], with the correct spelling, the new group of operator gets a proper description:
+The description is really null. After verification, in our first command used to create the group, the attribute for the description is misspelled. Using the following command link:https://opfab.github.io/projects/services/core/users/0.14.1.SNAPSHOT/api/#updateGroup[to update the group], with the correct spelling, the new group of operator gets a proper description:
 
 with httpie:
 ....
@@ -261,7 +261,7 @@ echo '{"name":"OPERATORS","description":"This is the brand new  group of operato
 
 with cURL:
 ....
-http -b PUT http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","description":"This is the brand new  group of operator"}' 
+curl -X PUT http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","description":"This is the brand new  group of operator"}'
 ....
 
 response
@@ -278,12 +278,12 @@ As both new group and new user are correct it's time link:https://opfab.github.i
 
 with httpie:
 ....
-echo '["john-doe-operator"]' | http POST http://localhost:2103/groups/OPERATORS/users "Authorization:Bearer $token" "Content-Type:application/json"
+echo '["john-doe-operator"]' | http PATCH http://localhost:2103/groups/OPERATORS/users "Authorization:Bearer $token" "Content-Type:application/json"
 ....
 
 with cURL:
 ....
-http POST http://localhost:2103/groups/OPERATORS/users -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '["john-doe-operator"]' 
+curl -X PATCH http://localhost:2103/groups/OPERATORS/users -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '["john-doe-operator"]'
 ....
 
 response
@@ -291,7 +291,7 @@ response
 HTTP/1.1 200 OK
 ....
 
-Let's verify that the changes are correctelly recorded by fetching the :
+Let's verify that the changes are correctly recorded by fetching the :
 ....
 http http://localhost:2103/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
 ....
@@ -317,16 +317,16 @@ It's now possible to send cards either specifically to `john-doe-operator` or mo
 
 === Remove a user from a Group
 
-When John Doe is no longer in charge of hypervising cards for `OPERATORS` group, this group has to be remove from his login by using the following command:
+When John Doe is no longer in charge of hypervising cards for `OPERATORS` group, this group has to be removed from his login by using the following command:
 
 with httpie:
 ....
-echo '["john-doe-operator"]' | http DELETE http://localhost:2103/groups/OPERATORS/users "Authorization:Bearer $token" "Content-Type:application/json"
+http DELETE http://localhost:2103/groups/OPERATORS/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
 ....
 
 with cURL:
 ....
-curl -X DELETE -H "Authorization:Bearer $token" -H "Content-Type:application/json" http://localhost:2103/users/john-doe-operator
+curl -X DELETE -H "Authorization:Bearer $token" -H "Content-Type:application/json" http://localhost:2103/groups/OPERATORS/users/john-doe-operator
 ....
 
 response

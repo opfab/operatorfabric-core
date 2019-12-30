@@ -23,7 +23,7 @@ Groups::
 - represent set of users destined to receive collectively some cards.
 - can be used in a way to handle rights on card reception in OperatorFabric.
 
-WARNING: The user define here is an internal representation of the individual card recipient in `OperatorFabric` the authentication is leave to specific OAuth2 extrernal service.
+WARNING: The user define here is an internal representation of the individual card recipient in `OperatorFabric` the authentication is leave to specific OAuth2 external service.
 
 NOTE: In the following commands the `$token` is an authentication token currently valid for the `OAuth2` service used by the current `OperatorFabric` system.
 
