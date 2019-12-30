@@ -26,7 +26,7 @@ The following card contains only the mandatory attributes.
 }
 ....
 
-This an information about the process `process-000`, send by the `TSO1`. The title and the summary refere to `i18n` keys defined in the associated `i18n` files of the pulbisher. This card is displayable since the first januray of 2019 and should only be received by the user using the `tso1-operator` login.
+This an information about the process `process-000`, send by the `TSO1`. The title and the summary refers to `i18n` keys defined in the associated `i18n` files of the publisher. This card is displayable since the first january of 2019 and should only be received by the user using the `tso1-operator` login.
 
 ==== Send to several users
 
@@ -53,7 +53,7 @@ The following example is nearly the same as the previous one except for the reci
 
 The recipient is here a group, the `TSO1`. So all users whoa are member of this group will receive the card.
 
-===== Complexe case
+===== Complex case
 
 If this card need to be view by a user who is not in the `TSO1` group, it's possible to tune more precisely the definition of the recipient. If the `tso2-operator` needs to see also this card, the recipient definition could be(the following code details only the recipient part):
 
@@ -71,7 +71,7 @@ So here, all the users of the `TSO1` group will received the `NOTIFICATION` as s
 
 === Regular Card
 
-The previous cards were nearly empty regarding information carrying. In fact, cards are intented to contains more information than a title and a summary. The optional attribute `data` is here for that. This attribute is destined to contains any `json` object. The creator of the card is free to put any information needed as long as it's in a `json` format.
+The previous cards were nearly empty regarding information carrying. In fact, cards are intended to contains more information than a title and a summary. The optional attribute `data` is here for that. This attribute is destined to contains any `json` object. The creator of the card is free to put any information needed as long as it's in a `json` format.
 
 ==== Full of Hidden data
 
