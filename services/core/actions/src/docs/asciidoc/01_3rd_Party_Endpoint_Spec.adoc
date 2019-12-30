@@ -6,7 +6,7 @@
 
 == Third Party Endpoint Specification
 
-URL Action may specify any url as action to trigger but those resourse must
+URL Action may specify any url as action to trigger but those resource must
 comply to certain constraints
 
 === GET
@@ -28,7 +28,7 @@ update the corresponding action.
 
 See Actions Service Rest API for complete structure.
 
-This reponse gathers information to update the client side behavior of the action.
+This response gathers information to update the client side behavior of the action.
 
 === POST
 
@@ -55,4 +55,4 @@ the operator. The structure of the object reflects
 
 See Actions Service Rest API for complete structure.
 
-This reponse gathers information to update the client side behavior of the action.
+This response gathers information to update the client side behavior of the action.

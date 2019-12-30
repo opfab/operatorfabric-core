@@ -4,7 +4,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Card Consultation Service Reference Documentation
+= Actions Service Reference Documentation
 :author: David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
 :revnumber: 0.14.1.SNAPSHOT
 :revdate: 23 December 2019
@@ -12,7 +12,7 @@
 :sectnums:
 :toc: left
 :toclevels: 2
-:toc-title: Architecture
+:toc-title: Actions Service
 :icons: font
 :hide-uri-scheme:
 
