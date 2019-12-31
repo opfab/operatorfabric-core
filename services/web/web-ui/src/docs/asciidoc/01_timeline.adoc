@@ -327,14 +327,23 @@ If it's day's begin, hour 0, and unit of time used is equal to 0, the day's date
 
 In the year's first day the year is displayed with 'YY' at the end of ordinary display.
 
-== Let's Co example
+== Let's Co and SEA examples
 
-Let's Co project is the first application to use a specific timeline configuration. It's using the realtime bar display and active zoom only on the buttons.
+Let's Co and SEA projects are the first applications to use a specific timeline configuration. It's using the realtime bar display and active zoom only on the buttons.
 
 On all their zooms level: followClockTicks, clusterTicksToTicks, centeredOnTicks and startDomainWith3Ticks are true.
 As well as property firstMoveStartOfUnit, allowing to pass the visualization from 2 units of time to 1 and stay with it.
 
 They made 4 zooms level:
+
+- J and TR zooms: to illustrate these two domains, see the example below:
+For instance, today is 9th Dec, 10:44 (H:10 and J: 9th Dec)
+[%header,format=csv]
+|===
+Domain Name,Start Domain,End Domain,Graduation,Forward,Backward
+TR,9 Dec 8:00,10 Dec 00:00,30min,+2h(9 Dec 10:00 to 10 Dec 2:00),-2h(9 Dec 6:00 to 9 Dec 10:00)
+J,9 Dec 00:00,11 Dec 00:00,1h,+1J(10 Dec 00:00 to 12 Dec 00:00),-1J(8 Dec 00:00 to 10 Dec 00:00)
+|===
 
 - 7 days zoom: domain begins at actual day, and closes at the end of 7 days after.
 Its 7 days visualization when you move domain, and you move by one day.
@@ -409,7 +418,7 @@ Missing only the conf ticks object to define, it's the most important conf objec
         };
 ```
 
-Finally set the two objects with the data prepared and their booleans to configures timeline.
+Set the two objects with the data prepared and their booleans to configures timeline.
 
 ```
 	this.conf = {
@@ -420,27 +429,39 @@ Finally set the two objects with the data prepared and their booleans to configu
             showGridLines: true,
             realTimeBar: true,
         };
-        this.confZoom = [{
-            startDomain: startDomain.valueOf(),
-            endDomain: endDomain.valueOf(),
-            centeredOnTicks: true,
-            clusterTicksToTicks: true,
-            buttonTitle: 'W',
-            forwardConf: forwardWeekConf,
-            backwardConf: forwardWeekConf,
-            ticksConf: ticks4HoursConf,
-            followClockTick: true,
-            firstMoveStartOfUnit: true,
-        }]
+        this.doamins = {
+            'W': {
+                startDomain: startDomainWeek.valueOf(),
+                endDomain: endDomainWeek.valueOf(),
+                centeredOnTicks: true,
+                clusterTicksToTicks: true,
+                buttonTitle: 'W',
+                forwardConf: forwardWeekConf,
+                backwardConf: forwardWeekConf,
+                ticksConf: ticks4HoursConf,
+                followClockTick: false,
+                firstMoveStartOfUnit: false,
+                homeDomainExtraTicks: false
+            }
+        }
 ```
 
-== SEA Domain (TR and J)
+Finally, to add or remove a domain, change the corresponding letter for doaine name in __web-ui.json__ file:
+```
+	feed:
+    subscription:
+      timeout: 600000
+    card:
+      time:
+        display: BUSINESS
+    timeline:
+      domains:
+        - "J"
+        - "TR"
+        - "7D"
+        - "W"
+        - "M"
+        - "Y"
+```
 
-In the case of SEA Team, we need to create two new domains TR and J.
-For instance, today is 9th Dec, 10:44 (H:10 and J: 9th Dec)
-[%header,format=csv]
-|===
-Domain Name,Start Domain,End Domain,Graduation,Forward,Backward
-TR,9 Dec 8:00,10 Dec 00:00,30min,+2h(9 Dec 10:00 to 10 Dec 2:00),-2h(9 Dec 6:00 to 9 Dec 10:00)
-J,9 Dec 00:00,11 Dec 00:00,1h,+1J(10 Dec 00:00 to 12 Dec 00:00),-1J(8 Dec 00:00 to 10 Dec 00:00)
-|===
+Defined domaines are: J, TR, 7D, W, M and Y.

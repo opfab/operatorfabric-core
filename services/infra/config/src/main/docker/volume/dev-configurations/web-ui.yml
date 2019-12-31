@@ -13,6 +13,14 @@ operatorfabric:
     card:
       time:
         display: BUSINESS
+    timeline:
+      domains:
+        - "J"
+        - "TR"
+        - "7D"
+        - "W"
+        - "M"
+        - "Y"
   archive:
     filters:
       page.size:

@@ -15,6 +15,7 @@ import {InitTimeline, SetCardDataTimeline} from '@ofActions/timeline.actions';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
+import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 
 @Component({
   selector: 'of-time-line',
@@ -25,14 +26,15 @@ export class TimeLineComponent implements OnInit, OnDestroy {
     subscription: Subscription;
 
     public conf: any;
-    public confZoom: any;
+    public confZoom = [];
+    public doamins: any;
 
     constructor(private store: Store<AppState>) {}
     ngOnInit() {
         // DOMAIN CONF from moment() to our conf
         const domain7DayConf = this.constructMomentObj([0, 0, 0, 8, 0, 0, 0], ['day'], null);
         const domainWeekConf = this.constructMomentObj([0, 0, 1, 0, 0, 0, 0], ['week'], null);
-        
+
         const domainMonthConf = this.constructMomentObj([0, 1, 0, 0, 0, 0, 0], ['month'], null);
         const domainYearConf = this.constructMomentObj([1, 0, 0, 0, 0, 0, 0], ['year'], null);
         const currentMoment = moment();
@@ -53,7 +55,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         startDomainYear.hour(0).minutes(0).second(0).millisecond(0);
         const endDomainYear = this.periodStartToEnd(domainYearConf, true);
 
-        // Adding two domaines required by SEA Team
+        // Adding two doamins required by SEA Team
         const startDomainTR = moment().minutes(0).second(0).millisecond(0).subtract(2, 'hours');
         const endDomainTR = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
 
@@ -96,7 +98,9 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             showGridLines: true,
             realTimeBar: true,
         };
-        this.confZoom = [{
+
+        this.doamins = {
+            J: {
                 startDomain: startDomainJ.valueOf(),
                 endDomain: endDomainJ.valueOf(),
                 centeredOnTicks: true,
@@ -106,7 +110,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 backwardConf: forwardDayConf,
                 ticksConf: ticks1hConf,
                 formatTicks: 'dd - h:mm a'
-            }, {
+            }, TR: {
                 startDomain: startDomainTR.valueOf(),
                 endDomain: endDomainTR.valueOf(),
                 centeredOnTicks: true,
@@ -116,7 +120,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 backwardConf: forwardTRConf,
                 ticksConf: ticks30minConf,
                 formatTicks: 'dd - h:mm a'
-            }, {
+            }, '7D': {
                 startDomain: startDomain7Day.valueOf(),
                 endDomain: endDomain7Day.valueOf(),
                 centeredOnTicks: true,
@@ -127,7 +131,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 followClockTick: true,
                 firstMoveStartOfUnit: true,
                 homeDomainExtraTicks: true
-            }, {
+            }, 'W': {
                 startDomain: startDomainWeek.valueOf(),
                 endDomain: endDomainWeek.valueOf(),
                 centeredOnTicks: true,
@@ -139,7 +143,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 followClockTick: false,
                 firstMoveStartOfUnit: false,
                 homeDomainExtraTicks: false
-            }, {
+            }, M: {
                 startDomain: startDomainMonth.valueOf(),
                 endDomain: endDomainMonth.valueOf(),
                 centeredOnTicks: true,
@@ -152,7 +156,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 followClockTick: false,
                 firstMoveStartOfUnit: false,
                 homeDomainExtraTicks: false
-            }, {
+            }, Y: {
                 startDomain: startDomainYear.valueOf(),
                 endDomain: endDomainYear.valueOf(),
                 centeredOnTicks: true,
@@ -163,8 +167,17 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 followClockTick: false,
                 firstMoveStartOfUnit: false,
                 homeDomainExtraTicks: false
-        }];
-
+            }
+        };
+        this.store.pipe(select(buildConfigSelector('feed.timeline.domains')), catchError(() => of([]))).subscribe(d => {
+            if (d) {
+                d.map(domain => {
+                    if (Object.keys(this.doamins).includes(domain)) {
+                        this.confZoom.push(this.doamins[domain]);
+                    }
+                });
+            }
+        });
         // timeline state is same than feed state (not filtered Feed)
         // select all the feed
         this.lightCards$ = this.store.pipe(select(feedSelectors.selectFeed),
