@@ -27,7 +27,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
     public conf: any;
     public confZoom = [];
-    public doamins: any;
+    public domains: any;
 
     constructor(private store: Store<AppState>) {}
     ngOnInit() {
@@ -55,7 +55,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         startDomainYear.hour(0).minutes(0).second(0).millisecond(0);
         const endDomainYear = this.periodStartToEnd(domainYearConf, true);
 
-        // Adding two doamins required by SEA Team
+        // Adding two domains required by SEA Team
         const startDomainTR = moment().minutes(0).second(0).millisecond(0).subtract(2, 'hours');
         const endDomainTR = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
 
@@ -99,7 +99,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             realTimeBar: true,
         };
 
-        this.doamins = {
+        this.domains = {
             J: {
                 startDomain: startDomainJ.valueOf(),
                 endDomain: endDomainJ.valueOf(),
@@ -172,8 +172,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         this.store.pipe(select(buildConfigSelector('feed.timeline.domains')), catchError(() => of([]))).subscribe(d => {
             if (d) {
                 d.map(domain => {
-                    if (Object.keys(this.doamins).includes(domain)) {
-                        this.confZoom.push(this.doamins[domain]);
+                    if (Object.keys(this.domains).includes(domain)) {
+                        this.confZoom.push(this.domains[domain]);
                     }
                 });
             }

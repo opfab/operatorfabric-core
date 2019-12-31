@@ -418,7 +418,7 @@ Missing only the conf ticks object to define, it's the most important conf objec
         };
 ```
 
-Set the two objects with the data prepared and their booleans to configures timeline.
+Set the two objects with the data prepared and their booleans to configure timeline.
 
 ```
 	this.conf = {
@@ -429,7 +429,7 @@ Set the two objects with the data prepared and their booleans to configures time
             showGridLines: true,
             realTimeBar: true,
         };
-        this.doamins = {
+        this.domains = {
             'W': {
                 startDomain: startDomainWeek.valueOf(),
                 endDomain: endDomainWeek.valueOf(),
@@ -446,7 +446,7 @@ Set the two objects with the data prepared and their booleans to configures time
         }
 ```
 
-Finally, to add or remove a domain, change the corresponding letter for doaine name in __web-ui.json__ file:
+Finally, to add or remove a domain, change the corresponding letter for domain name in __web-ui.json__ file:
 ```
 	feed:
     subscription:
@@ -464,4 +464,4 @@ Finally, to add or remove a domain, change the corresponding letter for doaine n
         - "Y"
 ```
 
-Defined domaines are: J, TR, 7D, W, M and Y.
+Defined domains are: J, TR, 7D, W, M and Y.
