@@ -92,7 +92,7 @@ It's a description file in `json` format. It lists the content of the bundle.
           "actions" : {
             "finish" : {
               "type" : "URI",
-              "url": "http://somewher.org/simpleProcess/finish
+              "url": "http://somewher.org/simpleProcess/finish",
               "lockAction" : true,
               "lockCard" : true,
               "needsConfirm" : false,
@@ -336,7 +336,7 @@ A process definition is itself a dictionary of states, each key maps to a state 
 ....
 {
   "type" : "URI",
-  "url": "http://somewher.org/simpleProcess/finish
+  "url": "http://somewher.org/simpleProcess/finish",
   "lockAction" : true,
   "lockCard" : true,
   "needsConfirm" : false,
@@ -543,7 +543,7 @@ These command line should return a `200 http status` response with the details 
             "actions" : {
               "finish" : {
                 "type" : "URI",
-                "url": "http://somewher.org/simpleProcess/finish
+                "url": "http://somewher.org/simpleProcess/finish",
                 "lockAction" : true,
                 "lockCard" : true,
                 "needsConfirm" : false,
