@@ -1162,12 +1162,13 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
-  '/cards/{processId}':
+  '/cards/{id}':
             parameters:
               - in: path
-                name: processId
+                name: id
                 type: string
                 required: true
+                description: "The id parameter is constructed as follows : {publisher}_{processId}"
             delete:
               operationId: deleteProcessCard
               tags:
@@ -1194,12 +1195,13 @@ paths:
                   description: Authentication required
                 '403':
                   description: Forbidden - User doesn't have any group
-  '/cards/{processId}/actions/{actionKey}':
+  '/cards/{id}/actions/{actionKey}':
     parameters:
       - in: path
-        name: processId
+        name: id
         type: string
         required: true
+        description: "The id parameter is constructed as follows : {publisher}_{processId}"
       - in: path
         name: actionKey
         type: string
