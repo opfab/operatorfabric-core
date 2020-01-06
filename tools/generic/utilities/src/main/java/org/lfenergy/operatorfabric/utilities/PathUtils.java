@@ -30,8 +30,6 @@ import java.util.Set;
 @Slf4j
 public class PathUtils {
 
-  public static final String OPEN_BAR = "rwxrwxrwx";
-
   /**
    * Utility class don't need to be instantiated;
    */
@@ -147,7 +145,6 @@ public class PathUtils {
           Path curPath = outPath.resolve(entry.getName());
           createDirIfNeeded(curPath.getParent());
           Files.copy(tis, curPath);
-          Files.setPosixFilePermissions(curPath, PosixFilePermissions.fromString(OPEN_BAR));
         }
       }
     }
@@ -160,18 +157,8 @@ public class PathUtils {
    */
   private static void createDirIfNeeded(Path dir) throws IOException {
     if (!dir.toFile().exists()) {
-      FileAttribute<Set<PosixFilePermission>> attr = openBarPerms();
-      Files.createDirectories(dir, attr);
+      Files.createDirectories(dir);
     }
-  }
-
-  /**
-   * rwxrwxrwx posix permissions
-   * @return rwxrwxrwx posix permissions
-   */
-  private static FileAttribute<Set<PosixFilePermission>> openBarPerms() {
-    Set<PosixFilePermission> perms = PosixFilePermissions.fromString(OPEN_BAR);
-    return PosixFilePermissions.asFileAttribute(perms);
   }
 }
 
