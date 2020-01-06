@@ -84,7 +84,7 @@ To do the job, the following business components are defined:
 - Card Publication : this component receive the cards from third party tools
 - Card Consultation : this component delivers the cards to the operators and provide access to all cards exchanged (archives)
 - Actions : this component receive the action from the operator and send it to the third party tool
-- Card layout and process definition : this component store the layout of the card (templates , internationalization , ... ) and a light description of the process associate(states , actions, ...) . This configuration data can be provided either by an administrator or by a third party tool.
+- Card rendering and process definition : this component store the information for card rendering(templates , internationalization , ... ) and a light description of the process associate(states , actions, ...) . This configuration data can be provided either by an administrator or by a third party tool.
 - User Management : this component is used to manage users and groups 
 
 === Business objects 
@@ -99,7 +99,7 @@ image::BusinessObjects.jpg[business objects diagram]
 * Group : a group of users
 * Process : the process the card is dealing with 
 * State : the step in the process
-* Card Layout : data for card rendering 
+* Card Rendering : data for card rendering 
 * Action : a list of possible actions for a specific state in a process
 
 
@@ -116,7 +116,7 @@ image::LogicalDiagram.jpg[functional diagram]
 We find here the business component seen before:
 
 * We have a "UI" component that store the static pages and the UI code that is downloaded by the browser. The UI is based an https://angular.io/[Angular] and  https://handlebarsjs.com/[Handlebars] for card templating.
-* The business component named  "Card layout and process definition" is at the technical level known as "Third service". This service receive card layout and process definition as a bundle. The bundle is a tar.gz file containing
+* The business component named  "Card rendering and process definition" is at the technical level known as "Third service". This service receive card rendering and process definition as a bundle. The bundle is a tar.gz file containing
 	** json process configuration file (containings states & actions)
 	** templates for rendering
 	** stylesheets 
