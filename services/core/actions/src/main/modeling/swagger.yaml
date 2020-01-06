@@ -102,11 +102,11 @@ definitions:
     type: string
     description: |-
       Action type >
-      * INTERNAL - Internal OperatorFabric action
-      * URL - Uri based action
-      * JNLP - Uri based jnlp action
+      * EXTERNAL - Not defined
+      * URL - The action is tied to a url which must conform the specification of 3rd Party actions (see reference manual)
+      * JNLP - The action triggers a JNLP link
     enum:
-      - INTERNAL
+      - EXTERNAL
       - URL
       - JNLP
     example: URL

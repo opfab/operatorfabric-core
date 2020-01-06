@@ -101,11 +101,11 @@ definitions:
     type: string
     description: |-
       Action type >
-      * INTERNAL - Internal OperatorFabric action
-      * URL - Uri based action
-      * JNLP - Uri based jnlp action
+      * EXTERNAL - Not defined
+      * URL - The action is tied to a url which must conform the specification of 3rd Party actions (see reference manual)
+      * JNLP - The action triggers a JNLP link
     enum:
-      - INTERNAL
+      - EXTERNAL
       - URL
       - JNLP
     example: URL
@@ -173,6 +173,8 @@ definitions:
         description: Optional parameters
         additionalProperties:
           type: string
+    required:
+      - key
     example:
       key: title
       parameters:
@@ -432,6 +434,9 @@ definitions:
         type: array
         items:
           type: string
+    required:
+      - title
+      - templateName
     example:
       title:
         key: myCard.title
@@ -468,6 +473,8 @@ definitions:
           If main users from the underlying recipients are to be propagated.
           Used by INTERSECT and UNION recipients.
         type: boolean
+    required:
+      - type
     example:
       type: UNION
       recipients:
@@ -603,6 +610,7 @@ definitions:
       - startDate
       - title
       - summary
+      - recipient
     example:
       uid: 12345
       id: cardIdFromMyProcess
@@ -1154,12 +1162,13 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
-  '/cards/{processId}':
+  '/cards/{id}':
             parameters:
               - in: path
-                name: processId
+                name: id
                 type: string
                 required: true
+                description: "The id parameter is constructed as follows : {publisher}_{processId}"
             delete:
               operationId: deleteProcessCard
               tags:
@@ -1186,12 +1195,13 @@ paths:
                   description: Authentication required
                 '403':
                   description: Forbidden - User doesn't have any group
-  '/cards/{processId}/actions/{actionKey}':
+  '/cards/{id}/actions/{actionKey}':
     parameters:
       - in: path
-        name: processId
+        name: id
         type: string
         required: true
+        description: "The id parameter is constructed as follows : {publisher}_{processId}"
       - in: path
         name: actionKey
         type: string
