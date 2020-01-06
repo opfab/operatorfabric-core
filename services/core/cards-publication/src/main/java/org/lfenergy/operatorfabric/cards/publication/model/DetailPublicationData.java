@@ -28,6 +28,7 @@ import java.util.List;
 @Builder
 public class DetailPublicationData implements Detail {
     private TitlePositionEnum titlePosition;
+    @NotNull
     private I18n title;
     private String titleStyle;
     @NotNull
