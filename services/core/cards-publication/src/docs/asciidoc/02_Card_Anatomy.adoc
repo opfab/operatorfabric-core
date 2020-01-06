@@ -1,12 +1,12 @@
 == Card Anatomy
 
-Cards are modelized as `Json` objects. The technical design of card is describe in link:../api/#Card[the swagger api description of Card Publication Service]. A card correspond to the state of a Processus in OperatorFabric.
+Cards are modelized as `Json` objects. The technical design of card is describe in link:../api/#Card[the swagger api description of Card Publication Service]. A card correspond to the state of a Process in OperatorFabric.
 
 === Technical Information of the card
 
-Those attributes are used by OperatorFabric to manage how cards are stored, to whom and when they're sended.
+Those attributes are used by OperatorFabric to manage how cards are stored, to whom and when they're sent.
 
-==== Mandotory information
+==== Mandatory information
 
 Below, the `json` technical key is in the '()' following the title.
 
@@ -19,7 +19,7 @@ Quite obviously it's the Third party which publish the card. This information is
 ===== Publisher Version (`publisherVersion`)
 
 Refers the `version` of `publisher third` to use to render this card (i18n, title, summary, media and details).
-As through time, the presentation of a publisher card data changes, this changes are managed through `publisherVersion` in OperatorFabric. Each version is keep in the system in order to be able to display correctely old cards.
+As through time, the presentation of a publisher card data changes, this changes are managed through `publisherVersion` in OperatorFabric. Each version is keep in the system in order to be able to display correctly old cards.
 
 ===== Process Identifier (`processId`)
 
@@ -28,13 +28,13 @@ It's the way to identify the process to which the card is associated. A card rep
 [#startDate]
 ===== Start Date (`startDate`)
 
-This attribute is a part of the card life management system. It's indicate OperatorFabric the moment since the card can be diplay to the opertors or main receipients, <<_displaying_rules, see Displaying rules>>.
+This attribute is a part of the card life management system. It's indicate OperatorFabric the moment since the card can be displayed to the operators or main recipients, <<_displaying_rules, see Displaying rules>>.
 
 ===== Severity (`severity`)
 
-The severity is a core principe of the OperatorFabric Card system. There are 4 serverities available(link:../api/#SeverityEnum[Technical definition of OperatorFabric Card Severity]). A color is associated in the GUI to each severity. Here the details about severity and their meaning for OperatorFabric:
+The severity is a core principe of the OperatorFabric Card system. There are 4 severities available(link:../api/#SeverityEnum[Technical definition of OperatorFabric Card Severity]). A color is associated in the GUI to each severity. Here the details about severity and their meaning for OperatorFabric:
 
-1. ALARM: representes a critical state of the associated process, need an action from the operator. In the Gui, the card is red;
+1. ALARM: represents a critical state of the associated process, need an action from the operator. In the Gui, the card is red;
 2. ACTION: the associated process need an action form operators in order to evolve correctly. In the Gui, an action is orange;
 3. QUESTION: an operator need to give specific information to the associated process in order to evolve correctly. In the UI, an action is blue.;
 4. NOTIFICATION: give information to the operator. In the GUI, a notification is green.
@@ -65,7 +65,7 @@ Unique identifier of the card in the OperatorFabric system. This attribute can b
 
 ===== id (`id`)
 
-State id of the associated process, determines by `OperatorFabric` can be set abritrarly by the `publisher`.
+State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`.
 
 ==== Card Life Management Configuration
 
@@ -81,17 +81,17 @@ Fixes the moment until when `OperatorFabric` displays the card. After the card i
 
 ==== Last Time to Decide (`lttd`)
 
-Fixes the moment until when a `actions` associated to the card are available. After then, the associated actions won't be displayed or actionnable.
+Fixes the moment until when a `actions` associated to the card are available. After then, the associated actions won't be displayed or actionable.
 
 ==== Other technical attributes
 
 ==== Publish Date (`publishDate`)
 
-Indicates when the card has been registred in `OperatorFabric` sytsem. This is a technical information exclusively managed by `OperatorFabric`.
+Indicates when the card has been registered in `OperatorFabric` system. This is a technical information exclusively managed by `OperatorFabric`.
 
 ==== Deletion Date (`deletionDate°)
 
-Indicates when the card has been removes from `OperatorFabric` system. Technical inforation manage by `OperatorFabric`.
+Indicates when the card has been removes from `OperatorFabric` system. Technical information manage by `OperatorFabric`.
 
 === User destined Information of the card
 
@@ -107,11 +107,11 @@ There are two kind of User destined information in a card. Some are restricted t
 
 <<cardSummary, see Summary in Technical Information of the Card>>
 
-==== Custome part
+==== Custom part
 
 ===== Data (`data`)
 
-Determines where custome information is store. The content in this attribute, is purely `publisher` choice. This content, as long as it's in `json` format can be used to display details. For the way the details are displayed <<_presentation_information_of_the_card,see below>>.
+Determines where custom information is store. The content in this attribute, is purely `publisher` choice. This content, as long as it's in `json` format can be used to display details. For the way the details are displayed <<_presentation_information_of_the_card,see below>>.
 
 === Presentation Information of the card
 
@@ -121,7 +121,7 @@ Some cards can emit a sound when displayed in the feed of the GUI, the id of aud
 
 ==== details (`details`)
 
-This attribute is a string of objects containing a `title` attribute whichi is `i18n` key and a `template` attribute which referes to a template name contained in the publisher bundle. The bundle in which those resources will be looked for is the one corresponding of the <<_card_publisher_version, version>> declared in the card for the current <<_card_publisher, publisher>>. If no resource is found, either because there is no bundle for the given version or there is no resource for the given key, then the corresponding key is displayed in the details section of the GUI.
+This attribute is a string of objects containing a `title` attribute which is `i18n` key and a `template` attribute which refers to a template name contained in the publisher bundle. The bundle in which those resources will be looked for is the one corresponding of the <<_card_publisher_version, version>> declared in the card for the current <<_card_publisher, publisher>>. If no resource is found, either because there is no bundle for the given version or there is no resource for the given key, then the corresponding key is displayed in the details section of the GUI.
 
 link:../../../thirds/0.14.1.SNAPSHOT/reference/#_bundle[See the documentation about third bundle in the Third service documentation].
 
@@ -149,12 +149,12 @@ card:
 	"publisher":"TSO1",
 	"publisherVersion":"0.1",
 	"processId":"process-000",
-	"startDate":"1546297200000",
+	"startDate":1546297200000,
 	"severity":"NOTIFICATION",
 	...
 	"timeSpans" : [
         {"start" : 1546297200000},
-        {"start" : 1546297500000},
+        {"start" : 1546297500000}
     ]
 
 }
@@ -172,11 +172,11 @@ as a line in the time line.
 	"publisher":"TSO1",
 	"publisherVersion":"0.1",
 	"processId":"process-000",
-	"startDate":"1546297200000",
+	"startDate":1546297200000,
 	"severity":"NOTIFICATION",
 	...
 	"timeSpans" : [
-        {"start" : 1546297200000, "end" : 1546297500000},
+        {"start" : 1546297200000, "end" : 1546297500000}
     ]
 
 }

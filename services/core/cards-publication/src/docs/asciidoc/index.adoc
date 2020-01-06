@@ -16,9 +16,9 @@
 :icons: font
 :hide-uri-scheme:
 
-The Card Publication Service is the entry point in OpeartorFabric to send information to Operators. The cards are the bearer of this information in OperatorFabric system. They are composed of 3 differents parts. The technical one is destined to the internal mecanism of card managing of Operator Fabric, the second one is the data itself destined to the Operator and the third and last one is the formatting information, which indicates OperatorFabric how to display the card data to the operator.
+The Card Publication Service is the entry point in OperatorFabric to send information to Operators. The cards are the bearer of this information in OperatorFabric system. They are composed of 3 different parts. The technical one is destined to the internal mecanism of card managing of Operator Fabric, the second one is the data itself destined to the Operator and the third and last one is the formatting information, which indicates OperatorFabric how to display the card data to the operator.
 
-To have an overview of the card publication you could go through the 101 document. If it's ok for you, let's dive more deeply in the cards anatomy and then we will explore the subtilities of the Card publication API.
+To have an overview of the card publication you could go through the 101 document. If it's ok for you, let's dive more deeply in the cards anatomy and then we will explore the subtleties of the Card publication API.
 
 But mainly, before everything else, posting a card in OperatorFabric is done by using a POST request sending the card as Json object in the request body.
 
@@ -29,7 +29,7 @@ For a card stored in a file named `card.json`, with an OperatorFabric running on
 curl -X POST http://localhost:2102/cards -H "Content-Type:application/type" --data @card.json
 ....
 
-For more details about possibilities about the Card Publication REST API please refere to the <<_publication_rest_api_overview>> chapter or to the link:https://opfab.github.io/projects/services/core/cards-publication/0.14.1.SNAPSHOT/api/[swagger documentation].
+For more details about possibilities about the Card Publication REST API please refer to the <<_publication_rest_api_overview>> chapter or to the link:https://opfab.github.io/projects/services/core/cards-publication/0.14.1.SNAPSHOT/api/[swagger documentation].
 
 include::01_Card_Examples.adoc[]
 

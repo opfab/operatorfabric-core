@@ -2,9 +2,9 @@
 
 This sections explains Third Party Service Configuration
 
-The third party service configuration is declaredusing a bundle which is described below.
+The third party service configuration is declared using a bundle which is described below.
 Once this bundle fully created, it must be uploaded to the server which will apply this configuration into current
-for further web UI calls
+for further web UI calls.
 
 The way configuration is done is explained throughout examples before a more technical review of the configuration details.
 The following instructions describe tests to perform on OperatorFabric to understand how customization is working in it.
@@ -24,8 +24,8 @@ For didactic purposes, in this section, the third name is `BUNDLE_TEST` (to matc
 This bundle is localized for `en` and `fr`.
 
 As detailed in the `Third core service README` the bundle contains at least a metadata file called `config.json`,
-a `css` folder, an `media` folder(not create in this example), an `i18n` folder and a `template` folder.
- All, but `config.json file`, elements are optional.
+a `css` folder, a `media` folder (not created in this example), an `i18n` folder and a `template` folder.
+ All elements except the `config.json file` are optional.
 
 The files of this example are organized as below:
 
@@ -92,7 +92,7 @@ It's a description file in `json` format. It lists the content of the bundle.
           "actions" : {
             "finish" : {
               "type" : "URI",
-              "url": "http://somewher.org/simpleProcess/finish
+              "url": "http://somewher.org/simpleProcess/finish",
               "lockAction" : true,
               "lockCard" : true,
               "needsConfirm" : false,
@@ -130,24 +130,24 @@ It's a description file in `json` format. It lists the content of the bundle.
 ....
 
 - name: third name;
-- version: enable the correct display even the old ones as all version are stored by the server you *card* as a version
+- version: enable the correct display, even the old ones as all versions are stored by the server. Your *card* has a version
 field that will be matched to third configuration for correct rendering ;
 - processes : list the available processes and their possible states; actions and templates are associated to states
 - css file template list as `csses`;
 - third name in the main bar menu as `i18nLabelKey`: optional, used if the third service add one or several entry in the OperatorFabric main menu bar,cf <<MenuEntries, menu entries section for details>>;
 - extra menu entries as `menuEntries`: optional, see below for the declaration format of objects of this array, cf <<MenuEntries, menu entries section for details>>.
 
-The mandatory declaration are `name` and `version` attributes.
+The mandatory declarations are `name` and `version` attributes.
 
 link:../api/#Third[related api details]
 
 ==== i18n
 
-There are two ways of i18n for third service. The first one is done using l10n files which are located in the `i18n` folder, the second one throuhougt l10n name folder nested in the `template` folder or in the `media` folder.
+There are two ways of i18n for third service. The first one is done using l10n files which are located in the `i18n` folder, the second one throughout l10n name folder nested in the `template` folder or in the `media` folder.
 
 The `i18n` folder contains one json file per l10n.
 
-These localisation is used for integration of the third service into OperatorFabric, i.e. the label displayed for the third service, the label displayed for each tab of the details of the third card, the label of the actions in cards if any or the additionnal third entries in OperatorFabric(more on that at the chapter ????).
+These localisation is used for integration of the third service into OperatorFabric, i.e. the label displayed for the third service, the label displayed for each tab of the details of the third card, the label of the actions in cards if any or the additional third entries in OperatorFabric(more on that at the chapter ????).
 
 =====  Template and Media folders
 
@@ -155,20 +155,20 @@ The `template` and the `media` folder must contain localized folder for the i18n
 
 ===== i18n file
 
-If there is no i18n file or key is missing, the i18n key is desplayed in OperatorFabric. 
+If there is no i18n file or key is missing, the i18n key is displayed in OperatorFabric.
 
-The choice of i18n keys is leaved to the Third service maintainer. The keys are referenced in the following places:
+The choice of i18n keys is left to the Third service maintainer. The keys are referenced in the following places:
 
 * `config.json` file:
 	** `i18nLabelKey`: key used for the label for the third service displayed in the main menu bar of OperatorFabric;
 	** `label` of `menu entry declaration`: key used to l10n the `menu entries` declared by the Third party in the bundle;
-* `card data`: values of `card title` and `card summary` refer to `i18n keys` as well as `key attribute` in the `carde detail` section of the card data.
+* `card data`: values of `card title` and `card summary` refer to `i18n keys` as well as `key attribute` in the `card detail` section of the card data.
 
 *example*
 
 So in this example the third service is named `Bundle Test` with `BUNDLE_TEST` technical name. The bundle provide an english and a french l10n.
 
-The example bundle defined an new menu entry given acces to 3 entries. The title and the summary have to be l10n, so needs to be the 2 tabs titles.
+The example bundle defined an new menu entry given access to 3 entries. The title and the summary have to be l10n, so needs to be the 2 tabs titles.
 
 The name of the third service as displayed in the main menu bar of OperatorFabric. It will have the key `"third-name-in-menu-bar"`. The english l10n will be `Bundle Test` and the french one will be `Bundle de test`.
 
@@ -176,7 +176,7 @@ A name for the three entries in the third entry menu. Their keys will be in orde
 
 The title for the card and its summary. As the card used here are generated by the script of the `cards-publication` project we have to used the key declared there. So they are respectively `process.title` and `process.summary` with the following l10ns for english: `Card Title` and `Card short description`, and for french l10ns: `Titre de la carte` and `Courte description de la carte`.
 
-A title for earch (two of them) tab of the detail cards. As for card title and card summary, those key are already define by the test script. There are `"process.detail.tab.first"` and `"process.detail.tab.second"`. For english l10n the values are `First Detail List` and `Second Detail List` and for the french l10n, the values are `Première liste de détails` and `Seconde liste de détails`.
+A title for each (two of them) tab of the detail cards. As for card title and card summary, those keys are already defined by the test script. There are `"process.detail.tab.first"` and `"process.detail.tab.second"`. For english l10n, the values are `First Detail List` and `Second Detail List` and for the french l10n, the values are `Première liste de détails` and `Seconde liste de détails`.
 
 Here is the content of `en.json`
 ....
@@ -217,12 +217,12 @@ Here the content of `fr.json`
 }
 ....
 
-Once the bundle correctly upload, the way to verify if the i18n have been correctly uploaded it's to used the GET method of third api for i18n file.
+Once the bundle is correctly uploaded, the way to verify if the i18n have been correctly uploaded is to use the GET method of third api for i18n file.
 
-The service is describe link:../api/#getI18n[here] and can be used directly in the browser usinge the link:http://localhost:2100/swagger-ui.html#/thirds/getI18n[Swagger UI - Third get i18n]. The `locale` language, the `version` of the bundle and the `technical name` of the third party are needed to get json in the response.
+The service is described link:../api/#getI18n[here] and can be used directly in the browser using the link:http://localhost:2100/swagger-ui.html#/thirds/getI18n[Swagger UI - Third get i18n]. The `locale` language, the `version` of the bundle and the `technical name` of the third party are needed to get json in the response.
 
 To verify if the french l10n data of the version 1 of the BUNDLE_TEST third party we could use the following command line `curl -X GET "http://localhost:2100/thirds/BUNDLE_TEST/i18n?locale=fr&version=1" -H  "accept: application/json"`.
-The service response with a 200 status and with the json correpsonding to the defined fr.json file show below.
+The service response with a 200 status and with the json corresponding to the defined fr.json file show below.
 
 ....
 {
@@ -248,19 +248,19 @@ The service response with a 200 status and with the json correpsonding to the d
 
 Those elements are declared  in the `config.json` file of the bundle. 
 
-If there are several items to declare for a third service, a title for the third menu section need to be declared within the `i18nLabelKey` attribut, otherwise the first and only `menu entry` item is used to create an entry in the menu nav bar of OperatorFabric.
+If there are several items to declare for a third service, a title for the third menu section need to be declared within the `i18nLabelKey` attribute, otherwise the first and only `menu entry` item is used to create an entry in the menu nav bar of OperatorFabric.
 
 ===== config.json declaration
 
 This kind of objects contains the following attributes :
 
 - `id`: identifier of the entry menu in the UI;
-- `url`: url openning a new page in a tab in the browser;
+- `url`: url opening a new page in a tab in the browser;
 - `label`: it's an i18n key used to l10n the entry in the UI.
 
 ====== Examples
 
-In the following examples, only the part relative to menu entries in the `config.json` file is detailed, the other parts are omitted and represent with a '…'.
+In the following examples, only the part relative to menu entries in the `config.json` file is detailed, the other parts are omitted and represented with a '…'.
 
 *Single menu entry*
 
@@ -309,7 +309,7 @@ actions allowing specific card rendering for each state of the business process.
 
 The purpose of this section is to display elements of third card data in a custom format.
 
-Regarding the card detail customization, all the examples in this section will be based on the cards generated by the script existing in the `Cards-Publication` project. For the examples given here, this script is run with arguments detail in the following command line:
+Regarding the card detail customization, all the examples in this section will be based on the cards generated by the script existing in the `Cards-Publication` project. For the examples given here, this script is run with arguments detailed in the following command line:
 [#CardSendingScript]
 ....
 $OPERATOR_FABRIC_HOME/services/core/cards-publication/src/main/bin/push_card_loop.sh --publisher BUNDLE_TEST --process tests
@@ -319,24 +319,24 @@ where:
 
 - `$OPERATOR_FABRIC_HOME` is the root folder of OperatorFabric where tests are performed;
 - `BUNDLE_TEST` is the name of the Third party;
-- `tests` is the name of the process refered by published cards.
+- `tests` is the name of the process referred by published cards.
 
 ===== configuration
 
 The process entry in the configuration file is a dictionary of processes, each key maps to a process definition.
-A process definition is itself a dictionary of states, each key maps to a state definition. A state is define by:
+A process definition is itself a dictionary of states, each key maps to a state definition. A state is defined by:
 
-* a list of details: details are a combination of an internationnalized title (tile), css class styling element
+* a list of details: details are a combination of an internationalized title (title), css class styling element
 (titleStyle) and a template reference
-* a dictionary of actions: actions are described in the bellow <<ActionsThirdsDesfription, Actions>> section.
+* a dictionary of actions: actions are described in the bellow <<ActionsThirdsDescription, Actions>> section.
 
-[#ActionsThirdsDesfription]
+[#ActionsThirdsDescription]
 ===== Actions
 
 ....
 {
   "type" : "URI",
-  "url": "http://somewher.org/simpleProcess/finish
+  "url": "http://somewher.org/simpleProcess/finish",
   "lockAction" : true,
   "lockCard" : true,
   "needsConfirm" : false,
@@ -362,7 +362,7 @@ An action aggregates both the mean to trigger action on the third party and data
 
 * type - mandatory: for now only URL type is supported:
  ** URL: this action triggers a call to an external REST end point
-* url - mandatory: a templated url for URL type action. this url may be injected with data before actions call, data are
+* url - mandatory: a template url for URL type action. this url may be injected with data before actions call, data are
 specified using curly brackets. Available parameters:
  ** processInstance: the name/id of the process instance
  ** process: the name of the process
@@ -429,11 +429,11 @@ Those templates display also a l10n title and a list of numeric values from 1 to
 ===== CSS
 
 This folder contains regular css files.
-The file name must be declared in the `config.json` file in order to be used in the templates and applyed to them.
+The file name must be declared in the `config.json` file in order to be used in the templates and applied to them.
 
 ====== Examples
 
-As above, all parts of files unreleavant for our example are symbolise by a `…` character.
+As above, all parts of files irrelevant for our example are symbolised by a `…` character.
 
 *Declaration of css files in `config.json` file*
 
@@ -452,7 +452,7 @@ As above, all parts of files unreleavant for our example are symbolise by a `…
 	<div class="bundle-test">'{{card.data.level1.level1Prop}}'</div>
 	…
 ....
-As seen abow, the value of `{{card.data.level1.level1Prop}}` of a test card is `This is a level1 property`
+As seen above, the value of `{{card.data.level1.level1Prop}}` of a test card is `This is a level1 property`
 
 *Style declaration in `./css/bundleTest.css`*
 
@@ -469,8 +469,8 @@ image::images/expected-result.png[Formatted root property]
 
 ==== Upload
 
-For this, the bundle is submitted to the OperatorFabric server using a POST http method as describe in link:../api/#uploadBundle[the Third Service API documentation].
-It's possible for test purposes to use the swagger documentation of the OperatorFabric using the folling url `https//:$OPERATOR_FABRIC_ROOT_URL:2100/swagger-ui.html#/thirds/uploadBundle`
+For this, the bundle is submitted to the OperatorFabric server using a POST http method as describe in <<../api/index#uploadBundle,the Third Service API documentation>>.
+It's possible for test purposes to use the swagger documentation of the OperatorFabric using the following url `https//:$OPERATOR_FABRIC_ROOT_URL:2100/swagger-ui.html#/thirds/uploadBundle`
 
  where `$OPERATOR_FABRIC_ROOT_URL` is the url of the running OperatorFabric tested.
 
@@ -543,7 +543,7 @@ These command line should return a `200 http status` response with the details 
             "actions" : {
               "finish" : {
                 "type" : "URI",
-                "url": "http://somewher.org/simpleProcess/finish
+                "url": "http://somewher.org/simpleProcess/finish",
                 "lockAction" : true,
                 "lockCard" : true,
                 "needsConfirm" : false,
