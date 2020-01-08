@@ -163,8 +163,16 @@ public class ThirdsService implements ResourceLoaderAware {
         Map<String, Third> versions = completeCache.get(thirdName);
         if (versions == null)
             throw new FileNotFoundException("No resource exist for " + thirdName);
-        String finalVersion = version != null ? version : this.fetch(thirdName).getVersion();
-        Third third = versions.get(finalVersion);
+
+        String finalVersion;
+        Third third;
+        if ((version != null) && ((third = versions.get(version)) != null))
+            finalVersion = version;
+        else {
+            finalVersion = this.fetch(thirdName).getVersion();
+            third = versions.get(finalVersion);
+        }
+
         if (third == null)
             throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + thirdName);
         validateResourceParameters(thirdName, type, name, finalVersion, locale);
