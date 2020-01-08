@@ -11,7 +11,7 @@
   }
   
   .material-icons {
-    font-family: 'Material Icons';
+    font-family: 'Material Icons', sans-serif;
     font-weight: normal;
     font-style: normal;
     font-size: 24px;  /* Preferred icon size */
@@ -37,7 +37,7 @@
 
   /* roboto-regular - latin */
 @font-face {
-    font-family: 'Roboto';
+    font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 400;
     src: local('Roboto'), local('Roboto-Regular'),
