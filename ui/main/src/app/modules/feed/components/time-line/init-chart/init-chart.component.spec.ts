@@ -111,7 +111,7 @@ describe('InitChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should apply differents zoom movements on timeline' +
+  xit('should apply differents zoom movements on timeline' +
       'should verify domain value is changed after calling moveDomain & homeClick functions', () => {
     fixture.detectChanges();
     const tmp = component.buttonTitle;
