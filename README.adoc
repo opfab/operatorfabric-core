@@ -65,7 +65,7 @@ when the feed is more like a "To Do" list.
 
 Part of the value of OperatorFabric is that it makes the integration very
 simple on the part of the third-party applications.
-To start publishing cards to users in an Opera,torFabric instance, all they
+To start publishing cards to users in an OperatorFabric instance, all they
 have to do is:
 
 * Register as a publisher through the "Thirds" service and provide a "bundle"
