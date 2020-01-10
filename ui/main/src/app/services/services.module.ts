@@ -11,16 +11,16 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
 import {TokenInjector} from './interceptors.service';
 import {CardService} from './card.service';
-import {GuidService} from "@ofServices/guid.service";
-import {TimeService} from "@ofServices/time.service";
-import {ThirdsService} from "@ofServices/thirds.service";
-import {FilterService} from "@ofServices/filter.service";
-import {ConfigService} from "@ofServices/config.service";
-import {I18nService} from "@ofServices/i18n.service";
-import {SettingsService} from "@ofServices/settings.service";
+import {GuidService} from '@ofServices/guid.service';
+import {TimeService} from '@ofServices/time.service';
+import {ThirdsService} from '@ofServices/thirds.service';
+import {FilterService} from '@ofServices/filter.service';
+import {ConfigService} from '@ofServices/config.service';
+import {I18nService} from '@ofServices/i18n.service';
+import {SettingsService} from '@ofServices/settings.service';
 import { UserService } from './user.service';
-import {ThirdActionService} from "@ofServices/third-action.service";
-import {ConfirmModalComponent} from "../modules/cards/components/action/confirm-modal/confirm-modal.component";
+import {ThirdActionService} from '@ofServices/third-action.service';
+import { NotifyService } from '@ofServices/notify.service';
 
 @NgModule({
     imports: [
@@ -42,7 +42,8 @@ import {ConfirmModalComponent} from "../modules/cards/components/action/confirm-
         FilterService,
         I18nService,
         UserService,
-        ThirdActionService
+        ThirdActionService,
+        NotifyService
     ]
 })
 export class ServicesModule {

@@ -11,9 +11,10 @@ import {AppState} from '@ofStore/index';
 import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
-import {catchError} from "rxjs/operators";
-import {buildConfigSelector} from "@ofSelectors/config.selectors";
+import {catchError} from 'rxjs/operators';
+import {buildConfigSelector} from '@ofSelectors/config.selectors';
 import * as moment from 'moment';
+import { NotifyService } from '@ofServices/notify.service';
 
 @Component({
     selector: 'of-cards',
@@ -26,7 +27,7 @@ export class FeedComponent implements OnInit, AfterViewInit {
     selection$: Observable<string>;
     hideTimeLine: boolean;
 
-    constructor(private store: Store<AppState>) {
+    constructor(private store: Store<AppState>, private notifyService: NotifyService) {
     }
 
     ngOnInit() {
@@ -35,17 +36,21 @@ export class FeedComponent implements OnInit, AfterViewInit {
             catchError(err => of([]))
         );
         this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);
-        this.store.select(buildConfigSelector('feed.timeline.hide'))
-            .subscribe(v=>this.hideTimeLine = v);
-    
-            moment.updateLocale('en', { week: {
-                dow: 6, // First day of week is Saturday
-                doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
-            }});
-    
+        this.store.select(buildConfigSelector('feed.timeline.hide')).subscribe(
+            v => this.hideTimeLine = v
+        );
+        moment.updateLocale('en', { week: {
+            dow: 6, // First day of week is Saturday
+            doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
+        }});
+        this.store.select(buildConfigSelector('feed.notify')).subscribe(
+            (notif) => {
+                if (notif) {
+                    this.notifyService.requestPermission();
+                }
+            }
+        );
     }
-
-
     ngAfterViewInit() {
     }
 }
