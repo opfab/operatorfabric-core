@@ -62,7 +62,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
                 .antMatchers(USERS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(GROUPS_PATH).hasRole(ADMIN_ROLE)
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
     }
 
 }

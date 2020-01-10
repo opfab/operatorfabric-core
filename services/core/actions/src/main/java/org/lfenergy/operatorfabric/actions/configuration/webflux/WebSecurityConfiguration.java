@@ -64,7 +64,6 @@ public class WebSecurityConfiguration {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers("/publisher/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
                 .anyExchange().authenticated();
 

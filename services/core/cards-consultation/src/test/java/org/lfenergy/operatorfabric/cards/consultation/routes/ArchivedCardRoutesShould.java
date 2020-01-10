@@ -100,13 +100,6 @@ public class ArchivedCardRoutesShould {
     public class GivenUserWithNoGroupCardRoutesShould {
 
         @Test
-        public void respondOkIfOptions(){
-            assertThat(archivedCardRoutes).isNotNull();
-            webTestClient.options().uri("/archives/id").exchange()
-                    .expectStatus().isOk();
-        }
-
-        @Test
         public void findOutCard(){
             ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
             StepVerifier.create(repository.save(simpleCard))
