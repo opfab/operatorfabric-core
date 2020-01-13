@@ -53,7 +53,7 @@ describe('Directive: AppMouseWheel', () => {
         expect(component).toBeTruthy();
     });
 
-    it('simulate the combination of events : mouse move & mouse release ' +
+    xit('simulate the combination of events : mouse move & mouse release ' +
         'on the chart, nothing happen', () => {
         inputEl.triggerEventHandler('pointermove', null);
         inputEl.triggerEventHandler('pointerup', null);
