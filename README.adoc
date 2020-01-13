@@ -620,6 +620,7 @@ For debugging purpose the following ports are also exposed:
 |===
 |Port |Forwards to | |
 
+|89 |KeyCloak |89 |KeyCloak api port
 |2000 |config |8080 |Configuration service http (REST)
 |2001 |registry |8080 |Registry service http (REST)
 |2002 |gateway |8080 |Gateway service http (REST+html)
@@ -628,6 +629,7 @@ For debugging purpose the following ports are also exposed:
 |2102 |cards-publication |8080 |card publication service http (REST)
 |2103 |users |8080 |Users management service http (REST)
 |2104 |cards-consultation |8080 |card consultation service http (REST)
+|2105 |actions |8080 |actions (REST)
 |2200 |web-ui |8080 |card consultation service http (REST)
 |3000 |oauth |8080 |Oauth development service http (REST)
 |4000 |config |5005 |java debug port
@@ -638,6 +640,7 @@ For debugging purpose the following ports are also exposed:
 |4102 |cards-publication |5005 |java debug port
 |4103 |users |5005 |java debug port
 |4104 |cards-consultation |5005 |java debug port
+|4105 |actions |5005 |java debug port
 |4200 |web-ui |5005 |java debug port
 |5000 |oauth |5005 |java debug port
 |27017 |mongo |27017 |mongo api port
