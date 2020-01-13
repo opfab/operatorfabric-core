@@ -42,6 +42,7 @@
                 (click)="toggleMenu(index)"
                 *ngIf="tMenu.entries.length>1"
                 translate
+                href="javascript:void(0)"
         >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.label}}</a>
         <div class="dropdown-menu"
              *ngIf="tMenu.entries.length>1"
@@ -63,6 +64,7 @@
                 id="drop_user_menu"
                 [attr.aria-expanded]="expandedUserMenu"
                 (click)="toggleUserMenu()"
+                href="javascript:void(0)"
         ><of-info></of-info></a>
         <div class="dropdown-menu dropdown-menu-right"
              [ngbCollapse]="!expandedUserMenu">
@@ -76,7 +78,7 @@
           </div>
           <div class="dropdown-item">
             <form>
-              <a class="nav-link text-dark text-decoration-none" (click)="logOut()">
+              <a class="nav-link text-dark text-decoration-none" (click)="logOut()" href="javascript:void(0)">
                 <span translate>menu.logout</span>&nbsp;<fa-icon icon="sign-out-alt"></fa-icon></a>
             </form>
           </div>
