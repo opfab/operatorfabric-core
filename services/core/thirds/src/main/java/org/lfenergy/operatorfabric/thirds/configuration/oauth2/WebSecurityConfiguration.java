@@ -56,7 +56,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, THIRDS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.PUT, THIRDS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.DELETE, THIRDS_PATH).hasRole(ADMIN_ROLE)
-                .anyRequest().permitAll(); //Needed to allow styles to be loaded without auth
+                .anyRequest().authenticated();
     }
 
 }

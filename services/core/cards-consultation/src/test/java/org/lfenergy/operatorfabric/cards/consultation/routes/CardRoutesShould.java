@@ -106,13 +106,6 @@ public class CardRoutesShould {
     public class GivenUserWithNoGroupCardRoutesShould {
 
         @Test
-        public void respondOkIfOptions(){
-            assertThat(cardRoutes).isNotNull();
-            webTestClient.options().uri("/cards/id").exchange()
-                    .expectStatus().isOk();
-        }
-
-        @Test
         public void findOutCard(){
             CardConsultationData simpleCard = createSimpleCard(1, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600));
             StepVerifier.create(repository.save(simpleCard))

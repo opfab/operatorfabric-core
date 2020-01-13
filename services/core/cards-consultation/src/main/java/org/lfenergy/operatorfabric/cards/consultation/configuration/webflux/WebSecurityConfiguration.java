@@ -62,7 +62,6 @@ public class WebSecurityConfiguration {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers("/cards/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
                 .pathMatchers("/cardSubscription/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
                 .pathMatchers("/archives/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
