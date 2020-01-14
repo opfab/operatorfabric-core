@@ -1,6 +1,8 @@
 server:
   port: 2200
 operatorfabric:
+  keycloak:
+    realm: dev
   security:
     oauth2:
       flow:
