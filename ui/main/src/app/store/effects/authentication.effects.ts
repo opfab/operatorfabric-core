@@ -120,10 +120,12 @@ export class AuthenticationEffects {
 
     private resetState() {
         AuthenticationService.clearAuthenticationInformation();
-        this.store.select(buildConfigSelector('keycloak.realm'))
-            .subscribe(realm => {
-                window.location.href = `${environment.urls.auth}/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${AuthenticationService.computeRedirectUri()}`;
-            });
+        this.store.select(buildConfigSelector('keycloak.realm')).subscribe(realm => {
+            if (realm) {
+                const redirect = AuthenticationService.computeRedirectUri();
+                window.location.href = `${environment.urls.auth}/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
+            }
+        });
         this.cardService.unsubscribeCardOperation();
     }
 
