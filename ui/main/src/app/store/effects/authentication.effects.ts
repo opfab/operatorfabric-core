@@ -126,6 +126,7 @@ export class AuthenticationEffects {
                 window.location.href = `${environment.urls.auth}/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
             }
         });
+
         this.cardService.unsubscribeCardOperation();
     }
 
