@@ -29,7 +29,7 @@ services:
     depends_on:
      - rabbitmq
     image: "lfeoperatorfabric/of-configuration-cloud-service:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
      - "2000:8080"
      - "4000:5005"
@@ -48,7 +48,7 @@ services:
     depends_on:
      - config
     image: "lfeoperatorfabric/of-registry-cloud-service:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
      - "2001:8080"
      - "4001:5005"
@@ -61,7 +61,7 @@ services:
     depends_on:
      - registry
     image: "lfeoperatorfabric/of-client-gateway-cloud-service:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
      - "2002:8080"
      - "4002:5005"
@@ -73,7 +73,7 @@ services:
     depends_on:
      - registry
     image: "lfeoperatorfabric/of-users-business-service:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
      - "2103:8080"
      - "4103:5005"
@@ -85,7 +85,7 @@ services:
     depends_on:
      - registry
     image: "lfeoperatorfabric/of-thirds-business-service:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
      - "2100:8080"
      - "4100:5005"
@@ -99,7 +99,7 @@ services:
     depends_on:
      - registry
     image: "lfeoperatorfabric/of-time-business-service:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
      - "2101:8080"
      - "4101:5005"
@@ -111,7 +111,7 @@ services:
     depends_on:
      - registry
     image: "lfeoperatorfabric/of-cards-publication-business-service:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
      - "2102:8080"
      - "4102:5005"
@@ -123,7 +123,7 @@ services:
     depends_on:
      - registry
     image: "lfeoperatorfabric/of-cards-consultation-business-service:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
      - "2104:8080"
      - "4104:5005"
@@ -135,7 +135,7 @@ services:
     depends_on:
     - registry
     image: "lfeoperatorfabric/of-actions-business-service:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
     - "2105:8080"
     - "4105:5005"
@@ -147,7 +147,7 @@ services:
     depends_on:
     - registry
     image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
-    user: 1000:1000
+    user: ${USER_ID}:${USER_GID}
     ports:
     - "2200:8080"
     - "4200:5005"
