@@ -118,6 +118,7 @@ describe('AuthenticationEffects', () => {
             const localAction$ = new Actions(hot('-a--', {a: new TryToLogOut()}));
             setStorageWithUserData();
             cardService.unsubscribeCardOperation.and.callFake(()=>{})
+            mockStore.select.and.returnValue(of(null));
             effects = new AuthenticationEffects(mockStore, localAction$, null, cardService, null);
             expect(effects).toBeTruthy();
             const localExpected = hot('-(abc)', {a: new EmptyLightCards(), b: new ClearCard(), c:new AcceptLogOut()});

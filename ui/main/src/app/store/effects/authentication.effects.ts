@@ -22,16 +22,18 @@ import {
 } from '@ofActions/authentication.actions';
 import {AuthenticationService} from '../../services/authentication.service';
 import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {AppState} from "@ofStore/index";
-import {Router} from "@angular/router";
-import {ConfigActionTypes} from "@ofActions/config.actions";
-import {selectCode} from "@ofSelectors/authentication.selectors";
-import {Message, MessageLevel} from "@ofModel/message.model";
-import {I18n} from "@ofModel/i18n.model";
-import {Map} from "@ofModel/map";
-import {CardService} from "@ofServices/card.service";
-import {EmptyLightCards} from "@ofActions/light-card.actions";
-import {ClearCard} from "@ofActions/card.actions";
+import {AppState} from '@ofStore/index';
+import {Router} from '@angular/router';
+import {ConfigActionTypes} from '@ofActions/config.actions';
+import {selectCode} from '@ofSelectors/authentication.selectors';
+import {Message, MessageLevel} from '@ofModel/message.model';
+import {I18n} from '@ofModel/i18n.model';
+import {Map} from '@ofModel/map';
+import {CardService} from '@ofServices/card.service';
+import {EmptyLightCards} from '@ofActions/light-card.actions';
+import {ClearCard} from '@ofActions/card.actions';
+import {environment} from '@env/environment';
+import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 
 /**
  * Management of the authentication of the current user
@@ -118,6 +120,13 @@ export class AuthenticationEffects {
 
     private resetState() {
         AuthenticationService.clearAuthenticationInformation();
+        this.store.select(buildConfigSelector('keycloak.realm')).subscribe(realm => {
+            if (realm) {
+                const redirect = AuthenticationService.computeRedirectUri();
+                window.location.href = `${environment.urls.auth}/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
+            }
+        });
+
         this.cardService.unsubscribeCardOperation();
     }
 
