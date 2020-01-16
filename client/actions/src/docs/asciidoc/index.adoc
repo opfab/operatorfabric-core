@@ -6,7 +6,8 @@
 
 = Client Thirds Data Model Reference Documentation
 David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-v0.3.1, April 15, 2019
+:revnumber: 0.13.1.SNAPSHOT
+:revdate: December 2, 2019
 :imagesdir: images
 :sectnums:
 :toc: left
