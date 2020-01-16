@@ -8,7 +8,7 @@
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {AuthenticationService} from './authentication.service';
+import {AuthenticationService} from './authentication/authentication.service';
 import {TokenInjector} from './interceptors.service';
 import {CardService} from './card.service';
 import {GuidService} from '@ofServices/guid.service';

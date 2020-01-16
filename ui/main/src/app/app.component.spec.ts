@@ -15,24 +15,23 @@ import {of} from 'rxjs';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
-import {IconComponent} from "./components/navbar/icon/icon.component";
-import {TranslateModule} from "@ngx-translate/core";
-import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {I18nService} from "@ofServices/i18n.service";
-import {Title} from "@angular/platform-browser";
+import {IconComponent} from './components/navbar/icon/icon.component';
+import {TranslateModule} from '@ngx-translate/core';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {I18nService} from '@ofServices/i18n.service';
+import {Title} from '@angular/platform-browser';
+import {MockStore, provideMockStore} from '@ngrx/store/testing';
+import {emptyAppState4Test} from '@tests/helpers';
+import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 import createSpyObj = jasmine.createSpyObj;
-import {MockStore, provideMockStore} from "@ngrx/store/testing";
-import {emptyAppState4Test} from "@tests/helpers";
-import {authInitialState} from "@ofStates/authentication.state";
+import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 
 
 describe('AppComponent', () => {
 
     let store: Store<AppState>;
-
     let fixture;
-
-    let component;
 
     beforeEach(async(() => {
         TestBed.resetTestEnvironment();
@@ -44,10 +43,11 @@ describe('AppComponent', () => {
                 StoreModule.forRoot(appReducer),
                 TranslateModule.forRoot(),
                 // solution 4 RouterTestingModule: https://github.com/coreui/coreui-free-bootstrap-admin-template/issues/202
-                RouterTestingModule
+                RouterTestingModule,
+                HttpClientTestingModule
             ],
-            declarations: [AppComponent,NavbarComponent, IconComponent],
-            providers: [{provide: store, useClass: Store},I18nService],
+            declarations: [AppComponent, NavbarComponent, IconComponent],
+            providers: [{provide: store, useClass: Store}, I18nService, AuthenticationImportHelperForSpecs],
             schemas: [ NO_ERRORS_SCHEMA ]
         }).compileComponents();
         store = TestBed.get(Store);
@@ -62,7 +62,6 @@ describe('AppComponent', () => {
         }
     );
         fixture = TestBed.createComponent(AppComponent);
-        component = fixture.componentInstance;
     }));
 
     it('should create the app', async(() => {
@@ -89,6 +88,8 @@ describe('AppComponent', () => {
     let store: MockStore<AppState>;
     let fixture;
     const i18nServiceSpy = createSpyObj('i18NService', ['changeLocale']);
+    const authServiceSpy = createSpyObj('AuthenticationService', ['intializeAuthentication',
+        'linkAuthenticationStatus']);
 
     let titleService: Title;
 
@@ -109,11 +110,13 @@ describe('AppComponent', () => {
                 // solution 4 RouterTestingModule: https://github.com/coreui/coreui-free-bootstrap-admin-template/issues/202
                 RouterTestingModule
             ],
+
             declarations: [AppComponent],
             providers: [
                 provideMockStore({initialState}),
-                {provide: I18nService, useValue: i18nServiceSpy}
-                , Title],
+                {provide: I18nService, useValue: i18nServiceSpy},
+                Title,
+                {provide: AuthenticationService, useValue: authServiceSpy}],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
         store = TestBed.get(Store);
@@ -121,7 +124,7 @@ describe('AppComponent', () => {
         titleService = TestBed.get(Title);
     }));
 
-    it(`should have the title 'toto' as set in Config microservice`, async(() => {
+    it(`should have the title 'toto' as set in Config service`, async(() => {
 
         store.setState({
             ...initialState
@@ -137,7 +140,7 @@ describe('AppComponent', () => {
         expect(titleService.getTitle()).toEqual('toto');
     }));
 
-    it(`should have the default title 'OperatorFabric' (because of '' set as title in Config microservice)`,
+    it(`should have the default title 'OperatorFabric' when title is set to '' in Config service`,
         async(() => {
 
         store.setState({
@@ -154,7 +157,7 @@ describe('AppComponent', () => {
         expect(titleService.getTitle()).toEqual('OperatorFabric');
     }));
 
-    it(`should have the default title 'OperatorFabric' (because of title parameter not present in Config microservice)`,
+    it(`should have the default title 'OperatorFabric' when title parameter not present in Config service`,
         async(() => {
 
             store.setState({

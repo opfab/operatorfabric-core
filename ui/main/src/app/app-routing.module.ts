@@ -7,14 +7,9 @@
 
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
-// import {AuthenticationGuard} from '@ofServices/guard.service';
 import {LoginComponent} from './components/login/login.component';
 
 const routes: Routes = [
-    // {
-    //     path: 'login',
-    //     component: LoginComponent
-    // },
     {
         path: 'feed',
         loadChildren: './modules/feed/feed.module#FeedModule',
@@ -45,7 +40,15 @@ const routes: Routes = [
 export const navigationRoutes: Routes = routes.slice(0, 2);
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes,{ enableTracing: false, preloadingStrategy: PreloadAllModules })],
+    imports: [
+        RouterModule.forRoot(routes, {
+            enableTracing: false, preloadingStrategy:
+            PreloadAllModules,
+            /* sets initialNavigation to false is needed to enable authentication implicit flow
+            * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+            */
+            initialNavigation: false
+        })],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

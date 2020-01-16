@@ -19,7 +19,7 @@ import {EventSourceInit, EventSourcePolyfill} from "ng-event-source";
 import {map, tap} from "rxjs/operators";
 import {selectTimeReference} from "@ofSelectors/time.selectors";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
-import {AuthenticationService} from "@ofServices/authentication.service";
+import {AuthenticationService} from "@ofServices/authentication/authentication.service";
 import {TickPayload} from "@ofActions/time.actions";
 
 @Injectable()
@@ -37,7 +37,8 @@ export class TimeService {
     private timeAtLastHeartBeat: Moment;
     private timeLineFormats: any;
 
-    constructor(private store: Store<AppState>) {
+    constructor(private store: Store<AppState>,
+                private authService: AuthenticationService) {
         this.initializeTimeFormat();
 
         this.store.select(buildConfigSelector('time.pulse',
@@ -103,7 +104,7 @@ export class TimeService {
     initiateTimeReference() {
         const eventSource = new EventSourcePolyfill(
             environment.urls.time,
-            {   headers: AuthenticationService.getSecurityHeader(),
+            {   headers: this.authService.getSecurityHeader(),
                 heartbeatTimeout: 600000
             } as EventSourceInit);
         this.timeReference$ = this.fetchVirtualTime(eventSource);

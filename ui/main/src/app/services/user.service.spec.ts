@@ -8,7 +8,7 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { CardService } from './card.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { AuthenticationService } from '@ofServices/authentication.service';
+import { AuthenticationService } from '@ofServices/authentication/authentication.service';
 import { GuidService } from "@ofServices/guid.service";
 import { StoreModule } from "@ngrx/store";
 import { appReducer } from "@ofStore/index";

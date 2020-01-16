@@ -15,6 +15,8 @@ import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-s
 import {CustomRouterStateSerializer} from "@ofStates/router.state";
 import {appReducer, storeConfig} from "@ofStore/index";
 import {RouterTestingModule} from "@angular/router/testing";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
 
 let component: CustomTimelineChartComponent;
 let fixture: ComponentFixture<CustomTimelineChartComponent>;
@@ -28,12 +30,14 @@ describe('Directive: XAxisTickFormatPipe', () => {
                 StoreModule.forRoot(appReducer, storeConfig),
                 RouterTestingModule,
                 StoreRouterConnectingModule,
-                NgxChartsModule ],
+                NgxChartsModule,
+                HttpClientTestingModule ],
             declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent, XAxisTickFormatPipe ],
             providers: [{provide: APP_BASE_HREF, useValue: '/'},
-                {provide: Store, useClass: Store},
+                Store,
                 {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
-                {provide: TimeService, useClass: TimeService}],
+                TimeService,
+                AuthenticationImportHelperForSpecs],
             schemas: [ NO_ERRORS_SCHEMA ]
         })
         .compileComponents();

@@ -20,6 +20,7 @@ import createSpyObj = jasmine.createSpyObj;
 import { getRandomPage } from '@tests/helpers';
 import * as fromStore from '@ofStore/selectors/archive.selectors';
 import { ArchiveQuerySuccess } from '@ofStore/actions/archive.actions';
+import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 describe('ArchiveFiltersComponent', () => {
   let component: ArchiveFiltersComponent;
@@ -62,7 +63,8 @@ describe('ArchiveFiltersComponent', () => {
         ThirdsService,
         {provide: 'TimeEventSource', useValue: null},
         TimeService,
-        I18nService
+        I18nService,
+        AuthenticationImportHelperForSpecs
       ]}).compileComponents();
       store = TestBed.get(Store);
       spyOn(store, 'dispatch').and.callThrough();

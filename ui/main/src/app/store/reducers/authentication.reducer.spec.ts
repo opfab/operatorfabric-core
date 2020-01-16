@@ -27,7 +27,8 @@ const previousState: AuthState = {
     message: null,
     code: null,
     firstName: 'john',
-    lastName: 'doe'
+    lastName: 'doe',
+    isImplicitlyAuthenticated: false
 
 };
 

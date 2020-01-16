@@ -11,12 +11,14 @@ import {DraggableDirective} from '../directives/app-draggable';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
 import {XAxisTickFormatPipe} from '../tick-format-pipe/x-axis-tick-format.pipe';
 import * as _ from 'lodash';
-import {Store, StoreModule} from "@ngrx/store";
-import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
-import {CustomRouterStateSerializer} from "@ofStates/router.state";
-import {TimeService} from "@ofServices/time.service";
-import {appReducer, storeConfig} from "@ofStore/index";
-import {RouterTestingModule} from "@angular/router/testing";
+import {Store, StoreModule} from '@ngrx/store';
+import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
+import {CustomRouterStateSerializer} from '@ofStates/router.state';
+import {TimeService} from '@ofServices/time.service';
+import {appReducer, storeConfig} from '@ofStore/index';
+import {RouterTestingModule} from '@angular/router/testing';
+import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('CustomTimelineChartComponent', () => {
   let component: CustomTimelineChartComponent;
@@ -31,14 +33,16 @@ describe('CustomTimelineChartComponent', () => {
         StoreModule.forRoot(appReducer, storeConfig),
         RouterTestingModule,
         StoreRouterConnectingModule,
-        NgxChartsModule ],
+        NgxChartsModule,
+        HttpClientTestingModule],
       declarations: [ CustomTimelineChartComponent,
         DraggableDirective, MouseWheelDirective,
         XAxisTickFormatPipe],
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
         {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
-        {provide: TimeService, useClass: TimeService}],
+        {provide: TimeService, useClass: TimeService},
+      AuthenticationImportHelperForSpecs],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

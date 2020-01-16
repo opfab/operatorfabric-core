@@ -11,7 +11,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
-import {AuthenticationService} from "@ofServices/authentication.service";
+import {AuthenticationService} from "@ofServices/authentication/authentication.service";
 import {LoginComponent} from "./login.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
@@ -40,7 +40,8 @@ describe('LoginComponent', () => {
                 'extractIdentificationInformation',
                 'askTokenFromPassword',
                 'checkAuthentication',
-                'askTokenFromCode'
+                'askTokenFromCode',
+                'isAuthModeCodeOrImplicitFlow'
             ]);
         const storeSpy = createSpyObj('Store', ['dispatch','select']);
         TestBed.configureTestingModule({

@@ -18,7 +18,7 @@ The service has no mandatory configuration beside global configuration and
 usual bootstrap configuration.
 
 For other configuration see:
-
+NONE
 * {springboot_doc}/reference/htmlsingle/[Spring Boot documentation].
 * {spring_doc}spring-framework-reference/web-reactive.html#webflux[Spring MVC documentation].
 
@@ -27,14 +27,24 @@ For other configuration see:
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.security.oauth2.flow.mode|PASSWORD|no|authentication mode (CODE: Authorization Code Flow, PASSWORD: Direct Password Flow)
+|operatorfabric.security.oauth2.flow.mode|PASSWORD|no
+a|authentication mode, awailable options:
+
+ - CODE: Authorization Code Flow;
+ - PASSWORD: Direct Password Flow (fallback);
+ - IMPLICIT: Implicit Flow.
 |operatorfabric.security.oauth2.flow.provider|null|no|provider name to display on log in button
-|operatorfabric.security.oauth2.flow.delegate-url|null|no|Url to redirect the browser to for authentication, mandatory with CODE flow
+|operatorfabric.security.oauth2.flow.delegate-url|null|no
+a|Url to redirect the browser to for authentication. Mandatory with:
+
+- CODE flow: must be the url with protocol choice and version as query parameters;
+- IMPLICIT flow: must be the url part before `.well-known/openid-configuration` (for example in dev configuration it's
+ `http://localhost:89/auth/realms/dev`).
 |operatorfabric.feed.subscription.timeout|60000|no|Milliseconds between card subscription renewal
 |operatorfabric.feed.card.time.display|BUSINESS|no
 a|card time display mode in the feed. Values :
 
- - BUSINESS: displays card with entire business period;
+ - BUSINESS: displays card with entire business period. It the fallback if the set value is none of the values listed here;
  - BUSINESS_START: displays card with business start date;
  - PUBLICATION: displays card with publication date;
  - LTTD: displays card with lttd date;

@@ -31,6 +31,7 @@ import {translateConfig} from "../../translate.config";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {ServicesModule} from "@ofServices/services.module";
 import {compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
+import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
 
 describe('FeedComponent', () => {
     let component: FeedComponent;
@@ -48,7 +49,10 @@ describe('FeedComponent', () => {
                 CardsModule,
                 TranslateModule.forRoot(translateConfig)],
             declarations: [CardListComponent, FeedComponent, TimeLineComponent],
-            providers: [{provide: Store, useClass: Store},{provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}],
+            providers: [
+                Store,
+                {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
+                AuthenticationImportHelperForSpecs],
             schemas: [ NO_ERRORS_SCHEMA ]
         })
             .compileComponents();
