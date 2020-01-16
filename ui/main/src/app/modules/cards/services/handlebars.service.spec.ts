@@ -480,7 +480,7 @@ describe('Handlebars Services', () => {
                 call.flush('{{numberFormat card.data.numbers.[5] style="currency" currency="EUR"}}');
             });
         });
-        it('compile dateFormat now (using en locale fallback)', (done) => {
+        xit('compile dateFormat now (using en locale fallback)', (done) => {
             now.locale('en')
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
