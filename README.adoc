@@ -435,7 +435,7 @@ Per project configuration :
 *[sub-project]/build/docker-volume/* by task *copyWorkingDir*. The latest
 can then be mounted as volume in docker containers.
 
-=== Scripts (bin)
+=== Scripts (bin and CICD)
 
 [horizontal]
 bin/build_all.sh:: builds all artifacts as gradle is not able to manage
@@ -446,8 +446,8 @@ bin/load_environment_light.sh:: sets up environment when *sourced* (java
 version, gradle version, maven version, node version)
 bin/load_environment_ramdisk.sh:: sets up environment and links build
 subdirectories to a ramdisk when *sourced* at ~/tmp
-bin/prepare_release_version.sh:: performs the changes necessary to tag a RELEASE version
-bin/prepare_snapshot_version.sh:: performs the changes necessary to tag a SNAPSHOT version
+CICD/prepare_release_version.sh:: performs the changes necessary to tag a RELEASE version
+CICD/prepare_snapshot_version.sh:: performs the changes necessary to tag a SNAPSHOT version
 bin/run_all.sh:: runs all all services (see below)
 bin/setup_dockerized_environment.sh:: generate docker images for all services
 

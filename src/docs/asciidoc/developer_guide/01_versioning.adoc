@@ -31,10 +31,10 @@ Considering a version X.X.X.SNAPSHOT.
 
 ==== In the source repository (operatorfabric-core)
 
-. Use the ./bin/prepare_release_version.sh script to automatically perform all the necessary changes:
+. Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
 ```
-./bin/prepare_release_version.sh
+./CICD/prepare_release_version.sh
 ```
 +
 This will perform the following changes:
@@ -170,10 +170,10 @@ To prepare a next version you simply need to increment the version after a relea
 
 ==== In the source repository (operatorfabric-core)
 
-. Use the ./bin/prepare_snapshot_version.sh script to automatically perform all the necessary changes:
+. Use the ./CICD/prepare_snapshot_version.sh script to automatically perform all the necessary changes:
 +
 ```
-./bin/prepare_snapshot_version.sh --version Y.Y.Y.SNAPSHOT
+./CICD/prepare_snapshot_version.sh --version Y.Y.Y.SNAPSHOT
 ```
 +
 This will perform the following changes:
