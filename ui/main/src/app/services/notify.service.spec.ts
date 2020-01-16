@@ -1,7 +1,7 @@
 import { NotifyService } from './notify.service';
 import { TestBed } from '@angular/core/testing';
 
-fdescribe('NotifyService', () => {
+describe('NotifyService', () => {
 
     let mockWindow: any;
     let mockNotification: any;
