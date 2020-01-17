@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. ${BASH_SOURCE%/*}/../load_variables.sh
+. ${BASH_SOURCE%/*}/../../bin/load_variables.sh
 
 CURRENT_PATH=$(pwd)
 GH_REPO=github.com/opfab/operatorfabric.git
