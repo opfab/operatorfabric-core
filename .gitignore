@@ -75,6 +75,8 @@ classes
 .settings
 .classpath
 #*/**/bin
+services/*/*/bin
+*/**/*.class
 
 ### Gradle ###
 .gradle
