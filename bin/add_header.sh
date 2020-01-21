@@ -11,18 +11,19 @@ OF_HOME=$(realpath $DIR/..)
 CURRENT_PATH=$(pwd)
 
 function display_usage() {
-	echo -e "This script adds license header to all file with of the specified language.\n"
+	echo -e "This script adds license header to all files with of the specified language.\n"
+	echo -e "All headings should be removed before adding new headings to avoid duplicate headings.\n"
 	echo -e "Usage:\n"
 	echo -e "\tadd_headers.sh [OPTIONS] [TYPE]\n"
 	echo -e "options:\n"
-	echo -e "\t-d, --delete deelte headers."
+	echo -e "\t-d, --delete delete headers."
 	echo -e "\t-h, --help display this help message."
 	echo -e "types:\n"
 	echo -e "\tJAVA  : .java files"
 	echo -e "\tTS  : .ts (TypeScript) files"
 	echo -e "\tCSS  : .css, .scss files"
 	echo -e "\tHTML  : .htm, .html files"
-	echo -e "\tADOC  : .adocl files"
+	echo -e "\tADOC  : .adoc files"
 }
 delete=false
 while [[ $# -gt 0 ]]
@@ -85,6 +86,10 @@ echo "Licence header line count: $licenceLines"
 echo -e "Licence header content: \n$licenceContent"
 echo -e "\n"
 
+#Exclude bundles demo/test files
+findCommand+="! -path \"$OF_HOME/services/core/thirds/src/main/docker/volume/thirds-storage/*\" "
+
+findCommand+=" -and "
 for ((i=0; i<${#file_extensions[*]}; i=$((i+1))));
 do
     if ((i>0)); then
@@ -92,6 +97,7 @@ do
     fi
     findCommand+=" -name \"*.${file_extensions[i]}\""
 done
+
 #findCommand+='|grep -Rv "build"'
 echo "computed find command: $findCommand"
 
