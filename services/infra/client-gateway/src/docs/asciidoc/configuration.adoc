@@ -24,8 +24,8 @@ In a configuration service client-gateway.yml file
 ** /auth/code/(?<params>.*) must match the auth entry point with specific query
 parameters : response_type=code&client_id=[client id]&$\{params}
 ** /auth/check_token must match token introspection entry point
-* The application may set up CORS rules if api are to be accessed outside of
-the deployment domain
+* The application may set up CORS rules if api are to be accessed from browser outside of
+the deployment domain 
 
 For other configuration see {spring_cloud_gateway_doc}single/spring-cloud-gateway.html[spring cloud gateway documentation].
 

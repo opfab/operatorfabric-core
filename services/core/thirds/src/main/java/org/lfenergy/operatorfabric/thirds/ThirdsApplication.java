@@ -19,7 +19,6 @@ import org.springframework.context.annotation.ImportResource;
 //@EnableSwagger2
 @Slf4j
 @RefreshScope
-@ImportResource("classpath:/cors.xml")
 @EnableOperatorFabricOAuth2
 public class ThirdsApplication {
 
