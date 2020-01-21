@@ -6,7 +6,7 @@
 
 = OperatorFabric Web UI Reference Documentation
 David Binder; Boris Dolley; Alexandra Guironnet; Baptiste Julien; Ronan Le Gall;
-:revnumber: 0.14.1.RELEASE
+:revnumber: 0.15.1.SNAPSHOT
 :revdate: 17 January 2020
 :imagesdir: images
 :sectnums:

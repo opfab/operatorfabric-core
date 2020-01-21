@@ -123,7 +123,7 @@ Some cards can emit a sound when displayed in the feed of the GUI, the id of aud
 
 This attribute is a string of objects containing a `title` attribute which is `i18n` key and a `template` attribute which refers to a template name contained in the publisher bundle. The bundle in which those resources will be looked for is the one corresponding of the <<_card_publisher_version, version>> declared in the card for the current <<_card_publisher, publisher>>. If no resource is found, either because there is no bundle for the given version or there is no resource for the given key, then the corresponding key is displayed in the details section of the GUI.
 
-link:../../../thirds/0.14.1.RELEASE/reference/#_bundle[See the documentation about third bundle in the Third service documentation].
+link:../../../thirds/0.15.1.SNAPSHOT/reference/#_bundle[See the documentation about third bundle in the Third service documentation].
 
 *example:*
 

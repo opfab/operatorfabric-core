@@ -269,7 +269,7 @@ don't quite cover what you're planning to do, please look into the <<Recipes>>
 section.
 
 TIP: In addition, a
-link:https://opfab.github.io/documentation/0.14.1.RELEASE/start/[Getting
+link:https://opfab.github.io/documentation/0.15.1.SNAPSHOT/start/[Getting
 Started guide on our website] exists.
 Check it out !
 
