@@ -90,7 +90,7 @@ do
     if ((i>0)); then
         findCommand+=" -or"
     fi
-    findCommand+=" -name *.${file_extensions[i]}"
+    findCommand+=" -name \"*.${file_extensions[i]}\""
 done
 #findCommand+='|grep -Rv "build"'
 echo "computed find command: $findCommand"
