@@ -17,6 +17,7 @@ public class EmptyListComparator<T> implements Comparator<List<T>> {
 
     @Override
     public int compare(List<T> ts, List<T> t1) {
+        if (ts==null && t1==null) return 0;
         if((ts==null&&t1.isEmpty())||(ts.isEmpty()&&t1==null)) {
             return 0;
         } else {
