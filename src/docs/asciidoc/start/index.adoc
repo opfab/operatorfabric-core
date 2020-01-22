@@ -90,7 +90,7 @@ image::formated-card-details.jpg[detail card screenshot]
 ==== Anatomy of the card : 
 A card is containing information regarding the publisher, the recipients , the process , the data to show ... 
 
-More information can be found on the user guide : https://opfab.github.io/documentation/0.13.1.SNAPSHOT/user_guide/#_card_anatomy
+More information can be found on the user guide : https://opfab.github.io/documentation/0.15.1.RELEASE/user_guide/#_card_anatomy
 
 ----
 {
@@ -103,7 +103,7 @@ More information can be found on the user guide : https://opfab.github.io/docume
 				"type" : "GROUP",
 				"identity" : "TSO1"
 			},
-	"severity" : "NOTIFICATION",
+	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
@@ -299,7 +299,7 @@ You can send the following card to test your new bundle :
 				"type" : "GROUP",
 				"identity" : "TSO1"
 			},
-	"severity" : "NOTIFICATION",
+	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
@@ -451,7 +451,7 @@ To view the card in the time line , you need to set times in the card using time
 				"type" : "GROUP",
 				"identity" : "TSO1"
 			},
-	"severity" : "NOTIFICATION",
+	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "maintenanceProcess.summary"},
 	"title" : {"key" : "maintenanceProcess.title"},
