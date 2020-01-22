@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Define the structure of the RoleClaim.
@@ -26,6 +27,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Slf4j
 public abstract class RoleClaim {
 	
 	public static final String ROOT_PATH = "/";
@@ -53,7 +55,7 @@ public abstract class RoleClaim {
 			jsonNodeRoot = getJsonNodeRoot(payload);
 			listRoleResult = getListRoles(jsonNodeRoot);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Unexpected Error arose",e);
 		}
 		
 		return listRoleResult;

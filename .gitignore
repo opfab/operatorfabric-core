@@ -76,6 +76,7 @@ classes
 .classpath
 #*/**/bin
 services/*/*/bin
+tools/spring/spring-oauth2-utilities/bin
 services/core/bin
 */**/*.class
 

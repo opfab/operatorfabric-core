@@ -51,7 +51,7 @@ public class OpfabSpringGenerator extends SpringCodegen {
                     co.vendorExtensions.put("x-operatorfabric-spring-subPath",subPath);
             }
         }catch (Throwable t){
-            t.printStackTrace();
+            log.error("Unexpected Error arose", t);
         }
     }
 
