@@ -122,8 +122,10 @@ export class TranslateEffects {
     }
 
     static extractPublisherAssociatedWithDistinctVersionsFromCards(cards: LightCard[]): Map<Set<string>> {
-        const thirdsAndVersions = cards.map(card => {
-            return new TransitionalThirdWithItSVersion(card.publisher,card.publisherVersion);
+        let thirdsAndVersions: TransitionalThirdWithItSVersion[];
+        thirdsAndVersions = cards.map(card => {
+            // See OC-555 to avoid the infinite loop
+            // return new TransitionalThirdWithItSVersion(card.publisher,card.publisherVersion);
         });
         return this.consolidateThirdAndVersions(thirdsAndVersions);
     };
@@ -198,6 +200,6 @@ export class TranslateEffects {
 }
 
 class TransitionalThirdWithItSVersion {
-    constructor(public third:string,public version:string){}
+    constructor(public third:string, public version:string){}
 };
 
