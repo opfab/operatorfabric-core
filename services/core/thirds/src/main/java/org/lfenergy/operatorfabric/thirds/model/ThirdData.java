@@ -9,6 +9,7 @@ package org.lfenergy.operatorfabric.thirds.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,12 +21,12 @@ import java.util.Map;
  *
  * {@inheritDoc}
  *
- * @author David Binder
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Slf4j
 public class ThirdData implements Third {
 
   private String name;
@@ -52,7 +53,12 @@ public class ThirdData implements Third {
 
   @Override
   public void setProcesses(Map<String, ? extends ThirdProcesses> processesData){
-    this.processesData = new HashMap<>((Map<String,ThirdProcessesData>) processesData);
+    try { 
+      this.processesData = new HashMap<>((Map<String,ThirdProcessesData>) processesData);
+    }
+    catch (ClassCastException exception) {
+      log.error("Unexpected Error arose ", exception);
+    }
   }
 
   @Override
@@ -62,7 +68,12 @@ public class ThirdData implements Third {
 
   @Override
   public void setMedias(Map<String, ? extends ThirdMedias> mediasData){
+    try {
     this.mediasData = new HashMap<>((Map<String,ThirdMediasData>) mediasData);
+    }
+    catch (ClassCastException exception) {
+      log.error("Unexpected Error arose ", exception);
+    }
   }
 
   @Override
@@ -72,7 +83,12 @@ public class ThirdData implements Third {
 
   @Override
   public void setMenuEntries(List<? extends ThirdMenuEntry> menuEntries){
-    this.menuEntriesData = new ArrayList<>((List < ThirdMenuEntryData >) menuEntries);
+    try {
+      this.menuEntriesData = new ArrayList<>((List < ThirdMenuEntryData >) menuEntries);
+    }
+    catch (ClassCastException exception) {
+      log.error("Unexpected Error arose ", exception);
+    }
   }
 
 }
