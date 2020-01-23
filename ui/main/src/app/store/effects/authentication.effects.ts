@@ -34,6 +34,7 @@ import {EmptyLightCards} from '@ofActions/light-card.actions';
 import {ClearCard} from '@ofActions/card.actions';
 import {environment} from '@env/environment';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
+import {redirectToCurrentLocation} from "../../app-routing.module";
 
 /**
  * Management of the authentication of the current user
@@ -196,7 +197,7 @@ export class AuthenticationEffects {
                             if (!!code) {
                                 return this.authService.askTokenFromCode(code).pipe(
                                     tap(() => {
-                                        this.router.navigate(['/feed']);
+                                        redirectToCurrentLocation(this.router);
                                     }),
                                     map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
                                     catchError(errorResponse => {
@@ -212,7 +213,10 @@ export class AuthenticationEffects {
                                 const authInfo = this.authService.extractIdentificationInformation();
                                 return this.authService.loadUserData(authInfo)
                                     .pipe(
-                                        map(auth => new AcceptLogIn(auth))
+                                        map(auth => {
+                                            redirectToCurrentLocation(this.router);
+                                            return new AcceptLogIn(auth);
+                                        })
                                     );
                                 // return of(new AcceptLogIn(authInfo));
                             }
@@ -247,7 +251,7 @@ export class AuthenticationEffects {
                     })
                 )),
                 // due to implicit flow mode an explicit rerouting to `/feed` is needed once authenticated
-                tap ( () => this.router.navigate(['/feed'])),
+                tap ( () => redirectToCurrentLocation(this.router)),
                 map(() => {
                     return new  AcceptLogIn(this.authService.providePayloadForSuccessfulAuthenticationFromImplicitFlow());
                 }));

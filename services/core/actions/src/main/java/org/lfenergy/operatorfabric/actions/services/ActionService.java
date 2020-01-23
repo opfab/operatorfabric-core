@@ -160,6 +160,7 @@ public class ActionService {
                     return this.objectMapper.readValue(entity.getBody(), ActionStatusData.class);
                 } catch (IOException e) {
                     log.warn(DELINEARIZING_ERROR_MESSAGE, e);
+                    return null;
                 }
             case 204:
                 return null;
