@@ -423,7 +423,7 @@ The card refer to the process "criticalSituation" as defined in the config.json,
 Two other card have be provided to continu the process
 
 - cardUpdate.json : the state is criticalSituation-update
-- cardEnd.json : the state is criticalSituation-end and severity set to "notification"
+- cardEnd.json : the state is criticalSituation-end and severity set to "information"
 
 
 You can send these cards : 

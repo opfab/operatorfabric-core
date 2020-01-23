@@ -16,9 +16,9 @@ import {
 } from "@ofStates/feed.state";
 
 describe('FeedState', () => {
-    const card1 = getOneRandomLigthCard({startDate:5000, severity:Severity.NOTIFICATION, lttd:10000, publishDate:5000});
+    const card1 = getOneRandomLigthCard({startDate:5000, severity:Severity.INFORMATION, lttd:10000, publishDate:5000});
     const card2 = getOneRandomLigthCard({startDate:10000, severity: Severity.ALARM, lttd:5000, publishDate:10000});
-    const card3 = getOneRandomLigthCard({startDate:10000, severity: Severity.NOTIFICATION, lttd:10000, publishDate:10000});
+    const card3 = getOneRandomLigthCard({startDate:10000, severity: Severity.INFORMATION, lttd:10000, publishDate:10000});
     const card4 = getOneRandomLigthCard({startDate:10000, severity: Severity.ALARM, lttd:10000, publishDate:10000});
 
     describe('#compareByStartDate', () => {
