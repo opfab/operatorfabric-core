@@ -172,42 +172,6 @@ describe('Thirds Services', () => {
             done();
         }, 1000);
     });
-    /*
-    it('should update translate service upon new card arrival only if new publisher detected', (done) => {
-        let card = getOneRandomLigthCard();
-        let i18n = {}
-        _.set(i18n, `en.${card.title.key}`, 'en title');
-        _.set(i18n, `en.${card.summary.key}`, 'en summary');
-        _.set(i18n, `fr.${card.title.key}`, 'titre fr');
-        _.set(i18n, `fr.${card.summary.key}`, 'résumé fr');
-        const setTranslationSpy = spyOn(translateService, "setTranslation").and.callThrough();
-        const getLangsSpy = spyOn(translateService, "getLangs").and.callThrough();
-        store.dispatch(new LoadLightCardsSuccess({lightCards: [card]}));
-        let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/i18n`);
-        expect(calls.length).toEqual(2);
-
-        expect(calls[0].request.method).toBe('GET');
-        flushI18nJson(calls[0], i18n);
-        expect(calls[1].request.method).toBe('GET');
-        flushI18nJson(calls[1], i18n);
-        store.dispatch(new LoadLightCardsSuccess({lightCards: [card]}));
-        httpMock.expectNone(`${environment.urls.thirds}/testPublisher/i18n`);
-        setTimeout(() => {
-            expect(setTranslationSpy.calls.count()).toEqual(2);
-            translateService.use('fr')
-            translateService.get(cardPrefix(card) + card.title.key)
-                .subscribe(value => expect(value).toEqual('titre fr'))
-            translateService.get(cardPrefix(card) + card.summary.key)
-                .subscribe(value => expect(value).toEqual('résumé fr'))
-            translateService.use('en')
-            translateService.get(cardPrefix(card) + card.title.key)
-                .subscribe(value => expect(value).toEqual('en title'))
-            translateService.get(cardPrefix(card) + card.summary.key)
-                .subscribe(value => expect(value).toEqual('en summary'))
-            done();
-        }, 1000);
-    });
-    */
     
     it('should compute url with encoding special characters', () => {
         const urlFromPublishWithSpaces = thirdsService.computeThirdCssUrl('publisher with spaces'
