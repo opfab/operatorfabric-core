@@ -92,7 +92,7 @@ operatorfabric:
         delagate-url: http://localhost:89/auth/realms/${operatorfabric.keycloak.realm}
 ```
 
-Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value of the `operatorfabric.keycloak.realm` declared earlier.
+Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value of the `operatorfabric.keycloak.realm` declared earlier, `dev` here.
 For keycloak instance used for dev purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred. The 
 url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
 
@@ -123,5 +123,5 @@ operatorfabric:
         delagate-url: http://localhost:89/auth/realms/${operatorfabric.keycloak.realm}/protocol/openid-connect/auth?response_type=code&client_id=opfab-client
 ```
 
-Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value of the `operatorfabric.keycloak.realm` declared earlier.
+Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value(also `dev` here) of the `operatorfabric.keycloak.realm` declared earlier.
 Here, the `client-id` value is `opfab-client` which is define as client under the `realm` named dev on the dev keycloak instance.
