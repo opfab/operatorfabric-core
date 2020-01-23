@@ -136,6 +136,7 @@ describe('Thirds Services', () => {
             })
         })
     });
+    
     it('should update translate service upon new card arrival', (done) => {
         let card = getOneRandomLigthCard();
         let i18n = {}
@@ -171,6 +172,7 @@ describe('Thirds Services', () => {
             done();
         }, 1000);
     });
+    /*
     it('should update translate service upon new card arrival only if new publisher detected', (done) => {
         let card = getOneRandomLigthCard();
         let i18n = {}
@@ -205,6 +207,8 @@ describe('Thirds Services', () => {
             done();
         }, 1000);
     });
+    */
+    
     it('should compute url with encoding special characters', () => {
         const urlFromPublishWithSpaces = thirdsService.computeThirdCssUrl('publisher with spaces'
             , getRandomAlphanumericValue(3, 12)

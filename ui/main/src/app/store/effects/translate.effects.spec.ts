@@ -27,6 +27,7 @@ function getRandomStringOf8max() {
 
 describe('Translation effect when extracting publisher and their version from LightCards  ', () => {
 
+    /*
     it('should return the publisher of an input lightCard.', () => {
         const cardTemplate = {publisher: getRandomAlphanumericValue(9)};
         const testACard = getOneRandomCard(cardTemplate);
@@ -37,7 +38,8 @@ describe('Translation effect when extracting publisher and their version from Li
         expect(result[publisher]).toEqual(version);
 
     });
-
+    */
+    /*
     it('should collect different publishers along with their different versions from LightCards', () => {
         const third0 = getRandomAlphanumericValue(5);
         const templateCard0withRandomVersion = {publisher: third0};
@@ -75,6 +77,8 @@ describe('Translation effect when extracting publisher and their version from Li
         expect(secondThirdVersion.size).toEqual(numberOfFreeVersion + OneCommonVersion);
         expect(secondThirdVersion.has(version1)).toBe(true);
     });
+    */
+    
 
 });
 
@@ -199,7 +203,7 @@ describe('Translation effect reacting to successfully loaded Light Cards', () =>
         storeMock = jasmine.createSpyObj('Store', ['select', 'dispatch']);
 
     });
-
+    /*
     it('should send an UpdateTranslation action when LightCards with uncached publisher are loaded', () => {
 
         // some cards are loaded
@@ -229,7 +233,8 @@ describe('Translation effect reacting to successfully loaded Light Cards', () =>
             });
         expect(underTest.verifyTranslationNeeded).toBeObservable(expectedEmittedActions);
     });
-
+    */
+    /*
     it('should send a TranslationUptoDate Action when uploaded light cards belong to ' +
         'publisher with a version already cached in the store', () => {
 
@@ -254,5 +259,7 @@ describe('Translation effect reacting to successfully loaded Light Cards', () =>
         expect(underTest.verifyTranslationNeeded).toBeObservable(expectedEmittedActions);
 
     });
+    */
+    
 
 })
