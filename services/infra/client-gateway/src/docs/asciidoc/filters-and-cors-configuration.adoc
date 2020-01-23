@@ -7,8 +7,8 @@ In a configuration service `client-gateway.yml` file
     ** `/auth/check_token`: must match token introspection entry point
     * The application must add request header for each request:
     ** `AddRequestHeader: Authorization, Basic`: followed, separated with a space, by the `OAuth2 client-id` and the `OAuth2 client-secret` encoded in base64.
-    * The application may set up CORS rules if api are to be accessed outside of
-    the deployment domain
+    * The application may set up CORS rules if api are to be accessed from browser outside of
+the deployment domain
 
 Configuration example of the filters, for the docker dev keycloak:
 ```
