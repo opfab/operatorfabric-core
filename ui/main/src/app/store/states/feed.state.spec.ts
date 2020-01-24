@@ -38,14 +38,14 @@ describe('FeedState', () => {
     });
     describe('#compareByPublishDate', () => {
         it('should sort', () => {
-            expect(compareByPublishDate(card1,card2)).toBeLessThan(0);
+            expect(compareByPublishDate(card1,card2)).toBeGreaterThan(0);
         });
     });
     describe('#compareBySeverityLttdPublishDate', () => {
         it('should sort', () => {
-            expect(compareBySeverityLttdPublishDate(card1,card3)).toBeLessThan(0);
+            expect(compareBySeverityLttdPublishDate(card1,card3)).toBeGreaterThan(0);
             expect(compareBySeverityLttdPublishDate(card2,card4)).toBeLessThan(0);
-            expect([card1,card2,card3,card4].sort(compareBySeverityLttdPublishDate)).toEqual([card2,card4,card1,card3])
+            expect([card1,card2,card3,card4].sort(compareBySeverityLttdPublishDate)).toEqual([card2,card4,card3,card1])
         });
     });
 });
