@@ -17,14 +17,14 @@
                 <label for="type-action" class="form-check-label" translate>feed.filters.type.action.label</label>
             </div>
             <div class="form-group form-check">
-                <input type="checkbox" id="type-question" class="form-check-input" formControlName="question">
-                <em class="fas fa-circle text-sev-question"></em>
-                <label for="type-question" class="form-check-label" translate>feed.filters.type.question.label</label>
+                <input type="checkbox" id="type-compliant" class="form-check-input" formControlName="compliant">
+                <em class="fas fa-circle text-sev-compliant"></em>
+                <label for="type-compliant" class="form-check-label" translate>feed.filters.type.compliant.label</label>
             </div>
             <div class="form-group form-check">
-                <input type="checkbox" id="type-notification" class="form-check-input" formControlName="notification">
-                <em class="fas fa-circle text-sev-notification"></em>
-                <label for="type-notification" class="form-check-label" translate>feed.filters.type.notification.label</label>
+                <input type="checkbox" id="type-information" class="form-check-input" formControlName="information">
+                <em class="fas fa-circle text-sev-information"></em>
+                <label for="type-information" class="form-check-label" translate>feed.filters.type.information.label</label>
             </div>
         </form>
     </ng-template>
@@ -38,8 +38,8 @@
                 <div class="type-cell" [class.bg-sev-action]="!(filter$|async).active || (filter$|async).status.action"></div>
             </div>
             <div class="type-row">
-                <div class="type-cell" [class.bg-sev-question]="!(filter$|async).active || (filter$|async).status.question"></div>
-                <div class="type-cell" [class.bg-sev-notification]="!(filter$|async).active || (filter$|async).status.notification"></div>
+                <div class="type-cell" [class.bg-sev-compliant]="!(filter$|async).active || (filter$|async).status.compliant"></div>
+                <div class="type-cell" [class.bg-sev-information]="!(filter$|async).active || (filter$|async).status.information"></div>
             </div>
         </div>
     </button>

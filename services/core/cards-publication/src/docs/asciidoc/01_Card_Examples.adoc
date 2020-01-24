@@ -15,7 +15,7 @@ The following card contains only the mandatory attributes.
 	"publisherVersion":"0.1",
 	"processId":"process-000",
 	"startDate":1546297200000,
-	"severity":"NOTIFICATION",
+	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
 	"recipient":{
@@ -40,7 +40,7 @@ The following example is nearly the same as the previous one except for the reci
 	"publisherVersion":"0.1",
 	"processId":"process-000",
 	"startDate":1546297200000,
-	"severity":"NOTIFICATION",
+	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
 	"recipient":{
@@ -67,7 +67,7 @@ If this card need to be view by a user who is not in the `TSO1` group, it's poss
 	}
 ....
 
-So here, all the users of the `TSO1` group will received the `NOTIFICATION` as should the `tos2-operator` user.
+So here, all the users of the `TSO1` group will received the `INFORMATION` as should the `tos2-operator` user.
 
 === Regular Card
 
@@ -83,7 +83,7 @@ For this example we will use our previous example for the `TSO1` group with a `d
 	"publisherVersion":"0.1",
 	"processId":"process-000",
 	"startDate":1546297200000,
-	"severity":"NOTIFICATION",
+	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
 	"recipient":{
@@ -112,7 +112,7 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 	"publisherVersion":"1",
 	"processId":"process-000",
 	"startDate":1546297200000,
-	"severity":"NOTIFICATION",
+	"severity":"INFORMATION",
 	"title":{"key":"process.title"},
 	"summary":{"key":"process.summary"},
 	"recipient":{

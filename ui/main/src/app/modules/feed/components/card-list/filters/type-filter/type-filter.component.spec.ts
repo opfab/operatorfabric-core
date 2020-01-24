@@ -54,8 +54,8 @@ describe('TypeFilterComponent', () => {
         expect(component).toBeTruthy();
         expect(component.typeFilterForm.get('alarm').value).toBe(true);
         expect(component.typeFilterForm.get('action').value).toBe(true);
-        expect(component.typeFilterForm.get('question').value).toBe(true);
-        expect(component.typeFilterForm.get('notification').value).toBe(true);
+        expect(component.typeFilterForm.get('compliant').value).toBe(true);
+        expect(component.typeFilterForm.get('information').value).toBe(true);
         //dom structure
         let debugElement = fixture.debugElement;
         expect(debugElement.queryAll(By.css('.btn'))).toBeTruthy();
@@ -88,13 +88,12 @@ describe('TypeFilterComponent', () => {
         //dom interraction
         debugElement.queryAll(By.css('.btn'))[0].triggerEventHandler('click', null);
         fixture.detectChanges();
-        const notificationCheckboxQuery = debugElement.queryAll(By.css('#type-notification'));
-        // notificationCheckboxQuery[0].triggerEventHandler('click',null);
-        notificationCheckboxQuery[0].nativeElement.click();
+        const informationCheckboxQuery = debugElement.queryAll(By.css('#type-information'));
+        informationCheckboxQuery[0].nativeElement.click();
         fixture.detectChanges();
-        expect(component.typeFilterForm.get('notification').value).toBe(false);
+        expect(component.typeFilterForm.get('information').value).toBe(false);
         setTimeout(() => {
-            const expectedObs = cold('b', {b: {alarm: true, action: true, question: true, notification: false}});
+            const expectedObs = cold('b', {b: {alarm: true, action: true, compliant: true, information: false}});
 
             const selectTypeFilter = store.select(buildFilterSelector(FilterType.TYPE_FILTER));
             expect(selectTypeFilter.pipe(map((filter => filter.status)))).toBeObservable(expectedObs);

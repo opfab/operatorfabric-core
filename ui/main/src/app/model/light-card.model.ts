@@ -34,7 +34,7 @@ export class LightCard {
 }
 
 export enum Severity {
-    ALARM = "ALARM", ACTION = "ACTION", NOTIFICATION = "NOTIFICATION", QUESTION = "QUESTION"
+    ALARM = "ALARM", ACTION = "ACTION", INFORMATION = "INFORMATION", COMPLIANT = "COMPLIANT"
 }
 
 export function severityOrdinal(severity: Severity) {
@@ -46,10 +46,10 @@ export function severityOrdinal(severity: Severity) {
         case Severity.ACTION:
             result = 1;
             break;
-        case Severity.QUESTION:
+        case Severity.COMPLIANT:
             result = 2;
             break;
-        case Severity.NOTIFICATION:
+        case Severity.INFORMATION:
             result = 3;
             break;
     }
@@ -57,7 +57,7 @@ export function severityOrdinal(severity: Severity) {
 }
 
 export enum Sound {
-    NOTIFICATION, QUESTION
+    INFORMATION, COMPLIANT
 }
 
 export enum Display {

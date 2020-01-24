@@ -16,16 +16,16 @@ $icon-font-path: "../../../node_modules/bootstrap-sass/assets/fonts/bootstrap/" 
 
 $sev-alarm:        #EE0000 !default;
 $sev-action:       #FD9312 !default;
-$sev-question:     #00BB00 !default;
-$sev-notification: #1074AC !default;
+$sev-compliant:    #00BB00 !default;
+$sev-information:  #1074AC !default;
 $less-dark:        #525854 !default;
 
 $theme-colors: map-merge(
     (
             "sev-alarm":    $sev-alarm,
             "sev-action":  $sev-action,
-            "sev-notification":    $sev-notification,
-            "sev-question":       $sev-question,
+            "sev-information":    $sev-information,
+            "sev-compliant":       $sev-compliant,
             "less-dark": $less-dark
     ),
     $theme-colors

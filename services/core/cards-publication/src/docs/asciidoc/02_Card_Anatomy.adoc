@@ -36,8 +36,8 @@ The severity is a core principe of the OperatorFabric Card system. There are 4 s
 
 1. ALARM: represents a critical state of the associated process, need an action from the operator. In the Gui, the card is red;
 2. ACTION: the associated process need an action form operators in order to evolve correctly. In the Gui, an action is orange;
-3. QUESTION: an operator need to give specific information to the associated process in order to evolve correctly. In the UI, an action is blue.;
-4. NOTIFICATION: give information to the operator. In the GUI, a notification is green.
+3. COMPLIANT: the process related to the card is in a compliant status. In the UI, an action is green.;
+4. INFORMATION: give information to the operator. In the GUI, a information is blue.
 
 [#cardTitle]
 ===== Title (`title`)
@@ -150,7 +150,7 @@ card:
 	"publisherVersion":"0.1",
 	"processId":"process-000",
 	"startDate":1546297200000,
-	"severity":"NOTIFICATION",
+	"severity":"INFORMATION",
 	...
 	"timeSpans" : [
         {"start" : 1546297200000},
@@ -173,7 +173,7 @@ as a line in the time line.
 	"publisherVersion":"0.1",
 	"processId":"process-000",
 	"startDate":1546297200000,
-	"severity":"NOTIFICATION",
+	"severity":"INFORMATION",
 	...
 	"timeSpans" : [
         {"start" : 1546297200000, "end" : 1546297500000}
