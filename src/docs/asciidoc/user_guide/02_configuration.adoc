@@ -128,7 +128,7 @@ Below are description of Operator Fabric specific configuration properties.
 Note that other components may have specific configuration, see the relevant
 sub-sections.
 
-include::02_security.adoc[]
+include::02_security.adoc[leveloffset=+4]
 
 
 ===== Creation user
