@@ -21,10 +21,10 @@ For test purposes in `dev` mode, it's possible to edit files located into ``${O
 Be aware that those changes will be lost after a new compilation or even a simple re-run of the project.
 
 This configuration files follow the `springframework` configuration convention. Within a same file it's possible to
-use `SEL` convention. For example,  `${AnotheProperty}` allows to re-use the value of `AnotherProperty` already declared.
-It helps to avoid typos and missing to report some changes. An example could be find below into the `delegate-url` property.
+use `link:https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions[SpEL ${}]` convention. For example,  `${AnotheProperty}` allows to re-use the value of `AnotherProperty` already declared.
+It helps to avoid typos or missing to report some changes. An example could be find below into the `delegate-url` property.
 
-== Application
+== application.yml
 
 |===
 |name|default|mandatory?|Description
@@ -49,17 +49,17 @@ operatorfabric:
 
 where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one.
 
-== Client-Gateway
+== client-gateway.yml
 
-include::include::../../../../services/infra/client-gateway/src/docs/asciidoc/filters-and-cors-configuration.adoc[leveloffset=+3]
+include::../../../../services/infra/client-gateway/src/docs/asciidoc/filters-and-cors-configuration.adoc[leveloffset=+3]
 
-== Web-UI
+== web-ui.yml
 
 For OAuth2 security concerns into this file, there are two way to configure it, based on the Oauth2 chosen flow.
 There are two common properties:
 
-- `operatorfabric.security.oauth2.flow.provider` which correspond to the OAuth2 provider.
-- `operatorfabric.keycloak.realm`: which is the OAuth2 realm provider under which is attached the OpertaroFabric client.
+- `operatorfabric.security.oauth2.flow.provider` which corresponds to the OAuth2 provider.
+- `operatorfabric.keycloak.realm`: which is the OAuth2 realm provider under which the OpertaroFabric client is declared.
 
 
 === OAuth2 Flow Mode
