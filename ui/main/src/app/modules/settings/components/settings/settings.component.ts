@@ -20,6 +20,7 @@ export class SettingsComponent implements OnInit {
   timeZones$: Observable<string[]>;
   hideTags$: Observable<boolean>;
   disableInfos$: Observable<boolean>;
+  dispalyInfos: {};
 
   constructor(private store: Store<AppState>) { }
 
@@ -28,6 +29,9 @@ export class SettingsComponent implements OnInit {
     this.timeZones$ = this.store.select(buildConfigSelector('i10n.supported.time-zones'));
     this.hideTags$ = this.store.select(buildConfigSelector('settings.tags.hide'));
     this.disableInfos$ = this.store.select(buildConfigSelector('settings.infos.disable'));
+    this.store.select(buildConfigSelector('settings.infos')).subscribe(d => {
+      this.dispalyInfos = d
+    });
   }
 
 }
