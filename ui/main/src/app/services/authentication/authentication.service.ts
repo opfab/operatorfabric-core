@@ -83,6 +83,7 @@ export class AuthenticationService {
      */
     instantiateAuthModeHandler(mode: string): AuthenticationModeHandler {
         if (mode.toLowerCase() === 'implicit') {
+            this.instantiateImplicitFlowConfiguration();
             return new ImplicitAuthenticationHandler(this, this.store, sessionStorage);
         }
         return new PasswordOrCodeAuthenticationHandler(this, this.store);
@@ -104,7 +105,7 @@ export class AuthenticationService {
     }
 
     // TODO push this part into ImplicitAuthenticationHandler class
-    instantiateImplicitFlowConfiguration() {
+    instantiateImplicitFlowConfiguration(): void {
         this.implicitConf = {...this.implicitConf, issuer: this.delegateUrl, clientId: this.clientId};
     }
 
@@ -507,7 +508,6 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
     constructor(private authenticationService: AuthenticationService
         , private store: Store<AppState>
         , private storage: Storage) {
-        this.authenticationService.instantiateImplicitFlowConfiguration();
     }
 
     initializeAuthentication(currentLocationHref: string) {
