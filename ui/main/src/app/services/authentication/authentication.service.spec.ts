@@ -8,21 +8,37 @@
 import {TestBed} from '@angular/core/testing';
 
 import {
+    AuthenticationModeHandler,
     AuthenticationService,
     AuthObject,
-    CheckTokenResponse,
+    CheckTokenResponse, ImplicitAuthenticationHandler,
     isInTheFuture,
-    LocalStorageAuthContent
+    LocalStorageAuthContent,
+    PasswordOrCodeAuthenticationHandler
 } from './authentication.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {PayloadForSuccessfulAuthentication} from '@ofActions/authentication.actions';
+import {
+    ImplicitlyAuthenticated,
+    PayloadForSuccessfulAuthentication,
+    UnAuthenticationFromImplicitFlow
+} from '@ofActions/authentication.actions';
 import {Guid} from 'guid-typescript';
 import {getPositiveRandomNumberWithinRange, getRandomAlphanumericValue} from '@tests/helpers';
 import {GuidService} from '@ofServices/guid.service';
-import {StoreModule} from '@ngrx/store';
+import {Store, StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
 import {environment} from '@env/environment';
-import {OAuthLogger, OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
+import {
+    OAuthEvent,
+    OAuthLogger,
+    OAuthService,
+    UrlHelperService,
+    EventType as OauthEventType,
+    OAuthSuccessEvent
+} from 'angular-oauth2-oidc';
+import createSpyObj = jasmine.createSpyObj;
+import {create} from "domain";
+import any = jasmine.any;
 
 
 export const AuthenticationImportHelperForSpecs = [AuthenticationService,
@@ -154,7 +170,7 @@ describe('AuthenticationService', () => {
         expect(securityHeaderElement).toEqual(`Bearer ${fakeToken}`);
     });
     describe('#checkAuthentication', () => {
-        it('should check token succesfully', () => {
+        it('should check token successfully', () => {
             const response = new CheckTokenResponse('johndoe', 123, 'opfab-client');
             service.checkAuthentication('fake-token').subscribe((next: CheckTokenResponse) => {
                 expect(next.sub).toEqual('johndoe');
@@ -167,7 +183,7 @@ describe('AuthenticationService', () => {
 
         });
 
-        it('should fail if check token unsuccesfully', () => {
+        it('should fail if check token unsuccessfully', () => {
             // const response = new CheckTokenResponse('johndoe', 123, 'opfab-client');
             service.checkAuthentication('fake-token').subscribe((next) => {
                 fail(`unexpected value:${next}`);
@@ -191,7 +207,7 @@ describe('AuthenticationService', () => {
         beforeEach(() => {
             service.assignConfigurationProperties(securityConf);
         });
-        it('should ask token succesfully', () => {
+        it('should ask token successfully', () => {
             const response = new AuthObject(token, 123, Guid.create(), 'johndoe');
             service.askTokenFromCode('fake-code').subscribe((next: PayloadForSuccessfulAuthentication) => {
                 expect(next.token).toEqual(token);
@@ -207,7 +223,7 @@ describe('AuthenticationService', () => {
 
         });
 
-        it('should fail if ask token unsuccesfully', () => {
+        it('should fail if ask token unsuccessfully', () => {
             service.askTokenFromCode('fake-code').subscribe((next) => {
                 fail(`unexpected value:${next}`);
             }, (err) => {
@@ -234,7 +250,7 @@ describe('AuthenticationService', () => {
         beforeEach(() => {
             service.assignConfigurationProperties(securityConf);
         });
-        it('should ask token succesfully', () => {
+        it('should ask token successfully', () => {
             const response = new AuthObject(token, 123, Guid.create(), 'johndoe');
             service.askTokenFromPassword('fake-login', 'fake-pwd').subscribe((next: PayloadForSuccessfulAuthentication) => {
                 expect(next.token).toEqual(token);
@@ -250,7 +266,7 @@ describe('AuthenticationService', () => {
 
         });
 
-        it('should fail if ask token unsuccesfully', () => {
+        it('should fail if ask token unsuccessfully', () => {
             service.askTokenFromPassword('fake-login', 'fake-pwd').subscribe((next) => {
                 fail(`unexpected value:${next}`);
             }, (err) => {
@@ -313,4 +329,178 @@ describe('isInTheFuture', () => {
         expect(isInTheFuture(tomorrow.getTime())).toEqual(true);
     });
 
+});
+
+describe('AuthenticationService', () => {
+    const httpClientMock = createSpyObj('HttpClient', ['request']);
+    const guidServiceMock = createSpyObj('GuidService', ['getCurrentGuid', 'getCurrentGuidString']);
+    const store = createSpyObj('Store', ['select', 'dispatch']);
+    store.select.and.returnValue({
+        subscribe: (func: () => {}) => {
+        }
+    });
+    const oAuthServiceMock = createSpyObj('OAuthService', ['configure'
+        , 'restartSessionChecksIfStillLoggedIn'
+        , 'setupAutomaticSilentRefresh'
+        , 'loadDiscoveryDocumentAndTryLogin'
+        , 'setStorage'
+        , 'fetchTokenUsingPasswordFlowAndLoadUserProfile'
+        , 'loadUserProfile'
+        , 'fetchTokenUsingPasswordFlow'
+        , 'refreshToken'
+        , 'silentRefresh'
+        , 'initImplicitFlowInPopup'
+        , 'initImplicitFlowInternal'
+        , 'initImplicitFlow'
+        , 'resetImplicitFlow'
+        , 'tryLogin'
+        , 'tryLoginCodeFlow'
+        , 'tryLoginImplicitFlow'
+        , 'processIdToken'
+        , 'getIdentityClaims'
+        , 'getGrantedScopes'
+        , 'getGrantedScopes'
+        , 'getAccessToken'
+        , 'getRefreshToken'
+        , 'getAccessTokenExpiration'
+    ]);
+    const service = new AuthenticationService(httpClientMock, guidServiceMock, store, oAuthServiceMock);
+    describe('dispatchAppStateActionFromOAuth2Events', () => {
+        it('should dispatch an `ImplicitlyAuthenticated` on `token_received` events',
+            () => {
+                const tokenReceivedEvent = new OAuthSuccessEvent('token_received');
+                service.dispatchAppStateActionFromOAuth2Events(tokenReceivedEvent);
+                expect(store.dispatch).toHaveBeenCalledWith(any(ImplicitlyAuthenticated));
+            });
+        it('should dispatch an `UnAuthenticationFromImplicitFlow` on `token_error` events',
+            () => {
+                const tokenReceivedEvent = new OAuthSuccessEvent('token_error');
+                service.dispatchAppStateActionFromOAuth2Events(tokenReceivedEvent);
+                expect(store.dispatch).toHaveBeenCalledWith(any(UnAuthenticationFromImplicitFlow));
+            });
+        it('should dispatch an `UnAuthenticationFromImplicitFlow` on `token_refresh_error` events',
+            () => {
+                const tokenReceivedEvent = new OAuthSuccessEvent('token_refresh_error');
+                service.dispatchAppStateActionFromOAuth2Events(tokenReceivedEvent);
+                expect(store.dispatch).toHaveBeenCalledWith(any(UnAuthenticationFromImplicitFlow));
+            });
+        it('should dispatch an `UnAuthenticationFromImplicitFlow` on `logout` events',
+            () => {
+                const tokenReceivedEvent = new OAuthSuccessEvent('logout');
+                service.dispatchAppStateActionFromOAuth2Events(tokenReceivedEvent);
+                expect(store.dispatch).toHaveBeenCalledWith(any(UnAuthenticationFromImplicitFlow));
+            });
+    });
+    describe('instantiateAuthModeHandler', () => {
+        it('should instantiate a `ImplicitFlowConfiguration` and the `Implicit Configuration` ' +
+            'when mode is `implicit`', () => {
+            const spy = spyOn(service, 'instantiateImplicitFlowConfiguration').and.callThrough();
+            const result = service.instantiateAuthModeHandler('implicit');
+            expect(result).toEqual(new ImplicitAuthenticationHandler(service, store, sessionStorage));
+            expect(spy).toHaveBeenCalled();
+        });
+        it('should return a `PasswordOrCodeFlowAuthenticationHandler` ' +
+            'when mode is different from `implicit`', () => {
+            function stringDifferentFromImplicit() {
+                const mode = getRandomAlphanumericValue(4, 12);
+                return (mode === 'implicit') ? stringDifferentFromImplicit() : mode;
+            }
+
+            const result = service.instantiateAuthModeHandler(stringDifferentFromImplicit());
+            expect(result).toEqual(new PasswordOrCodeAuthenticationHandler(service, store));
+        });
+    });
+
+});
+
+describe('AuthenticationModeHandler', () => {
+    const store = createSpyObj('Store', ['dispatch', 'pipe']);
+    store.pipe.and.returnValue({
+        subscribe: (func: (t: boolean) => {}) => {
+            func(true);
+        }
+    });
+
+    const authServiceSpy = createSpyObj('AuthenticationService',
+        ['initializeAuthentication',
+            'linkAuthenticationStatus',
+            'getAuthenticationMode',
+            'initAndLoadAuth',
+            'moveToCodeFlowLoginPage'
+        ]);
+    let test: boolean;
+    const linker = (isAuthenticated: boolean) => test = isAuthenticated;
+
+    beforeEach(() => {
+        store.pipe.calls.reset();
+    });
+    describe('implemented as PasswordOrCodeAuthenticationHandler', () => {
+        const underTest = new PasswordOrCodeAuthenticationHandler(authServiceSpy, store);
+        beforeEach(() => {
+            store.dispatch.calls.reset();
+        });
+        describe('initializeAuthentication', () => {
+            it(`should dispatch an InitAuthStatus Action when 'window.location.href' contains 'code=' as query parameter`, () => {
+                underTest.initializeAuthentication('http://abcdef.com?code=authentication');
+                expect(store.dispatch).toHaveBeenCalled();
+            });
+            it(`should dispatch any action when 'window.location.href' contains no queryParameters
+             of type 'code=' `, () => {
+                underTest.initializeAuthentication('http://abcdefgh.com');
+                expect(store.dispatch).not.toHaveBeenCalled();
+            });
+        });
+        describe('linkAuthenticationStatus', () => {
+
+            it(`should subscribe linker to expirationTime changes when called`, () => {
+                underTest.linkAuthenticationStatus(linker);
+                expect(store.pipe).toHaveBeenCalled();
+            });
+        });
+        describe('move', () => {
+            it('should use moveToCodeFlowLoginPage', () => {
+                underTest.move();
+                expect(authServiceSpy.moveToCodeFlowLoginPage).toHaveBeenCalled();
+            });
+        });
+    });
+    describe('implemented as ImplicitAuthentication', () => {
+        const storage = createSpyObj('sessionStorage', ['getItem']);
+        const underTest = new ImplicitAuthenticationHandler(authServiceSpy, store, storage);
+        beforeEach(() => {
+            authServiceSpy.initAndLoadAuth.calls.reset();
+        });
+        describe('initializedAuthentication', () => {
+            it('should call getAuthenticationMode and initAndLoadAuth methods from `authenticationService`' +
+                ' when AuthenticationMode is set to `IMPLICIT',
+                () => {
+                    authServiceSpy.getAuthenticationMode.and.returnValue('IMPLICIT');
+                    underTest.initializeAuthentication(getRandomAlphanumericValue(1, 12));
+                    expect(authServiceSpy.getAuthenticationMode).toHaveBeenCalled();
+                    expect(authServiceSpy.initAndLoadAuth).toHaveBeenCalled();
+
+                });
+            it('should do nothing when  `getAuthenticationMode` of `AuthenticationService` return something ' +
+                ' else than `IMPLICIT`', () => {
+                authServiceSpy.getAuthenticationMode.and.returnValue(getRandomAlphanumericValue(9, 15));
+                underTest.initializeAuthentication(getRandomAlphanumericValue(5, 12));
+                expect(authServiceSpy.getAuthenticationMode).toHaveBeenCalled();
+                expect(authServiceSpy.initAndLoadAuth).not.toHaveBeenCalled();
+
+            });
+
+        });
+        describe('linkAuthenticationStatus', () => {
+            it('should call subscribe linker on the slice of selectIsImplicitlyAuthenticated', () => {
+                underTest.linkAuthenticationStatus(linker);
+                expect(store.pipe).toHaveBeenCalled();
+            });
+        });
+        describe('extractToken', () => {
+            it('should ask for `access_token` item from `sessionStorage`', () => {
+                underTest.extractToken();
+                expect(storage.getItem).toHaveBeenCalled();
+            });
+        });
+    });
 });
