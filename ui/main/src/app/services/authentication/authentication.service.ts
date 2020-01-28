@@ -75,14 +75,23 @@ export class AuthenticationService {
             });
     }
 
+    /**
+     * Choose to handle the OAuth 2.0 using implicit workflow
+     * if mode equals to 'implicit' other manage password grand
+     * or code flow.
+     * @param mode - extracted from config web-service settings
+     */
     instantiateAuthModeHandler(mode: string): AuthenticationModeHandler {
         if (mode.toLowerCase() === 'implicit') {
-            this.instantiateImplicitFlowConfiguration();
             return new ImplicitAuthenticationHandler(this, this.store, sessionStorage);
         }
         return new PasswordOrCodeAuthenticationHandler(this, this.store);
     }
 
+    /**
+     * extract Oauth 2.0 configuration from settings and store it in the service
+     * @param oauth2Conf - settings return by the back-end config service
+     */
     assignConfigurationProperties(oauth2Conf) {
         this.clientId = _.get(oauth2Conf, 'oauth2.client-id', null);
         this.clientSecret = _.get(oauth2Conf, 'oauth2.client-secret', null);
@@ -406,7 +415,7 @@ export class AuthenticationService {
 
 
 /**
- * class used to try to login using the authentication web service.
+ * class used to login using the authentication web service.
  */
 export class AuthObject {
 
@@ -443,6 +452,9 @@ export function isInTheFuture(time: number): boolean {
     return time > Date.now();
 }
 
+/**
+ * interface to handle the mode of authentication
+ */
 export interface AuthenticationModeHandler {
     initializeAuthentication(currentHrefLocation: string): void;
 
@@ -453,6 +465,11 @@ export interface AuthenticationModeHandler {
     move(): void;
 }
 
+/**
+ * Implementation class of @Interface AuthenticationModeHandler
+ * use the OperatorFabric legacy code to manage the authentication in
+ * OAuth 2.0 password grant or code flow mode
+ */
 export class PasswordOrCodeAuthenticationHandler implements AuthenticationModeHandler {
 
     constructor(private authenticationService: AuthenticationService,
@@ -482,16 +499,19 @@ export class PasswordOrCodeAuthenticationHandler implements AuthenticationModeHa
     }
 }
 
+/**
+ * Implementation class of @Interface AuthenticationModeHandler
+ * use the Oidc Connect library to manage OAuth 2.0 implicit authentication mode
+ */
 export class ImplicitAuthenticationHandler implements AuthenticationModeHandler {
     constructor(private authenticationService: AuthenticationService
         , private store: Store<AppState>
         , private storage: Storage) {
-
+        this.authenticationService.instantiateImplicitFlowConfiguration();
     }
 
     initializeAuthentication(currentLocationHref: string) {
-        if (this.authenticationService.getAuthenticationMode() === 'IMPLICIT') {
-
+        if (this.authenticationService.getAuthenticationMode().toLowerCase() === 'implicit') {
             this.authenticationService.initAndLoadAuth();
         }
     }
