@@ -25,9 +25,9 @@ import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.sele
 export class HandlebarsService {
 
     private templateCache:Map<Function> = new Map();
-    private _locale:string;
+    private _locale: string;
 
-    constructor(private time:TimeService,
+    constructor(private time: TimeService,
                 private translate: TranslateService,
                 private thirds: ThirdsService,
                 private store: Store<AppState>){

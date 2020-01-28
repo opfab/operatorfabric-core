@@ -26,7 +26,6 @@ import org.springframework.context.annotation.ImportResource;
 @EnableFeignClients(basePackageClasses = CardConsultationServiceProxy.class)
 @EnableDiscoveryClient
 @EnableOperatorFabricOAuth2
-@ImportResource("classpath:/cors.xml")
 public class TimeApplication {
 
     public static void main(String[] args) {

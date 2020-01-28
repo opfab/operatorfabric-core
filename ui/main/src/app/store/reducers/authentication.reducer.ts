@@ -43,7 +43,7 @@ export function reducer(state: AuthState = authInitialState, action: Authenticat
                 expirationDate: new Date(0),
                 message: null,
                 firstName: null,
-                lastName:null
+                lastName: null
             };
         }
         case AuthenticationActionTypes.RejectLogIn: {
@@ -56,6 +56,19 @@ export function reducer(state: AuthState = authInitialState, action: Authenticat
                 message: action.payload.error
             };
         }
+        case AuthenticationActionTypes.ImplicitallyAuthenticated: {
+            return {
+                ...state,
+                isImplicitlyAuthenticated: true
+            };
+        }
+        case AuthenticationActionTypes.UnAuthenticationFromImplicitFlow: {
+                return {
+                    ...state,
+                    isImplicitlyAuthenticated: false
+                }
+            }
+
         default:
             return state;
     }

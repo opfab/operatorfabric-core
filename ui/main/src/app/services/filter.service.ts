@@ -29,23 +29,23 @@ export class FilterService {
     private initTypeFilter() {
         const alarm = Severity.ALARM;
         const action = Severity.ACTION;
-        const question = Severity.QUESTION;
-        const notification = Severity.NOTIFICATION;
+        const compliant = Severity.COMPLIANT;
+        const information = Severity.INFORMATION;
         return new Filter(
             (card, status) => {
                 const result =
                     status.alarm && card.severity == alarm ||
                     status.action && card.severity == action ||
-                    status.question && card.severity == question ||
-                    status.notification && card.severity == notification;
+                    status.compliant && card.severity == compliant ||
+                    status.information && card.severity == information;
                 return result;
             },
             true,
             {
                 alarm: true,
                 action: true,
-                question: true,
-                notification: true
+                compliant: true,
+                information: true
             }
         );
     }
@@ -58,13 +58,6 @@ export class FilterService {
         );
     }
 
-    private initRecipientFilter() {
-        return new Filter(
-            (card, status) => false,
-            false,
-            {}
-        );
-    }
 
     private initTimeFilter() {
         return new Filter(
@@ -91,7 +84,6 @@ export class FilterService {
     private initFilters(): Map<string, Filter> {
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
-        // filters.set(FilterType.RECIPIENT_FILTER, this.initRecipientFilter());
         filters.set(FilterType.TIME_FILTER, this.initTimeFilter());
         filters.set(FilterType.TAG_FILTER, this.initTagFilter());
         return filters;

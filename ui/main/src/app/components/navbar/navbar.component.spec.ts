@@ -13,13 +13,13 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState, storeConfig} from '@ofStore/index';
 import { IconComponent } from './icon/icon.component';
-import {EffectsModule} from "@ngrx/effects";
-import {MenuEffects} from "@ofEffects/menu.effects";
-import {ThirdsService} from "@ofServices/thirds.service";
-import {By} from "@angular/platform-browser";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {InfoComponent} from "./info/info.component";
-import {TimeService} from "@ofServices/time.service";
+import {EffectsModule} from '@ngrx/effects';
+import {MenuEffects} from '@ofEffects/menu.effects';
+import {ThirdsService} from '@ofServices/thirds.service';
+import {By} from '@angular/platform-browser';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {InfoComponent} from './info/info.component';
+import {TimeService} from '@ofServices/time.service';
 import clock = jasmine.clock;
 import { emptyAppState4Test } from '@tests/helpers';
 import { configInitialState } from '@ofStore/states/config.state';
@@ -31,10 +31,11 @@ import { settingsInitialState } from '@ofStore/states/settings.state';
 import { authInitialState } from '@ofStore/states/authentication.state';
 import { timeInitialState } from '@ofStore/states/time.state';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
-import {MenuLinkComponent} from "./menus/menu-link/menu-link.component";
-import {library} from "@fortawesome/fontawesome-svg-core";
-import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
+import {MenuLinkComponent} from './menus/menu-link/menu-link.component';
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 import { CustomLogoComponent } from './custom-logo/custom-logo.component';
+import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 library.add(faSignOutAlt);
 
@@ -61,14 +62,16 @@ describe('NavbarComponent', () => {
                 RouterTestingModule,
                 StoreModule.forRoot(appReducer, storeConfig),
                 EffectsModule.forRoot([MenuEffects]),
-                HttpClientTestingModule, 
+                HttpClientTestingModule,
                 FontAwesomeModule
             ],
             declarations: [NavbarComponent, IconComponent, CustomLogoComponent, InfoComponent, MenuLinkComponent],
             providers: [
                 Store,
-                ThirdsService, 
-                TimeService]
+                ThirdsService,
+                TimeService,
+                AuthenticationImportHelperForSpecs
+            ]
         })
             .compileComponents();
 

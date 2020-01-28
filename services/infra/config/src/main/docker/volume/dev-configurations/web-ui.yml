@@ -23,6 +23,7 @@ operatorfabric:
         - "W"
         - "M"
         - "Y"
+    notify: false
   archive:
     filters:
       page.size:

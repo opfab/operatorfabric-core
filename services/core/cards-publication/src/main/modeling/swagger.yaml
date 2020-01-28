@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
-  version: 0.14.1.SNAPSHOT
+  version: 0.15.1.SNAPSHOT
   title: Card Management API
   termsOfService: ''
   contact:
@@ -67,16 +67,15 @@ definitions:
       * ACTION - The process instance behind the card is expecting an action
       from the user
 
-      * QUESTION - The process instance behind the card needs information from
-      the user
+      * COMPLIANT - The process related to the card is in a compliant status
 
-      * NOTIFICATION - Purely informational card
+      * INFORMATION - Purely informational card
     enum:
       - ALARM
       - ACTION
-      - QUESTION
-      - NOTIFICATION
-    example: NOTIFICATION
+      - COMPLIANT
+      - INFORMATION
+    example: INFORMATION
   InputEnum:
     type: string
     description: |-

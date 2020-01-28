@@ -45,8 +45,8 @@ export class TypeFilterComponent implements OnInit, OnDestroy {
         return new FormGroup({
             alarm: new FormControl(),
             action: new FormControl(),
-            question: new FormControl(),
-            notification: new FormControl()
+            compliant: new FormControl(),
+            information: new FormControl()
         },{updateOn: 'change'});
     }
 
@@ -62,13 +62,13 @@ export class TypeFilterComponent implements OnInit, OnDestroy {
             if (next) {
                 this.typeFilterForm.get('alarm').setValue(!next.active || next.status.alarm, {emitEvent: false});
                 this.typeFilterForm.get('action').setValue(!next.active || next.status.action, {emitEvent: false});
-                this.typeFilterForm.get('question').setValue(!next.active || next.status.question, {emitEvent: false});
-                this.typeFilterForm.get('notification').setValue(!next.active || next.status.notification, {emitEvent: false});
+                this.typeFilterForm.get('compliant').setValue(!next.active || next.status.compliant, {emitEvent: false});
+                this.typeFilterForm.get('information').setValue(!next.active || next.status.information, {emitEvent: false});
             } else {
                 this.typeFilterForm.get('alarm').setValue(true,{emitEvent: false});
                 this.typeFilterForm.get('action').setValue(true,{emitEvent: false});
-                this.typeFilterForm.get('question').setValue(true,{emitEvent: false});
-                this.typeFilterForm.get('notification').setValue(true,{emitEvent: false});
+                this.typeFilterForm.get('compliant').setValue(true,{emitEvent: false});
+                this.typeFilterForm.get('information').setValue(true,{emitEvent: false});
             }
         });
         this._filter$.pipe(first(),takeUntil(this.ngUnsubscribe$)).subscribe(()=>{
@@ -83,7 +83,7 @@ export class TypeFilterComponent implements OnInit, OnDestroy {
                 .subscribe(form => this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.TYPE_FILTER,
-                        active: !(form.alarm && form.action && form.question && form.notification),
+                        active: !(form.alarm && form.action && form.compliant && form.information),
                         status: form
                     }))
                 );

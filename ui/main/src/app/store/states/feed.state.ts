@@ -40,7 +40,7 @@ export function compareByLttd(card1: LightCard, card2: LightCard){
 }
 
 export function compareByPublishDate(card1: LightCard, card2: LightCard){
-    return card1.publishDate - card2.publishDate;
+    return card2.publishDate - card1.publishDate;
 }
 
 export function compareBySeverityLttdPublishDate(card1: LightCard, card2: LightCard){

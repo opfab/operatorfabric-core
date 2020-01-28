@@ -20,7 +20,6 @@ import java.util.List;
  * <p>Spring converter registered in mongo conversions</p>
  * <p>Converts {@link Document} to {@link CardOperation} using {@link CardOperationConsultationData} builder.</p>
  *
- * @author David Binder
  */
 @Slf4j
 public class CardOperationReadConverter implements Converter<Document, CardOperation> {
@@ -34,11 +33,16 @@ public class CardOperationReadConverter implements Converter<Document, CardOpera
         if(type!=null)
             builder.type(CardOperationTypeEnum.valueOf(type));
 
-        List<Document> cards = (List<Document>) source.get("cards");
-        if(cards!=null)
-            for(Document cardDoc:cards){
-                builder.card(cardConverter.convert(cardDoc));
-            }
+        try {
+            List<Document> cards = (List<Document>) source.get("cards");
+            if(cards!=null)
+                for(Document cardDoc:cards){
+                    builder.card(cardConverter.convert(cardDoc));
+                }
+        }
+        catch(ClassCastException exception){
+                log.error("Unexpected Error arose ", exception);
+        }
         List<String> cardIds = (List<String>) source.get("cardIds");
         if (cardIds != null)
             for (String id : cardIds) {

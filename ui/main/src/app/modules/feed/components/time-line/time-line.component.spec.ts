@@ -172,14 +172,14 @@ describe('TimeLineComponent', () => {
     const oneCard = getOneRandomLigthCard();
     const actionCard = getOneRandomLigthCard({severity: 'ACTION'});
     const alarmCard = getOneRandomLigthCard({severity: 'ALARM'});
-    const notificationCard = getOneRandomLigthCard({severity: 'NOTIFICATION'});
+    const informationCard = getOneRandomLigthCard({severity: 'INFORMATION'});
     // alarmCard.timeSpans = [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}];  // display is an enum normally
-    const action = new LoadLightCardsSuccess({lightCards: [oneCard, actionCard, alarmCard, notificationCard] as LightCard[]});
+    const action = new LoadLightCardsSuccess({lightCards: [oneCard, actionCard, alarmCard, informationCard] as LightCard[]});
     store.dispatch(action);
     const lightCards$ = store.select(fromStore.selectFeed);
     lightCards$.pipe(debounceTime(300), distinctUntilChanged())
         .subscribe(lightCard => {
-      expect(lightCard).toEqual([oneCard, actionCard, alarmCard, notificationCard].sort(compareBySeverityLttdPublishDate));
+      expect(lightCard).toEqual([oneCard, actionCard, alarmCard, informationCard].sort(compareBySeverityLttdPublishDate));
     });
     const dataCard = [{
         // timeSpans: [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}],
@@ -210,14 +210,14 @@ describe('TimeLineComponent', () => {
         publisherVersion: oneCard.publisherVersion,
         summary: oneCard.title
     }, {
-        displayDate: notificationCard.startDate,
-        publishDate: notificationCard.publishDate,
-        startDate: notificationCard.startDate,
-        endDate: notificationCard.endDate,
-        severity: notificationCard.severity,
-        publisher: notificationCard.publisher,
-        publisherVersion: notificationCard.publisherVersion,
-        summary: notificationCard.title
+        displayDate: informationCard.startDate,
+        publishDate: informationCard.publishDate,
+        startDate: informationCard.startDate,
+        endDate: informationCard.endDate,
+        severity: informationCard.severity,
+        publisher: informationCard.publisher,
+        publisherVersion: informationCard.publisherVersion,
+        summary: informationCard.title
     }];
     const data$ = store.select((timelineSelectors.selectTimelineSelection));
     data$.pipe(debounceTime(300), distinctUntilChanged())

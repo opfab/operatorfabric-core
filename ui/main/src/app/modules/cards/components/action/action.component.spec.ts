@@ -11,7 +11,7 @@ import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {StoreModule} from "@ngrx/store";
 import {appReducer} from "@ofStore/index";
 import {Action, emptyAction} from "@ofModel/thirds.model";
-import {AuthenticationService} from "@ofServices/authentication.service";
+import {AuthenticationService} from "@ofServices/authentication/authentication.service";
 import {GuidService} from "@ofServices/guid.service";
 import createSpyObj = jasmine.createSpyObj;
 import {I18nService} from "@ofServices/i18n.service";

@@ -1,0 +1,127 @@
+= Security
+
+It's mainly about `OAuth2` configuration. This concern is configured within the `${OF_HOME}/services/infra/config` project
+into 3 distinct files:
+
+* `application.yml`;
+* `web-ui.yml`;
+* `client-gateway.yml`.
+
+They are located into the following folders within the `${OF_HOME}/services/infra/config/java/src/main/docker/volume` folder:
+
+* `dev-configurations`: to be use into `dev` mode;
+* `docker-configurations`: used by docker at run time.
+
+EXAMPLE: the configuration for `dev` before compilation is done in the following files:
+    - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/application.yml`;
+    - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/client-gateway.ym`;
+    - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/web-ui.yml`.
+
+For test purposes in `dev` mode, it's possible to edit files located into ``${OF_HOME}/services/infra/config/build/docker-volume/dev-configurations`.
+Be aware that those changes will be lost after a new compilation or even a simple re-run of the project.
+
+This configuration files follow the `springframework` configuration convention. Within a same file it's possible to
+use `link:https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions[SpEL ${}]` convention. For example,  `${AnotheProperty}` allows to re-use the value of `AnotherProperty` already declared.
+It helps to avoid typos or missing to report some changes. An example could be find below into the `delegate-url` property.
+
+== application.yml
+
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.security.oauth2.client-id|null|yes| Oauth2 client id used by OperatorFabric may be specific for each service
+|operatorfabric.security.oauth2.client-secret|null|yes| Oauth2 client secret used by OperatorFabric may be specific for each service
+|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as user login or id
+|operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim is used as token expiration timestamp
+|===
+
+example of `application.yml`
+```
+operatorfabric:
+    security:
+        oauth2:
+            client-id: opfab-client
+            client-secret: opfab-keycloak-secret
+        jwt:
+            login-claim: preferred_username
+            expire-claim: exp
+```
+
+where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one.
+
+== client-gateway.yml
+
+include::../../../../services/infra/client-gateway/src/docs/asciidoc/filters-and-cors-configuration.adoc[leveloffset=+3]
+
+== web-ui.yml
+
+For OAuth2 security concerns into this file, there are two way to configure it, based on the Oauth2 chosen flow.
+There are two common properties:
+
+- `operatorfabric.security.oauth2.flow.provider` which corresponds to the OAuth2 provider.
+- `operatorfabric.keycloak.realm`: which is the OAuth2 realm provider under which the OpertaroFabric client is declared.
+
+
+=== OAuth2 Flow Mode
+
+There are 3 OAuth2 Authentication flows available into OperatorFabric UI:
+
+- password grant: referred as PASSWORD mode flow;
+- code flow : referred as  CODE mode flow;
+- implicit flow: referred as IMPLICIT mode flow.
+
+==== OAuth2 IMPLICIT Flow
+
+It had its own way of configuration.
+To enable IMPLICIT Flow authentication the following properties need to be set:
+
+- `operatorfabric.security.oauth2.flow.mode` to `IMPLICIT`;
+- `operatorfabric.security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the `.well-known/openid-configuration` end-point used for authentication configuration.
+
+===== Example of Keycloak configuration for OperatorFabric OAuth2
+
+```
+operatorfabric:
+  keycloak:
+    realm: dev
+  security:
+    oauth2:
+      flow:
+        mode: IMPLICIT
+        provider: Opfab Keycloak
+        delagate-url: http://localhost:89/auth/realms/${operatorfabric.keycloak.realm}
+```
+
+Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value of the `operatorfabric.keycloak.realm` declared earlier, `dev` here.
+For keycloak instance used for dev purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred. The 
+url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
+
+===== Keycloak instance additional configuration for dev purposes
+
+Once connected as Admin (login:_admin_,password:_admin_ ) on keycloak (`http://localhost:89/auth/admin`) The first thing is to enable the implicit flow for `opfa-client`. To do so
+select `Dev` in the upper select of the right panel then click on Clients. In the table, click on `opfab-client` in the column `Client ID`. Then in the `Settings` tabs turn on the
+`Implicit Flow Enabled`. In the same tab, modify `http://localhost:2002/ui/` to `http://localhost:2002/*` and `http://localhost:4200` to `http://localhost:4200/*`.
+
+==== OAuth2 PASSWORD or CODE Flows
+
+These two modes share the same way of declaring the delegate URL. The default configuration for dev is set to `CODE` and work straight away.
+
+- `operatorfabric.security.oauth2.flow.mode` to `PASSWORD` or `CODE`;
+- `operatorfabric.security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the protocol used for authentication.
+
+===== Example of Keycloak Configuration For OperatorFabric OAuth2
+
+```
+operatorfabric:
+  keycloak:
+    realm: dev
+  security:
+    oauth2:
+      flow:
+        mode: CODE
+        provider: Opfab Keycloak
+        delagate-url: http://localhost:89/auth/realms/${operatorfabric.keycloak.realm}/protocol/openid-connect/auth?response_type=code&client_id=opfab-client
+```
+
+Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value(also `dev` here) of the `operatorfabric.keycloak.realm` declared earlier.
+Here, the `client-id` value is `opfab-client` which is define as client under the `realm` named dev on the dev keycloak instance.

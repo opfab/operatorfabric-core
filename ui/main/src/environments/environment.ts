@@ -10,17 +10,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+    production: false,
     urls: {
-      authentication: '',
+        authentication: '',
         auth: 'http://localhost:2002/auth',
         cards: 'http://localhost:2002/cards',
         users: 'http://localhost:2002/users',
-        archives : '',
+        archives: '',
         thirds: 'http://localhost:2002/thirds',
         config: 'http://localhost:2002/config/web-ui.json',
         time: 'http://localhost:2002/time',
-      actions:'http://localhost:2002/actions'
+        actions: 'http://localhost:2002/actions'
     }
 };
 

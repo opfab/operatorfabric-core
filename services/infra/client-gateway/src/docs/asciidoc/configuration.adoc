@@ -17,15 +17,7 @@ Registry.
 To get a working gateway service, there a few mandatory configuration
 properties:
 
-In a configuration service client-gateway.yml file
-
-* The application must set up a route to the oauth server
-** /auth/token(?<path>.*) must match the oauth2 token entry point
-** /auth/code/(?<params>.*) must match the auth entry point with specific query
-parameters : response_type=code&client_id=[client id]&$\{params}
-** /auth/check_token must match token introspection entry point
-* The application may set up CORS rules if api are to be accessed outside of
-the deployment domain
+include::filters-and-cors-configuration.adoc[]
 
 For other configuration see {spring_cloud_gateway_doc}single/spring-cloud-gateway.html[spring cloud gateway documentation].
 

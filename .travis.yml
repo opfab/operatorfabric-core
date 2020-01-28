@@ -41,7 +41,7 @@ jobs:
     script:
       - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
       - ./gradlew --build-cache generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc securityReport
-      - ./bin/travis/upload_doc.sh
+      - ./CICD/travis/upload_doc.sh
 stages:
   - test-assemble
   - name: docker-images
@@ -54,7 +54,7 @@ stages:
 #deploy:
 #- provider: script
 #  skip_cleanup: true
-#  script: ./bin/travis/upload_doc.sh
+#  script: ./CICD/travis/upload_doc.sh
 #  on:
 #    all_branches: true
 #   # condition: $TRAVIS_EVENT_TYPE = cron  # Commented out while in documentation phase to trigger doc upload for all builds

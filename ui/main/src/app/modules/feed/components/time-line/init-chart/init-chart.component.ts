@@ -177,10 +177,10 @@ export class InitChartComponent implements OnInit, OnDestroy {
        case 'ACTION': {
          return 'orange';
        }
-       case 'QUESTION': {
+       case 'COMPLIANT': {
          return 'green';
        }
-       case 'NOTIFICATION': {
+       case 'INFORMATION': {
          return 'blue';
        }
        default : {
@@ -205,10 +205,10 @@ export class InitChartComponent implements OnInit, OnDestroy {
        case 'ACTION': {
          return 3;
        }
-       case 'QUESTION': {
+       case 'COMPLIANT': {
          return 2;
        }
-       case 'NOTIFICATION': {
+       case 'INFORMATION': {
          return 1;
        }
        default : {

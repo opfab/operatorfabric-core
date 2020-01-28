@@ -26,6 +26,7 @@ import {of} from 'rxjs';
 import {Process, State} from '@ofModel/thirds.model';
 import {Detail} from '@ofModel/card.model';
 import {Map as OfMap} from '@ofModel/map';
+import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 describe('CardDetailsComponent', () => {
     let component: CardDetailsComponent;
@@ -54,7 +55,8 @@ describe('CardDetailsComponent', () => {
                 ThirdsService,
                 HandlebarsService,
                 {provide: 'TimeEventSource', useValue: null},
-                TimeService
+                TimeService,
+                AuthenticationImportHelperForSpecs
             ]
         })
             .compileComponents();

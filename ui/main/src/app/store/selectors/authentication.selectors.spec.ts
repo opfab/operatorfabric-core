@@ -32,7 +32,8 @@ describe('AuthenticationSelectors', () => {
         token: 'test-token',
         expirationDate: referenceDate,
         firstName: 'john',
-        lastName: 'doe'
+        lastName: 'doe',
+        isImplicitlyAuthenticated: false
     };
 
     let errorConfigState: AuthState = {

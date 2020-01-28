@@ -22,11 +22,11 @@
         "action": {
           "label": "Action"
         },
-        "question": {
-          "label": "Question"
+        "compliant": {
+          "label": "Compliant"
         },
-        "notification": {
-          "label": "Notification"
+        "information": {
+          "label": "Information"
         }
       }
     }
