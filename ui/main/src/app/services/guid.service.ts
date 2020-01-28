@@ -23,7 +23,7 @@ export class GuidService {
         return this.guid;
     }
 
-    getCurrentGuidString():string{
+    getCurrentGuidString(): string {
         return this.getCurrentGuid().toString();
     }
 }

@@ -9,67 +9,72 @@ import {Card, Detail} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap} from "@ofModel/map";
 
-export class Third{
+export class Third {
     /* istanbul ignore next */
     constructor(
-        readonly name:string,
-        readonly version:string,
+        readonly name: string,
+        readonly version: string,
         readonly i18nLabelKey: string,
-        readonly templates?:string[],
-        readonly csses?:string[],
-        readonly locales?:string[],
-        readonly menuEntries?:ThirdMenuEntry[],
-        readonly processes?:OfMap<Process>
-    ){}
+        readonly templates?: string[],
+        readonly csses?: string[],
+        readonly locales?: string[],
+        readonly menuEntries?: ThirdMenuEntry[],
+        readonly processes?: OfMap<Process>
+    ) {
+    }
 
-    public extractState(card:Card):State{
-        if(card.process && this.processes[card.process]) {
+    public extractState(card: Card): State {
+        if (card.process && this.processes[card.process]) {
             const process = this.processes[card.process];
-            if(card.state && process.states[card.state]) {
-               return process.states[card.state];
+            if (card.state && process.states[card.state]) {
+                return process.states[card.state];
             }
         }
         return null;
     }
 }
 
-export class ThirdMenuEntry{
+export class ThirdMenuEntry {
     /* istanbul ignore next */
     constructor(
-        readonly id:string,
+        readonly id: string,
         readonly label: string,
         readonly url: string
-    ){}
+    ) {
+    }
 }
 
-export class ThirdMenu{
+export class ThirdMenu {
     /* istanbul ignore next */
     constructor(
         readonly id: string,
         readonly version: string,
         readonly label: string,
-        readonly entries: ThirdMenuEntry[]){}
+        readonly entries: ThirdMenuEntry[]) {
+    }
 }
 
-export class Process{
+export class Process {
     /* istanbul ignore next */
     constructor(
-        readonly states?:OfMap<State>
-    ){}
+        readonly states?: OfMap<State>
+    ) {
+    }
 }
 
-export class State{
+export class State {
     /* istanbul ignore next */
     constructor(
-        readonly details?:Detail[],
-        readonly actions?:OfMap<Action>
-    ){}
+        readonly details?: Detail[],
+        readonly actions?: OfMap<Action>
+    ) {
+    }
 }
 
 export enum ActionType {
-    EXTERNAL='EXTERNAL',
-    JNLP='JNLP',
-    URL='URL'
+    EXTERNAL = 'EXTERNAL',
+    JNLP = 'JNLP',
+    URL = 'URL'
 
 }
 
@@ -88,28 +93,30 @@ export class Action {
         readonly updateStateBeforeAction: boolean = false,
         readonly called: boolean = false,
         readonly needsConfirm: boolean = false,
-        readonly key?:string
-    ) {}
+        readonly key?: string
+    ) {
+    }
 
 }
 
-export const emptyAction=new Action(null,null);
+export const emptyAction = new Action(null, null);
 
-type Omit<T, K extends keyof T> = Pick<T,Exclude<keyof T,K>>;
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-export class ActionStatus{
+export class ActionStatus {
     constructor(
-                        readonly label: I18n,
-                        readonly hidden:boolean=false,
-                        readonly buttonStyle: string = '',
-                        readonly contentStyle: string = '',
-                        readonly inputs: Input[] = [],
-                        readonly lockCard: boolean = false,
-                        readonly updateState: boolean = false,
-                        readonly updateStateBeforeAction: boolean = false,
-                        readonly needsConfirm: boolean = false,
-                        readonly lockAction: boolean = false,
-    ){}
+        readonly label: I18n,
+        readonly hidden: boolean = false,
+        readonly buttonStyle: string = '',
+        readonly contentStyle: string = '',
+        readonly inputs: Input[] = [],
+        readonly lockCard: boolean = false,
+        readonly updateState: boolean = false,
+        readonly updateStateBeforeAction: boolean = false,
+        readonly needsConfirm: boolean = false,
+        readonly lockAction: boolean = false,
+    ) {
+    }
 }
 
 export const emptyActionStatus = new ActionStatus(null);
@@ -118,15 +125,15 @@ export const emptyActionStatus = new ActionStatus(null);
 for some reasons lodash equals take attribute order declaration in account to compute object equality
 needed by LightCardEffects updateAThirdAction Effect and by checkIfReceivedStatusIsDifferentFromCurrentOne method of ThirdActionService .
  */
-export function extractActionStatusFromPseudoActionStatus(tAction:object):ActionStatus{
-    let label=new I18n('');
+export function extractActionStatusFromPseudoActionStatus(tAction: object): ActionStatus {
+    let label = new I18n('');
     const i18n = tAction['label'];
-    if(i18n){
+    if (i18n) {
         const params = i18n['parameters'];
-        if(params) {
-            Object.setPrototypeOf(params,OfMap.prototype);
-            label = new I18n(i18n['key'],params);
-        }else{
+        if (params) {
+            Object.setPrototypeOf(params, OfMap.prototype);
+            label = new I18n(i18n['key'], params);
+        } else {
             label = new I18n(i18n['key']);
         }
 
@@ -134,9 +141,9 @@ export function extractActionStatusFromPseudoActionStatus(tAction:object):Action
     const result = new ActionStatus(
         label
         , tAction['hidden']
-        ,tAction['buttonStyle']
-        ,tAction['contentStyle']
-        ,tAction['inputs']//TODO Need proper prototype handling
+        , tAction['buttonStyle']
+        , tAction['contentStyle']
+        , tAction['inputs'] // TODO Need proper prototype handling
         , tAction['lockCard']
         , tAction['updateState']
         , tAction['updateStateBeforeAction']

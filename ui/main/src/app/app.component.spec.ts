@@ -88,7 +88,7 @@ describe('AppComponent', () => {
     let store: MockStore<AppState>;
     let fixture;
     const i18nServiceSpy = createSpyObj('i18NService', ['changeLocale']);
-    const authServiceSpy = createSpyObj('AuthenticationService', ['intializeAuthentication',
+    const authServiceSpy = createSpyObj('AuthenticationService', ['initializeAuthentication',
         'linkAuthenticationStatus']);
 
     let titleService: Title;

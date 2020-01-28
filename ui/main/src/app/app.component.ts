@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
      */
     ngOnInit() {
         console.log(`location: ${location.href}`);
-        this.authenticationService.intializeAuthentication();
+        this.authenticationService.initializeAuthentication();
         this.store.pipe(select(selectCurrentUrl)).subscribe(url => this.currentPath = url);
         this.authenticationService.linkAuthenticationStatus(
             (isAuthenticated: boolean) => {
