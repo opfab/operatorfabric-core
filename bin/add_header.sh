@@ -79,7 +79,7 @@ fi
 
 cd $OF_HOME
 licenceLines=$(wc -l <"$OF_HOME/src/main/headers/$header")
-licenceLines=$((licenceLines+1))
+licenceLines=$((licenceLines+1)) #Because wc is actually counting newline chars and header files aren't ending on newlines?
 licenceContent=$(cat "$OF_HOME/src/main/headers/$header")
 findCommand="find $OF_HOME "
 echo "Licence header line count: $licenceLines"
@@ -88,6 +88,13 @@ echo -e "\n"
 
 #Exclude bundles demo/test files
 findCommand+="! -path \"$OF_HOME/services/core/thirds/src/main/docker/volume/thirds-storage/*\" "
+
+#Exclude generated folders from ui
+findCommand+="-and ! -path \"$OF_HOME/ui/main/build/*\" "
+findCommand+="-and ! -path \"$OF_HOME/ui/main/documentation/*\" "
+findCommand+="-and ! -path \"$OF_HOME/ui/main/e2e/*\" "
+findCommand+="-and ! -path \"$OF_HOME/ui/main/node_modules/*\" "
+findCommand+="-and ! -path \"$OF_HOME/ui/main/reports/*\" "
 
 findCommand+=" -and "
 for ((i=0; i<${#file_extensions[*]}; i=$((i+1))));
@@ -104,9 +111,8 @@ echo "computed find command: $findCommand"
 for f in `eval $findCommand`
 do
   if [[ $f != *"build"* ]]; then
-#    echo $f
     if [ "$delete" = true ]; then
-    head -$licenceLines $f | diff - <(echo "$licenceContent") > /dev/null 2>&1 && ( ( cat $f | sed -e "1,$((licenceLines+1))d" ) > /tmp/file; mv /tmp/file $f )
+    head -$licenceLines $f | diff - <(echo "$licenceContent") > /dev/null 2>&1 && ( ( cat $f | sed -e "1,$((licenceLines))d" ) > /tmp/file; mv /tmp/file $f )
     else
     head -$licenceLines $f | diff - <(echo "$licenceContent") > /dev/null 2>&1  || ( ( echo -e "$licenceContent\n"; cat $f) > /tmp/file; mv /tmp/file $f )
     fi
