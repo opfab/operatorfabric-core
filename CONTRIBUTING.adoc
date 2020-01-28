@@ -128,10 +128,10 @@ Needless to say, it's a work in progress so feel free to tell us what you feel i
 
 TIP: We also use this website to broadcast any news we have about the project so don't hesitate to subscribe to the RSS feed on the home page to be informed of any update.
 
-=== Collaboration platform: https://team.opfab.org
+=== Spectrum Community : https://spectrum.chat/opfab
 
-If you would like to join the discussions regarding OperatorFabric, please https://team.opfab.org/signup_user_complete/?id=7nhtz5psobgpud6yqzrbibmdtw[join our collaboration platform on Mattermost]!
+If you would like to join the discussions regarding OperatorFabric, please https://spectrum.chat/opfab[join our community on Spectrum]!
 
-We're also thinking about setting up a Jira platform for issue tracking and agile project management.
+Regarding issue tracking, our Jira platform should be open soon.
 
 
