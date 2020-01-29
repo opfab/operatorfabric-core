@@ -22,6 +22,8 @@ import reactor.core.publisher.Flux;
 
 import javax.annotation.PostConstruct;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -118,9 +120,11 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
     }
 
     private Criteria userCriteria(String login, String... groups) {
+        List<String> groupsList = Arrays.asList(groups);
+
         return  new Criteria().orOperator(
                 where("orphanedUsers").in(login),
-                where("groupRecipients").in(groups));
+                where("groupRecipients").in(groupsList));
     }
 
     private Criteria publishDateCriteria(Instant latestPublication) {

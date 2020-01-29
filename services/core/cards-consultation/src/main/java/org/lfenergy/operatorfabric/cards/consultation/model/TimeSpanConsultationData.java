@@ -31,5 +31,5 @@ import java.time.Instant;
 public class TimeSpanConsultationData implements TimeSpan{
     private Instant start;
     private Instant end;
-    private TimeSpanDisplayModeEnum display = TimeSpanDisplayModeEnum.BUBBLE;
+    private TimeSpanDisplayModeEnum display;
 }
