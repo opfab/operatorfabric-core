@@ -8,9 +8,3 @@ services:
      - "3001:5005"
     volumes:
      - "../../../build/docker-volume:/config"
-    networks:
-     - opfabnet
-networks:
-  opfabnet:
-    external:
-      name: opfabnet

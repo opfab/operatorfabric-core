@@ -14,7 +14,7 @@ offline=false
 build=false
 
 function display_usage() {
-	echo -e "This script prepares all docker images and create the necessary docker network.\n"
+	echo -e "This script prepares all docker images.\n"
 	echo -e "Usage:\n"
 	echo -e "\tsetup_dockerized_environment.sh [OPTIONS] \n"
 	echo -e "options:\n"
@@ -103,5 +103,3 @@ gradle copyWorkingDir dockerTag -x test \
 -Papk.proxy.password=$proxy_password $GRADLE_OPTIONS
 
 cd $CURRENT_PATH
-
-docker network create opfabnet
