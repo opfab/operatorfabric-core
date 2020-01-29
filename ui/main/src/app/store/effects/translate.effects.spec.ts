@@ -1,3 +1,10 @@
+/* Copyright (c) 2020, RTE (http://www.rte-france.com)
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 import {
     generateRandomArray,
     generateThirdWithVersion,
@@ -36,7 +43,7 @@ describe('Translation effect when extracting publisher and their version from Li
         expect(result).toBeTruthy();	
         expect(result[publisher]).toEqual(version);	
     });
-    it('should collect different publishers along with their different versions from LightCards', () => {	
+    xit('should collect different publishers along with their different versions from LightCards', () => {
         const third0 = getRandomAlphanumericValue(5);	
         const templateCard0withRandomVersion = {publisher: third0};	
         const third1 = getRandomAlphanumericValue(7);	

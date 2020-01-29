@@ -11,18 +11,19 @@ OF_HOME=$(realpath $DIR/..)
 CURRENT_PATH=$(pwd)
 
 function display_usage() {
-	echo -e "This script adds license header to all file with of the specified language.\n"
+	echo -e "This script adds license header to all files with of the specified language.\n"
+	echo -e "All headings should be removed before adding new headings to avoid duplicate headings.\n"
 	echo -e "Usage:\n"
 	echo -e "\tadd_headers.sh [OPTIONS] [TYPE]\n"
 	echo -e "options:\n"
-	echo -e "\t-d, --delete deelte headers."
+	echo -e "\t-d, --delete delete headers."
 	echo -e "\t-h, --help display this help message."
 	echo -e "types:\n"
 	echo -e "\tJAVA  : .java files"
 	echo -e "\tTS  : .ts (TypeScript) files"
 	echo -e "\tCSS  : .css, .scss files"
 	echo -e "\tHTML  : .htm, .html files"
-	echo -e "\tADOC  : .adocl files"
+	echo -e "\tADOC  : .adoc files"
 }
 delete=false
 while [[ $# -gt 0 ]]
@@ -78,29 +79,42 @@ fi
 
 cd $OF_HOME
 licenceLines=$(wc -l <"$OF_HOME/src/main/headers/$header")
-licenceLines=$((licenceLines+1))
+licenceLines=$((licenceLines+1)) #Because wc is actually counting newline chars and header files aren't ending on newlines?
 licenceContent=$(cat "$OF_HOME/src/main/headers/$header")
 findCommand="find $OF_HOME "
 echo "Licence header line count: $licenceLines"
 echo -e "Licence header content: \n$licenceContent"
 echo -e "\n"
 
+#Exclude bundles demo/test files
+findCommand+="! -path \"$OF_HOME/services/core/thirds/src/test/data/bundles/*\" "
+findCommand+="-and ! -path \"$OF_HOME/services/core/thirds/src/main/docker/volume/thirds-storage/*\" "
+findCommand+="-and ! -path \"$OF_HOME/services/core/thirds/src/test/docker/volume/thirds-storage/*\" "
+
+#Exclude generated folders from ui
+findCommand+="-and ! -path \"$OF_HOME/ui/main/build/*\" "
+findCommand+="-and ! -path \"$OF_HOME/ui/main/documentation/*\" "
+findCommand+="-and ! -path \"$OF_HOME/ui/main/e2e/*\" "
+findCommand+="-and ! -path \"$OF_HOME/ui/main/node_modules/*\" "
+findCommand+="-and ! -path \"$OF_HOME/ui/main/reports/*\" "
+
+findCommand+=" -and "
 for ((i=0; i<${#file_extensions[*]}; i=$((i+1))));
 do
     if ((i>0)); then
         findCommand+=" -or"
     fi
-    findCommand+=" -name *.${file_extensions[i]}"
+    findCommand+=" -name \"*.${file_extensions[i]}\""
 done
+
 #findCommand+='|grep -Rv "build"'
 echo "computed find command: $findCommand"
 
 for f in `eval $findCommand`
 do
   if [[ $f != *"build"* ]]; then
-#    echo $f
     if [ "$delete" = true ]; then
-    head -$licenceLines $f | diff - <(echo "$licenceContent") > /dev/null 2>&1 && ( ( cat $f | sed -e "1,$((licenceLines+1))d" ) > /tmp/file; mv /tmp/file $f )
+    head -$licenceLines $f | diff - <(echo "$licenceContent") > /dev/null 2>&1 && ( ( cat $f | sed -e "1,$((licenceLines))d" ) > /tmp/file; mv /tmp/file $f )
     else
     head -$licenceLines $f | diff - <(echo "$licenceContent") > /dev/null 2>&1  || ( ( echo -e "$licenceContent\n"; cat $f) > /tmp/file; mv /tmp/file $f )
     fi
