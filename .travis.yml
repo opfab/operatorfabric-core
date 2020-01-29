@@ -45,9 +45,10 @@ jobs:
 stages:
   - test-assemble
   - name: docker-images
-    if: type = cron OR commit_message =~ ci_docker
+    if: (type = cron OR commit_message =~ ci_docker) AND (NOT type IN (pull_request)) AND (branch = master)
   - name: doc
-    if: type = cron OR commit_message =~ ci_documentation
+    if: (type = cron OR commit_message =~ ci_documentation) AND (NOT type IN (pull_request)) AND (branch = master)
+# Note: The condition on type is necessary to exclude PRs because their base branch could be master
 #script:
 #  - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
 #  - ./gradlew copyDependencies build jacocoTestReport && sonar-scanner
