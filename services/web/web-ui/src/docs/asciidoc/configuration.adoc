@@ -28,6 +28,7 @@ NONE
 |===
 |name|default|mandatory?|Description
 
+|operatorfabric.keycloak.realm||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
 |operatorfabric.security.oauth2.flow.mode|PASSWORD|no
 a|authentication mode, awailable options:
 
@@ -67,12 +68,6 @@ the navigation bar.
 - BOTH: Both a text link and a little arrow icon are displayed. Clicking the text link opens the link in an iframe
 while clicking the icon opens in a new tab.
 
-|operatorfabric.settings.timeZone||no|Default user time zone for users (use browser time zone if not set)
-|operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
-|operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
-|operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
-|operatorfabric.settings.locale|en|no|Default user locale (use en if not set)
-|operatorfabric.settings.default-tags||no|Default user list of filtered in tags
 |operatorfabric.time.pulse|5000|no|Duration between two ticks of the internal state of the User Interface
 |operatorfabric.archive.filters.page.size||no|The page size of archive filters
 |operatorfabric.archive.filters.page.first||no|The first page start of archiving module
@@ -91,11 +86,10 @@ while clicking the icon opens in a new tab.
 
 |===
 |name|default|mandatory?|Description
-|operatorfabric.settings.timeZone||no|Default user time zone for users (use browser time zone if not set)
-|operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
+|operatorfabric.settings.timeZone||no|Default user time zone for users (use|operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
 |operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
 |operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
-|operatorfabric.settings.locale|LT|no|Default user locale (use browser if not set)
+|operatorfabric.settings.locale|en|no|Default user locale (use en if not set)
 |operatorfabric.settings.default-tags||no|Default user list of filtered in tags
 |operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsWeek||no|
 |operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsWeek|ddd DD MMM HH|Default format use on date inside tooltips for time's unit lower than hour|
