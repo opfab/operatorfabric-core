@@ -71,14 +71,18 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/ {
         MongoClientOptions.Builder optionsBuilder = new MongoClientOptions.Builder();
         optionsBuilder.maxConnectionIdleTime(60000);
         List<ServerAddress> addrs = new ArrayList<>();
-        List<MongoCredential> credentials = new ArrayList<>();
+        MongoCredential credential = null;
+
         for (String uriString : properties.getUris()) {
             URI uri = URI.create(uriString);
             addrs.add(new ServerAddress(uri.getHost(), uri.getPort()));
             String[] userInfo = uri.getUserInfo().split(":");
-            credentials.add(MongoCredential.createCredential(userInfo[0], "admin", userInfo[1].toCharArray()));
+
+            if (credential == null) {
+                credential = MongoCredential.createCredential(userInfo[0], "admin", userInfo[1].toCharArray());
+            }
         }
-        com.mongodb.MongoClient client = new com.mongodb.MongoClient(addrs, credentials, optionsBuilder.build());
+        com.mongodb.MongoClient client = new com.mongodb.MongoClient(addrs, credential, optionsBuilder.build());
         return client;
     }
 
