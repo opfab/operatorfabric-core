@@ -88,7 +88,8 @@ while clicking the icon opens in a new tab.
 |operatorfabric.settings.timeZone||no|Default user time zone for users (use|operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
 |operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
 |operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
-|operatorfabric.settings.locale|en|no|Default user locale (use en if not set)|operatorfabric.settings.default-tags||no|Default user list of filtered in tags
+|operatorfabric.settings.locale|en|no|Default user locale (use en if not set)
+|operatorfabric.settings.default-tags||no|Default user list of filtered in tags
 |operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsWeek||no|
 |operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsWeek|ddd DD MMM HH|Default format use on date inside tooltips for time's unit lower than hour|
 |operatorfabric.settings.timeLineDefaultClusteringFormats.dateInsideTooltipsMonth|ddd DD MMM YYYY|Default format use on date inside tooltips for other case|
