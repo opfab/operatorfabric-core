@@ -167,11 +167,6 @@ https://sdkman.io/[sdkman] and
 https://github.com/creationix/nvm[nvm] to manage tool versions ( for java,
 gradle, node and npm).
 
-WARNING: Before running containers with docker-compose, it is required to
-configure a docker network for them using `docker network create opfabnet`. You
-can also use the bin/setup_dockerized_environment which builds the services
-images ant sets up the `opfabnet` network.
-
 There are several ways to get started with OperatorFabric. Please look into
 the section that best fits your needs.
 
@@ -206,13 +201,7 @@ build can be done.
 A docker-compose file with properly configured containers is available
 link:src/main/docker/test-quality-environment/[there].
 
-If it hasn't be done before, a docker network need to be configured for the
-containers using the following command:
-----
-docker network create opfabnet
-----
-
-Then `docker-compose` can be run in detached mode:
+The `docker-compose` can be run in detached mode:
 ----
 cd src/main/docker/test-quality-environment/
 docker-compose up -d
@@ -506,8 +495,7 @@ instance).
 
 Please see `setup_dockerized_environment.sh -h` usage before running.
 
-Builds all sub-projects, generate docker images and volumes for docker-compose,
-also sets up docker network "opfabnet" if needed.
+Builds all sub-projects, generate docker images and volumes for docker-compose.
 
 == Environment variables
 
@@ -657,8 +645,7 @@ For debugging purpose the following ports are also exposed:
 
 === Generating docker images
 
-To Generate all docker images run `bin/setup_dockerized_environment`,
-it will generate all images and also generate an opfabnet docker network
+To Generate all docker images run `bin/setup_dockerized_environment.sh`.
 
 INFORMATION: If you work behind a proxy you need to specify the following
 properties to
