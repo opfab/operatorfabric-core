@@ -27,7 +27,7 @@ NONE
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.keycloak.realm||no|The realm name in keycloak server settings page
+|operatorfabric.keycloak.realm||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
 |operatorfabric.security.oauth2.flow.mode|PASSWORD|no
 a|authentication mode, awailable options:
 
