@@ -127,6 +127,7 @@ export class AddThirdActions implements Action {
 
 export class UpdateALightCard implements Action {
     readonly type = LightCardActionTypes.UpdateALightCard;
+
     constructor(public payload: { card: LightCard }) {
     }
 }
@@ -134,34 +135,43 @@ export class UpdateALightCard implements Action {
 export class UpdateAnAction implements Action {
     readonly type = LightCardActionTypes.UpdateAnAction;
 
-    constructor(public payload: {cardId:string,actionKey: string, status: ActionStatus}) {
+    constructor(public payload: { cardId: string, actionKey: string, status: ActionStatus }) {
     }
 }
 
-export class UpdateAnActionFailure implements Action{
+export class UpdateAnActionFailure implements Action {
     readonly type = LightCardActionTypes.UpdateAnActionFailure;
 
-    constructor(){}
+    constructor() {
+    }
 }
 
-export class ThirdActionAlreadyLoaded implements Action{
-    readonly  type = LightCardActionTypes.ThirdActionAlreadyLoaded;
-    constructor(){}
+export class ThirdActionAlreadyLoaded implements Action {
+    readonly type = LightCardActionTypes.ThirdActionAlreadyLoaded;
+
+    constructor() {
+    }
 }
 
-export class ThirdActionAlreadyUpdated implements Action{
-    readonly  type = LightCardActionTypes.ThirdActionAlreadyUpdated;
-    constructor(){}
+export class ThirdActionAlreadyUpdated implements Action {
+    readonly type = LightCardActionTypes.ThirdActionAlreadyUpdated;
+
+    constructor() {
+    }
 }
 
-export class DelayedLightCardUpdate implements Action{
-    readonly  type = LightCardActionTypes.DelayedLightCardUpdate;
-    constructor(public payload:{card:LightCard}){}
+export class DelayedLightCardUpdate implements Action {
+    readonly type = LightCardActionTypes.DelayedLightCardUpdate;
+
+    constructor(public payload: { card: LightCard }) {
+    }
 }
 
-export class LightCardAlreadyUpdated implements Action{
+export class LightCardAlreadyUpdated implements Action {
     readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
-    constructor(){}
+
+    constructor() {
+    }
 }
 
 export type LightCardActions =

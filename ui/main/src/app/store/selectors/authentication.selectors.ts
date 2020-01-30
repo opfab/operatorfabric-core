@@ -14,14 +14,14 @@ import * as _ from 'lodash';
 export const selectAuthenticationState = createFeatureSelector<AuthState>('authentication');
 
 export const selectExpirationTime = createSelector(selectAuthenticationState, fromAuthentication.getExpirationTime);
-export const selectCode = createSelector(selectAuthenticationState, (authState)=>authState.code);
-export const selectMessage = createSelector(selectAuthenticationState, (authState)=>authState.message);
-export const selectIdentifier = createSelector(selectAuthenticationState, (authState)=>authState.identifier);
-export const selectUserNameOrIdentifier = createSelector(selectAuthenticationState, (authState)=>{
-    if(authState.lastName && authState.firstName){
-        return `${_.upperFirst(authState.firstName)} ${_.upperFirst(authState.lastName)}`
+export const selectCode = createSelector(selectAuthenticationState, (authState) => authState.code);
+export const selectMessage = createSelector(selectAuthenticationState, (authState) => authState.message);
+export const selectIdentifier = createSelector(selectAuthenticationState, (authState) => authState.identifier);
+export const selectUserNameOrIdentifier = createSelector(selectAuthenticationState, (authState) => {
+    if (authState.lastName && authState.firstName) {
+        return `${_.upperFirst(authState.firstName)} ${_.upperFirst(authState.lastName)}`;
     }
-    return authState.identifier
+    return authState.identifier;
 });
-export const  selectIsImplicitallyAuthenticated = createSelector(selectAuthenticationState
-    , (authState) => authState.isImplicitlyAuthenticated)
+export const selectIsImplicitlyAuthenticated = createSelector(selectAuthenticationState
+    , (authState) => authState.isImplicitlyAuthenticated);

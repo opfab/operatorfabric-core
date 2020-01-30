@@ -160,7 +160,7 @@ export class UselessAuthAction implements  Action{
 
 }
 
-export class ImplicitallyAuthenticated implements Action {
+export class ImplicitlyAuthenticated implements Action {
     readonly type = AuthenticationActionTypes.ImplicitallyAuthenticated;
 }
 
@@ -178,5 +178,5 @@ export type AuthenticationActions =
     | AcceptLogOutSuccess
     | CheckImplicitFlowAuthenticationStatus
     | UselessAuthAction
-    | ImplicitallyAuthenticated
+    | ImplicitlyAuthenticated
     |UnAuthenticationFromImplicitFlow;
