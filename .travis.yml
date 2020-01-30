@@ -45,9 +45,9 @@ jobs:
 stages:
   - test-assemble
   - name: docker-images
-    if: (type = cron OR commit_message =~ ci_docker) AND (NOT type IN (pull_request)) AND (branch = master)
+    if: type = cron OR commit_message =~ ci_docker
   - name: doc
-    if: (type = cron OR commit_message =~ ci_documentation) AND (NOT type IN (pull_request)) AND (branch = master)
+    if: type = cron OR commit_message =~ ci_documentation
 # Note: The condition on type is necessary to exclude PRs because their base branch could be master
 #script:
 #  - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
