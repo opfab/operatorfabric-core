@@ -90,7 +90,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         const ticksHalfMonthConf = this.constructMomentObj([0, 0, 0, 0, 0, 0, 0], null, [1, 16]);
 
         const ticks15minConf = this.constructMomentObj([0, 0, 0, 0, 0, 15, 0]);
-        const ticks1hConf = this.constructMomentObj([0, 0, 0, 0, 1, 0, 0]);
+        const ticks30minConf = this.constructMomentObj([0, 0, 0, 0, 0, 30, 0]);
+
         this.conf = {
             enableDrag: false,
             enableZoom: true,
@@ -109,8 +110,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 buttonTitle: 'J',
                 forwardConf: forwardDayConf,
                 backwardConf: forwardDayConf,
-                ticksConf: ticks1hConf,
-                formatTicks: 'dd - h:mm a'
+                ticksConf: ticks30minConf,
+                formatTicks: 'HH[h]mm'
             }, TR: {
                 startDomain: startDomainTR.valueOf(),
                 endDomain: endDomainTR.valueOf(),
@@ -119,8 +120,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 buttonTitle: 'TR',
                 forwardConf: forwardTRConf,
                 backwardConf: forwardTRConf,
-                ticksConf: ticks15minConf,
-                formatTicks: 'dd - h:mm a'
+                ticksConf: ticks15minConf
             }, '7D': {
                 startDomain: startDomain7Day.valueOf(),
                 endDomain: endDomain7Day.valueOf(),
