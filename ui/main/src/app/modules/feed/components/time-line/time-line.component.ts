@@ -58,7 +58,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
         // Adding two domains required by SEA Team
         const startDomainTR = moment().minutes(0).second(0).millisecond(0).subtract(2, 'hours');
-        const endDomainTR = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
+        const endDomainTR = moment().minutes(0).second(0).millisecond(0).add(10, 'hours');
 
         const startDomainJ = moment().hours(0).minutes(0).second(0).millisecond(0);
         const endDomainJ = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
@@ -89,8 +89,9 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         const ticksDayConf = this.constructMomentObj([0, 0, 0, 1, 0, 0, 0]);
         const ticksHalfMonthConf = this.constructMomentObj([0, 0, 0, 0, 0, 0, 0], null, [1, 16]);
 
+        const ticks15minConf = this.constructMomentObj([0, 0, 0, 0, 0, 15, 0]);
         const ticks30minConf = this.constructMomentObj([0, 0, 0, 0, 0, 30, 0]);
-        const ticks1hConf = this.constructMomentObj([0, 0, 0, 0, 1, 0, 0]);
+
         this.conf = {
             enableDrag: false,
             enableZoom: true,
@@ -109,8 +110,8 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 buttonTitle: 'J',
                 forwardConf: forwardDayConf,
                 backwardConf: forwardDayConf,
-                ticksConf: ticks1hConf,
-                formatTicks: 'dd - h:mm a'
+                ticksConf: ticks30minConf,
+                formatTicks: 'HH[h]mm'
             }, TR: {
                 startDomain: startDomainTR.valueOf(),
                 endDomain: endDomainTR.valueOf(),
@@ -119,8 +120,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 buttonTitle: 'TR',
                 forwardConf: forwardTRConf,
                 backwardConf: forwardTRConf,
-                ticksConf: ticks30minConf,
-                formatTicks: 'dd - h:mm a'
+                ticksConf: ticks15minConf
             }, '7D': {
                 startDomain: startDomain7Day.valueOf(),
                 endDomain: endDomain7Day.valueOf(),

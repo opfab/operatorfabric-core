@@ -17,8 +17,8 @@ operatorfabric:
         display: BUSINESS
     timeline:
       domains:
-        - "J"
         - "TR"
+        - "J"
         - "7D"
         - "W"
         - "M"
