@@ -58,7 +58,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
         // Adding two domains required by SEA Team
         const startDomainTR = moment().minutes(0).second(0).millisecond(0).subtract(2, 'hours');
-        const endDomainTR = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
+        const endDomainTR = moment().minutes(0).second(0).millisecond(0).add(10, 'hours');
 
         const startDomainJ = moment().hours(0).minutes(0).second(0).millisecond(0);
         const endDomainJ = moment().hours(0).minutes(0).second(0).millisecond(0).add(1, 'days');
@@ -89,7 +89,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         const ticksDayConf = this.constructMomentObj([0, 0, 0, 1, 0, 0, 0]);
         const ticksHalfMonthConf = this.constructMomentObj([0, 0, 0, 0, 0, 0, 0], null, [1, 16]);
 
-        const ticks30minConf = this.constructMomentObj([0, 0, 0, 0, 0, 30, 0]);
+        const ticks15minConf = this.constructMomentObj([0, 0, 0, 0, 0, 15, 0]);
         const ticks1hConf = this.constructMomentObj([0, 0, 0, 0, 1, 0, 0]);
         this.conf = {
             enableDrag: false,
@@ -119,7 +119,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 buttonTitle: 'TR',
                 forwardConf: forwardTRConf,
                 backwardConf: forwardTRConf,
-                ticksConf: ticks30minConf,
+                ticksConf: ticks15minConf,
                 formatTicks: 'dd - h:mm a'
             }, '7D': {
                 startDomain: startDomain7Day.valueOf(),
