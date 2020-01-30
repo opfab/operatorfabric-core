@@ -279,7 +279,6 @@ project
 │   ├──src
 │   ├──time (time-client-data)
 │   └──users (users-client-data)
-├──docker-standalone-images
 ├──services
 │   ├──core
 │   │   ├──cards-consultation (cards-consultation-business-service)
@@ -328,8 +327,6 @@ used by external projects
 code generation
 ** link:client/time[time (time-client-data)]: simple beans regarding time
 ** link:client/users[users (users-client-data)]: simple beans regarding users
-* link:docker-standalone-images[docker-standalone-images]: contains a
-standalone docker image for demonstration purposes
 * link:services[services]: contains the microservices that make up
 OperatorFabric
 ** link:services/core[core]: contains core business microservices
@@ -589,14 +586,11 @@ Asciidoctor Plugin]
 
 == Docker demo
 
-Global docker compose files for demonstration purposes are available at :
-
-* link:src/main/docker/demo[src/main/docker/demo] : sets up all services,
-generate a dummy card every 5 seconds
-* link:src/main/docker/deploy[src/main/docker/deploy] : sets up all services,
+A global docker compose files for demonstration purposes is available at
+link:src/main/docker/deploy[src/main/docker/deploy] : sets up all services,
 ready for card reception
 
-*These demo setups expose the application UI at localhost:2002/ui/*
+*This setup expose the application UI at localhost:2002/ui/*
 
 WARNING: Don't forget the *final slash* in the URL or you will get an error.
 

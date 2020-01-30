@@ -25,7 +25,6 @@ include 'services:core:time'
 include 'services:core:users'
 include 'services:web:web-ui'
 include 'ui:main'
-include 'docker-standalone-images:dummy-card-daemon'
 
 project(':client:time').name = 'time-client-data'
 project(':client:actions').name = 'actions-client-data'

@@ -70,9 +70,8 @@ find . -name "*.adoc" | xargs sed -i "s/\/$oldVersion\//\/$newVersion\//g";
 echo "Updating revision date in adoc files"
 find . -name "*.adoc" | xargs sed -i "s/\(:revdate:\)\(.*\)$/\1 $revisionDate/g";
 
-echo "Using $newVersion for lfeoperatorfabric images in  demo/deploy docker-compose files"
+echo "Using $newVersion for lfeoperatorfabric images in deploy docker-compose file"
 # String example for regexp: image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
-sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./src/main/docker/demo/docker-compose.yml;
 sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./src/main/docker/deploy/docker-compose.yml;
 
 echo "The following files have been updated: "
