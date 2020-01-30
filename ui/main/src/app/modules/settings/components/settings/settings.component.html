@@ -7,28 +7,28 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6" *ngIf="!dispalyInfos?.email">
       <of-email-setting settingPath="email" [disabled]="(disableInfos$|async)"></of-email-setting>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6" *ngIf="!dispalyInfos?.description">
       <of-text-setting settingPath="description" [disabled]="(disableInfos$|async)"></of-text-setting>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6" *ngIf="!dispalyInfos?.language">
       <of-list-setting settingPath="locale" [values]="locales$|async" ></of-list-setting>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6" *ngIf="!dispalyInfos?.timezone">
       <of-list-setting settingPath="timeZone" [values]="timeZones$|async" ></of-list-setting>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6" *ngIf="!dispalyInfos?.timeformat">
       <of-text-setting settingPath="timeFormat"></of-text-setting>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6" *ngIf="!dispalyInfos?.dateformat">
       <of-text-setting settingPath="dateFormat"></of-text-setting>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6" *ngIf="!dispalyInfos?.datetimeformat">
       <of-text-setting settingPath="dateTimeFormat"></of-text-setting>
     </div>
-    <div class="col-md-6" *ngIf="!(hideTags$|async)">
+    <div class="col-md-6" *ngIf="!dispalyInfos?.tags">
       <of-type-ahead-settings settingPath="defaultTags"></of-type-ahead-settings>
     </div>
   </div>

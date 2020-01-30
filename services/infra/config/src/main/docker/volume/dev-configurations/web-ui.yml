@@ -63,5 +63,7 @@ operatorfabric:
     - en
   settings:
     locale: en
+    infos:
+      description: true
   time:
     pulse: 5000
