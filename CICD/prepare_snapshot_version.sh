@@ -77,7 +77,7 @@ echo "Replacing $oldVersion with $newVersion in links in adoc files"
 find . -name "*.adoc" | xargs sed -i "s/\/$oldVersion\//\/$newVersion\//g";
 
 # Revision dates don't need to be updated (they've been updated when preparing the release).
-# demo and deploy docker-compose files mustn't be updated either as they should use the latest RELEASE for stability.
+# deploy docker-compose file mustn't be updated either as it should use the latest RELEASE for stability.
 
 echo "The following files have been updated: "
 echo | git status --porcelain

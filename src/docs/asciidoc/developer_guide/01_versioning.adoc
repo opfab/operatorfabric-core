@@ -42,7 +42,7 @@ This will perform the following changes:
 +
 * Replace X.X.X.SNAPSHOT with X.X.X.RELEASE in *.adoc, swagger.yaml files and the VERSION file at the root operator-fabric folder
 * Update the revision date in *.adoc files (by default, the new revision date is today, but see the script usage for details)
-* Change the version from W.W.W.RELEASE (previous release) to X.X.X.RELEASE in the deploy and demo docker-compose file
+* Change the version from W.W.W.RELEASE (previous release) to X.X.X.RELEASE in the deploy docker-compose file
 +
 IMPORTANT: The VERSION file is particularly important as the CI/CD pipeline tasks
 (building the documentation and the docker images for example) are based on it.
@@ -100,9 +100,9 @@ repository, so instead you can just type https://opfab.github.io/documentation/X
 . Check that the tag was correctly pushed to GitHub and is visible under the
 https://github.com/opfab/operatorfabric-core/releases[releases page] for the repository.
 
-==== Checking demonstration docker-compose files
+==== Checking deploy docker-compose
 
-The demo and deploy docker-compose files should always rely on the latest RELEASE version
+The deploy docker-compose file should always rely on the latest RELEASE version
 available on DockerHub. Once the CI pipeline triggered by the previous steps has completed successfully,
 and you can see X.X.X.RELEASE images for all services on DockerHub, you should:
 
@@ -179,9 +179,9 @@ To prepare a next version you simply need to increment the version after a relea
 +
 This will perform the following changes:
 +
-* Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT **EXCEPT** in the demonstration docker-compose files
-(src/main/docker/demo/docker-compose.yml and src/main/docker/deploy/docker-compose.yml). The files concerned are *.adoc,
-swagger.yaml files and the VERSION file at the root operator-fabric folder.
+* Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT **EXCEPT** in the deploy docker-compose file
+(src/main/docker/deploy/docker-compose.yml). The files concerned are *.adoc,
+swagger.yaml files and the VERSION file at the root operatorfabric-core folder.
 +
 IMPORTANT: The VERSION file is particularly important as the CI/CD pipeline tasks
 (building the documentation and the docker images for example) are based on it.
