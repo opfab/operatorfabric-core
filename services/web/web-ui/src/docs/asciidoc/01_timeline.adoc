@@ -339,6 +339,7 @@ They made 4 zooms level:
 
 - J and TR zooms: to illustrate these two domains, see the example below:
 For instance, today is 9th Dec, 10:44 (H:10 and J: 9th Dec)
+
 [%header,format=csv]
 |===
 Domain Name,Start Domain,End Domain,Graduation,Forward,Backward

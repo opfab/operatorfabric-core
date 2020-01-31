@@ -70,13 +70,13 @@ The above embedded configurations are the basic settings of the application:
 === Sample development configuration
 
 ```
-include::../../../../../infra/config/src/main/docker/volume/dev-configurations/cards-Publication.yml[]
+include::../../../../../infra/config/src/main/docker/volume/dev-configurations/cards-publication.yml[]
 ```
 
 === Sample docker image configuration
 
 ```
-include::../../../../../infra/config/src/main/docker/volume/docker-configurations/cards-Publication.yml[]
+include::../../../../../infra/config/src/main/docker/volume/docker-configurations/cards-publication.yml[]
 ```
 
 == Specifying external configuration properties when launching a jar file
