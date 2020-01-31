@@ -40,7 +40,6 @@ export class TranslateEffects {
     ) {
     }
 
-    static versions = new Map<Set<string>>();
 
     @Effect()
     updateTranslateService: Observable<TranslateActions> = this.actions$
@@ -163,18 +162,16 @@ export class TranslateEffects {
     }
 
     private static consolidateThirdAndVersions(thirdsAndVersions:TransitionalThirdWithItSVersion[]) {
+        const result = new Map<Set<string>>();
         thirdsAndVersions.forEach(u => {
-            const versions = TranslateEffects.versions[u.third];
-            // versions.add(u.version)
-            
+            const versions = result[u.third];
             if (versions) {
                 versions.add(u.version)
             } else {
-                TranslateEffects.versions[u.third] = new Set([u.version]);
+                result[u.third] = new Set([u.version]);
             }
-            
         });
-        return TranslateEffects.versions;
+        return result;
     }
 
     static extractThirdToUpdate(versionInput: Map<Set<string>>, cachedVersions: Map<Set<string>>): Map<Set<string>> {
