@@ -1,4 +1,4 @@
-# Dev Key Cloak configuration
+# Dev Keycloak configuration
 
 Go to [host]:89/auth/admin
 
@@ -55,7 +55,7 @@ rte-operator, tso1-operator, tso2-operator
 
 ## Specific dev Configuration 
 
-To falicilate developpement, in  the configuration file provide in the git (dev-realms.json) ,  session are parameted on a duration of 10 hours (36000 seconds) and SSL is not required . These parameters shoud not be used in production. 
+To facilitate development, in  the configuration file provide in the git (dev-realms.json) ,  session are set to have a duration of 10 hours (36000 seconds) and SSL is not required. These parameters shoud not be used in production. 
 
 The following parameters are set : 
 accessTokenLifespan : 36000
