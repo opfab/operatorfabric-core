@@ -50,14 +50,13 @@ IMPORTANT: The VERSION file is particularly important as the CI/CD pipeline task
 . Commit with the template message:
 +
 ```
-[RELEASE] X.X.X.RELEASE (ci_docker,ci_latest,ci_documentation)
+[RELEASE] X.X.X.RELEASE (ci_docker,ci_documentation)
 ```
 +
 The commit comment leverages these three keywords to trigger the delivery of documentation and docker images, so you should
 check that they are correctly spelt.
 
 * ci_docker: triggers the build and upload of versioned docker images to dockerhub
-* ci_latest: associate the latest alias to the current versioned docker images
 * ci_documentation: triggers the build and upload of the current documentation
 
 . Tag the commit with the version
