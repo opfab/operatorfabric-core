@@ -39,6 +39,8 @@ It helps to avoid typos or missing to report some changes. An example could be f
 |operatorfabric.security.oauth2.client-secret|null|yes| Oauth2 client secret used by OperatorFabric may be specific for each service
 |operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as user login or id
 |operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim is used as token expiration timestamp
+|spring.security.oauth2.resourceserver.jwt.provider-url|null|yes|The keycloak instance url
+|spring.security.oauth2.resourceserver.jwt.provider-realm|null|yes|The realm name within the keycloak instance
 |===
 
 example of `application.yml`
@@ -65,8 +67,8 @@ For OAuth2 security concerns into this file, there are two way to configure it, 
 There are two common properties:
 
 - `operatorfabric.security.oauth2.flow.provider` which corresponds to the OAuth2 provider.
-- `operatorfabric.keycloak.realm`: which is the OAuth2 realm provider under which the OpertaroFabric client is declared.
-
+- `operatorfabric.security.realm-url`: which is the OAuth2 realm provider under which the OpertaroFabric client is declared.
+- `operatorfabric.security.provider-url`: which is the The keycloak server instance.
 
 === OAuth2 Flow Mode
 

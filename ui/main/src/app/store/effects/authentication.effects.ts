@@ -36,6 +36,7 @@ import {ClearCard} from '@ofActions/card.actions';
 import {environment} from '@env/environment';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 import {redirectToCurrentLocation} from "../../app-routing.module";
+import { combineLatest } from 'rxjs';
 
 /**
  * Management of the authentication of the current user
@@ -287,11 +288,12 @@ export class AuthenticationEffects {
 
     private resetState() {
         this.authService.clearAuthenticationInformation();
-        this.store.select(buildConfigSelector('keycloak.realm')).subscribe(realm => {
-            if (realm) {
-                const redirect = this.authService.computeRedirectUri();
-                window.location.href = `${environment.urls.auth}/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
-            }
+        combineLatest(
+            this.store.select(buildConfigSelector('security.provider-realm')),
+            this.store.select(buildConfigSelector('security.provider-url'))
+        ).subscribe(([realm, url]) => {
+            const redirect = this.authService.computeRedirectUri();
+            window.location.href = `${url}/auth/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
         });
         this.cardService.unsubscribeCardOperation();
     }

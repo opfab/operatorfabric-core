@@ -26,7 +26,7 @@ spring.cloud.gateway.routes[0].filters:
 ```
 
 where:
-
+- `spring.cloud.gateway.routes.uri`: is your keycloak instance
 - `spring.cloud.gateway.routes[0]` is the routes with `id` equals to `auth`;
 - `/realms/dev`: is the keycloak realm where `opfab-client` is defined.
 - `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==`: is the base64 encoded string of `opfab-client:opfab-keycloak-secret` with
