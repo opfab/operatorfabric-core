@@ -50,14 +50,12 @@ export class HandlebarsService {
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale))
     }
 
-    public changeLocale(locale:string){ //TODO Refactor as common with i18n service ? Common fallback handling ?
+    public changeLocale(locale:string){ 
         if(locale) {
             this._locale = locale;
         }else{
             this._locale = 'en';
         }
-        moment.locale(this._locale);
-        this.translate.use(this._locale);
     }
 
     public executeTemplate(templateName: string, context: DetailContext):Observable<string> {

@@ -59,8 +59,8 @@ operatorfabric:
     - Europe/Athens
     - Pacific/Samoa
   i18n.supported.locales:
-    - fr
     - en
+    - fr
   settings:
     locale: en
     infos:

@@ -47,9 +47,8 @@ import {reducer as userReducer} from '@ofStore/reducers/user.reducer';
 import {UserState} from "@ofStates/user.state";
 import {UserEffects} from "@ofEffects/user.effects";
 
-import {reducer as translationReducer} from "@ofStore/reducers/translation.reducer";
 import {TranslateEffects} from "@ofEffects/translate.effects";
-import {TranslationState} from "@ofStates/translation.state";
+
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -63,7 +62,6 @@ export interface AppState {
     time: TimeState;
     archive: ArchiveState;
     user: UserState;
-    translation: TranslationState;
 }
 
 export const appEffects = [
@@ -94,8 +92,7 @@ export const appReducer: ActionReducerMap<AppState> = {
     settings: settingsReducer,
     time: timeReducer,
     archive: archiveReducer,
-    user: userReducer,
-    translation: translationReducer
+    user: userReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production

@@ -14,7 +14,6 @@ import {forkJoin, Observable, of} from "rxjs";
 import {LightCardActionTypes, LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {catchError, concatAll, map, mergeMap, switchMap} from "rxjs/operators";
 import {
-    RefreshTranslation,
     TranslateActions,
     TranslateActionsTypes,
     TranslationUpToDate,
@@ -25,13 +24,13 @@ import {
 import {LightCard} from "@ofModel/light-card.model";
 import {Map} from "@ofModel/map";
 import * as _ from 'lodash';
-import {selectI18nUpLoaded} from "@ofSelectors/translation.selectors";
 import {ThirdsService} from "@ofServices/thirds.service";
 import {ThirdMenu} from "@ofModel/thirds.model";
 import {LoadMenuSuccess, MenuActionTypes} from "@ofActions/menu.actions";
 
 @Injectable()
 export class TranslateEffects {
+
 
     constructor(private store: Store<AppState>
         , private actions$: Actions
@@ -40,6 +39,7 @@ export class TranslateEffects {
     ) {
     }
 
+    private static i18nBundleVersionLoaded = new Map<Set<string>>();
 
     @Effect()
     updateTranslateService: Observable<TranslateActions> = this.actions$
@@ -95,16 +95,6 @@ export class TranslateEffects {
 
 
     @Effect()
-    refreshLanguageUsedByTranslation: Observable<TranslateActions> = this.actions$
-        .pipe(
-            ofType(TranslateActionsTypes.UpdateTranslationSuccessful)
-            , map((action: UpdateTranslationSuccessful) => {
-                this.translate.use(action.payload.language);
-                return new RefreshTranslation();
-            })
-        );
-
-    @Effect()
     verifyTranslationNeeded: Observable<TranslateActions> = this.actions$
         .pipe(
             ofType(LightCardActionTypes.LoadLightCardsSuccess)
@@ -123,15 +113,11 @@ export class TranslateEffects {
         );
 
     private extractI18nToUpdate(versions: Map<Set<string>>) {
-        return this.store.select(selectI18nUpLoaded).pipe(
-            map((referencedTranslation: Map<Set<string>>) => {
-                return TranslateEffects.extractThirdToUpdate(versions, referencedTranslation)
-            }));
+            return of(TranslateEffects.extractThirdToUpdate(versions, TranslateEffects.i18nBundleVersionLoaded));
     }
 
     static extractPublisherAssociatedWithDistinctVersionsFromCards(cards: LightCard[]): Map<Set<string>> {
         let thirdsAndVersions: TransitionalThirdWithItSVersion[];
-        // See OC-555 to avoid the infinite loop
         thirdsAndVersions = cards.map(card => {
             return new TransitionalThirdWithItSVersion(card.publisher,card.publisherVersion);
         });
@@ -153,7 +139,7 @@ export class TranslateEffects {
 
 
     static extractPublisherAssociatedWithDistinctVersionsFrom(menus: ThirdMenu[]):Map<Set<string>>{
-
+        
         const thirdsAndVersions = menus.map(menu=>{
             return new TransitionalThirdWithItSVersion(menu.id,menu.version);
         })
@@ -203,7 +189,10 @@ export class TranslateEffects {
     }
 
     static sendTranslateAction(versionToUpdate: Map<Set<string>>): TranslateActions {
-        if (versionToUpdate) return new UpdateTranslation({versions: versionToUpdate});
+        if (versionToUpdate) {
+            TranslateEffects.i18nBundleVersionLoaded = {...TranslateEffects.i18nBundleVersionLoaded, ...versionToUpdate};
+            return new UpdateTranslation({versions: versionToUpdate});
+            }
         return new TranslationUpToDate();
     }
 }

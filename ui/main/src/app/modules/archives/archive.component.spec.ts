@@ -16,7 +16,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {TranslateModule} from '@ngx-translate/core';
-import {translateConfig} from '../../translate.config';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ServicesModule} from '@ofServices/services.module';
 import {ArchiveQuerySuccess} from '@ofStore/actions/archive.actions';
@@ -39,7 +38,7 @@ describe('ArchivesComponent', () => {
                 RouterTestingModule,
                 StoreRouterConnectingModule,
                 HttpClientTestingModule,
-                TranslateModule.forRoot(translateConfig)],
+                TranslateModule.forRoot()],
             declarations: [
                 ArchivesComponent,
                 ArchiveFiltersComponent,

@@ -17,7 +17,6 @@ import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
 import {generateThirdWithVersion, getOneRandomLigthCard, getRandomAlphanumericValue} from "@tests/helpers";
 import * as _ from 'lodash';
-import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {LightCard} from "@ofModel/light-card.model";
 import {AuthenticationService} from "@ofServices/authentication/authentication.service";
 import {GuidService} from "@ofServices/guid.service";

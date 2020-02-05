@@ -9,7 +9,6 @@
   <div class="form-group">
     <label for="setting" translate>settings.{{settingPath}}</label>
     <select class="form-control" id="setting" formControlName="setting" [attr.required]="requiredField">
-      <option value=""></option>
       <option *ngFor="let v of preparedList" value="{{v.value}}">{{v.label|async}}</option>
     </select>
     <span class="text-danger" *ngIf="!form.valid">Incorrect submission</span>

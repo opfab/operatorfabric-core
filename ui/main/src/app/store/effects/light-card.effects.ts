@@ -17,6 +17,7 @@ import {
     DelayedLightCardUpdate,
     LightCardActionTypes,
     LightCardAlreadyUpdated,
+    LoadLightCardsFailure,
     ThirdActionAlreadyLoaded,
     ThirdActionAlreadyUpdated,
     UpdateALightCard,
@@ -97,6 +98,7 @@ export class LightCardEffects {
                 return this.store.select(fetchLightCard(lightCardId))
             }),
             switchMap((lightCard: LightCard) => {
+                if (!lightCard) return of(new LoadLightCardsFailure({error: new Error("Light card not loaded in the store yet")}));
                 if (lightCard.actions) {
                     return of(new ThirdActionAlreadyLoaded());
                 }

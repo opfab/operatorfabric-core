@@ -103,14 +103,18 @@ export class TimeService {
      */
 
     initiateTimeReference() {
-        const eventSource = new EventSourcePolyfill(
+      /**  const eventSource = new EventSourcePolyfill(
             environment.urls.time,
             {   headers: this.authService.getSecurityHeader(),
                 heartbeatTimeout: 600000
             } as EventSourceInit);
         this.timeReference$ = this.fetchVirtualTime(eventSource);
         this.store.select(selectTimeReference)
-            .subscribe(timeRef => this.currentTimeReference = timeRef);
+            .subscribe(timeRef => this.currentTimeReference = timeRef); */
+
+            
+// first REMOVE of time service 
+            this.timeReference$ = of(neutralTimeReference);
     }
 
     /**

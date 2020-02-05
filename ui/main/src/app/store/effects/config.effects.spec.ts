@@ -18,6 +18,7 @@ import {
 } from "@ofActions/config.actions";
 import {async} from "@angular/core/testing";
 import {ConfigService} from "@ofServices/config.service";
+import {TranslateService} from "@ngx-translate/core";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {selectConfigRetry} from "@ofSelectors/config.selectors";
@@ -28,6 +29,7 @@ describe('ConfigEffects', () => {
     let effects: ConfigEffects;
     let configService: SpyObj<ConfigService>;
     let mockStore: SpyObj<Store<AppState>>;
+    let translateServMock: SpyObj<TranslateService>;
 
     beforeEach(async(() => {
         configService = jasmine.createSpyObj('ConfigService', ['fetchConfiguration','fetchUserSettings']);
@@ -36,7 +38,8 @@ describe('ConfigEffects', () => {
     }))
     describe('loadConfiguration', () => {
         it('should return a LoadConfigsSuccess when the configService serve configuration', () => {
-            const expectedConfig = {value: {subValue1: 1, subValue2: 2}};
+            
+            const expectedConfig = {value: {subValue1: 1, subValue2: 2},i18n:{supported:"empty"}};
 
             const localActions$ = new Actions(hot('-a--', {a: new LoadConfig()}));
 
@@ -46,7 +49,7 @@ describe('ConfigEffects', () => {
             const expectedAction = new LoadConfigSuccess({config: expectedConfig});
             const localExpected = hot('---c', {c: expectedAction});
 
-            effects = new ConfigEffects(mockStore, localActions$, configService);
+            effects = new ConfigEffects(mockStore, localActions$, configService,translateServMock);
 
             expect(effects).toBeTruthy();
             expect(effects.loadConfiguration).toBeObservable(localExpected);
@@ -55,7 +58,7 @@ describe('ConfigEffects', () => {
 
             const localActions$ = new Actions(hot('-a--', {a: new LoadConfig()}));
             configService.fetchConfiguration.and.returnValue(hot('---#'));
-            effects = new ConfigEffects(mockStore, localActions$, configService);
+            effects = new ConfigEffects(mockStore, localActions$, configService,translateServMock);
             expect(effects).toBeTruthy();
             effects.loadConfiguration.subscribe((action: ConfigActions) => expect(action.type).toEqual(ConfigActionTypes.LoadConfigFailure));
             // expect(effects.loadConfiguration).toBeObservable(localExpected);
@@ -69,7 +72,7 @@ describe('ConfigEffects', () => {
             const expectedAction = new LoadConfig();
             const localExpected = hot('-c', {c: expectedAction});
 
-            effects = new ConfigEffects(mockStore, localActions$, configService,0);
+            effects = new ConfigEffects(mockStore, localActions$, configService,translateServMock,0);
             expect(effects).toBeTruthy();
             expect(effects.retryConfigurationLoading).toBeObservable(localExpected);
         })

@@ -33,13 +33,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
 
     private static final String[] AUTH_WHITELIST = {
-
-            // -- swagger ui
-            "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/swagger.json",
-            "/v2/api-docs",
-            "/webjars/**"
+        // Style is called via <style> , so no token is provided 
+        // Static ressource 
+            "/style**",
     };
 
     @Override
@@ -56,8 +52,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.POST, THIRDS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.PUT, THIRDS_PATH).hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.DELETE, THIRDS_PATH).hasRole(ADMIN_ROLE)
-                .anyRequest().authenticated();
+                .antMatchers(HttpMethod.DELETE, THIRDS_PATH).hasRole(ADMIN_ROLE);
     }
 
 }

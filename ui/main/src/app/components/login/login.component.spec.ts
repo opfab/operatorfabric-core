@@ -16,7 +16,6 @@ import {AuthenticationService} from "@ofServices/authentication/authentication.s
 import {LoginComponent} from "./login.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
-import {translateConfig} from "../../translate.config";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {RejectLogIn, TryToLogIn} from "@ofActions/authentication.actions";
 import {Message, MessageLevel} from "@ofModel/message.model";
@@ -52,7 +51,7 @@ describe('LoginComponent', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 RouterTestingModule,
-                TranslateModule.forRoot(translateConfig),
+                TranslateModule.forRoot(),
                 StoreModule.forRoot(appReducer)
             ],
             declarations: [LoginComponent],
