@@ -105,3 +105,6 @@ gradle-app.setting
 # ignoring sonar generated reports
 .sonar
 .scannerwork
+
+# ignoring .env file needed by docker-compose in deploy containers
+**/deploy/.env
