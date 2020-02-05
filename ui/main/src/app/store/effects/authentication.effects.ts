@@ -292,8 +292,10 @@ export class AuthenticationEffects {
             this.store.select(buildConfigSelector('security.provider-realm')),
             this.store.select(buildConfigSelector('security.provider-url'))
         ).subscribe(([realm, url]) => {
-            const redirect = this.authService.computeRedirectUri();
-            window.location.href = `${url}/auth/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
+            if(realm && url) {
+                const redirect = this.authService.computeRedirectUri();
+                window.location.href = `${url}/auth/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
+            }
         });
         this.cardService.unsubscribeCardOperation();
     }
