@@ -109,11 +109,11 @@ licenseReport {
 
 asciidoctor {
     sources {
-        include 'architecture/index.adoc','start/index.adoc','user_guide/index.adoc','developer_guide/index.adoc'
+        include 'architecture/index.adoc','start/index.adoc','user_guide/index.adoc','developer_guide/index.adoc', 'release_notes/index.adoc'
     }
     resources {
         from('src/docs/asciidoc') {
-            include 'architecture/images/**/*', 'start/images/*'
+            include 'architecture/images/**/*', 'start/images/*', 'user_guide/images/*','developer_guide/images/*', 'release_notes/images/*'
         }
     }
     attributes nofooter : ''
