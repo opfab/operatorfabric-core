@@ -48,6 +48,8 @@ _No administration/user impact._
 * [OC-600] - Minor code correction for security - AUDIT E.
 * [OC-601] - Multiple unchecked CAST - AUDIT E.
 * [OC-602] - Deprecated MongoClient constructor - AUDIT E.
++
+_Today we have only one MongoDB server. But if one day we have several servers then there can only be one login/password for all the servers._
 * [OC-611] - Create missing Unit Test for Implicit flow in the UI
 * [OC-612] - Document the dev keycloak configuration to test implicit flow authentication
 * [OC-622] - Design the new feature of playing a sound when a card is received
