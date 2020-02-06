@@ -1,0 +1,28 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+= OperatorFabric roadmap
+
+
+== Technical Roadmap :
+ 
+* Lighten the software architecture to simplify development and deployment
+* Upgrade the technical stack
+* Implement API testing using KARATE DSL
+
+== Functional Roadmap :
+ 
+* Propose new features such as card routing, sound playing on card’s arrival, triggering actions  …
+* Implement end user tests using tools such as Cypres and Selinium
+* Enhance the UX experience
+
+== Other 
+ * Restructure documentation
+
+
+
+The roadmap is under refinement by the team, a detailed one will be published soonly. 
