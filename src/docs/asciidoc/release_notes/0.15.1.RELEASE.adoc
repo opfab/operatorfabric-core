@@ -1,0 +1,59 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+= Version 0.15.1.RELEASE
+
+== Bug
+* [OC-458] - Fix/test docker-compose
++
+_The containers created by test-environment and test-quality-environment docker-compose now have default
+docker-generated names rather than set names (e.g. *+test-environment_keycloak_1+* rather than *keycloak*). This is
+done to avoid conflicts._
+* [OC-487] - Feed empty or unresponsive when changing user
+* [OC-555] - Firefox request server in an infinite loop when receive card with a valid publisher name but an invalid publisherVersion
+* [OC-615] - Once logged if the user reload the UI the navbar alone is displayed
+
+== Story
+* [OC-616] - As a user I want clearer severity names
+* [OC-618] - As an admin I want to hide some fields in settings page
+
+== Task
+* [OC-496] - Verify that javascript embedded in card data is sanitized
+* [OC-507] - CI/CD hooks should only be triggered on the master branch
++
+_No administration/user impact._
+* [OC-552] - Network and service names should be consistent in docker-compose files
++
+_Creating the *opfabnet* and *operatorfabricnet* networks is no longer required, docker-compose files now rely on
+default docker-generated networks (such as *+deploy_default+*)._
+* [OC-560] - Fix SEVERE warnings in doc generation
++
+_No administration/user impact._
+* [OC-585] - Use generic error messages
+* [OC-595] - Restrict cors for webflux - AUDIT E.
+* [OC-600] - Minor code correction for security - AUDIT E.
+* [OC-601] - Multiple unchecked CAST - AUDIT E.
+* [OC-602] - Deprecated MongoClient constructor - AUDIT E.
+* [OC-611] - Create missing Unit Test for Implicit flow in the UI
+* [OC-612] - Document the dev keycloak configuration to test implicit flow authentication
+* [OC-622] - Design the new feature of playing a sound when a card is received
+* [OC-625] - Fix add_header script and update copyright headers
++
+_Note to contributors: Copyright headers are up to date as of today, please make sure to add headers to any new file
+that you add._
+* [OC-630] - Delete demo docker-compose
++
+_The demo docker compose has been deprecated in favour of using the deploy docker-compose and the push_card_loop as
+described in the https://github.com/opfab/operatorfabric-core#8-docker-demo[README]._
+* [OC-641] - Correct deprecated warning in build
+* [OC-650] - Title and summary in feed do not work
+
+** Sub-task
+* [OC-459] - Remove set container names from test-environment and test-quality-env as well to avoid conflicts?
+_See OC-458_
+** Feature Request
+* [OC-581] - In user settings, all fields there should be maskable
+_See OC-618_
