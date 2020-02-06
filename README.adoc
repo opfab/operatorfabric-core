@@ -573,16 +573,11 @@ build/test-data/
 In addition to these custom tasks and standard Gradle tasks, OperatorFabric
 uses several Gradle plugins, among which:
 
-*
-link:https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/[Spring
-Boot Gradle Plugin]
+* link:https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/[Spring Boot Gradle Plugin]
 * link:https://github.com/palantir/gradle-docker[Palantir Docker Gradle Plugin]
-* link:https://github.com/avast/gradle-docker-compose-plugin/[Docker Compose
-Plugin]
-* link:https://github.com/int128/gradle-swagger-generator-plugin[Gradle
-Swagger Generator Plugin]
-* link:https://github.com/asciidoctor/asciidoctor-gradle-plugin[Gradle
-Asciidoctor Plugin]
+* link:https://github.com/avast/gradle-docker-compose-plugin/[Docker Compose Plugin]
+* link:https://github.com/int128/gradle-swagger-generator-plugin[Gradle Swagger Generator Plugin]
+* link:https://github.com/asciidoctor/asciidoctor-gradle-plugin[Gradle Asciidoctor Plugin]
 
 == Docker demo
 
