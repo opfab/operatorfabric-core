@@ -32,11 +32,7 @@ To start OperatorFabric, you first need to clone the getting started git
 ----
  git clone https://github.com/opfab/operatorfabric-getting-started.git
 ----
-Launch docker-compose up in the server directory. You need to wait for all the services to start (it usually takes one minute to start),it is done when no more logs are written on the output(It could continue to log  but slowly).
-
-----
-docker-compose up & 
-----
+Launch the startserver.sh in the server directory. You need to wait for all the services to start (it usually takes one minute to start),it is done when no more logs are written on the output(It could continue to log  but slowly).
 
 Test the connection to the UI : To connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use tso1-operator as login and test as password. 
 
