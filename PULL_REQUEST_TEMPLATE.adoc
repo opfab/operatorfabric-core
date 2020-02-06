@@ -14,6 +14,13 @@
 
 *Does this PR introduce a breaking change?* _(What changes might users need to make in their application due to this PR?)_
 
+To help users integrate new releases easily, we try to include all the relevant information in release notes
+(pointing to the documentation regarding this new feature is available, what configuration changes are necessary to
+use the new version, what new behaviours/changes does it bring about, etc.).
+In order to do that, please:
+
+*Make sure that your PR includes this information in src/docs/asciidoc/release_notes*
+
 *Other information*:
 
 
