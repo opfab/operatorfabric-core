@@ -113,7 +113,7 @@ asciidoctor {
     }
     resources {
         from('src/docs/asciidoc') {
-            include 'architecture/images/**/*', 'start/images/*'
+            include 'architecture/images/**/*', 'start/images/*', 'user_guide/images/*','developer_guide/images/*', 'release_notes/images/*'
         }
     }
     attributes nofooter : ''
