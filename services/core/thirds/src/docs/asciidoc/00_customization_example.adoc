@@ -97,26 +97,16 @@ It's a description file in `json` format. It lists the content of the bundle.
           } ],
           "actions" : {
             "finish" : {
-              "type" : "URI",
+              "type" : "URL",
               "url": "http://somewher.org/simpleProcess/finish",
               "lockAction" : true,
-              "lockCard" : true,
-              "needsConfirm" : false,
               "called" : false,
-              "updateState" : false,
               "updateStateBeforeAction" : false,
               "hidden" : true,
-              "contentStyle" : "buttonContentClass",
               "buttonStyle" : "buttonClass",
               "label" : {
                 "key" : "my.card.my.action.label"
               },
-              "inputs" : [ {
-                "type" : "TEXT",
-                "label" : { "key" : "simple-process.finsih.comment" },
-                "mandatory" : true,
-                "name" : "comment"
-              } ]
             }
           }
         },
@@ -341,26 +331,16 @@ A process definition is itself a dictionary of states, each key maps to a state 
 
 ....
 {
-  "type" : "URI",
+  "type" : "URL",
   "url": "http://somewher.org/simpleProcess/finish",
   "lockAction" : true,
-  "lockCard" : true,
-  "needsConfirm" : false,
   "called" : false,
-  "updateState" : false,
   "updateStateBeforeAction" : false,
   "hidden" : true,
-  "contentStyle" : "buttonContentClass",
   "buttonStyle" : "buttonClass",
   "label" : {
     "key" : "my.card.my.action.label"
-  },
-  "inputs" : [ {
-    "type" : "TEXT",
-    "label" : { "key" : "simple-process.finsih.comment" },
-    "mandatory" : true,
-    "name" : "comment"
-  } ]
+  }
 }
 ....
 
@@ -376,16 +356,11 @@ specified using curly brackets. Available parameters:
  ** jwt: the jwt token of the user
  ** data.[path]: a path to object in card data structure
 * hidden: if true, action won't be visible on the card but will be available to templates
-* contentStyle: css style classes to apply to the content of the action button
 * buttonStyle: css style classes to apply to the action button
 * label: an i18n key and parameters used to display a tooltip over the button
 * lockAction: not yet implemented
-* lockCard: not yet implemented
-* updateState: not yet implemented
-* updateState: not yet implemented
 * updateStateBeforeAction: not yet implemented
 * called: not yet implemented
-* inputs: input parameters for action submission. Not yet implemented.
 
 For in depth information on the behavior needed for the third party rest endpoints refer to the Actions service reference.
 
@@ -489,7 +464,7 @@ curl -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H  "
 Where:
 
 - `$BUNDLE_FOLDER` is the folder containing the bundle archive to be uploaded.
-- `bundle-test.tar.g` is the name of the uploaded bundle.
+- `bundle-test.tar.gz` is the name of the uploaded bundle.
 
 These command line should return a `200 http status` response with the details of the content of the bundle in the response body such as :
 ....
@@ -548,26 +523,16 @@ These command line should return a `200 http status` response with the details 
             } ],
             "actions" : {
               "finish" : {
-                "type" : "URI",
+                "type" : "URL",
                 "url": "http://somewher.org/simpleProcess/finish",
                 "lockAction" : true,
-                "lockCard" : true,
-                "needsConfirm" : false,
                 "called" : false,
-                "updateState" : false,
                 "updateStateBeforeAction" : false,
                 "hidden" : true,
-                "contentStyle" : "buttonContentClass",
                 "buttonStyle" : "buttonClass",
                 "label" : {
                   "key" : "my.card.my.action.label"
                 },
-                "inputs" : [ {
-                  "type" : "TEXT",
-                  "label" : { "key" : "simple-process.finsih.comment" },
-                  "mandatory" : true,
-                  "name" : "comment"
-                } ]
               }
             }
           },

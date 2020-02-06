@@ -23,7 +23,5 @@ public class ActionsModule extends SimpleModule {
         addAbstractTypeMapping(I18n.class, I18nData.class);
         addAbstractTypeMapping(Action.class, ActionData.class);
         addAbstractTypeMapping(ActionStatus.class, ActionStatusData.class);
-        addAbstractTypeMapping(Input.class, InputData.class);
-        addAbstractTypeMapping(ParameterListItem.class, ParameterListItemData.class);
     }
 }

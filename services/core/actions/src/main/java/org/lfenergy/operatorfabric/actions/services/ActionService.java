@@ -77,8 +77,7 @@ public class ActionService {
                             .message(BAD_STATE_MESSAGE).build());
                 }
                 Action action = this.thirdsService.fetchAction(card.getPublisher(), card.getProcess(), card.getState(), actionKey, BEARER_PREFIX + jwt);
-                if (action != null && (action.getUpdateState() != null && action.getUpdateState()
-                        || action.getUpdateStateBeforeAction() != null && action.getUpdateStateBeforeAction())) {
+                if (action != null && (action.getUpdateStateBeforeAction() != null && action.getUpdateStateBeforeAction())) {
                     return updateAction(action, card, jwt);
                 }
                 if(action!=null)

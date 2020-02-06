@@ -32,14 +32,9 @@ public class ActionData implements Action {
     private String url;
     @NotNull
     private I18n label;
-    @Singular  private List<? extends Input> inputs;
     private String buttonStyle;
-    private String contentStyle;
     private Boolean lockAction;
-    private Boolean lockCard;
-    private Boolean updateState;
     private Boolean updateStateBeforeAction;
     private Boolean called;
-    private Boolean needsConfirm;
     private Boolean hidden;
 }

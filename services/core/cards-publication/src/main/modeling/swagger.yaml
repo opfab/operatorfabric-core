@@ -76,33 +76,13 @@ definitions:
       - COMPLIANT
       - INFORMATION
     example: INFORMATION
-  InputEnum:
-    type: string
-    description: |-
-      Input type >
-      * TEXT - A simple text input (size not limited)
-      * LONGTEXT - A long text input (size not limited)
-      * BOOLEAN - A boolean input
-      * LIST - A list with one selectable value
-      * MULTI_LIST - A list with multiple selectable values
-      * SWITCH_LIST - Two lists with exchangeable values
-      * STATIC - A static non editable parameter
-    enum:
-      - TEXT
-      - LONGTEXT
-      - BOOLEAN
-      - LIST
-      - MULTI_LIST
-      - SWITCH_LIST
-      - STATIC
-    example: TEXT
   ActionEnum:
     type: string
     description: |-
       Action type >
-      * EXTERNAL - Not defined
+      * EXTERNAL - Not defined (not implemented)
       * URL - The action is tied to a url which must conform the specification of 3rd Party actions (see reference manual)
-      * JNLP - The action triggers a JNLP link
+      * JNLP - The action triggers a JNLP link (not implemented)
     enum:
       - EXTERNAL
       - URL
@@ -179,186 +159,6 @@ definitions:
       parameters:
         EN: My Title
         FR: Mon Titre
-  ParameterListItem:
-    description: An item of list input parameter
-    type: object
-    properties:
-      value:
-        type: string
-        description: parameter technical value
-      label:
-        $ref: '#/definitions/I18n'
-        description: Value i18n label
-    required:
-      - value
-    example:
-      value: 42
-      label:
-        key: theAnswer
-        parameters:
-          EN: >-
-            the Answer to the Ultimate Question of Life, the Universe, and
-            Everything
-          FR: 'la Réponse à la Grande Question sur la vie, l''Univers et le Reste'
-  Input:
-    description: Describe an input parameter for an Action
-    type: object
-    properties:
-      type:
-        $ref: '#/definitions/InputEnum'
-        description: 'Parameter type, may imply some mandatory attributes, see description'
-      label:
-        $ref: '#/definitions/I18n'
-        description: internationalized label
-      mandatory:
-        type: boolean
-        default: false
-        description: Is the parameter required
-      name:
-        type: string
-        description: Parameter name (unique in action scope)
-      value:
-        type: string
-        description: Parameter default value
-      maxLength:
-        type: integer
-        description: >-
-          Only for TEXT and LONGTEXT parameters. Specifies the maximum allowed
-          character count
-      rows:
-        type: integer
-        description: LONGTEXT parameter. Specifies the maximum number of displayed rows
-      values:
-        type: array
-        description: >-
-          Only for LIST,MULTI_LIST and SWITCH_LIST parameters. Specifies the
-          selectable items in a list
-        items:
-          $ref: '#/definitions/ParameterListItem'
-      selectedValues:
-        type: array
-        description: >-
-          Only for MULTI_LIST and SWITCH_LIST parameters. List selected value.
-          Order matters.
-        items:
-          type: string
-      unSelectedValues:
-        type: array
-        description: >-
-          Only for SWITCH_LIST parameters. List unselected values. Order
-          matters.
-        items:
-          type: string
-    required:
-      - type
-      - label
-      - name
-    example:
-      type: LIST
-      label:
-        key: myCard.myAction.myInput.label
-        parameters:
-          EN: Colours
-          FR: Couleurs
-      mandatory: true
-      name: selectedColour
-      value:
-        value: '#000000'
-        label:
-          key: black
-          parameters:
-            EN: Paint It Black
-            FR: Broyer du noir
-      values:
-        - value: '#000000'
-          label:
-            key: black
-            parameters:
-              EN: Paint It Black
-              FR: Broyer du noir
-        - value: '#51CE1E'
-          label:
-            key: green
-            parameters:
-              EN: Go Green
-              FR: Se mettre au vert
-  ActionStatus:
-    type: object
-    properties:
-      unlock:
-        type: boolean
-        description: Unlock action button upon client return after action submission
-        default: true
-      disabled:
-        type: boolean
-        description: disable action button upon client return
-        default: false
-      label:
-        description: 'updated button label, if null no change'
-        $ref: '#/definitions/I18n'
-      contentStyle:
-        type: string
-        description: css classes of action button content (a &lt;i&gt; tag)
-      buttonStyle:
-        type: string
-        description: css classes of action button
-      inputs:
-        description: >-
-          list of action input parameters, generate a popup form upon action
-          call
-        type: array
-        items:
-          $ref: '#/definitions/Input'
-    example:
-      unlock: true
-      disabled: false
-      label:
-        key: myCard.myAction.label
-        parameters:
-          EN: Update colour
-          FR: Choisir une nouvelle couleur
-      contentStyle: buttonContent.css
-      buttonStyle: button.css
-      inputs:
-        - type: LIST
-          label:
-            key: myCard.myAction.myInput1.label
-            parameters:
-              EN: Colours
-              FR: Couleurs
-          mandatory: true
-          name: selectedColour
-          value:
-            value: '#000000'
-            label:
-              key: black
-              parameters:
-                EN: Paint It Black
-                FR: Broyer du noir
-          values:
-            - value: '#000000'
-              label:
-                key: black
-                parameters:
-                  EN: Paint It Black
-                  FR: Broyer du noir
-            - value: '#51CE1E'
-              label:
-                key: green
-                parameters:
-                  EN: Go Green
-                  FR: Se mettre au vert
-        - type: LONGTEXT
-          label:
-            key: myCard.myAction.myInput2.label
-            parameters:
-              EN: Comment
-              FR: Commentaire
-          mandatory: false
-          name: comment
-          value: ''
-          maxLength: 250
-          rows: 10
   CardCreationReport:
     type: object
     properties:
@@ -632,44 +432,15 @@ definitions:
       actions:
         - type: URL
           lockAction: true
-          lockCard: true
-          needsConfirm: false
           called: false
-          updateState: false
           updateStateBeforeAction: false
           hidden: true
-          contentStyle: buttonContent.css
           buttonStyle: button.css
           label:
             key: myCard.myAction.label
             parameters:
               EN: My actions label
               FR: Mon intitule d'actions
-          inputs:
-            - type: LIST
-              label:
-                key: myCard.myAction.myInput1.label
-                parameters:
-                  EN: Available options
-                  FR: Options disponibles
-              mandatory: true
-              name: selectedOption
-              value: plan B
-              values:
-                - plan A
-                - plan B
-                - plan C
-            - type: LONGTEXT
-              label:
-                key: myCard.myAction.myInput2.label
-                parameters:
-                  EN: Comment
-                  FR: Commentaire
-              mandatory: false
-              name: comment
-              value: ''
-              maxLength: 250
-              rows: 10
       details:
         title:
           key: myCard.title
@@ -1194,51 +965,3 @@ paths:
                   description: Authentication required
                 '403':
                   description: Forbidden - User doesn't have any group
-  '/cards/{id}/actions/{actionKey}':
-    parameters:
-      - in: path
-        name: id
-        type: string
-        required: true
-        description: "The id parameter is constructed as follows : {publisher}_{processId}"
-      - in: path
-        name: actionKey
-        type: string
-        required: true
-    get:
-      operationId: fetchProcessCardAction
-      tags:
-        - cards
-        - actions
-        - read
-      summary: Fetch action status
-      description: >-
-        Fetch an updated action status for action to update client side
-        representation
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ActionStatus'
-        '401':
-          description: Authentication required
-        '403':
-          description: Forbidden - User doesn't have any group
-    put:
-      operationId: triggerProcessCardAction
-      tags:
-        - cards
-        - actions
-      summary: Trigger action
-      description: >-
-        Trigger corresponding action in OperatorFabric, returns ActionStatus
-        upon action realization
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ActionStatus'

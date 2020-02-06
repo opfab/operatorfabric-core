@@ -99,8 +99,8 @@ describe('DetailComponent', () => {
         const processesMap:OfMap<Process> = new OfMap();
         const statesMap:OfMap<State> = new OfMap();
         const actionMap:OfMap<Action> = new OfMap();
-        actionMap['hidden2']=new Action(ActionType.URL, getRandomI18nData(), true,'btn-light','fa fa-warning text-dark');
-        actionMap['hidden1']=new Action(ActionType.URL, getRandomI18nData(), true,'buttonStyle','contentStyle');
+        actionMap['hidden2']=new Action(ActionType.URL, getRandomI18nData(), true,'btn-light');
+        actionMap['hidden1']=new Action(ActionType.URL, getRandomI18nData(), true,'buttonStyle');
         statesMap['state01']=new State(null,actionMap);
         processesMap['process01']=new Process(statesMap);
         const third = getOneRandomThird({
@@ -135,12 +135,8 @@ describe('DetailComponent', () => {
             fixture.detectChanges();
             expect(fixture.nativeElement.children[0].children[0].classList[0]).toEqual('btn');
             expect(fixture.nativeElement.children[0].children[0].classList[1]).toEqual('buttonStyle');
-            expect(fixture.nativeElement.children[0].children[0].children[0].classList[0]).toEqual('contentStyle');
             expect(fixture.nativeElement.children[0].children[1].classList[0]).toEqual('btn');
             expect(fixture.nativeElement.children[0].children[1].classList[1]).toEqual('btn-light');
-            expect(fixture.nativeElement.children[0].children[1].children[0].classList[0]).toEqual('fa');
-            expect(fixture.nativeElement.children[0].children[1].children[0].classList[1]).toEqual('fa-warning');
-            expect(fixture.nativeElement.children[0].children[1].children[0].classList[2]).toEqual('text-dark');
             const alertSpy = spyOn(window, 'alert').and.callThrough();
             fixture.nativeElement.children[0].children[0].click();
             expect(alertSpy.calls.count()).toEqual(1);

@@ -86,14 +86,9 @@ export class Action {
         readonly label: I18n,
         readonly hidden: boolean = false,
         readonly buttonStyle: string = '',
-        readonly contentStyle: string = '',
-        readonly inputs: Input[] = [],
         readonly lockAction: boolean = false,
-        readonly lockCard: boolean = false,
-        readonly updateState: boolean = false,
         readonly updateStateBeforeAction: boolean = false,
         readonly called: boolean = false,
-        readonly needsConfirm: boolean = false,
         readonly key?: string
     ) {
     }
@@ -109,12 +104,7 @@ export class ActionStatus {
         readonly label: I18n,
         readonly hidden: boolean = false,
         readonly buttonStyle: string = '',
-        readonly contentStyle: string = '',
-        readonly inputs: Input[] = [],
-        readonly lockCard: boolean = false,
-        readonly updateState: boolean = false,
         readonly updateStateBeforeAction: boolean = false,
-        readonly needsConfirm: boolean = false,
         readonly lockAction: boolean = false,
     ) {
     }
@@ -143,12 +133,7 @@ export function extractActionStatusFromPseudoActionStatus(tAction: object): Acti
         label
         , tAction['hidden']
         , tAction['buttonStyle']
-        , tAction['contentStyle']
-        , tAction['inputs'] // TODO Need proper prototype handling
-        , tAction['lockCard']
-        , tAction['updateState']
         , tAction['updateStateBeforeAction']
-        , tAction['needsConfirm']
         , tAction['lockAction']
     );
     return result;
