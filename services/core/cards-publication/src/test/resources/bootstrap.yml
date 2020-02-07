@@ -1,3 +1,6 @@
 spring:
   application:
     name: cards-publication
+logging:
+  level:
+    root: DEBUG

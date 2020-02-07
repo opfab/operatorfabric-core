@@ -16,11 +16,10 @@ buildscript {
         classpath boot.springBootPlugin
         classpath generator.swaggerGeneratorPlugin
         classpath misc.palantir
+
     }
 }
-
 subprojects {
-
     /////// PLUGINS
     if (!project.name.equals("infra")&&!project.name.equals("core")&&!project.name.equals("web")) {
         apply plugin: 'java'
@@ -45,8 +44,11 @@ subprojects {
 
             testAnnotationProcessor misc.lombok
             testCompileOnly misc.lombok
-            testRuntimeOnly testing.junit5Engine
-            testImplementation testing.junit5Api
+//            testRuntimeOnly testing.junit5Engine
+            testRuntimeOnly "org.junit.jupiter:junit-jupiter:${versions['junit5']}"
+            testImplementation "org.junit.jupiter:junit-jupiter:${versions['junit5']}"
+
+//            testImplementation testing.junit5Api
             testImplementation boot.starterTest, testing.assertJ
             testImplementation project(':tools:generic:test-utilities')
             testImplementation testing.awaitility
@@ -73,6 +75,7 @@ subprojects {
 
         test {
             useJUnitPlatform()
+
             filter {
                 includeTestsMatching "*Should"
             }
@@ -80,9 +83,6 @@ subprojects {
 
         task unitTest(type: Test) {
             description 'runs unit tests'
-            useJUnitPlatform {
-                excludeTags "end-to-end"
-            }
             filter {
                 includeTestsMatching "*Should"
             }
