@@ -16,7 +16,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${provider-url}/auth/realms/${provider-realm}/protocol/openid-connect/certs
+          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
 #          jwk-set-uri: http://localhost:3000/auth/jwks.json
   data:
     mongodb:
