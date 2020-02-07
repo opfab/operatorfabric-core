@@ -15,6 +15,8 @@ done to avoid conflicts._
 * [OC-487] - Feed empty or unresponsive when changing user
 * [OC-555] - Firefox request server in an infinite loop when receive card with a valid publisher name but an invalid publisherVersion
 * [OC-615] - Once logged if the user reload the UI the navbar alone is displayed
++
+_See configuration https://opfab.github.io/documentation/0.15.1.SNAPSHOT/user_guide/#_web_ui[doc] and  see https://opfab.github.io/documentation/0.15.1.SNAPSHOT/user_guide/#_operator_fabric_specific_configuration[doc]: add the relam name and keycloak server instance ip address to web-ui.json and application.yml_
 
 == Story
 * [OC-579] - As a developer/contributor I want to be able to pull the SNAPSHOT tag from DockerHub rather than having to
@@ -27,6 +29,8 @@ _Now, for each microservice DockerHub will offer the following tags:_
 ** _latest: Shortcut for the latest release._
 * [OC-616] - As a user I want clearer severity names
 * [OC-618] - As an admin I want to hide some fields in settings page
++
+_See the *web-ui* configuration doc from here:  https://opfab.github.io/documentation/0.15.1.SNAPSHOT/user_guide/#_web_ui[Service specific properties]. (All the properties starting with *operatorfabric.settings.infos*)_
 
 == Task
 * [OC-367] - Fix travis script regarding "latest" docker images on dockerhub
