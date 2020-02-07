@@ -12,8 +12,8 @@
 _The containers created by test-environment and test-quality-environment docker-compose now have default
 docker-generated names rather than set names (e.g. *+test-environment_keycloak_1+* rather than *keycloak*). This is
 done to avoid conflicts._
+* [OC-442] - Cards in the feed aren't no longer sorted according to their arrival 
 * [OC-487] - Feed empty or unresponsive when changing user
-* [OC-555] - Firefox request server in an infinite loop when receive card with a valid publisher name but an invalid publisherVersion
 * [OC-615] - Once logged if the user reload the UI the navbar alone is displayed
 +
 _See configuration https://opfab.github.io/documentation/0.15.1.SNAPSHOT/user_guide/#_web_ui[doc] and  see https://opfab.github.io/documentation/0.15.1.SNAPSHOT/user_guide/#_operator_fabric_specific_configuration[doc]: add the relam name and keycloak server instance ip address to web-ui.json and application.yml_
@@ -67,6 +67,6 @@ that you add._
 _The demo docker compose has been deprecated in favour of using the deploy docker-compose and the push_card_loop as
 described in the https://github.com/opfab/operatorfabric-core#8-docker-demo[README]._
 * [OC-641] - Correct deprecated warning in build
-* [OC-650] - Title and summary in feed do not work
+
 
 
