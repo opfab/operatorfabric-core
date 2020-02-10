@@ -108,6 +108,12 @@ class GivenNonAdminUserThirdControllerShould {
     }
 
     @Test
+    void fetchNonExistingThirds() throws Exception {
+        mockMvc.perform(get("/thirds/DOES_NOT_EXIST"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void fetchCssResource() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/thirds/first/css/style1")

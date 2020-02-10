@@ -64,10 +64,4 @@ public class ThirdsServiceWithWrongConfigurationShould {
     mockMvc.perform(multipart("/thirds").file(bundle))
        .andExpect(status().isBadRequest());
   }
-
-  @Test
-  void getNonExistingThirds() throws Exception {
-    mockMvc.perform(get("/thirds/DOES_NOT_EXIST"))
-            .andExpect(status().isNotFound());
-  }
 }
