@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -62,5 +63,11 @@ public class ThirdsServiceWithWrongConfigurationShould {
        .readAllBytes(pathToBundle));
     mockMvc.perform(multipart("/thirds").file(bundle))
        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void getNonExistingThirds() throws Exception {
+    mockMvc.perform(get("/thirds/DOES_NOT_EXIST"))
+            .andExpect(status().isNotFound());
   }
 }
