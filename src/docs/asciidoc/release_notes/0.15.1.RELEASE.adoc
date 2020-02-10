@@ -16,7 +16,7 @@ done to avoid conflicts._
 * [OC-487] - Feed empty or unresponsive when changing user
 * [OC-615] - Once logged if the user reload the UI the navbar alone is displayed
 +
-_See configuration https://opfab.github.io/documentation/0.15.1.SNAPSHOT/user_guide/#_web_ui[doc] and  see https://opfab.github.io/documentation/0.15.1.SNAPSHOT/user_guide/#_operator_fabric_specific_configuration[doc]: add the relam name and keycloak server instance ip address to web-ui.json and application.yml_
+_See configuration https://opfab.github.io/documentation/0.15.1.RELEASE/user_guide/#_web_ui[doc] and  see https://opfab.github.io/documentation/0.15.1.RELEASE/user_guide/#_operator_fabric_specific_configuration[doc]: add the relam name and keycloak server instance ip address to web-ui.json and application.yml_
 
 == Story
 * [OC-579] -Now, for each microservice DockerHub will offer the following tags:
@@ -34,7 +34,7 @@ It is necessary to remove or modify card created with previous version in the mo
 
 * [OC-618] - Add the possibility  to hide some fields in settings page
 +
-_See the *web-ui* configuration doc from here:  https://opfab.github.io/documentation/0.15.1.SNAPSHOT/user_guide/#_web_ui[Service specific properties]. (All the properties starting with *operatorfabric.settings.infos*)_
+_See the *web-ui* configuration doc from here:  https://opfab.github.io/documentation/0.15.1.RELEASE/user_guide/#_web_ui[Service specific properties]. (All the properties starting with *operatorfabric.settings.infos*)_
 
 == Task
 
@@ -57,7 +57,7 @@ _Today we have only one MongoDB server. But if one day we have several servers t
 * [OC-611] - Create missing Unit Test for Implicit flow in the UI
 * [OC-612] - Document the dev keycloak configuration to test implicit flow authentication
 +
-_See the *web-ui* configuration doc frome here: link:https://opfab.github.io/documentation/0.15.1.SNAPSHOT/user_guide/#_operator_fabric_specific_configuration[OperatorFabric User Guide]_
+_See the *web-ui* configuration doc frome here: link:https://opfab.github.io/documentation/0.15.1.RELEASE/user_guide/#_operator_fabric_specific_configuration[OperatorFabric User Guide]_
 * [OC-625] - Fix add_header script and update copyright headers
 +
 _Note to contributors: Copyright headers are up to date as of today, please make sure to add headers to any new file

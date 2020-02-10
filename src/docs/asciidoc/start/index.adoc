@@ -7,8 +7,8 @@
 
 
 
-:revnumber: 0.15.1.SNAPSHOT
-:revdate: 17 January 2020
+:revnumber: 0.15.1.RELEASE
+:revdate: 10 February 2020
 :imagesdir: images
 :sectnums:
 :toc: left
