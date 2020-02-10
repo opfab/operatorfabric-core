@@ -5,3 +5,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 = Version 0.16.1.RELEASE
+
+== Bug
+* [OC-549] - Thirds API does't return 404 when requested third doesn't exist.
