@@ -6,7 +6,7 @@
 
 = OperatorFabric Release Notes
 :author: David Binder; Boris Dolley; Alexandra Guironnet; Ronan Le Gall
-:revnumber: 0.15.1.RELEASE
+:revnumber: 0.16.1.SNAPSHOT
 :revdate: 10 February 2020
 :imagesdir: images
 :sectnums:

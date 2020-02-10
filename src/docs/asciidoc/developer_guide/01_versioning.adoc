@@ -159,9 +159,6 @@ This post should highlight new features and necessary upgrade actions if any.
 
 . Send the same content as an email to the opfab-announce@lists.lfenergy.org mailing list.
 
-
-
-
 === Preparing next version
 
 IMPORTANT: You should wait for all the tasks associated with creating the X.X.X.RELEASE
@@ -189,6 +186,9 @@ IMPORTANT: The VERSION file is particularly important as the CI/CD pipeline task
 (building the documentation and the docker images for example) are based on it.
 +
 NOTE: If no --version parameter is provided to the script, the new version will be the next minor version.
++
+. Add a Y.Y.Y.RELEASE.adoc file (blank except for copyright and title) under src/docs/asciidoc/release_notes to initialize the release
+notes for next version.
 +
 . Commit and push changes with the following message:
 +
