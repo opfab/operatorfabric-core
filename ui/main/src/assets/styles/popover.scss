@@ -8,7 +8,7 @@
 
 @import "variables";
 
-/deep/ .popover{
+::ng-deep .popover{
   background-color: $dark;
   color: $light;
 }

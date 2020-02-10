@@ -27,7 +27,7 @@ $cell-width: 10;
   display: table-cell;
 }
 
-/deep/ .popover {
+::ng-deep .popover {
   background-color: $dark;
   .popover-header {
     color: $light;

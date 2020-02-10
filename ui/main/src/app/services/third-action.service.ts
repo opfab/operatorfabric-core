@@ -39,7 +39,7 @@ export class ThirdActionService {
 
     checkIfReceivedStatusIsDifferentFromCurrentOne(formerStatus: ActionStatus) {
         const status = extractActionStatusFromPseudoActionStatus(formerStatus);
-        return map(currentStatus => {
+        return map((currentStatus: ActionStatus) => {
             const normalizedCurrentStatus = extractActionStatusFromPseudoActionStatus(currentStatus);
             const hasChanged = !_.isEqual(status, normalizedCurrentStatus);
             return [hasChanged, currentStatus];
