@@ -20,7 +20,7 @@ import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
 import {UserApplicationRegistered} from '@ofStore/actions/user.actions';
 import {User} from '@ofModel/user.model';
-import moment = require("moment-timezone");
+import moment from "moment-timezone";
 import SpyObj = jasmine.SpyObj;
 
 describe('TimeEffects', () => {
