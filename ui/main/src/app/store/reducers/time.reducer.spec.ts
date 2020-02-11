@@ -12,7 +12,7 @@ import {neutralTimeReference, TimeReference, TimeSpeed} from "@ofModel/time.mode
 import {Message, MessageLevel} from "@ofModel/message.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map} from "@ofModel/map";
-import moment = require("moment-timezone");
+import moment from "moment-timezone";
 
 describe('TimeReducer', () => {
 
