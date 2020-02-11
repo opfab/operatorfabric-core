@@ -10,7 +10,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MultiFilterComponent } from './multi-filter.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { translateConfig } from 'app/translate.config';
 import { HttpClientModule } from '@angular/common/http';
 import { zip } from 'rxjs';
 
@@ -24,7 +23,7 @@ describe('MultiFilterComponent', () => {
         ReactiveFormsModule,
         FormsModule,
         HttpClientModule,
-        TranslateModule.forRoot(translateConfig)
+        TranslateModule.forRoot()
       ],
       declarations: [ MultiFilterComponent ]
     })

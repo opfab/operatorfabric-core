@@ -125,7 +125,7 @@ export class ThirdsService {
         return this.httpClient.get<Third[]>(`${this.thirdsUrl}/`).pipe(
             switchMap(ts => from(ts)),
             filter((t: Third) => !(!t.menuEntries)),
-            map(t =>
+            map(t => 
                 new ThirdMenu(t.name, t.version, t.i18nLabelKey, t.menuEntries)
             ),
             reduce((menus: ThirdMenu[], menu: ThirdMenu) => {
@@ -147,8 +147,13 @@ export class ThirdsService {
             params,
             responseType: 'text'
         }).pipe(map((json: string) => {
-            const obj = JSON.parse(json);
-            return new Map<string, Action>(Object.entries(obj));
+            // json empty in this case no action 
+            if (json.length>1)
+                {
+                const obj = JSON.parse(json);
+                return new Map<string, Action>(Object.entries(obj));
+                }
+            return new Map<string,Action>();
         }));
     }
 }

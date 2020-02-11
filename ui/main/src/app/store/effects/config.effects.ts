@@ -9,6 +9,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
+import {TranslateService} from "@ngx-translate/core";
 import {Observable} from 'rxjs';
 import {catchError, delay, filter, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {ConfigService} from '@ofServices/config.service';
@@ -25,6 +26,8 @@ export class ConfigEffects {
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private service: ConfigService,
+                private translate: TranslateService,
+
                 @Inject('configRetryDelay')
                 private retryDelay: number = 5000,
     ) {
@@ -57,6 +60,7 @@ export class ConfigEffects {
             ofType<LoadConfig>(ConfigActionTypes.LoadConfig),
             switchMap(action => this.service.fetchConfiguration()),
             map((config: any) => {
+                this.initSupportedLocales(config);
                 return new LoadConfigSuccess({config: config});
             }),
             catchError((err, caught) => {
@@ -70,5 +74,9 @@ export class ConfigEffects {
      */
     @Effect()
     retryConfigurationLoading: Observable<Action>;
+
+    private initSupportedLocales(config: any) {
+        if (config.i18n.supported.locales) this.translate.addLangs(config.i18n.supported.locales);
+    }
     
 }

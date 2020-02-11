@@ -23,7 +23,6 @@ import {Actions} from "@ngrx/effects";
 import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {hot} from "jasmine-marbles";
 import {TranslateService} from "@ngx-translate/core";
-import {selectI18nUpLoaded} from "@ofSelectors/translation.selectors";
 import {ThirdsService} from "@ofServices/thirds.service";
 import SpyObj = jasmine.SpyObj;
 

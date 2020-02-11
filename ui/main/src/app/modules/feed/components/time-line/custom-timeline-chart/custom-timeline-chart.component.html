@@ -51,13 +51,13 @@
               [attr.y]="-10" stroke="'grey'"
               [attr.fill]="'grey'"
               text-anchor="middle" stroke-width="1px"
-              [attr.font-size]="11" dy=".3em"> {{timeService.predefinedFormat(xRealTimeLine, 'realTimeBarFormat')}}</text>
+              [attr.font-size]="11" dy=".3em">{{timeService.predefinedFormat(xRealTimeLine, 'realTimeBarFormat')}}</text>
         <text *ngIf="underDayPeriod"
               [attr.x]="50"
               [attr.y]="-10" stroke="'black'"
               [attr.fill]="'black'"
               text-anchor="middle" stroke-width="1px"
-              [attr.font-size]="12" dy=".3em"> {{dateFirstTick}}</text>
+              [attr.font-size]="12" dy=".3em">{{dateFirstTick}}</text>
         <svg:rect *ngIf="realTimeBar && checkInsideDomain(xRealTimeLine)"
                   [attr.x]="timeScale(xRealTimeLine)"
                   [attr.width]="5"
@@ -81,7 +81,7 @@
                 />
                 <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count < 100"
                       [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)"
-                      stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> {{myCircle.count}} </text>
+                      stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em">{{myCircle.count}} </text>
                 <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count > 99"
                       [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)"
                       stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> +99 </text>

@@ -21,7 +21,6 @@ import {NavbarComponent} from './components/navbar/navbar.component';
 import {LoginComponent} from './components/login/login.component';
 import {IconComponent} from './components/navbar/icon/icon.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {translateConfig} from './translate.config';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faExternalLinkAlt, faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
@@ -46,7 +45,7 @@ library.add(faSignOutAlt);
         StateModule.forRoot(),
         ServicesModule.forRoot(),
         NgbModule,
-        TranslateModule.forRoot(translateConfig),
+        TranslateModule.forRoot(),
         FontAwesomeModule,
         UtilitiesModule,
         AppRoutingModule

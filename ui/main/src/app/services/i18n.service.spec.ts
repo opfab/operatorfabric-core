@@ -6,7 +6,8 @@
  */
 
 
-import {TestBed} from '@angular/core/testing';
+import {getTestBed, TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {I18nService} from "@ofServices/i18n.service";
@@ -22,6 +23,7 @@ import {configInitialState} from "@ofStates/config.state";
 describe('I18nService', () => {
 
     let mockStore: SpyObj<Store<AppState>>;
+    let httpMock: HttpTestingController;
     let emptyAppState: AppState = {
         ...emptyAppState4Test,
         config: configInitialState
@@ -30,12 +32,15 @@ describe('I18nService', () => {
     beforeEach(() => {
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
         TestBed.configureTestingModule({
-            imports: [TranslateModule.forRoot({
+            imports: [
+                HttpClientTestingModule,
+                TranslateModule.forRoot({
                 useDefaultLang: false
             })],
             providers: [I18nService, {provide: Store, useValue: storeSpy}]
         });
         mockStore = TestBed.get(Store);
+        httpMock = getTestBed().get(HttpTestingController);
         mockStore.select.and.callFake(selector => {
             return of({
                 ...emptyAppState, settings: {
@@ -60,6 +65,8 @@ describe('I18nService', () => {
                 try {
                     expect(service.locale).toEqual('de');
                     expect(service.timeZone).toEqual('America/Thule');
+                    let calls = httpMock.match(req => req.url.endsWith("assets/i18n/de.json"));
+                    expect(calls.length).toEqual(1);
                 } finally {
 
                     done();
