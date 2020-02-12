@@ -90,7 +90,14 @@ public class ThirdsController implements ThirdsApi {
 
     @Override
     public Third getThird(HttpServletRequest request, HttpServletResponse response, @PathVariable String thirdName, String apiVersion) {
-        return service.fetch(thirdName, apiVersion);
+        Third third = service.fetch(thirdName, apiVersion);
+        if (third == null) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.NOT_FOUND)
+                    .message(String.format("Third with name %s was not found", thirdName))
+                    .build());
+        }
+        return third;
     }
 
     @Override
