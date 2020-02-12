@@ -14,6 +14,6 @@ export const implicitAuthenticationConfigFallback: AuthConfig = {
     silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
     clientId: 'opfab-client',
     scope: 'openid profile email',
-    showDebugInformation: true,
+    showDebugInformation: false,
     sessionChecksEnabled: false
 };

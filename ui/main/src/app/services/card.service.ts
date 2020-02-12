@@ -51,7 +51,11 @@ export class CardService {
             `${this.cardOperationsUrl}&notification=true&rangeStart=${minus2Hour.valueOf()}&rangeEnd=${plus48Hours.valueOf()}`
             , {
                 headers: this.authService.getSecurityHeader(),
-                heartbeatTimeout: 600000
+                // We loose sometimes cards  when reconnecting after a heatbeat timeout
+                // there 's no way to inhibe this heardbeat timeout so putting it to 31536000000 milliseconds make it sufficiently long (1 year)
+                // Anyway the token will expire long before and the connection will restart 
+                
+                heartbeatTimeout: 31536000000
             }));
     }
 
