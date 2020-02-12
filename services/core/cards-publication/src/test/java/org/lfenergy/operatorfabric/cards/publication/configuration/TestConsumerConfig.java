@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Profile;
  * <p></p>
  * Created on 06/08/18
  *
- * @author David Binder
+ *
  */
 @Configuration
 @Profile("test")

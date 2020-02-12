@@ -22,7 +22,6 @@ import javax.validation.Valid;
 /**
  * Asynchronous controller
  *
- * @author David Binder
  */
 @RestController
 @RequestMapping("/async/cards")

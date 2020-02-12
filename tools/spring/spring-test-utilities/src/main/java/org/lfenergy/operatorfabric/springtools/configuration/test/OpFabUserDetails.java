@@ -21,7 +21,7 @@ import static org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2
  * This class extends the OperatorFabric custom {@link User} and implements Spring Security's {@link UserDetails} to serve as a mock in tests (see {@link WithMockOpFabUser})
  * A separate class had to be created in the users-business-service module for the same purpose (see details there) so any changes made in this class should be reflected there.
  *
- * @author Alexandra Guironnet
+ *
  */
 public class OpFabUserDetails extends User implements UserDetails {
 

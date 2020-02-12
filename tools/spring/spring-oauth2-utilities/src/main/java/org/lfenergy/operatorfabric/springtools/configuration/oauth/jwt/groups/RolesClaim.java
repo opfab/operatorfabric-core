@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Contains all type of RoleClaim (RoleClaimStandard, rolesClaimStandardList, rolesClaimStandardArray or RoleClaimCheckExistPath for instance...)
- * @author chengyli
+ *
  *
  */
 @Data

@@ -28,7 +28,7 @@ import java.util.Optional;
  * This component solely serve as data intializer for users and groups, it loads users and group from properties
  * configuration and insert or update them as needed
  *
- * @author David Binder
+ *
  */
 @Component
 @Slf4j

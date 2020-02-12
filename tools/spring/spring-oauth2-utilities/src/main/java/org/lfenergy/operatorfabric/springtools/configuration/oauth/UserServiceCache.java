@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * as well as clearing the cache on request.</p>
  * A dedicated class had to be created because caching annotations won't work if the cached method is called from its own class.
  *
- * @author Alexandra Guironnet
+ *
  */
 @EnableCaching
 @Component

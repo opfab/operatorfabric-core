@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Test class for custom serializer for {@link Instant}
  *
  *
- * @author Alexandra Guironnet
+ *
  */
 public class InstantSerializerShould {
 

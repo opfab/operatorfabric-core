@@ -16,7 +16,6 @@ import reactor.core.publisher.Flux;
 /**
  * <p>Auto generated spring mongo reactive repository to access Archived Card collection</p>
  *
- * @author David Binder
  */
 @Repository
 public interface ArchivedCardRepository extends ReactiveMongoRepository<ArchivedCardPublicationData,String> {

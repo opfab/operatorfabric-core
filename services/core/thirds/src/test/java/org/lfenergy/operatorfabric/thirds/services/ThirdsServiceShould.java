@@ -38,7 +38,7 @@ import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
  * <p></p>
  * Created on 16/04/18
  *
- * @author David Binder
+ *
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class})

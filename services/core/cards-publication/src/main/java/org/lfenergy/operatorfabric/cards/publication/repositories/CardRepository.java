@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 /**
  * <p>Auto generated spring mongo reactive repository to access Card collection</p>
  *
- * @author David Binder
  */
 @Repository
 public interface CardRepository extends ReactiveMongoRepository<CardPublicationData,String> {

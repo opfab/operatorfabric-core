@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 /**
  * Feign proxy for User service
  *
- * @author David Binder
+ *
  */
 @FeignClient(value = "cards-consultation", primary = false)
 public interface CardConsultationServiceProxy {

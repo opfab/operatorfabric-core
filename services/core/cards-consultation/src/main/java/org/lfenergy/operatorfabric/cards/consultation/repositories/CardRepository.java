@@ -18,7 +18,7 @@ import java.time.Instant;
 /**
  * <p>Custom spring mongo reactive repository to access {@link org.lfenergy.operatorfabric.cards.consultation.model.Card} mongodb collection</p>
  *
- * @author David Binder
+ *
  */
 @Repository
 public interface CardRepository extends ReactiveMongoRepository<CardConsultationData, String>, CardOperationRepository, CardCustomRepository {

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Utility class to retrieve the GrantedAuthority list through a jwt
- * @author chengyli
+ *
  *
  */
 

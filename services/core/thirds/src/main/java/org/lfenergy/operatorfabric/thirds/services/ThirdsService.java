@@ -36,7 +36,6 @@ import java.util.stream.Stream;
 /**
  * Thirds Service for managing Third properties and resources
  *
- * @author David Binder
  */
 @Service
 @Slf4j

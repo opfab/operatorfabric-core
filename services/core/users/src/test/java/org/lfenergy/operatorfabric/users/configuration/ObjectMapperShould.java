@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p></p>
  * Created on 06/08/18
  *
- * @author David Binder
+ *
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes={UnitTestApplication.class, JacksonConfig.class})

@@ -14,7 +14,6 @@ import org.lfenergy.operatorfabric.cards.consultation.model.*;
 /**
  * Jackson (JSON) Business Module configuration
  *
- * @author David Binder
  */
 public class CardsModule extends SimpleModule {
 

@@ -24,7 +24,6 @@ import java.util.Queue;
  * <p></p>
  * Created on 06/08/18
  *
- * @author David Binder
  */
 @Component
 @Slf4j

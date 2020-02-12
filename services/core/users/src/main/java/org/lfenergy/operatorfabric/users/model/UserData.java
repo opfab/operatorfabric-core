@@ -22,7 +22,6 @@ import java.util.*;
  *
  * {@inheritDoc}
  *
- * @author David Binder
  */
 @Document(collection = "user")
 @Data

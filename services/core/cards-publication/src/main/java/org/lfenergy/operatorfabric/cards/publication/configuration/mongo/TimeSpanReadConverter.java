@@ -21,7 +21,7 @@ import java.time.Instant;
  * <p>Spring converter registered in mongo conversions</p>
  * <p>Converts {@link Document} to {@link TimeSpan} using {@link TimeSpanPublicationData} builder</p>
  *
- * @author David Binder
+ *
  */
 public class TimeSpanReadConverter implements Converter<Document, TimeSpan> {
 

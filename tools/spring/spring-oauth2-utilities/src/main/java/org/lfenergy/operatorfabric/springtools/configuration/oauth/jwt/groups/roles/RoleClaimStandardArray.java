@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Define the structure of the RoleClaimStandardArray, the common use case which dealts the case of an array value.
- * @author chengyli
+ *
  *
  */
 @Data

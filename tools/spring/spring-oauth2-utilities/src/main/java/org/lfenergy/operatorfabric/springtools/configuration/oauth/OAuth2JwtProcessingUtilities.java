@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Some share utilities
  *
- * @author David Binder
+ *
  */
 public class OAuth2JwtProcessingUtilities {
 

@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * Custom serializer to serialize {@link PageImpl}
  *
- * @author Alexandra Guironnet
+ *
  */
 public class PageImplSerializer extends StdSerializer<Page> {
 

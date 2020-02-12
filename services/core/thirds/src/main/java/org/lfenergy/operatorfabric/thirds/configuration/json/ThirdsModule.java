@@ -14,7 +14,7 @@ import org.lfenergy.operatorfabric.thirds.model.*;
 /**
  * Jackson (JSON) Business Module configuration
  *
- * @author David Binder
+ *
  */
 public class ThirdsModule extends SimpleModule {
 

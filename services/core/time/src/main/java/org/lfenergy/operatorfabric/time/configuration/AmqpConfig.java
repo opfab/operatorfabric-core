@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * AMQP exchange configuration
  *
- * @author David Binder
+ *
  */
 @Configuration
 public class AmqpConfig {

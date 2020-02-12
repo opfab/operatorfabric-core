@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Specific mongo converter declaration configuration
  *
- * @author David Binder
+ *
  */
 @Component
 public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {

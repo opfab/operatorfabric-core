@@ -43,7 +43,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.prepa
  * <p></p>
  * Created on 24/07/18
  *
- * @author David Binder
+ *
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = IntegrationTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

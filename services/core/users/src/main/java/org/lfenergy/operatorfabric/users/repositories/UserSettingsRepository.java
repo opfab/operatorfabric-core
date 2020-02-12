@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Mongo {@link UserData} repository
- * @author David Binder
+ *
  */
 @Repository
 public interface UserSettingsRepository extends MongoRepository<UserSettingsData,String> {

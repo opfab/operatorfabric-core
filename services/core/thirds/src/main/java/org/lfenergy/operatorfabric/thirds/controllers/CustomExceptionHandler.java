@@ -31,7 +31,6 @@ import java.io.IOException;
  * @see ApiError
  * @see ApiErrorException
  *
- * @author David Binder
  */
 @RestControllerAdvice
 @Slf4j

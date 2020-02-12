@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 /**
  * Collection of assertion utilities
  *
- * @author David Binder
+ *
  */
 public class AssertUtils {
 

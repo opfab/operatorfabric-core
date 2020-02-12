@@ -15,7 +15,7 @@ import org.springframework.context.event.EventListener;
 /**
  * <p>Listens for {@link UpdatedUserEvent} to clear user cache for a given user.</p>
  * See issue #64
- * @author Alexandra Guironnet
+ *
  */
 @Configuration
 public class UpdateUserEventListener {

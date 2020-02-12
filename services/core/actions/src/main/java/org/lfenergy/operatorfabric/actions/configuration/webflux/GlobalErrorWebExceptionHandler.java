@@ -30,7 +30,7 @@ import java.util.Map;
  * {@link ApiErrorException}. In this case froward its associated
  * {@link org.lfenergy.operatorfabric.springtools.error.model.ApiError} object</p>
  *
- * @author David Binder
+ *
  */
 @Component
 @Order(-2)

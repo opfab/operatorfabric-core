@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Import;
  * <p></p>
  * Created on 29/10/18
  *
- * @author David Binder
+ *
  */
 @SpringBootApplication
 @Slf4j

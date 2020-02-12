@@ -32,7 +32,6 @@ import java.util.List;
 /**
  * GroupsController, documented at {@link GroupsApi}
  *
- * @author David Binder
  */
 @RestController
 @RequestMapping("/groups")

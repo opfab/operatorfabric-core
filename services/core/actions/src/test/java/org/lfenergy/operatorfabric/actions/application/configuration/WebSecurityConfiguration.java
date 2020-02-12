@@ -23,7 +23,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
  *  - Disable csrf
  *  - Remove configuration of OAuth2ResourceServer
  *
- * @author David Binder
+ *
  */
 @Configuration
 @Slf4j

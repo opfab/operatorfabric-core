@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  * <li>operatorfabric.notification.timeout: maximum wait time before treatment window creation</li>
  * </ul>
  *
- * @author David Binder
+ *
  */
 @Service
 @Slf4j

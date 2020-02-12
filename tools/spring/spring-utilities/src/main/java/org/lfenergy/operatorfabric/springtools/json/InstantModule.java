@@ -15,7 +15,7 @@ import java.time.Instant;
 /**
  * Jackson (JSON) Module configuration to handle {@link Instant} as number of milliseconds since Epoch
  *
- * @author Alexandra Guironnet
+ *
  */
 public class InstantModule extends SimpleModule {
 

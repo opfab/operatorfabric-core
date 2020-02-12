@@ -55,7 +55,6 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
  * <p></p>
  * Created on 30/07/18
  *
- * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CardPublicationApplication.class)

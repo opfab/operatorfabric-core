@@ -21,7 +21,7 @@ import java.util.List;
  *
  * {@inheritDoc}
  *
- * @author David Binder
+ *
  */
 @Data
 @NoArgsConstructor

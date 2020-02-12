@@ -22,7 +22,6 @@ import java.util.List;
  * <p>Spring converter registered in mongo conversions</p>
  * <p>Converts {@link Document} to {@link Detail} using {@link DetailConsultationData} builder.</p>
  *
- * @author David Binder
  */
 public class DetailReadConverter implements Converter<Document, Detail> {
 

@@ -19,7 +19,7 @@ import java.util.Collection;
 /**
  * Custom OperatorFabric Jwt Authentication Token whose custom principal is a {@link User} object
  *
- * @author David Binder
+ *
  */
 public class OpFabJwtAuthenticationToken extends JwtAuthenticationToken {
     @Getter

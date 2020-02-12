@@ -22,7 +22,7 @@ import java.time.Instant;
  *
  * {@inheritDoc}
  *
- * @author David Binder
+ *
  */
 @Data
 @AllArgsConstructor

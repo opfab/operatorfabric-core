@@ -18,7 +18,6 @@ import java.util.List;
 
 /**
  * Mongo {@link UserData} repository
- * @author David Binder
  */
 @Repository
 public interface UserRepository extends MongoRepository<UserData,String> {

@@ -20,7 +20,7 @@ import java.time.Instant;
 /**
  * Receives message from time queue and updates the local {@link VirtualTime instance}
  *
- * @author David Binder
+ *
  */
 public class TimeReceiver {
 

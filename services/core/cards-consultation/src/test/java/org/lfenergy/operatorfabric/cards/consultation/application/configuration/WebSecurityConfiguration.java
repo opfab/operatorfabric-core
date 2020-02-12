@@ -25,7 +25,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.configuration.webfl
  *  - Disable csrf
  *  - Remove configuration of OAuth2ResourceServer
  *
- * @author David Binder
+ *
  */
 @Configuration
 @Slf4j

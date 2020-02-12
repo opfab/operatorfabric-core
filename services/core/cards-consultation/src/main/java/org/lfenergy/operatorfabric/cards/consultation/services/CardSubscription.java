@@ -32,7 +32,7 @@ import java.time.Instant;
  * See amqp.xml resource file ([project]/services/core/cards-publication/src/main/resources/amqp.xml)
  * for their exact configuration</p>
  *
- * @author David Binder
+ *
  */
 @Slf4j
 @EqualsAndHashCode

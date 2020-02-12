@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * TODO can't remember the reason of this code, explore and remove if not needed
  *
- * @author David Binder
+ *
  */
 @Configuration
 public class GatewayConfig {

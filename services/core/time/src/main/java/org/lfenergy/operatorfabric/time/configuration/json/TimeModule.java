@@ -15,7 +15,7 @@ import org.lfenergy.operatorfabric.time.model.TimeData;
 /**
  * Jackson (JSON) Business Module configuration
  *
- * @author David Binder
+ *
  */
 public class TimeModule extends SimpleModule {
 

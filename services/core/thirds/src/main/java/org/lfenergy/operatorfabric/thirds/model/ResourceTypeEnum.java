@@ -21,7 +21,6 @@ import lombok.Getter;
  *     <dt>MENU_ITEM</dt><dd>Menu item resource type</dd>
  * </dl>
  *
- * @author David Binder
  */
 @Getter
 @AllArgsConstructor

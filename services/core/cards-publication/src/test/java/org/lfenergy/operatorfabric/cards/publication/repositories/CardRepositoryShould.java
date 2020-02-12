@@ -35,7 +35,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p></p>
  * Created on 24/07/18
  *
- * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CardPublicationApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
