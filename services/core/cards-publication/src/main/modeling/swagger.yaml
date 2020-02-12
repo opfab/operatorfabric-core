@@ -496,7 +496,7 @@ definitions:
         description: Span start
       end:
         $ref: '#/definitions/EpochDate'
-        description: Span start
+        description: Span end (must be after start)
       display:
         $ref: '#/definitions/TimeSpanDisplayModeEnum'
         description: >-
@@ -551,7 +551,7 @@ definitions:
         description: Card validity start time
       endDate:
         $ref: '#/definitions/EpochDate'
-        description: Card validity end time
+        description: Card validity end time (must be after startDate)
       severity:
         $ref: '#/definitions/SeverityEnum'
         description: Card severity

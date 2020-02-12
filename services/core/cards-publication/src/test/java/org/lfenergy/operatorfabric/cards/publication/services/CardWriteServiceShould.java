@@ -370,7 +370,22 @@ class CardWriteServiceShould {
     }
 //FIXME unify way test cards are created throughout tests
     private List<CardPublicationData> instantiateServeralRandomCards(EasyRandom randomGenerator, int cardNumber) {
-        return randomGenerator.objects(CardPublicationData.class, cardNumber).collect(Collectors.toList());
+
+        List<CardPublicationData> cardsList = randomGenerator.objects(CardPublicationData.class, cardNumber).collect(Collectors.toList());
+
+        //endDate must be after startDate
+        if (cardsList != null)
+            for (int i = 0; i < cardsList.size(); i++){
+                if (cardsList.get(i) != null) {
+                    Instant startDateInstant = cardsList.get(i).getStartDate();
+                    Instant endDateInstant = cardsList.get(i).getEndDate();
+
+                    if ((startDateInstant != null) && (endDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0))
+                        cardsList.get(i).setEndDate(startDateInstant.plusSeconds(86400));
+                }
+            }
+
+        return cardsList;
     }
 
     @NotNull
