@@ -22,7 +22,7 @@ import java.util.Map;
  * to {@link org.lfenergy.operatorfabric.springtools.error.model.ApiError} if underlying exception is instance of
  * {@link ApiErrorException}
  * </p>
- * @author David Binder
+ *
  */
 @Component
 public class GlobalErrorAttributes extends DefaultErrorAttributes {

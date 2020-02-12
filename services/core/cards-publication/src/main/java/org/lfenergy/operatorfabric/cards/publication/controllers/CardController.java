@@ -23,7 +23,6 @@ import javax.validation.Valid;
 /**
  * Synchronous controller
  *
- * @author David Binder
  */
 @RestController
 @RequestMapping("/cards")

@@ -14,7 +14,7 @@ import org.springframework.cloud.bus.event.RemoteApplicationEvent;
  * <p>Custom event fired by users-business-service when a user is updated.</p>
  * See issue #64
  *
- * @author Alexandra Guironnet
+ *
  */
 public class UpdatedUserEvent extends RemoteApplicationEvent {
 

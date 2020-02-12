@@ -23,7 +23,6 @@ import static org.lfenergy.operatorfabric.cards.publication.model.RecipientPubli
  * <p></p>
  * Created on 26/10/18
  *
- * @author David Binder
  */
 public class RecipientProcessorShould {
 

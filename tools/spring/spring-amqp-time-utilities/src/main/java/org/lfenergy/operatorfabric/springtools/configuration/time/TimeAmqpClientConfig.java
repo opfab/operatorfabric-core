@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Configures time client
  *
- * @author David Binder
+ *
  */
 @Configuration
 @Slf4j

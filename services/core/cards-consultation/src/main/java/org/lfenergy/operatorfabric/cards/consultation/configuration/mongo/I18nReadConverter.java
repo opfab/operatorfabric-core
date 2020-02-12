@@ -20,7 +20,6 @@ import java.util.Map;
  * <p>Spring converter registered in mongo conversions</p>
  * <p>Converts {@link Document} to {@link I18n} using {@link I18nConsultationData} builder.</p>
  *
- * @author David Binder
  */
 public class I18nReadConverter implements Converter<Document, I18n> {
     @Override

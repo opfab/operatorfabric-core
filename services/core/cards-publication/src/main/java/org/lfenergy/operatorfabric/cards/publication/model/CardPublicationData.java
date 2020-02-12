@@ -30,7 +30,7 @@ import java.util.UUID;
  * <p>
  * {@inheritDoc}
  *
- * @author David Binder
+ *
  */
 @Data
 @Document(collection = "cards")

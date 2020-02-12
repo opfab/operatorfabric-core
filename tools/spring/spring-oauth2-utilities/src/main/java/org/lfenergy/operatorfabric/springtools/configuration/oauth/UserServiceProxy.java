@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 /**
  * Feign proxy for User service
  *
- * @author David Binder
+ *
  */
 //@FeignClient(value = "users", primary = false)
 public interface UserServiceProxy {

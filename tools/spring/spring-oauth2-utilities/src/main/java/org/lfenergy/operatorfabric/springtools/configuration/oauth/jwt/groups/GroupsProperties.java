@@ -20,7 +20,7 @@ import lombok.Data;
 /**
  * Define how to get the roles from a JWT mode or from the OPERATOR_FABRIC mode
  * 
- * @author chengyli
+ *
  *
  */
 

@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Creates {@link SecurityContext} containing token holding {@link WithMockOpFabUser} principal
  *
- * @author Alexandra Guironnet
+ *
  */
 public class WithMockOpFabUserSecurityContextFactory implements WithSecurityContextFactory<WithMockOpFabUser> {
 

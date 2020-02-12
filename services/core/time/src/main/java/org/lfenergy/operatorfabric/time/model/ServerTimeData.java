@@ -17,7 +17,6 @@ import java.time.Instant;
  *
  * {@inheritDoc}
  *
- * @author David Binder
  */
 @NoArgsConstructor
 public class ServerTimeData extends ClientTimeData implements TimeData {

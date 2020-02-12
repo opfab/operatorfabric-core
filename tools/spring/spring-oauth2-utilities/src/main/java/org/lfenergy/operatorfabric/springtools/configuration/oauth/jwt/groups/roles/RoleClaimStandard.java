@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Define the structure of the RoleClaimStandard, the most common use case, which is a key/value system.
- * @author chengyli
+ *
  */
 @Data
 @NoArgsConstructor

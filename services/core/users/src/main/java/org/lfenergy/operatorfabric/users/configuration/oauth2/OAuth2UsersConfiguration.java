@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * necessary because access depending on roles is now used in the
  * WebSecurityConfiguration of this service.
  *
- * @author Alexandra Guironnet
+ *
  */
 @Configuration
 @Import({GroupsProperties.class, GroupsUtils.class, JwtProperties.class})

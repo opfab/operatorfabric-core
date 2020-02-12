@@ -26,7 +26,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
  * <p></p>
  * Created on 29/10/18
  *
- * @author David Binder
+ *
  */
 @SpringBootApplication
 @Slf4j

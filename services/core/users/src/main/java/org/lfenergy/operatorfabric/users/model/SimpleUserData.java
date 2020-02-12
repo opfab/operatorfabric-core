@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
  *
  * {@inheritDoc}
  *
- * @author David Binder
  */
 @Data
 @NoArgsConstructor

@@ -67,7 +67,7 @@ import java.util.function.Function;
  * <li>operatorfabric.write.timeout: maximum wait time before treatment window creation</li>
  * </ul>
  *
- * @author David Binder
+ *
  */
 @Service
 @Slf4j

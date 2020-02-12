@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Common configuration (MVC and Webflux)
  *
- * @author David Binder
+ *
  */
 @Configuration
 @EnableFeignClients

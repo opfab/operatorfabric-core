@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Property object to gather OperatorFabric specific mongo properties
- * @author David Binder
+ *
  */
 @Configuration
 @ConfigurationProperties("spring.data.mongodb")

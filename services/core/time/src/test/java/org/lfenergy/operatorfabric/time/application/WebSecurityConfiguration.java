@@ -19,7 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  *  - Disable csrf
  *  - Remove configuration of OAuth2ResourceServer
  *
- * @author Alexandra Guironnet
+ *
  */
 @Configuration
 @Slf4j

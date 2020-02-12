@@ -22,7 +22,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
  * <p>Feign interceptor used to add OAuth2  authentication to http headers :</p>
  * {@code Authorization: Bearer [token]}
  *
- * @author David Binder
+ *
  */
 @Slf4j
 public class OAuth2FeignRequestInterceptor implements RequestInterceptor {

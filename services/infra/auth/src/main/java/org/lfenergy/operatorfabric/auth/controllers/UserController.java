@@ -18,7 +18,6 @@ import java.security.Principal;
 /**
  * Endpoint to expose user info for an authorized user
  *
- * @author David Binder
  */
 @RestController
 @Slf4j

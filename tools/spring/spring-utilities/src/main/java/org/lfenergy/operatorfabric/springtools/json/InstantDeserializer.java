@@ -19,7 +19,7 @@ import java.time.Instant;
 /**
  * Custom deserializer to turn number of milliseconds from Epoch into corresponding {@link Instant}
  *
- * @author Alexandra Guironnet
+ *
  */
 public class InstantDeserializer extends StdDeserializer<Instant> {
 

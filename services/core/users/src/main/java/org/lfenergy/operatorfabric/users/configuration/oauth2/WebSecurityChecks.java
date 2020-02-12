@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * WebSecurityChecks
  * This class defines the access checks that can be performed, for use in {@link WebSecurityConfiguration}
  *
- * @author Alexandra Guironnet
+ *
  */
 
 @Component

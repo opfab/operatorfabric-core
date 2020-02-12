@@ -37,7 +37,7 @@ import java.time.Instant;
 /**
  * <p>Handles cards access at the rest level. Depends on {@link CardSubscriptionService} for business logic</p>
  *
- * @author David Binder
+ *
  */
 @Component
 @Slf4j

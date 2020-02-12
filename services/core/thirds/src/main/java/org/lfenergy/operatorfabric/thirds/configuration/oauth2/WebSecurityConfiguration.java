@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 /**
  * OAuth 2 http authentication configuration and access rules
  *
- * @author Alexandra Guironnet
+ *
  */
 @Configuration
 @Slf4j

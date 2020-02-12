@@ -21,7 +21,6 @@ package org.lfenergy.operatorfabric.cards.model;
  *
  * Created on 10/07/18
  *
- * @author David Binder
  */
 public enum SeverityEnum {
     ALARM,

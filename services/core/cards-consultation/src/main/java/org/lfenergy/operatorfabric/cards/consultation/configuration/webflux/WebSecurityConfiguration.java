@@ -27,7 +27,6 @@ import reactor.core.publisher.Mono;
 /**
  * Configures web security
  *
- * @author David Binder
  */
 @Configuration
 @Slf4j

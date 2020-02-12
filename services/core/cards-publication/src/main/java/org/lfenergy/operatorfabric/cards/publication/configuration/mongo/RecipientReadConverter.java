@@ -22,7 +22,6 @@ import java.util.List;
  * <p>Converts {@link Document} to {@link Recipient} using
  * {@link RecipientPublicationData} builder</p>
  *
- * @author David Binder
  */
 public class RecipientReadConverter implements Converter<Document,Recipient> {
     @Override

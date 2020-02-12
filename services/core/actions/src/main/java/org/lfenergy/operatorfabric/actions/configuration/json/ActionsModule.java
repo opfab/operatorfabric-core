@@ -14,7 +14,7 @@ import org.lfenergy.operatorfabric.actions.model.*;
 /**
  * Jackson (JSON) Business Module configuration
  *
- * @author David Binder
+ *
  */
 public class ActionsModule extends SimpleModule {
 

@@ -19,7 +19,6 @@ import org.springframework.core.convert.converter.Converter;
  * <p>Converts {@link Document} to {@link ParameterListItem} using {@link ParameterListItemConsultationData} builder
  * .</p>
  *
- * @author David Binder
  */
 public class ParameterListItemReadConverter implements Converter<Document,ParameterListItem> {
 

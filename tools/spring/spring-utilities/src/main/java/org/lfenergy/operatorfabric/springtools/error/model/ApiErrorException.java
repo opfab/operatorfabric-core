@@ -14,7 +14,7 @@ import lombok.Getter;
  * Exception used to to throw error during endpoint access. Encapsulate both an {@link ApiError} object and a cause
  * exception from business layer
  *
- * @author David Binder
+ *
  */
 @Getter()
 public class ApiErrorException extends RuntimeException {

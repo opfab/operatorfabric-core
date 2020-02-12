@@ -22,7 +22,7 @@ import java.util.List;
  * The behaviour is similar to the OpFabUserDetails class defined in the tools/spring/spring-test-utilities module used by the other services, which extends the User class from the client-data module.
  * This clashed with the User interface already present in the users-business-service module (same qualified name), so a separate class had to be created for the Users service, this time implementing the User interface.
  *
- * @author Alexandra Guironnet
+ *
  */
 @AllArgsConstructor
 public class OpFabUserDetails implements UserDetails, User {

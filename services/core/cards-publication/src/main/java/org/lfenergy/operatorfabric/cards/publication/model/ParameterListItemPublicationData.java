@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
  *
  * {@inheritDoc}
  *
- * @author David Binder
+ *
  */
 @Data
 @NoArgsConstructor

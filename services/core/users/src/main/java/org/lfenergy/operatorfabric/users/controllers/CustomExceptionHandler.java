@@ -32,7 +32,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * @see org.lfenergy.operatorfabric.springtools.error.model.ApiError
  * @see ApiErrorException
  *
- * @author David Binder
  */
 @RestControllerAdvice
 @Slf4j

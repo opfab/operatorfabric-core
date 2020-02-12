@@ -37,7 +37,6 @@ import static org.awaitility.Awaitility.await;
  * <p></p>
  * Created on 29/10/18
  *
- * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class,CardSubscriptionService.class})

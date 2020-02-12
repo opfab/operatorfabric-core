@@ -34,7 +34,7 @@ import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.*;
 import static reactor.util.function.Tuples.of;
 
 /**
- * @author Alexandra Guironnet
+ *
  */
 
 @ExtendWith(SpringExtension.class)

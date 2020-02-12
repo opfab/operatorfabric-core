@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 /**
  * Define the structure of the RoleClaimStandardList, an extension of RoleClaimStandard 
  * that dealts the case of key/value whose the value is a list of roles separated by a separator.
- * @author chengyli
+ *
  *
  */
 @Data

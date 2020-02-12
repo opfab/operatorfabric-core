@@ -27,7 +27,7 @@ import java.util.Set;
  * <p>
  * {@inheritDoc}
  *
- * @author David Binder
+ *
  */
 @Data
 @NoArgsConstructor

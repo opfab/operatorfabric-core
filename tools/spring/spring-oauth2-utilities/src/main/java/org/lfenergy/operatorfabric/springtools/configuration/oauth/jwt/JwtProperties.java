@@ -14,7 +14,7 @@ import lombok.Data;
 
 /**
  * define the jwt properties
- * @author chengyli
+ *
  *
  */
 

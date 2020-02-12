@@ -30,7 +30,7 @@ import java.util.concurrent.ScheduledFuture;
  *
  * <p>Uses a {@link ThreadPoolTaskScheduler} delay definitive deletion of subscription (defaults to 10s)</p>
  *
- * @author David Binder
+ *
  */
 @Service
 @Slf4j

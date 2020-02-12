@@ -16,7 +16,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 /**
  * Sets up gateway application
  *
- * @author David
  */
 @SpringBootApplication
 @EnableDiscoveryClient

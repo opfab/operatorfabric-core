@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 /**
  * <p>Enables Mongo generic configuration for OperatorFabric (see {@link MongoConfiguration})</p>
  *
- * @author David Binder
+ *
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

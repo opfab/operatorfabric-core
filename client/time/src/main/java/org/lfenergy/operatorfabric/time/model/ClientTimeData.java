@@ -25,7 +25,6 @@ import java.time.Instant;
  *   <dt>speed</dt><dd>Speed of virtual time flow</dd>
  * </dl>
  *
- * @author David Binder
  */
 @Data
 @AllArgsConstructor

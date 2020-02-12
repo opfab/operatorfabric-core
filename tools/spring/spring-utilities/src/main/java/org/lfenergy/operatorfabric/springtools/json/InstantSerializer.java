@@ -18,7 +18,7 @@ import java.time.Instant;
 /**
  * Custom serializer to serialize {@link Instant} as number of milliseconds from Epoch rather than timestamp.
  *
- * @author Alexandra Guironnet
+ *
  */
 public class InstantSerializer extends StdSerializer<Instant> {
 

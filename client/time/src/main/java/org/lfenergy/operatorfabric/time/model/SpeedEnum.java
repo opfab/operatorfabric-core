@@ -21,7 +21,7 @@ package org.lfenergy.operatorfabric.time.model;
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Time API.
  *
- * @author David Binder
+ *
  */
 public enum SpeedEnum {
   X1(1f), X2(2f), X10(10f), X60(60f), X3600(3600f), HALF(.5f);

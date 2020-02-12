@@ -25,7 +25,7 @@ import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
  * <basePath></basePath>
  * Created on 22/06/18
  *
- * @author David Binder
+ *
  */
 @Slf4j
 public class PathUtilsShould {

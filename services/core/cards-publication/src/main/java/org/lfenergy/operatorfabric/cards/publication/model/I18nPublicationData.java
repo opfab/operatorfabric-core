@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * {@inheritDoc}
  *
- * @author David Binder
+ *
  */
 @Data
 @Builder

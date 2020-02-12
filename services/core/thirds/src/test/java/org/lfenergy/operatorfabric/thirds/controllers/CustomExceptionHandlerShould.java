@@ -30,7 +30,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
  * <p></p>
  * Created on 18/06/18
  *
- * @author David Binder
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class})

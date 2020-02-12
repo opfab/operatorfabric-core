@@ -30,7 +30,6 @@ import java.util.List;
 /**
  * UsersController, documented at {@link UsersApi}
  *
- * @author David Binder
  */
 @RestController
 @RequestMapping("/users")

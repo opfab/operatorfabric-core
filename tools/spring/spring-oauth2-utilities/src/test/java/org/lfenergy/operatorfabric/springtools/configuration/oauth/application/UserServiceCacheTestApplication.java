@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  * <p></p>
  * Created on 28/01/19
  *
- * @author Alexandra Guironnet
+ *
  */
 @SpringBootApplication
 @EnableConfigurationProperties

@@ -34,7 +34,6 @@ import java.util.Map;
 /**
  * ThirdController, documented at {@link ThirdsApi}
  *
- * @author David Binder
  */
 @RestController
 @Slf4j

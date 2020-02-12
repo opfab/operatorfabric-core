@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * Define the structure of the RoleClaim.
  * Must contain the field path, which defines where will be the key in the JWT structure.
  * 
- * @author chengyli
+ *
  *
  */
 @Data

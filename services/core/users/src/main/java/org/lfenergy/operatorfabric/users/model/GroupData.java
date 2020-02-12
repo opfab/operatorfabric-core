@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * {@inheritDoc}
  *
- * @author David Binder
  */
 @Document(collection = "group")
 @Data

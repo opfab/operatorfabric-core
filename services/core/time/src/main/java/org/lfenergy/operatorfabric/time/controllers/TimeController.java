@@ -33,7 +33,6 @@ import java.time.Instant;
 /**
  * The Time Api exposing method to manipulate time, documented at {@link TimeApi}
  *
- * @author David Binder
  */
 @RestController
 @RequestMapping("time")

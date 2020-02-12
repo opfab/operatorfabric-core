@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * Path manipulation utility
  *
- * @author David Binder
+ *
  */
 @Slf4j
 public class PathUtils {

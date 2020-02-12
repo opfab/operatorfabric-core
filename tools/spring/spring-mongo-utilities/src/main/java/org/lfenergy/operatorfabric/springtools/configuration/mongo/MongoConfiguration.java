@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
  * <li>Mongo bean validation</li>
  * </ul>
  *
- * @author David binder
+ *
  */
 @Slf4j
 @Configuration

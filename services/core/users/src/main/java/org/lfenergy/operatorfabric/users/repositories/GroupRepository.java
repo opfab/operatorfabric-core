@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Mongo {@link GroupData} repository
- * @author David Binder
  */
 @Repository
 public interface GroupRepository extends MongoRepository<GroupData,String> {

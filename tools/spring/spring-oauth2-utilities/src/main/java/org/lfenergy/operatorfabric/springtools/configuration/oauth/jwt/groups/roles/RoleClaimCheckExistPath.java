@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 /**
  * Define the structure of the RoleClaimCheckExistPath.
  * It is a specific case to retrieve a role through a path value.
- * @author chengyli
+ *
  *
  */
 @Data

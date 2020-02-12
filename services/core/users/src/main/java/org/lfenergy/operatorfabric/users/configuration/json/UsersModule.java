@@ -14,7 +14,7 @@ import org.lfenergy.operatorfabric.users.model.*;
 /**
  * Jackson (JSON) Business Module configuration
  *
- * @author David Binder
+ *
  */
 public class UsersModule extends SimpleModule {
 

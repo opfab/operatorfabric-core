@@ -22,7 +22,6 @@ import java.util.List;
  * <p>Spring converter registered in mongo conversions</p>
  * <p>Converts {@link Document} to {@link LightCard} using {@link LightCardConsultationData} builder.</p>
  *
- * @author David Binder
  */
 @Slf4j
 public class LightCardReadConverter implements Converter<Document, LightCard> {

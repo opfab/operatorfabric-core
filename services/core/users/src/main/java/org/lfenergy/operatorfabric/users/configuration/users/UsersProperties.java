@@ -26,7 +26,7 @@ import java.util.List;
  * <p>See {@link org.lfenergy.operatorfabric.users.model.User} and {@link org.lfenergy.operatorfabric.users.model.Group}
  * for data structure details</p>
  *
- * @author David Binder
+ *
  */
 @ConfigurationProperties("operatorfabric.users.default")
 @Component

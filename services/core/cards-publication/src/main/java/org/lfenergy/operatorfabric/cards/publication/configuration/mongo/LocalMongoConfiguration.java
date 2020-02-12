@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Configures mongo {@link org.bson.Document} to Business objects converters
  *
- * @author David Binder
  */
 @Component
 public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {

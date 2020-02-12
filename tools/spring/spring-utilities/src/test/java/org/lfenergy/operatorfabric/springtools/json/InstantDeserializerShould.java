@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Test class for custom deserializer for {@link Instant}
  *
  *
- * @author Alexandra Guironnet
+ *
  */
 public class InstantDeserializerShould {
 

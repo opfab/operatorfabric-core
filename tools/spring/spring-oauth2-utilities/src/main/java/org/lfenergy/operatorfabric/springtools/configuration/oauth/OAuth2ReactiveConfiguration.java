@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
  *
  * FIXME probably useless since Spring security 5.1.1. Check it.
  *
- * @author David Binder
+ *
  */
 @Configuration
 public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{
