@@ -29,7 +29,7 @@ configurations {
 
 jar {
     manifest {
-        attributes("Created-By"         : "David Binder",
+        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
                 "Specification-Title": "OperatorFabric Microservices Gateway",
                 "Main-Class"         : "org.lfenergy.operatorfabric.gateway.GatewayApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))

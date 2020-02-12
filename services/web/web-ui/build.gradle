@@ -1,6 +1,6 @@
 jar {
 	manifest {
-		attributes("Created-By"      : "David Binder",
+		attributes("Created-By"      : "Gradle ${gradle.gradleVersion}",
 				"Specification-Title": "Web UI service",
 				"Main-Class"         : "org.lfenergy.operatorfabric.webui.WebUiApplication",
 				"Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))

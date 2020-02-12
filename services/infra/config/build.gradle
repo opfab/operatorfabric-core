@@ -9,7 +9,7 @@ configurations {
 
 jar {
     manifest {
-        attributes("Created-By"         : "David Binder",
+        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
                 "Specification-Title": "OperatorFabric Centralized configuration",
                 "Main-Class"         : "org.lfenergy.operatorfabric.config.ConfigurationApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))

@@ -11,7 +11,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes("Created-By"         : "David Binder",
+        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
                 "Specification-Title": "OperatorFabric Action Service",
                 "Main-Class"         : "org.lfenergy.operatorfabric.actions.ActionApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
