@@ -6,7 +6,7 @@
 
 
 = Client Thirds Data Model Reference Documentation
-:revnumber: 0.13.1.SNAPSHOT
+:revnumber: 0.16.1.SNAPSHOT
 :revdate: 10 February 2020
 :imagesdir: images
 :sectnums:
