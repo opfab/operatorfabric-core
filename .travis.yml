@@ -8,7 +8,7 @@ addons:
 services:
   - docker
 env:
-  - NODE_VERSION="v10.10.0"
+  - NODE_VERSION="v10.16.3"
 language: java
 before_install:
   - npm i -g npm@6.4.1
