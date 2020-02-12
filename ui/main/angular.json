@@ -26,7 +26,8 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/silent-refresh.html"
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
