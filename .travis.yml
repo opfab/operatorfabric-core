@@ -8,10 +8,10 @@ addons:
 services:
   - docker
 env:
-  - NODE_VERSION=10
+  - NODE_VERSION="v10.16.3"
 language: java
 before_install:
-  - npm i -g npm@6.4.1
+  - nvm install $NODE_VERSION
   - sudo apt-get install realpath
   - export OF_VERSION=$(cat VERSION)
   # Load cached docker images
