@@ -7,10 +7,8 @@ addons:
             secure: ${SONAR_TOKEN}
 services:
   - docker
-#env:
-#  - NODE_VERSION=10
-node_js:
-  - "10"
+env:
+  - NODE_VERSION=10
 language: java
 before_install:
   - npm i -g npm@6.4.1
