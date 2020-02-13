@@ -20,6 +20,7 @@ import {
     CheckImplicitFlowAuthenticationStatus,
     RejectLogIn,
     TryToLogIn,
+    TryToLogOut
 } from '@ofActions/authentication.actions';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {catchError, flatMap, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -257,6 +258,15 @@ export class AuthenticationEffects {
                 map(() => {
                     return new  AcceptLogIn(this.authService.providePayloadForSuccessfulAuthenticationFromImplicitFlow());
                 }));
+    @Effect()
+    UnableToRefreshToken: Observable<Action> =
+        this.actions$.pipe(
+            ofType(AuthenticationActionTypes.UnableToRefreshToken),
+            switchMap(() => {
+                window.alert("you have been disconnected");
+                return of(new TryToLogOut());
+            })
+        );
 
     handleErrorOnTokenGeneration(errorResponse, category: string) {
         let message, key;

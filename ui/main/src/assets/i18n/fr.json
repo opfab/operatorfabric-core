@@ -44,6 +44,7 @@
       "code":"Mauvais code d'authentification",
       "unavailable":"Le service d'authentification n'est pas disponible",
       "unexpected":"Une erreur inattendue a été détectée : {{error}}",
+      "disconnected": "Vous avez été deconnecté",
       "token": {
         "invalid": "Le jeton conservé est invalide",
         "expiration": "Le jeton conservé a expiré"
