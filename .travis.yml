@@ -12,6 +12,10 @@ env:
 language: java
 before_install:
   - npm i -g npm@6.4.1
+  - curl -s "https://get.sdkman.io" | bash
+  - source "$PWD/.sdkman/bin/sdkman-init.sh"
+  - echo sdkman_auto_answer=true > ~/.sdkman/etc/config
+  - source "$PWD/.sdkman/bin/sdkman-init.sh"
   - sdk install gradle 6.1.1
   - sudo apt-get install realpath
   - export OF_VERSION=$(cat VERSION)
