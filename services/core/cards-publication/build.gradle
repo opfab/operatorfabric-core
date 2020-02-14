@@ -23,4 +23,8 @@ swaggerSources {
     }
 }
 
+jacoco {
+    toolVersion="0.8.5"
+}
+
 println "current jacoco plugin version: ${jacoco.toolVersion}"
