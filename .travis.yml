@@ -12,6 +12,7 @@ env:
 language: java
 before_install:
   - npm i -g npm@6.4.1
+  - sdk install gradle 6.1.1
   - sudo apt-get install realpath
   - export OF_VERSION=$(cat VERSION)
   # Load cached docker images
@@ -26,7 +27,7 @@ jobs:
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
       - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
       # If SONAR_TOKEN is not available (for external PRs for example), skip sonar
-      - (./gradlew --build-cache copyDependencies test jacocoTestReport)
+      - ./gradlew --build-cache copyDependencies test jacocoTestReport
       - if [ "${SONAR_TOKEN}" != "" ]; then
          && (sonar-scanner);
         fi
