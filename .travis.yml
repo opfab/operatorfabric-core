@@ -26,10 +26,9 @@ jobs:
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
       - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
       # If SONAR_TOKEN is not available (for external PRs for example), skip sonar
+      - (./gradlew --build-cache copyDependencies test jacocoTestReport)
       - if [ "${SONAR_TOKEN}" != "" ]; then
-        (./gradlew --build-cache copyDependencies test jacocoTestReport) && (sonar-scanner);
-        else
-        (./gradlew --build-cache copyDependencies test jacocoTestReport);
+         && (sonar-scanner);
         fi
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
 #      - ./gradlew --build-cache assemble -x test
