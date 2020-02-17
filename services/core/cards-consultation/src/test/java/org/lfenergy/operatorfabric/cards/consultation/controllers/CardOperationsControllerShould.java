@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -92,6 +93,11 @@ public class CardOperationsControllerShould {
 
     private User user;
 
+    @AfterEach
+    public void clean() {
+        repository.deleteAll().subscribe();
+    }
+
     public CardOperationsControllerShould(){
         user = new User();
         user.setLogin("ret-operator");
@@ -102,11 +108,6 @@ public class CardOperationsControllerShould {
         groups.add("operator");
         user.setGroups(groups);
     }
-
-//    @AfterEach
-//    public void clean() {
-//        repository.deleteAll().subscribe();
-//    }
 
     @BeforeEach
     private void initCardData() {
