@@ -10,3 +10,4 @@
 * [OC-549] - Thirds API does't return 404 when requested third doesn't exist.
 * [OC-325] - Put a long heardbeatTimeout to avoid loosing cards
 * [OC-349] - Correct bug in token silent refresh (Implicit Mode) 
+* [OC-715] - [Cards-consultation][tests] : clean must be done after each unit test
