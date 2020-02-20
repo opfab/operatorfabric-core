@@ -48,12 +48,12 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
                 .gte(pivotalInstant);// search in the future
 
         query.addCriteria(criteria.andOperator(this.computeUserCriteria(user)));
-        query.with(new Sort(new Sort.Order(
+        query.with(Sort.by(new Sort.Order(
 
                 Sort.Direction.ASC// sort for the nearer cards in the future first
 
                 , "startDate")));
-        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "_id")));
+        query.with(Sort.by(new Sort.Order(Sort.Direction.ASC, "_id")));
         return template.findOne(query, CardConsultationData.class);
     }
 
@@ -72,12 +72,12 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
                 .lte(pivotalInstant);// search in the past
 
         query.addCriteria(criteria.andOperator(this.computeUserCriteria(user)));
-        query.with(new Sort(new Sort.Order(
+        query.with(Sort.by(new Sort.Order(
 
                 Sort.Direction.DESC// sort for the most recent cards first
 
                 , "startDate")));
-        query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "_id")));
+        query.with(Sort.by(new Sort.Order(Sort.Direction.ASC, "_id")));
         return template.findOne(query, CardConsultationData.class);
     }
 }
