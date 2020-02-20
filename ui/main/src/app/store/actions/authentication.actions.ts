@@ -9,7 +9,6 @@
 import {Action} from '@ngrx/store';
 import {Guid} from 'guid-typescript';
 import {Message} from "@ofModel/message.model";
-// import {ExtractI18nBuilderOptions} from "@angular-devkit/build-angular";
 
 export enum AuthenticationActionTypes {
     InitAuthStatus = '[Authentication] Init Authentication Status',

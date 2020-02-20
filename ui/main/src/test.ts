@@ -11,7 +11,6 @@
 import 'zone.js/dist/zone-testing';
 import {getTestBed} from '@angular/core/testing';
 import {BrowserDynamicTestingModule, platformBrowserDynamicTesting} from '@angular/platform-browser-dynamic/testing';
-import { addMatchers, initTestScheduler } from 'jasmine-marbles';
 
 declare const require: any;
 
@@ -26,9 +25,3 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
-/*
-beforeEach(() => {
-  initTestScheduler();
-  addMatchers();
-});
-*/
