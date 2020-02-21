@@ -9,38 +9,77 @@ services:
   - docker
 env:
   - NODE_VERSION="v10.10.0"
+
 language: java
 before_install:
-  - npm i -g npm@6.4.1
+  # first install needs to remove ~/.sdkman (empty in our case because created by cache step) otherwise SdkMan is not installed
+  - if [ -z "$(ls -A $HOME/.sdkman)" ]; then
+    rm -fr $HOME/.sdkman ;
+    else
+    source "$HOME/.sdkman/bin/sdkman-init.sh" ;
+    fi
+  # if sdk unavailable then download and install it
+  - if not type -t sdk &>/dev/null ;
+    then
+    curl -s "https://get.sdkman.io" | bash ;
+    fi
+  # configures SdkMan to use new installed java directly as default and lets it updates itself if needed.
+  - echo sdkman_auto_answer=true > ~/.sdkman/etc/config
+  - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
+  # Keep it ! Do not delete ! useful after a first installation otherwise sdkman won't be available during current build
+  - source "$HOME/.sdkman/bin/sdkman-init.sh"
+install:
+  - EXPECTED_NPM_VERSION="6.4.1"
+  - CurrentNpmVersion="$(npm -version)"
+  - if [ "${CurrentNpmVersion}" != "${EXPECTED_NPM_VERSION}" ] ; then npm i -g npm@${EXPECTED_NPM_VERSION} ; fi
+  # Should be synch with ${OF_HOME}/bin/load_environment_light.sh. It's the first part of the sdk reference without vendor name
+  # for example the current configured in sdk has the following reference `8.0.242-zulu`
+  # the value of the following variable is `8.0.242` and its vendor name part is `-zulu`
+  - CURRENT_JDK_VERSION="8.0.242"
+  # need to substitute last dot by an underscore. Example value for the following: "1.8.0_242"
+  # for java version higher than 8 the prefix `1.` should be removed
+  - FULL_JDK_VERSION="1.${CURRENT_JDK_VERSION%.*}${CURRENT_JDK_VERSION/*./_}"
+  # example value for the following: "8.0.242-zulu"
+  - JDK_VERSION_4_SDKMAN="${CURRENT_JDK_VERSION}-zulu"
+  # Use javac because the prompt is simpler than the java one
+  # skips the beginning should return 1.8.0_242. Here redirection '2>&1' needed to load prompt value otherwise variable is empty
+  - CurrentJavacVersionNumber="$(javac -version 2>&1 | cut -d ' ' -f 2)"
+  # if javac version is different than expected then asks sdkman to use expected java version or install it if necessary
+  # if sdkman can't use the expected java version then asks sdkman to install it. Sdkman is configured to use it as default (line 26)
+  - if [ "${CurrentJavacVersionNumber}" != "${FULL_JDK_VERSION}" ] ;
+    then
+    if ! sdk use java "${JDK_VERSION_4_SDKMAN}" ;
+    then
+    sdk install java "${JDK_VERSION_4_SDKMAN}" ;
+    fi ;
+    fi
   - sudo apt-get install realpath
-  - export OF_VERSION=$(cat VERSION)
-  # Load cached docker images
-  # - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
-install: true
+  # `<VERSION` is builtin way to load VERSION file content. No usage of cat needed
+  - export OF_VERSION=$(<VERSION)
+
+
 jobs:
   include:
   - stage: test-assemble
     script:
-#      - rm -rf  $HOME/.gradle/caches/build-cache-*
-#      - ./gradlew --build-cache clean
+      # displays versions of useful tools for visual checks
+      - npm -version
+      - sdk version
+      - javac -version
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml up -d
       - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
       # If SONAR_TOKEN is not available (for external PRs for example), skip sonar
-      - if [ "${SONAR_TOKEN}" != "" ]; then
-        (./gradlew --build-cache copyDependencies test jacocoTestReport) && (sonar-scanner);
-        else
-        (./gradlew --build-cache copyDependencies test jacocoTestReport);
+      - ./gradlew --build-cache copyDependencies test jacocoTestReport
+      - if [ -z "${SONAR_TOKEN}" ];
+        then
+        sonar-scanner;
         fi
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
-#      - ./gradlew --build-cache assemble -x test
   - stage: docker-images
     script:
     - echo preparing image for version $OF_VERSION
     - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
     - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
-    - "[[ $OF_VERSION =~ .+SNAPSHOT$ ]] && ./gradlew --build-cache copyWorkingDir dockerPushSnapshot -x test || echo not publishing docker snapshot tag"
-    - "[[ $OF_VERSION =~ .+RELEASE$ ]] && ./gradlew --build-cache copyWorkingDir dockerPushLatest -x test || echo not publishing docker latest tag"
-    - "[[ $OF_VERSION =~ .+RELEASE$ ]] && ./gradlew --build-cache copyWorkingDir dockerPush${OF_VERSION} -x test || echo not publishing docker ${OF_VERSION} tag"
     - docker image ls -a|grep lfeoperatorfabric
   - stage: doc
     script:
@@ -79,7 +118,6 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.gradle/dependency-check-data/
-    # caches docker images
-    #- $HOME/docker
     # cache ui dependencies
     - ui/main/nodes_modules
+    - $HOME/.sdkman
