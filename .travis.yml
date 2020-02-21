@@ -11,24 +11,19 @@ env:
   - NODE_VERSION="v10.10.0"
 
 language: java
-before_install:
+
+install:
   # first install needs to remove ~/.sdkman (empty in our case because created by cache step) otherwise SdkMan is not installed
+  # then install sdkman
+  # configures by default SdkMan to use new installed java directly and updates itself if needed.
   - if [ -z "$(ls -A $HOME/.sdkman)" ]; then
     rm -fr $HOME/.sdkman ;
-    else
-    source "$HOME/.sdkman/bin/sdkman-init.sh" ;
-    fi
-  # if sdk unavailable then download and install it
-  - if not type -t sdk &>/dev/null ;
-    then
     curl -s "https://get.sdkman.io" | bash ;
+    echo sdkman_auto_answer=true > ~/.sdkman/etc/config ;
+    echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config ;
     fi
-  # configures SdkMan to use new installed java directly as default and lets it updates itself if needed.
-  - echo sdkman_auto_answer=true > ~/.sdkman/etc/config
-  - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
-  # Keep it ! Do not delete ! useful after a first installation otherwise sdkman won't be available during current build
-  - source "$HOME/.sdkman/bin/sdkman-init.sh"
-install:
+  # needed in order to have sdk available into the current environment
+  - source "$HOME/.sdkman/bin/sdkman-init.sh" ;
   - EXPECTED_NPM_VERSION="6.4.1"
   - CurrentNpmVersion="$(npm -version)"
   - if [ "${CurrentNpmVersion}" != "${EXPECTED_NPM_VERSION}" ] ; then npm i -g npm@${EXPECTED_NPM_VERSION} ; fi
