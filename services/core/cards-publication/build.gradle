@@ -8,7 +8,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
+        attributes("Created-By"      : "Gradle ${gradle.gradleVersion}",
                 "Specification-Title": "OperatorFabric Card Manager Service",
                 "Main-Class"         : "org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication",
                 "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))

@@ -62,7 +62,7 @@ ext {
     testing = [
             junit5Api: "org.junit.jupiter:junit-jupiter-api:${versions['junit5']}",
             junit5Engine: "org.junit.jupiter:junit-jupiter-engine:${versions['junit5']}",
-//            junit5Plugin: "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
+            junit5Plugin: "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
             assertJ     : "org.assertj:assertj-core:${versions['assertj']}",
             reactor     : "io.projectreactor:reactor-test",
             awaitility  : "org.awaitility:awaitility-kotlin:${versions['awaitility']}"
@@ -87,7 +87,6 @@ ext {
 
     plugin = [
             boot: "org.springframework.boot",
-            junit: "org.junit.platform.gradle.plugin",
             bom: "io.spring.dependency-management",
             swagger: "org.hidetake.swagger.generator",
             dockerBuild: "com.palantir.docker",
@@ -204,5 +203,5 @@ tasks.withType(JavaCompile) {
 }
 
  wrapper {
-    gradleVersion = '5.4.1'
+    gradleVersion = '6.1.1'
 }
