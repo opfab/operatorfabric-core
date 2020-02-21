@@ -13,7 +13,6 @@
   "singleContentTypes": false,
   "importMappings" : {
     "ActionEnum": "org.lfenergy.operatorfabric.actions.model.ActionEnum",
-    "InputEnum": "org.lfenergy.operatorfabric.actions.model.InputEnum",
     "EpochDate": "java.lang.Long",
     "LongInteger": "java.lang.Long"
   }

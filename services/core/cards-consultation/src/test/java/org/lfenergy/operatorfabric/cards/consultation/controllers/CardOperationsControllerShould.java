@@ -93,11 +93,6 @@ public class CardOperationsControllerShould {
 
     private User user;
 
-    @AfterEach
-    public void clean() {
-        repository.deleteAll().subscribe();
-    }
-
     public CardOperationsControllerShould(){
         user = new User();
         user.setLogin("ret-operator");
@@ -107,6 +102,11 @@ public class CardOperationsControllerShould {
         groups.add("rte");
         groups.add("operator");
         user.setGroups(groups);
+    }
+
+    @AfterEach
+    public void clean() {
+        repository.deleteAll().subscribe();
     }
 
     @BeforeEach

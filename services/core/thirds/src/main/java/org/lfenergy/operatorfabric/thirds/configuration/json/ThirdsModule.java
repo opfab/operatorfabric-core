@@ -26,7 +26,5 @@ public class ThirdsModule extends SimpleModule {
         addAbstractTypeMapping(Detail.class,DetailData.class);
         addAbstractTypeMapping(I18n.class,I18nData.class);
         addAbstractTypeMapping(Action.class,ActionData.class);
-        addAbstractTypeMapping(Input.class,InputData.class);
-        addAbstractTypeMapping(ParameterListItem.class,ParameterListItemData.class);
     }
 }

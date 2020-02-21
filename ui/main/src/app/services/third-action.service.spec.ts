@@ -255,7 +255,6 @@ describe('ThirdActionService', () => {
                 , getRandomI18nData()
                 ,true
                 ,getRandomAlphanumericValue(3)
-                ,getRandomAlphanumericValue(12)
             );
             dispatch = spyOn(thirdActionService, 'dispatchUpdateThirdAction');
         });

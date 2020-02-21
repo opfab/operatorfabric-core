@@ -136,15 +136,6 @@ export class DetailComponent implements OnInit, OnChanges {
         } else {
             button.classList.add('btn-light');
         }
-        if (action.contentStyle) {
-            for (let c of action.contentStyle.split(' ')) {
-                button.children[0].classList.add(c);
-            }
-        } else {
-            button.children[0].classList.add('fa', 'fa-warning', 'text-dark');
-        }
-
-        button.children[0].textContent = this.handelActionButtonText(action.label);
 
         button.addEventListener('click', (event: Event) => {
             alert(`${actionId} was triggered.\nAction handling is not yet implemented`);

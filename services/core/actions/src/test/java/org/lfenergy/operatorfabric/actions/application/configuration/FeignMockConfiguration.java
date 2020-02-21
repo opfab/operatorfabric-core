@@ -47,7 +47,7 @@ public class FeignMockConfiguration {
         card.setData(new ActionServiceShould.TestClass1());
 
         Action action = ActionData.builder()
-                .updateState(true)
+                .updateStateBeforeAction(true)
                 .url("http://somewhere:111/{process}/{state}/action?access_token={jwt}")
                 .build();
 

@@ -16,25 +16,15 @@ import java.util.List;
 @Builder
 public class ActionStatusData implements ActionStatus {
     private Boolean lockAction;
-    private Boolean lockCard;
-    private Boolean needsConfirm;
     private Boolean called;
-    private Boolean updateState;
     private Boolean updateStateBeforeAction;
-    private String contentStyle;
     private String buttonStyle;
     private I18n label;
-    private List< ? extends Input> inputs;
 
     public static ActionStatus fromAction(Action action) {
         ActionStatusData.ActionStatusDataBuilder result = ActionStatusData.builder()
                 .lockAction(action.getLockAction())
-                .lockCard(action.getLockCard())
-                .needsConfirm(action.getNeedsConfirm())
                 .called(action.getCalled())
-                .updateState(action.getUpdateState())
-                .updateStateBeforeAction(action.getUpdateStateBeforeAction())
-                .contentStyle(action.getContentStyle())
                 .buttonStyle(action.getButtonStyle())
                 ;
         if(action.getLabel()!=null){
@@ -43,8 +33,6 @@ public class ActionStatusData implements ActionStatus {
                 labelBuilder.parameters(action.getLabel().getParameters());
             result.label(labelBuilder.build());
         }
-        if(action.getInputs()!=null)
-            result.inputs(action.getInputs());
         return result.build();
     }
 }
