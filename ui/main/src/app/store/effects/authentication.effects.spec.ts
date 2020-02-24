@@ -40,6 +40,8 @@ import {EmptyLightCards} from '@ofActions/light-card.actions';
 import {ClearCard} from '@ofActions/card.actions';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
+import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
+import { transformAll } from '@angular/compiler/src/render3/r3_ast';
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -48,6 +50,7 @@ describe('AuthenticationEffects', () => {
     let authenticationService: SpyObj<AuthenticationService>;
     let cardService: SpyObj<CardService>;
     let router: SpyObj<Router>;
+    let translate: TranslateService;
 
     beforeEach(async(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -67,6 +70,7 @@ describe('AuthenticationEffects', () => {
             , ['unsubscribeCardOperation']);
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
         TestBed.configureTestingModule({
+            imports: [TranslateModule.forRoot()],
             providers: [
                 AuthenticationEffects,
                 provideMockActions(() => actions$),
@@ -78,6 +82,7 @@ describe('AuthenticationEffects', () => {
         });
 
         effects = TestBed.get(AuthenticationEffects);
+        translate = TestBed.get(TranslateService);
 
     }));
 
@@ -96,7 +101,7 @@ describe('AuthenticationEffects', () => {
     it('returns CheckAuthenticationStatus on LoadConfigSuccess', () => {
         const localActions$ = new Actions(hot('-a--',
             {a: new LoadConfigSuccess({config: {security: {oauth2: {flow: {mode: 'CODE'}}}}})}));
-        effects = new AuthenticationEffects(mockStore, localActions$, null, null, null);
+        effects = new AuthenticationEffects(mockStore, localActions$, null, null, null,translate);
         expect(effects).toBeTruthy();
         effects.checkAuthenticationWhenReady
             .subscribe((action: AuthenticationActions) => {
@@ -111,14 +116,14 @@ describe('AuthenticationEffects', () => {
             authenticationService.askTokenFromPassword.and.returnValue(of(
                 new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', new Date())
             ));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null,translate);
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn))
         });
         it('should fail if JWT is not generated from backend', () => {
             const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
             authenticationService.askTokenFromPassword.and.returnValue(throwError('Something went wrong'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null,translate);
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn))
         });
@@ -132,7 +137,7 @@ describe('AuthenticationEffects', () => {
             mockStore.select.and.returnValue(of(null));
             const authServiceSpy = createSpyObj('AuthenticationService',
                 ['clearAuthenticationInformation']);
-            effects = new AuthenticationEffects(mockStore, localAction$, authServiceSpy, cardService, null);
+            effects = new AuthenticationEffects(mockStore, localAction$, authServiceSpy, cardService, null,translate);
             expect(effects).toBeTruthy();
             const localExpected = hot('-(abc)', {a: new EmptyLightCards(), b: new ClearCard(), c: new AcceptLogOut()});
             expect(effects.TryToLogOut).toBeObservable(localExpected);
@@ -145,7 +150,7 @@ describe('AuthenticationEffects', () => {
         it('should success and navigate', () => {
             const localAction$ = new Actions(hot('-a--', {a: new AcceptLogOut()}));
             router.navigate.and.callThrough();
-            effects = new AuthenticationEffects(mockStore, localAction$, null, null, router);
+            effects = new AuthenticationEffects(mockStore, localAction$, null, null, router,translate);
             expect(effects).toBeTruthy();
             effects.AcceptLogOut.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogOutSuccess);
@@ -173,7 +178,7 @@ describe('AuthenticationEffects', () => {
             ));
             mockStore.select.and.returnValue(of(null));
             authenticationService.loadUserData.and.callFake(auth => of(auth));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn);
@@ -187,7 +192,7 @@ describe('AuthenticationEffects', () => {
                 new CheckTokenResponse('johndoe', 123, Guid.create().toString())
             ));
             mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
@@ -198,7 +203,7 @@ describe('AuthenticationEffects', () => {
             const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
             authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
             mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
@@ -212,7 +217,7 @@ describe('AuthenticationEffects', () => {
                 new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', moment().add(1, 'days').toDate())
             ));
             mockStore.select.and.returnValue(of('code'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn);
@@ -223,7 +228,7 @@ describe('AuthenticationEffects', () => {
             authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
             authenticationService.askTokenFromCode.and.returnValue(throwError('no valid code'));
             mockStore.select.and.returnValue(of('code'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);

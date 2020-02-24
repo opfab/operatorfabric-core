@@ -24,7 +24,7 @@ export enum AuthenticationActionTypes {
     // TODO the following actions should be merge with password and code flow management of authentication
     ,ImplicitallyAuthenticated = '[Authentication] User is authentication using Implicit Flow' 
     ,UnAuthenticationFromImplicitFlow = '[Authentication] User is log out by implicit Flow internal managment'
-    ,UnableToRefreshToken = '[Authentication] The token can not be refresh'
+    ,UnableToRefreshOrGetToken = '[Authentication] The token can not be refresh or we cannot get a token'
 }
 
 /**
@@ -146,9 +146,9 @@ export class UnAuthenticationFromImplicitFlow implements Action {
     readonly type = AuthenticationActionTypes.UnAuthenticationFromImplicitFlow;
 }
 
-export class UnableToRefreshToken implements Action {
+export class UnableToRefreshOrGetToken implements Action {
     /* istanbul ignore next */
-    readonly type = AuthenticationActionTypes.UnableToRefreshToken;
+    readonly type = AuthenticationActionTypes.UnableToRefreshOrGetToken;
 
 }
 
@@ -165,4 +165,4 @@ export type AuthenticationActions =
     | UselessAuthAction
     | ImplicitlyAuthenticated
     | UnAuthenticationFromImplicitFlow
-    | UnableToRefreshToken;
+    | UnableToRefreshOrGetToken;

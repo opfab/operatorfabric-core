@@ -14,6 +14,7 @@
 
 == Task
 
+* [OC-712] - When Token refresh is not possible redirect to login page (Implcit Mode)
 [%hardbreaks]
 * [OC-649] - Upgrade the backend
 +

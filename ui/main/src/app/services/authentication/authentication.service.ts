@@ -16,7 +16,7 @@ import {
     InitAuthStatus,
     PayloadForSuccessfulAuthentication,
     UnAuthenticationFromImplicitFlow,
-    UnableToRefreshToken
+    UnableToRefreshOrGetToken
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
@@ -383,10 +383,12 @@ export class AuthenticationService {
                 this.store.dispatch(new ImplicitlyAuthenticated());
                 break;
             }
+            // We can have a token_error or token_refresh_error when it is not possible to refresh token 
+            // This case arise for example when using a SSO and the session is not valid anymore (session timeout)
+            case ('token_error'): 
             case('token_refresh_error'):
-                this.store.dispatch(new UnableToRefreshToken());
+                this.store.dispatch(new UnableToRefreshOrGetToken());
                 break;
-            case ('token_error'):
             case('logout'): {
                 this.store.dispatch(new UnAuthenticationFromImplicitFlow());
                 break;
