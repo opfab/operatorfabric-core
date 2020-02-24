@@ -20,3 +20,6 @@
 +
 WARNING:    Details declared in Cards are no longer supported
 +
+* [OC-681] - Migrate angular from version 7 to 8
+_In this task, we moved to version 8 of Angular, we would draw your attention that there is a breaking changes during this migration, especially, we passed from v10.10.0 to v10.16.3 of node, and from 7 to 8 of ng command (angular-cli)_
+_Please refer to angular.json file the packages we have migrated_

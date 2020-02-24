@@ -22,7 +22,7 @@ import {configInitialState} from "@ofStates/config.state";
 import {feedInitialState} from "@ofStates/feed.state";
 import {Tick, TickPayload} from "@ofActions/time.actions";
 import {emptyAppState4Test} from "@tests/helpers";
-import moment = require("moment-timezone");
+import moment from 'moment-timezone';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 import { User } from '@ofModel/user.model';

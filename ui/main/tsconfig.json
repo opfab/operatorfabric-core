@@ -3,6 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "importHelpers": true,
+    "module": "esnext",
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@env/*": ["environments/*"],
       "@ofStore/*": ["app/store/*"],
@@ -28,7 +30,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "es2015",
     "downlevelIteration": true,
     "typeRoots": [
       "node_modules/@types"
