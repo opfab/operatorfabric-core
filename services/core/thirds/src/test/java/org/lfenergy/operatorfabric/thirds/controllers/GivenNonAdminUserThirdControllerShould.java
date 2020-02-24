@@ -83,7 +83,7 @@ class GivenNonAdminUserThirdControllerShould {
     void listThirds() throws Exception {
         mockMvc.perform(get("/thirds"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
         ;
     }
@@ -93,7 +93,7 @@ class GivenNonAdminUserThirdControllerShould {
         ResultActions result = mockMvc.perform(get("/thirds/first"));
         result
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.version", is("v1")))
         ;
     }
@@ -103,7 +103,7 @@ class GivenNonAdminUserThirdControllerShould {
         ResultActions result = mockMvc.perform(get("/thirds/first?version=0.1"));
         result
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.version", is("0.1")));
     }
 
@@ -169,7 +169,7 @@ class GivenNonAdminUserThirdControllerShould {
                         .accept("application/json", "application/handlebars"));
         result
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         ;
     }
 
@@ -255,7 +255,7 @@ class GivenNonAdminUserThirdControllerShould {
 
             mockMvc.perform(get("/thirds"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(1)));
 
 
@@ -270,7 +270,7 @@ class GivenNonAdminUserThirdControllerShould {
                         .andExpect(status().isForbidden());
                 mockMvc.perform(get("/thirds"))
                         .andExpect(status().isOk())
-                        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                         .andExpect(jsonPath("$", hasSize(1)));
             }
         }

@@ -57,7 +57,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @ActiveProfiles("test")
 @WebAppConfiguration
 @Slf4j
-@AutoConfigureMockMvc(secure = false)
+@AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("end-to-end")
 @Tag("amqp")
@@ -92,7 +92,7 @@ class TimeControllerShould {
             LocalDateTime now = LocalDateTime.now();
             MvcResult result = mockMvc.perform(get("/time"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.referenceTime", nullValue()))
                     .andExpect(jsonPath("$.virtualTime", nullValue()))
                     .andExpect(jsonPath("$.computedNow", notNullValue()))
@@ -166,10 +166,10 @@ class TimeControllerShould {
             ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear, null, SpeedEnum.X2);
             String jsonEntity = objectMapper.writeValueAsString(updatedTimeData);
             MvcResult result = mockMvc.perform(put("/time")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.referenceTime", notNullValue()))
                     .andExpect(jsonPath("$.virtualTime", notNullValue()))
                     .andExpect(jsonPath("$.computedNow", notNullValue()))
@@ -189,10 +189,10 @@ class TimeControllerShould {
             ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear, null, SpeedEnum.X2);
             String jsonEntity = objectMapper.writeValueAsString(updatedTimeData);
             MvcResult result = mockMvc.perform(post("/time")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.referenceTime", notNullValue()))
                     .andExpect(jsonPath("$.virtualTime", notNullValue()))
                     .andExpect(jsonPath("$.computedNow", notNullValue()))
@@ -209,7 +209,7 @@ class TimeControllerShould {
             String invalidBody = "NotAProperClientTimeData json";
 
             mockMvc.perform(put("/time")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(invalidBody))
                     .andExpect(status().isBadRequest())
             ;
@@ -221,7 +221,7 @@ class TimeControllerShould {
             String invalidBody = "NotAProperClientTimeData json";
 
             mockMvc.perform(post("/time")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(invalidBody))
                     .andExpect(status().isBadRequest())
             ;
@@ -237,10 +237,10 @@ class TimeControllerShould {
             log.info("last year is : " + lastYear.toString());
             String jsonEntity = objectMapper.writeValueAsString(lastYear.toEpochMilli());
             MvcResult result = mockMvc.perform(put("/time/current")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 //           .andExpect(jsonPath("$", is(lastYear.toEpochMilli())))
                     .andReturn();
             Long time = objectMapper.readValue(result.getResponse().getContentAsString(), Long.class);
@@ -248,10 +248,10 @@ class TimeControllerShould {
 
             jsonEntity = objectMapper.writeValueAsString(SpeedEnum.X2);
             mockMvc.perform(put("/time/speed")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", is("X2")));
 
             updateAndResetTime0(lastYear);
@@ -265,10 +265,10 @@ class TimeControllerShould {
             log.info("last year is : " + lastYear.toString());
             String jsonEntity = objectMapper.writeValueAsString(lastYear);
             MvcResult result = mockMvc.perform(post("/time/current")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 //           .andExpect(jsonPath("$", is(lastYear.toEpochMilli())))
                     .andReturn();
 
@@ -277,10 +277,10 @@ class TimeControllerShould {
 
             jsonEntity = objectMapper.writeValueAsString(SpeedEnum.X2);
             mockMvc.perform(post("/time/speed")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", is("X2")));
 
             updateAndResetTime0(lastYear);
@@ -291,14 +291,14 @@ class TimeControllerShould {
 
             String invalidBody = "ABC12345678";
             mockMvc.perform(put("/time/current")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(invalidBody))
                     .andExpect(status().isBadRequest())
             ;
 
             invalidBody = "X22";
             mockMvc.perform(put("/time/speed")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(invalidBody))
                     .andExpect(status().isBadRequest())
             ;
@@ -309,14 +309,14 @@ class TimeControllerShould {
 
             String invalidBody = "ABC12345678";
             mockMvc.perform(post("/time/current")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(invalidBody))
                     .andExpect(status().isBadRequest())
             ;
 
             invalidBody = "X22";
             mockMvc.perform(post("/time/speed")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(invalidBody))
                     .andExpect(status().isBadRequest())
             ;
@@ -332,7 +332,7 @@ class TimeControllerShould {
             LocalDateTime now = LocalDateTime.now();
             MvcResult result = mockMvc.perform(get("/time"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.referenceTime", nullValue()))
                     .andExpect(jsonPath("$.virtualTime", nullValue()))
                     .andExpect(jsonPath("$.computedNow", notNullValue()))
@@ -361,7 +361,7 @@ class TimeControllerShould {
             String jsonEntity = objectMapper.writeValueAsString(updatedTimeData);
             log.info("jsonEntity "+jsonEntity);
             mockMvc.perform(put("/time")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isForbidden())
                     .andReturn()
@@ -390,7 +390,7 @@ class TimeControllerShould {
             ClientTimeData updatedTimeData = new ClientTimeData(null, lastYear, null, SpeedEnum.X2);
             String jsonEntity = objectMapper.writeValueAsString(updatedTimeData);
             mockMvc.perform(post("/time")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isForbidden())
             ;
@@ -412,7 +412,7 @@ class TimeControllerShould {
             log.info("last year is : " + lastYear.toString());
             String jsonEntity = objectMapper.writeValueAsString(lastYear.toEpochMilli());
             mockMvc.perform(put("/time/current")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isForbidden())
             ;
@@ -426,7 +426,7 @@ class TimeControllerShould {
             log.info("last year is : " + lastYear.toString());
             String jsonEntity = objectMapper.writeValueAsString(lastYear.toEpochMilli());
             mockMvc.perform(post("/time/current")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonEntity))
                     .andExpect(status().isForbidden())
             ;
@@ -439,7 +439,7 @@ class TimeControllerShould {
         Thread.sleep(1500);
         MvcResult result = mockMvc.perform(get("/time"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.referenceTime", notNullValue()))
                 .andExpect(jsonPath("$.virtualTime", notNullValue()))
                 .andExpect(jsonPath("$.computedNow", notNullValue()))
@@ -461,7 +461,7 @@ class TimeControllerShould {
 
         mockMvc.perform(get("/time"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.referenceTime", nullValue()))
                 .andExpect(jsonPath("$.virtualTime", nullValue()))
                 .andExpect(jsonPath("$.computedNow", notNullValue()))
@@ -480,7 +480,7 @@ class TimeControllerShould {
         //Get current time configuration and store it in timeData
         MvcResult result = mockMvc.perform(get("/time"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.referenceTime", notNullValue()))
                 .andExpect(jsonPath("$.virtualTime", notNullValue()))
                 .andExpect(jsonPath("$.computedNow", notNullValue()))
@@ -513,7 +513,7 @@ class TimeControllerShould {
         //Check that time configuration is correctly reset
         mockMvc.perform(get("/time"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.referenceTime", nullValue()))
                 .andExpect(jsonPath("$.virtualTime", nullValue()))
                 .andExpect(jsonPath("$.computedNow", notNullValue()))

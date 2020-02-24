@@ -133,7 +133,7 @@ class UsersControllerShould {
             ResultActions result = mockMvc.perform(get("/users"));
             result
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(3)))
             ;
         }
@@ -143,7 +143,7 @@ class UsersControllerShould {
             ResultActions result = mockMvc.perform(get("/users/gchapman"));
             result
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.firstName", is("Graham")))
                     .andExpect(jsonPath("$.lastName", is("Chapman")))
@@ -156,7 +156,7 @@ class UsersControllerShould {
             ResultActions result = mockMvc.perform(get("/users/tgillian"));
             result
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "tgillian"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -168,7 +168,7 @@ class UsersControllerShould {
             ResultActions result = mockMvc.perform(get("/users/gchapman/settings"));
             result
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is(nullValue())))
@@ -180,7 +180,7 @@ class UsersControllerShould {
             ResultActions result = mockMvc.perform(get("/users/tgillian/settings"));
             result
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_SETTINGS_NOT_FOUND_MSG, "tgillian"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -190,7 +190,7 @@ class UsersControllerShould {
         @Test
         void createSettings() throws Exception {
             mockMvc.perform(put("/users/mpalin/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
                             "\"dateFormat\": \"LL\"," +
@@ -198,7 +198,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -207,7 +207,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -215,13 +215,13 @@ class UsersControllerShould {
             ;
 
             mockMvc.perform(put("/users/mpalin/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"" +
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.dateFormat", is(nullValue())))
                     .andExpect(jsonPath("$.timeFormat", is(nullValue())))
@@ -229,7 +229,7 @@ class UsersControllerShould {
             ;
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.dateFormat", is(nullValue())))
                     .andExpect(jsonPath("$.timeFormat", is(nullValue())))
@@ -241,7 +241,7 @@ class UsersControllerShould {
         @Test
         void patchSettings() throws Exception {
             mockMvc.perform(put("/users/mpalin/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
                             "\"dateFormat\": \"LL\"," +
@@ -249,7 +249,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -258,7 +258,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -266,14 +266,14 @@ class UsersControllerShould {
             ;
 
             mockMvc.perform(patch("/users/mpalin/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
                             "\"dateFormat\": \"LLL\"" +
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.dateFormat", is("LLL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -281,7 +281,7 @@ class UsersControllerShould {
             ;
             mockMvc.perform(get("/users/mpalin/settings"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.dateFormat", is("LLL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -294,14 +294,14 @@ class UsersControllerShould {
         void patchSettingsIncomplete() throws Exception {
 
             mockMvc.perform(patch("/users/tjones/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
                             "\"dateFormat\": \"LLL\"" +
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("tjones")))
                     .andExpect(jsonPath("$.dateFormat", is("LLL")))
                     .andExpect(jsonPath("$.timeFormat", is(nullValue())))
@@ -309,7 +309,7 @@ class UsersControllerShould {
             ;
             mockMvc.perform(get("/users/tjones/settings"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("tjones")))
                     .andExpect(jsonPath("$.dateFormat", is("LLL")))
                     .andExpect(jsonPath("$.timeFormat", is(nullValue())))
@@ -321,7 +321,7 @@ class UsersControllerShould {
         @Test
         void create() throws Exception {
             mockMvc.perform(post("/users")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
                             "\"firstName\": \"Michael\"," +
@@ -330,7 +330,7 @@ class UsersControllerShould {
             )
                     .andExpect(status().isCreated())
                     .andExpect(header().string("Location","/users/mpalin"))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.firstName", is("Michael")))
                     .andExpect(jsonPath("$.lastName", is("Palin")))
@@ -338,19 +338,19 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(4)));
 
             mockMvc.perform(get("/users/mpalin"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("mpalin")))
                     .andExpect(jsonPath("$.firstName", is("Michael")))
                     .andExpect(jsonPath("$.lastName", is("Palin")))
             ;
 
             mockMvc.perform(put("/users/tgillian")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"tgillian\","+
                             "\"firstName\": \"Terry\","+
@@ -358,7 +358,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().is(HttpStatus.CREATED.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("tgillian")))
                     .andExpect(jsonPath("$.firstName", is("Terry")))
                     .andExpect(jsonPath("$.lastName", is("Gillian")))
@@ -371,14 +371,14 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/kkline"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("kkline")))
                     .andExpect(jsonPath("$.firstName", is("Kevin")))
                     .andExpect(jsonPath("$.lastName", is("Kline")))
             ;
 
 //            ResultActions result = mockMvc.perform(post("/users")
-//                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+//                    .contentType(MediaType.APPLICATION_JSON)
 //                    .content("{" +
 //                            "\"login\": \"kkline\"," +
 //                            "\"firstName\": \"KEVIN\"," +
@@ -386,7 +386,7 @@ class UsersControllerShould {
 //                            "}")
 //            )
 //                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-//                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+//                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 //                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
 //                    .andExpect(jsonPath("$.message", is("Resource creation failed because a resource with the same key already exists.")))
 //                    .andExpect(jsonPath("$.errors", hasSize(1)))
@@ -394,12 +394,12 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(3)));
 
             mockMvc.perform(get("/users/kkline"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("kkline")))
                     .andExpect(jsonPath("$.firstName", is("Kevin")))
                     .andExpect(jsonPath("$.lastName", is("Kline")))
@@ -410,7 +410,7 @@ class UsersControllerShould {
         @Test
         void update() throws Exception {
             mockMvc.perform(put("/users/kkline")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"kkline\"," +
                             "\"firstName\": \"Kevin\"," +
@@ -418,7 +418,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("kkline")))
                     .andExpect(jsonPath("$.firstName", is("Kevin")))
                     .andExpect(jsonPath("$.lastName", is("KLINE")))
@@ -426,12 +426,12 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(3)));
 
             mockMvc.perform(get("/users/kkline"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("kkline")))
                     .andExpect(jsonPath("$.firstName", is("Kevin")))
                     .andExpect(jsonPath("$.lastName", is("KLINE")))
@@ -444,7 +444,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/unknownSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -452,7 +452,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/unknownSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -464,14 +464,14 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/kkline"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("kkline")))
                     .andExpect(jsonPath("$.firstName", is("Kevin")))
                     .andExpect(jsonPath("$.lastName", is("Kline")))
             ;
 
             mockMvc.perform(put("/users/kkline")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
                             "\"firstName\": \"Kevin\"," +
@@ -479,14 +479,14 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
                     .andExpect(jsonPath("$.message", is(UsersController.NO_MATCHING_USER_NAME_MSG)))
                     .andExpect(jsonPath("$.errors").doesNotExist());
 
             mockMvc.perform(get("/users/kkline"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("kkline")))
                     .andExpect(jsonPath("$.firstName", is("Kevin")))
                     .andExpect(jsonPath("$.lastName", is("Kline")))
@@ -499,14 +499,14 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/unknownSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
             mockMvc.perform(put("/users/unknownSoFar")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"someOtherLogin\"," +
                             "\"firstName\": \"John\"," +
@@ -514,7 +514,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.NO_MATCHING_USER_NAME_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -522,7 +522,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/unknownSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -555,7 +555,7 @@ class UsersControllerShould {
             ResultActions result = mockMvc.perform(get("/users/gchapman"));
             result
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.firstName", is("Graham")))
                     .andExpect(jsonPath("$.lastName", is("Chapman")))
@@ -566,7 +566,7 @@ class UsersControllerShould {
         @Test
         void create() throws Exception {
             mockMvc.perform(post("/users")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\","+
                             "\"firstName\": \"Michael\","+
@@ -581,7 +581,7 @@ class UsersControllerShould {
         @Test
         void update() throws Exception {
             mockMvc.perform(put("/users/kkline")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"kkline\","+
                             "\"firstName\": \"Kevin\","+
@@ -596,7 +596,7 @@ class UsersControllerShould {
         @Test
         void updateOwnData() throws Exception {
             mockMvc.perform(put("/users/gchapman")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\","+
                             "\"firstName\": \"GRAHAM\","+
@@ -604,7 +604,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.firstName", is("GRAHAM")))
                     .andExpect(jsonPath("$.lastName", is("CHAPMAN")))
@@ -620,7 +620,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/unknownSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -628,7 +628,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/unknownSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -640,14 +640,14 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/gchapman"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.firstName", is("Graham")))
                     .andExpect(jsonPath("$.lastName", is("Chapman")))
             ;
 
             mockMvc.perform(put("/users/gchapman")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\","+
                             "\"firstName\": \"Michael\","+
@@ -655,7 +655,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
                     .andExpect(jsonPath("$.message", is(UsersController.NO_MATCHING_USER_NAME_MSG)))
                     .andExpect(jsonPath("$.errors").doesNotExist());
@@ -668,14 +668,14 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/unknownSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
             mockMvc.perform(put("/users/unknownSoFar")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"someOtherLogin\","+
                             "\"firstName\": \"John\","+
@@ -683,7 +683,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.NO_MATCHING_USER_NAME_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -691,7 +691,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/unknownSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
                     .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
@@ -704,7 +704,7 @@ class UsersControllerShould {
             ResultActions result = mockMvc.perform(get("/users/gchapman/settings"));
             result
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is(nullValue())))
@@ -717,7 +717,7 @@ class UsersControllerShould {
             result
                     .andDo(MockMvcResultHandlers.log())
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 //                .andExpect(jsonPath("$.status", is(HttpStatus.FORBIDDEN.name())))
 //                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_SETTINGS_NOT_FOUND_MSG, "kkline"))))
 //                .andExpect(jsonPath("$.errors").doesNotExist())
@@ -727,7 +727,7 @@ class UsersControllerShould {
         @Test
         void createSettings() throws Exception {
             mockMvc.perform(put("/users/gchapman/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\"," +
                             "\"dateFormat\": \"LL\"," +
@@ -735,7 +735,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -744,7 +744,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -752,13 +752,13 @@ class UsersControllerShould {
             ;
 
             mockMvc.perform(put("/users/gchapman/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\"" +
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is(nullValue())))
                     .andExpect(jsonPath("$.timeFormat", is(nullValue())))
@@ -766,7 +766,7 @@ class UsersControllerShould {
             ;
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is(nullValue())))
                     .andExpect(jsonPath("$.timeFormat", is(nullValue())))
@@ -778,7 +778,7 @@ class UsersControllerShould {
         @Test
         void createSettingsWithError() throws Exception {
             mockMvc.perform(put("/users/kkline/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"mpalin\"," +
                             "\"dateFormat\": \"LL\"," +
@@ -794,7 +794,7 @@ class UsersControllerShould {
         @Test
         void patchSettings() throws Exception {
             mockMvc.perform(put("/users/gchapman/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\"," +
                             "\"dateFormat\": \"LLL\"," +
@@ -802,7 +802,7 @@ class UsersControllerShould {
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is("LLL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -811,7 +811,7 @@ class UsersControllerShould {
 
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is("LLL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -819,14 +819,14 @@ class UsersControllerShould {
             ;
 
             mockMvc.perform(patch("/users/gchapman/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"gchapman\"," +
                             "\"dateFormat\": \"LL\"" +
                             "}")
             )
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -834,7 +834,7 @@ class UsersControllerShould {
             ;
             mockMvc.perform(get("/users/gchapman/settings"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.login", is("gchapman")))
                     .andExpect(jsonPath("$.dateFormat", is("LL")))
                     .andExpect(jsonPath("$.timeFormat", is("LT")))
@@ -846,7 +846,7 @@ class UsersControllerShould {
         @Test
         void patchSettingsWithError() throws Exception {
             mockMvc.perform(patch("/users/kkline/settings")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
                             "\"login\": \"kkline\"," +
                             "\"dateFormat\": \"LL\"," +

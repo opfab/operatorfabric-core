@@ -86,7 +86,7 @@ class GivenAdminUserThirdControllerShould {
     void listThirds() throws Exception {
         mockMvc.perform(get("/thirds"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
         ;
     }
@@ -96,7 +96,7 @@ class GivenAdminUserThirdControllerShould {
         ResultActions result = mockMvc.perform(get("/thirds/first"));
         result
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.version", is("v1")))
         ;
     }
@@ -106,7 +106,7 @@ class GivenAdminUserThirdControllerShould {
         ResultActions result = mockMvc.perform(get("/thirds/first?version=0.1"));
         result
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.version", is("0.1")));
     }
 
@@ -141,7 +141,7 @@ class GivenAdminUserThirdControllerShould {
                         .accept("application/json"));
         result
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].templateName", is("template")))
         ;
@@ -181,7 +181,7 @@ class GivenAdminUserThirdControllerShould {
                         .accept("application/json"));
         result
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.testAction.type", is("URL")))
         ;
     }
@@ -210,7 +210,7 @@ class GivenAdminUserThirdControllerShould {
                         .accept("application/json"));
         result
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.type", is("URL")))
         ;
     }
@@ -271,7 +271,7 @@ class GivenAdminUserThirdControllerShould {
                         .accept("application/json", "application/handlebars"));
         result
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         ;
     }
 
@@ -354,14 +354,14 @@ class GivenAdminUserThirdControllerShould {
             mockMvc.perform(multipart("/thirds").file(bundle))
                     .andExpect(status().isCreated())
                     .andExpect(header().string("Location", "/thirds/second"))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.name", is("second")))
                     .andExpect(jsonPath("$.version", is("2.1")))
             ;
 
             mockMvc.perform(get("/thirds"))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(2)));
 
             mockMvc.perform(get("/thirds/second/css/nostyle"))
@@ -379,7 +379,7 @@ class GivenAdminUserThirdControllerShould {
                         .andExpect(status().isOk());
                 mockMvc.perform(get("/thirds"))
                         .andExpect(status().isOk())
-                        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                         .andExpect(jsonPath("$", hasSize(0)));
             }
         }

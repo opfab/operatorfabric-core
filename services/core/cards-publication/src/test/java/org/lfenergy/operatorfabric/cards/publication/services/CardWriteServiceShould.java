@@ -54,7 +54,6 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 /**
  * <p></p>
  * Created on 30/07/18
- *
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CardPublicationApplication.class)
@@ -99,6 +98,10 @@ class CardWriteServiceShould {
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .timeSpan(TimeSpanPublicationData.builder()
+                                .start(Instant.ofEpochMilli(123l))
+                                .build()
+                        )
                         .build(),
                 CardPublicationData.builder()
                         .publisher("PUBLISHER_2")
@@ -220,14 +223,6 @@ class CardWriteServiceShould {
                 .tag("tag1").tag("tag2")
                 .media("SOUND")
                 .data(data)
-                .detail(
-                        DetailPublicationData.builder()
-                                .style("style1")
-                                .title(I18nPublicationData.builder().key("detail.title").build())
-                                .templateName("testTemplate")
-                                .titleStyle("titleStyle")
-                                .build()
-                )
                 .recipient(
                         RecipientPublicationData.builder()
                                 .type(RecipientEnum.UNION)
@@ -244,41 +239,6 @@ class CardWriteServiceShould {
                                                 .build()
                                 )
                                 .build())
-                // FIXME move this to thirds
-//                .action("act1",
-//                        ActionPublicationData.builder()
-//                                .type(ActionEnum.URI)
-//                                .label(I18nPublicationData.builder().key("action.one").build())
-//                                .build())
-//                .action("act2",
-//                        ActionPublicationData.builder()
-//                                .type(ActionEnum.URI)
-//                                .label(I18nPublicationData.builder().key("action.two").build())
-//                                .input(
-//                                        InputPublicationData.builder()
-//                                                .type(InputEnum.BOOLEAN)
-//                                                .label(I18nPublicationData.builder().key("action.two.input.one").build())
-//                                                .name("input1")
-//                                                .build()
-//                                )
-//                                .input(
-//                                        InputPublicationData.builder()
-//                                                .type(InputEnum.LIST)
-//                                                .label(I18nPublicationData.builder().key("action.two.input.two").build())
-//                                                .name("input2")
-//                                                .value(
-//                                                        ParameterListItemPublicationData.builder()
-//                                                                .label(I18nPublicationData.builder().key("value.one").build())
-//                                                                .value("one")
-//                                                                .build())
-//                                                .value(
-//                                                        ParameterListItemPublicationData.builder()
-//                                                                .label(I18nPublicationData.builder().key("value.two").build())
-//                                                                .value("two")
-//                                                                .build())
-//                                                .build()
-//                                )
-//                                .build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l))
                         .build()
@@ -303,9 +263,9 @@ class CardWriteServiceShould {
 
     private boolean checkCardCount(long expectedCount) {
         Long count = cardRepository.count().block();
-        if (count == expectedCount)
+        if (count == expectedCount) {
             return true;
-        else {
+        } else {
             log.warn("Expected card count " + expectedCount + " but was " + count);
             return false;
         }
@@ -326,7 +286,7 @@ class CardWriteServiceShould {
 
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
-        List<CardPublicationData> cards = instantiateServeralRandomCards(easyRandom, numberOfCards);
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
 
         cardWriteService.pushCardsAsyncParallel(
                 Flux.just(
@@ -351,7 +311,7 @@ class CardWriteServiceShould {
         DeleteResult deleteResult = cardWriteService.deleteCard(processId);
 
         /*one card should be deleted(the first one)*/
-        int thereShouldBeOneCardLess = numberOfCards-1;
+        int thereShouldBeOneCardLess = numberOfCards - 1;
 
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
                     Long block = cardRepository.count().block();
@@ -367,23 +327,23 @@ class CardWriteServiceShould {
         );
         Assertions.assertThat(deleteResult).isEqualTo(DeleteResult.acknowledged(1));
     }
-//FIXME unify way test cards are created throughout tests
-    private List<CardPublicationData> instantiateServeralRandomCards(EasyRandom randomGenerator, int cardNumber) {
+
+    //FIXME unify way test cards are created throughout tests
+    private List<CardPublicationData> instantiateSeveralRandomCards(EasyRandom randomGenerator, int cardNumber) {
 
         List<CardPublicationData> cardsList = randomGenerator.objects(CardPublicationData.class, cardNumber).collect(Collectors.toList());
 
         //endDate must be after startDate
-        if (cardsList != null)
-            for (int i = 0; i < cardsList.size(); i++){
-                if (cardsList.get(i) != null) {
-                    Instant startDateInstant = cardsList.get(i).getStartDate();
-                    Instant endDateInstant = cardsList.get(i).getEndDate();
-
-                    if ((startDateInstant != null) && (endDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0))
-                        cardsList.get(i).setEndDate(startDateInstant.plusSeconds(86400));
+        if (cardsList != null) {
+            for (CardPublicationData cardPublicationData : cardsList) {
+                if (cardPublicationData != null) {
+                    Instant startDateInstant = cardPublicationData.getStartDate();
+                    if (startDateInstant != null && startDateInstant.compareTo(cardPublicationData.getEndDate()) >= 0) {
+                        cardPublicationData.setEndDate(startDateInstant.plusSeconds(86400));
+                    }
                 }
             }
-
+        }
         return cardsList;
     }
 
@@ -419,10 +379,10 @@ class CardWriteServiceShould {
     }
 
     @Test
-    void deleteCards_Non_existentProcessId(){
+    void deleteCards_Non_existentProcessId() {
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
-        List<CardPublicationData> cards = instantiateServeralRandomCards(easyRandom, numberOfCards);
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
 
         cardWriteService.pushCardsAsyncParallel(
                 Flux.just(
@@ -465,18 +425,18 @@ class CardWriteServiceShould {
         cardRepository.findAll().map(card -> card.getId()).subscribe(ids::add);
 
         EasyRandom easyRandom = instantiateRandomCardGenerator();
-        String id =easyRandom.nextObject(String.class);
-        while (ids.contains(id)){
-            id=easyRandom.nextObject(String.class);
+        String id = easyRandom.nextObject(String.class);
+        while (ids.contains(id)) {
+            id = easyRandom.nextObject(String.class);
         }
         return id;
     }
 
 
     @Test
-    void findCardToDelete_should_Only_return_Card_with_NullData(){
+    void findCardToDelete_should_Only_return_Card_with_NullData() {
         EasyRandom easyRandom = instantiateRandomCardGenerator();
-        List<CardPublicationData> card = instantiateServeralRandomCards(easyRandom,1);
+        List<CardPublicationData> card = instantiateSeveralRandomCards(easyRandom, 1);
         String fakeDataContent = easyRandom.nextObject(String.class);
         CardPublicationData publishedCard = card.get(0);
         publishedCard.setData(fakeDataContent);
@@ -493,7 +453,7 @@ class CardWriteServiceShould {
                 }
         );
 
-        String computedCardId = publishedCard.getPublisher()+"_"+publishedCard.getProcessId();
+        String computedCardId = publishedCard.getPublisher() + "_" + publishedCard.getProcessId();
         CardPublicationData cardToDelete = cardWriteService.findCardToDelete(computedCardId);
 
         Assertions.assertThat(cardToDelete).isNotNull();

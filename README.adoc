@@ -109,15 +109,14 @@ Please see <<Getting Started>> below for details on:
 
 === Tools and libraries
 
-* Gradle 5 +
-* Java 8.0.163-zulu +
+* Gradle 6 +
+* Java 8.0 +
 * Maven 3.5.3 +
 * Docker
 * Docker Compose with 2.1+ file format support
 * Chrome (needed for UI tests in build)
 
-NOTE: Java 8.0.163-zulu is no longer available for security reasons, the
-next version is Java 8.0.192-zulu.
+NOTE: the current Jdk used for the project is Java 8.0.242-zulu.
 
 IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
 https://github.com/creationix/nvm[nvm] to manage tools versions.
@@ -185,8 +184,7 @@ git clone https://github.com/opfab/operatorfabric-core.git
 cd operatorfabric-core
 ----
 
-==== Set up your environment (environment variables & appropriate versions
-of gradle, maven, etc…)
+==== Set up your environment (environment variables & appropriate versions of gradle, maven, etc…)
 ----
 source bin/load_environment_light.sh
 ----
@@ -208,9 +206,19 @@ docker-compose up -d
 ----
 
 ==== Build OperatorFabric with Gradle
+
+Using the wrapper in order to ensure building the project the same way from one machine to another.
+
+To only compile and package the jars:
 ----
 cd $OF_HOME
-gradle assemble
+./gradlew assemble
+----
+
+To launch the Unit Test, compile and package the jars:
+----
+cd $OF_HOME
+./gradlew build
 ----
 
 ==== Run OperatorFabric Services using the `run_all.sh` script
@@ -445,7 +453,7 @@ There are prerequisites before sourcing load_environment_ramdisk.sh:
 * Logged user needs sudo rights for mount
 * System needs to have enough free ram
 
-CAUTION: Never ever run a `gradle clean` to avoid deleting those links.
+CAUTION: Never ever run a `gradle clean` or `./gradlew clean` to avoid deleting those links.
 
 ==== run_all.sh
 
@@ -520,8 +528,7 @@ settings)
 
 In this section only custom tasks are described. For more
 information on tasks, refer to the output of the "tasks" gradle task and
-to gradle
-and plugins official documentation.
+to gradle and plugins official documentation.
 
 ==== Services
 
@@ -829,6 +836,25 @@ Available Java Versions
 
 +++ </div></details> +++
 
++++ <details><summary> +++
+**BUILD FAILED with message `Execution failed for task ':ui:main-user-interface:npmInstall'.`**
++++ </summary><div> +++
+
+.Error message
+[source]
+----
+FAILURE: Build failed with an exception.
+
+    What went wrong:
+    Execution failed for task ':ui:main-user-interface:npmInstall'.
+----
+
+.Possible causes & resolution
+A `sudo` has been used before the `./gradlew assemble`.
+
+IMPORTANT: Don't use *sudo* to build OperatorFabric otherwise unexpected problems could arise.
+
++++ </div></details> +++
 == Licensing
 
 This project and all its sub-projects are licensed under
