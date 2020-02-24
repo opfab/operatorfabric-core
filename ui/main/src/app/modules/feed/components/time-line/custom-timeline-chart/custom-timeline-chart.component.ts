@@ -131,7 +131,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public dateFirstTick: string;
   public oldWidth: number;
   // MUST
-  @ViewChild(ChartComponent, { read: ElementRef }) chart: ElementRef;
+  @ViewChild(ChartComponent, { read: ElementRef , static: false}) chart: ElementRef;
   public dims: ViewDimensions;
   public xDomain: any;
   public yDomain: any;

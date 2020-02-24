@@ -16,22 +16,22 @@ const archivePath = 'archives';
 const routes: Routes = [
     {
         path: 'feed',
-        loadChildren: './modules/feed/feed.module#FeedModule',
+        loadChildren: () => import('./modules/feed/feed.module').then(m => m.FeedModule),
         // canActivate: [AuthenticationGuard]
     },
     {
         path: archivePath,
-        loadChildren: './modules/archives/archives.module#ArchivesModule',
+        loadChildren: () => import('./modules/archives/archives.module').then(m => m.ArchivesModule),
         // canActivate: [AuthenticationGuard]
     },
     {
         path: 'thirdparty',
-        loadChildren: './modules/thirdparty/thirdparty.module#ThirdpartyModule',
+        loadChildren: () => import('./modules/thirdparty/thirdparty.module').then(m => m.ThirdpartyModule),
         // canActivate: [AuthenticationGuard]
     },
     {
         path: 'settings',
-        loadChildren: './modules/settings/settings.module#SettingsModule',
+        loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule),
         // canActivate: [AuthenticationGuard]
     },
     {

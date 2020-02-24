@@ -31,12 +31,14 @@ describe('SettingsEffects', () => {
     let mockStore: SpyObj<Store<AppState>>;
 
     beforeEach(async(() => {
+        console.log('before each');
         settingsService = jasmine.createSpyObj('SettingsService', ['fetchUserSettings','patchUserSettings']);
         mockStore = jasmine.createSpyObj('Store', ['dispatch', 'select']);
 
     }))
     describe('loadSettings', () => {
         it('should return a LoadSettingsSuccess when the settingsService serve settings', () => {
+            console.log('in the it block');
             const expectedSettings = {value: 1};
 
             const localActions$ = new Actions(hot('-a--', {a: new LoadSettings()}));
