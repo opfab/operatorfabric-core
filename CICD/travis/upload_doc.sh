@@ -6,11 +6,17 @@ CURRENT_PATH=$(pwd)
 GH_REPO=github.com/opfab/opfab.github.io.git
 HTTP_REPO="https://opfabtech:${GH_DOC_TOKEN}@${GH_REPO}"
 git clone $HTTP_REPO $HOME/documentation
+
+cd $HOME/documentation
 echo "List files after inital clone"
-echo ls $HOME/documentation
+LIST_FILES=$(ls $HOME/documentation)
+echo $LIST_FILES
+cd $CURRENT_PATH
+
 # TODO Find out what sed below is for (as we don't have - in our version tags)
 version=$(echo "$OF_VERSION"| sed s/-SNAPSHOT//)
 cd $OF_HOME
+# TODO It looks like doc generation is already done in travis.yml To be checked
 ./gradlew generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc
 for prj in "${OF_REL_COMPONENTS[@]}"; do
   echo "copying $prj documentation"
@@ -27,8 +33,11 @@ cp -r $OF_HOME/ui/main/documentation/* $HOME/documentation/projects/ui/main/$ver
 cp -r $OF_HOME/ui/main/reports/* $HOME/documentation/projects/ui/main/$version/reports/.
 cp -r $OF_HOME/build/asciidoc/html5/* $HOME/documentation/documentation/$version/.
 cd $HOME/documentation
+
 echo "Results of copy"
-echo git status
+COPY_RES=$(git status)
+echo $COPY_RES
+
 if [ -n "$(git status --porcelain)" ]; then
     echo "Changes to documentation detected, preparing commit"
     git add .
