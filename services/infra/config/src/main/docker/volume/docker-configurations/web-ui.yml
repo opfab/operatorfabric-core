@@ -56,3 +56,16 @@ operatorfabric:
     locale: en
     infos:
       description: true
+    about:
+      firstapplication:
+        name: First application
+        version: v12.34.56
+        rank: 1
+      keycloack:
+        name: Keycloak
+        version: 6.0.1
+        rank: 2
+      lastapplication:
+        name: Wonderful Solution
+        version: 0.1.2-RELEASE
+

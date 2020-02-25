@@ -7,12 +7,14 @@ dependencies {
     testCompile project(':tools:spring:spring-test-utilities')
 }
 
-jar {
+bootJar {
     manifest {
-        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
-                "Specification-Title": "OperatorFabric Card Read Service",
-                "Main-Class"         : "org.lfenergy.operatorfabric.cards.consultation.CardConsultationApplication",
-                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+        attributes( "Created-By"             : "Gradle ${gradle.gradleVersion}",
+                    "Specification-Title"    : "OperatorFabric Card Read Service",
+                    "Implementation-Title"   : "OperatorFabric Card Read Service",
+                    "Implementation-Version" : operatorfabric.version,
+                    "Specification-Version"  : operatorfabric.version
+        )
     }
 }
 

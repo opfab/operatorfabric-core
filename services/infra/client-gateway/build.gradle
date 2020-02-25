@@ -27,11 +27,13 @@ configurations {
 
 
 
-jar {
+bootJar {
     manifest {
-        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
-                "Specification-Title": "OperatorFabric Microservices Gateway",
-                "Main-Class"         : "org.lfenergy.operatorfabric.gateway.GatewayApplication",
-                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+        attributes("Created-By"          : "Gradle ${gradle.gradleVersion}",
+                "Specification-Title"    : "OperatorFabric Microservices Gateway",
+                "Implementation-Title"   : "OperatorFabric Microservices Gateway",
+                "Implementation-Version" : operatorfabric.version,
+                "Specification-Version"  : operatorfabric.version
+        )
     }
 }

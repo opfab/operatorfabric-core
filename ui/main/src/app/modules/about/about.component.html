@@ -1,0 +1,7 @@
+<ul>
+    <li *ngFor="let elem of (aboutElements|async)">
+        <span class="about-application-name">{{elem.name}}</span>
+        <span> - </span>
+        <span>{{elem.version}}</span>
+    </li>
+</ul>

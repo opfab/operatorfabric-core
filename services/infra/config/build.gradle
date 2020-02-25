@@ -7,12 +7,14 @@ configurations {
     compile.exclude module: "spring-cloud-starter-config"
 }
 
-jar {
+bootJar {
     manifest {
-        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
-                "Specification-Title": "OperatorFabric Centralized configuration",
-                "Main-Class"         : "org.lfenergy.operatorfabric.config.ConfigurationApplication",
-                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+        attributes("Created-By"          : "Gradle ${gradle.gradleVersion}",
+                "Specification-Title"    : "OperatorFabric Centralized configuration",
+                "Implementation-Title"   : "OperatorFabric Centralized configuration",
+                "Implementation-Version" : operatorfabric.version,
+                "Specification-Version"  : operatorfabric.version
+        )
     }
 }
 

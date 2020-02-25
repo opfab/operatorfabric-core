@@ -29,6 +29,7 @@ import {UtilitiesModule} from './modules/utilities/utilities.module';
 import {MenuLinkComponent} from './components/navbar/menus/menu-link/menu-link.component';
 import {CustomLogoComponent} from './components/navbar/custom-logo/custom-logo.component';
 import {OAuthModule} from 'angular-oauth2-oidc';
+import {AboutComponent} from "./modules/about/about.component";
 
 library.add(faExternalLinkAlt);
 library.add(faSignOutAlt);
@@ -56,7 +57,8 @@ library.add(faSignOutAlt);
         IconComponent,
         InfoComponent,
         MenuLinkComponent,
-        CustomLogoComponent],
+        CustomLogoComponent,
+        AboutComponent],
     providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
     bootstrap: [AppComponent]
 })

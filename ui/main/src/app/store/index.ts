@@ -27,27 +27,27 @@ import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
 import {reducer as timeReducer} from '@ofStore/reducers/time.reducer';
 import {reducer as archiveReducer} from '@ofStore/reducers/archive.reducer';
 import {AuthState} from '@ofStates/authentication.state';
-import {CardState} from "@ofStates/card.state";
-import {CustomRouterEffects} from "@ofEffects/custom-router.effects";
-import {MenuState} from "@ofStates/menu.state";
-import {MenuEffects} from "@ofEffects/menu.effects";
-import {LightCardEffects} from "@ofEffects/light-card.effects";
-import {FeedFiltersEffects} from "@ofEffects/feed-filters.effects";
-import {ConfigState} from "@ofStates/config.state";
-import {ConfigEffects} from "@ofEffects/config.effects";
-import {TimelineState} from "@ofStates/timeline.state";
-import {SettingsState} from "@ofStates/settings.state";
-import {SettingsEffects} from "@ofEffects/settings.effects";
-import {TimeState} from "@ofStates/time.state";
-import {TimeEffects} from "@ofEffects/time.effects";
-import {ArchiveState} from "@ofStates/archive.state";
-import {ArchiveEffects} from "@ofEffects/archive.effects";
+import {CardState} from '@ofStates/card.state';
+import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
+import {MenuState} from '@ofStates/menu.state';
+import {MenuEffects} from '@ofEffects/menu.effects';
+import {LightCardEffects} from '@ofEffects/light-card.effects';
+import {FeedFiltersEffects} from '@ofEffects/feed-filters.effects';
+import {ConfigState} from '@ofStates/config.state';
+import {ConfigEffects} from '@ofEffects/config.effects';
+import {TimelineState} from '@ofStates/timeline.state';
+import {SettingsState} from '@ofStates/settings.state';
+import {SettingsEffects} from '@ofEffects/settings.effects';
+import {TimeState} from '@ofStates/time.state';
+import {TimeEffects} from '@ofEffects/time.effects';
+import {ArchiveState} from '@ofStates/archive.state';
+import {ArchiveEffects} from '@ofEffects/archive.effects';
 
 import {reducer as userReducer} from '@ofStore/reducers/user.reducer';
-import {UserState} from "@ofStates/user.state";
-import {UserEffects} from "@ofEffects/user.effects";
+import {UserState} from '@ofStates/user.state';
+import {UserEffects} from '@ofEffects/user.effects';
 
-import {TranslateEffects} from "@ofEffects/translate.effects";
+import {TranslateEffects} from '@ofEffects/translate.effects';
 
 
 export interface AppState {

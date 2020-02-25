@@ -3,15 +3,15 @@ dependencies {
     compile project(':tools:spring:spring-mongo-utilities')
     compile project(':tools:spring:spring-oauth2-utilities')
     testCompile spring.securityTest
-//    compile project(':client:users-client-data')
-//    compile project(':tools:spring:spring-amqp-time-utilities')
 }
 
-jar {
+bootJar {
     manifest {
-        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
-                "Specification-Title": "OperatorFabric User Manager Service",
-                "Main-Class"         : "org.lfenergy.operatorfabric.users.UsersApplication",
-                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+        attributes("Created-By"          : "Gradle ${gradle.gradleVersion}",
+                "Specification-Title"    : "OperatorFabric User Manager Service",
+                "Implementation-Title"   : "OperatorFabric User Manager Service",
+                "Implementation-Version" : operatorfabric.version,
+                "Specification-Version"  : operatorfabric.version
+        )
     }
 }

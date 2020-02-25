@@ -34,7 +34,10 @@
         >{{'menu.'+link.path}}</a>
       </li>
       <!-- Links from menus declared in third-party bundles-->
-      <li *ngFor="let tMenu of (thirdMenus|async); let index = index;" class="nav-item" [class.dropdown]="tMenu.entries.length>1" [class.thirds-dropdown]="tMenu.entries.length>1">
+      <li *ngFor="let tMenu of (thirdMenus|async); let index = index;"
+          class="nav-item"
+          [class.dropdown]="tMenu.entries.length>1"
+          [class.thirds-dropdown]="tMenu.entries.length>1">
         <!-- Dropdown menu if at least 2 entries-->
         <a
                 class="nav-link dropdown-toggle"
@@ -76,6 +79,14 @@
                     routerLinkActive #rla="routerLinkActive"
                     translate
             >menu.settings</a>
+          </div>
+          <div class="dropdown-item" [class.active]="currentPath && 'about' === currentPath[1]">
+            <a
+                    class="nav-link text-dark text-decoration-none"
+                    routerLink="/about"
+                    routerLinkActive #rla="routerLinkActive"
+                    translate
+            >menu.about</a>
           </div>
           <div class="dropdown-item">
             <form>

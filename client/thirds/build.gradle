@@ -1,6 +1,11 @@
 jar {
     manifest {
-        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
-                "Specification-Title": "OperatorFabric Thirds Manager Client Data")
+        attributes( "Created-By"             : "Gradle ${gradle.gradleVersion}",
+                    "Specification-Title"    : "OperatorFabric Thirds Manager Client Data",
+                    "Implementation-Title"   : "OperatorFabric Thirds Manager Client Data",
+                    "Implementation-Version" : operatorfabric.version,
+                    "Specification-Version"  : operatorfabric.version
+        )
+
     }
 }
