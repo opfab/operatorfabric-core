@@ -6,6 +6,8 @@ CURRENT_PATH=$(pwd)
 GH_REPO=github.com/opfab/opfab.github.io.git
 HTTP_REPO="https://opfabtech:${GH_DOC_TOKEN}@${GH_REPO}"
 git clone $HTTP_REPO $HOME/documentation
+echo "List files after inital clone"
+echo ls $HOME/documentation
 # TODO Find out what sed below is for (as we don't have - in our version tags)
 version=$(echo "$OF_VERSION"| sed s/-SNAPSHOT//)
 cd $OF_HOME
@@ -25,6 +27,8 @@ cp -r $OF_HOME/ui/main/documentation/* $HOME/documentation/projects/ui/main/$ver
 cp -r $OF_HOME/ui/main/reports/* $HOME/documentation/projects/ui/main/$version/reports/.
 cp -r $OF_HOME/build/asciidoc/html5/* $HOME/documentation/documentation/$version/.
 cd $HOME/documentation
+echo "Results of copy"
+echo git status
 if [ -n "$(git status --porcelain)" ]; then
     echo "Changes to documentation detected, preparing commit"
     git add .
