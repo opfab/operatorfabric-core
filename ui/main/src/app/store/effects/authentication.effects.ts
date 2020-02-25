@@ -20,6 +20,7 @@ import {
     CheckImplicitFlowAuthenticationStatus,
     RejectLogIn,
     TryToLogIn,
+    TryToLogOut
 } from '@ofActions/authentication.actions';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {catchError, flatMap, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -33,10 +34,10 @@ import {Map} from '@ofModel/map';
 import {CardService} from '@ofServices/card.service';
 import {EmptyLightCards} from '@ofActions/light-card.actions';
 import {ClearCard} from '@ofActions/card.actions';
-import {environment} from '@env/environment';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 import {redirectToCurrentLocation} from "../../app-routing.module";
 import { combineLatest } from 'rxjs';
+import {TranslateService} from "@ngx-translate/core";
 
 /**
  * Management of the authentication of the current user
@@ -49,15 +50,17 @@ export class AuthenticationEffects {
      * @param store - {Store<AppState>} state manager
      * @param actions$ - {Action} {Observable} of Action of the Application
      * @param authService - service implementing the authentication business rules
-     * @param router - router service to redirect user accordingly to the user authentication status or variation of it.
      * @param cardService - service handling request of cards
+     * @param router - router service to redirect user accordingly to the user authentication status or variation of it.
+     * @param translate - object to get translation 
      *
      * istanbul ignore next */
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private authService: AuthenticationService,
                 private cardService: CardService,
-                private router: Router) {
+                private router: Router,
+                private translate: TranslateService) {
     }
 
     /**
@@ -257,6 +260,15 @@ export class AuthenticationEffects {
                 map(() => {
                     return new  AcceptLogIn(this.authService.providePayloadForSuccessfulAuthenticationFromImplicitFlow());
                 }));
+    @Effect()
+    UnableToRefreshToken: Observable<Action> =
+        this.actions$.pipe(
+            ofType(AuthenticationActionTypes.UnableToRefreshOrGetToken),
+            switchMap(() => {
+                window.alert(this.translate.instant("login.error.disconnected"));
+                return of(new TryToLogOut());
+            })
+        );
 
     handleErrorOnTokenGeneration(errorResponse, category: string) {
         let message, key;

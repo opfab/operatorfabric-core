@@ -9,7 +9,6 @@
 import {TestBed} from '@angular/core/testing';
 
 import {
-    AuthenticationModeHandler,
     AuthenticationService,
     AuthObject,
     CheckTokenResponse, ImplicitAuthenticationHandler,
@@ -21,7 +20,8 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import {
     ImplicitlyAuthenticated,
     PayloadForSuccessfulAuthentication,
-    UnAuthenticationFromImplicitFlow
+    UnAuthenticationFromImplicitFlow,
+    UnableToRefreshOrGetToken
 } from '@ofActions/authentication.actions';
 import {Guid} from 'guid-typescript';
 import {getPositiveRandomNumberWithinRange, getRandomAlphanumericValue} from '@tests/helpers';
@@ -30,7 +30,6 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
 import {environment} from '@env/environment';
 import {
-    OAuthEvent,
     OAuthLogger,
     OAuthService,
     UrlHelperService,
@@ -373,17 +372,17 @@ describe('AuthenticationService', () => {
                 service.dispatchAppStateActionFromOAuth2Events(tokenReceivedEvent);
                 expect(store.dispatch).toHaveBeenCalledWith(any(ImplicitlyAuthenticated));
             });
-        it('should dispatch an `UnAuthenticationFromImplicitFlow` on `token_error` events',
+        it('should dispatch an `UnableToRefreshOrGetToken` on `token_error` events',
             () => {
                 const tokenReceivedEvent = new OAuthSuccessEvent('token_error');
                 service.dispatchAppStateActionFromOAuth2Events(tokenReceivedEvent);
-                expect(store.dispatch).toHaveBeenCalledWith(any(UnAuthenticationFromImplicitFlow));
+                expect(store.dispatch).toHaveBeenCalledWith(any(UnableToRefreshOrGetToken));
             });
-        it('should dispatch an `UnAuthenticationFromImplicitFlow` on `token_refresh_error` events',
+        it('should dispatch an `UnableToRefreshOrGetToken` on `token_refresh_error` events',
             () => {
                 const tokenReceivedEvent = new OAuthSuccessEvent('token_refresh_error');
                 service.dispatchAppStateActionFromOAuth2Events(tokenReceivedEvent);
-                expect(store.dispatch).toHaveBeenCalledWith(any(UnAuthenticationFromImplicitFlow));
+                expect(store.dispatch).toHaveBeenCalledWith(any(UnableToRefreshOrGetToken));
             });
         it('should dispatch an `UnAuthenticationFromImplicitFlow` on `logout` events',
             () => {

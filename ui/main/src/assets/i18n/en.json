@@ -44,6 +44,7 @@
       "code":"Wrong authentication code",
       "unavailable":"Authentication service is currently unavailable",
       "unexpected":"An unexpected error was detected during login: {{error}}",
+      "disconnected": "You have been disconnected",
       "token": {
         "invalid": "Invalid token stored",
         "expiration": "The stored token has expired"

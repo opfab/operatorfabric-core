@@ -9,22 +9,22 @@
 import {Action} from '@ngrx/store';
 import {Guid} from 'guid-typescript';
 import {Message} from "@ofModel/message.model";
-import {ExtractI18nBuilderOptions} from "@angular-devkit/build-angular";
 
 export enum AuthenticationActionTypes {
-    InitAuthStatus = '[Authentication] Init Authentication Status',
-    CheckAuthenticationStatus = '[Authentication] Check Authentication Status',
-    AcceptLogIn = '[Authentication] Accept the user log in attempt',
-    RejectLogIn = '[Authentication] Reject the user log in attempt',
-    TryToLogIn = '[Authentication] Try to log the user in',
-    TryToLogOut = '[Authentication] Try to log the user out',
-    AcceptLogOut = '[Authentication] Accept the user log out attempt',
-    AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt',
-    CheckImplicitFlowAuthenticationStatus = '[Authentication] Check Authentication Status specifically for the Implicit Flow',
-    UselessAuthAction = '[Authentication] test purpose action'
+    InitAuthStatus = '[Authentication] Init Authentication Status'
+    ,CheckAuthenticationStatus = '[Authentication] Check Authentication Status'
+    ,AcceptLogIn = '[Authentication] Accept the user log in attempt'
+    ,RejectLogIn = '[Authentication] Reject the user log in attempt'
+    ,TryToLogIn = '[Authentication] Try to log the user in'
+    ,TryToLogOut = '[Authentication] Try to log the user out'
+    ,AcceptLogOut = '[Authentication] Accept the user log out attempt'
+    ,AcceptLogOutSuccess = '[Authentication] Success Accept the user log out attempt'
+    ,CheckImplicitFlowAuthenticationStatus = '[Authentication] Check Authentication Status specifically for the Implicit Flow'
+    ,UselessAuthAction = '[Authentication] Test purpose action'
     // TODO the following actions should be merge with password and code flow management of authentication
-    , ImplicitallyAuthenticated = '[Authentication] user is authentication using Implicit Flow' //
-    , UnAuthenticationFromImplicitFlow = '[Authentication[ user is log out by implicit Flow internal managment'
+    ,ImplicitallyAuthenticated = '[Authentication] User is authentication using Implicit Flow' 
+    ,UnAuthenticationFromImplicitFlow = '[Authentication] User is log out by implicit Flow internal managment'
+    ,UnableToRefreshOrGetToken = '[Authentication] The token can not be refresh or we cannot get a token'
 }
 
 /**
@@ -45,6 +45,7 @@ export class PayloadForSuccessfulAuthentication {
  *
  */
 export class InitAuthStatus implements Action {
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.InitAuthStatus;
     /* istanbul ignore next */
     constructor(public payload:{code: string}){}
@@ -62,15 +63,9 @@ export class CheckAuthenticationStatus implements Action {
 /**
  * Action used to update the state with the authentication information
  *
- * Emitted by {AuthenticationEffects} in the following {Observable} @members:
- *  * TryToLogIn
- *  * CheckAuthentication via handleLogInAttempt @method
- *
- * Used in the {function} reducer of the {authentication.reducer.ts} file to create a new state
- * containing the authentication information by filtering on the {AuthenticationActionTypes.AcceptLogIn} type.
- *
  */
 export class AcceptLogIn implements Action {
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.AcceptLogIn;
 
     /* istanbul ignore next */
@@ -80,10 +75,9 @@ export class AcceptLogIn implements Action {
 /**
  * Action used to push login/password pair to the authentication service
  *
- * Emitted by {LoginComponent} in the onSubmit @method which is called
- * when the user click on the `Login` button of the login page form.
  */
 export class TryToLogIn implements Action {
+    /* istanbul ignore next */
     readonly type= AuthenticationActionTypes.TryToLogIn;
 
     /* istanbul ignore next */
@@ -91,10 +85,7 @@ export class TryToLogIn implements Action {
 }
 
 /**
- * Action used when the user logout
- *
- * Emitted by {NavbarComponent} win the logOut @method which is called
- * when the user click on the `logOut` button of the `navbar`
+ * Action used when the user logout`
  */
 export class TryToLogOut implements Action {
     /* istanbul ignore next */
@@ -104,17 +95,9 @@ export class TryToLogOut implements Action {
 /**
  * Action used to notify the store that the authentication is not possible.
  *
- * Emmited by {AuthenticationEffect} in the following {Observable} @members:
- *  * `TryToLogin`;
- *  *  `CheckAuthentication`
- *  and in the `handleRejectedLogin` @method called by the `ChecAuthentication` {Observable}
- *
- * Used in the {function} reducer of the {authentication.reducer.ts} file to create a new state
- * without any authentication information and containing a message about login rejection
- * by filtering on the {AuthenticationActionTypes.RejectLogIn} type.
- *
  */
 export class RejectLogIn implements Action {
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.RejectLogIn;
 
     /* istanbul ignore next */
@@ -124,27 +107,18 @@ export class RejectLogIn implements Action {
 /**
  * Action used to removes authentication information of the system and thus logOut the user.
  *
- * Emitted by {AuthenticationEffect} in the following {Observable} @members:
- *  * `TryToLogOut`
- *  * `RejectLogInAttempt`
- *
- *  Consume by {AuthenticationEffect} in the `AcceptLogOut` {Observable} @member
- *
  */
 export class AcceptLogOut implements Action {
-    readonly type = AuthenticationActionTypes.AcceptLogOut;
-
     /* istanbul ignore next */
-    constructor(){}
+    readonly type = AuthenticationActionTypes.AcceptLogOut;
+     
+    /* istanbul ignore next */
+     constructor(){}
 }
 
 /**
  * Action used to notify the store to remove authentication information
  *
- * Emitted by {AuthenticationEffect} in `AcceptLogOut` {Observable} @member.
- *
- * Used in the {function} reducer of the {authentication.reducer.ts} file to create a new state
- * without any authentication information by filtering on the {AuthenticationActionTypes.AcceptLogOut} type.
  */
 export class AcceptLogOutSuccess implements Action {
     /* istanbul ignore next */
@@ -152,21 +126,32 @@ export class AcceptLogOutSuccess implements Action {
 }
 
 export class CheckImplicitFlowAuthenticationStatus implements Action {
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.CheckImplicitFlowAuthenticationStatus;
 }
 
 export class UselessAuthAction implements  Action{
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.UselessAuthAction;
 
 }
 
 export class ImplicitlyAuthenticated implements Action {
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.ImplicitallyAuthenticated;
 }
 
 export class UnAuthenticationFromImplicitFlow implements Action {
+    /* istanbul ignore next */
     readonly type = AuthenticationActionTypes.UnAuthenticationFromImplicitFlow;
 }
+
+export class UnableToRefreshOrGetToken implements Action {
+    /* istanbul ignore next */
+    readonly type = AuthenticationActionTypes.UnableToRefreshOrGetToken;
+
+}
+
 export type AuthenticationActions =
     InitAuthStatus
     | AcceptLogIn
@@ -179,4 +164,5 @@ export type AuthenticationActions =
     | CheckImplicitFlowAuthenticationStatus
     | UselessAuthAction
     | ImplicitlyAuthenticated
-    |UnAuthenticationFromImplicitFlow;
+    | UnAuthenticationFromImplicitFlow
+    | UnableToRefreshOrGetToken;
