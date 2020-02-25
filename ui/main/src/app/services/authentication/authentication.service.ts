@@ -377,7 +377,7 @@ export class AuthenticationService {
 
     dispatchAppStateActionFromOAuth2Events(event: OAuthEvent): void {
         const eventType: OAuthType = event.type;
-        console.log("Authentification event",event);
+        console.log(new Date(),"Authentification event",event);
         switch (eventType) {
             case ('token_received'): {
                 this.store.dispatch(new ImplicitlyAuthenticated());
