@@ -7,13 +7,13 @@
 
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {BaseSettingComponent} from "../base-setting/base-setting.component";
-import {AppState} from "@ofStore/index";
-import {Store} from "@ngrx/store";
-import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
-import {I18n} from "@ofModel/i18n.model";
-import {TranslateService} from "@ngx-translate/core";
-import {Observable, of} from "rxjs";
+import {BaseSettingComponent} from '../base-setting/base-setting.component';
+import {AppState} from '@ofStore/index';
+import {Store} from '@ngrx/store';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {I18n} from '@ofModel/i18n.model';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable, of} from 'rxjs';
 
 @Component({
     selector: 'of-list-setting',
@@ -31,10 +31,10 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
     ngOnInit() {
         this.preparedList = [];
         if (this.values) {
-            for (let v of this.values) {
-                if (typeof v == 'string') {
+            for (const v of this.values) {
+                if (typeof v === 'string') {
                     this.preparedList.push({value: v, label: of(v)});
-                } else if (typeof v.label == 'string') {
+                } else if (typeof v.label === 'string') {
                     this.preparedList.push({value: v.value, label: of(v.label)});
                 } else {
                     this.preparedList.push({
@@ -48,7 +48,7 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
     }
 
     initFormGroup() {
-        let validators = this.computeListValidators();
+        const validators = this.computeListValidators();
         validators.push(this.valueInListValidator());
         return new FormGroup({
             setting: new FormControl('', validators)
@@ -56,27 +56,29 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
     }
 
     protected computeListValidators() {
-        let validators = [];
-        if (this.requiredField)
+        const validators = [];
+        if (this.requiredField) {
             validators.push(Validators.required);
+        }
         return validators;
     }
 
     updateValue(value) {
-        this.form.get('setting').setValue(value?value:'', {emitEvent: false});
+        this.form.get('setting').setValue(value ? value : '', {emitEvent: false});
     }
 
     protected isEqual(formA, formB): boolean {
-        console.log('ListSettingComponent.isEqual called')
+        console.log('ListSettingComponent.isEqual called');
         return formA.setting === formB.setting;
     }
 
-    private valueInListValidator(){
-        return (control: AbstractControl)=>{
-            if(!!control.value && this.preparedList.map(e=>e.value).indexOf(control.value)<0)
-                return {valueInList:{valid:false}};
+    private valueInListValidator() {
+        return (control: AbstractControl) => {
+            if (!!control.value && this.preparedList.map(e => e.value).indexOf(control.value) < 0) {
+                return {valueInList: {valid: false}};
+            }
             return null;
-        }
+        };
     }
 
 }

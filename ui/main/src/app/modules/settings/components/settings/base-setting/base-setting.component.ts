@@ -7,16 +7,16 @@
 
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {AppState} from "@ofStore/index";
-import {Store} from "@ngrx/store";
-import {PatchSettings} from "@ofActions/settings.actions";
-import {buildSettingsSelector} from "@ofSelectors/settings.selectors";
-import {buildConfigSelector} from "@ofSelectors/config.selectors";
-import {Subject, timer} from "rxjs";
-import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from "rxjs/operators";
-import {FormGroup} from "@angular/forms";
-import * as _ from "lodash";
-import {selectIdentifier} from "@ofSelectors/authentication.selectors";
+import {AppState} from '@ofStore/index';
+import {Store} from '@ngrx/store';
+import {PatchSettings} from '@ofActions/settings.actions';
+import {buildSettingsSelector} from '@ofSelectors/settings.selectors';
+import {buildConfigSelector} from '@ofSelectors/config.selectors';
+import {Subject, timer} from 'rxjs';
+import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from 'rxjs/operators';
+import {FormGroup} from '@angular/forms';
+import * as _ from 'lodash';
+import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 
 @Component({
     selector: 'of-base-setting',
@@ -39,31 +39,33 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.form = this.initFormGroup();
-        if(!this.form){
-            throw 'Trying to instanciate component without form';
+        if (!this.form) {
+            throw new Error('Trying to instantiate component without form');
         }
         this.setting$ = this.store.select(buildSettingsSelector(this.settingPath))
             .pipe(takeUntil(this.ngUnsubscribe$));
-            this.setting$.subscribe(next => this.updateValue(next));
+        this.setting$.subscribe(next => this.updateValue(next));
         this.setting$
             .pipe(first())
-            .subscribe(()=>
+            .subscribe(() =>
                 this.form.valueChanges
                     .pipe(
                         takeUntil(this.ngUnsubscribe$),
-                        filter(()=>this.form.valid),
+                        filter(() => this.form.valid),
                         distinctUntilChanged((formA, formB) => this.isEqual(formA, formB)),
                         debounce(() => timer(500))
                     )
-                    .subscribe(next=>this.dispatch(this.convert(next)))
+                    .subscribe(next => this.dispatch(this.convert(next)))
             );
         this.placeholder$ = this.store.select(buildConfigSelector(`settings.${this.settingPath}`))
             .pipe(takeUntil(this.ngUnsubscribe$));
         this.store.select(selectIdentifier)
             .pipe(
                 takeUntil(this.ngUnsubscribe$),
-                map(id=>{return {login:id}}))
-            .subscribe(next=>this.baseSettings = next);
+                map(id => {
+                    return {login: id};
+                }))
+            .subscribe(next => this.baseSettings = next);
 
     }
 
@@ -72,31 +74,27 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe$.complete();
     }
 
-    protected updateValue(value:any){
+    protected updateValue(value: any) {
 
     }
 
-    protected initFormGroup():FormGroup{
-        return null
+    protected initFormGroup(): FormGroup {
+        return null;
     }
 
-    protected convert(value:any):any{
+    protected convert(value: any): any {
         return value;
     }
 
 
-    private dispatch(value:any) {
+    private dispatch(value: any) {
         const settings = {...this.baseSettings};
         settings[this.settingPath] = value.setting;
         this.store.dispatch(new PatchSettings({settings: settings}));
     }
 
-    protected isEqual(formA, formB):boolean{
+    protected isEqual(formA, formB): boolean {
         return _.isEqual(formA, formB);
-    }
-
-    protected submitValue(){
-        alert('submitted');
     }
 
 }
