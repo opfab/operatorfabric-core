@@ -75,6 +75,9 @@ jobs:
     - echo preparing image for version $OF_VERSION
     - docker login --username ${DOCKER_CLOUD_USER} --password ${DOCKER_CLOUD_PWD}
     - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
+    - "[[ $OF_VERSION =~ .+SNAPSHOT$ ]] && ./gradlew --build-cache copyWorkingDir dockerPushSnapshot -x test || echo not publishing docker snapshot tag"
+    - "[[ $OF_VERSION =~ .+RELEASE$ ]] && ./gradlew --build-cache copyWorkingDir dockerPushLatest -x test || echo not publishing docker latest tag"
+    - "[[ $OF_VERSION =~ .+RELEASE$ ]] && ./gradlew --build-cache copyWorkingDir dockerPush${OF_VERSION} -x test || echo not publishing docker ${OF_VERSION} tag"
     - docker image ls -a|grep lfeoperatorfabric
   - stage: doc
     script:
