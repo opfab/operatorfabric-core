@@ -11,6 +11,8 @@ cd $HOME/documentation
 echo "List files after inital clone"
 LIST_FILES=$(ls $HOME/documentation)
 echo $LIST_FILES
+GIT_CONFIG=$(git config --list --show-origin)
+echo $GIT_CONFIG
 cd $CURRENT_PATH
 
 # TODO Find out what sed below is for (as we don't have - in our version tags)
