@@ -6,8 +6,9 @@
 
 <div class="card bg-less-dark rounded">
     <div class="d-inline">
-    <of-type-filter></of-type-filter>
-    <of-time-filter></of-time-filter>
+        <of-type-filter></of-type-filter>
+        <of-time-filter></of-time-filter>
+        <of-severity-sort></of-severity-sort>
     </div>
     <div *ngIf="!(hideTags$|async)">
         <of-tags-filter></of-tags-filter>

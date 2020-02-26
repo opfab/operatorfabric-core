@@ -1,0 +1,21 @@
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)                 -->
+<!--                                                                     -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
+<!-- file, You can obtain one at http:F//mozilla.org/MPL/2.0/.            -->
+
+<ng-template #sortLabel>
+    <span *ngIf="toggleActive"translate>feed.sort.severityLttdPub</span>
+    <span *ngIf="!toggleActive" translate>feed.sort.lttdPub</span>
+ </ng-template>
+
+ <span *ngIf="toggleActive">
+     <button type="button" class="btn p-1 btn-outline-light border-0" data-placement="right" [ngbTooltip]="sortLabel" placement="right" (click)="toggleSort()">
+         <fa-icon icon="toggle-on"></fa-icon>
+     </button>
+ </span>
+ <span *ngIf="!toggleActive">
+     <button type="button" class="btn p-1 btn-outline-light border-0" data-toggle="tooltip"  [ngbTooltip]="sortLabel" placement="right" (click)="toggleSort()">
+         <fa-icon icon="toggle-off"></fa-icon>
+     </button>
+ </span>

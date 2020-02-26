@@ -22,7 +22,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {TimeFilterComponent} from './components/card-list/filters/time-filter/time-filter.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {faClock} from "@fortawesome/free-solid-svg-icons";
+import {faClock, faToggleOff, faToggleOn} from "@fortawesome/free-solid-svg-icons";
 import {ChartCommonModule, NgxChartsModule} from "@swimlane/ngx-charts";
 import {CustomTimelineChartComponent} from "./components/time-line/custom-timeline-chart/custom-timeline-chart.component";
 import {XAxisTickFormatPipe} from "./components/time-line/tick-format-pipe/x-axis-tick-format.pipe";
@@ -33,8 +33,11 @@ import {TagsFilterComponent} from './components/card-list/filters/tags-filter/ta
 import {TypeaheadModule} from "ngx-type-ahead";
 import {TimeService} from "@ofServices/time.service";
 import {UtilitiesModule} from "../utilities/utilities.module";
+import { SeveritySortComponent } from './components/card-list/filters/severity-sort/severity-sort.component';
 
 library.add(faClock);
+library.add(faToggleOn);
+library.add(faToggleOff);
 
 @NgModule({
     imports: [
@@ -57,7 +60,8 @@ library.add(faClock);
         DraggableDirective,
         MouseWheelDirective,
         XAxisTickFormatPipe,
-        TagsFilterComponent],
+        TagsFilterComponent,
+        SeveritySortComponent],
     exports: [FeedComponent],
     providers: [ {provide: TimeService, useClass: TimeService}]
 })

@@ -20,7 +20,7 @@ import {CustomTimelineChartComponent} from './custom-timeline-chart/custom-timel
 import {InitChartComponent} from './init-chart/init-chart.component';
 import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {getOneRandomLigthCard} from '@tests/helpers';
+import {getOneRandomLightCard} from '@tests/helpers';
 import {LoadLightCardsSuccess} from '@ofActions/light-card.actions';
 import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '@ofSelectors/feed.selectors';
@@ -134,7 +134,7 @@ describe('TimeLineComponent', () => {
   it('should create a list with one element when there is ' +
     'only one card in the state', (done) => {
     fixture.detectChanges();
-    const oneCard = getOneRandomLigthCard();
+    const oneCard = getOneRandomLightCard();
     const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
     store.dispatch(action);
     const lightCards$ = store.select(fromStore.selectFeed);
@@ -166,21 +166,21 @@ describe('TimeLineComponent', () => {
     // expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
   });
 
-  it('should create four differents circles when there is ' +
-      'four cards with differents severity in the state', (done) => {
+  it('should create four different circles when there is ' +
+      'four cards with different severity in the state', (done) => {
     // const compiled = fixture.debugElement.nativeElement;
     fixture.detectChanges();
-    const oneCard = getOneRandomLigthCard();
-    const actionCard = getOneRandomLigthCard({severity: 'ACTION'});
-    const alarmCard = getOneRandomLigthCard({severity: 'ALARM'});
-    const informationCard = getOneRandomLigthCard({severity: 'INFORMATION'});
+    const compliantCard = getOneRandomLightCard({severity: 'COMPLIANT'});
+    const actionCard = getOneRandomLightCard({severity: 'ACTION'});
+    const alarmCard = getOneRandomLightCard({severity: 'ALARM'});
+    const informationCard = getOneRandomLightCard({severity: 'INFORMATION'});
     // alarmCard.timeSpans = [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}];  // display is an enum normally
-    const action = new LoadLightCardsSuccess({lightCards: [oneCard, actionCard, alarmCard, informationCard] as LightCard[]});
+    const action = new LoadLightCardsSuccess({lightCards: [compliantCard, actionCard, alarmCard, informationCard] as LightCard[]});
     store.dispatch(action);
-    const lightCards$ = store.select(fromStore.selectFeed);
+    const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
     lightCards$.pipe(debounceTime(300), distinctUntilChanged())
-        .subscribe(lightCard => {
-      expect(lightCard).toEqual([oneCard, actionCard, alarmCard, informationCard].sort(compareBySeverityLttdPublishDate));
+        .subscribe(lightCards => {
+      expect(lightCards).toEqual([informationCard, alarmCard, actionCard, compliantCard].sort(compareBySeverityLttdPublishDate)); //Default sort
     });
     const dataCard = [{
         // timeSpans: [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}],
@@ -202,14 +202,14 @@ describe('TimeLineComponent', () => {
         publisherVersion: actionCard.publisherVersion,
         summary: actionCard.title
     }, {
-        displayDate: oneCard.startDate,
-        publishDate: oneCard.publishDate,
-        startDate: oneCard.startDate,
-        endDate: oneCard.endDate,
-        severity: oneCard.severity,
-        publisher: oneCard.publisher,
-        publisherVersion: oneCard.publisherVersion,
-        summary: oneCard.title
+        displayDate: compliantCard.startDate,
+        publishDate: compliantCard.publishDate,
+        startDate: compliantCard.startDate,
+        endDate: compliantCard.endDate,
+        severity: compliantCard.severity,
+        publisher: compliantCard.publisher,
+        publisherVersion: compliantCard.publisherVersion,
+        summary: compliantCard.title
     }, {
         displayDate: informationCard.startDate,
         publishDate: informationCard.publishDate,
@@ -237,7 +237,7 @@ describe('TimeLineComponent', () => {
     expect(listElements.length).toEqual(numberOfCardsInTheActionPayload);*/
   });
 
-  it('sould test constructMomentObj return an obj', () => {
+  it('should test constructMomentObj return an obj', () => {
     const result = component.constructMomentObj([0, 0, 1, 1, 2, 4, 0]);
     expect(result).toEqual({
       year: 0,

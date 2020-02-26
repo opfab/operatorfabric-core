@@ -70,6 +70,7 @@ export function reducer(
                 lastCards: []
             };
         }
+
         case FeedActionTypes.ApplyFilter: {
             if(state.filters.get(action.payload.name)) {
                 const filters = new Map(state.filters);
@@ -93,11 +94,21 @@ export function reducer(
                 filters: action.payload.filters
             };
         }
+
+        case FeedActionTypes.ChangeSort: {
+            return {
+                ...state,
+                sortBySeverity: !state.sortBySeverity
+            };
+        }
+
         case LightCardActionTypes.UpdateALightCard:{
             return LightCardAdapter.upsertOne(action.payload.card, state);
         }
+
         default: {
             return state;
         }
+
     }
 }

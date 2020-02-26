@@ -17,7 +17,7 @@ import {
     selectCardActionsAppearState
 } from '@ofSelectors/card.selectors';
 
-describe('ConfigSelectors', () => {
+describe('CardSelectors', () => {
     const emptyAppState: AppState = emptyAppState4Test;
     const selectedState: CardState = {
         ...cardInitialState,
@@ -31,7 +31,7 @@ describe('ConfigSelectors', () => {
         expect(selectCardStateSelectedDetails(testAppState)).toBeNull();
         expect(selectCardStateSelectedId(testAppState)).toBeNull();
     });
-    it('manage slected card state', () => {
+    it('manage selected card state', () => {
         const testAppState = {...emptyAppState, card: selectedState};
         expect(selectCardState(testAppState)).toEqual(selectedState);
         expect(selectCardStateSelected(testAppState)).toEqual(selectedState.selected);
