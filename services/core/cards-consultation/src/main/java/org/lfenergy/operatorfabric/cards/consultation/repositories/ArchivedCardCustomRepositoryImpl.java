@@ -66,6 +66,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
     public Mono<Page<LightCardConsultationData>> findWithUserAndParams(Tuple2<User, MultiValueMap<String, String>> params) {
         Query query = createQueryFromUserAndParams(params);
+        Query countQuery = createQueryFromUserAndParams(params);
 
         //Handle Paging
         Pageable pageableRequest = createPageableFromParams(params.getT2());
@@ -73,7 +74,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             return template.find(query.with(pageableRequest), LightCard.class, ARCHIVED_CARDS_COLLECTION)
                     .map(lightCard -> (LightCardConsultationData) lightCard)
                     .collectList()
-                    .zipWith(template.count(query, LightCard.class, ARCHIVED_CARDS_COLLECTION))
+                    .zipWith(template.count(countQuery, LightCard.class, ARCHIVED_CARDS_COLLECTION))
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, tuple.getT2()));
         } else {
             return template.find(query, LightCard.class, ARCHIVED_CARDS_COLLECTION)
