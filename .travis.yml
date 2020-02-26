@@ -65,9 +65,8 @@ jobs:
       - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
       # If SONAR_TOKEN is not available (for external PRs for example), skip sonar
       - ./gradlew --build-cache copyDependencies test jacocoTestReport
-      - if [ -z "${SONAR_TOKEN}" ];
-        then
-        sonar-scanner;
+      - if [ "${SONAR_TOKEN}" != "" ]; then
+        (sonar-scanner) && (echo sonar-scanner was run);
         fi
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
   - stage: docker-images
