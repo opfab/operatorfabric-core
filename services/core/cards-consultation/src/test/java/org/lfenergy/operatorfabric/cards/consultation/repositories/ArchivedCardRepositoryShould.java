@@ -396,10 +396,10 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    int expectedNbOfElementsForPagesRequested_ie_FirstPage = 3;
-                    assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElementsForPagesRequested_ie_FirstPage);
-                    int expectedNbOfPageRequested_ie_OnlyTheFirstOne = 1;
-                    assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPageRequested_ie_OnlyTheFirstOne);
+                    int expectedNbOfElements = 7;
+                    assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
+                    int expectedNbOfPages = 3;
+                    assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheFirstPage = 3;
                     assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheFirstPage);
                     //Check criteria are matched
@@ -417,10 +417,10 @@ public class ArchivedCardRepositoryShould {
         params = of(user1,queryParams);
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    int expectedNbOfElementsForPagesRequested_ie_FirstAndSecondOne = 6;
-                    assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElementsForPagesRequested_ie_FirstAndSecondOne);
-                    int expectedNbOfRequestedPages_ie_FirstAndSecondOnes = 2;
-                    assertThat(page.getTotalPages()).isEqualTo(expectedNbOfRequestedPages_ie_FirstAndSecondOnes);
+                    int expectedNbOfElements = 7;
+                    assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
+                    int expectedNbOfPages = 3;
+                    assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheSecondPage = 3;
                     assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheSecondPage);
                     //Check criteria are matched
@@ -438,10 +438,10 @@ public class ArchivedCardRepositoryShould {
         params = of(user1,queryParams);
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    int expectedNbOfElementsForRequestedPages_ie_FistSecondAndThirdOnes = 7;
-                    assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElementsForRequestedPages_ie_FistSecondAndThirdOnes);
-                    int expectedNbOfRequestedPages_ie_FirstSecondAndThirdOnes = 3;
-                    assertThat(page.getTotalPages()).isEqualTo(expectedNbOfRequestedPages_ie_FirstSecondAndThirdOnes);
+                    int expectedNbOfElements = 7;
+                    assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
+                    int expectedNbOfPages = 3;
+                    assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheThirdPage = 1;
                     assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheThirdPage);
                     //Check criteria are matched
