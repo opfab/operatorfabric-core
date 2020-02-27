@@ -17,6 +17,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
+import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 
 @Component({
   selector: 'of-time-line',
@@ -32,6 +33,9 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
     constructor(private store: Store<AppState>) {}
     ngOnInit() {
+        this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(
+            l => moment.locale(l)
+        )
         // DOMAIN CONF from moment() to our conf
         const domain7DayConf = this.constructMomentObj([0, 0, 0, 8, 0, 0, 0], ['day'], null);
         const domainWeekConf = this.constructMomentObj([0, 0, 1, 0, 0, 0, 0], ['week'], null);
