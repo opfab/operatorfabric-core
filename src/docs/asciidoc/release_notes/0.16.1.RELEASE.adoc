@@ -13,7 +13,7 @@
 * [OC-715] - [Cards-consultation][tests] : clean must be done after each unit test
 
 == Task
-
+* [OC-687] - Remove unused OAuth2 micro-service 
 * [OC-712] - When Token refresh is not possible redirect to login page (Implcit Mode)
 [%hardbreaks]
 * [OC-649] - Upgrade the backend

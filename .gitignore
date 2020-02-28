@@ -66,7 +66,7 @@ fabric.properties
 classes
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
+.vscode/settings.json
 !.vscode/tasks.json
 #!.vscode/launch.json
 !.vscode/extensions.json
@@ -108,3 +108,4 @@ gradle-app.setting
 
 # ignoring .env file needed by docker-compose in deploy containers
 **/deploy/.env
+

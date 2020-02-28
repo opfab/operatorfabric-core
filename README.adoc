@@ -296,7 +296,6 @@ project
 │   │   ├──time (time-business-service)
 │   │   └──users (users-business-service)
 │   ├──infra
-│   │   ├──auth (OAuth2-dev-server)
 │   │   ├──client-gateway (client-gateway-cloud-service)
 │   │   ├──config (configuration-cloud-service)
 │   │   └──registry (registry-cloud-service)
@@ -351,8 +350,6 @@ service
 *** link:services/core/users[users (users-business-service)]: Users management
 service
 ** link:services/infra[infra]: contains infrastructure microservices
-*** link:services/infra/auth[auth (OAuth2-dev-server)]: Auth is a dummy
-development spring-oauth2 server used for testing and debugging other services
 *** link:services/infra/client-gateway[client-gateway
 (client-gateway-cloud-service)]: spring-gateway client side only gateway
 microservice, used to serve public apis and web ui
@@ -482,7 +479,6 @@ instance).
 |2102 |cards-publication |card publication service http (REST)
 |2103 |users |Users management service http (REST)
 |2104 |cards-consultation |card consultation service http (REST)
-|3000 |oauth |Oauth development service http (REST)
 |4000 |config |java debug port
 |4001 |registry |java debug port
 |4002 |gateway |java debug port
@@ -491,7 +487,6 @@ instance).
 |4102 |cards-publication |java debug port
 |4103 |users |java debug port
 |4103 |cards-consultation |java debug port
-|5000 |oauth |java debug port
 |===
 
 +++ </div></details> +++
@@ -618,7 +613,6 @@ For debugging purpose the following ports are also exposed:
 |2104 |cards-consultation |8080 |card consultation service http (REST)
 |2105 |actions |8080 |actions (REST)
 |2200 |web-ui |8080 |card consultation service http (REST)
-|3000 |oauth |8080 |Oauth development service http (REST)
 |4000 |config |5005 |java debug port
 |4001 |registry |5005 |java debug port
 |4002 |gateway |5005 |java debug port
@@ -629,7 +623,6 @@ For debugging purpose the following ports are also exposed:
 |4104 |cards-consultation |5005 |java debug port
 |4105 |actions |5005 |java debug port
 |4200 |web-ui |5005 |java debug port
-|5000 |oauth |5005 |java debug port
 |27017 |mongo |27017 |mongo api port
 |5672 |rabbitmq |5672 |amqp api port
 |15672 |rabbitmq |15672 |rabbitmq api port
@@ -715,7 +708,6 @@ docker-compose files (see [prj]/src/main/docker) the ports used are
 |cards-publication |2102 |2102 |2102
 |users |2103 |2103 |2103
 |cards-consultation |2104 |2104 |2104
-|oauth |3000 |3000 |3000
 |config |4000 |4000 |4000
 |registry |4001 |4001 |4001
 |gateway |4002 |4002 |4002
@@ -724,8 +716,6 @@ docker-compose files (see [prj]/src/main/docker) the ports used are
 |cards-publication |4102 |4102 |4102
 |users |4103 |4103 |4103
 |cards-consultation |4103 |4103 |4103
-|oauth |5000 |5000 |5000
-|oauth |5000 |5000 |5000
 |===
 
 == Troubleshooting
