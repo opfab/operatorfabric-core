@@ -4,6 +4,7 @@ operatorfabric:
   security:
     provider-url: http://localhost:89
     provider-realm: dev
+    logout-url: http://localhost:89/auth
     oauth2:
       flow:
         mode: CODE

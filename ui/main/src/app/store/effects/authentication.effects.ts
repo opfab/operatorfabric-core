@@ -302,11 +302,11 @@ export class AuthenticationEffects {
         this.authService.clearAuthenticationInformation();
         combineLatest(
             this.store.select(buildConfigSelector('security.provider-realm')),
-            this.store.select(buildConfigSelector('security.provider-url'))
+            this.store.select(buildConfigSelector('security.logout-url'))
         ).subscribe(([realm, url]) => {
             if(realm && url) {
                 const redirect = this.authService.computeRedirectUri();
-                window.location.href = `${url}/auth/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
+                window.location.href = `${url}/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
             }
         });
         this.cardService.unsubscribeCardOperation();
