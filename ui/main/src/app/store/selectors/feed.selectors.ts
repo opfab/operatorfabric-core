@@ -7,19 +7,18 @@
 
 
 import {createSelector} from '@ngrx/store';
-import {LightCardAdapter} from '@ofStates/feed.state';
+import {compareByLttdPublishDate, compareBySeverityLttdPublishDate, LightCardAdapter} from '@ofStates/feed.state';
 import {AppState} from "@ofStore/index";
 import {Filter} from "@ofModel/feed-filter.model";
 import {LightCard} from "@ofModel/light-card.model";
 import {FilterType} from "@ofServices/filter.service";
-import {getSelectedId} from "@ofStore/reducers/card.reducer";
 
 export const selectLightCardsState = (state:AppState) => state.feed;
 
 export const {
-  selectIds: selecteFeedCardIds,
+  selectIds: selectFeedCardIds,
   selectAll: selectFeed,
-  selectEntities: selecteFeedCardEntities
+  selectEntities: selectFeedCardEntities
 } = LightCardAdapter.getSelectors(selectLightCardsState);
 
 export const selectLightCardSelection = createSelector(
@@ -51,5 +50,30 @@ export function buildFilterSelector(name:FilterType){
     });
 }
 
-export const fetchLightCard = lightCardId =>(state:AppState) => selecteFeedCardEntities(state)[lightCardId]
+export const fetchLightCard = lightCardId =>(state:AppState) => selectFeedCardEntities(state)[lightCardId]
 
+export const selectSortBySeverity = createSelector(selectLightCardsState,
+    state => state.sortBySeverity);
+
+export const selectSortedFilterLightCardIds = createSelector(
+    selectFilteredFeed,
+    selectSortBySeverity,
+    ( entityArray, sortBySeverity ) => {
+        function compareFn(sortBySeverity: boolean){
+            if(sortBySeverity) {
+                return compareBySeverityLttdPublishDate;
+            } else {
+                return compareByLttdPublishDate;
+            }
+        }
+        return entityArray
+            .sort( compareFn(sortBySeverity) )
+            .map( entity => entity.id );
+    });
+
+export const selectSortedFilteredLightCards = createSelector(
+    selectFeedCardEntities,
+    selectSortedFilterLightCardIds,
+    ( entities, sortedIds ) => {
+        return sortedIds.map( id => entities[id]);
+    })

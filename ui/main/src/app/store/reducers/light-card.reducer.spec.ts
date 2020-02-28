@@ -10,7 +10,12 @@ import {reducer} from './light-card.reducer';
 import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
 import {createEntityAdapter} from "@ngrx/entity";
 import {LightCard} from "@ofModel/light-card.model";
-import {getOneRandomLigthCard, getRandomAlphanumericValue, getSeveralRandomLightCards} from "@tests/helpers";
+import {
+    getOneRandomLightCard,
+    getRandomAlphanumericValue,
+    getRandomBoolean,
+    getSeveralRandomLightCards
+} from "@tests/helpers";
 import {
     AddLightCardFailure,
     ClearLightCardSelection,
@@ -18,7 +23,7 @@ import {
     LoadLightCardsFailure,
     LoadLightCardsSuccess
 } from "@ofActions/light-card.actions";
-import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
+import {ApplyFilter, ChangeSort, InitFilters} from "@ofActions/feed.actions";
 import {Filter} from "@ofModel/feed-filter.model";
 import {FilterType} from "@ofServices/filter.service";
 
@@ -39,7 +44,7 @@ describe('LightCard Reducer', () => {
     it('should return the previous state on living state', () => {
       const action = {} as any;
 
-      const previousState = lightCardEntityAdapter.addOne(getOneRandomLigthCard(),feedInitialState);
+      const previousState = lightCardEntityAdapter.addOne(getOneRandomLightCard(),feedInitialState);
       const result = reducer(previousState,action);
       expect(result).toBe(previousState);
     });
@@ -182,7 +187,8 @@ describe('LightCard Reducer', () => {
                     lastCards: [],
                     loading: false,
                     error: '',
-                    filters: new Map()
+                    filters: new Map(),
+                    sortBySeverity: true
                 });
 
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
@@ -191,7 +197,42 @@ describe('LightCard Reducer', () => {
                     lastCards: [],
                     loading: false,
                     error: '',
-                    filters: new Map()
+                    filters: new Map(),
+                    sortBySeverity: true
+                });
+
+            const result = reducer(previousState, action);
+
+            expect(result).toEqual(expectedState);
+
+        });
+
+    });
+
+    describe('ChangeSort', () => {
+
+        it('should toggle the sortBySeverity property', () => {
+            const action = new ChangeSort();
+            const initialSort = getRandomBoolean();
+            const initialSelectedCardId = getRandomAlphanumericValue(5,10);
+            const previousState: CardFeedState = LightCardAdapter.getInitialState(
+                {
+                    selectedCardId: initialSelectedCardId,
+                    lastCards: [],
+                    loading: false,
+                    error: '',
+                    filters: new Map(),
+                    sortBySeverity: initialSort
+                });
+
+            const expectedState: CardFeedState = LightCardAdapter.getInitialState(
+                {
+                    selectedCardId: initialSelectedCardId,
+                    lastCards: [],
+                    loading: false,
+                    error: '',
+                    filters: new Map(),
+                    sortBySeverity: !initialSort
                 });
 
             const result = reducer(previousState, action);

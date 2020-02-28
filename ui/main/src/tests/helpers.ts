@@ -10,11 +10,10 @@ import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {Card, Detail, TitlePosition} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
-import {Map as OfMap} from "@ofModel/map";
+import {Map as OfMap, Map} from "@ofModel/map";
 import {Action, ActionType, Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
-import { Page } from '@ofModel/page.model';
+import {Page} from '@ofModel/page.model';
 import {AppState} from "@ofStore/index";
-import {Map} from "@ofModel/map";
 
 export const emptyAppState4Test:AppState = {
     router: null,
@@ -144,7 +143,7 @@ export function getRandomIndex<E>(array: E[]){
     }
 }
 
-export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
+export function getOneRandomLightCard(lightCardTemplate?:any): LightCard {
     lightCardTemplate = lightCardTemplate?lightCardTemplate:{};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
@@ -155,7 +154,7 @@ export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
         lightCardTemplate.publishDate?lightCardTemplate.publishDate:today,
         lightCardTemplate.startDate? lightCardTemplate.startDate:startTime,
         lightCardTemplate.endDate?lightCardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        lightCardTemplate.severity?lightCardTemplate.severity:Severity.COMPLIANT,
+        lightCardTemplate.severity?lightCardTemplate.severity:getRandomSeverity(),
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
         lightCardTemplate.lttd?lightCardTemplate.lttd:generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
@@ -166,6 +165,12 @@ export function getOneRandomLigthCard(lightCardTemplate?:any): LightCard {
     );
     return oneCard;
 }
+
+export function getRandomSeverity(): Severity {
+    const severities : Severity[] = [Severity.ALARM, Severity.ACTION, Severity.COMPLIANT, Severity.INFORMATION];
+    return severities[getPositiveRandomNumberWithinRange(0,3)];
+}
+
 export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCard> {
     const lightCards = getSeveralRandomLightCards(totalElements);
     const randomPage = new Page<LightCard>(totalPages, totalElements, lightCards);
@@ -192,7 +197,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.publishDate?cardTemplate.publishDate:today,
         cardTemplate.startDate? cardTemplate.startDate:startTime,
         cardTemplate.endDate?cardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        cardTemplate.severity?cardTemplate.severity:Severity.COMPLIANT,
+        cardTemplate.severity?cardTemplate.severity:getRandomSeverity(),
         getRandomAlphanumericValue(3, 24),
         cardTemplate.process?cardTemplate.process:getRandomAlphanumericValue(3, 24),
         cardTemplate.processId?cardTemplate.processId:getRandomAlphanumericValue(3, 24),
@@ -256,7 +261,7 @@ export function getSeveralRandomLightCards(numberOfCards = 1, cardTemplate?:any)
     const finalNumberOfCards = forcePositiveAndOneMinimum(numberOfCards);
     const lightCards: LightCard[] = new Array(finalNumberOfCards);
     for (let i = 0; i < finalNumberOfCards; ++i) {
-        lightCards[i] = getOneRandomLigthCard(cardTemplate);
+        lightCards[i] = getOneRandomLightCard(cardTemplate);
     }
     return lightCards;
 }
@@ -287,6 +292,11 @@ export function generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min = 1
     const minimum = forcePositiveAndOneMinimum(min);
     const maximum = handleMaxAgainstMin(minimum, max);
     return Math.floor(Math.random() * (maximum - minimum) + minimum);
+}
+
+export function getRandomBoolean(): boolean {
+    return Math.random() >= 0.5;
+
 }
 
 function forcePositiveAndOneMinimum(min: number): number {

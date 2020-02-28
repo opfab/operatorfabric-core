@@ -15,7 +15,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
-import {generateThirdWithVersion, getOneRandomLigthCard, getRandomAlphanumericValue} from "@tests/helpers";
+import {generateThirdWithVersion, getOneRandomLightCard, getRandomAlphanumericValue} from "@tests/helpers";
 import * as _ from 'lodash';
 import {LightCard} from "@ofModel/light-card.model";
 import {AuthenticationService} from "@ofServices/authentication/authentication.service";
@@ -138,7 +138,7 @@ describe('Thirds Services', () => {
     });
     
     it('should update translate service upon new card arrival', (done) => {
-        let card = getOneRandomLigthCard();
+        let card = getOneRandomLightCard();
         let i18n = {}
         _.set(i18n, `en.${card.title.key}`, 'en title');
         _.set(i18n, `en.${card.summary.key}`, 'en summary');

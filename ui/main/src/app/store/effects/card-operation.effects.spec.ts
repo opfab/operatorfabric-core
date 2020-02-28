@@ -12,7 +12,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {CardOperationEffects} from '@ofEffects/card-operation.effects';
 import {LoadLightCardsSuccess} from '@ofActions/light-card.actions';
-import {getOneRandomLigthCard, getRandomIndex, getSeveralRandomLightCards} from '@tests/helpers';
+import {getOneRandomLightCard, getRandomIndex, getSeveralRandomLightCards} from '@tests/helpers';
 import {CardService} from '@ofServices/card.service';
 import {LoadCard} from '@ofActions/card.actions';
 import {MockStore, provideMockStore} from '@ngrx/store/testing';
@@ -84,7 +84,7 @@ describe('CardOperationEffects', () => {
         it( 'should not trigger LoadCard on LoadLightCardSuccess if selected card is not among updated cards', () =>{
 
             const severalRandomLightCards = getSeveralRandomLightCards(5);
-            const selectedLightCard = getOneRandomLigthCard();
+            const selectedLightCard = getOneRandomLightCard();
 
             store.setState({
                 ...initialState,

@@ -10,7 +10,7 @@ import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testin
 
 
 import {CardComponent} from './card.component';
-import {getOneRandomLigthCard, getRandomAlphanumericValue} from '@tests/helpers';
+import {getOneRandomLightCard, getRandomAlphanumericValue} from '@tests/helpers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Store, StoreModule} from '@ngrx/store';
@@ -84,7 +84,7 @@ describe('CardComponent', () => {
         router = TestBed.get(Router);
     });
     it('should create and display minimal light card information', () => {
-        const lightCard = getOneRandomLigthCard();
+        const lightCard = getOneRandomLightCard();
         // extract expected data
         const id = lightCard.id;
         const uid = lightCard.uid;
@@ -101,7 +101,7 @@ describe('CardComponent', () => {
         expect(fixture.nativeElement.querySelector('.card-body > p')).toBeFalsy();
     });
     it('should select card', () => {
-        const lightCard = getOneRandomLigthCard();
+        const lightCard = getOneRandomLightCard();
 
         router.navigate.and.callThrough();
 
@@ -114,7 +114,7 @@ describe('CardComponent', () => {
         expect(router.navigate).toHaveBeenCalledWith(['/' + lightCardDetailsComp.currentPath, 'cards', lightCard.id]);
     });
     it('should select card and set the appear array', () => {
-        const lightCard = getOneRandomLigthCard();
+        const lightCard = getOneRandomLightCard();
         lightCardDetailsComp.lightCard = lightCard;
         lightCardDetailsComp.ngOnInit();
         fixture.detectChanges();
@@ -145,12 +145,12 @@ describe('CardComponent', () => {
         });
 
     it('should return an empty string if NONE is configured', () => {
-        const lightCard = getOneRandomLigthCard();
+        const lightCard = getOneRandomLightCard();
         const expectedEmptyDisplayedDate = lightCardDetailsComp.computeDisplayedDates('NONE', lightCard);
         expect(expectedEmptyDisplayedDate).toEqual('');
         });
     it('should return interval if BUSINESS is configured', () => {
-        const lightCard = getOneRandomLigthCard();
+        const lightCard = getOneRandomLightCard();
         const expectedBuisnessInterval = lightCardDetailsComp.computeDisplayedDates('BUSINESS', lightCard);
         verifyCorrectInterval(expectedBuisnessInterval);
     });
@@ -170,29 +170,29 @@ describe('CardComponent', () => {
     }
 
     it('should return interval if there is no configuration', () => {
-        const lightCard = getOneRandomLigthCard();
+        const lightCard = getOneRandomLightCard();
         const expectedBusinessInterVal = lightCardDetailsComp.computeDisplayedDates(undefined, lightCard);
         verifyCorrectInterval(expectedBusinessInterVal);
     });
 
     it('should return interval with unexpected configuration', () => {
-        const lightCard = getOneRandomLigthCard();
+        const lightCard = getOneRandomLightCard();
         const expectedBusinessInterVal = lightCardDetailsComp.computeDisplayedDates(getRandomAlphanumericValue(12), lightCard);
         verifyCorrectInterval(expectedBusinessInterVal);
     });
 
     it( 'should return a single date with LTTD configuration', () => {
-       const expectDate = lightCardDetailsComp.computeDisplayedDates('LTTD', getOneRandomLigthCard());
+       const expectDate = lightCardDetailsComp.computeDisplayedDates('LTTD', getOneRandomLightCard());
        verifyCorrectString(expectDate, 18, 20);
     });
 
     it( 'should return a single date with BUSINESS_START configuration', () => {
-        const expectDate = lightCardDetailsComp.computeDisplayedDates('BUSINESS_START', getOneRandomLigthCard());
+        const expectDate = lightCardDetailsComp.computeDisplayedDates('BUSINESS_START', getOneRandomLightCard());
         verifyCorrectString(expectDate, 18, 20);
     });
 
     it( 'should return a single date with PUBLICATION configuration', () => {
-        const expectDate = lightCardDetailsComp.computeDisplayedDates('PUBLICATION', getOneRandomLigthCard());
+        const expectDate = lightCardDetailsComp.computeDisplayedDates('PUBLICATION', getOneRandomLightCard());
         verifyCorrectString(expectDate, 18, 20);
     });
 

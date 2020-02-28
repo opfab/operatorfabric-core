@@ -17,7 +17,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '@ofStore/selectors/feed.selectors';
 import {By} from '@angular/platform-browser';
 import {
-    getOneRandomLigthCard,
+    getOneRandomLightCard,
     getPositiveRandomNumberWithinRange,
     getSeveralRandomLightCards
 } from '../../../tests/helpers';
@@ -81,11 +81,11 @@ describe('FeedComponent', () => {
     it('should create a list with one element when there are ' +
         'only one card in the state', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const oneCard = getOneRandomLigthCard();
+        const oneCard = getOneRandomLightCard();
 
         const action = new LoadLightCardsSuccess({lightCards: [oneCard] as LightCard[]});
         store.dispatch(action);
-        const lightCards$ = store.select(fromStore.selectFeed);
+        const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
         lightCards$.subscribe(lightCard => {
             expect(lightCard).toEqual([oneCard]);
         });
@@ -103,13 +103,13 @@ describe('FeedComponent', () => {
     it('should create a list with two elements when there are ' +
         'only two cards in the state', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const oneCard = getOneRandomLigthCard();
-        const anotherCard = getOneRandomLigthCard();
+        const oneCard = getOneRandomLightCard();
+        const anotherCard = getOneRandomLightCard();
         const action = new LoadLightCardsSuccess({lightCards: [oneCard, anotherCard] as LightCard[]});
         store.dispatch(action);
-        const lightCards$ = store.select(fromStore.selectFeed);
+        const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
         lightCards$.subscribe(lightCard => {
-            expect(lightCard).toEqual([oneCard, anotherCard].sort(compareBySeverityLttdPublishDate));
+            expect(lightCard).toEqual([oneCard, anotherCard].sort(compareBySeverityLttdPublishDate)); //This is the default sort
         });
         expect(store.dispatch).toHaveBeenCalledWith(action);
         expect(component).toBeTruthy();
@@ -129,13 +129,13 @@ describe('FeedComponent', () => {
     it('should create a list with two cards when two arrays of one card are dispatched' +
         ' 1', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const oneCard = getOneRandomLigthCard({startDate:Date.now()});
-        const anotherCard = getOneRandomLigthCard({startDate:Date.now()-3600000});
+        const oneCard = getOneRandomLightCard({startDate:Date.now()});
+        const anotherCard = getOneRandomLightCard({startDate:Date.now()-3600000});
         const action = new LoadLightCardsSuccess({lightCards: [oneCard]});
         store.dispatch(action);
         const action0 = new LoadLightCardsSuccess({lightCards: [anotherCard]});
         store.dispatch(action0);
-        const lightCards$ = store.select(fromStore.selectFeed);
+        const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
         lightCards$.subscribe(lightCard => {
             expect(lightCard).toEqual([anotherCard,oneCard].sort(compareBySeverityLttdPublishDate));
         });

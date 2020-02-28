@@ -29,6 +29,10 @@
           "label": "Information"
         }
       }
+    },
+    "sort": {
+      "severityLttdPub": "Trier par type, lttd et date de publication",
+      "lttdPub": "Trier par lttd et date de publication"
     }
   },
   "login":{

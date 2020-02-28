@@ -6,6 +6,17 @@
 
 = Version 0.16.1.RELEASE
 
+== Story
+* [OC-624] As a user I want to sort cards on the feed either by severity, lttd, publishDate or by lttd, publishDate only.
++
+_In the feed, the cards remain sorted by default by severity, then by lttd (last time to decide) desc.
+(i.e. closest lttd first), then by publication date asc. (i.e. latest cards first)._
++
+_This version adds a toggle to the feed buttons to switch to a second sort order that doesn't take severity
+into account, so that cards are sorted by closest lttd then latest publication date._
++
+_Note: No configuration is necessary._
+
 == Bug
 * [OC-549] - Thirds API does't return 404 when requested third doesn't exist.
 * [OC-325] - Put a long heardbeatTimeout to avoid loosing cards
@@ -13,8 +24,8 @@
 * [OC-715] - [Cards-consultation][tests] : clean must be done after each unit test
 
 == Task
-* [OC-687] - Remove unused OAuth2 micro-service 
-* [OC-712] - When Token refresh is not possible redirect to login page (Implcit Mode)
+* [OC-687] - Remove unused OAuth2 micro-service
+* [OC-712] - When Token refresh is not possible redirect to login page (Implicit Mode)
 [%hardbreaks]
 * [OC-649] - Upgrade the backend
 * [OC-681] - Migrate angular from version 7 to 8
