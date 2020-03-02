@@ -1,6 +1,6 @@
 import {extractNameWithVersionAndSortByRank} from './about.component';
 
-fdescribe('extractNamesWithVersionAndSortByRank', () => {
+describe('extractNamesWithVersionAndSortByRank', () => {
 
     it('should order applications by rank if they are all declared without duplicate', () => {
         const first = {name: 'first', version: 'first version', rank: 0};
