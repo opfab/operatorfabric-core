@@ -30,7 +30,11 @@ NONE
 
 |operatorfabric.security.realm-url||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
 |operatorfabric.security.provider-url||yes|The keycloak server instance
-|operatorfabric.security.logout-url||yes|The keycloak logout URL. In most cases, this parameter is a composition of your keycloak instance and the _auth_ keyword (ex: https://www.keycloakurl.com/auth), but we also support domains without _auth_ (ex: https://www.keycloakurl.com/customPath)
+|operatorfabric.security.logout-url||yes
+a|The keycloak logout URL. Is a composition of:
+ - Your keycloak instance and the _auth_ keyword (ex: https://www.keycloakurl.com/auth), but we also support domains without _auth_ (ex: https://www.keycloakurl.com/customPath)
+ - The realm name (Ex: dev)
+ - The redirect URL (_redirect_uri_): The redirect URL after success authentification
 |operatorfabric.security.oauth2.flow.mode|PASSWORD|no
 a|authentication mode, awailable options:
 

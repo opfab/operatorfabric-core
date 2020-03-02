@@ -297,16 +297,12 @@ export class AuthenticationEffects {
         return new RejectLogIn({error: errorMsg});
 
     }
-
+    
     private resetState() {
         this.authService.clearAuthenticationInformation();
-        combineLatest(
-            this.store.select(buildConfigSelector('security.provider-realm')),
-            this.store.select(buildConfigSelector('security.logout-url'))
-        ).subscribe(([realm, url]) => {
-            if(realm && url) {
-                const redirect = this.authService.computeRedirectUri();
-                window.location.href = `${url}/realms/${realm}/protocol/openid-connect/logout?redirect_uri=${redirect}`;
+        this.store.select(buildConfigSelector('security.logout-url')).subscribe(url => {
+            if (url) {
+                window.location.href = url;
             }
         });
         this.cardService.unsubscribeCardOperation();
