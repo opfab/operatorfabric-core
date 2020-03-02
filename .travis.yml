@@ -4,7 +4,7 @@ addons:
     sonarcloud:
         organization: "opfab"
         token:
-            secure: ${SONAR_TOKEN}
+            secure: "CT0LLYn5ApBOB7vX5LALKUBKDI8UEyPPavsEZVqoyfAQ+WUWfDFCTWJQgvrjnxkERQ8Ow9kw7rJZDavVUlZKGUSEchnP5zZeRsiA/IYlQumj0J8CzNgntwSCsMfK2MKS+Pt9Too2g9lYFil5QYYlBUrlQMzQ2uuBeZfKLRiapxF3vyJ9KlwDsW9tzQTT1P2gtrWeKeFHHZFQ7/agc46KWwFre4tHnB7b64WU89qvLNaVJBs+gkfLfjnUt+/SprK3GqbFtPmKlRvK/zSUdGLEwdq6sSwK2UTVcJzQ1DmlIhOn4gIT0pqFlkieRYgsRv/IRzcim2DF//gi8qxD8m1Ux+RzvfyRsuOGuxZ+dvNSiFY9Ht/IforXkxTQL1ygSxRDBQk3gZABXEp7QZlz+bjFiUx5c0fFlaTo1B4aBnUKrFzm1c/Cc9+s5ai1YNNq3++LW9SyUJsKX+7oFJpmXRfduhGwQeUKMymgsDRRXbso2HB5fq8CEivfXwfyVvE5h7E3pvTlFJgLVIW6fLzpaQDbxn2nwuI/Fk5iFb+bXdLK4tL1cCItorH/1N8KJckeVsVGdu3HypK2+kh/LbAI2F19uT25VBTofPjwLJqSMB/uPdarQusjZ2hcpuAn47hm6SCy78ApsqOMNvQ51k9JMa8NVtKR6A75ygNBq5BphBaJy9U="
 services:
   - docker
 env:
@@ -65,10 +65,9 @@ jobs:
       - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
       # If SONAR_TOKEN is not available (for external PRs for example), skip sonar
       - ./gradlew --build-cache copyDependencies test jacocoTestReport
-      # TEMPORARY Skipping Sonar until token issue is sorted out
-      # - if [ "${SONAR_TOKEN}" != "" ]; then
-      #  (sonar-scanner) && (echo sonar-scanner was run);
-      #  fi
+      - if [ "${SONAR_TOKEN}" != "" ]; then
+        (sonar-scanner) && (echo sonar-scanner was run);
+        fi
       - docker-compose -f src/main/docker/test-environment/docker-compose.yml down
   - stage: docker-images
     script:
