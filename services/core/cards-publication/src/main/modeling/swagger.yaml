@@ -246,11 +246,6 @@ definitions:
       identity:
         type: string
         description: 'Used by USER, GROUP'
-      preserveMain:
-        description: >-
-          If main users from the underlying recipients are to be propagated.
-          Used by UNION recipients.
-        type: boolean
     required:
       - type
     example:
@@ -357,10 +352,6 @@ definitions:
       recipient:
         description: Recipient computation rule
         $ref: '#/definitions/Recipient'
-      mainRecipient:
-        description: Main user recipient id (if any)
-        type: string
-        readOnly: true
       userRecipients:
         description: Complete list of user recipients at computation time
         readOnly: true
@@ -520,10 +511,6 @@ definitions:
       summary:
         description: Card i18n summary
         $ref: '#/definitions/I18n'
-      mainRecipient:
-        description: Main user recipient ID (if any)
-        type: string
-        readOnly: true
       timeSpans:
         type: array
         description: List of business time span associated to card
@@ -553,7 +540,6 @@ definitions:
         parameters:
           EN: Summary of card content
           FR: Resume du contenu de la carte
-      mainRecipient: givenUser
   LightCardPage:
     type: object
     description: >-

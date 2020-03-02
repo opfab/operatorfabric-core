@@ -27,8 +27,7 @@ public class RecipientReadConverter implements Converter<Document, Recipient> {
         RecipientConsultationData.RecipientConsultationDataBuilder builder =
                 RecipientConsultationData.builder()
                         .type(RecipientEnum.valueOf(source.getString("type")))
-                        .identity(source.getString("identity"))
-                        .preserveMain(source.getBoolean("preserveMain"));
+                        .identity(source.getString("identity"));
         List<Document> recipientsDocument = (List<Document>) source.get("recipients");
         if (recipientsDocument != null)
             for (Document d : recipientsDocument) {

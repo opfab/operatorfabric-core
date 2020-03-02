@@ -20,7 +20,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class ComputedRecipient {
-    private String main;
     @Singular
     private Set<String> groups;
     @Singular

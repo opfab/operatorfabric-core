@@ -64,7 +64,6 @@ public class ArchivedCardPublicationData implements Card {
     private Object data;
     @Indexed
     private int shardKey;
-    private String mainRecipient;
     private List<String> userRecipients;
     private List<String> groupRecipients;
     @Transient
@@ -89,7 +88,6 @@ public class ArchivedCardPublicationData implements Card {
         this.recipient = card.getRecipient();
         this.severity = card.getSeverity();
         this.data = card.getData();
-        this.mainRecipient = card.getMainRecipient();
         this.userRecipients = card.getUserRecipients() == null ? null : new ArrayList<>(card.getUserRecipients());
         this.groupRecipients = card.getGroupRecipients() == null ? null : new ArrayList<>(card.getGroupRecipients());
         this.media = card.getMedia();

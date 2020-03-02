@@ -33,23 +33,10 @@ public class RecipientPublicationData implements Recipient {
     private String identity;
     @Singular
     private List<? extends Recipient> recipients;
-    private Boolean preserveMain;
-
-
-
 
     public static RecipientPublicationData union(Recipient... recipients) {
         RecipientPublicationData.RecipientPublicationDataBuilder result = RecipientPublicationData.builder()
            .type(RecipientEnum.UNION);
-        for(Recipient r : recipients)
-            result.recipient(r);
-        return result.build();
-    }
-
-    public static RecipientPublicationData union(boolean preserveMain, Recipient... recipients) {
-        RecipientPublicationData.RecipientPublicationDataBuilder result = RecipientPublicationData.builder()
-           .type(RecipientEnum.UNION)
-           .preserveMain(preserveMain);
         for(Recipient r : recipients)
             result.recipient(r);
         return result.build();

@@ -39,7 +39,6 @@ public class RecipientProcessorShould {
     public void processGroup(){
         ComputedRecipient result = processor.processAll(matchGroup("group1"));
         assertThat(result).isNotNull();
-        assertThat(result.getMain()).isNull();
         assertThat(result.getUsers()).isEmpty();
         assertThat(result.getGroups()).containsExactly("group1");
         assertThat(result.getOrphanUsers()).isEmpty();
@@ -50,7 +49,6 @@ public class RecipientProcessorShould {
     public void processUnionGroups(){
         ComputedRecipient result = processor.processAll(union(matchGroup("group1"),matchGroup("group2")));
         assertThat(result).isNotNull();
-        assertThat(result.getMain()).isNull();
         assertThat(result.getUsers()).isEmpty();
         assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
         assertThat(result.getOrphanUsers()).isEmpty();
@@ -69,7 +67,6 @@ public class RecipientProcessorShould {
     public void processUnionUsers(){
         ComputedRecipient result = processor.processAll(union(matchUser("user1"),matchUser("user2")));
         assertThat(result).isNotNull();
-        assertThat(result.getMain()).isNull();
         assertThat(result.getGroups()).isEmpty();
         assertThat(result.getUsers()).containsExactlyInAnyOrder("user1","user2");
         assertThat(result.getOrphanUsers()).containsExactlyInAnyOrder("user1","user2");
@@ -79,7 +76,6 @@ public class RecipientProcessorShould {
     public void processUnionGroupsAndUser(){
         ComputedRecipient result = processor.processAll(union(matchGroup("group1"),matchGroup("group2"),matchGroup("group3"),matchUser("user1")));
         assertThat(result).isNotNull();
-        assertThat(result.getMain()).isNull();
         assertThat(result.getUsers()).containsExactly("user1");
         assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2","group3");
         assertThat(result.getOrphanUsers()).containsExactly("user1");

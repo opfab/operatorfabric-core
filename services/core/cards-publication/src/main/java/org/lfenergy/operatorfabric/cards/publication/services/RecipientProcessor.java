@@ -22,16 +22,11 @@ import java.util.stream.Stream;
  * <ul>
  * <li>The list of concerned groups</li>
  * <li>The list of concerned orphan users (concerned users not belonging to any concerned group)</li>
- * <li>The main recipient if any. The main recipient is the responsible user for the associated card</li>
  * </ul>
  * <p>
- * TODO Load user cache
  */
 @Component
 public class RecipientProcessor {
-
-
-
 
     /**
      * <p>Processes all recipient data associated with {@link CardPublicationData#getRecipient()} at the time of computation.</p>
@@ -44,7 +39,6 @@ public class RecipientProcessor {
     public ComputedRecipient processAll(CardPublicationData card) {
         Recipient recipient = card.getRecipient();
         ComputedRecipient computedRecipient = processAll(recipient);
-        card.setMainRecipient(computedRecipient.getMain());
         card.setUserRecipients(new ArrayList<>(computedRecipient.getUsers()));
         card.setOrphanedUsers(new ArrayList<>(computedRecipient.getOrphanUsers()));
         card.setGroupRecipients(new ArrayList<>(computedRecipient.getGroups()));
@@ -80,8 +74,7 @@ public class RecipientProcessor {
                 builder = ComputedRecipient.builder();
                 break;
         }
-        processed.stream()
-                .flatMap(pr -> pr.getGroups().stream()).forEach(builder::group);
+        processed.stream().flatMap(pr -> pr.getGroups().stream()).forEach(builder::group);
         ComputedRecipient computedRecipient = builder.build();
         Set<String> orphanUsers = new HashSet<>(computedRecipient.getUsers());
         computedRecipient.setOrphanUsers(orphanUsers);
@@ -95,23 +88,13 @@ public class RecipientProcessor {
      * @param processed
      * @return
      */
-    private ComputedRecipient.BuilderEncapsulator processUnion(Recipient recipient, List<ComputedRecipient>
-            processed) {
+    private ComputedRecipient.BuilderEncapsulator processUnion(Recipient recipient, List<ComputedRecipient> processed) {
         ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
         ComputedRecipient.ComputedRecipientBuilder builder = result.builder();
         processed.forEach(r -> {
             builder.users(r.getUsers());
             builder.groups(r.getGroups());
         });
-        if (recipient.getPreserveMain() != null && recipient.getPreserveMain()) {
-            builder.main(
-                    processed.stream()
-                            .filter(pr -> pr.getMain() != null)
-                            .map(ComputedRecipient::getMain)
-                            .findFirst()
-                            .orElse(null)
-            );
-        }
         return result;
     }
 
@@ -136,9 +119,7 @@ public class RecipientProcessor {
      */
     private ComputedRecipient.BuilderEncapsulator processUser(Recipient recipient) {
         ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
-        result.builder()
-            .user(recipient.getIdentity())
-            .main(recipient.getIdentity());
+        result.builder().user(recipient.getIdentity());
         return result;
     }
 

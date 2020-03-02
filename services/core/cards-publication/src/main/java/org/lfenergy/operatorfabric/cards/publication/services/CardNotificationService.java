@@ -75,7 +75,7 @@ public class CardNotificationService {
     private void pushCardInRabbit(CardOperation cardOperation,String queueName,String routingKey) {
         try {
             rabbitTemplate.convertAndSend(queueName, routingKey, mapper.writeValueAsString(cardOperation));
-            if (log.isInfoEnabled()) log.info("Operation sent to Exchange[" + queueName  + "] with routing key " + routingKey
+            if (log.isDebugEnabled()) log.debug("Operation sent to Exchange[" + queueName  + "] with routing key " + routingKey
                     + ",type=" + cardOperation.getType() + ", ids=" + cardOperation.getCardIds().toString() + ",cards="
                     + cardOperation.getCards().toString());
         } catch (JsonProcessingException e) {
