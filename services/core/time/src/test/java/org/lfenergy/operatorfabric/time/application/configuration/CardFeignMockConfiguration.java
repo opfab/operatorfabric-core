@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-;
+;import java.time.Instant;
 
 @Configuration
 @Slf4j
@@ -38,10 +38,10 @@ public class CardFeignMockConfiguration {
         //Create MockClient and set behaviour
         Card card1 = new Card();
         card1.setId("id1");
-        card1.setStartDate(2300000l);
+        card1.setStartDate(Instant.ofEpochMilli(2300000l));
         Card card2 = new Card();
         card2.setId("id1");
-        card2.setStartDate(1300000l);
+        card2.setStartDate(Instant.ofEpochMilli(1300000l));
 
         MockClient mockClient = new MockClient();
         mockClient = mockClient
