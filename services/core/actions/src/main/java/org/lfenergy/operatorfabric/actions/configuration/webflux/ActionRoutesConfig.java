@@ -45,7 +45,7 @@ public class ActionRoutesConfig {
      * @return route
      */
     @Bean
-    public RouterFunction<ServerResponse> cardRoutes() {
+    public RouterFunction<ServerResponse> actionRoutes() {
         return RouterFunctions
                 .route(RequestPredicates.GET(ACTION_ROUTE), actionGetRoute())
                 .andRoute(RequestPredicates.POST(ACTION_ROUTE), actionPostRoute())
