@@ -14,11 +14,8 @@ import {Store} from "@ngrx/store";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 import {isMoment} from "moment";
 import {environment} from '@env/environment';
-import {neutralTimeReference, TimeReference} from "@ofModel/time.model";
 import {interval, Observable, of} from "rxjs";
-import {EventSourceInit, EventSourcePolyfill} from "ng-event-source";
 import {map, tap} from "rxjs/operators";
-import {selectTimeReference} from "@ofSelectors/time.selectors";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {AuthenticationService} from "@ofServices/authentication/authentication.service";
 import {TickPayload} from "@ofActions/time.actions";
@@ -32,8 +29,6 @@ export class TimeService {
     private dateFormat;
     private dateTimeFormat;
     readonly timeUrl: string;
-    private timeReference$: Observable<TimeReference>;
-    private currentTimeReference: TimeReference=neutralTimeReference;
     private beatDurationInMilliseconds: number;
     private timeAtLastHeartBeat: Moment;
     private timeLineFormats: any;
@@ -80,43 +75,6 @@ export class TimeService {
     }
 
 
-    public currentTime(): moment.Moment {
-        return this.computeCurrentTime(moment(), this.currentTimeReference);
-    }
-
-    computeCurrentTime(now: moment.Moment, timeRef: TimeReference): moment.Moment {
-        return timeRef.computeNow(now);
-
-    }
-
-    public fetchTimeReferences(): Observable<TimeReference> {
-        if(typeof this.timeReference$ === 'undefined' || this.timeReference$ === null){
-            this.initiateTimeReference();
-        }
-        return this.timeReference$;
-    }
-
-    /**
-     * Due te specific implementation of EventSourcePolyfill, this method need to be called just before usage,
-     * not within the constructor of the service otherwise try to call indefinitely the time service even
-     * it it's unavailable.
-     */
-
-    initiateTimeReference() {
-      /**  const eventSource = new EventSourcePolyfill(
-            environment.urls.time,
-            {   headers: this.authService.getSecurityHeader(),
-                heartbeatTimeout: 600000
-            } as EventSourceInit);
-        this.timeReference$ = this.fetchVirtualTime(eventSource);
-        this.store.select(selectTimeReference)
-            .subscribe(timeRef => this.currentTimeReference = timeRef); */
-
-            
-// first REMOVE of time service 
-            this.timeReference$ = of(neutralTimeReference);
-    }
-
     /**
      * Emits a pulse every beatDurationInMilliseconds, containing the current virtual time as well as the
      * elapsed time (milliseconds) since the previous pulse
@@ -128,7 +86,7 @@ export class TimeService {
     private heartBeat(interValDurationInMilliseconds: number): Observable<TickPayload> {
         return interval(interValDurationInMilliseconds)
             .pipe(
-                map(n => this.currentTime()),
+                map(n => moment()),
                 map(heartBeat => {
                     return {
                         currentTime: heartBeat,
@@ -139,33 +97,7 @@ export class TimeService {
             );
     }
 
-    fetchVirtualTime(eventSource: EventSourcePolyfill): Observable<TimeReference> {
-        if(!!eventSource) return of(neutralTimeReference);
-        return Observable.create(observer => {
-            try {
-                eventSource.onmessage = message => {
-                    if (!!message) {
-                        console.error('no message in Event from Event Source of Time service',message);
-                        return observer.error('no message in Event from Event Source of Time service');
-                    }
-                    const timeRef = JSON.parse(message.data, TimeReference.convertSpeedIntoEnum);
-                    return observer.next(timeRef);
-                };
-                eventSource.onerror = error => {
-                    console.error('error occurred from Event Source of Time Service', error)
-                }
 
-            } catch (error) {
-                console.error('error occurred from Event Source of Time Service', error)
-                return observer.error(error);
-            }
-            return () => {
-                if (eventSource && eventSource.readyState !== eventSource.CLOSED) {
-                    eventSource.close();
-                }
-            };
-        })
-    }
 
     public parseString(value: string): moment.Moment {
         return moment(value, 'YYYY-MM-DDTHH:mm');

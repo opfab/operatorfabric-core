@@ -15,7 +15,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {TimeReference, TimeSpeed} from '@ofModel/time.model';
 import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 describe('TimeService', () => {
@@ -47,11 +46,6 @@ describe('TimeService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should return now', () => {
-        expect(service).toBeTruthy();
-        expect(service.currentTime().valueOf() / 100).toBeCloseTo(moment().valueOf() / 100, 1);
-    });
-
     it('should parse', () => {
         expect(service).toBeTruthy();
         expect(service.parseString('2019-05-24T10:25').valueOf()).toEqual(1558686300000);
@@ -74,7 +68,7 @@ describe('TimeService', () => {
         expect(service).toBeTruthy();
         expect(service.formatDate(1559721634989)).toEqual('06/05/2019');
         expect(service.formatDate(new Date(1559721634989))).toEqual('06/05/2019');
-expect(service.formatDate(moment(new Date(1559721634989)))).toEqual('06/05/2019');
+        expect(service.formatDate(moment(new Date(1559721634989)))).toEqual('06/05/2019');
     });
 
     it('should format timestamp, date and moment to predefined timeline formats', () => {
@@ -86,43 +80,6 @@ expect(service.formatDate(moment(new Date(1559721634989)))).toEqual('06/05/2019'
         expect(service.predefinedFormat(1559721634989,'realTimeBarFormat')).toEqual('05/06/19 10:00');
         expect(service.predefinedFormat(new Date(1559721634989),'realTimeBarFormat')).toEqual('05/06/19 10:00');
         expect(service.predefinedFormat(moment(new Date(1559721634989)),'realTimeBarFormat')).toEqual('05/06/19 10:00');
-    });
-
-
-    it('should return now given as argument when compute the correct time for a X1 virtual time speed',()=>{
-        const testedNow = moment();
-        const tested = service.computeCurrentTime(testedNow,new TimeReference(null,
-            null,
-            moment.now().valueOf(),
-            TimeSpeed.X1));
-        expect(tested).toEqual(testedNow);
-    });
-
-    it( 'should return a fixed moment given as argument when compute the correct time for X1 virtual' +
-        'time speed', () => {
-        const testedNow = moment('2019-06-12T16:08:25+02:00');
-        const tested =service.computeCurrentTime(testedNow,new TimeReference(null,
-            null,
-            moment.now().valueOf(),
-            TimeSpeed.X1));
-        expect(tested).toEqual(testedNow);
-    });
-
-    it('should return two hours from a given moment corresponding to one hour after ' +
-        'virtual time has been set when timeSpeed is X2', () =>{
-    const initialReferenceMoment=moment('2019-06-12T16:08:25+02:00');
-    const momentAtRequestMoment=moment('2019-06-12T17:08:25+02:00');
-    const expectedMoment = moment('2019-06-12T19:08:25+02:00');
-    const doubleSpeed = TimeSpeed.X2;
-    const tested = service.computeCurrentTime(momentAtRequestMoment,
-                                                new TimeReference(
-                                                    initialReferenceMoment.valueOf(),
-                                                    null,
-                                                    initialReferenceMoment.valueOf()
-                                                    ,doubleSpeed
-                                                )
-    );
-       expect(tested.valueOf).toEqual(expectedMoment.valueOf);
     });
 
     it('should convert date string to timestamp', () => {

@@ -36,7 +36,6 @@ describe('Handlebars Services', () => {
     let handlebarsService: HandlebarsService;
     let httpMock: HttpTestingController;
     let store: Store<AppState>;
-    let time: TimeService;
     let translate: TranslateService;
     const now = moment(Date.now());
     beforeEach(() => {
@@ -58,7 +57,6 @@ describe('Handlebars Services', () => {
             providers: [
                 {provide: 'TimeEventSource', useValue: null},
                 {provide: store, useClass: Store},
-                {provide: time, useClass: TimeService},
                 ThirdsService,
                 HandlebarsService,
                 AuthenticationImportHelperForSpecs
@@ -67,10 +65,6 @@ describe('Handlebars Services', () => {
         injector = getTestBed();
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
-        time = TestBed.get(TimeService);
-        spyOn(time, "currentTime").and.returnValue(now);
-        // avoid exceptions during construction and init of the component
-        // spyOn(store, 'select').and.callFake(() => of('/test/url'));
         httpMock = injector.get(HttpTestingController);
         handlebarsService = TestBed.get(HandlebarsService);
         translate = TestBed.get(TranslateService)

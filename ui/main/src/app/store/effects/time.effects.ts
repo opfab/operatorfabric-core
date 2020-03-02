@@ -11,29 +11,20 @@ import {Action, Store} from "@ngrx/store";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Observable, of} from "rxjs";
 import {TimeService} from "@ofServices/time.service";
-import {catchError, map, switchMap} from "rxjs/operators";
-import {TimeReference} from "@ofModel/time.model";
-import {FailToUpdateTimeReference, Tick, UpdateTimeReference} from "@ofActions/time.actions";
-import {selectTimeReference} from "@ofSelectors/time.selectors";
-import {Message, MessageLevel} from "@ofModel/message.model";
-import {I18n} from "@ofModel/i18n.model";
-import {Map} from "@ofModel/map";
+import {map, switchMap} from "rxjs/operators";
+import {Tick} from "@ofActions/time.actions";
+
 import {UserActionsTypes} from '@ofStore/actions/user.actions';
 
 @Injectable()
 export class TimeEffects {
 
-    private currentTimeReference: TimeReference;
-
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
                 private service: TimeService
     ) {
-        this.store.select(selectTimeReference).subscribe(
-            timeRef => this.currentTimeReference = timeRef
-        );
-    }
 
+    }
     /**
      *This Observable send a tick corresponding to the heart beat of the application.
      *
@@ -47,34 +38,6 @@ export class TimeEffects {
                         return new Tick(pulse);
                     })
                 ))
-        );
-    /**
-     *This Observable update the way time is managed in the application.
-     *
-     */
-    @Effect()
-    stickToVirtualTime: Observable<Action> = this.actions$
-        .pipe(
-            ofType(UserActionsTypes.UserApplicationRegistered),
-            switchMap(
-                () => this.service.fetchTimeReferences().pipe(
-                    map(timeRef => new UpdateTimeReference({timeReference: timeRef})),
-                    catchError(error => {
-                                console.error(error);
-                                const i18nParameters = new Map<string>();
-                                i18nParameters['message'] = error;
-
-                                return of(new FailToUpdateTimeReference(
-                                    {
-                                        error: new Message(
-                                            'something went wrong during Time Reference update from Time service',
-                                            MessageLevel.ERROR,
-                                            new I18n('time.error', i18nParameters))
-                                    }))
-                        }
-                    )
-                )
-            )
         );
 
 }
