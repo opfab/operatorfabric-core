@@ -30,22 +30,8 @@ import java.util.stream.Stream;
 @Component
 public class RecipientProcessor {
 
-    private Random random = new Random();
 
-    /**
-     * Users have a "groups" property listing the groups they belong to, but groups don't hold a list of their users
-     * The aim of this cache is to avoid going through all the users every time we need a list of the users in a given group
-     * Key: group name, value: list of users belonging to this group
-    */
-    private Map<String, List<String>> userCache = new HashMap<>();
 
-    public Map<String, List<String>> getUserCache() {
-        return this.userCache;
-    }
-
-    public void setUserCache(Map<String, List<String>> userCache) {
-        this.userCache = userCache;
-    }
 
     /**
      * <p>Processes all recipient data associated with {@link CardPublicationData#getRecipient()} at the time of computation.</p>
@@ -90,18 +76,6 @@ public class RecipientProcessor {
             case UNION:
                 builder = processUnion(recipient, processed).builder();
                 break;
-            case INTERSECT:
-                builder = processIntersect(recipient, processed).builder();
-                break;
-            case FAVORITE:
-                builder = processFavorite(recipient, processed).builder();
-                break;
-            case WEIGHTED:
-                builder = processWeighted(recipient, processed).builder();
-                break;
-            case RANDOM:
-                builder = processRandom(processed).builder();
-                break;
             default:
                 builder = ComputedRecipient.builder();
                 break;
@@ -110,106 +84,8 @@ public class RecipientProcessor {
                 .flatMap(pr -> pr.getGroups().stream()).forEach(builder::group);
         ComputedRecipient computedRecipient = builder.build();
         Set<String> orphanUsers = new HashSet<>(computedRecipient.getUsers());
-        orphanUsers.removeAll(computedRecipient.getGroups().stream()
-                .flatMap(g -> {
-                    List<String> users = userCache.get(g);
-                    if (users == null)
-                        return Stream.empty();
-                    else
-                        return users.stream();
-                })
-                .collect(Collectors.toSet()));
         computedRecipient.setOrphanUsers(orphanUsers);
         return computedRecipient;
-    }
-
-    /**
-     * Computes {@link ComputedRecipient} builder data for a list of recipient using random rule
-     *
-     * @param processed
-     * @return
-     */
-    private ComputedRecipient.BuilderEncapsulator processRandom(List<ComputedRecipient> processed) {
-        Set<String> users = processed.stream().flatMap(pr -> pr.getUsers().stream()).collect(Collectors.toSet());
-        ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
-        result.builder()
-            .users(users)
-            .main(users.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
-        return result;
-    }
-
-    /**
-     * Computes {@link ComputedRecipient} builder data for a list of recipient using random weighted rule
-     *
-     * @param  recipient
-     * @param processed
-     * @return
-     */
-    private ComputedRecipient.BuilderEncapsulator processWeighted(Recipient recipient, List<ComputedRecipient>
-            processed) {
-        Set<String> users = processed.stream().flatMap(pr -> pr.getUsers().stream()).collect(Collectors.toSet());
-        Set<String> randomSource = new HashSet<>(users);
-
-        if (users.contains(recipient.getIdentity()))
-            IntStream.range(1, users.size()).forEach(i -> randomSource.add(recipient.getIdentity()));
-
-        ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
-        result.builder()
-            .users(users)
-            .main(randomSource.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
-        return result;
-    }
-
-    /**
-     * Computes {@link ComputedRecipient} builder data for a list of recipient using the favorite rule
-     * (the favorite user is main if available)
-     *
-     * @param  recipient
-     * @param processed
-     * @return
-     */
-    private ComputedRecipient.BuilderEncapsulator processFavorite(Recipient recipient, List<ComputedRecipient>
-            processed) {
-        Set<String> users = processed.stream().flatMap(pr -> pr.getUsers().stream()).collect(Collectors.toSet());
-        ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
-        ComputedRecipient.ComputedRecipientBuilder builder = result.builder()
-                .users(users);
-
-        if (users.contains(recipient.getIdentity()))
-            builder.main(recipient.getIdentity());
-        else
-            builder.main(users.stream().skip(random.nextInt(users.size())).findFirst().orElse(null));
-        return result;
-    }
-
-    /**
-     * Computes {@link ComputedRecipient} builder data for a list of recipient using intersection
-     *
-     * @param  recipient
-     * @param processed
-     * @return
-     */
-    private ComputedRecipient.BuilderEncapsulator processIntersect(Recipient recipient, List<ComputedRecipient>
-            processed) {
-        ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
-        ComputedRecipient.ComputedRecipientBuilder builder = result.builder();
-        Set<String> users = new HashSet<>();
-        processed.stream().findFirst().ifPresent(r -> users.addAll(r.getUsers()));
-        processed.stream().skip(1).forEach(r -> users.retainAll(r.getUsers()));
-        processed.stream().forEach(r -> builder.groups(r.getGroups()));
-        builder.users(users);
-
-        if (recipient.getPreserveMain() != null && recipient.getPreserveMain()) {
-            builder.main(
-                    processed.stream()
-                            .filter(pr -> pr.getMain() != null)
-                            .map(ComputedRecipient::getMain)
-                            .filter(users::contains)
-                            .findFirst()
-                            .orElse(null)
-            );
-        }
-        return result;
     }
 
     /**
@@ -246,12 +122,8 @@ public class RecipientProcessor {
      * @return
      */
     private ComputedRecipient.BuilderEncapsulator processGroup(Recipient recipient) {
-        List<String> users = getUserCache().get(recipient.getIdentity());
-        if (users == null)
-            users = Collections.emptyList();
         ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
         result.builder()
-            .users(users)
             .group(recipient.getIdentity());
         return result;
     }

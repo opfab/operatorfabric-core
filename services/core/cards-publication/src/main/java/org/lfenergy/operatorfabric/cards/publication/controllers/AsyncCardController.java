@@ -11,6 +11,7 @@ package org.lfenergy.operatorfabric.cards.publication.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardWriteService;
+import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,8 @@ public class AsyncCardController {
     private CardWriteService cardWriteService;
 
     /**
+     *  DEPRECATED / ONLY FOR COMPATIBILIY / NOT ASYNCHRONE ANYMORE 
+     * 
      * <p>POST cards to create/update new cards.</p>
      * <p>Always returns {@link HttpStatus#ACCEPTED}</p>
      *
@@ -39,9 +42,7 @@ public class AsyncCardController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<Void> createCards(@Valid @RequestBody Flux<CardPublicationData> cards) {
-        return cards
-                .doOnNext(cardWriteService::pushCardAsyncParallel)
-                .last().flatMap(c->Mono.empty());
+    public  Mono<Void>  createCards(@Valid @RequestBody Flux<CardPublicationData> cards) {
+        return cardWriteService.createCards(cards).flatMap(c->Mono.empty());
     }
 }

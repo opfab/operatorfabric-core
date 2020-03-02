@@ -40,7 +40,7 @@ public class CardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public @Valid Mono<CardCreationReportData> createCards(@Valid @RequestBody Flux<CardPublicationData> cards){
-        return cardWriteService.createCardsWithResult(cards);
+        return cardWriteService.createCards(cards);
 
     }
 

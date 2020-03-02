@@ -3,9 +3,6 @@ spring:
     mongodb:
       database: operator-fabric
 operatorfabric:
-  card-write.window:
-    size: 1000
-    timeout: 500
   card-notification.window:
     size: 100
     timeout: 1000

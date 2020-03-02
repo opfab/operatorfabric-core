@@ -30,132 +30,60 @@ public class RecipientProcessorShould {
     private static RecipientProcessor processor;
 
     @BeforeAll
-    public static void initCache(){
-        List<String> group1Users = new ArrayList<>();
-        group1Users.add("user1");
-        group1Users.add("user2");
-        cache.put("group1",group1Users);
-        List<String> group2Users = new ArrayList<>();
-        group2Users.add("user1");
-        group2Users.add("user3");
-        cache.put("group2",group2Users);
+    public static void init(){
         processor = new RecipientProcessor();
-        processor.setUserCache(cache);
     }
 
+
     @Test
-    public void processIntersect(){
-        ComputedRecipient result = processor.processAll(intersect(matchGroup("group1"),matchGroup("group2")));
+    public void processGroup(){
+        ComputedRecipient result = processor.processAll(matchGroup("group1"));
         assertThat(result).isNotNull();
         assertThat(result.getMain()).isNull();
-        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1");
+        assertThat(result.getUsers()).isEmpty();
+        assertThat(result.getGroups()).containsExactly("group1");
         assertThat(result.getOrphanUsers()).isEmpty();
     }
 
-//    @Test
-//    public void processEmpty(){
-//        ComputedRecipient result = processor.processAll(RecipientPublicationData.builder().build());
-//        assertThat(result).isNotNull();
-//        assertThat(result.getMain()).isNull();
-//        assertThat(result.getGroups()).isEmpty();
-//        assertThat(result.getUsers()).isEmpty();
-//        assertThat(result.getOrphanUsers()).isEmpty();
-//    }
 
     @Test
-    public void processUnion(){
-        ComputedRecipient result = processor.processAll(union(matchGroup("group1"),matchUser("user3")));
+    public void processUnionGroups(){
+        ComputedRecipient result = processor.processAll(union(matchGroup("group1"),matchGroup("group2")));
         assertThat(result).isNotNull();
         assertThat(result.getMain()).isNull();
-        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1","user2","user3");
-        assertThat(result.getOrphanUsers()).containsExactly("user3");
-    }
-
-    @Test
-    public void processRandom(){
-        ComputedRecipient result = processor.processAll(random(union(matchGroup("group1"),matchGroup("group2"))));
-        assertThat(result).isNotNull();
-        assertThat(result.getMain()).isIn("user1","user2","user3");
+        assertThat(result.getUsers()).isEmpty();
         assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1","user2","user3");
         assertThat(result.getOrphanUsers()).isEmpty();
     }
 
     @Test
-    public void processWeighted(){
-        ComputedRecipient result = processor.processAll(weigthed(union(matchGroup("group1"),matchGroup("group2")),"user1"));
+    public void processUser(){
+        ComputedRecipient result = processor.processAll(matchUser("user1"));
         assertThat(result).isNotNull();
-        assertThat(result.getMain()).isIn("user1","user2","user3");
-        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1","user2","user3");
-        assertThat(result.getOrphanUsers()).isEmpty();
+        assertThat(result.getUsers()).containsExactly("user1");
+        assertThat(result.getGroups()).isEmpty();
+        assertThat(result.getOrphanUsers()).containsExactly("user1");
     }
 
     @Test
-    public void processFavorite(){
-        ComputedRecipient result = processor.processAll(favorite(union(matchGroup("group1"),matchGroup("group2")),
-           "user1"));
-        assertThat(result).isNotNull();
-        assertThat(result.getMain()).isEqualTo("user1");
-        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1","user2","user3");
-        assertThat(result.getOrphanUsers()).isEmpty();
-    }
-
-    @Test
-    public void processWeightedNotFound(){
-        ComputedRecipient result = processor.processAll(weigthed(union(matchGroup("group1"),matchGroup("group2")),
-           "user33"));
-        assertThat(result).isNotNull();
-        assertThat(result.getMain()).isIn("user1","user2","user3");
-        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1","user2","user3");
-        assertThat(result.getOrphanUsers()).isEmpty();
-    }
-
-    @Test
-    public void processFavoriteNotFound(){
-        ComputedRecipient result = processor.processAll(favorite(union(matchGroup("group1"),matchGroup("group2")),
-           "user33"));
-        assertThat(result).isNotNull();
-        assertThat(result.getMain()).isIn("user1","user2","user3");
-        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1","user2","user3");
-        assertThat(result.getOrphanUsers()).isEmpty();
-    }
-
-    @Test
-    public void processUnionPreserveMain(){
-        ComputedRecipient result = processor.processAll(union(true,favorite(matchGroup("group1"),"user1"),matchGroup
-           ("group2")));
-        assertThat(result).isNotNull();
-        assertThat(result.getMain()).isEqualTo("user1");
-        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1","user2","user3");
-        assertThat(result.getOrphanUsers()).isEmpty();
-    }
-
-    @Test
-    public void processIntersectPreserveMain(){
-        ComputedRecipient result = processor.processAll(intersect(true,favorite(matchGroup("group1"),"user1"),matchGroup
-           ("group2")));
-        assertThat(result).isNotNull();
-        assertThat(result.getMain()).isEqualTo("user1");
-        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1");
-        assertThat(result.getOrphanUsers()).isEmpty();
-    }
-
-    @Test
-    public void processIntersectPreserveMainMissed(){
-        ComputedRecipient result = processor.processAll(intersect(true,favorite(matchGroup("group1"),"user2"),matchGroup
-           ("group2")));
+    public void processUnionUsers(){
+        ComputedRecipient result = processor.processAll(union(matchUser("user1"),matchUser("user2")));
         assertThat(result).isNotNull();
         assertThat(result.getMain()).isNull();
-        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2");
-        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1");
-        assertThat(result.getOrphanUsers()).isEmpty();
+        assertThat(result.getGroups()).isEmpty();
+        assertThat(result.getUsers()).containsExactlyInAnyOrder("user1","user2");
+        assertThat(result.getOrphanUsers()).containsExactlyInAnyOrder("user1","user2");
     }
+
+    @Test
+    public void processUnionGroupsAndUser(){
+        ComputedRecipient result = processor.processAll(union(matchGroup("group1"),matchGroup("group2"),matchGroup("group3"),matchUser("user1")));
+        assertThat(result).isNotNull();
+        assertThat(result.getMain()).isNull();
+        assertThat(result.getUsers()).containsExactly("user1");
+        assertThat(result.getGroups()).containsExactlyInAnyOrder("group1","group2","group3");
+        assertThat(result.getOrphanUsers()).containsExactly("user1");
+    }
+
+
 }
