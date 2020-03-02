@@ -13,21 +13,21 @@ import {AppState} from '@ofStore/index';
 import {Validators} from '@angular/forms';
 
 @Component({
-  selector: 'of-email-setting',
-  templateUrl: './email-setting.component.html'
+    selector: 'of-email-setting',
+    templateUrl: './email-setting.component.html'
 })
 export class EmailSettingComponent extends TextSettingComponent implements OnInit, OnDestroy {
 
     @Input() disabled: boolean;
+
     constructor(protected store: Store<AppState>) {
         super(store);
-        console.log(this.disabled);
     }
 
     computeTextValidators() {
-      const validators = super.computeTextValidators();
-      validators.push(Validators.email);
-      return validators;
+        const validators = super.computeTextValidators();
+        validators.push(Validators.email);
+        return validators;
     }
 
 }

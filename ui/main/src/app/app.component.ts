@@ -12,10 +12,10 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors';
-import {AuthenticationService} from "@ofServices/authentication/authentication.service";
-import {LoadConfig} from "@ofActions/config.actions";
-import {buildConfigSelector, selectConfigLoaded, selectMaxedRetries} from "@ofSelectors/config.selectors";
-import {I18nService} from "@ofServices/i18n.service";
+import {AuthenticationService} from '@ofServices/authentication/authentication.service';
+import {LoadConfig} from '@ofActions/config.actions';
+import {buildConfigSelector, selectConfigLoaded, selectMaxedRetries} from '@ofSelectors/config.selectors';
+import {I18nService} from '@ofServices/i18n.service';
 
 @Component({
     selector: 'of-root',
@@ -26,9 +26,9 @@ export class AppComponent implements OnInit {
     readonly title = 'OperatorFabric';
     getRoutePE: Observable<any>;
     currentPath: any;
-    isAuthenticated$: boolean = false;
-    configLoaded: boolean = false;
-    private maxedRetries: boolean = false;
+    isAuthenticated$ = false;
+    configLoaded = false;
+    private maxedRetries = false;
 
     /**
      * NB: I18nService is injected to trigger its constructor at application startup

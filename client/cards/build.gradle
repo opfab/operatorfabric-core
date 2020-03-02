@@ -1,7 +1,12 @@
 jar {
     manifest {
-        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
-                "Specification-Title": "OperatorFabric Card Client Data")
+        attributes( "Created-By"             : "Gradle ${gradle.gradleVersion}",
+                    "Specification-Title"    : "OperatorFabric Card Client Data",
+                    "Implementation-Title"   : "OperatorFabric Card Client Data",
+                    "Implementation-Version" : operatorfabric.version,
+                    "Specification-Version"  : operatorfabric.version
+        )
+
     }
 }
 swaggerSources {

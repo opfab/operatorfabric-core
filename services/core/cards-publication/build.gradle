@@ -6,12 +6,14 @@ dependencies {
     testCompile testing.reactor
 }
 
-jar {
+bootJar {
     manifest {
-        attributes("Created-By"      : "Gradle ${gradle.gradleVersion}",
-                "Specification-Title": "OperatorFabric Card Manager Service",
-                "Main-Class"         : "org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication",
-                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+        attributes( "Created-By"             : "Gradle ${gradle.gradleVersion}",
+                    "Specification-Title"    : "OperatorFabric Card Manager Service",
+                    "Implementation-Title"   : "OperatorFabric Card Manager Service",
+                    "Implementation-Version" : operatorfabric.version,
+                    "Specification-Version"  : operatorfabric.version
+        )
     }
 }
 

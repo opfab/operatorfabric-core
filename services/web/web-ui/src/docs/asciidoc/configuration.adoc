@@ -84,11 +84,22 @@ while clicking the icon opens in a new tab.
 |operatorfabric.settings.infos.dateformat|false|no|Control if we want to hide(true) or display(false or not specified) the dateformat in the settings page
 |operatorfabric.settings.infos.datetimeformat|false|no|Control if we want to hide(true) or display(false or not specified) the datetimeformat in the settings page
 |operatorfabric.settings.infos.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
+|operatorfabric.settings.about
+a|`operatorfabric: +
+     name:  'OperatorFabric' +
+     version:  ${currentVersion} +
+     rank: 0`
+a|no
+a|Declares application names and their version into web-ui about section. +
+Each entry is
+a free key value followed by its name (a string of characters), its version(a string of characters) and its rank of declaration(a number) cf the default value where the declared key is `operatorfabric'`. +
+For this default value, with `'OperatorFabric'` as `name` and `0` as `rank`, the value of `${currentVersion}` is the version of the current release. `0.16.1-RELEASE` for example.
 |operatorfabric.logo.base64|medium OperatorFabric icon|no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg. If it is not set, a medium (32px) OperatorFabric icon is displayed.
 |operatorfabric.logo.height|32|no|The height of the logo (in px) (only taken into account if operatorfabric.logo.base64 is set).
 |operatorfabric.logo.width|150|no|The width of the logo (in px) (only taken into account if operatorfabric.logo.base64 is set).
 |operatorfabric.logo.limitSize|true|no|If it is true, the height limit is 32(px) and the width limit is 200(px), it means that if the height is over than 32, it will be set to 32, if the width is over than 200, it is set to 200. If it is false, no limit restriction for the height and the width. 
 |operatorfabric.title|OperatorFabric|no|Title of the application, displayed on the browser
+
 |===
 
 *User Settings default values*

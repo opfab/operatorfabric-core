@@ -9,12 +9,14 @@ dependencies {
     testCompile project(':tools:spring:spring-test-utilities')
 }
 
-jar {
+bootJar {
     manifest {
-        attributes("Created-By"         : "Gradle ${gradle.gradleVersion}",
-                "Specification-Title": "OperatorFabric Action Service",
-                "Main-Class"         : "org.lfenergy.operatorfabric.actions.ActionApplication",
-                "Class-Path"         : configurations.compile.collect { it.getName() }.join(' '))
+        attributes( "Created-By"             : "Gradle ${gradle.gradleVersion}",
+                    "Specification-Title"    : "OperatorFabric Action Service",
+                    "Implementation-Title"   : "OperatorFabric Action Service",
+                    "Implementation-Version" : operatorfabric.version,
+                    "Specification-Version"  : operatorfabric.version
+        )
     }
 }
 

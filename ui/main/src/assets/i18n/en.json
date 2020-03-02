@@ -3,7 +3,8 @@
     "feed": "Card Feed",
     "archives": "Archives",
     "logout": "Logout",
-    "settings": "Settings"
+    "settings": "Settings",
+    "about": "About"
   },
   "feed": {
     "filters": {

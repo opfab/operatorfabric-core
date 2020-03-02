@@ -13,6 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.config.server.EnableConfigServer;
+import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
 
@@ -25,8 +26,13 @@ import java.io.IOException;
 @Slf4j
 public class ConfigurationApplication {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         SpringApplication.run(ConfigurationApplication.class, args);
+    }
+
+    @Bean
+    public CustomEnvironmentRepository customEnvironmentRepository(){
+        return new CustomEnvironmentRepository();
     }
 
 }
