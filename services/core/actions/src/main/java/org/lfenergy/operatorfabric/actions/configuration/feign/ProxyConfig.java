@@ -8,23 +8,18 @@
 package org.lfenergy.operatorfabric.actions.configuration.feign;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import feign.*;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
-import org.lfenergy.operatorfabric.actions.configuration.json.ActionsModule;
 import org.lfenergy.operatorfabric.actions.services.feign.CardConsultationServiceProxy;
 import org.lfenergy.operatorfabric.actions.services.feign.ThirdsServiceProxy;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.*;
-import org.lfenergy.operatorfabric.springtools.json.InstantModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
 * Feign Proxy Configuration

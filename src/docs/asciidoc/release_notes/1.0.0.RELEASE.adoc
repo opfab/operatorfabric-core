@@ -4,7 +4,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Version 0.16.1.RELEASE
+= Version 1.0.0.RELEASE
 
 == Story
 * [OC-624] As a user I want to sort cards on the feed either by severity, lttd, publishDate or by lttd, publishDate only.
@@ -19,11 +19,12 @@ _Note: No configuration is necessary._
 
 == Bug
 * [OC-549] - Thirds API does't return 404 when requested third doesn't exist.
-* [OC-325] - Put a long heardbeatTimeout to avoid loosing cards
+* [OC-325] - Put a long heartbeat timeout to avoid losing cards
 * [OC-349] - Correct bug in token silent refresh (Implicit Mode) 
 * [OC-715] - [Cards-consultation][tests] : clean must be done after each unit test
 * [OC-727] - regression in Action Service - feign.codec.DecodeException
 * [OC-368] - Cards with an end date that is before their start date should be refused
+* [OC-720] - CSS in card detail is not correctly applied until reload
 
 == Task
 * [OC-669] - Remove unused and non working recipient options : INTERSECT , RANDOM, WEIGHTED and FAVORITE 
