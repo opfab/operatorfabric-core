@@ -16,19 +16,6 @@ export function reducer(state = timeInitialState, action: TimeActions): TimeStat
                 currentDate: action.payload.currentTime
             };
         }
-        case TimeActionTypes.UpdateTimeReference:{
-            return {
-                ...state,
-                timeReference: action.payload.timeReference
-            };
-        }
-        case TimeActionTypes.FailToUpdateTimeReference:{
-            return {
-                ...state,
-                error: action.payload.error
-            };
-        }
-
         default:{
             return state;
         }

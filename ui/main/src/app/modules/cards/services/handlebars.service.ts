@@ -9,7 +9,6 @@
 import {Injectable} from "@angular/core";
 import {Card} from "@ofModel/card.model";
 import * as Handlebars from "handlebars/dist/handlebars.js"
-import {TimeService} from "@ofServices/time.service";
 import {TranslateService} from "@ngx-translate/core";
 import * as moment from 'moment';
 import {Map} from "@ofModel/map";
@@ -28,7 +27,7 @@ export class HandlebarsService {
     private templateCache:Map<Function> = new Map();
     private _locale: string;
 
-    constructor(private time: TimeService,
+    constructor(
                 private translate: TranslateService,
                 private thirds: ThirdsService,
                 private store: Store<AppState>){
@@ -281,7 +280,7 @@ export class HandlebarsService {
     private registerNow() {
         const that = this;
         Handlebars.registerHelper('now', function (options) {
-            return that.time.currentTime().valueOf();
+            return moment().valueOf();
         })
     }
 

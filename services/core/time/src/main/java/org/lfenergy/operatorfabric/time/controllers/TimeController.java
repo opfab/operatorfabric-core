@@ -74,7 +74,7 @@ public class TimeController implements TimeApi {
     private Void fetchNextTime0(long longMillisTime) {
         try {
             Card card = this.cardConsultationServiceProxy.fetchNextCard(longMillisTime);
-            timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
+            timeService.updateTime(card.getStartDate().minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
         } catch (FeignException fex) {
             handleCardServiceErrors(fex);
         }
@@ -90,7 +90,7 @@ public class TimeController implements TimeApi {
     private Void fetchPreviousTime0(long longMillisTime) {
         try {
             Card card = this.cardConsultationServiceProxy.fetchPreviousCard(longMillisTime);
-            timeService.updateTime(Instant.ofEpochMilli(card.getStartDate()).minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
+            timeService.updateTime(card.getStartDate().minusMillis(TIME_TO_SUBSTRACT_IN_FWD_BWD));
         } catch (FeignException fex) {
             return handleCardServiceErrors(fex);
         }
