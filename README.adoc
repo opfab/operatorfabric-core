@@ -139,7 +139,6 @@ service communication
 
 RabbitMQ is required for :
 
-* Time change push
 * Card AMQP push
 * Multiple service sync
 
@@ -285,7 +284,6 @@ project
 ├──client
 │   ├──cards (cards-client-data)
 │   ├──src
-│   ├──time (time-client-data)
 │   └──users (users-client-data)
 ├──services
 │   ├──core
@@ -293,7 +291,6 @@ project
 │   │   ├──cards-publication (cards-publication-business-service)
 │   │   ├──src
 │   │   ├──thirds (third-party-business-service)
-│   │   ├──time (time-business-service)
 │   │   └──users (users-business-service)
 │   ├──infra
 │   │   ├──client-gateway (client-gateway-cloud-service)
@@ -313,7 +310,6 @@ project
 │   │   ├──test-utilities
 │   │   └──utilities
 │   ├── spring
-│   │   ├──spring-amqp-time-utilities
 │   │   ├──spring-mongo-utilities
 │   │   ├──spring-oauth2-utilities
 │   │   ├──spring-test-utilities
@@ -332,7 +328,6 @@ used by external projects
 ** link:client/cards[cards (cards-client-data)]: simple beans regarding cards
 ** link:client/src[src]: contains swagger templates for link:client[client]
 code generation
-** link:client/time[time (time-client-data)]: simple beans regarding time
 ** link:client/users[users (users-client-data)]: simple beans regarding users
 * link:services[services]: contains the microservices that make up
 OperatorFabric
@@ -345,8 +340,6 @@ OperatorFabric
 microservices
 *** link:services/core/thirds[thirds (third-party-business-service)]:
 Third-party information management service
-*** link:services/core/time[time (time-business-service)]: Time management
-service
 *** link:services/core/users[users (users-business-service)]: Users management
 service
 ** link:services/infra[infra]: contains infrastructure microservices
@@ -375,9 +368,6 @@ utility code
 utility code
 *** link:tools/generic/utilities[utilities]: Utility code
 ** link:tools/spring[spring]: Spring-related utility code
-*** link:tools/spring/spring-amqp-time-utilities[spring-amqp-time-utilities]
-: Utility code with Spring-AMQP-specific dependencies, used to share common
-features across AMQP-dependent services
 *** link:tools/spring/spring-mongo-utilities[spring-mongo-utilities] : Utility
 code with Spring-specific dependencies, used to share common features across
 MongoDB-dependent services
@@ -475,7 +465,6 @@ instance).
 |2001 |registry |Registry service http (REST)
 |2002 |gateway |Gateway service http (REST+html)
 |2100 |thirds |Third party management service http (REST)
-|2101 |time |Time management service http (REST)
 |2102 |cards-publication |card publication service http (REST)
 |2103 |users |Users management service http (REST)
 |2104 |cards-consultation |card consultation service http (REST)
@@ -483,7 +472,6 @@ instance).
 |4001 |registry |java debug port
 |4002 |gateway |java debug port
 |4100 |thirds |java debug port
-|4101 |time |java debug port
 |4102 |cards-publication |java debug port
 |4103 |users |java debug port
 |4103 |cards-consultation |java debug port
@@ -607,7 +595,6 @@ For debugging purpose the following ports are also exposed:
 |2001 |registry |8080 |Registry service http (REST)
 |2002 |gateway |8080 |Gateway service http (REST+html)
 |2100 |thirds |8080 |Third party management service http (REST)
-|2101 |time |8080 |Time management service http (REST)
 |2102 |cards-publication |8080 |card publication service http (REST)
 |2103 |users |8080 |Users management service http (REST)
 |2104 |cards-consultation |8080 |card consultation service http (REST)
@@ -617,7 +604,6 @@ For debugging purpose the following ports are also exposed:
 |4001 |registry |5005 |java debug port
 |4002 |gateway |5005 |java debug port
 |4100 |thirds |5005 |java debug port
-|4101 |time |5005 |java debug port
 |4102 |cards-publication |5005 |java debug port
 |4103 |users |5005 |java debug port
 |4104 |cards-consultation |5005 |java debug port
@@ -704,7 +690,6 @@ docker-compose files (see [prj]/src/main/docker) the ports used are
 |registry |2001 |2001 |2001
 |gateway |2002 |2002 |2002
 |thirds |2100 |2100 |2100
-|time |2101 |2101 |2101
 |cards-publication |2102 |2102 |2102
 |users |2103 |2103 |2103
 |cards-consultation |2104 |2104 |2104
@@ -712,7 +697,6 @@ docker-compose files (see [prj]/src/main/docker) the ports used are
 |registry |4001 |4001 |4001
 |gateway |4002 |4002 |4002
 |thirds |4100 |4100 |4100
-|time |4101 |4101 |4101
 |cards-publication |4102 |4102 |4102
 |users |4103 |4103 |4103
 |cards-consultation |4103 |4103 |4103

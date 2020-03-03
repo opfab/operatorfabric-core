@@ -95,18 +95,6 @@ services:
     - DEPENDS_ON=CONFIG
     volumes:
      - "../../../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
-  time:
-    depends_on:
-     - registry
-    image: "lfeoperatorfabric/of-time-business-service:1.0.0.RELEASE"
-    user: ${USER_ID}:${USER_GID}
-    ports:
-     - "2101:8080"
-     - "4101:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
   cards-publication:
     depends_on:
      - registry

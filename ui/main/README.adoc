@@ -41,13 +41,6 @@ pid file: $OF_HOME/services/core/users/build/PIDFILE
 Started with pid: 7483
 
 ##########################################################
-Starting time-business-service, debug port: 5010
-
-##########################################################
-pid file: $OF_HOME/services/core/time/build/PIDFILE
-Started with pid: 7488
-
-##########################################################
 Starting cards-consultation-business-service, debug port: 5011
 
 ##########################################################

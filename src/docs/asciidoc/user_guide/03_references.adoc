@@ -11,4 +11,3 @@ include::../../../../services/core/cards-publication/src/docs/asciidoc/index.ado
 include::../../../../services/core/cards-consultation/src/docs/asciidoc/index.adoc[leveloffset=+2]
 include::../../../../services/core/thirds/src/docs/asciidoc/index.adoc[leveloffset=+2]
 include::../../../../services/core/users/src/docs/asciidoc/index.adoc[leveloffset=+2]
-include::../../../../services/core/time/src/docs/asciidoc/index.adoc[leveloffset=+2]

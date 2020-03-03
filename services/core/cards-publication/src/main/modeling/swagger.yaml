@@ -825,48 +825,6 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
-  '/{millisTime}/next':
-    parameters:
-      - in: path
-        name: millisTime
-        type: number
-        required: true
-        description: time in milliseconds from epoch
-    get:
-      operationId: fetchNextCard
-      tags:
-        - cards
-        - read
-      summary: fetch next card after specified time if any
-      description: fetch current card for process id
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/Card'
-        '404':
-          description: no card found
-  '/{millisTime}/previous':
-    parameters:
-      - in: path
-        name: millisTime
-        type: number
-        required: true
-        description: time in milliseconds from epoch
-    get:
-      operationId: fetchPreviousCard
-      tags:
-        - cards
-        - read
-      summary: fetch previous card before specified time if any
-      description: fetch current card for process id
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/Card'
-        '404':
-          description: no card found
   '/archives/{id}':
     parameters:
       - in: path
