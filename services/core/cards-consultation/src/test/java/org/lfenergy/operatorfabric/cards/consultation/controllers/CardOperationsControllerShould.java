@@ -349,7 +349,6 @@ public class CardOperationsControllerShould {
                 assertThat(c.getUid()).isEqualTo(stringLong);
                 assertThat(c.getSummary().getKey()).isEqualTo("summary");
                 assertThat(c.getTitle().getKey()).isEqualTo("title");
-                assertThat(c.getMainRecipient()).isEqualTo("rte-operator");
                 assertThat(c.getSeverity()).isEqualTo(SeverityEnum.ALARM);
             } catch (IOException e) {
                 log.error("Unable to extract light cards",e);

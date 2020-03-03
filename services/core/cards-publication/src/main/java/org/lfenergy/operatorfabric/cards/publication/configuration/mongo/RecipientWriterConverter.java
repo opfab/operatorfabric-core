@@ -33,10 +33,6 @@ public class RecipientWriterConverter implements Converter<RecipientPublicationD
         if (identity != null) {
             result.append("identity", identity);
         }
-        Boolean preserveMain = source.getPreserveMain();
-        if (preserveMain != null) {
-            result.append("preserveMain", preserveMain);
-        }
         List<? extends Recipient> recipients = source.getRecipients();
         if (recipients != null) {
             List<Document> recipientsAsDocuments = recipients.stream()

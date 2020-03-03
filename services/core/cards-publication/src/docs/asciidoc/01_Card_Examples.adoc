@@ -179,16 +179,11 @@ The available types are:
 - `GROUP`
 - `USER`
 - `UNION`
-- `INTERSECT`
-- `RANDOM`
-- `WEIGHTED`
-- `FAVORITE`
-- `BROADCAST`
 - `DEADEND`
 
 The simplest way to determine the recipient is to assign the card to a `user` or a `group` as seen <<_minimal_card, previously in  "Minimal Card">>.
 
-But it's possible to combine groups and potentially users using `UNION` and `INTERSECT` type to have a better control on whom should receive the card.
+But it's possible to combine groups and potentially users using `UNION`  type to have a better control on whom should receive the card.
 
 ===== UNION
 
@@ -204,15 +199,3 @@ For example, if a card is destined to the operators of `TSO1` and `TSO2` and nee
 	}
 ....
 
-===== INTERSECT
-
-To target all users member of the `admin` group in the `TSO2` group, the recipient rule could be:
-
-....
-"recipient":{"type":"INTERSECT",
-	"recipients":[
-		{"type":"GROUP","identity":"TSO1"},
-		{"type":"GROUP","identity":"ADMIN"}
-		]
-	}
-....

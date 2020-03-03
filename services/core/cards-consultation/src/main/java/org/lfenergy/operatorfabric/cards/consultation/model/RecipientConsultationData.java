@@ -31,6 +31,4 @@ public class RecipientConsultationData implements Recipient {
     private String identity;
     @Singular
     private List<? extends Recipient> recipients;
-    private Boolean preserveMain;
-
 }

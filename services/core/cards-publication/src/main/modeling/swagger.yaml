@@ -105,8 +105,6 @@ definitions:
     description: >-
       Recipient type >
 
-      * BROADCAST - Card is sent to everybody
-
       * DEADEND - Card is sent to no one (mostly for testing purposes)
 
       * GROUP - Card is sent to every user belonging to a group (identity)
@@ -116,29 +114,11 @@ definitions:
       * UNION - Card is sent to users according to the union of a recipient
       list  (recipients)
 
-      * INTERSECT - Card is sent to users according to the intersection of a
-      recipient list (recipients)
-
-      * RANDOM - Card is sent to user as defined by underlying recipient
-      (recipient) a random user is picked as the main recipient
-
-      * WEIGHTED - Card is sent to users as defined by underlying recipient
-      (recipient) a random user is picked as the main recipient. A favorite user
-      (favorite) may be specified and is favored in the random choosing process.
-
-      * FAVORITE - Card is sent to user as defined by underlying recipient
-      (recipient), if favorite user (favorite) is in the computed users list it
-      will be set as main recipient
     enum:
-      - BROADCAST
       - DEADEND
       - GROUP
       - USER
       - UNION
-      - INTERSECT
-      - RANDOM
-      - WEIGHTED
-      - FAVORITE
     example: GROUP
   I18n:
     type: object
@@ -255,38 +235,28 @@ definitions:
       type:
         $ref: '#/definitions/RecipientEnum'
         description: >-
-          Specifies the recipient type. Please note that BROADCAST and DEADEND
+          Specifies the recipient type. Please note that DEADEND
           do not expose any other properties
       recipients:
         type: array
         items:
           $ref: '#/definitions/Recipient'
         description: >-
-          Used by INTERSECT, UNION with multiple Recipients. Used by FAVORITE,
-          RANDOM, WEIGHTED for single Recipient
+          Used by UNION with multiple Recipients.
       identity:
         type: string
-        description: 'Used by USER, GROUP, FAVORITE'
-      preserveMain:
-        description: >-
-          If main users from the underlying recipients are to be propagated.
-          Used by INTERSECT and UNION recipients.
-        type: boolean
+        description: 'Used by USER, GROUP'
     required:
       - type
     example:
       type: UNION
       recipients:
-        - type: INTERSECT
-          recipients:
-            - type: GROUP
-              identity: myGroupA
-            - type: GROUP
-              identity: myGroupB
-          preserveMain: true
+        - type: GROUP
+          identity: myGroupA
+        - type: GROUP
+          identity: myGroupB
         - type: USER
           identity: aGivenUser
-      preserveMain: true
   TimeSpan:
     type: object
     description: An object to define a business time span
@@ -382,10 +352,6 @@ definitions:
       recipient:
         description: Recipient computation rule
         $ref: '#/definitions/Recipient'
-      mainRecipient:
-        description: Main user recipient id (if any)
-        type: string
-        readOnly: true
       userRecipients:
         description: Complete list of user recipients at computation time
         readOnly: true
@@ -466,16 +432,12 @@ definitions:
       recipient:
         type: UNION
         recipients:
-          - type: INTERSECT
-            recipients:
-              - type: GROUP
-                identity: myGroupA
-              - type: GROUP
-                identity: myGroupB
-            preserveMain: true
+          - type: GROUP
+            identity: myGroupA
+          - type: GROUP
+            identity: myGroupB
           - type: USER
             identity: aGivenUser
-        preserveMain: true
   Subscription:
     type: object
     description: LightCard Subscription object
@@ -549,10 +511,6 @@ definitions:
       summary:
         description: Card i18n summary
         $ref: '#/definitions/I18n'
-      mainRecipient:
-        description: Main user recipient ID (if any)
-        type: string
-        readOnly: true
       timeSpans:
         type: array
         description: List of business time span associated to card
@@ -582,7 +540,6 @@ definitions:
         parameters:
           EN: Summary of card content
           FR: Resume du contenu de la carte
-      mainRecipient: givenUser
   LightCardPage:
     type: object
     description: >-

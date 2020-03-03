@@ -123,7 +123,6 @@ public class CardPublicationData implements Card {
                 .severity(this.getSeverity())
                 .media(this.getMedia())
                 .tags(this.getTags())
-                .mainRecipient(this.getMainRecipient())
                 .title(((I18nPublicationData) this.getTitle()).copy())
                 .summary(((I18nPublicationData) this.getSummary()).copy());
         if(this.getTimeSpans()!=null)

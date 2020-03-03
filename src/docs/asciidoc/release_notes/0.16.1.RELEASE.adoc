@@ -24,6 +24,9 @@ _Note: No configuration is necessary._
 * [OC-715] - [Cards-consultation][tests] : clean must be done after each unit test
 
 == Task
+* [OC-669] - Remove unused and non working recipient options : INTERSECT , RANDOM, WEIGHTED and FAVORITE 
+           - Remove unused field mainRecipient
+           - Remove internal asynchronous mecanism to push cards in Mongo and Rabbit 
 * [OC-643] - Remove code regarding unused virtual time in frontend
 * [OC-687] - Remove unused OAuth2 micro-service
 * [OC-712] - When Token refresh is not possible redirect to login page (Implicit Mode)
