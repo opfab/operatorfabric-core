@@ -10,7 +10,7 @@ import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
 import {FeedFiltersEffects} from "@ofEffects/feed-filters.effects";
 import {Filter} from "@ofModel/feed-filter.model";
-import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
+import {ApplyFilter} from "@ofActions/feed.actions";
 import {LoadSettingsSuccess} from "@ofActions/settings.actions";
 import {of} from "rxjs";
 import {FilterService, FilterType} from "@ofServices/filter.service";
@@ -48,33 +48,6 @@ describe('FeedFilterEffects', () => {
         mockStore = TestBed.get(Store);
     });
 
-    describe('loadFeedFilterOnAuthenticationSuccess', () => {
-
-        it('should return a InitFilter Action', () => {
-            const localActions$ = new Actions(hot('a', {a: new UserApplicationRegistered({user: new User("userRegisterd", "aa", "bb")})}));
-
-            const defaultFilters= new Map();
-            defaultFilters.set('testFilter',
-                new Filter(
-                    () => false,
-                    false,
-                    {}
-                ));
-
-            localMockFeedFilterService.defaultFilters.and.returnValue(defaultFilters);
-
-            const expectedAction = new InitFilters({filters: localMockFeedFilterService.defaultFilters()});
-            const localExpected = hot('c', {c: expectedAction});
-
-            mockStore.select.and.returnValue(of(null)); //needed otherwise "TypeError: Cannot read property 'pipe' of undefined"
-
-            effects = new FeedFiltersEffects(mockStore, localActions$, localMockFeedFilterService);
-
-            expect(effects).toBeTruthy();
-            expect(effects.loadFeedFilterOnAuthenticationSuccess).toBeObservable(localExpected);
-        });
-
-    });
     describe('initTagFilterOnLoadedSettings', () => {
         it('should return nothing if no default tags', () => {
             const localActions$ = new Actions(hot('a', {a: new LoadSettingsSuccess({settings:{}})}));

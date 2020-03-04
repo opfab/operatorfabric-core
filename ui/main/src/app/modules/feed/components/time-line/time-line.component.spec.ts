@@ -175,7 +175,7 @@ describe('TimeLineComponent', () => {
     const alarmCard = getOneRandomLightCard({severity: 'ALARM'});
     const informationCard = getOneRandomLightCard({severity: 'INFORMATION'});
     // alarmCard.timeSpans = [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}];  // display is an enum normally
-    const action = new LoadLightCardsSuccess({lightCards: [compliantCard, actionCard, alarmCard, informationCard] as LightCard[]});
+    const action = new LoadLightCardsSuccess({lightCards: [alarmCard,actionCard,compliantCard,informationCard] as LightCard[]});
     store.dispatch(action);
     const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
     lightCards$.pipe(debounceTime(300), distinctUntilChanged())

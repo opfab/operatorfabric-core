@@ -13,12 +13,11 @@ import {filter, map, withLatestFrom} from 'rxjs/operators';
 import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {FilterService, FilterType} from "@ofServices/filter.service";
-import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
+import {ApplyFilter} from "@ofActions/feed.actions";
 import {LoadSettingsSuccess, SettingsActionTypes} from "@ofActions/settings.actions";
 import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {Tick, TimeActionTypes} from "@ofActions/time.actions";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
-import { UserActionsTypes } from '@ofStore/actions/user.actions';
 
 @Injectable()
 export class FeedFiltersEffects {
@@ -42,16 +41,6 @@ export class FeedFiltersEffects {
     }
 
     @Effect()
-    loadFeedFilterOnAuthenticationSuccess: Observable<Action> = this.actions$
-        .pipe(
-            // loads card operations only after authentication of a default user ok.
-            // tap(v=>console.log("loadFeedFilterOnAuthenticationSuccess: action start", v)),
-            ofType(UserActionsTypes.UserApplicationRegistered),
-            map((action) => {
-                return new InitFilters({filters:this.service.defaultFilters()});
-            }));
-
-    @Effect()
     initTagFilterOnLoadedSettings: Observable<Action> = this.actions$
         .pipe(
             // tap(v=>console.log("initTagFilterOnLoadedSettings: action start", v)),
@@ -68,7 +57,10 @@ export class FeedFiltersEffects {
             // tap(v=>console.log("initTagFilterOnLoadedSettings: mapped tag array", v)),
             filter(v=>!!v),
             // tap(v=>console.log("initTagFilterOnLoadedSettings: filtered empty array", v)),
-            map(v=>new ApplyFilter({name:FilterType.TAG_FILTER,active:true,status:{tags:v}})),
+            map(v=> {
+                console.log(new Date().toISOString(),"BUG OC-604 feed_filters.effects.ts initTagFilterOnLoadedSettings ");
+                return new ApplyFilter({name:FilterType.TAG_FILTER,active:true,status:{tags:v}});
+            })
             // tap(v=>console.log("initTagFilterOnLoadedSettings: mapped action", v))
         );
 
@@ -94,6 +86,7 @@ export class FeedFiltersEffects {
             map(([elapsedSinceLast, currentTimeFilter]) => {
                 const start = currentTimeFilter.status.start == null ? null : currentTimeFilter.status.start + elapsedSinceLast;
                 const end = currentTimeFilter.status.end == null ? null : currentTimeFilter.status.end + elapsedSinceLast;
+                console.log(new Date().toISOString(),"BUG OC-604 updateFilterOnClockTick()  start= ", start,",end=",end);
                 return new ApplyFilter({
                     name: FilterType.TIME_FILTER,
                     active: true,

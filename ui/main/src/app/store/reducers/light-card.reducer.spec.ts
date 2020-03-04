@@ -23,7 +23,7 @@ import {
     LoadLightCardsFailure,
     LoadLightCardsSuccess
 } from "@ofActions/light-card.actions";
-import {ApplyFilter, ChangeSort, InitFilters} from "@ofActions/feed.actions";
+import {ApplyFilter, ChangeSort} from "@ofActions/feed.actions";
 import {Filter} from "@ofModel/feed-filter.model";
 import {FilterType} from "@ofServices/filter.service";
 
@@ -116,40 +116,8 @@ describe('LightCard Reducer', () => {
     });
   });
 
-    describe('init filter action', () => {
-        it('should return initial state with an additionnal filter', () => {
-            const filters = new Map();
-            const testFilter = new Filter(
-                (card,status)=>true,
-                false,
-                {}
-            );
-            filters.set(FilterType.TEST_FILTER,testFilter);
-
-            expect(feedInitialState.filters.size).toBe(0);
-            const result = reducer(feedInitialState, new InitFilters({filters:filters}));
-
-            expect(result.filters.size).toBe(1);
-            expect(result.filters.get(FilterType.TEST_FILTER)).toBe(testFilter);
-            expect(result.filters.get(FilterType.TEST_FILTER).funktion).toBe(testFilter.funktion);
-        });
-
-    });
 
     describe('apply filter action', () => {
-        it('should return initial state if the filter is not in state', () => {
-            const action = new ApplyFilter({
-                name: FilterType.TEST_FILTER,
-                active: true,
-                status: {}
-            });
-
-            expect(feedInitialState.filters.size).toBe(0);
-            const result = reducer(feedInitialState, action);
-            expect(feedInitialState.filters.size).toBe(0);
-
-            expect(result).toEqual(feedInitialState);
-        });
         it('should return state with filter updated', () => {
             const filter = new Filter(
                 (card,status)=>true,

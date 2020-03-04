@@ -7,12 +7,10 @@
 
 
 import {Action} from '@ngrx/store';
-import {Filter} from "@ofModel/feed-filter.model";
 import {FilterType} from "@ofServices/filter.service";
 
 export enum FeedActionTypes {
     ApplyFilter = '[Feed] Change filter Status',
-    InitFilter = '[Feed] Init filter',
     ChangeSort = '[Feed] Change sort order'
 }
 
@@ -22,12 +20,6 @@ export class ApplyFilter implements Action {
     constructor(public payload:{name: FilterType, active: boolean, status: any}){}
 }
 
-export class InitFilters implements Action {
-    readonly type = FeedActionTypes.InitFilter;
-    /* istanbul ignore next */
-    constructor(public payload:{filters: Map<FilterType,Filter>}){}
-}
-
 export class ChangeSort implements Action {
     readonly type = FeedActionTypes.ChangeSort;
     /* istanbul ignore next */
@@ -35,6 +27,5 @@ export class ChangeSort implements Action {
 }
 
 export type FeedActions =
-    InitFilters
-    | ApplyFilter
+    ApplyFilter
     | ChangeSort;

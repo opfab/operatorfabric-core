@@ -18,7 +18,7 @@ import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
 import {FilterService} from "@ofServices/filter.service";
-import {InitFilters} from "@ofActions/feed.actions";
+
 
 describe('CardListComponent', () => {
     let component: CardListComponent;
@@ -43,7 +43,6 @@ describe('CardListComponent', () => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
         filterService = TestBed.get(FilterService);
-        store.dispatch(new InitFilters({filters: filterService.defaultFilters()}));
         fixture = TestBed.createComponent(CardListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

@@ -364,6 +364,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     if (conf) {
       this.buttonHomeActive = false;
       this.readZoomConf(conf);
+      console.log(new Date().toISOString(),"BUG OC-604 init-chart.components.ts changeGraphConf()   startDomain= ", conf.startDomain ,",endDomain=",conf.endDomain);
       this.setStartAndEndDomain(conf.startDomain, conf.endDomain);
       this.buttonHome = [conf.startDomain, conf.endDomain];
       this.buttonList.forEach(button => {
@@ -559,6 +560,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     if (this.homeDomainExtraTicksMode) {
       this.homeDomainExtraTicks = true;
     }
+    console.log(new Date().toISOString(),"BUG OC-604 homeClick()   startDomain= ", startDomain ,",endDomain=",endDomain);
     this.setStartAndEndDomain(startDomain, endDomain);
     this.buttonHomeActive = false;
     this.firstMove = true;
@@ -649,6 +651,8 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * @param endDomain new end of domain
    */
   setStartAndEndDomain(startDomain: number, endDomain: number): void {
+
+    console.log(new Date().toISOString(),"BUG OC-604 init-chart.components.ts setStartAndEndDomain() , startDomain= ", startDomain ,",endDomain=",endDomain);
     let valueStart = startDomain;
     // set domain start value 3 ticks before
     if (this.homeDomainExtraTicks && !this.autonomousTicks) {
@@ -659,6 +663,9 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.myDomain = [valueStart, valueEnd];
     this.autonomousTicksConf();
     // apply zoom on feed
+
+    console.log(new Date().toISOString(),"BUG OC-604 init-chart.components.ts setStartAndEndDomain() , send new AppliFilter event ,  valueStart= ", valueStart ,",valueEnd=",valueEnd);
+
     this.store.dispatch(new ApplyFilter({
       name: FilterType.TIME_FILTER, active: true,
       status: {start: valueStart, end: valueEnd}
@@ -727,6 +734,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     if (this.firstMoveStartOfUnit) {
       this.firstMoveStartOfUnit = false;
     }
+    console.log(new Date().toISOString(),"BUG OC-604 moveDomain()   startDomain= ", startDomain ,",endDomain=",endDomain);
     this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
   }
 

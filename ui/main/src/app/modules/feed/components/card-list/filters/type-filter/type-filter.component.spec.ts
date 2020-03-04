@@ -14,7 +14,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
 import {FilterService, FilterType} from "@ofServices/filter.service";
-import {InitFilters} from "@ofActions/feed.actions";
 import {map} from "rxjs/operators";
 import {By} from "@angular/platform-browser";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
@@ -44,7 +43,6 @@ describe('TypeFilterComponent', () => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
         filterService = TestBed.get(FilterService);
-        store.dispatch(new InitFilters({filters: filterService.defaultFilters()}));
         fixture = TestBed.createComponent(TypeFilterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

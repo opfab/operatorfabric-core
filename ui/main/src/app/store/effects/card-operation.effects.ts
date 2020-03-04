@@ -76,12 +76,16 @@ export class CardOperationEffects {
             // loads card operations only after authentication of a default user ok.
             ofType(FeedActionTypes.ApplyFilter),
             filter((af: ApplyFilter) => af.payload.name == FilterType.TIME_FILTER),
-            switchMap((af: ApplyFilter) => this.service.updateCardSubscriptionWithDates(af.payload.status.start, af.payload.status.end)
+            switchMap((af: ApplyFilter) => 
+                { 
+                    console.log(new Date().toISOString(),"BUG OC-604 card-operation.effect.ts update subscription af.payload.status.start  = ",af.payload.status.start,"af.payload.status.end",af.payload.status.end);
+                    return this.service.updateCardSubscriptionWithDates(af.payload.status.start, af.payload.status.end) 
                 .pipe(
                     map(() => {
                         return new UpdatedSubscription();
                     })
                 )
+                }
             ),
             catchError((error, caught) => {
                 this.store.dispatch(new HandleUnexpectedError({error: error}))

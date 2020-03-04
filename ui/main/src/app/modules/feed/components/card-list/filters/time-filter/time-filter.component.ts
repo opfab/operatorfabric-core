@@ -51,6 +51,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         //With {emitEvent:false}, this update won't trigger a valueChanges, so no ApplyFilter action will be dispatched
         this._filter$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
             if (next) {
+                console.log(new Date().toISOString(),"BUG OC-604 time-filter.component.ts ngOnInit() , filter value change in store ", next.status);
                 if (this.timeService.parseString(this.timeFilterForm.get('start').value).valueOf() != next.status.start) {
                     if(!!next.status.start)
                         this.timeFilterForm.get('start').setValue(this.timeService.asInputString(next.status.start), {emitEvent:false});
@@ -73,15 +74,20 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         });
 
         this._filter$.pipe(first(), takeUntil(this.ngUnsubscribe$)).subscribe(() => {
+
+            console.log(new Date().toISOString(),"BUG OC-604 time-filter.component.ts ngOnInit() , first ");
             this.timeFilterForm
                 .valueChanges
                 .pipe(
                     takeUntil(this.ngUnsubscribe$),
                     distinctUntilChanged((formA, formB) => {
+                        console.log(new Date().toISOString(),"BUG OC-604 time-filter.component.ts ngOnInit() distinctUntilChanged() formA= ", formA,",formB=",formB);
                         return _.isEqual(formA, formB);
                     }),
                     debounce(() => timer(500)))
-                .subscribe(form => this.store.dispatch(
+                .subscribe(form => {
+                    console.log(new Date().toISOString(),"BUG OC-604 time-filter.component.ts ngOnInit() distinctUntilChanged() new ApplyFilter TIME_FILTER");
+                    this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.TIME_FILTER,
                         active: !!form.start || !!form.end,
@@ -90,7 +96,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
                             end: form.end ? this.timeService.parseString(form.end).valueOf() : null
                         }
                     }))
-                );
+                });
         });
     }
 

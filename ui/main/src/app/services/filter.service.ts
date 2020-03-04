@@ -83,10 +83,12 @@ export class FilterService {
 
 
     private initFilters(): Map<string, Filter> {
+        console.log(new Date().toISOString(),"BUG OC-604 filter.service.ts init filter");
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
         filters.set(FilterType.TIME_FILTER, this.initTimeFilter());
         filters.set(FilterType.TAG_FILTER, this.initTagFilter());
+        console.log(new Date().toISOString(),"BUG OC-604 filter.service.ts init filter done");
         return filters;
     }
 }

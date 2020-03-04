@@ -17,7 +17,7 @@ import {appReducer, AppState, storeConfig} from "@ofStore/index";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {ApplyFilter, InitFilters} from "@ofActions/feed.actions";
+import {ApplyFilter} from "@ofActions/feed.actions";
 import {FilterService, FilterType} from "@ofServices/filter.service";
 
 describe('TagsFilterComponent', () => {
@@ -45,8 +45,6 @@ describe('TagsFilterComponent', () => {
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();
         filterService = TestBed.get(FilterService);
-        const defaultFilters = filterService.defaultFilters();
-        store.dispatch(new InitFilters({filters: defaultFilters}));
         fixture = TestBed.createComponent(TagsFilterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -74,7 +72,7 @@ describe('TagsFilterComponent', () => {
         component.tagFilterForm.get('tags').setValue(['A','B']);
         setTimeout(()=> {
             expect(component.tagFilterForm.valid).toBeTruthy();
-            expect(store.dispatch).toHaveBeenCalledTimes(2);
+            expect(store.dispatch).toHaveBeenCalledTimes(1);
             expect(store.dispatch).toHaveBeenCalledWith(new ApplyFilter({
                 name: FilterType.TAG_FILTER,
                 active: true,
