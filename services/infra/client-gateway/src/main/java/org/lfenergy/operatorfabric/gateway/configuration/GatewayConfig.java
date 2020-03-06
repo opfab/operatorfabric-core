@@ -101,7 +101,7 @@ public class GatewayConfig {
                         r-> r
                                 .path("/actions/**")
                                 .filters(f->f.rewritePath("/actions/(?<path>.*)", "/$\\{path}"))
-                                .uri("lb://ACTIONS")
+                                .uri("http://localhost:2105")
                 )
                 .route("web-ui",
                         r-> r

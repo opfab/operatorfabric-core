@@ -47,7 +47,7 @@ public class RoleClaimStandardArray extends RoleClaimStandard {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("RoleClaimStandardArray(path="+path+")");
+		sb.append("RoleClaimStandardArray(path=").append(path).append(")");
 		return sb.toString();
 	}
 

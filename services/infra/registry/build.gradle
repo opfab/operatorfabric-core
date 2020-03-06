@@ -1,5 +1,5 @@
 dependencies {
-    compile cloud.eurekaServer, boot.starterAop, spring.retry
+    compile cloud.eurekaServer, boot.starterAop
 }
 
 bootJar {

@@ -55,7 +55,7 @@ public class RoleClaimStandardList extends RoleClaimStandard {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("RoleClaimStandardList(path="+path+", separator=" + separator+")");
+		sb.append("RoleClaimStandardList(path=").append(path).append(", separator=").append(separator).append(")");
 		return sb.toString();
 	}
 	 

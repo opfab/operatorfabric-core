@@ -9,5 +9,20 @@ spring:
     port: 5672
     username: guest
     password: guest
-spring.cloud.discovery.enabled: false
+  cloud:
+    discovery:
+      enabled:  false
+  security:
+    provider-url: http://localhost:89
+    provider-realm: dev
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
 eureka.client.enabled: false
+operatorfabric:
+  services:
+    base-url:
+      third: http://localhost:2100
+      users: http://localhost:2103
+      cards: http://localhost:2104

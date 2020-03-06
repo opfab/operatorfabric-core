@@ -1,7 +1,16 @@
 dependencies {
+    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+    compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
+    compile  cloud.starterBus, cloud.eurekaClient
+    compile boot.starterAop
+
+    compileOnly boot.annotationConfiguration
+    annotationProcessor boot.annotationConfiguration
+
     compile boot.starterWeb, boot.starterJetty
     compile project(':tools:spring:spring-mongo-utilities')
     compile project(':tools:spring:spring-oauth2-utilities')
+
     testCompile spring.securityTest
 }
 
