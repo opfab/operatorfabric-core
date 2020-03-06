@@ -67,6 +67,7 @@ that you add._
 _The demo docker compose has been deprecated in favour of using the deploy docker-compose and the push_card_loop as
 described in the https://github.com/opfab/operatorfabric-core#8-docker-demo[README]._
 * [OC-641] - Correct deprecated warning in build
+* [OC-636] - Delete backend time service
 
 
 
