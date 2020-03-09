@@ -4,11 +4,12 @@
 revisionDate="$(LC_ALL=en_GB.utf8 date +'%d %B %Y')"
 
 display_usage() {
-	echo "This script makes the necessary changes to version controlled files to prepare for a RELEASE version."
+	echo "This script makes the necessary changes to version controlled files in case the snapshot version needs to be
+	updated before the release."
 	echo -e "Usage:\n"
 	echo -e "\tprepare_release_version.sh [OPTIONS] \n"
 	echo -e "options:\n"
-	echo -e "\t-d, --date  : string. Revision date (please use %d %B %Y format). Defaults to today ($revisionDate)"
+	echo -e "\t-v, --version  : string. New snapshot version (X.X.X.SNAPSHOT) Defaults to next minor version"
 }
 
 # Read parameters
@@ -17,8 +18,8 @@ do
 key="$1"
 # echo $key
 case $key in
-    -d|--date)
-    revisionDate="$2"
+    -v|--version)
+    newVersion="$2"
     shift # past argument
     shift # past value
     ;;
@@ -34,8 +35,6 @@ display_usage
 esac
 done
 
-echo "Revision date: $revisionDate"
-
 # Get current (SNAPSHOT) version from VERSION file
 oldVersion=$(cat VERSION)
 echo "Current version is $oldVersion (based on VERSION file)"
@@ -46,11 +45,24 @@ if [[ $oldVersion != *.SNAPSHOT ]]; then
   exit 1;
 fi
 
-# Determine RELEASE version
-newVersion=$(cat VERSION | sed 's/SNAPSHOT/RELEASE/' )
+# Determine new version if it wasn't passed as parameter
+if [[ $newVersion == "" ]]; then
+  echo "New version wasn't set, defaulting to next minor version."
+  currentMinorNumber=$(cat VERSION | sed 's/.RELEASE//g' | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\2/g')
+  nextMinorNumber=$((currentMinorNumber + 1));
+  newVersion=$(cat VERSION | sed "s/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\1\.$nextMinorNumber\.\3/g")
+fi
+
+# Check that new version is SNAPSHOT
+if [[ $oldVersion != *.SNAPSHOT ]]; then
+  echo "Proposed new version is not a SNAPSHOT version, this script shouldn't be used."
+  echo "If you want to prepare a new RELEASE version, use prepare_release_version.sh instead."
+  exit 1;
+fi
+
 echo "Preparing $newVersion"
 
-# Replace SNAPSHOT with RELEASE
+# Replace version in VERSION file
 echo "Updating version for pipeline in VERSION file"
 sed -i "s/$oldVersion/$newVersion/g" VERSION;
 
@@ -67,12 +79,7 @@ find . ! -path "./src/docs/asciidoc/release_notes/*" -and -name "*.adoc" | xargs
 echo "Replacing $oldVersion with $newVersion in links in adoc files (excluding release notes)"
 find . ! -path "./src/docs/asciidoc/release_notes/*" -and -name "*.adoc" | xargs sed -i "s/\/$oldVersion\//\/$newVersion\//g";
 
-echo "Updating revision date in adoc files (excluding release notes)"
-find . ! -path "./src/docs/asciidoc/release_notes/*" -and -name "*.adoc" | xargs sed -i "s/\(:revdate:\)\(.*\)$/\1 $revisionDate/g";
-
-echo "Using $newVersion for lfeoperatorfabric images in deploy docker-compose file"
-# String example for regexp: image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
-sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./src/main/docker/deploy/docker-compose.yml;
+# No revision date update in adoc, no update for docker-compose files
 
 echo "The following files have been updated: "
 echo | git status --porcelain
