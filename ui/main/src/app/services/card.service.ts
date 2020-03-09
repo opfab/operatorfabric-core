@@ -26,7 +26,8 @@ export class CardService {
     readonly cardOperationsUrl: string;
     readonly cardsUrl: string;
     readonly archivesUrl: string;
-
+    private subscriptionTime = 0 ; 
+    private static MINIMUM_DELAY_FOR_SUBSCRIPTION = 1000;
 
     constructor(private httpClient: HttpClient,
                 private notifyService: NotifyService,
@@ -65,6 +66,8 @@ export class CardService {
     }
 
     fetchCardOperation(eventSource: EventSourcePolyfill): Observable<CardOperation> {
+        this.subscriptionTime = new Date().getTime();
+        console.log(new Date().toISOString(),"BUG OC-604 card.services.ts fetch card set subscription time to ", this.subscriptionTime );
         return Observable.create(observer => {
             try {
                 eventSource.onmessage = message => {
@@ -91,9 +94,31 @@ export class CardService {
     }
 
     public updateCardSubscriptionWithDates(rangeStart: number, rangeEnd: number): Observable<any> {
-        return this.httpClient.post<any>(
-            `${this.cardOperationsUrl}`,
-            {rangeStart: rangeStart, rangeEnd: rangeEnd});
+        
+        /**
+         * Hack to solve OC 604 bug 
+         * Depending on the network conditions , it may appends that the subscription is not totally configured in the backend when we try to update it
+         * To solve this , we wait a minimum delay after subscription creation request  to make an updateSubscribe request 
+         * 
+         * It as well possible to have a update subscription ask form NGRX before the create subscription , in this case we wait 2 times the minimum delay 
+         * 
+         * This solution should be replace with a more robust one (the backend should be modify to send an information saying the subscription is OK )
+         */
+        let timeout = 0;
+        const currentTime= new Date().getTime();
+        if (this.subscriptionTime ==0) timeout = CardService.MINIMUM_DELAY_FOR_SUBSCRIPTION*2 ; 
+        else {
+                const delayAfterSubscription = currentTime-this.subscriptionTime ; 
+                if (delayAfterSubscription < CardService.MINIMUM_DELAY_FOR_SUBSCRIPTION) timeout = CardService.MINIMUM_DELAY_FOR_SUBSCRIPTION - delayAfterSubscription;
+        }
+        console.log(new Date().toISOString(),"BUG OC-604 card.services.ts send  updateCardSubscriptionWithDates in ", timeout , " ms" );
+        setTimeout(() => {
+            this.httpClient.post<any>(
+                `${this.cardOperationsUrl}`,
+                {rangeStart: rangeStart, rangeEnd: rangeEnd}).subscribe();
+        }, timeout);
+       
+        return of();
     }
 
     loadArchivedCard(id: string): Observable<Card> {

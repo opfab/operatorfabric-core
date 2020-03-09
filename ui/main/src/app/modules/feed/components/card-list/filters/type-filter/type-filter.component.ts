@@ -81,13 +81,15 @@ export class TypeFilterComponent implements OnInit, OnDestroy {
                         return _.isEqual(formA,formB);
                     }),
                     debounce(() => timer(500)))
-                .subscribe(form => this.store.dispatch(
+                .subscribe(form => { 
+                    console.log(new Date().toISOString(),"BUG OC-604 type-filter.components.ts ngInit() , send new AppliFilter TYPE FILTER event");
+                    return this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.TYPE_FILTER,
                         active: !(form.alarm && form.action && form.compliant && form.information),
                         status: form
-                    }))
-                );
+                    }));
+                });
         });
     }
 

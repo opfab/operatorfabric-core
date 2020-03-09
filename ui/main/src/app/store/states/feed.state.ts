@@ -9,7 +9,7 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {LightCard, severityOrdinal} from '@ofModel/light-card.model';
 import {Filter} from "@ofModel/feed-filter.model";
-import {FilterType} from "@ofServices/filter.service";
+import {FilterType,FilterService} from "@ofServices/filter.service";
 
 /**
  * The Feed State consist of:
@@ -70,12 +70,22 @@ export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<Li
     * in the selectors (see selectSortedFilterLightCardIds) */
 });
 
+/**
+ * Hack to solve OC-604 
+ * Init is done using a service , to be refactor 
+ */
+function getDefaultFilter()
+{
+    let filterservice = new FilterService();
+    return filterservice.defaultFilters() ;
+}
+
 export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(
     {
         selectedCardId: null,
         lastCards: [],
         loading: false,
         error: '',
-        filters: new Map(),
+        filters: getDefaultFilter(),
         sortBySeverity: true
     });

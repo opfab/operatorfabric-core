@@ -72,7 +72,13 @@ export function reducer(
         }
 
         case FeedActionTypes.ApplyFilter: {
+            console.log(new Date().toISOString(),"BUG OC-604 light-card.reducer.ts case FeedActionTypes.ApplyFilter filtername = ",action.payload.name);
+            console.log(new Date().toISOString(),"BUG OC-604 light-card.reducer.ts case FeedActionTypes.ApplyFilter filters = ", state.filters);
+           
+           
+           
             if(state.filters.get(action.payload.name)) {
+                console.log (new Date().toISOString(),"BUG OC-604 light-card.reducer.ts case FeedActionTypes.ApplyFilter state.filters = ",state.filters);
                 const filters = new Map(state.filters);
                 const filter = filters.get(action.payload.name).clone();
                 filter.active = action.payload.active;
@@ -84,17 +90,10 @@ export function reducer(
                     filters: filters
                 };
             }
-            return {...state}
-        }
+            else 
+            return {...state} 
 
-        case FeedActionTypes.InitFilter: {
-            return {
-                ...state,
-                loading: false,
-                filters: action.payload.filters
-            };
         }
-
         case FeedActionTypes.ChangeSort: {
             return {
                 ...state,
@@ -112,3 +111,6 @@ export function reducer(
 
     }
 }
+
+
+
