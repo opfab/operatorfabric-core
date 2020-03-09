@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric User Management API
-  version: 0.16.1.SNAPSHOT
+  version: 1.0.0.SNAPSHOT
   title: User Management
   termsOfService: ''
   contact:

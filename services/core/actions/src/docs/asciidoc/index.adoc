@@ -6,7 +6,7 @@
 
 
 = Actions Service Reference Documentation
-:revnumber: 0.16.1.SNAPSHOT
+:revnumber: 1.0.0.SNAPSHOT
 :revdate: 10 February 2020
 :imagesdir: images
 :sectnums:
