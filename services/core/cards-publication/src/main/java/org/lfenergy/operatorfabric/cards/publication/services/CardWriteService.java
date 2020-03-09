@@ -29,6 +29,7 @@ import reactor.util.function.Tuples;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -257,6 +258,18 @@ public class CardWriteService {
         Document objDocument = new Document();
         template.getConverter().write(c, objDocument);
         Update update = new Update();
+
+        //work around OC-709 : "Change card update mechanism in Mongo"
+        for (Field f : CardPublicationData.class.getDeclaredFields()) {
+            try {
+                f.setAccessible(true);
+                if (f.get(c) == null)
+                    update.unset(f.getName());
+            } catch (IllegalAccessException e) {
+                log.error("Unable to access to field" + f.getName(), e);
+            }
+        }
+
         objDocument.entrySet().forEach(e -> update.set(e.getKey(), e.getValue()));
         bulk.upsert(Query.query(Criteria.where("_id").is(c.getId())), update);
     }
