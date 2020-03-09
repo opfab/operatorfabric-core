@@ -8,7 +8,7 @@
 
 A new operator call John Doe, who has OAuth granted right to connect ot current `OperatorFabric` instance, need to receive cards within current `OperatorFabric` instance. As a user of OperatorFabric, he needs to be added to the system with a `login` (john-doe-operator), his `firstName` (John) and his `lastName` (Doe).
 operator
-As there is no `Administration GUI` for the moment, it must be performed through command line, as specify link:https://opfab.github.io/projects/services/core/users/1.0.0.SNAPSHOT/api/#SimpleUser[here].
+As there is no `Administration GUI` for the moment, it must be performed through command line, as specify link:https://opfab.github.io/projects/services/core/users/1.0.0.RELEASE/api/#SimpleUser[here].
 
 === List all users
 
@@ -135,7 +135,7 @@ HTTP/1.1 200 OK
 
 === Update user details
 
-As shown by this result, the firstName of the new operator has been misspelled.We need link:https://opfab.github.io/projects/services/core/users/1.0.0.SNAPSHOT/api/#updateUser[to update the existing user] with `john-doe-operator` login. To correct this mistake, the following commands can be used :
+As shown by this result, the firstName of the new operator has been misspelled.We need link:https://opfab.github.io/projects/services/core/users/1.0.0.RELEASE/api/#updateUser[to update the existing user] with `john-doe-operator` login. To correct this mistake, the following commands can be used :
 
 with httpie:
 ....
@@ -160,7 +160,7 @@ HTTP/1.1 200 OK
 
 === List groups
 
-This operator is the first member of a new group operator called the `OPERATORS`, which doesn't exist for the moment in the system. As shown when we link:https://opfab.github.io/projects/services/core/users/1.0.0.SNAPSHOT/api/#fetchGroups[lists the groups existing in the server].
+This operator is the first member of a new group operator called the `OPERATORS`, which doesn't exist for the moment in the system. As shown when we link:https://opfab.github.io/projects/services/core/users/1.0.0.RELEASE/api/#fetchGroups[lists the groups existing in the server].
 
 Httpie
 ....
@@ -210,7 +210,7 @@ HTTP/1.1 200 OK
 
 === Create a new Group
 
-Firstly, the group called `OPERATORS` has link:https://opfab.github.io/projects/services/core/users/1.0.0.SNAPSHOT/api/#createGroup[to be added to the system] using the following command:
+Firstly, the group called `OPERATORS` has link:https://opfab.github.io/projects/services/core/users/1.0.0.RELEASE/api/#createGroup[to be added to the system] using the following command:
 
 using httpie:
 ....
@@ -234,7 +234,7 @@ HTTP/1.1 200 OK
 
 === Fetch details of a given group
 
-The result return seems strange, to verify if it's the correct answer by link:https://opfab.github.io/projects/services/core/users/1.0.0.SNAPSHOT/api/#fetchGroup[displaying the details of the group] called `OPERATORS`, use the following command:
+The result return seems strange, to verify if it's the correct answer by link:https://opfab.github.io/projects/services/core/users/1.0.0.RELEASE/api/#fetchGroup[displaying the details of the group] called `OPERATORS`, use the following command:
 
 using httpie:
 ....
@@ -258,7 +258,7 @@ HTTP/1.1 200 OK
 
 === Update details of a group
 
-The description is really null. After verification, in our first command used to create the group, the attribute for the description is misspelled. Using the following command link:https://opfab.github.io/projects/services/core/users/1.0.0.SNAPSHOT/api/#updateGroup[to update the group], with the correct spelling, the new group of operator gets a proper description:
+The description is really null. After verification, in our first command used to create the group, the attribute for the description is misspelled. Using the following command link:https://opfab.github.io/projects/services/core/users/1.0.0.RELEASE/api/#updateGroup[to update the group], with the correct spelling, the new group of operator gets a proper description:
 
 with httpie:
 ....
@@ -280,7 +280,7 @@ response
 
 === Add a user to a group
 
-As both new group and new user are correct it's time link:https://opfab.github.io/projects/services/core/users/1.0.0.SNAPSHOT/api/#addGroupUsers[to make the user member of the group]. To achieve this, use the following command:
+As both new group and new user are correct it's time link:https://opfab.github.io/projects/services/core/users/1.0.0.RELEASE/api/#addGroupUsers[to make the user member of the group]. To achieve this, use the following command:
 
 with httpie:
 ....

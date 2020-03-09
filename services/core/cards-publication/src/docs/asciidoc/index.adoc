@@ -6,8 +6,8 @@
 
 
 = OperatorFabric Card Publication Service
-:revnumber: 1.0.0.SNAPSHOT
-:revdate: 10 February 2020
+:revnumber: 1.0.0.RELEASE
+:revdate: 09 March 2020
 :imagesdir: images
 :sectnums:
 :toc: left
@@ -29,7 +29,7 @@ For a card stored in a file named `card.json`, with an OperatorFabric running on
 curl -X POST http://localhost:2102/cards -H "Content-Type:application/type" --data @card.json
 ....
 
-For more details about possibilities about the Card Publication REST API please refer to the <<_publication_rest_api_overview>> chapter or to the link:https://opfab.github.io/projects/services/core/cards-publication/1.0.0.SNAPSHOT/api/[swagger documentation].
+For more details about possibilities about the Card Publication REST API please refer to the <<_publication_rest_api_overview>> chapter or to the link:https://opfab.github.io/projects/services/core/cards-publication/1.0.0.RELEASE/api/[swagger documentation].
 
 include::01_Card_Examples.adoc[]
 

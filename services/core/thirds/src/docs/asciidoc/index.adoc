@@ -6,8 +6,8 @@
 
 
 = OperatorFabric Third service
-:revnumber: 1.0.0.SNAPSHOT
-:revdate: 10 February 2020
+:revnumber: 1.0.0.RELEASE
+:revdate: 09 March 2020
 :imagesdir: images
 :sectnums:
 :toc: left
