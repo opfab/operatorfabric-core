@@ -5,3 +5,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 == Version 1.1.0.RELEASE
+
+=== Task
+* [OC-749] Build is passing even though documentation wasn't pushed
++
+_Builds with a documentation stage will now fail if the push to the website repository wasn't successful._
