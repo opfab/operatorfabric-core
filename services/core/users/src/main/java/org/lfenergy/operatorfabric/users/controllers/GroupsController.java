@@ -40,7 +40,7 @@ public class GroupsController implements GroupsApi {
     public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
     public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
-    public static final String NO_MATCHING_GROUP_NAME_MSG = "Payload Group name does not match URL Group name";
+    public static final String NO_MATCHING_GROUP_ID_MSG = "Payload Group id does not match URL Group id";
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
@@ -54,16 +54,16 @@ public class GroupsController implements GroupsApi {
     private ApplicationEventPublisher publisher;
 
     @Override
-    public Void addGroupUsers(HttpServletRequest request, HttpServletResponse response, String name, List<String> users) throws Exception {
+    public Void addGroupUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
 
         //Only existing groups can be updated
-        findGroupOrThrow(name);
+        findGroupOrThrow(id);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
         List<UserData> foundUsers = retrieveUsers(users);
 
         for (UserData userData : foundUsers) {
-            userData.addGroup(name);
+            userData.addGroup(id);
             publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
         }
         userRepository.saveAll(foundUsers);
@@ -73,25 +73,25 @@ public class GroupsController implements GroupsApi {
 
     @Override
     public Group createGroup(HttpServletRequest request, HttpServletResponse response, Group group) throws Exception {
-        if(groupRepository.findById(group.getName()).orElse(null) == null){
-            response.addHeader("Location", request.getContextPath() + "/groups/" + group.getName());
+        if(groupRepository.findById(group.getId()).orElse(null) == null){
+            response.addHeader("Location", request.getContextPath() + "/groups/" + group.getId());
             response.setStatus(201);
         }
         return groupRepository.save((GroupData)group);
     }
 
     @Override
-    public Void deleteGroupUsers(HttpServletRequest request, HttpServletResponse response, String name) throws Exception {
+    public Void deleteGroupUsers(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
 
         //Only existing groups can be updated
-         findGroupOrThrow(name);
+         findGroupOrThrow(id);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
-        List<UserData> foundUsers = userRepository.findByGroupSetContaining(name);
+        List<UserData> foundUsers = userRepository.findByGroupSetContaining(id);
 
         if(foundUsers!=null) {
             for (UserData userData : foundUsers) {
-                userData.deleteGroup(name);
+                userData.deleteGroup(id);
                 publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
             }
             userRepository.saveAll(foundUsers);
@@ -100,10 +100,10 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public Void deleteGroupUser(HttpServletRequest request, HttpServletResponse response, String name, String login) throws Exception {
+    public Void deleteGroupUser(HttpServletRequest request, HttpServletResponse response, String id, String login) throws Exception {
 
         //Only existing groups can be updated
-        findGroupOrThrow(name);
+        findGroupOrThrow(id);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
         UserData foundUser = userRepository.findById(login).orElseThrow(()->new ApiErrorException(
@@ -114,7 +114,7 @@ public class GroupsController implements GroupsApi {
         ));
 
         if(foundUser!=null) {
-                foundUser.deleteGroup(name);
+                foundUser.deleteGroup(id);
                 publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
             userRepository.save(foundUser);
         }
@@ -127,25 +127,25 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public Group fetchGroup(HttpServletRequest request, HttpServletResponse response, String name) throws Exception {
-        return groupRepository.findById(name).orElseThrow(
+    public Group fetchGroup(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+        return groupRepository.findById(id).orElseThrow(
            ()-> new ApiErrorException(
               ApiError.builder()
                  .status(HttpStatus.NOT_FOUND)
-                 .message(String.format(GROUP_NOT_FOUND_MSG,name))
+                 .message(String.format(GROUP_NOT_FOUND_MSG,id))
                  .build()
            )
         );
     }
 
     @Override
-    public Group updateGroup(HttpServletRequest request, HttpServletResponse response, String name, Group group) throws Exception {
-        //name from group body parameter should match name path parameter
-        if(!group.getName().equals(name)){
+    public Group updateGroup(HttpServletRequest request, HttpServletResponse response, String id, Group group) throws Exception {
+        //id from group body parameter should match id path parameter
+        if(!group.getId().equals(id)){
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
-                            .message(NO_MATCHING_GROUP_NAME_MSG)
+                            .message(NO_MATCHING_GROUP_ID_MSG)
                             .build());
         } else {
             return createGroup(request,response,group);
@@ -154,12 +154,12 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public Void updateGroupUsers(HttpServletRequest request, HttpServletResponse response, String name, List<String> users) throws Exception {
+    public Void updateGroupUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
 
         //Only existing groups can be updated
-        findGroupOrThrow(name);
+        findGroupOrThrow(id);
 
-        List<UserData> formerlyBelongs = userRepository.findByGroupSetContaining(name);
+        List<UserData> formerlyBelongs = userRepository.findByGroupSetContaining(id);
         List<String> newUsersInGroup = new ArrayList<>(users);
 
         //Make sure the intended updated users list only contains logins existing in the repository, throwing an error if this is not the case
@@ -169,27 +169,27 @@ public class GroupsController implements GroupsApi {
         formerlyBelongs.stream()
            .filter(u->!users.contains(u.getLogin()))
            .forEach(u-> {
-               u.deleteGroup(name);
+               u.deleteGroup(id);
                newUsersInGroup.remove(u.getLogin());
                toUpdate.add(u);
            });
 
         //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
         for (UserData userData : toUpdate) {
-            userData.addGroup(name);
+            userData.addGroup(id);
             publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
         }
         userRepository.saveAll(toUpdate);
-        addGroupUsers(request, response, name,newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
+        addGroupUsers(request, response, id,newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
         return null;
     }
 
-    private GroupData findGroupOrThrow(String name) {
-        return groupRepository.findById(name).orElseThrow(
+    private GroupData findGroupOrThrow(String id) {
+        return groupRepository.findById(id).orElseThrow(
                 ()-> new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(GROUP_NOT_FOUND_MSG,name))
+                                .message(String.format(GROUP_NOT_FOUND_MSG,id))
                                 .build()
                 ));
     }

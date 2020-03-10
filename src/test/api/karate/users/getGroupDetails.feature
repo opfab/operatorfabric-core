@@ -11,8 +11,9 @@ Feature: Get Group details
     * def group =
 """
 {
-  "name" : "groupKarate3",
-  "description" : "group"
+  "id" : "groupKarate3",
+  "name" : "groupKarate3 name",
+  "description" : "groupKarate3 description"
 }
 """
 
@@ -28,22 +29,23 @@ Feature: Get Group details
 
   Scenario: get group details
     #get /groups/{name}
-    Given url opfabUrl + 'users/groups/' + group.name
+    Given url opfabUrl + 'users/groups/' + group.id
     And header Authorization = 'Bearer ' + authToken
     When method get
-    Then match response.name == group.name
+    Then match response.id == group.id
     And match response.description == group.description
+    And match response.name == group.name
     And status 200
 
 
   Scenario: get group details without authentication
-    Given url opfabUrl + 'users/groups/' + group.name
+    Given url opfabUrl + 'users/groups/' + group.id
     When method get
     Then status 401
 
 
   Scenario: get group details with a simple user
-    Given url opfabUrl + 'users/groups/' + group.name
+    Given url opfabUrl + 'users/groups/' + group.id
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 403

@@ -10,8 +10,8 @@ Feature: CreateGroups
     * def group =
 """
 {
-
-  "name" : "groupKarate1",
+  "id" : "groupKarate1",
+  "name" : "groupKarate1 name",
   "description" : "Karate is driving me crazy"
 }
 """
@@ -19,7 +19,8 @@ Feature: CreateGroups
 """
 {
 
-  "name" : "groupKarate1",
+  "id" : "groupKarate1",
+  "name" : "groupKarate1 name",
   "description" : "I Love Karate"
 }
 """
@@ -41,6 +42,7 @@ Feature: CreateGroups
     Then status 201
     And match response.description == group.description
     And match response.name == group.name
+    And match response.id == group.id
 
   Scenario: Update my group
 
@@ -52,10 +54,11 @@ Feature: CreateGroups
     Then status 200
     And match response.description == groupUpdated.description
     And match response.name == groupUpdated.name
+    And match response.id == groupUpdated.id
 
   Scenario: create without admin role
         #HForbiden without admin role, expected response 403
-    Given url opfabUrl + 'users/groups/' + group.name
+    Given url opfabUrl + 'users/groups/' + group.id
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request group
     When method post
@@ -63,7 +66,7 @@ Feature: CreateGroups
 
      Scenario: Update without authentication token
      #Witout authentication
-    Given url opfabUrl + 'users/groups/' + group.name
+    Given url opfabUrl + 'users/groups/' + group.id
     And request group
     When method post
    Then status 401

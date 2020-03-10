@@ -188,32 +188,39 @@ HTTP/1.1 200 OK
 
 [
     {
-        "description": "The admin group",
-        "name": "ADMIN"
+        "id": "ADMIN",
+        "name": "ADMINISTRATORS",
+        "description": "The admin group"
     },
     {
-        "description": "RTE TSO Group",
-        "name": "RTE"
+        "id": "RTE",
+        "name": "RTE France",
+        "description": "RTE TSO Group"
     },
     {
-        "description": "ELIA TSO group",
-        "name": "ELIA"
+        "id": "ELIA",
+        "name": "ELIA Group",
+        "description": "ELIA TSO group"
     },
     {
-        "description": "CORESO Group",
-        "name": "CORESO"
+        "id": "CORESO",
+        "name": "CORESO Group",
+        "description": "CORESO Coordination Group"
     },
     {
-        "description": "TSO 1 Group",
-        "name": "TSO1"
+        "id": "TSO1",
+        "name": "TSO number 1",
+        "description": "TSO 1 Group"
     },
     {
-        "description": "TSO 2 Group",
-        "name": "TSO2"
+        "id": "TSO2",
+        "name": "TSO number 2",
+        "description": "TSO 2 Group"
     },
     {
-        "description": "Transnationnal Group",
-        "name": "TRANS"
+        "id": "TRANS",
+        "name": "TRANS name",
+        "description": "Transnational Group"
     }
 ]
 ....
@@ -227,12 +234,12 @@ using the following command:
 
 using httpie:
 ....
-echo '{"name":"OPERATORS","decription":"This is the brand new  group of operator"}' | http POST http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/json"
+echo '{"id":"OPERATORS","name":"OPERATORS Group","decription":"This is the brand new group of operator"}' | http POST http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/json"
 ....
 
 using cURL:
 ....
-curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","decription":"This is the brand new  group of operator"}'
+curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"OPERATORS","name":"OPERATORS Group","decription":"This is the brand new  group of operator"}'
 ....
 
 response
@@ -240,8 +247,9 @@ response
 HTTP/1.1 200 OK
 
 {
-    "description": null,
-    "name": "OPERATORS"
+    "id": "OPERATORS",
+    "name": "OPERATORS Group",
+    "description": null
 }
 ....
 
@@ -267,8 +275,9 @@ response
 HTTP/1.1 200 OK
 
 {
-    "description": null,
-    "name": "OPERATORS"
+    "id": "OPERATORS",
+    "name": "OPERATORS Group",
+    "description": null
 }
 ....
 
@@ -282,19 +291,20 @@ with the correct spelling, the new group of operator gets a proper description:
 
 with httpie:
 ....
-echo '{"name":"OPERATORS","description":"This is the brand new  group of operator"}' | http -b PUT http://localhost:2103/groups/OPERATORS "Authorization:Bearer $token" "Content-Type:application/json"
+echo '{"id":"OPERATORS","name":"OPERATORS Group","description":"This is the brand new group of operator"}' | http -b PUT http://localhost:2103/groups/OPERATORS "Authorization:Bearer $token" "Content-Type:application/json"
 ....
 
 with cURL:
 ....
-curl -X PUT http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","description":"This is the brand new  group of operator"}'
+curl -X PUT http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"OPERATORS","name":"OPERATORS Group","description":"This is the brand new group of operator"}'
 ....
 
 response
 ....
 {
-    "description": "This is the brand new  group of operator",
-    "name": "OPERATORS"
+    "id": "OPERATORS",
+    "name": "OPERATORS Group",
+    "description": "This is the brand new group of operator"
 }
 ....
 
@@ -391,7 +401,7 @@ HTTP/1.1 200 OK
     "firstName": "John",
     "groups": [],
     "lastName": "Doe",
-    "login": "coreso-operator"
+    "login": "john-doe-operator"
 
 }
 ....

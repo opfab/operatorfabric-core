@@ -13,15 +13,15 @@ Feature: Users and groups
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response[0].name != null
-    And def groupName = response[0].name
+    And match response[0].id != null
+    And def groupId = response[0].id
 
     # Get the first group
-    Given url opfabUrl + 'users/groups/' +  groupName
+    Given url opfabUrl + 'users/groups/' +  groupId
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.name == groupName
+    And match response.id == groupId
 
 
   Scenario: Get Users

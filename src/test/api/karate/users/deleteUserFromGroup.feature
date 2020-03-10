@@ -12,8 +12,7 @@ Feature: deleteUserFromGroup
     * def groupKarate2 =
 """
 {
-
-  "name" : "groupKarate2",
+  "id" : "groupKarate2",
   "description" : "group to delete after the test"
 }
 """
@@ -58,7 +57,7 @@ Feature: deleteUserFromGroup
 
   Scenario: affect an user to the group
 
-    Given url opfabUrl + 'users/groups/' + groupKarate2.name +'/users'
+    Given url opfabUrl + 'users/groups/' + groupKarate2.id +'/users'
     And header Authorization = 'Bearer ' + authToken
     And request usersArray
     When method put
@@ -67,14 +66,14 @@ Feature: deleteUserFromGroup
 
   Scenario: Delete user from a group (with tso1-operator authentication)
     #Given url opfabUrl + 'users/groups/' + groupDeletedFrom + '/users/' + userToDelete
-    Given url opfabUrl + 'users/groups/' + groupKarate2.name  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + userKarate2.login
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
 
 
   Scenario: No authentication, expected response 401
-    Given url opfabUrl + 'users/groups/' + groupKarate2.name  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + userKarate2.login
     When method delete
     Then status 401
 
@@ -90,7 +89,7 @@ Feature: deleteUserFromGroup
 
   #delete /groups/{name}/users/{login}
   Scenario: Delete user from a group (with admin authentication)
-    Given url opfabUrl + 'users/groups/' + groupKarate2.name  + '/users/' + userKarate2.login
+    Given url opfabUrl + 'users/groups/' + groupKarate2.id  + '/users/' + userKarate2.login
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

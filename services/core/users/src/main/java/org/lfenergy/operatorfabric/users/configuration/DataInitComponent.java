@@ -98,10 +98,10 @@ public class DataInitComponent {
             if (resultUser.isPresent()) {
                 UserData loadedUser = resultUser.get();
                 boolean updated = false;
-                for (String groupName : u.getGroupSet()) {
-                    if (!loadedUser.getGroupSet().contains(groupName)) {
-                        loadedUser.addGroup(groupName);
-                        log.info("Added group '{}' to existing user '{}'", groupName, loadedUser.getLogin());
+                for (String groupId : u.getGroupSet()) {
+                    if (!loadedUser.getGroupSet().contains(groupId)) {
+                        loadedUser.addGroup(groupId);
+                        log.info("Added group '{}' to existing user '{}'", groupId, loadedUser.getLogin());
 
                         updated = true;
                     }
@@ -130,7 +130,7 @@ public class DataInitComponent {
         try {
             groupRepository.insert(g);
         } catch (DuplicateKeyException ex) {
-            log.warn("{} {} group: duplicate", FAILED_INIT_MSG, g.getName());
+            log.warn("{} {} group: duplicate", FAILED_INIT_MSG, g.getId());
         }
     }
 }

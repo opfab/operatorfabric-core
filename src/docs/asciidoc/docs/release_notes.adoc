@@ -12,3 +12,16 @@
 * [OC-414] Issue with using user data in templates
 
 == Task
+* [OC-736] Add a field "name" to the object Group +
+Now, Group data model is : +
+[source]
+----
+Group{
+    id*	        string
+    name        string
+    description	string
+}
+----
+Please do take a look at the Users API documentation (groups section) :
+https://opfab.github.io/documentation/current/api/users/#/groups
+

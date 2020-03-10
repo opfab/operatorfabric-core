@@ -14,16 +14,21 @@ operatorfabric.users.default:
       groups: ["TSO2", "TRANS"]
       entities: ["ENTITY2"]
   groups:
-    - name: ADMIN
+    - id: ADMIN
+      name: ADMINISTRATORS
       description: The admin group
-    - name: RTE
+    - id: RTE
+      name: RTE France
       description: RTE TSO Group
-    - name: TSO1
+    - id: TSO1
+      name: TSO number 1
       description: TSO 1 Group
-    - name: TSO2
+    - id: TSO2
+      name: TSO number 2
       description: TSO 2 Group
-    - name: TRANS
-      description: Transnationnal Group
+    - id: TRANS
+      name: TRANS name
+      description: Transnational Group
   user-settings:
     - login: rte-operator
       description: Da Operator Rulez

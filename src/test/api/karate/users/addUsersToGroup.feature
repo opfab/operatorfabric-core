@@ -20,7 +20,7 @@ Feature: Add users to a group
 ]
 """
 
-    #Endpoint tested patch /groups/{name}/users
+    #Endpoint tested patch /groups/{id}/users
 
   Scenario: Add a user to a group with bad request
     Given url opfabUrl + 'users/groups/' + mygroup + '/users'
@@ -53,7 +53,6 @@ Feature: Add users to a group
 
 
   Scenario: Add users to a group
-    #Given url opfabUrl + 'users/groups/' + group.name +'/users'
     Given url opfabUrl + 'users/groups/' + mygroup + '/users'
     And header Authorization = 'Bearer ' + authToken
     And request usersArray

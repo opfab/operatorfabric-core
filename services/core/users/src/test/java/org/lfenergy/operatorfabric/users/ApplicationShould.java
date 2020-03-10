@@ -56,7 +56,8 @@ class ApplicationShould {
         List<GroupData> defaultGroups = groupRepository.findAll();
         assertThat(defaultGroups).hasSize(1);
         assertThat(defaultUsers.get(0).getLogin()).isEqualTo("admin");
-        assertThat(defaultGroups.get(0).getName()).isEqualTo("ADMIN");
+        assertThat(defaultGroups.get(0).getId()).isEqualTo("ADMIN");
+        assertThat(defaultGroups.get(0).getName()).isEqualTo("ADMINISTRATORS");
     }
 
 }

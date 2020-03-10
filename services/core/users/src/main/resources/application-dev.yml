@@ -10,5 +10,6 @@ operatorfabric.users.default:
     - login: admin
       groupSet: [ADMIN]
   groups:
-    - name: ADMIN
+    - id: ADMIN
+      name: ADMINISTRATORS
       description: The admin group
