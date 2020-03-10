@@ -3,7 +3,8 @@ operatorfabric.users.default:
     - login: admin
       groups: [ADMIN]
   groups:
-    - name: ADMIN
+    - id: ADMIN
+      name: ADMINISTRATORS
       description: The admin group
   entities:
     - id: ENTITYADMIN

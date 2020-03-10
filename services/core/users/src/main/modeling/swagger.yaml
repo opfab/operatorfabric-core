@@ -63,22 +63,25 @@ definitions:
       firstName: John
       lastName: Cleese
       groups:
-        - Monty Python
-        - Wanda
+        - MONTY
+        - WANDA
       entities:
         - ENTITY1
         - ENTITY2
   Group:
     type: object
     properties:
+      id:
+        type: string
       name:
         type: string
       description:
         type: string
     required:
-      - name
+      - id
     example:
-      name: Wanda
+      id: WANDA
+      name : Wanda
       description: They were not as successful in Fierce Creatures.
   Entity:
     type: object
@@ -176,8 +179,8 @@ paths:
                 firstName: John
                 lastName: Cleese
                 groups:
-                  - Monty Python
-                  - Wanda
+                  - MONTY
+                  - WANDA
                 entities:
                   - ENITY1
                   - ENTITY2
@@ -185,7 +188,7 @@ paths:
                 firstName: Graham
                 lastName: Chapman
                 groups:
-                  - Monty Python
+                  - MONTY
                 entities:
                   - ENITY1
         '401':
@@ -405,9 +408,11 @@ paths:
               $ref: '#/definitions/Group'
           examples:
             application/json:
-              - name: Wanda
+              - id: WANDA
+                name: Wanda
                 description: They were not as successful in Fierce Creatures
-              - name: Marx Brothers
+              - id: MARXB
+                name: Marx Brothers
                 description: 'Chico, Groucho and Harpo, forget about Zeppo and Gummo'
         '401':
           description: Authentication required
@@ -444,7 +449,7 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
-  '/groups/{name}':
+  '/groups/{id}':
     put:
       tags:
         - groups
@@ -457,13 +462,13 @@ paths:
         - application/json
       parameters:
         - in: path
-          name: name
-          description: Name of group to be updated (should match name in request body)
+          name: id
+          description: Id of group to be updated (should match "id group" in request body)
           type: string
           required: true
         - in: body
           name: group
-          description: Updated group data (should match name path parameter)
+          description: Updated group data (should match "id group" path parameter)
           schema:
             $ref: '#/definitions/Group'
       responses:
@@ -476,7 +481,7 @@ paths:
           schema:
             $ref: '#/definitions/Group'
         '400':
-          description: Bad request (body doesn't match name path parameter)
+          description: Bad request (body doesn't match "id group" path parameter)
         '401':
           description: Authentication required
         '403':
@@ -491,8 +496,8 @@ paths:
         - application/json
       parameters:
         - in: path
-          name: name
-          description: Group name
+          name: id
+          description: Group id
           type: string
           required: true
       responses:
@@ -507,7 +512,7 @@ paths:
         '404':
           description: Required group not found
 
-  '/groups/{name}/users':
+  '/groups/{id}/users':
     put:
       tags:
         - groups
@@ -523,14 +528,14 @@ paths:
         - application/json
       parameters:
         - in: path
-          name: name
-          description: Group name
+          name: id
+          description: Group id
           type: string
           required: true
         - in: body
           name: users
           description: >-
-            Array of user logins representing exactly the intended list of group
+            Array of user ids representing exactly the intended list of group
             users after update
           schema:
             type: array
@@ -560,13 +565,13 @@ paths:
         - application/json
       parameters:
         - in: path
-          name: name
-          description: Group name
+          name: id
+          description: Group id
           type: string
           required: true
         - in: body
           name: users
-          description: Array of user logins to be added to group
+          description: Array of user ids to be added to group
           schema:
             type: array
             items:
@@ -593,8 +598,8 @@ paths:
         - application/json
       parameters:
         - in: path
-          name: name
-          description: Group name
+          name: id
+          description: Group id
           type: string
           required: true
       responses:
@@ -608,7 +613,7 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required group not found
-  '/groups/{name}/users/{login}':
+  '/groups/{id}/users/{login}':
     delete:
       tags:
       - groups
@@ -620,8 +625,8 @@ paths:
       - application/json
       parameters:
       - in: path
-        name: name
-        description: Group name
+        name: id
+        description: Group id
         type: string
         required: true
       - in: path

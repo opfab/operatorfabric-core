@@ -86,20 +86,20 @@ class GroupsControllerShould {
            .login("jcleese")
            .firstName("John")
            .lastName("Cleese")
-           .group("Monty Pythons").group("Wanda")
+           .group("MONTY").group("WANDA")
            .build();
         u2 = UserData.builder()
            .login("gchapman")
            .firstName("Graham")
            .lastName("Chapman")
-           .group("Monty Pythons")
+           .group("MONTY")
            .entity("entity1").entity("entity2")
            .build();
         u3 = UserData.builder()
            .login("kkline")
            .firstName("Kevin")
            .lastName("Kline")
-           .group("Wanda")
+           .group("WANDA")
            .entity("entity1")
            .build();
         userRepository.insert(u1);
@@ -107,10 +107,12 @@ class GroupsControllerShould {
         userRepository.insert(u3);
         GroupData g1, g2;
         g1 = GroupData.builder()
+           .id("MONTY")
            .name("Monty Pythons")
            .description("A bunch of humorous fellows")
            .build();
         g2 = GroupData.builder()
+           .id("WANDA")
            .name("Wanda")
            .description("The cast of a really successful comedy")
            .build();
@@ -140,10 +142,11 @@ class GroupsControllerShould {
 
         @Test
         void fetch() throws Exception {
-            ResultActions result = mockMvc.perform(get("/groups/Monty Pythons"));
+            ResultActions result = mockMvc.perform(get("/groups/MONTY"));
             result
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.id", is("MONTY")))
                     .andExpect(jsonPath("$.name", is("Monty Pythons")))
                     .andExpect(jsonPath("$.description", is("A bunch of humorous fellows")))
             ;
@@ -166,12 +169,14 @@ class GroupsControllerShould {
             mockMvc.perform(post("/groups")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
+                            "\"id\": \"MARXB\"," +
                             "\"name\": \"Marx Brothers\"," +
                             "\"description\": \"Chico, Groucho and Harpo, forget about Zeppo and Gummo\"" +
                             "}")
             )
                     .andExpect(status().isCreated())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.id", is("MARXB")))
                     .andExpect(jsonPath("$.name", is("Marx Brothers")))
                     .andExpect(jsonPath("$.description", is("Chico, Groucho and Harpo, forget about Zeppo and Gummo")))
             ;
@@ -179,12 +184,14 @@ class GroupsControllerShould {
             mockMvc.perform(post("/groups")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
+                            "\"id\": \"MARXB\"," +
                             "\"name\": \"Marx Brothers\"," +
                             "\"description\": \"Chico, Groucho and Harpo, forget about Zeppo and Gummo\"" +
                             "}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.id", is("MARXB")))
                     .andExpect(jsonPath("$.name", is("Marx Brothers")))
                     .andExpect(jsonPath("$.description", is("Chico, Groucho and Harpo, forget about Zeppo and Gummo")))
             ;
@@ -194,9 +201,10 @@ class GroupsControllerShould {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(3)));
 
-            mockMvc.perform(get("/groups/Marx Brothers"))
+            mockMvc.perform(get("/groups/MARXB"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.id", is("MARXB")))
                     .andExpect(jsonPath("$.name", is("Marx Brothers")))
                     .andExpect(jsonPath("$.description", is("Chico, Groucho and Harpo, forget about Zeppo and Gummo")))
             ;
@@ -205,15 +213,17 @@ class GroupsControllerShould {
 
         @Test
         void update() throws Exception {
-            mockMvc.perform(put("/groups/Wanda")
+            mockMvc.perform(put("/groups/WANDA")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
+                            "\"id\": \"WANDA\"," +
                             "\"name\": \"Wanda\"," +
                             "\"description\": \"They were not as successful in Fierce Creatures\"" +
                             "}")
             )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.id", is("WANDA")))
                     .andExpect(jsonPath("$.name", is("Wanda")))
                     .andExpect(jsonPath("$.description", is("They were not as successful in Fierce Creatures")))
             ;
@@ -223,9 +233,10 @@ class GroupsControllerShould {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(2)));
 
-            mockMvc.perform(get("/groups/Wanda"))
+            mockMvc.perform(get("/groups/WANDA"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.id", is("WANDA")))
                     .andExpect(jsonPath("$.name", is("Wanda")))
                     .andExpect(jsonPath("$.description", is("They were not as successful in Fierce Creatures")))
             ;
@@ -234,16 +245,18 @@ class GroupsControllerShould {
         @Test
         void updateWithMismatchedError() throws Exception {
 
-            mockMvc.perform(get("/groups/Wanda"))
+            mockMvc.perform(get("/groups/WANDA"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.id", is("WANDA")))
                     .andExpect(jsonPath("$.name", is("Wanda")))
                     .andExpect(jsonPath("$.description", is("The cast of a really successful comedy")))
             ;
 
-            mockMvc.perform(put("/groups/Wanda")
+            mockMvc.perform(put("/groups/WANDA")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
+                            "\"id\": \"MONTY\"," +
                             "\"name\": \"Monty Pythons\"," +
                             "\"description\": \"They were not as successful in Fierce Creatures\"" +
                             "}")
@@ -251,13 +264,14 @@ class GroupsControllerShould {
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                    .andExpect(jsonPath("$.message", is(GroupsController.NO_MATCHING_GROUP_NAME_MSG)))
+                    .andExpect(jsonPath("$.message", is(GroupsController.NO_MATCHING_GROUP_ID_MSG)))
                     .andExpect(jsonPath("$.errors").doesNotExist());
             ;
 
-            mockMvc.perform(get("/groups/Wanda"))
+            mockMvc.perform(get("/groups/WANDA"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.id", is("WANDA")))
                     .andExpect(jsonPath("$.name", is("Wanda")))
                     .andExpect(jsonPath("$.description", is("The cast of a really successful comedy")))
             ;
@@ -266,17 +280,18 @@ class GroupsControllerShould {
         @Test
         void updateWithMismatchedAndNotFoundError() throws Exception {
 
-            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+            mockMvc.perform(get("/groups/unknownGroupSoFarId"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFarId"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
-            mockMvc.perform(put("/groups/unknownGroupSoFar")
+            mockMvc.perform(put("/groups/unknownGroupSoFarId")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
+                            "\"id\": \"someOtherGroupNameId\"," +
                             "\"name\": \"someOtherGroupName\"," +
                             "\"description\": \"New description for group\"" +
                             "}")
@@ -284,22 +299,22 @@ class GroupsControllerShould {
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.NO_MATCHING_GROUP_NAME_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.NO_MATCHING_GROUP_ID_MSG, "unknownGroupSoFarId"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
-            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+            mockMvc.perform(get("/groups/unknownGroupSoFarId"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
-                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFarId"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
         }
 
         @Test
         void addGroupToUsers() throws Exception {
-            mockMvc.perform(patch("/groups/Wanda/users")
+            mockMvc.perform(patch("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"gchapman\"]")
             )
@@ -308,10 +323,10 @@ class GroupsControllerShould {
 
             UserData gchapman = userRepository.findById("gchapman").get();
             assertThat(gchapman).isNotNull();
-            assertThat(gchapman.getGroups()).contains("Monty Pythons", "Wanda");
+            assertThat(gchapman.getGroups()).contains("MONTY", "WANDA");
             UserData jcleese = userRepository.findById("jcleese").get();
             assertThat(jcleese).isNotNull();
-            assertThat(jcleese.getGroups()).contains("Monty Pythons", "Wanda");
+            assertThat(jcleese.getGroups()).contains("MONTY", "WANDA");
         }
 
         @Test
@@ -352,7 +367,7 @@ class GroupsControllerShould {
 
         @Test
         void addGroupToUsersWithBadRequest() throws Exception {
-            mockMvc.perform(patch("/groups/Wanda/users")
+            mockMvc.perform(patch("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"gchapman\",\"unknownUserSoFar\"]")
             )
@@ -365,7 +380,7 @@ class GroupsControllerShould {
             //If the user list isn't correct, no user should be updated
             UserData gchapman = userRepository.findById("gchapman").get();
             assertThat(gchapman).isNotNull();
-            assertThat(gchapman.getGroups()).contains("Monty Pythons");
+            assertThat(gchapman.getGroups()).contains("MONTY");
 
             mockMvc.perform(get("/users/unknownUserSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
@@ -391,7 +406,7 @@ class GroupsControllerShould {
             ).andExpect(status().isCreated())
             .andExpect(header().string("Location","/users/"+newUserName));
 
-            mockMvc.perform(put("/groups/Wanda/users")
+            mockMvc.perform(put("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"" + newUserName + "\"]")
             )
@@ -399,35 +414,35 @@ class GroupsControllerShould {
 
             UserData jcleese = userRepository.findById(newUserName).get();
             assertThat(jcleese).isNotNull();
-            assertThat(jcleese.getGroups()).contains("Wanda");
+            assertThat(jcleese.getGroups()).contains("WANDA");
 
         }
 
         @Test
         void deleteGroupsFromUsers() throws Exception {
-            List<UserData> pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            List<UserData> pythons = userRepository.findByGroupSetContaining("MONTY");
             assertThat(pythons.size()).isEqualTo(2);
-            mockMvc.perform(delete("/groups/Monty Pythons/users")
+            mockMvc.perform(delete("/groups/MONTY/users")
                     .contentType(MediaType.APPLICATION_JSON)
             )
                     .andExpect(status().isOk())
             ;
 
-            pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            pythons = userRepository.findByGroupSetContaining("MONTY");
             assertThat(pythons).isEmpty();
         }
 
         @Test
         void deleteGroupsFromUser() throws Exception {
-            List<UserData> pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            List<UserData> pythons = userRepository.findByGroupSetContaining("MONTY");
             assertThat(pythons.size()).isEqualTo(2);
-            mockMvc.perform(delete("/groups/Monty Pythons/users/gchapman")
+            mockMvc.perform(delete("/groups/MONTY/users/gchapman")
                     .contentType(MediaType.APPLICATION_JSON)
             )
                     .andExpect(status().isOk())
             ;
 
-            pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            pythons = userRepository.findByGroupSetContaining("MONTY");
             assertThat(pythons.size()).isEqualTo(1);
         }
 
@@ -495,7 +510,7 @@ class GroupsControllerShould {
 
         @Test
         void updateGroupsFromUsers() throws Exception {
-            mockMvc.perform(put("/groups/Wanda/users")
+            mockMvc.perform(put("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"gchapman\"]")
             )
@@ -504,10 +519,10 @@ class GroupsControllerShould {
 
             UserData gchapman = userRepository.findById("gchapman").get();
             assertThat(gchapman).isNotNull();
-            assertThat(gchapman.getGroups()).contains("Monty Pythons", "Wanda");
+            assertThat(gchapman.getGroups()).contains("MONTY", "WANDA");
             UserData jcleese = userRepository.findById("jcleese").get();
             assertThat(jcleese).isNotNull();
-            assertThat(jcleese.getGroups()).contains("Monty Pythons");
+            assertThat(jcleese.getGroups()).contains("MONTY");
         }
 
         @Test
@@ -549,7 +564,7 @@ class GroupsControllerShould {
         @Test
         void updateGroupFromUsersWithBadRequest() throws Exception {
 
-            mockMvc.perform(put("/groups/Wanda/users")
+            mockMvc.perform(put("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"gchapman\",\"unknownUserSoFar\"]")
             )
@@ -562,11 +577,11 @@ class GroupsControllerShould {
             //If the user list isn't correct, no user should be updated
             UserData kkline = userRepository.findById("kkline").get();
             assertThat(kkline).isNotNull();
-            assertThat(kkline.getGroups()).contains("Wanda");
+            assertThat(kkline.getGroups()).contains("WANDA");
 
             UserData gchapman = userRepository.findById("gchapman").get();
             assertThat(gchapman).isNotNull();
-            assertThat(gchapman.getGroups()).doesNotContain("Wanda");
+            assertThat(gchapman.getGroups()).doesNotContain("WANDA");
 
             mockMvc.perform(get("/users/unknownUserSoFar"))
                     .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
@@ -641,7 +656,7 @@ class GroupsControllerShould {
 
         @Test
         void deleteGroupsFromUsers() throws Exception {
-            mockMvc.perform(delete("/groups/Monty Pythons/users")
+            mockMvc.perform(delete("/groups/MONTY/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"gchapman\"]")
             )
@@ -652,7 +667,7 @@ class GroupsControllerShould {
 
         @Test
         void updateGroupsFromUsers() throws Exception {
-            mockMvc.perform(put("/groups/Wanda/users")
+            mockMvc.perform(put("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"gchapman\"]")
             )
