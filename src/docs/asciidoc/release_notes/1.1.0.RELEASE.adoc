@@ -4,16 +4,4 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
-= OperatorFabric Web UI Reference Documentation
-:revnumber: 1.1.0.SNAPSHOT
-:revdate: 09 March 2020
-:imagesdir: images
-:sectnums:
-:toc: left
-:toclevels: 2
-:toc-title: Web UI Service
-:icons: font
-:hide-uri-scheme:
-
-include::01_timeline.adoc[]
+== Version 1.1.0.RELEASE

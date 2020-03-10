@@ -92,7 +92,7 @@ Wait for the build to complete (around 30 minutes).
 date at the top of document)
 +
 NOTE: You won't be able to access it from the homepage until you have <<In the documentation repository (opfab.github.io),updated the _version.yml file>> in the opfab.github.io
-repository, so instead you can just type https://opfab.github.io/documentation/X.X.X.SNAPSHOT/developer_guide/ in your browser.
+repository, so instead you can just type https://opfab.github.io/documentation/X.X.X.RELEASE/developer_guide/ in your browser.
 
 . Check that the tag was correctly pushed to GitHub and is visible under the
 https://github.com/opfab/operatorfabric-core/releases[releases page] for the repository.
@@ -189,6 +189,8 @@ NOTE: If no --version parameter is provided to the script, the new version will 
 +
 . Add a Y.Y.Y.RELEASE.adoc file (blank except for copyright and title) under src/docs/asciidoc/release_notes to initialize the release
 notes for next version.
++
+. Edit src/docs/asciidoc/release_notes/index.adoc to include this new file (before the previous versions so it appears on top).
 +
 . Commit and push changes with the following message:
 +

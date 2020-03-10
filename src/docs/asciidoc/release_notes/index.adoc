@@ -12,4 +12,6 @@
 :icons: font
 :hide-uri-scheme:
 
+include::1.1.0.RELEASE.adoc[]
+include::1.0.0.RELEASE.adoc[]
 include::0.15.1.RELEASE.adoc[]

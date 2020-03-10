@@ -4,9 +4,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Version 1.0.0.RELEASE
+== Version 1.0.0.RELEASE
 
-== Story
+=== Story
 * [OC-624] As a user I want to sort cards on the feed either by severity, lttd, publishDate or by lttd, publishDate only.
 +
 _In the feed, the cards remain sorted by default by severity, then by lttd (last time to decide) desc.
@@ -17,7 +17,7 @@ into account, so that cards are sorted by closest lttd then latest publication d
 +
 _Note: No configuration is necessary._
 
-== Bug
+=== Bug
 * [OC-549] - Thirds API does't return 404 when requested third doesn't exist.
 * [OC-325] - Put a long heartbeat timeout to avoid losing cards
 * [OC-349] - Correct bug in token silent refresh (Implicit Mode) 
@@ -27,7 +27,7 @@ _Note: No configuration is necessary._
 * [OC-720] - CSS in card detail is not correctly applied until reload
 * [OC-604] - On first opening the app, the feed filter isn't synchronized with timeline time horizon
 
-== Task
+=== Task
 * [OC-669] Card publication service refactoring
            - Remove unused and non working recipient options : INTERSECT , RANDOM, WEIGHTED and FAVORITE 
            - Remove unused field mainRecipient
@@ -46,7 +46,7 @@ _In this task, we moved to version 8 of Angular, we would draw your attention th
 _Please refer to angular.json file the packages we have migrated_
 * [OC-652] - Update API Action documentation, more precisely, remove unused fields : lockCard, needsConfirm, updateState, contentStyle, inputs
 
-== Feature
+=== Feature
 * [OC-204] - As a Client, I need a about section "about" with a fixed value and a freely configurable value
   ** adds release version and application name into jar manifests;
   ** displays current release version of `OperatorFabric` into the `UI about section`;
