@@ -4,7 +4,7 @@ addons:
     sonarcloud:
         organization: "opfab"
         token:
-            secure: ${SONAR_TOKEN}
+            secure: "r3BfCTuMqW5B6GvQR5ZnnHauciJsqOLeKPMRp7NS1vr6oIo4SHIO6zyLbHUK7ItRt8at+DPkQE8eHtDSWlYutKwfbRPwxcqR4zf4AYuVmHWCS7WmcERMEixbOo5lGQ47KjMMsTbGTSg+Atv80Y3fugX4prm4rDWE8G/Irqvw4GW8P9DeI5upHOTBRzPifrT/PVoovCsqkdfzEFJBYb/fl9VdT340+nrxmcM1Lm1dQeDibAdqdXJQxjgKvbZTUq0D8Ih65EPEESQZjkb8G9CGumsfm6Rhcu1btrqVUCdv8QXe/ERkmryMSA041SmgmtEAf+b/TfdgIn1SLnEbOlLIv1melv0yvBhMHijcASZP1gsnfOTBKFRE616a87L7y3XrX58OAHiAaZ9ecpW5McOI6hHwlHpUaFvKTvbN05lxe3VziYmCIT0SRRrfquyoe8b9s/04FzGTSVnVumKCzlwUJq5M1pbjnS5XOgQCuwauAEarqdCyS9iSWPPm8NkSxkkNu43tCykYRh8dDAN/4E7f8oSoW2RrSsMpJ7a3Q77ACVQJQZtiGQdDStUPHtLNQlN8vzbYNHrkpZbO4nT64tONaTvwFirbkuQpkAGmYFN8jSSeyNRI+gM1lx3fxowjyIt+D+8KsofX5GYG7IDRTt9jVUkcwBOicDG9IuZ3ZaZRtVU="
 services:
   - docker
 env:
