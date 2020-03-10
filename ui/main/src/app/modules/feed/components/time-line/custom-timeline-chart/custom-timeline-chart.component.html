@@ -10,16 +10,13 @@
         appMouseWheel
         (mouseWheelUp)="onZoom($event, 'in')"
         (mouseWheelDown)="onZoom($event, 'out')"
-        appDraggable
-        (dragStart)="onDragStart($event)"
-        (dragMove)="onDragMove($event)"
         class="">
     <svg:g [attr.transform]="transform" class="chart">
         <svg:g ngx-charts-x-axis
-               *ngIf="xAxis"
+               *ngIf="prod"
                [xScale]="timeScale"
                [dims]="dims"
-               [showGridLines]="showGridLines"
+               [showGridLines]="true"
                [tickFormatting]="fctTickFormattingAdvanced"
                [ticks]="xTicksOne"
                (dimensionsChanged)="updateXAxisHeight($event)">
@@ -27,9 +24,9 @@
 
         <svg:g [attr.transform]="transform2">
             <svg:g ngx-charts-x-axis-ticks
-                   *ngIf="xAxis"
+                   *ngIf="prod"
                    [scale]="timeScale"
-                   [showGridLines]="showGridLines"
+                   [showGridLines]="true"
                    [gridLineHeight]="dims.height"
                    [tickFormatting]="fctTickFormatting"
                    [width]="dims.width"
@@ -38,15 +35,14 @@
             />
         </svg:g>
         <svg:g ngx-charts-y-axis
-               *ngIf="yAxis"
                [yScale]="yScale"
                [dims]="dims"
                [tickFormatting]="hideLabelsTicks"
-               [ticks]="yTicks"
-               [showGridLines]="showGridLines"
+               [ticks]="[0,1,2,3,4,5]"
+               [showGridLines]="true"
                (dimensionsChanged)="updateYAxisWidth($event)">
         </svg:g>
-        <text *ngIf="realTimeBar && checkInsideDomain(xRealTimeLine) && !underDayPeriod"
+        <text *ngIf="checkInsideDomain(xRealTimeLine) && !underDayPeriod"
               [attr.x]="timeScale(xRealTimeLine)"
               [attr.y]="-10" stroke="'grey'"
               [attr.fill]="'grey'"
@@ -58,7 +54,7 @@
               [attr.fill]="'black'"
               text-anchor="middle" stroke-width="1px"
               [attr.font-size]="12" dy=".3em">{{dateFirstTick}}</text>
-        <svg:rect *ngIf="realTimeBar && checkInsideDomain(xRealTimeLine)"
+        <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)"
                   [attr.x]="timeScale(xRealTimeLine)"
                   [attr.width]="5"
                   y="0"
@@ -79,12 +75,9 @@
                             [attr.stroke]="myCircle.stroke"
                             [attr.opacity]="0.7"
                 />
-                <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count < 100"
+                <text *ngIf="checkInsideDomain(myCircle.date)"
                       [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)"
                       stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em">{{myCircle.count}} </text>
-                <text *ngIf="checkInsideDomain(myCircle.date) && myCircle.count > 99"
-                      [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)"
-                      stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em"> +99 </text>
             </svg:g>
         </svg:g>
     </svg:g>

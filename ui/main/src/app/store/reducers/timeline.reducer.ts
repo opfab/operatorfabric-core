@@ -16,18 +16,10 @@ export function reducer(
     action: LightCardActions|TimelineActions
 ): TimelineState {
     switch (action.type) {
-        case TimelineActionTypes.InitTimeline: {
-            return {
-                ...state,
-                loading: false,
-                data: action.payload.data
-            };
-        }
         case TimelineActionTypes.SetCardDataTimeline: {
             const newData = _.cloneDeep(action.payload.cardsTimeline);
             return {
                 ...state,
-                loading: false,
                 data: newData
             };
         }

@@ -13,3 +13,6 @@ _The OperatorFabric deployment no longer requires a Time microservice._
 * [OC-749] Build is passing even though documentation wasn't pushed
 +
 _Builds with a documentation stage will now fail if the push to the website repository wasn't successful._
+
+=== Bug 
+* [OC-730] Correct minors bugs in timeline and major refactoring 

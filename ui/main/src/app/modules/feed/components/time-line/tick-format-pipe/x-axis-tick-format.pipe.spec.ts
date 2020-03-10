@@ -50,6 +50,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         .compileComponents();
         fixture = TestBed.createComponent(CustomTimelineChartComponent);
         component = fixture.componentInstance;
+        component.xDomain = [moment().valueOf,moment().add(1,'year').valueOf];
     }));
 
     it('should create', () => {
@@ -132,6 +133,7 @@ describe('Directive: XAxisTickFormatPipe', () => {
         expect(component).toBeTruthy();
     });
 
+    
     it('Check transform function: ' +
         'return formatted date on M Zoom configuration', () => {
         fixture.detectChanges();
@@ -139,6 +141,9 @@ describe('Directive: XAxisTickFormatPipe', () => {
         start.date(3).startOf('day');
         start.hours(0).minutes(0).seconds(0).millisecond(0);
         const startCopy = moment(start);
+        
+
+
         const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(component.timeService);
         expect(formatPipe.transform(start, 'Day')).toEqual(startCopy.format('ddd DD MMM'));
         expect(component).toBeTruthy();
@@ -146,6 +151,9 @@ describe('Directive: XAxisTickFormatPipe', () => {
 
     it('Check transform function: ' +
         'return formatted date on Y Zoom configuration', () => {
+        const startDomainYear = moment().startOf('year').hour(0).minutes(0).second(0).millisecond(0).valueOf;
+        const endDomainYear = moment().startOf('year').hour(0).minutes(0).second(0).millisecond(0).add(1,'year').valueOf;
+        component.xDomain = [startDomainYear,endDomainYear];
         fixture.detectChanges();
         const start = moment();
         start.date(16).startOf('day');
@@ -158,6 +166,9 @@ describe('Directive: XAxisTickFormatPipe', () => {
 
     it('Check transform function: ' +
         'return formatted date on RealW, RealM, RealY and nbW Zoom configuration', () => {
+        const startDomainYear = moment().startOf('year').hour(0).minutes(0).second(0).millisecond(0).valueOf;
+        const endDomainYear = moment().startOf('year').hour(0).minutes(0).second(0).millisecond(0).add(1,'year').valueOf;
+        component.xDomain = [startDomainYear,endDomainYear];
         fixture.detectChanges();
         const start = moment();
         start.date(16).startOf('day');
