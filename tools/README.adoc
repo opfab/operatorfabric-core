@@ -15,7 +15,6 @@ The tools sub project contains OperatorFabric common utilities for all other sub
 │   │   ├──test-utilities
 │   │   └──utilities
 │   ├── spring
-│   │   ├──spring-amqp-time-utilities
 │   │   ├──spring-mongo-utilities
 │   │   ├──spring-oauth2-utilities
 │   │   ├──spring-test-utilities
@@ -28,7 +27,6 @@ The tools sub project contains OperatorFabric common utilities for all other sub
 *** link:tools/generic/test-utilities[test-utilities]: Test-specific utility code
 *** link:tools/generic/utilities[utilities]: Utility code
 ** link:tools/spring[spring]: Spring-related utility code
-*** link:tools/spring/spring-amqp-time-utilities[spring-amqp-time-utilities] : Utility code with Spring-AMQP-specific dependencies, used to share common features across AMQP-dependent services
 *** link:tools/spring/spring-mongo-utilities[spring-mongo-utilities] : Utility code with Spring-specific dependencies, used to share common features across MongoDB-dependent services
 *** link:tools/spring/spring-oauth2-utilities[spring-oauth2-utilities] : Utility code with Spring-specific dependencies, used to share common features across OAuth2-dependent services
 *** link:tools/spring/spring-test-utilities[spring-test-utilities] : Utility code with Spring-specific dependencies for testing purposes
