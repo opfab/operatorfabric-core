@@ -56,10 +56,6 @@ administrators are responsible for the quality and security of the provided bund
 In particular, as it is possible to use scripts in templates, they should perform a security check to make sure that
 there is no XSS risk.
 
-.Time Service (for demonstration purposes only)
-Any user can get the current state of simulated time but acting on it (changing the speed of time flow, setting
-the reference for simulated time or resetting it entirely) requires the ADMIN role.
-
 IMPORTANT: The ADMIN role doesn't grant any special privileges when it comes to card consultation (be they current or
 archived), so an user with the ADMIN role will only see cards that have been addressed to them or to one of their
 groups), just like any other user.

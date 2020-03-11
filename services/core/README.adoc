@@ -14,12 +14,10 @@ core
 └──cards-consultation (cards-consultation-party-service)
 └──cards-publication (cards-publication-party-service)
 └──thirds (third-party-business-service)
-└──time (time-business-service)
 └──users (users-business-service)
 ----
 
 * link:cards-consultation[cards-consultation (cards-consultation-party-service)] : Cards consultation (read only) service
 * link:cards-publication[cards-publication (cards-publication-party-service)] : Cards publication (write only) service
 * link:thirds[thirds (third-party-business-service)] : Third Party Management service
-* link:time[time (time-business-service)] : Time Management service
 * link:users[users (users-business-service)] : Users Management service
