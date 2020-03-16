@@ -28,3 +28,5 @@ for this to work._
 IMPORTANT: Due to the autoplay policy of some browsers (recent versions of Chrome for example), sounds won't be played
 until the user has "interacted" with the application at least once: clicked a filter or menu, a card, etc. This is to
 prevent malicious sites to autoplay unwanted content.
++
+https://www.zapsplat.com[Sound effects obtained from zapsplat.com]
