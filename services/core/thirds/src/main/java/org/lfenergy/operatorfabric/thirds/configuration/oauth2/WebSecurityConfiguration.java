@@ -29,15 +29,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String THIRDS_PATH = "/thirds/**";
+    private static final String STYLE_URL_PATTERN = "/thirds/*/css/*";
+    
     @Autowired
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
 
-    private static final String[] AUTH_WHITELIST = {
-        // Style is called via <style> , so no token is provided 
-        // Static ressource 
-            "/style**",
-    };
-
+    
     @Override
     public void configure(final HttpSecurity http) throws Exception {
         configureCommon(http);
@@ -49,10 +46,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers(AUTH_WHITELIST).permitAll()
+                .antMatchers(STYLE_URL_PATTERN).permitAll() // Style is called via <style> , so no token is provided  (Static ressource)
                 .antMatchers(HttpMethod.POST, THIRDS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.PUT, THIRDS_PATH).hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.DELETE, THIRDS_PATH).hasRole(ADMIN_ROLE);
+                .antMatchers(HttpMethod.DELETE, THIRDS_PATH).hasRole(ADMIN_ROLE)
+                .anyRequest().authenticated();
+                
     }
 
 }
