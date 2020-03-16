@@ -55,14 +55,6 @@ en.json
 de.json
 ....
 
-[[media-notification-sounds]]
-==== Media (notification sounds)
-
-Supported media files type : * ogg * wav * mp3
-
-Due to web nature of Operator Fabric, we encourage business modules provider to
-favor the lightest file formats (ogg,mp3, ...)
-
 [[templates]]
 ==== Templates
 

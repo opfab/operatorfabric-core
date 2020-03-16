@@ -157,29 +157,6 @@ class ThirdsServiceShould {
   }
 
   @Test
-  void fetchMedia() throws IOException {
-    File mediaFile = service.fetchResource("first", MEDIA,null,"fr", "bidon.txt").getFile();
-    assertThat(mediaFile.getParentFile()).isDirectory().hasName("fr");
-    assertThat(mediaFile)
-       .exists()
-       .isFile()
-       .hasName("bidon.txt")
-       .hasContent("BIDON");
-    mediaFile = service.fetchResource("first", MEDIA, "0.1", "fr", "bidon.txt").getFile();
-    assertThat(mediaFile)
-       .exists()
-       .isFile()
-       .hasName("bidon.txt")
-       .hasContent("BIDON 0.1");
-    mediaFile = service.fetchResource("first", MEDIA, "0.1", "en", "bidon.txt").getFile();
-    assertThat(mediaFile)
-       .exists()
-       .isFile()
-       .hasName("bidon.txt")
-       .hasContent("FOO 0.1");
-  }
-
-  @Test
   void fetchResourceError() {
     assertException(FileNotFoundException.class).isThrownBy(() ->
        service.fetchResource("what",
@@ -199,12 +176,6 @@ class ThirdsServiceShould {
           "0.1",
           null,
           "styleWhat"));
-    assertException(FileNotFoundException.class).isThrownBy(() ->
-       service.fetchResource("first",
-          MEDIA,
-          "0.1",
-          null,
-          "sound"));
     assertException(FileNotFoundException.class).isThrownBy(() ->
        service.fetchResource("first",
           TEMPLATE,

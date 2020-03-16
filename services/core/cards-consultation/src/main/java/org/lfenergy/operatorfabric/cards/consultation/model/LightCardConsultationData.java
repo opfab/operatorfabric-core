@@ -50,8 +50,6 @@ public class LightCardConsultationData implements LightCard {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
     private SeverityEnum severity;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String media;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> tags;
@@ -93,7 +91,6 @@ public class LightCardConsultationData implements LightCard {
                 .publishDate(other.getPublishDate())
                 .endDate(other.getEndDate())
                 .severity(other.getSeverity())
-                .media(other.getMedia())
                 .title(I18nConsultationData.copy(other.getTitle()))
                 .summary(I18nConsultationData.copy(other.getSummary()))
                 ;

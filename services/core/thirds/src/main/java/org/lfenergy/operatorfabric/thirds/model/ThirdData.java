@@ -36,9 +36,6 @@ public class ThirdData implements Third {
   private List<String> templates;
   @Singular
   private List<String> csses;
-  @Singular("mediasData")
-  @JsonIgnore
-  private Map<String,ThirdMediasData> mediasData;
   @Singular("processesData")
   @JsonIgnore
   private Map<String,ThirdProcessesData> processesData;
@@ -56,21 +53,6 @@ public class ThirdData implements Third {
   public void setProcesses(Map<String, ? extends ThirdProcesses> processesData){
     try { 
       this.processesData = new HashMap<>((Map<String,ThirdProcessesData>) processesData);
-    }
-    catch (ClassCastException exception) {
-      log.error("Unexpected Error arose ", exception);
-    }
-  }
-
-  @Override
-  public Map<String, ? extends ThirdMedias> getMedias(){
-    return mediasData;
-  }
-
-  @Override
-  public void setMedias(Map<String, ? extends ThirdMedias> mediasData){
-    try {
-    this.mediasData = new HashMap<>((Map<String,ThirdMediasData>) mediasData);
     }
     catch (ClassCastException exception) {
       log.error("Unexpected Error arose ", exception);

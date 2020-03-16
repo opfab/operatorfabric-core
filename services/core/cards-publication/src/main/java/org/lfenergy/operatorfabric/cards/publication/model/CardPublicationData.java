@@ -66,8 +66,6 @@ public class CardPublicationData implements Card {
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String media;
     @NotNull
     private SeverityEnum severity;
     @Singular
@@ -121,7 +119,6 @@ public class CardPublicationData implements Card {
                 .endDate(this.getEndDate())
                 .publishDate(this.getPublishDate())
                 .severity(this.getSeverity())
-                .media(this.getMedia())
                 .tags(this.getTags())
                 .title(((I18nPublicationData) this.getTitle()).copy())
                 .summary(((I18nPublicationData) this.getSummary()).copy());

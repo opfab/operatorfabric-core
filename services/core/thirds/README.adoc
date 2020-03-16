@@ -25,7 +25,7 @@ Module resources. These bundle are `tar.gz` archives enclosing resource
 files and a configuration file.
 
 Bundle is composed of one subdirectory per resource. When the resource is
-internationalized (template, i18n, media) , those subdirectories themselves need to have
+internationalized (template, i18n) , those subdirectories themselves need to have
 one subdirectory per supported language.
 
 ==== Layout
@@ -39,13 +39,6 @@ bundle
 └──i18n
 │   └──en.json
 │   └──fr.json
-└──media
-│   └──en
-│       └──sound.opus
-│       └──sound.mp3
-│   └──fr
-│       └──sound.opus
-│       └──sound.mp3
 └──template
 │   └──en
 │       └──emergency.handlebars
@@ -69,15 +62,6 @@ bundle
     "tab",
     "emergency"
   ],
-  "medias": {
-    "sound": {
-      "name": "sound",
-      "files": [
-        "sound.opus",
-        "sound.mp3"
-      ]
-    }
-  },
   "locales": [
     "fr",
     "en"

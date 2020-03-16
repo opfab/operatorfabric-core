@@ -210,37 +210,6 @@ class GivenNonAdminUserThirdControllerShould {
                 ));
     }
 
-    @Test
-    void fetchMediaResource() throws Exception {
-        ResultActions result = mockMvc.perform(
-                get("/thirds/first/media/bidon.txt?locale=fr")
-                        .accept("audio/_*")
-        );
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("audio/_*"))
-                .andExpect(content().string(is("BIDON")))
-        ;
-        result = mockMvc.perform(
-                get("/thirds/first/media/bidon.txt?locale=en")
-                        .accept("audio/_*")
-        );
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("audio/_*"))
-                .andExpect(content().string(is("FOO")))
-        ;
-        result = mockMvc.perform(
-                get("/thirds/first/media/bidon.txt?locale=en&version=0.1")
-                        .accept("audio/_*")
-        );
-        result
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("audio/_*"))
-                .andExpect(content().string(is("FOO 0.1")))
-        ;
-    }
-
     @Nested
     @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
     class CreateContent {

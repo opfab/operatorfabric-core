@@ -24,7 +24,7 @@ Quite obviously it's the Third party which publish the card. This information is
 [#_card_publisher_version]
 ===== Publisher Version (`publisherVersion`)
 
-Refers the `version` of `publisher third` to use to render this card (i18n, title, summary, media and details).
+Refers the `version` of `publisher third` to use to render this card (i18n, title, summary and details).
 As through time, the presentation of a publisher card data changes, this changes are managed through `publisherVersion` in OperatorFabric. Each version is keep in the system in order to be able to display correctly old cards.
 
 ===== Process Identifier (`processId`)
@@ -120,10 +120,6 @@ There are two kind of User destined information in a card. Some are restricted t
 Determines where custom information is store. The content in this attribute, is purely `publisher` choice. This content, as long as it's in `json` format can be used to display details. For the way the details are displayed <<_presentation_information_of_the_card,see below>>.
 
 === Presentation Information of the card
-
-==== Media (`media`)
-
-Some cards can emit a sound when displayed in the feed of the GUI, the id of audio notification is indicated in this attribute.
 
 ==== details (`details`)
 

@@ -7,14 +7,6 @@
   "csses": [
     "dastyle","nostyle"
   ],
-  "medias": {
-    "bidon": {
-      "name": "bidon",
-      "files": [
-        "bidon.txt"
-      ]
-    }
-  },
   "locales": [
     "fr",
     "en"

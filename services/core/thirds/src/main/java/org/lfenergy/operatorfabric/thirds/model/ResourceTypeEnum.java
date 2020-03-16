@@ -15,7 +15,6 @@ import lombok.Getter;
  * Models Third resource type, used to generalize {@link org.lfenergy.operatorfabric.thirds.services.ThirdsService} code
  * <dl>
  *     <dt>CSS</dt><dd>cascading style sheet resource type</dd>
- *     <dt>MEDIA</dt><dd>Media sound resource type</dd>
  *     <dt>TEMPLATE</dt><dd>Card template resource type</dd>
  *     <dt>I18N</dt><dd>i18n file resource type</dd>
  *     <dt>MENU_ITEM</dt><dd>Menu item resource type</dd>
@@ -26,7 +25,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ResourceTypeEnum {
   CSS("css", ".css", false),
-  MEDIA("media", "", true),
   TEMPLATE("template", ".handlebars", true),
   I18N("i18n", ".json", true),
   MENU_ITEM("menu","",true);

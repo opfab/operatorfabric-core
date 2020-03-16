@@ -13,3 +13,14 @@ _The OperatorFabric deployment no longer requires a Time microservice._
 * [OC-749] Build is passing even though documentation wasn't pushed
 +
 _Builds with a documentation stage will now fail if the push to the website repository wasn't successful._
+
+=== Bug
+* [OC-614] The possibility to associate sounds to cards is described in the card API but not implemented
++
+_The API described the possibility to associate sounds to cards and to provide them in bundles. However, this was never
+fully implemented. So in this release we removed all the existing code and API documentation regarding this feature.
+Instead, OC-682 (see above) implements instance-wide sound notifications (one sound by severity)._
++
+NOTE: Existing bundles and cards with media information will continue to work as before. Pushing a bundle or a card
+with media information won't generate an error.
+

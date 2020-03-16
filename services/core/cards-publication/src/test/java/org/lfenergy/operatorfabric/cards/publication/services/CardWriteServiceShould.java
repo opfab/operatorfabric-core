@@ -174,7 +174,7 @@ class CardWriteServiceShould {
                                 .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1")
                                                 .build())
                                 .endDate(start.plusSeconds(60)).lttd(start.minusSeconds(600))
-                                .deletionDate(start.plusSeconds(3600)).tag("tag1").tag("tag2").media("SOUND").data(data)
+                                .deletionDate(start.plusSeconds(3600)).tag("tag1").tag("tag2").data(data)
                                 .recipient(RecipientPublicationData.builder().type(RecipientEnum.UNION)
                                                 .recipient(RecipientPublicationData.builder().type(RecipientEnum.USER)
                                                                 .identity("graham").build())
