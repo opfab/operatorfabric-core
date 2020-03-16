@@ -15,7 +15,6 @@ import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
 import {FilterService, FilterType} from "@ofServices/filter.service";
 import {ApplyFilter} from "@ofActions/feed.actions";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {ServicesModule} from "@ofServices/services.module";
 import {By} from "@angular/platform-browser";
 import {buildFilterSelector} from "@ofSelectors/feed.selectors";
@@ -26,6 +25,7 @@ import {I18nService} from "@ofServices/i18n.service";
 import {TranslateModule} from "@ngx-translate/core";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
+import {FontAwesomeIconsModule} from "../../../../../utilities/fontawesome-icons.module";
 
 describe('TimeFilterComponent', () => {
     let component: TimeFilterComponent;
@@ -43,7 +43,7 @@ describe('TimeFilterComponent', () => {
                 ReactiveFormsModule,
                 TranslateModule.forRoot(),
                 StoreModule.forRoot(appReducer, storeConfig),
-                FontAwesomeModule,
+                FontAwesomeIconsModule,
                 ServicesModule,
                 HttpClientTestingModule
             ],

@@ -8,20 +8,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SeveritySortComponent } from './severity-sort.component';
-import {library} from "@fortawesome/fontawesome-svg-core";
-import {faToggleOff, faToggleOn} from "@fortawesome/free-solid-svg-icons";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {TranslateModule} from "@ngx-translate/core";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {ServicesModule} from "@ofServices/services.module";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {FilterService, FilterType} from "@ofServices/filter.service";
-import {TypeFilterComponent} from "../type-filter/type-filter.component";
 import {By} from "@angular/platform-browser";
-import {ApplyFilter, ChangeSort} from "@ofActions/feed.actions";
+import {ChangeSort} from "@ofActions/feed.actions";
+import {FontAwesomeIconsModule} from "../../../../../utilities/fontawesome-icons.module";
 
 describe('SeveritySortComponent', () => {
   let component: SeveritySortComponent;
@@ -33,7 +25,7 @@ describe('SeveritySortComponent', () => {
       imports: [
         NgbModule.forRoot(),
         StoreModule.forRoot(appReducer, storeConfig),
-        FontAwesomeModule,
+        FontAwesomeIconsModule,
       ],
       declarations: [ SeveritySortComponent ]
     })
