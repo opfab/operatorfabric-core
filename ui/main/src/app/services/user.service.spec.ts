@@ -27,7 +27,6 @@ describe('UserService', () => {
     let userService: UserService;
 
     beforeEach(() => {
-        // TODO: spy on other methods too
         httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'put']);
         userService = new UserService(<any>httpClientSpy);
     });
