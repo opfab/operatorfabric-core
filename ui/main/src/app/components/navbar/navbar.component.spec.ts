@@ -18,7 +18,6 @@ import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
 import {ThirdsService} from '@ofServices/thirds.service';
 import {By} from '@angular/platform-browser';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {InfoComponent} from './info/info.component';
 import {TimeService} from '@ofServices/time.service';
 import clock = jasmine.clock;
@@ -33,12 +32,9 @@ import { authInitialState } from '@ofStore/states/authentication.state';
 import { timeInitialState } from '@ofStore/states/time.state';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
 import {MenuLinkComponent} from './menus/menu-link/menu-link.component';
-import {library} from '@fortawesome/fontawesome-svg-core';
-import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 import { CustomLogoComponent } from './custom-logo/custom-logo.component';
 import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
-
-library.add(faSignOutAlt);
+import {FontAwesomeIconsModule} from "../../modules/utilities/fontawesome-icons.module";
 
 enum MODE {
     HAS_NO_CONFIG,
@@ -64,7 +60,7 @@ describe('NavbarComponent', () => {
                 StoreModule.forRoot(appReducer, storeConfig),
                 EffectsModule.forRoot([MenuEffects]),
                 HttpClientTestingModule,
-                FontAwesomeModule
+                FontAwesomeIconsModule
             ],
             declarations: [NavbarComponent, IconComponent, CustomLogoComponent, InfoComponent, MenuLinkComponent],
             providers: [

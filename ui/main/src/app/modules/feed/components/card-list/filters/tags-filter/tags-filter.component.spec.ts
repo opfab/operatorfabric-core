@@ -14,11 +14,11 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {ServicesModule} from "@ofServices/services.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {ApplyFilter} from "@ofActions/feed.actions";
 import {FilterService, FilterType} from "@ofServices/filter.service";
+import {FontAwesomeIconsModule} from "../../../../../utilities/fontawesome-icons.module";
 
 describe('TagsFilterComponent', () => {
     let component: TagsFilterComponent;
@@ -33,7 +33,7 @@ describe('TagsFilterComponent', () => {
                 ReactiveFormsModule,
                 TranslateModule.forRoot(),
                 StoreModule.forRoot(appReducer, storeConfig),
-                FontAwesomeModule,
+                FontAwesomeIconsModule,
                 ServicesModule,
                 HttpClientTestingModule],
             declarations: [TagsFilterComponent],
