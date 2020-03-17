@@ -16,3 +16,20 @@ _Builds with a documentation stage will now fail if the push to the website repo
 
 === Bug 
 * [OC-730] Correct minors bugs in timeline and major refactoring 
+=======
+=== Issue
+* [OC-682] As a user I want sound to be played on cards arrival
++
+_This feature allows (predefined) sounds to be played when cards of a given severity are added or updated in the feed.
+Only cards that are currently visible in the feed based on its filters (severity, tag, time) can trigger sounds.
+For sounds to be played for a given severity, the administrator needs to set the corresponding property to true.
+See operatorfabric.sounds.* properties in the
+https://opfab.github.io/documentation/1.1.0.RELEASE/user_guide/#_web_ui[configuration documentation] for more details.
+Depending on their browser default settings, users might also need to allow sounds (globally or for the OperatorFabric url)
+for this to work._
++
+IMPORTANT: Due to the autoplay policy of some browsers (recent versions of Chrome for example), sounds won't be played
+until the user has "interacted" with the application at least once: clicked a filter or menu, a card, etc. This is to
+prevent malicious sites to autoplay unwanted content.
++
+https://www.zapsplat.com[Sound effects obtained from zapsplat.com]

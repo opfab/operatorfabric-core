@@ -19,7 +19,7 @@ import {selectSortedFilteredLightCards} from "@ofSelectors/feed.selectors";
 import {LightCard} from "@ofModel/light-card.model";
 
 describe('FeedSelectors', () => {
-    const emptyAppState: AppState = emptyAppState4Test; //TODO Do we need it?
+    const emptyAppState: AppState = emptyAppState4Test;
     const selectedState: CardFeedState = {
         ...feedInitialState
     };

@@ -29,7 +29,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String THIRDS_PATH = "/thirds/**";
-    private static final String STYLE_URL_PATTERN = "/thirds/*/css/style";
+    private static final String STYLE_URL_PATTERN = "/thirds/*/css/*";
     
     @Autowired
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
