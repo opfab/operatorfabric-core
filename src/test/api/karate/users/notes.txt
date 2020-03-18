@@ -1,0 +1,34 @@
+createUsers.feature :
+    creation of "loginKarate1" user
+
+createGroups.feature :
+    creation of "groupKarate1" group
+
+addUsersToGroup.feature :
+    adding of "loginKarate1" user to "groupKarate1" group
+
+getGroupDetails.feature :
+    creation of "groupKarate3" group
+
+updateExistingGroup.feature :
+    update of "groupKarate1" group description with : "group description updated"
+
+updateExistingUser.feature :
+    creation of "loginKarate5" user
+    update of "loginKarate5" with : "firstName" : "name update Karate5",
+                                    "lastName" : "last name update Karate5"
+
+updateListOfGroupUsers.feature :
+    creation of "loginKarate3" user
+    creation of "loginKarate4" user
+    adding of "loginKarate3" and "loginKarate4" to "groupKarate1" group
+
+deleteAllUsersFromAGroup.feature :
+    remove all users from "groupKarate1" group
+
+deleteUserFromGroup.feature :
+    creation of "groupKarate2" group
+    creation of "loginKarate2" user
+    adding of "loginKarate2" user in "groupKarate2" group
+    remove of "loginKarate2" user from "groupKarate2" group
+
