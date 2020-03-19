@@ -19,7 +19,6 @@ import org.lfenergy.operatorfabric.thirds.model.*;
 public class ThirdsModule extends SimpleModule {
 
     public ThirdsModule() {
-        addAbstractTypeMapping(ThirdMedias.class, ThirdMediasData.class);
         addAbstractTypeMapping(ThirdMenuEntry.class, ThirdMenuEntryData.class);
         addAbstractTypeMapping(ThirdProcesses.class,ThirdProcessesData.class);
         addAbstractTypeMapping(ThirdStates.class,ThirdStatesData.class);

@@ -30,7 +30,7 @@ For didactic purposes, in this section, the third name is `BUNDLE_TEST` (to matc
 This bundle is localized for `en` and `fr`.
 
 As detailed in the `Third core service README` the bundle contains at least a metadata file called `config.json`,
-a `css` folder, a `media` folder (not created in this example), an `i18n` folder and a `template` folder.
+a `css` folder, an `i18n` folder and a `template` folder.
  All elements except the `config.json file` are optional.
 
 The files of this example are organized as below:
@@ -139,15 +139,15 @@ link:../api/#Third[related api details]
 
 ==== i18n
 
-There are two ways of i18n for third service. The first one is done using l10n files which are located in the `i18n` folder, the second one throughout l10n name folder nested in the `template` folder or in the `media` folder.
+There are two ways of i18n for third service. The first one is done using l10n files which are located in the `i18n` folder, the second one throughout l10n name folder nested in the `template` folder.
 
 The `i18n` folder contains one json file per l10n.
 
 These localisation is used for integration of the third service into OperatorFabric, i.e. the label displayed for the third service, the label displayed for each tab of the details of the third card, the label of the actions in cards if any or the additional third entries in OperatorFabric(more on that at the chapter ????).
 
-=====  Template and Media folders
+=====  Template folder
 
-The `template` and the `media` folder must contain localized folder for the i18n of the card details. This is why in our example, as the bundle is localized for `en` and `fr` language, the `template` folder contains a `en` and a `fr` folder.
+The `template` folder must contain localized folder for the i18n of the card details. This is why in our example, as the bundle is localized for `en` and `fr` language, the `template` folder contains a `en` and a `fr` folder.
 
 ===== i18n file
 
@@ -469,7 +469,6 @@ Where:
 These command line should return a `200 http status` response with the details of the content of the bundle in the response body such as :
 ....
 {
-  "mediasData": null,
   "menuEntriesData": [
     {
       "id": "uid test 0",
@@ -493,7 +492,6 @@ These command line should return a `200 http status` response with the details 
     "bundleTest"
   ],
   "i18nLabelKey": "third-name-in-menu-bar",
-  "medias": null,
   "menuEntries": [
     {
       "id": "uid test 0",

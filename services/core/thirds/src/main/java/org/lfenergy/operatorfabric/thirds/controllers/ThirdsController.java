@@ -74,12 +74,6 @@ public class ThirdsController implements ThirdsApi {
     }
 
     @Override
-    public byte[] getMedia(HttpServletRequest request, HttpServletResponse response, String thirdName, String mediaFileName, String locale, String apiVersion) throws IOException {
-        Resource resource = service.fetchResource(thirdName, ResourceTypeEnum.MEDIA, apiVersion, locale, mediaFileName);
-        return loadResource(resource);
-    }
-
-    @Override
     public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String thirdName, String templateName, String locale, String apiVersion) throws
             IOException {
         Resource resource;

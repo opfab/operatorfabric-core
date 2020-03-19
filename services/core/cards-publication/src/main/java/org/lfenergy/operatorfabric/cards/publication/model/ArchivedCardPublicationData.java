@@ -56,7 +56,6 @@ public class ArchivedCardPublicationData implements Card {
     private Instant startDate;
     @Indexed
     private Instant endDate;
-    private String media;
     private SeverityEnum severity;
     private List<String> tags;
     private List<? extends Detail> details;
@@ -90,7 +89,6 @@ public class ArchivedCardPublicationData implements Card {
         this.data = card.getData();
         this.userRecipients = card.getUserRecipients() == null ? null : new ArrayList<>(card.getUserRecipients());
         this.groupRecipients = card.getGroupRecipients() == null ? null : new ArrayList<>(card.getGroupRecipients());
-        this.media = card.getMedia();
     }
 
 }

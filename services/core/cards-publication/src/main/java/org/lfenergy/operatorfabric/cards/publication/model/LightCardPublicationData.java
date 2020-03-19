@@ -54,8 +54,6 @@ public class LightCardPublicationData implements LightCard {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
     private SeverityEnum severity;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String media;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     //@Singular not used because lead to a NPE when built from Card
     private List<String> tags;

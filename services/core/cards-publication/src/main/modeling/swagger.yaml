@@ -325,9 +325,6 @@ definitions:
       severity:
         $ref: '#/definitions/SeverityEnum'
         description: Card severity
-      media:
-        type: string
-        description: Media unique ID for audio notification
       tags:
         type: array
         items:
@@ -390,7 +387,6 @@ definitions:
       startDate: 1546387200000
       endDate: 1546387250000
       severity: ACTION
-      media: sound1.wav
       tags:
         - MyService
         - MyProcess
@@ -497,9 +493,6 @@ definitions:
       severity:
         $ref: '#/definitions/SeverityEnum'
         description: Card severity
-      media:
-        type: string
-        description: Media unique ID for audio notification
       tags:
         type: array
         items:
@@ -526,7 +519,6 @@ definitions:
       startDate: 1546387200000
       endDate: 1546387250000
       severity: ACTION
-      media: sound1.wav
       tags:
         - MyService
         - MyProcess

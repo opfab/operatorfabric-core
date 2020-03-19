@@ -217,8 +217,6 @@ public class ThirdsService implements ResourceLoaderAware {
                 if (!third.getCsses().contains(name))
                     throw new FileNotFoundException("Unknown css resource for " + thirdName + ":" + version);
                 break;
-            case MEDIA:
-                break;
             case I18N:
                 break;
             case TEMPLATE:

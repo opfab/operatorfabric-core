@@ -8,14 +8,6 @@
     "style1",
     "style2"
   ],
-  "medias": {
-    "bidon": {
-      "name": "bidon",
-      "files": [
-        "bidon.txt"
-      ]
-    }
-  },
   "locales": [
     "fr",
     "en"
