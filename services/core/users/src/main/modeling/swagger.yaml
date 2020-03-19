@@ -158,6 +158,18 @@ definitions:
           uniqueItems: true
       timeLineDefaultClusteringFormats:
         $ref: '#/definitions/TimeLineFormats'
+      playSoundForAlarm:
+        type: boolean
+        description: If this is set to true, a sound will be played for incoming cards with ALARM severity.
+      playSoundForAction:
+        type: boolean
+        description: If this is set to true, a sound will be played for incoming cards with ACTION severity.
+      playSoundForCompliant:
+        type: boolean
+        description: If this is set to true, a sound will be played for incoming cards with COMPLIANT severity.
+      playSoundForInformation:
+        type: boolean
+        description: If this is set to true, a sound will be played for incoming cards with INFORMATION severity.
     required:
       - login
     example:

@@ -61,10 +61,10 @@ a|card time display mode in the feed. Values :
 |operatorfabric.feed.timeFilter.followClockTick|false|no|If set to true, the time filter on the feed will shift
 to reflect elapsed time
 |operatorfabric.feed.notify|false|no|If set to true, new cards are notified in the OS through web-push notifications
-|operatorfabric.sounds.alarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
-|operatorfabric.sounds.action|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
-|operatorfabric.sounds.compliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
-|operatorfabric.sounds.information|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
+|operatorfabric.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
+|operatorfabric.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
+|operatorfabric.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
+|operatorfabric.playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
 |operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 |operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
@@ -93,6 +93,7 @@ while clicking the icon opens in a new tab.
 |operatorfabric.settings.infos.dateformat|false|no|Control if we want to hide(true) or display(false or not specified) the dateformat in the settings page
 |operatorfabric.settings.infos.datetimeformat|false|no|Control if we want to hide(true) or display(false or not specified) the datetimeformat in the settings page
 |operatorfabric.settings.infos.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
+|operatorfabric.settings.infos.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
 |operatorfabric.settings.about
 a|`operatorfabric: +
      name:  'OperatorFabric' +

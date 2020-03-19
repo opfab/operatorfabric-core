@@ -52,15 +52,14 @@ export class SoundNotificationService {
     this.informationSoundPath = (baseHref?baseHref:'/')+'assets/sounds/information.mp3'
     this.informationSound = new Audio(this.informationSoundPath);
 
-    store.select(buildConfigSelector('sounds.alarm')).subscribe(x => { this.playSoundForAlarm = x;});
-    store.select(buildConfigSelector('sounds.action')).subscribe(x => { this.playSoundForAction = x;});
-    store.select(buildConfigSelector('sounds.compliant')).subscribe(x => { this.playSoundForCompliant = x;});
-    store.select(buildConfigSelector('sounds.information')).subscribe(x => { this.playSoundForInformation = x;});
+    store.select(buildSettingsOrConfigSelector('playSoundForAlarm')).subscribe(x => { this.playSoundForAlarm = x;});
+    store.select(buildSettingsOrConfigSelector('playSoundForAction')).subscribe(x => { this.playSoundForAction = x;});
+    store.select(buildSettingsOrConfigSelector('playSoundForCompliant')).subscribe(x => { this.playSoundForCompliant = x;});
+    store.select(buildSettingsOrConfigSelector('playSoundForInformation')).subscribe(x => { this.playSoundForInformation = x;});
 
   }
 
   handleCards(lightCards : LightCard[], currentlyVisibleIds : string[]) {
-
     from(lightCards).subscribe( //There is no need to unsubscribe because this is by essence a finite observable
         // TODO Possible improvement: all cards in an operation have the same publishDate (to be checked) so we could do this check only once by operation and either handle all cards or dismiss the batch entirely
         (card : LightCard) => {

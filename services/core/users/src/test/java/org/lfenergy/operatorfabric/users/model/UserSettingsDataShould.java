@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserSettingsDataShould {
 
+    //TODO Add tests for new settings
+
     @Test
     public void encapsulateTagSet(){
         UserSettingsData userData = UserSettingsData.builder().defaultTag("test1").defaultTag("test2").build();
@@ -39,6 +41,9 @@ public class UserSettingsDataShould {
                 .email("test@test.tst")
                 .locale("fr")
                 .timeZone("Europe/Berlin")
+                .playSoundForAlarm(true)
+                .playSoundForAction(false)
+                //Not setting Compliant and Information to test patch on empty
                 .build();
         UserSettingsData patched = userData.patch(UserSettingsData.builder().timeFormat("LLT").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"timeFormat");
@@ -66,5 +71,22 @@ public class UserSettingsDataShould {
         patched = userData.patch(UserSettingsData.builder().timeZone("patched-zone").build().clearTags());
         assertThat(patched).isEqualToIgnoringGivenFields(userData,"timeZone");
         assertThat(patched.getTimeZone()).isEqualTo("patched-zone");
+
+        patched = userData.patch(UserSettingsData.builder().playSoundForAlarm(false).build().clearTags());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForAlarm");
+        assertThat(patched.getPlaySoundForAlarm()).isEqualTo(false);
+
+        patched = userData.patch(UserSettingsData.builder().playSoundForAction(true).build().clearTags());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForAction");
+        assertThat(patched.getPlaySoundForAction()).isEqualTo(true);
+
+        patched = userData.patch(UserSettingsData.builder().playSoundForCompliant(false).build().clearTags());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForCompliant");
+        assertThat(patched.getPlaySoundForCompliant()).isEqualTo(false);
+
+        patched = userData.patch(UserSettingsData.builder().playSoundForInformation(true).build().clearTags());
+        assertThat(patched).isEqualToIgnoringGivenFields(userData,"playSoundForInformation");
+        assertThat(patched.getPlaySoundForInformation()).isEqualTo(true);
+
     }
 }

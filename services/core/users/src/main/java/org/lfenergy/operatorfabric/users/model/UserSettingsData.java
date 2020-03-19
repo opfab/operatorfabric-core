@@ -20,6 +20,7 @@ import java.util.*;
 @AllArgsConstructor
 @Builder
 public class UserSettingsData implements UserSettings {
+
     @Id
     private String login;
     private String description;
@@ -32,8 +33,11 @@ public class UserSettingsData implements UserSettings {
     @JsonIgnore
     @Singular("defaultTag")
     private Set<String> defaultTagsSet;
-
     private TimeLineFormats timeLineDefaultClusteringFormats;
+    private Boolean playSoundForAlarm;
+    private Boolean playSoundForAction;
+    private Boolean playSoundForCompliant;
+    private Boolean playSoundForInformation;
 
     public UserSettingsData(UserSettings settings) {
         this.login = settings.getLogin();
@@ -50,6 +54,10 @@ public class UserSettingsData implements UserSettings {
         this.email = settings.getEmail();
         if(settings.getTimeLineDefaultClusteringFormats()!=null)
             this.timeLineDefaultClusteringFormats = ((TimeLineFormatsData)settings.getTimeLineDefaultClusteringFormats()).copy();
+        this.playSoundForAlarm = settings.getPlaySoundForAlarm();
+        this.playSoundForAction = settings.getPlaySoundForAction();
+        this.playSoundForCompliant = settings.getPlaySoundForCompliant();
+        this.playSoundForInformation = settings.getPlaySoundForInformation();
     }
 
     public Set<String> getDefaultTagsSet() {
@@ -79,10 +87,10 @@ public class UserSettingsData implements UserSettings {
     }
 
     /**
-     * Create a new patched settings using this as reference and overiding fields from other parameter when filed is not
+     * Create a new patched settings using this as reference and overriding fields from other parameter when field is not
      * null.
      * <br>
-     * NB: resulting field defaultTags is the addition of collectins from both sides
+     * NB: resulting field defaultTags is the addition of collections from both sides
      * NB2: login cannot be changed
      *
      * @param other
@@ -104,6 +112,10 @@ public class UserSettingsData implements UserSettings {
             result.defaultTagsSet = new HashSet<>(this.getDefaultTags());
         else
             result.defaultTagsSet = null;
+        result.playSoundForAlarm = other.getPlaySoundForAlarm() != null ? other.getPlaySoundForAlarm() : this.getPlaySoundForAlarm();
+        result.playSoundForAction = other.getPlaySoundForAction() != null ? other.getPlaySoundForAction() : this.getPlaySoundForAction();
+        result.playSoundForCompliant = other.getPlaySoundForCompliant() != null ? other.getPlaySoundForCompliant() : this.getPlaySoundForCompliant();
+        result.playSoundForInformation = other.getPlaySoundForInformation() != null ? other.getPlaySoundForInformation() : this.getPlaySoundForInformation();
         return result;
     }
 }

@@ -31,5 +31,12 @@
     <div class="col-md-6" *ngIf="!displayInfo?.tags">
       <of-type-ahead-settings settingPath="defaultTags"></of-type-ahead-settings>
     </div>
+    <div class="col-md-6" *ngIf="!displayInfo?.sounds">
+      <div><label translate>settings.playSoundLabel</label></div>
+      <of-checkbox-setting settingPath="playSoundForAlarm"></of-checkbox-setting>
+      <of-checkbox-setting settingPath="playSoundForAction"></of-checkbox-setting>
+      <of-checkbox-setting settingPath="playSoundForCompliant"></of-checkbox-setting>
+      <of-checkbox-setting settingPath="playSoundForInformation"></of-checkbox-setting>
+    </div>
   </div>
 </div>
