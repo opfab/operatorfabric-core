@@ -15,8 +15,9 @@ _The OperatorFabric deployment no longer requires a Time microservice._
 _Builds with a documentation stage will now fail if the push to the website repository wasn't successful._
 
 === Bug 
-* [OC-730] Correct minors bugs in timeline and major refactoring 
-=======
+* [OC-730] Correct minors bugs in timeline and major refactoring
+* [OC-783] Fix settingsOrConfig selector behaviour for booleans
+
 === Issue
 * [OC-682] As a user I want sound to be played on cards arrival
 +
