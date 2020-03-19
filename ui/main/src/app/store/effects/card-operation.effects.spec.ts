@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-
 import {Actions} from '@ngrx/effects';
 import {hot} from 'jasmine-marbles';
 import {Store} from '@ngrx/store';
@@ -20,11 +19,14 @@ import {provideMockActions} from '@ngrx/effects/testing';
 import {Observable} from 'rxjs';
 import {async, TestBed} from '@angular/core/testing';
 import SpyObj = jasmine.SpyObj;
+import {SoundNotificationService} from "@ofServices/sound-notification.service";
+import {feedInitialState} from "@ofStates/feed.state";
 
 describe('CardOperationEffects', () => {
     let actions$: Observable<any>;
     let effects: CardOperationEffects;
     let cardServiceSpy: SpyObj<CardService>;
+    let soundNotificationServiceSpy: SpyObj<SoundNotificationService>;
     let store: MockStore<AppState>;
 
     const initialState = {
@@ -37,14 +39,17 @@ describe('CardOperationEffects', () => {
 
     beforeEach(async(() => {
         cardServiceSpy = jasmine.createSpyObj('CardService', ['loadCard']);
+        soundNotificationServiceSpy = jasmine.createSpyObj('SoundNotificationService',['handleCards']);
         TestBed.configureTestingModule({
             providers: [
                 CardOperationEffects,
                 provideMockStore({ initialState }),
                 provideMockActions(() => actions$),
-                {provide: CardService, useValue: cardServiceSpy}
+                {provide: CardService, useValue: cardServiceSpy},
+                {provide: SoundNotificationService, useValue: soundNotificationServiceSpy}
             ],
         });
+
 
         store = TestBed.get(Store);
         effects = TestBed.get(CardOperationEffects);
@@ -74,7 +79,7 @@ describe('CardOperationEffects', () => {
 
             const localExpected = hot('-b-', {b: expectedAction});
 
-            effects = new CardOperationEffects(store, localActions$, cardServiceSpy);
+            effects = new CardOperationEffects(store, localActions$, cardServiceSpy, soundNotificationServiceSpy);
 
             expect(effects).toBeTruthy();
             expect(effects.refreshIfSelectedCard).toBeObservable(localExpected);
@@ -98,10 +103,32 @@ describe('CardOperationEffects', () => {
 
             const localActions$ = new Actions(hot('-a-', {a: new LoadLightCardsSuccess({lightCards: severalRandomLightCards})}));
 
-            effects = new CardOperationEffects(store, localActions$, cardServiceSpy);
+            effects = new CardOperationEffects(store, localActions$, cardServiceSpy, soundNotificationServiceSpy);
 
             expect(effects).toBeTruthy();
             effects.refreshIfSelectedCard.subscribe( x => fail('Unexpected action emitted.'));
+
+        });
+
+    });
+
+    describe( 'triggerSoundNotifications', () => {
+
+        it('should call notification service when LoadLightCardSuccess is fired', () => {
+
+            const severalRandomLightCards = getSeveralRandomLightCards(5);
+
+            store.setState({
+                ...initialState,
+                feed: feedInitialState
+            });
+
+            const localActions$ = new Actions(hot('-a-', {a: new LoadLightCardsSuccess({lightCards: severalRandomLightCards})}));
+            effects = new CardOperationEffects(store, localActions$, cardServiceSpy, soundNotificationServiceSpy);
+            expect(effects).toBeTruthy();
+            effects.triggerSoundNotifications.subscribe(() => {
+                expect(soundNotificationServiceSpy.handleCards).toHaveBeenCalledTimes(1);
+            });
 
         });
 

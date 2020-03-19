@@ -16,4 +16,4 @@
 :icons: font
 :hide-uri-scheme:
 
-include::01_timeline.adoc[]
+include::configuration.adoc[]

@@ -25,7 +25,6 @@ import {LoadLightCardsSuccess} from '@ofActions/light-card.actions';
 import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '@ofSelectors/feed.selectors';
 import * as timelineSelectors from '@ofSelectors/timeline.selectors';
-import {DraggableDirective} from './directives/app-draggable';
 import {MouseWheelDirective} from './directives/mouse-wheel.directive';
 import {XAxisTickFormatPipe} from './tick-format-pipe/x-axis-tick-format.pipe';
 import * as moment from 'moment';
@@ -49,7 +48,7 @@ describe('TimeLineComponent', () => {
         RouterTestingModule,
         StoreRouterConnectingModule,
         NgxChartsModule ],
-      declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent, DraggableDirective, MouseWheelDirective,
+      declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent,MouseWheelDirective,
         XAxisTickFormatPipe],
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
@@ -70,66 +69,6 @@ describe('TimeLineComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return a date formatted by domain Conf pass on parameter ' +
-    'from periodStartToEnd function', () => {
-    fixture.detectChanges();
-    const actualMoment = moment();
-    const oneWeekConf = {
-      week: 1,
-    };
-    const momentOnFuture = moment(actualMoment);
-    momentOnFuture.add(1, 'week');
-    // cause of execution time between declaration of actualMoment and periodStartToEnd
-    momentOnFuture.minute(0).second(0).millisecond(0);
-    const momentOnPast = moment(actualMoment);
-    momentOnPast.subtract(1, 'week');
-    momentOnPast.minute(0).second(0).millisecond(0);
-    const startDomain = component.periodStartToEnd(oneWeekConf, false);
-    startDomain.minute(0).second(0).millisecond(0);
-    const endDomain = component.periodStartToEnd(oneWeekConf, true);
-    endDomain.minute(0).second(0).millisecond(0);
-    expect(endDomain.valueOf()).toEqual(momentOnFuture.valueOf());
-    expect(startDomain.valueOf()).toEqual(momentOnPast.valueOf());
-    expect(component).toBeTruthy();
-  });
-  it('should give the end of TR config domain', () => {
-    fixture.detectChanges();
-    const actualMoment = moment();
-    const twoHoursConf = {
-      hours: 2,
-    };
-    const momentOnFuture = moment(actualMoment);
-    momentOnFuture.add(2, 'hours');
-    // cause of execution time between declaration of actualMoment and periodStartToEnd
-    momentOnFuture.minute(0).second(0).millisecond(0);
-    const endDomain = component.periodStartToEnd(twoHoursConf, true);
-    endDomain.minute(0).second(0).millisecond(0);
-    expect(endDomain.valueOf()).toEqual(momentOnFuture.valueOf());
-    expect(component).toBeTruthy();
-  });
-
-  it('should return a date formatted by domain Conf pass on parameter ' +
-    'from periodStartToEnd function', () => {
-    fixture.detectChanges();
-    const actualMoment = moment();
-    const oneWeekConf = {
-      week: 1,
-    };
-    const momentOnFuture = moment(actualMoment);
-    momentOnFuture.add(1, 'week');
-    // cause of execution time between declaration of actualMoment and periodStartToEnd
-    momentOnFuture.minute(0).second(0).millisecond(0);
-    const momentOnPast = moment(actualMoment);
-    momentOnPast.subtract(1, 'week');
-    momentOnPast.minute(0).second(0).millisecond(0);
-    const startDomain = component.periodStartToEnd(oneWeekConf, false);
-    startDomain.minute(0).second(0).millisecond(0);
-    const endDomain = component.periodStartToEnd(oneWeekConf, true);
-    endDomain.minute(0).second(0).millisecond(0);
-    expect(endDomain.valueOf()).toEqual(momentOnFuture.valueOf());
-    expect(startDomain.valueOf()).toEqual(momentOnPast.valueOf());
-    expect(component).toBeTruthy();
-  });
 
   it('should create a list with one element when there is ' +
     'only one card in the state', (done) => {
@@ -237,40 +176,5 @@ describe('TimeLineComponent', () => {
     expect(listElements.length).toEqual(numberOfCardsInTheActionPayload);*/
   });
 
-  it('should test constructMomentObj return an obj', () => {
-    const result = component.constructMomentObj([0, 0, 1, 1, 2, 4, 0]);
-    expect(result).toEqual({
-      year: 0,
-      month: 0,
-      week: 1,
-      day: 1,
-      hour: 2,
-      minute: 4,
-      second: 0
-    });
 
-    const result1 = component.constructMomentObj([0, 0, 1, 1, 2, 4, 0], ['week']);
-    expect(result1).toEqual({
-      year: 0,
-      month: 0,
-      week: 1,
-      day: 1,
-      hour: 2,
-      minute: 4,
-      second: 0,
-      startOf: ['week']
-    });
-
-    const result2 = component.constructMomentObj([0, 0, 1, 1, 2, 4, 0], null, [1, 15]);
-    expect(result2).toEqual({
-      year: 0,
-      month: 0,
-      week: 1,
-      day: 1,
-      hour: 2,
-      minute: 4,
-      second: 0,
-      date: [1, 15]
-    });
-  });
 });

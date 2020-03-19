@@ -21,18 +21,13 @@ import {NavbarComponent} from './components/navbar/navbar.component';
 import {LoginComponent} from './components/login/login.component';
 import {IconComponent} from './components/navbar/icon/icon.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {library} from '@fortawesome/fontawesome-svg-core';
-import {faExternalLinkAlt, faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 import {InfoComponent} from './components/navbar/info/info.component';
 import {UtilitiesModule} from './modules/utilities/utilities.module';
 import {MenuLinkComponent} from './components/navbar/menus/menu-link/menu-link.component';
 import {CustomLogoComponent} from './components/navbar/custom-logo/custom-logo.component';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {AboutComponent} from "./modules/about/about.component";
-
-library.add(faExternalLinkAlt);
-library.add(faSignOutAlt);
+import {FontAwesomeIconsModule} from "./modules/utilities/fontawesome-icons.module";
 
 @NgModule({
     imports: [
@@ -47,7 +42,7 @@ library.add(faSignOutAlt);
         ServicesModule.forRoot(),
         NgbModule,
         TranslateModule.forRoot(),
-        FontAwesomeModule,
+        FontAwesomeIconsModule,
         UtilitiesModule,
         AppRoutingModule
     ],
@@ -63,4 +58,5 @@ library.add(faSignOutAlt);
     bootstrap: [AppComponent]
 })
 export class AppModule {
+
 }

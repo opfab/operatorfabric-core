@@ -6,23 +6,24 @@
  */
 
 import {
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    NgZone,
-    OnInit,
-    Output,
-    ViewChild,
-    ViewEncapsulation
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
-import {scaleLinear, scaleTime} from 'd3-scale';
+import { scaleLinear, scaleTime } from 'd3-scale';
 import * as _ from 'lodash';
-import {BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions} from '@swimlane/ngx-charts';
+import { BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
-import {XAxisTickFormatPipe} from '../tick-format-pipe/x-axis-tick-format.pipe';
-import {TimeService} from '@ofServices/time.service';
+import { XAxisTickFormatPipe } from '../tick-format-pipe/x-axis-tick-format.pipe';
+import { TimeService } from '@ofServices/time.service';
+import { TestBed } from '@angular/core/testing';
 
 @Component({
   selector: 'of-custom-timeline-chart',
@@ -44,11 +45,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.xTicks = [];
     this.xTicksOne = [];
     this.xTicksTwo = [];
-    this.yTicks = [];
     this.xAxisHeight = 0;
     this.yAxisWidth = 0;
     this.margin = [10, 20, 10, 0];
-    this.realTimeBar = moment();
     this.circleHovered = {
       period: '',
       count: 0,
@@ -62,17 +61,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Input()
   set valueDomain(value: any) {
     this.xDomain = value;
-    // allow to show on top left of component date of first tick (same as xDomain[0])
+    // allow to show on top left of component date of first tick 
     this.underDayPeriod = false;
-    const millisecondsDomain = value[1] - value[0];
-    if (millisecondsDomain < 3600001) { // 1 Hour
-      this.underDayPeriod = true;
-      this.dateFirstTick = moment(value[0]).format('ddd DD MMM YYYY HH') + 'h';
-    } else if (millisecondsDomain < 86400000) { // 1 Day
+    if (value[1] - value[0] < 86400000) { // 1 Day
       this.underDayPeriod = true;
       this.dateFirstTick = this.timeService.predefinedFormat(moment(value[0]), 'dateInsideTooltipsMonth');
     }
   }
+
   get valueDomain() {
     return this.xDomain;
   }
@@ -84,54 +80,29 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   get myData() {
     return this._myData;
   }
-  // formatting and ticks spacing
-  @Input() clusterConf;
-  public clusterLevel;
-  // Axis
-  @Input() xAxis;
-  @Input() yAxis;
-  // realTimeBar
-  @Input() realTimeBar;
-  // Y axis domain
-  @Input() autoScale;
-  // On axis the tick display line perpendicularly of axis
-  @Input() showGridLines;
-  // Unknown yet
-  @Input() gradient;
-  // Zoom
-  @Input() enableZoom;
-  @Input() zoomOnButton;
-  @Input()
-  set zoomVector(level) {
-    this._zoomVector = Number(level);
-  }
-  get zoomVector() {
-    return this._zoomVector;
-  }
+  // Workaround for testing, the variable is not set  in unit test an true in production mode 
+  @Input() prod;
+
+  @Input() domainId;
+
   // manage home btn when domain change inside this component
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
   // Movement
   @Input() followClockTick;
-  // Drag
-  @Input() enableDrag;
-  // Circle
-  @Input() circleDiameter;
+
   // TICKS
   @Output() widthChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Input() centeredOnTicks;
-  @Input() clusterTicksToTicks;
-  @Input() formatTicks;
-  @Input() formatTooltipsDate;
+
+
   public xTicks: Array<any>;
   public xTicksOne: Array<any>;
   public xTicksTwo: Array<any>;
-  public yTicks: Array<any>;
   public formatLevel: string;
   public underDayPeriod: boolean;
   public dateFirstTick: string;
   public oldWidth: number;
   // MUST
-  @ViewChild(ChartComponent, { read: ElementRef , static: false}) chart: ElementRef;
+  @ViewChild(ChartComponent, { read: ElementRef, static: false }) chart: ElementRef;
   public dims: ViewDimensions;
   public xDomain: any;
   public yDomain: any;
@@ -143,20 +114,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public transform: string;
   public transform2: string;
   public xRealTimeLine: moment.Moment;
+  // Circle
+  private circleDiameter = 10;
+
   // TOOLTIP
   public circleHovered;
   // DATA
   private _myData;
   public dataClustered;
-  // ZOOM
-  private maxZoom;
-  private minZoom;
-  private _zoomVector;
-  // DRAG
-  private startDragX;
-  private setDragDirection;
-  public dragDirection;
-  private previousXPos;
+
+
+
+
 
   /**
    *  - call loop function for update real time bar value
@@ -169,7 +138,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     // Divided by 4, but can be another value
     // searching to loop lessiest time possible but loop enough time for use more than usable space
     const limit = window.innerWidth / 10; // 10 px for one tick
-      for (let i = 0; i < limit; i++) {
+    for (let i = 0; i < limit; i++) {
       this.xTicksOne.push(moment(i));
       this.xTicksTwo.push(moment(i));
     }
@@ -187,19 +156,19 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       width: this.width,
       height: this.height,
       margins: this.margin,
-      showXAxis: this.xAxis,
-      showYAxis: this.yAxis,
+      showXAxis: true,
+      showYAxis: true,
       xAxisHeight: this.xAxisHeight,
       yAxisWidth: this.yAxisWidth,
       showLegend: false,
       legendType: 'time'
     });
     this.xDomain = this.getXDomain();
-    this.yDomain = this.getYDomain();
+    this.yDomain = [0, 5];
     this.timeScale = this.getTimeScale(this.xDomain, this.dims.width);
     this.yScale = this.getYScale(this.yDomain, this.dims.height);
-    this.transform = `translate(${ this.dims.xOffset } , ${ this.margin[0] })`;
-    this.transform2 = `translate(0, ${ this.dims.height + 15})`;
+    this.transform = `translate(${this.dims.xOffset} , ${this.margin[0]})`;
+    this.transform2 = `translate(0, ${this.dims.height + 15})`;
     if (this.oldWidth !== this.dims.width) {
       this.oldWidth = this.dims.width;
       this.widthChange.emit(true);
@@ -207,17 +176,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   /**
-   * return the ticks value displayed:
-   * hide ticks display when autoScale is false
-   * or return the value received
-   * @param e
+   * return an empty value to display (use to have no label on y axis) 
    */
   hideLabelsTicks = (e): string => {
-    if (!this.autoScale) {
-      return '';
-    } else {
-      return e;
-    }
+    return '';
   }
 
   /**
@@ -226,9 +188,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * update the domain if check follow clock tick is true
    */
   updateRealTimeDate(): void {
-    if (this.realTimeBar) {
-      this.xRealTimeLine = moment();
-    }
+    this.xRealTimeLine = moment();
     if (this.followClockTick) {
       if (this.checkFollowClockTick()) {
         this.update();
@@ -247,11 +207,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     if (this.xTicks && this.xTicks.length > 5) {
       const tmp = moment();
       tmp.millisecond(0);
-      // const tmpTick = moment(this.xTicks[4]);
-      // tmpTick.millisecond(0);
       if (this.xTicks[4].valueOf() <= tmp.valueOf()) {
-          this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
-          return true;
+        this.valueDomain = [this.xTicks[1].valueOf(), this.xDomain[1] + (this.xTicks[1] - this.xDomain[0])];
+        return true;
       }
     }
     return false;
@@ -282,117 +240,25 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       this.circleHovered.period = 'Date : ' + this.fctHoveredCircleDateFormatting(myCircle.start);
     } else {
       this.circleHovered.period = 'Periode : ' + this.fctHoveredCircleDateFormatting(myCircle.start) +
-          ' - ' + this.fctHoveredCircleDateFormatting(myCircle.end);
+        ' - ' + this.fctHoveredCircleDateFormatting(myCircle.end);
     }
     this.circleHovered.summary = myCircle.summary;
   }
 
-  /**
-   * when timeline is clicked init all drag variables
-   * @param $event
-   */
-  onDragStart($event: MouseEvent): void {
-    if ($event) {
-      this.startDragX = $event.clientX;
-    }
-    this.setDragDirection = true;
-    this.dragDirection = undefined;
-    this.previousXPos = 0;
-  }
 
   /**
-   * dragging the timeline
-   * @param $event
-   */
-  onDragMove($event: MouseEvent) {
-    if (!this.enableDrag) {
-      return;
-    }
-
-    if ($event) {
-      const mouseX = $event.clientX;
-      // set dragDirection to true if mouse go to right side
-      // false if mouse go to left
-      if (this.setDragDirection) {
-        this.dragDirection = (mouseX - this.startDragX) > 0;
-        this.setDragDirection = false;
-      }
-      // check if mouse still going to the same direction
-      // if direction differe we change start point position by mouse position (reset algo)
-      if (this.dragDirection && (mouseX < this.previousXPos)) {
-        this.startDragX = mouseX - 1;
-        this.setDragDirection = true;
-      } else if (!this.dragDirection && (mouseX > this.previousXPos)) {
-        this.startDragX = mouseX + 1;
-        this.setDragDirection = true;
-      }
-      let result = 0;
-      if (this.timeScale) {
-        result = this.timeScale.invert(mouseX / 10).getTime() - this.timeScale.invert(this.startDragX / 10).getTime();
-      }
-      const myDomain2 = this.valueDomain;
-      this.xDomain = [(myDomain2[0] - result), (myDomain2[1] - result)];
-      if (result !== 0) {
-        this.timeScale = this.getTimeScale(this.xDomain, this.dims.width);
-      }
-      // keep mouse X position
-      this.previousXPos = mouseX;
-      this.zoomChange.emit('drag');
-      return;
-    } else {
-      return;
-    }
-  }
-
-  /**
-   * zoom on timeline : Two modes
-   * on buttons : change for next or previous zoom set by buttons conf
-   * on chart : using static multiplicator for zooming or unzooming, a maximal and minimal value of zoom is set statically
-   * @param $event
-   * @param direction
+   *  change for next or previous zoom set by buttons conf
    */
   onZoom($event: MouseEvent, direction): void {
-    if (!this.enableZoom) {
-      return;
-    }
-    if (this.zoomOnButton) {
-      // active next or previous zoom button
-      if (direction === 'in') {
-        this.zoomChange.emit('in');
-      }
-      if (direction === 'out') {
-        this.zoomChange.emit('out');
-      }
-    } else {
-      // Not use on Let's Co, commented for Unit Test
-      /*this.maxZoom = 104637; // 2 mins: mettre un multiplicateur pr etre reponsive
-      this.minZoom = 459344306211715; // 2 mins: mettre un multiplicateur pr etre reponsive
 
-      const mouseX = $event.clientX;
-      const cursorXTime = this.timeScale.invert(mouseX - 40).getTime(); // amelio cursorXTime = cercle.date.getTime()
-      let myDomain2 = this.valueDomain;
-      // use mathematic function:  ==> new Start of domain =  x - (x - domain[0]) / 2
-      //                           ==> new End of domain = x + (domain[1] - x) / 2
-      if (direction === 'in') {
-        if ((myDomain2[1] - myDomain2[0]) > this.maxZoom) {
-          const newStart = cursorXTime - ((cursorXTime - myDomain2[0]) / this.zoomVector);
-          const newEnd = cursorXTime + ((myDomain2[1] - cursorXTime) / this.zoomVector);
-          myDomain2 = [newStart, newEnd];
-        }
-      }
-      // same mathematic function: only change division by multiplication
-      if (direction === 'out') {
-        if ((myDomain2[1] - myDomain2[0]) < this.minZoom) {
-          const newStart = cursorXTime - ((cursorXTime - myDomain2[0]) * this.zoomVector);
-          const newEnd = cursorXTime + ((myDomain2[1] - cursorXTime) * this.zoomVector);
-          myDomain2 = [newStart, newEnd];
-        }
-      }
-      // Add an output for send the new xDomain to init-chart if you want to got autonomousTicks treatment used
-      this.xDomain = [myDomain2[0], myDomain2[1]];
-      // change the domain on xAxis
-      this.timeScale = this.getTimeScale(this.xDomain, this.dims.width);*/
+    // active next or previous zoom button
+    if (direction === 'in') {
+      this.zoomChange.emit('in');
     }
+    if (direction === 'out') {
+      this.zoomChange.emit('out');
+    }
+
   }
 
   /**
@@ -410,7 +276,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   fctTickFormattingAdvanced = (e): string => {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(this.timeService);
     if (this.formatLevel === 'Hou' || this.formatLevel === 'Min' ||
-        this.formatLevel === 'Sec' || this.formatLevel === 'nbW') {
+      this.formatLevel === 'Sec' || this.formatLevel === 'nbW') {
       return formatPipe.transformAdvanced(e, this.formatLevel);
     }
     return formatPipe.transform(e, this.formatLevel);
@@ -421,76 +287,60 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   fctHoveredCircleDateFormatting(e): string {
     const formatPipe: XAxisTickFormatPipe = new XAxisTickFormatPipe(this.timeService);
-    // when formatTooltipsDate is init, it will format the date with his own value
-    if (this.formatTooltipsDate) {
-        return formatPipe.transformHovered(e, this.formatTooltipsDate);
-    } else {
-        return formatPipe.transformHovered(e, this.formatLevel);
-    }
+    return formatPipe.transformHovered(e, this.formatLevel);
+    
   }
 
-  /**
-   * for each keys set on ticks configuration object, add the value of this unit
-   * date key is skipped
-   * @param tmpMoment
-   */
-  getDateParsedConfCluster(tmpMoment: moment.Moment) {
-    Object.keys(this.clusterLevel).forEach(key => {
-      // for skip date key, verify type first
-      if (typeof this.clusterLevel[key] === 'number' && this.clusterLevel[key] > 0) {
-        tmpMoment.add((this.clusterLevel[key]), key);
-      }
-    });
-  }
-
-  /**
-   * delete all ticks until the end of domain
-   * and push a tick for the end of domain
-   * @param domain
-   */
-  cleanXTicksOffFields(domain): void {
-    let j = this.xTicks.length - 1;
-    while (j >= 0) {
-      if (this.xTicks[j] >= domain[1]) {
-        this.xTicks.pop();
-      }
-      j--;
-    }
-    this.xTicks.push(moment(domain[1]));
-  }
-
-  /**
-   * set xTicks:
-   * - push the start of domain
-   * - push ticks until end of domain by adding time value corresponding of ticks conf
-   * - clean extra ticks (tick after end domain)
-   * - push the end of domain
-   * @param domain
-   */
+  
   setXTicksValue(domain): void {
     const startDomain = moment(domain[0]);
     this.xTicks.push(startDomain);
-    const nextUnit = moment(startDomain);
-    while (nextUnit.valueOf() < domain[1]) {
-      // special case date : list of day
-      // for each date on the list do same implementation, and finish by adding 1 month
-      if (this.clusterLevel && this.clusterLevel.date && this.clusterLevel.date.length > 0) {
-        this.clusterLevel.date.forEach(op => {
-          nextUnit.date(op);
-          this.getDateParsedConfCluster(nextUnit);
-          const tmp2 = moment(nextUnit);
-          if (tmp2 > domain[0]) {
-            this.xTicks.push(tmp2);
-          }
-        });
-        nextUnit.add(1, 'month');
-      } else {
-        this.getDateParsedConfCluster(nextUnit);
-        const tmp = moment(nextUnit);
-        this.xTicks.push(tmp);
+    let nextTick = moment(startDomain);
+    const tickSize = this.getTickSize();
+
+    while (nextTick.valueOf() < domain[1]) {
+      
+      // we need to make half month tick when Y domain 
+      if (this.domainId==='Y') {
+         if ( nextTick.isSame(moment(nextTick).startOf('month'))) nextTick.add(15,'day')
+         else nextTick.add(1,'month').startOf('month');
       }
+      else nextTick.add(tickSize.amount,tickSize.unit);
+      this.xTicks.push(moment(nextTick));
+    } 
+  }
+
+  getTickSize() {
+    switch (this.domainId) {
+
+      // need to explicit format for moment : https://stackoverflow.com/questions/41768864/moment-add-only-works-with-literal-values
+      case 'TR': 
+      const amountTR: moment.DurationInputArg1 = 15;
+      const unitTR : moment.DurationInputArg2 = 'minute';
+      return {amount: amountTR,unit:unitTR};
+
+      case 'J': 
+      const amountJ: moment.DurationInputArg1 = 30;
+      const unitJ : moment.DurationInputArg2 = 'minute';
+      return {amount: amountJ,unit:unitJ};
+
+      case '7D': 
+      const amount7D: moment.DurationInputArg1 = 4;
+      const unit7D : moment.DurationInputArg2 = 'hour';
+      return {amount: amount7D,unit:unit7D};
+
+      case 'W': 
+      const amountW: moment.DurationInputArg1 = 4;
+      const unitW : moment.DurationInputArg2 = 'hour';
+      return {amount: amountW,unit:unitW};
+
+      case 'M': 
+      const amountM: moment.DurationInputArg1 = 1;
+      const unitM : moment.DurationInputArg2 = 'day';
+      return {amount: amountM,unit:unitM};
+
+      default: return;
     }
-    this.cleanXTicksOffFields(domain);
   }
 
   /**
@@ -502,8 +352,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.xTicks = [];
     this.setTicksAndClusterize(domain);
     return scaleTime()
-        .range([0, width])
-        .domain(domain);
+      .range([0, width])
+      .domain(domain);
   }
 
   /**
@@ -512,11 +362,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * @param height
    */
   getYScale(domain, height): any {
-    this.yTicks = [];
-    this.setYTicks();
     return scaleLinear()
-        .range([height, 0])
-        .domain(domain);
+      .range([height, 0])
+      .domain(domain);
   }
 
   /**
@@ -525,70 +373,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    * return a domain with the minimum and Maximum date inside the arrays of this.myData
    */
   getXDomain(): number[] {
-    // if it's already set, return it
-    if (this.xDomain) {
-      return this.xDomain;
-    }
-    // Stack on values array all the date property of our data
-    const values = [];
-    if (this.myData) {
-      for (const series of this.myData) {
-        for (const d of series) {
-          if (!values.includes(d.date)) {
-            values.push(d.date);
-          }
-        }
-      }
-    } else {
-      values.push(0);
-      values.push(1);
-    }
-    let domain: number[];
-    const min = moment(Math.min(...values));
-    const max = moment(Math.max(...values));
-    if (JSON.stringify(values) !== JSON.stringify([0, 1])) {
-      min.hours(0).minutes(0).seconds(0).milliseconds(0);
-      max.hours(0).minutes(0).seconds(0).milliseconds(0);
-    }
-    domain = [min.valueOf(), max.valueOf()];
-    return domain;
+    return this.xDomain;
   }
 
-  /**
-   * return static domain of 4 raw if autoScale is false
-   * return static domain of 4 raw if our data variable is undefined
-   * return a domain with rows equal to the number of array inside this.myData
-   */
-  getYDomain(): number[] {
-    const domain = [];
-    if (this._myData === undefined) {
-      return [0, 5];
-    }
-    for (const series of this.myData) {
-      for (const d of series) {
-        if (domain.indexOf(d.value) < 0) {
-          domain.push(d.value);
-        }
-        if (d.min !== undefined) {
-          if (domain.indexOf(d.min) < 0) {
-            domain.push(d.min);
-          }
-        }
-        if (d.max !== undefined) {
-          if (domain.indexOf(d.max) < 0) {
-            domain.push(d.max);
-          }
-        }
-      }
-    }
-    let min = Math.min(...domain);
-    let max = Math.max(...domain);
-    if (!this.autoScale) {
-      min = Math.min(0, min);
-      max = Math.max(5, max);
-    }
-    return [min, max];
-  }
 
   /**
    * called when the width of the chart is updated
@@ -610,17 +397,87 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.update();
   }
 
+
   /**
-   * return a list of ticks made by the parsing of xTicks
-   * 1 : return half of xTicks' ticks
-   * 2 : return the other half of xTicks' ticks
-   * 3 : return xTicks
-   * 4 : return tick value every time tick hour = 0
-   * 5 : return tick value every time tick minute = 0
-   * 6 : return tick value every time tick second = 0
-   * 7 : return tick value on first week of the year and every 5 weeks
-   * @param pos
+   * set an default format level:
+   * run through ticks configuration for find the format moment needed
    */
+  setFormatLevel() {
+
+    switch (this.domainId) {
+
+      case 'TR': {
+        this.formatLevel = 'Min';
+        break;
+      }
+      case 'J': { // change
+        this.formatLevel = 'HH[h]mm';
+        break;
+      }
+      case '7D': { // change
+        this.formatLevel = 'Hou';
+        break;
+      }
+      case 'W': {
+        this.formatLevel = 'Hou';
+        break;
+      }
+      case 'M': {
+        this.formatLevel = 'Day';
+        break;
+      }
+      case 'Y': {
+        this.formatLevel = 'Dat';
+        break;
+      }
+    }
+  }
+
+
+
+  /**
+   * set cluster level 
+   * set format level
+   * set the x ticks value
+   * set the two x ticks displayed lists
+   * call clusterize function
+   * @param domain
+   */
+  setTicksAndClusterize(domain): void {
+
+    this.setFormatLevel();
+    this.setXTicksValue(domain);
+    this.xTicksOne = [];
+    this.xTicksTwo = [];
+    if (this.formatLevel === 'Hou') {
+      this.xTicksOne = this.multiHorizontalTicksLine(3);
+      this.xTicksTwo = this.multiHorizontalTicksLine(4);
+    } else if (this.formatLevel === 'Min') {
+      this.xTicksOne = this.multiHorizontalTicksLine(3);
+      this.xTicksTwo = this.multiHorizontalTicksLine(5);
+    } else if (this.formatLevel === 'nbW') {
+      this.xTicksOne = this.multiHorizontalTicksLine(3);
+      this.xTicksTwo = this.multiHorizontalTicksLine(7);
+    } else {
+      this.xTicksOne = this.multiHorizontalTicksLine(1);
+      this.xTicksTwo = this.multiHorizontalTicksLine(2);
+    }
+    this.clusterize(domain);
+  }
+
+
+
+  /**
+     * return a list of ticks made by the parsing of xTicks
+     * 1 : return half of xTicks' ticks
+     * 2 : return the other half of xTicks' ticks
+     * 3 : return xTicks
+     * 4 : return tick value every time tick hour = 0
+     * 5 : return tick value every time tick minute = 0
+     * 6 : return tick value every time tick second = 0
+     * 7 : return tick value on first week of the year and every 5 weeks
+     * @param pos
+     */
   multiHorizontalTicksLine(pos: number) {
     const newList = [];
     switch (pos) {
@@ -662,14 +519,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }
         break;
       }
-      case 6: {
-        for (let i = 0; i < this.xTicks.length; i++) {
-          if (this.xTicks[i].second() === 0) {
-            newList.push(this.xTicks[i]);
-          }
-        }
-        break;
-      }
       case 7: {
         for (let i = 0; i < this.xTicks.length; i++) {
           if (this.xTicks[i].week() === 1 || this.xTicks[i].week() % 5 === 0) {
@@ -678,172 +527,13 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }
         break;
       }
-      default : {
+      default: {
         break;
       }
     }
     return newList;
   }
 
-  /**
-   * set an default format level:
-   * run through ticks configuration for find the format moment needed
-   */
-  setFormatLevel() {
-      // Use the more precise unit set on ticks configuration object
-      Object.keys(this.clusterLevel).forEach(key => {
-        if (key === 'date') {
-          this.formatLevel = 'Dat';
-        } else if (this.clusterLevel[key] > 0) {
-          switch (key) {
-            case 'weekNb': {
-              this.formatLevel = 'nbW';
-              break;
-            }
-            case 'year': { // change
-              this.formatLevel = 'Yea';
-              break;
-            }
-            case 'month': { // change
-              this.formatLevel = 'Mon';
-              break;
-            }
-            case 'week': { // change
-              this.formatLevel = 'Wee';
-              break;
-            }
-            case 'day': {
-              this.formatLevel = 'Day';
-              break;
-            }
-            case 'hour': {
-              this.formatLevel = 'Hou';
-              break;
-            }
-            case 'minute': {
-              this.formatLevel = 'Min';
-              break;
-            }
-            case 'second': {
-              this.formatLevel = 'Sec';
-              break;
-            }
-          }
-        }
-      });
-  }
-
-  /**
-   * set format level by configuration passed on formatTicks:
-   * when formatTicks is an Array, formatLevel become format value of the more
-   * hight width_min property smaller than window width
-   * other case just use formatTicks (string)
-   */
-  selectFormatTicks() {
-    let keepGoing = true;
-    if (Array.isArray(this.formatTicks)) {
-      this.formatTicks.forEach(oneSet => {
-        if (keepGoing) {
-          if (oneSet.width_min <= window.innerWidth) {
-            this.formatLevel = _.cloneDeep(oneSet.formatTicks);
-            keepGoing = false;
-          }
-        }
-      });
-      // if width_min: 0 wasn't set and screen width is more little than smallest width_min configuration
-      if (keepGoing) {
-        this.formatLevel = _.cloneDeep(this.formatTicks[this.formatTicks.length - 1].formatTicks);
-      }
-    } else {
-      this.formatLevel = _.cloneDeep(this.formatTicks);
-    }
-  }
-
-  /**
-   * set cluster level by configuration passed on clusterConf:
-   * when clusterConf is an Array, clusterLevel become the tick conf of the more
-   * hight width_min property smaller than window width
-   * other case just use clusterConf (Object)
-   * @param domain
-   */
-  setClusterLevel(domain) { // conf celon la taille de l'ecran et la conf
-    // use domain for automatic cluster conf
-    let keepGoing = true;
-    if (this.clusterConf && Array.isArray(this.clusterConf)) {
-      this.clusterConf.forEach(oneSet => {
-        if (keepGoing) {
-          if (oneSet.width_min <= window.innerWidth) {
-            this.clusterLevel = _.cloneDeep(oneSet.conf);
-            keepGoing = false;
-          }
-        }
-      });
-      // if width_min: 0 wasn't set and screen width is more little than smallest width_min configuration
-      if (keepGoing) {
-        this.clusterLevel = _.cloneDeep(this.clusterConf[this.clusterConf.length - 1].conf);
-      }
-    } else {
-      this.clusterLevel = _.cloneDeep(this.clusterConf);
-    }
-  }
-
-  /**
-   * set cluster level by configuration passed on clusterConf
-   * set format level by conf passed on formatTicks or by conf passed on clusterLevel
-   * set the x ticks value
-   * set the two x ticks displayed lists
-   * call clusterize function
-   * @param domain
-   */
-  setTicksAndClusterize(domain): void {
-    // clusterLevel defines the ticks configuration used
-    this.setClusterLevel(domain);
-    if (this.formatTicks) {
-      // formatLevel is defined by format ticks configuration (formatTicks)
-      this.selectFormatTicks();
-    } else {
-      // formatLevel is defined by ticks configuration (clusterLevel)
-      this.setFormatLevel();
-    }
-    this.setXTicksValue(domain);
-    this.xTicksOne = [];
-    this.xTicksTwo = [];
-    if (this.formatLevel === 'Hou') {
-      this.xTicksOne = this.multiHorizontalTicksLine(3);
-      this.xTicksTwo = this.multiHorizontalTicksLine(4);
-    } else if (this.formatLevel === 'Min') {
-      this.xTicksOne = this.multiHorizontalTicksLine(3);
-      this.xTicksTwo = this.multiHorizontalTicksLine(5);
-    } else if (this.formatLevel === 'Sec') {
-      this.xTicksOne = this.multiHorizontalTicksLine(3);
-      this.xTicksTwo = this.multiHorizontalTicksLine(6);
-    } else if (this.formatLevel === 'nbW') {
-      this.xTicksOne = this.multiHorizontalTicksLine(3);
-      this.xTicksTwo = this.multiHorizontalTicksLine(7);
-    } else {
-      this.xTicksOne = this.multiHorizontalTicksLine(1);
-      this.xTicksTwo = this.multiHorizontalTicksLine(2);
-    }
-    this.clusterize(domain);
-  }
-
-  /**
-   * set y ticks
-   * one ticks by severity
-   */
-  setYTicks(): void {
-    // max = 5 coz Let's Co use
-    if (!this.autoScale) {
-      if (this.myData) {
-        const max = 5; // this.myData.length + 1;
-        for (let i = 0; i <= max; i++) {
-          this.yTicks.push(i);
-        }
-      }
-    } else {
-      this.yTicks = null;
-    }
-  }
 
   /**
    * set dataClustered with the data after they be parsed
@@ -875,19 +565,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
           if (array[j]) {
             let feedIt = false;
             let circleDate;
-            // set the new position for the circle group
-            // two cases : on ticks or in middle of two ticks
-            if (this.centeredOnTicks) {
-              if (this.clusterTicksToTicks) {
-                circleDate = this.xTicks[i - 1].valueOf();
-              } else {
-                circleDate = this.xTicks[i].valueOf();
-              }
-            } else {
-              // Circle on middle
-              circleDate = this.xTicks[i - 1].valueOf() + ((this.xTicks[i].valueOf() - this.xTicks[i - 1].valueOf()) / 2);
-            }
-
+            circleDate = this.xTicks[i - 1].valueOf();
             const newDate = moment(circleDate);
             // initialisation a new circle
             // it's push on our new Data List only if it's inside the interval
@@ -900,40 +578,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               cy: array[j].cy,
               value: array[j].value,
               summary: [],
-              r: this.circleDiameter, // array[j].r
+              r: this.circleDiameter,
             };
             let startLimit: number;
             let endLimit: number;
 
-            if (this.clusterTicksToTicks) { // Group Algo 1
-                startLimit = this.xTicks[i - 1].valueOf();
-                endLimit = this.xTicks[i].valueOf();
-                if (i + 1 === this.xTicks.length) {
-                  endLimit = this.xTicks[i].valueOf() + 1;
-                }
-            } else { // Group Algo 2
-            // begin special case:
-              // first tick has is own value for startLimit
-              // endLimit has half of 2nd tick
-              // set i to 0 for one more loop
-              if (firstPass) {
-                firstPass = false;
-                i = 0;
-                newCircle.date = moment(this.xTicks[i].valueOf());
-                startLimit = this.xTicks[i].valueOf();
-                endLimit = this.xTicks[i].valueOf() + ((this.xTicks[i + 1].valueOf() - this.xTicks[i].valueOf()) / 2);
-              } else {
-                // startLimit set with half of the interval between the actual and previous ticks
-                startLimit = this.xTicks[i].valueOf() - ((this.xTicks[i].valueOf() - this.xTicks[i - 1].valueOf()) / 2);
-                // last tick has is own value for endLimit
-                if (i + 1 === this.xTicks.length) {
-                  endLimit = this.xTicks[i].valueOf() + 1;
-                } else {
-                  // endLimit set with half of the interval between the actual and next ticks
-                  endLimit = this.xTicks[i].valueOf() + ((this.xTicks[i + 1].valueOf() - this.xTicks[i].valueOf()) / 2);
-                }
-              }
+
+            startLimit = this.xTicks[i - 1].valueOf();
+            endLimit = this.xTicks[i].valueOf();
+            if (i + 1 === this.xTicks.length) {
+              endLimit = this.xTicks[i].valueOf() + 1;
             }
+
             // add value of array[j] if his date is inside the interval make by start and end limit
             while (array[j] && startLimit <= array[j].date && array[j].date < endLimit) {
               const newValue = newCircle.count + array[j].count;
@@ -941,9 +597,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               newCircle.count = newValue;
               newCircle.end = array[j].date;
               const summaryDate = this.timeService.predefinedFormat(moment(array[j].date), 'titleDateInsideTooltips') +
-                  ' - ' + this.timeService.predefinedFormat(moment(array[j].date), 'titleHourInsideTooltips') + ' : ';
-              const objSummary = { parameters: array[j].summary.parameters, key: array[j].summary.key,
-                summaryDate: summaryDate, i18nPrefix: array[j].publisher + '.' + array[j].publisherVersion + '.'};
+                ' - ' + this.timeService.predefinedFormat(moment(array[j].date), 'titleHourInsideTooltips') + ' : ';
+              const objSummary = {
+                parameters: array[j].summary.parameters, key: array[j].summary.key,
+                summaryDate: summaryDate, i18nPrefix: array[j].publisher + '.' + array[j].publisherVersion + '.'
+              };
               newCircle.summary.push(objSummary);
               j++;
             }
