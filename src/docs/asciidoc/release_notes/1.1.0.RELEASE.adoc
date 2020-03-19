@@ -26,6 +26,7 @@ with media information won't generate an error.
 
 * [OC-730] Correct minors bugs in timeline and major refactoring
 * [OC-783] Fix settingsOrConfig selector behaviour for booleans
+* [OC-342] Set a new version of feed time filter to solve firefox incompatibily with datetime-local html5 attribute
 
 === Issue
 * [OC-682] As a user I want sound to be played on cards arrival

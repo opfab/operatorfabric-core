@@ -31,6 +31,7 @@ import {TimeService} from "@ofServices/time.service";
 import {UtilitiesModule} from "../utilities/utilities.module";
 import { SeveritySortComponent } from './components/card-list/filters/severity-sort/severity-sort.component';
 import {FontAwesomeIconsModule} from "../utilities/fontawesome-icons.module";
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 @NgModule({
     imports: [
@@ -45,7 +46,8 @@ import {FontAwesomeIconsModule} from "../utilities/fontawesome-icons.module";
         CardsModule,
         FeedRoutingModule,
         FontAwesomeIconsModule,
-        UtilitiesModule
+        UtilitiesModule,
+        FlatpickrModule.forRoot()
     ],
     declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent, TimeFilterComponent,
         InitChartComponent,
@@ -58,5 +60,4 @@ import {FontAwesomeIconsModule} from "../utilities/fontawesome-icons.module";
     providers: [ {provide: TimeService, useClass: TimeService}]
 })
 export class FeedModule {
-
 }

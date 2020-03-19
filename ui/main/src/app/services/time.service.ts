@@ -103,10 +103,6 @@ export class TimeService {
         return moment(value, 'YYYY-MM-DDTHH:mm');
     }
 
-    public asInputString(value: number): string {
-        return moment(value).format('YYYY-MM-DDTHH:mm:ss.SSS');
-    }
-
     public formatDate(timestamp: number): string;
     public formatDate(date: Date): string;
     public formatDate(date: Moment): string;

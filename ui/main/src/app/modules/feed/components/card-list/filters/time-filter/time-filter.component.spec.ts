@@ -6,34 +6,29 @@
  */
 
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed ,flush , fakeAsync} from '@angular/core/testing';
 
 import {TimeFilterComponent} from './time-filter.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState, storeConfig} from "@ofStore/index";
-import {FilterService, FilterType} from "@ofServices/filter.service";
+import {FilterType} from "@ofServices/filter.service";
 import {ApplyFilter} from "@ofActions/feed.actions";
 import {ServicesModule} from "@ofServices/services.module";
 import {By} from "@angular/platform-browser";
-import {buildFilterSelector} from "@ofSelectors/feed.selectors";
-import {map} from "rxjs/operators";
-import {cold} from "jasmine-marbles";
-import {TimeService} from "@ofServices/time.service";
 import {I18nService} from "@ofServices/i18n.service";
 import {TranslateModule} from "@ngx-translate/core";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
 import {FontAwesomeIconsModule} from "../../../../../utilities/fontawesome-icons.module";
+import { FlatpickrModule } from 'angularx-flatpickr';
+import * as moment from 'moment-timezone';
 
 describe('TimeFilterComponent', () => {
     let component: TimeFilterComponent;
     let fixture: ComponentFixture<TimeFilterComponent>;
     let store: Store<AppState>;
-    let filterService: FilterService;
-    let timeService: TimeService;
-    let httpMock: HttpTestingController;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -45,44 +40,53 @@ describe('TimeFilterComponent', () => {
                 StoreModule.forRoot(appReducer, storeConfig),
                 FontAwesomeIconsModule,
                 ServicesModule,
-                HttpClientTestingModule
+                HttpClientTestingModule,
+                FlatpickrModule.forRoot()
             ],
             declarations: [TimeFilterComponent],
             providers:[ I18nService,
                 {provide: 'TimeEventSource', useValue: null},
-                TimeService,
                 AuthenticationImportHelperForSpecs]
         })
             .compileComponents();
-        httpMock = TestBed.get(HttpTestingController);
     }));
 
     beforeEach(() => {
         store = TestBed.get(Store);
-        timeService = TestBed.get(TimeService);
         TestBed.get(I18nService).changeLocale('fr','Europe/Paris');
         spyOn(store, 'dispatch').and.callThrough();
-        filterService = TestBed.get(FilterService);
-        const defaultFilters = filterService.defaultFilters();
         fixture = TestBed.createComponent(TimeFilterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    it('should update filter on state change', () => {
-        //componenet state
+    it('should update filter on state change', fakeAsync(() =>  {
+
+        const start = moment();
+        const end = moment().add('month',1);
         store.dispatch(new ApplyFilter({
             name: FilterType.TIME_FILTER,
             active: true,
             status: {
-                start: 1557878400000,
-                end: 1557964800000
+                start: start.valueOf(),
+                end: end.valueOf(),
             }}));
+        let debugElement = fixture.debugElement;
+         //dom interraction
+        debugElement.queryAll(By.css('.btn'))[0].triggerEventHandler('click', null);
         fixture.detectChanges();
-        expect(timeService.parseString(component.timeFilterForm.get('start').value).valueOf()).toEqual(1557878400000);
-        expect(timeService.parseString(component.timeFilterForm.get('end').value).valueOf()).toEqual(1557964800000);
 
-    });
+        flush();
+        const inputStart = debugElement.query(By.css('#startDateInput'));
+        expect(inputStart.nativeElement.value).toContain(start.format('YYYY-MM-DD')); 
+        const inputEnd = debugElement.query(By.css('#endDateInput'));
+        expect(inputEnd.nativeElement.value).toContain(end.format('YYYY-MM-DD'));
+        const timeStart = debugElement.query(By.css('#startTimeInput'));
+        expect(timeStart.nativeElement.value).toContain(start.format('HH:mm')); 
+        const timeEnd = debugElement.query(By.css('#endTimeInput'));
+        expect(timeEnd.nativeElement.value).toContain(end.format('HH:mm'));
+
+    }));
 
     it('should display popover', () => {
         //componenet state
@@ -92,41 +96,13 @@ describe('TimeFilterComponent', () => {
         //dom interraction
         debugElement.queryAll(By.css('.btn'))[0].triggerEventHandler('click', null);
         fixture.detectChanges();
-        let formQuery = [...new Set(debugElement.queryAll(By.css('#time-filter-form')))];
-        let formDivQuery = [...new Set(debugElement.queryAll(By.css('#time-filter-form > div')))];
-        let checkedQuery = [...new Set(debugElement.queryAll(By.css("input[type=datetime-local]")))];
+        let formQuery = [...new Set(debugElement.queryAll(By.css('#start')))];
+        let formLabelQuery = [...new Set(debugElement.queryAll(By.css('#start > label')))];
+        let inputTextQuery = [...new Set(debugElement.queryAll(By.css("input[type=text]")))];
         expect(formQuery).toBeTruthy();
         expect(formQuery.length).toBe(1);
-        expect(formDivQuery).toBeTruthy();
-        expect(formDivQuery.length).toBe(2);
-        expect(checkedQuery.length).toBe(2);
+        expect(formLabelQuery).toBeTruthy();
+        expect(inputTextQuery.length).toBe(4);
     });
-    it('should update filter on input', (done) => {
-        //componenet state
-        expect(component).toBeTruthy();
-        //dom structure
-        let debugElement = fixture.debugElement;
-        //dom interraction
-        debugElement.queryAll(By.css('.btn'))[0].triggerEventHandler('click', null);
-        fixture.detectChanges();
-        const startInput = debugElement.queryAll(By.css('#time-start'));
-        const dateStringValue = "2019-04-10T00:00";
-        startInput[0].nativeElement.value = dateStringValue;
-        startInput[0].nativeElement.dispatchEvent(new Event('input'));
-        fixture.detectChanges();
-        expect(component.timeFilterForm.get('start').value).toBe(dateStringValue);
-        // setTimeout(() => {
-        //     expect(store.select(buildFilterSelector(FilterType.TYPE_FILTER)).pipe(map((filter => filter.status))))
-        //         .toBeObservable(hot('---a', {a: {start: Date.parse(dateStringValue), end: null}})); 
-        //     done();
-        // });
-        setTimeout(() => {
-            const expectedObs = cold('b', {b: timeService.parseString(dateStringValue).valueOf()});
 
-            const selectTypeFilter = store.select(buildFilterSelector(FilterType.TIME_FILTER));
-            expect(selectTypeFilter.pipe(map((filter => filter.status.start)))).toBeObservable(expectedObs);
-            done();
-        },1000);
-
-    });
 });

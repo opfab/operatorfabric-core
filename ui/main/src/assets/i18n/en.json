@@ -83,7 +83,8 @@
     },
     "search": "Search"
   },
-  "time": {
-    "error": "time reference update failed for following reason: {{error}}"
+  "button": {
+    "ok": "OK",
+    "cancel": "Cancel"
   }
 }

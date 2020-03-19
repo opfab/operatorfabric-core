@@ -4,22 +4,45 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
+<ng-template #filterTimeContent>
 
-  <ng-template #filterTimeContent>
-    <form [formGroup]="timeFilterForm" id="time-filter-form">
-      <div class="form-group">
-        <label for="time-start" translate>feed.filters.time.start.label</label>
-        <input type="datetime-local" class="form-control" id="time-start" formControlName="start">
+  <div class="form-group" id="start">
+    <label for="time-start" translate>feed.filters.time.start.label</label>
+    <div class="row">
+      <div class="col-md-6">
+        <input type="text" mwlFlatpickr [allowInput]="true" [convertModelValue]="true" [(ngModel)]="startDate"
+          [time24hr]="true" dateFormat="Y-m-d" class="form-control" id="startDateInput" >
       </div>
-      <div class="form-group">
-        <label for="time-end" translate>feed.filters.time.end.label</label>
-        <input type="datetime-local" class="form-control" id="time-end" formControlName="end">
+      <div class="col-md-5"> <input class="form-control" type="text" [(ngModel)]="startTime" maxlength="5" id="startTimeInput">  </div>
+    </div>
+  </div>
+
+
+  <div class="form-group" id="end">
+    <label for="time-end" translate>feed.filters.time.end.label</label>
+    <div class="row">
+      <div class="col-md-6">
+        <input type="text" mwlFlatpickr [allowInput]="true" [convertModelValue]="true" [(ngModel)]="endDate"
+          [time24hr]="true" dateFormat="Y-m-d" class="form-control" id="endDateInput">
       </div>
-    </form>
-  </ng-template>
-  <ng-template #filterTimeTitle><span translate>feed.filters.time.title</span></ng-template>
-  <button type="button" class="btn btn-outline-light p-1 mr-1 border-0" placement="right"
-          [ngbPopover]="filterTimeContent" [popoverTitle]="filterTimeTitle" container="body"
-          [autoClose]="'outside'">
-    <fa-icon icon="clock"></fa-icon>
-  </button>
+      <div class="col-md-5"> <input class="form-control" type="text" [(ngModel)]="endTime"  maxlength="5" id="endTimeInput"> </div>
+    </div>
+  </div>
+
+  <div style="text-align:center">
+    <button type="button" class="btn btn-primary w-30" translate (click)="p.close();setOldFilterValue()">
+      button.cancel
+    </button>
+    &nbsp;
+    <button type="button" id="confirm_button" class="btn btn-primary w-30" translate
+      (click)="p.close();setNewFilterValue()">
+      button.ok
+    </button>
+  </div>
+
+</ng-template>
+<ng-template #filterTimeTitle><span translate>feed.filters.time.title</span> </ng-template>
+<button type="button" class="btn btn-outline-light p-1 mr-1 border-0" placement="right" [ngbPopover]="filterTimeContent"
+  [popoverTitle]="filterTimeTitle" [autoClose]="false" triggers="manual" #p="ngbPopover" (click)="p.open()">
+  <fa-icon icon="clock"></fa-icon>
+</button>
