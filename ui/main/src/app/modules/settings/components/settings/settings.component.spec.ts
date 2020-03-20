@@ -33,8 +33,8 @@ describe('SettingsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create and have 9 elements', () => {
     expect(component).toBeTruthy();
-    expect(fixture.debugElement.queryAll(By.css('.col-md-6')).length).toEqual(8)
+    expect(fixture.debugElement.queryAll(By.css('.col-md-6')).length).toEqual(9)
   });
 });

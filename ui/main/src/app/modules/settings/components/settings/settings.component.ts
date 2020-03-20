@@ -46,4 +46,5 @@ interface SettingsInputs {
   dateformat: boolean;
   datetimeformat: boolean;
   tags: boolean;
+  sounds: boolean;
 }

@@ -44,3 +44,11 @@ prevent malicious sites to autoplay unwanted content.
 +
 https://www.zapsplat.com[Sound effects obtained from zapsplat.com]
 
+* [OC-773] As a user I want sound notifications to be manageable in my settings
++
+_This feature allows the user to override the sound playing policy that has been defined in the configuration by the
+administrator (see OC-682) in the settings screen._
++
+IMPORTANT: To disable sounds for a given severity, you need to click the checkbox twice (check then uncheck) to set it
+to false, otherwise your settings for this severity will remain "undefined" an the instance-wide configuration value
+will be applied instead.

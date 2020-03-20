@@ -1,0 +1,12 @@
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)                 -->
+<!--                                                                     -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+
+<form [formGroup]="form" class="form-check-inline" id="checkbox-setting-form">
+    <div class="form-group" >
+        <label class="form-check-label" for="setting" translate>settings.{{settingPath}}</label>
+        <input id="setting" type="checkbox" formControlName="setting" class="form-check-input"/>
+    </div>
+</form>

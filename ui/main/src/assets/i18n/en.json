@@ -64,7 +64,12 @@
     "timeFormat": "Time format",
     "dateFormat": "Date format",
     "dateTimeFormat": "Date Time format",
-    "defaultTags": "Default tags"
+    "defaultTags": "Default tags",
+    "playSoundLabel": "Play sounds for cards with severity",
+    "playSoundForAlarm": "Alarm",
+    "playSoundForAction": "Action",
+    "playSoundForCompliant": "Compliant",
+    "playSoundForInformation": "Information"
   },
   "archive": {
     "filters": {

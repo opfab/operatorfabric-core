@@ -64,6 +64,8 @@ describe('SoundNotificationService', () => {
 
   it('should play appropriate sound only if card is visible and freshly published and its severity is on', () => {
 
+    //Handles 1 Action and 1 Information, should play 1 Action sound
+
     configOnlyActionOn();
 
     const today = new Date().getTime();
@@ -78,6 +80,8 @@ describe('SoundNotificationService', () => {
   });
 
   it('should play appropriate sound for all severities if card is visible and freshly published and all severities are on', () => {
+
+    //Handles 1 card of each severity, should play all four sounds
 
     configAllSeveritiesOn();
 

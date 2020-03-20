@@ -64,7 +64,12 @@
     "timeFormat": "Format heure/minute",
     "dateFormat": "Format de date",
     "dateTimeFormat": "Format date et heure/minute",
-    "defaultTags": "Tags par défaut"
+    "defaultTags": "Tags par défaut",
+    "playSoundLabel": "Jouer des sons pour les cartes de type",
+    "playSoundForAlarm": "Alarme",
+    "playSoundForAction": "Action",
+    "playSoundForCompliant": "Conforme",
+    "playSoundForInformation": "Information"
   },
   "archive": {
     "filters": {

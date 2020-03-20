@@ -19,6 +19,7 @@ import {ListSettingComponent} from './components/settings/list-setting/list-sett
 import {MultiSettingsComponent} from './components/settings/multi-settings/multi-settings.component';
 import {TypeAheadSettingsComponent} from './components/settings/type-ahead-settings/type-ahead-settings.component';
 import {TypeaheadModule} from 'ngx-type-ahead';
+import { CheckboxSettingComponent } from './components/settings/checkbox-setting/checkbox-setting.component';
 
 @NgModule({
     declarations: [SettingsComponent
@@ -27,7 +28,8 @@ import {TypeaheadModule} from 'ngx-type-ahead';
         , EmailSettingComponent
         , ListSettingComponent
         , MultiSettingsComponent
-        , TypeAheadSettingsComponent],
+        , TypeAheadSettingsComponent
+        , CheckboxSettingComponent],
     imports: [
         CommonModule,
         FormsModule,
