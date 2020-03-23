@@ -206,10 +206,6 @@ paths:
             format: binary
         '404':
           description: No such template
-        '401':
-          description: Authentication required
-        '403':
-          description: Forbidden - ADMIN role necessary
   '/thirds/{thirdName}/i18n':
     get:
       tags:
