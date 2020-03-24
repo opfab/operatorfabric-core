@@ -164,14 +164,14 @@ public class ThirdsService implements ResourceLoaderAware {
         if (versions == null)
             throw new FileNotFoundException("No resource exist for " + thirdName);
 
-        String finalVersion;
         Third third;
-        if ((version != null) && ((third = versions.get(version)) != null))
-            finalVersion = version;
-        else {
+        String finalVersion = version;
+
+        if ((version == null) || (version.length() == 0)){
             finalVersion = this.fetch(thirdName).getVersion();
-            third = versions.get(finalVersion);
         }
+
+        third = versions.get(finalVersion);
 
         if (third == null)
             throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + thirdName);
