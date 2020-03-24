@@ -83,7 +83,8 @@
     },
     "search": "Rechercher"
   },
-  "time": {
-    "error": "La mise-à-jour du temps de référence a échoué pour la raison suivante: {{error}}"
+  "button": {
+    "ok": "OK",
+    "cancel": "Annuler"
   }
 }

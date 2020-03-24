@@ -51,10 +51,6 @@ describe('TimeService', () => {
         expect(service.parseString('2019-05-24T10:25').valueOf()).toEqual(1558686300000);
     });
 
-    it('should format html input value string', () => {
-        expect(service).toBeTruthy();
-        expect(service.asInputString(1558686353989)).toEqual('2019-05-24T10:25:53.989');
-    });
     it('should format timestamp, date and moment to date time string', () => {
         moment.locale('en');
         expect(service).toBeTruthy();
