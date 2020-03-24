@@ -327,12 +327,12 @@ When John Doe is no longer in charge of hypervising cards for `OPERATORS` group,
 
 with httpie:
 ....
-http DELETE http://localhost:2103/groups/OPERATORS/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
+http DELETE http://localhost:2103/groups/OPERATORS/users/john-doe-operator "Authorization:Bearer $token"
 ....
 
 with cURL:
 ....
-curl -X DELETE -H "Authorization:Bearer $token" -H "Content-Type:application/json" http://localhost:2103/groups/OPERATORS/users/john-doe-operator
+curl -X DELETE -H "Authorization:Bearer $token" http://localhost:2103/groups/OPERATORS/users/john-doe-operator
 ....
 
 response

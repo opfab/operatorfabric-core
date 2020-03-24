@@ -148,7 +148,7 @@ The card should be updated on the UI.
 
 You can delete the card using DELETE HTTP code with reference to publisher and processId
 ----
-curl -s -X DELETE http://localhost:2102/cards/message-publisher_hello-world-1 -H "Content-type:application/json"
+curl -s -X DELETE http://localhost:2102/cards/message-publisher_hello-world-1
 ---- 
 
 or use provided script:
