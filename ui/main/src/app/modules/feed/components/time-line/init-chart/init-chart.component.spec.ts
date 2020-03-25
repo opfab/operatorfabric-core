@@ -14,14 +14,13 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {CustomTimelineChartComponent} from '../custom-timeline-chart/custom-timeline-chart.component';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {Store, StoreModule} from '@ngrx/store';
-import {appReducer, AppState, storeConfig} from '@ofStore/index';
+import {appReducer, storeConfig} from '@ofStore/index';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
-import {XAxisTickFormatPipe} from '../tick-format-pipe/x-axis-tick-format.pipe';
 import {TimeService} from '@ofServices/time.service';
-import * as moment from 'moment';
+
 
 describe('InitChartComponent', () => {
   let component: InitChartComponent;
@@ -36,7 +35,7 @@ describe('InitChartComponent', () => {
         RouterTestingModule,
         StoreRouterConnectingModule,
         NgxChartsModule ],
-      declarations: [ InitChartComponent, CustomTimelineChartComponent, MouseWheelDirective, XAxisTickFormatPipe],
+      declarations: [ InitChartComponent, CustomTimelineChartComponent, MouseWheelDirective],
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
         {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},

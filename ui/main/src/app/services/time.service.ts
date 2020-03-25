@@ -28,21 +28,15 @@ export class TimeService {
     private timeFormat;
     private dateFormat;
     private dateTimeFormat;
-    readonly timeUrl: string;
     private beatDurationInMilliseconds: number;
     private timeAtLastHeartBeat: Moment;
-    private timeLineFormats: any;
 
-    constructor(private store: Store<AppState>,
-                private authService: AuthenticationService) {
+    constructor(private store: Store<AppState>) {
         this.initializeTimeFormat();
 
         this.store.select(buildConfigSelector('time.pulse',
             this.FiveSecondsAsPulseDurationFallback))
             .subscribe(duration => this.beatDurationInMilliseconds = duration);
-
-        this.timeUrl = environment.urls.time;
-
     }
 
     private initializeTimeFormat() {
@@ -52,26 +46,6 @@ export class TimeService {
             .subscribe(next => this.dateFormat = next);
         this.store.select(buildSettingsOrConfigSelector('dateTimeFormat'))
             .subscribe(next => this.dateTimeFormat = next);
-        this.store.select(buildSettingsOrConfigSelector('timeLineDefaultClusteringFormats',
-            {
-                dateInsideTooltipsWeek: "ddd DD MMM HH",
-                dateInsideTooltipsMonth: "ddd DD MMM YYYY",
-                dateOnDay: "ddd DD MMM",
-                dateOnWeek: "DD/MM/YY",
-                dateOnMonth: "MMM YY",
-                dateOnYear: "YYYY",
-                titleDateInsideTooltips: "DD/MM",
-                titleHourInsideTooltips: "HH:mm",
-                dateOnDayNewYear: "DD MMM YY",
-                realTimeBarFormat: "DD/MM/YY HH:mm",
-                dateSimplifliedOnDayNewYear: "D MMM YY",
-                dateSimplifliedOnDay: "D MMM",
-                hoursOnly: "HH",
-                minutesOnly: "mm",
-                secondedsOnly: "ss",
-                weekNumberOnly: "ww"
-            }))
-            .subscribe(next => this.timeLineFormats = next);
     }
 
 
@@ -155,20 +129,5 @@ export class TimeService {
     private static isMoment(arg: Date | number | Moment): arg is Moment { //magic happens here
         return (<Moment>arg).format !== undefined && (<Moment>arg).toISOString !== undefined;
     }
-
-    public predefinedFormat(date: Date, formatKey:string);
-    public predefinedFormat(timestamp: number, formatKey:string);
-    public predefinedFormat(m: Moment, formatKey:string);
-    public predefinedFormat(arg:Date | number | Moment, formatKey:string){
-        let m = null;
-        if (!arg)
-            return '';
-        if (isMoment(arg))
-            m = arg;
-        else
-            m = moment(arg);
-        return m.format(this.timeLineFormats[formatKey]);
-    }
-
 
 }

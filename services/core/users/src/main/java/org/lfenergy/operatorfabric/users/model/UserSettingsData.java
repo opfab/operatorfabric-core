@@ -33,7 +33,6 @@ public class UserSettingsData implements UserSettings {
     @JsonIgnore
     @Singular("defaultTag")
     private Set<String> defaultTagsSet;
-    private TimeLineFormats timeLineDefaultClusteringFormats;
     private Boolean playSoundForAlarm;
     private Boolean playSoundForAction;
     private Boolean playSoundForCompliant;
@@ -52,8 +51,6 @@ public class UserSettingsData implements UserSettings {
         else
             this.defaultTagsSet = null;
         this.email = settings.getEmail();
-        if(settings.getTimeLineDefaultClusteringFormats()!=null)
-            this.timeLineDefaultClusteringFormats = ((TimeLineFormatsData)settings.getTimeLineDefaultClusteringFormats()).copy();
         this.playSoundForAlarm = settings.getPlaySoundForAlarm();
         this.playSoundForAction = settings.getPlaySoundForAction();
         this.playSoundForCompliant = settings.getPlaySoundForCompliant();

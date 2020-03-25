@@ -12,15 +12,6 @@
         (mouseWheelDown)="onZoom($event, 'out')"
         class="">
     <svg:g [attr.transform]="transform" class="chart">
-        <svg:g ngx-charts-x-axis
-               *ngIf="prod"
-               [xScale]="timeScale"
-               [dims]="dims"
-               [showGridLines]="true"
-               [tickFormatting]="fctTickFormattingAdvanced"
-               [ticks]="xTicksOne"
-               (dimensionsChanged)="updateXAxisHeight($event)">
-        </svg:g>
 
         <svg:g [attr.transform]="transform2">
             <svg:g ngx-charts-x-axis-ticks
@@ -28,12 +19,23 @@
                    [scale]="timeScale"
                    [showGridLines]="true"
                    [gridLineHeight]="dims.height"
-                   [tickFormatting]="fctTickFormatting"
+                   [tickFormatting]="getXTickTwoFormatting"
                    [width]="dims.width"
                    [tickValues]="xTicksTwo"
                    (dimensionsChanged)="updateXAxisHeight($event)"
             />
         </svg:g>
+        <svg:g ngx-charts-x-axis
+               *ngIf="prod"
+               [xScale]="timeScale"
+               [dims]="dims"
+               [showGridLines]="true"
+               [tickFormatting]="getXTickOneFormatting"
+               [ticks]="xTicksOne"
+               (dimensionsChanged)="updateXAxisHeight($event)">
+        </svg:g>
+
+
         <svg:g ngx-charts-y-axis
                [yScale]="yScale"
                [dims]="dims"
@@ -47,7 +49,7 @@
               [attr.y]="-10" stroke="'grey'"
               [attr.fill]="'grey'"
               text-anchor="middle" stroke-width="1px"
-              [attr.font-size]="11" dy=".3em">{{timeService.predefinedFormat(xRealTimeLine, 'realTimeBarFormat')}}</text>
+              [attr.font-size]="11" dy=".3em">{{getXRealTimeLineFormatting(xRealTimeLine)}}</text>
         <text *ngIf="underDayPeriod"
               [attr.x]="50"
               [attr.y]="-10" stroke="'black'"

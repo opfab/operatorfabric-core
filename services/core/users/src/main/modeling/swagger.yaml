@@ -70,58 +70,6 @@ definitions:
     example:
       name: Wanda
       description: They were not as successful in Fierce Creatures.
-  TimeLineFormats:
-    type: object
-    description: Timeline rendered date / time formats
-    properties:
-      dateInsideTooltipsWeek:
-        type: string
-        description: Default format use on date inside tooltips for time's unit lower than hour
-      dateInsideTooltipsMonth:
-        type: string
-        description: Default format use on date inside tooltips for other case
-      dateOnDay:
-        type: string
-        description: Default format use for display a day and month informations with day name, number, and month
-      dateOnWeek:
-        type: string
-        description: Default format use for display a week information with day number, month number and two last year's number
-      dateOnMonth:
-        type: string
-        description: Default format use for display a month information with month name and two last year's number
-      dateOnYear:
-        type: string
-        description: Default format use for display a year information
-      titleDateInsideTooltips:
-        type: string
-        description: Default format use on first part of title inside tooltips showing day number and month number of its date
-      titleHourInsideTooltips:
-        type: string
-        description: Default format use on second part of title inside tooltips showing hours and minutes of its date
-      dateOnDayNewYear:
-        type: string
-        description: Default format use for display first year's day on a day configuration display day number, month name and two last year's number
-      realTimeBarFormat:
-        type: string
-        description: Default format use on real time bar date, show minutes, hours, day number, month number and two last year's number
-      dateSimplifliedOnDayNewYear:
-        type: string
-        description: Default format use on date configuration for first year's day, show simplified day number, month name and last two year's number
-      dateSimplifliedOnDay:
-        type: string
-        description: Default format use on date configuration, show simplified day number and month name
-      hoursOnly:
-        type: string
-        description: Default format for show only hours
-      minutesOnly:
-        type: string
-        description: Default format for show only minutes
-      secondedsOnly:
-        type: string
-        description: Default format for show only seconds
-      weekNumberOnly:
-        type: string
-        description: Default format for show only week number
   UserSettings:
     type: object
     description: User associated settings. Note that the current supported locales are en and fr. Date and time formats use Moment.js formats.
@@ -156,8 +104,6 @@ definitions:
         items:
           type: string
           uniqueItems: true
-      timeLineDefaultClusteringFormats:
-        $ref: '#/definitions/TimeLineFormats'
       playSoundForAlarm:
         type: boolean
         description: If this is set to true, a sound will be played for incoming cards with ALARM severity.

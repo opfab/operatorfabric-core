@@ -22,7 +22,6 @@ import {TranslateModule} from "@ngx-translate/core";
 import {TimeFilterComponent} from './components/card-list/filters/time-filter/time-filter.component';
 import {ChartCommonModule, NgxChartsModule} from "@swimlane/ngx-charts";
 import {CustomTimelineChartComponent} from "./components/time-line/custom-timeline-chart/custom-timeline-chart.component";
-import {XAxisTickFormatPipe} from "./components/time-line/tick-format-pipe/x-axis-tick-format.pipe";
 import {MouseWheelDirective} from "./components/time-line/directives/mouse-wheel.directive";
 import {InitChartComponent} from "./components/time-line/init-chart/init-chart.component";
 import {TagsFilterComponent} from './components/card-list/filters/tags-filter/tags-filter.component';
@@ -53,7 +52,6 @@ import { FlatpickrModule } from 'angularx-flatpickr';
         InitChartComponent,
         CustomTimelineChartComponent,
         MouseWheelDirective,
-        XAxisTickFormatPipe,
         TagsFilterComponent,
         SeveritySortComponent],
     exports: [FeedComponent],
