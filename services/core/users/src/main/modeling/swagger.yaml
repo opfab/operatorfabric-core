@@ -221,7 +221,7 @@ paths:
       tags:
         - users
       summary: Create a new user
-      description: Create a new user
+      description: Create a new user. If the user already exists, then an update of the user will be made.
       operationId: createUser
       consumes:
         - application/json
@@ -235,7 +235,7 @@ paths:
             $ref: '#/definitions/SimpleUser'
       responses:
         '200':
-          description: OK
+          description: OK (user already existed so it was updated)
           schema:
             $ref: '#/definitions/SimpleUser'
         '201':
@@ -243,7 +243,7 @@ paths:
           schema:
             $ref: '#/definitions/SimpleUser'
         '400':
-          description: Bad request (duplicate key)
+          description: Bad request
         '401':
           description: Authentication required
         '403':
