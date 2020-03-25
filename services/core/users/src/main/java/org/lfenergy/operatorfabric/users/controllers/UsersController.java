@@ -39,6 +39,7 @@ public class UsersController implements UsersApi {
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
     public static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
     public static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
+    public static final String MANDATORY_LOGIN_MISSING = "Mandatory 'login' field is missing";
     
     public static final String USER_CREATED = "User %s is created";
     public static final String USER_UPDATED = "User %s is updated";
@@ -60,7 +61,15 @@ public class UsersController implements UsersApi {
     public SimpleUser createUser(HttpServletRequest request, HttpServletResponse response, SimpleUser user) throws Exception {
         boolean created = false;
         String login = user.getLogin();
-        
+
+        if ((login == null) || (login.length() == 0)) {
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(MANDATORY_LOGIN_MISSING)
+                            .build());
+        }
+
         if(userRepository.findById(user.getLogin()).orElse(null)==null){
             response.addHeader("Location", request.getContextPath() + "/users/" + user.getLogin());
             response.setStatus(201);
