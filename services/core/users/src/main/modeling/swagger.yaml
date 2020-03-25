@@ -235,7 +235,7 @@ paths:
             $ref: '#/definitions/SimpleUser'
       responses:
         '200':
-          description: OK
+          description: OK (user already existed so it was updated)
           schema:
             $ref: '#/definitions/SimpleUser'
         '201':
