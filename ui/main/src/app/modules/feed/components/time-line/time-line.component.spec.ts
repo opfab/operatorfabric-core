@@ -26,8 +26,6 @@ import {LightCard} from '@ofModel/light-card.model';
 import * as fromStore from '@ofSelectors/feed.selectors';
 import * as timelineSelectors from '@ofSelectors/timeline.selectors';
 import {MouseWheelDirective} from './directives/mouse-wheel.directive';
-import {XAxisTickFormatPipe} from './tick-format-pipe/x-axis-tick-format.pipe';
-import * as moment from 'moment';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {compareBySeverityLttdPublishDate} from '@ofStates/feed.state';
 import {TimeService} from '@ofServices/time.service';
@@ -36,8 +34,7 @@ describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
   let store: Store<AppState>;
   let fixture: ComponentFixture<TimeLineComponent>;
-  // let componentInit: InitChartComponent;
-  // let fixtureInit: ComponentFixture<InitChartComponent>;
+;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -48,8 +45,7 @@ describe('TimeLineComponent', () => {
         RouterTestingModule,
         StoreRouterConnectingModule,
         NgxChartsModule ],
-      declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent,MouseWheelDirective,
-        XAxisTickFormatPipe],
+      declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent,MouseWheelDirective],
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
         {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
@@ -99,21 +95,16 @@ describe('TimeLineComponent', () => {
         });
     expect(store.dispatch).toHaveBeenCalledWith(action);
     expect(component).toBeTruthy();
-    // title exists
-    // expect(compiled.childrend[0]); // .querySelector('h3').textContent).toContain('Feed');
-    // a list exists
-    // expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
+
   });
 
   it('should create four different circles when there is ' +
       'four cards with different severity in the state', (done) => {
-    // const compiled = fixture.debugElement.nativeElement;
     fixture.detectChanges();
     const compliantCard = getOneRandomLightCard({severity: 'COMPLIANT'});
     const actionCard = getOneRandomLightCard({severity: 'ACTION'});
     const alarmCard = getOneRandomLightCard({severity: 'ALARM'});
     const informationCard = getOneRandomLightCard({severity: 'INFORMATION'});
-    // alarmCard.timeSpans = [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}];  // display is an enum normally
     const action = new LoadLightCardsSuccess({lightCards: [alarmCard,actionCard,compliantCard,informationCard] as LightCard[]});
     store.dispatch(action);
     const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
@@ -122,7 +113,6 @@ describe('TimeLineComponent', () => {
       expect(lightCards).toEqual([informationCard, alarmCard, actionCard, compliantCard].sort(compareBySeverityLttdPublishDate)); //Default sort
     });
     const dataCard = [{
-        // timeSpans: [{start: alarmCard.publishDate, end: alarmCard.endDate, display: 1}],
         displayDate: alarmCard.startDate,
         publishDate: alarmCard.publishDate,
         startDate: alarmCard.startDate,
@@ -167,13 +157,7 @@ describe('TimeLineComponent', () => {
         });
     expect(store.dispatch).toHaveBeenCalledWith(action);
     expect(component).toBeTruthy();
-/*
-    // const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.feed-content > div')).toBeTruthy();
-    // counts the list elements
-    const listElements = fixture.debugElement.queryAll(By.css('.feed-content > div'));
-    const numberOfCardsInTheActionPayload = 2;
-    expect(listElements.length).toEqual(numberOfCardsInTheActionPayload);*/
+
   });
 
 

@@ -14,7 +14,6 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {DebugElement, NO_ERRORS_SCHEMA} from '@angular/core';
 import * as moment from 'moment';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
-import {XAxisTickFormatPipe} from '../tick-format-pipe/x-axis-tick-format.pipe';
 import * as _ from 'lodash';
 import {Store, StoreModule} from '@ngrx/store';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
@@ -28,7 +27,6 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 describe('CustomTimelineChartComponent', () => {
   let component: CustomTimelineChartComponent;
   let fixture: ComponentFixture<CustomTimelineChartComponent>;
-  let inputEl: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -41,8 +39,7 @@ describe('CustomTimelineChartComponent', () => {
         NgxChartsModule,
         HttpClientTestingModule],
       declarations: [ CustomTimelineChartComponent,
-   MouseWheelDirective,
-        XAxisTickFormatPipe],
+   MouseWheelDirective],
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
         {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
@@ -60,7 +57,6 @@ describe('CustomTimelineChartComponent', () => {
 
   it('should call update() and create chart by calling updateYAxisWidth function', () => {
     fixture.detectChanges();
-    component.formatLevel = 'Hou'; // check diff par rapport au next test
     component.domainId = 'W'
     component.updateYAxisWidth({width: 1920});
     expect(component).toBeTruthy();
@@ -118,20 +114,6 @@ describe('CustomTimelineChartComponent', () => {
     expect(component.checkFollowClockTick()).toBeFalsy();
     expect(component).toBeTruthy();
   });
-
-
-  it('should return the param formatted by normal transform', () => {
-    fixture.detectChanges();
-    component.formatLevel = 'Day';
-    const test = moment();
-    test.date(3).hours(0);
-    expect(component.fctTickFormatting(test)).toEqual(test.format('ddd DD MMM'));
-    expect(component.fctTickFormattingAdvanced(test)).toEqual(test.format('ddd DD MMM'));
-    component.formatLevel = 'Hou';
-    expect(component.fctTickFormattingAdvanced(test)).toEqual(test.format('HH') + 'h');
-  });
-
-
 
 
   it('check clusterize functions : ' +
@@ -247,11 +229,6 @@ describe('CustomTimelineChartComponent', () => {
     };
     expect(component.circleHovered.period).toEqual('');
 
-    // transformHovered return empty string when formatLevel is undefined
-    component.formatLevel = 'Day';
-    component.feedCircleHovered(circleTest);
-    fixture.detectChanges();
-    expect(component.circleHovered.period).not.toEqual('');
 
     const tmp = component.circleHovered.period;
     component.feedCircleHovered(circleTestPeriod);

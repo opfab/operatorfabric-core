@@ -24,7 +24,7 @@ Instead, OC-682 (see above) implements instance-wide sound notifications (one so
 NOTE: Existing bundles and cards with media information will continue to work as before. Pushing a bundle or a card
 with media information won't generate an error.
 
-* [OC-730] Correct minors bugs in timeline and major refactoring
+* [OC-730][OC-797] Correct bugs in timeline and major refactoring
 * [OC-783] Fix settingsOrConfig selector behaviour for booleans
 * [OC-698] API testing - Get css - wrong response when fetching non-existing css file
 * [OC-342] Set a new version of feed time filter to solve firefox incompatibily with datetime-local html5 attribut

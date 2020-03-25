@@ -16,6 +16,8 @@ import { SetCardDataTimeline } from '@ofActions/timeline.actions';
 import * as _ from 'lodash';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
+import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
+import * as moment from 'moment';
 
 @Component({
     selector: 'of-time-line',
@@ -24,6 +26,7 @@ import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 export class TimeLineComponent implements OnInit, OnDestroy {
     lightCards$: Observable<LightCard[]>;
     subscription: Subscription;
+    localSubscription: Subscription;
 
     public confDomain = [];
     public domains: any;
@@ -34,6 +37,10 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
         this.loadConfiguration();
         this.loadDomainsListFromConfiguration();
+
+        this.localSubscription = this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(
+            l => moment.locale(l)
+        )
 
         this.subscription = this.store.pipe(select(feedSelectors.selectFeed))
             .pipe(debounceTime(300), distinctUntilChanged())
@@ -118,5 +125,9 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
+        if (this.localSubscription) {
+            this.localSubscription.unsubscribe();
+        }
+        
     }
 }
