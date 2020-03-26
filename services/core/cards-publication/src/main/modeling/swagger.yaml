@@ -682,7 +682,7 @@ paths:
         - cards
         - creation
       summary: publish cards
-      description: publish one or more card to OperatorFabric
+      description: Publish one or more card to OperatorFabric. Be careful, to know if the cards were published well, then it is necessary to consult the report returned in the body of the request (do not rely only on the response code).
       operationId: publishCards
       consumes:
         - application/json
@@ -694,12 +694,8 @@ paths:
             items:
               $ref: '#/definitions/Card'
       responses:
-        '200':
+        '201':
           description: created
-          schema:
-            $ref: '#/definitions/CardCreationReport'
-        '400':
-          description: erroneous payload
           schema:
             $ref: '#/definitions/CardCreationReport'
   /archives:
@@ -840,35 +836,35 @@ paths:
         '403':
           description: Forbidden - User doesn't have any group
   '/cards/{id}':
-            parameters:
-              - in: path
-                name: id
-                type: string
-                required: true
-                description: "The id parameter is constructed as follows : {publisher}_{processId}"
-            delete:
-              operationId: deleteProcessCard
-              tags:
-                - cards
-                - deletion
-              summary: delete current card
-              description: delete current card for process id
-              responses:
-                '200':
-                  description: OK
-            get:
-              operationId: fetchProcessCard
-              tags:
-                - cards
-                - read
-              summary: fetch current card
-              description: fetch current card for process id
-              responses:
-                '200':
-                  description: OK
-                  schema:
-                    $ref: '#/definitions/Card'
-                '401':
-                  description: Authentication required
-                '403':
-                  description: Forbidden - User doesn't have any group
+    parameters:
+      - in: path
+        name: id
+        type: string
+        required: true
+        description: "The id parameter is constructed as follows : {publisher}_{processId}"
+    delete:
+      operationId: deleteProcessCard
+      tags:
+        - cards
+        - deletion
+      summary: delete current card
+      description: delete current card for process id
+      responses:
+        '200':
+          description: OK
+    get:
+      operationId: fetchProcessCard
+      tags:
+        - cards
+        - read
+      summary: fetch current card
+      description: fetch current card for process id
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Card'
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - User doesn't have any group
