@@ -10,7 +10,9 @@
 
 As <<_publish_card, seen here>> the main publication method is to post Card using an http `POST` method to the endpoint `/cards` with a card as `json` object in the body of the request.
 
-There is an asynchronous method available whom end-point is `/async/cards`. The response for this method is always a `201` status, no matter what the card is accepted or not.
+There is an asynchronous method available whom end-point is `/async/cards`.
+The response for this method is always a `201` status, no matter whether the card is accepted or not.
+To know if the card was published well, then it is necessary to consult the report returned in the body of the request.
 
 === Delete Cards
 

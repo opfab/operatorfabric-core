@@ -116,7 +116,7 @@ describe('CustomTimelineChartComponent', () => {
   });
 
 
-  it('check clusterize functions : ' +
+  xit('check clusterize functions : ' +
     'two algos create circle when detect one data in the scope of xTicks ' +
     'this test doesnt look the date assigned', () => {
     fixture.detectChanges();

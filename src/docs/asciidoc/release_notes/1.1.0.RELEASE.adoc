@@ -30,9 +30,10 @@ _Please note that configuration and settings under timeLineDefaultClusteringForm
 the timeline, no longer exist and have been replace by hard-coded defaults._
 * [OC-783] Fix settingsOrConfig selector behaviour for booleans
 * [OC-698] API testing - Get css - wrong response when fetching non-existing css file
-* [OC-342] Set a new version of feed time filter to solve firefox incompatibily with datetime-local html5 attribut
+* [OC-342] Set a new version of feed time filter to solve firefox incompatibility with datetime-local html5 attribut
 * [OC-795] API testing - DELETE endpoints - deletion of "Content-Type:application/json" for header
 * [OC-679] API testing- UserCreation - wrong response when the request body is erroneous
+* [OC-779] API testing - Push cards - update documentation for return codes
 
 === Issue
 * [OC-682] As a user I want sound to be played on cards arrival
