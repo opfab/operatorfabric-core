@@ -7,8 +7,8 @@
 
 
 
-:revnumber: 1.1.0.SNAPSHOT
-:revdate: 09 March 2020
+:revnumber: 1.1.0.RELEASE
+:revdate: 27 March 2020
 :imagesdir: images
 :sectnums:
 :toc: left
@@ -87,7 +87,7 @@ image::formated-card-details.jpg[detail card screenshot]
 ==== Anatomy of the card : 
 A card is containing information regarding the publisher, the recipients , the process , the data to show ... 
 
-More information can be found on the user guide : https://opfab.github.io/documentation/1.1.0.SNAPSHOT/user_guide/#_card_anatomy
+More information can be found on the user guide : https://opfab.github.io/documentation/1.1.0.RELEASE/user_guide/#_card_anatomy
 
 ----
 {

@@ -5,8 +5,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 = Contributing
-:revnumber: 1.1.0.SNAPSHOT
-:revdate: 09 March 2020
+:revnumber: 1.1.0.RELEASE
+:revdate: 27 March 2020
 :imagesdir: images
 :sectnums:
 :toc: macro

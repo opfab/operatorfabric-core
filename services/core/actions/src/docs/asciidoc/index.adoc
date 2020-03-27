@@ -6,8 +6,8 @@
 
 
 = Actions Service Reference Documentation
-:revnumber: 1.1.0.SNAPSHOT
-:revdate: 09 March 2020
+:revnumber: 1.1.0.RELEASE
+:revdate: 27 March 2020
 :imagesdir: images
 :sectnums:
 :toc: left
