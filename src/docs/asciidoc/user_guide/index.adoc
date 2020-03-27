@@ -6,7 +6,7 @@
 
 
 = OperatorFabric User Guide
-:revnumber: 1.1.0.RELEASE
+:revnumber: 1.2.0.SNAPSHOT
 :revdate: 27 March 2020
 :imagesdir: images
 :sectnums:
