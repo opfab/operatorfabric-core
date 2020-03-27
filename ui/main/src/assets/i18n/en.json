@@ -6,6 +6,16 @@
     "settings": "Settings",
     "about": "About"
   },
+  "timeline" : {
+    "buttonTitle" : { 
+      "TR": "RT",
+      "J" : "D",
+      "7D":"7D",
+      "W" : "W",
+      "M" : "M",
+      "Y" : "Y"
+    }
+  },
   "feed": {
     "filters": {
       "title": "Filters",
