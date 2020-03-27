@@ -95,7 +95,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.xDomain = value;
     // allow to show on top left of component date of first tick 
     this.underDayPeriod = false;
-    if (value[1] - value[0] < 86400000) { // 1 Day
+    if (value[1] - value[0] < 86401000) { // 1 Day + 1 second  , take into account the J domain form Oh to 0h the next day 
       this.underDayPeriod = true;
       this.dateFirstTick = moment(value[0]).format('ddd DD MMM YYYY');
     }
