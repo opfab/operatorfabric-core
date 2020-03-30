@@ -134,7 +134,7 @@ public class UsersController implements UsersApi {
     @Override
     public SimpleUser updateUser(HttpServletRequest request, HttpServletResponse response, String login, SimpleUser user) throws Exception {
         //login from user body parameter should match login path parameter
-        if(!user.getLogin().equals(login)){
+        if((user.getLogin() != null) && (!user.getLogin().equals(login))){
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
