@@ -7,16 +7,14 @@ ARG HTTP_PROXY_AUTH
 ENV http_proxy=$http_proxy
 ENV https_proxy=$https_proxy
 ENV HTTP_PROXY_AUTH=$HTTP_PROXY_AUTH
-COPY ${JAR_FILE} app.jar
-COPY bootstrap-docker.yml /config/bootstrap.yml
-COPY java-config-dependent-docker-entrypoint.sh /docker-entrypoint.sh
-#RUN fetch http://ftp.acc.umu.se/mirror/alpinelinux.org/v3.5/main/x86_64/APKINDEX.tar.gz
 RUN env
-#RUN echo http://ftp.acc.umu.se/mirror/alpinelinux.org/v3.5/main > /etc/apk/repositories; \
-#    echo http://ftp.acc.umu.se/mirror/alpinelinux.org/v3.5/community >> /etc/apk/repositories
 RUN apk add bash curl --no-cache
 ENV http_proxy=""
 ENV https_proxy=""
 ENV HTTP_PROXY_AUTH=""
 RUN env
+COPY add-certificates.sh /add-certificates.sh
+COPY java-config-dependent-docker-entrypoint.sh /docker-entrypoint.sh
+COPY ${JAR_FILE} app.jar
+COPY bootstrap-docker.yml /config/bootstrap.yml
 ENTRYPOINT ["/docker-entrypoint.sh"]

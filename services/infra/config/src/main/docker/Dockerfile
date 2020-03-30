@@ -4,5 +4,16 @@ ARG JAR_FILE
 ARG http_proxy
 ARG https_proxy
 ARG HTTP_PROXY_AUTH
+ENV http_proxy=$http_proxy
+ENV https_proxy=$https_proxy
+ENV HTTP_PROXY_AUTH=$HTTP_PROXY_AUTH
+RUN env
+RUN apk add bash curl --no-cache
+ENV http_proxy=""
+ENV https_proxy=""
+ENV HTTP_PROXY_AUTH=""
+RUN env
+COPY add-certificates.sh /add-certificates.sh
+COPY java-config-docker-entrypoint.sh /docker-entrypoint.sh
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=docker,native","-jar","/app.jar"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

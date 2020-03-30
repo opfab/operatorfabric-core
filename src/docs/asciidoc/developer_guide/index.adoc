@@ -12,11 +12,11 @@
 :sectnums:
 :toc: left
 :toclevels: 3
-:toc-title: User Guide
 :icons: font
 :hide-uri-scheme:
 
 include::01_versioning.adoc[]
+include::02_deployment.adoc[]
 
 
 

@@ -3,6 +3,14 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+# This part of the script allows custom certification authorities or certificates to be added to the JVM keystore
+cp $JAVA_HOME/jre/lib/security/cacerts /tmp
+chmod u+w /tmp/cacerts
+./add-certificates.sh /certificates_to_add /tmp/cacerts
+
+# This part of the script makes sure that the services that this container depends on (registry, config) are ready
+# before running it.
+
 URL="http://$REGISTRY_HOST:$REGISTRY_PORT"
 
 test_url() {
@@ -13,8 +21,10 @@ test_url() {
     [ -n "$HTTP_STATUS" ] && [ "$HTTP_STATUS" = 200 ]
     return
 }
+
 maxRetry=50
 retry=0
+
 # Testing registry access
 while ! test_url $URL && [ $retry -lt $maxRetry ]; do
  echo "Registry is not available at $URL, retry in 5s ($retry)"
@@ -39,6 +49,6 @@ else
         exit 1
      else
      echo "$DEPENDS_ON is declared in Registry, starting Client Gateway service"
-        java -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n -Djava.security.egd=file:/dev/./urandom -jar /app.jar $JAVA_OPTIONS
+        java -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n -Djavax.net.ssl.trustStore=/tmp/cacerts -Djava.security.egd=file:/dev/./urandom -jar /app.jar $JAVA_OPTIONS
     fi
 fi
