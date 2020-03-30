@@ -9,3 +9,8 @@
 === Issue
 * [OC-799] Show date when timeline is on 1 day
 * [OC-791] Add translation mechanism for timeline buttons
+
+=== Task
+* [OC-801] - Allow for custom certification authorities or certificates
++
+_See link:https://opfab.github.io/documentation/1.2.0.RELEASE/developer_guide/#_deployment[Deployment] for details_

@@ -43,6 +43,7 @@ services:
      - REGISTRY_HOST=registry
      - REGISTRY_PORT=8080
     volumes:
+     - "../../../../src/main/docker/certificates:/certificates_to_add"
      - "../../../../services/infra/config/src/main/docker/volume/docker-configurations:/service-config"
   registry:
     depends_on:
@@ -57,6 +58,8 @@ services:
     environment:
      - CONFIG_HOST=config
      - CONFIG_PORT=8080
+    volumes:
+      - "../../../../src/main/docker/certificates:/certificates_to_add"
   client_gateway:
     depends_on:
      - registry
@@ -69,6 +72,8 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
+    volumes:
+      - "../../../../src/main/docker/certificates:/certificates_to_add"
   users:
     depends_on:
      - registry
@@ -81,6 +86,8 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
+    volumes:
+      - "../../../../src/main/docker/certificates:/certificates_to_add"
   thirds:
     depends_on:
      - registry
@@ -94,6 +101,7 @@ services:
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
     volumes:
+     - "../../../../src/main/docker/certificates:/certificates_to_add"
      - "../../../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
   cards-publication:
     depends_on:
@@ -107,6 +115,8 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
+    volumes:
+      - "../../../../src/main/docker/certificates:/certificates_to_add"
   cards-consultation:
     depends_on:
      - registry
@@ -119,6 +129,8 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
+    volumes:
+      - "../../../../src/main/docker/certificates:/certificates_to_add"
   actions:
     depends_on:
     - registry
@@ -131,6 +143,8 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
+    volumes:
+      - "../../../../src/main/docker/certificates:/certificates_to_add"
   web-ui:
     depends_on:
     - registry
@@ -143,3 +157,5 @@ services:
     - REGISTRY_HOST=registry
     - REGISTRY_PORT=8080
     - DEPENDS_ON=CONFIG
+    volumes:
+      - "../../../../src/main/docker/certificates:/certificates_to_add"
