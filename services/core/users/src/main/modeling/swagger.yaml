@@ -466,7 +466,7 @@ paths:
           type: string
           required: true
       responses:
-        '201':
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/Group'
