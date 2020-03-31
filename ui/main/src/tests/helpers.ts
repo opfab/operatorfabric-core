@@ -25,9 +25,9 @@ export const emptyAppState4Test:AppState = {
     config: null,
     settings: null,
     archive:null,
-    time:null,
     user:null
 };
+
 
 export function getOneRandomMenu(): ThirdMenu {
     let entries: ThirdMenuEntry[]=[];

@@ -29,7 +29,6 @@ import { menuInitialState } from '@ofStore/states/menu.state';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { settingsInitialState } from '@ofStore/states/settings.state';
 import { authInitialState } from '@ofStore/states/authentication.state';
-import { timeInitialState } from '@ofStore/states/time.state';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
 import {MenuLinkComponent} from './menus/menu-link/menu-link.component';
 import { CustomLogoComponent } from './custom-logo/custom-logo.component';
@@ -197,7 +196,6 @@ describe('NavbarComponent', () => {
                     ...emptyAppState,
                     authentication: { ...authInitialState },
                     settings: {...settingsInitialState },
-                    time: {...timeInitialState },
                     menu: {...menuInitialState },
                     config: { ...configInitialState } 
                 }).pipe(
@@ -209,7 +207,6 @@ describe('NavbarComponent', () => {
                     ...emptyAppState,
                     authentication: { ...authInitialState },
                     settings: {...settingsInitialState },
-                    time: {...timeInitialState },
                     config: { ...configInitialState }, 
                     menu: {
                         ...menuInitialState,
@@ -245,7 +242,6 @@ describe('NavbarComponent', () => {
                         ...emptyAppState,
                         authentication: { ...authInitialState },
                         settings: {...settingsInitialState },
-                        time: {...timeInitialState },
                         menu: {...menuInitialState },
                         config: {...configInitialState,
                             config: {
@@ -265,7 +261,6 @@ describe('NavbarComponent', () => {
                         ...emptyAppState,
                         authentication: { ...authInitialState },
                         settings: {...settingsInitialState },
-                        time: {...timeInitialState },
                         menu: {...menuInitialState },
                         config: {...configInitialState,
                             config: {
@@ -285,7 +280,6 @@ describe('NavbarComponent', () => {
                         ...emptyAppState,
                         authentication: { ...authInitialState },
                         settings: {...settingsInitialState },
-                        time: {...timeInitialState },
                         menu: {...menuInitialState },
                         config: {...configInitialState,
                             config: {
@@ -305,7 +299,6 @@ describe('NavbarComponent', () => {
                         ...emptyAppState,
                         authentication: { ...authInitialState },
                         settings: {...settingsInitialState },
-                        time: {...timeInitialState },
                         menu: {...menuInitialState },
                         config: {...configInitialState,
                             config: {

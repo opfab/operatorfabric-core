@@ -21,7 +21,10 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import * as _ from 'lodash';
 import { BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
-
+import {Store} from "@ngrx/store";
+import {AppState} from "@ofStore/index";
+import {ApplyFilter} from "@ofActions/feed.actions";
+import {FilterType} from "@ofServices/filter.service";
 
 
 @Component({
@@ -69,10 +72,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>(); // manage home btn when domain change inside this component
   @Input() followClockTick;
 
+
   @Output() widthChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
-  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef) {
+  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef,private store: Store<AppState>) {
     super(chartElement, zone, cd);
     this.xTicks = [];
     this.xTicksOne = [];
