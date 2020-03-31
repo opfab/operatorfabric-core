@@ -11,7 +11,9 @@ import com.mongodb.client.result.DeleteResult;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.*;
+import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -29,12 +31,10 @@ import reactor.util.function.Tuples;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * <p>
@@ -111,7 +111,7 @@ public class CardWriteService {
         Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
         cards = registerValidationProcess(cards, Instant.now());
         return registerPersistenceAndNotificationProcess(cards, windowStart)
-                .doOnNext(count -> log.debug(count + " pushed Cards persisted"))
+                .doOnNext(count -> log.debug("{} pushed Cards persisted", count))
                 .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
                 .onErrorResume(e -> {
                     log.error("Unexpected error during pushed Cards persistence", e);
@@ -238,8 +238,7 @@ public class CardWriteService {
             return;
         BulkOperations bulkCard = template.bulkOps(BulkOperations.BulkMode.ORDERED, CardPublicationData.class);
         cards.forEach(c -> {
-            if (log.isDebugEnabled())
-                log.debug("preparing to write " + c.toString());
+                log.debug("preparing to write {}", c.toString());
             addBulkCard(bulkCard, c);
         });
         bulkCard.execute();
@@ -325,7 +324,6 @@ public class CardWriteService {
         long windowDuration = System.nanoTime() - windowStart;
         double windowDurationMillis = windowDuration / 1000000d;
         double cardWindowDurationMillis = windowDurationMillis / count;
-        log.debug(count + " cards handled in " + cardWindowDurationMillis + " ms each (total: " + windowDurationMillis
-                + ")");
+        log.debug("{} cards handled in {} ms each (total: {})", count, cardWindowDurationMillis, windowDurationMillis);
     }
 }
