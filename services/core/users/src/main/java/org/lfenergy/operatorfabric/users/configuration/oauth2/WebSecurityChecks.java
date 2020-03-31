@@ -36,7 +36,7 @@ public class WebSecurityChecks {
         else
             user = ((User) authentication.getPrincipal()).getLogin();
 
-    	if (log.isDebugEnabled())
+        if (log.isDebugEnabled())
             log.debug("login from the principal " + user + " login parameter " + login);
 
         return user.equals(login);

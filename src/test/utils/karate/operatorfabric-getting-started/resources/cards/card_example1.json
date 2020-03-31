@@ -1,0 +1,16 @@
+{
+	"publisher" : "message-publisher",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "hello-world-1",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"Hello World !!! That's my first message"}
+}
