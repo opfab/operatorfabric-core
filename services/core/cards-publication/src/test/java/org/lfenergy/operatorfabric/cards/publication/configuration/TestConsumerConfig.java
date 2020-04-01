@@ -35,12 +35,8 @@ public class TestConsumerConfig {
     Queue userQueue(){return QueueBuilder.nonDurable().autoDelete().build();}
 
     @Bean
-    Binding groupBinding1(Queue groupQueue, TopicExchange groupExchange) {
-        return BindingBuilder.bind(groupQueue).to(groupExchange).with("#.mytso.#");
-    }
-    @Bean
-    Binding groupBinding2(Queue groupQueue, TopicExchange groupExchange) {
-        return BindingBuilder.bind(groupQueue).to(groupExchange).with("#.admin.#");
+    Binding groupBinding(Queue groupQueue, FanoutExchange groupExchange) {
+        return BindingBuilder.bind(groupQueue).to(groupExchange);
     }
 
     @Bean

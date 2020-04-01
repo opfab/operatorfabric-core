@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,7 +51,7 @@ public class CardSubscriptionServiceShould {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
-    private TopicExchange groupExchange;
+    private FanoutExchange groupExchange;
     @Autowired
     private DirectExchange userExchange;
     @Autowired
@@ -137,5 +137,19 @@ public class CardSubscriptionServiceShould {
             rabbitTemplate.convertAndSend(userExchange.getName(),user.getLogin(),"test message 1");
             rabbitTemplate.convertAndSend(userExchange.getName(),user.getLogin(),"test message 2");
         };
+    }
+
+    @Test
+    public void testIsUserInGroupRecipients() {
+        CardSubscription subscription = service.subscribe(user, TEST_ID, null, null, false);
+        String messageBody1 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup2\"]}";
+        String messageBody2 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup3\"]}";
+        String messageBody3 = "{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"]}";
+        String messageBody4 = "{\"groupRecipientsIds\":[]}";
+
+        Assertions.assertThat(subscription.isUserInGroupRecipients(messageBody1)).isTrue();
+        Assertions.assertThat(subscription.isUserInGroupRecipients(messageBody2)).isTrue();
+        Assertions.assertThat(subscription.isUserInGroupRecipients(messageBody3)).isFalse();
+        Assertions.assertThat(subscription.isUserInGroupRecipients(messageBody4)).isFalse();
     }
 }

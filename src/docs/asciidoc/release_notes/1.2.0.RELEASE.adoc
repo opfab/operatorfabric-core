@@ -20,6 +20,7 @@
 * [OC-798] Remove Pusle mechanism in UI and unused UI option operatorfabric.feed.timeFilter.followClockTick
 * [OC-801] Allow for custom certification authorities or certificates
 * [OC-819] Solve Sonar Issues
+* [OC-812] Refactor sending card via rabbit queue "GROUP"
 +
 _See link:https://opfab.github.io/documentation/1.2.0.RELEASE/developer_guide/#_deployment[Deployment] for details_
 * [OC-818] Implement automatic logout when token expired (code flow authentification mode )
