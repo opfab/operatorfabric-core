@@ -110,6 +110,8 @@ export class AuthenticationEffects {
                 })
             );
 
+
+
     /**
      * This {Observable} of {AuthenticationActions} listens for {AuthenticationActionTypes.TryToLogOut} type.
      * It tells the {AuthenticationService} to clear the authentication information from the system and emit
@@ -204,7 +206,10 @@ export class AuthenticationEffects {
                                     tap(() => {
                                         redirectToCurrentLocation(this.router);
                                     }),
-                                    map(authenticationInfo => new AcceptLogIn(authenticationInfo)),
+                                    map(authenticationInfo => {
+                                        this.authService.regularCheckTokenValidity();
+                                        return new AcceptLogIn(authenticationInfo)
+                                    }),
                                     catchError(errorResponse => {
                                             return this.handleErrorOnTokenGeneration(errorResponse, 'code');
                                         }
@@ -216,6 +221,7 @@ export class AuthenticationEffects {
                         } else {
                             if (!this.authService.isExpirationDateOver()) {
                                 const authInfo = this.authService.extractIdentificationInformation();
+                               this.authService.regularCheckTokenValidity();
                                 return this.authService.loadUserData(authInfo)
                                     .pipe(
                                         map(auth => {
@@ -223,7 +229,6 @@ export class AuthenticationEffects {
                                             return new AcceptLogIn(auth);
                                         })
                                     );
-                                // return of(new AcceptLogIn(authInfo));
                             }
                             return of(this.handleRejectedLogin(new Message('The stored token has expired',
                                 MessageLevel.ERROR,

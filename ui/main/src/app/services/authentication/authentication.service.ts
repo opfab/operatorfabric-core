@@ -75,6 +75,19 @@ export class AuthenticationService {
                 this.assignConfigurationProperties(oauth2Conf);
                 this.authModeHandler = this.instantiateAuthModeHandler(this.mode);
             });
+
+    }
+
+    regularCheckTokenValidity()
+    {
+        if (this.verifyExpirationDate()) {
+            setTimeout(() => {
+                this.regularCheckTokenValidity();
+              }, 5000);
+        }
+        // Will send Logout if token is expired 
+        else this.store.dispatch(new UnableToRefreshOrGetToken());
+
     }
 
     /**
