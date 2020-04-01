@@ -18,4 +18,7 @@
 * [OC-801] - Allow for custom certification authorities or certificates
 +
 _See link:https://opfab.github.io/documentation/1.2.0.RELEASE/developer_guide/#_deployment[Deployment] for details_
-* [OC-818] Implement automatic logout when token expired (code flow authentification mode ) 
+* [OC-818] Implement automatic logout when token expired (code flow authentification mode )
+* [OC-814] Remove registry and configuration microservice for action service
++
+_ `Actions service` is now configured with it's own `application.yml` configuraion file._
