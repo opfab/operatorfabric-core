@@ -48,10 +48,7 @@ public class LightCardPublicationData implements LightCard {
     private Instant lttd;
     private Instant publishDate;
     @NotNull
-    @Indexed
     private Instant startDate;
-    @Indexed
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
