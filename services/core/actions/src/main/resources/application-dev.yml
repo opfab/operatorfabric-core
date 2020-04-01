@@ -1,22 +1,14 @@
 server:
   port: 2105
 spring:
-  application:
-    name: actions
   security:
-    provider-url: http://localhost:89
-    provider-realm: dev
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
-
-logging:
-  level:
-    root: debug
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
 operatorfabric:
   services:
     base-url:
-        third: http://localhost:2100
-        users: http://localhost:2103
-        cards: http://localhost:2104
+      cards: http://localhost:2104
+      thirds: http://localhost:2100
+      users: http://localhost:2103

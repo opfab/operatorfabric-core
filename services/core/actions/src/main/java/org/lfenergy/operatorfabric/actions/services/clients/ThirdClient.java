@@ -30,7 +30,7 @@ public class ThirdClient {
     public static final String NO_THIRD_ACTION_MESSAGE = "No Action found";
     public final static String ACTION_FETCH_ERROR = "Unable to fetch Action";
 
-    @Value("${operatorfabric.services.base-url.third}")
+    @Value("${operatorfabric.services.base-url.thirds}")
     String thirdBaseUrl;
     private final WebClient client;
 
