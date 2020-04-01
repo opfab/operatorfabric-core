@@ -64,7 +64,8 @@ describe('AuthenticationEffects', () => {
                 'askTokenFromCode',
                 'loadUserData',
                 'isExpirationDateOver',
-                'computeRedirectUri'
+                'computeRedirectUri',
+                'regularCheckTokenValidity'
             ]);
         const cardServiceSpy = createSpyObj('CardService'
             , ['unsubscribeCardOperation']);
