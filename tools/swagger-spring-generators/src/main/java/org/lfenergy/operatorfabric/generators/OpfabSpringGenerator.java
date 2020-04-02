@@ -63,8 +63,8 @@ public class OpfabSpringGenerator extends SpringCodegen {
             Property additionalProperties2 = ap.getAdditionalProperties();
             String type = additionalProperties2.getType();
             if (null == type) {
-                log.error("No Type defined for Additional Property %s\n" //
-                   + "\tIn Property: %s", additionalProperties2,p);
+                log.error("No Type defined for Additional Property {}\n"
+                   + "\tIn Property: {}", additionalProperties2,p);
             }
             String inner = getSwaggerType(additionalProperties2);
             return instantiationTypes.get("map") + "<String, ? extends " + inner + ">";
@@ -83,10 +83,10 @@ public class OpfabSpringGenerator extends SpringCodegen {
       ArrayProperty ap = (ArrayProperty) p;
       Property inner = ap.getItems();
       if (inner == null) {
-        log.warn(ap.getName() + "(array property) does not have a proper inner type defined");
+        log.warn("{} (array property) does not have a proper inner type defined", ap.getName());
         return null;
       }
-      log.info("inner property type "+inner.getClass().getName()+" "+getTypeDeclaration(inner));
+      log.info("inner property type {} {}", inner.getClass().getName(), getTypeDeclaration(inner));
       if(inner instanceof RefProperty)
         return getSwaggerType(p) + "< ? extends " + getTypeDeclaration(inner) + ">";
       else
@@ -95,7 +95,7 @@ public class OpfabSpringGenerator extends SpringCodegen {
       MapProperty mp = (MapProperty) p;
       Property inner = mp.getAdditionalProperties();
       if (inner == null) {
-        log.warn(mp.getName() + "(map property) does not have a proper inner type defined");
+        log.warn("{} (map property) does not have a proper inner type defined", mp.getName());
         return null;
       }
       if(inner instanceof RefProperty)

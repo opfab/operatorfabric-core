@@ -78,7 +78,7 @@ public class ThirdsService implements ResourceLoaderAware {
      * Loads third data to defaultCache (not thread safe {@link #loadCacheSafe()})
      */
     private void loadCache() {
-        log.info("loading thirds from " + new File(storagePath).getAbsolutePath());
+        log.info("loading thirds from {}", new File(storagePath).getAbsolutePath());
         try {
             Map<String, Map<String, Third>> completeResult = new HashMap<>();
             Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath);
@@ -94,7 +94,7 @@ public class ThirdsService implements ResourceLoaderAware {
             this.defaultCache = result;
             this.completeCache = completeResult;
         } catch (IOException e) {
-            log.warn("Unreadable Third config files at  " + storagePath);
+            log.warn("Unreadable Third config files at  {}", storagePath);
         }
 
     }
@@ -124,7 +124,7 @@ public class ThirdsService implements ResourceLoaderAware {
                                         if (onEachActor != null)
                                             onEachActor.accept(f, third);
                                     } catch (IOException e) {
-                                        log.warn("Unreadable Third config file " + f.getAbsolutePath(), e);
+                                        log.warn("Unreadable Third config file "+ f.getAbsolutePath(), e);
                                     }
                                 }
                             }
@@ -193,7 +193,7 @@ public class ThirdsService implements ResourceLoaderAware {
                 File.separator +
                 (type.isLocalized() && !type.equals(ResourceTypeEnum.I18N) ? (locale + File.separator) : "") +
                 finalName + type.getSuffix();
-        log.info("loading resource: " + resourcePath);
+        log.info("loading resource: {}", resourcePath);
         return this.resourceLoader.getResource(resourcePath);
     }
 

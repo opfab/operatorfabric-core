@@ -7,22 +7,19 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.roles;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-
-import javax.validation.constraints.NotBlank;
-
-import org.springframework.security.oauth2.jwt.Jwt;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.jwt.Jwt;
+
+import javax.validation.constraints.NotBlank;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 /**
  * Define the structure of the RoleClaim.
@@ -53,19 +50,16 @@ public abstract class RoleClaim {
 	 */
 	public List<String> getListRoles(Jwt jwt) {
 		
-		JsonNode jsonNodeRoot;
-		List<String> listRoleResult = new ArrayList<>();
-
 		String payload = getPayload(jwt);
 		
 		try {
-			jsonNodeRoot = getJsonNodeRoot(payload);
-			listRoleResult = getListRoles(jsonNodeRoot);
+			JsonNode jsonNodeRoot = getJsonNodeRoot(payload);
+			return getListRoles(jsonNodeRoot);
 		} catch (IOException e) {
 			log.error("Unexpected Error arose",e);
 		}
 		
-		return listRoleResult;
+		return new ArrayList<>();
 	}
 	
 	/**
@@ -75,13 +69,14 @@ public abstract class RoleClaim {
 	 */
 	private String getPayload(Jwt jwt) {		
         String jwtToken = jwt.getTokenValue();
-        String[] tokenSplit = jwtToken.split("\\.");
+		String partSeparatorWithinJWT = "\\.";
+		String[] tokenSplit = jwtToken.split(partSeparatorWithinJWT);
         
-        // position 1 is the payload
-        String base64EncodedBody = tokenSplit[1];
-        String body = new String(Base64.getUrlDecoder().decode(base64EncodedBody));
+		int payloadIndexInJwt = 1;
+		String base64EncodedBody = tokenSplit[payloadIndexInJwt];
+        String payload = new String(Base64.getUrlDecoder().decode(base64EncodedBody));
  
-		return body;
+		return payload;
 	}
 	
 	/**

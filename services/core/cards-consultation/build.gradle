@@ -1,4 +1,11 @@
 dependencies {
+    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+    compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
+    compile  cloud.starterBus, cloud.eurekaClient
+    compile boot.starterAop
+    compileOnly boot.annotationConfiguration
+    annotationProcessor boot.annotationConfiguration
+
     compile boot.starterWebflux
     compile project(':client:cards-client-data')
     compile project(':tools:spring:spring-mongo-utilities')

@@ -56,7 +56,11 @@ public class RoleClaimCheckExistPath extends RoleClaim {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("RoleClaimCheckExistPath(path="+path+", roleValue="+ roleValue+")");
+		sb.append("RoleClaimCheckExistPath(path=")
+				.append(path)
+				.append(", roleValue=")
+				.append(roleValue)
+				.append(")");
 		return sb.toString();
 	}
 

@@ -31,13 +31,12 @@ public class WebSecurityChecks {
 
         //authentication.getPrincipal() is UserData type if there is authentication
         //but is String type if there is no authentication (jira : OC-655)
-        if (authentication.getPrincipal().getClass().getName().equals("java.lang.String"))
+        if (authentication.getPrincipal()  instanceof String)
             user = (String) authentication.getPrincipal();
         else
             user = ((User) authentication.getPrincipal()).getLogin();
 
-        if (log.isDebugEnabled())
-            log.debug("login from the principal " + user + " login parameter " + login);
+            log.debug("login from the principal {} login parameter {}", user, login);
 
         return user.equals(login);
     }

@@ -78,7 +78,7 @@ public class DataInitComponent {
         try {
             userSettingsRepository.insert(u);
         } catch (DuplicateKeyException ex) {
-            log.warn(FAILED_INIT_MSG + u.getLogin() + " user settings: duplicate");
+            log.warn("{} {} user settings: duplicate",FAILED_INIT_MSG, u.getLogin() );
         }
     }
 
@@ -93,7 +93,7 @@ public class DataInitComponent {
         try {
             userRepository.insert(u);
         } catch (DuplicateKeyException ex) {
-            log.warn(FAILED_INIT_MSG + u.getLogin() + " user: duplicate");
+            log.warn("{} {} user: duplicate", FAILED_INIT_MSG, u.getLogin());
             Optional<UserData> resultUser = userRepository.findById(u.getLogin());
             if (resultUser.isPresent()) {
                 UserData loadedUser = resultUser.get();
@@ -101,7 +101,7 @@ public class DataInitComponent {
                 for (String groupName : u.getGroupSet()) {
                     if (!loadedUser.getGroupSet().contains(groupName)) {
                         loadedUser.addGroup(groupName);
-                        log.info("Added \"" + groupName + "\" to existing user \"" + loadedUser.getLogin() + "\"");
+                        log.info("Added '{}' to existing user '{}'", groupName, loadedUser.getLogin());
 
                         updated = true;
                     }
@@ -121,7 +121,7 @@ public class DataInitComponent {
         try {
             groupRepository.insert(g);
         } catch (DuplicateKeyException ex) {
-            log.warn(FAILED_INIT_MSG + g.getName() + " group: duplicate");
+            log.warn("{} {} group: duplicate", FAILED_INIT_MSG, g.getName());
         }
     }
 }

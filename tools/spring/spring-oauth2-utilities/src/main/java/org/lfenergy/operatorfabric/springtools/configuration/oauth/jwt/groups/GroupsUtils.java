@@ -54,7 +54,7 @@ public class GroupsUtils {
 	/**
 	 * get a groups list from the jwt through a roles claims list defined
 	 * @param jwt
-	 * @param listRolesClaim
+	 * @param listRoleClaim
 	 * @return a groups list
 	 */
 	private List<String> getGroupsFromListRolesClaim(Jwt jwt, List<RoleClaim> listRoleClaim) {	

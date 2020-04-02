@@ -77,8 +77,7 @@ public class WebSecurityConfiguration {
                 .flatMapIterable(Authentication::getAuthorities)
                 .hasElements()
                 .map(AuthorizationDecision::new)
-                .defaultIfEmpty(new AuthorizationDecision(false))
-                ;
+                .defaultIfEmpty(new AuthorizationDecision(false));
     }
 
 

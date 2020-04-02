@@ -8,9 +8,13 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import feign.Client;
+import feign.Feign;
+import feign.FeignException;
+import feign.RequestInterceptor;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
+import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
@@ -29,29 +33,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import feign.Client;
-import feign.Feign;
-import feign.FeignException;
-import feign.RequestInterceptor;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
-import lombok.extern.slf4j.Slf4j;
-
-//import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
-//import org.springframework.boot.autoconfigure.security.oauth2.resource.JwtAccessTokenConverterConfigurer;
-//import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-//import org.springframework.security.oauth2.client.OAuth2ClientContext;
-//import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-//import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
-//import org.springframework.security.oauth2.common.OAuth2AccessToken;
-//import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-//import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-//import org.springframework.security.oauth2.provider.OAuth2Authentication;
-//import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
-//import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
-//import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
-//import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
-//import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import java.util.List;
 
 /**
  * Common configuration (MVC and Webflux)
@@ -62,8 +44,13 @@ import lombok.extern.slf4j.Slf4j;
 @EnableFeignClients
 @EnableCaching
 @EnableDiscoveryClient
-@Import({UserServiceCache.class,BusConfiguration.class,UpdateUserEventListener.class,UpdatedUserEvent.class,
-	GroupsProperties.class, GroupsUtils.class, JwtProperties.class})
+@Import({UserServiceCache.class
+        ,BusConfiguration.class
+        ,UpdateUserEventListener.class
+        ,UpdatedUserEvent.class
+        ,GroupsProperties.class
+        ,GroupsUtils.class
+        ,JwtProperties.class})
 @Slf4j
 public class OAuth2GenericConfiguration {
 
@@ -107,7 +94,9 @@ public class OAuth2GenericConfiguration {
     }
 
     @Bean
-    public UserServiceProxy userServiceProxy(Client client /*Encoder encoder, Decoder decoder, Contract contract,*/){
+    public UserServiceProxy userServiceProxy(Client client
+            /*Encoder encoder, Decoder decoder, Contract contract,*/
+    ){
         return Feign.builder()
                 .client(client)
                 .encoder(new JacksonEncoder())
@@ -133,7 +122,7 @@ public class OAuth2GenericConfiguration {
 		
 		List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);	
 		
-		log.debug("user ["+principalId+"] has these roles " + authorities.toString() + " through the " + groupsProperties.getMode()+ " mode");
+		log.debug("user [{}] has these roles '{}' through the {} mode",principalId,authorities,groupsProperties.getMode());
         
         return new OpFabJwtAuthenticationToken(jwt, user, authorities);
     }

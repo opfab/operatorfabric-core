@@ -8,9 +8,17 @@
         "second": "Deuxième onglet"
       }
     },
-    "action":{
-      "first": "Action {{value}}"
-    }
+    "action":{ "new":
+    {
+      "first": "Action {{value}}",
+      "second": "Deuxième action",
+      "third": "La troisième ({{value}})"
+    },
+      "clicked": {
+        "first": "{{value}} cliqué",
+        "second": "Résolution secondaire",
+        "third": "Pour ({{value}}, c'est fait.)"
+      },
   },
   "third":{
     "label": "Tier de test"

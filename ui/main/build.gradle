@@ -26,8 +26,8 @@ npm_run_test {
     args = ['--', '--browsers', 'ChromeHeadless', '--watch=false', '--code-coverage']
 }
 
-npm_run_headless.dependsOn(npm_install)
-test.dependsOn(npm_run_headless)
+//npm_run_headless.dependsOn(npm_install)
+//test.dependsOn(npm_run_headless)
 if(project.hasProperty('uiDebug'))
     build.dependsOn(npmBuildDebug)
 else

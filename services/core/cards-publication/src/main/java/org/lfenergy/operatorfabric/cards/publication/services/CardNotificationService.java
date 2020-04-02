@@ -75,11 +75,14 @@ public class CardNotificationService {
     private void pushCardInRabbit(CardOperation cardOperation,String queueName,String routingKey) {
         try {
             rabbitTemplate.convertAndSend(queueName, routingKey, mapper.writeValueAsString(cardOperation));
-            if (log.isDebugEnabled()) log.debug("Operation sent to Exchange[" + queueName  + "] with routing key " + routingKey
-                    + ",type=" + cardOperation.getType() + ", ids=" + cardOperation.getCardIds().toString() + ",cards="
-                    + cardOperation.getCards().toString());
+            log.debug("Operation sent to Exchange[{}] with routing key {}, type={}, ids={}, cards={}"
+                    , queueName
+                    , routingKey
+                    , cardOperation.getType()
+                    , cardOperation.getCardIds().toString()
+                    , cardOperation.getCards().toString());
         } catch (JsonProcessingException e) {
-            log.error("Unnable to linearize card to json on amqp notification");
+            log.error("Unable to linearize card to json on amqp notification");
         }
     }
 

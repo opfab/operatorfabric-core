@@ -1,8 +1,6 @@
 dependencies {
     compile cloud.eurekaClient, cloud.gateway
-//    compile boot.starterSecurity
-     compile boot.starterAop, spring.retry
-//    compile spring.securityOauthResource, spring.securityOauthJose
+     compile boot.starterAop
     compile boot.devTools
     compile project(':ui:main-user-interface')
 }

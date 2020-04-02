@@ -1,12 +1,25 @@
 dependencies {
-    compile boot.starterWebflux
-    compile project(':client:actions-client-data')
-    compile project(':client:cards-client-data')
-    compile project(':client:thirds-client-data')
-//    compile project(':tools:spring:spring-mongo-utilities')
-    compile project(':tools:spring:spring-oauth2-utilities')
-    testCompile testing.reactor
-    testCompile project(':tools:spring:spring-test-utilities')
+    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+    implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
+    implementation  cloud.starterBus
+    implementation boot.starterAop
+    compileOnly boot.annotationConfiguration
+    annotationProcessor boot.annotationConfiguration
+
+    implementation boot.starterWebflux
+    implementation project(':client:actions-client-data')
+    implementation project(':client:cards-client-data')
+    implementation project(':client:thirds-client-data')
+    implementation project(':client:users-client-data')
+    implementation boot.starterSecurity
+    implementation spring.securityOauthResource
+    implementation spring.securityOauthJose
+
+    testImplementation testing.reactor
+    testImplementation project(':tools:spring:spring-test-utilities')
+
+
+
 }
 
 bootJar {

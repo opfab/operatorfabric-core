@@ -1,7 +1,14 @@
 server:
   port: 2105
 spring:
-  data:
-    mongodb:
-      uris:
-        - mongodb://root:password@localhost:27017
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
+operatorfabric:
+  services:
+    base-url:
+      cards: http://localhost:2104
+      thirds: http://localhost:2100
+      users: http://localhost:2103

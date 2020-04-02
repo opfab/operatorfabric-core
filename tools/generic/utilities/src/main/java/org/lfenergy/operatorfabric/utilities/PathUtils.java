@@ -119,7 +119,7 @@ public class PathUtils {
     if (source.toFile().isDirectory())
       deleteDir(source);
     else {
-      log.debug("deleting " + source.toString());
+      log.debug("deleting {}", source.toString());
       Files.delete(source);
     }
   }
@@ -207,10 +207,10 @@ class DeleteDir extends SimpleFileVisitor<Path> {
   @Override
   public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
     try {
-      log.debug("deleting " + file.toString());
+      log.debug("deleting {}", file.toString());
       Files.delete(file);
     } catch (IOException ex) {
-      log.error("error deleting " + file.toString(), ex);
+      log.error("error deleting {}" + file.toString(), ex);
     }
     return FileVisitResult.CONTINUE;
   }
