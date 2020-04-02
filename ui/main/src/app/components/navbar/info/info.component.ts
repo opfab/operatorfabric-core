@@ -22,9 +22,9 @@ import * as moment from 'moment';
     styleUrls: ['./info.component.scss']
 })
 export class InfoComponent implements OnInit {
-    private _userName$: Observable<string>;
-    private _description$: Observable<string>;
-    private timeToDisplay: string;
+     _userName$: Observable<string>;
+     _description$: Observable<string>;
+     timeToDisplay: string;
 
     constructor(private store: Store<AppState>, private timeService: TimeService) {
     }
