@@ -15,8 +15,10 @@
 * [OC-709] Change card update mechanism in Mongo : if we removed a field in the new card , for certains flield it was conserved from the old version in MongoDB , it is now deleted which is the wanted behavior
 
 === Task
+
 * [OC-753] Add API tests with karate DSL
-* [OC-801] - Allow for custom certification authorities or certificates
+* [OC-798] Remove Pusle mechanism in UI and unused UI option operatorfabric.feed.timeFilter.followClockTick
+* [OC-801] Allow for custom certification authorities or certificates
 +
 _See link:https://opfab.github.io/documentation/1.2.0.RELEASE/developer_guide/#_deployment[Deployment] for details_
 * [OC-818] Implement automatic logout when token expired (code flow authentification mode )

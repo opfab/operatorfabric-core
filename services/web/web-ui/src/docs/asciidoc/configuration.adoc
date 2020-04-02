@@ -58,8 +58,6 @@ a|card time display mode in the feed. Values :
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
 |operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen
-|operatorfabric.feed.timeFilter.followClockTick|false|no|If set to true, the time filter on the feed will shift
-to reflect elapsed time
 |operatorfabric.feed.notify|false|no|If set to true, new cards are notified in the OS through web-push notifications
 |operatorfabric.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |operatorfabric.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
