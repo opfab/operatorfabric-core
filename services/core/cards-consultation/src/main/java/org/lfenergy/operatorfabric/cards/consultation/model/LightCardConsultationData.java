@@ -44,10 +44,7 @@ public class LightCardConsultationData implements LightCard {
     private String state;
     private Instant lttd;
     private Instant publishDate;
-    @Indexed
     private Instant startDate;
-    @Indexed
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
