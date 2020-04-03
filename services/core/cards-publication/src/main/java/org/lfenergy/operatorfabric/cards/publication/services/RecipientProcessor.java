@@ -66,7 +66,7 @@ public class RecipientProcessor {
                 builder = processGroup(recipient).builder();
                 break;
             case UNION:
-                builder = processUnion(recipient, processed).builder();
+                builder = processUnion(processed).builder();
                 break;
             default:
                 builder = ComputedRecipient.builder();
@@ -86,7 +86,7 @@ public class RecipientProcessor {
      * @param processed
      * @return
      */
-    private ComputedRecipient.BuilderEncapsulator processUnion(Recipient recipient, List<ComputedRecipient> processed) {
+    private ComputedRecipient.BuilderEncapsulator processUnion(List<ComputedRecipient> processed) {
         ComputedRecipient.BuilderEncapsulator result = ComputedRecipient.encapsulatedBuilder();
         ComputedRecipient.ComputedRecipientBuilder builder = result.builder();
         processed.forEach(r -> {

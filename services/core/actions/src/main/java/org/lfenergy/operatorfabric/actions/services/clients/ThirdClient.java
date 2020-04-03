@@ -28,7 +28,7 @@ public class ThirdClient {
             "user not allowed to access resource";
     public static final String THIRD_ERROR_MESSAGE = "Error accessing OperatorFabric third service, no fallback behavior";
     public static final String NO_THIRD_ACTION_MESSAGE = "No Action found";
-    public final static String ACTION_FETCH_ERROR = "Unable to fetch Action";
+    public static final String ACTION_FETCH_ERROR = "Unable to fetch Action";
 
     @Value("${operatorfabric.services.base-url.thirds}")
     String thirdBaseUrl;
