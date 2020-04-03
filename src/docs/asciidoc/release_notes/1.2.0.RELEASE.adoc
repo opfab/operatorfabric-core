@@ -23,5 +23,6 @@
 _See link:https://opfab.github.io/documentation/1.2.0.RELEASE/developer_guide/#_deployment[Deployment] for details_
 * [OC-818] Implement automatic logout when token expired (code flow authentification mode )
 * [OC-814] Remove registry and configuration microservice for action service
-+
-_ `Actions service` is now configured with it's own `application.yml` configuraion file._
+ ** _ `Actions service` is now configured with it's own `application.yml` configuraion file._
+ ** _ `Client-gateway service` need to be configured manually to reach the `actions service`
+see link:https://opfab.github.io/documentation/1.2.0.RELEASE/user_guide/#_cloud_gateway_service[Client-gateway configuration]_
