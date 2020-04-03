@@ -11,7 +11,7 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.springframework.data.mongodb.core.index.Indexed;
+
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;

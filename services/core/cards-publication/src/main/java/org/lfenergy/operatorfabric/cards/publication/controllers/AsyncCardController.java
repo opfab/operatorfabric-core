@@ -11,7 +11,6 @@ package org.lfenergy.operatorfabric.cards.publication.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardWriteService;
-import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

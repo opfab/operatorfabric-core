@@ -23,6 +23,7 @@ import java.time.Instant;
 public class CardCustomRepositoryImpl implements CardCustomRepository {
 
     private final ReactiveMongoTemplate template;
+    private static final String START_DATE = "startDate"; 
 
     @Autowired
     public CardCustomRepositoryImpl(ReactiveMongoTemplate template) {
@@ -43,7 +44,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
      */
     public Mono<CardConsultationData> findNextCardWithUser(Instant pivotalInstant, User user) {
         Query query = new Query();
-        Criteria criteria = new Criteria().where("startDate")
+        Criteria criteria = Criteria.where(START_DATE)
 
                 .gte(pivotalInstant);// search in the future
 
@@ -52,7 +53,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
                 Sort.Direction.ASC// sort for the nearer cards in the future first
 
-                , "startDate")));
+                , START_DATE)));
         query.with(Sort.by(new Sort.Order(Sort.Direction.ASC, "_id")));
         return template.findOne(query, CardConsultationData.class);
     }
@@ -67,7 +68,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
      */
     public Mono<CardConsultationData> findPreviousCardWithUser(Instant pivotalInstant, User user) {
         Query query = new Query();
-        Criteria criteria = new Criteria().where("startDate")
+        Criteria criteria = Criteria.where(START_DATE)
 
                 .lte(pivotalInstant);// search in the past
 
@@ -76,7 +77,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
                 Sort.Direction.DESC// sort for the most recent cards first
 
-                , "startDate")));
+                , START_DATE)));
         query.with(Sort.by(new Sort.Order(Sort.Direction.ASC, "_id")));
         return template.findOne(query, CardConsultationData.class);
     }

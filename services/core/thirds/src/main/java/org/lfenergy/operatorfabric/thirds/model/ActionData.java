@@ -11,7 +11,6 @@ package org.lfenergy.operatorfabric.thirds.model;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * <p>Please use builder to instantiate</p>

@@ -170,10 +170,9 @@ public class CardWriteService {
         // constraint check : endDate must be after startDate
         Instant endDateInstant = c.getEndDate();
         Instant startDateInstant = c.getStartDate();
-        if ((endDateInstant != null) && (startDateInstant != null)) {
-            if (endDateInstant.compareTo(startDateInstant) < 0)
+        if ((endDateInstant != null) && (startDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0))
                 throw new ConstraintViolationException("constraint violation : endDate must be after startDate", null);
-        }
+        
 
         // constraint check : timeSpans list : each end date must be after his start
         // date
@@ -182,11 +181,9 @@ public class CardWriteService {
                 if (c.getTimeSpans().get(i) != null) {
                     Instant endInstant = c.getTimeSpans().get(i).getEnd();
                     Instant startInstant = c.getTimeSpans().get(i).getStart();
-                    if ((endInstant != null) && (startInstant != null)) {
-                        if (endInstant.compareTo(startInstant) < 0)
+                    if ((endInstant != null) && (startInstant != null) && (endInstant.compareTo(startInstant) < 0))
                             throw new ConstraintViolationException(
                                     "constraint violation : TimeSpan.end must be after TimeSpan.start", null);
-                    }
                 }
             }
     }

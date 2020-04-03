@@ -23,7 +23,7 @@ public class UserClient {
             "user not allowed to access resource";
     public static final String USER_ERROR_MESSAGE = "Error accessing OperatorFabric user service, no fallback behavior";
     public static final String NO_USER_ACTION_MESSAGE = "No User found";
-    public final static String USER_FETCH_ERROR = "Unable to fetch User";
+    public static final String USER_FETCH_ERROR = "Unable to fetch User";
 
     @Value("${operatorfabric.services.base-url.users}")
     String userBaseUrl;
