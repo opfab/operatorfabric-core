@@ -48,9 +48,6 @@ public class ActionService {
     static final String UNEXPECTED_REMOTE_3RD_MESSAGE = "Unexpected behaviour of third party handler endpoint";
     static final String DELINEARIZING_ERROR_MESSAGE = "Exception delinearizing data from remote action url";
     public static final String EMPTY_RESULT_MESSAGE = "Card or action was empty";
-    public static final String NO_SUCH_CARD_OR_ACTION_MESSAGE = "No such card or action";
-    public static final String FEIGN_401_MESSAGE = "Remote service returned 401(Unauthorized), authentication may have expired or remote service is incorrectly configured";
-    public static final String FEIGN_403_MESSAGE = "Remote service returned 403(Unauthorized), user not allowed to acces resource";
     public static final String BAD_STATE_MESSAGE = "Submitted state does not match current card state";
     private static Pattern TOKEN_PATTERN = Pattern.compile("\\{(.+?)\\}");
 
