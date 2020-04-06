@@ -195,8 +195,7 @@ class CardWriteServiceShould {
                                 "actions", "timeSpans");
                 assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
                 assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
-                assertThat(testCardReceiver.getAdminQueue().size()).isEqualTo(0);
-                assertThat(testCardReceiver.getTsoQueue().size()).isEqualTo(0);
+                assertThat(testCardReceiver.getGroupQueue().size()).isEqualTo(1);
         }
 
         private boolean checkCardCount(long expectedCount) {

@@ -9,7 +9,7 @@ Background:
   * def authTokenTso2 = signInTso2.authToken
 
 
-Scenario: Post Card only for tso1
+Scenario: Post Card only for group TSO1
 
 * def card =
 """
@@ -27,7 +27,7 @@ Scenario: Post Card only for tso1
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"a message for tso1"}
+	"data" : {"message":"a message for group TSO1"}
 }
 """
 
@@ -44,7 +44,7 @@ Given url opfabUrl + 'cards/cards/api_test_process2'
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
-And match response.data.message == 'a message for tso1'
+And match response.data.message == 'a message for group TSO1'
 And def cardUid = response.uid
 
 
@@ -53,7 +53,7 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
-And match response.data.message == 'a message for tso1'
+And match response.data.message == 'a message for group TSO1'
 
 
 #get card with user tso2-operator should not be possible
@@ -71,7 +71,7 @@ Then status 404
 
 
 
-Scenario: Post Card for tso1 and tso2
+Scenario: Post Card for groups TSO1 and TSO2
 
 * def card =
 """
@@ -92,7 +92,7 @@ Scenario: Post Card for tso1 and tso2
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"a message for tso1"}
+	"data" : {"message":"a message for groups TSO1 and TSO2"}
 }
 """
 
@@ -109,7 +109,7 @@ Given url opfabUrl + 'cards/cards/api_test_process2tso'
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
-And match response.data.message == 'a message for tso1'
+And match response.data.message == 'a message for groups TSO1 and TSO2'
 And def cardUid = response.uid
 
 
@@ -118,7 +118,7 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
-And match response.data.message == 'a message for tso1'
+And match response.data.message == 'a message for groups TSO1 and TSO2'
 
 
 #get card with user tso2-operator should be possible
@@ -126,6 +126,8 @@ Given url opfabUrl + 'cards/cards/api_test_process2tso'
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 200
+And match response.data.message == 'a message for groups TSO1 and TSO2'
+And def cardUid = response.uid
 
 
 #get card form archives with  user tso2-operator should be possible 
@@ -133,3 +135,4 @@ Given url opfabUrl + 'cards/archives/' + cardUid
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 200
+And match response.data.message == 'a message for groups TSO1 and TSO2'

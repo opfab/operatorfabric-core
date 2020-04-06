@@ -13,6 +13,10 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.VirtualTime;
 import org.springframework.amqp.core.*;
@@ -53,7 +57,7 @@ public class CardSubscription {
     private FluxSink<String> externalSink;
     private AmqpAdmin amqpAdmin;
     private DirectExchange userExchange;
-    private TopicExchange groupExchange;
+    private FanoutExchange groupExchange;
     private ConnectionFactory connectionFactory;
     private MessageListenerContainer userMlc;
     private MessageListenerContainer groupMlc;
@@ -86,7 +90,7 @@ public class CardSubscription {
                             Runnable doOnCancel,
                             AmqpAdmin amqpAdmin,
                             DirectExchange userExchange,
-                            TopicExchange groupExchange,
+                            FanoutExchange groupExchange,
                             ConnectionFactory connectionFactory,
                             Instant rangeStart,
                             Instant rangeEnd,
@@ -126,12 +130,12 @@ public class CardSubscription {
      */
     public void initSubscription(Runnable doOnCancel) {
         createUserQueue();
-        createTopicQueue();
+        createGroupQueue();
         this.userMlc = createMessageListenerContainer(this.userQueueName);
         this.groupMlc = createMessageListenerContainer(groupQueueName);
         amqpPublisher = Flux.create(emitter -> {
             registerListener(userMlc, emitter,this.user.getLogin());
-            registerListener(groupMlc, emitter,this.user.getLogin()+ GROUPS_SUFFIX);
+            registerListenerForGroups(groupMlc, emitter,this.user.getLogin()+ GROUPS_SUFFIX);
             emitter.onRequest(v -> {
                 log.info("STARTING subscription");
                 log.info("LISTENING to messages on User[{}] queue",this.user.getLogin());
@@ -176,6 +180,17 @@ public class CardSubscription {
         });
     }
 
+    private void registerListenerForGroups(MessageListenerContainer groupMlc, FluxSink<String> emitter, String queueName) {
+        groupMlc.setupMessageListener((MessageListener) message -> {
+
+            String messageBody = new String(message.getBody());
+            if (isUserInGroupRecipients(messageBody)){
+                log.info("PUBLISHING message from {}",queueName);
+                emitter.next(messageBody);
+            }
+        });
+    }
+
     /**
      * Constructs a non durable queue to userExchange using user login as binding, queue name
      * is [user login]#[client id]
@@ -197,21 +212,17 @@ public class CardSubscription {
     /**
      * <p>Constructs a non durable queue to groupExchange using queue name
      * [user login]Groups#[client id].</p>
-     * <p>Generates a binding for each group using pattern: #.[group].#</p>
      * @return
      */
-    private Queue createTopicQueue() {
+    private Queue createGroupQueue() {
         log.info("CREATE Group[{}Groups] queue",this.user.getLogin());
         Queue queue = QueueBuilder.nonDurable(this.groupQueueName).build();
         amqpAdmin.declareQueue(queue);
-        this.user.getGroups().stream().map(g -> "#." + g + ".#").forEach(g -> {
-            Binding binding = BindingBuilder.bind(queue).to(groupExchange).with(g);
-            amqpAdmin.declareBinding(binding);
-        });
-        log.info("CREATED Group[{}Groups] queue with bindings :",this.groupQueueName);
-        if(log.isInfoEnabled()) {
-            this.user.getGroups().stream().map(g -> "#." + g + ".#").forEach(g -> log.info("\t*  {}",g));
-        }
+
+        Binding binding = BindingBuilder.bind(queue).to(groupExchange);
+        amqpAdmin.declareBinding(binding);
+
+        log.info("CREATED Group[{}Groups] queue",this.groupQueueName);
         return queue;
     }
 
@@ -261,5 +272,26 @@ public class CardSubscription {
 
     public void publishInto(Flux<String> fetchOldCards) {
         fetchOldCards.subscribe(next->this.externalSink.next(next));
+    }
+
+    /**
+     * @param messageBody message body received from rabbitMQ
+     * @return true if the message received is intended for one of the user's groups
+     */
+    public boolean isUserInGroupRecipients(final String messageBody){
+        try{
+            JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
+            JSONObject obj = (JSONObject)parser.parse(messageBody);
+            JSONArray array = (JSONArray)obj.get("groupRecipientsIds");
+
+            if (array != null) {
+                for (String group : user.getGroups()) {
+                    if (array.contains(group))
+                        return true;
+                }
+            }
+        }
+        catch(ParseException e){ log.error("ERROR during received message parsing", e); }
+        return false;
     }
 }

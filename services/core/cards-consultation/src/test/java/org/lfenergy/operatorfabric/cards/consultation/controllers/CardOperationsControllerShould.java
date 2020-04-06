@@ -28,7 +28,7 @@ import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionS
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -77,7 +77,7 @@ public class CardOperationsControllerShould {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
-    private TopicExchange groupExchange;
+    private FanoutExchange groupExchange;
     @Autowired
     private DirectExchange userExchange;
     @Autowired

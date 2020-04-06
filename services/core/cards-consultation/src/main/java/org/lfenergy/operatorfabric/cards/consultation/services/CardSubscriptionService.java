@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +37,7 @@ import java.util.concurrent.ScheduledFuture;
 public class CardSubscriptionService {
 
     private final ThreadPoolTaskScheduler taskScheduler;
-    private final TopicExchange groupExchange;
+    private final FanoutExchange groupExchange;
     private final DirectExchange userExchange;
     private final AmqpAdmin amqpAdmin;
     private final long deletionDelay;
@@ -47,7 +47,7 @@ public class CardSubscriptionService {
 
     @Autowired
     public CardSubscriptionService(ThreadPoolTaskScheduler taskScheduler,
-                                   TopicExchange groupExchange,
+                                   FanoutExchange groupExchange,
                                    DirectExchange userExchange,
                                    ConnectionFactory connectionFactory,
                                    AmqpAdmin amqpAdmin,
