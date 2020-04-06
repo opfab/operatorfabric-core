@@ -93,6 +93,9 @@ public class CardPublicationData implements Card {
     @Singular
     @JsonIgnore
     private List<String> orphanedUsers;
+    @Singular
+    @Indexed
+    private List<String> entityRecipients;
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;

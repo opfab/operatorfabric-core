@@ -361,6 +361,12 @@ definitions:
         type: array
         items:
           type: string
+      entityRecipients:
+        description: List of entity recipients
+        type: array
+        items:
+          type: string
+        example: ["tso1","tso2"]
       data:
         type: object
         description: Business data

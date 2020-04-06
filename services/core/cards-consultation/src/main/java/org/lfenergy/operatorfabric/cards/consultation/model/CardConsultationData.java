@@ -81,5 +81,8 @@ public class CardConsultationData implements Card {
     @Singular
     private List<String> orphanedUsers;
     @Singular
+    @Indexed
+    private List<String> entityRecipients;
+    @Singular
     private List<? extends TimeSpan> timeSpans;
 }

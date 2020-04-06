@@ -9,7 +9,7 @@ Background:
 Scenario: Check Archives / must insert 10 cards first with other scenarios
 
 
-#get cards form archives with  user tso1-operator 
+#get cards from archives with user tso1-operator
 Given url opfabUrl + 'cards/archives/?size=10&page=0' 
 And header Authorization = 'Bearer ' + authToken 
 When method get

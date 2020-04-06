@@ -48,7 +48,7 @@ And match response.data.message == 'a message for group TSO1'
 And def cardUid = response.uid
 
 
-#get card form archives with  user tso1-operator 
+#get card from archives with  user tso1-operator
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
@@ -63,7 +63,7 @@ When method get
 Then status 404
 
 
-#get card form archives with  user tso2-operator should not be possible 
+#get card from archives with user tso2-operator should not be possible
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
@@ -113,7 +113,7 @@ And match response.data.message == 'a message for groups TSO1 and TSO2'
 And def cardUid = response.uid
 
 
-#get card form archives with  user tso1-operator 
+#get card from archives with user tso1-operator
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
@@ -130,7 +130,7 @@ And match response.data.message == 'a message for groups TSO1 and TSO2'
 And def cardUid = response.uid
 
 
-#get card form archives with  user tso2-operator should be possible 
+#get card from archives with user tso2-operator should be possible
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get

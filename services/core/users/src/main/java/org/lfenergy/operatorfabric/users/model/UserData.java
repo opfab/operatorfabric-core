@@ -77,7 +77,6 @@ public class UserData implements User {
 
     public void deleteGroup(String name) {
         groupSet.remove(name);
-
     }
 
 

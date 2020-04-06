@@ -45,7 +45,7 @@ And match response.data.message == 'a message'
 And def cardUid = response.uid
 
 
-#get card form archives with  user tso1-operator 
+#get card from archives with user tso1-operator
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get
@@ -90,7 +90,7 @@ And match response.data.message == 'new message'
 And def cardUid = response.uid
 
 
-#get card form archives with  user tso1-operator 
+#get card from archives with user tso1-operator
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get
@@ -119,7 +119,7 @@ And header Authorization = 'Bearer ' + authToken
 When method get
 Then status 404
 
-#get card form archives with  user tso1-operator is possible
+#get card from archives with user tso1-operator is possible
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get

@@ -142,12 +142,17 @@ public class CardOperationsController {
         referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow() : referencePublishDate;
         String login = user.getLogin();
         String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
+
+        String[] entities = new String[]{};
+        if (user.getEntities() != null)
+            entities = user.getEntities().toArray(new String[user.getEntities().size()]);
+
         if (end != null && start != null) {
-            oldCards = cardRepository.findUrgentJSON(referencePublishDate, start, end, login, groups);
+            oldCards = cardRepository.findUrgentJSON(referencePublishDate, start, end, login, groups, entities);
         } else if (end != null) {
-            oldCards = cardRepository.findPastOnlyJSON(referencePublishDate, end, login, groups);
+            oldCards = cardRepository.findPastOnlyJSON(referencePublishDate, end, login, groups, entities);
         } else if (start != null) {
-            oldCards = cardRepository.findFutureOnlyJSON(referencePublishDate, start, login, groups);
+            oldCards = cardRepository.findFutureOnlyJSON(referencePublishDate, start, login, groups, entities);
         } else {
             log.info("Not loading published cards as no range is provided");
             oldCards = Flux.empty();
