@@ -1,0 +1,17 @@
+server:
+  port: 2105
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/auth/realms/dev/protocol/openid-connect/certs
+  data:
+    mongodb:
+      database: operator-fabric
+operatorfabric:
+  services:
+    base-url:
+      cards: http://cards-consultation:8080
+      thirds: http://thirds:8080
+      users: http://users:8080

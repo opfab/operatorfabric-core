@@ -16,4 +16,5 @@ RUN env
 COPY add-certificates.sh /add-certificates.sh
 COPY java-config-dependent-docker-entrypoint.sh /docker-entrypoint.sh
 COPY ${JAR_FILE} app.jar
+COPY application-docker.yml /config/application.yml
 ENTRYPOINT ["/docker-entrypoint.sh"]
