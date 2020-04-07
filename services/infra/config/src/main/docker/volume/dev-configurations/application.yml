@@ -35,7 +35,7 @@ operatorfabric:
   security:
     oauth2:
       client-id: opfab-client
-      client-secret: opfab-keycloak-secret
+#      client-secret: opfab-keycloak-secret
     jwt:
       login-claim: preferred_username    
       expire-claim: exp

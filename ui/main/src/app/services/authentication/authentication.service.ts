@@ -15,8 +15,8 @@ import {
     ImplicitlyAuthenticated,
     InitAuthStatus,
     PayloadForSuccessfulAuthentication,
-    UnAuthenticationFromImplicitFlow,
-    UnableToRefreshOrGetToken
+    UnableToRefreshOrGetToken,
+    UnAuthenticationFromImplicitFlow
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
@@ -48,7 +48,6 @@ export class AuthenticationService {
     private askTokenUrl = `${environment.urls.auth}/token`;
     private userDataUrl = `${environment.urls.users}/users`;
     private clientId: string;
-    private clientSecret: string;
     private loginClaim: string;
     private expireClaim: string;
     private delegateUrl: string;
@@ -78,15 +77,14 @@ export class AuthenticationService {
 
     }
 
-    regularCheckTokenValidity()
-    {
+    regularCheckTokenValidity() {
         if (this.verifyExpirationDate()) {
             setTimeout(() => {
                 this.regularCheckTokenValidity();
-              }, 5000);
+            }, 5000);
+        } else {// Will send Logout if token is expired
+            this.store.dispatch(new UnableToRefreshOrGetToken());
         }
-        // Will send Logout if token is expired 
-        else this.store.dispatch(new UnableToRefreshOrGetToken());
 
     }
 
@@ -110,7 +108,6 @@ export class AuthenticationService {
      */
     assignConfigurationProperties(oauth2Conf) {
         this.clientId = _.get(oauth2Conf, 'oauth2.client-id', null);
-        this.clientSecret = _.get(oauth2Conf, 'oauth2.client-secret', null);
         this.delegateUrl = _.get(oauth2Conf, 'oauth2.flow.delagate-url', null);
         this.loginClaim = _.get(oauth2Conf, 'jwt.login-claim', 'sub');
         this.givenNameClaim = _.get(oauth2Conf, 'jwt.given-name-claim', 'given_name');
@@ -156,18 +153,20 @@ export class AuthenticationService {
      */
     askTokenFromCode(code: string):
         Observable<PayloadForSuccessfulAuthentication> {
-        if (!this.clientId || !this.clientSecret || !this.loginClaim) {
+        if (!this.clientId || !this.loginClaim) {
             return throwError('The authentication service is no correctly initialized');
         }
         const params = new URLSearchParams();
         params.append('code', code);
         params.append('grant_type', 'authorization_code');
-// beware clientId for token defines a type of authentication
+        // beware clientId for token defines a type of authentication
         params.append('clientId', this.clientId);
         params.append('redirect_uri', this.computeRedirectUri());
 
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
-        return this.handleNewToken(this.httpClient.post<AuthObject>(this.askTokenUrl, params.toString(), {headers: headers}));
+        return this.handleNewToken(this.httpClient.post<AuthObject>(    this.askTokenUrl
+                                                                   ,    params.toString()
+                                                                   ,    {headers: headers}));
     }
 
     /**
@@ -177,19 +176,19 @@ export class AuthenticationService {
      * @param password
      */
     askTokenFromPassword(login: string, password: string): Observable<any> {
-        if (!this.clientId || !this.clientSecret) {
+        if (!this.clientId) {
             return throwError('The authentication service is no correctly initialized');
         }
         const params = new URLSearchParams();
         params.append('username', login);
         params.append('password', password);
         params.append('grant_type', 'password');
-// beware clientId for access_token is an oauth parameters
+        // beware clientId for access_token is an oauth parameters
         params.append('clientId', this.clientId);
-        params.append('client_secret', this.clientSecret);
-
         const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
-        return this.handleNewToken(this.httpClient.post<AuthObject>(this.askTokenUrl, params.toString(), {headers: headers}));
+        return this.handleNewToken(this.httpClient.post<AuthObject>(    this.askTokenUrl
+                                                                   ,    params.toString()
+                                                                   ,    {headers: headers}));
     }
 
     private handleNewToken(call: Observable<AuthObject>): Observable<PayloadForSuccessfulAuthentication> {
@@ -314,8 +313,8 @@ export class AuthenticationService {
     }
 
     public moveToCodeFlowLoginPage() {
-        if (!this.clientId || !this.clientSecret) {
-            return throwError('The authentication service is no correctly iniitialized');
+        if (!this.clientId) {
+            return throwError('The authentication service is no correctly initialized');
         }
         if (!this.delegateUrl) {
             window.location.href = `${environment.urls.auth}/code/redirect_uri=${this.computeRedirectUri()}`;
@@ -390,15 +389,15 @@ export class AuthenticationService {
 
     dispatchAppStateActionFromOAuth2Events(event: OAuthEvent): void {
         const eventType: OAuthType = event.type;
-        console.log(new Date(),"Authentification event",event);
+        console.log(new Date(), 'Authentication event', event);
         switch (eventType) {
             case ('token_received'): {
                 this.store.dispatch(new ImplicitlyAuthenticated());
                 break;
             }
-            // We can have a token_error or token_refresh_error when it is not possible to refresh token 
+            // We can have a token_error or token_refresh_error when it is not possible to refresh token
             // This case arise for example when using a SSO and the session is not valid anymore (session timeout)
-            case ('token_error'): 
+            case ('token_error'):
             case('token_refresh_error'):
                 this.store.dispatch(new UnableToRefreshOrGetToken());
                 break;
