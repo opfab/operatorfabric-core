@@ -40,7 +40,8 @@ ext {
             securityOauthResource   : "org.springframework.security:spring-security-oauth2-resource-server:${versions['spring.security']}",
             securityOauthJose       : "org.springframework.security:spring-security-oauth2-jose:${versions['spring.security']}",
             securityTest            : "org.springframework.security:spring-security-test:${versions['spring.security']}",
-            webflux                 : "org.springframework:spring-webflux:${versions['spring']}"
+            webflux                 : "org.springframework:spring-webflux:${versions['spring']}",
+            retry                   : "org.springframework.retry:spring-retry:1.2.2.RELEASE"
     ]
 
     cloud = [
