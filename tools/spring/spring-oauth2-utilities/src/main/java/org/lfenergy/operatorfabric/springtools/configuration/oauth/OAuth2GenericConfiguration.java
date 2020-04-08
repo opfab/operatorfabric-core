@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
 import feign.Client;
@@ -33,6 +32,8 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -108,21 +109,21 @@ public class OAuth2GenericConfiguration {
     
     
     public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) {
-    	
-    	String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
+        
+        String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
         OAuth2JwtProcessingUtilities.token.set(jwt);
        
         User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
 		OAuth2JwtProcessingUtilities.token.remove();
         
-		if (groupsProperties.getMode() == GroupsMode.JWT) {
-			// override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
-			user.setGroups(getGroupsList(jwt));
-		}
-		
+        	// override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
+		if (groupsProperties.getMode() == GroupsMode.JWT) user.setGroups(getGroupsList(jwt));
+        
+        if (jwtProperties.gettingEntitiesFromToken) user.setEntities(getEntitiesFromToken(jwt));
+
 		List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);	
 		
-		log.debug("user [{}] has these roles '{}' through the {} mode",principalId,authorities,groupsProperties.getMode());
+		log.debug("user [{}] has these roles '{}' through the {} mode and entities {}",principalId,authorities,groupsProperties.getMode(),user.getEntities());
         
         return new OpFabJwtAuthenticationToken(jwt, user, authorities);
     }
@@ -136,6 +137,15 @@ public class OAuth2GenericConfiguration {
 	 */
 	public List<String> getGroupsList(Jwt jwt) {
 		return groupsUtils.createGroupsList(jwt);
-	}
+
+    }
+
+    private List<String> getEntitiesFromToken(Jwt jwt){
+        String entitiesId = jwt.getClaimAsString(jwtProperties.getEntitiesIdClaim());  
+        List<String> enititiesIdList = new ArrayList<>();
+		if (entitiesId!=null)  enititiesIdList.addAll(Arrays.asList(entitiesId.split(";")));	
+		return enititiesIdList;      
+
+    }
 
 }

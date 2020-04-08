@@ -101,11 +101,20 @@ public class DataInitComponent {
                 for (String groupName : u.getGroupSet()) {
                     if (!loadedUser.getGroupSet().contains(groupName)) {
                         loadedUser.addGroup(groupName);
-                        log.info("Added '{}' to existing user '{}'", groupName, loadedUser.getLogin());
+                        log.info("Added group '{}' to existing user '{}'", groupName, loadedUser.getLogin());
 
                         updated = true;
                     }
                 }
+                for (String entityId : u.getEntities()) {
+                    if (!loadedUser.getEntities().contains(entityId)) {
+                        loadedUser.addEntity(entityId);
+                        log.info("Added entityId '{}' to existing user '{}'", entityId, loadedUser.getLogin());
+
+                        updated = true;
+                    }
+                }
+
                 if (updated)
                     userRepository.save(loadedUser);
             }
