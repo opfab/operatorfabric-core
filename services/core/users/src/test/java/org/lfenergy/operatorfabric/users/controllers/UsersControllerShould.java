@@ -37,6 +37,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p></p>
  * Created on 13/09/18
@@ -79,6 +82,7 @@ class UsersControllerShould {
     @BeforeEach
     public void init() {
         UserData u1, u2, u3;
+
         u1 = UserData.builder()
                 .login("jcleese")
                 .firstName("John")
@@ -90,12 +94,14 @@ class UsersControllerShould {
                 .firstName("Graham")
                 .lastName("Chapman")
                 .group("Monty Pythons")
+                .entity("entity1").entity("entity2")
                 .build();
         u3 = UserData.builder()
                 .login("kkline")
                 .firstName("Kevin")
                 .lastName("Kline")
                 .group("Wanda")
+                .entity("entity1")
                 .build();
         userRepository.insert(u1);
         userRepository.insert(u2);
@@ -148,6 +154,8 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.firstName", is("Graham")))
                     .andExpect(jsonPath("$.lastName", is("Chapman")))
                     .andExpect(jsonPath("$.groups", contains("Monty Pythons")))
+                    .andExpect(jsonPath("$['entities'].[0]", equalTo("entity1")))
+                    .andExpect(jsonPath("$['entities'].[1]", equalTo("entity2")))
             ;
         }
 
@@ -377,21 +385,6 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.lastName", is("Kline")))
             ;
 
-//            ResultActions result = mockMvc.perform(post("/users")
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .content("{" +
-//                            "\"login\": \"kkline\"," +
-//                            "\"firstName\": \"KEVIN\"," +
-//                            "\"lastName\": \"KLINE\"" +
-//                            "}")
-//            )
-//                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-//                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-//                    .andExpect(jsonPath("$.message", is("Resource creation failed because a resource with the same key already exists.")))
-//                    .andExpect(jsonPath("$.errors", hasSize(1)))
-//                    .andExpect(jsonPath("$.errors[0]", stringContainsInOrder(Arrays.asList("duplicate key", "\"kkline\""))));
-
             mockMvc.perform(get("/users"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -560,6 +553,8 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.firstName", is("Graham")))
                     .andExpect(jsonPath("$.lastName", is("Chapman")))
                     .andExpect(jsonPath("$.groups", contains("Monty Pythons")))
+                    .andExpect(jsonPath("$['entities'].[0]", equalTo("entity1")))
+                    .andExpect(jsonPath("$['entities'].[1]", equalTo("entity2")))
             ;
         }
 
@@ -717,10 +712,6 @@ class UsersControllerShould {
             result
                     .andDo(MockMvcResultHandlers.log())
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.status", is(HttpStatus.FORBIDDEN.name())))
-//                .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_SETTINGS_NOT_FOUND_MSG, "kkline"))))
-//                .andExpect(jsonPath("$.errors").doesNotExist())
             ;
         }
 

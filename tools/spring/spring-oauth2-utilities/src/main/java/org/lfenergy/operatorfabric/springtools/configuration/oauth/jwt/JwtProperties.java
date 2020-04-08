@@ -30,4 +30,8 @@ public class JwtProperties {
 	public String givenNameClaim = "given-name";
 	public String familyNameClaim = "family-name";
 
+	
+	public String entitiesIdClaim = "entitiesId";
+	public boolean gettingEntitiesFromToken = false;
+
 }

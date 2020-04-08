@@ -44,6 +44,11 @@ definitions:
         type: string
       lastName:
         type: string
+      entities:
+        type: array
+        items:
+          type: string
+          uniqueItems: true
       groups:
         type: array
         items:
