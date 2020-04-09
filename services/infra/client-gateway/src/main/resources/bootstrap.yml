@@ -11,4 +11,5 @@ spring:
         service-id: config
         enabled: true
 logging:
-  level: debug
+  level:
+    root: debug
