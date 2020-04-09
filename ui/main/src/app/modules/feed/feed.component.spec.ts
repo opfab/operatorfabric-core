@@ -30,7 +30,7 @@ import {CustomRouterStateSerializer} from "@ofStates/router.state";
 import {TranslateModule} from "@ngx-translate/core";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {ServicesModule} from "@ofServices/services.module";
-import {compareBySeverityLttdPublishDate} from "@ofStates/feed.state";
+import {compareByPublishDate} from "@ofStates/feed.state";
 import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
 
 describe('FeedComponent', () => {
@@ -109,7 +109,7 @@ describe('FeedComponent', () => {
         store.dispatch(action);
         const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
         lightCards$.subscribe(lightCard => {
-            expect(lightCard).toEqual([oneCard, anotherCard].sort(compareBySeverityLttdPublishDate)); //This is the default sort
+            expect(lightCard).toEqual([oneCard, anotherCard].sort(compareByPublishDate)); //This is the default sort
         });
         expect(store.dispatch).toHaveBeenCalledWith(action);
         expect(component).toBeTruthy();
@@ -129,15 +129,15 @@ describe('FeedComponent', () => {
     it('should create a list with two cards when two arrays of one card are dispatched' +
         ' 1', () => {
         // const compiled = fixture.debugElement.nativeElement;
-        const oneCard = getOneRandomLightCard({startDate:Date.now()});
-        const anotherCard = getOneRandomLightCard({startDate:Date.now()-3600000});
+        const oneCard = getOneRandomLightCard({publishDate:Date.now()});
+        const anotherCard = getOneRandomLightCard({publishDate:Date.now()+3600000});
         const action = new LoadLightCardsSuccess({lightCards: [oneCard]});
         store.dispatch(action);
         const action0 = new LoadLightCardsSuccess({lightCards: [anotherCard]});
         store.dispatch(action0);
         const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
         lightCards$.subscribe(lightCard => {
-            expect(lightCard).toEqual([anotherCard,oneCard].sort(compareBySeverityLttdPublishDate));
+            expect(lightCard).toEqual([anotherCard,oneCard].sort(compareByPublishDate)); //default sort
         });
         expect(store.dispatch).toHaveBeenCalledWith(action);
         expect(component).toBeTruthy();
