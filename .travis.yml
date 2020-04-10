@@ -81,7 +81,7 @@ jobs:
   - stage: doc
     script:
       - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
-      - ./gradlew --build-cache generateSwaggerCodeDoc javadoc asciidoctor :ui:main:npm_run_compodoc securityReport
+      - ./gradlew --build-cache generateSwaggerUI asciidoctor
       - ./CICD/travis/upload_doc.sh
 stages:
   - test-assemble

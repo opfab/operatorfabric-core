@@ -10,11 +10,20 @@ jar {
     }
 }
 swaggerSources {
+
     model {
         inputFile = file("../../services/core/cards-publication/src/main/modeling/swagger.yaml")
-    }
-
-    doc {
-        inputFile = file('../../services/core/cards-publication/src/main/modeling/swagger.yaml')
+        code {
+            language = 'org.lfenergy.operatorfabric.generators.OpfabClientGenerator'
+            configFile = file('src/main/modeling/config.json')
+            outputDir = file("./build/swagger")
+            templateDir = file('../src/main/resources/swagger-templates')
+            components = ['models']
+        }
+        ui {
+            outputDir = file("./build/docs/api")
+        }
     }
 }
+
+

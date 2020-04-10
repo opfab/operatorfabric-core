@@ -17,7 +17,8 @@ file("versions.properties").withReader { reader ->
 ext {
     operatorfabric = [
             group: "org.lfenergy.operatorfabric",
-            version: version = rootProject.file('VERSION').text.trim()
+            version: version = rootProject.file('VERSION').text.trim(),
+            revisionDate: revisionDate = new Date().format('dd MMMM yyyy')
     ]
 
     boot = [
@@ -79,6 +80,8 @@ ext {
     generator = [
             swagger                 : "io.swagger:swagger-codegen-cli:${versions['swagger']}",
             swaggerGeneratorPlugin  : "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:${versions['swagger.generator.plugin']}",
+            swaggerUI               : "org.webjars:swagger-ui:${versions['swaggerUI']}",
+            //TODO Is springFox still used? What for?
             springfoxSwagger2       : "io.springfox:springfox-swagger2:${versions['springfox']}",
             springfoxSwaggerUI      : "io.springfox:springfox-swagger-ui:${versions['springfox']}"
     ]
@@ -105,25 +108,24 @@ licenseReport {
 }
 
 asciidoctor {
+
     sources {
-        include 'architecture/index.adoc','start/index.adoc','user_guide/index.adoc','developer_guide/index.adoc', 'release_notes/index.adoc'
+        include '*/index.adoc','docs/*'
     }
     resources {
         from('src/docs/asciidoc') {
-            include 'architecture/images/**/*', 'start/images/*', 'user_guide/images/*','developer_guide/images/*', 'release_notes/images/*'
+            include 'images/*'
         }
     }
-    attributes nofooter : ''
-    
+    attributes  nofooter            : '',
+                revnumber           : operatorfabric.version,
+                revdate             : operatorfabric.revisionDate,
+                sectnums            : '',
+                toc                 : 'left',
+                toclevels           : '3',
+                icons               : 'font',
+                "hide-uri-scheme"   : ''
 }
-
-//asciidoctor.doLast {
-//    copy {
-//        from "src/docs/asciidoc/architecture/images"
-//        into "build/asciidoc/html5/architecture/images"
-//        include '**/*'
-//    }
-//}
 
 subprojects {
 
@@ -177,24 +179,6 @@ subprojects {
             options.noTimestamp()
         }
 
-        asciidoctor {
-            sources {
-                include 'index.adoc'
-            }
-            resources {
-                from('src/docs/asciidoc') {
-                    include 'images/**/*'
-                }
-            }
-            attributes nofooter : ''
-        }
-        asciidoctor.doLast {
-            copy {
-                from "$buildDir/asciidoc/html5"
-                into "$buildDir/docs/reference"
-                include '*'
-            }
-        }
     }
 }
 
