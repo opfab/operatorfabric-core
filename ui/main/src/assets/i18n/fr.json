@@ -42,8 +42,8 @@
       }
     },
     "sort": {
-      "severityLttdPub": "Trier par type, lttd et date de publication",
-      "lttdPub": "Trier par lttd et date de publication"
+      "severityPub": "Triées par type puis date de publication",
+      "pub": "Triées par date de publication"
     }
   },
   "login":{

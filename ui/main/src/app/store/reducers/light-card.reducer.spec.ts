@@ -156,7 +156,7 @@ describe('LightCard Reducer', () => {
                     loading: false,
                     error: '',
                     filters: new Map(),
-                    sortBySeverity: true
+                    sortBySeverity: false
                 });
 
             const expectedState: CardFeedState = LightCardAdapter.getInitialState(
@@ -166,7 +166,7 @@ describe('LightCard Reducer', () => {
                     loading: false,
                     error: '',
                     filters: new Map(),
-                    sortBySeverity: true
+                    sortBySeverity: false
                 });
 
             const result = reducer(previousState, action);

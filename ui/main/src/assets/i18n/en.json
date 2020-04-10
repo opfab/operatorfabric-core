@@ -42,8 +42,8 @@
       }
     },
     "sort": {
-      "severityLttdPub": "Sort by severity, lttd and publication",
-      "lttdPub": "Sort by lttd and publication"
+      "severityPub": "Sorted by severity then publication",
+      "pub": "Sorted by publication"
     }
   },
   "login":{

@@ -20,7 +20,7 @@ import {FilterType,FilterService} from "@ofServices/filter.service";
  *  * message: last message during state processing
  *  * filters: a collection of filter to apply to the rendered feed
  *  * sortBySeverity: Indicates whether the cards in the feed should be sorted by severity before being sorted by
- *    lttd (asc = earliest first) then publishDate (desc = latest first)
+ *    publishDate (desc = latest first)
  */
 export interface CardFeedState extends EntityState<LightCard> {
     selectedCardId: string;
@@ -39,25 +39,12 @@ export function compareBySeverity(card1: LightCard, card2: LightCard){
     return severityOrdinal(card1.severity) - severityOrdinal(card2.severity);
 }
 
-export function compareByLttd(card1: LightCard, card2: LightCard){
-    return card1.lttd - card2.lttd;
-}
-
 export function compareByPublishDate(card1: LightCard, card2: LightCard){
     return card2.publishDate - card1.publishDate;
 }
 
-export function compareBySeverityLttdPublishDate(card1: LightCard, card2: LightCard){
+export function compareBySeverityPublishDate(card1: LightCard, card2: LightCard){
     let result = compareBySeverity(card1,card2);
-    if(result==0)
-        result = compareByLttd(card1,card2);
-    if(result == 0)
-        result = compareByPublishDate(card1,card2);
-    return result;
-}
-
-export function compareByLttdPublishDate(card1: LightCard, card2: LightCard){
-    let result = compareByLttd(card1,card2);
     if(result == 0)
         result = compareByPublishDate(card1,card2);
     return result;
@@ -87,5 +74,5 @@ export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(
         loading: false,
         error: '',
         filters: getDefaultFilter(),
-        sortBySeverity: true
+        sortBySeverity: false
     });

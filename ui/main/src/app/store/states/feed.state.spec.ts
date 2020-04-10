@@ -9,11 +9,8 @@
 import {Severity} from "@ofModel/light-card.model";
 import {getOneRandomLightCard} from "@tests/helpers";
 import {
-    compareByLttd,
-    compareByLttdPublishDate,
     compareByPublishDate,
-    compareBySeverity,
-    compareBySeverityLttdPublishDate,
+    compareBySeverity, compareBySeverityPublishDate,
     compareByStartDate
 } from "@ofStates/feed.state";
 
@@ -21,7 +18,7 @@ describe('FeedState', () => {
     const card1 = getOneRandomLightCard({startDate:5000, severity:Severity.INFORMATION, lttd:10000, publishDate:5000});
     const card2 = getOneRandomLightCard({startDate:10000, severity: Severity.ALARM, lttd:5000, publishDate:10000});
     const card3 = getOneRandomLightCard({startDate:10000, severity: Severity.INFORMATION, lttd:10000, publishDate:10000});
-    const card4 = getOneRandomLightCard({startDate:10000, severity: Severity.ALARM, lttd:10000, publishDate:10000});
+    const card4 = getOneRandomLightCard({startDate:10000, severity: Severity.ALARM, lttd:10000, publishDate:5000});
 
     describe('#compareByStartDate', () => {
         it('should sort', () => {
@@ -33,28 +30,17 @@ describe('FeedState', () => {
             expect(compareBySeverity(card1,card2)).toBeGreaterThan(0);
         });
     });
-    describe('#compareByLttd', () => {
-        it('should sort', () => {
-            expect(compareByLttd(card1,card2)).toBeGreaterThan(0);
-        });
-    });
     describe('#compareByPublishDate', () => {
         it('should sort', () => {
             expect(compareByPublishDate(card1,card2)).toBeGreaterThan(0);
         });
     });
-    describe('#compareBySeverityLttdPublishDate', () => {
+    describe('#compareBySeverityPublishDate', () => {
         it('should sort', () => {
-            expect(compareBySeverityLttdPublishDate(card1,card3)).toBeGreaterThan(0);
-            expect(compareBySeverityLttdPublishDate(card2,card4)).toBeLessThan(0);
-            expect([card1,card2,card3,card4].sort(compareBySeverityLttdPublishDate)).toEqual([card2,card4,card3,card1])
+            expect(compareBySeverityPublishDate(card1,card2)).toBeGreaterThan(0); //Different severities
+            expect(compareBySeverityPublishDate(card1,card3)).toBeGreaterThan(0); //Same severities, different publishDate
+            expect([card1,card2,card3,card4].sort(compareBySeverityPublishDate)).toEqual([card2,card4,card3,card1])
         });
     });
-    describe('#compareByLttdPublishDate', () => {
-        it('should sort', () => {
-            expect(compareByLttdPublishDate(card1,card3)).toBeGreaterThan(0);
-            expect(compareByLttdPublishDate(card2,card3)).toBeLessThan(0);
-            expect([card1,card2,card3].sort(compareByLttdPublishDate)).toEqual([card2,card3,card1])
-        });
-    });
+
 });

@@ -7,7 +7,7 @@
 
 
 import {createSelector} from '@ngrx/store';
-import {compareByLttdPublishDate, compareBySeverityLttdPublishDate, LightCardAdapter} from '@ofStates/feed.state';
+import {compareByPublishDate, compareBySeverityPublishDate, LightCardAdapter} from '@ofStates/feed.state';
 import {AppState} from "@ofStore/index";
 import {Filter} from "@ofModel/feed-filter.model";
 import {LightCard} from "@ofModel/light-card.model";
@@ -61,9 +61,9 @@ export const selectSortedFilterLightCardIds = createSelector(
     ( entityArray, sortBySeverity ) => {
         function compareFn(sortBySeverity: boolean){
             if(sortBySeverity) {
-                return compareBySeverityLttdPublishDate;
+                return compareBySeverityPublishDate;
             } else {
-                return compareByLttdPublishDate;
+                return compareByPublishDate;
             }
         }
         return entityArray

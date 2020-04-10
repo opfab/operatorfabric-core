@@ -15,7 +15,7 @@ import {ChangeSort} from "@ofActions/feed.actions";
   templateUrl: './severity-sort.component.html'
 })export class SeveritySortComponent implements OnInit {
 
-  toggleActive = true;
+  toggleActive = false;
 
   constructor(private store: Store<AppState>) { }
 

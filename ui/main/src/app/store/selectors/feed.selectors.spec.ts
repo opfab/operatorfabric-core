@@ -10,8 +10,8 @@ import {AppState} from '@ofStore/index';
 import {emptyAppState4Test, getOneRandomCard, getSeveralRandomLightCards} from '@tests/helpers';
 import {
     CardFeedState,
-    compareByLttdPublishDate,
-    compareBySeverityLttdPublishDate,
+    compareByPublishDate,
+    compareBySeverityPublishDate,
     feedInitialState,
     LightCardAdapter
 } from "@ofStates/feed.state";
@@ -24,7 +24,7 @@ describe('FeedSelectors', () => {
         ...feedInitialState
     };
 
-    it('should be sorted by lttd,publishDate if sortBySeverity=false', () => {
+    it('should be sorted by publishDate if sortBySeverity=false', () => {
 
         const lightCards: LightCard[] = getSeveralRandomLightCards(6);
 
@@ -36,12 +36,12 @@ describe('FeedSelectors', () => {
         }
 
         //Expected sort
-        const sortedLightCards: LightCard[] = lightCards.sort(compareByLttdPublishDate)
+        const sortedLightCards: LightCard[] = lightCards.sort(compareByPublishDate)
         expect(selectSortedFilteredLightCards(testAppState)).toEqual(sortedLightCards);
 
     });
 
-    it('should be sorted by severity,lttd,publishDate if sortBySeverity=true', () => {
+    it('should be sorted by severity,publishDate if sortBySeverity=true', () => {
 
         const lightCards: LightCard[] = getSeveralRandomLightCards(6);
 
@@ -53,7 +53,7 @@ describe('FeedSelectors', () => {
         }
 
         //Expected sort
-        const sortedLightCards: LightCard[] = lightCards.sort(compareBySeverityLttdPublishDate)
+        const sortedLightCards: LightCard[] = lightCards.sort(compareBySeverityPublishDate)
         expect(selectSortedFilteredLightCards(testAppState)).toEqual(sortedLightCards);
 
     });
