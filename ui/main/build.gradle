@@ -34,3 +34,7 @@ else
 task securityReport {
     dependsOn 'npm_run_audit'
 }
+
+build.dependsOn(npm_run_build)
+
+assemble.dependsOn(npm_run_build)

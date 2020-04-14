@@ -19,7 +19,7 @@ include 'services:core:actions'
 include 'services:core:cards-publication'
 include 'services:core:cards-consultation'
 include 'services:core:users'
-include 'services:web:web-ui'
+include 'web-ui'
 include 'ui:main'
 
 project(':client:actions').name = 'actions-client-data'
@@ -34,6 +34,7 @@ project(':services:core:cards-consultation').name = 'cards-consultation-business
 project(':services:infra:config').name = 'configuration-cloud-service'
 project(':services:infra:registry').name = 'registry-cloud-service'
 project(':services:infra:client-gateway').name = 'client-gateway-cloud-service'
+project(':web-ui').name = 'web-ui'
 project(':ui:main').name = 'main-user-interface'
 
 //we check if the modules have gradle configuration files
