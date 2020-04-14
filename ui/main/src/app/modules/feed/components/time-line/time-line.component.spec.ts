@@ -100,11 +100,12 @@ describe('TimeLineComponent', () => {
 
   it('should create four different circles when there is ' +
       'four cards with different severity in the state', (done) => {
+      const today = new Date().getTime();
     fixture.detectChanges();
-    const compliantCard = getOneRandomLightCard({severity: 'COMPLIANT'});
-    const actionCard = getOneRandomLightCard({severity: 'ACTION'});
-    const alarmCard = getOneRandomLightCard({severity: 'ALARM'});
-    const informationCard = getOneRandomLightCard({severity: 'INFORMATION'});
+    const compliantCard = getOneRandomLightCard({severity: 'COMPLIANT', publishDate: today});
+    const actionCard = getOneRandomLightCard({severity: 'ACTION', publishDate: today});
+    const alarmCard = getOneRandomLightCard({severity: 'ALARM', publishDate: today});
+    const informationCard = getOneRandomLightCard({severity: 'INFORMATION', publishDate: today});
     const action = new LoadLightCardsSuccess({lightCards: [alarmCard,actionCard,compliantCard,informationCard] as LightCard[]});
     store.dispatch(action);
     const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
