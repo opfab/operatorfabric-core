@@ -73,19 +73,25 @@ public class CardNotificationService {
         List listOfGroupRecipients = new ArrayList();
         card.getGroupRecipients().forEach(group -> listOfGroupRecipients.add(group));
         cardOperation.setGroupRecipientsIds(listOfGroupRecipients);
+
+        List listOfEntityRecipients = new ArrayList();
+        if (card.getEntityRecipients() != null)
+            card.getEntityRecipients().forEach(entity -> listOfEntityRecipients.add(entity));
+        cardOperation.setEntityRecipientsIds(listOfEntityRecipients);
         pushCardInRabbit(cardOperation, "GROUP_EXCHANGE", "");
     }
 
     private void pushCardInRabbit(CardOperationData cardOperation,String queueName,String routingKey) {
         try {
             rabbitTemplate.convertAndSend(queueName, routingKey, mapper.writeValueAsString(cardOperation));
-            log.debug("Operation sent to Exchange[{}] with routing key {}, type={}, ids={}, cards={}, groupRecipientsIds={}"
+            log.debug("Operation sent to Exchange[{}] with routing key {}, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}"
                     , queueName
                     , routingKey
                     , cardOperation.getType()
                     , cardOperation.getCardIds().toString()
                     , cardOperation.getCards().toString()
-                    , cardOperation.getGroupRecipientsIds().toString());
+                    , cardOperation.getGroupRecipientsIds().toString()
+                    , cardOperation.getEntityRecipientsIds().toString());
         } catch (JsonProcessingException e) {
             log.error("Unable to linearize card to json on amqp notification");
         }

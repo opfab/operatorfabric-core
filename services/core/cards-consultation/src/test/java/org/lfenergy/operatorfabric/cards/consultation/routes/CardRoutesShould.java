@@ -78,12 +78,10 @@ public class CardRoutesShould {
 
         @Test
         public void findOutCard() {
-            int oneHourInSeconds = 3600;
             Instant now = Instant.now();
-            List<String> groups = Arrays.asList("SOME_GROUP");
 
             CardConsultationData simpleCard = instantiateOneCardConsultationData();
-            configureRecipientReferencesAndStartDate(simpleCard,"userWithGroup",now,"SOME_GROUP");
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
 
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
@@ -117,6 +115,110 @@ public class CardRoutesShould {
             webTestClient.get().uri("/cards/{id}",simpleCard.getId()).exchange()
                     .expectStatus().isForbidden()
             ;
+        }
+
+    }
+
+    @Nested
+    @WithMockOpFabUser(login="userWithGroupAndEntity", roles={"SOME_GROUP"}, entities={"SOME_ENTITY"})
+    public class GivenUserWithGroupAndEntityCardRoutesShould {
+
+        @Test
+        public void findOutCard(){
+            Instant now = Instant.now();
+
+            CardConsultationData simpleCard1 = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard1, "", now,
+                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+
+            CardConsultationData simpleCard2 = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard2, "", now,
+                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY"});//must not receive
+
+            CardConsultationData simpleCard3 = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard3, "", now,
+                    new String[]{"OTHER_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive
+
+            CardConsultationData simpleCard4 = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard4, "", now,
+                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, null);//must receive
+
+            CardConsultationData simpleCard5 = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard5, "", now,
+                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+
+            CardConsultationData simpleCard6 = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard6, "", now,
+                    null, null);//must not receive
+
+            StepVerifier.create(repository.save(simpleCard1))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}", simpleCard1.getId()).exchange()
+                    .expectStatus().isOk()
+                    .expectBody(CardConsultationData.class).value(card -> {
+                assertThat(card)
+                        //This is necessary because empty lists are ignored in the returned JSON
+                        .usingComparatorForFields(new EmptyListComparator<String>(),
+                                "tags", "details", "userRecipients","orphanedUsers")
+                        .isEqualToComparingFieldByFieldRecursively(simpleCard1);
+            });
+
+            StepVerifier.create(repository.save(simpleCard2))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}", simpleCard2.getId()).exchange()
+                    .expectStatus().isNotFound();
+
+            StepVerifier.create(repository.save(simpleCard3))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}", simpleCard3.getId()).exchange()
+                    .expectStatus().isNotFound();
+
+            StepVerifier.create(repository.save(simpleCard4))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}", simpleCard4.getId()).exchange()
+                    .expectStatus().isOk()
+                    .expectBody(CardConsultationData.class).value(card -> {
+                assertThat(card)
+                        //This is necessary because empty lists are ignored in the returned JSON
+                        .usingComparatorForFields(new EmptyListComparator<String>(),
+                                "tags", "details", "userRecipients","orphanedUsers")
+                        .isEqualToComparingFieldByFieldRecursively(simpleCard4);
+            });
+
+            StepVerifier.create(repository.save(simpleCard5))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}", simpleCard5.getId()).exchange()
+                    .expectStatus().isOk()
+                    .expectBody(CardConsultationData.class).value(card -> {
+                assertThat(card)
+                        //This is necessary because empty lists are ignored in the returned JSON
+                        .usingComparatorForFields(new EmptyListComparator<String>(),
+                                "tags", "details", "userRecipients","orphanedUsers")
+                        .isEqualToComparingFieldByFieldRecursively(simpleCard5);
+            });
+
+            StepVerifier.create(repository.save(simpleCard6))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}", simpleCard6.getId()).exchange()
+                    .expectStatus().isNotFound();
         }
 
     }

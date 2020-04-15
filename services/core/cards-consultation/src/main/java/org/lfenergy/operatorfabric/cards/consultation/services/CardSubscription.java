@@ -28,6 +28,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>This object manages subscription to AMQP exchange</p>
@@ -184,7 +186,7 @@ public class CardSubscription {
         groupMlc.setupMessageListener((MessageListener) message -> {
 
             String messageBody = new String(message.getBody());
-            if (isUserInGroupRecipients(messageBody)){
+            if (checkIfUserMustReceiveTheCard(messageBody)){
                 log.info("PUBLISHING message from {}",queueName);
                 emitter.next(messageBody);
             }
@@ -276,19 +278,30 @@ public class CardSubscription {
 
     /**
      * @param messageBody message body received from rabbitMQ
-     * @return true if the message received is intended for one of the user's groups
+     * @return true if the message received is either :
+     * 1) intended for one of the user's groups and there is no entityRecipients in the card
+     * 2) or intended for one of the user's entities and there is no groupRecipients in the card
+     * 3) or intended for one of the user's groups and also for one of the user's entities
      */
-    public boolean isUserInGroupRecipients(final String messageBody){
-        try{
-            JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
-            JSONObject obj = (JSONObject)parser.parse(messageBody);
-            JSONArray array = (JSONArray)obj.get("groupRecipientsIds");
+    public boolean checkIfUserMustReceiveTheCard(final String messageBody){
+        try {
+            JSONObject obj = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(messageBody);
+            JSONArray groupRecipientsIdsArray = (JSONArray) obj.get("groupRecipientsIds");
+            JSONArray entityRecipientsIdsArray = (JSONArray) obj.get("entityRecipientsIds");
+            List<String> userGroups = user.getGroups();
+            List<String> userEntities = user.getEntities();
 
-            if (array != null) {
-                for (String group : user.getGroups()) {
-                    if (array.contains(group))
-                        return true;
-                }
+            if (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()) { //no entityRecipients in the card
+                return (userGroups != null) && (groupRecipientsIdsArray != null)
+                        && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
+            }
+            else if (groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty()){ //entityRecipients present in the card and no groupRecipients
+                return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray));
+            }
+            else{ //entityRecipients and groupRecipients present in the card
+                return (userEntities != null) && (userGroups != null)
+                        && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
+                        && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
             }
         }
         catch(ParseException e){ log.error("ERROR during received message parsing", e); }

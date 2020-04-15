@@ -54,18 +54,18 @@ public class TestUtilities {
     /* Utilities regarding Cards */
 
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null);
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null);
     }
 
-    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String... groups) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups);
+    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities);
     }
 
     public static CardConsultationData createSimpleCard(String processSuffix
             , Instant publication
             , Instant start
             , Instant end
-            , String login, String... groups) {
+            , String login, String[] groups, String[] entities) {
         CardConsultationData.CardConsultationDataBuilder cardBuilder = CardConsultationData.builder()
                 .processId("PROCESS" + processSuffix)
                 .publisher("PUBLISHER")
@@ -79,6 +79,8 @@ public class TestUtilities {
 
         if (groups != null && groups.length > 0)
             cardBuilder.groupRecipients(Arrays.asList(groups));
+        if (entities != null && entities.length > 0)
+            cardBuilder.entityRecipients(Arrays.asList(entities));
         if (login != null)
             cardBuilder.orphanedUser(login);
         CardConsultationData card = cardBuilder.build();
@@ -143,14 +145,14 @@ public class TestUtilities {
     /* Utilities regarding archived Cards */
 
     public static ArchivedCardConsultationData createSimpleArchivedCard(int processSuffix, String publisher, Instant publication, Instant start, Instant end) {
-        return createSimpleArchivedCard(Integer.toString(processSuffix), publisher, publication, start, end, null);
+        return createSimpleArchivedCard(Integer.toString(processSuffix), publisher, publication, start, end, null, null, null);
     }
 
-    public static ArchivedCardConsultationData createSimpleArchivedCard(int processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String... groups) {
-        return createSimpleArchivedCard(Integer.toString(processSuffix), publisher, publication, start, end, login, groups);
+    public static ArchivedCardConsultationData createSimpleArchivedCard(int processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
+        return createSimpleArchivedCard(Integer.toString(processSuffix), publisher, publication, start, end, login, groups, entities);
     }
 
-    public static ArchivedCardConsultationData createSimpleArchivedCard(String processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String... groups) {
+    public static ArchivedCardConsultationData createSimpleArchivedCard(String processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
         ArchivedCardConsultationData.ArchivedCardConsultationDataBuilder archivedCardBuilder = ArchivedCardConsultationData.builder()
                 .processId("PROCESS" + processSuffix)
                 .publisher(publisher)
@@ -164,6 +166,8 @@ public class TestUtilities {
 
         if (groups != null && groups.length > 0)
             archivedCardBuilder.groupRecipients(Arrays.asList(groups));
+        if (entities != null && entities.length > 0)
+            archivedCardBuilder.entityRecipients(Arrays.asList(entities));
         if (login != null)
             archivedCardBuilder.userRecipient(login);
         ArchivedCardConsultationData archivedCard = archivedCardBuilder.build();
@@ -253,9 +257,10 @@ public class TestUtilities {
 
     //TODO Method to check if a flux of pages are sorted
 //
-    public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card, String user, Instant startDate, String... groups) {
+    public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card, String user, Instant startDate, String[] groups, String[] entities) {
         card.setStartDate(startDate);
-        card.setGroupRecipients(Arrays.asList(groups));
+        card.setGroupRecipients(groups != null ? Arrays.asList(groups) : null);
+        card.setEntityRecipients(entities != null ? Arrays.asList(entities) : null);
         card.setUserRecipients(Arrays.asList(user));
         return card;
     }

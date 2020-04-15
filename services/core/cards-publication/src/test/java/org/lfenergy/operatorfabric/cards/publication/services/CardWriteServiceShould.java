@@ -37,10 +37,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -168,6 +165,9 @@ class CardWriteServiceShould {
                 subdata.put("int", 456);
                 subdata.put("string", "test2");
                 data.put("object", subdata);
+                ArrayList<String> entityRecipients = new ArrayList<>();
+                entityRecipients.add("TSO1");
+                entityRecipients.add("TSO2");
                 CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")
                                 .publisherVersion("0.0.1").processId("PROCESS_1").severity(SeverityEnum.ALARM)
                                 .startDate(start).title(I18nPublicationData.builder().key("title").build())
@@ -181,6 +181,7 @@ class CardWriteServiceShould {
                                                 .recipient(RecipientPublicationData.builder().type(RecipientEnum.USER)
                                                                 .identity("eric").build())
                                                 .build())
+                                .entityRecipients(entityRecipients)
                                 .timeSpan(TimeSpanPublicationData.builder().start(Instant.ofEpochMilli(123l)).build())
                                 .build();
                 cardWriteService.createCards(Flux.just(newCard)).subscribe();

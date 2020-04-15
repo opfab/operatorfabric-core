@@ -17,7 +17,7 @@ Feature: patch user settings
   "email" : "user@user.com",
   "description" : "my dummy user",
   "timeZone" : "Europe/Dublin",
-  "locale" : "en-GB",
+  "locale" : "en",
   "timeFormat" : "LT",
   "dateFormat" : "L",
   "defaultTags" : [ "tag 1", "tag 2" ]
@@ -31,7 +31,7 @@ Feature: patch user settings
   "email" : "tso1-operator@user.com",
   "description" : "my dummy tso1-operator user",
   "timeZone" : "Australia/Melbourne",
-  "locale" : "en-AU",
+  "locale" : "en",
   "timeFormat" : "LT",
   "dateFormat" : "L",
   "defaultTags" : [ "tag 3", "tag 4" ]

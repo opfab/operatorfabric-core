@@ -49,9 +49,13 @@ public class ArchivedCardRepositoryShould {
     public static final String login1 = "user1Login";
     public static final String login2 = "user2Login";
     public static final String login3 = "user3Login";
+    public static final String login4 = "user4Login";
+    public static final String login5 = "user5Login";
     private static User user1 = new User();
     private static User user2 = new User();
     private static User user3 = new User();
+    private static User user4 = new User();
+    private static User user5 = new User();
 
     private static Instant now = Instant.now();
     private static Instant nowPlusHalf = now.plus(30, ChronoUnit.MINUTES);
@@ -83,11 +87,24 @@ public class ArchivedCardRepositoryShould {
         user1.setLogin(login1);
         user1.addGroupsItem("someGroup");
         user1.addGroupsItem("someOtherGroup");
+        //Groups only
+
         user2.setLogin(login2);
         user2.addGroupsItem("rte");
-        user3.setLogin(login3);
-        //No groups
+        //Group only
 
+        user3.setLogin(login3);
+        //No group and no entity
+
+        user4.setLogin(login4);
+        user4.addEntitiesItem("someEntity");
+        user4.addEntitiesItem("someOtherEntity");
+        //Entities only
+
+        user5.setLogin(login5);
+        user5.addGroupsItem("group1");
+        user5.addEntitiesItem("entity1");
+        //Group and entity
     }
 
     @BeforeEach
@@ -95,36 +112,42 @@ public class ArchivedCardRepositoryShould {
         //TODO Limit test data to what's really necessary
         int processNo = 0;
         //create past cards
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne, login1, "rte", "operator"));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne, login1, "rte", "operator"));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusOne, now, login1, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, null));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusOne, now, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
         //create future cards
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, now, nowPlusOne, login1, "rte", "operator"));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusOne, nowPlusTwo, login1, "rte", "operator"));
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusTwo, nowPlusThree, login1, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, now, nowPlusOne, login1, new String[]{"rte","operator"}, null));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusOne, nowPlusTwo, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusTwo, nowPlusThree, login1, new String[]{"rte","operator"}, null));
 
         //card starts in past and ends in future
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusThree, nowPlusThree, login1, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusThree, nowPlusThree, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
 
         //card starts in past and never ends
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusThree, null, login1, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowMinusThree, null, login1, new String[]{"rte","operator"}, null));
 
         //card starts in future and never ends
-        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusThree, null, login1, "rte", "operator", "group2"));
+        persistCard(createSimpleArchivedCard(processNo++, firstPublisher, nowMinusThree, nowPlusThree, null, login1, new String[]{"rte","operator","group2"}, new String[]{"entity1","entity2"}));
 
         //create later published cards in past
-        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login1, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, null));
 
         //create later published cards in future
-        persistCard(createSimpleArchivedCard(3, firstPublisher, nowPlusOne, nowPlusOne, nowPlusTwo, login1, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(3, firstPublisher, nowPlusOne, nowPlusOne, nowPlusTwo, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
 
         //create cards with different publishers
-        persistCard(createSimpleArchivedCard(1, secondPublisher, now, nowMinusTwo, nowMinusOne, login1, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(1, secondPublisher, now, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, null));
 
-        persistCard(createSimpleArchivedCard(1, thirdPublisher, nowPlusTwo, now, null, login1, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(1, thirdPublisher, nowPlusTwo, now, null, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
 
         //create card sent to user3
-        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login3, "rte", "operator"));
+        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login3, new String[]{"rte","operator"}, null));
+
+        //create card only received by user4
+        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, null, null, new String[]{"someEntity"}));
+
+        //create card only received by user5
+        persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, null, new String[]{"group1"}, new String[]{"entity1"}));
 
     }
 
@@ -140,7 +163,7 @@ public class ArchivedCardRepositoryShould {
         repository.deleteAll().subscribe();
 
         ArchivedCardConsultationData card =
-                createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login1, "rte", "operator");
+                createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, new String[]{"entity1", "entity2"});
         StepVerifier.create(repository.save(card))
                 .expectNextMatches(computeCardPredicate())
                 .expectComplete()
@@ -158,12 +181,15 @@ public class ArchivedCardRepositoryShould {
         predicate = predicate.and(c -> c.getUserRecipients().contains(login1));
         predicate = predicate.and(c -> c.getGroupRecipients().contains("rte"));
         predicate = predicate.and(c -> c.getGroupRecipients().contains("operator"));
+        predicate = predicate.and(c -> c.getEntityRecipients().size() == 2);
+        predicate = predicate.and(c -> c.getEntityRecipients().get(0).equals("entity1"));
+        predicate = predicate.and(c -> c.getEntityRecipients().get(1).equals("entity2"));
         return predicate;
     }
 
     @Test void fetchArchivedCardByIdWithUserWhoIsARecipient() {
 
-        ArchivedCardConsultationData archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, "rte", "operator");
+        ArchivedCardConsultationData archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, null);
         String id = archivedCard.getId();
 
         persistCard(archivedCard);
@@ -182,7 +208,7 @@ public class ArchivedCardRepositoryShould {
 
     @Test void fetchArchivedCardByIdWithUserWhoIsNotARecipient() {
 
-        ArchivedCardConsultationData archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, "someGroup", "operator");
+        ArchivedCardConsultationData archivedCard = createSimpleArchivedCard(1, "PUBLISHER", nowPlusOne, nowMinusTwo, nowMinusOne, login1, new String[]{"someGroup","operator"}, null);
         String id = archivedCard.getId();
 
         persistCard(archivedCard);
@@ -547,12 +573,12 @@ public class ArchivedCardRepositoryShould {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
-        //Cards visible by someone from group rte
+        //Cards visible by someone from group "rte"
         Tuple2<User, MultiValueMap<String, String>> params = of(user2,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(14);
+                    assertThat(page.getTotalElements()).isEqualTo(7);
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     //Check sort order
                     assertTrue(checkIfPageIsSorted(page));
@@ -569,6 +595,36 @@ public class ArchivedCardRepositoryShould {
 
         //Cards visible by user3 (who has no groups at all)
         Tuple2<User, MultiValueMap<String, String>> params = of(user3,queryParams);
+
+        StepVerifier.create(repository.findWithUserAndParams(params))
+                .expectNextCount(1)
+                .expectComplete()
+                .verify();
+
+    }
+
+    @Test
+    public void fetchArchivedCardsEntityRecipientIsAllowedToSee() {
+
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+
+        //Cards visible by someone from entity "someEntity"
+        Tuple2<User, MultiValueMap<String, String>> params = of(user4,queryParams);
+
+        StepVerifier.create(repository.findWithUserAndParams(params))
+                .expectNextCount(1)
+                .expectComplete()
+                .verify();
+
+    }
+
+    @Test
+    public void fetchArchivedCardsGroupAndEntityRecipientAreAllowedToSee() {
+
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+
+        //Cards visible by someone from group "group1" and from entity "entity1"
+        Tuple2<User, MultiValueMap<String, String>> params = of(user5,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .expectNextCount(1)

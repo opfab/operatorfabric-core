@@ -54,6 +54,11 @@ definitions:
         items:
           type: string
           uniqueItems: true
+      entities:
+        type: array
+        items:
+          type: string
+          uniqueItems: true
     required:
       - login
     example:
