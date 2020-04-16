@@ -1,0 +1,30 @@
+spring:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+  data:
+    mongodb:
+      uris:
+        - mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://authserver/auth/realms/dev/protocol/openid-connect/certs
+eureka:
+  client:
+    service-url:
+      defaultZone: http://registry:8080/eureka
+    region: default
+  registryFetchIntervalSeconds: 5
+
+operatorfabric:
+  security:
+    oauth2:
+      client-id: opfab-client
+      client-secret: opfab-oauth-secret
+    jwt:
+      login-claim: preferred_username
+      expire-claim: exp

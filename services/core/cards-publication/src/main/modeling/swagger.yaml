@@ -585,7 +585,10 @@ paths:
         - cards
         - creation
       summary: publish cards
-      description: Publish one or more cards to OperatorFabric
+      description: >-
+        Publish one or more cards to OperatorFabric
+        The response for this method is always a `201` status. To make sure the cards have been published, check the
+        count returned in the body of the request.
       operationId: publishCardsAsync
       consumes:
         - application/json

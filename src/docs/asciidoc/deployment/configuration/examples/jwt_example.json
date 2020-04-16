@@ -1,0 +1,58 @@
+{
+  "jti": "5ff87583-10bd-4946-8753-9d58171c8b7f",
+  "exp": 1572979628,
+  "nbf": 0,
+  "iat": 1572961628,
+  "iss": "http://localhost:89/auth/realms/dev",
+  "aud": [
+    "AAA",
+    "BBB",
+    "account"
+  ],
+  "sub": "example_user",
+  "typ": "Bearer",
+  "azp": "opfab-client",
+  "auth_time": 0,
+  "session_state": "960cbec4-fcb2-47f2-a155-975832e61300",
+  "acr": "1",
+  "realm_access": {
+    "roles": [
+      "offline_access",
+      "uma_authorization"
+    ]
+  },
+  "resource_access": {
+    "AAA": {
+      "roles": [
+        "role_AAA"
+      ]
+    },
+    "BBB": {
+      "roles": [
+        "role_BBB"
+      ]
+    },
+    "opfab-client": {
+      "roles": [
+        "USER"
+      ]
+    },
+    "account": {
+      "roles": [
+        "manage-account",
+        "manage-account-links",
+        "view-profile"
+      ]
+    }
+  },
+  "scope": "openid ATTR2 email ATTR1 profile roleFieldList",
+  "email_verified": false,
+  "name": "example_firtstname example_lastname",
+  "ATTR2": "roleATTR2",
+  "ATTR1": "roleATTR1",
+  "preferred_username": "example_user",
+  "given_name": "example_firtstname",
+  "family_name": "example_lastname",
+  "email": "example_user@mail.com",
+  "roleFieldList": "roleA;roleB;roleC"
+}

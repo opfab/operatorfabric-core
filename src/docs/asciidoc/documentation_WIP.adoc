@@ -1,0 +1,33 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+//TODO Explain how documentation is organized and conventions, how to generate it
+Write docs with level 1 title (so they can be used on their own) + level offset (except for really short bits)
+
+All includes are defined based on root dir
+
+asciidoctor index.adoc -a imagesdir=images
+
+Avoid long lines (give char number)
+
+using custom ids : cumbersome but
+1) you get a warning if duplicates rather than silently link to the wrong section
+2) easier to find referenced text (ctrl-f on id)
+3) it's a sign that the content is referenced somewhere else (if you're thinking of deleting/moving it)
+
+defining label with the id doesn't work with relative links
+[[my_id, text to display]]
+
+ifdef::single-page-doc[<<card_structure, Card Structure>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_structure, Card Structure>>]
+
+ifdef::single-page-doc[link:../api/cards/index.html#/archives[here]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/cards/index.html#/archives[here]]
+
+{gradle-rootdir} doesn't work for images (because resolved when the page is displayed and not when it is generated like links,
+so didn't work because site structure doesn't match core structure?), hence the addition of docs subfolder

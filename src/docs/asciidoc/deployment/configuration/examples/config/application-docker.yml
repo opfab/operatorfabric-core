@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: [native]
+  cloud:
+    config:
+      server:
+        native:
+          search-locations:
+           - file:/service-config
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+eureka:
+  client:
+    region: default
+    service-url:
+      defaultZone: http://${REGISTRY_HOST}:${REGISTRY_PORT}/eureka
+    registryFetchIntervalSeconds: 5

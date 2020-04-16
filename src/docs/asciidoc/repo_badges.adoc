@@ -1,0 +1,21 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0
+License,link=https://www.mozilla.org/en-US/MPL/2.0/]
+image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master[Build
+Status,link=https://travis-ci.org/opfab/operatorfabric-core]
+image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status[Quality
+Gate,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
+image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=coverage[Coverage,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Coverage]
+image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=code_smells[Code
+Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
+image:https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg[Website
+opfab.github.io,link=http://opfab.github.io/]
+image:https://img.shields.io/badge/Join%20us%20on-Spectrum-%237473C0.svg[Join
+us on Spectrum,link=https://spectrum.chat/opfab]

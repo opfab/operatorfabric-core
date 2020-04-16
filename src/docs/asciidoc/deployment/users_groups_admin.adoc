@@ -1,0 +1,397 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+== Users and Groups Administration
+
+A new operator call John Doe, who has OAuth granted right to connect ot current `OperatorFabric` instance, need to receive cards within current `OperatorFabric` instance. As a user of OperatorFabric, he needs to be added to the system with a `login` (john-doe-operator), his `firstName` (John) and his `lastName` (Doe).
+operator
+As there is no `Administration GUI` for the moment, it must be performed through command line, as detailed in the Users API.
+
+=== List all users
+
+First of all, list the users (who are the recipients in OperatorFabric) of the system with the following commands:
+
+Httpie
+....
+http http://localhost:2103/users "Authorization:Bearer $token" "Content-Type:application/type"
+....
+cURL
+....
+curl -v http://localhost:2103/users -H "Authorization:Bearer $token" -H "Content-Type:application/type"
+....
+
+response
+....
+HTTP/1.1 200 OK
+
+[
+    {
+        "firstName": null,
+        "groups": [
+            "ADMIN"
+        ],
+        "lastName": null,
+        "login": "admin"
+    },
+    {
+        "firstName": null,
+        "groups": [
+            "RTE",
+            "ADMIN",
+            "CORESO",
+            "TRANS",
+            "TEST"
+        ],
+        "lastName": null,
+        "login": "rte-operator"
+    },
+    {
+        "firstName": null,
+        "groups": [
+            "ELIA"
+        ],
+        "lastName": null,
+        "login": "elia-operator"
+    },
+    {
+        "firstName": null,
+        "groups": [
+            "CORESO"
+        ],
+        "lastName": null,
+        "login": "coreso-operator"
+    },
+    {
+        "firstName": null,
+        "groups": [
+            "TSO1",
+            "TRANS",
+            "TEST"
+        ],
+        "lastName": null,
+        "login": "tso1-operator"
+    },
+    {
+        "firstName": null,
+        "groups": [
+            "TSO2",
+            "TRANS"
+        ],
+        "lastName": null,
+        "login": "tso2-operator"
+    },
+]
+....
+
+=== Create a new User
+
+We are sure that no John-doe-operator exists in our OperatorFabric instance. We can add him in our OperatorFabric instance using the following command use httpie:
+....
+echo '{"login":"john-doe-operator","firstName":"Jahne","lastName":"Doe"}' | http POST http://localhost:2103/users "Authorization:Bearer $token" "Content-Type:application/json"
+....
+Or here cURL:
+....
+curl -X POST http://localhost:2103/users -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"login":"john-doe-operator","firstName":"Jahne","lastName":"Doe"}'
+....
+response
+....
+HTTP/1.1 200 OK
+
+{
+    "firstName": "Jahne",
+    "lastName": "Doe",
+    "login": "john-doe-operator"
+}
+....
+
+=== Fetch user details
+
+It's always a good thing to verify if all the information has been correctly recorded in the system:
+
+with httpie:
+....
+http -b http://localhost:2103/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+or with cURL:
+....
+curl http://localhost:2103/users/john-doe-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json"
+....
+
+response
+....
+HTTP/1.1 200 OK
+
+{
+    "firstName": "Jahne",
+    "groups": [],
+    "lastName": "Doe",
+    "login": "john-doe-operator"
+}
+....
+
+=== Update user details
+
+//TODO Check if it hasn't been replaced with create
+As shown by this result, the firstName of the new operator has been misspelled.We need
+ifdef::single-page-doc[link:../api/users/index.html#/users/updateUser[to update the existing user]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/users/updateUser[to update the existing user]]
+with `john-doe-operator` login. To correct this mistake, the following commands can be used :
+
+with httpie:
+....
+echo '{"login":"john-doe-operator","lastName":"Doe","firstName":"John"}' | http PUT http://localhost:2103/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+or with cURL:
+....
+curl -X PUT http://localhost:2103/users/john-doe-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"login":"john-doe-operator","firstName":"John","lastName":"Doe"}'
+....
+
+response
+....
+HTTP/1.1 200 OK
+
+{
+    "firstName": "John",
+    "lastName": "Doe",
+    "login": "john-doe-operator"
+}
+....
+
+=== List groups
+
+This operator is the first member of a new group operator called the `OPERATORS`, which doesn't exist for the moment in
+the system. As shown when we
+ifdef::single-page-doc[link:../api/users/index.html#/groups/fetchGroups[list the groups]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/groups/fetchGroups[list the groups]]
+existing in the server.
+
+Httpie
+....
+http http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/type"
+....
+
+cURL
+....
+curl http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json"
+....
+
+response
+....
+HTTP/1.1 200 OK
+
+[
+    {
+        "description": "The admin group",
+        "name": "ADMIN"
+    },
+    {
+        "description": "RTE TSO Group",
+        "name": "RTE"
+    },
+    {
+        "description": "ELIA TSO group",
+        "name": "ELIA"
+    },
+    {
+        "description": "CORESO Group",
+        "name": "CORESO"
+    },
+    {
+        "description": "TSO 1 Group",
+        "name": "TSO1"
+    },
+    {
+        "description": "TSO 2 Group",
+        "name": "TSO2"
+    },
+    {
+        "description": "Transnationnal Group",
+        "name": "TRANS"
+    }
+]
+....
+
+=== Create a new Group
+
+Firstly, the group called `OPERATORS` has to be
+ifdef::single-page-doc[link:../api/users/index.html#/groups/createGroup[added to the system]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/groups/createGroup[added to the system]]
+using the following command:
+
+using httpie:
+....
+echo '{"name":"OPERATORS","decription":"This is the brand new  group of operator"}' | http POST http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+using cURL:
+....
+curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","decription":"This is the brand new  group of operator"}'
+....
+
+response
+....
+HTTP/1.1 200 OK
+
+{
+    "description": null,
+    "name": "OPERATORS"
+}
+....
+
+=== Fetch details of a given group
+
+The result returned seems strange, to verify if it's the correct answer by
+ifdef::single-page-doc[link:../api/users/index.html#/groups/fetchGroup[displaying the details of the group]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/groups/fetchGroup[displaying the details of the group]]
+called `OPERATORS`, use the following command:
+
+using httpie:
+....
+http http://localhost:2103/groups/OPERATORS "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+using cURL:
+....
+curl http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json"
+....
+
+response
+....
+HTTP/1.1 200 OK
+
+{
+    "description": null,
+    "name": "OPERATORS"
+}
+....
+
+=== Update details of a group
+
+The description is really null. After verification, in our first command used to create the group,
+the attribute for the description is misspelled. Using the following command
+ifdef::single-page-doc[link:../api/users/index.html#/groups/updateGroup[to update the group]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/groups/updateGroup[to update the group]]
+with the correct spelling, the new group of operator gets a proper description:
+
+with httpie:
+....
+echo '{"name":"OPERATORS","description":"This is the brand new  group of operator"}' | http -b PUT http://localhost:2103/groups/OPERATORS "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+with cURL:
+....
+curl -X PUT http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","description":"This is the brand new  group of operator"}'
+....
+
+response
+....
+{
+    "description": "This is the brand new  group of operator",
+    "name": "OPERATORS"
+}
+....
+
+=== Add a user to a group
+
+As both new group and new user are correct it's time
+ifdef::single-page-doc[link:../api/users/index.html#/users/addGroupUsers[to make the user a member of the group]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/users/index.html#/users/addGroupUsers[to make the user a member of the group]]
+. To achieve this, use the following command:
+
+with httpie:
+....
+echo '["john-doe-operator"]' | http PATCH http://localhost:2103/groups/OPERATORS/users "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+with cURL:
+....
+curl -X PATCH http://localhost:2103/groups/OPERATORS/users -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '["john-doe-operator"]'
+....
+
+response
+....
+HTTP/1.1 200 OK
+....
+
+Let's verify that the changes are correctly recorded by fetching the :
+....
+http http://localhost:2103/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+with cURL
+....
+curl http://localhost:2103/users/john-doe-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json"
+....
+
+response
+....
+HTTP/1.1 200 OK
+
+{
+    "firstName": "John",
+    "groups": ["OPERATORS"],
+    "lastName": "Doe",
+    "login": "john-doe-operator"
+}
+....
+
+It's now possible to send cards either specifically to `john-doe-operator` or more generally to the `OPERATORS` group.
+
+=== Remove a user from a Group
+
+When John Doe is no longer in charge of hypervising cards for `OPERATORS` group, this group has to be removed from his login by using the following command:
+
+with httpie:
+....
+http DELETE http://localhost:2103/groups/OPERATORS/users/john-doe-operator "Authorization:Bearer $token"
+....
+
+with cURL:
+....
+curl -X DELETE -H "Authorization:Bearer $token" http://localhost:2103/groups/OPERATORS/users/john-doe-operator
+....
+
+response
+....
+
+HTTP/1.1 200 OK
+
+{
+	"login":"john-doe-operator","
+	firstName":"John",
+	"lastName":"Doe",
+	"groups":[]
+}
+
+....
+A last command to verify that `OPERATORS` is no longer linked to `john-doe-operator`:
+
+with httpie:
+....
+http http://localhost:2103/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
+....
+
+with cURL:
+....
+curl http://localhost:2103/users/john-doe-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json"
+....
+
+response
+....
+HTTP/1.1 200 OK
+
+{
+    "firstName": "John",
+    "groups": [],
+    "lastName": "Doe",
+    "login": "coreso-operator"
+
+}
+....

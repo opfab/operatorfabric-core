@@ -1,0 +1,104 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+[[setup_dev_env]]
+= Setting up your development environment
+
+WARNING: The steps below assume that you have installed and are using
+https://sdkman.io/[sdkman] and
+https://github.com/creationix/nvm[nvm] to manage tool versions ( for java,
+gradle, node and npm).
+
+There are several ways to get started with OperatorFabric. Please look into
+the section that best fits your needs.
+
+TIP: If you encounter any issue, see
+ifdef::single-page-doc[<<troubleshooting, Troubleshooting>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#troubleshooting, Troubleshooting>>]
+below. In particular,
+a command that hangs then fails is often a proxy issue.
+
+The following steps describe how to launch MongoDB, RabbitMQ and SonarQube
+using Docker,  build OperatorFabric using gradle and run it using the
+`run_all.sh` script.
+
+== Clone repository
+----
+git clone https://github.com/opfab/operatorfabric-core.git
+cd operatorfabric-core
+----
+
+== Set up your environment (environment variables & appropriate versions of gradle, maven, etc…)
+----
+source bin/load_environment_light.sh
+----
+
+TIP: From now on, you can use environment variable $OF_HOME to go back to
+the home repository of OperatorFabric.
+
+== Deploy dockerized MongoDB, RabbitMQ and SonarQube
+MongoDB, RabbitMQ and SonarQube are needed for the tests to be run so the
+build can be done.
+
+A docker-compose file with properly configured containers is available
+link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker/test-quality-environment/[there].
+
+The `docker-compose` can be run in detached mode:
+----
+cd src/main/docker/test-quality-environment/
+docker-compose up -d
+----
+
+== Build OperatorFabric with Gradle
+
+Using the wrapper in order to ensure building the project the same way from one machine to another.
+
+To only compile and package the jars:
+----
+cd $OF_HOME
+./gradlew assemble
+----
+
+To launch the Unit Test, compile and package the jars:
+----
+cd $OF_HOME
+./gradlew build
+----
+
+== Run OperatorFabric Services using the `run_all.sh` script
+----
+bin/run_all.sh start
+----
+
+TIP: See `bin/run_all.sh -h` for details.
+
+== Check services status
+----
+bin/run_all.sh status
+----
+
+== Log into the UI
+
+URL: localhost:2002/ui/
+
+login: admin
+
+password: test
+
+WARNING: It might take a little while for the UI to load even after all
+services are running.
+
+WARNING: Don't forget the *final slash* in the URL or you will get an error.
+
+== Push cards to the feed
+
+You can check that you see cards into the feed by running the
+`push_card_loop.sh` script.
+----
+services/core/cards-publication/src/main/bin/push_card_loop.sh
+----

@@ -1,0 +1,37 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+[[dev_env]]
+= Development environment
+
+The aim of this document is to provide all the necessary information to developers who would like to start working on
+OperatorFabric.
+It will walk you through setting up the necessary tooling to be able to launch OperatorFabric in development mode,
+describe the structure of the project and point out useful tools (Gradle tasks, scripts, etc.) for development purposes.
+
+include::requirements.adoc[leveloffset=+1]
+
+include::launch_dev.adoc[leveloffset=+1]
+
+include::ui.adoc[leveloffset=+1]
+
+include::env_variables.adoc[leveloffset=+1]
+
+include::project_structure.adoc[leveloffset=+1]
+
+== Development tools
+
+include::scripts.adoc[leveloffset=+2]
+
+include::gradle.adoc[leveloffset=+2]
+
+include::misc.adoc[leveloffset=+1]
+
+include::troubleshooting.adoc[leveloffset=+1]
+
+include::keycloak-configuration.adoc[leveloffset=+1]

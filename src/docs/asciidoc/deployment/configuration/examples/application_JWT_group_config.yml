@@ -1,0 +1,19 @@
+operatorfabric:
+  security:
+    jwt:
+      groups:
+        mode: JWT # value possible JWT | OPERATOR_FABRIC
+        rolesClaim:
+          rolesClaimStandard:
+            - path: "ATTR1"
+            - path: "ATTR2"            
+          rolesClaimStandardArray:  
+            - path: "resource_access/opfab-client/roles"
+          rolesClaimStandardList:  
+            - path: "roleFieldList" 
+              separator: ";"           
+          rolesClaimCheckExistPath: 
+            - path: "resource_access/AAA" 
+              roleValue: "roleAAA"      
+            - path: "resource_access/BBB"
+              roleValue: "roleBBB"  

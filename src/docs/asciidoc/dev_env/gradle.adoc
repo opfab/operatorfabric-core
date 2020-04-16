@@ -1,0 +1,70 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+[[gradle_tasks]]
+= Gradle Tasks
+
+In this section only custom tasks are described. For more
+information on tasks, refer to the output of the "tasks" gradle task and
+to gradle and plugins official documentation.
+
+== Services
+
+=== Common tasks for all sub-projects
+
+* Test tasks
+** unitTest: runs unit tests
+* Other:
+** copyWorkingDir: copies [sub-project]/src/main/docker/volume to
+[sub-project]/build/
+** copyDependencies: copy dependencies to build/libs
+
+=== Core
+
+* Swagger Generator tasks
+** debugSwaggerOperations: generate swagger code from
+/src/main/modeling/config.json to build/swagger-analyse
+** swaggerHelp: display help regarding swagger configuration options for java
+
+=== Thirds Service
+
+* Test tasks
+** prepareTestDataDir: prepare directory (build/test-data) for test data
+** compressBundle1Data, compressBundle2Data: generate tar.gz third party
+configuration data for tests in build/test-data
+** prepareDevDataDir: prepare directory (build/dev-data) for bootRun task
+** createDevData: prepare data in build/test-data for running bootRun task
+during development
+* Other tasks
+** copyCompileClasspathDependencies: copy compile classpath dependencies,
+catching lombok that must be sent for sonarqube
+
+=== infra/config
+
+* Test tasks
+** createDevData: prepare data in build/test-data for running bootRun task
+during development
+
+=== tools/generic
+
+* Test tasks
+** prepareTestData: copy test data from src/test/data/simple to
+build/test-data/
+** compressTestArchive: compress the contents of /src/test/data/archive to
+/build/test-data/archive.tar.gz
+
+== Gradle Plugins
+
+In addition to these custom tasks and standard Gradle tasks, OperatorFabric
+uses several Gradle plugins, among which:
+
+* link:https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/[Spring Boot Gradle Plugin]
+* link:https://github.com/palantir/gradle-docker[Palantir Docker Gradle Plugin]
+* link:https://github.com/avast/gradle-docker-compose-plugin/[Docker Compose Plugin]
+* link:https://github.com/int128/gradle-swagger-generator-plugin[Gradle Swagger Generator Plugin]
+* link:https://github.com/asciidoctor/asciidoctor-gradle-plugin[Gradle Asciidoctor Plugin]

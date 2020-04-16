@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: users
+  cloud:
+    config:
+      name: users
+      fail-fast: true
+      retry:
+        max-attempts: 20
+      discovery:
+        service-id: config
+        enabled: true

@@ -1,0 +1,101 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= OperatorFabric Architecture
+
+== Introduction
+
+include::../short_description.adoc[]
+
+The aim of this document is to describe the architecture of the solution, first by defining the business concepts it
+deals with and then showing how this translates into the technical architecture.
+
+== Business Architecture
+
+OperatorFabric is based on the concept of *cards*, which contain data regarding events that are relevant for the
+operator.
+A third party tool publish cards and the cards are received on the screen of the operators. Depending on the type
+of the cards, the operator  can send back information to the third party via an "action".
+
+=== Business components
+
+image::FunctionalDiagram.jpg[functional diagram]
+
+To do the job, the following business components are defined:  
+
+- Card Publication : this component receive the cards from third party tools
+- Card Consultation : this component delivers the cards to the operators and provide access to all cards exchanged (archives)
+- Actions : this component receive the action from the operator and send it to the third party tool
+- Card rendering and process definition : this component store the information for card rendering(templates , internationalization , ... ) and a light description of the process associate(states , actions, ...) . This configuration data can be provided either by an administrator or by a third party tool.
+- User Management : this component is used to manage users and groups 
+
+=== Business objects 
+
+The business objects can be represented as follow:
+
+image::BusinessObjects.jpg[business objects diagram]
+
+* Card : the core business object which contains the data to show to the user(or operator) 
+* Publisher : the third party that publishes cards
+* User : the operator receiving cards and responding via actions
+* Group : a group of users
+* Process : the process the card is dealing with 
+* State : the step in the process
+* Card Rendering : data for card rendering 
+* Action : a list of possible actions for a specific state in a process
+
+== Technical Architecture
+
+The architecture is based on micro-services. All business services are accessible via REST API.
+
+image::LogicalDiagram.jpg[functional diagram]
+
+=== Business components
+
+We find here the business component seen before:
+
+* We have a "UI" component that store the static pages and the UI code that is downloaded by the browser. The UI is based an https://angular.io/[Angular] and  https://handlebarsjs.com/[Handlebars] for card templating.
+* The business component named  "Card rendering and process definition" is at the technical level known as "Third service". This service receive card rendering and process definition as a bundle. The bundle is a tar.gz file containing
+	** json process configuration file (containings states & actions)
+	** templates for rendering
+	** stylesheets 
+	** internationalization information
+ 
+ 
+All business components are based on https://spring.io/projects/spring-boot[SpringBoot] and packaged via https://www.docker.com/[Docker]. 
+
+https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html[Spring WebFlux] is used to provide the card in a fluid way.
+
+=== Technical components 
+ 
+==== Registry
+
+It is the central component where all services are registered. It serves as a reference point for the gateway and other
+services to find information about the running services instance and allow for local load balancing of accesses. It is implemented by https://spring.io/projects/spring-cloud-netflix[Spring Cloud Netflix] . 
+
+==== Gateway
+
+It provides a filtered view of the APIS and static served pages for external access through browsers or other http
+compliant accesses. It provide the rooting and load balancing for accessing the micro-services from outside. It is implemented by https://cloud.spring.io/spring-cloud-gateway/reference/html/[Spring Cloud Gateway].
+
+==== Configuration
+
+A configuration service is not mandatory in a micro-services architecture but may allow for better sharing of common configuration and
+to dispatch global configuration changes to all services. It is implemented via https://cloud.spring.io/spring-cloud-config/reference/html/[Spring Cloud Config].
+
+==== Broker
+
+The broker is used to share information asynchronously across the whole services. It is implemented via https://www.rabbitmq.com/[RabbitMQ]
+
+==== Authentication
+
+The architecture provide a default authentication service via https://www.keycloak.org/[KeyCloak] but it can delegates it to an external provider. Authentication is done through the use of  Oauth2, three flows are supported: implicit, authorization code and password. 
+
+==== Database 
+
+The cards are stored in a https://www.mongodb.com/[MongoDb] database. The bundles are stored in a file system. 

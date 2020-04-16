@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: cards-consultation
+  cloud:
+    config:
+      name: cards-consultation
+      fail-fast: true
+      retry:
+        max-attempts: 20
+      discovery:
+        service-id: config
+        enabled: true
+#  level.root: debug
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:2001/eureka'

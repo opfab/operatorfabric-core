@@ -1,0 +1,158 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Project Structure
+
+== Tree View
+
+[source]
+----
+project
+├──bin
+│   └─ travis
+├──client
+│   ├──cards (cards-client-data)
+│   ├──src
+│   └──users (users-client-data)
+├──services
+│   ├──core
+│   │   ├──cards-consultation (cards-consultation-business-service)
+│   │   ├──cards-publication (cards-publication-business-service)
+│   │   ├──src
+│   │   ├──thirds (third-party-business-service)
+│   │   └──users (users-business-service)
+│   ├──infra
+│   │   ├──client-gateway (client-gateway-cloud-service)
+│   │   ├──config (configuration-cloud-service)
+│   │   └──registry (registry-cloud-service)
+│   └──web
+│       └──web-ui
+├──src
+|   ├──docs
+|   │   ├──asciidoc
+|   │   └──modelio
+|   └──main
+|       ├──docker
+|       └──headers
+├──tools
+│   ├──generic
+│   │   ├──test-utilities
+│   │   └──utilities
+│   ├── spring
+│   │   ├──spring-mongo-utilities
+│   │   ├──spring-oauth2-utilities
+│   │   ├──spring-test-utilities
+│   │   └──spring-utilities
+│   └──swagger-spring-generators
+└─ui
+----
+
+
+== Content Details
+
+* link:https://github.com/opfab/operatorfabric-core/tree/master/bin[bin]: contains useful scripts
+** link:https://github.com/opfab/operatorfabric-core/tree/master/bin/travis[travis]: travis script for documentation generation and
+upload to opfab.github.io repository
+* link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]: contains REST APIs simple beans definition, may be
+used by external projects
+** link:https://github.com/opfab/operatorfabric-core/tree/master/client/cards[cards (cards-client-data)]: simple beans regarding cards
+** link:https://github.com/opfab/operatorfabric-core/tree/master/client/src[src]: contains swagger templates for link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]
+code generation
+** link:https://github.com/opfab/operatorfabric-core/tree/master/client/users[users (users-client-data)]: simple beans regarding users
+* link:https://github.com/opfab/operatorfabric-core/tree/master/services[services]: contains the microservices that make up
+OperatorFabric
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core[core]: contains core business microservices
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/cards-consultation[cards-consultation
+(cards-consultation-business-service)]: Card consultation service
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/cards-publication[cards-publication
+(cards-publication-business-service)]: Card publication service
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/src[src]: contains swagger templates for core business
+microservices
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/thirds[thirds (third-party-business-service)]:
+Third-party information management service
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/users[users (users-business-service)]: Users management
+service
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/infra[infra]: contains infrastructure microservices
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/infra/client-gateway[client-gateway
+(client-gateway-cloud-service)]: spring-gateway client side only gateway
+microservice, used to serve public apis and web ui
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/infra/config[config (configuration-cloud-service)]:
+spring-configuration centralized configuration microservice
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/infra/registry[registry (registry-cloud-service)]: eureka
+microservice registry
+** link:https://github.com/opfab/operatorfabric-core/tree/master/services/web[web]: contains web pages and application services
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/web/web-ui[web-ui]: Main OperatorFabric SPA
+* link:https://github.com/opfab/operatorfabric-core/tree/master/src[src]
+** link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs[docs]
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs/asciidoc[asciidoc]: General documentation (Architecture,
+Getting Started Guide, etc.)
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs/modelio[modelio]: Archive containing documentation diagrams
+** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main[main]
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker[docker]: contains docker-compose files to help with
+tests and demonstrations
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/headers[headers]: contains license header files
+* link:https://github.com/opfab/operatorfabric-core/tree/master/tools[tools]
+** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/generic[generic]: Generic (as opposed to Spring-related)
+utility code
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/generic/test-utilities[test-utilities]: Test-specific
+utility code
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/generic/utilities[utilities]: Utility code
+** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring[spring]: Spring-related utility code
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring/spring-mongo-utilities[spring-mongo-utilities] : Utility
+code with Spring-specific dependencies, used to share common features across
+MongoDB-dependent services
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring/spring-oauth2-utilities[spring-oauth2-utilities] :
+Utility code with Spring-specific dependencies, used to share common features
+across OAuth2-dependent services
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring/spring-test-utilities[spring-test-utilities] : Utility
+code with Spring-specific dependencies for testing purposes
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring/spring-utilities[spring-utilities] : Utility code with
+Spring-specific dependencies
+** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/swagger-spring-generators[swagger-spring-generators] : Spring
+Boot generator for swagger, tailored for OperatorFabric needs
+* link:https://github.com/opfab/operatorfabric-core/tree/master/ui[ui]: Angular sources for the UI
+
+== Conventions regarding project structure and configuration
+
+Sub-projects must conform to a few rules in order for the configured Gradle
+tasks to work:
+
+=== Java
+
+[horizontal]
+[sub-project]/src/main/java:: contains java source code
+[sub-project]/src/test/java:: contains java tests source code
+[sub-project]/src/main/resources:: contains resource files
+[sub-project]/src/test/resources:: contains test resource files
+
+=== Modeling
+
+Core services projects declaring REST APIS that use Swagger for their
+definition must declare two files:
+
+[horizontal]
+[sub-project]/src/main/modeling/swagger.yaml:: Swagger API definition
+[sub-project]/src/main/modeling/config.json:: Swagger generator configuration
+
+=== Docker
+
+Services project all have docker image generated in their build cycle. See
+ifdef::single-page-doc[<<gradle_tasks, Gradle Tasks>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/dev_env/index.adoc#gradle_tasks, Gradle Tasks>>]
+for details.
+
+Per project configuration :
+
+* docker file : *[sub-project]/src/main/docker/Dockerfile*
+* docker-compose file : *[sub-project]/src/main/docker/docker-compose.yml*
+* runtime data : *[sub-project]/src/main/docker/volume* is copied to
+*[sub-project]/build/docker-volume/* by task *copyWorkingDir*. The latest
+can then be mounted as volume in docker containers.
+
+
+
