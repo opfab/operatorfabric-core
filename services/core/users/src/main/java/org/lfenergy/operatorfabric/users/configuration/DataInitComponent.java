@@ -11,9 +11,11 @@ package org.lfenergy.operatorfabric.users.configuration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
+import org.lfenergy.operatorfabric.users.model.EntityData;
 import org.lfenergy.operatorfabric.users.model.GroupData;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.model.UserSettingsData;
+import org.lfenergy.operatorfabric.users.repositories.EntityRepository;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserSettingsRepository;
@@ -25,7 +27,7 @@ import javax.annotation.PostConstruct;
 import java.util.Optional;
 
 /**
- * This component solely serve as data intializer for users and groups, it loads users and group from properties
+ * This component solely serves as data initializer for users, groups and entities, it loads users, groups and entities from properties
  * configuration and insert or update them as needed
  *
  *
@@ -45,6 +47,9 @@ public class DataInitComponent {
     private GroupRepository groupRepository;
 
     @Autowired
+    private EntityRepository entityRepository;
+
+    @Autowired
     private UserSettingsRepository userSettingsRepository;
 
     @Getter
@@ -55,6 +60,9 @@ public class DataInitComponent {
         try {
             for (GroupData g : usersProperties.getGroups()) {
                 safeInsertGroup(g);
+            }
+            for (EntityData e : usersProperties.getEntities()) {
+                safeInsertEntity(e);
             }
             for (UserData u : usersProperties.getUsers()) {
                 safeInsertUsers(u);
@@ -68,7 +76,7 @@ public class DataInitComponent {
     }
 
     /**
-     * Insert user settings, if failure (seetings already exist), logs and carries on to next user settings
+     * Insert user settings, if failure (settings already exist), logs and carries on to next user settings
      *
      * If users exist adds missing groups (no delete)
      *
@@ -131,6 +139,19 @@ public class DataInitComponent {
             groupRepository.insert(g);
         } catch (DuplicateKeyException ex) {
             log.warn("{} {} group: duplicate", FAILED_INIT_MSG, g.getName());
+        }
+    }
+
+    /**
+     * Insert entities, if failure (entities already exist), logs and carries on to next entity
+     *
+     * @param e
+     */
+    private void safeInsertEntity(EntityData e) {
+        try {
+            entityRepository.insert(e);
+        } catch (DuplicateKeyException ex) {
+            log.warn("{} {} entity: duplicate", FAILED_INIT_MSG, e.getId());
         }
     }
 }

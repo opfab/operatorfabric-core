@@ -14,8 +14,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
 import org.lfenergy.operatorfabric.users.model.GroupData;
+import org.lfenergy.operatorfabric.users.model.EntityData;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
+import org.lfenergy.operatorfabric.users.repositories.EntityRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,11 +44,14 @@ class ApplicationShould {
     UserRepository userRepository;
     @Autowired
     GroupRepository groupRepository;
+    @Autowired
+    EntityRepository entityRepository;
 
     @AfterEach
     public void clean(){
         userRepository.deleteAll();
         groupRepository.deleteAll();
+        entityRepository.deleteAll();
     }
 
     @Test
@@ -54,9 +59,16 @@ class ApplicationShould {
         List<UserData> defaultUsers = userRepository.findAll();
         assertThat(defaultUsers).hasSize(1);
         List<GroupData> defaultGroups = groupRepository.findAll();
+        List<EntityData> defaultEntities = entityRepository.findAll();
+
         assertThat(defaultGroups).hasSize(1);
         assertThat(defaultUsers.get(0).getLogin()).isEqualTo("admin");
         assertThat(defaultGroups.get(0).getName()).isEqualTo("ADMIN");
+
+        assertThat(defaultEntities).hasSize(1);
+        assertThat(defaultEntities.get(0).getId()).isEqualTo("ENTITYADMIN");
+        assertThat(defaultEntities.get(0).getName()).isEqualTo("Entity admin");
+        assertThat(defaultEntities.get(0).getDescription()).isEqualTo("The admin entity");
     }
 
 }

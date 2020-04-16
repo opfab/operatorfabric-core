@@ -778,8 +778,6 @@ class UsersControllerShould {
             )
                     .andExpect(status().isForbidden())
             ;
-
-
         }
 
         @Test
@@ -846,8 +844,6 @@ class UsersControllerShould {
             )
                     .andExpect(status().isForbidden())
             ;
-
-
         }
     }
 }

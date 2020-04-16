@@ -2,9 +2,9 @@ Feature: Get Group details
 
   Background:
    #Getting token for admin and tso1-operator user calling getToken.feature
-    * def signIn = call read('../common/getToken.feature') { username: 'admin'}
+    * def signIn = call read('../../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
-    * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def signInAsTSO = call read('../../common/getToken.feature') { username: 'tso1-operator'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
        #defining groups

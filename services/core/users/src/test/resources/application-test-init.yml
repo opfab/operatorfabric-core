@@ -5,6 +5,10 @@ operatorfabric.users.default:
   groups:
     - name: ADMIN
       description: The admin group
+  entities:
+    - id: ENTITYADMIN
+      name: Entity admin
+      description: The admin entity
 operatorfabric:
   security:
     jwt:

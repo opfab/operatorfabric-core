@@ -12,3 +12,6 @@
 * [OC-414] Issue with using user data in templates
 
 == Task
+* [OC-737] Add an object entity in the user service +
+Below, you will find information about our new object "Entity" and its endpoints :
+https://opfab.github.io/documentation/current/api/users/#/entities
