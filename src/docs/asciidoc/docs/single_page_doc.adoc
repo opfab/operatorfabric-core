@@ -1,0 +1,29 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+:single-page-doc:
+:doctype: book
+
+= OperatorFabric Documentation
+
+include::../architecture/index.adoc[]
+
+include::../getting_started/index.adoc[]
+
+include::../reference_doc/index.adoc[]
+
+include::../deployment/index.adoc[]
+
+include::../dev_env/index.adoc[]
+
+include::../community/index.adoc[]
+
+include::../CICD/index.adoc[]
+
+//TODO Add introduction and move architecture after getting started?
+
+//TODO Reorder

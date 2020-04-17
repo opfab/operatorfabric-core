@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: thirds
+  cloud:
+    config:
+      name: thirds
+      fail-fast: true
+      retry:
+        max-attempts: 20
+      discovery:
+        service-id: config
+        enabled: true
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:2001/eureka'

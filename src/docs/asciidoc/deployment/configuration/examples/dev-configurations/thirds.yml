@@ -1,0 +1,5 @@
+server:
+  port: 2100
+operatorfabric.thirds:
+  storage:
+    path: "./services/core/thirds/build/docker-volume/thirds-storage"

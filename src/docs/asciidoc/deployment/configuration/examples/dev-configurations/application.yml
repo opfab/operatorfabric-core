@@ -1,0 +1,43 @@
+message: common message
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  security:
+    provider-url: http://localhost:89
+    provider-realm: dev
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
+#          jwk-set-uri: http://localhost:3000/auth/jwks.json
+  data:
+    mongodb:
+      uris:
+        - mongodb://root:password@localhost:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:2001/eureka
+    region: default
+  registryFetchIntervalSeconds: 5
+security:
+  basic:
+    enabled: false
+
+operatorfabric:
+  security:
+    oauth2:
+      client-id: opfab-client
+      client-secret: opfab-keycloak-secret
+    jwt:
+      login-claim: preferred_username    
+      expire-claim: exp
+#logging.level.root: DEBUG           

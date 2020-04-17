@@ -1,5 +1,6 @@
 dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+    swaggerUI generator.swaggerUI
     compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     compile  cloud.starterBus, cloud.eurekaClient
     compile boot.starterAop
@@ -35,12 +36,7 @@ swaggerSources {
             templateDir = file('../src/main/resources/swagger-templates')
             components = ['models']
         }
-    }
-
-    doc {
-        inputFile = file('../cards-publication/src/main/modeling/swagger.yaml')
-        code {
-            language = 'html'
+        ui {
             outputDir = file("./build/docs/api")
         }
     }

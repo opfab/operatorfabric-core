@@ -1,0 +1,36 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= OperatorFabric Reference Documentation
+
+The aim of this document is to:
+
+* Explain what OperatorFabric is about and define the concepts it relies on
+* Give a basic tour of its features from a user perspective
+* Describe the technical implementation that makes it possible
+
+== Introduction
+
+include::../business_description.adoc[]
+
+== A quick walk through the user interface
+
+Work in progress
+//TODO Explain timeline, archives?
+//TODO Go through each screen to explain buttons? Filters etc.
+
+== Technical overview
+
+include::thirds_service.adoc[leveloffset=+1]
+
+include::users_service.adoc[leveloffset=+1]
+
+include::cards_publication_service.adoc[leveloffset=+1]
+
+include::cards_consultation_service.adoc[leveloffset=+1]
+

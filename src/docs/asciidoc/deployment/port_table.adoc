@@ -1,0 +1,68 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Service port table
+
+//TODO Check that it is correct and up to date
+
+By default all service built artifacts are configured with server.port set
+to 8080
+
+If you run the services using `bootRun` Gradle task or the provided
+docker-compose files (see [prj]/src/main/docker) the ports used are
+
+[cols="<,>,>,>"]
+|===
+|Service |bootRun port |docker-compose mapping |docker-compose debug mapping
+
+|registry |2001 |2001 |2001
+|gateway |2002 |2002 |2002
+|thirds |2100 |2100 |2100
+|cards-publication |2102 |2102 |2102
+|users |2103 |2103 |2103
+|cards-consultation |2104 |2104 |2104
+|config |4000 |4000 |4000
+|registry |4001 |4001 |4001
+|gateway |4002 |4002 |4002
+|thirds |4100 |4100 |4100
+|cards-publication |4102 |4102 |4102
+|users |4103 |4103 |4103
+|cards-consultation |4103 |4103 |4103
+|===
+
++++ <details><summary> +++
+**Complete port table**
++++ </summary><div> +++
+|===
+|Port |Forwards to | |
+
+|89 |KeyCloak |89 |KeyCloak api port
+|2000 |config |8080 |Configuration service http (REST)
+|2001 |registry |8080 |Registry service http (REST)
+|2002 |gateway |8080 |Gateway service http (REST+html)
+|2100 |thirds |8080 |Third party management service http (REST)
+|2102 |cards-publication |8080 |card publication service http (REST)
+|2103 |users |8080 |Users management service http (REST)
+|2104 |cards-consultation |8080 |card consultation service http (REST)
+|2105 |actions |8080 |actions (REST)
+|2200 |web-ui |8080 |card consultation service http (REST)
+|4000 |config |5005 |java debug port
+|4001 |registry |5005 |java debug port
+|4002 |gateway |5005 |java debug port
+|4100 |thirds |5005 |java debug port
+|4102 |cards-publication |5005 |java debug port
+|4103 |users |5005 |java debug port
+|4104 |cards-consultation |5005 |java debug port
+|4105 |actions |5005 |java debug port
+|4200 |web-ui |5005 |java debug port
+|27017 |mongo |27017 |mongo api port
+|5672 |rabbitmq |5672 |amqp api port
+|15672 |rabbitmq |15672 |rabbitmq api port
+|===
+
++++ </div></details> +++

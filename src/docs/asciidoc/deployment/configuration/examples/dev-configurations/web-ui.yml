@@ -1,0 +1,82 @@
+server:
+  port: 2200
+operatorfabric:
+  security:
+    provider-url: http://localhost:89
+    provider-realm: dev
+    logout-url: ${operatorfabric.security.provider-url}/auth/realms/${operatorfabric.security.provider-realm}/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/ui/
+    oauth2:
+      flow:
+        mode: CODE
+        provider: Opfab Keycloak
+        delagate-url: ${operatorfabric.security.provider-url}/auth/realms/${operatorfabric.security.provider-realm}/protocol/openid-connect/auth?response_type=code&client_id=opfab-client
+  feed:
+    subscription:
+      timeout: 600000
+    card:
+      time:
+        display: BUSINESS
+    timeline:
+      domains:
+        - "TR"
+        - "J"
+        - "7D"
+        - "W"
+        - "M"
+        - "Y"
+    notify: false
+  archive:
+    filters:
+      page.size:
+        - "10"
+      page.first:
+        - "0"
+      publisher.list:
+        - value: "TEST"
+          label: "Test Publisher"
+        - value: "TEST2"
+          label: "Test Publisher 2"
+      process.list:
+            - process
+            - someOtherProcess
+      tags.list:
+        - value: "tag1"
+          label: "Label for tag 1"
+        - value: "tag2"
+          label: "Label for tag 2"
+  i10n.supported.time-zones:
+    - value: "Europe/Paris"
+      label: "Headquarters timezone"
+    - value: "Australia/Melbourne"
+      label: "Down Under"
+    - Europe/London
+    - Europe/Dublin
+    - Europe/Brussel
+    - Europe/Berlin
+    - Europe/Rome
+    - Europe/Madrid
+    - Europe/Lisbon
+    - Europe/Amsterdam
+    - Europe/Athens
+    - Pacific/Samoa
+  i18n.supported.locales:
+    - en
+    - fr
+  settings:
+    locale: en
+    infos:
+      description: true
+    about:
+      firstapplication:
+        name: First application
+        version: v12.34.56
+        rank: 1
+      keycloack:
+        name: Keycloak
+        version: 6.0.1
+        rank: 2
+      lastapplication:
+          name: Wonderful Solution
+          version: 0.1.2-RELEASE
+  time:
+    pulse: 5000

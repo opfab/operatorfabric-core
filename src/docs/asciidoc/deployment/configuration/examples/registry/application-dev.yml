@@ -1,0 +1,5 @@
+server:
+  port: 2001
+eureka:
+  instance.hostname: localhost
+  client.serviceUrl.defaultZone: http://localhost:2001/eureka/

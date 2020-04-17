@@ -54,12 +54,7 @@ subprojects {
                 outputDir = file("./build/swagger")
                 templateDir = file('../src/main/resources/swagger-templates')
             }
-        }
-
-        doc {
-            inputFile = file('src/main/modeling/swagger.yaml')
-            code {
-                language = 'html'
+            ui {
                 outputDir = file("./build/docs/api")
             }
         }

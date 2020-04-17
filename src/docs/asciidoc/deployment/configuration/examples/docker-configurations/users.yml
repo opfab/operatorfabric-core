@@ -1,0 +1,21 @@
+operatorfabric.users.default:
+  users:
+  - login: admin
+    groups: ["ADMIN"]
+  - login: rte-operator
+    groups: ["RTE","ADMIN","TRANS"]
+  - login: tso1-operator
+    groups: ["TSO1","TRANS"]
+  - login: tso2-operator
+    groups: ["TSO2", "TRANS"]
+  groups:
+  - name: ADMIN
+    description: The admin group
+  - name: RTE
+    description: RTE TSO Group
+  - name: TSO1
+    description: TSO 1 Group
+  - name: TSO2
+    description: TSO 2 Group
+  - name: TRANS
+    description: Transnationnal Group

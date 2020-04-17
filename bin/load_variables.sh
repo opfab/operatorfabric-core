@@ -23,11 +23,13 @@ OF_COMPONENTS+=("$OF_WEB/web-ui")
 export OF_REL_COMPONENTS=( "tools/swagger-spring-generators" "tools/generic/utilities" "tools/generic/test-utilities" )
 OF_REL_COMPONENTS+=( "tools/spring/spring-utilities" "tools/spring/spring-mongo-utilities" "tools/spring/spring-oauth2-utilities" )
 OF_REL_COMPONENTS+=( "services/infra/config" "services/infra/auth" "services/infra/registry" "services/infra/client-gateway" )
-OF_REL_COMPONENTS+=( "client/cards" "client/users")
+OF_REL_COMPONENTS+=( "client/cards" "client/users" "client/thirds" "client/actions")
 OF_REL_COMPONENTS+=("services/core/thirds" "services/core/cards-publication" "services/core/cards-consultation" "services/core/users" "services/core/actions" )
 OF_REL_COMPONENTS+=("services/web/web-ui")
 
 export OF_VERSION=$(cat "$OF_HOME/VERSION")
+
+export OF_CLIENT_REL_COMPONENTS=( "cards" "users" "thirds" "actions")
 
 echo "OPERATORFABRIC ENVIRONMENT VARIABLES"
 

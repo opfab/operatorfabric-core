@@ -1,0 +1,211 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Web UI
+
+OperatorFabric Web UI service is a Spring MVC application bootstrapped using
+SpringBoot. Its sole purpose is to serve the Angular SPA to browsers.
+
+In our spring micro service architecture this service depends on Eureka
+Registry.
+
+== Mandatory configuration, Profiles and default properties
+
+The service has no mandatory configuration beside global configuration and
+usual bootstrap configuration.
+
+For other configuration see:
+NONE
+* {springboot_doc}/reference/htmlsingle/[Spring Boot documentation].
+* {spring_doc}spring-framework-reference/web-reactive.html#webflux[Spring MVC documentation].
+
+=== Service specific properties
+
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.security.realm-url||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
+|operatorfabric.security.provider-url||yes|The keycloak server instance
+|operatorfabric.security.logout-url||yes
+a|The keycloak logout URL. Is a composition of:
+ - Your keycloak instance and the _auth_ keyword (ex: https://www.keycloakurl.com/auth), but we also support domains without _auth_ (ex: https://www.keycloakurl.com/customPath)
+ - The realm name (Ex: dev)
+ - The redirect URL (_redirect_uri_): The redirect URL after success authentification
+|operatorfabric.security.oauth2.flow.mode|PASSWORD|no
+a|authentication mode, awailable options:
+
+ - CODE: Authorization Code Flow;
+ - PASSWORD: Direct Password Flow (fallback);
+ - IMPLICIT: Implicit Flow.
+|operatorfabric.security.oauth2.flow.provider|null|no|provider name to display on log in button
+|operatorfabric.security.oauth2.flow.delegate-url|null|no
+a|Url to redirect the browser to for authentication. Mandatory with:
+
+- CODE flow: must be the url with protocol choice and version as query parameters;
+- IMPLICIT flow: must be the url part before `.well-known/openid-configuration` (for example in dev configuration it's
+ `http://localhost:89/auth/realms/dev`).
+|operatorfabric.feed.subscription.timeout|60000|no|Milliseconds between card subscription renewal
+|operatorfabric.feed.card.time.display|BUSINESS|no
+a|card time display mode in the feed. Values :
+
+ - BUSINESS: displays card with entire business period. It the fallback if the set value is none of the values listed here;
+ - BUSINESS_START: displays card with business start date;
+ - PUBLICATION: displays card with publication date;
+ - LTTD: displays card with lttd date;
+ - NONE: nothing displayed.
+|operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen
+|operatorfabric.feed.notify|false|no|If set to true, new cards are notified in the OS through web-push notifications
+|operatorfabric.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
+|operatorfabric.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
+|operatorfabric.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
+|operatorfabric.playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
+|operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en so far)
+|operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
+Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
+|operatorfabric.navbar.thirdmenus.type|BOTH|no
+a|Defines how thirdparty menu links are displayed in the navigation bar and how
+they open. Possible values:
+
+- TAB: Only a text link is displayed, and clicking it opens the link in a new tab.
+- IFRAME: Only a text link is displayed, and clicking it opens the link in an iframe in the main content zone below
+the navigation bar.
+- BOTH: Both a text link and a little arrow icon are displayed. Clicking the text link opens the link in an iframe
+while clicking the icon opens in a new tab.
+
+|operatorfabric.time.pulse|5000|no|Duration between two ticks of the internal state of the User Interface
+|operatorfabric.archive.filters.page.size||no|The page size of archive filters
+|operatorfabric.archive.filters.page.first||no|The first page start of archiving module
+|operatorfabric.archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
+|operatorfabric.archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
+|operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page
+|operatorfabric.settings.infos.disable||no|Control if we want to disable/enable editing user email, description in the settings page
+|operatorfabric.settings.infos.email|false|no|Control if we want to hide(true) or display(false or not specified) the user email in the settings page
+|operatorfabric.settings.infos.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
+|operatorfabric.settings.infos.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
+|operatorfabric.settings.infos.timezone|false|no|Control if we want to hide(true) or display(false or not specified) the timezone in the settings page
+|operatorfabric.settings.infos.timeformat|false|no|Control if we want to hide(true) or display(false or not specified) the timeformat in the settings page
+|operatorfabric.settings.infos.dateformat|false|no|Control if we want to hide(true) or display(false or not specified) the dateformat in the settings page
+|operatorfabric.settings.infos.datetimeformat|false|no|Control if we want to hide(true) or display(false or not specified) the datetimeformat in the settings page
+|operatorfabric.settings.infos.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
+|operatorfabric.settings.infos.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
+|operatorfabric.settings.about
+a|`operatorfabric: +
+     name:  'OperatorFabric' +
+     version:  ${currentVersion} +
+     rank: 0`
+a|no
+a|Declares application names and their version into web-ui about section. +
+Each entry is
+a free key value followed by its name (a string of characters), its version(a string of characters) and its rank of declaration(a number) cf the default value where the declared key is `operatorfabric'`. +
+For this default value, with `'OperatorFabric'` as `name` and `0` as `rank`, the value of `${currentVersion}` is the version of the current release. `0.16.1-RELEASE` for example.
+|operatorfabric.logo.base64|medium OperatorFabric icon|no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg. If it is not set, a medium (32px) OperatorFabric icon is displayed.
+|operatorfabric.logo.height|32|no|The height of the logo (in px) (only taken into account if operatorfabric.logo.base64 is set).
+|operatorfabric.logo.width|150|no|The width of the logo (in px) (only taken into account if operatorfabric.logo.base64 is set).
+|operatorfabric.logo.limitSize|true|no|If it is true, the height limit is 32(px) and the width limit is 200(px), it means that if the height is over than 32, it will be set to 32, if the width is over than 200, it is set to 200. If it is false, no limit restriction for the height and the width. 
+|operatorfabric.title|OperatorFabric|no|Title of the application, displayed on the browser
+
+|===
+
+*User Settings default values*
+
+|===
+|name|default|mandatory?|Description
+|operatorfabric.settings.timeZone||no|Default user time zone for users (use|operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
+|operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
+|operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
+|operatorfabric.settings.locale|en|no|Default user locale (use en if not set)
+|operatorfabric.settings.default-tags||no|Default user list of filtered in tags
+
+|===
+
+=== default properties
+
+Note that you must provide a bootstrap file with a convenient registry configuration
+
+_bootstrap.yml_
+
+[source]
+----
+include::examples/web-ui/bootstrap.yml[]
+----
+
+_bootstrap-docker.yml_
+
+[source]
+----
+include::examples/web-ui/bootstrap-docker.yml[]
+----
+
+_bootstrap-dev.yml_
+
+[source]
+----
+include::examples/web-ui/bootstrap-dev.yml[]
+----
+
+The bootstrap-docker.yml file is a replacement bootstrap file we use for our
+docker images configuration.
+
+The bootstrap-dev.yml file is a replacement bootstrap file we use for our
+development environment
+
+//TODO Point to spring doc explaining precedence
+//TODO When are services/web/web-ui/src/main/resources/application.yml and application-dev.yml used?
+
+The above embedded configurations are the basic settings of the application:
+
+* it sets its service name
+* it sets the configuration name to use (which configuration file to retrieve)
+* it must set the registry service (example in bootstrap-docker.yml)
+
+=== Sample development configuration
+
+[source]
+----
+include::examples/dev-configurations/web-ui.yml[]
+----
+
+=== Sample docker image configuration
+
+[source]
+----
+include::examples/docker-configurations/web-ui.yml[]
+----
+
+== Specifying external configuration properties when lauching a jar file
+
+See {springboot_doc}/reference/htmlsingle/#boot-features-external-config-application-property-files[Application Property Files]
+on how to setup an external spring properties or yml file.
+
+See {springboot_doc}/reference/htmlsingle/#howto-set-active-spring-profiles[Set the Active Spring Profiles] for specifying alternate profile.
+
+
+== Specifying configuration properties when lauching a docker image
+
+Our docker image expects optional property file to be stored in the container
+/service-config folder. You can bind so docker volume to this path to make
+properties or yml available.
+
+At time of writing, you cannot specify an alternate profile at runCards-Publication.
+The default profiles activated are docker and native.
+
+=== Available environment variables for docker image
+
+* REGISTRY_HOST: Registry service host
+* REGISTRY_PORT: Registry service port
+* JAVA_OPTIONS: Additional java options
+
+== Specifying configuration properties when lauching on Kubernetes
+
+In progress
+
+=== Available environment variables when launching on Kubernetes
+
+* REGISTRY_HOST: Registry service host
+* REGISTRY_PORT: Registry service port
+* JAVA_OPTIONS: Additional java options

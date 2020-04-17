@@ -1,0 +1,76 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+:sectnums:
+:toc: macro
+:toclevels: 2
+:icons: font
+:hide-uri-scheme:
+
+= OperatorFabric README
+
+include::repo_badges.adoc[]
+include::short_description.adoc[]
+
+toc::[]
+
+//TODO Decide what to put here: link to getting started ? steps to docker deploy + push card ?
+
+TIP: In addition, a Getting
+Started guide on our website exists.
+//TODO links
+Check it out !
+
+== Docker demo
+
+A global docker-compose file for demonstration purposes is available at
+link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker/deploy[src/main/docker/deploy] : sets up all services,
+ready for card reception
+
+*This setup expose the application UI at localhost:2002/ui/*
+
+WARNING: Don't forget the *final slash* in the URL or you will get an error.
+
+== Open source
+
+OperatorFabric is part of the https://www.lfenergy.org/[LF Energy] coalition, a project of The Linux Foundation that supports open source innovation projects within the energy and electricity sectors.
+
+OpFab is an open source platform licensed under https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2].
+The source code is hosted on GitHub in this repository : https://github.com/opfab/operatorfabric-core[operatorfabric-core].
+
+== Technology stack
+
+=== Development
+
+OperatorFabric is mostly written in Java and based on the Spring framework. This makes writing and integrating software for a simplified and better coordination very easy.
+
+image:https://img.shields.io/badge/Using-Java-%237473C0.svg?style=for-the-badge[Using Java,link=]
+image:https://img.shields.io/badge/Using-Spring-%236db33f.svg?style=for-the-badge[Using Spring,link=https://spring.io/]
+image:https://img.shields.io/badge/Using-Angular-%237473C0.svg?style=for-the-badge[Using Angular,link=https://angular.io/]
+image:https://img.shields.io/badge/Using-Swagger-%237473C0.svg?style=for-the-badge[Using Swagger,link=https://swagger.io/]
+
+=== Continuous Integration / Continuous Delivery
+
+OperatorFabric is built and integrated using battle-tested tools and (open) platforms.
+
+image:https://img.shields.io/badge/Built%20with-Gradle-%23410099.svg?style=for-the-badge[Built with Gradle,link=https://gradle.org/]
+image:https://img.shields.io/badge/Using-Travis%20CI-%23FF647D.svg?style=for-the-badge[Using Travis CI,link=https://travis-ci.org/opfab/operatorfabric-core]
+image:https://img.shields.io/badge/Using-SonarCloud-%23FF647D.svg?style=for-the-badge[Using SonarCloud,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
+
+
+
+== Licensing
+
+This project and all its sub-projects are licensed under
+https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2.0]. See
+link:LICENSE.txt[LICENSE.txt]
+
+== Contributing
+
+Read our link:CONTRIBUTING.adoc[CONTRIBUTING] file for more information on
+how to contribute to the project.

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: web-ui
+  cloud:
+    config:
+      name: web-ui
+      fail-fast: true
+      retry:
+        max-attempts: 20
+      discovery:
+        service-id: config
+        enabled: true

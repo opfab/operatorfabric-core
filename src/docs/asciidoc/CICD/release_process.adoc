@@ -1,0 +1,228 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Release process
+
+[[version_numbers]]
+== Version numbers
+
+Version numbers X.Y.Z.label should be understood like this:
+
+* X: Major version, a major version adds new features and breaks compatibility with previous major and minor versions.
+* Y: Minor version, a minor version adds new features and does not break compatibility with previous minor versions for
+the same major version.
+* Z: Patch, a patch version only contains bug fixes of current minor version
+* Label: pre-release or build metadata:
+** SNAPSHOT: a version whose development is in progress, nightly builds only deliver SNAPSHOT versions
+** RELEASE: a version whose development is finished
+
+== Releasing Version
+
+IMPORTANT: To release a version we use some Travis dedicated jobs. These jobs are triggered by specific commit keywords and rely
+on the VERSION file at the root of this repository to know which version is being produced.
+It is thus crucial to double-check the content of this file before any push (triggering the Travis jobs) is made.
+
+Before releasing a version, you need to prepare the release.
+
+Considering a version X.X.X.SNAPSHOT.
+
+=== In the source repository (operatorfabric-core)
+
+. Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
++
+```
+./CICD/prepare_release_version.sh
+```
++
+This will perform the following changes:
++
+* Replace X.X.X.SNAPSHOT with X.X.X.RELEASE in *.adoc, swagger.yaml files and the VERSION file at the root operator-fabric folder
+* Update the revision date in *.adoc files (by default, the new revision date is today, but see the script usage for details)
+* Change the version from W.W.W.RELEASE (previous release) to X.X.X.RELEASE in the deploy docker-compose file
++
+IMPORTANT: The VERSION file is particularly important as the CI/CD pipeline tasks
+(building the documentation and the docker images for example) are based on it.
+
+. Commit with the template message:
++
+```
+[RELEASE] X.X.X.RELEASE (ci_docker,ci_documentation)
+```
++
+The commit comment leverages these three keywords to trigger the delivery of documentation and docker images, so you should
+check that they are correctly spelt.
+
+* ci_docker: triggers the build and upload of versioned docker images to dockerhub
+* ci_documentation: triggers the build and upload of the current documentation
+
+. Tag the commit with the version
++
+```
+git tag X.X.X.RELEASE
+```
+
+. Push the commit
++
+```
+git push
+```
+
+. Push the tag
++
+```
+git push origin X.X.X.RELEASE
+```
+
+. Check that the build is correctly triggered
++
+You can check the status of the build job triggered by the commit on https://travis-ci.org/opfab/operatorfabric-core/branches[Travis CI].
+The build job should have the following three stages:
++
+image::running_build.png[Running build status page screenshot]
++
+Wait for the build to complete (around 30 minutes).
+
+. Check that the X.X.X.RELEASE images have been generated and pushed to DockerHub.
+
+. Check that the latest images have been updated on DockerHub.
+
+. Check that the documentation has been generated and pushed to the GitHub pages website (check version and revision
+date at the top of document)
++
+NOTE: You won't be able to access it from the homepage until you have updated the _version.yml file in the opfab.github.io
+repository, so instead you can just type https://opfab.github.io/documentation/X.X.X.RELEASE/developer_guide/ in your browser.
+
+. Check that the tag was correctly pushed to GitHub and is visible under the
+https://github.com/opfab/operatorfabric-core/releases[releases page] for the repository.
+
+=== Checking deploy docker-compose
+
+The deploy docker-compose file should always rely on the latest RELEASE version
+available on DockerHub. Once the CI pipeline triggered by the previous steps has completed successfully,
+and you can see X.X.X.RELEASE images for all services on DockerHub, you should:
+
+. Remove your locally built X.X.X.RELEASE images if any
+. Run each of the two docker-compose files to make sure they pull the images from DockerHub and behave as intended.
+
+=== In the documentation repository (opfab.github.io)
+
+. In the _data/versions.yml file:
++
+* Change:
++
+```
+- name: X.X.X
+  fullname: X.X.X.SNAPSHOT
+  badges:
+  - name: SNAPSHOT
+    style: badge-snapshot
+```
+to:
++
+```
+- name: X.X.X
+  fullname: X.X.X.RELEASE
+  badges:
+  - name: RELEASE
+    style: badge-release
+  - name: CURRENT
+    style: badge-current
+```
+* Then remove the following lines from the previous release version:
++
+```
+  - name: CURRENT
+    style: badge-current
+```
++
+. Commit and push changes
+
+=== In Jira
+
+. Set all concerned tickets (US, BUG, FR) and set fix version to X.X.X.RELEASE
+
+. In the "Releases" screen release X.X.X.RELEASE version
+
+== Advertising the new release (opfab.github.io and mailing list)
+
+. Click the appropriate version from
+https://opfab.atlassian.net/projects/OC?orderField=RANK&selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=all[JIRA the release list]
+to get the release notes (click "Release notes" under the version name at the top) listing new features, fixed bugs etc...
++
+image::release_notes.png[Release notes link]
+
+. Take this text and use it
+to create a short post on the opfab.github.io repository (under _posts) announcing the release.
+This post should highlight new features and necessary upgrade actions if any.
+
+. Send the same content as an email to the opfab-announce@lists.lfenergy.org mailing list.
+
+== Preparing next version
+
+IMPORTANT: You should wait for all the tasks associated with creating the X.X.X.RELEASE
+version to finish and make sure that they've had the expected output before starting the
+preparation of the next version. This is because any committed/pushed changes preparing the
+new version will make rolling back or correcting any mistake on the release more complicated.
+
+To prepare a next version you simply need to increment the version after a release (see
+ifdef::single-page-doc[<<version_numbers, Version numbers>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/CICD/index.adoc#version_numbers, Version numbers>>]
+).
+
+=== In the source repository (operatorfabric-core)
+
+. Use the ./CICD/prepare_snapshot_version.sh script to automatically perform all the necessary changes:
++
+```
+./CICD/prepare_snapshot_version.sh --version Y.Y.Y.SNAPSHOT
+```
++
+This will perform the following changes:
++
+* Replace all occurrences of X.X.X.RELEASE by Y.Y.Y.SNAPSHOT **EXCEPT** in the deploy docker-compose file
+(src/main/docker/deploy/docker-compose.yml). The files concerned are *.adoc,
+swagger.yaml files and the VERSION file at the root operatorfabric-core folder.
++
+IMPORTANT: The VERSION file is particularly important as the CI/CD pipeline tasks
+(building the documentation and the docker images for example) are based on it.
++
+NOTE: If no --version parameter is provided to the script, the new version will be the next minor version.
++
+. Add a Y.Y.Y.RELEASE.adoc file (blank except for copyright and title) under src/docs/asciidoc/release_notes to initialize the release
+notes for next version.
+. Edit src/docs/asciidoc/release_notes/index.adoc to include this new file (before the previous versions so it appears on top).
++
+. Commit and push changes with the following message:
++
+```
+[PREPARE] next version: Y.Y.Y.SNAPSHOT
+```
+
+=== In the documentation repository (opfab.github.io)
+
+. In the _data/versions.yml file, add the Y.Y.Y.SNAPSHOT version
++
+```
+- name: Y.Y.Y
+  fullname: Y.Y.Y.SNAPSHOT
+  badges:
+  - name: SNAPSHOT
+    style: badge-snapshot
+```
+
+. Commit and push changes.
+
+=== In Jira
+
+. In the "Releases" screen create a  Y.Y.Y.RELEASE version.
+
+=== Checking DockerHub the following day
+
+A CRON Travis job runs daily (the time of the day may vary) and generates the documentation and docker snapshot images.
+After you have finished switching to the Y.Y.Y.SNAPSHOT version, you should wait for such a job to run and check that
+the snapshot images are correctly generated and pushed on DockerHub.

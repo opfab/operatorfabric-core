@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: actions
+  cloud:
+    config:
+      name: actions
+      fail-fast: true
+      retry:
+        max-attempts: 20
+      discovery:
+        service-id: config
+        enabled: true
+logging.level.root: debug
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:2001/eureka'

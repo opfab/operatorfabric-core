@@ -1,0 +1,65 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+// Before moving to opfab.github.io
+//TODO Create 1.2.0.SNAPSHOT using diff
+//TODO Guidelines doc
+//TODO Adapt release script and docs
+//TODO Change links starting with https://opfab.github.io/documentation
+//TODO Check links
+//TODO Find tool to automatically check all links after rendering (and images?)
+
+//TODO Put imagedir in build
+
+// After moving
+//TODO Rework readme on core repo, remove README.adoc
+//TODO Remove unnecessary custom id anchors (script it?)
+//TODO Look at todo in documents, create issues
+//TODO Document new documentation org, guidelines and pipeline
+
+//TODO Proofreading
+//TODO Test examples to see if they are still accurate
+//TODO Check all images
+//TODO Add HSA archive doc
+//TODO Add CICD doc
+//TODO Cross-reference troubleshooting and organize into sections
+//TODO Get new roadmap and make it prettier
+//TODO Set API properties (URL etc.) in config files
+//TODO Add footer with social/contact/github/spectrum icons
+//TODO Handle responsive behaviour
+//TODO Replace drawio files by svg or png with embedded drawio info
+
+//TODO Rebase mock website and repo
+
+//TODO Warning LC local serve KO
+//Jekyll Feed: Generating feed for posts
+//Conversion error: Jekyll::Converters::Scss encountered an error while converting 'assets/css/style.scss':
+//Invalid US-ASCII character "\xE2" on line 5
+//jekyll 3.8.5 | Error:  Invalid US-ASCII character "\xE2" on line 5
+
+// Optional
+//TODO FInd a way to keep navbar (asciidoctor plugin? modifying index.html for swagger UI? customizing asciidoc template?) Issue for previous versions?
+
+//TODO Try moving :imagesdir:{gradle-rootdir} to build config
+//TODO Use gradle-project-version / revnumber to avoid having to change version numbers by script
+//TODO Update asciidoctor plugin (v10)
+//TODO Create macro or block so that the special behaviour of inter-doc links for the single page doc doesn't have to be specified everytime
+//TODO Add link back to summary (only for html?)
+//TODO yml examples: links to github repo, include from github repo, include copies? tradeoff between self-sufficient
+//and risk that 1) content is not available at the time of generation 2) content evolves (rather than remaining snapshot
+// of what it was for this version) -> not for html
+//TODO Organize root content
+//TODO Organize images into subfolders
+//TODO Replace file copies by includes from code
+//TODO Read back notes
+//TODO Look at old site and check that there is nothing left to take/move (footer, favicon, etc.)
+//TODO Shallow clone of site repo for travis?
+//TODO Find a way to share common resources (js, images) between apis
+//TODO What should we do with posts?
+//TODO Test pdf output (images, links)
+
