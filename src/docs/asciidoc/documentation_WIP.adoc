@@ -31,3 +31,5 @@ ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/cards/in
 
 {gradle-rootdir} doesn't work for images (because resolved when the page is displayed and not when it is generated like links,
 so didn't work because site structure doesn't match core structure?), hence the addition of docs subfolder
+
+avoid links in https://opfab.github.io/documentation so they stay relative to the current version (except for release process )

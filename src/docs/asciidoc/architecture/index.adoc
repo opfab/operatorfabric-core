@@ -6,6 +6,7 @@
 
 :imagesdir: ../images
 
+[[architecture]]
 = OperatorFabric Architecture
 
 == Introduction

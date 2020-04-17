@@ -17,7 +17,10 @@ with us while the contribution process and tooling are sorted out.
 
 == Code of Conduct
 
-This project and everyone participating in it is governed by the link:CODE_OF_CONDUCT.adoc[OperatorFabric Code of Conduct].
+This project and everyone participating in it is governed by the
+ifdef::single-page-doc[<<code_of_conduct, OperatorFabric Code of Conduct>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#code_of_conduct, OperatorFabric Code of Conduct>>]
+.
 By participating, you are expected to uphold this code.
 Please report unacceptable behavior to mailto:opfab_AT_lists.lfenergy.org[opfab_AT_lists.lfenergy.org].
 
@@ -107,7 +110,7 @@ iterative process. The iterative process has several goals:
 
 Please follow these steps to have your contribution considered by the maintainers:
 
-. Fill in all the required information in the link:PULL_REQUEST_TEMPLATE.adoc[template].
+//TODO Create new pull request template and link to it here
 //TODO add status checks
 . Request a GitHub review by one of the core developers
 . Take their review into account or discuss the requested changes. Please don't take criticism personally, it is normal
