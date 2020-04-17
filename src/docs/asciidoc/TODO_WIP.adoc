@@ -7,7 +7,6 @@
 :imagesdir: ../images
 
 // Before moving to opfab.github.io
-//TODO Create 1.2.0.SNAPSHOT using diff
 //TODO Guidelines doc
 //TODO Adapt release script and docs
 //TODO Change links starting with https://opfab.github.io/documentation
