@@ -168,15 +168,16 @@ file to initialize the release notes for version Y.Y.Y.RELEASE.
 . Commit and push changes with the following message:
 +
 ```
-[PREPARE] next version: Y.Y.Y.SNAPSHOT
+[PREPARE] next version: Y.Y.Y.SNAPSHOT (ci_docker,ci_documentation)
 ```
+
+Wait for the build to complete (around 30 minutes).
+
+. Check that the snapshot images have been generated and pushed to DockerHub.
+
+. Check that the documentation has been generated and pushed to the GitHub pages website: you should see the
+Y.Y.Y.SNAPSHOT under the link:https://opfab.github.io/pages/releases.html[releases page]. Check that the links work.
 
 === In Jira
 
 . In the "Releases" screen create a  Y.Y.Y.RELEASE version.
-
-=== Checking DockerHub the following day
-
-A CRON Travis job runs daily (the time of the day may vary) and generates the documentation and docker snapshot images.
-After you have finished switching to the Y.Y.Y.SNAPSHOT version, you should wait for such a job to run and check that
-the snapshot images are correctly generated and pushed on DockerHub.
