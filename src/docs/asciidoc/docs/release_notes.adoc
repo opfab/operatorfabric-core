@@ -9,6 +9,6 @@
 == Issue
 
 == Bug
+* [OC-414] Issue with using user data in templates
 
 == Task
-
