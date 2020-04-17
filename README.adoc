@@ -7,19 +7,49 @@
 :imagesdir: src/docs/asciidoc/images
 
 :sectnums:
-:toc: macro
-:toclevels: 2
 :icons: font
 :hide-uri-scheme:
 
 = OperatorFabric README
 
-include::src/docs/asciidoc/repo_badges.adoc[]
-
-toc::[]
+image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0
+License,link=https://www.mozilla.org/en-US/MPL/2.0/]
+image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master[Build
+Status,link=https://travis-ci.org/opfab/operatorfabric-core]
+image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status[Quality
+Gate,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
+image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=coverage[Coverage,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Coverage]
+image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=code_smells[Code
+Smells,link=https://sonarcloud.io/component_measures?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=Maintainability]
+image:https://img.shields.io/website-up-down-green-red/http/opfab.github.io.svg[Website
+opfab.github.io,link=http://opfab.github.io/]
+image:https://img.shields.io/badge/Join%20us%20on-Spectrum-%237473C0.svg[Join
+us on Spectrum,link=https://spectrum.chat/opfab]
 
 == Introduction
-include::src/docs/asciidoc/short_description.adoc[leveloffset=+1]
+
+//tag::short_description[]
+OperatorFabric is a modular, extensible, industrial-strength and field-tested
+platform for use in electricity, water, and other utility operations.
+
+* System visualization and console integration
+* Precise alerting
+* Workflow scheduling
+* Historian
+* Scripting (ex: Python, JavaScript)
+
+NOTE: Workflow Scheduling could be addressed either as an internal module or
+through simplified and standardized (BPMN) integration with external workflow
+engines, we're still weighing the pros and cons of the two options._
+
+OperatorFabric is part of the https://www.lfenergy.org/[LF Energy] coalition, a project of The Linux Foundation that
+supports open source innovation projects within the energy and electricity sectors.
+
+OpFab is an open source platform licensed under https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2].
+The source code is hosted on GitHub in this repository : https://github.com/opfab/operatorfabric-core[operatorfabric-core].
+//end::short_description[]
+
+image::feed_screenshot.png[UI screenshot]
 
 == Try it!
 
@@ -50,14 +80,6 @@ WARNING: Don't forget the *final slash* in the URL or you will get an error.
 
 TIP: If you want to experiment in more depth and have more details on how it works (as well as some troubleshooting), check out our
 link:https://opfab.github.io/documentation/current/getting_started/[Getting Started guide]!
-
-== Open source
-
-OperatorFabric is part of the https://www.lfenergy.org/[LF Energy] coalition, a project of The Linux Foundation that
-supports open source innovation projects within the energy and electricity sectors.
-
-OpFab is an open source platform licensed under https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License V2].
-The source code is hosted on GitHub in this repository : https://github.com/opfab/operatorfabric-core[operatorfabric-core].
 
 == Technology stack
 

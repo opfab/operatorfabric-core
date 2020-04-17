@@ -11,7 +11,7 @@
 
 == Introduction
 
-include::../short_description.adoc[]
+include::{gradle-rootdir}/README.adoc[tag=short_description]
 
 The aim of this document is to describe the architecture of the solution, first by defining the business concepts it
 deals with and then showing how this translates into the technical architecture.
