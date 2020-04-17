@@ -4,46 +4,11 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-= Version 1.2.0.RELEASE
-
-IMPORTANT: Due to changes in the setup of queues in RabbitMQ (see OC-812), it's best to completely remove the
-RabbitMQ docker container you were using with previous versions before running (either in dev or docker mode)
-version 1.2.0.RELEASE. This won't cause any data loss as cards are stored in MongoDB.
+= Version 1.3.0.RELEASE
 
 == Issue
-* [OC-835] Remove lttd from feed sorts and make publication date sort (rather than severity then publication date)
-the default
-+
-_Now, the toggle button introduced by OC-624 lets the users choose between :_
-+
-** _by publication date (newest at the top) (default)_
-** _by severity then publication date_
-+
-_Resolved OC-771, OC-766 and OC-820_
 
 == Bug
-* [OC-799] Show date when timeline is on 1 day
-* [OC-791] Add translation mechanism for timeline buttons
-* [OC-816] API testing - User update (PUT) - error "500" NullPointerException instead of "'400" BAD_REQUEST
-* [OC-360] On very wide screens, the filter panel at the top of the feed appears wider than the cards below it.
-* [OC-648] API testing - Group fetching - wrong response when fetching information about an existing group
-* [OC-709] Change card update mechanism in Mongo : if we removed a field in the new card , for certain fields it was
-conserved from the old version in MongoDB , it is now deleted which is the wanted behavior
 
 == Task
-* [OC-753] Add API tests with karate DSL
-* [OC-798] Remove Pulse mechanism in UI and unused UI option operatorfabric.feed.timeFilter.followClockTick
-* [OC-801] Allow for custom certification authorities or certificates
-+
-_See the relevant section of the
-<<{gradle-rootdir}/documentation/current/deployment/index.adoc#custom_certificates, deployment documentation>> for details_
-* [OC-819] Solve Sonar Issues
-* [OC-812] Refactor sending card via rabbit queue "GROUP"
-* [OC-818] Implement automatic logout when token expired (code flow authentication mode )
-* [OC-814] Remove registry and configuration microservice for action service
-** _ `Actions service` is now configured with it's own `application.yml` (or `application-docker.yml`) configuration file._
-** _ `Client-gateway service` need to be configured manually to reach the `actions service`.
-See the <<{gradle-rootdir}/documentation/current/deployment/index.adoc#cloud_gateway_service_config, client gateway configuration>>
-for details._
-** _The deploy docker-compose now sets predefined names for its containers ("users" rather than "deploy_users_1"
-for example). These names match the ones defined in the application-docker.yml file of the Actions service._
+
