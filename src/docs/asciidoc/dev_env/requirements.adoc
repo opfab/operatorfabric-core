@@ -1,0 +1,69 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Requirements
+
+This section describes the projects requirements regardless of
+installation options.
+Please see
+ifdef::single-page-doc[<<setup_dev_env, Setting up your environment>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/dev_env/index.adoc#setup_dev_env, Setting up your environment>>] below for details on:
+
+* setting up a development environment with these prerequisites
+* building and running OperatorFabric
+
+== Tools and libraries
+
+* Gradle 6 +
+* Java 8.0 +
+* Maven 3.5.3 +
+* Docker
+* Docker Compose with 2.1+ file format support
+* Chrome (needed for UI tests in build)
+
+NOTE: the current Jdk used for the project is Java 8.0.242-zulu.
+
+IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
+https://github.com/creationix/nvm[nvm] to manage tools versions.
+
+Once you have installed sdkman and nvm, you can **source** the following
+script to set up your development environment (appropriate versions of Gradle,
+Java, Maven and project variables set):
+
+.Set up development environment (using sdkman and nvm)
+[source]
+----
+source bin/load_environment_light.sh
+----
+
+== Software
+
+* RabbitMQ 3.7.6 +: AMQP messaging layer allows inter
+service communication
+* MongoDB 4.0 +: Card persistent storage
+
+RabbitMQ is required for :
+
+* Card AMQP push
+* Multiple service sync
+
+MongoDB is required for :
+
+* Current Card storage
+* Archived Card storage
+* User Storage
+
+IMPORTANT: Installing MongoDB and RabbitMQ is not necessary as preconfigured
+MongoDB and RabbitMQ are available in the form of docker-compose configuration
+files at
+link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker[src/main/docker]
+
+== Browser support
+
+We currently use Firefox (63.0.3). Automatic tests for the UI rely on Chrome
+(73.0.3683.86).

@@ -79,7 +79,7 @@ public class ArchivedCardRoutesShould {
 
         @Test
         public void findArchivedCardById() {
-            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600),"userWithGroup");
+            ArchivedCardConsultationData simpleCard = createSimpleArchivedCard(1, publisher, Instant.now(), Instant.now(), Instant.now().plusSeconds(3600),"userWithGroup", null,null);
             StepVerifier.create(repository.save(simpleCard))
                     .expectNextCount(1)
                     .expectComplete()
@@ -98,7 +98,7 @@ public class ArchivedCardRoutesShould {
 
     @Nested
     @WithMockOpFabUser(login="userWithNoGroup", roles = {})
-    public class GivenUserWithNoGroupCardRoutesShould {
+    public class GivenUserWithNoGroupArchivedCardRoutesShould {
 
         @Test
         public void findOutCard(){
@@ -113,5 +113,104 @@ public class ArchivedCardRoutesShould {
             ;
         }
 
+    }
+
+    @Nested
+    @WithMockOpFabUser(login="userWithGroupAndEntity", roles={"SOME_GROUP"}, entities={"SOME_ENTITY"})
+    public class GivenUserWithGroupAndEntityArchivedCardRoutesShould {
+
+        @Test
+        public void findArchivedCardById() {
+
+            ArchivedCardConsultationData simpleCard1 = createSimpleArchivedCard(1, publisher, Instant.now(),
+                    Instant.now(), Instant.now().plusSeconds(3600), "",
+                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+
+            ArchivedCardConsultationData simpleCard2 = createSimpleArchivedCard(1, publisher, Instant.now(),
+                    Instant.now(), Instant.now().plusSeconds(3600), "",
+                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, new String[]{"OTHER_ENTITY"});//must not receive
+
+            ArchivedCardConsultationData simpleCard3 = createSimpleArchivedCard(1, publisher, Instant.now(),
+                    Instant.now(), Instant.now().plusSeconds(3600), "",
+                    new String[]{"OTHER_GROUP"}, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive
+
+            ArchivedCardConsultationData simpleCard4 = createSimpleArchivedCard(1, publisher, Instant.now(),
+                    Instant.now(), Instant.now().plusSeconds(3600), "",
+                    new String[]{"OTHER_GROUP", "SOME_GROUP"}, null);//must receive
+
+            ArchivedCardConsultationData simpleCard5 = createSimpleArchivedCard(1, publisher, Instant.now(),
+                    Instant.now(), Instant.now().plusSeconds(3600), "",
+                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+
+            ArchivedCardConsultationData simpleCard6 = createSimpleArchivedCard(1, publisher, Instant.now(),
+                    Instant.now(), Instant.now().plusSeconds(3600), "",
+                    null, null);//must not receive
+
+            StepVerifier.create(repository.save(simpleCard1))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(archivedCardRoutes).isNotNull();
+            webTestClient.get().uri("/archives/{id}", simpleCard1.getId()).exchange()
+                    .expectStatus().isOk()
+                    .expectBody(ArchivedCardConsultationData.class).value(card -> {
+                assertThat(card)
+                        //This is necessary because empty lists are ignored in the returned JSON
+                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualToComparingFieldByFieldRecursively(simpleCard1);
+            });
+
+            StepVerifier.create(repository.save(simpleCard2))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(archivedCardRoutes).isNotNull();
+            webTestClient.get().uri("/archives/{id}", simpleCard2.getId()).exchange()
+                    .expectStatus().isNotFound();
+
+            StepVerifier.create(repository.save(simpleCard3))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(archivedCardRoutes).isNotNull();
+            webTestClient.get().uri("/archives/{id}", simpleCard3.getId()).exchange()
+                    .expectStatus().isNotFound();
+
+            StepVerifier.create(repository.save(simpleCard4))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(archivedCardRoutes).isNotNull();
+            webTestClient.get().uri("/archives/{id}", simpleCard4.getId()).exchange()
+                    .expectStatus().isOk()
+                    .expectBody(ArchivedCardConsultationData.class).value(card -> {
+                assertThat(card)
+                        //This is necessary because empty lists are ignored in the returned JSON
+                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualToComparingFieldByFieldRecursively(simpleCard4);
+            });
+
+            StepVerifier.create(repository.save(simpleCard5))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(archivedCardRoutes).isNotNull();
+            webTestClient.get().uri("/archives/{id}", simpleCard5.getId()).exchange()
+                    .expectStatus().isOk()
+                    .expectBody(ArchivedCardConsultationData.class).value(card -> {
+                assertThat(card)
+                        //This is necessary because empty lists are ignored in the returned JSON
+                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
+                        .isEqualToComparingFieldByFieldRecursively(simpleCard5);
+            });
+
+            StepVerifier.create(repository.save(simpleCard6))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(archivedCardRoutes).isNotNull();
+            webTestClient.get().uri("/archives/{id}", simpleCard6.getId()).exchange()
+                    .expectStatus().isNotFound();
+        }
     }
 }

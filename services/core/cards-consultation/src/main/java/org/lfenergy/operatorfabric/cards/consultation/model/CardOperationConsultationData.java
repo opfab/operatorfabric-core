@@ -39,5 +39,4 @@ public class CardOperationConsultationData implements CardOperation {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends LightCard> cards;
-
 }

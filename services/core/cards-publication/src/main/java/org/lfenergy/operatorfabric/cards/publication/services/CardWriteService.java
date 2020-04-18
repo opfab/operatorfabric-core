@@ -11,7 +11,9 @@ import com.mongodb.client.result.DeleteResult;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.*;
+import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -29,12 +31,11 @@ import reactor.util.function.Tuples;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.time.Duration;
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * <p>
@@ -111,7 +112,7 @@ public class CardWriteService {
         Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
         cards = registerValidationProcess(cards, Instant.now());
         return registerPersistenceAndNotificationProcess(cards, windowStart)
-                .doOnNext(count -> log.debug(count + " pushed Cards persisted"))
+                .doOnNext(count -> log.debug("{} pushed Cards persisted", count))
                 .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
                 .onErrorResume(e -> {
                     log.error("Unexpected error during pushed Cards persistence", e);
@@ -169,10 +170,9 @@ public class CardWriteService {
         // constraint check : endDate must be after startDate
         Instant endDateInstant = c.getEndDate();
         Instant startDateInstant = c.getStartDate();
-        if ((endDateInstant != null) && (startDateInstant != null)) {
-            if (endDateInstant.compareTo(startDateInstant) < 0)
+        if ((endDateInstant != null) && (startDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0))
                 throw new ConstraintViolationException("constraint violation : endDate must be after startDate", null);
-        }
+        
 
         // constraint check : timeSpans list : each end date must be after his start
         // date
@@ -181,11 +181,9 @@ public class CardWriteService {
                 if (c.getTimeSpans().get(i) != null) {
                     Instant endInstant = c.getTimeSpans().get(i).getEnd();
                     Instant startInstant = c.getTimeSpans().get(i).getStart();
-                    if ((endInstant != null) && (startInstant != null)) {
-                        if (endInstant.compareTo(startInstant) < 0)
+                    if ((endInstant != null) && (startInstant != null) && (endInstant.compareTo(startInstant) < 0))
                             throw new ConstraintViolationException(
                                     "constraint violation : TimeSpan.end must be after TimeSpan.start", null);
-                    }
                 }
             }
     }
@@ -238,8 +236,7 @@ public class CardWriteService {
             return;
         BulkOperations bulkCard = template.bulkOps(BulkOperations.BulkMode.ORDERED, CardPublicationData.class);
         cards.forEach(c -> {
-            if (log.isDebugEnabled())
-                log.debug("preparing to write " + c.toString());
+                log.debug("preparing to write {}", c.toString());
             addBulkCard(bulkCard, c);
         });
         bulkCard.execute();
@@ -257,6 +254,18 @@ public class CardWriteService {
         Document objDocument = new Document();
         template.getConverter().write(c, objDocument);
         Update update = new Update();
+
+        //work around OC-709 : "Change card update mechanism in Mongo"
+        for (Field f : CardPublicationData.class.getDeclaredFields()) {
+            try {
+                f.setAccessible(true);
+                if (f.get(c) == null)
+                    update.unset(f.getName());
+            } catch (IllegalAccessException e) {
+                log.error("Unable to access to field" + f.getName(), e);
+            }
+        }
+
         objDocument.entrySet().forEach(e -> update.set(e.getKey(), e.getValue()));
         bulk.upsert(Query.query(Criteria.where("_id").is(c.getId())), update);
     }
@@ -325,7 +334,6 @@ public class CardWriteService {
         long windowDuration = System.nanoTime() - windowStart;
         double windowDurationMillis = windowDuration / 1000000d;
         double cardWindowDurationMillis = windowDurationMillis / count;
-        log.debug(count + " cards handled in " + cardWindowDurationMillis + " ms each (total: " + windowDurationMillis
-                + ")");
+        log.debug("{} cards handled in {} ms each (total: {})", count, cardWindowDurationMillis, windowDurationMillis);
     }
 }

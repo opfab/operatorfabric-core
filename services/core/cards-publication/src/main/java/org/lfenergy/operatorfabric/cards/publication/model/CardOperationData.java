@@ -40,6 +40,12 @@ public class CardOperationData implements CardOperation {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends LightCard> cards;
+    @Singular
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<String> groupRecipientsIds;
+    @Singular
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<String> entityRecipientsIds;
 
     /**
      * Class used to encapsulate builder in order to bypass javadoc inability to handle annotation processor generated classes

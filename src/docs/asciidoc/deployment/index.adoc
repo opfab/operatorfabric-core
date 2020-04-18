@@ -1,0 +1,65 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Deployment and Administration of OperatorFabric
+
+The aim of this document is to explain how to configure and deploy OperatorFabric.
+
+== Deployment
+
+For now OperatorFabric consist of Docker images available either by compiling
+the project or by using images releases from link:https://hub.docker.com/[Dockerhub]
+
+Service images are all based on link:https://hub.docker.com/_/openjdk[openjdk:8-jre-alpine].
+
+For simple one instance per service deployment, you can find a sample
+deployment as a docker-compose file
+link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker/deploy[here]
+
+include::certificates.adoc[leveloffset=+1]
+
+To run OperatorFabric in development mode, see
+ifdef::single-page-doc[<<dev_env, the development environment documentation>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#dev_env, the development environment documentation>>]
+.
+
+include::RABBITMQ.adoc[leveloffset=+1]
+
+include::configuration/configuration.adoc[leveloffset=+1]
+
+include::users_groups_admin.adoc[leveloffset=+1]
+
+include::port_table.adoc[leveloffset=+1]
+
+== Restricted operations (administration)
+
+Some operations are restricted to users with the **ADMIN** role, either because they are administration
+operations with the potential to impact the OperatorFabric instance as a whole, or because they
+give access to information that should be private to a user.
+
+Below is a quick recap of these restricted operations.
+
+.Users Service
+Any action (read, create/update or delete) regarding a single user's data (their personal info such as their first and
+last name, as well as their settings) can be performed either by the user in question or by a user with the ADMIN role.
+
+Any action on a list of users or on the groups (if authorization is managed in OperatorFabric) can only be performed by
+a user with the ADMIN role.
+
+.Thirds Service
+Any write (create, update or delete) action on bundles can only be performed by a user with the ADMIN role. As such,
+administrators are responsible for the quality and security of the provided bundles.
+In particular, as it is possible to use scripts in templates, they should perform a security check to make sure that
+there is no XSS risk.
+
+IMPORTANT: The ADMIN role doesn't grant any special privileges when it comes to card consultation (be they current or
+archived), so an user with the ADMIN role will only see cards that have been addressed to them or to one of their
+groups), just like any other user.
+
+
+

@@ -32,6 +32,7 @@ import reactor.test.StepVerifier;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -78,31 +79,31 @@ public class CardRepositoryShould {
     private void initCardData() {
         int processNo = 0;
         //create past cards
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, LOGIN, "rte", "operator"));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, new String[]{"entity1", "entity2"}));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, null));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, LOGIN, new String[]{"rte","operator"}, null));
         //create future cards
-        persistCard(createSimpleCard(processNo++, nowMinusThree, now, nowPlusOne, LOGIN, "rte", "operator"));
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusOne, nowPlusTwo, LOGIN, "rte", "operator"));
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusTwo, nowPlusThree, LOGIN, "rte", "operator"));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, now, nowPlusOne, LOGIN, new String[]{"rte","operator"}, null));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusOne, nowPlusTwo, LOGIN, new String[]{"rte","operator"}, new String[]{"entity1", "entity2"}));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusTwo, nowPlusThree, LOGIN, new String[]{"rte","operator"}, null));
 
         //card starts in past and ends in future
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, nowPlusThree, LOGIN, "rte", "operator"));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, nowPlusThree, LOGIN, new String[]{"rte","operator"}, null));
 
         //card starts in past and never ends
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, null, LOGIN, "rte", "operator"));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, null, LOGIN, new String[]{"rte","operator"}, null));
 
         //card starts in future and never ends
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusThree, null, LOGIN, "rte", "operator"));
+        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusThree, null, LOGIN, new String[]{"rte","operator"}, null));
 
         //create later published cards in past
         //this one overrides first
-        persistCard(createSimpleCard(1, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
-        persistCard(createSimpleCard(processNo++, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, "rte", "operator"));
+        persistCard(createSimpleCard(1, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, null));
+        persistCard(createSimpleCard(processNo++, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, null));
         //create later published cards in future
         // this one overrides third
-        persistCard(createSimpleCard(3, nowPlusOne, nowPlusOne, nowPlusTwo, LOGIN, "rte", "operator"));
-        persistCard(createSimpleCard(processNo++, nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN, "rte", "operator"));
+        persistCard(createSimpleCard(3, nowPlusOne, nowPlusOne, nowPlusTwo, LOGIN, new String[]{"rte","operator"}, null));
+        persistCard(createSimpleCard(processNo++, nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN, new String[]{"rte","operator"}, null));
     }
 
     private void persistCard(CardConsultationData simpleCard) {
@@ -119,6 +120,9 @@ public class CardRepositoryShould {
         List<String> groups = new ArrayList<>();
         groups.add("operator");
         currentUser.setGroups(groups);
+        List<String> entities = new ArrayList<>();
+        entities.add("entity2");
+        currentUser.setEntities(entities);
         StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo,currentUser))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
@@ -149,6 +153,9 @@ public class CardRepositoryShould {
         List<String> groups = new ArrayList<>();
         groups.add("operator");
         currentUser.setGroups(groups);
+        List<String> entities = new ArrayList<>();
+        entities.add("entity1");
+        currentUser.setEntities(entities);
         StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo,currentUser))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
@@ -203,6 +210,7 @@ public class CardRepositoryShould {
                                 .titlePosition(TitlePositionEnum.UP)
                                 .style("style")
                                 .build())
+                        .entityRecipients(new ArrayList<String>(Arrays.asList("entity1", "entity2")))
                         .build();
         prepareCard(card, Instant.now());
         StepVerifier.create(repository.save(card))
@@ -218,9 +226,9 @@ public class CardRepositoryShould {
 
     @Test
     public void fetchPast() {
-        //matches rte group
+        //matches rte group and entity1
         log.info(String.format("Fetching past before now(%s), published after now(%s)", TestUtilities.format(now), TestUtilities.format(now)));
-        StepVerifier.create(repository.findPastOnly(now, now, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findPastOnly(now, now, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity1"})
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
@@ -231,7 +239,7 @@ public class CardRepositoryShould {
                 .verify();
 
         //matches admin orphaned user
-        StepVerifier.create(repository.findPastOnly(now, now, "admin")
+        StepVerifier.create(repository.findPastOnly(now, now, "admin", null, null)
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
@@ -242,7 +250,7 @@ public class CardRepositoryShould {
                 .verify();
 
         log.info(String.format("Fetching past before now plus three hours(%s), published after now(%s)", TestUtilities.format(nowPlusThree), TestUtilities.format(now)));
-        StepVerifier.create(repository.findPastOnly(now, nowPlusThree, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findPastOnly(now, nowPlusThree, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity1"})
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(3);
@@ -254,7 +262,7 @@ public class CardRepositoryShould {
                 .expectComplete()
                 .verify();
         log.info(String.format("Fetching past before now (%s), published after now plus three hours(%s)", TestUtilities.format(now), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.findPastOnly(nowPlusThree, now, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findPastOnly(nowPlusThree, now, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity1"})
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
@@ -279,7 +287,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchPastJSON() {
         log.info(String.format("Fetching past before now (%s), published after now plus three hours(%s)", TestUtilities.format(now), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.findPastOnlyJSON(nowPlusThree, now, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findPastOnlyJSON(nowPlusThree, now, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity1"})
                 .map(s -> TestUtilities.readCardOperation(mapper, s))
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
@@ -295,7 +303,7 @@ public class CardRepositoryShould {
                 .expectComplete()
                 .verify();
 
-        StepVerifier.create(repository.findPastOnlyJSON(nowPlusThree, now, "admin")
+        StepVerifier.create(repository.findPastOnlyJSON(nowPlusThree, now, "admin", null,null)
                 .map(s -> TestUtilities.readCardOperation(mapper, s))
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
@@ -315,7 +323,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchFuture() {
         log.info(String.format("Fetching future from now(%s), published after now(%s)", TestUtilities.format(now), TestUtilities.format(now)));
-        StepVerifier.create(repository.findFutureOnly(now, now, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findFutureOnly(now, now, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity1"})
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(3);
@@ -327,7 +335,7 @@ public class CardRepositoryShould {
                 .expectComplete()
                 .verify();
         log.info(String.format("Fetching future from now minus two hours(%s), published after now(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(now)));
-        StepVerifier.create(repository.findFutureOnly(now, nowMinusTwo, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findFutureOnly(now, nowMinusTwo, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity2"})
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(4);
@@ -340,7 +348,7 @@ public class CardRepositoryShould {
                 .expectComplete()
                 .verify();
         log.info(String.format("Fetching future from now minus two hours(%s), published after now plus three hours(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.findFutureOnly(nowPlusThree, nowMinusTwo, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findFutureOnly(nowPlusThree, nowMinusTwo, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity1"})
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(4);
@@ -363,7 +371,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchFutureJSON() {
         log.info(String.format("Fetching future from now minus two hours(%s), published after now plus three hours(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.findFutureOnlyJSON(nowPlusThree, nowMinusTwo, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findFutureOnlyJSON(nowPlusThree, nowMinusTwo, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity2"})
                 .map(s -> TestUtilities.readCardOperation(mapper, s))
                 .doOnNext(TestUtilities::logCardOperation)
         )
@@ -388,7 +396,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchUrgent() {
         log.info(String.format("Fetching urgent from now minus one hours(%s) and now plus one hours(%s), published after now (%s)", TestUtilities.format(nowMinusOne), TestUtilities.format(nowPlusOne), TestUtilities.format(now)));
-        StepVerifier.create(repository.findUrgent(now, nowMinusOne, nowPlusOne, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findUrgent(now, nowMinusOne, nowPlusOne, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity1"})
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(5);
@@ -406,7 +414,7 @@ public class CardRepositoryShould {
     @Test
     public void fetchUrgentJSON() {
         log.info(String.format("Fetching urgent from now minus one hours(%s) and now plus one hours(%s), published after now (%s)", TestUtilities.format(nowMinusOne), TestUtilities.format(nowPlusOne), TestUtilities.format(now)));
-        StepVerifier.create(repository.findUrgentJSON(now, nowMinusOne, nowPlusOne, "rte-operator", "rte", "operator")
+        StepVerifier.create(repository.findUrgentJSON(now, nowMinusOne, nowPlusOne, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity2"})
                 .map(s -> TestUtilities.readCardOperation(mapper, s))
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
@@ -428,6 +436,9 @@ public class CardRepositoryShould {
         predicate = predicate.and(c -> c.getDetails().size() == 1);
         predicate = predicate.and(c -> c.getDetails().get(0).getTitlePosition() == TitlePositionEnum.UP);
         predicate = predicate.and(c -> "PUBLISHER".equals(c.getPublisher()));
+        predicate = predicate.and(c -> c.getEntityRecipients().size() == 2);
+        predicate = predicate.and(c -> c.getEntityRecipients().get(0).equals("entity1"));
+        predicate = predicate.and(c -> c.getEntityRecipients().get(1).equals("entity2"));
         return predicate;
     }
 

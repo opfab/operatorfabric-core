@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -44,10 +43,7 @@ public class LightCardConsultationData implements LightCard {
     private String state;
     private Instant lttd;
     private Instant publishDate;
-    @Indexed
     private Instant startDate;
-    @Indexed
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

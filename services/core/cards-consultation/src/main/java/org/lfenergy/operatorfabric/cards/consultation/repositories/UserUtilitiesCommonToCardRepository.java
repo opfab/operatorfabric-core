@@ -38,37 +38,34 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
     }
 
     default List<Criteria> computeCriteriaList4User(User user) {
+        List<Criteria> criteriaList = new ArrayList<>();
         List<Criteria> criteria = new ArrayList<>();
         String login = user.getLogin();
         List<String> groups = user.getGroups();
+        List<String> entities = user.getEntities();
 
-        if (login != null && !(groups == null || groups.isEmpty())) {
-            criteria.add(new Criteria().orOperator(
-                    where("userRecipients").in(login),
-                    where("groupRecipients").in(groups)));
-        } else if (login != null) {
-            criteria.add(new Criteria().orOperator(
-                    where("userRecipients").in(login)));
-        } else if (!(groups == null || groups.isEmpty())) {
-            criteria.add(where("groupRecipients").in(groups));
+        if (login != null) {
+            criteriaList.add(new Criteria().where("userRecipients").in(login));
         }
+        if (!(groups == null || groups.isEmpty())) {
+            criteriaList.add(new Criteria().where("groupRecipients").in(groups).andOperator(new Criteria().orOperator(
+                    Criteria.where("entityRecipients").exists(false), Criteria.where("entityRecipients").size(0))));
+        }
+        if (!(entities == null || entities.isEmpty())) {
+            criteriaList.add(new Criteria().where("entityRecipients").in(entities).andOperator(new Criteria().orOperator(
+                    Criteria.where("groupRecipients").exists(false), Criteria.where("groupRecipients").size(0))));
+        }
+        if (!(groups == null || groups.isEmpty()) &&  !(entities == null || entities.isEmpty()))
+            criteriaList.add(new Criteria().where("groupRecipients").in(groups).and("entityRecipients").in(entities));
 
+        if (! criteriaList.isEmpty())
+            criteria.add(new Criteria().orOperator(criteriaList.toArray(new Criteria[criteriaList.size()])));
         return criteria;
     }
 
     default Criteria computeUserCriteria(User user) {
         Criteria criteria = new Criteria();
-        String login = user.getLogin();
-        List<String> groups = user.getGroups();
-        boolean isGroupNonEmpty = !(null == groups || groups.isEmpty());
-        if (isGroupNonEmpty)  criteria = where("groupRecipients").in(groups);
-        if (null != login) {
-            Criteria userRec = where("userRecipients").in(login);
-            boolean isGroupEmpty = !isGroupNonEmpty;
-            Criteria[] crits=(isGroupEmpty)?new Criteria[]{userRec}:new Criteria[]{userRec,criteria};
-            criteria = new Criteria().orOperator(crits);
-        }
-        return criteria;
+        return (!computeCriteriaList4User(user).isEmpty()) ? computeCriteriaList4User(user).get(0) : criteria;
     }
 
     Mono<T> findByIdWithUser(String id, User user);

@@ -29,6 +29,7 @@ subprojects {
 
     dependencies {
         swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+        swaggerUI generator.swaggerUI
 //        compile generator.springfoxSwagger2
         annotationProcessor misc.lombok
         implementation misc.lombok
@@ -61,14 +62,8 @@ subprojects {
                 templateDir = file('../src/main/resources/swagger-templates')
                 components = ['models']
             }
-        }
-
-        doc {
-            inputFile = file("../../services/core/$project.projectDir.name/src/main/modeling/swagger.yaml")
-            code {
-                language = 'html'
+            ui {
                 outputDir = file("./build/docs/api")
-                components = ['models']
             }
         }
     }

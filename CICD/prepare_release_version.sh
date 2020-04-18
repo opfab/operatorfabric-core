@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# Default values
-revisionDate="$(LC_ALL=en_GB.utf8 date +'%d %B %Y')"
-
 display_usage() {
 	echo "This script makes the necessary changes to version controlled files to prepare for a RELEASE version."
 	echo -e "Usage:\n"
-	echo -e "\tprepare_release_version.sh [OPTIONS] \n"
-	echo -e "options:\n"
-	echo -e "\t-d, --date  : string. Revision date (please use %d %B %Y format). Defaults to today ($revisionDate)"
+	echo -e "\tprepare_release_version.sh\n"
 }
 
 # Read parameters
@@ -17,11 +12,6 @@ do
 key="$1"
 # echo $key
 case $key in
-    -d|--date)
-    revisionDate="$2"
-    shift # past argument
-    shift # past value
-    ;;
     -h|--help)
     shift # past argument
 display_usage
@@ -33,8 +23,6 @@ display_usage
     ;;
 esac
 done
-
-echo "Revision date: $revisionDate"
 
 # Get current (SNAPSHOT) version from VERSION file
 oldVersion=$(cat VERSION)
@@ -60,15 +48,6 @@ find . -name swagger.yaml | xargs sed -i "s/\(version: *\)$oldVersion/\1$newVers
 # That's why oldVersion is part of the pattern, as it is less likely that another version key would appear with the exact same value.
 # The issue is that if the value has been mistakenly modified and is not $oldVersion, it won't be updated
 # TODO Find a better solution or add a check
-
-echo "Replacing $oldVersion with $newVersion in :revnumber in adoc files (excluding release notes)"
-find . ! -path "./src/docs/asciidoc/release_notes/*" -and -name "*.adoc" | xargs sed -i "s/\(:revnumber: *\)$oldVersion/\1$newVersion/g";
-
-echo "Replacing $oldVersion with $newVersion in links in adoc files (excluding release notes)"
-find . ! -path "./src/docs/asciidoc/release_notes/*" -and -name "*.adoc" | xargs sed -i "s/\/$oldVersion\//\/$newVersion\//g";
-
-echo "Updating revision date in adoc files (excluding release notes)"
-find . ! -path "./src/docs/asciidoc/release_notes/*" -and -name "*.adoc" | xargs sed -i "s/\(:revdate:\)\(.*\)$/\1 $revisionDate/g";
 
 echo "Using $newVersion for lfeoperatorfabric images in deploy docker-compose file"
 # String example for regexp: image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"

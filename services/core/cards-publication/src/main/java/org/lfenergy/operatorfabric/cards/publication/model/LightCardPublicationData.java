@@ -11,7 +11,7 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.springframework.data.mongodb.core.index.Indexed;
+
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -48,10 +48,7 @@ public class LightCardPublicationData implements LightCard {
     private Instant lttd;
     private Instant publishDate;
     @NotNull
-    @Indexed
     private Instant startDate;
-    @Indexed
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

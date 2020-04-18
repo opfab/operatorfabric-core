@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,7 +51,7 @@ public class CardSubscriptionServiceShould {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
-    private TopicExchange groupExchange;
+    private FanoutExchange groupExchange;
     @Autowired
     private DirectExchange userExchange;
     @Autowired
@@ -66,10 +66,16 @@ public class CardSubscriptionServiceShould {
         user.setLogin("testuser");
         user.setFirstName("Test");
         user.setLastName("User");
+
         List<String> groups = new ArrayList<>();
         groups.add("testgroup1");
         groups.add("testgroup2");
         user.setGroups(groups);
+
+        List<String> entities = new ArrayList<>();
+        entities.add("testentity1");
+        entities.add("testentity2");
+        user.setEntities(entities);
     }
 
     @Test
@@ -137,5 +143,52 @@ public class CardSubscriptionServiceShould {
             rabbitTemplate.convertAndSend(userExchange.getName(),user.getLogin(),"test message 1");
             rabbitTemplate.convertAndSend(userExchange.getName(),user.getLogin(),"test message 2");
         };
+    }
+
+    @Test
+    public void testCheckIfUserMustReceiveTheCard() {
+        CardSubscription subscription = service.subscribe(user, TEST_ID, null, null, false);
+
+        //groups only
+        String messageBody1 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"]}";  //true
+        String messageBody2 = "{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"]}";  //false
+        String messageBody3 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"], \"entityRecipientsIds\":[]}";  //true
+        String messageBody4 = "{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"], \"entityRecipientsIds\":[]}";  //false
+
+        //entities only
+        String messageBody5 = "{\"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}";   //true
+        String messageBody6 = "{\"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}";   //false
+        String messageBody7 = "{\"groupRecipientsIds\":[], \"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}";    //true
+        String messageBody8 = "{\"groupRecipientsIds\":[], \"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}";    //false
+
+        //groups and entities
+        String messageBody9 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}";  //true
+        String messageBody10 = "{\"groupRecipientsIds\":[\"testgroup2\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity2\", \"testentity4\"]}";  //true
+        String messageBody11 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}";  //false (in group but not in entity)
+        String messageBody12 = "{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}";  //false (in entity but not in group)
+        String messageBody13 = "{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}";  //false (not in group and not in entity)
+
+        //no groups and no entities
+        String messageBody14 = "{\"groupRecipientsIds\":[], \"entityRecipientsIds\":[]}";    //false
+        String messageBody15 = "{}";    //false
+
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody1)).isTrue();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody2)).isFalse();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody3)).isTrue();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody4)).isFalse();
+
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody5)).isTrue();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody6)).isFalse();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody7)).isTrue();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody8)).isFalse();
+
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody9)).isTrue();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody10)).isTrue();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody11)).isFalse();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody12)).isFalse();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody13)).isFalse();
+
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody14)).isFalse();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody15)).isFalse();
     }
 }

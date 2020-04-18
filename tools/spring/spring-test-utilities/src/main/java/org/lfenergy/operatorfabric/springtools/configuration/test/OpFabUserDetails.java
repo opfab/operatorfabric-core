@@ -25,11 +25,12 @@ import static org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2
  */
 public class OpFabUserDetails extends User implements UserDetails {
 
-    public OpFabUserDetails(String login, String firstName, String lastName, List<String> roles){
+    public OpFabUserDetails(String login, String firstName, String lastName, List<String> roles, List<String> entities){
         login(login);
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setGroups(roles);
+        this.setEntities(entities);
     }
 
     /**

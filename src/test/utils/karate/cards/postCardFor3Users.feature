@@ -28,7 +28,7 @@ Scenario: Post Card
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"a message for 3 users"}
+	"data" : {"message":"a message for 3 users (tso1-operator, tso2-operator and admin)"}
 }
 """
 
@@ -45,14 +45,14 @@ Given url opfabUrl + 'cards/cards/api_test_process3users'
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.data.message == 'a message for 3 users'
+And match response.data.message == 'a message for 3 users (tso1-operator, tso2-operator and admin)'
 And def cardUid = response.uid
 
 
-#get card form archives with  user tso1-operator 
+#get card from archives with user tso1-operator
 Given url opfabUrl + 'cards/archives/' + cardUid 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.data.message == 'a message for 3 users'
+And match response.data.message == 'a message for 3 users (tso1-operator, tso2-operator and admin)'
 

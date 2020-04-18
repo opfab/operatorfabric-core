@@ -29,8 +29,7 @@ import java.util.Queue;
 @Slf4j
 public class TestCardReceiver {
 
-    Queue<CardOperation> adminQueue = new LinkedList<>();
-    Queue<CardOperation> tsoQueue = new LinkedList<>();
+    Queue<CardOperation> groupQueue = new LinkedList<>();
     Queue<CardOperation> ericQueue = new LinkedList<>();
     private ObjectMapper mapper;
 
@@ -42,13 +41,9 @@ public class TestCardReceiver {
     @RabbitListener(queues = "#{groupQueue.name}")
     public void receiveGroup(Message message) throws IOException {
         String cardString = new String(message.getBody());
-        String key = message.getMessageProperties().getReceivedRoutingKey();
         log.info("receiving group card");
         CardOperation card = mapper.readValue(cardString, CardOperation.class);
-        if(key.contains("admin"))
-            adminQueue.add(card);
-        if(key.contains("mytso"))
-            tsoQueue.add(card);
+        groupQueue.add(card);
     }
 
     @RabbitListener(queues = "#{userQueue.name}")
@@ -61,17 +56,12 @@ public class TestCardReceiver {
 
     public void clear(){
         log.info("clearing data");
-        adminQueue.clear();
-        tsoQueue.clear();
+        groupQueue.clear();
         ericQueue.clear();
     }
 
-    public Queue<CardOperation> getAdminQueue() {
-        return adminQueue;
-    }
-
-    public Queue<CardOperation> getTsoQueue() {
-        return tsoQueue;
+    public Queue<CardOperation> getGroupQueue() {
+        return groupQueue;
     }
 
     public Queue<CardOperation> getEricQueue() {

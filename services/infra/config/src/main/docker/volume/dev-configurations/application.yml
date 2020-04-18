@@ -17,7 +17,6 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
-#          jwk-set-uri: http://localhost:3000/auth/jwks.json
   data:
     mongodb:
       uris:
@@ -36,8 +35,31 @@ operatorfabric:
   security:
     oauth2:
       client-id: opfab-client
-      client-secret: opfab-keycloak-secret
     jwt:
       login-claim: preferred_username    
       expire-claim: exp
+### activate the folLowing if you want the entities of the user to came from the token and not mongoDB   
+### entitiesIdClaim is the name of the field in the token     
+    #  entitiesIdClaim : entitiesId
+    #  gettingEntitiesFromToken: true
+###
+
+### activate the following if you want the groups of the user to came from the token and not mongoDB   
+#      groups: 
+#        mode: JWT
+#        rolesClaim:
+#          rolesClaimStandard:
+#            - path: "ATTR1"
+#            - path: "ATTR2"            
+#          rolesClaimStandardArray:  
+#            - path: "resource_access/opfab-client/roles"
+#          rolesClaimStandardList:  
+#            - path: "roleFieldList" 
+#              separator: ";"           
+#          rolesClaimCheckExistPath: 
+#            - path: "resource_access/AAA" 
+#              roleValue: "roleAAA"      
+#            - path: "resource_access/BBB"
+#              roleValue: "roleBBB"  
+### 
 #logging.level.root: DEBUG           

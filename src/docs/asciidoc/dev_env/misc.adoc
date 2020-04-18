@@ -1,0 +1,50 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Useful recipes
+
+== Running sub-project from jar file
+
+* gradle :[sub-projectPath]:bootJar
+* or java -jar [sub-projectPath]/build/libs/[sub-project].jar
+
+== Overriding properties when running from jar file
+
+* java -jar [sub-projectPath]/build/libs/[sub-project].jar
+–spring.config.additional-location=file:[filepath]
+NB : properties may be set using ".properties" file or ".yml" file. See
+https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[Spring
+Boot configuration] for more info.
+* Generic property list extract :
+** server.port (defaults to 8080) : embedded server port
+* :services:core:third-party-service properties list extract :
+** operatorfabric.thirds.storage.path (defaults to &quot;&quot;) : where to
+save/load OperatorFabric Third Party data
+
+== Generating docker images
+
+To Generate all docker images run `bin/setup_dockerized_environment.sh`.
+
+INFORMATION: If you work behind a proxy you need to specify the following
+properties to
+configure alpine apk package manager:
+
+* apk.proxy.uri: proxy http uri ex:
+"http://somewhere:3128[http://somewhere:3128]" (defaults to blank)
+* apk.proxy.httpsuri: proxy http uri ex:
+"http://somewhere:3128[http://somewhere:3128]" (defaults to apk.proxy.uri
+value)
+* apk.proxy.user: proxy user
+* apk.proxy.password: proxy *unescaped* password
+
+Alternatively, you may configure the following environment variables :
+
+* APK_PROXY_URI
+* APK_PROXY_HTTPS_URI
+* APK_PROXY_USER
+* APK_PROXY_PASSWORD

@@ -32,7 +32,7 @@ public class IntrospectionUtils {
         try {
             method = current.getClass().getDeclaredMethod(methodName);
         }catch (NoSuchMethodException nsm){
-            log.info("No method \""+methodName+"\" found for object of class \""+current.getClass().getSimpleName()+"\"");
+            log.info("No method '{}' found for object of class '{}'", methodName, current.getClass().getSimpleName());
         }
 
         if(method!=null)
@@ -41,7 +41,7 @@ public class IntrospectionUtils {
         try {
             method = current.getClass().getDeclaredMethod(name);
         }catch (NoSuchMethodException nsm){
-            log.info("No method \""+name+"\" found for object of class \""+current.getClass().getSimpleName()+"\"");
+            log.info("No method '{}' found for object of class '{}'", name, current.getClass().getSimpleName());
         }
 
         if(method!=null)
@@ -59,9 +59,9 @@ public class IntrospectionUtils {
         try {
             return method.invoke(current);
         } catch (IllegalAccessException e) {
-            log.info("Unnable to access method\""+method.getName()+"\" of class \""+current.getClass().getSimpleName()+"\"");
+            log.info("Unable to access method'{}' of class '{}'", method.getName(), current.getClass().getSimpleName());
         } catch (InvocationTargetException e) {
-            log.info("No method \""+method.getName()+"\" found for object of class \""+current.getClass().getSimpleName()+"\"");
+            log.info("No method '{}' found for object of class '{}'",method.getName(), current.getClass().getSimpleName());
         } catch (IllegalArgumentException e) {
             log.info(e.getMessage(),e);
 

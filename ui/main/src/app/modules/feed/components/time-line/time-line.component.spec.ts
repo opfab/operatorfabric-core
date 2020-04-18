@@ -27,7 +27,7 @@ import * as fromStore from '@ofSelectors/feed.selectors';
 import * as timelineSelectors from '@ofSelectors/timeline.selectors';
 import {MouseWheelDirective} from './directives/mouse-wheel.directive';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
-import {compareBySeverityLttdPublishDate} from '@ofStates/feed.state';
+import {compareBySeverityPublishDate} from '@ofStates/feed.state';
 import {TimeService} from '@ofServices/time.service';
 
 describe('TimeLineComponent', () => {
@@ -100,17 +100,18 @@ describe('TimeLineComponent', () => {
 
   it('should create four different circles when there is ' +
       'four cards with different severity in the state', (done) => {
+      const today = new Date().getTime();
     fixture.detectChanges();
-    const compliantCard = getOneRandomLightCard({severity: 'COMPLIANT'});
-    const actionCard = getOneRandomLightCard({severity: 'ACTION'});
-    const alarmCard = getOneRandomLightCard({severity: 'ALARM'});
-    const informationCard = getOneRandomLightCard({severity: 'INFORMATION'});
+    const compliantCard = getOneRandomLightCard({severity: 'COMPLIANT', publishDate: today});
+    const actionCard = getOneRandomLightCard({severity: 'ACTION', publishDate: today});
+    const alarmCard = getOneRandomLightCard({severity: 'ALARM', publishDate: today});
+    const informationCard = getOneRandomLightCard({severity: 'INFORMATION', publishDate: today});
     const action = new LoadLightCardsSuccess({lightCards: [alarmCard,actionCard,compliantCard,informationCard] as LightCard[]});
     store.dispatch(action);
     const lightCards$ = store.select(fromStore.selectSortedFilteredLightCards);
     lightCards$.pipe(debounceTime(300), distinctUntilChanged())
         .subscribe(lightCards => {
-      expect(lightCards).toEqual([informationCard, alarmCard, actionCard, compliantCard].sort(compareBySeverityLttdPublishDate)); //Default sort
+      expect(lightCards).toEqual([informationCard, alarmCard, actionCard, compliantCard].sort(compareBySeverityPublishDate)); //Default sort
     });
     const dataCard = [{
         displayDate: alarmCard.startDate,

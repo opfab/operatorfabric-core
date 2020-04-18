@@ -1,0 +1,20 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Cards Publication Service
+
+The Cards Publication Service exposes a REST API through which third-party applications, or "publishers" can post cards
+to OperatorFabric. It then handles those cards:
+
+* Time-stamping them with a "publishDate"
+* Sending them to the message broker (RabbitMQ) to be delivered in real time to the appropriate operators
+* Persisting them to the database (MongoDB) for later consultation
+
+include::card_structure.adoc[leveloffset=+1]
+
+include::card_examples.adoc[leveloffset=+1]

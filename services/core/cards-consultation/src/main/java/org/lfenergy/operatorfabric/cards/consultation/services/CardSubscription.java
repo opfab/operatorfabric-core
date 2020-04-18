@@ -13,6 +13,10 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.lfenergy.operatorfabric.utilities.VirtualTime;
 import org.springframework.amqp.core.*;
@@ -24,6 +28,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>This object manages subscription to AMQP exchange</p>
@@ -53,7 +59,7 @@ public class CardSubscription {
     private FluxSink<String> externalSink;
     private AmqpAdmin amqpAdmin;
     private DirectExchange userExchange;
-    private TopicExchange groupExchange;
+    private FanoutExchange groupExchange;
     private ConnectionFactory connectionFactory;
     private MessageListenerContainer userMlc;
     private MessageListenerContainer groupMlc;
@@ -86,7 +92,7 @@ public class CardSubscription {
                             Runnable doOnCancel,
                             AmqpAdmin amqpAdmin,
                             DirectExchange userExchange,
-                            TopicExchange groupExchange,
+                            FanoutExchange groupExchange,
                             ConnectionFactory connectionFactory,
                             Instant rangeStart,
                             Instant rangeEnd,
@@ -126,17 +132,17 @@ public class CardSubscription {
      */
     public void initSubscription(Runnable doOnCancel) {
         createUserQueue();
-        createTopicQueue();
+        createGroupQueue();
         this.userMlc = createMessageListenerContainer(this.userQueueName);
         this.groupMlc = createMessageListenerContainer(groupQueueName);
         amqpPublisher = Flux.create(emitter -> {
             registerListener(userMlc, emitter,this.user.getLogin());
-            registerListener(groupMlc, emitter,this.user.getLogin()+ GROUPS_SUFFIX);
+            registerListenerForGroups(groupMlc, emitter,this.user.getLogin()+ GROUPS_SUFFIX);
             emitter.onRequest(v -> {
                 log.info("STARTING subscription");
-                log.info(String.format("LISTENING to messages on User[%s] queue",this.user.getLogin()));
+                log.info("LISTENING to messages on User[{}] queue",this.user.getLogin());
                 userMlc.start();
-                log.info(String.format("LISTENING to messages on Group[%sGroups] queue",this.user.getLogin()));
+                log.info("LISTENING to messages on Group[{}Groups] queue",this.user.getLogin());
                 groupMlc.start();
                 startingPublishDate = VirtualTime.getInstance().computeNow();
             });
@@ -170,9 +176,20 @@ public class CardSubscription {
      */
     private void registerListener(MessageListenerContainer userMlc, FluxSink<String> emitter, String queueName) {
         userMlc.setupMessageListener((MessageListener) message -> {
-            log.info("PUBLISHING message from "+queueName);
+            log.info("PUBLISHING message from  {}",queueName);
             emitter.next(new String(message.getBody()));
 
+        });
+    }
+
+    private void registerListenerForGroups(MessageListenerContainer groupMlc, FluxSink<String> emitter, String queueName) {
+        groupMlc.setupMessageListener((MessageListener) message -> {
+
+            String messageBody = new String(message.getBody());
+            if (checkIfUserMustReceiveTheCard(messageBody)){
+                log.info("PUBLISHING message from {}",queueName);
+                emitter.next(messageBody);
+            }
         });
     }
 
@@ -182,7 +199,7 @@ public class CardSubscription {
      * @return
      */
     private Queue createUserQueue() {
-        log.info(String.format("CREATE User[%s] queue",this.user.getLogin()));
+        log.info("CREATE User[{}] queue",this.user.getLogin());
         Queue queue = QueueBuilder.nonDurable(this.userQueueName).build();
         amqpAdmin.declareQueue(queue);
         Binding binding = BindingBuilder
@@ -190,26 +207,24 @@ public class CardSubscription {
            .to(this.userExchange)
            .with(this.user.getLogin());
         amqpAdmin.declareBinding(binding);
-        log.info(String.format("CREATED User[%s] queue",this.userQueueName));
+        log.info("CREATED User[{}] queue",this.userQueueName);
         return queue;
     }
 
     /**
      * <p>Constructs a non durable queue to groupExchange using queue name
      * [user login]Groups#[client id].</p>
-     * <p>Generates a binding for each group using pattern: #.[group].#</p>
      * @return
      */
-    private Queue createTopicQueue() {
-        log.info(String.format("CREATE Group[%sGroups] queue",this.user.getLogin()));
+    private Queue createGroupQueue() {
+        log.info("CREATE Group[{}Groups] queue",this.user.getLogin());
         Queue queue = QueueBuilder.nonDurable(this.groupQueueName).build();
         amqpAdmin.declareQueue(queue);
-        this.user.getGroups().stream().map(g -> "#." + g + ".#").forEach(g -> {
-            Binding binding = BindingBuilder.bind(queue).to(groupExchange).with(g);
-            amqpAdmin.declareBinding(binding);
-        });
-        log.info(String.format("CREATED Group[%sGroups] queue with bindings :",this.groupQueueName));
-        this.user.getGroups().stream().map(g -> "#." + g + ".#").forEach(g -> log.info("\t* "+g));
+
+        Binding binding = BindingBuilder.bind(queue).to(groupExchange);
+        amqpAdmin.declareBinding(binding);
+
+        log.info("CREATED Group[{}Groups] queue",this.groupQueueName);
         return queue;
     }
 
@@ -217,10 +232,10 @@ public class CardSubscription {
      * Stops associated {@link MessageListenerContainer} and delete queues
      */
     public void clearSubscription() {
-        log.info(String.format("STOPPING User[%s] queue",this.userQueueName));
+        log.info("STOPPING User[{}] queue",this.userQueueName);
         this.userMlc.stop();
         amqpAdmin.deleteQueue(this.userQueueName);
-        log.info(String.format("STOPPING Group[%sGroups] queue",this.groupQueueName));
+        log.info("STOPPING Group[{}Groups] queue",this.groupQueueName);
         this.groupMlc.stop();
         amqpAdmin.deleteQueue(this.groupQueueName);
         this.cleared = true;
@@ -259,5 +274,37 @@ public class CardSubscription {
 
     public void publishInto(Flux<String> fetchOldCards) {
         fetchOldCards.subscribe(next->this.externalSink.next(next));
+    }
+
+    /**
+     * @param messageBody message body received from rabbitMQ
+     * @return true if the message received is either :
+     * 1) intended for one of the user's groups and there is no entityRecipients in the card
+     * 2) or intended for one of the user's entities and there is no groupRecipients in the card
+     * 3) or intended for one of the user's groups and also for one of the user's entities
+     */
+    public boolean checkIfUserMustReceiveTheCard(final String messageBody){
+        try {
+            JSONObject obj = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(messageBody);
+            JSONArray groupRecipientsIdsArray = (JSONArray) obj.get("groupRecipientsIds");
+            JSONArray entityRecipientsIdsArray = (JSONArray) obj.get("entityRecipientsIds");
+            List<String> userGroups = user.getGroups();
+            List<String> userEntities = user.getEntities();
+
+            if (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()) { //no entityRecipients in the card
+                return (userGroups != null) && (groupRecipientsIdsArray != null)
+                        && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
+            }
+            else if (groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty()){ //entityRecipients present in the card and no groupRecipients
+                return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray));
+            }
+            else{ //entityRecipients and groupRecipients present in the card
+                return (userEntities != null) && (userGroups != null)
+                        && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
+                        && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
+            }
+        }
+        catch(ParseException e){ log.error("ERROR during received message parsing", e); }
+        return false;
     }
 }

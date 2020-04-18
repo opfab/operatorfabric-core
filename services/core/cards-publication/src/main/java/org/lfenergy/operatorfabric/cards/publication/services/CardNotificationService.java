@@ -67,19 +67,33 @@ public class CardNotificationService {
                 builderEncapsulator.builder().cardId(card.getId());
 
         }
-        CardOperation cardOperation = builderEncapsulator.builder().build();
+        CardOperationData cardOperation = builderEncapsulator.builder().build();
         card.getUserRecipients().forEach(user -> pushCardInRabbit(cardOperation,"USER_EXCHANGE", user));
-        card.getGroupRecipients().forEach(group -> pushCardInRabbit(cardOperation, "GROUP_EXCHANGE", group));
+
+        List listOfGroupRecipients = new ArrayList();
+        card.getGroupRecipients().forEach(group -> listOfGroupRecipients.add(group));
+        cardOperation.setGroupRecipientsIds(listOfGroupRecipients);
+
+        List listOfEntityRecipients = new ArrayList();
+        if (card.getEntityRecipients() != null)
+            card.getEntityRecipients().forEach(entity -> listOfEntityRecipients.add(entity));
+        cardOperation.setEntityRecipientsIds(listOfEntityRecipients);
+        pushCardInRabbit(cardOperation, "GROUP_EXCHANGE", "");
     }
 
-    private void pushCardInRabbit(CardOperation cardOperation,String queueName,String routingKey) {
+    private void pushCardInRabbit(CardOperationData cardOperation,String queueName,String routingKey) {
         try {
             rabbitTemplate.convertAndSend(queueName, routingKey, mapper.writeValueAsString(cardOperation));
-            if (log.isDebugEnabled()) log.debug("Operation sent to Exchange[" + queueName  + "] with routing key " + routingKey
-                    + ",type=" + cardOperation.getType() + ", ids=" + cardOperation.getCardIds().toString() + ",cards="
-                    + cardOperation.getCards().toString());
+            log.debug("Operation sent to Exchange[{}] with routing key {}, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}"
+                    , queueName
+                    , routingKey
+                    , cardOperation.getType()
+                    , cardOperation.getCardIds().toString()
+                    , cardOperation.getCards().toString()
+                    , cardOperation.getGroupRecipientsIds().toString()
+                    , cardOperation.getEntityRecipientsIds().toString());
         } catch (JsonProcessingException e) {
-            log.error("Unnable to linearize card to json on amqp notification");
+            log.error("Unable to linearize card to json on amqp notification");
         }
     }
 

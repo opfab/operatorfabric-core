@@ -48,8 +48,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     private static final List<String> SPECIAL_PARAMETERS = Arrays.asList(
             PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
 
-    private static final List<String> UNIQUE_PARAMETERS = Arrays.asList(
-            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM, PAGE_PARAM, PAGE_SIZE_PARAM);
 
     private static final String ARCHIVED_CARDS_COLLECTION = "archivedCards";
 
@@ -111,15 +109,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         query.with(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)));
 
         //TODO Improvement Pass only items from params that are interesting to each method, not the whole map (split it)..
-
-        /* Check that parameters that should be unique are */
-        UNIQUE_PARAMETERS.forEach(paramKey -> {
-            if (queryParams.containsKey(paramKey)) {
-                if (queryParams.get(paramKey).size() > 1) {
-                    //TODO THROW ERROR
-                }
-            }
-        });
 
         /* Handle special parameters */
 

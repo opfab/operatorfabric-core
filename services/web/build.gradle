@@ -11,7 +11,7 @@ subprojects {
     dependencies{
         compile boot.starterWeb, boot.starterJetty
         compile cloud.eurekaClient
-        compile boot.starterAop, spring.retry
+        compile boot.starterAop
     }
     
     sourceSets {

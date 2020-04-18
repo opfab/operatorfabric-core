@@ -17,16 +17,10 @@ import {FilterService, FilterType} from "@ofServices/filter.service";
 import {async, TestBed} from "@angular/core/testing";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
-import {map} from "rxjs/operators";
-import {configInitialState} from "@ofStates/config.state";
-import {feedInitialState} from "@ofStates/feed.state";
-import {Tick, TickPayload} from "@ofActions/time.actions";
 import {emptyAppState4Test} from "@tests/helpers";
-import moment from 'moment-timezone';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
-import { User } from '@ofModel/user.model';
-import { UserApplicationRegistered } from '@ofStore/actions/user.actions';
+
 
 describe('FeedFilterEffects', () => {
     let effects: FeedFiltersEffects;
@@ -128,110 +122,5 @@ describe('FeedFilterEffects', () => {
         });
     });
 
-    describe('updateFilterOnClockTick', () => {
-
-        let initialStart, initialEnd, timeBetweenTicks, refreshThreshold: number;
-        let filters: Map<any,any>;
-
-        beforeAll(() => {
-        initialStart = 1562250123000;
-        initialEnd = 1562422923000;
-
-        timeBetweenTicks = 10000;
-        refreshThreshold = 60000;
-
-        filters = new Map();
-        const initialFilter = new Filter(
-            (card,status)=>true,
-            true,
-            {start: initialStart, end: initialEnd}
-        );
-        filters.set(FilterType.TIME_FILTER,initialFilter);
-        });
-
-        it('should return nothing if followClockTick property is set to false', () => {
-
-            const localActions$ = new Actions(hot('aaaaaa', {a: new Tick(new TickPayload(moment(), timeBetweenTicks))}));
-
-            const localExpected = hot('------');
-
-            mockStore.select.and.callFake(buildFn =>
-            {
-                return of({
-                        ...emptyAppState,
-                        config: {
-                            ...configInitialState,
-                            config: {
-                                feed: {
-                                    timeFilter: {
-                                        followClockTick: false
-                                    }
-                                }
-                            }
-                        },
-                        feed: {
-                            ...feedInitialState,
-                            filters: filters
-                        }
-                    }
-                ).pipe(
-                    map(v => buildFn(v))
-                )
-            }  )
-
-            effects = new FeedFiltersEffects(mockStore, localActions$, localMockFeedFilterService);
-
-            expect(effects).toBeTruthy();
-            expect(effects.updateFilterOnClockTick).toBeObservable(localExpected);
-
-        });
-
-        it('should return ApplyFilter actions  if followClockTick property is set to true', () => {
-
-
-            const localActions$ = new Actions(hot('aaaaaa', {a: new Tick(new TickPayload(moment(), timeBetweenTicks))}));
-
-            const localExpected = hot('-----b', {b: new ApplyFilter({
-                    name: FilterType.TIME_FILTER,
-                    active: true,
-                    status: {
-                        start: initialStart + refreshThreshold,
-                        end: initialEnd + refreshThreshold
-                    }
-                })
-            });
-
-            mockStore.select.and.callFake(buildFn =>
-            {
-                return of({
-                        ...emptyAppState,
-                        config: {
-                            ...configInitialState,
-                            config: {
-                                feed: {
-                                    timeFilter: {
-                                        followClockTick: true
-                                    }
-                                }
-                            }
-                        },
-                        feed: {
-                            ...feedInitialState,
-                            filters: filters
-                        }
-                    }
-                ).pipe(
-                    map(v => buildFn(v))
-                )
-            }  )
-
-
-            effects = new FeedFiltersEffects(mockStore, localActions$, localMockFeedFilterService);
-
-            expect(effects).toBeTruthy();
-            expect(effects.updateFilterOnClockTick).toBeObservable(localExpected);
-
-        });
-    });
 
 });

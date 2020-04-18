@@ -36,8 +36,6 @@ import java.time.Instant;
 
 /**
  * <p>Handles cards access at the rest level. Depends on {@link CardSubscriptionService} for business logic</p>
- *
- *
  */
 @Component
 @Slf4j
@@ -96,9 +94,9 @@ public class CardOperationsController {
                     try {
                         CardSubscription oldSubscription = cardSubscriptionService.findSubscription(p.getUser(), p.getClientId());
                         if (oldSubscription != null) {
-                            log.info(String.format("Found subscription: %s", oldSubscription.getId()));
+                            log.info("Found subscription: {}", oldSubscription.getId());
                         } else {
-                            log.info(String.format("No subscription found for %s#%s", p.getUser().getLogin(), p.getClientId()));
+                            log.info("No subscription found for {}#{}", p.getUser().getLogin(), p.getClientId());
                         }
                         return Tuples.of(p, oldSubscription);
                     } catch (IllegalArgumentException e) {
@@ -107,10 +105,10 @@ public class CardOperationsController {
                     }
                 })
                 .doOnNext(t -> {
-                    log.info(String.format("UPDATING Subscription %s updated with rangeStart: %s, rangeEnd: %s",
+                    log.info("UPDATING Subscription {} updated with rangeStart: {}, rangeEnd: {}",
                             t.getT2().getId(),
                             t.getT1().getRangeStart(),
-                            t.getT1().getRangeEnd()));
+                            t.getT1().getRangeEnd());
                     t.getT2().updateRange(t.getT1().getRangeStart(), t.getT1().getRangeEnd());
                     t.getT2().publishInto(fetchOldCards(t.getT2()));
                 })
@@ -144,12 +142,17 @@ public class CardOperationsController {
         referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow() : referencePublishDate;
         String login = user.getLogin();
         String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
+
+        String[] entities = new String[]{};
+        if (user.getEntities() != null)
+            entities = user.getEntities().toArray(new String[user.getEntities().size()]);
+
         if (end != null && start != null) {
-            oldCards = cardRepository.findUrgentJSON(referencePublishDate, start, end, login, groups);
+            oldCards = cardRepository.findUrgentJSON(referencePublishDate, start, end, login, groups, entities);
         } else if (end != null) {
-            oldCards = cardRepository.findPastOnlyJSON(referencePublishDate, end, login, groups);
+            oldCards = cardRepository.findPastOnlyJSON(referencePublishDate, end, login, groups, entities);
         } else if (start != null) {
-            oldCards = cardRepository.findFutureOnlyJSON(referencePublishDate, start, login, groups);
+            oldCards = cardRepository.findFutureOnlyJSON(referencePublishDate, start, login, groups, entities);
         } else {
             log.info("Not loading published cards as no range is provided");
             oldCards = Flux.empty();
@@ -167,7 +170,7 @@ public class CardOperationsController {
     public Flux<String> publishTestData(Mono<CardOperationsGetParameters> input) {
         return input.flatMapMany(t -> Flux
                 .interval(Duration.ofSeconds(5))
-                .doOnEach(l -> log.info("message " + l + " to " + t.getUser().getLogin()))
+                .doOnEach(l -> log.info("message {} to {}", l, t.getUser().getLogin()))
                 .map(l -> CardOperationConsultationData.builder()
                         .number(l)
                         .publishDate(VirtualTime.getInstance().computeNow().minusMillis(600000))

@@ -13,30 +13,19 @@ import {AppState} from "@ofStore/index";
 import {Store} from "@ngrx/store";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
 import {isMoment} from "moment";
-import {environment} from '@env/environment';
-import {interval, Observable, of} from "rxjs";
-import {map, tap} from "rxjs/operators";
-import {buildConfigSelector} from "@ofSelectors/config.selectors";
-import {AuthenticationService} from "@ofServices/authentication/authentication.service";
-import {TickPayload} from "@ofActions/time.actions";
+
 
 @Injectable()
 export class TimeService {
 
-    readonly FiveSecondsAsPulseDurationFallback = '5000';
 
     private timeFormat;
     private dateFormat;
     private dateTimeFormat;
-    private beatDurationInMilliseconds: number;
-    private timeAtLastHeartBeat: Moment;
 
     constructor(private store: Store<AppState>) {
         this.initializeTimeFormat();
 
-        this.store.select(buildConfigSelector('time.pulse',
-            this.FiveSecondsAsPulseDurationFallback))
-            .subscribe(duration => this.beatDurationInMilliseconds = duration);
     }
 
     private initializeTimeFormat() {
@@ -46,29 +35,6 @@ export class TimeService {
             .subscribe(next => this.dateFormat = next);
         this.store.select(buildSettingsOrConfigSelector('dateTimeFormat'))
             .subscribe(next => this.dateTimeFormat = next);
-    }
-
-
-    /**
-     * Emits a pulse every beatDurationInMilliseconds, containing the current virtual time as well as the
-     * elapsed time (milliseconds) since the previous pulse
-     * */
-    public pulsate(): Observable<TickPayload> {
-        return this.heartBeat(this.beatDurationInMilliseconds);
-    }
-
-    private heartBeat(interValDurationInMilliseconds: number): Observable<TickPayload> {
-        return interval(interValDurationInMilliseconds)
-            .pipe(
-                map(n => moment()),
-                map(heartBeat => {
-                    return {
-                        currentTime: heartBeat,
-                        elapsedSinceLast: this.timeAtLastHeartBeat ? heartBeat.diff(this.timeAtLastHeartBeat) : 0
-                    };
-                }),
-                tap(heartBeat => this.timeAtLastHeartBeat = heartBeat.currentTime) // update timeAtLastHeartBeat with the emitted value
-            );
     }
 
 

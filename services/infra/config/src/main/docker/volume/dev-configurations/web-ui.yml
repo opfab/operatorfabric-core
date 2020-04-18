@@ -2,14 +2,15 @@ server:
   port: 2200
 operatorfabric:
   security:
-    provider-url: http://localhost:89
+    provider-url: http://localhost:2002
     provider-realm: dev
-    logout-url: ${operatorfabric.security.provider-url}/auth/realms/${operatorfabric.security.provider-realm}/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/ui/
+    base-url: ${operatorfabric.security.provider-url}/auth/realms/${operatorfabric.security.provider-realm}/protocol/openid-connect
+    logout-url: ${operatorfabric.security.base-url}/logout?redirect_uri=http://localhost:2002/ui/
     oauth2:
       flow:
         mode: CODE
         provider: Opfab Keycloak
-        delagate-url: ${operatorfabric.security.provider-url}/auth/realms/${operatorfabric.security.provider-realm}/protocol/openid-connect/auth?response_type=code&client_id=opfab-client
+        delagate-url: ${operatorfabric.security.base-url}/auth?response_type=code&client_id=opfab-client
   feed:
     subscription:
       timeout: 600000

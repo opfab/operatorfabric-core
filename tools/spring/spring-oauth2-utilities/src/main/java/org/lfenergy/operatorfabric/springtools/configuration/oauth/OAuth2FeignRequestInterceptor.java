@@ -16,7 +16,6 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-//import org.springframework.security.oauth2.client.OAuth2ClientContext;
 
 /**
  * <p>Feign interceptor used to add OAuth2  authentication to http headers :</p>

@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: client-gateway
+  cloud:
+    config:
+      name: client-gateway
+      failFast: true
+      retry:
+        max-attempts: 20
+      discovery:
+        service-id: config
+        enabled: true
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: 'http://localhost:2001/eureka/'

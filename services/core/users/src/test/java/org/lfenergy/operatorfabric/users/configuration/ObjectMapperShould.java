@@ -44,7 +44,8 @@ public class ObjectMapperShould {
             "\"login\": \"jdoe\"," +
             "\"firstName\": \"john\"," +
             "\"lastName\": \"doe\"," +
-            "\"groups\": [\"user\",\"admin\"]" +
+            "\"groups\": [\"user\",\"admin\"]," +
+            "\"entities\":[\"entity1\",\"entity2\"]" + 
            "}";
         User user = mapper.readValue(stringUser, User.class);
         assertThat(user).isNotNull();
@@ -53,6 +54,7 @@ public class ObjectMapperShould {
         assertThat(user.getFirstName()).isEqualTo("john");
         assertThat(user.getLastName()).isEqualTo("doe");
         assertThat(user.getGroups()).containsExactlyInAnyOrder("user","admin");
+        assertThat(user.getEntities()).containsExactlyInAnyOrder("entity1","entity2");
     }
 
     @Test

@@ -1,0 +1,83 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Keycloak Configuration
+
+The configuration needed for development purposes is automatically loaded from the dev-realms.json file.
+However, the steps below describe how they can be reproduced from scratch on a blank Keycloak instance in case you
+want to add to it.
+
+The Keycloak Management interface is available here:  [host]:89/auth/admin
+Default credentials are admin/admin.
+
+== Add Realm
+
+* Click top left down arrow next to Master
+* Add Realm
+* Name it dev (or whatever)
+
+== Setup at least one client (or best one per service)
+
+=== Create client
+ * Click Clients in left menu
+ * Click Create Button
+ * Set client ID to "opfab-client" (or whatever)
+ * Select Openid-Connect Protocol
+ * Enable Authorization
+ * Access Type to Confidential
+ * save
+ 
+=== Add a Role to Client
+
+* In client view, click Roles tab
+* Click Add button
+* create a USER role (or whatever)
+* save
+== create a Mapper
+
+Used to map the user name to a field that suits services
+
+* name it sub
+* set mapper type to User Property
+* set Property to username
+* set Token claim name to sub
+* enable add to access token
+* save
+
+== Create Users
+
+ * Click Users in left menu
+ * Click Add User button
+ * Set username to admin 
+ * Save
+ * Select Role Mappings tab
+ * Select "opfab-client" in client roles combo (or whatever id you formerly chose)
+ * Select USER  as assigned role (or whatever role you formerly created)
+ * Select Credentials tab
+ * set password and confirmation to "test"
+ * 
+ 
+repeat process for other users:
+rte-operator, tso1-operator, tso2-operator
+
+
+=== Development-specific configuration
+
+To facilitate development, in  the configuration file provided in the git (dev-realms.json) ,session are set to have
+a duration of 10 hours (36000 seconds) and SSL is not required. These parameters should not be used in production.
+
+The following parameters are set : 
+accessTokenLifespan : 36000
+ssoSessionMaxLifespan : 36000
+accessCodeLifespan" : 36000
+accessCodeLifespanUserAction : 36000
+sslRequired : none
+
+
+
+

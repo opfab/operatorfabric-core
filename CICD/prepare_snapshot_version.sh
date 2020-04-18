@@ -70,14 +70,7 @@ find . -name swagger.yaml | xargs sed -i "s/\(version: *\)$oldVersion/\1$newVers
 # The issue is that if the value has been mistakenly modified and is not $oldVersion, it won't be updated
 # TODO Find a better solution or add a check
 
-echo "Replacing $oldVersion with $newVersion in :revnumber in adoc files (excluding release notes)"
-find . ! -path "./src/docs/asciidoc/release_notes/*" -and -name "*.adoc" | xargs sed -i "s/\(:revnumber: *\)$oldVersion/\1$newVersion/g";
-
-echo "Replacing $oldVersion with $newVersion in links in adoc files (excluding release notes)"
-find . ! -path "./src/docs/asciidoc/release_notes/*" -and -name "*.adoc" | xargs sed -i "s/\/$oldVersion\//\/$newVersion\//g";
-
-# Revision dates don't need to be updated (they've been updated when preparing the release).
-# deploy docker-compose file mustn't be updated either as it should use the latest RELEASE for stability.
+# deploy docker-compose file mustn't be updated as it should use the latest RELEASE for stability.
 
 echo "The following files have been updated: "
 echo | git status --porcelain

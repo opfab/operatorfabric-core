@@ -1,13 +1,13 @@
 spring:
   data:
-    mongodb:
-      uris:
-        - mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1
-      database: operator-fabric-test
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-spring.cloud.discovery.enabled: false
-eureka.client.enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
+operatorfabric:
+  services:
+    base-url:
+      thirds: http://localhost:2100
+      users: http://localhost:2103
+      cards: http://localhost:2104

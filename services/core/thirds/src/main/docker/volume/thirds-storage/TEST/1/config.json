@@ -37,7 +37,7 @@
             "action1": {
               "type": "URL",
               "label": {
-                "key": "process.action.first",
+                "key": "process.action.new.first",
                 "parameters": {"value": "1"}
               },
               "url":"http://localhost:3000/{process}/{state}/action1?access_token={jwt}"
@@ -45,14 +45,14 @@
             "action2": {
               "type": "URL",
               "label": {
-                "key": "process.action.first",
+                "key": "process.action.new.second",
                 "parameters": {"value": "2"}
               }
             },
             "action3": {
               "type": "URL",
               "label": {
-                "key": "process.action.first",
+                "key": "process.action.new.third",
                 "parameters": {"value": "3"}
               }
             }

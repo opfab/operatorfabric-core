@@ -42,7 +42,7 @@ public class RoleClaimStandard extends RoleClaim {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("RoleClaimStandard(path="+path+")");
+		sb.append("RoleClaimStandard(path=").append(path).append(")");
 		return sb.toString();
 	}
 	 

@@ -17,8 +17,6 @@ npm_run_build {
 }
 
 task npmBuildDebug(type: NpmTask) {
-//    args = ['run', 'build','--', '--configuration=production', '--baseHref=/ui/', '--deployUrl=/ui/', '--optimization=false', '--outputHashing=none',
-//            '--sourceMap=true', '--extractCss=false', '--aot=false', '--vendorChunk=true', '--buildOptimizer=false']
     args = ['run', 'build','--', '--configuration=productionDebug', '--baseHref=/ui/', '--deployUrl=/ui/']
 }
 

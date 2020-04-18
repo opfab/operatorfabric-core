@@ -8,9 +8,18 @@
         "second": "Second Tab"
       }
     },
-    "action":{
-      "first": "First action"
-    }
+    "action":{ "new":
+    {
+      "first": "Action number {{value}}",
+      "second": "Second Action",
+      "third": "Third One ({{value}})"
+    },
+      "clicked": {
+        "first": "{{value}} clicked",
+        "second": "Resolved secondly",
+        "third": "For ({{value}}, it's done.)"
+      }
+}
   },
   "third":{
     "label": "Test 3rd"

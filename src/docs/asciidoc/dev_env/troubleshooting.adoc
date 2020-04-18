@@ -1,0 +1,136 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+[[troubleshooting]]
+= Troubleshooting
+
++++ <details><summary> +++
+**Proxy error when running third-party docker-compose**
++++ </summary><div> +++
+
+.Error message
+[source]
+----
+Pulling rabbitmq (rabbitmq:3-management)...
+ERROR: Get https://registry-1.docker.io/v2/: Proxy Authentication Required
+----
+
+.Possible causes & resolution
+When running docker-compose files using third-party images(such as rabbitmq,
+mongodb etc.) the first time, docker will need to pull these images from
+their repositories.
+If the docker proxy isn't set properly, you will see the above message.
+
+To set the proxy, follow https://docs.docker.com/config/daemon/systemd/[these
+steps from the docker documentation].
+
+If your proxy needs authentication, add your user and password as follows:
+----
+HTTP_PROXY=http://user:password@proxy.example.com:80/
+----
+
+IMPORTANT: The password should be URL-encoded.
+
++++ </div></details> +++
+
++++ <details><summary> +++
+**Gradle Metaspace error**
++++ </summary><div> +++
+
+Gradle task (for example gradle build) fails with the following error:
+
+.Error message
+[source]
+----
+* What went wrong:
+Metaspace
+----
+
+.Possible causes & resolution
+Issue with the Gradle daemon. Stopping the daemon using `gradle --stop`
+and re-launching the build should solve this issue.
+
++++ </div></details> +++
+
++++ <details><summary> +++
+**Java version not available when setting up environment**
++++ </summary><div> +++
+When sourcing the link:https://github.com/opfab/operatorfabric-core/tree/master/bin/load_environment_light.sh[load_environment_light]
+script to set up your environment, you might get the following error message:
+
+.Error message
+[source]
+----
+Stop! java 8.0.192-zulu is not available. Possible causes:
+ * 8.0.192-zulu is an invalid version
+ * java binaries are incompatible with Linux64
+ * java has not been released yet
+----
+
+Select the next available version and update
+link:https://github.com/opfab/operatorfabric-core/tree/master/bin/load_environment_light.sh[load_environment_light] accordingly before
+sourcing it again.
+
+.Possible causes & resolution
+The java version currently listed in the script might have been deprecated
+(for security reasons) or might not be available for your operating system
+(for example, 8.0.192-zulu wasn't available for Ubuntu).
+
+Run `sdk list java` to find out which versions are available. You will get
+this kind of output:
+
+[source]
+----
+================================================================================
+Available Java Versions
+================================================================================
+     13.ea.16-open       9.0.4-open          1.0.0-rc-11-grl
+     12.0.0-zulu         8.0.202-zulu        1.0.0-rc-10-grl
+     12.0.0-open         8.0.202-amzn        1.0.0-rc-9-grl
+     12.0.0-librca       8.0.202.j9-adpt     1.0.0-rc-8-grl
+     11.0.2-zulu         8.0.202.hs-adpt
+     11.0.2-open         8.0.202-zulufx
+     11.0.2-amzn         8.0.202-librca
+     11.0.2.j9-adpt      8.0.201-oracle
+     11.0.2.hs-adpt  > + 8.0.192-zulu
+     11.0.2-zulufx       7.0.211-zulu
+     11.0.2-librca       6.0.119-zulu
+     11.0.2-sapmchn      1.0.0-rc-15-grl
+     10.0.2-zulu         1.0.0-rc-14-grl
+     10.0.2-open         1.0.0-rc-13-grl
+     9.0.7-zulu          1.0.0-rc-12-grl
+
+================================================================================
++ - local version
+* - installed
+> - currently in use
+================================================================================
+----
+
+
++++ </div></details> +++
+
++++ <details><summary> +++
+**BUILD FAILED with message `Execution failed for task ':ui:main-user-interface:npmInstall'.`**
++++ </summary><div> +++
+
+.Error message
+[source]
+----
+FAILURE: Build failed with an exception.
+
+    What went wrong:
+    Execution failed for task ':ui:main-user-interface:npmInstall'.
+----
+
+.Possible causes & resolution
+A `sudo` has been used before the `./gradlew assemble`.
+
+IMPORTANT: Don't use *sudo* to build OperatorFabric otherwise unexpected problems could arise.
+
++++ </div></details> +++

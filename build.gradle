@@ -6,6 +6,7 @@ plugins {
     id "maven-publish"
     id "signing"
     id "org.owasp.dependencycheck" version "5.2.0"
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
 }
 
 ext.versions = new Properties()
@@ -16,56 +17,54 @@ file("versions.properties").withReader { reader ->
 ext {
     operatorfabric = [
             group: "org.lfenergy.operatorfabric",
-            version: version = rootProject.file('VERSION').text.trim()
+            version: version = rootProject.file('VERSION').text.trim(),
+            revisionDate: revisionDate = new Date().format('dd MMMM yyyy')
     ]
 
     boot = [
-            springBootPlugin: "org.springframework.boot:spring-boot-gradle-plugin:${versions['spring.boot']}",
-            starter         : "org.springframework.boot:spring-boot-starter:${versions['spring.boot']}",
-            starterWeb      : "org.springframework.boot:spring-boot-starter-web:${versions['spring.boot']}",
-            starterWebflux  : "org.springframework.boot:spring-boot-starter-webflux:${versions['spring.boot']}",
-            actuator        : "org.springframework.boot:spring-boot-starter-actuator:${versions['spring.boot']}",
-            starterAop      : "org.springframework.boot:spring-boot-starter-aop:${versions['spring.boot']}",
-            starterJetty    : "org.springframework.boot:spring-boot-starter-jetty:${versions['spring.boot']}",
-            starterRabbitmq : "org.springframework.boot:spring-boot-starter-amqp:${versions['spring.boot']}",
-            starterSecurity : "org.springframework.boot:spring-boot-starter-security:${versions['spring.boot']}",
-            starterOAuth2    : "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${versions['spring.security.deprecated.oauth']}",
-            starterMongoR   : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${versions['spring.boot']}",
-            starterTest     : "org.springframework.boot:spring-boot-starter-test:${versions['spring.boot']}",
-            starterValidation: "org.springframework.boot:spring-boot-starter-validation:${versions['spring.boot']}",
-            annotationConfiguration: "org.springframework.boot:spring-boot-configuration-processor:${versions['spring.boot']}",
-            devTools        : "org.springframework.boot:spring-boot-devtools:${versions['spring.boot']}"
+            springBootPlugin        : "org.springframework.boot:spring-boot-gradle-plugin:${versions['spring.boot']}",
+            starterWeb              : "org.springframework.boot:spring-boot-starter-web:${versions['spring.boot']}",
+            starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:${versions['spring.boot']}",
+            actuator                : "org.springframework.boot:spring-boot-starter-actuator:${versions['spring.boot']}",
+            starterAop              : "org.springframework.boot:spring-boot-starter-aop:${versions['spring.boot']}",
+            starterJetty            : "org.springframework.boot:spring-boot-starter-jetty:${versions['spring.boot']}",
+            starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:${versions['spring.boot']}",
+            starterSecurity         : "org.springframework.boot:spring-boot-starter-security:${versions['spring.boot']}",
+            starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${versions['spring.boot']}",
+            starterTest             : "org.springframework.boot:spring-boot-starter-test:${versions['spring.boot']}",
+            starterValidation       : "org.springframework.boot:spring-boot-starter-validation:${versions['spring.boot']}",
+            annotationConfiguration : "org.springframework.boot:spring-boot-configuration-processor:${versions['spring.boot']}",
+            devTools                : "org.springframework.boot:spring-boot-devtools:${versions['spring.boot']}"
     ]
 
     spring = [
-            securityJwt    : "org.springframework.security:spring-security-jwt:${versions['spring.security.jwt']}",
-            securityOauthResource: "org.springframework.security:spring-security-oauth2-resource-server:${versions['spring.security']}",
-            securityOauthJose: "org.springframework.security:spring-security-oauth2-jose:${versions['spring.security']}",
-            securityTest: "org.springframework.security:spring-security-test:${versions['spring.security']}",
-            webflux: "org.springframework:spring-webflux:${versions['spring']}",
-            retry: "org.springframework.retry:spring-retry:1.2.2.RELEASE"
+            securityOauthResource   : "org.springframework.security:spring-security-oauth2-resource-server:${versions['spring.security']}",
+            securityOauthJose       : "org.springframework.security:spring-security-oauth2-jose:${versions['spring.security']}",
+            securityTest            : "org.springframework.security:spring-security-test:${versions['spring.security']}",
+            webflux                 : "org.springframework:spring-webflux:${versions['spring']}",
+            retry                   : "org.springframework.retry:spring-retry:${versions['spring.retry']}"
     ]
 
     cloud = [
-            dependencies    : "org.springframework.cloud:spring-cloud-dependencies:${versions['spring.cloud']}",
-            configMonitor   : "org.springframework.cloud:spring-cloud-config-monitor",
+            dependencies          : "org.springframework.cloud:spring-cloud-dependencies:${versions['spring.cloud']}",
+            configMonitor         : "org.springframework.cloud:spring-cloud-config-monitor",
             starterConfigServer   : "org.springframework.cloud:spring-cloud-config-server",
             starterConfigClient   : "org.springframework.cloud:spring-cloud-starter-config",
             starterBus            : "org.springframework.cloud:spring-cloud-starter-bus-amqp",
-            starterStream   : "org.springframework.cloud:spring-cloud-starter-stream-rabbit",
-            starterFeign   : "org.springframework.cloud:spring-cloud-starter-openfeign",
-            eurekaServer    : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server',
-            eurekaClient    : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
-            gateway         : 'org.springframework.cloud:spring-cloud-starter-gateway'
+            starterStream         : "org.springframework.cloud:spring-cloud-starter-stream-rabbit",
+            starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
+            eurekaServer          : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server',
+            eurekaClient          : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
+            gateway               : 'org.springframework.cloud:spring-cloud-starter-gateway'
     ]
 
     testing = [
-            junit5Api: "org.junit.jupiter:junit-jupiter-api:${versions['junit5']}",
-            junit5Engine: "org.junit.jupiter:junit-jupiter-engine:${versions['junit5']}",
-            junit5Plugin: "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
-            assertJ     : "org.assertj:assertj-core:${versions['assertj']}",
-            reactor     : "io.projectreactor:reactor-test",
-            awaitility  : "org.awaitility:awaitility-kotlin:${versions['awaitility']}"
+            junit5Api       : "org.junit.jupiter:junit-jupiter-api:${versions['junit5']}",
+            junit5Engine    : "org.junit.jupiter:junit-jupiter-engine:${versions['junit5']}",
+            junit5Plugin    : "org.junit.platform:junit-platform-gradle-plugin:${versions['junit5.platform']}",
+            assertJ         : "org.assertj:assertj-core:${versions['assertj']}",
+            reactor         : "io.projectreactor:reactor-test",
+            awaitility      : "org.awaitility:awaitility-kotlin:${versions['awaitility']}"
     ]
 
 
@@ -79,18 +78,20 @@ ext {
     ]
 
     generator = [
-            swagger: "io.swagger:swagger-codegen-cli:${versions['swagger']}",
-            swaggerGeneratorPlugin: "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:${versions['swagger.generator.plugin']}",
-            springfoxSwagger2: "io.springfox:springfox-swagger2:${versions['springfox']}",
-            springfoxSwaggerUI: "io.springfox:springfox-swagger-ui:${versions['springfox']}"
+            swagger                 : "io.swagger:swagger-codegen-cli:${versions['swagger']}",
+            swaggerGeneratorPlugin  : "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:${versions['swagger.generator.plugin']}",
+            swaggerUI               : "org.webjars:swagger-ui:${versions['swaggerUI']}",
+            //TODO Is springFox still used? What for?
+            springfoxSwagger2       : "io.springfox:springfox-swagger2:${versions['springfox']}",
+            springfoxSwaggerUI      : "io.springfox:springfox-swagger-ui:${versions['springfox']}"
     ]
 
     plugin = [
-            boot: "org.springframework.boot",
-            bom: "io.spring.dependency-management",
-            swagger: "org.hidetake.swagger.generator",
-            dockerBuild: "com.palantir.docker",
-            dockerRun: "com.palantir.docker-run",
+            boot        : "org.springframework.boot",
+            bom         : "io.spring.dependency-management",
+            swagger     : "org.hidetake.swagger.generator",
+            dockerBuild : "com.palantir.docker",
+            dockerRun   : "com.palantir.docker-run",
 
     ]
     apk = [
@@ -107,25 +108,24 @@ licenseReport {
 }
 
 asciidoctor {
+
     sources {
-        include 'architecture/index.adoc','start/index.adoc','user_guide/index.adoc','developer_guide/index.adoc', 'release_notes/index.adoc'
+        include '*/index.adoc','docs/*'
     }
     resources {
         from('src/docs/asciidoc') {
-            include 'architecture/images/**/*', 'start/images/*', 'user_guide/images/*','developer_guide/images/*', 'release_notes/images/*'
+            include 'images/*'
         }
     }
-    attributes nofooter : ''
-    
+    attributes  nofooter            : '',
+                revnumber           : operatorfabric.version,
+                revdate             : operatorfabric.revisionDate,
+                sectnums            : '',
+                toc                 : 'left',
+                toclevels           : '3',
+                icons               : 'font',
+                "hide-uri-scheme"   : ''
 }
-
-//asciidoctor.doLast {
-//    copy {
-//        from "src/docs/asciidoc/architecture/images"
-//        into "build/asciidoc/html5/architecture/images"
-//        include '**/*'
-//    }
-//}
 
 subprojects {
 
@@ -162,6 +162,8 @@ subprojects {
     subprojects {
         apply plugin: 'java'
         apply plugin: 'org.asciidoctor.convert'
+        apply plugin: 'io.spring.dependency-management'
+        apply plugin: plugin.bom
 
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -177,24 +179,6 @@ subprojects {
             options.noTimestamp()
         }
 
-        asciidoctor {
-            sources {
-                include 'index.adoc'
-            }
-            resources {
-                from('src/docs/asciidoc') {
-                    include 'images/**/*'
-                }
-            }
-            attributes nofooter : ''
-        }
-        asciidoctor.doLast {
-            copy {
-                from "$buildDir/asciidoc/html5"
-                into "$buildDir/docs/reference"
-                include '*'
-            }
-        }
     }
 }
 

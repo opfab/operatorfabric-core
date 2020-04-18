@@ -34,6 +34,11 @@ public class UserData implements User {
     private String login;
     private String firstName;
     private String lastName;
+
+    @JsonIgnore
+    @Singular("entity")
+    private Set<String> entities;
+
     @JsonIgnore
     @Singular("group")
     private Set<String> groupSet;
@@ -73,4 +78,31 @@ public class UserData implements User {
     public void deleteGroup(String name) {
         groupSet.remove(name);
     }
+
+
+    public void addEntity(String entity){
+        if(null== entities){
+            this.entities=new HashSet<>();
+        }
+        entities.add(entity);
+    }
+
+
+    @Override
+    public List<String> getEntities() {
+        if(entities == null)
+            return Collections.emptyList();
+        return new ArrayList<>(entities);
+    }
+
+    @Override
+    public void setEntities(List<String> entities) {
+        this.entities = new HashSet<>(entities);
+    }
+
+    public void deleteEntity(String name) {
+        entities.remove(name);
+
+    }
+
 }

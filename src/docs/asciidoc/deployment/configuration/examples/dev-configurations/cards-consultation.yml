@@ -1,0 +1,3 @@
+server:
+  port: 2104
+logging.level.root: DEBUG

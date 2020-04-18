@@ -29,4 +29,6 @@ public @interface WithMockOpFabUser {
     String lastName() default  "myUserLastName";
 
     String[] roles() default "";
+
+    String[] entities() default "";
 }

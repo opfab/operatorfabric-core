@@ -1,0 +1,17 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= OperatorFabric Community
+
+== Introduction
+
+The aim of this document is to present the OperatorFabric community, its code of conduct and to welcome contributors!
+
+include::CONTRIBUTING.adoc[leveloffset=+1]
+
+include::CODE_OF_CONDUCT.adoc[leveloffset=+1]

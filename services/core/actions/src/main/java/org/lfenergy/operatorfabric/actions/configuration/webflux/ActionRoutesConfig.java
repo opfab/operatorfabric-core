@@ -21,8 +21,9 @@ import reactor.util.function.Tuple6;
 import reactor.util.function.Tuples;
 
 import java.util.List;
+import java.util.function.Function;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
@@ -56,47 +57,47 @@ public class ActionRoutesConfig {
 
     private HandlerFunction<ServerResponse> actionGetRoute() {
         return request -> extractParameters(request)
-                .flatMap(t -> {
-                        ActionStatus actionStatus = this.actionService.lookUpActionStatus(t.getT1(),t.getT2(),t.getT3(),t.getT4(),t.getT5());
-                    if (actionStatus != null) {
-                            return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(actionStatus));
-                    }else{
-                        return noContent().build();
-                    }
-                });
+                .flatMap(t -> this.actionService.lookUpActionStatus(t.getT1(), t.getT2(), t.getT3(), t.getT4(), t.getT5())
+                        .flatMap(getActionStatusMonoFunction()));
+    }
+
+    private Function<ActionStatus, Mono<? extends ServerResponse>> getActionStatusMonoFunction() {
+        return actionStatus -> {
+            if (actionStatus != null) {
+                return ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(fromValue(actionStatus));
+            }
+            return noContent().build();
+
+        };
     }
 
     private HandlerFunction<ServerResponse> actionPostRoute() {
         return request -> extractParameters(request)
-                .flatMap(t -> {
-                    ActionStatus actionStatus = this.actionService.submitAction(t.getT1(),t.getT2(),t.getT3(),t.getT4(),t.getT5(),t.getT6());
-                    if (actionStatus != null) {
-                        return ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(actionStatus));
-                    }else{
-                        return noContent().build();
-                    }
-                });
+                .flatMap(t ->
+                        this.actionService.submitAction(t.getT1(), t.getT2(), t.getT3(), t.getT4(), t.getT5(), t.getT6())
+                                .flatMap(getActionStatusMonoFunction()));
     }
 
 
-
-    private Mono<Tuple6<String, String, String, String, String,String>> extractParameters(ServerRequest request) {
+    private Mono<Tuple6<String, String, String, String, String, String>> extractParameters(ServerRequest request) {
         String jwt = null;
         List<String> authorizations = request.headers().header("Authorization");
-        if(!authorizations.isEmpty()){
-            jwt = authorizations.get(0).replaceAll("Bearer (.+)","$1");
+        if (!authorizations.isEmpty()) {
+            jwt = authorizations.get(0).replaceAll("Bearer (.+)", "$1");
 
         }
         final String finalJwt = jwt;
         return request.bodyToMono(String.class)
                 .switchIfEmpty(Mono.just(""))
-                .map(body->Tuples.of(
-                request.pathVariable("publisher"),
-                request.pathVariable("processInstanceId"),
-                request.pathVariable("state"),
-                request.pathVariable("actionKey"),
-                finalJwt,
-                body));
+                .map(body -> Tuples.of(
+                        request.pathVariable("publisher"),
+                        request.pathVariable("processInstanceId"),
+                        request.pathVariable("state"),
+                        request.pathVariable("actionKey"),
+                        finalJwt,
+                        body));
     }
 
     private HandlerFunction<ServerResponse> actionOptionRoute() {
