@@ -8,10 +8,205 @@
 
 = OperatorFabric Community
 
-== Introduction
-
 The aim of this document is to present the OperatorFabric community, its code of conduct and to welcome contributors!
 
-include::CONTRIBUTING.adoc[leveloffset=+1]
+First of all, thank you for your interest !
+
+We can't stress enough that feedback, discussions, questions and contributions on OperatorFabric are very much
+appreciated.
+However, because the project is still in its early stages, we're not fully equipped for any of it yet, so please bear
+with us while the contribution process and tooling are sorted out.
+
+This project and everyone participating in it is governed by the
+ifdef::single-page-doc[<<code_of_conduct, OperatorFabric Code of Conduct>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#code_of_conduct, OperatorFabric Code of Conduct>>]
+.
+By participating, you are expected to uphold this code.
+Please report unacceptable behavior to mailto:opfab_AT_lists.lfenergy.org[opfab_AT_lists.lfenergy.org].
+
+== License and Developer Certificate of Origin
+
+OperatorFabric is an open source project licensed under the link:https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License 2.0].
+By contributing to OperatorFabric, you accept and agree to the terms and conditions for your present and future
+contributions submitted to OperatorFabric.
+
+The project also uses a mechanism known as a link:https://developercertificate.org/[Developer Certificate of Origin (DCO)]
+to ensure that we are legally allowed to distribute all the code and assets for the project. A DCO is a legally binding
+statement that asserts that you are the author of your contribution, and that you wish to allow OperatorFabric to use
+your work.
+
+Contributors sign-off that they adhere to these requirements by adding a `Signed-off-by` line to commit messages. All
+commits to any repository of the OperatorFabric organization have to be signed-off like this:
+
+----
+This is my commit message.
+
+Signed-off-by: John Doe <john.doe@email-provider.com>
+----
+
+You can write it manually but Git has a -s command line option to append it automatically to your commit message:
+
+----
+$ git commit -s -m 'This is my commit message'
+----
+
+Note that in the future a check will be performed during the integration, making sure all commits in the Pull Request
+contain a valid `Signed-off-by` line.
+
+These processes and templates have been adapted from the ones defined by the link:https://github.com/powsybl[PowSyBl]
+project.
+
+== Reporting Bugs and Suggesting Enhancements
+
+Work in Progress
+//TODO Describe JIRA workflows and how to sign up/login
+
+== Contributing Code or Documentation
+
+=== Code Guidelines
+
+//TODO add style guidelines
+//TODO Organize/reword section
+//TODO Update PR template to link back to this sections for rules to be checked before merging
+
+* We don't mention specific authors by name in each file (in Javadoc or in the
+documentation for example), so as not to have to maintain these mentions (since this
+information is tracked by git anyway).
+
+* If you are working on a JIRA issue:
+** Please name your branch with the corresponding JIRA issue ID: OC-XXX
+** Start all your commit messages with [OC-XXX]
++
+This allows the branch, PR and commits to be directly accessible from the JIRA issue.
+
+* Before submitting your PR, please rebase your branch against the current master to minimize conflicts when merging.
++
+```
+git checkout OC-XXX
+git fetch
+git rebase origin/master
+```
+
+* Before submitting your PR, please squash/fix your commits so as to reduce the
+number of commits and comment them accordingly. In the end, the division of changes
+into commits should make the PR easier to understand and review.
+
+
+* Feel free to add a copyright header (on top of the existing ones) to files
+you create or amend. See src/main/headers for examples.
+
+include::documentation.adoc[leveloffset=+2]
+
+=== Contribution Process
+
+Code Contribution is tracked as link:https://help.github.com/en/articles/about-pull-requests[GitHub Pull Requests].
+Crafting a good pull request takes time and energy and we will help as much as we can, but be prepared to follow our
+iterative process. The iterative process has several goals:
+
+* Maintain the quality of the project
+* Fix issues that are important to users
+* Allow everyone from the community to take part in the discussions, to reach the best possible solution
+* Make the review by OperatorFabric maintainers as efficient as possible
+
+Please follow these steps to have your contribution considered by the maintainers:
+
+//TODO Create new pull request template and link to it here
+//TODO add status checks
+. Request a GitHub review by one of the core developers
+. Take their review into account or discuss the requested changes. Please don't take criticism personally, it is normal
+to iterate on this step several times.
+. Repeat step 3 until the pull request is merged!
+
+Continuous integration is set up to run on all branches automatically and will often report problems, so don't worry
+about getting everything perfect on the first try (SonarCloud Analysis is a notorious problem source).
+Until you add a reviewer, you can trigger as many builds as you want by amending your commits. The status checks
+enforce the following:
+
+* All tests in the test suite pass
+* Checkstyle and SonarCloud report no violations (coming soon)
+* The code coverage is high enough (currently about 85%) (coming soon)
+
+== Project Governance
+
+=== Project Owner
+
+OperatorFabric is part of the link:https://www.lfenergy.org/[LF Energy Foundation], a project of the
+link:https://www.linuxfoundation.org/[Linux Foundation] that supports open source innovation projects within the energy
+and electricity sectors.
+
+=== Committers
+
+Committers are contributors who have made several valuable contributions to the project and are now relied upon to both
+write code directly to the repository and screen the contributions of others. In many cases they are programmers but it
+is also possible that they contribute in a different role. Typically, a committer will focus on a specific aspect of
+the project, and will bring a level of expertise and understanding that earns them the respect of the community and the
+project owner.
+
+=== Technical Steering Committee
+
+The Technical Steering Committee (TSC) is composed of voting members elected by the active Committers as described in
+the project’s Technical Charter.
+
+OperatorFabric TSC voting members are:
+
+* link:https://github.com/0x62646f727465[Boris Dolley]
+* link:https://github.com/francoisjolain[François Jolain]
+* link:https://github.com/AlexGuironnetRTE[Alexandra Guironnet]
+* link:https://github.com/HanaeSafiRTE[Hanae Safi]
+* Guillaume Trimbach
+
+Boris Dolley will chair the TSC, with Hanae Safi as his deputy.
+
+=== Contributors
+
+Contributors include anyone in the technical community that contributes code, documentation, or other technical
+artifacts to the project.
+
+Anyone can become a contributor. There is no expectation of commitment to the project, no specific skill requirements
+and no selection process. To become a contributor, a community member simply has to perform one or more actions that
+are beneficial to the project.
+
+== Communication channels
+
+In addition to GitHub we have set up:
+
+=== Website: http://opfab.org
+
+Our website contains all the documentation and resources we're currently working on. Here is what we aim to provide:
+
+* Architecture documentation
+* REST API documentation
+* Reference documentation for each component
+* Javadoc/Compodoc for each component
+* Tutorials and QuickStart guides and videos
+
+*This documentation is our priority* right now so future contributors can quickly find their way around the project.
+Needless to say, it's a work in progress so feel free to tell us what you feel is missing or what type of documentation
+you would be interested in as a contributor.
+
+TIP: We also use this website to broadcast any news we have about the project so don't hesitate to subscribe to the
+RSS feed on the home page to be informed of any update.
+
+=== Spectrum Community : https://spectrum.chat/opfab
+
+If you would like to join the discussions regarding OperatorFabric, please
+https://spectrum.chat/opfab[join our community on Spectrum]!
+
+Regarding issue tracking, our Jira platform should be open soon.
+
+=== LF Energy Mailing Lists
+
+Several mailing lists have been created by LF Energy for the project, please feel free to subscribe to the ones you
+could be interested in:
+
+* https://lists.lfenergy.org/g/opfab-announce[OperatorFabric Announcements] (such as new releases)
+* https://lists.lfenergy.org/g/opfab[OperatorFabric General Discussion]
+* https://lists.lfenergy.org/g/opfab-dev[OperatorFabric Developers] for project development discussions
+
+And if you're interested in LF Energy in general:
+https://lists.lfenergy.org/g/lfenergy[LF Energy General Discussion]
+
+=== JIRA
+//TODO
 
 include::CODE_OF_CONDUCT.adoc[leveloffset=+1]
