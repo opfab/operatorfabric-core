@@ -4,7 +4,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-
+ 
+ 
 .ngx-charts {
     /*
       Block text selection
@@ -19,6 +20,7 @@
                                   supported by Chrome and Opera */
     float: left;
     overflow: visible;
+    background-color: var(--opfab-timeline-bgcolor);
 
     .gridline-path {
         stroke: #ddd;
@@ -26,7 +28,14 @@
         fill: none;
     }
 
-/*
-:: ng-deep .gridline-path-horizontal {      display: inline; }
-*/
+
+    text {
+      fill: var(--opfab-timeline-text-color);
+    }
+
+
+    .gridline-path {
+      stroke:var(--opfab-timeline-grid-color);
+    }
+
 }

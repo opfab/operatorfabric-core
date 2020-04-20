@@ -6,6 +6,11 @@
  */
 
 
+.light-card-detail {
+  background-color: var(--opfab-lightcard-detail-bgcolor);
+  color: var(--opfab-lightcard-detail-textcolor);
+}
+
 .card {
   margin-bottom: 5px;
   word-break: break-all;

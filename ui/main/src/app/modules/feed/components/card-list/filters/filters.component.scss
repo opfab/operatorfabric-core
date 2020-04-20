@@ -1,0 +1,38 @@
+/* Copyright (c) 2020, RTE (http://www.rte-france.com)
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+
+ ::ng-deep .popover {
+  background-color: var(--opfab-bgcolor);
+  color: var(--opfab-text-color);
+  .popover-header {
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-bgcolor);
+    border-bottom: 1px solid var(--opfab-text-color);
+  }
+  .popover-body {
+    color: var(--opfab-text-color);
+  }
+  .arrow::after{
+    border-right-color: var(--opfab-bgcolor);
+  }
+}
+
+::ng-deep .opfab-feed-icon{
+  background-color: var(--opfab-feedbar-bgcolor);
+  color: var(--opfab-feedbar-icon-color);
+}
+
+
+::ng-deep .opfab-feed-icon:hover{
+  background: var(--opfab-feedbar-icon-hover-color);
+  color: var(--opfab-feedbar-icon-hover-bgcolor);
+}
+
+.opfab-feedbar-bgcolor {
+  background-color: var(--opfab-feedbar-bgcolor);
+}

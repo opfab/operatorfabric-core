@@ -77,12 +77,14 @@ the navigation bar.
 - BOTH: Both a text link and a little arrow icon are displayed. Clicking the text link opens the link in an iframe
 while clicking the icon opens in a new tab.
 
-|operatorfabric.time.pulse|5000|no|Duration between two ticks of the internal state of the User Interface
+
 |operatorfabric.archive.filters.page.size||no|The page size of archive filters
 |operatorfabric.archive.filters.page.first||no|The first page start of archiving module
 |operatorfabric.archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
 |operatorfabric.archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
-|operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page
+|operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 
+|operatorfabric.settings.nightDayMode|false|no|if you want to activate toggle for night or day mode 
+|operatorfabric.settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY,NIGHT or LEGACY (black background and white timeline) 
 |operatorfabric.settings.infos.disable||no|Control if we want to disable/enable editing user email, description in the settings page
 |operatorfabric.settings.infos.email|false|no|Control if we want to hide(true) or display(false or not specified) the user email in the settings page
 |operatorfabric.settings.infos.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page

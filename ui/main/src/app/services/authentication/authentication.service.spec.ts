@@ -123,9 +123,9 @@ describe('AuthenticationService', () => {
 
 
     it('should clear the local storage when clearAuthenticationInformation', () => {
-        spyOn(localStorage, 'clear').and.callThrough();
+        spyOn(localStorage, 'removeItem').and.callThrough();
         service.clearAuthenticationInformation();
-        expect(localStorage.clear).toHaveBeenCalled();
+        expect(localStorage.removeItem).toHaveBeenCalled();
     });
 
     it('should set items in localStorage when save Authentication Information', () => {
