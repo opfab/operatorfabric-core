@@ -57,6 +57,14 @@ export class DetailComponent implements OnInit, OnChanges {
     ngOnChanges(): void {
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
+        this.store.select(selectAuthenticationState).subscribe(authState => {
+            this.userContext = new UserContext(
+                authState.identifier,
+                authState.token,
+                authState.firstName,
+                authState.lastName
+            );
+        });
     }
 
     private initializeHrefsOfCssLink() {
@@ -78,7 +86,7 @@ export class DetailComponent implements OnInit, OnChanges {
     private initializeHandlebarsTemplates() {
 
         zip(this.thirds.queryThirdFromCard(this.card),
-        this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card,null)))
+        this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card, this.userContext)))
             .subscribe(
                 ([third, html]) => {
                 this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
