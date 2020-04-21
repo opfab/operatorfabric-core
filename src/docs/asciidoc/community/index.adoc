@@ -124,7 +124,7 @@ enforce the following:
 
 * All tests in the test suite pass
 * Checkstyle and SonarCloud report no violations (coming soon)
-* The code coverage is high enough (currently about 85%) (coming soon)
+* The code coverage is high enough (coming soon)
 
 == Project Governance
 
