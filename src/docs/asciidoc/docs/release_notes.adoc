@@ -12,4 +12,7 @@
 * [OC-414] Issue with using user data in templates
 
 == Task
+* [OC-737] Add an object entity in the user service +
+Below, you will find information about our new object "Entity" and its endpoints :
+https://opfab.github.io/documentation/current/api/users/#/entities
 * [OC-844] Add a UI style for day and a UI style for night with a button to permut. This fonctionnality is optionnal and can be activate/desactivate via configuration https://opfab.github.io/documentation/current/deployment/#_web_ui 

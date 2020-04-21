@@ -49,18 +49,21 @@ public class UserRepositoryShould {
            .firstName("John")
            .lastName("Cleese")
            .group("Monty Pythons").group("Wanda")
+           .entity("ENTITY1").entity("ENTITY2")
            .build();
         u2 = UserData.builder()
            .login("gchapman")
            .firstName("Graham")
            .lastName("Chapman")
            .group("Monty Pythons")
+           .entity("ENTITY1")
            .build();
         u3 = UserData.builder()
            .login("kkline")
            .firstName("Kevin")
            .lastName("Kline")
            .group("Wanda")
+           .entity("ENTITY2")
            .build();
         repository.insert(u1);
         repository.insert(u2);
@@ -79,6 +82,7 @@ public class UserRepositoryShould {
            .firstName("Michael")
            .lastName("Palin")
            .group("Monty Pythons").group("Wanda")
+           .entity("ENTITY1").entity("ENTITY2")
            .build();
         repository.insert(user);
         assertThat(repository.count()).isEqualTo(4);
@@ -88,6 +92,7 @@ public class UserRepositoryShould {
         assertThat(mpalin.getFirstName()).isEqualTo("Michael");
         assertThat(mpalin.getLastName()).isEqualTo("Palin");
         assertThat(mpalin.getGroups()).contains("Monty Pythons", "Wanda");
+        assertThat(mpalin.getEntities()).contains("ENTITY1", "ENTITY2");
     }
 
     @Test
@@ -100,5 +105,13 @@ public class UserRepositoryShould {
         assertThat(results).hasSize(0);
     }
 
-
+    @Test
+    public void findByEntity(){
+        List<UserData> results = repository.findByEntitiesContaining("ENTITY2");
+        assertThat(results).hasSize(2);
+        results = repository.findByEntitiesContaining("ENTITY1");
+        assertThat(results).hasSize(2);
+        results = repository.findByEntitiesContaining("ENTITY3");
+        assertThat(results).hasSize(0);
+    }
 }

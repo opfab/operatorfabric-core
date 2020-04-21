@@ -9,6 +9,7 @@
 package org.lfenergy.operatorfabric.users.configuration.users;
 
 import lombok.Data;
+import org.lfenergy.operatorfabric.users.model.EntityData;
 import org.lfenergy.operatorfabric.users.model.GroupData;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.model.UserSettingsData;
@@ -24,7 +25,7 @@ import java.util.List;
  * <p>The properties are prefixed by "operatorfabric.users.default"</p>
  *
  * <p>See {@link org.lfenergy.operatorfabric.users.model.User} and {@link org.lfenergy.operatorfabric.users.model.Group}
- * for data structure details</p>
+ * and {@link org.lfenergy.operatorfabric.users.model.Entity} for data structure details</p>
  *
  *
  */
@@ -36,5 +37,6 @@ public class UsersProperties {
 
     private List<UserData> users = new ArrayList<>();
     private List<GroupData> groups = new ArrayList<>();
+    private List<EntityData> entities = new ArrayList<>();
     private List<UserSettingsData> userSettings = new ArrayList<>();
 }

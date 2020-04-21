@@ -24,6 +24,13 @@ operatorfabric.users.default:
       description: TSO 2 Group
     - name: TRANS
       description: Transnationnal Group
+  entities:
+    - id: ENTITY1
+      name: Entity 1 name
+      description: Entity 1 short description
+    - id: ENTITY2
+      name: Entity 2 name
+      description: Entity 2 short description
   user-settings:
     - login: rte-operator
       description: Da Operator Rulez

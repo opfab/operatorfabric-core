@@ -8,21 +8,18 @@
 
 package org.lfenergy.operatorfabric.users.repositories;
 
-import org.lfenergy.operatorfabric.users.model.UserData;
+import org.lfenergy.operatorfabric.users.model.EntityData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
- * Mongo {@link UserData} repository
+ * Mongo {@link EntityData} repository
  */
 @Repository
-public interface UserRepository extends MongoRepository<UserData,String> {
+public interface EntityRepository extends MongoRepository<EntityData,String> {
 
-    Page<UserData> findAll(Pageable pageable);
-    List<UserData> findByGroupSetContaining(String groupContains);
-    List<UserData> findByEntitiesContaining(String entityContains);
+    Page<EntityData> findAll(Pageable pageable);
+
 }

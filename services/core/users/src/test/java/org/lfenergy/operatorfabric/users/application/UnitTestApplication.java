@@ -18,6 +18,7 @@ import org.lfenergy.operatorfabric.users.configuration.mongo.LocalMongoConfigura
 import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
 import org.lfenergy.operatorfabric.users.controllers.CustomExceptionHandler;
 import org.lfenergy.operatorfabric.users.controllers.GroupsController;
+import org.lfenergy.operatorfabric.users.controllers.EntitiesController;
 import org.lfenergy.operatorfabric.users.controllers.UsersController;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.boot.SpringApplication;
@@ -34,8 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 @EnableOperatorFabricMongo
 @EnableConfigurationProperties
 @EnableMongoRepositories(basePackageClasses = UserRepository.class)
-@Import({JacksonConfig.class, LocalMongoConfiguration.class,UsersProperties.class,CustomExceptionHandler.class,GroupsController
-   .class,UsersController.class,DataInitComponent.class, GroupsProperties.class, GroupsUtils.class, JwtProperties.class})
+@Import({JacksonConfig.class, LocalMongoConfiguration.class,UsersProperties.class,CustomExceptionHandler.class,
+   GroupsController.class,EntitiesController.class,UsersController.class,DataInitComponent.class, GroupsProperties.class,
+   GroupsUtils.class, JwtProperties.class})
 @ImportResource("classpath:/security.xml")
 @Slf4j
 public class UnitTestApplication {

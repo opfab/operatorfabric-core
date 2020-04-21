@@ -11,10 +11,10 @@ package org.lfenergy.operatorfabric.users.controllers;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.Group;
-import org.lfenergy.operatorfabric.users.model.GroupData;
+import org.lfenergy.operatorfabric.users.model.Entity;
+import org.lfenergy.operatorfabric.users.model.EntityData;
 import org.lfenergy.operatorfabric.users.model.UserData;
-import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
+import org.lfenergy.operatorfabric.users.repositories.EntityRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
@@ -31,19 +31,19 @@ import java.util.stream.Collectors;
 
 
 /**
- * GroupsController, documented at {@link GroupsApi}
+ * GroupsController, documented at {@link EntitiesApi}
  *
  */
 @RestController
-@RequestMapping("/groups")
-public class GroupsController implements GroupsApi {
+@RequestMapping("/entities")
+public class EntitiesController implements EntitiesApi {
 
-    public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
+    public static final String ENTITY_NOT_FOUND_MSG = "Entity %s not found";
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
     public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
-    public static final String NO_MATCHING_GROUP_NAME_MSG = "Payload Group name does not match URL Group name";
+    public static final String NO_MATCHING_ENTITY_ID_MSG = "Payload Entity id does not match URL Entity id";
     @Autowired
-    private GroupRepository groupRepository;
+    private EntityRepository entityRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -55,16 +55,16 @@ public class GroupsController implements GroupsApi {
     private ApplicationEventPublisher publisher;
 
     @Override
-    public Void addGroupUsers(HttpServletRequest request, HttpServletResponse response, String name, List<String> users) throws Exception {
+    public Void addEntityUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
 
-        //Only existing groups can be updated
-        findGroupOrThrow(name);
+        //Only existing entities can be updated
+        findEntityOrThrow(id);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
         List<UserData> foundUsers = retrieveUsers(users);
 
         for (UserData userData : foundUsers) {
-            userData.addGroup(name);
+            userData.addEntity(id);
             publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
         }
         userRepository.saveAll(foundUsers);
@@ -73,26 +73,26 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public Group createGroup(HttpServletRequest request, HttpServletResponse response, Group group) throws Exception {
-        if(groupRepository.findById(group.getName()).orElse(null) == null){
-            response.addHeader("Location", request.getContextPath() + "/groups/" + group.getName());
+    public Entity createEntity(HttpServletRequest request, HttpServletResponse response, Entity entity) throws Exception {
+        if(entityRepository.findById(entity.getId()).orElse(null) == null){
+            response.addHeader("Location", request.getContextPath() + "/entities/" + entity.getId());
             response.setStatus(201);
         }
-        return groupRepository.save((GroupData)group);
+        return entityRepository.save((EntityData) entity);
     }
 
     @Override
-    public Void deleteGroupUsers(HttpServletRequest request, HttpServletResponse response, String name) throws Exception {
+    public Void deleteEntityUsers(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
 
-        //Only existing groups can be updated
-         findGroupOrThrow(name);
+        //Only existing entities can be updated
+         findEntityOrThrow(id);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
-        List<UserData> foundUsers = userRepository.findByGroupSetContaining(name);
+        List<UserData> foundUsers = userRepository.findByEntitiesContaining(id);
 
         if(foundUsers!=null) {
             for (UserData userData : foundUsers) {
-                userData.deleteGroup(name);
+                userData.deleteEntity(id);
                 publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
             }
             userRepository.saveAll(foundUsers);
@@ -101,21 +101,21 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public Void deleteGroupUser(HttpServletRequest request, HttpServletResponse response, String name, String login) throws Exception {
+    public Void deleteEntityUser(HttpServletRequest request, HttpServletResponse response, String id, String login) throws Exception {
 
-        //Only existing groups can be updated
-        findGroupOrThrow(name);
+        //Only existing entities can be updated
+        findEntityOrThrow(id);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
         UserData foundUser = userRepository.findById(login).orElseThrow(()->new ApiErrorException(
                 ApiError.builder()
                         .status(HttpStatus.NOT_FOUND)
-                        .message(String.format(USER_NOT_FOUND_MSG,login))
+                        .message(String.format(USER_NOT_FOUND_MSG, login))
                         .build()
         ));
 
         if(foundUser!=null) {
-                foundUser.deleteGroup(name);
+                foundUser.deleteEntity(id);
                 publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
             userRepository.save(foundUser);
         }
@@ -123,45 +123,45 @@ public class GroupsController implements GroupsApi {
     }
 
     @Override
-    public List<? extends Group> fetchGroups(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return groupRepository.findAll();
+    public List<? extends Entity> fetchEntities(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return entityRepository.findAll();
     }
 
     @Override
-    public Group fetchGroup(HttpServletRequest request, HttpServletResponse response, String name) throws Exception {
-        return groupRepository.findById(name).orElseThrow(
+    public Entity fetchEntity(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+        return entityRepository.findById(id).orElseThrow(
            ()-> new ApiErrorException(
               ApiError.builder()
                  .status(HttpStatus.NOT_FOUND)
-                 .message(String.format(GROUP_NOT_FOUND_MSG,name))
+                 .message(String.format(ENTITY_NOT_FOUND_MSG, id))
                  .build()
            )
         );
     }
 
     @Override
-    public Group updateGroup(HttpServletRequest request, HttpServletResponse response, String name, Group group) throws Exception {
-        //name from group body parameter should match name path parameter
-        if(!group.getName().equals(name)){
+    public Entity updateEntity(HttpServletRequest request, HttpServletResponse response, String id, Entity entity) throws Exception {
+        //id from entity body parameter should match id path parameter
+        if(!entity.getId().equals(id)){
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
-                            .message(NO_MATCHING_GROUP_NAME_MSG)
+                            .message(NO_MATCHING_ENTITY_ID_MSG)
                             .build());
         } else {
-            return createGroup(request,response,group);
+            return createEntity(request, response, entity);
         }
 
     }
 
     @Override
-    public Void updateGroupUsers(HttpServletRequest request, HttpServletResponse response, String name, List<String> users) throws Exception {
+    public Void updateEntityUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
 
-        //Only existing groups can be updated
-        findGroupOrThrow(name);
+        //Only existing entities can be updated
+        findEntityOrThrow(id);
 
-        List<UserData> formerlyBelongs = userRepository.findByGroupSetContaining(name);
-        List<String> newUsersInGroup = new ArrayList<>(users);
+        List<UserData> formerlyBelongs = userRepository.findByEntitiesContaining(id);
+        List<String> newUsersInEntity = new ArrayList<>(users);
 
         //Make sure the intended updated users list only contains logins existing in the repository, throwing an error if this is not the case
         retrieveUsers(users);
@@ -170,24 +170,24 @@ public class GroupsController implements GroupsApi {
                 formerlyBelongs.stream()
                         .filter(u->!users.contains(u.getLogin()))
                         .peek(u-> {
-                            u.deleteGroup(name);
-                            newUsersInGroup.remove(u.getLogin());
-                            u.addGroup(name);
-                            //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
+                            u.deleteEntity(id);
+                            newUsersInEntity.remove(u.getLogin());
+                            u.addEntity(id);
+                            //Fire an UpdatedUserEvent for all users that are updated because they're removed from the entity
                             publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getLogin()));
                         }).collect(Collectors.toList());
 
         userRepository.saveAll(toUpdate);
-        addGroupUsers(request, response, name, newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
+        addEntityUsers(request, response, id, newUsersInEntity); //For users that are added to the entity, the event will be published by addEntityUsers.
         return null;
     }
 
-    private GroupData findGroupOrThrow(String name) {
-        return groupRepository.findById(name).orElseThrow(
+    private EntityData findEntityOrThrow(String id) {
+        return entityRepository.findById(id).orElseThrow(
                 ()-> new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(GROUP_NOT_FOUND_MSG,name))
+                                .message(String.format(ENTITY_NOT_FOUND_MSG, id))
                                 .build()
                 ));
     }
@@ -202,7 +202,7 @@ public class GroupsController implements GroupsApi {
                     () -> new ApiErrorException(
                             ApiError.builder()
                                     .status(HttpStatus.BAD_REQUEST)
-                                    .message(String.format(BAD_USER_LIST_MSG,login))
+                                    .message(String.format(BAD_USER_LIST_MSG, login))
                                     .build()
                     ));
             foundUsers.add(foundUser);
