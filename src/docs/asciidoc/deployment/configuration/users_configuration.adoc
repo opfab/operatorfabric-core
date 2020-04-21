@@ -32,6 +32,7 @@ For other configuration see:
 |operatorfabric.users.default.users|null|no| Array of user objects to create upon startup if they don't exist
 |operatorfabric.users.default.user-settings|null|no| Array of user settings objects to create upon startup if they don't exist
 |operatorfabric.users.default.groups|null|no| Array of group objects to create upon startup if they don't exist
+|operatorfabric.users.default.entities|null|no| Array of entity objects to create upon startup if they don't exist
 
 |===
 
@@ -64,7 +65,7 @@ The bootstrap-docker.yml file is a replacement bootstrap file we use for our
 docker images configuration.
 
 The bootstrap-dev.yml file is a replacement bootstrap file we use for our
-development environment
+development environment.
 
 The above embedded configurations are the basic settings of the application:
 
@@ -89,7 +90,7 @@ include::examples/docker-configurations/users.yml[]
 == Specifying external configuration properties when launching a jar file
 
 See {springboot_doc}/reference/htmlsingle/#boot-features-external-config-application-property-files[Application Property Files]
-on how to setup an external spring properties or yml file.
+on how to set up an external spring properties or yml file.
 
 See {springboot_doc}/reference/htmlsingle/#howto-set-active-spring-profiles[Set the Active Spring Profiles] for specifying alternate profile.
 

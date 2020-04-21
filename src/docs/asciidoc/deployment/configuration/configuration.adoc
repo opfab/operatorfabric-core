@@ -41,7 +41,7 @@ configuration service (under /services/infra/config/src/main/docker/volume).
 
 Note that a few things cannot be set in the configuration served by the configuration service (because its needed
 right at the application startup for example) and
-must be set in each services bootstrap configuration file. In this regard,
+must be set in each service bootstrap configuration file. In this regard,
 ifdef::single-page-doc[<<cloud_config_service_config, Cloud Configuration Service>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/deployment/index.adoc#cloud_config_service_config, Cloud Configuration Service>>]
 and
@@ -64,8 +64,8 @@ In most situation, you do not need to change the default bootstrap
 configuration for those services. Make a copy of the default bootstrap (inside
 the jar or from the sources) and set eureka up (see above).
 
-The different services also share common configuration you can setup in the
-config service backend. those common configuration may be set up in the backend ```application.yml``` file.
+The different services also share a common configuration you can setup in the
+config service backend. Those common configuration may be set up in the backend ```application.yml``` file.
 
 [source]
 ----
@@ -117,31 +117,33 @@ include::security_configuration.adoc[leveloffset=+2]
 
 === User creation
 
-Setting automated user creation==. Creation user requires an user id. Given name and family name are optional.
+Setting automated user creation==. Creation user requires a user id. Given name and family name are optional.
 
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as an user login or id
+|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as a user login or id
 |operatorfabric.security.jwt.given-name-claim|given-name|no| Jwt claim is used to set the user's given name
 |operatorfabric.security.jwt.family-name-claim|family-name|no| Jwt claim is used to set the user's family name
 |===
 
 
-=== Alternative way to manage groups
+=== Alternative way to manage groups (and/or entities)
 
-By default, `Operator-Fabric` manage groups through the user's group. Another mode can be defined, the JWT mode. The groups come from the authentication token. The administrator of the authentication service has to set what claims define a group. In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve thoses groups.
+By default, `Operator-Fabric` manage groups (and/or entities) through the user's collection in the database. Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token. The administrator of the authentication service has to set what claims define a group (and/or entity). In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve those groups (and/or entities).
   
 |===
 |name|default|mandatory?|Description
 
 |operatorfabric.security.jwt.groups.mode|OPERATOR_FABRIC|no| Set the group mode, possible values JWT or OPERATOR_FABRIC 
-|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandard-claim.path||no| path in the JWT to retrieve the claim that defines a group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandard.path||no| path in the JWT to retrieve the claim that defines a group
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardArray.path||no| path in the JWT to retrieve the claim that defines an array of groups
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.path||no| path in the JWT to retrieve the claim that defines a list of group
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.separator||no| set the separator value of the list of group
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.path||no| path in the JWT to check if that path does exist, if it does, use the roleValue as a group 
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.roleValue||no| set the value of the group if the path exists
+|operatorfabric.security.jwt.entitiesIdClaim||no| set the name of the field in the token
+|operatorfabric.security.jwt.gettingEntitiesFromToken||no| boolean indicating if you want the entities of the user to come from the token and not mongoDB (possible values : true/false)
 |===
 
 _application.yml_

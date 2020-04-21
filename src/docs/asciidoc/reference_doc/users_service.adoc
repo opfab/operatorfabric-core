@@ -8,10 +8,13 @@
 
 = OperatorFabric Users Service
 
-The User service manages users and groups.
+The User service manages users, groups and entities.
 
-Users:: represent account information for person destined to receive cards in the OperatorFabric instance.
+Users:: represent account information for a person destined to receive cards in the OperatorFabric instance.
 Groups::
+- represent set of users destined to receive collectively some cards.
+- can be used in a way to handle rights on card reception in OperatorFabric.
+Entities::
 - represent set of users destined to receive collectively some cards.
 - can be used in a way to handle rights on card reception in OperatorFabric.
 
@@ -20,21 +23,21 @@ WARNING: The user define here is an internal representation of the individual ca
 NOTE: In the following commands the `$token` is an authentication token currently valid for the `OAuth2` service used by the current `OperatorFabric` system.
 
 
-== Users and Groups
+== Users, groups and entities
 
-User service manager users and groups.
+User service manages users, groups and entities.
 
 === Users
 
 Users are the individuals and mainly physical person who can log in OperatorFabric.
 
-The access to this service has to be authorized, in the `OAuth2` service used by the current `OperatorFabric` instance, at least to access User information and to manage Users. The membership of groups is stored in the user information.
+The access to this service has to be authorized, in the `OAuth2` service used by the current `OperatorFabric` instance, at least to access User information and to manage Users. The membership of groups and entities are stored in the user information.
 
 ==== Automated user creation
 
-In case of an user does exist in a provided authentication service but he does not exist in the `OperatorFabric` instance, when he is authenticated and connected
-for the first time in the `OperatorFabric` instance, the user is automatically created in the system with no attached groups.
-The administration of the groups is dealt by the administrator manually. More details about automated user creation
+In case of a user does exist in a provided authentication service but he does not exist in the `OperatorFabric` instance, when he is authenticated and connected
+for the first time in the `OperatorFabric` instance, the user is automatically created in the system without attached group or entity.
+The administration of the groups and entities is dealt by the administrator manually. More details about automated user creation
 ifdef::single-page-doc[<<opfab_spec_conf, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#opfab_spec_conf, here>>]
 .
@@ -42,8 +45,15 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/inde
 === Groups
 opfab_spec_conf
 The notion of group is loose and can be used to simulate role in `OperatorFabric`.
-Groups are used to send cards to several users without name them specifically.The information about membership to a
+Groups are used to send cards to several users without a name specifically. The information about membership to a
 group is stored in the user information. The rules used to send cards are described in the
+ifdef::single-page-doc[<<card_recipients, recipients section>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference/index.adoc#card_recipients, recipients section>>]
+.
+
+=== Entities
+Entities are used to send cards to several users without a name specifically. The information about membership to an
+entity is stored in the user information. The rules used to send cards are described in the
 ifdef::single-page-doc[<<card_recipients, recipients section>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference/index.adoc#card_recipients, recipients section>>]
 .

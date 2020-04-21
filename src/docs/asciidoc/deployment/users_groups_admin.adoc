@@ -6,7 +6,7 @@
 
 :imagesdir: ../images
 
-== Users and Groups Administration
+== Users, Groups and Entities Administration
 
 A new operator call John Doe, who has OAuth granted right to connect ot current `OperatorFabric` instance, need to receive cards within current `OperatorFabric` instance. As a user of OperatorFabric, he needs to be added to the system with a `login` (john-doe-operator), his `firstName` (John) and his `lastName` (Doe).
 operator
@@ -34,6 +34,10 @@ HTTP/1.1 200 OK
         "firstName": null,
         "groups": [
             "ADMIN"
+        ],
+        "entities": [
+            "ENTITY1",
+            "ENTITY2"
         ],
         "lastName": null,
         "login": "admin"
@@ -73,6 +77,9 @@ HTTP/1.1 200 OK
             "TRANS",
             "TEST"
         ],
+        "entities": [
+            "ENTITY1"
+        ],
         "lastName": null,
         "login": "tso1-operator"
     },
@@ -81,6 +88,9 @@ HTTP/1.1 200 OK
         "groups": [
             "TSO2",
             "TRANS"
+        ],
+        "entities": [
+            "ENTITY2"
         ],
         "lastName": null,
         "login": "tso2-operator"
@@ -130,6 +140,7 @@ HTTP/1.1 200 OK
 {
     "firstName": "Jahne",
     "groups": [],
+    "entities": [],
     "lastName": "Doe",
     "login": "john-doe-operator"
 }
@@ -164,7 +175,20 @@ HTTP/1.1 200 OK
 }
 ....
 
-=== List groups
+== Groups/Entities
+
+All the commands below :
+
+* List groups
+* Create a new group
+* Fetch details of a given group
+* Update details of a group
+* Add a user to a group
+* Remove a user from a group
+
+are available for both groups and entities. In order not to overload the documentation, we will only detail groups endpoints.
+
+=== List groups (or entities)
 
 This operator is the first member of a new group operator called the `OPERATORS`, which doesn't exist for the moment in
 the system. As shown when we
@@ -189,36 +213,43 @@ HTTP/1.1 200 OK
 [
     {
         "description": "The admin group",
-        "name": "ADMIN"
+        "name": "ADMIN group",
+        "id": "ADMIN"
     },
     {
         "description": "RTE TSO Group",
-        "name": "RTE"
+        "name": "RTE group",
+        "id": "RTE"
     },
     {
         "description": "ELIA TSO group",
-        "name": "ELIA"
+        "name": "ELIA group",
+        "id": "ELIA"
     },
     {
         "description": "CORESO Group",
-        "name": "CORESO"
+        "name": "CORESO group",
+        "id": "CORESO"
     },
     {
         "description": "TSO 1 Group",
-        "name": "TSO1"
+        "name": "TSO1 group",
+        "id": "TSO1"
     },
     {
         "description": "TSO 2 Group",
-        "name": "TSO2"
+        "name": "TSO2 group",
+        "id": "TSO2"
     },
     {
         "description": "Transnationnal Group",
-        "name": "TRANS"
+        "name": "TRANS group",
+        "id": "TRANS"
     }
 ]
 ....
 
-=== Create a new Group
+=== Create a new group (or entity)
 
 Firstly, the group called `OPERATORS` has to be
 ifdef::single-page-doc[link:../api/users/index.html#/groups/createGroup[added to the system]]
@@ -227,12 +258,12 @@ using the following command:
 
 using httpie:
 ....
-echo '{"name":"OPERATORS","decription":"This is the brand new  group of operator"}' | http POST http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/json"
+echo '{"id":"OPERATORS","decription":"This is the brand new  group of operator"}' | http POST http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/json"
 ....
 
 using cURL:
 ....
-curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","decription":"This is the brand new  group of operator"}'
+curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"OPERATORS","decription":"This is the brand new  group of operator"}'
 ....
 
 response
@@ -241,11 +272,12 @@ HTTP/1.1 200 OK
 
 {
     "description": null,
-    "name": "OPERATORS"
+    "name": null,
+    "id": "OPERATORS"
 }
 ....
 
-=== Fetch details of a given group
+=== Fetch details of a given group (or entity)
 
 The result returned seems strange, to verify if it's the correct answer by
 ifdef::single-page-doc[link:../api/users/index.html#/groups/fetchGroup[displaying the details of the group]]
@@ -268,11 +300,12 @@ HTTP/1.1 200 OK
 
 {
     "description": null,
-    "name": "OPERATORS"
+    "name": null,
+    "id": "OPERATORS"
 }
 ....
 
-=== Update details of a group
+=== Update details of a group (or entity)
 
 The description is really null. After verification, in our first command used to create the group,
 the attribute for the description is misspelled. Using the following command
@@ -282,23 +315,24 @@ with the correct spelling, the new group of operator gets a proper description:
 
 with httpie:
 ....
-echo '{"name":"OPERATORS","description":"This is the brand new  group of operator"}' | http -b PUT http://localhost:2103/groups/OPERATORS "Authorization:Bearer $token" "Content-Type:application/json"
+echo '{"id":"OPERATORS","description":"This is the brand-new group of operator"}' | http -b PUT http://localhost:2103/groups/OPERATORS "Authorization:Bearer $token" "Content-Type:application/json"
 ....
 
 with cURL:
 ....
-curl -X PUT http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"name":"OPERATORS","description":"This is the brand new  group of operator"}'
+curl -X PUT http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"OPERATORS","description":"This is the brand-new group of operator"}'
 ....
 
 response
 ....
 {
-    "description": "This is the brand new  group of operator",
-    "name": "OPERATORS"
+    "description": "This is the brand-new group of operator",
+    "name": null,
+    "id": "OPERATORS"
 }
 ....
 
-=== Add a user to a group
+=== Add a user to a group (or entity)
 
 As both new group and new user are correct it's time
 ifdef::single-page-doc[link:../api/users/index.html#/users/addGroupUsers[to make the user a member of the group]]
@@ -337,6 +371,7 @@ HTTP/1.1 200 OK
 {
     "firstName": "John",
     "groups": ["OPERATORS"],
+    "entities": [],
     "lastName": "Doe",
     "login": "john-doe-operator"
 }
@@ -344,7 +379,7 @@ HTTP/1.1 200 OK
 
 It's now possible to send cards either specifically to `john-doe-operator` or more generally to the `OPERATORS` group.
 
-=== Remove a user from a Group
+=== Remove a user from a group (or entity)
 
 When John Doe is no longer in charge of hypervising cards for `OPERATORS` group, this group has to be removed from his login by using the following command:
 
@@ -367,7 +402,8 @@ HTTP/1.1 200 OK
 	"login":"john-doe-operator","
 	firstName":"John",
 	"lastName":"Doe",
-	"groups":[]
+	"groups":[],
+    "entities":[]
 }
 
 ....
@@ -390,6 +426,7 @@ HTTP/1.1 200 OK
 {
     "firstName": "John",
     "groups": [],
+    "entities": [],
     "lastName": "Doe",
     "login": "coreso-operator"
 
