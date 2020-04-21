@@ -34,6 +34,7 @@ import {MenuLinkComponent} from './menus/menu-link/menu-link.component';
 import { CustomLogoComponent } from './custom-logo/custom-logo.component';
 import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 import {FontAwesomeIconsModule} from "../../modules/utilities/fontawesome-icons.module";
+import {GlobalStyleService} from '@ofServices/global-style.service';
 
 enum MODE {
     HAS_NO_CONFIG,
@@ -66,7 +67,8 @@ describe('NavbarComponent', () => {
                 Store,
                 ThirdsService,
                 TimeService,
-                AuthenticationImportHelperForSpecs
+                AuthenticationImportHelperForSpecs,
+                GlobalStyleService
             ]
         })
             .compileComponents();
@@ -197,7 +199,12 @@ describe('NavbarComponent', () => {
                     authentication: { ...authInitialState },
                     settings: {...settingsInitialState },
                     menu: {...menuInitialState },
-                    config: { ...configInitialState } 
+                    config: { ...configInitialState,
+                            config: {
+                                settings: "empty"
+                            } 
+                        }
+                     
                 }).pipe(
                     map(v => buildFn(v))
                 )
@@ -207,7 +214,11 @@ describe('NavbarComponent', () => {
                     ...emptyAppState,
                     authentication: { ...authInitialState },
                     settings: {...settingsInitialState },
-                    config: { ...configInitialState }, 
+                    config: { ...configInitialState,
+                        config: {
+                            settings: "empty"
+                        } 
+                    }, 
                     menu: {
                         ...menuInitialState,
                         menu: [{
@@ -245,6 +256,7 @@ describe('NavbarComponent', () => {
                         menu: {...menuInitialState },
                         config: {...configInitialState,
                             config: {
+                                settings : "empty",
                                 logo: {
                                     base64: 'abcde64', 
                                     height: 64,
@@ -264,6 +276,7 @@ describe('NavbarComponent', () => {
                         menu: {...menuInitialState },
                         config: {...configInitialState,
                             config: {
+                                settings : "empty",
                                 logo: {
                                     base64: 'abcde64', 
                                     height: 32,
@@ -283,6 +296,7 @@ describe('NavbarComponent', () => {
                         menu: {...menuInitialState },
                         config: {...configInitialState,
                             config: {
+                                settings: "empty",
                                 logo: {
                                     base64: 'abcde64', 
                                     height: 32,
@@ -302,6 +316,7 @@ describe('NavbarComponent', () => {
                         menu: {...menuInitialState },
                         config: {...configInitialState,
                             config: {
+                                settings: "empty",
                                 logo: {
                                     base64: 'abcde64', 
                                     height: 16,

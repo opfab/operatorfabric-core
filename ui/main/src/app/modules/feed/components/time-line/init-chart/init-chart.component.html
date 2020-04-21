@@ -6,14 +6,14 @@
 
 <div class="timeline">
   <div class="menu-timeline">
-    <button class="home-btn" *ngIf="buttonHomeActive" (click)="homeClick(buttonHome[0], buttonHome[1])">
-      <em class="fas fa-home"></em>
+    <button class="home-btn opfab-button-color" *ngIf="buttonHomeActive" (click)="homeClick(buttonHome[0], buttonHome[1])">
+      <em class="fas fa-home "></em>
     </button>
     <div id="btn-menu-timeline">
       <ul>
         <li style="margin-right: 1rem;">
-          <button class="circle-btn" (click)="moveDomain(false)">
-            <em class="fas fa-angle-double-left"></em>
+          <button class="circle-btn opfab-button-color" (click)="moveDomain(false)">
+            <em class="fas fa-angle-double-left "></em>
           </button>
         </li>
         <li *ngFor="let button of buttonList">
@@ -22,7 +22,7 @@
           </button>
         </li>
         <li style="margin-left: 1rem">
-          <button class="circle-btn" (click)="moveDomain(true)">
+          <button class="circle-btn opfab-button-color" (click)="moveDomain(true)">
             <em class="fas fa-angle-double-right"></em>
           </button>
         </li>

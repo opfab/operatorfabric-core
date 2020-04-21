@@ -5,8 +5,8 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 
-<div class="card light-card-detail bg-dark rounded" [class.border-light]="open" (click)="select()">
-    <div class="d-flex card-header p-0 border-0">
+<div class="card light-card-detail  rounded" [class.border-light]="open" (click)="select()">
+    <div class="d-flex card-header p-0 border-0 light-card-detail">
         <div class="badge-border rounded-top-left bg-sev-{{lightCard.severity.toString()|lowercase}} col-1">
         </div>
         <div class="p-1" [class.text-truncate]="!open">

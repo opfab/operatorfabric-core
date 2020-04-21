@@ -23,6 +23,7 @@ import { UserService } from './user.service';
 import {ThirdActionService} from '@ofServices/third-action.service';
 import { NotifyService } from '@ofServices/notify.service';
 import {SoundNotificationService} from "@ofServices/sound-notification.service";
+import {GlobalStyleService} from "@ofServices/global-style.service";
 
 @NgModule({
     imports: [
@@ -46,7 +47,8 @@ import {SoundNotificationService} from "@ofServices/sound-notification.service";
         UserService,
         ThirdActionService,
         NotifyService,
-        SoundNotificationService
+        SoundNotificationService,
+        GlobalStyleService
     ]
 })
 export class ServicesModule {

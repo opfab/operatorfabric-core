@@ -5,9 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-* {
-  color: black;
-}
 
 .timeline {
   height: 150px;
@@ -17,6 +14,7 @@
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
+  background-color: var(--opfab-timeline-bgcolor);
 
   .of-custom-timeline-chart {
     max-height: 100px;
@@ -32,6 +30,15 @@
     flex-direction: row;
     justify-content: flex-end;
 
+    .opfab-button-color {
+      color: var(--opfab-timeline-button-text-color);
+      background-color: var(--opfab-timeline-button-bgcolor);
+    }
+
+    .opfab-button-color:hover{
+      background-color: var(--opfab-timeline-bgcolor);
+    }
+
     .home-btn {
       position: absolute;
       align-self: flex-start;
@@ -39,7 +46,6 @@
       height: 25px;
       border-radius: 50%;
       border: none;
-      opacity: 0.7;
       left: -25px;
       padding: 1px;
     }
@@ -56,26 +62,25 @@
         list-style: none;
         display: flex;
         justify-content: flex-end;
-        opacity: 0.7;
 
-
+        
         li {
           button {
             list-style: none;
             width: 25px;
             height: 25px;
             padding: 1px;
-            color: black;
             font-weight: bold;
           }
 
           .btn-selected {
-            background-color: black;
-            color: white;
+            background-color: var(--opfab-timeline-button-selected-bgcolor);
+            color: var(--opfab-timeline-button-selected-text-color);
           }
 
           .btn-unselect {
-            background-color: rgb(221, 221, 221);
+            background-color: var(--opfab-timeline-button-bgcolor);
+            color: var(--opfab-timeline-button-text-color);
           }
 
           .circle-btn {

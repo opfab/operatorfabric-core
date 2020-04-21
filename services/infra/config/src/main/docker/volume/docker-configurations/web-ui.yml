@@ -64,6 +64,8 @@ operatorfabric:
     - fr
   settings:
     locale: en
+    nightDayMode: true
+  # styleWhenNightDayModeDesactivated : LEGACY   #Possible value DAY,NIGHT or LEGACY (black background and white timeline)
     infos:
       description: true
     about:
@@ -78,5 +80,4 @@ operatorfabric:
       lastapplication:
           name: Wonderful Solution
           version: 0.1.2-RELEASE
-  time:
-    pulse: 5000
+

@@ -46,6 +46,7 @@ describe('TimeLineComponent', () => {
         StoreRouterConnectingModule,
         NgxChartsModule ],
       declarations: [ TimeLineComponent, CustomTimelineChartComponent, InitChartComponent,MouseWheelDirective],
+
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
         {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},

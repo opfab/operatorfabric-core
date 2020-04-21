@@ -5,19 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-.navbar-info-block {
-  display: inline-block;
-  line-height: 90%;
-  color: var(--opfab-navbar-info-block-color);
-  
 
-  > .time {
-    font-size: small;
-    
-  }
+ .close {
+  color: var(--opfab-text-color);
+  text-shadow: 0 1px 0 var(--opfab-bgcolor);
+}
 
-  > .user-description {
-    font-size: small;
-  }
-
+.close:hover {
+  color: var(--opfab-text-color);
 }

@@ -248,7 +248,10 @@ export class AuthenticationService {
      * clear the `localstorage` from all its content.
      */
     clearAuthenticationInformation(): void {
-        localStorage.clear();
+        localStorage.removeItem(LocalStorageAuthContent.identifier);
+        localStorage.removeItem(LocalStorageAuthContent.token);
+        localStorage.removeItem(LocalStorageAuthContent.expirationDate);
+        localStorage.removeItem(LocalStorageAuthContent.clientId);
         sessionStorage.clear();
         this.oauthService.logOut();
     }
