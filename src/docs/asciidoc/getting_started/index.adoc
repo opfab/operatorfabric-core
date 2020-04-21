@@ -12,7 +12,7 @@
 To use OperatorFabric, you need a linux OS with the following:
   
 - Docker install with 4Gb of space 
-- 16Gb of RAM minimal ,32 Gb recommended  
+- 16Gb of RAM minimal, 32 Gb recommended
 
 == Install and run server
 
@@ -21,11 +21,11 @@ To start OperatorFabric, you first need to clone the getting started git
 ----
  git clone https://github.com/opfab/operatorfabric-getting-started.git
 ----
-Launch the `startserver.sh` in the server directory. You need to wait for all the services to start (it usually takes one minute to start), it is done when no more logs are written on the output(It could continue to log  but slowly).
+Launch the `startserver.sh` in the server directory. You need to wait for all the services to start (it usually takes one minute to start), it is done when no more logs are written on the output (It could continue to log but slowly).
 
 Test the connection to the UI: to connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use `tso1-operator` as login and `test` as password.
 
-If you are not accessing the server from localhost, there is a bug with authentication redirection. Your must use the following URL, replacing `SERVER_IP` by the IP address of your server:
+If you are not accessing the server from localhost, there is a bug with authentication redirection. Your must use the following URL, replacing `SERVER_IP` by the IP address of your server :
 
 ---- 
 http://SERVER_IP:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&redirect_uri=http://SERVER_IP:2002/ui/
@@ -149,7 +149,7 @@ or use provided script:
 
 === Example 2: Publish a new bundle
 
-The way the card is display in the UI is defined via a Bundle containing templates and process description .
+The way the card is display in the UI is defined via a Bundle containing templates and process description.
 
 The bundle structure is the following:
 
@@ -162,7 +162,7 @@ The bundle structure is the following:
 config.json : process description and global configuration 
 ----
 
-The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1 . 
+The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1.
 
 We just change the template and the stylesheet instead of displaying:
 ----
@@ -191,7 +191,7 @@ h2{
 
 ----
 
-The global configuration is defined in config.json:
+The global configuration is defined in config.json :
 
 ----
 {
@@ -229,7 +229,7 @@ A file name bundle.tar.gz will be created.
 
 ==== Get a Token 
 
-To send the bundle you need to be authentified . To do that you need to get a token with the following command:
+To send the bundle you need to be authenticated. To do that you need to get a token with the following command :
 
 ----
 curl -s -X POST -d "username=admin&password=test&grant_type=password&client_id=opfab-client" http://localhost:2002/auth/token
@@ -241,7 +241,7 @@ or use the provided script
 ./getToken.sh
 ----
 
-You should received JSON a reponse like this:
+You should received JSON a response like this:
 
 ----
 {"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSbXFOVTNLN0x4ck5SRmtIVTJxcTZZcTEya1RDaXNtRkw5U2NwbkNPeDBjIn0.eyJqdGkiOiIzZDhlODY3MS1jMDhjLTQ3NDktOTQyOC1hZTdhOTE5OWRmNjIiLCJleHAiOjE1NzU1ODQ0NTYsIm5iZiI6MCwiaWF0IjoxNTc1NTQ4NDU2LCJpc3MiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9hdXRoL3JlYWxtcy9kZXYiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiYTNhM2IxYTYtMWVlYi00NDI5LWE2OGItNWQ1YWI1YjNhMTI5IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoib3BmYWItY2xpZW50IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiODc3NzZjOTktYjA1MC00NmQxLTg5YjYtNDljYzIxNTQyMDBhIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwic3ViIjoiYWRtaW4iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIn0.XMLjdOJV-A-iZrtq7sobcvU9XtJVmKKv9Tnv921PjtvJ85CnHP-qXp2hYf5D8TXnn32lILVD3g8F9iXs0otMAbpA9j9Re2QPadwRnGNLIzmD5pLzjJ7c18PWZUVscbaqdP5PfVFA67-j-YmQBwxiys8psF8keJFvmg-ExOGh66lCayClceQaUUdxpeuKFDxOSkFVEJcVxdelFtrEbpoq0KNPtYk7vtoG74zO3KjNGrzLkSE_e4wR6MHVFrZVJwG9cEPd_dLGS-GmkYjB6lorXPyJJ9WYvig56CKDaFry3Vn8AjX_SFSgTB28WkWHYZknTwm9EKeRCsBQlU6MLe4Sng","expires_in":36000,"refresh_expires_in":1800,"refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIzZjdkZTM0OC05N2Q5LTRiOTUtYjViNi04MjExYTI3YjdlNzYifQ.eyJqdGkiOiJhZDY4ODQ4NS1hZGE0LTQwNWEtYjQ4MS1hNmNkMTM2YWY0YWYiLCJleHAiOjE1NzU1NTAyNTYsIm5iZiI6MCwiaWF0IjoxNTc1NTQ4NDU2LCJpc3MiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9hdXRoL3JlYWxtcy9kZXYiLCJhdWQiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9hdXRoL3JlYWxtcy9kZXYiLCJzdWIiOiJhM2EzYjFhNi0xZWViLTQ0MjktYTY4Yi01ZDVhYjViM2ExMjkiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoib3BmYWItY2xpZW50IiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiODc3NzZjOTktYjA1MC00NmQxLTg5YjYtNDljYzIxNTQyMDBhIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUifQ.sHskPtatqlU9Z8Sfq6yvzUP_L6y-Rv26oPpykyPgzmk","token_type":"bearer","not-before-policy":0,"session_state":"87776c99-b050-46d1-89b6-49cc2154200a","scope":"email profile"}
@@ -305,7 +305,7 @@ To send the card:
 You should see in the UI the detail card with the new template.
 
 ==== Internationalization
-If you switch langage to french in the UI (Settings menu on the top rigth of the screen), you should see the cards in french.
+If you switch language to french in the UI (Settings menu on the top right of the screen), you should see the cards in french.
 
 OperatorFabric will use templates define in repository "template/fr" and keys define in "i18n/fr.json".
 
@@ -317,7 +317,7 @@ For this example, we will set the following process:
 - Step 2: The critical situation evolve
 - Step 3: The critical situation ended
 
-To modelize this process in OperatorFabric, we will use a "Process" with "States", we will modelize this in the `config.json` of the bundle:
+To model this process in OperatorFabric, we will use a "Process" with "States", we will model this in the `config.json` of the bundle:
 
 ----
 {
@@ -356,7 +356,7 @@ To modelize this process in OperatorFabric, we will use a "Process" with "States
 
 ----
 
-You can see in the JSON we define a process name "criticalSituation" with 3 states: criticalSituation-begin, criticalSituation-update and criticalSituation-end . For each state we define a title for the card, and the template a stylesheets to use.
+You can see in the JSON we define a process name "criticalSituation" with 3 states: criticalSituation-begin, criticalSituation-update and criticalSituation-end. For each state we define a title for the card, and the template a stylesheets to use.
 
 The title is a key which refer to an i18n found in the corresponding i18n repository:
 
@@ -401,7 +401,7 @@ We can now send cards and simulate the process, first we send a card at the begi
 }
 ----
 
-The card refer to the process "criticalSituation" as defined in the config.json, the state attribute is put to "criticalSituation-begin" which is the first step of the process, again as defined in the config.json. The card can be sent via provided script:
+The card refer to the process "criticalSituation" as defined in the config.json, the state attribute is put to "criticalSituation-begin" which is the first step of the process, again as defined in the config.json. The card can be sent via provided script :
 
 ----
 ./sendCard.sh card.json
@@ -461,7 +461,7 @@ corresponding bundle to the thirds service as it has been loaded in advance to b
 getting started). If you want to take a look at its content you can find it under
 server/thirds-storage/scheduledMaintenance-publisher/1.
 
-Before sending the card provide, you need to set the good time values as epoch (ms)  (https://en.wikipedia.org/wiki/Epoch_(computing)) in the json . For each value you set, you will have a point in the timeline . In our example, the first point represent the beginning of the maintenance operation, and the second the end of the maintenance operation.
+Before sending the card provide, you need to set the good time values as epoch (ms)  (https://en.wikipedia.org/wiki/Epoch_(computing)) in the json. For each value you set, you will have a point in the timeline. In our example, the first point represent the beginning of the maintenance operation, and the second the end of the maintenance operation.
 
 
 To get the dates in Epoch, you can use the following commands:

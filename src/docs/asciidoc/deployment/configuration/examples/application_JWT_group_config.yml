@@ -1,6 +1,8 @@
 operatorfabric:
   security:
     jwt:
+      entitiesIdClaim: entitiesId
+      gettingEntitiesFromToken: true
       groups:
         mode: JWT # value possible JWT | OPERATOR_FABRIC
         rolesClaim:

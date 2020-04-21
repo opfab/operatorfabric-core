@@ -20,31 +20,32 @@ deals with and then showing how this translates into the technical architecture.
 
 OperatorFabric is based on the concept of *cards*, which contain data regarding events that are relevant for the
 operator.
-A third party tool publish cards and the cards are received on the screen of the operators. Depending on the type
-of the cards, the operator  can send back information to the third party via an "action".
+A third party tool publishes cards and the cards are received on the screen of the operators. Depending on the type
+of the cards, the operator can send back information to the third party via an "action".
 
 === Business components
 
 image::FunctionalDiagram.jpg[functional diagram]
 
-To do the job, the following business components are defined:  
+To do the job, the following business components are defined :
 
-- Card Publication : this component receive the cards from third party tools
+- Card Publication : this component receives the cards from third party tools
 - Card Consultation : this component delivers the cards to the operators and provide access to all cards exchanged (archives)
-- Actions : this component receive the action from the operator and send it to the third party tool
-- Card rendering and process definition : this component store the information for card rendering(templates , internationalization , ... ) and a light description of the process associate(states , actions, ...) . This configuration data can be provided either by an administrator or by a third party tool.
-- User Management : this component is used to manage users and groups 
+- Actions : this component receives the action from the operator and send it to the third party tool
+- Card rendering and process definition : this component stores the information for the card rendering (templates, internationalization, ...) and a light description of the process associate (states, actions, ...). This configuration data can be provided either by an administrator or by a third party tool.
+- User Management : this component is used to manage users, groups and entities.
 
 === Business objects 
 
-The business objects can be represented as follow:
+The business objects can be represented as follows :
 
 image::BusinessObjects.jpg[business objects diagram]
 
 * Card : the core business object which contains the data to show to the user(or operator) 
-* Publisher : the third party that publishes cards
+* Publisher : the third party which publishes cards
 * User : the operator receiving cards and responding via actions
-* Group : a group of users
+* Group : a group (containing a list of users)
+* Entity : an entity (containing a list of users)
 * Process : the process the card is dealing with 
 * State : the step in the process
 * Card Rendering : data for card rendering 
@@ -60,9 +61,9 @@ image::LogicalDiagram.jpg[functional diagram]
 
 We find here the business component seen before:
 
-* We have a "UI" component that store the static pages and the UI code that is downloaded by the browser. The UI is based an https://angular.io/[Angular] and  https://handlebarsjs.com/[Handlebars] for card templating.
+* We have a "UI" component which stores the static pages and the UI code that is downloaded by the browser. The UI is based an https://angular.io/[Angular] and  https://handlebarsjs.com/[Handlebars] for the card templating.
 * The business component named  "Card rendering and process definition" is at the technical level known as "Third service". This service receive card rendering and process definition as a bundle. The bundle is a tar.gz file containing
-	** json process configuration file (containings states & actions)
+	** json process configuration file (containing states & actions)
 	** templates for rendering
 	** stylesheets 
 	** internationalization information
@@ -82,7 +83,7 @@ services to find information about the running services instance and allow for l
 ==== Gateway
 
 It provides a filtered view of the APIS and static served pages for external access through browsers or other http
-compliant accesses. It provide the rooting and load balancing for accessing the micro-services from outside. It is implemented by https://cloud.spring.io/spring-cloud-gateway/reference/html/[Spring Cloud Gateway].
+compliant accesses. It provides the rooting and load balancing for accessing the micro-services from outside. It is implemented by https://cloud.spring.io/spring-cloud-gateway/reference/html/[Spring Cloud Gateway].
 
 ==== Configuration
 
@@ -95,7 +96,7 @@ The broker is used to share information asynchronously across the whole services
 
 ==== Authentication
 
-The architecture provide a default authentication service via https://www.keycloak.org/[KeyCloak] but it can delegates it to an external provider. Authentication is done through the use of  Oauth2, three flows are supported: implicit, authorization code and password. 
+The architecture provides a default authentication service via https://www.keycloak.org/[KeyCloak] but it can delegate it to an external provider. Authentication is done through the use of  Oauth2, three flows are supported : implicit, authorization code and password.
 
 ==== Database 
 

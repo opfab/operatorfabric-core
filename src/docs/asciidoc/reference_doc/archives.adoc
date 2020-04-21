@@ -30,8 +30,8 @@ The layout of this screen is very similar to the Feed screen: the results are di
 (paginated) card list, and the user can display the associated card details by clicking a card in the list.
 
 IMPORTANT: The results of these queries are limited to cards that the user is allowed to see, either
-because they are direct recipient of the card or because they belong to a group that is a recipient
-of the card.
+because this user is direct recipient of the card or because he belongs to a group (or entity) that is a recipient
+of the card. If a card is sent to an entity and a group, then this user must be part of both the group and the entity.
 
 //TODO Add screenshot
 
