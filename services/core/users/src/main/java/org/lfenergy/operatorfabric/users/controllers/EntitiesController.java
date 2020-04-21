@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -165,20 +166,17 @@ public class EntitiesController implements EntitiesApi {
         //Make sure the intended updated users list only contains logins existing in the repository, throwing an error if this is not the case
         retrieveUsers(users);
 
-        List<UserData> toUpdate = new ArrayList<>();
-        formerlyBelongs.stream()
-           .filter(u->!users.contains(u.getLogin()))
-           .forEach(u-> {
-               u.deleteEntity(id);
-               newUsersInEntity.remove(u.getLogin());
-               toUpdate.add(u);
-           });
+        List<UserData> toUpdate =
+                formerlyBelongs.stream()
+                        .filter(u->!users.contains(u.getLogin()))
+                        .peek(u-> {
+                            u.deleteEntity(id);
+                            newUsersInEntity.remove(u.getLogin());
+                            u.addEntity(id);
+                            //Fire an UpdatedUserEvent for all users that are updated because they're removed from the entity
+                            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getLogin()));
+                        }).collect(Collectors.toList());
 
-        //Fire an UpdatedUserEvent for all users that are updated because they're removed from the entity
-        for (UserData userData : toUpdate) {
-            userData.addEntity(id);
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
-        }
         userRepository.saveAll(toUpdate);
         addEntityUsers(request, response, id, newUsersInEntity); //For users that are added to the entity, the event will be published by addEntityUsers.
         return null;

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -165,22 +166,19 @@ public class GroupsController implements GroupsApi {
         //Make sure the intended updated users list only contains logins existing in the repository, throwing an error if this is not the case
         retrieveUsers(users);
 
-        List<UserData> toUpdate = new ArrayList<>();
-        formerlyBelongs.stream()
-           .filter(u->!users.contains(u.getLogin()))
-           .forEach(u-> {
-               u.deleteGroup(name);
-               newUsersInGroup.remove(u.getLogin());
-               toUpdate.add(u);
-           });
+        List<UserData> toUpdate =
+                formerlyBelongs.stream()
+                        .filter(u->!users.contains(u.getLogin()))
+                        .peek(u-> {
+                            u.deleteGroup(name);
+                            newUsersInGroup.remove(u.getLogin());
+                            u.addGroup(name);
+                            //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
+                            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getLogin()));
+                        }).collect(Collectors.toList());
 
-        //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
-        for (UserData userData : toUpdate) {
-            userData.addGroup(name);
-            publisher.publishEvent(new UpdatedUserEvent(this,busServiceMatcher.getServiceId(),userData.getLogin()));
-        }
         userRepository.saveAll(toUpdate);
-        addGroupUsers(request, response, name,newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
+        addGroupUsers(request, response, name, newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
         return null;
     }
 
