@@ -107,6 +107,7 @@ licenseReport {
     renderers = [new InventoryHtmlReportRenderer()]
 }
 
+//tag::asciidoctor_gradle_task_config[]
 asciidoctor {
 
     sources {
@@ -124,8 +125,10 @@ asciidoctor {
                 toc                 : 'left',
                 toclevels           : '3',
                 icons               : 'font',
-                "hide-uri-scheme"   : ''
+                "hide-uri-scheme"   : '',
+                "source-highlighter": 'coderay'
 }
+//end::asciidoctor_gradle_task_config[]
 
 subprojects {
 
