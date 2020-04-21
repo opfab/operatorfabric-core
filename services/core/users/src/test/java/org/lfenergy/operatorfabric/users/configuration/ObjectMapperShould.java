@@ -84,4 +84,19 @@ public class ObjectMapperShould {
         assertThat(group.getName()).isEqualTo("testGroup");
         assertThat(group.getDescription()).isEqualTo("A group used for tests");
     }
+
+    @Test
+    public void readEntity() throws IOException {
+        String stringEntity = "{" +
+                "\"id\": \"TESTENTITY\"," +
+                "\"name\": \"Test Entity\"," +
+                "\"description\": \"An entity used for tests\"" +
+                "}";
+        Entity entity = mapper.readValue(stringEntity, Entity.class);
+        assertThat(entity).isNotNull();
+        assertThat(entity).isInstanceOf(EntityData.class);
+        assertThat(entity.getId()).isEqualTo("TESTENTITY");
+        assertThat(entity.getName()).isEqualTo("Test Entity");
+        assertThat(entity.getDescription()).isEqualTo("An entity used for tests");
+    }
 }
