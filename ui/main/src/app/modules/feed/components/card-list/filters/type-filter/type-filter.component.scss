@@ -27,16 +27,3 @@ $cell-width: 10;
   display: table-cell;
 }
 
-::ng-deep .popover {
-  background-color: $dark;
-  .popover-header {
-    color: $light;
-    background-color: $dark;
-  }
-  .popover-body {
-    color: $light;
-  }
-  .arrow::after{
-    border-right-color: $dark;
-  }
-}

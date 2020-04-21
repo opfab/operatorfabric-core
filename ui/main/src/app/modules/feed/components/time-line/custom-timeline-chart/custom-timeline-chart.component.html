@@ -46,8 +46,8 @@
         </svg:g>
         <text *ngIf="checkInsideDomain(xRealTimeLine) && !underDayPeriod"
               [attr.x]="timeScale(xRealTimeLine)"
-              [attr.y]="-10" stroke="'grey'"
-              [attr.fill]="'grey'"
+              [attr.y]="-10" stroke="'black'"
+              [attr.fill]="'black'"
               text-anchor="middle" stroke-width="1px"
               [attr.font-size]="11" dy=".3em">{{getXRealTimeLineFormatting(xRealTimeLine)}}</text>
         <text *ngIf="underDayPeriod"
@@ -60,9 +60,9 @@
                   [attr.x]="timeScale(xRealTimeLine)"
                   [attr.width]="5"
                   y="0"
-                  [attr.fill]="'grey'"
+                  fill=var(--opfab-timeline-realtimebar-color)
                   [attr.height]="dims.height"
-                  class="realTimeLine"
+                  class="realTimeLine opfab-timeline-realtimebar-color"
         ></svg:rect>
         <svg:g *ngFor="let series of dataClustered">
             <svg:g *ngFor="let myCircle of series"

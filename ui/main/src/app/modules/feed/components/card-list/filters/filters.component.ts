@@ -14,7 +14,8 @@ import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 
 @Component({
   selector: 'of-filters',
-  templateUrl: './filters.component.html'
+  templateUrl: './filters.component.html',
+  styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent implements OnInit {
 

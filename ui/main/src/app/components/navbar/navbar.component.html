@@ -5,7 +5,7 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark ">
+<nav class="navbar navbar-expand-lg fixed-top  opfab-navbar">
   <a class="navbar-brand">
     <div *ngIf="this.customLogo; else opFabLogo">
       <of-custom-logo [base64]="customLogo" [limitSize]="limitSize" [height]="height" [width]="width" ></of-custom-logo> 
@@ -20,8 +20,8 @@
           aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarContent" [ngbCollapse]="navbarCollapsed">
-    <ul class="navbar-nav mr-auto">
+  <div class="collapse navbar-collapse " id="navbarContent" [ngbCollapse]="navbarCollapsed">
+    <ul class="navbar-nav mr-auto ">
       <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
       <li class="nav-item" *ngFor="let link of navigationRoutes, let i = index"
           [class.active]="currentPath && link.path === currentPath[1]">
@@ -40,7 +40,7 @@
           [class.thirds-dropdown]="tMenu.entries.length>1">
         <!-- Dropdown menu if at least 2 entries-->
         <a
-                class="nav-link dropdown-toggle"
+                class="nav-link"
                 [id]="'drop_'+tMenu.id"
                 [attr.aria-expanded]="expandedMenu[index]"
                 (click)="toggleMenu(index)"
@@ -48,10 +48,10 @@
                 translate
                 href="javascript:void(0)"
         >{{tMenu.id}}.{{tMenu.version}}.{{tMenu.label}}</a>
-        <div class="dropdown-menu"
+        <div class="dropdown-menu "
              *ngIf="tMenu.entries.length>1"
              [ngbCollapse]="!expandedMenu[index]">
-          <div class="dropdown-item" *ngFor="let entry of tMenu.entries">
+          <div class="dropdown-item nav-link opfab-menu-link" *ngFor="let entry of tMenu.entries">
             <of-menu-link [menu]="tMenu" [menuEntry]="entry"></of-menu-link>
           </div>
         </div>
@@ -61,7 +61,17 @@
         </div>
       </li>
     </ul>
+  
     <ul class="navbar-nav navbar-right">
+      <li *ngIf="(nightDayMode)">
+        <button type="button" class="btn p-1 btn-outline-light opfab-nightday-icon border-0" *ngIf="(!(getNightMode()|async))" (click)='switchToNightMode()' >
+          <i  class="fas fa-moon"></i>
+      </button>
+
+      <button type="button" class="btn p-1 btn-outline-light opfab-nightday-icon border-0" *ngIf="(getNightMode()|async)" (click)='switchToDayMode()' >
+        <i class="fas fa-sun"></i>
+    </button>
+      </li>
       <li class="nav-item dropdown align-middle">
         <a
                 class="nav-link dropdown-toggle"
@@ -74,7 +84,7 @@
              [ngbCollapse]="!expandedUserMenu">
           <div class="dropdown-item" [class.active]="currentPath && 'settings' === currentPath[1]">
             <a
-                    class="nav-link text-dark text-decoration-none"
+                    class="nav-link opfab-menu-link text-decoration-none"
                     routerLink="/settings"
                     routerLinkActive #rla="routerLinkActive"
                     translate
@@ -82,7 +92,7 @@
           </div>
           <div class="dropdown-item" [class.active]="currentPath && 'about' === currentPath[1]">
             <a
-                    class="nav-link text-dark text-decoration-none"
+                    class="nav-link opfab-menu-link text-decoration-none"
                     routerLink="/about"
                     routerLinkActive #rla="routerLinkActive"
                     translate
@@ -90,7 +100,7 @@
           </div>
           <div class="dropdown-item">
             <form>
-              <a class="nav-link text-dark text-decoration-none" (click)="logOut()" href="javascript:void(0)">
+              <a class="nav-link opfab-menu-link  text-decoration-none" (click)="logOut()" href="javascript:void(0)">
                 <span translate>menu.logout</span>&nbsp;<fa-icon icon="sign-out-alt"></fa-icon></a>
             </form>
           </div>
