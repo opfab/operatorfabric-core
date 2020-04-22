@@ -28,6 +28,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public class GroupData implements Group {
     @Id
+    private String id;
     private String name;
     private String description;
 }

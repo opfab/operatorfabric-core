@@ -11,7 +11,7 @@ Feature: Update existing group
     * def groupUpdated =
 """
 {
-  "name" : "groupKarate1",
+  "id" : "groupKarate1",
   "description" : "group description updated"
 }
 """
@@ -19,14 +19,13 @@ Feature: Update existing group
     * def groupError =
 """
 {
-
   "virtualField" : "virtual"
 }
 """
 
   Scenario: Update the group
     #Update the group, expected response 200
-    Given url opfabUrl + 'users/groups/' + groupUpdated.name
+    Given url opfabUrl + 'users/groups/' + groupUpdated.id
     And header Authorization = 'Bearer ' + authToken
     And request groupUpdated
     When method put

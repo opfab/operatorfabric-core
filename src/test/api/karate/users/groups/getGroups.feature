@@ -16,16 +16,15 @@ Feature: Get Groups
     When method get
     Then status 200
     And print response
-    #And match response[0].name != null
-    And def groupName = response[0].name
+    And def groupId = response[0].id
 
 
     # Get the first group
-    Given url opfabUrl + 'users/groups/' +  groupName
+    Given url opfabUrl + 'users/groups/' +  groupId
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.name == groupName
+    And match response.id == groupId
 
 
   Scenario: get groups without authentication

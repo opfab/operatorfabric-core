@@ -15,5 +15,17 @@
 * [OC-844] Add a UI style for day and a UI style for night with a button to permut. This fonctionnality is optionnal and can be activate/desactivate via configuration https://opfab.github.io/documentation/current/deployment/#_web_ui
 * [OC-846] Update documentation for "OC-737 : Add an object entity in the user service"
 * [OC-737] Add an object entity in the user service +
-Below, you will find information about our new object "Entity" and its endpoints :
+Below, you will find information about our new object "Entity" and its endpoints : +
 https://opfab.github.io/documentation/current/api/users/#/entities
+* [OC-736] Add a field "name" to the object Group +
+Now, Group data model is : +
+[source]
+----
+Group{
+    id*	        string
+    name        string
+    description	string
+}
+----
+Please do take a look at the Users API documentation (groups section) :
+https://opfab.github.io/documentation/current/api/users/#/groups
