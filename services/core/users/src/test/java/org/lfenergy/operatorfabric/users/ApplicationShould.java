@@ -13,11 +13,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
-import org.lfenergy.operatorfabric.users.model.GroupData;
-import org.lfenergy.operatorfabric.users.model.EntityData;
-import org.lfenergy.operatorfabric.users.model.UserData;
+import org.lfenergy.operatorfabric.users.model.*;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.EntityRepository;
+import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,20 +45,27 @@ class ApplicationShould {
     GroupRepository groupRepository;
     @Autowired
     EntityRepository entityRepository;
+    @Autowired
+    PerimeterRepository perimeterRepository;
 
     @AfterEach
     public void clean(){
         userRepository.deleteAll();
         groupRepository.deleteAll();
         entityRepository.deleteAll();
+        perimeterRepository.deleteAll();
     }
 
     @Test
     public void createInitialData(){
         List<UserData> defaultUsers = userRepository.findAll();
         assertThat(defaultUsers).hasSize(1);
+
         List<GroupData> defaultGroups = groupRepository.findAll();
+
         List<EntityData> defaultEntities = entityRepository.findAll();
+
+        List<PerimeterData> defaultPerimeters = perimeterRepository.findAll();
 
         assertThat(defaultGroups).hasSize(1);
         assertThat(defaultUsers.get(0).getLogin()).isEqualTo("admin");
@@ -70,6 +76,12 @@ class ApplicationShould {
         assertThat(defaultEntities.get(0).getId()).isEqualTo("ENTITYADMIN");
         assertThat(defaultEntities.get(0).getName()).isEqualTo("Entity admin");
         assertThat(defaultEntities.get(0).getDescription()).isEqualTo("The admin entity");
+
+        assertThat(defaultPerimeters).hasSize(1);
+        assertThat(defaultPerimeters.get(0).getId()).isEqualTo("PERIMETERADMIN");
+        assertThat(defaultPerimeters.get(0).getProcess()).isEqualTo("*");
+        assertThat(defaultPerimeters.get(0).getState()).isEqualTo("*");
+        assertThat(defaultPerimeters.get(0).getRights()).isEqualTo(RightsEnum.READANDWRITE);
     }
 
 }

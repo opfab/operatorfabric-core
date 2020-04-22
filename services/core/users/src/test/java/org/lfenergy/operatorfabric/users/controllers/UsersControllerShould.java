@@ -12,8 +12,9 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
 import org.lfenergy.operatorfabric.users.application.configuration.WithMockOpFabUser;
-import org.lfenergy.operatorfabric.users.model.UserData;
-import org.lfenergy.operatorfabric.users.model.UserSettingsData;
+import org.lfenergy.operatorfabric.users.model.*;
+import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
+import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,12 @@ class UsersControllerShould {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PerimeterRepository perimeterRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
 
     @Autowired
     private UserSettingsRepository userSettingsRepository;
@@ -122,12 +129,46 @@ class UsersControllerShould {
         userSettingsRepository.insert(us1);
         userSettingsRepository.insert(us2);
         userSettingsRepository.insert(us3);
+
+        GroupData montyPythons, wanda;
+        montyPythons = GroupData.builder()
+                .id("Monty Pythons")
+                .name("Monty Pythons name")
+                .description("Monty Pythons description")
+                .perimeter("PERIMETER1_1").perimeter("PERIMETER1_2")
+                .build();
+        wanda = GroupData.builder()
+                .id("Wanda")
+                .name("Wanda name")
+                .description("Wanda description")
+                .perimeter("PERIMETER1_1")
+                .build();
+        groupRepository.insert(montyPythons);
+        groupRepository.insert(wanda);
+
+        PerimeterData p1, p2;
+        p1 = PerimeterData.builder()
+                .id("PERIMETER1_1")
+                .process("process1")
+                .state("state1")
+                .rights(RightsEnum.READ)
+                .build();
+        p2 = PerimeterData.builder()
+                .id("PERIMETER1_2")
+                .process("process1")
+                .state("state2")
+                .rights(RightsEnum.READANDWRITE)
+                .build();
+        perimeterRepository.insert(p1);
+        perimeterRepository.insert(p2);
     }
 
     @AfterEach
     public void clean() {
         userRepository.deleteAll();
         userSettingsRepository.deleteAll();
+        perimeterRepository.deleteAll();
+        groupRepository.deleteAll();
     }
 
     @Nested
@@ -522,6 +563,52 @@ class UsersControllerShould {
             ;
 
         }
+
+        @Test
+        void fetchAllPerimetersForAUser() throws Exception {
+            //User jcleese is part of Monty Pythons and Wanda groups.
+            //Monty Pythons group has perimeters PERIMETER1_1 and PERIMETER1_2.
+            //Wanda group has perimeters PERIMETER1_1. We must not have duplicate perimeters in results
+            ResultActions result1 = mockMvc.perform(get("/users/jcleese/perimeters"));
+            result1
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_2\" && @.process == \"process1\" && @.state == \"state2\" && @.rights == \"ReadAndWrite\")]").exists())
+            ;
+
+            //User gchapman is part of Monty Pythons group whose perimeters are PERIMETER1_1 and PERIMETER1_2.
+            ResultActions result2 = mockMvc.perform(get("/users/gchapman/perimeters"));
+            result2
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_2\" && @.process == \"process1\" && @.state == \"state2\" && @.rights == \"ReadAndWrite\")]").exists())
+            ;
+
+            //User kkline is part of Wanda group whose perimeter is PERIMETER1_1.
+            ResultActions result3 = mockMvc.perform(get("/users/kkline/perimeters"));
+            result3
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(1)))
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
+            ;
+        }
+
+        @Test
+        void fetchAllPerimetersForAUserWithError() throws Exception {
+            ResultActions result = mockMvc.perform(get("/users/tgillian/perimeters"));
+            result
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "tgillian"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+        }
     }
 
     @Nested
@@ -555,6 +642,26 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.groups", contains("Monty Pythons")))
                     .andExpect(jsonPath("$['entities'].[0]", equalTo("entity1")))
                     .andExpect(jsonPath("$['entities'].[1]", equalTo("entity2")))
+            ;
+        }
+
+        @Test
+        void fetchAllPerimetersForAnotherUser() throws Exception {
+            ResultActions result = mockMvc.perform(get("/users/jcleese/perimeters"));
+            result
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void fetchAllPerimetersForOwnData() throws Exception {
+            ResultActions result = mockMvc.perform(get("/users/gchapman/perimeters"));
+            result
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_2\" && @.process == \"process1\" && @.state == \"state2\" && @.rights == \"ReadAndWrite\")]").exists())
             ;
         }
 

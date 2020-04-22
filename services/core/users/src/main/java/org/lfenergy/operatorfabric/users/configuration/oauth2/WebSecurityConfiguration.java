@@ -30,9 +30,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String USER_PATH = "/users/{login}";
     public static final String USERS_SETTINGS_PATH = "/users/{login}/settings";
+    public static final String USERS_PERIMETERS_PATH = "/users/{login}/perimeters";
     public static final String USERS_PATH = "/users/**";
     public static final String GROUPS_PATH = "/groups/**";
     public static final String ENTITIES_PATH = "/entities/**";
+    public static final String PERIMETERS_PATH = "/perimeters/**";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String IS_ADMIN_OR_OWNER = "hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)";
     @Autowired
@@ -62,9 +64,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
                 .antMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
                 .antMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
+                .antMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(IS_ADMIN_OR_OWNER)
                 .antMatchers(USERS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(GROUPS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(ENTITIES_PATH).hasRole(ADMIN_ROLE)
+                .antMatchers(PERIMETERS_PATH).hasRole(ADMIN_ROLE)
                 .anyRequest().authenticated();
     }
 

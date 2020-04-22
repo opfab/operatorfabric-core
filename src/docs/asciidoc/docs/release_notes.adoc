@@ -3,7 +3,7 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
+:icons: font
 = Version 1.3.0.RELEASE
 
 == Issue
@@ -15,36 +15,43 @@
 
 
 == Task
-
-* [OC-844] Add a UI style for day and a UI style for night with a button to permut. This fonctionnality is optionnal and can be activate/desactivate via configuration https://opfab.github.io/documentation/current/deployment/#_web_ui
+* [OC-844] Add a UI style for day and a UI style for night with a button to permute. This functionality is optional and can be activate/desactivate via configuration https://opfab.github.io/documentation/current/deployment/#_web_ui
 * [OC-846] Update documentation for "OC-737 : Add an object entity in the user service"
 * [OC-737] Add an object entity in the user service +
 Below, you will find information about our new object "Entity" and its endpoints : +
 https://opfab.github.io/documentation/current/api/users/#/entities
 * [OC-736] Add a field "name" to the object Group +
+
+[WARNING]
+====
+Group data model has changed. +
+Please do take a look at the Users API documentation (groups section) :
+https://opfab.github.io/documentation/current/api/users/#/groups +
 Now, Group data model is : +
 [source]
 ----
 Group{
-    id*	        string
+    id*         string
     name        string
-    description	string
+    description string
 }
 ----
-Please do take a look at the Users API documentation (groups section) :
-https://opfab.github.io/documentation/current/api/users/#/groups
+====
 
 * [OC-858] Refactoring UI Timeline code for circle content and position computing
 * [OC-744] Replace web-ui spring component with Nginx
-    ** adds a new docker configuration for development purpose : `${OF_HOME}/src/main/docker/dev-environment/docker-compose.yml` +
+** adds a new docker configuration for development purpose : `${OF_HOME}/src/main/docker/dev-environment/docker-compose.yml` +
 this folder contains also a grayscale version of the favicon. It's helping to distinguish this environment from `deploy` one. +
 To force favicon refresh use `CTRL+F5` in the browser. +
 Use this configuration when developing on `OperatorFabric` instead of `test-environment` as before.
-    ** removes `keycloak` container from `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`. +
+** removes `keycloak` container from `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`. +
 Clean your docker environment with adding an `--remove-orphans` option to your next `docker-compose` usage.
-    ** removes `container-name`s from `docker-compose.yml` files for `keycloak`, `mongodb` and `rabbitmq` docker service definitions.
+** removes `container-name`s from `docker-compose.yml` files for `keycloak`, `mongodb` and `rabbitmq` docker service definitions.
 * [OC-733] As an administrator I would like to be able to customize the icon on the title bar of the browser +
 cf Web-ui README.adoc, or the chapter link:https://opfab.github.io/documentation/current/dev_env/#_docker_dev_env[Development environment] of Setting up your development environment within Development Environment documentation,
 or the entry about [OC-744] of this current file.
 * [OC-658] gradle assemble shouldn't run the ui unit tests
+* [OC-738] Add a group perimeter object in the user service
 
+[NOTE]
+Work is still in progress. The object is not usable at the moment.

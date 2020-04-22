@@ -17,6 +17,9 @@ Feature: Get Groups
     Then status 200
     And print response
     And def groupId = response[0].id
+    And def groupName = response[0].name
+    And def groupDescription = response[0].description
+    And def groupPerimeters = response[0].perimeters
 
 
     # Get the first group
@@ -25,6 +28,9 @@ Feature: Get Groups
     When method get
     Then status 200
     And match response.id == groupId
+    And match response.name == groupName
+    And match response.description == groupDescription
+    And match response.perimeters == groupPerimeters
 
 
   Scenario: get groups without authentication
