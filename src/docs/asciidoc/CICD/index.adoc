@@ -8,12 +8,9 @@
 
 = OperatorFabric CICD
 
-
-
-== Introduction
-
 The aim of this document is to describe our CICD pipeline and our release process.
+
+include::pipeline_conf.adoc[leveloffset=+1]
 
 include::release_process.adoc[leveloffset=+1]
 
-include::CICD_scripts.adoc[leveloffset=+1]

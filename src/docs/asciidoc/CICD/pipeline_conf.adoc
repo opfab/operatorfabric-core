@@ -1,0 +1,241 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Pipeline Configuration
+
+The first part briefly describes the organization of the real CICD pipeline whereas the second part lists the steps
+that were necessary to create the mock pipeline as well as the issues we ran into.
+
+Most of the access and permissions required by our CICD plateform (Travis) are managed by tokens that are created on
+each of the required services (SonarCloud, DockerHub, GitHub).
+A technical user account (opfabtech) has been created for each of these services so that these tokens are not linked
+to the account of any member of the team.
+
+== CICD Pipeline
+
+=== Travis CI
+
+We use Travis CI to manage our pipeline. As of today, it is composed of 3 stages:
+[horizontal]
+test-assemble:: Run on every push regardless of the branch, does the build and produces test reports.
+It also triggers a sonar-scanner analysis and pushes the results to SonarCloud (except for external pull requests).
+doc:: Run only on the master branch, for the daily cron jobs or if a commit is push with a message containing
+ci_documentation. It generates the documentation (adoc, javadoc, compodoc, reports) and pushes it to the opfab.github.io
+repository to update the website.
+docker:: Run only on the master branch, for the daily cron jobs or if a commit is push with a message containing
+ci_docker. It generates the docker images for the current version and pushes them to DockerHub.
+
+=== SonarCloud
+
+To be allowed to push results to SonarCloud, Travis needs to be authenticated. This is done by generating a token on
+SonarCloud with an account (opfabtech) that has admin rights to the organization, and then providing this token to Travis
+either through the .travis.yml file or as an environment variable through Travis settings
+(see <<_sonarcloud_2,SonarCloud>> below).
+
+=== GitHub (documentation)
+
+To be allowed to push the generated documentation to the opfab.github.io, Travis needs write access to the repository.
+This is done by setting up a Personal Access Token in GitHub using the technical account
+(see <<_github_documentation_2,GitHub (documentation)>> below).
+This token is then passed to Travis as an environment variable through Travis settings, and is used in the .travis.yml file.
+Right now the scope of this token is maximal, it can probably be reduced (see https://opfab.atlassian.net/browse/OC-755[OC-755]).
+
+NOTE: After new content is pushed to the opfab.github.io repository, it can take a few minutes before this content is
+visible on the website because it needs to be built by GitHub pages, and this can take a short while
+depending on how busy the service is.
+
+=== DockerHub
+To be allowed to push images to DockerHub, Travis needs to be authenticated. This is done by setting the dockerhub
+login and password of the technical account as environment variables through Travis settings and referencing them in
+the .travis.yml file (see <<_dockerhub_2,DockerHub>> below).
+
+== Mock CICD Pipeline
+
+We wanted to be able to test changes to this configuration or to the scripts used by the pipeline without risks to the real
+master branch, to our docker images or to the documentation. We didn't find any such "dry-run" options on Travis CI so
+we decided to create a complete mock pipeline replicating the actual pipeline.
+This is a short summary of the necessary steps.
+
+=== GitHub
+. Create organization opfab-mock
+. Create user account opfabtechmock
+. Invite opfabtechmock to opfab-mock organization as owner (see later if this can/should be restricted)
+. Fork operatorfabric-core and opfab.github.io repos to opfab-mock organization
+
+=== Travis CI
+. Go to travis-ci.org (not travis-ci.com)
+. Sign in with GitHub (using opfabtechmock)
+This redirects to a page offering to grant access to your account to Travis CI for Open Source, click ok.
++
+Note: This page (https://github.com/settings/applications) lets you review the apps that have keen granted this kind
+of access and when it was last used.
+
+. Looking at https://travis-ci.org/account/repositories, the opfab-mock organization didn't appear even after syncing
+the account, so click on "review and add your authorized organizations" (this redirects to
+https://github.com/settings/connections/applications/f244293c729d5066cf27).
+
+. Click "grant" next to the organization.
+
+. After that, Travis CI for Open Source is visible here: https://github.com/organizations/opfab-mock/settings/oauth_application_policy.
++
+This allowed the opfab-mock organization to appear in the account: https://travis-ci.org/account/repositories
+Click on opfab-mock to get to the https://travis-ci.org/organizations/opfab-mock/repositories[list of repositories for this organization] and toggle "operatorfabric-core" on.
++
+image::travis-ci.png[]
++
+. Under the https://travis-ci.org/opfab-mock/operatorfabric-core/settings[Travis settings for the operatorfabric-core repository],
+create a Cron Job on branch master, that runs daily and is always run.
+
+=== SonarCloud
+
+. Go to SonarCloud.io
+. Sign in with GitHub
++
+IMPORTANT: When switching between accounts (your own and the technical account for example), make sure to log out of
+SonarCloud when you're done using an account because otherwise it will keep the existing session (even in a new tab)
+rather than sign you back in with the account you're currently using on GitHub.
++
+. Authorize SonarCloud by sonarcloud
++ Create a new organization
+https://sonarcloud.io/create-organization[from the "+" dropdown menu to the left of your profile picture]
++
+IMPORTANT: Click on "Just testing? You can create manually" on the bottom right, and not "Choose an organization on GitHub".
++
+This is because the "opfab" SonarCloud organization that we are trying to replicate is not currently linked to its GitHub
+counterpart (maybe the option didn't exist at the time), so we're doing the same here. In the future it might be a good
+idea to link them (see https://opfab.atlassian.net/browse/OC-751[OC-751])as SonarCloud states that
+____
+Binding an organization from SonarCloud with GitHub is an easy way to keep
+them synchronized. To bind this organization to GitHub, the SonarCloud application will be installed.
+____
+And then it warns again that
+____
+Manual setup is not recommended, and leads to missing features like appropriate setup of
+your project or analysis feedback in the Pull Request.
+____
+. Click "Analyze new project" then "Create manually" (for the same reasons as the organization).
++
+Project key and display name : *org.lfenergy.operatorfabric:operatorfabric-core-mock*
+Then choose "Public" and click "Set Up".
+. This redirects to the the following message :
+https://sonarcloud.io/project/configuration?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core-mock[We initialized your project on SonarCloud, now it's up to you to launch analyses!]
+Now we need to provide Travis with a token to use to access SonarCloud.
+. To generate a token, go to https://sonarcloud.io/account/security/[Account/Security]
++
+There are two options to pass this token to Travis:
++
+.. Option A: Define a new SONAR_TOKEN environment variable in the
+https://travis-ci.org/opfab-mock/operatorfabric-core/settings[repository's settings in Travis], then use it in the
+.travis.yml file as follows:
++
+----
+addons:
+  sonarcloud:
+    organization: "opfab-mock"
+    token:
+         secure: ${SONAR_TOKEN}
+----
+.. Option B: Encrypt this token using the travis gem:
++
+----
+travis encrypt XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+----
++
+IMPORTANT: This has to be run at the root of the repository otherwise you get the following error: `Can't figure out GitHub repo name. Ensure you're in the repo directory, or specify the repo name via the -r option (e.g. travis <command> -r <owner>/<repo>)`
++
+IMPORTANT: Do not use the --add option (to add the encrypted value directly to the .travis.yml file) as it changes
+a lot of things in the file (remove comments, change indentation and quotes, etc.).
++
+Paste the result (YYYY) in the .travis.yml file:
++
+----
+addons:
+  sonarcloud:
+    organization: "opfab-mock"
+    token:
+         secure: "YYYY"
+----
++
+Option A would be better as it's not necessary to make a new commit if the token needs to be changed, but it stopped
+working suddenly, maybe as a result of a travis policy change regarding encryption.
+https://opfab.atlassian.net/browse/OC-752[OC-752] was created to investigate.
+
+IMPORTANT: There is still a SONAR_TOKEN environment variable defined in the Travis settings (with a dummy value)
+because there is a test on its presence to decide whether sonar-scanner should be launched or
+not (in the case of external PRs) (see https://opfab.atlassian.net/browse/OC-700[OC-700]
+/ https://opfab.atlassian.net/browse/OC-507[OC-507]).
+
+. Finally change the organization in .travis.yml file and the project key
+in sonar-project.properties (replace the actual values with mock values).
+
+NOTE: In travis.yml we launch the sonar-scanner command whereas the tutorials mention gradle sonarqube.
+It looks like we're following https://sonarcloud.io/documentation/analysis/scan/sonarscanner/[this] which says that
+"The SonarScanner is the scanner to use when there is no specific scanner for your build system."
+But there is a https://sonarcloud.io/documentation/analysis/scan/sonarscanner-for-gradle/[specific scanner for Gradle]:
+____
+The SonarScanner for Gradle provides an easy way to start SonarCloud analysis of a Gradle project.
+The ability to execute the SonarCloud analysis via a regular Gradle task makes it available anywhere Gradle is available
+(CI service, etc.), without the need to manually download, setup, and maintain a SonarScanner installation.
+The Gradle build already has much of the information needed for SonarCloud to successfully analyze a project.
+By configuring the analysis based on that information, the need for manual configuration is reduced significantly.
+____
+-> This could make sonar easier to run locally and reduce the need for configuration
+(see https://opfab.atlassian.net/browse/OC-754[OC-754]).
+
+=== GitHub (documentation)
+
+. Create a personal access token for GitHub (for the documentation). Its name is not important.
++
+See https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line[GitHub documentation].
++
+image::perso_access_token_doc.png[]
+
+. Create a GH_DOC_TOKEN env variable
+in https://travis-ci.org/opfab-mock/operatorfabric-core/settings[Travis settings for the operatorfabric-core repository]
+, making it available to all branches.
++
+image::adding_gh_doc_token_travis.png[]
+
+=== DockerHub
+
+. Create account opfabtechmock
+. Create organization *lfeoperatorfabricmock*
+. Change organization name in docker config in services.gradle
++
+----
+docker {
+    name "lfeoperatorfabricmock/of-${project.name.toLowerCase()}"
+    tags 'latest', dockerVersionTag
+    labels (['project':"${project.group}"])
+    files jar.archivePath, 'src/main/resources/bootstrap-docker.yml', '../../../src/main/docker/java-config-dependent-docker-entrypoint.sh'
+    buildArgs(['JAR_FILE'       : "${jar.archiveName}",
+               'http_proxy'     : apk.proxy.uri,
+               'https_proxy'    : apk.proxy.uri,
+               'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
+    dockerfile file("src/main/docker/Dockerfile")
+}
+----
+
+. Add the opfabtechmock dockerhub account credentials as DOCKER_CLOUD_USER / DOCKER_CLOUD_PWD in Travis env variables
+in settings (see GH_DOC_TOKEN above).
+
+=== Updating the fork
+
+To make the mock repositories catch up with the upstream (the real repositories) from time to time, follow
+this procedure (the command line version), except you should do a rebase instead of a merge:
+https://rick.cogley.info/post/update-your-forked-repository-directly-on-github/
+
+== To Do
+//TODO Handle those TODOs
+There are a few "nice to have" things left to do.
+
+. Make https://sonarcloud.io/organizations/opfab-mock/quality_profiles[quality profiles] match between mock and real sonar
+. What about ui/main/sonar-project.properties with a different project key ? is it still used ?
+. Make sure it is no longer used and delete opfab travis account (and remove rights from dockerhub)
+. Remove commented out lines in .travis.yml
+
