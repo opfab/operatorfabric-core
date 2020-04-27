@@ -412,10 +412,13 @@ class GroupsControllerShould {
             )
                     .andExpect(status().isOk());
 
-            UserData jcleese = userRepository.findById(newUserName).get();
-            assertThat(jcleese).isNotNull();
-            assertThat(jcleese.getGroups()).contains("WANDA");
+            UserData freshlyNewUser = userRepository.findById(newUserName).get();
+            assertThat(freshlyNewUser).isNotNull();
+            assertThat(freshlyNewUser.getGroups()).containsExactly("WANDA");
 
+            List<UserData> wanda = userRepository.findByGroupSetContaining("WANDA");
+            assertThat(wanda).isNotNull();
+            assertThat(wanda).containsExactly(freshlyNewUser);
         }
 
         @Test
@@ -519,10 +522,15 @@ class GroupsControllerShould {
 
             UserData gchapman = userRepository.findById("gchapman").get();
             assertThat(gchapman).isNotNull();
-            assertThat(gchapman.getGroups()).contains("MONTY", "WANDA");
+            assertThat(gchapman.getGroups()).containsExactly("MONTY", "WANDA");
+
+            //WANDA group must only contain gchapman (jcleese and kkline must be removed from group)
             UserData jcleese = userRepository.findById("jcleese").get();
             assertThat(jcleese).isNotNull();
-            assertThat(jcleese.getGroups()).contains("MONTY");
+            assertThat(jcleese.getGroups()).containsExactly("MONTY");
+            UserData kkline = userRepository.findById("kkline").get();
+            assertThat(kkline).isNotNull();
+            assertThat(kkline.getGroups()).isEmpty();
         }
 
         @Test

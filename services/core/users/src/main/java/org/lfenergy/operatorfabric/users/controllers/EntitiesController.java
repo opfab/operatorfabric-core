@@ -172,7 +172,6 @@ public class EntitiesController implements EntitiesApi {
                         .peek(u-> {
                             u.deleteEntity(id);
                             newUsersInEntity.remove(u.getLogin());
-                            u.addEntity(id);
                             //Fire an UpdatedUserEvent for all users that are updated because they're removed from the entity
                             publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getLogin()));
                         }).collect(Collectors.toList());
