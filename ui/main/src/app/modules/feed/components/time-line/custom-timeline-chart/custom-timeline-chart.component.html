@@ -11,12 +11,12 @@
         (mouseWheelUp)="onZoom($event, 'in')"
         (mouseWheelDown)="onZoom($event, 'out')"
         class="">
-    <svg:g [attr.transform]="transform" class="chart">
+    <svg:g [attr.transform]="translateGraph" class="chart">
 
-        <svg:g [attr.transform]="transform2">
+        <svg:g [attr.transform]="translateXTicksTwo">
             <svg:g ngx-charts-x-axis-ticks
                    *ngIf="prod"
-                   [scale]="timeScale"
+                   [scale]="xScale"
                    [showGridLines]="true"
                    [gridLineHeight]="dims.height"
                    [tickFormatting]="getXTickTwoFormatting"
@@ -27,7 +27,7 @@
         </svg:g>
         <svg:g ngx-charts-x-axis
                *ngIf="prod"
-               [xScale]="timeScale"
+               [xScale]="xScale"
                [dims]="dims"
                [showGridLines]="true"
                [tickFormatting]="getXTickOneFormatting"
@@ -41,11 +41,10 @@
                [dims]="dims"
                [tickFormatting]="hideLabelsTicks"
                [ticks]="[0,1,2,3,4,5]"
-               [showGridLines]="true"
-               (dimensionsChanged)="updateYAxisWidth($event)">
+               [showGridLines]="true">
         </svg:g>
         <text *ngIf="checkInsideDomain(xRealTimeLine) && !underDayPeriod"
-              [attr.x]="timeScale(xRealTimeLine)"
+              [attr.x]="xScale(xRealTimeLine)"
               [attr.y]="-10" stroke="'black'"
               [attr.fill]="'black'"
               text-anchor="middle" stroke-width="1px"
@@ -57,35 +56,26 @@
               text-anchor="middle" stroke-width="1px"
               [attr.font-size]="12" dy=".3em">{{dateFirstTick}}</text>
         <svg:rect *ngIf="checkInsideDomain(xRealTimeLine)"
-                  [attr.x]="timeScale(xRealTimeLine)"
+                  [attr.x]="xScale(xRealTimeLine)"
                   [attr.width]="5"
                   y="0"
                   fill=var(--opfab-timeline-realtimebar-color)
                   [attr.height]="dims.height"
                   class="realTimeLine opfab-timeline-realtimebar-color"
         ></svg:rect>
-        <svg:g *ngFor="let series of dataClustered">
-            <svg:g *ngFor="let myCircle of series"
-                   (mouseenter)="feedCircleHovered(myCircle)"
-                   ngx-tooltip
-                   [tooltipTemplate]="tooltipTemplate2">
-                <svg:circle *ngIf="checkInsideDomain(myCircle.date)"
-                            [attr.cx]="timeScale(myCircle.date)"
-                            [attr.cy]="yScale(myCircle.value)"
-                            [attr.r]="myCircle.r"
-                            [attr.fill]=myCircle.color
-                            [attr.stroke]="myCircle.stroke"
-                            [attr.opacity]="0.7"
-                />
-                <text *ngIf="checkInsideDomain(myCircle.date)"
-                      [attr.x]="timeScale(myCircle.date)" [attr.y]="yScale(myCircle.value)"
-                      stroke="#000000" text-anchor="middle" stroke-width="1px" [attr.font-size]="13" dy=".3em">{{myCircle.count}} </text>
-            </svg:g>
+        <svg:g *ngFor="let circle of circles" (mouseenter)="feedCircleHovered(circle)" ngx-tooltip
+            [tooltipTemplate]="tooltipTemplate">
+            <svg:circle [attr.cx]="xScale(circle.date)"
+                [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
+                [attr.opacity]="0.7" />
+            <text  [attr.x]="xScale(circle.date)"
+                [attr.y]="yScale(circle.circleYPosition)" text-anchor="middle" font-weight="bold" stroke-width="0px"
+                [attr.font-size]="13" dy=".3em">{{circle.count}} </text>
         </svg:g>
     </svg:g>
-    <ng-template #tooltipTemplate2>
-        {{circleHovered.period}} <br/>
-        Count: {{circleHovered.count}} <br/>
-        Summary: <p *ngFor="let title of circleHovered.summary"style="padding: 0px;margin: 0px;line-height: 10px">{{title.summaryDate}}<span class="nav-link" translate [translateParams]="title.parameters">{{title.i18nPrefix + title.key}}</span></p>
+    <ng-template #tooltipTemplate>
+        {{currentCircleHovered.dateOrPeriod}} <br/>
+        Count: {{currentCircleHovered.count}} <br/>
+        Summary: <p *ngFor="let title of currentCircleHovered.summary"style="padding: 0px;margin: 0px;line-height: 10px">{{title.summaryDate}}<span class="nav-link" translate [translateParams]="title.parameters">{{title.i18nPrefix + title.key}}</span></p>
     </ng-template>
 </ngx-charts-chart>

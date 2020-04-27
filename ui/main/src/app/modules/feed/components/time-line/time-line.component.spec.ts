@@ -79,10 +79,7 @@ describe('TimeLineComponent', () => {
       expect(lightCard).toEqual([oneCard]);
     });
     const dataCard = [{
-      displayDate: oneCard.startDate,
-      publishDate: oneCard.publishDate,
-      startDate: oneCard.startDate,
-      endDate: oneCard.endDate,
+      date: oneCard.startDate,
       severity: oneCard.severity,
       publisher: oneCard.publisher,
       publisherVersion: oneCard.publisherVersion,
@@ -115,37 +112,25 @@ describe('TimeLineComponent', () => {
       expect(lightCards).toEqual([informationCard, alarmCard, actionCard, compliantCard].sort(compareBySeverityPublishDate)); //Default sort
     });
     const dataCard = [{
-        displayDate: alarmCard.startDate,
-        publishDate: alarmCard.publishDate,
-        startDate: alarmCard.startDate,
-        endDate: alarmCard.endDate,
+        date: alarmCard.startDate,
         severity: alarmCard.severity,
         publisher: alarmCard.publisher,
         publisherVersion: alarmCard.publisherVersion,
         summary: alarmCard.title
     }, {
-        displayDate: actionCard.startDate,
-        publishDate: actionCard.publishDate,
-        startDate: actionCard.startDate,
-        endDate: actionCard.endDate,
+        date: actionCard.startDate,
         severity: actionCard.severity,
         publisher: actionCard.publisher,
         publisherVersion: actionCard.publisherVersion,
         summary: actionCard.title
     }, {
-        displayDate: compliantCard.startDate,
-        publishDate: compliantCard.publishDate,
-        startDate: compliantCard.startDate,
-        endDate: compliantCard.endDate,
+        date: compliantCard.startDate,
         severity: compliantCard.severity,
         publisher: compliantCard.publisher,
         publisherVersion: compliantCard.publisherVersion,
         summary: compliantCard.title
     }, {
-        displayDate: informationCard.startDate,
-        publishDate: informationCard.publishDate,
-        startDate: informationCard.startDate,
-        endDate: informationCard.endDate,
+        date: informationCard.startDate,
         severity: informationCard.severity,
         publisher: informationCard.publisher,
         publisherVersion: informationCard.publisherVersion,

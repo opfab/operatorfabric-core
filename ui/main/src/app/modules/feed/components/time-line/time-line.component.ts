@@ -92,15 +92,12 @@ export class TimeLineComponent implements OnInit, OnDestroy {
     }
 
     sendAllCardsToDrawOnTheTimeLine(cards) {
-        const cards_copy = _.cloneDeep(cards);
         const myCardsTimeline = [];
-        for (const card of cards_copy) {
+        for (const card of cards) {
             if (card.timeSpans && card.timeSpans.length > 0) {
-                card.timeSpans.forEach(d => {
+                card.timeSpans.forEach(timeSpan => {
                     const myCardTimelineTimespans = {
-                        displayDate: d.start, publishDate: d.start, 
-                        startDate: d.start, 
-                        endDate: d.end, 
+                        date: timeSpan.start, 
                         severity: card.severity, publisher: card.publisher,
                         publisherVersion: card.publisherVersion, summary: card.title
                     };
@@ -108,10 +105,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
                 });
             } else {
                 const myCardTimeline = {
-                    displayDate: card.startDate,
-                    publishDate: card.publishDate, 
-                    startDate: card.startDate, 
-                    endDate: card.endDate, 
+                    date: card.startDate,
                     severity: card.severity, publisher: card.publisher,
                     publisherVersion: card.publisherVersion, summary: card.title
                 };

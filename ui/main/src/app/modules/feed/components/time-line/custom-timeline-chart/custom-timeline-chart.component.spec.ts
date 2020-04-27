@@ -28,6 +28,9 @@ describe('CustomTimelineChartComponent', () => {
   let component: CustomTimelineChartComponent;
   let fixture: ComponentFixture<CustomTimelineChartComponent>;
 
+  const startDate = moment().startOf('year');
+  const endDate = moment().startOf('year').add(1,'year');
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule,
@@ -55,24 +58,12 @@ describe('CustomTimelineChartComponent', () => {
   }));
 
 
-  it('should call update() and create chart by calling updateYAxisWidth function', () => {
-    fixture.detectChanges();
-    component.domainId = 'W'
-    component.updateYAxisWidth({width: 1920});
-    expect(component).toBeTruthy();
-  });
-
   it('should format dateFirsTick when the domain set is smaller than 1 day', () => {
     fixture.detectChanges();
     component.valueDomain = [0, 5000000];
     expect(component.underDayPeriod).toBeTruthy();
   });
 
-  it('should create', () => {
-    fixture.detectChanges();
-    component.ngOnInit();
-    expect(component).toBeTruthy();
-  });
 
   it('should call update() and create chart by calling updateXAxisWidth function', () => {
     fixture.detectChanges();
@@ -116,126 +107,296 @@ describe('CustomTimelineChartComponent', () => {
   });
 
 
-  xit('check clusterize functions : ' +
-    'two algos create circle when detect one data in the scope of xTicks ' +
-    'this test doesnt look the date assigned', () => {
+
+  it('set no circle if no card ', () => {
     fixture.detectChanges();
-    const tmpMoment = moment();
-    component.xTicks.push(tmpMoment);
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
+    component.cardsData = [];
+    component.createCircles();
+    expect(component.circles.length).toEqual(0);
+
+  });
+
+  it('set one circle with count=1 if one card ', () => {
+    fixture.detectChanges();
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
 
     // Test 1
-    const tmpData = {
-      date: tmpMoment,
-      color: 'red',
-      count: 1,
-      cy: 0,
-      value: 4,
+    const card1 = {
+      date:   moment(startDate).add(5,'day').add(1,'hour'),
+      severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
       publisherVersion: '1',
     };
-    component.myData = [[tmpData]];
-    component.domainId = 'W'
-    component.setTicksAndClusterize([0, 1]);
-    expect(component.dataClustered).toEqual([[]]);
 
-    // Test 2
-    const tmpData2 = {
-      date: moment(),
-      color: 'orange',
-      count: 1,
-      cy: 0,
-      value: 3,
-      summary: {parameters: 'param2', key: 'process'},
-      publisher: 'TEST',
-      publisherVersion: '2',
-    };
-    component.setTicksAndClusterize([tmpData.date.valueOf(), tmpData2.date.valueOf()]);
-    // Check if dataClustered was feed with the circle in myData
-    // can't compare date cause of _i property inside moment
-    expect(component.dataClustered[0][0].start).toEqual(tmpMoment);
-    expect(component.dataClustered[0][0].end).toEqual(tmpMoment);
-    expect(component.dataClustered[0][0].count).toEqual(1);
-    expect(component.dataClustered[0][0].color).toEqual('red');
-    expect(component.dataClustered[0][0].cy).toEqual(0);
-    expect(component.dataClustered[0][0].value).toEqual(4);
-    expect(component.dataClustered[0][0].summary[0].summaryDate).toEqual(tmpMoment.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
-    ' : ');
-    expect(component.dataClustered[0][0].summary[0].i18nPrefix).toEqual('TEST.1.');
-    expect(component.dataClustered[0][0].summary[0].parameters).toEqual('param');
-    expect(component.dataClustered[0][0].summary[0].key).toEqual('process');
-    expect(component.dataClustered[0][0].r).toEqual(10);
-    expect(component.dataClustered[0][2]).toEqual(undefined);
+    component.cardsData = [card1];
+    component.createCircles();
 
-    // Test 3
-    const tmpData3 = {
-      date: moment(),
-      color: 'blue',
-      count: 1,
-      cy: 0,
-      value: 2,
-      summary: {parameters: 'param3', key: 'process'},
-      publisher: 'TEST',
-      publisherVersion: '3',
-    };
-    tmpData2.date.add(3, 'days');
-    tmpData3.date.subtract(3, 'days');
-    component.myData = [[tmpData3, tmpData, tmpData2]];
-    component.setTicksAndClusterize([tmpData.date.valueOf(), tmpData2.date.valueOf()]);
-    // First Circle
-    expect(component.dataClustered[0][0].start).toEqual(tmpMoment);
-    expect(component.dataClustered[0][0].end).toEqual(tmpMoment);
-    expect(component.dataClustered[0][0].count).toEqual(1);
-    expect(component.dataClustered[0][0].color).toEqual('red');
-    expect(component.dataClustered[0][0].cy).toEqual(0);
-    expect(component.dataClustered[0][0].value).toEqual(4);
-    expect(component.dataClustered[0][0].summary[0].summaryDate).toEqual(tmpMoment.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
-    ' : ');
-    expect(component.dataClustered[0][0].summary[0].i18nPrefix).toEqual('TEST.1.');
-    expect(component.dataClustered[0][0].summary[0].parameters).toEqual('param');
-    expect(component.dataClustered[0][0].summary[0].key).toEqual('process');
-    expect(component.dataClustered[0][0].r).toEqual(10);
-    // Second Circle
-    expect(component.dataClustered[0][1].start).toEqual(tmpData2.date);
-    expect(component.dataClustered[0][1].end).toEqual(tmpData2.date);
-    expect(component.dataClustered[0][1].count).toEqual(1);
-    expect(component.dataClustered[0][1].color).toEqual('orange');
-    expect(component.dataClustered[0][1].cy).toEqual(0);
-    expect(component.dataClustered[0][1].value).toEqual(3);
-    expect(component.dataClustered[0][1].summary[0].summaryDate).toEqual(tmpData2.date.format('DD/MM') + ' - ' + tmpMoment.format('HH:mm') +
-    ' : ');
-    expect(component.dataClustered[0][1].summary[0].i18nPrefix).toEqual('TEST.2.');
-    expect(component.dataClustered[0][1].summary[0].parameters).toEqual('param2');
-    expect(component.dataClustered[0][1].summary[0].key).toEqual('process');
-    expect(component.dataClustered[0][1].r).toEqual(10);
-    // Third circle isn't in the scope of ticks
-    expect(component.dataClustered[0][3]).toEqual(undefined);
-    expect(component).toBeTruthy();
+    expect(component.circles.length).toEqual(1);
+    expect(component.circles[0].count).toEqual(1);
+    expect(component.circles[0].circleYPosition).toEqual(4);
   });
 
-  it('simulate circle hovered', () => {
+  it('set no circle if one card is before time domain ', () => {
     fixture.detectChanges();
-    const circleTest = {
-      start: moment(),
-      end: moment(),
-      count: 5,
-    };
-    const end = moment();
-    end.add(1, 'days');
-    const circleTestPeriod = {
-      start: moment(),
-      end,
-      count: 5,
-    };
-    expect(component.circleHovered.period).toEqual('');
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
 
+    // Test 1
+    const card1 = {
+      date:   moment(startDate).subtract(2,'day'),
+      severity: 'ALARM',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
 
-    const tmp = component.circleHovered.period;
-    component.feedCircleHovered(circleTestPeriod);
-    fixture.detectChanges();
-    expect(component.circleHovered.period).not.toEqual(tmp);
-    expect(component).toBeTruthy();
+    component.cardsData = [card1];
+    component.createCircles();
+
+    expect(component.circles.length).toEqual(0);
+
   });
 
+  it('set no circle if one card is after time domain ', () => {
+    fixture.detectChanges();
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
+    // Test 1
+    const card1 = {
+      date:  moment(endDate).add(1,'hour'),
+      severity: 'ALARM',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    component.cardsData = [card1];
+    component.createCircles();
+
+    expect(component.circles.length).toEqual(0);
+
+  });
+
+  it('set one circle with count=2 if two card in the same interval and same severity ', () => {
+    fixture.detectChanges();
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
+
+    const card1 = {
+      date:   moment(startDate).add(2,'day').add(1,'hour'),
+      severity: 'ALARM',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+
+    const card2 = {
+      date: moment(startDate).add(4,'day').add(2,'hour'),
+      severity: 'ALARM',
+      summary: { parameters: 'param', key: 'process' },
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    component.cardsData = [card1,card2];
+    component.createCircles();
+
+    expect(component.circles.length).toEqual(1);
+    expect(component.circles[0].count).toEqual(2);
+
+  });
+
+
+  it('set two circles with count=1 if two card are not in the same interval but same severity ', () => {
+    fixture.detectChanges();
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
+
+    const card1 = {
+      date:  moment(startDate).add(2,'day').add(1,'hour'),
+      severity: 'ALARM',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    const card2 = {
+      date: moment(startDate).add(2,'month').add(1,'hour'),
+      severity: 'ALARM',
+      summary: { parameters: 'param', key: 'process' },
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    component.cardsData = [card1,card2];
+    component.createCircles();
+
+    expect(component.circles.length).toEqual(2);
+    expect(component.circles[0].count).toEqual(1);
+    expect(component.circles[1].count).toEqual(1);
+
+  });
+
+  it('set two circles with count=1 if two cards are in the same interval but not same severity ', () => {
+    fixture.detectChanges();
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
+
+    const card1 = {
+      date: moment(startDate).add(2,'day').add(1,'hour'),
+      severity: 'ALARM',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    const card2 = {
+      date: moment(startDate).add(4,'day').add(1,'hour'),
+      severity: 'INFORMATION',
+      summary: { parameters: 'param', key: 'process' },
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    component.cardsData = [card1,card2];
+    component.createCircles();
+
+    expect(component.circles.length).toEqual(2);
+    expect(component.circles[0].count).toEqual(1);
+    expect(component.circles[1].count).toEqual(1);
+
+  });
+
+  it('set two circles with one count=1 and one count= 2 if three cards of same severity  and 2 in the same interval ', () => {
+    fixture.detectChanges();
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
+
+    const card1 = {
+      date:  moment(startDate).add(2,'day').add(1,'hour'),
+      severity: 'ALARM',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    const card2 = {
+      date: moment(startDate).add(4,'day').add(1,'hour'),
+      severity: 'ALARM',
+      summary: { parameters: 'param', key: 'process' },
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    const card3 = {
+      date: moment(startDate).add(6,'month').add(1,'hour'),
+      severity: 'ALARM',
+      summary: { parameters: 'param', key: 'process' },
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    component.cardsData = [card1,card2,card3];
+    component.createCircles();
+
+    expect(component.circles.length).toEqual(2);
+    expect(component.circles[0].count).toEqual(2);
+    expect(component.circles[1].count).toEqual(1);
+
+  });
+
+
+  it('set three card in the same interval and same severity , the end date should be the max date of the cards ', () => {
+    fixture.detectChanges();
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
+
+    const card1 = {
+      date:  moment(startDate).add(2,'day').add(1,'hour'),
+      severity: 'ALARM',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+
+    const card2 = {
+      date: moment(startDate).add(5,'day').add(1,'hour'),
+      severity: 'ALARM',
+      summary: { parameters: 'param', key: 'process' },
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    const card3 = {
+      date:  moment(startDate).add(3,'day').add(1,'hour'),
+      severity: 'ALARM',
+      summary: { parameters: 'param', key: 'process' },
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+
+    component.cardsData = [card1,card2,card3];
+    component.createCircles();
+
+    expect(component.circles.length).toEqual(1);
+    expect(component.circles[0].end).toEqual(card2.date);
+
+  });
+
+  it('set three cards in the same interval and same severity , there shoud be one circle with 3 summary  ', () => {
+    fixture.detectChanges();
+    component.domainId = 'Y'
+    component.xDomain = [startDate,endDate];
+    component.setXTicksValue();
+
+    const card1 = {
+      date:   moment(startDate).add(5,'day').add(1,'hour'),
+      severity: 'ALARM',
+      summary: {parameters: 'param', key: 'process'},
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+
+    const card2 = {
+      date:  moment(startDate).add(6,'day').add(3,'hour'),
+      severity: 'ALARM',
+      summary: { parameters: 'param', key: 'process' },
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+    const card3 = {
+      date:  moment(startDate).add(8,'day').add(8,'hour'),
+      severity: 'ALARM',
+      summary: { parameters: 'param', key: 'process' },
+      publisher: 'TEST',
+      publisherVersion: '1',
+    };
+
+
+    component.cardsData = [card1,card2,card3];
+    component.createCircles();
+
+    expect(component.circles.length).toEqual(1);
+    expect(component.circles[0].summary.length).toEqual(3);
+
+  });
 
 });

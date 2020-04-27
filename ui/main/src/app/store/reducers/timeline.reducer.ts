@@ -17,7 +17,7 @@ export function reducer(
 ): TimelineState {
     switch (action.type) {
         case TimelineActionTypes.SetCardDataTimeline: {
-            const newData = _.cloneDeep(action.payload.cardsTimeline);
+            const newData = action.payload.cardsTimeline;
             return {
                 ...state,
                 data: newData
