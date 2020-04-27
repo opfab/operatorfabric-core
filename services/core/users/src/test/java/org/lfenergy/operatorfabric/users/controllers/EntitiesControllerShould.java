@@ -405,10 +405,13 @@ class EntitiesControllerShould {
             )
                     .andExpect(status().isOk());
 
-            UserData jcleese = userRepository.findById(newUserName).get();
-            assertThat(jcleese).isNotNull();
-            assertThat(jcleese.getEntities()).contains("ENTITY2");
+            UserData freshlyNewUser = userRepository.findById(newUserName).get();
+            assertThat(freshlyNewUser).isNotNull();
+            assertThat(freshlyNewUser.getEntities()).containsExactly("ENTITY2");
 
+            List<UserData> entity2 = userRepository.findByEntitiesContaining("ENTITY2");
+            assertThat(entity2).isNotNull();
+            assertThat(entity2).containsExactly(freshlyNewUser);
         }
 
         @Test
@@ -512,10 +515,15 @@ class EntitiesControllerShould {
 
             UserData gchapman = userRepository.findById("gchapman").get();
             assertThat(gchapman).isNotNull();
-            assertThat(gchapman.getEntities()).contains("ENTITY1", "ENTITY2");
+            assertThat(gchapman.getEntities()).containsExactly("ENTITY1", "ENTITY2");
+
+            //ENTITY2 must only contain gchapman (jcleese and kkline must be removed from entity)
             UserData jcleese = userRepository.findById("jcleese").get();
             assertThat(jcleese).isNotNull();
-            assertThat(jcleese.getEntities()).contains("ENTITY1");
+            assertThat(jcleese.getEntities()).containsExactly("ENTITY1");
+            UserData kkline = userRepository.findById("kkline").get();
+            assertThat(kkline).isNotNull();
+            assertThat(kkline.getEntities()).isEmpty();
         }
 
         @Test

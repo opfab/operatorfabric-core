@@ -31,6 +31,22 @@ Feature: Update list of entity users
 }
 """
 
+    * def userKarate6 =
+"""
+{
+   "login" : "loginKarate6",
+   "firstName" : "name6",
+   "lastName" : "familyName6"
+}
+"""
+
+    * def userKarate6List =
+"""
+[
+"loginKarate6"
+]
+"""
+
     * def userList =
 """
 [
@@ -64,6 +80,35 @@ Feature: Update list of entity users
     And match response.lastName == userKarate4.lastName
 
 
+  Scenario: Create userKarate6 (if everything is ok, the user already exists)
+    #post /users
+    #create new user, expected response 201
+    Given url opfabUrl + 'users/users'
+    And header Authorization = 'Bearer ' + authToken
+    And request userKarate6
+    When method post
+    Then status 200
+    And match response.login == userKarate6.login
+    And match response.firstName == userKarate6.firstName
+    And match response.lastName == userKarate6.lastName
+
+
+  Scenario: Add userKarate6 to the entity
+    Given url opfabUrl + 'users/entities/' + entity + '/users'
+    And header Authorization = 'Bearer ' + authToken
+    And request userKarate6List
+    When method patch
+    And status 200
+
+
+  Scenario: Check that userKarate6 belongs to the entity
+    Given url opfabUrl + 'users/users/' + userKarate6.login
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response.entities[0] == entity
+
+
   Scenario: Update list of entity users without authentication
     Given url opfabUrl + 'users/entities/'+ entity + '/users'
     And request userList
@@ -86,6 +131,7 @@ Feature: Update list of entity users
     When method put
     Then status 404
 
+
   #Endpoints tested put /entities/{id}/users
   Scenario: Update list of entity users
     Given url opfabUrl + 'users/entities/'+ entity + '/users'
@@ -93,3 +139,27 @@ Feature: Update list of entity users
     And request userList
     When method put
     Then status 200
+
+
+  Scenario: Check that userKarate3 belongs to the entity
+    Given url opfabUrl + 'users/users/' + userKarate3.login
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response.entities[0] == entity
+
+
+  Scenario: Check that userKarate4 belongs to the entity
+    Given url opfabUrl + 'users/users/' + userKarate4.login
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response.entities[0] == entity
+
+
+  Scenario: Check that userKarate6 no longer belongs to the entity
+    Given url opfabUrl + 'users/users/' + userKarate6.login
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And assert response.entities.length == 0

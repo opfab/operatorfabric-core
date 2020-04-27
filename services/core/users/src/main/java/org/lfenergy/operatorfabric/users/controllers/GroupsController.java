@@ -172,7 +172,6 @@ public class GroupsController implements GroupsApi {
                         .peek(u-> {
                             u.deleteGroup(id);
                             newUsersInGroup.remove(u.getLogin());
-                            u.addGroup(id);
                             //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
                             publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getLogin()));
                         }).collect(Collectors.toList());
