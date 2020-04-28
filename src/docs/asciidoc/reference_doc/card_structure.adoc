@@ -77,7 +77,7 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/i
 
 === Card Life Management Configuration
 
-With this attributes OperatorFabric know when to display or hide cards.
+With this attributes OperatorFabric knows when to display or hide cards.
 
 ==== Start Date (`startDate`)
 
@@ -102,11 +102,11 @@ for some examples.
 
 ==== Tags (`tag`)
 
-Tags are intended to enable filter of cards in the feed of the GUI.
+Tags are intended as an additional way to filter cards in the feed of the GUI.
 
 ==== EntityRecipients (`entityRecipients`)
 
-Use to send to cards to entity : all users members of the entities listed will receive the card. If it is used in conjonction with groups recipients, users must be member of one of the entities AND one of the groups to received the cards.
+Used to send to cards to entity : all users members of the listed entities will receive the card. If it is used in conjunction with groups recipients, users must be members of one of the entities AND one of the groups to receive the cards.
 
 
 === Last Time to Decide (`lttd`)
@@ -117,7 +117,7 @@ Fixes the moment until when a `actions` associated to the card are available. Af
 
 ==== uid (`uid`)
 
-Unique identifier of the card in the OperatorFabric system. This attribute can be send with card, but normally it's manage by `OperatorFabric` system.
+Unique identifier of the card in the OperatorFabric system. This attribute can be sent with card, but by default it's managed by OperatorFabric.
 
 ==== id (`id`)
 
@@ -194,7 +194,7 @@ If the `publisherVersion` of the card is `2` then only the `title` key declared 
 
 When the simple startDate and endDate are not enough to characterize your
 process business times, you can add a list of TimeSpan to your card. TimeSpans
-are rendered in the timeline component as cluster bubbles. This as no effect on the feed
+are rendered in the timeline component as cluster bubbles. This has no effect on the feed
 content
 
 *example :*
@@ -221,4 +221,4 @@ In this sample, the card will be displayed twice in the time line. The card
 start date will be ignored.
 
 
-For timeSpans, you can specify an end date but it is not used by operator fabric (it was intended for future uses but it will be deprecated)
+For timeSpans, you can specify an end date but it is not implemented in OperatorFabric (it was intended for future uses but it will be deprecated).
