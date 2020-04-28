@@ -65,6 +65,10 @@ jobs:
       - export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx1024m"
       # If SONAR_TOKEN is not available (for external PRs for example), skip sonar
       - ./gradlew --build-cache copyDependencies test jacocoTestReport
+      # [OC-865] Dropping dependency messing with typescript version as a workaround until sonar bug is fixed
+      # See https://github.com/SonarSource/SonarJS/issues/1928 and https://community.sonarsource.com/t/error-about-unsupported-ts-version-while-project-is-using-supported-version/15776
+      - rm -r ui/main/node_modules/@compodoc/ngd-core
+      - rm -r ui/main/node_modules/ts-simple-ast
       - if [ "${SONAR_TOKEN}" != "" ]; then
         (sonar-scanner) && (echo sonar-scanner was run);
         fi
