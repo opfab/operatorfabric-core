@@ -75,23 +75,9 @@ ifdef::single-page-doc[<<display_rules, Display rules>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
 . Without recipient declaration a card is useless in `OperatorFabric` system.
 
-=== Store information
-
-==== Tags (`tag`)
-
-Tags are intended to enable filter of cards in the feed of the GUI.
-
-==== uid (`uid`)
-
-Unique identifier of the card in the OperatorFabric system. This attribute can be send with card, but normally it's manage by `OperatorFabric` system.
-
-==== id (`id`)
-
-State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`.
-
 === Card Life Management Configuration
 
-With this attributes OperatorFabric know when to display or hide cards, but also if an action is still available for a given card.
+With this attributes OperatorFabric knows when to display or hide cards.
 
 ==== Start Date (`startDate`)
 
@@ -110,9 +96,34 @@ ifdef::single-page-doc[<<display_rules, Display rules>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
 for some examples.
 
+
+
+=== Optional information
+
+==== Tags (`tag`)
+
+Tags are intended as an additional way to filter cards in the feed of the GUI.
+
+==== EntityRecipients (`entityRecipients`)
+
+Used to send to cards to entity : all users members of the listed entities will receive the card. If it is used in conjunction with groups recipients, users must be members of one of the entities AND one of the groups to receive the cards.
+
+
 === Last Time to Decide (`lttd`)
 
 Fixes the moment until when a `actions` associated to the card are available. After then, the associated actions won't be displayed or actionable.
+
+=== Store information 
+
+==== uid (`uid`)
+
+Unique identifier of the card in the OperatorFabric system. This attribute can be sent with card, but by default it's managed by OperatorFabric.
+
+==== id (`id`)
+
+State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`.
+
+
 
 === Other technical attributes
 
@@ -183,11 +194,10 @@ If the `publisherVersion` of the card is `2` then only the `title` key declared 
 
 When the simple startDate and endDate are not enough to characterize your
 process business times, you can add a list of TimeSpan to your card. TimeSpans
-are rendered in the timeline component as cluster bubbles are as lines
-depending on your parametrization of the span. This as no effect on the feed
+are rendered in the timeline component as cluster bubbles. This has no effect on the feed
 content
 
-*example 1:*
+*example :*
 
 to display the card two times in the timeline you can add two TimeSpan to your
 card:
@@ -210,22 +220,5 @@ card:
 In this sample, the card will be displayed twice in the time line. The card
 start date will be ignored.
 
-*example 2:*
 
-Instead of the default clustered view, you may want your card to be displayed
-as a line in the time line.
-
-....
-{
-	"publisher":"TSO1",
-	"publisherVersion":"0.1",
-	"processId":"process-000",
-	"startDate":1546297200000,
-	"severity":"INFORMATION",
-	...
-	"timeSpans" : [
-        {"start" : 1546297200000, "end" : 1546297500000}
-    ]
-
-}
-....
+For timeSpans, you can specify an end date but it is not implemented in OperatorFabric (it was intended for future uses but it will be deprecated).
