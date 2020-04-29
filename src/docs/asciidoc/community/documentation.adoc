@@ -21,7 +21,8 @@ It is organized into several folders (architecture documentation, deployment doc
 folders represent a document and contain an *index.adoc* file, optionally referencing other adoc files (to break it
 down into sections).
 
-In addition, an *images* folder contains images for all documents.
+In addition, an *images* folder contains images for all documents and a *resources* folder contains various appendices
+that might be of use to some people but that we felt weren't part of the main documentation.
 
 The table below gives a short summary of the content of each document as well as advice on which ones you should focus
 on depending on your profile.

@@ -24,6 +24,8 @@ include::../community/index.adoc[]
 
 include::../CICD/index.adoc[]
 
+include::../resources/index.adoc[]
+
 //TODO Add introduction and move architecture after getting started?
 
 //TODO Reorder

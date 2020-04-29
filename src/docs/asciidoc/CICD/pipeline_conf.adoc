@@ -1,0 +1,56 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Pipeline Configuration
+
+This section briefly describes the organization of our CICD pipeline. If you are looking for more detailed information,
+see
+ifdef::single-page-doc[<<mock_pipeline, this document>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/resources/index.adoc#mock_pipeline, this document>>]
+describing the steps that were necessary to create our mock pipeline as well as the issues we ran into.
+
+Most of the access and permissions required by our CICD plateform (Travis) are managed by tokens that are created on
+each of the required services (SonarCloud, DockerHub, GitHub).
+A technical user account (opfabtech) has been created for each of these services so that these tokens are not linked
+to the account of any member of the team.
+
+== CICD Pipeline
+
+=== Travis CI
+
+We use Travis CI to manage our pipeline. As of today, it is composed of 3 stages:
+[horizontal]
+test-assemble:: Run on every push regardless of the branch, does the build and produces test reports.
+It also triggers a sonar-scanner analysis and pushes the results to SonarCloud (except for external pull requests).
+doc:: Run only on the master branch, for the daily cron jobs or if a commit is push with a message containing
+ci_documentation. It generates the documentation (adoc, javadoc, compodoc, reports) and pushes it to the opfab.github.io
+repository to update the website.
+docker:: Run only on the master branch, for the daily cron jobs or if a commit is push with a message containing
+ci_docker. It generates the docker images for the current version and pushes them to DockerHub.
+
+=== SonarCloud
+
+To be allowed to push results to SonarCloud, Travis needs to be authenticated. This is done by generating a token on
+SonarCloud with an account (opfabtech) that has admin rights to the organization, and then providing this token to Travis
+either through the .travis.yml file or as an environment variable through Travis settings.
+
+=== GitHub (documentation)
+
+To be allowed to push the generated documentation to the opfab.github.io, Travis needs write access to the repository.
+This is done by setting up a Personal Access Token in GitHub using the technical account.
+This token is then passed to Travis as an environment variable through Travis settings, and is used in the .travis.yml file.
+Right now the scope of this token is maximal, it can probably be reduced (see https://opfab.atlassian.net/browse/OC-755[OC-755]).
+
+NOTE: After new content is pushed to the opfab.github.io repository, it can take a few minutes before this content is
+visible on the website because it needs to be built by GitHub pages, and this can take a short while
+depending on how busy the service is.
+
+=== DockerHub
+To be allowed to push images to DockerHub, Travis needs to be authenticated. This is done by setting the dockerhub
+login and password of the technical account as environment variables through Travis settings and referencing them in
+the .travis.yml file.

@@ -6,9 +6,6 @@
 
 :imagesdir: ../images
 
-= CICD Scripts
+= Resources
 
-
-
-CICD/prepare_release_version.sh:: performs the changes necessary to tag a RELEASE version
-CICD/prepare_snapshot_version.sh:: performs the changes necessary to tag a SNAPSHOT version
+include::mock_pipeline.adoc[leveloffset=+1]
