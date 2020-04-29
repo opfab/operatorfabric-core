@@ -19,3 +19,6 @@ export const selectArchiveCount = createSelector(selectArchive, (archiveState: A
 
 
 export const selectArchiveLightCardSelection = createSelector(selectArchive, (archiveState: ArchiveState) => archiveState.selectedCardId);
+
+//export const selectArchiveNoResultMessage = createSelector(selectArchive, (archiveState: ArchiveState) => archiveState.noResultMessage);
+export const selectArchiveLoading= createSelector(selectArchive, (archiveState: ArchiveState) => archiveState.firstLoading);

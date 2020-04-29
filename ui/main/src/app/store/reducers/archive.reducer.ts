@@ -6,17 +6,20 @@
  */
 
 
-import {archiveInitialState, ArchiveState} from '@ofStates/archive.state';
-import {ArchiveActions, ArchiveActionTypes} from '@ofActions/archive.actions';
+import { archiveInitialState, ArchiveState } from '@ofStates/archive.state';
+import { ArchiveActions, ArchiveActionTypes, FlushArchivesResult } from '@ofActions/archive.actions';
+
+
 
 
 export function reducer(
     state = archiveInitialState,
     action: ArchiveActions
+
 ): ArchiveState {
     switch (action.type) {
 
-        case ArchiveActionTypes.UpdateArchiveFilter : {
+        case ArchiveActionTypes.UpdateArchiveFilter: {
             const filters = new Map(action.payload.filters);
             return {
                 ...state,
@@ -25,12 +28,13 @@ export function reducer(
             };
         }
 
-        case ArchiveActionTypes.ArchiveQuerySuccess : {
-            const {resultPage} = action.payload;
+        case ArchiveActionTypes.ArchiveQuerySuccess: {
+            const { resultPage } = action.payload;
             return {
                 ...state,
                 resultPage: resultPage,
-                loading: false
+                loading: false,
+                firstLoading : true
             };
         }
         case ArchiveActionTypes.SelectArchivedLightCard: {
@@ -39,6 +43,15 @@ export function reducer(
                 ...action.payload
             };
         }
+        case ArchiveActionTypes.FlushArchivesResult: {
+            return archiveInitialState;
+        }
+        case ArchiveActionTypes.SendArchiveQuery: {
+          return {
+                ...state,
+                firstLoading : true
+            };
+         }
         default: {
             return state;
         }

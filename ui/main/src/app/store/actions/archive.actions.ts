@@ -16,8 +16,8 @@ export enum ArchiveActionTypes {
     ArchiveQuerySuccess = '[Archive] Query was successful',
     UpdateArchivePage = '[Archive] Update query result page',
     HandleUnexpectedError = '[Archive] Handle unexpected error related to archived card issue',
-    SelectArchivedLightCard = '[Archive] Select one archived light card'
-
+    SelectArchivedLightCard = '[Archive] Select one archived light card',
+    FlushArchivesResult = '[Archive] Flush archives result'
 }
 
 export class UpdateArchiveFilter implements Action {
@@ -25,6 +25,12 @@ export class UpdateArchiveFilter implements Action {
     /* istanbul ignore next */
     constructor(public payload: {filters: Map<string, string[]>}) {}
 }
+
+
+export class FlushArchivesResult implements Action {
+    readonly type = ArchiveActionTypes.FlushArchivesResult;
+}
+
 
 export class SendArchiveQuery implements Action {
     readonly type = ArchiveActionTypes.SendArchiveQuery;
@@ -63,4 +69,5 @@ export type ArchiveActions = UpdateArchiveFilter
     | HandleUnexpectedError
     | ArchiveQuerySuccess
     | UpdateArchivePage
-    | SelectArchivedLightCard;
+    | SelectArchivedLightCard
+    | FlushArchivesResult;
