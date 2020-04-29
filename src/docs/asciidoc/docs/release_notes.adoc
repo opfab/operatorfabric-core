@@ -30,3 +30,4 @@ Group{
 ----
 Please do take a look at the Users API documentation (groups section) :
 https://opfab.github.io/documentation/current/api/users/#/groups
+* [OC-858] Refactoring UI Timeline code for circle content and position computing

@@ -43,8 +43,7 @@ export class MouseWheelDirective {
       event = window.event;
     }
 
-    let delta = 0;
-    delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
+    let delta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
     if (delta > 0) {
       this.mouseWheelUp.emit(event);
     } else if (delta < 0) {

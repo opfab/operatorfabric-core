@@ -12,7 +12,6 @@ import {CardListComponent} from './components/card-list/card-list.component';
 import {FeedComponent} from './feed.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FeedRoutingModule} from "./feed-routing.module";
-import {NoSelectionComponent} from './components/no-selection/no-selection.component';
 import {TimeLineComponent} from './components/time-line/time-line.component';
 import {CardsModule} from "../cards/cards.module";
 import {FiltersComponent} from './components/card-list/filters/filters.component';
@@ -48,7 +47,7 @@ import { FlatpickrModule } from 'angularx-flatpickr';
         UtilitiesModule,
         FlatpickrModule.forRoot()
     ],
-    declarations: [CardListComponent, FeedComponent, NoSelectionComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent, TimeFilterComponent,
+    declarations: [CardListComponent, FeedComponent, TimeLineComponent, FiltersComponent, TypeFilterComponent, TimeFilterComponent,
         InitChartComponent,
         CustomTimelineChartComponent,
         MouseWheelDirective,

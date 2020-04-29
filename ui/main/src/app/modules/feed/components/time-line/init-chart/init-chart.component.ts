@@ -31,7 +31,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
   @Input() confDomain;
 
   // required by Timeline
-  public arrayChartData: any[];
+  public cardsData: any[];
   public myDomain: number[];
   public domainId: string;
   data$: Observable<any[]>;
@@ -184,19 +184,13 @@ export class InitChartComponent implements OnInit, OnDestroy {
   }
 
 
-  /**
-   * subscribe on timeline's State data
-   * feed arrayChartData with values from data Observable
-   */
   initDataPipe(): void {
-    // init data selector
     this.data$ = this.store.pipe(
       select(timelineSelectors.selectTimelineSelection),
       catchError(err => of([]))
     );
     this.subscription = this.data$.pipe(debounceTime(300), distinctUntilChanged()).subscribe(value => {
-      const chartData = _.cloneDeep(value);
-      this.setArrayChartData(chartData);
+      this.cardsData  = _.cloneDeep(value);
     });
   }
 
@@ -210,104 +204,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
   }
 
 
-  /**
-   * sort by display date the array received on param
-   * set an list of arrays for each severity of Cards
-   */
-  setArrayChartData(array: any[]): void {
-    array.sort((val1, val2) => {
-      return val1.displayDate - val2.displayDate;
-    });
-
-    const arraySeverity = [];
-    this.arrayChartData = [];
-    for (const value of array) {
-      const obj = _.cloneDeep(value);
-      obj.date = obj.displayDate;
-      obj.r = 20;
-      obj.stroke = 'stroke';
-      obj.count = 1;
-      obj.color = this.getColorSeverity(obj.severity);
-      obj.value = this.getCircleValue(obj.severity);
-
-      let idx = -1;
-      // compare object color with all colors stock on arraySeverity
-      for (let i = 0; i < arraySeverity.length; i++) {
-        if (arraySeverity[i].color === obj.color) {
-          idx = i;
-          break;
-        }
-      }
-      // push a new array when an new color is parsed
-      if (idx === -1) {
-        const last = this.arrayChartData.length;
-        this.arrayChartData.push([]);
-        this.arrayChartData[last].push(obj);
-        arraySeverity.push({ color: obj.color, id: last });
-      } else {
-        // push object inside the severity's list corresponding on arrayChartData
-        this.arrayChartData[idx].push(obj);
-      }
-    }
-  }
-
-  /**
-   * return color according to severity
-   * @param color
-   */
-  getColorSeverity(color: string): string {
-    if (color) {
-      switch (color) {
-        case 'ALARM': {
-          return 'red';
-        }
-        case 'ACTION': {
-          return 'orange';
-        }
-        case 'COMPLIANT': {
-          return 'green';
-        }
-        case 'INFORMATION': {
-          return 'blue';
-        }
-        default: {
-          return 'white';
-        }
-      }
-    } else { // default
-      return 'white';
-    }
-  }
-
-  /**
-   * return value (y position) according to severity
-   * @param color
-   */
-  getCircleValue(color: string): number {
-    if (color) {
-      switch (color) {
-        case 'ALARM': {
-          return 4;
-        }
-        case 'ACTION': {
-          return 3;
-        }
-        case 'COMPLIANT': {
-          return 2;
-        }
-        case 'INFORMATION': {
-          return 1;
-        }
-        default: {
-          return 5;
-        }
-      }
-    } else { // default
-      return 5;
-    }
-  }
-
-
 
   /**
 :
@@ -317,29 +213,16 @@ export class InitChartComponent implements OnInit, OnDestroy {
    */
   applyNewZoom(direction: string): void {
     this.buttonHomeActive = false;
-    if (direction === 'in') {
-      const reverseButtonList = _.cloneDeep(this.buttonList);
-      reverseButtonList.reverse();
-      for (let i = 0; i < reverseButtonList.length; i++) {
-        if (reverseButtonList[i].buttonTitle === this.buttonTitle) {
-          if (i + 1 === reverseButtonList.length) {
-            return;
-          } else {
-            this.changeGraphConf(reverseButtonList[i + 1]);
-            return;
-          }
+
+    for (let i = 0; i < this.buttonList.length; i++) {
+      if (this.buttonList[i].buttonTitle === this.buttonTitle) {
+        if (direction === 'in') {
+          if (i!==0) this.changeGraphConf(this.buttonList[i-1]);
         }
-      }
-    } else if (direction === 'out') {
-      for (let i = 0; i < this.buttonList.length; i++) {
-        if (this.buttonList[i].buttonTitle === this.buttonTitle) {
-          if (i + 1 === this.buttonList.length) {
-            return;
-          } else {
-            this.changeGraphConf(this.buttonList[i + 1]);
-            return;
-          }
+        else {
+          if (i!==this.buttonList.length-1) this.changeGraphConf(this.buttonList[i+1]);
         }
+        return;
       }
     }
   }

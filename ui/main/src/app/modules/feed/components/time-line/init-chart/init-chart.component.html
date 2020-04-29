@@ -39,9 +39,9 @@
    (zoomChange) call when custom timeline chart change his domain
   -->
   <of-custom-timeline-chart class="of-custom-timeline-chart"
-                              *ngIf="arrayChartData"
+                              *ngIf="cardsData"
                              [prod]="true"
-                             [myData]="arrayChartData"
+                             [cardsData]="cardsData"
                              [domainId]="domainId"
                              [valueDomain]="myDomain"
                              [followClockTick]="followClockTick"
