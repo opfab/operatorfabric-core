@@ -59,3 +59,4 @@ Work is still in progress. The object is not usable at the moment.
 ====
 * [OC-878] Remove unecessary utilities time classes
 * [OC-882] Remove unused publishTestData method in cardConsultation service
+* [OC-836] Remove netflix stack (eureka registry server) and config server for thirds microsevice

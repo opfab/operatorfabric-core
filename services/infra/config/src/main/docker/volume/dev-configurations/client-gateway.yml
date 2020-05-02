@@ -25,6 +25,12 @@ spring:
         - Path=/ui/**
         filters:
         - RewritePath=/ui/(?<path>.*), /$\{path}
+      - id: thirds
+        uri: http://localhost:2100
+        predicates:
+          - Path=/thirds/**
+        filters:
+          - RewritePath=/thirds/(?<path>.*), /thirds/$\{path}
 # WARNING : THIS CORS CONFIGURATION SHOULD NOT BE USED IN PRODUCTION      
       globalcors:
         corsConfigurations:

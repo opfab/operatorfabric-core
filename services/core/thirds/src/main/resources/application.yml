@@ -1,3 +1,7 @@
-operatorfabric.thirds:
-  storage:
-    path: "/configuration/thirds-storage"
+server:
+  port: 2100
+
+spring:
+  data:
+    mongodb:
+      database: operator-fabric
