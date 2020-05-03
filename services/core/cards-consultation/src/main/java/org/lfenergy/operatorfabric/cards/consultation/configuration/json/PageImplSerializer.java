@@ -20,6 +20,7 @@ import java.io.IOException;
  *
  *
  */
+@SuppressWarnings("rawtypes")
 public class PageImplSerializer extends StdSerializer<Page> {
 
     protected PageImplSerializer(Class<Page> t) {

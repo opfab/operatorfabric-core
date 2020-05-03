@@ -80,7 +80,7 @@ public class ActionService {
                                 .message(EMPTY_RESULT_MESSAGE).build()));
                     }
                     return fetchAction(state, actionKey, jwt, card)
-                            .map(action -> (ActionStatus) computeActionStatus(jwt, card, action));
+                            .map(action -> computeActionStatus(jwt, card, action));
                 })
                 ;
     }

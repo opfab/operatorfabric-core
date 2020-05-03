@@ -126,7 +126,7 @@ public class CardPublicationData implements Card {
                 .title(((I18nPublicationData) this.getTitle()).copy())
                 .summary(((I18nPublicationData) this.getSummary()).copy());
         if(this.getTimeSpans()!=null)
-            result.timeSpansSet(new HashSet(this.getTimeSpans()));
+            result.timeSpansSet(new HashSet<>(this.getTimeSpans()));
         return result.build();
     }
 }

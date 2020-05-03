@@ -7,17 +7,15 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
-import lombok.extern.slf4j.Slf4j;
-import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import java.lang.reflect.Field;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -27,30 +25,16 @@ import java.lang.reflect.Field;
 @Service
 @Slf4j
 public class CardRepositoryService {
+	
+	
 
     @Autowired
     private MongoTemplate template;
-
+	
+	
     public void saveCard(CardPublicationData card) {
-
         log.debug("preparing to write {}", card.toString());
-        Document objDocument = new Document();
-        template.getConverter().write(card, objDocument);
-
-        Update update = new Update();
-        // work around OC-709 : "Change card update mechanism in Mongo"
-        for (Field f : CardPublicationData.class.getDeclaredFields()) {
-            try {
-                f.setAccessible(true);
-                if (f.get(card) == null)
-                    update.unset(f.getName());
-            } catch (IllegalAccessException e) {
-                log.error("Unable to access to field" + f.getName(), e);
-            }
-        }
-        objDocument.entrySet().forEach(e -> update.set(e.getKey(), e.getValue()));
-        this.template.upsert(Query.query(Criteria.where("_id").is(card.getId())), update, CardPublicationData.class);
-
+        template.save(card);
     }
 
     public void saveCardToArchive(ArchivedCardPublicationData card) {
