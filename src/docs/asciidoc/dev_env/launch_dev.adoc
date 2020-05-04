@@ -70,6 +70,7 @@ cd ${OF_HOME}
 
 To export the different report into the `SonarQube` docker instance you need to install and use link:https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/[SonarScanner].
 
+[[_docker_dev_env]]
 === Development environment
 
 During `OperatorFabric` development the running docker images of `MongoDB`, `RabbitMQ`, `web-ui` and `Keycloak` are needed.

@@ -13,13 +13,9 @@ Its sole purpose is to serve the Angular SPA to browsers.
 
 == NGINX configuration
 
-The NGINX configuration is managed in the nginx.conf file:
+The NGINX configuration used is the NGINX default one.
 
-* Under src/main/docker/nginx/nginx.conf if running in "dev" mode (using the dev-environment
-docker-compose and run_all script)
-* Under src/main/docker/deploy/nginx.conf if running in full docker mode using the deploy docker-compose
-
-Please refer to the link:https://docs.nginx.com/[NGINX documentation] for more details.
+Please refer to the link:https://docs.nginx.com/[NGINX documentation] for more details for any required customisations.
 
 === Service specific properties
 
