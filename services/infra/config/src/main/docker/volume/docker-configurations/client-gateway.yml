@@ -17,7 +17,13 @@ spring:
           - Path=/actions/**
         filters:
           - RewritePath=/actions/(?<path>.*), /$\{path}
-# WARNING : THIS CORS CONFIGURATION SHOULD NOT BE USED IN PRODUCTION
+      - id: web-ui
+        uri: http://web-ui:80
+        predicates:
+          - Path=/ui/**
+        filters:
+          - RewritePath=/ui/(?<path>.*), /$\{path}
+        # WARNING : THIS CORS CONFIGURATION SHOULD NOT BE USED IN PRODUCTION
         globalcors:
          corsConfigurations:
           '[/**]':

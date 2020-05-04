@@ -26,12 +26,11 @@ project
 │   │   ├──src
 │   │   ├──thirds (third-party-business-service)
 │   │   └──users (users-business-service)
-│   ├──infra
-│   │   ├──client-gateway (client-gateway-cloud-service)
-│   │   ├──config (configuration-cloud-service)
-│   │   └──registry (registry-cloud-service)
-│   └──web
-│       └──web-ui
+│   └──infra
+│       ├──client-gateway (client-gateway-cloud-service)
+│       ├──config (configuration-cloud-service)
+│       └──registry (registry-cloud-service)
+├──web-ui
 ├──src
 |   ├──docs
 |   │   ├──asciidoc
@@ -85,8 +84,8 @@ microservice, used to serve public apis and web ui
 spring-configuration centralized configuration microservice
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/services/infra/registry[registry (registry-cloud-service)]: eureka
 microservice registry
-** link:https://github.com/opfab/operatorfabric-core/tree/master/services/web[web]: contains web pages and application services
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/web/web-ui[web-ui]: Main OperatorFabric SPA
+* link:https://github.com/opfab/operatorfabric-core/tree/master/web-ui[web-ui]: project based on Nginx server to serve
+the OperatorFabric UI
 * link:https://github.com/opfab/operatorfabric-core/tree/master/src[src]
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs[docs]
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs/asciidoc[asciidoc]: General documentation (Architecture,

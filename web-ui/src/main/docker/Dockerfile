@@ -1,6 +1,5 @@
-FROM openjdk:8-jre-alpine
+FROM nginx:1.17.10-alpine
 VOLUME /tmp
-ARG JAR_FILE
 ARG http_proxy
 ARG https_proxy
 ARG HTTP_PROXY_AUTH
@@ -13,8 +12,4 @@ ENV http_proxy=""
 ENV https_proxy=""
 ENV HTTP_PROXY_AUTH=""
 RUN env
-COPY add-certificates.sh /add-certificates.sh
-COPY java-config-dependent-docker-entrypoint.sh /docker-entrypoint.sh
-COPY ${JAR_FILE} app.jar
-COPY bootstrap-docker.yml /config/bootstrap.yml
-ENTRYPOINT ["/docker-entrypoint.sh"]
+COPY distribution /usr/share/nginx/html/

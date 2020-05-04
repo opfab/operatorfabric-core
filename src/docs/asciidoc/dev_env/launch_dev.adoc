@@ -14,7 +14,7 @@ https://sdkman.io/[sdkman] and
 https://github.com/creationix/nvm[nvm] to manage tool versions ( for java,
 gradle, node and npm).
 
-There are several ways to get started with OperatorFabric. Please look into
+There are several ways to get started with `OperatorFabric`. Please look into
 the section that best fits your needs.
 
 TIP: If you encounter any issue, see
@@ -23,82 +23,123 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.a
 below. In particular,
 a command that hangs then fails is often a proxy issue.
 
-The following steps describe how to launch MongoDB, RabbitMQ and SonarQube
+The following steps describe how to launch MongoDB, RabbitMQ and Keycloak
 using Docker,  build OperatorFabric using gradle and run it using the
 `run_all.sh` script.
 
 == Clone repository
+[source,shell]
 ----
 git clone https://github.com/opfab/operatorfabric-core.git
 cd operatorfabric-core
 ----
 
 == Set up your environment (environment variables & appropriate versions of gradle, maven, etc…)
+[source,shell]
 ----
 source bin/load_environment_light.sh
 ----
 
-TIP: From now on, you can use environment variable $OF_HOME to go back to
-the home repository of OperatorFabric.
+TIP: From now on, you can use environment variable `${OF_HOME}` to go back to
+the home repository of `OperatorFabric`.
 
-== Deploy dockerized MongoDB, RabbitMQ and SonarQube
-MongoDB, RabbitMQ and SonarQube are needed for the tests to be run so the
-build can be done.
+== Deploy needed docker containers
 
-A docker-compose file with properly configured containers is available
-link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker/test-quality-environment/[there].
+=== Minimal configuration for `gradle` build
+
+Two docker container must be available during a gradle build of `OperatorFabric`:
+* RabbitMQ;
+* MongoDB.
+
+They can be launch using the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`.
+
+Remind that, during a gradle build, before the `assemble` task, the `test` one is called. The Unit tests depend on those
+two software.
+
+=== Enabling local quality report generation
+
+To get a Sonarqube report, in addition to the two previously listed docker containers, a `SonarQube` docker container is
+required. Use the `${OF_HOME}/src/main/docker/test-quality-environment/docker-compose.yml` to get them all running.
+
+To generate the quality report use the following command:
+[source,shell]
+---
+cd ${OF_HOME}
+./gradlew jacocoTestReport
+---
+
+To export the different report into the `SonarQube` docker instance you need to install and use link:https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/[SonarScanner].
+
+[[_docker_dev_env]]
+=== Development environment
+
+During `OperatorFabric` development the running docker images of `MongoDB`, `RabbitMQ`, `web-ui` and `Keycloak` are needed.
 
 The `docker-compose` can be run in detached mode:
+[source,shell]
 ----
-cd src/main/docker/test-quality-environment/
+cd ${OF_HOME}/src/main/docker/dev-environment/
 docker-compose up -d
 ----
+
+The configuration of the `web-ui` embeds a grayscale favicon which can be usefull to spot the `OperatorFabric` dev tab in the browser.
+Sometime a `CTRL+F5` on the tab is required to refresh the favicon.
 
 == Build OperatorFabric with Gradle
 
 Using the wrapper in order to ensure building the project the same way from one machine to another.
 
 To only compile and package the jars:
+[source,shell]
 ----
-cd $OF_HOME
+cd ${OF_HOME}
 ./gradlew assemble
 ----
 
 To launch the Unit Test, compile and package the jars:
+[source,shell]
 ----
-cd $OF_HOME
+cd ${OF_HOME}
+docker-compose -f ${OF_HOME}/src/main/docker/test-environment/docker-compose.yml up -d
 ./gradlew build
 ----
 
 == Run OperatorFabric Services using the `run_all.sh` script
+[source,shell]
 ----
+cd ${OF_HOME}
+docker-compose -f ${OF_HOME}/src/main/docker/dev-environment/docker-compose.yml up -d
 bin/run_all.sh start
 ----
+
+WARNING: the `${OF_HOME}/bin/run_all.sh` must be launched from `${OF_HOME}` otherwise some runtime exception will occur.
 
 TIP: See `bin/run_all.sh -h` for details.
 
 == Check services status
+[source,shell]
 ----
+cd ${OF_HOME}
 bin/run_all.sh status
 ----
 
 == Log into the UI
 
-URL: localhost:2002/ui/
+*_URL:_* localhost:2002/ui/ +
+*_login:_* tso1-operator +
+*_password:_* test
 
-login: admin
+The other users available in development mode are `rte-operator` and `admin`, both with `test` as password.
 
-password: test
+WARNING: It might take a little while for the UI to load even after all services are running.
 
-WARNING: It might take a little while for the UI to load even after all
-services are running.
-
-WARNING: Don't forget the *final slash* in the URL or you will get an error.
+WARNING: Don't forget the *final slash* in the URL or you will get an error, a `404` page.
 
 == Push cards to the feed
 
 You can check that you see cards into the feed by running the
 `push_card_loop.sh` script.
+[source,shell]
 ----
 services/core/cards-publication/src/main/bin/push_card_loop.sh
 ----
