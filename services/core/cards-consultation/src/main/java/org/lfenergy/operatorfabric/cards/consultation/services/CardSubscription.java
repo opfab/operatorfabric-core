@@ -18,7 +18,6 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.lfenergy.operatorfabric.users.model.User;
-import org.lfenergy.operatorfabric.utilities.VirtualTime;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
@@ -144,7 +143,7 @@ public class CardSubscription {
                 userMlc.start();
                 log.info("LISTENING to messages on Group[{}Groups] queue",this.user.getLogin());
                 groupMlc.start();
-                startingPublishDate = VirtualTime.getInstance().computeNow();
+                startingPublishDate = Instant.now();;
             });
             emitter.onDispose(()->{
                 log.info("DISPOSING amqp publisher");
@@ -269,7 +268,7 @@ public class CardSubscription {
     public void updateRange(Instant rangeStart, Instant rangeEnd) {
         this.rangeStart = rangeStart;
         this.rangeEnd = rangeEnd;
-        startingPublishDate = VirtualTime.getInstance().computeNow();
+        startingPublishDate = Instant.now();
     }
 
     public void publishInto(Flux<String> fetchOldCards) {

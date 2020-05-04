@@ -23,7 +23,6 @@ import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.User;
-import org.lfenergy.operatorfabric.utilities.VirtualTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -139,7 +138,7 @@ public class CardOperationsController {
 
     private Flux<String> fetchOldCards0(Instant referencePublishDate, Instant start, Instant end, User user) {
         Flux<String> oldCards;
-        referencePublishDate = referencePublishDate == null ? VirtualTime.getInstance().computeNow() : referencePublishDate;
+        referencePublishDate = referencePublishDate == null ? Instant.now() : referencePublishDate;
         String login = user.getLogin();
         String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
 
@@ -173,7 +172,7 @@ public class CardOperationsController {
                 .doOnEach(l -> log.info("message {} to {}", l, t.getUser().getLogin()))
                 .map(l -> CardOperationConsultationData.builder()
                         .number(l)
-                        .publishDate(VirtualTime.getInstance().computeNow().minusMillis(600000))
+                        .publishDate(Instant.now().minusMillis(600000))
                         .type(CardOperationTypeEnum.ADD)
                         .card(
                                 LightCardConsultationData.builder()
@@ -183,8 +182,8 @@ public class CardOperationsController {
                                         .title(I18nConsultationData.builder().key("title").build())
                                         .mainRecipient("rte-operator")
                                         .severity(SeverityEnum.ALARM)
-                                        .startDate(VirtualTime.getInstance().computeNow())
-                                        .endDate(VirtualTime.getInstance().computeNow().plusMillis(3600000))
+                                        .startDate(Instant.now())
+                                        .endDate(Instant.now().plusMillis(3600000))
                                         .build()
                         )
                         .build())

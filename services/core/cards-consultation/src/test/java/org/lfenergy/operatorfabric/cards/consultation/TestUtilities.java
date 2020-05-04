@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import org.lfenergy.operatorfabric.cards.consultation.model.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.lfenergy.operatorfabric.utilities.DateTimeUtil;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
@@ -39,7 +38,7 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.*;
 @Slf4j
 public class TestUtilities {
 
-    private static DateTimeFormatter ZONED_FORMATTER = DateTimeUtil.OUT_DATETIME_FORMAT.withZone(ZoneOffset.UTC);
+    private static DateTimeFormatter ZONED_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
 
     @NotNull
     public static String format(Instant now) {

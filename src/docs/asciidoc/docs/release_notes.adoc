@@ -36,10 +36,14 @@ Group{
     description string
 }
 ----
+====
 
 * [OC-858] Refactoring UI Timeline code for circle content and position computing
 * [OC-869] Small improvements in karate test 
 * [OC-744] Replace web-ui spring component with Nginx
+
+[NOTE]
+====
 ** adds a new docker configuration for development purpose : `${OF_HOME}/src/main/docker/dev-environment/docker-compose.yml` +
 this folder contains also a grayscale version of the favicon. It's helping to distinguish this environment from `deploy` one. +
 To force favicon refresh use `CTRL+F5` in the browser. +
@@ -47,11 +51,19 @@ Use this configuration when developing on `OperatorFabric` instead of `test-envi
 ** removes `keycloak` container from `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`. +
 Clean your docker environment with adding an `--remove-orphans` option to your next `docker-compose` usage.
 ** removes `container-name`s from `docker-compose.yml` files for `keycloak`, `mongodb` and `rabbitmq` docker service definitions.
-* [OC-733] As an administrator I would like to be able to customize the icon on the title bar of the browser +
+====
+* [OC-733] As an administrator I would like to be able to customize the icon on the title bar of the browser 
+
+[NOTE]
+====
 cf Web-ui README.adoc, or the chapter link:https://opfab.github.io/documentation/current/dev_env/#_docker_dev_env[Development environment] of Setting up your development environment within Development Environment documentation,
 or the entry about [OC-744] of this current file.
+====
 * [OC-658] gradle assemble shouldn't run the ui unit tests
 * [OC-738] Add a group perimeter object in the user service
 
 [NOTE]
+====
 Work is still in progress. The object is not usable at the moment.
+====
+* [OC-878] remove unecessary utilities time classes
