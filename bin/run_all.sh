@@ -135,18 +135,38 @@ PRJ_STRC_FIELDS=4
 declare -a projects
 declare -a dependentProjects
 i=0
-projects[$i]="configuration-cloud-service"; projects[$i+1]="services/infra/config"; projects[$i+2]=0; projects[$i+3]="--spring.cloud.config.server.native.search-locations=$DIR/../services/infra/config/build/docker-volume/dev-configurations/"; i=$((i+$PRJ_STRC_FIELDS))
+projects[$i]="configuration-cloud-service"
+projects[$i+1]="services/infra/config"
+projects[$i+2]=0
+projects[$i+3]="--spring.cloud.config.server.native.search-locations=$DIR/../services/infra/config/build/docker-volume/dev-configurations/"
+i=$((i+$PRJ_STRC_FIELDS))
 #projects[$i]="OAuth2-dev-server"; projects[$i+1]="services/infra/auth"; projects[$i+2]=0; projects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
-projects[$i]="registry-cloud-service"; projects[$i+1]="services/infra/registry"; projects[$i+2]=10; projects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
+projects[$i]="registry-cloud-service"
+projects[$i+1]="services/infra/registry"
+projects[$i+2]=10
+projects[$i+3]=""
+i=$((i+$PRJ_STRC_FIELDS))
 i=0
 #if [ "$gateway" = true ] ; then
-    dependentProjects[$i]="client-gateway-cloud-service"; dependentProjects[$i+1]="services/infra/client-gateway"; dependentProjects[$i+2]=0; dependentProjects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
+    dependentProjects[$i]="client-gateway-cloud-service"
+ dependentProjects[$i+1]="services/infra/client-gateway"
+ dependentProjects[$i+2]=0
+ dependentProjects[$i+3]=""
+ i=$((i+$PRJ_STRC_FIELDS))
 #fi
 for bservice in "${businessServices[@]}"; do
-    dependentProjects[$i]="$bservice-business-service"; dependentProjects[$i+1]="services/core/$bservice"; dependentProjects[$i+2]=0; dependentProjects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
+    dependentProjects[$i]="$bservice-business-service"
+ dependentProjects[$i+1]="services/core/$bservice"
+ dependentProjects[$i+2]=0
+ dependentProjects[$i+3]=""
+ i=$((i+$PRJ_STRC_FIELDS))
 done
 
-dependentProjects[$i]="web-ui"; dependentProjects[$i+1]="services/web/web-ui"; dependentProjects[$i+2]=0; dependentProjects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
+#dependentProjects[$i]="web-ui"
+#dependentProjects[$i+1]="services/web/web-ui"
+#dependentProjects[$i+2]=0
+#dependentProjects[$i+3]=""
+#i=$((i+$PRJ_STRC_FIELDS))
 
 debugPort=5005
 version=$OF_VERSION

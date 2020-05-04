@@ -8,14 +8,13 @@
 
 = User Interface
 
-This project was partially generated with https://github.com/angular/angular-cli[Angular CLI] version 6.0.8.
+The https://github.com/angular/angular-cli[Angular CLI] version 6.0.8 has been used to generate this project.
 
 IMPORTANT: In the following document the variable declared as `OF_HOME` is the root folder of the `operatorfabric-core project`.
 
 [horizontal]
 CLI:: stands for *Command Line Interface*
 SPA:: stands for *Single Page Application*
-OS:: stands for *Operating System*
 
 == Run
 
@@ -26,7 +25,7 @@ OS:: stands for *Operating System*
 After launching docker containers, use the following command line `$OF_HOME/bin/run_all.sh start` to run the application.
 Once the whole application is ready, you should have the following output in your terminal:
 
-[source]
+[source, shell]
 ----
 ##########################################################
 Starting client-gateway-cloud-service, debug port: 5008
@@ -60,13 +59,14 @@ Wait a moment before trying to connect to the`SPA`, leaving time for the`client-
 
 The `SPA`, on a local machine, is available at the following Url: `http://localhost:2002/ui/`.
 
-To log in you need to use a valid user. Currently you need to use a connection pair define in `$OPERATOR_FABRIC_HOME/services/infra/auth/src/main/java/org/lfenergy/operatorfabric/auth/config/WebSecurityConfiguration.java`. It could be `admin` with `test`, for example.
+To log in you need to use a valid user among the following: `tso1-operator`, `rte-operator` or `admin`.
+The common password is `test` for them all.
 
 To test the reception of cards, you can use the following script to create dummy cards:
 
-[source]
+[source,shell]
 ----
-$OF_HOME/services/core/cards-publication/src/main/bin/push_cards_loop.sh
+${OF_HOME}/services/core/cards-publication/src/main/bin/push_cards_loop.sh
 ----
 
 Once logged in, with that script running in the background, you should be able to see some cards displayed in `http://localhost:2002/ui/feed`.
@@ -78,20 +78,21 @@ Run `ng build` to build the project. The build artifacts will be stored in :
 
 [source,shell]
 ----
-$OPERATOR_FABRIC_CORE_HOME/services/web/web-ui/build/src/generated/resources/static
+${OF_HOME}/ui/main/build/distribution
 ----
 
 == Test
 
 === Standalone tests
 
-Run in the `$OF_HOME/ui/main` directory the command `ng test --watch=false` to execute the unit tests based on https://jasmine.github.io[Jasmine] using https://karma-runner.github.io[Karma] to drive the browser.
+Run in the `${OF_HOME}/ui/main` directory the command `ng test --watch=false` to execute the unit tests
+on https://jasmine.github.io[Jasmine] using https://karma-runner.github.io[Karma] to drive the browser.
 
 === Test during UI development
 
-. if the RabbitMQ and MongoDB docker containers are not not running, launch them;
-. set your environment variables with `. $OF_HOME/bin/load_environment_light.sh`;
-. run the micro services using the same command as earlier: `$OF_HOME/bin/run_all.sh start`;
-. if needed, enable a card-operation test flow using the script `$OF_HOME/service/core/cards-publication/src/main/bin/push_cards_loop.sh`;
+. if the RabbitMQ, MongoDB and Keycloak docker containers are not running, launch them;
+. set your environment variables with `source ${OF_HOME}/bin/load_environment_light.sh`;
+. run the micro services using the same command as earlier: `${OF_HOME}/bin/run_all.sh start`;
+. if needed, enable a card-operation test flow using the script `${OF_HOME}/service/core/cards-publication/src/main/bin/push_cards_loop.sh`;
 . launch an angular server with the command: `ng serve`;
 . test your changes in your browser using this url: `http://localhost:4200` which leads to `http://localhost:4200/#/feed`.

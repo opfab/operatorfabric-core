@@ -22,7 +22,10 @@ export const environment = {
         config: 'http://opfab.rte-europe.com:2002/config/web-ui.json',
       time: 'http://opfab.rte-europe.com:2002/time',
       actions: 'http://opfab.rte-europe.com:2002/action'
-    }
+    },
+  paths: {
+    i18n: '/ui/assets/i18n/'
+  }
 };
 
 /*

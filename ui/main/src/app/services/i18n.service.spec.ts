@@ -8,23 +8,23 @@
 
 import {getTestBed, TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {I18nService} from "@ofServices/i18n.service";
-import {of} from "rxjs";
-import {settingsInitialState} from "@ofStates/settings.state";
-import {map} from "rxjs/operators";
-import {TranslateModule} from "@ngx-translate/core";
-import {emptyAppState4Test} from "@tests/helpers";
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {I18nService} from '@ofServices/i18n.service';
+import {of} from 'rxjs';
+import {settingsInitialState} from '@ofStates/settings.state';
+import {map} from 'rxjs/operators';
+import {TranslateModule} from '@ngx-translate/core';
+import {emptyAppState4Test} from '@tests/helpers';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
-import {configInitialState} from "@ofStates/config.state";
+import {configInitialState} from '@ofStates/config.state';
 
 describe('I18nService', () => {
 
     let mockStore: SpyObj<Store<AppState>>;
     let httpMock: HttpTestingController;
-    let emptyAppState: AppState = {
+    const emptyAppState: AppState = {
         ...emptyAppState4Test,
         config: configInitialState
     };
@@ -53,19 +53,19 @@ describe('I18nService', () => {
                 }
             }).pipe(
                 map(v => selector(v))
-            )
+            );
         });
 
     });
 
     it('sets locale and timezone according to state'
         , (done) => {
-            const service = TestBed.get(I18nService)
+            const service = TestBed.get(I18nService);
             setTimeout(() => {
                 try {
                     expect(service.locale).toEqual('de');
                     expect(service.timeZone).toEqual('America/Thule');
-                    let calls = httpMock.match(req => req.url.endsWith("assets/i18n/de.json"));
+                    const calls = httpMock.match(req => req.url.endsWith('assets/i18n/de.json'));
                     expect(calls.length).toEqual(1);
                 } finally {
 

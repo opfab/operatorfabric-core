@@ -19,5 +19,8 @@ export const environment = {
         time: '/time',
         actions: '/actions'
 
+    },
+    paths: {
+        i18n: '/ui/assets/i18n/'
     }
 };

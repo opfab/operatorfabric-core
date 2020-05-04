@@ -19,6 +19,12 @@ spring:
         - Path=/actions/**
         filters:
         - RewritePath=/actions/(?<path>.*), /$\{path}
+      - id: web-ui
+        uri: http://localhost:2200
+        predicates:
+        - Path=/ui/**
+        filters:
+        - RewritePath=/ui/(?<path>.*), /$\{path}
 # WARNING : THIS CORS CONFIGURATION SHOULD NOT BE USED IN PRODUCTION      
       globalcors:
         corsConfigurations:

@@ -87,6 +87,7 @@ ext {
     ]
 
     plugin = [
+            base        : "base",
             boot        : "org.springframework.boot",
             bom         : "io.spring.dependency-management",
             swagger     : "org.hidetake.swagger.generator",

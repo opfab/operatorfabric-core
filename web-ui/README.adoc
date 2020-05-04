@@ -1,0 +1,26 @@
+
+The adhoc `web-ui` service is now a plain `Nginx` server within a docker container.
+
+The `web-ui` docker is built to contain front files which are overridable for customisation.
+
+For example, override the `favicon` by using the following configuration into the `docker-compose` file :
+```
+    volumes:
+        - "./favicon.ico:/usr/share/nginx/html/favicon.ico"
+```
+
+With a favicon named `favicon.ico` is in the same folder of the `docker-compose.yml`.
+
+Use a `Ctrl+F5` to force the `favicon.ico` refresh.
+
+The `dev-environment` is an example of a such case, where the `favicon.ico` is a gray scale version of the original one.
+
+This instance is available into 2 `docker-compose` environments. One  for deployment which is under
+`${OF_HOME}/src/main/docker/deploy`  and one for development which is under `${OF_HOME}/src/main/docker/dev-environment`.
+
+Just in case, and keep it in mind, the `keycloak` docker image has been removed from the `/test-/docker-compose.yml` file.
+
+To remove the orphans images use the following command
+```
+docker-compose -f ${OF_HOME}/srd/main/docker/test-/docker-compose.yml down --remove-orphans
+```
