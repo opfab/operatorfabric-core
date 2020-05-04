@@ -1,0 +1,39 @@
+buildscript {
+	repositories {
+		jcenter()
+		mavenLocal()
+		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/" }
+	}
+	dependencies {
+		classpath misc.palantir
+	}
+}
+
+apply plugin: plugin.base
+apply plugin: plugin.dockerBuild
+
+// Docker
+//For X.X.X.SNAPSHOT versions, docker images should be pushed with "snapshot" tag as the version number isn't
+//important since the content evolves every day (see OC-579)
+//For X.X.X.RELEASE versions, docker images are pushed with the full version number
+ext.isSnapshot = version.endsWith(".SNAPSHOT")
+if (isSnapshot) {
+	ext.dockerVersionTag = "snapshot"
+} else {
+	ext.dockerVersionTag = "${project.version}"
+}
+
+docker {
+
+	name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
+	tags 'latest', dockerVersionTag
+	labels(['project': "${project.group}"])
+	copySpec.from("../ui/main/build/distribution").into("distribution")
+	buildArgs(['http_proxy'     : apk.proxy.uri,
+			   'https_proxy'    : apk.proxy.uri,
+			   'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
+	dockerfile file("src/main/docker/Dockerfile")
+}
+
+tasks.dockerPrepare.dependsOn ':ui:main-user-interface:build'

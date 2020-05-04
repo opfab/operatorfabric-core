@@ -8,21 +8,14 @@
 
 = Web UI
 
-OperatorFabric Web UI service is a Spring MVC application bootstrapped using
-SpringBoot. Its sole purpose is to serve the Angular SPA to browsers.
+OperatorFabric Web UI service is built on top of a link:https://www.nginx.com/[NGINX] server.
+Its sole purpose is to serve the Angular SPA to browsers.
 
-In our spring micro service architecture this service depends on Eureka
-Registry.
+== NGINX configuration
 
-== Mandatory configuration, Profiles and default properties
+The NGINX configuration used is the NGINX default one.
 
-The service has no mandatory configuration beside global configuration and
-usual bootstrap configuration.
-
-For other configuration see:
-NONE
-* {springboot_doc}/reference/htmlsingle/[Spring Boot documentation].
-* {spring_doc}spring-framework-reference/web-reactive.html#webflux[Spring MVC documentation].
+Please refer to the link:https://docs.nginx.com/[NGINX documentation] for more details for any required customisations.
 
 === Service specific properties
 

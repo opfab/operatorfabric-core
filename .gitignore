@@ -114,3 +114,8 @@ src/test/api/karate/target/**/*
 src/test/api/karate/karate.jar
 src/test/utils/karate/target/**/*
 src/test/utils/karate/karate.jar
+
+# UI
+ui/main/node_modules
+ui/main/reports
+ui/main/report.html

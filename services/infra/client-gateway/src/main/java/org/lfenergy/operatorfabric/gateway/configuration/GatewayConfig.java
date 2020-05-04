@@ -97,12 +97,6 @@ public class GatewayConfig {
                                 .filters(f->f.rewritePath("/cards/(?<path>.*)", "/$\\{path}"))
                                 .uri("lb://CARDS-CONSULTATION")
                 )
-                .route("web-ui",
-                        r-> r
-                                .path("/ui/**")
-                                .filters(f->f.rewritePath("/ui/(?<path>.*)", "/$\\{path}"))
-                                .uri("lb://WEB-UI")
-                )
                 .route("archives",
                         r-> r
                                 .path("/archives/**")
