@@ -8,9 +8,8 @@
 
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.services.CardWriteService;
+import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +24,11 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/async/cards")
-@Slf4j
+
 public class AsyncCardController {
 
     @Autowired
-    private CardWriteService cardWriteService;
+    private CardProcessingService cardProcessingService;
 
     /**
      *  DEPRECATED / ONLY FOR COMPATIBILIY / NOT ASYNCHRONE ANYMORE 
@@ -42,6 +41,6 @@ public class AsyncCardController {
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public  Mono<Void>  createCards(@Valid @RequestBody Flux<CardPublicationData> cards) {
-        return cardWriteService.createCards(cards).flatMap(c->Mono.empty());
+        return cardProcessingService.processCards(cards).flatMap(c->Mono.empty());
     }
 }

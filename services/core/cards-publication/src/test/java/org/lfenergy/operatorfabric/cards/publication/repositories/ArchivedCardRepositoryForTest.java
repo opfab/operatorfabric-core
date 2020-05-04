@@ -8,17 +8,17 @@
 
 package org.lfenergy.operatorfabric.cards.publication.repositories;
 
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 /**
- * <p>Auto generated spring mongo reactive repository to access Card collection</p>
+ * <p>Auto generated spring mongo reactive repository to access Archived Card collection</p>
  *
  */
 @Repository
-public interface CardRepository extends ReactiveMongoRepository<CardPublicationData,String> {
+public interface ArchivedCardRepositoryForTest extends ReactiveMongoRepository<ArchivedCardPublicationData,String> {
 
-    public Mono<CardPublicationData> findByProcessId(String processId);
+    public Flux<ArchivedCardPublicationData> findByProcessId(String processId);
 }

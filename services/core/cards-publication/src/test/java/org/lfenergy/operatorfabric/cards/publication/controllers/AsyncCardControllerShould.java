@@ -18,8 +18,8 @@ import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepository;
-import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepository;
+import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
+import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,9 +52,9 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 class AsyncCardControllerShould {
 
     @Autowired
-    private CardRepository cardRepository;
+    private CardRepositoryForTest cardRepository;
     @Autowired
-    private ArchivedCardRepository archiveRepository;
+    private ArchivedCardRepositoryForTest archiveRepository;
     @Autowired
     private WebTestClient webTestClient;
 

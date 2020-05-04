@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>Aim of this service whose sole externally accessible method is
- * {@link #notifyCards(Collection, CardOperationTypeEnum)} is to
+ * {@link #notifyCard(CardOperationData, CardOperationTypeEnum)} is to
  * prepare data and notify AMQP exchange of it. Information about card
  * publication and deletion is then accessible to other services or
  * entities through bindings to these exchanges.
@@ -40,10 +40,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CardNotificationService {
 
+    
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper mapper;
 
-    @Autowired
+   
     public CardNotificationService(RabbitTemplate rabbitTemplate,
                                    ObjectMapper mapper
     ) {
@@ -51,11 +52,7 @@ public class CardNotificationService {
         this.mapper = mapper;
     }
 
-    public void notifyCards(Collection<CardPublicationData> cards, CardOperationTypeEnum type) {
-        cards.forEach(card -> notifyOneCard(card,type));
-    }
-
-    private void notifyOneCard(CardPublicationData card, CardOperationTypeEnum type) {
+    public void notifyOneCard(CardPublicationData card, CardOperationTypeEnum type) {
         CardOperationData.BuilderEncapsulator builderEncapsulator = CardOperationData.encapsulatedBuilder();
         builderEncapsulator.builder().type(type).publishDate(card.getPublishDate());
         switch (type) {
