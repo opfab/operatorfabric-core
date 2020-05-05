@@ -11,10 +11,9 @@ package org.lfenergy.operatorfabric.users.controllers;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.Group;
-import org.lfenergy.operatorfabric.users.model.GroupData;
-import org.lfenergy.operatorfabric.users.model.UserData;
+import org.lfenergy.operatorfabric.users.model.*;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
+import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
@@ -41,11 +40,14 @@ public class GroupsController implements GroupsApi {
     public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
     public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
+    public static final String BAD_PERIMETER_LIST_MSG = "Bad perimeter list : perimeter %s not found";
     public static final String NO_MATCHING_GROUP_ID_MSG = "Payload Group id does not match URL Group id";
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PerimeterRepository perimeterRepository;
 
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
@@ -69,7 +71,6 @@ public class GroupsController implements GroupsApi {
         }
         userRepository.saveAll(foundUsers);
         return null;
-
     }
 
     @Override
@@ -151,7 +152,6 @@ public class GroupsController implements GroupsApi {
         } else {
             return createGroup(request,response,group);
         }
-
     }
 
     @Override
@@ -181,18 +181,59 @@ public class GroupsController implements GroupsApi {
         return null;
     }
 
+    @Override
+    public List<? extends Perimeter> fetchGroupPerimeters(HttpServletRequest request, HttpServletResponse response, String id) throws Exception{
+
+        List<String> perimeters = findGroupOrThrow(id).getPerimeters();
+
+        //Retrieve perimeters from repository for perimeters list, throwing an error if a perimeter is not found
+        if (perimeters != null)
+            return retrievePerimeters(perimeters);
+
+        return null;
+    }
+
+    @Override
+    public Void updateGroupPerimeters(HttpServletRequest request, HttpServletResponse response, String id, List<String> perimeters) throws Exception{
+
+        //Only existing groups can be updated
+        GroupData group = findGroupOrThrow(id);
+
+        //Make sure the intended updated perimeters list only contains perimeter ids existing in the repository, throwing an error if this is not the case
+        retrievePerimeters(perimeters);
+
+        group.setPerimeters(perimeters);
+        groupRepository.save(group);
+        return null;
+    }
+
+    @Override
+    public Void addGroupPerimeters(HttpServletRequest request, HttpServletResponse response, String id, List<String> perimeters) throws Exception{
+
+        //Only existing groups can be updated
+        GroupData group = findGroupOrThrow(id);
+
+        //Make sure the perimeters list only contains perimeter ids existing in the repository, throwing an error if this is not the case
+        retrievePerimeters(perimeters);
+
+        for (String perimeter : perimeters)
+            group.addPerimeter(perimeter);
+        groupRepository.save(group);
+        return null;
+    }
+
     private GroupData findGroupOrThrow(String id) {
         return groupRepository.findById(id).orElseThrow(
                 ()-> new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(GROUP_NOT_FOUND_MSG,id))
+                                .message(String.format(GROUP_NOT_FOUND_MSG, id))
                                 .build()
                 ));
     }
 
-/** Retrieve users from repository for logins list, throwing an error if a login is not found
- * */
+    /** Retrieve users from repository for logins list, throwing an error if a login is not found
+     * */
     private List<UserData> retrieveUsers(List<String> logins) {
 
         List<UserData> foundUsers = new ArrayList<>();
@@ -206,7 +247,24 @@ public class GroupsController implements GroupsApi {
                     ));
             foundUsers.add(foundUser);
         }
-
         return foundUsers;
+    }
+
+    /** Retrieve perimeters from repository for perimeter list, throwing an error if a perimeter is not found
+     * */
+    private List<PerimeterData> retrievePerimeters(List<String> perimeterIds) {
+
+        List<PerimeterData> foundPerimeters = new ArrayList<>();
+        for(String perimeterId : perimeterIds){
+            PerimeterData foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
+                    () -> new ApiErrorException(
+                            ApiError.builder()
+                                    .status(HttpStatus.BAD_REQUEST)
+                                    .message(String.format(BAD_PERIMETER_LIST_MSG, perimeterId))
+                                    .build()
+                    ));
+            foundPerimeters.add(foundPerimeter);
+        }
+        return foundPerimeters;
     }
 }

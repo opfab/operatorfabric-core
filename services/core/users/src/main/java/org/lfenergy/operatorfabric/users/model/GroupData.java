@@ -8,12 +8,12 @@
 
 package org.lfenergy.operatorfabric.users.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.*;
 
 /**
  * Group Model, documented at {@link Group}
@@ -31,4 +31,31 @@ public class GroupData implements Group {
     private String id;
     private String name;
     private String description;
+
+    @JsonIgnore
+    @Singular("perimeter")
+    private Set<String> perimeters;
+
+    @Override
+    public List<String> getPerimeters() {
+        if(perimeters == null)
+            return Collections.emptyList();
+        return new ArrayList<>(perimeters);
+    }
+
+    @Override
+    public void setPerimeters(List<String> perimeters) {
+        this.perimeters = new HashSet<>(perimeters);
+    }
+
+    public void addPerimeter(String idParameter){
+        if (null == perimeters){
+            this.perimeters = new HashSet<>();
+        }
+        perimeters.add(idParameter);
+    }
+
+    public void deletePerimeter(String id) {
+        perimeters.remove(id);
+    }
 }

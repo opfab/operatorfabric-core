@@ -16,7 +16,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Group Model, documented at {@link Entity}
+ * Entity Model, documented at {@link Entity}
  *
  * {@inheritDoc}
  *

@@ -12,6 +12,7 @@
   "delegatePattern": true,
   "singleContentTypes": false,
   "importMappings": {
-    "EpochDate": "java.time.Instant"
+    "EpochDate": "java.time.Instant",
+    "RightsEnum": "org.lfenergy.operatorfabric.users.model.RightsEnum"
   }
 }

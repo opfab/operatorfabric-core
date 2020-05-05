@@ -33,21 +33,21 @@ Feature: Update existing group
 
   Scenario: Without authentication
     # authentication required, response expected 401
-    Given url opfabUrl + 'users/groups/' + groupUpdated.name
+    Given url opfabUrl + 'users/groups/' + groupUpdated.id
     And request groupUpdated
     When method put
     Then status 401
 
   Scenario: With a simple user
     # update Group wrong user response expected 403
-    Given url opfabUrl + 'users/groups/' + groupUpdated.name
+    Given url opfabUrl + 'users/groups/' + groupUpdated.id
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request groupUpdated
     When method put
     Then status 403
 
   Scenario: error 400
-    Given url opfabUrl + 'users/groups/' + groupUpdated.name
+    Given url opfabUrl + 'users/groups/' + groupUpdated.id
     And header Authorization = 'Bearer ' + authToken
     And request groupError
     When method put

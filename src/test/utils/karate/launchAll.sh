@@ -7,6 +7,7 @@ java -jar karate.jar                                        \
       thirds/post2Bundles.feature                           \
       users/getGroupsAndUsers.feature                       \
       users/getEntities.feature                             \
+      users/getPerimeters.feature                           \
       cards/post2CardsRouting.feature                       \
       cards/post6CardsSeverity.feature                      \
       cards/post4CardsSeverityAsync.feature                 \

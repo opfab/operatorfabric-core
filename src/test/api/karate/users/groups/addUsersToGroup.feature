@@ -8,7 +8,7 @@ Feature: Add users to a group
     * def authTokenAsTSO = signInAsTSO.authToken
     * def mygroup = 'groupKarate1'
 
-    # defining users to create
+    # defining users to add
     * def usersArray =
 """
 [   "loginKarate1"

@@ -47,7 +47,7 @@ Feature: CreateGroups
   Scenario: Update my group
 
 #Expected response 200
-    Given url opfabUrl + 'users/groups/'
+    Given url opfabUrl + 'users/groups'
     And header Authorization = 'Bearer ' + authToken
     And request groupUpdated
     When method post
@@ -58,7 +58,7 @@ Feature: CreateGroups
 
   Scenario: create without admin role
         #HForbiden without admin role, expected response 403
-    Given url opfabUrl + 'users/groups/' + group.id
+    Given url opfabUrl + 'users/groups'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request group
     When method post
@@ -66,7 +66,7 @@ Feature: CreateGroups
 
      Scenario: Update without authentication token
      #Witout authentication
-    Given url opfabUrl + 'users/groups/' + group.id
+    Given url opfabUrl + 'users/groups'
     And request group
     When method post
    Then status 401
