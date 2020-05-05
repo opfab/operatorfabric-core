@@ -151,7 +151,6 @@ public class EntitiesController implements EntitiesApi {
         } else {
             return createEntity(request, response, entity);
         }
-
     }
 
     @Override

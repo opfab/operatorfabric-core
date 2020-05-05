@@ -46,7 +46,7 @@ Feature: CreateEntities
   Scenario: Update my entity
 
 #Expected response 200
-    Given url opfabUrl + 'users/entities/'
+    Given url opfabUrl + 'users/entities'
     And header Authorization = 'Bearer ' + authToken
     And request entityUpdated
     When method post
@@ -57,7 +57,7 @@ Feature: CreateEntities
 
   Scenario: create without admin role
         #HForbiden without admin role, expected response 403
-    Given url opfabUrl + 'users/entities/' + entity.id
+    Given url opfabUrl + 'users/entities'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request entity
     When method post
@@ -65,7 +65,7 @@ Feature: CreateEntities
 
      Scenario: Update without authentication token
      #Witout authentication
-    Given url opfabUrl + 'users/entities/' + entity.id
+    Given url opfabUrl + 'users/entities'
     And request entity
     When method post
    Then status 401

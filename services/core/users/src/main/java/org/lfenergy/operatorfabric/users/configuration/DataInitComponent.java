@@ -11,14 +11,8 @@ package org.lfenergy.operatorfabric.users.configuration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
-import org.lfenergy.operatorfabric.users.model.EntityData;
-import org.lfenergy.operatorfabric.users.model.GroupData;
-import org.lfenergy.operatorfabric.users.model.UserData;
-import org.lfenergy.operatorfabric.users.model.UserSettingsData;
-import org.lfenergy.operatorfabric.users.repositories.EntityRepository;
-import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
-import org.lfenergy.operatorfabric.users.repositories.UserRepository;
-import org.lfenergy.operatorfabric.users.repositories.UserSettingsRepository;
+import org.lfenergy.operatorfabric.users.model.*;
+import org.lfenergy.operatorfabric.users.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -50,6 +44,9 @@ public class DataInitComponent {
     private EntityRepository entityRepository;
 
     @Autowired
+    private PerimeterRepository perimeterRepository;
+
+    @Autowired
     private UserSettingsRepository userSettingsRepository;
 
     @Getter
@@ -63,6 +60,9 @@ public class DataInitComponent {
             }
             for (EntityData e : usersProperties.getEntities()) {
                 safeInsertEntity(e);
+            }
+            for (PerimeterData p : usersProperties.getPerimeters()) {
+                safeInsertPerimeter(p);
             }
             for (UserData u : usersProperties.getUsers()) {
                 safeInsertUsers(u);
@@ -152,6 +152,19 @@ public class DataInitComponent {
             entityRepository.insert(e);
         } catch (DuplicateKeyException ex) {
             log.warn("{} {} entity: duplicate", FAILED_INIT_MSG, e.getId());
+        }
+    }
+
+    /**
+     * Insert perimeters, if failure (perimeters already exist), logs and carries on to next perimeter
+     *
+     * @param p
+     */
+    private void safeInsertPerimeter(PerimeterData p) {
+        try {
+            perimeterRepository.insert(p);
+        } catch (DuplicateKeyException ex) {
+            log.warn("{} {} perimeter: duplicate", FAILED_INIT_MSG, p.getId());
         }
     }
 }

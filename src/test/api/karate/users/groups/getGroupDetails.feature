@@ -28,7 +28,7 @@ Feature: Get Group details
 
 
   Scenario: get group details
-    #get /groups/{name}
+    #get /groups/{id}
     Given url opfabUrl + 'users/groups/' + group.id
     And header Authorization = 'Bearer ' + authToken
     When method get

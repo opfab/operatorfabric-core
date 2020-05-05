@@ -55,7 +55,7 @@ Feature: deleteUserFromGroup
     And match response.lastName == userKarate2.lastName
 
 
-  Scenario: affect an user to the group
+  Scenario: affect a user to the group
 
     Given url opfabUrl + 'users/groups/' + groupKarate2.id +'/users'
     And header Authorization = 'Bearer ' + authToken

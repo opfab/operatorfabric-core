@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-
 package org.lfenergy.operatorfabric.users.model;
 
 import lombok.AllArgsConstructor;
@@ -16,19 +15,20 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Entity Model, documented at {@link Entity}
+ * Perimeter Model, documented at {@link Perimeter}
  *
  * {@inheritDoc}
  *
  */
-@Document(collection = "entity")
+@Document(collection = "perimeter")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EntityData implements Entity {
+public class PerimeterData implements Perimeter {
     @Id
     private String id;
-    private String name;
-    private String description;
+    private String process;
+    private String state;
+    private RightsEnum rights;
 }

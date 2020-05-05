@@ -12,6 +12,8 @@ import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEv
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.*;
+import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
+import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * UsersController, documented at {@link UsersApi}
@@ -40,12 +45,18 @@ public class UsersController implements UsersApi {
     public static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
     public static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
     public static final String MANDATORY_LOGIN_MISSING = "Mandatory 'login' field is missing";
+    public static final String GROUP_ID_IMPOSSIBLE_TO_FETCH_MSG = "Group id impossible to fetch : %s";
+    public static final String PERIMETER_ID_IMPOSSIBLE_TO_FETCH_MSG = "Perimeter id impossible to fetch : %s";
     
     public static final String USER_CREATED = "User %s is created";
     public static final String USER_UPDATED = "User %s is updated";
     
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private PerimeterRepository perimeterRepository;
     @Autowired
     private UserSettingsRepository userSettingsRepository;
 
@@ -141,8 +152,74 @@ public class UsersController implements UsersApi {
                             .message(NO_MATCHING_USER_NAME_MSG)
                             .build());
         }
-
         return createUser(request, response, user);
+    }
 
+    @Override
+    public List<? extends Perimeter> fetchUserPerimeters(HttpServletRequest request, HttpServletResponse response, String login) throws Exception{
+
+        List<String> groups = findUserOrThrow(login).getGroups(); //First, we recover the groups to which the user belongs
+
+        if ((groups != null) && (! groups.isEmpty())) {     //Then, we recover the groups data
+            List<GroupData> groupsData = retrieveGroups(groups);
+
+            if ((groupsData != null) && (! groupsData.isEmpty())){
+                Set<PerimeterData> perimetersData = new HashSet<>(); //We use a set because we don't want to have a duplicate
+                groupsData.forEach(     //For each group, we recover its perimeters
+                        groupData -> {
+                            List<PerimeterData> list = retrievePerimeters(groupData.getPerimeters());
+                            if (list != null)
+                                perimetersData.addAll(list);
+                        });
+                return new ArrayList<>(perimetersData);
+            }
+        }
+        return null;
+    }
+
+    private UserData findUserOrThrow(String login) {
+        return userRepository.findById(login).orElseThrow(
+                ()-> new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.NOT_FOUND)
+                                .message(String.format(USER_NOT_FOUND_MSG, login))
+                                .build()
+                ));
+    }
+
+    /** Retrieve groups from repository for groups list, throwing an error if a group id is not found
+     * */
+    private List<GroupData> retrieveGroups(List<String> groupIds) {
+
+        List<GroupData> foundGroups = new ArrayList<>();
+        for(String id : groupIds){
+            GroupData foundGroup = groupRepository.findById(id).orElseThrow(
+                    () -> new ApiErrorException(
+                            ApiError.builder()
+                                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                    .message(String.format(GROUP_ID_IMPOSSIBLE_TO_FETCH_MSG, id))
+                                    .build()
+                    ));
+            foundGroups.add(foundGroup);
+        }
+        return foundGroups;
+    }
+
+    /** Retrieve perimeters from repository for perimeter list, throwing an error if a perimeter is not found
+     * */
+    private List<PerimeterData> retrievePerimeters(List<String> perimeterIds) {
+
+        List<PerimeterData> foundPerimeters = new ArrayList<>();
+        for(String perimeterId : perimeterIds){
+            PerimeterData foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
+                    () -> new ApiErrorException(
+                            ApiError.builder()
+                                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                    .message(String.format(PERIMETER_ID_IMPOSSIBLE_TO_FETCH_MSG, perimeterId))
+                                    .build()
+                    ));
+            foundPerimeters.add(foundPerimeter);
+        }
+        return foundPerimeters;
     }
 }

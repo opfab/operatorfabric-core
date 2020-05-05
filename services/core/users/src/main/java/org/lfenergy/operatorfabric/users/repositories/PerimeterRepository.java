@@ -5,25 +5,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-
 package org.lfenergy.operatorfabric.users.repositories;
 
-import org.lfenergy.operatorfabric.users.model.GroupData;
-import org.lfenergy.operatorfabric.users.model.UserData;
+import org.lfenergy.operatorfabric.users.model.PerimeterData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
- * Mongo {@link GroupData} repository
+ * Mongo {@link PerimeterData} repository
  */
 @Repository
-public interface GroupRepository extends MongoRepository<GroupData,String> {
-
-    Page<GroupData> findAll(Pageable pageable);
-
-    List<GroupData> findByPerimetersContaining(String perimeterContains);
+public interface PerimeterRepository extends MongoRepository<PerimeterData, String> {
+    Page<PerimeterData> findAll(Pageable pageable);
 }
+

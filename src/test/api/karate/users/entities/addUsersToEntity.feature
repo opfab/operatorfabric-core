@@ -8,7 +8,7 @@ Feature: Add users to an entity
     * def authTokenAsTSO = signInAsTSO.authToken
     * def myentity = 'entityKarate1'
 
-    # defining users to create
+    # defining users to add
     * def usersArray =
 """
 [   "loginKarate1"

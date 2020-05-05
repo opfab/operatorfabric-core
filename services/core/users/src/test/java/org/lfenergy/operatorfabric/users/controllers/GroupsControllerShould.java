@@ -13,8 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
 import org.lfenergy.operatorfabric.users.application.configuration.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.users.model.GroupData;
+import org.lfenergy.operatorfabric.users.model.PerimeterData;
+import org.lfenergy.operatorfabric.users.model.RightsEnum;
 import org.lfenergy.operatorfabric.users.model.UserData;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
+import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,6 +66,9 @@ class GroupsControllerShould {
     @Autowired
     private GroupRepository groupRepository;
 
+    @Autowired
+    private PerimeterRepository perimeterRepository;
+
     @MockBean
     private ServiceMatcher busServiceMatcher;
 
@@ -110,20 +116,39 @@ class GroupsControllerShould {
            .id("MONTY")
            .name("Monty Pythons")
            .description("A bunch of humorous fellows")
+           .perimeter("PERIMETER1_1").perimeter("PERIMETER1_2")
            .build();
         g2 = GroupData.builder()
            .id("WANDA")
            .name("Wanda")
            .description("The cast of a really successful comedy")
+           .perimeter("PERIMETER1_1")
            .build();
         groupRepository.insert(g1);
         groupRepository.insert(g2);
+
+        PerimeterData p1, p2;
+        p1 = PerimeterData.builder()
+                .id("PERIMETER1_1")
+                .process("process1")
+                .state("state1")
+                .rights(RightsEnum.READ)
+                .build();
+        p2 = PerimeterData.builder()
+                .id("PERIMETER1_2")
+                .process("process1")
+                .state("state2")
+                .rights(RightsEnum.READANDWRITE)
+                .build();
+        perimeterRepository.insert(p1);
+        perimeterRepository.insert(p2);
     }
 
     @AfterEach
     public void clean(){
         userRepository.deleteAll();
         groupRepository.deleteAll();
+        perimeterRepository.deleteAll();
     }
 
     @Nested
@@ -566,7 +591,6 @@ class GroupsControllerShould {
                     .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
-
         }
 
         @Test
@@ -599,6 +623,207 @@ class GroupsControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist());
 
         }
+
+        @Test
+        void fetchAllPerimetersForAGroup() throws Exception {
+            //MONTY group has perimeters PERIMETER1_1 and PERIMETER1_2.
+            ResultActions result1 = mockMvc.perform(get("/groups/MONTY/perimeters"));
+            result1
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_2\" && @.process == \"process1\" && @.state == \"state2\" && @.rights == \"ReadAndWrite\")]").exists())
+            ;
+
+            //WANDA group has perimeter PERIMETER1_1.
+            ResultActions result2 = mockMvc.perform(get("/groups/WANDA/perimeters"));
+            result2
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(1)))
+                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
+            ;
+        }
+
+        @Test
+        void fetchAllPerimetersForAGroupWithError() throws Exception {
+            ResultActions result = mockMvc.perform(get("/groups/unknownGroupSoFar/perimeters"));
+            result
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+        }
+
+        @Test
+        void updateGroupFromPerimetersWithBadRequest() throws Exception {
+
+            mockMvc.perform(put("/groups/WANDA/perimeters")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("[\"PERIMETER1_2\",\"unknownPerimeterSoFar\"]")
+            )
+                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.BAD_PERIMETER_LIST_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist());
+
+            //If the perimeters list isn't correct, no group should be updated
+            GroupData monty = groupRepository.findById("MONTY").get();
+            assertThat(monty).isNotNull();
+            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+
+            GroupData wanda = groupRepository.findById("WANDA").get();
+            assertThat(wanda).isNotNull();
+            assertThat(wanda.getPerimeters()).containsExactly("PERIMETER1_1");
+
+            mockMvc.perform(get("/perimeters/unknownPerimeterSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(PerimetersController.PERIMETER_NOT_FOUND_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist());
+        }
+
+        @Test
+        void updateGroupFromPerimetersWithNotFoundError() throws Exception {
+
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(put("/groups/unknownGroupSoFar/perimeters")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("[\"PERIMETER1_2\"]")
+            )
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+        }
+
+        @Test
+        void updateGroupFromPerimeters() throws Exception {
+            mockMvc.perform(put("/groups/WANDA/perimeters")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("[\"PERIMETER1_2\"]")
+            )
+                    .andExpect(status().isOk())
+            ;
+
+            //WANDA group must only contain PERIMETER1_2 (PERIMETER1_1 must be removed)
+            GroupData wanda = groupRepository.findById("WANDA").get();
+            assertThat(wanda).isNotNull();
+            assertThat(wanda.getPerimeters()).hasSize(1);
+            assertThat(wanda.getPerimeters()).containsExactly("PERIMETER1_2");
+
+            //MONTY group must not be changed
+            GroupData monty = groupRepository.findById("MONTY").get();
+            assertThat(monty).isNotNull();
+            assertThat(monty.getPerimeters()).hasSize(2);
+            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+        }
+
+        @Test
+        void addGroupToPerimetersWithNotFoundError() throws Exception {
+
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(patch("/groups/unknownGroupSoFar/perimeters")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("[\"PERIMETER1_2\"]")
+            )
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+        }
+
+        @Test
+        void addGroupToPerimetersWithBadRequest() throws Exception {
+            mockMvc.perform(patch("/groups/WANDA/perimeters")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("[\"PERIMETER1_2\",\"unknownPerimeterSoFar\"]")
+            )
+                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.BAD_PERIMETER_LIST_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist());
+
+            //If the perimeters list isn't correct, no group should be updated
+            GroupData monty = groupRepository.findById("MONTY").get();
+            assertThat(monty).isNotNull();
+            assertThat(monty.getPerimeters()).hasSize(2);
+            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+
+            GroupData wanda = groupRepository.findById("WANDA").get();
+            assertThat(wanda).isNotNull();
+            assertThat(wanda.getPerimeters()).hasSize(1);
+            assertThat(wanda.getPerimeters()).containsExactly("PERIMETER1_1");
+
+            mockMvc.perform(get("/perimeters/unknownPerimeterSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(PerimetersController.PERIMETER_NOT_FOUND_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist());
+        }
+
+        @Test
+        void addGroupToPerimeters() throws Exception {
+            mockMvc.perform(patch("/groups/WANDA/perimeters")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("[\"PERIMETER1_2\"]")
+            )
+                    .andExpect(status().isOk())
+            ;
+
+            //WANDA group must contain PERIMETER1_1 and PERIMETER1_2
+            GroupData wanda = groupRepository.findById("WANDA").get();
+            assertThat(wanda).isNotNull();
+            assertThat(wanda.getPerimeters()).hasSize(2);
+            assertThat(wanda.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+
+            //MONTY group must not be changed
+            GroupData monty = groupRepository.findById("MONTY").get();
+            assertThat(monty).isNotNull();
+            assertThat(monty.getPerimeters()).hasSize(2);
+            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+        }
     }
 
     @Nested
@@ -626,6 +851,7 @@ class GroupsControllerShould {
             mockMvc.perform(post("/groups")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
+                            "\"id\": \"MARXB\","+
                             "\"name\": \"Marx Brothers\","+
                             "\"description\": \"Chico, Groucho and Harpo, forget about Zeppo an Gummo\""+
                             "}")
@@ -637,9 +863,10 @@ class GroupsControllerShould {
 
         @Test
         void update() throws Exception {
-            mockMvc.perform(put("/groups/Wanda")
+            mockMvc.perform(put("/groups/WANDA")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{" +
+                            "\"id\": \"WANDA\","+
                             "\"name\": \"Wanda\","+
                             "\"description\": \"They were not as successful in Fierce Creatures\""+
                             "}")
@@ -652,7 +879,7 @@ class GroupsControllerShould {
 
         @Test
         void addGroupToUsers() throws Exception {
-            mockMvc.perform(post("/groups/Wanda/users")
+            mockMvc.perform(patch("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"gchapman\"]")
             )
@@ -678,6 +905,42 @@ class GroupsControllerShould {
             mockMvc.perform(put("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"gchapman\"]")
+            )
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void fetchAllPerimetersForAGroup() throws Exception {
+            ResultActions result = mockMvc.perform(get("/groups/MONTY/perimeters"));
+            result
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void fetchAllPerimetersForOwnGroup() throws Exception {
+            ResultActions result = mockMvc.perform(get("/groups/Monty Pythons/perimeters"));
+            result
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void updateGroupFromPerimeters() throws Exception {
+            mockMvc.perform(put("/groups/WANDA/perimeters")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("[\"PERIMETER1_2\"]")
+            )
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void addGroupToPerimeters() throws Exception {
+            mockMvc.perform(patch("/groups/WANDA/perimeters")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("[\"PERIMETER1_2\"]")
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
             ;

@@ -19,6 +19,8 @@ tags:
     description: Everything concerning groups
   - name: entities
     description: Everything concerning entities
+  - name: perimeters
+    description: Everything concerning perimeters
 schemes:
   - http
 definitions:
@@ -77,6 +79,11 @@ definitions:
         type: string
       description:
         type: string
+      perimeters:
+        type: array
+        items:
+          type: string
+          uniqueItems: true
     required:
       - id
     example:
@@ -98,6 +105,37 @@ definitions:
       id: ENTITY1
       name: Entity 1 name
       description: Entity 1 short description
+  RightsEnum:
+    type: string
+    description: |-
+      Different rights possible >
+      * Read: Only read rights (reading card)
+      * ReadAndWrite: Read and write rights (reading card and creating new card)
+      * ReadAndRespond: Read and respond rights (reading card and responding to card)
+      * All: Read, write and respond rights (reading card, creating new card and responding to a card)
+    enum:
+      - Read
+      - ReadAndWrite
+      - ReadAndRespond
+      - All
+  Perimeter:
+    type: object
+    properties:
+      id:
+        type: string
+      process:
+        type: string
+      state:
+        type: string
+      rights:
+        $ref: '#/definitions/RightsEnum'
+    required:
+      - id
+    example:
+      id: Process1Perimeter1
+      process: Process1
+      state: State1
+      rights: R
   UserSettings:
     type: object
     description: User associated settings. Note that the current supported locales are en and fr. Date and time formats use Moment.js formats.
@@ -557,7 +595,7 @@ paths:
         - groups
         - users
       summary: Add users to group
-      description: ONLY add users to group (no deletions)
+      description: ONLY add users to group (no deletion)
       operationId: addGroupUsers
       produces:
         - application/json
@@ -619,7 +657,7 @@ paths:
       - groups
       - users
       summary: Remove user from group
-      description: ONLY remove user from group (no additions)
+      description: ONLY remove user from group (no addition)
       operationId: deleteGroupUser
       produces:
       - application/json
@@ -811,7 +849,7 @@ paths:
         - entities
         - users
       summary: Add users to entity
-      description: ONLY add users to entity (no deletions)
+      description: ONLY add users to entity (no deletion)
       operationId: addEntityUsers
       produces:
         - application/json
@@ -873,7 +911,7 @@ paths:
         - entities
         - users
       summary: Remove user from entity
-      description: ONLY remove user from entity (no additions)
+      description: ONLY remove user from entity (no addition)
       operationId: deleteEntityUser
       produces:
         - application/json
@@ -899,3 +937,405 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required entity not found
+  /perimeters:
+    get:
+      tags:
+        - perimeters
+      summary: Fetch a list of all existing perimeters
+      description: 'Fetch a list of all existing perimeters'
+      operationId: fetchPerimeters
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Perimeter'
+          examples:
+            application/json:
+              - id: Process1Perimeter1
+                process: Process1
+                state: State1
+                rights: R
+              - id: Process1Perimeter2
+                process: Process1
+                state: State1
+                rights: ReadAndWrite
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+    post:
+      tags:
+        - perimeters
+      summary: Create a new perimeter
+      description: Create a new perimeter
+      operationId: createPerimeter
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: perimeter
+          description: Perimeter to be created
+          schema:
+            $ref: '#/definitions/Perimeter'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Perimeter'
+        '400':
+          description: Bad request (duplicate key)
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+  '/perimeters/{id}':
+    put:
+      tags:
+        - perimeters
+      summary: Update existing perimeter
+      description: Update existing perimeter
+      operationId: updatePerimeter
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Id of perimeter to be updated (should match id in request body)
+          type: string
+          required: true
+        - in: body
+          name: perimeter
+          description: Updated perimeter data (should match id path parameter)
+          schema:
+            $ref: '#/definitions/Perimeter'
+      responses:
+        '200':
+          description: Updated
+          schema:
+            $ref: '#/definitions/Perimeter'
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Perimeter'
+        '400':
+          description: Bad request (body doesn't match id path parameter)
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+    get:
+      tags:
+        - perimeters
+      summary: Fetch an existing perimeter
+      description: Fetch an existing perimeter
+      operationId: fetchPerimeter
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Perimeter id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Perimeter'
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required perimeter not found
+  '/perimeters/{id}/groups':
+    put:
+      tags:
+        - perimeters
+        - groups
+      summary: Update list of groups that have this perimeter
+      description: >-
+        Update list of groups that have this perimeter, groups not included in given list lose this perimeter
+      operationId: updatePerimeterGroups
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Perimeter id
+          type: string
+          required: true
+        - in: body
+          name: groups
+          description: >-
+            Array of group id representing exactly the intended list of groups that must have this perimeter after update
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Updated
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required perimeter not found
+    patch:
+      tags:
+        - perimeters
+        - groups
+      summary: Add groups to perimeter
+      description: ONLY add groups to perimeter (no deletion)
+      operationId: addPerimeterGroups
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Perimeter id
+          type: string
+          required: true
+        - in: body
+          name: groups
+          description: Array of group id to be added to perimeter
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Updated
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required perimeter not found
+    delete:
+      tags:
+        - perimeters
+        - groups
+      summary: Remove all groups from perimeter
+      description: remove all groups from perimeter
+      operationId: deletePerimeterGroups
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Perimeter id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Deleted
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required perimeter not found
+  '/perimeters/{idPerimeter}/groups/{idGroup}':
+    delete:
+      tags:
+        - perimeters
+        - groups
+      summary: Remove group from perimeter
+      description: ONLY remove group from perimeter (no addition)
+      operationId: deletePerimeterGroup
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: idPerimeter
+          description: Perimeter id
+          type: string
+          required: true
+        - in: path
+          name: idGroup
+          description: Group id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Deleted
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required perimeter not found
+  '/groups/{id}/perimeters':
+    get:
+      tags:
+        - groups
+        - perimeters
+      summary: Fetch an existing group's perimeters
+      description: Fetch existing group's perimeters from their id
+      operationId: fetchGroupPerimeters
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: group id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Perimeter'
+          examples:
+            application/json:
+              - id: Process1Perimeter1
+                process: Process1
+                state: State1
+                rights: R
+              - id: Process1Perimeter2
+                process: Process1
+                state: State1
+                rights: ReadAndWrite
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required group not found
+    put:
+      tags:
+        - groups
+        - perimeters
+      summary: Update list of perimeters for group
+      description: >-
+        Update list of perimeters for group, perimeters not included in given list are no longer linked to the group
+      operationId: updateGroupPerimeters
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Group id
+          type: string
+          required: true
+        - in: body
+          name: perimeters
+          description: >-
+            Array of perimeter id representing exactly the intended list of perimeters that must be linked to the group after update
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Updated
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required group not found
+    patch:
+      tags:
+        - groups
+        - perimeters
+      summary: Add perimeters to group
+      description: ONLY add perimeters to group (no deletion)
+      operationId: addGroupPerimeters
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Group id
+          type: string
+          required: true
+        - in: body
+          name: perimeters
+          description: Array of perimeter id to be added to group
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Updated
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required group not found
+  '/users/{login}/perimeters':
+    get:
+      tags:
+        - users
+        - perimeters
+      summary: Fetch an existing user's perimeters
+      description: Fetch existing user's perimeters from their login
+      operationId: fetchUserPerimeters
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: login
+          description: user login
+          type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Perimeter'
+          examples:
+            application/json:
+              - id: Process1Perimeter1
+                process: Process1
+                state: State1
+                rights: R
+              - id: Process1Perimeter2
+                process: Process1
+                state: State1
+                rights: ReadAndWrite
+        '401':
+          description: Authentication required
+        '403':
+          description: >-
+            Authenticated users who are not admins can only access their own
+            data
+        '404':
+          description: Required user not found
