@@ -36,9 +36,9 @@ Group{
     description string
 }
 ----
-====
 
 * [OC-858] Refactoring UI Timeline code for circle content and position computing
+* [OC-869] Small improvements in karate test 
 * [OC-744] Replace web-ui spring component with Nginx
 ** adds a new docker configuration for development purpose : `${OF_HOME}/src/main/docker/dev-environment/docker-compose.yml` +
 this folder contains also a grayscale version of the favicon. It's helping to distinguish this environment from `deploy` one. +
