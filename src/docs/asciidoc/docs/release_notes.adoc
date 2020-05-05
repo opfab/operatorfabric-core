@@ -58,3 +58,4 @@ or the entry about [OC-744] of this current file.
 Work is still in progress. The object is not usable at the moment.
 ====
 * [OC-878] remove unecessary utilities time classes
+* [OC-880] modify KeyCloak configuration to facilitate dev 

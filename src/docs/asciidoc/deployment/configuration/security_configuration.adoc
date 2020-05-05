@@ -92,7 +92,7 @@ To enable IMPLICIT Flow authentication the following properties need to be set:
 - `operatorfabric.security.oauth2.flow.mode` to `IMPLICIT`;
 - `operatorfabric.security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the `.well-known/openid-configuration` end-point used for authentication configuration.
 
-==== Example of Keycloak configuration for OperatorFabric OAuth2
+==== Example of configuration for IMPLICIT Flow 
 
 [source]
 ----
@@ -111,12 +111,6 @@ Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers
 For keycloak instance used for dev purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred. The 
 url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
 
-==== Keycloak instance additional configuration for dev purposes
-
-Once connected as Admin (login:_admin_,password:_admin_ ) on keycloak (`http://localhost:89/auth/admin`) The first thing is to enable the implicit flow for `opfa-client`. To do so
-select `Dev` in the upper select of the right panel then click on Clients. In the table, click on `opfab-client` in the column `Client ID`. Then in the `Settings` tabs turn on the
-`Implicit Flow Enabled`. In the same tab, modify `http://localhost:2002/ui/` to `http://localhost:2002/\*` and `http://localhost:4200` to `http://localhost:4200/*`.
-//TODO Move to dev_env?
 
 === OAuth2 PASSWORD or CODE Flows
 
@@ -125,7 +119,7 @@ These two modes share the same way of declaring the delegate URL. The default co
 - `operatorfabric.security.oauth2.flow.mode` to `PASSWORD` or `CODE`;
 - `operatorfabric.security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the protocol used for authentication.
 
-==== Example of Keycloak Configuration For OperatorFabric OAuth2
+==== Example of Configuration For CODE Flow
 
 [source]
 ----
