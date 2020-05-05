@@ -1,6 +1,13 @@
 spring:
   cloud:
     gateway:
+      globalcors:
+        # WARNING : THIS CORS CONFIGURATION SHOULD NOT BE USED IN PRODUCTION
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "Authorization, Content-Type"
       routes:
       - id: auth
         uri: http://keycloak:8080
@@ -23,12 +30,5 @@ spring:
           - Path=/ui/**
         filters:
           - RewritePath=/ui/(?<path>.*), /$\{path}
-        # WARNING : THIS CORS CONFIGURATION SHOULD NOT BE USED IN PRODUCTION
-        globalcors:
-         corsConfigurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedMethods: "*"
-            allowedHeaders: "Authorization, Content-Type"
 operatorfabric.gateway.configs:
   - web-ui.json
