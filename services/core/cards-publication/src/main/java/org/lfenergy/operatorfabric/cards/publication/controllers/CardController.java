@@ -8,10 +8,9 @@
 
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.services.CardWriteService;
+import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +25,11 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/cards")
-@Slf4j
+
 public class CardController {
 
     @Autowired
-    private CardWriteService cardWriteService;
+    private CardProcessingService cardProcessingService;
 
     /**
      * POST cards to create/update new cards
@@ -40,13 +39,13 @@ public class CardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public @Valid Mono<CardCreationReportData> createCards(@Valid @RequestBody Flux<CardPublicationData> cards){
-        return cardWriteService.createCards(cards);
+        return cardProcessingService.processCards(cards);
 
     }
 
     @DeleteMapping("/{processId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteCards(@PathVariable String processId){
-        cardWriteService.deleteCard(processId);
+        cardProcessingService.deleteCard(processId);
     }
 }
