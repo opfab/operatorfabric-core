@@ -24,8 +24,8 @@ import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardReceiver;
 import org.lfenergy.operatorfabric.cards.publication.model.*;
-import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepository;
-import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepository;
+import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
+import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -58,19 +58,22 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 @Slf4j
 @Tag("end-to-end")
 @Tag("mongo")
-class CardWriteServiceShould {
+class CardProcessServiceShould {
 
         @Autowired
-        private CardWriteService cardWriteService;
+        private CardProcessingService cardProcessingService;
 
         @Autowired
-        private CardRepository cardRepository;
+        private CardRepositoryForTest cardRepository;
 
         @Autowired
-        private ArchivedCardRepository archiveRepository;
+        private ArchivedCardRepositoryForTest archiveRepository;
 
         @Autowired
         private TestCardReceiver testCardReceiver;
+
+        @Autowired
+        private CardRepositoryService cardRepositoryService;
 
         @AfterEach
         public void cleanAfter() {
@@ -140,19 +143,19 @@ class CardWriteServiceShould {
 
         @Test
         void createCards() {
-                StepVerifier.create(cardWriteService.createCards(generateCards()))
+                StepVerifier.create(cardProcessingService.processCards(generateCards()))
                                 .expectNextMatches(r -> r.getCount().equals(5)).verifyComplete();
-                await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(4));
-                await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(5));
+                checkCardCount(4);
+                checkArchiveCount(5);
         }
 
         @Test
         void createCardsWithError() {
-                StepVerifier.create(cardWriteService.createCards(Flux
+                StepVerifier.create(cardProcessingService.processCards(Flux
                                 .concat(Flux.just(generateWrongCardData("PUBLISHER_1", "PROCESS_1")), generateCards())))
                                 .expectNextMatches(r -> r.getCount().equals(0)).verifyComplete();
-                await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(0));
-                await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(0));
+                checkCardCount(0);
+                checkArchiveCount(0);
         }
 
         @Test
@@ -184,7 +187,7 @@ class CardWriteServiceShould {
                                 .entityRecipients(entityRecipients)
                                 .timeSpan(TimeSpanPublicationData.builder().start(Instant.ofEpochMilli(123l)).build())
                                 .build();
-                cardWriteService.createCards(Flux.just(newCard)).subscribe();
+                cardProcessingService.processCards(Flux.just(newCard)).subscribe();
                 await().atMost(5, TimeUnit.SECONDS).until(() -> !newCard.getOrphanedUsers().isEmpty());
                 await().atMost(5, TimeUnit.SECONDS).until(() -> testCardReceiver.getEricQueue().size() >= 1);
                 CardPublicationData persistedCard = cardRepository.findById(newCard.getId()).block();
@@ -226,7 +229,7 @@ class CardWriteServiceShould {
                 int numberOfCards = 13;
                 List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
 
-                cardWriteService.createCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
                                 .subscribe();
 
                 Long block = cardRepository.count().block();
@@ -237,7 +240,7 @@ class CardWriteServiceShould {
                 CardPublicationData firstCard = cards.get(0);
                 String processId = firstCard.getId();
                 ;
-                DeleteResult deleteResult = cardWriteService.deleteCard(processId);
+                cardProcessingService.deleteCard(processId);
 
                 /* one card should be deleted(the first one) */
                 int thereShouldBeOneCardLess = numberOfCards - 1;
@@ -247,8 +250,6 @@ class CardWriteServiceShould {
                                                         + "when first added card is deleted(processId:'%s').",
                                                         thereShouldBeOneCardLess, block, processId)
                                         .isEqualTo(thereShouldBeOneCardLess);
-
-                Assertions.assertThat(deleteResult).isEqualTo(DeleteResult.acknowledged(1));
         }
 
         // FIXME unify way test cards are created throughout tests
@@ -300,7 +301,7 @@ class CardWriteServiceShould {
                 int numberOfCards = 13;
                 List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
 
-                cardWriteService.createCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
                                 .subscribe();
 
                 Long block = cardRepository.count().block();
@@ -309,7 +310,7 @@ class CardWriteServiceShould {
                                 numberOfCards, block).isEqualTo(numberOfCards);
 
                 final String processId = generateIdNotInCardRepository();
-                DeleteResult deleteResult = cardWriteService.deleteCard(processId);
+                cardProcessingService.deleteCard(processId);
 
                 int expectedNumberOfCards = numberOfCards;/* no card should be deleted */
 
@@ -321,7 +322,6 @@ class CardWriteServiceShould {
                                                 expectedNumberOfCards, block, processId)
                                 .isEqualTo(expectedNumberOfCards);
 
-                Assertions.assertThat(deleteResult).isEqualTo(DeleteResult.acknowledged(0));
         }
 
         private String generateIdNotInCardRepository() {
@@ -344,7 +344,7 @@ class CardWriteServiceShould {
                 CardPublicationData publishedCard = card.get(0);
                 publishedCard.setData(fakeDataContent);
 
-                cardWriteService.createCards(Flux.just(card.toArray(new CardPublicationData[1]))).subscribe();
+                cardProcessingService.processCards(Flux.just(card.toArray(new CardPublicationData[1]))).subscribe();
 
                 Long block = cardRepository.count().block();
                 Assertions.assertThat(block)
@@ -352,7 +352,7 @@ class CardWriteServiceShould {
                                 .isEqualTo(1);
 
                 String computedCardId = publishedCard.getPublisher() + "_" + publishedCard.getProcessId();
-                CardPublicationData cardToDelete = cardWriteService.findCardToDelete(computedCardId);
+                CardPublicationData cardToDelete = cardRepositoryService.findCardToDelete(computedCardId);
 
                 Assertions.assertThat(cardToDelete).isNotNull();
 

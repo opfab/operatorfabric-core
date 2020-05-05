@@ -24,8 +24,8 @@ import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportDat
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepository;
-import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepository;
+import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
+import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -64,9 +64,9 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 class CardControllerShould {
 
     @Autowired
-    private CardRepository cardRepository;
+    private CardRepositoryForTest cardRepository;
     @Autowired
-    private ArchivedCardRepository archiveRepository;
+    private ArchivedCardRepositoryForTest archiveRepository;
     @Autowired
     private WebTestClient webTestClient;
 
@@ -85,9 +85,8 @@ class CardControllerShould {
                 .exchange()
                 .expectBody(CardCreationReportData.class)
                 .value(hasProperty("count", is(5)));
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> Assertions.assertThat(cardRepository.count().block()).isEqualTo(4));
-
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> Assertions.assertThat(archiveRepository.count().block()).isEqualTo(5));
+        Assertions.assertThat(cardRepository.count().block()).isEqualTo(4);
+        Assertions.assertThat(archiveRepository.count().block()).isEqualTo(5);
     }
 
     private Flux<CardPublicationData> generateCards() {
@@ -170,8 +169,7 @@ class CardControllerShould {
         this.webTestClient.delete().uri("/cards/" + testedId).accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk();
-
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> Assertions.assertThat(cardRepository.count().block()).isEqualTo(numberOfCards - 1));
+        Assertions.assertThat(cardRepository.count().block()).isEqualTo(numberOfCards - 1);
 
     }
 
@@ -201,10 +199,8 @@ class CardControllerShould {
                 .exchange()
                 .expectStatus().isOk();
 
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> Assertions.assertThat(cardRepository.count().block()).isEqualTo(
-                cardNumber
+        Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
 
-        ));
 
     }
 

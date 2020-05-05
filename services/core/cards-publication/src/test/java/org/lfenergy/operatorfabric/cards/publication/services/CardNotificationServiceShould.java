@@ -105,7 +105,7 @@ class CardNotificationServiceShould {
            .build();
         recipientProcessor.processAll(newCard);
 
-        cardNotificationService.notifyCards(Collections.singleton(newCard),CardOperationTypeEnum.ADD);
+        cardNotificationService.notifyOneCard(newCard,CardOperationTypeEnum.ADD);
         await().pollDelay(1, TimeUnit.SECONDS).until(()->true);
         assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
         assertThat(testCardReceiver.getGroupQueue().size()).isEqualTo(1);
