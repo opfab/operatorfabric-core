@@ -67,27 +67,22 @@ public class CardSubscriptionRoutesConfig {
     }
 
     /**
-     * Card Operation OPTIONS route
+     * Card Operation GET route
      * @return
      */
     private HandlerFunction<ServerResponse> cardSubscriptionGetRoute() {
         return request -> {
             ServerResponse.BodyBuilder builder = ok()
                     .contentType(MediaType.TEXT_EVENT_STREAM);
-            Mono<CardOperationsGetParameters> params = extractCardSubscriptionInfoOnGet(request);
-            if (request.queryParam("test").orElse(FALSE).equals(TRUE)) {
-                return builder.body(cardOperationsController.publishTestData(params),
+            return builder.body(cardOperationsController.registerSubscriptionAndPublish
+                                (extractCardSubscriptionInfoOnGet(request)),
                         String.class);
-            } else {
-                return builder.body(cardOperationsController.registerSubscriptionAndPublish
-                                (params),
-                        String.class);
-            }
+
         };
     }
 
     /**
-     * CardOperation GET route
+     * CardOperation OPTION route
      * @return
      */
     private HandlerFunction<ServerResponse> cardSubscriptionOptionsRoute() {

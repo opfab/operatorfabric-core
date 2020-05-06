@@ -39,13 +39,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
+;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
@@ -270,7 +269,7 @@ public class CardOperationsControllerShould {
                     assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS6");
                     assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS7");
                     assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS0");
-//                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS9");
+
                 })
                 .thenCancel()
                 .verify();
@@ -321,40 +320,6 @@ public class CardOperationsControllerShould {
                 rabbitTemplate.convertAndSend(userExchange.getName(), user.getLogin(), mapper.writeValueAsString(builder.build()));
             } catch (JsonProcessingException e) {
                 log.error("Error during test data generation",e);
-            }
-        };
-    }
-
-    @Test
-    public void receiveTestNotificationCards() {
-        Flux<String> publisher = controller.publishTestData(Mono.just(CardOperationsGetParameters.builder()
-                .user(user)
-                .clientId(TEST_ID)
-                .test(true)
-                .notification(true).build()));
-        StepVerifier.FirstStep<String> verifier = StepVerifier.create(publisher);
-        verifier
-           .assertNext(generateAssertions(0))
-           .assertNext(generateAssertions(1))
-           .assertNext(generateAssertions(2))
-           .thenCancel()
-           .verify();
-    }
-
-    private Consumer<? super String> generateAssertions(long l) {
-        String stringLong = ""+l;
-        return s->{
-            try {
-                CardOperationConsultationData op = mapper.readValue(s, CardOperationConsultationData.class);
-                LightCardConsultationData c = (LightCardConsultationData) op.getCards().get(0);
-                assertThat(c.getId()).isEqualTo(stringLong);
-                assertThat(c.getUid()).isEqualTo(stringLong);
-                assertThat(c.getSummary().getKey()).isEqualTo("summary");
-                assertThat(c.getTitle().getKey()).isEqualTo("title");
-                assertThat(c.getSeverity()).isEqualTo(SeverityEnum.ALARM);
-            } catch (IOException e) {
-                log.error("Unable to extract light cards",e);
-                Assertions.assertThat(e).doesNotThrowAnyException();
             }
         };
     }

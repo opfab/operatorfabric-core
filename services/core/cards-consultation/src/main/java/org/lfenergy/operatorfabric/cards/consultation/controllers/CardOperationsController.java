@@ -11,15 +11,10 @@ package org.lfenergy.operatorfabric.cards.consultation.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardSubscriptionDto;
-import org.lfenergy.operatorfabric.cards.consultation.model.I18nConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
-import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.User;
@@ -30,7 +25,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuples;
 
-import java.time.Duration;
 import java.time.Instant;
 
 /**
@@ -159,39 +153,6 @@ public class CardOperationsController {
         return oldCards;
     }
 
-    /**
-     * Generates a test {@link Flux} of String. Those strings are Json
-     * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
-     *
-     * @param input o tuple containing 1) user data 2) client id
-     * @return message publisher
-     */
-    public Flux<String> publishTestData(Mono<CardOperationsGetParameters> input) {
-        return input.flatMapMany(t -> Flux
-                .interval(Duration.ofSeconds(5))
-                .doOnEach(l -> log.info("message {} to {}", l, t.getUser().getLogin()))
-                .map(l -> CardOperationConsultationData.builder()
-                        .number(l)
-                        .publishDate(Instant.now().minusMillis(600000))
-                        .type(CardOperationTypeEnum.ADD)
-                        .card(
-                                LightCardConsultationData.builder()
-                                        .id(l + "")
-                                        .uid(l + "")
-                                        .summary(I18nConsultationData.builder().key("summary").build())
-                                        .title(I18nConsultationData.builder().key("title").build())
-                                        .mainRecipient("rte-operator")
-                                        .severity(SeverityEnum.ALARM)
-                                        .startDate(Instant.now())
-                                        .endDate(Instant.now().plusMillis(3600000))
-                                        .build()
-                        )
-                        .build())
-                .map(this::objectToJsonString)
-                .doOnCancel(() -> log.info("cancelled"))
-                .log()
-        );
-    }
 
     /**
      * Converts an object to a JSON string. If conversion problems arise, logs and returns "null" string
