@@ -135,7 +135,7 @@ definitions:
       id: Process1Perimeter1
       process: Process1
       state: State1
-      rights: R
+      rights: Read
   UserSettings:
     type: object
     description: User associated settings. Note that the current supported locales are en and fr. Date and time formats use Moment.js formats.
@@ -193,6 +193,27 @@ definitions:
       timeFormat: LT
       dateFormat: L
       defaultTags: ['humor','movies']
+  CurrentUserWithPerimeters:
+    type: object
+    description: Information about the user connected and his perimeters
+    properties:
+      userData:
+        type: object
+        $ref: '#/definitions/User'
+      computedPerimeters:
+        type: array
+        items:
+          $ref: '#/definitions/ComputedPerimeter'
+          uniqueItems: true
+  ComputedPerimeter:
+    type: object
+    properties:
+      process:
+        type: string
+      state:
+        type: string
+      rights:
+        $ref: '#/definitions/RightsEnum'
 
 paths:
   /users:
@@ -687,8 +708,8 @@ paths:
     get:
       tags:
         - entities
-      summary: Fetch a list of all existing entities
-      description: 'Fetch a list of all existing entities, with pagination and filter options'
+      summary: Fetch a list of all existing entities.
+      description: 'Fetch a list of all existing entities, with pagination and filter options. Caution : work is still in progress, please do not use it.'
       operationId: fetchEntities
       produces:
         - application/json
@@ -715,7 +736,7 @@ paths:
       tags:
         - entities
       summary: Create a new entity of users
-      description: Create a new entity of users
+      description: 'Create a new entity of users. Caution : work is still in progress, please do not use it.'
       operationId: createEntity
       consumes:
         - application/json
@@ -747,7 +768,7 @@ paths:
       tags:
         - entities
       summary: Update existing entity
-      description: Update existing entity
+      description: 'Update existing entity. Caution : work is still in progress, please do not use it.'
       operationId: updateEntity
       consumes:
         - application/json
@@ -783,7 +804,7 @@ paths:
       tags:
         - entities
       summary: Fetch an existing entity of users
-      description: Fetch an existing entity of users
+      description: 'Fetch an existing entity of users. Caution : work is still in progress, please do not use it.'
       operationId: fetchEntity
       produces:
         - application/json
@@ -812,7 +833,7 @@ paths:
       summary: Update list of entity users
       description: >-
         Update list of entity users, users not included in given list are removed
-        from entity
+        from entity. Caution : work is still in progress, please do not use it.
       operationId: updateEntityUsers
       produces:
         - application/json
@@ -849,7 +870,7 @@ paths:
         - entities
         - users
       summary: Add users to entity
-      description: ONLY add users to entity (no deletion)
+      description: 'ONLY add users to entity (no deletion). Caution : work is still in progress, please do not use it.'
       operationId: addEntityUsers
       produces:
         - application/json
@@ -884,7 +905,7 @@ paths:
         - entities
         - users
       summary: Remove all users from entity
-      description: remove all users from entity
+      description: 'remove all users from entity. Caution : work is still in progress, please do not use it.'
       operationId: deleteEntityUsers
       produces:
         - application/json
@@ -911,7 +932,7 @@ paths:
         - entities
         - users
       summary: Remove user from entity
-      description: ONLY remove user from entity (no addition)
+      description: 'ONLY remove user from entity (no addition). Caution : work is still in progress, please do not use it.'
       operationId: deleteEntityUser
       produces:
         - application/json
@@ -942,7 +963,7 @@ paths:
       tags:
         - perimeters
       summary: Fetch a list of all existing perimeters
-      description: 'Fetch a list of all existing perimeters'
+      description: 'Fetch a list of all existing perimeters. Caution : work is still in progress, please do not use it.'
       operationId: fetchPerimeters
       produces:
         - application/json
@@ -958,7 +979,7 @@ paths:
               - id: Process1Perimeter1
                 process: Process1
                 state: State1
-                rights: R
+                rights: Read
               - id: Process1Perimeter2
                 process: Process1
                 state: State1
@@ -971,7 +992,7 @@ paths:
       tags:
         - perimeters
       summary: Create a new perimeter
-      description: Create a new perimeter
+      description: 'Create a new perimeter. Caution : work is still in progress, please do not use it.'
       operationId: createPerimeter
       consumes:
         - application/json
@@ -999,7 +1020,7 @@ paths:
       tags:
         - perimeters
       summary: Update existing perimeter
-      description: Update existing perimeter
+      description: 'Update existing perimeter. Caution : work is still in progress, please do not use it.'
       operationId: updatePerimeter
       consumes:
         - application/json
@@ -1035,7 +1056,7 @@ paths:
       tags:
         - perimeters
       summary: Fetch an existing perimeter
-      description: Fetch an existing perimeter
+      description: 'Fetch an existing perimeter. Caution : work is still in progress, please do not use it.'
       operationId: fetchPerimeter
       produces:
         - application/json
@@ -1063,7 +1084,7 @@ paths:
         - groups
       summary: Update list of groups that have this perimeter
       description: >-
-        Update list of groups that have this perimeter, groups not included in given list lose this perimeter
+        Update list of groups that have this perimeter, groups not included in given list lose this perimeter. Caution : work is still in progress, please do not use it.
       operationId: updatePerimeterGroups
       produces:
         - application/json
@@ -1099,7 +1120,7 @@ paths:
         - perimeters
         - groups
       summary: Add groups to perimeter
-      description: ONLY add groups to perimeter (no deletion)
+      description: 'ONLY add groups to perimeter (no deletion). Caution : work is still in progress, please do not use it.'
       operationId: addPerimeterGroups
       produces:
         - application/json
@@ -1134,7 +1155,7 @@ paths:
         - perimeters
         - groups
       summary: Remove all groups from perimeter
-      description: remove all groups from perimeter
+      description: 'remove all groups from perimeter. Caution : work is still in progress, please do not use it.'
       operationId: deletePerimeterGroups
       produces:
         - application/json
@@ -1161,7 +1182,7 @@ paths:
         - perimeters
         - groups
       summary: Remove group from perimeter
-      description: ONLY remove group from perimeter (no addition)
+      description: 'ONLY remove group from perimeter (no addition). Caution : work is still in progress, please do not use it.'
       operationId: deletePerimeterGroup
       produces:
         - application/json
@@ -1193,7 +1214,7 @@ paths:
         - groups
         - perimeters
       summary: Fetch an existing group's perimeters
-      description: Fetch existing group's perimeters from their id
+      description: "Fetch existing group's perimeters from their id. Caution : work is still in progress, please do not use it."
       operationId: fetchGroupPerimeters
       produces:
         - application/json
@@ -1215,7 +1236,7 @@ paths:
               - id: Process1Perimeter1
                 process: Process1
                 state: State1
-                rights: R
+                rights: Read
               - id: Process1Perimeter2
                 process: Process1
                 state: State1
@@ -1232,7 +1253,7 @@ paths:
         - perimeters
       summary: Update list of perimeters for group
       description: >-
-        Update list of perimeters for group, perimeters not included in given list are no longer linked to the group
+        Update list of perimeters for group, perimeters not included in given list are no longer linked to the group. Caution : work is still in progress, please do not use it.
       operationId: updateGroupPerimeters
       produces:
         - application/json
@@ -1268,7 +1289,7 @@ paths:
         - groups
         - perimeters
       summary: Add perimeters to group
-      description: ONLY add perimeters to group (no deletion)
+      description: 'ONLY add perimeters to group (no deletion). Caution : work is still in progress, please do not use it.'
       operationId: addGroupPerimeters
       produces:
         - application/json
@@ -1304,7 +1325,7 @@ paths:
         - users
         - perimeters
       summary: Fetch an existing user's perimeters
-      description: Fetch existing user's perimeters from their login
+      description: "Fetch existing user's perimeters from their login. Caution : work is still in progress, please do not use it."
       operationId: fetchUserPerimeters
       produces:
         - application/json
@@ -1326,7 +1347,7 @@ paths:
               - id: Process1Perimeter1
                 process: Process1
                 state: State1
-                rights: R
+                rights: Read
               - id: Process1Perimeter2
                 process: Process1
                 state: State1
@@ -1339,3 +1360,39 @@ paths:
             data
         '404':
           description: Required user not found
+  /CurrentUserWithPerimeters:
+    get:
+      tags:
+        - users
+      summary: Get information about the user connected and his perimeters
+      description: 'Get information about the user connected and his perimeters. Caution : work is still in progress, please do not use it.'
+      operationId: fetchCurrentUserWithPerimeters
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            $ref: '#/definitions/CurrentUserWithPerimeters'
+          examples:
+            application/json:
+              userData:
+                login: jcleese
+                firstName: John
+                lastName: Cleese
+                groups:
+                  - MONTY
+                  - WANDA
+                entities:
+                  - ENITY1
+                  - ENTITY2
+              computedPerimeters:
+                - process: Process1
+                  state: State1
+                  rights: Read
+                - process: Process1
+                  state: State2
+                  rights: ReadAndWrite
+        '401':
+          description: Authentication required

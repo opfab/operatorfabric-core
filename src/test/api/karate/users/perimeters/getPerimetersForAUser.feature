@@ -34,13 +34,23 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
 }
 """
 
-    * def perimeter10_1 =
+    * def perimeter10_1_R =
 """
 {
-  "id" : "perimeterKarate10_1",
+  "id" : "perimeterKarate10_1_R",
   "process" : "process10",
   "state" : "state1",
   "rights" : "Read"
+}
+"""
+
+    * def perimeter10_1_RR =
+"""
+{
+  "id" : "perimeterKarate10_1_RR",
+  "process" : "process10",
+  "state" : "state1",
+  "rights" : "ReadAndRespond"
 }
 """
 
@@ -66,6 +76,11 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     * def group10Array =
 """
 [   "groupKarate10"
+]
+"""
+    * def group11Array =
+"""
+[   "groupKarate11"
 ]
 """
 
@@ -118,16 +133,28 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     And status 200
 
 
-  Scenario: Create perimeter10_1
+  Scenario: Create perimeter10_1_R
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request perimeter10_1
+    And request perimeter10_1_R
     When method post
     Then status 201
-    And match response.id == perimeter10_1.id
-    And match response.process == perimeter10_1.process
-    And match response.state == perimeter10_1.state
-    And match response.rights == perimeter10_1.rights
+    And match response.id == perimeter10_1_R.id
+    And match response.process == perimeter10_1_R.process
+    And match response.state == perimeter10_1_R.state
+    And match response.rights == perimeter10_1_R.rights
+
+
+  Scenario: Create perimeter10_1_RR
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeter10_1_RR
+    When method post
+    Then status 201
+    And match response.id == perimeter10_1_RR.id
+    And match response.process == perimeter10_1_RR.process
+    And match response.state == perimeter10_1_RR.state
+    And match response.rights == perimeter10_1_RR.rights
 
 
   Scenario: Create perimeter10_2
@@ -142,8 +169,8 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     And match response.rights == perimeter10_2.rights
 
 
-  Scenario: Put group10 and group11 for perimeter10_1
-    Given url opfabUrl + 'users/perimeters/'+ perimeter10_1.id + '/groups'
+  Scenario: Put group10 and group11 for perimeter10_1_R
+    Given url opfabUrl + 'users/perimeters/'+ perimeter10_1_R.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
     And request group10group11Array
     When method put
@@ -154,6 +181,13 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     Given url opfabUrl + 'users/perimeters/'+ perimeter10_2.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
     And request group10Array
+    When method put
+    Then status 200
+
+  Scenario: Put group11 for perimeter10_1_RR
+    Given url opfabUrl + 'users/perimeters/'+ perimeter10_1_RR.id + '/groups'
+    And header Authorization = 'Bearer ' + authToken
+    And request group11Array
     When method put
     Then status 200
 
@@ -182,10 +216,10 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
 
 
   Scenario: get all perimeters for user10
-    #the result should be only perimeter10_1 and perimeterKarate10_2 (because we don't want a duplicate)
+    #the result should be only perimeter10_1_R, perimeterKarate10_2 and perimeterKarate10_1_RR (because we don't want a duplicate)
     Given url opfabUrl + 'users/users/' + user10.login + '/perimeters'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And assert response.length == 2
-    And match response contains only [{"id":"perimeterKarate10_1","process":"process10","state":"state1","rights":"Read"}, {"id":"perimeterKarate10_2","process":"process10","state":"state2","rights":"ReadAndWrite"}]
+    And assert response.length == 3
+    And match response contains only [{"id":"perimeterKarate10_1_R","process":"process10","state":"state1","rights":"Read"}, {"id":"perimeterKarate10_2","process":"process10","state":"state2","rights":"ReadAndWrite"}, {"id":"perimeterKarate10_1_RR","process":"process10","state":"state1","rights":"ReadAndRespond"}]

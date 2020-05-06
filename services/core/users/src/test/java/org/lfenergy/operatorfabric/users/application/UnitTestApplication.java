@@ -17,7 +17,9 @@ import org.lfenergy.operatorfabric.users.configuration.json.JacksonConfig;
 import org.lfenergy.operatorfabric.users.configuration.mongo.LocalMongoConfiguration;
 import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
 import org.lfenergy.operatorfabric.users.controllers.*;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
+import org.lfenergy.operatorfabric.users.services.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -34,7 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 @EnableMongoRepositories(basePackageClasses = UserRepository.class)
 @Import({JacksonConfig.class, LocalMongoConfiguration.class, UsersProperties.class, CustomExceptionHandler.class,
    GroupsController.class, EntitiesController.class, UsersController.class, PerimetersController.class,
-   DataInitComponent.class, GroupsProperties.class, GroupsUtils.class, JwtProperties.class})
+   CurrentUserWithPerimetersController.class, DataInitComponent.class, GroupsProperties.class, GroupsUtils.class,
+   JwtProperties.class, UserService.class})
 @ImportResource("classpath:/security.xml")
 @Slf4j
 public class UnitTestApplication {
