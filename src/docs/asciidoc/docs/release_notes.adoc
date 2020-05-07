@@ -12,6 +12,7 @@
 
 * [OC-414] Issue with using user data in templates
 * [OC-857] Users - PUT /groups/{id}/users doesn't delete former group members
+* [OC-883] Need a click on button "log in using keyCloak" after login in implicit mode
 
 
 == Task
