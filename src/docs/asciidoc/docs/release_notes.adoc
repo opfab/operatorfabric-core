@@ -59,3 +59,4 @@ Work is still in progress. The object is not usable at the moment.
 ====
 * [OC-878] remove unecessary utilities time classes
 * [OC-880] modify KeyCloak configuration to facilitate dev 
+* [OC-882] Remove unused publishTestData method in cardConsultation service
