@@ -1,3 +1,6 @@
+#  POPULATE THE USER DATABASE ON INIT 
+# !!!! WARNNING: VALUES SHOULD BE CHANGED FOR PRODUCTION MODE !!!! 
+# 
 operatorfabric.users.default:
   users:
   - login: admin
