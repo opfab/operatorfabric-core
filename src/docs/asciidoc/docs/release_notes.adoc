@@ -22,11 +22,25 @@ https://opfab.github.io/documentation/current/deployment/#_web_ui
 * [OC-737] Add an object entity in the user service +
 Below, you will find information about our new object "Entity" and its endpoints : +
 https://opfab.github.io/documentation/current/api/users/#/entities
-* [OC-736] Add a field "name" to the object Group +
+* [OC-736] Add a field "name" to the object Group
+
 [WARNING]
+====
 Group data model has changed. +
-Please do take a look at the Users API documentation (groups section) : +
-https://opfab.github.io/documentation/current/api/users/#/groups
+Please do take a look at the Users API documentation (groups section) :
+https://opfab.github.io/documentation/current/api/users/#/groups +
+Now, Group data model is : +
+[source]
+----
+Group{
+    id*         string
+    name        string
+    description string
+}
+----
+Please, in the config service, make sure to modify the file users.yml, replacing the field "name" by "id", so that the
+Groups objects contain the mandatory field id.
+====
 * [OC-858] Refactoring UI Timeline code for circle content and position computing
 * [OC-870] Refactoring cardWriteSerice class in cardPublication service
 * [OC-869] Small improvements in karate test 
