@@ -7,6 +7,10 @@
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
+    "attributes" : {
+      "entitiesId" : [ "ENTITY1;ENTITY2" ],
+      "groups" : ["ADMIN"]
+    },
     "credentials" : [ {
       "type" : "password",
       "hashedSaltedValue" : "7s25HFkeM9PRtZkCADMGxUSC9WiB6bj/ZXkC7Ctipif5ZgZHlr8KcSa+jchCja34JiywjYSPsOJhVehMH2Eg9g==",
@@ -34,6 +38,9 @@
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
+    "attributes" : {
+      "groups" : ["RTE;ADMIN;TRANS"]
+    },
     "credentials" : [ {
       "type" : "password",
       "hashedSaltedValue" : "dD2BxsdcXiP8llVoM/YgTxWFPUYWDJ2oyYXvEBZSHADbNplTDk4GgHL5YJKCLbSE4ju2Itho510sFIDLjQrw7A==",
@@ -82,6 +89,10 @@
     "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "attributes" : {
+      "entitiesId" : [ "ENTITY1" ],
+      "groups" : ["TSO1;TRANS"]
+    },
     "credentials" : [ {
       "type" : "password",
       "hashedSaltedValue" : "GMBbWuLbTQCAjzm46uXhvMXzkYsvrEt9zCdOafiR36ECpkHznpCP3T6wiEgfmNHHnuERdRWn5gYmAIS3A1oNWQ==",
@@ -109,6 +120,10 @@
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
+    "attributes" : {
+      "entitiesId" : [ "ENTITY2" ],
+      "groups" : ["TSO2;TRANS"]
+    },
     "credentials" : [ {
       "type" : "password",
       "hashedSaltedValue" : "7BJc08ILj6xLK78rWLSEnmoJWlawX4iRyqgbsKG7IkT5EkLe4rSa5z2a0yCSgr9AB61Wk8X5XZVuqcN/FHt2mA==",
