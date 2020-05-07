@@ -51,16 +51,19 @@ export class AppComponent implements OnInit {
      * Once the subscription done, send an Action to Check the current authentication status.
      */
     ngOnInit() {
-        console.log(`location: ${location.href}`);
-        this.authenticationService.initializeAuthentication();
+
         this.store.pipe(select(selectCurrentUrl)).subscribe(url => this.currentPath = url);
-        this.authenticationService.linkAuthenticationStatus(
+
+        this.store
+            .select(selectConfigLoaded)
+            .subscribe(loaded => {
+           this.authenticationService.initializeAuthentication();
+           this.authenticationService.linkAuthenticationStatus(
             (isAuthenticated: boolean) => {
                 this.isAuthenticated$ = isAuthenticated;
             });
-        this.store
-            .select(selectConfigLoaded)
-            .subscribe(loaded => this.configLoaded = loaded);
+           this.configLoaded = loaded 
+        });
         this.store
             .select(selectMaxedRetries)
             .subscribe((maxedRetries => this.maxedRetries = maxedRetries));
