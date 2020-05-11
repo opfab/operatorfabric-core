@@ -20,7 +20,6 @@ import {By} from "@angular/platform-browser";
 import {I18nService} from "@ofServices/i18n.service";
 import {TranslateModule} from "@ngx-translate/core";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
 import {FontAwesomeIconsModule} from "../../../../../utilities/fontawesome-icons.module";
 import { FlatpickrModule } from 'angularx-flatpickr';
 import * as moment from 'moment-timezone';
@@ -45,8 +44,7 @@ describe('TimeFilterComponent', () => {
             ],
             declarations: [TimeFilterComponent],
             providers:[ I18nService,
-                {provide: 'TimeEventSource', useValue: null},
-                AuthenticationImportHelperForSpecs]
+                {provide: 'TimeEventSource', useValue: null}]
         })
             .compileComponents();
     }));

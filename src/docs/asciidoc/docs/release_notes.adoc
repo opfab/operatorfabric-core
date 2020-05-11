@@ -7,21 +7,9 @@
 = Version 1.3.0.RELEASE
 
 == Issue
-
-== Bug
-
-* [OC-414] Issue with using user data in templates
-* [OC-857] Users - PUT /groups/{id}/users doesn't delete former group members
-* [OC-883] Need a click on button "log in using keyCloak" after login in implicit mode
-
-== Task
 * [OC-844] Add a UI style for day and a UI style for night with a button to permute. +
 This functionality is optional and can be activate/desactivate via configuration +
 https://opfab.github.io/documentation/current/deployment/#_web_ui
-* [OC-846] Update documentation for "OC-737 : Add an object entity in the user service"
-* [OC-737] Add an object entity in the user service +
-Below, you will find information about our new object "Entity" and its endpoints : +
-https://opfab.github.io/documentation/current/api/users/#/entities
 * [OC-736] Add a field "name" to the object Group
 
 [WARNING]
@@ -41,9 +29,10 @@ Group{
 Please, in the config service, make sure to modify the file users.yml, replacing the field "name" by "id", so that the
 Groups objects contain the mandatory field id.
 ====
-* [OC-858] Refactoring UI Timeline code for circle content and position computing
-* [OC-870] Refactoring cardWriteSerice class in cardPublication service
-* [OC-869] Small improvements in karate test 
+* [OC-737] Add an object entity in the user service +
+Below, you will find information about our new object "Entity" and its endpoints : +
+https://opfab.github.io/documentation/current/api/users/#/entities
+
 * [OC-744] Replace web-ui spring component with Nginx
 
 [NOTE]
@@ -64,20 +53,39 @@ cf Web-ui README.adoc, or the chapter link:https://opfab.github.io/documentation
 of Setting up your development environment within Development Environment documentation, 
 or the entry about [OC-744] of this current file.
 ====
-* [OC-658] gradle assemble shouldn't run the ui unit tests
+* [OC-748] Remove button "log in using keyCloak", go directly to login page
 * [OC-738] Add a group perimeter object in the user service
 
 [NOTE]
 ====
 Work is still in progress. The object is not usable at the moment.
 ====
-* [OC-878] remove unnecessary utilities time classes
-* [OC-547] remove unnecessary UI test
-* [OC-880] modify KeyCloak configuration to facilitate dev 
-* [OC-882] Remove unused publishTestData method in cardConsultation service
+
 * [OC-877] User Service : Implement endpoint GET /CurrentUserWithPerimeters
 
 [NOTE]
 ====
 Work is still in progress. The endpoint is not usable at the moment.
 ====
+
+== Bug
+
+* [OC-414] Issue with using user data in templates
+* [OC-857] Users - PUT /groups/{id}/users doesn't delete former group members
+* [OC-883] Need a click on button "log in using keyCloak" after login in implicit mode
+
+== Task
+
+* [OC-846] Update documentation for "OC-737 : Add an object entity in the user service"
+* [OC-858] Refactoring UI Timeline code for circle content and position computing
+* [OC-870] Refactoring cardWriteSerice class in cardPublication service
+* [OC-869] Small improvements in karate test 
+* [OC-658] gradle assemble shouldn't run the ui unit tests
+* [OC-878] remove unnecessary utilities time classes
+* [OC-547] remove unnecessary UI test
+* [OC-880] modify KeyCloak configuration to facilitate dev 
+* [OC-882] Remove unused publishTestData method in cardConsultation service
+
+
+
+

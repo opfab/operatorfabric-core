@@ -32,7 +32,6 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Router} from '@angular/router';
 import {hot} from 'jasmine-marbles';
-import {LoadConfigSuccess} from '@ofActions/config.actions';
 import * as moment from 'moment';
 import {Message} from '@ofModel/message.model';
 import {CardService} from '@ofServices/card.service';
@@ -40,8 +39,7 @@ import {EmptyLightCards} from '@ofActions/light-card.actions';
 import {ClearCard} from '@ofActions/card.actions';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
-import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
-import { transformAll } from '@angular/compiler/src/render3/r3_ast';
+import { TranslateModule, TranslateService} from "@ngx-translate/core";
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -99,18 +97,6 @@ describe('AuthenticationEffects', () => {
         expect(effects).toBeTruthy();
     });
 
-    it('returns CheckAuthenticationStatus on LoadConfigSuccess', () => {
-        const localActions$ = new Actions(hot('-a--',
-            {a: new LoadConfigSuccess({config: {security: {oauth2: {flow: {mode: 'CODE'}}}}})}));
-        effects = new AuthenticationEffects(mockStore, localActions$, null, null, null,translate);
-        expect(effects).toBeTruthy();
-        effects.checkAuthenticationWhenReady
-            .subscribe((action: AuthenticationActions) => {
-                expect(action.type).toEqual(AuthenticationActionTypes.CheckAuthenticationStatus)
-            });
-
-    });
-
     describe('TryToLogIn', () => {
         it('should success if JWT is generated from backend', () => {
             const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
@@ -163,16 +149,7 @@ describe('AuthenticationEffects', () => {
 
     describe('CheckAuthentication', () => {
         it('should success if has valid token', () => {
-            /*export class PayloadForSuccessfulAuthentication {
-    constructor(public identifier: string,
-                public clientId: Guid,
-                public token: string,
-                public expirationDate: Date,
-                public firstName?: string,
-                public lastName?: string) {
-    }
-}*/
-            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
+      const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
             setStorageWithUserData(moment().add(1, 'days').valueOf());
             authenticationService.checkAuthentication.and.returnValue(of(
                 new CheckTokenResponse('johndoe', 123, Guid.create().toString())
@@ -200,30 +177,6 @@ describe('AuthenticationEffects', () => {
 
             });
         });
-        it('should fail if has no valid token and no code', () => {
-            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
-            authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
-            mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
-            expect(effects).toBeTruthy();
-            effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
-                expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
-                expect(authenticationService.clearAuthenticationInformation).toHaveBeenCalled();
-            });
-        });
-        it('should success if has no valid token and a valid code', () => {
-            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
-            authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
-            authenticationService.askTokenFromCode.and.returnValue(of(
-                new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', moment().add(1, 'days').toDate())
-            ));
-            mockStore.select.and.returnValue(of('code'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
-            expect(effects).toBeTruthy();
-            effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
-                expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn);
-            });
-        });
         it('should fail if has no valid token and an invalid code', () => {
             const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
             authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
@@ -238,21 +191,6 @@ describe('AuthenticationEffects', () => {
     });
 
 
-    // it('should send accept loginAction when handling successful login attempt', () => {
-    //     const mockCheckTokenResponse = {sub:"",exp:0,clientId:""} as CheckTokenResponse;
-    //     const mockIdInfo = new PayloadForSuccessfulAuthentication("",Guid.create(),"",new Date());
-    //     authenticationService.extractIdentificationInformation.and.callFake(() => mockIdInfo);
-    //     const expectedAction = new AcceptLogIn(mockIdInfo);
-    //     expect(effects.handleLogInAttempt(mockCheckTokenResponse)).toEqual(expectedAction);
-    //     expect(authenticationService.extractIdentificationInformation).toHaveBeenCalled();
-    //
-    // })
-
-    // it('should clear local storage of auth information when handling a failing login attempt', () => {
-    //     expect(effects.handleLogInAttempt(null)).toEqual(new RejectLogIn( { message: 'invalid token'}));
-    //     expect(authenticationService.clearAuthenticationInformation).toHaveBeenCalled();
-    // })
-// TODO
     it('should clear local storage of auth information when sending RejectLogIn Action', () => {
         const errorMsg = new Message('test');
         expect(effects.handleRejectedLogin(errorMsg)).toEqual(new RejectLogIn({error: errorMsg}));

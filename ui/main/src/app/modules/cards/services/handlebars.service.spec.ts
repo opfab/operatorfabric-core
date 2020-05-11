@@ -15,17 +15,15 @@ import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
-import {getOneRandomCard} from "@tests/helpers";
+import {getOneRandomCard,AuthenticationImportHelperForSpecs} from "@tests/helpers";
 import {LightCard} from "@ofModel/light-card.model";
 import {ServicesModule} from "@ofServices/services.module";
 import {HandlebarsService} from "./handlebars.service";
 import {Guid} from "guid-typescript";
-import {TimeService} from "@ofServices/time.service";
 import {I18n} from "@ofModel/i18n.model";
 import * as moment from "moment";
 import {UserContext} from "@ofModel/user-context.model";
 import {DetailContext} from "@ofModel/detail-context.model";
-import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
 
 function computeTemplateUri(templateName) {
     return `${environment.urls.thirds}/testPublisher/templates/${templateName}`;
