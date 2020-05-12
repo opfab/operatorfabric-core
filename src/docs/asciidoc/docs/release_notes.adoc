@@ -75,3 +75,9 @@ Work is still in progress. The object is not usable at the moment.
 * [OC-547] remove unnecessary UI test
 * [OC-880] modify KeyCloak configuration to facilitate dev 
 * [OC-882] Remove unused publishTestData method in cardConsultation service
+* [OC-877] User Service : Implement endpoint GET /CurrentUserWithPerimeters
+
+[NOTE]
+====
+Work is still in progress. The endpoint is not usable at the moment.
+====
