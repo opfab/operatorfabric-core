@@ -81,3 +81,4 @@ Work is still in progress. The object is not usable at the moment.
 ====
 Work is still in progress. The endpoint is not usable at the moment.
 ====
+* [OC-876] User Service : Implement group in JWT Token Option
