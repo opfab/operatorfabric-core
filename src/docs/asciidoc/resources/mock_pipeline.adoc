@@ -39,10 +39,8 @@ https://github.com/settings/connections/applications/f244293c729d5066cf27).
 This allowed the opfab-mock organization to appear in the account: https://travis-ci.org/account/repositories
 Click on opfab-mock to get to the https://travis-ci.org/organizations/opfab-mock/repositories[list of repositories for this organization] and toggle "operatorfabric-core" on.
 +
-image::travis-ci.png[]
-+
 . Under the https://travis-ci.org/opfab-mock/operatorfabric-core/settings[Travis settings for the operatorfabric-core repository],
-create a Cron Job on branch master, that runs daily and is always run.
+create a Cron Job on branch `develop`, that runs daily and is always run.
 
 == SonarCloud
 
