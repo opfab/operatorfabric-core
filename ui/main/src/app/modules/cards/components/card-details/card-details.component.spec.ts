@@ -15,7 +15,7 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {RouterTestingModule} from '@angular/router/testing';
 import {LoadCardSuccess} from '@ofActions/card.actions';
-import {getOneRandomCard, getOneRandomThird, getRandomI18nData} from '@tests/helpers';
+import {getOneRandomCard, getOneRandomThird, getRandomI18nData,AuthenticationImportHelperForSpecs} from '@tests/helpers';
 import {By} from '@angular/platform-browser';
 import {ThirdsI18nLoaderFactory, ThirdsService} from '../../../../services/thirds.service';
 import {ServicesModule} from '@ofServices/services.module';
@@ -27,7 +27,6 @@ import {of} from 'rxjs';
 import {Process, State} from '@ofModel/thirds.model';
 import {Detail} from '@ofModel/card.model';
 import {Map as OfMap} from '@ofModel/map';
-import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 describe('CardDetailsComponent', () => {
     let component: CardDetailsComponent;

@@ -21,7 +21,6 @@ import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {TimeService} from '@ofServices/time.service';
 import {appReducer, storeConfig} from '@ofStore/index';
 import {RouterTestingModule} from '@angular/router/testing';
-import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('CustomTimelineChartComponent', () => {
@@ -46,8 +45,7 @@ describe('CustomTimelineChartComponent', () => {
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
         {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
-        {provide: TimeService, useClass: TimeService},
-      AuthenticationImportHelperForSpecs],
+        {provide: TimeService, useClass: TimeService}],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

@@ -68,7 +68,6 @@ export class UserEffects {
             ofType(UserActionsTypes.UserApplicationNotRegistered),
             map((action: UserApplicationNotRegistered) => {
                 const userDataPayload = action.payload.user;
-                // console.log("transitionCreateUserApplication userPayload : " + userDataPayload);
                 return new CreateUserApplication({user: userDataPayload});
             })
         );
@@ -86,11 +85,9 @@ export class UserEffects {
                 return this.userService.askCreateUser(user)
                     .pipe(
                         map(currentUser => {
-                            // console.log("ok creation user " + user.login);
                             return new CreateUserApplicationOnSuccess({user: currentUser});
                         }),
                         catchError((error, caught) => {
-                            // console.log(error, caught, "error on creation user application for the user ")
                             this.authService.clearAuthenticationInformation();
                             this.store.dispatch(new CreateUserApplicationOnFailure({error: error}));
                             return caught;

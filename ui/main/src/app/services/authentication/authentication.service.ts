@@ -12,11 +12,12 @@ import {Observable, of, throwError} from 'rxjs';
 import {catchError, filter, map, switchMap, tap} from 'rxjs/operators';
 import {Guid} from 'guid-typescript';
 import {
-    ImplicitlyAuthenticated,
+    CheckAuthenticationStatus,
     InitAuthStatus,
     PayloadForSuccessfulAuthentication,
     UnableToRefreshOrGetToken,
-    UnAuthenticationFromImplicitFlow
+    UnAuthenticationFromImplicitFlow,
+    AcceptLogIn
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
@@ -28,7 +29,8 @@ import * as _ from 'lodash';
 import {User} from '@ofModel/user.model';
 import {EventType as OAuthType, JwksValidationHandler, OAuthEvent, OAuthService} from 'angular-oauth2-oidc';
 import {implicitAuthenticationConfigFallback} from '@ofServices/authentication/auth-implicit-flow.config';
-import {selectExpirationTime, selectIsImplicitlyAuthenticated} from '@ofSelectors/authentication.selectors';
+import {redirectToCurrentLocation} from "../../app-routing.module";
+import {Router} from '@angular/router';
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -38,6 +40,7 @@ export enum LocalStorageAuthContent {
 }
 
 export const ONE_SECOND = 1000;
+export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS= 5000;
 
 @Injectable()
 export class AuthenticationService {
@@ -68,6 +71,7 @@ export class AuthenticationService {
         , private guidService: GuidService
         , private store: Store<AppState>
         , private oauthService: OAuthService
+        , private router: Router
     ) {
         store.select(buildConfigSelector('security'))
             .subscribe(oauth2Conf => {
@@ -77,30 +81,6 @@ export class AuthenticationService {
 
     }
 
-    regularCheckTokenValidity() {
-        if (this.verifyExpirationDate()) {
-            setTimeout(() => {
-                this.regularCheckTokenValidity();
-            }, 5000);
-        } else {// Will send Logout if token is expired
-            this.store.dispatch(new UnableToRefreshOrGetToken());
-        }
-
-    }
-
-    /**
-     * Choose to handle the OAuth 2.0 using implicit workflow
-     * if mode equals to 'implicit' other manage password grand
-     * or code flow.
-     * @param mode - extracted from config web-service settings
-     */
-    instantiateAuthModeHandler(mode: string): AuthenticationModeHandler {
-        if (mode.toLowerCase() === 'implicit') {
-            this.instantiateImplicitFlowConfiguration();
-            return new ImplicitAuthenticationHandler(this, this.store, sessionStorage);
-        }
-        return new PasswordOrCodeAuthenticationHandler(this, this.store);
-    }
 
     /**
      * extract Oauth 2.0 configuration from settings and store it in the service
@@ -116,11 +96,50 @@ export class AuthenticationService {
         this.mode = _.get(oauth2Conf, 'oauth2.flow.mode', 'PASSWORD');
     }
 
-    // TODO push this part into ImplicitAuthenticationHandler class
-    instantiateImplicitFlowConfiguration(): void {
-        this.implicitConf = {...this.implicitConf, issuer: this.delegateUrl, clientId: this.clientId};
+
+    /**
+     * Choose to handle the OAuth 2.0 using implicit workflow
+     * if mode equals to 'implicit' other manage password grand
+     * or code flow.
+     * @param mode - extracted from config web-service settings
+     */
+    instantiateAuthModeHandler(mode: string): AuthenticationModeHandler {
+        if (mode.toLowerCase() === 'implicit') {
+            this.implicitConf = {...this.implicitConf, issuer: this.delegateUrl, clientId: this.clientId,clearHashAfterLogin: false};
+            return new ImplicitAuthenticationHandler(this, this.store, sessionStorage,this.oauthService,this.guidService,this.router,this.implicitConf,);
+        }
+        return new PasswordOrCodeAuthenticationHandler(this, this.store);
     }
 
+
+    regularCheckTokenValidity() {
+        if (this.verifyExpirationDate()) {
+            setTimeout(() => {
+                this.regularCheckTokenValidity();
+            }, MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS);
+        } else {// Will send Logout if token is expired
+            this.store.dispatch(new UnableToRefreshOrGetToken());
+        }
+
+    }
+
+    /**
+     * @return true if the expiration date stored in the `localestorage` is still running, false otherwise.
+     */
+    verifyExpirationDate(): boolean {
+        // + to convert the stored number as a string back to number
+        const expirationDate = +localStorage.getItem(LocalStorageAuthContent.expirationDate);
+        const isNotANumber = isNaN(expirationDate);
+        const stillValid = (expirationDate> Date.now());
+        return !isNotANumber && stillValid;
+    }
+
+    /**
+     * @return true if the expiration date stored in the `localstorage` is over, false otherwise
+     */
+    isExpirationDateOver(): boolean {
+        return !this.verifyExpirationDate();
+    }
     /**
      * Call the web service which checks the authentication token. A valid token gives back the authentication information
      * and an invalid one an message.
@@ -131,7 +150,6 @@ export class AuthenticationService {
      */
     checkAuthentication(token: string): Observable<CheckTokenResponse> {
         if (!!token) {
-            // const postData = new FormData();
             const postData = new URLSearchParams();
             postData.append('token', token);
             const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
@@ -222,27 +240,9 @@ export class AuthenticationService {
      * extract the jwt authentication token from the localstorage
      */
     public extractToken(): string {
-        const currentAuthModeHandler = this.authModeHandler;
-        return currentAuthModeHandler.extractToken();
+        return this.authModeHandler.extractToken();
     }
 
-    /**
-     * @return true if the expiration date stored in the `localestorage` is still running, false otherwise.
-     */
-    verifyExpirationDate(): boolean {
-        // + to convert the stored number as a string back to number
-        const expirationDate = +localStorage.getItem(LocalStorageAuthContent.expirationDate);
-        const isNotANumber = isNaN(expirationDate);
-        const stillValid = isInTheFuture(expirationDate);
-        return !isNotANumber && stillValid;
-    }
-
-    /**
-     * @return true if the expiration date stored in the `localstorage` is over, false otherwise
-     */
-    isExpirationDateOver(): boolean {
-        return !this.verifyExpirationDate();
-    }
 
     /**
      * clear the `localstorage` from all its content.
@@ -326,35 +326,6 @@ export class AuthenticationService {
         }
     }
 
-    public async moveToImplicitFlowLoginPage() {
-        this.oauthService.configure(this.implicitConf);
-        await this.oauthService.loadDiscoveryDocument();
-        sessionStorage.setItem('flow', 'implicit');
-        this.oauthService.initImplicitFlow();
-    }
-
-    public async initAndLoadAuth() {
-        this.oauthService.configure(this.implicitConf);
-        this.oauthService.setupAutomaticSilentRefresh();
-        this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-        await this.oauthService.loadDiscoveryDocument()
-            .then(() => {
-                    this.oauthService.tryLogin();
-                }
-            ).then(() => {
-                if (this.oauthService.hasValidAccessToken()) {
-                    return Promise.resolve();
-                }
-            });
-
-        this.oauthService.events
-            .pipe(filter(e => e.type === 'session_terminated'))
-            .subscribe(() => {
-                console.log('Your session has been terminated!');
-            });
-        this.askForOauthAccessToken();
-        this.dispatchAuthActionFromOAuthEvents();
-    }
 
     computeRedirectUri() {
         const uriBase = location.origin;
@@ -370,49 +341,6 @@ export class AuthenticationService {
         }
     }
 
-    public dispatchAuthActionFromOAuthEvents() {
-        this.oauthService.events.subscribe(e => {
-            this.dispatchAppStateActionFromOAuth2Events(e);
-        });
-    }
-
-    public askForOauthAccessToken() {
-        return this.oauthService.getAccessToken();
-
-    }
-
-    public providePayloadForSuccessfulAuthenticationFromImplicitFlow(): PayloadForSuccessfulAuthentication {
-        const identityClaims = this.oauthService.getIdentityClaims();
-        const identifier = identityClaims['sub'];
-        const clientId = this.guidService.getCurrentGuid();
-        const token = this.askForOauthAccessToken();
-        const expirationDate = new Date(this.oauthService.getAccessTokenExpiration());
-        return new PayloadForSuccessfulAuthentication(identifier, clientId, token, expirationDate);
-    }
-
-    dispatchAppStateActionFromOAuth2Events(event: OAuthEvent): void {
-        const eventType: OAuthType = event.type;
-        console.log(new Date(), 'Authentication event', event);
-        switch (eventType) {
-            case ('token_received'): {
-                this.store.dispatch(new ImplicitlyAuthenticated());
-                break;
-            }
-            // We can have a token_error or token_refresh_error when it is not possible to refresh token
-            // This case arise for example when using a SSO and the session is not valid anymore (session timeout)
-            case ('token_error'):
-            case('token_refresh_error'):
-                this.store.dispatch(new UnableToRefreshOrGetToken());
-                break;
-            case('logout'): {
-                this.store.dispatch(new UnAuthenticationFromImplicitFlow());
-                break;
-            }
-            default: {
-                // console.log('no action to dispatch for:', eventType);
-            }
-        }
-    }
 
     public getAuthenticationMode(): string {
         return this.mode;
@@ -422,13 +350,6 @@ export class AuthenticationService {
         this.authModeHandler.initializeAuthentication(window.location.href);
     }
 
-    public linkAuthenticationStatus(linker: (isAuthenticated: boolean) => void): void {
-        this.authModeHandler.linkAuthenticationStatus(linker);
-    }
-
-    public move(): void {
-        this.authModeHandler.move();
-    }
 
     public isAuthModeCodeOrImplicitFlow(): boolean {
         const mode = this.getAuthenticationMode();
@@ -466,26 +387,13 @@ export class CheckTokenResponse {
 }
 
 /**
- * helper @method to confirm or not if the number corresponding to a given time is in the futur regarding the present
- * moment.
- * @param time - a number corresponding to an UTC time to test
- * @return  true if time is in the future regarding the present moment, false otherwise
- */
-export function isInTheFuture(time: number): boolean {
-    return time > Date.now();
-}
-
-/**
  * interface to handle the mode of authentication
  */
 export interface AuthenticationModeHandler {
     initializeAuthentication(currentHrefLocation: string): void;
 
-    linkAuthenticationStatus(linker: (isAuthenticated: boolean) => void): void;
-
     extractToken(): string;
 
-    move(): void;
 }
 
 /**
@@ -501,25 +409,19 @@ export class PasswordOrCodeAuthenticationHandler implements AuthenticationModeHa
 
     initializeAuthentication(currentLocationHref: string) {
         const searchCodeString = 'code=';
-        const foundIndex = currentLocationHref.indexOf(searchCodeString);
+       const foundIndex = currentLocationHref.indexOf(searchCodeString);
         if (foundIndex !== -1) {
             this.store.dispatch(
                 new InitAuthStatus({code: currentLocationHref.substring(foundIndex + searchCodeString.length)}));
         }
-    }
-
-    linkAuthenticationStatus(linker: (isAuthenticated: boolean) => void): void {
-        this.store.pipe(select(selectExpirationTime), map(isInTheFuture))
-            .subscribe(linker);
+        this.store.dispatch(
+            new CheckAuthenticationStatus());
     }
 
     public extractToken(): string {
         return localStorage.getItem(LocalStorageAuthContent.token);
     }
 
-    move(): void {
-        this.authenticationService.moveToCodeFlowLoginPage();
-    }
 }
 
 /**
@@ -529,24 +431,75 @@ export class PasswordOrCodeAuthenticationHandler implements AuthenticationModeHa
 export class ImplicitAuthenticationHandler implements AuthenticationModeHandler {
     constructor(private authenticationService: AuthenticationService
         , private store: Store<AppState>
-        , private storage: Storage) {
+        , private storage: Storage
+        , private oauthService: OAuthService
+        , private guidService: GuidService
+        , private router :Router
+        , private implicitConf) {
     }
 
     initializeAuthentication(currentLocationHref: string) {
-        if (this.authenticationService.getAuthenticationMode().toLowerCase() === 'implicit') {
-            this.authenticationService.initAndLoadAuth();
+        this.initFlow();
+    }
+
+
+    public async initFlow() {
+        this.oauthService.configure(this.implicitConf);
+        this.oauthService.setupAutomaticSilentRefresh();
+        this.oauthService.tokenValidationHandler = new JwksValidationHandler();
+        await this.oauthService.loadDiscoveryDocument()
+            .then(() => {
+                this.tryToLogin();
+            }
+            );
+        this.oauthService.events.subscribe(e => {
+            this.dispatchAppStateActionFromOAuth2Events(e);
+        });
+    }
+
+    public async tryToLogin() {
+        await this.oauthService.tryLogin()
+            .then(() => {
+                if (this.oauthService.hasValidAccessToken()) {
+                    this.store.dispatch(new AcceptLogIn(this.providePayloadForSuccessfulAuthentication()));
+                    redirectToCurrentLocation(this.router);
+                }
+                else {
+                    sessionStorage.setItem('flow', 'implicit');
+                    this.oauthService.initImplicitFlow();
+                }
+
+            });
+    }
+
+
+    public providePayloadForSuccessfulAuthentication(): PayloadForSuccessfulAuthentication {
+        const identityClaims = this.oauthService.getIdentityClaims();
+        const identifier = identityClaims['sub'];
+        const clientId = this.guidService.getCurrentGuid();
+        const token = this.oauthService.getAccessToken();
+        const expirationDate = new Date(this.oauthService.getAccessTokenExpiration());
+        return new PayloadForSuccessfulAuthentication(identifier, clientId, token, expirationDate);
+    }
+
+
+    dispatchAppStateActionFromOAuth2Events(event: OAuthEvent): void {
+        const eventType: OAuthType = event.type;
+        switch (eventType) {
+            // We can have a token_error or token_refresh_error when it is not possible to refresh token
+            // This case arise for example when using a SSO and the session is not valid anymore (session timeout)
+            case ('token_error'):
+            case('token_refresh_error'):
+                this.store.dispatch(new UnableToRefreshOrGetToken());
+                break;
+            case('logout'): {
+                this.store.dispatch(new UnAuthenticationFromImplicitFlow());
+                break;
+            }
         }
     }
-
-    linkAuthenticationStatus(linker: (isAuthenticated: boolean) => void): void {
-        this.store.pipe(select(selectIsImplicitlyAuthenticated)).subscribe(linker);
-    }
-
     public extractToken(): string {
         return this.storage.getItem('access_token');
     }
 
-    move() {
-        this.authenticationService.moveToImplicitFlowLoginPage();
-    }
 }

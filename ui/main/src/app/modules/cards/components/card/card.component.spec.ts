@@ -27,7 +27,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import { AddActionsAppear } from '@ofStore/actions/card.actions';
-import {AuthenticationImportHelperForSpecs} from "@ofServices/authentication/authentication.service.spec";
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
@@ -63,7 +62,7 @@ describe('CardComponent', () => {
                 {provide: Router, useValue: routerSpy},
                 ThirdsService,
                 {provide: 'TimeEventSource', useValue: null},
-                TimeService, I18nService, AuthenticationImportHelperForSpecs
+                TimeService, I18nService
             ]}).compileComponents();
         store = TestBed.get(Store);
         spyOn(store, 'dispatch').and.callThrough();

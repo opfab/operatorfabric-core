@@ -23,7 +23,6 @@ import {ArchiveListComponent} from './components/archive-list/archive-list.compo
 import {ArchiveFiltersComponent} from './components/archive-filters/archive-filters.component';
 import {getRandomPage} from '@tests/helpers';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 describe('ArchivesComponent', () => {
     let component: ArchivesComponent;
@@ -46,8 +45,7 @@ describe('ArchivesComponent', () => {
             ],
             providers: [
                 {provide: Store, useClass: Store},
-                {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
-                AuthenticationImportHelperForSpecs
+                {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer}
             ],
             schemas: [ NO_ERRORS_SCHEMA ]
         }).compileComponents();

@@ -14,6 +14,9 @@ import {Map as OfMap, Map} from "@ofModel/map";
 import {Action, ActionType, Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import {Page} from '@ofModel/page.model';
 import {AppState} from "@ofStore/index";
+import {AuthenticationService} from '@ofServices/authentication/authentication.service';
+import {GuidService} from '@ofServices/guid.service';
+import {OAuthLogger,OAuthService,UrlHelperService}from 'angular-oauth2-oidc';
 
 export const emptyAppState4Test:AppState = {
     router: null,
@@ -27,6 +30,12 @@ export const emptyAppState4Test:AppState = {
     archive:null,
     user:null
 };
+
+export const AuthenticationImportHelperForSpecs = [AuthenticationService,
+    GuidService,
+    OAuthService,
+    UrlHelperService,
+    OAuthLogger];
 
 
 export function getOneRandomMenu(): ThirdMenu {

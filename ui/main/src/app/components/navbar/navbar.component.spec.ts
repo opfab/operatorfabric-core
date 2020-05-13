@@ -21,7 +21,7 @@ import {By} from '@angular/platform-browser';
 import {InfoComponent} from './info/info.component';
 import {TimeService} from '@ofServices/time.service';
 import clock = jasmine.clock;
-import { emptyAppState4Test } from '@tests/helpers';
+import { emptyAppState4Test,AuthenticationImportHelperForSpecs} from '@tests/helpers';
 import { configInitialState } from '@ofStore/states/config.state';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -32,7 +32,6 @@ import { authInitialState } from '@ofStore/states/authentication.state';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
 import {MenuLinkComponent} from './menus/menu-link/menu-link.component';
 import { CustomLogoComponent } from './custom-logo/custom-logo.component';
-import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 import {FontAwesomeIconsModule} from "../../modules/utilities/fontawesome-icons.module";
 import {GlobalStyleService} from '@ofServices/global-style.service';
 
