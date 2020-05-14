@@ -1,0 +1,30 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Review Check List
+
+* Check that Travis build is passing (for both branch and PR)
+* Look through changed files to make sure everything is relevant to the PR (no mistakenly added changes,
+no secret information, no malicious changes) and to see if you have remarks on the way things are implemented
+* Check that the commit(s) message(s) is(are) relevant and follow conventions ([OC-XXX] ... )
+* If there is more than one commit, is it meaningful or do we need to squash ?
+* Meaningful and sufficient unit tests for backend (80% coverage is the threshold)
+* Meaningful unit tests for frontend (Angular tests can be complex to implement, we should focus on testing complex
+logic and not the framework itself)
+* Check Sonar analysis on SonarCloud to see if Sonar reports any bugs or code smells on the new code
+* API testing via Karate has been updated
+* Cypress UI tests have been updated
+* Documentation has been updated (especially if configuration is needed)
+* Configuration examples have been updated (both for dev and docker)
+* The release notes has been updated with the a brief explanation of the impact of these developments, and a pointer
+to the relevant documentation if need be. Otherwise, the PR message contains an explanation as to why it doesn't need
+to be on the release notes).
+* Build and run OpFab locally to see the new feature or bug fix at work. In the case of a new feature, it's also a way
+of making sure that the configuration documentation is correct and easily understandable.
+* Depending on the scope of the PR , build docker images and test in docker mode
+
