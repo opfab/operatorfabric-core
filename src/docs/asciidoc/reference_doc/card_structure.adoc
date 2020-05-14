@@ -163,6 +163,11 @@ Determines where custom information is store. The content in this attribute, is 
 This content, as long as it's in `json` format can be used to display details. For the way the details are
 displayed, see below.
 
+
+[WARNING]
+You must not use dot in json field names. In this case, the card will be refused with following message :  "Error, unable to handle pushed Cards: Map key xxx.xxx contains dots but no replacement was configured!""
+
+
 == Presentation Information of the card
 
 === details (`details`)
