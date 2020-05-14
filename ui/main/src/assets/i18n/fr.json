@@ -91,7 +91,9 @@
       "activeFrom": "Active à partir de",
       "activeTo": "Active jusqu'à"
     },
-    "search": "Rechercher"
+    "search": "Rechercher",
+    "noResult": "Votre recherche ne correspond à aucun résultat."
+
   },
   "button": {
     "ok": "OK",

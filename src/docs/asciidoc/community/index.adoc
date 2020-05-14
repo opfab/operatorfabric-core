@@ -59,72 +59,23 @@ project.
 == Reporting Bugs and Suggesting Enhancements
 
 Work in Progress
-//TODO Describe JIRA workflows and how to sign up/login
+//TODO OC-887 Describe JIRA workflows and how to sign up/login
 
 == Contributing Code or Documentation
+
+include::contribution_process.adoc[leveloffset=+1]
+
+include::workflow.adoc[leveloffset=+1]
 
 === Code Guidelines
 
 //TODO add style guidelines
-//TODO Organize/reword section
-//TODO Update PR template to link back to this sections for rules to be checked before merging
 
 * We don't mention specific authors by name in each file (in Javadoc or in the
 documentation for example), so as not to have to maintain these mentions (since this
 information is tracked by git anyway).
 
-* If you are working on a JIRA issue:
-** Please name your branch with the corresponding JIRA issue ID: OC-XXX
-** Start all your commit messages with [OC-XXX]
-+
-This allows the branch, PR and commits to be directly accessible from the JIRA issue.
-
-* Before submitting your PR, please rebase your branch against the current master to minimize conflicts when merging.
-+
-```
-git checkout OC-XXX
-git fetch
-git rebase origin/master
-```
-
-* Before submitting your PR, please squash/fix your commits so as to reduce the
-number of commits and comment them accordingly. In the end, the division of changes
-into commits should make the PR easier to understand and review.
-
-
-* Feel free to add a copyright header (on top of the existing ones) to files
-you create or amend. See src/main/headers for examples.
-
 include::documentation.adoc[leveloffset=+2]
-
-=== Contribution Process
-
-Code Contribution is tracked as link:https://help.github.com/en/articles/about-pull-requests[GitHub Pull Requests].
-Crafting a good pull request takes time and energy and we will help as much as we can, but be prepared to follow our
-iterative process. The iterative process has several goals:
-
-* Maintain the quality of the project
-* Fix issues that are important to users
-* Allow everyone from the community to take part in the discussions, to reach the best possible solution
-* Make the review by OperatorFabric maintainers as efficient as possible
-
-Please follow these steps to have your contribution considered by the maintainers:
-
-//TODO Create new pull request template and link to it here
-//TODO add status checks
-. Request a GitHub review by one of the core developers
-. Take their review into account or discuss the requested changes. Please don't take criticism personally, it is normal
-to iterate on this step several times.
-. Repeat step 3 until the pull request is merged!
-
-Continuous integration is set up to run on all branches automatically and will often report problems, so don't worry
-about getting everything perfect on the first try (SonarCloud Analysis is a notorious problem source).
-Until you add a reviewer, you can trigger as many builds as you want by amending your commits. The status checks
-enforce the following:
-
-* All tests in the test suite pass
-* Checkstyle and SonarCloud report no violations (coming soon)
-* The code coverage is high enough (coming soon)
 
 == Project Governance
 
@@ -149,11 +100,13 @@ the project’s Technical Charter.
 
 OperatorFabric TSC voting members are:
 
+* link:https://github.com/freddidierRTE[Frédéric Didier]
 * link:https://github.com/0x62646f727465[Boris Dolley]
-* link:https://github.com/francoisjolain[François Jolain]
 * link:https://github.com/AlexGuironnetRTE[Alexandra Guironnet]
+* link:https://github.com/rlg-rte[Ronan Le Gall]
+* link:https://github.com/vlo-rte[Valérie Longa]
 * link:https://github.com/HanaeSafiRTE[Hanae Safi]
-* Guillaume Trimbach
+* link:https://github.com/gtrimbach-RTE[Guillaume Trimbach]
 
 Boris Dolley will chair the TSC, with Hanae Safi as his deputy.
 
@@ -207,6 +160,6 @@ And if you're interested in LF Energy in general:
 https://lists.lfenergy.org/g/lfenergy[LF Energy General Discussion]
 
 === JIRA
-//TODO
+//TODO OC-887
 
 include::CODE_OF_CONDUCT.adoc[leveloffset=+1]

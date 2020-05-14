@@ -1,0 +1,62 @@
+// Copyright (c) 2020, RTE (http://www.rte-france.com)
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+:imagesdir: ../images
+
+= Contribution Process
+
+//TODO Merge with workflow?
+
+Code Contribution is tracked as link:https://help.github.com/en/articles/about-pull-requests[GitHub Pull Requests].
+Crafting a good pull request takes time and energy and we will help as much as we can, but be prepared to follow our
+iterative process. The iterative process has several goals:
+
+* Maintain the quality of the project
+* Fix issues that are important to users
+* Allow everyone from the community to take part in the discussions, to reach the best possible solution
+* Make the review by OperatorFabric maintainers as efficient as possible
+
+== Submitting a Pull Request
+
+//TODO link to CICD doc example or describe here git steps for PR (branch off develop, rebase, naming conventions)
+* Create a branch off the `develop` branch. If you are working on a JIRA issue:
+** Please name your branch with the corresponding JIRA issue ID: OC-XXX
+** Start all your commit messages with [OC-XXX]
++
+This allows the branch, PR and commits to be directly accessible from the JIRA issue.
+* Before submitting your PR, please update your branch against the current `develop` HEAD to avoid/minimize conflicts
+when merging.
+* Before submitting your PR, please squash/fix your commits so as to reduce the number of commits and comment them
+accordingly. In the end, the division of changes into commits should make the PR easier to understand and review.
+* Feel free to add a copyright header (on top of the existing ones) to files you create or amend. See src/main/headers
+for examples.
+
+Once you have a first version of your developments, you can push your branch to trigger a CICD build and checks. If need
+be, you can trigger new builds by pushing new or amended commits to your branch.
+You should also take a look at the
+ifdef::single-page-doc[<<review_checklist, review check list>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#review_checklist, review check list>>]
+below to make sure your branch meets its criteria.
+
+Once you feel your branch is ready, submit a pull request. Open pull requests are then reviewed by the core maintainers
+to assign a reviewer to each of them.
+
+//TODO Explain process for forks/external PRs
+
+== Reviewing and merging a Pull Request
+
+As of today, only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
+stop anyone interested in the topic of a PR to comment and review it.
+
+[[review_checklist]]
+include::review_checklist.adoc[leveloffset=+1]
+
+If the PR doesn't meet some of these criteria, use the GitHub review process to suggest changes and discuss problems
+with the PR author.
+
+Once the PR meets all these criteria:
+* Merge the PR into `develop`
+* Set the associated issue to `Done` in JIRA

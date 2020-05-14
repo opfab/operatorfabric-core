@@ -21,8 +21,8 @@ usual bootstrap configuration.
 
 For other configuration see:
 
-* {springboot_doc}/reference/htmlsingle/[Spring Boot documentation].
-* {spring_doc}spring-framework-reference/web.html#mvc[Spring MVC documentation].
+* link:{springboot_doc}/reference/htmlsingle/[Spring Boot documentation].
+* link:{spring_doc}spring-framework-reference/web.html#mvc[Spring MVC documentation].
 
 === Service specific properties
 
@@ -86,10 +86,10 @@ include::examples/docker-configurations/thirds.yml[]
 
 == Specifying external configuration properties when launching a jar file
 
-See {springboot_doc}/reference/htmlsingle/#boot-features-external-config-application-property-files[Application Property Files]
+See link:{springboot_doc}/reference/htmlsingle/#boot-features-external-config-application-property-files[Application Property Files]
 on how to setup an external spring properties or yml file.
 
-See {springboot_doc}/reference/htmlsingle/#howto-set-active-spring-profiles[Set the Active Spring Profiles] for specifying alternate profile.
+See link:{springboot_doc}/reference/htmlsingle/#howto-set-active-spring-profiles[Set the Active Spring Profiles] for specifying alternate profile.
 
 
 == Specifying configuration properties when launching a docker image

@@ -9,10 +9,10 @@ git clone --depth 1 $HTTP_REPO $HOME/documentation
 
 cd $OF_HOME
 
-# If the current version is a snapshot version
-if [[ $OF_VERSION =~ .+SNAPSHOT$ ]]; then
-  # Clear all snapshot versions from archives (because we only want to keep one snapshot at a time)
-  rm -r $HOME/documentation/documentation/archives/*SNAPSHOT
+# If the current version is SNAPSHOT
+if [[ $OF_VERSION = SNAPSHOT ]]; then
+  # Clear SNAPSHOT folder from archives
+  rm -r $HOME/documentation/documentation/archives/SNAPSHOT
 fi
 
 # If the current version is a release version

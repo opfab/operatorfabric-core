@@ -15,7 +15,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
 
 describe('TimeService', () => {
 
@@ -27,7 +26,7 @@ describe('TimeService', () => {
     });
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [TimeService, AuthenticationImportHelperForSpecs],
+            providers: [TimeService],
             imports:[  HttpClientTestingModule,
                         RouterTestingModule,
                         StoreModule.forRoot(appReducer)

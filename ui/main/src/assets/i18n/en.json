@@ -91,7 +91,8 @@
       "activeFrom": "Active From",
       "activeTo": "Active To"
     },
-    "search": "Search"
+    "search": "Search",
+    "noResult": "Your search did not match any results."
   },
   "button": {
     "ok": "OK",

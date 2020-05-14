@@ -27,7 +27,7 @@ import createSpyObj = jasmine.createSpyObj;
 import { getRandomPage } from '@tests/helpers';
 import * as fromStore from '@ofStore/selectors/archive.selectors';
 import { ArchiveQuerySuccess } from '@ofStore/actions/archive.actions';
-import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
+import {AuthenticationImportHelperForSpecs} from '@tests/helpers'
 
 describe('ArchiveFiltersComponent', () => {
   let component: ArchiveFiltersComponent;

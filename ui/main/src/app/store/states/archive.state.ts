@@ -15,11 +15,13 @@ export interface ArchiveState {
     resultPage: Page<LightCard>;
     filters: Map<string, string[]>;
     loading: boolean;
+    firstLoading : boolean;
 }
 
 export const archiveInitialState: ArchiveState = {
         selectedCardId: null,
         resultPage: new Page<LightCard>(1, 0 , []),
         filters: new Map(),
-        loading: false
+        loading: false,
+        firstLoading : false
 };

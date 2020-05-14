@@ -230,3 +230,5 @@ documentation easier and diffs more readable.
 document in the same version rather than the latest version.
 Links starting with *https://opfab.github.io/documentation/current/* should only be used when we want to always refer to
 the latest (release) version of the documentation.
+
+* If necessary, add the relevant copyright at the top of the file.

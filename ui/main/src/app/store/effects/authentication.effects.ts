@@ -18,9 +18,11 @@ import {
     AuthenticationActionTypes,
     CheckAuthenticationStatus,
     CheckImplicitFlowAuthenticationStatus,
+    InitAuthStatus,
     RejectLogIn,
     TryToLogIn,
-    TryToLogOut
+    TryToLogOut,
+    UnAuthenticationFromImplicitFlow
 } from '@ofActions/authentication.actions';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {catchError, flatMap, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -36,7 +38,6 @@ import {EmptyLightCards} from '@ofActions/light-card.actions';
 import {ClearCard} from '@ofActions/card.actions';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 import {redirectToCurrentLocation} from "../../app-routing.module";
-import { combineLatest } from 'rxjs';
 import {TranslateService} from "@ngx-translate/core";
 
 /**
@@ -62,23 +63,6 @@ export class AuthenticationEffects {
                 private router: Router,
                 private translate: TranslateService) {
     }
-
-    /**
-     * Triggers Authentication Check when the application is ready
-     */
-    @Effect()
-    checkAuthenticationWhenReady: Observable<AuthenticationActions> =
-        this.actions$
-            .pipe(
-                ofType(ConfigActionTypes.LoadConfigSuccess),
-                map((loadConfigSuccess: LoadConfigSuccess) => {
-                    const flowMode = loadConfigSuccess.payload.config.security.oauth2.flow.mode;
-                    if (flowMode && flowMode === 'IMPLICIT') {
-                        return new CheckImplicitFlowAuthenticationStatus();
-                    }
-                    return new CheckAuthenticationStatus();
-                })
-            );
 
     /**
      * This {Observable} of {AuthenticationActions} listen {AuthenticationActionTypes.TryToLogIn} type and uses
@@ -199,8 +183,9 @@ export class AuthenticationEffects {
                 }),
                 withLatestFrom(this.store.select(selectCode)),
                 switchMap(([payload, code]) => {
-                        // no token stored or token invalid
-                        if (!payload) {
+                    // no token stored or token invalid
+                    if (!payload) {
+                        if (this.authService.isAuthModeCodeOrImplicitFlow()) {
                             if (!!code) {
                                 return this.authService.askTokenFromCode(code).pipe(
                                     tap(() => {
@@ -211,30 +196,32 @@ export class AuthenticationEffects {
                                         return new AcceptLogIn(authenticationInfo)
                                     }),
                                     catchError(errorResponse => {
-                                            return this.handleErrorOnTokenGeneration(errorResponse, 'code');
-                                        }
+                                        return this.handleErrorOnTokenGeneration(errorResponse, 'code');
+                                    }
                                     ));
                             }
+                            this.authService.moveToCodeFlowLoginPage();
                             return of(this.handleRejectedLogin(new Message('The stored token is invalid',
                                 MessageLevel.ERROR,
                                 new I18n('login.error.token.invalid'))));
-                        } else {
-                            if (!this.authService.isExpirationDateOver()) {
-                                const authInfo = this.authService.extractIdentificationInformation();
-                               this.authService.regularCheckTokenValidity();
-                                return this.authService.loadUserData(authInfo)
-                                    .pipe(
-                                        map(auth => {
-                                            redirectToCurrentLocation(this.router);
-                                            return new AcceptLogIn(auth);
-                                        })
-                                    );
-                            }
-                            return of(this.handleRejectedLogin(new Message('The stored token has expired',
-                                MessageLevel.ERROR,
-                                new I18n('login.error.token.expiration'))));
                         }
+                    } else {
+                        if (!this.authService.isExpirationDateOver()) {
+                            const authInfo = this.authService.extractIdentificationInformation();
+                            this.authService.regularCheckTokenValidity();
+                            return this.authService.loadUserData(authInfo)
+                                .pipe(
+                                    map(auth => {
+                                        redirectToCurrentLocation(this.router);
+                                        return new AcceptLogIn(auth);
+                                    })
+                                );
+                        }
+                        return of(this.handleRejectedLogin(new Message('The stored token has expired',
+                            MessageLevel.ERROR,
+                            new I18n('login.error.token.expiration'))));
                     }
+                }
                 ),
                 catchError(err => {
                     console.error(err);
@@ -248,23 +235,6 @@ export class AuthenticationEffects {
             );
 
 
-    @Effect()
-    CheckImplicitFlowAuthentication: Observable<AuthenticationActions> =
-        this.actions$
-            .pipe(ofType(AuthenticationActionTypes.CheckImplicitFlowAuthenticationStatus),
-                flatMap(() => from(this.authService.initAndLoadAuth()).pipe(
-                    map ( response => {
-                        return response ;
-                    }),
-                    catchError( error => {
-                        return of(error);
-                    })
-                )),
-                // due to implicit flow mode an explicit rerouting to `/feed` is needed once authenticated
-                tap ( () => redirectToCurrentLocation(this.router)),
-                map(() => {
-                    return new  AcceptLogIn(this.authService.providePayloadForSuccessfulAuthenticationFromImplicitFlow());
-                }));
     @Effect()
     UnableToRefreshToken: Observable<Action> =
         this.actions$.pipe(
