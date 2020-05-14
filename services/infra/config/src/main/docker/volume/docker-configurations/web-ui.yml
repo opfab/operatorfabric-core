@@ -16,6 +16,7 @@ operatorfabric:
     card:
       time:
         display: BUSINESS
+      hideTimeFilter: false
     timeline:
       domains:
         - "TR"

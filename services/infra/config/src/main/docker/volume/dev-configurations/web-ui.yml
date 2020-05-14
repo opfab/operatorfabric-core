@@ -17,6 +17,7 @@ operatorfabric:
     card:
       time:
         display: BUSINESS
+      hideTimeFilter: false
     timeline:
       domains:
         - "TR"
@@ -38,8 +39,8 @@ operatorfabric:
         - value: "TEST2"
           label: "Test Publisher 2"
       process.list:
-            - process
-            - someOtherProcess
+        - process
+        - someOtherProcess
       tags.list:
         - value: "tag1"
           label: "Label for tag 1"
@@ -66,7 +67,7 @@ operatorfabric:
   settings:
     locale: en
     nightDayMode: true
-  # styleWhenNightDayModeDesactivated : LEGACY   #Possible value DAY,NIGHT or LEGACY (black background and white timeline)
+    # styleWhenNightDayModeDesactivated : LEGACY   #Possible value DAY,NIGHT or LEGACY (black background and white timeline)
     infos:
       description: true
     about:
@@ -79,5 +80,5 @@ operatorfabric:
         version: 6.0.1
         rank: 2
       lastapplication:
-          name: Wonderful Solution
-          version: 0.1.2-RELEASE
+        name: Wonderful Solution
+        version: 0.1.2-RELEASE

@@ -5,9 +5,11 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
 
 <div class="rounded opfab-feedbar-bgcolor">
-    <div class="d-inline">
+    <div class="row nomarginrow" >
         <of-type-filter></of-type-filter>
-        <of-time-filter></of-time-filter>
+        <div *ngIf="!(hideTimerTags$|async)">
+            <of-time-filter></of-time-filter>
+        </div>
         <of-severity-sort></of-severity-sort>
     </div>
     <div *ngIf="!(hideTags$|async)">

@@ -20,11 +20,12 @@ import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 export class FiltersComponent implements OnInit {
 
   hideTags$: Observable<boolean>;
+  hideTimerTags$: Observable<boolean>;
 
   constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
     this.hideTags$ = this.store.select(buildConfigSelector('settings.tags.hide'));
+    this.hideTimerTags$ = this.store.select(buildConfigSelector('feed.card.hideTimeFilter'));
   }
-
 }
