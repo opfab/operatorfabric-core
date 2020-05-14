@@ -98,6 +98,10 @@ optionally followed by additional information if several branches are associated
 * OC123
 * SomeTextDescribingTheBranch
 
+Commit messages should also start with the JIRA issue ID between brackets: `[OC-123] My commit message`
+
+This allows the branch, PR and commits to be directly accessible from the JIRA issue.
+
 //TODO Link to section describing JIRA workflow once it's written
 //TODO When should we delete supporting branches?
 
@@ -172,11 +176,10 @@ git pull <2>
 git checkout -b OC-Feature1 <3>
 ----
 <1> Check out the `develop` branch
-<2> Make sure it is up to date with origin (=GitHub repository)
+<2> Make sure it is up to date with the remote (=GitHub repository)
 <3> Create a `OC-Feature1` off the `develop` branch
 
-Then, you can start working on the feature and commit you work to the branch, following the conventions and guidelines
-described above.
+Then, you can start working on the feature and commit your work to the branch.
 
 ----
 git commit -m "[OC-Feature1] Developments for OC-Feature1"
@@ -206,22 +209,150 @@ To see your branch (and the status of the associated builds):
 
 . Go to the https://github.com/opfab/operatorfabric-core[operatorfabric-core repository on GitHub]
 . Click the `branches` tab
-. Click on the name of your branch
 
-//TODO Add images
+image::branches_tab.png[]
+
+You can see your OC-Feature1 branch, and the green check mark next to it indicates that the associated build(s) is/are
+passing.
+
+Clicking this check mark displays a pop-up describing the associated build(s), and clicking "Details" redirects you
+to the build report on Travis.
+
+image::build_checkmark_popup.png[]
+
+[NOTE]
+====
+Feel free to add a copyright header (on top of the existing ones) to files you create or amend. See src/main/headers
+for examples.
+====
+
 === Submitting a pull request
 
 Once you are satisfied with the state of your developments, you can submit it as a pull request.
-To do so,
 
+[IMPORTANT]
+====
+Before submitting your branch as a pull request, please squash/fix your commits so as to reduce the number of commits
+and comment them accordingly. In the end, the division of changes into commits should make the PR easier to understand
+and review.
+====
 
+You should also take a look at the
+ifdef::single-page-doc[<<review_checklist, review check list>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#review_checklist, review check list>>]
+below to make sure your branch meets its criteria.
 
+Once you feel your branch is ready, submit a pull request. Open pull requests are then reviewed by the core maintainers
+to assign a reviewer to each of them.
 
-Before doing so however,
-you should make sure that it is up to date with the latest developments from `develop` (i.e. all the commits that may
-have been merged into `develop` since you branched off it).
+//TODO Explain process for forks/external PRs
+To do so, go to the `branches` tab of the repository as described above.
+Click the "New Pull Request" button for your branch.
 
+image::feature1_new_PR.png[]
 
+[IMPORTANT]
+====
+On this screen, by default the base branch for the PR is `master` because it is the repository's default
+branch. However, feature branches are meant to be merged back into `develop`, not `master`, so you should select
+`develop` in the base branch dropdown list.
 
+image::develop_base_PR.png[]
+====
 
+At this point, GitHub will tell you whether your branch could be automatically merged into `develop` or whether
+there are conflicts to be fixed.
+
+===== Case 1: GitHub is able to automatically merge your branch
+
+image::feature1_PR_autom_merge_OK.png[]
+
+This means that either your branch was up to date with develop or there were no conflicts.
+In this case, just go ahead and fill in the PR title and message, then click "Create pull request".
+
+===== Case 2: GitHub can't merge your branch automatically
+
+image::feature1_PR_autom_merge_KO.png[]
+
+This means that there are conflicts with the current state of the `develop` branch on GitHub.
+To fix these conflicts, you need to update your local copy of the develop branch and merge it into your feature branch.
+
+----
+git checkout develop <1>
+git pull <2>
+git checkout OC-Feature1 <3>
+git merge develop <4>
+----
+<1> Check out the `develop` branch
+<2> Make sure it is up to date with the remote (=GitHub repository)
+<3> Check out the `OC-Feature1` branch
+<4> Merge the new commits from `develop` into the feature branch
+
+Then, handle any conflicts from the merge. For example, let's say there is a conflict on file `dummy1.txt`:
+
+----
+Auto-merging dummy1.txt
+CONFLICT (add/add): Merge conflict in dummy1.txt
+Automatic merge failed; fix conflicts and then commit the result.
+----
+
+Open file `dummy1.txt`:
+
+.dummy1.txt
+----
+<<<<<<< HEAD
+Some content from feature 1.
+=======
+Some content that has been changed on develop since Feature 1 branched off.
+>>>>>>> develop
+----
+
+Update the content to reflect the changes that you want to keep:
+
+.dummy1.txt
+----
+Some content from feature 1 and some content that has been changed on develop since Feature 1 branched off.
+----
+
+----
+git add dummy1.txt <1>
+git commit <2>
+git push
+----
+<1> Add the manually merged file to the changes to be committed
+<2> Commit the changes to finish the merge
+<3> Push the changes to GitHub
+
+Now, if you go back to GitHub and try to create a pull request again, GitHub should indicate that it is able to merge
+automatically.
+
+image::feature1_PR_autom_merge_OK.png[]
+
+=== Reviewing a Pull Request
+
+As of today, only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
+stop anyone interested in the topic of a PR to comment and review it.
+
+[[review_checklist]]
+include::review_checklist.adoc[leveloffset=+1]
+
+If the PR doesn't meet some of these criteria, use the GitHub review process to suggest changes and discuss problems
+with the PR author.
+
+=== Merging a Pull Request
+
+//TODO Finish and add GitHub commands
+
+Once the PR meets all these criteria:
+* Merge the PR into `develop`
+* Set the associated issue to `Done` in JIRA
+
+=== Preparing a release
+
+Work in progress
+//TODO
+
+=== Preparing a hotfix
+
+Work in progress
 //TODO
