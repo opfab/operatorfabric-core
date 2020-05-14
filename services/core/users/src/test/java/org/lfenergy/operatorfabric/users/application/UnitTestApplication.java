@@ -17,7 +17,6 @@ import org.lfenergy.operatorfabric.users.configuration.json.JacksonConfig;
 import org.lfenergy.operatorfabric.users.configuration.mongo.LocalMongoConfiguration;
 import org.lfenergy.operatorfabric.users.configuration.users.UsersProperties;
 import org.lfenergy.operatorfabric.users.controllers.*;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
 import org.lfenergy.operatorfabric.users.services.UserService;
 import org.springframework.boot.SpringApplication;

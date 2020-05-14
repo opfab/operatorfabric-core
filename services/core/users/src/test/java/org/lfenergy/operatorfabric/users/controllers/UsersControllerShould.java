@@ -38,8 +38,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * <p></p>
@@ -135,7 +135,7 @@ class UsersControllerShould {
                 .id("Monty Pythons")
                 .name("Monty Pythons name")
                 .description("Monty Pythons description")
-                .perimeter("PERIMETER1_1").perimeter("PERIMETER1_2")
+                .perimeter("PERIMETER1_1").perimeter("PERIMETER2")
                 .build();
         wanda = GroupData.builder()
                 .id("Wanda")
@@ -146,21 +146,31 @@ class UsersControllerShould {
         groupRepository.insert(montyPythons);
         groupRepository.insert(wanda);
 
-        PerimeterData p1, p2;
+        PerimeterData p1, p2, p3;
         p1 = PerimeterData.builder()
                 .id("PERIMETER1_1")
                 .process("process1")
-                .state("state1")
-                .rights(RightsEnum.READ)
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READ),
+                                                         new StateRightData("state2", RightsEnum.READANDWRITE))))
                 .build();
+
         p2 = PerimeterData.builder()
                 .id("PERIMETER1_2")
                 .process("process1")
-                .state("state2")
-                .rights(RightsEnum.READANDWRITE)
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READANDRESPOND),
+                                                         new StateRightData("state2", RightsEnum.ALL))))
                 .build();
+
+        p3 = PerimeterData.builder()
+                .id("PERIMETER2")
+                .process("process2")
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.ALL),
+                                                         new StateRightData("state2", RightsEnum.READ))))
+                .build();
+
         perimeterRepository.insert(p1);
         perimeterRepository.insert(p2);
+        perimeterRepository.insert(p3);
     }
 
     @AfterEach
@@ -567,26 +577,48 @@ class UsersControllerShould {
         @Test
         void fetchAllPerimetersForAUser() throws Exception {
             //User jcleese is part of Monty Pythons and Wanda groups.
-            //Monty Pythons group has perimeters PERIMETER1_1 and PERIMETER1_2.
+            //Monty Pythons group has perimeters PERIMETER1_1 and PERIMETER2.
             //Wanda group has perimeters PERIMETER1_1. We must not have duplicate perimeters in results
             ResultActions result1 = mockMvc.perform(get("/users/jcleese/perimeters"));
             result1
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(2)))
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_2\" && @.process == \"process1\" && @.state == \"state2\" && @.rights == \"ReadAndWrite\")]").exists())
-            ;
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER1_1\" && " +
+                            "@.process == \"process1\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists())
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER2\" && " +
+                            "@.process == \"process2\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"All\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Read\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"All\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Read\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists());
 
-            //User gchapman is part of Monty Pythons group whose perimeters are PERIMETER1_1 and PERIMETER1_2.
+            //User gchapman is part of Monty Pythons group whose perimeters are PERIMETER1_1 and PERIMETER2.
             ResultActions result2 = mockMvc.perform(get("/users/gchapman/perimeters"));
             result2
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(2)))
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_2\" && @.process == \"process1\" && @.state == \"state2\" && @.rights == \"ReadAndWrite\")]").exists())
-            ;
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER1_1\" && " +
+                            "@.process == \"process1\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists())
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER2\" && " +
+                            "@.process == \"process2\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"All\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Read\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"All\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Read\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists());
 
             //User kkline is part of Wanda group whose perimeter is PERIMETER1_1.
             ResultActions result3 = mockMvc.perform(get("/users/kkline/perimeters"));
@@ -594,8 +626,13 @@ class UsersControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(1)))
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
-            ;
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER1_1\" && " +
+                            "@.process == \"process1\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists());
         }
 
         @Test
@@ -660,9 +697,20 @@ class UsersControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(2)))
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_2\" && @.process == \"process1\" && @.state == \"state2\" && @.rights == \"ReadAndWrite\")]").exists())
-            ;
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER1_1\" && " +
+                            "@.process == \"process1\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists())
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER2\" && " +
+                            "@.process == \"process2\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"All\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Read\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"All\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Read\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists());
         }
 
         @Test

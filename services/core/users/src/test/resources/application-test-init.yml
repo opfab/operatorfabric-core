@@ -10,11 +10,6 @@ operatorfabric.users.default:
     - id: ENTITYADMIN
       name: Entity admin
       description: The admin entity
-  perimeters:
-    - id: PERIMETERADMIN
-      process: "*"
-      state: "*"
-      rights: ReadAndWrite
 operatorfabric:
   security:
     jwt:

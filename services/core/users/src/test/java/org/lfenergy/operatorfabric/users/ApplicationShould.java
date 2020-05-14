@@ -65,8 +65,6 @@ class ApplicationShould {
 
         List<EntityData> defaultEntities = entityRepository.findAll();
 
-        List<PerimeterData> defaultPerimeters = perimeterRepository.findAll();
-
         assertThat(defaultGroups).hasSize(1);
         assertThat(defaultUsers.get(0).getLogin()).isEqualTo("admin");
         assertThat(defaultGroups.get(0).getId()).isEqualTo("ADMIN");
@@ -76,12 +74,6 @@ class ApplicationShould {
         assertThat(defaultEntities.get(0).getId()).isEqualTo("ENTITYADMIN");
         assertThat(defaultEntities.get(0).getName()).isEqualTo("Entity admin");
         assertThat(defaultEntities.get(0).getDescription()).isEqualTo("The admin entity");
-
-        assertThat(defaultPerimeters).hasSize(1);
-        assertThat(defaultPerimeters.get(0).getId()).isEqualTo("PERIMETERADMIN");
-        assertThat(defaultPerimeters.get(0).getProcess()).isEqualTo("*");
-        assertThat(defaultPerimeters.get(0).getState()).isEqualTo("*");
-        assertThat(defaultPerimeters.get(0).getRights()).isEqualTo(RightsEnum.READANDWRITE);
     }
 
 }

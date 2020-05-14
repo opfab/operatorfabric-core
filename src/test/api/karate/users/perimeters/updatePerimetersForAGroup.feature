@@ -21,8 +21,16 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
 {
   "id" : "perimeterKarate13_1",
   "process" : "process13",
-  "state" : "state1",
-  "rights" : "Read"
+  "stateRights" : [
+    {
+      "state" : "state1",
+      "right" : "Read"
+    },
+    {
+      "state" : "state2",
+      "right" : "ReadAndRespond"
+    }
+  ]
 }
 """
 
@@ -31,8 +39,16 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
 {
   "id" : "perimeterKarate13_2",
   "process" : "process13",
-  "state" : "state2",
-  "rights" : "ReadAndWrite"
+  "stateRights" : [
+    {
+      "state" : "state1",
+      "right" : "All"
+    },
+    {
+      "state" : "state2",
+      "right" : "All"
+    }
+  ]
 }
 """
 
@@ -72,8 +88,7 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     Then status 201
     And match response.id == perimeter13_1.id
     And match response.process == perimeter13_1.process
-    And match response.state == perimeter13_1.state
-    And match response.rights == perimeter13_1.rights
+    And match response.stateRights == perimeter13_1.stateRights
 
 
   Scenario: Create perimeter13_2
@@ -84,8 +99,7 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     Then status 201
     And match response.id == perimeter13_2.id
     And match response.process == perimeter13_2.process
-    And match response.state == perimeter13_2.state
-    And match response.rights == perimeter13_2.rights
+    And match response.stateRights == perimeter13_2.stateRights
 
 
   Scenario: Put perimeter13_1 for group13 without authentication
@@ -145,7 +159,7 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     When method get
     Then status 200
     And assert response.length == 1
-    And match response contains only [{"id":"perimeterKarate13_1","process":"process13","state":"state1","rights":"Read"}]
+    And match response contains only [{"id":"perimeterKarate13_1","process":"process13","stateRights":[{"state":"state1","right":"Read"},{"state":"state2","right":"ReadAndRespond"}]}]
 
 
   Scenario: Put perimeter13_2 for group13
@@ -162,4 +176,4 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     When method get
     Then status 200
     And assert response.length == 1
-    And match response contains only [{"id":"perimeterKarate13_2","process":"process13","state":"state2","rights":"ReadAndWrite"}]
+    And match response contains only [{"id":"perimeterKarate13_2","process":"process13","stateRights":[{"state":"state1","right":"All"},{"state":"state2","right":"All"}]}]
