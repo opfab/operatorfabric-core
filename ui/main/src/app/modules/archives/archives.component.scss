@@ -5,4 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+.alert-info {
+    color: var(--opfab-text-color);
+    background-color: transparent;
+    border-color: transparent;
+    text-align: center;
+    width: auto;
+}
 
+h1, .h1 {
+    font-size: 1.2rem;
+}
