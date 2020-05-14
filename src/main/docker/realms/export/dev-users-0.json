@@ -90,8 +90,8 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "entitiesId" : [ "ENTITY1" ],
-      "groups" : ["TSO1;TRANS"]
+      "entitiesId" : [ "ENTITY1;ENTITY3" ],
+      "groups" : ["TSO1;TRANS;TSO3"]
     },
     "credentials" : [ {
       "type" : "password",
@@ -121,8 +121,8 @@
     "totp" : false,
     "emailVerified" : false,
     "attributes" : {
-      "entitiesId" : [ "ENTITY2" ],
-      "groups" : ["TSO2;TRANS"]
+      "entitiesId" : [ "ENTITY2;ENTITY4" ],
+      "groups" : ["TSO2;TRANS;TSO4"]
     },
     "credentials" : [ {
       "type" : "password",

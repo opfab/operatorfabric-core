@@ -8,9 +8,14 @@
 
 == Issues
 
+* [OC-876] User Service : Implement group in JWT Token Option
+
+
 == Bugs
 
 == Tasks
+
+
 
 
 
