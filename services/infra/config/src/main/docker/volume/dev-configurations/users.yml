@@ -26,6 +26,12 @@ operatorfabric.users.default:
     - id: TSO2
       name: TSO number 2
       description: TSO 2 Group
+    - id: TSO3
+      name: TSO number 3
+      description: TSO 3 Group
+    - id: TSO4
+      name: TSO number 4
+      description: TSO 4 Group
     - id: TRANS
       name: TRANS name
       description: Transnational Group
@@ -36,6 +42,12 @@ operatorfabric.users.default:
     - id: ENTITY2
       name: Entity 2 name
       description: Entity 2 short description
+    - id: ENTITY3
+      name: Entity 3 name
+      description: Entity 3 short description
+    - id: ENTITY4
+      name: Entity 4 name
+      description: Entity 4 short description
   user-settings:
     - login: rte-operator
       description: Da Operator Rulez

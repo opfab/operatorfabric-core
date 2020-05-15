@@ -30,7 +30,7 @@ services:
     container_name: config
     depends_on:
      - rabbitmq
-    image: "lfeoperatorfabric/of-configuration-cloud-service:snapshot"
+    image: "lfeoperatorfabric/of-configuration-cloud-service:1.3.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2000:8080"
@@ -51,7 +51,7 @@ services:
     container_name: registry
     depends_on:
      - config
-    image: "lfeoperatorfabric/of-registry-cloud-service:snapshot"
+    image: "lfeoperatorfabric/of-registry-cloud-service:1.3.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2001:8080"
@@ -67,7 +67,7 @@ services:
     container_name: client_gateway
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-client-gateway-cloud-service:snapshot"
+    image: "lfeoperatorfabric/of-client-gateway-cloud-service:1.3.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2002:8080"
@@ -82,7 +82,7 @@ services:
     container_name: users
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-users-business-service:snapshot"
+    image: "lfeoperatorfabric/of-users-business-service:1.3.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2103:8080"
@@ -97,7 +97,7 @@ services:
     container_name: thirds
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-thirds-business-service:snapshot"
+    image: "lfeoperatorfabric/of-thirds-business-service:1.3.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2100:8080"
@@ -113,7 +113,7 @@ services:
     container_name: cards-publication
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-cards-publication-business-service:snapshot"
+    image: "lfeoperatorfabric/of-cards-publication-business-service:1.3.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2102:8080"
@@ -128,7 +128,7 @@ services:
     container_name: cards-consultation
     depends_on:
      - registry
-    image: "lfeoperatorfabric/of-cards-consultation-business-service:snapshot"
+    image: "lfeoperatorfabric/of-cards-consultation-business-service:1.3.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2104:8080"
@@ -143,7 +143,7 @@ services:
     container_name: actions
     depends_on:
     - registry
-    image: "lfeoperatorfabric/of-actions-business-service:snapshot"
+    image: "lfeoperatorfabric/of-actions-business-service:1.3.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
     - "2105:8080"
@@ -155,6 +155,6 @@ services:
     volumes:
       - "../../../../src/main/docker/certificates:/certificates_to_add"
   web-ui:
-    image: "lfeoperatorfabric/of-web-ui:snapshot"
+    image: "lfeoperatorfabric/of-web-ui:1.3.0.RELEASE"
     ports:
     - "2200:80"

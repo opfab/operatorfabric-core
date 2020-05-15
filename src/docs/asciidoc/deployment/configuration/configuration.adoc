@@ -28,9 +28,9 @@ for more information on the different services.
 All services are SpringBoot applications and use jetty as an embedded servlet container. As such, they share some common
 configuration which is described in the following documentation:
 
- * {springboot_doc}/reference/htmlsingle/[Springboot documentation]
- * {springboot_doc}/reference/htmlsingle/#boot-features-external-config[Springboot external configuration]
- * {springboot_doc}/reference/htmlsingle/#common-application-properties[Common application properties from Springboot documentation]
+ * link:{springboot_doc}/reference/htmlsingle/[Springboot documentation]
+ * link:{springboot_doc}/reference/htmlsingle/#boot-features-external-config[Springboot external configuration]
+ * link:{springboot_doc}/reference/htmlsingle/#common-application-properties[Common application properties from Springboot documentation]
 
 == Global configuration
 
@@ -75,9 +75,9 @@ include::examples/common_application.yml[]
 
 In the above example you can see that we need to configure:
 
-* RabbitMQ (See {spring_amqp_doc}/reference/htmlsingle/[spring-amqp doc])
+* RabbitMQ (See link:{spring_amqp_doc}/reference/htmlsingle/[spring-amqp doc])
 * MongoDB
-* Eureka (See {spring_cloud_netflix_doc}/single/spring-cloud-netflix.html#_service_discovery_eureka_clients[spring eureka])
+* Eureka (See link:{spring_cloud_netflix_doc}/single/spring-cloud-netflix.html#_service_discovery_eureka_clients[spring eureka])
 * OperatorFabric
 
 == OperatorFabric Mongo configuration
@@ -85,7 +85,7 @@ In the above example you can see that we need to configure:
 We only use URI configuration for mongo through the usage of the ```spring.data.mongodb.uris```,
 it allows us to share the same configuration behavior for simple or cluster
 configuration and with both spring classic and reactive mongo configuration.
-See {mongo_doc}/connection-string/[mongo connection string] for the complete URI syntax.
+See link:{mongo_doc}/connection-string/[mongo connection string] for the complete URI syntax.
 
 === Define time to live for archived cards
 
@@ -130,7 +130,7 @@ Setting automated user creation==. Creation user requires a user id. Given name 
 
 === Alternative way to manage groups (and/or entities)
 
-By default, `Operator-Fabric` manage groups (and/or entities) through the user's collection in the database. Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token. The administrator of the authentication service has to set what claims define a group (and/or entity). In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve those groups (and/or entities).
+By default, `OperatorFabric` manages groups (and/or entities) through the user's collection in the database. Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token. The administrator of the authentication service has to set what claims define a group (and/or entity). In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve those groups (and/or entities).
   
 |===
 |name|default|mandatory?|Description

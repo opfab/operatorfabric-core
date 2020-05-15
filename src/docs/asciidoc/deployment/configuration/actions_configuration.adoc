@@ -42,10 +42,10 @@ current `OperatorFabric` instance | http://localhost:2103
 
 == Specifying external configuration properties when launching a jar file
 
-See {springboot_doc}/reference/htmlsingle/#boot-features-external-config-application-property-files[Application Property Files]
+See link:{springboot_doc}/reference/htmlsingle/#boot-features-external-config-application-property-files[Application Property Files]
 on how to setup an external spring properties or yml file.
 
-See {springboot_doc}/reference/htmlsingle/#howto-set-active-spring-profiles[Set the Active Spring Profiles] for specifying alternate profile.
+See link:{springboot_doc}/reference/htmlsingle/#howto-set-active-spring-profiles[Set the Active Spring Profiles] for specifying alternate profile.
 
 
 == Specifying configuration properties when launching a docker image

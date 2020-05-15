@@ -382,13 +382,13 @@
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "opfab-keycloak-secret",
-    "redirectUris" : [ "http://localhost:2002/ui/","http://localhost:4200" ],
+    "redirectUris" : [ "http://localhost:2002/*","http://localhost:4200/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
     "consentRequired" : false,
     "standardFlowEnabled" : true,
-    "implicitFlowEnabled" : false,
+    "implicitFlowEnabled" : true,
     "directAccessGrantsEnabled" : true,
     "serviceAccountsEnabled" : true,
     "authorizationServicesEnabled" : true,
@@ -467,6 +467,36 @@
         "access.token.claim" : "true",
         "claim.name" : "sub",
         "userinfo.token.claim" : "true"
+      }
+    },
+    {
+      "id": "f1305cd5-2bf2-4d79-a723-f7ed91e9b968",
+      "name": "entitiesId",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usermodel-attribute-mapper",
+      "consentRequired": false,
+      "config": {
+        "userinfo.token.claim": "true",
+        "user.attribute": "entitiesId",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "claim.name": "entitiesId",
+        "jsonType.label": "String"
+      }
+    },
+    {
+      "id": "f1305cd5-2bf2-4d79-a723-f7ed91e9b969",
+      "name": "groups",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usermodel-attribute-mapper",
+      "consentRequired": false,
+      "config": {
+        "userinfo.token.claim": "true",
+        "user.attribute": "groups",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "claim.name": "groups",
+        "jsonType.label": "String"
       }
     } ],
     "defaultClientScopes" : [ "web-origins", "role_list", "roles", "profile", "email" ],

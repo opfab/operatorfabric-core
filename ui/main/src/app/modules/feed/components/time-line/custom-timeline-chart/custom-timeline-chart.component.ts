@@ -257,7 +257,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
           if (tickIndex + 1 === this.xTicks.length) 
               {
                 endLimit += 1; // Include the limit domain value by adding 1ms
-                if (cards[cardIndex])  console.log("endLimit =" , endLimit , ",cards[cardIndex].date=",cards[cardIndex].date.valueOf());
               }
     
 

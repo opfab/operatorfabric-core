@@ -6,16 +6,15 @@
  */
 
 
-import {Component, OnInit} from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {AppState} from '@ofStore/index';
-import {selectCurrentUrl, selectRouterState} from '@ofSelectors/router.selectors';
-import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {LoadConfig} from '@ofActions/config.actions';
-import {buildConfigSelector, selectConfigLoaded, selectMaxedRetries} from '@ofSelectors/config.selectors';
-import {I18nService} from '@ofServices/i18n.service';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { AppState } from '@ofStore/index';
+import { AuthenticationService } from '@ofServices/authentication/authentication.service';
+import { LoadConfig } from '@ofActions/config.actions';
+import { buildConfigSelector, selectConfigLoaded, selectMaxedRetries } from '@ofSelectors/config.selectors';
+import { selectIdentifier } from '@ofSelectors/authentication.selectors';
+import { I18nService } from '@ofServices/i18n.service';
 
 @Component({
     selector: 'of-root',
@@ -24,51 +23,60 @@ import {I18nService} from '@ofServices/i18n.service';
 })
 export class AppComponent implements OnInit {
     readonly title = 'OperatorFabric';
-    getRoutePE: Observable<any>;
-    currentPath: any;
     isAuthenticated$ = false;
     configLoaded = false;
+    useCodeOrImplicitFlow = true;
     private maxedRetries = false;
 
     /**
      * NB: I18nService is injected to trigger its constructor at application startup
-     * @param store
-     * @param i18nService
      */
     constructor(private store: Store<AppState>,
-                private i18nService: I18nService,
-                private titleService: Title
+        private i18nService: I18nService,
+        private titleService: Title
         , private authenticationService: AuthenticationService) {
-        this.getRoutePE = this.store.pipe(select(selectRouterState));
     }
 
-    public setTitle(newTitle: string) {
-        this.titleService.setTitle(newTitle);
-    }
-
-    /**
-     * On Init the app take trace of the current url and of the authentication status
-     * Once the subscription done, send an Action to Check the current authentication status.
-     */
     ngOnInit() {
-        console.log(`location: ${location.href}`);
-        this.authenticationService.initializeAuthentication();
-        this.store.pipe(select(selectCurrentUrl)).subscribe(url => this.currentPath = url);
-        this.authenticationService.linkAuthenticationStatus(
-            (isAuthenticated: boolean) => {
-                this.isAuthenticated$ = isAuthenticated;
-            });
-        this.store
-            .select(selectConfigLoaded)
-            .subscribe(loaded => this.configLoaded = loaded);
+
+        this.loadConfiguration();
+        this.launchAuthenticationProcessWhenConfigurationLoaded();
+        this.waitForUserTobeAuthenticated();
+        this.setTitle();
+    }
+
+    private loadConfiguration() {
+        this.store.dispatch(new LoadConfig());
         this.store
             .select(selectMaxedRetries)
             .subscribe((maxedRetries => this.maxedRetries = maxedRetries));
-        this.store.dispatch(new LoadConfig());
+    }
 
-        const sTitle = this.store.select(buildConfigSelector('title', this.title));
-        sTitle.subscribe(data => {
-            this.setTitle(data);
-        });
+    private launchAuthenticationProcessWhenConfigurationLoaded() {
+        this.store
+            .select(selectConfigLoaded)
+            .subscribe(loaded => {
+                if (loaded) {
+                    this.authenticationService.initializeAuthentication();
+                    this.useCodeOrImplicitFlow = this.authenticationService.isAuthModeCodeOrImplicitFlow();
+                }
+                this.configLoaded = loaded;
+            });
+    }
+
+    private waitForUserTobeAuthenticated() {
+        this.store
+            .select(selectIdentifier)
+            .subscribe(identifier => {
+                if (identifier) this.isAuthenticated$ = true;
+            });
+    }
+
+    private setTitle() {
+        this.store
+            .select(buildConfigSelector('title', this.title))
+            .subscribe(data => {
+                this.titleService.setTitle(data);
+            });
     }
 }

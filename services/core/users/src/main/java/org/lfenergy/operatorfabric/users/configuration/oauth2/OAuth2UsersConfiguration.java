@@ -29,6 +29,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,6 +92,9 @@ public class OAuth2UsersConfiguration {
                     // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
                     user.setGroups(getGroupsList(jwt));
                 }
+
+                if (jwtProperties.gettingEntitiesFromToken) user.setEntities(getEntitiesFromToken(jwt));
+
                 List<GrantedAuthority> authorities = computeAuthorities(user);
 
                 log.debug("user [{}] has these roles {} through the {} mode"
@@ -141,5 +146,13 @@ public class OAuth2UsersConfiguration {
      */
     public List<String> getGroupsList(Jwt jwt) {
         return groupsUtils.createGroupsList(jwt);
+    }
+
+    private List<String> getEntitiesFromToken(Jwt jwt){
+        String entitiesId = jwt.getClaimAsString(jwtProperties.getEntitiesIdClaim());
+        List<String> enititiesIdList = new ArrayList<>();
+        if (entitiesId!=null)  enititiesIdList.addAll(Arrays.asList(entitiesId.split(";")));
+        return enititiesIdList;
+
     }
 }

@@ -6,6 +6,7 @@
 
 :imagesdir: ../images
 
+[[CICD]]
 = OperatorFabric CICD
 
 The aim of this document is to describe our CICD pipeline and our release process.

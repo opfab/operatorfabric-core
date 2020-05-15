@@ -38,8 +38,8 @@ operatorfabric:
       expire-claim: exp
 ### activate the folLowing if you want the entities of the user to came from the token and not mongoDB   
 ### entitiesIdClaim is the name of the field in the token     
-    #  entitiesIdClaim : entitiesId
-    #  gettingEntitiesFromToken: true
+#      entitiesIdClaim : entitiesId
+#      gettingEntitiesFromToken: true
 ###
 
 ### activate the following if you want the groups of the user to came from the token and not mongoDB   
@@ -52,7 +52,7 @@ operatorfabric:
 #          rolesClaimStandardArray:  
 #            - path: "resource_access/opfab-client/roles"
 #          rolesClaimStandardList:  
-#            - path: "roleFieldList" 
+#            - path: "groups" 
 #              separator: ";"           
 #          rolesClaimCheckExistPath: 
 #            - path: "resource_access/AAA" 
@@ -60,4 +60,4 @@ operatorfabric:
 #            - path: "resource_access/BBB"
 #              roleValue: "roleBBB"  
 ### 
-#logging.level.root: DEBUG     
+#logging.level.root: DEBUG   

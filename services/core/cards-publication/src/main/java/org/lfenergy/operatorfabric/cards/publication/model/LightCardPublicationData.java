@@ -57,14 +57,17 @@ public class LightCardPublicationData implements LightCard {
     private I18n title;
     private I18n summary;
     private String mainRecipient;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)    
     @Singular("timeSpan")
-    private Set<TimeSpanPublicationData> timeSpansSet;
+    private Set<TimeSpan> timeSpansSet;
 
     /**
      * return timespans, may be null
      * @return
      */
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Override
     public List<TimeSpan> getTimeSpans() {
         if(this.timeSpansSet!=null)
@@ -75,8 +78,9 @@ public class LightCardPublicationData implements LightCard {
     @Override
     public void setTimeSpans(List<? extends TimeSpan> timeSpans) {
         if(timeSpans != null)
-            this.timeSpansSet = new HashSet(timeSpans);
+            this.timeSpansSet = new HashSet<>(timeSpans);
 
     }
+    
 
 }

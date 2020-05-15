@@ -14,7 +14,8 @@ import {
     getOneRandomCardWithRandomDetails,
     getOneRandomThird,
     getRandomI18nData,
-    getRandomIndex
+    getRandomIndex,
+    AuthenticationImportHelperForSpecs
 } from '@tests/helpers';
 import {ThirdsI18nLoaderFactory, ThirdsService} from '../../../../services/thirds.service';
 import {ServicesModule} from '@ofServices/services.module';
@@ -29,7 +30,7 @@ import {By} from '@angular/platform-browser';
 import {of} from 'rxjs';
 import {Action, ActionType, Process, State} from '@ofModel/thirds.model';
 import {Map as OfMap} from '@ofModel/map';
-import {AuthenticationImportHelperForSpecs} from '@ofServices/authentication/authentication.service.spec';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('DetailComponent', () => {
     let component: DetailComponent;
@@ -44,6 +45,7 @@ describe('DetailComponent', () => {
                 StoreModule.forRoot(appReducer),
                 ServicesModule,
                 HttpClientTestingModule,
+                RouterTestingModule,
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,

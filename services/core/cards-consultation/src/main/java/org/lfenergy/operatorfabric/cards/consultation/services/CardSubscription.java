@@ -143,7 +143,7 @@ public class CardSubscription {
                 userMlc.start();
                 log.info("LISTENING to messages on Group[{}Groups] queue",this.user.getLogin());
                 groupMlc.start();
-                startingPublishDate = Instant.now();;
+                startingPublishDate = Instant.now();
             });
             emitter.onDispose(()->{
                 log.info("DISPOSING amqp publisher");
@@ -174,7 +174,7 @@ public class CardSubscription {
      * @param queueName
      */
     private void registerListener(MessageListenerContainer userMlc, FluxSink<String> emitter, String queueName) {
-        userMlc.setupMessageListener((MessageListener) message -> {
+        userMlc.setupMessageListener(message -> {
             log.info("PUBLISHING message from  {}",queueName);
             emitter.next(new String(message.getBody()));
 
@@ -182,7 +182,7 @@ public class CardSubscription {
     }
 
     private void registerListenerForGroups(MessageListenerContainer groupMlc, FluxSink<String> emitter, String queueName) {
-        groupMlc.setupMessageListener((MessageListener) message -> {
+        groupMlc.setupMessageListener(message -> {
 
             String messageBody = new String(message.getBody());
             if (checkIfUserMustReceiveTheCard(messageBody)){
