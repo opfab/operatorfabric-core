@@ -20,7 +20,6 @@ export class Card {
         readonly startDate: number,
         readonly endDate: number,
         readonly severity: Severity,
-        readonly mainRecipient: string,
         readonly process?: string,
         readonly processId?: string,
         readonly state?: string,

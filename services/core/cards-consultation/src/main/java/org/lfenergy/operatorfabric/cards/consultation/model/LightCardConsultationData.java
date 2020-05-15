@@ -51,7 +51,6 @@ public class LightCardConsultationData implements LightCard {
     private List<String> tags;
     private I18n title;
     private I18n summary;
-    private String mainRecipient;
     
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)

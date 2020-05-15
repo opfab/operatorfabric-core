@@ -83,7 +83,6 @@ public class CardPublicationData implements Card {
     private Object data;
     @Indexed
     private int shardKey;
-    private String mainRecipient;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> userRecipients;
