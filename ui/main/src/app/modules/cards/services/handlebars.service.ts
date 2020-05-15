@@ -278,7 +278,6 @@ export class HandlebarsService {
     }
 
     private registerNow() {
-        const that = this;
         Handlebars.registerHelper('now', function (options) {
             return moment().valueOf();
         })

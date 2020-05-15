@@ -26,6 +26,7 @@
         stroke: #ddd;
         stroke-width: 1;
         fill: none;
+        stroke:var(--opfab-timeline-grid-color);
     }
 
 
@@ -33,9 +34,5 @@
       fill: var(--opfab-timeline-text-color);
     }
 
-
-    .gridline-path {
-      stroke:var(--opfab-timeline-grid-color);
-    }
 
 }

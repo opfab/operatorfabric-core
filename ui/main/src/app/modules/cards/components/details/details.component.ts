@@ -47,7 +47,7 @@ export class DetailsComponent extends ResizableComponent implements AfterViewIni
 
     selectDetail(detail: DetailComponent) {
         // deactivate all tabs
-        this.details.toArray().forEach(detail => detail.active = false);
+        this.details.toArray().forEach(_detail => _detail.active = false);
 
         // activate the tab the user has clicked on.
         if (detail)

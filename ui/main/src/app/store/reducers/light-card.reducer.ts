@@ -90,9 +90,9 @@ export function reducer(
                     filters: filters
                 };
             }
-            else 
-            return {...state} 
-
+            else {
+                return {...state} 
+            }
         }
         case FeedActionTypes.ChangeSort: {
             return {
