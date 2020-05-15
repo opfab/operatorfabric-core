@@ -45,18 +45,18 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         List<String> entities = user.getEntities();
 
         if (login != null) {
-            criteriaList.add(new Criteria().where("userRecipients").in(login));
+            criteriaList.add(Criteria.where("userRecipients").in(login));
         }
         if (!(groups == null || groups.isEmpty())) {
-            criteriaList.add(new Criteria().where("groupRecipients").in(groups).andOperator(new Criteria().orOperator(
+            criteriaList.add(Criteria.where("groupRecipients").in(groups).andOperator(new Criteria().orOperator(
                     Criteria.where("entityRecipients").exists(false), Criteria.where("entityRecipients").size(0))));
         }
         if (!(entities == null || entities.isEmpty())) {
-            criteriaList.add(new Criteria().where("entityRecipients").in(entities).andOperator(new Criteria().orOperator(
+            criteriaList.add(Criteria.where("entityRecipients").in(entities).andOperator(new Criteria().orOperator(
                     Criteria.where("groupRecipients").exists(false), Criteria.where("groupRecipients").size(0))));
         }
         if (!(groups == null || groups.isEmpty()) &&  !(entities == null || entities.isEmpty()))
-            criteriaList.add(new Criteria().where("groupRecipients").in(groups).and("entityRecipients").in(entities));
+            criteriaList.add(Criteria.where("groupRecipients").in(groups).and("entityRecipients").in(entities));
 
         if (! criteriaList.isEmpty())
             criteria.add(new Criteria().orOperator(criteriaList.toArray(new Criteria[criteriaList.size()])));

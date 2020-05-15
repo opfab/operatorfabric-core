@@ -17,7 +17,8 @@
 == Tasks
 
 * [OC-892] Add in documentation that it is not possible to use dot in json field names 
-* [OC-888] Sonarcloud frontend fixes
+* [OC-888] Fix SonarCloud Frontend issues
+* [OC-692] Fix SonarCloud Backend issues 
 
 
 
