@@ -173,7 +173,7 @@ file to initialize the release notes for version Y.Y.Y.RELEASE.
 
 Wait for the build to complete (around 30 minutes).
 
-. Check that the snapshot images have been generated and pushed to DockerHub.
+. Check that the SNAPSHOT images have been generated and pushed to DockerHub.
 
 . Check that the documentation has been generated and pushed to the GitHub pages website: you should see the
 Y.Y.Y.SNAPSHOT under the link:https://opfab.github.io/pages/releases.html[releases page]. Check that the links work.

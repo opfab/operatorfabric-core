@@ -73,6 +73,7 @@ major or minor version (or even a simple patch).
 By contrast, hotfix branches fix bugs in existing releases and give rise to new patches.
 
 The lifecycle of feature branches is as follows:
+
 . A new feature branch is branched off `develop` before starting work on a feature or bug.
 . Once the developments are deemed ready by the developer(s) working on the feature, a pull request should be created
 for this branch.
@@ -81,7 +82,6 @@ for this branch.
 link:https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests[Git Hub pull requests]
 features (comments, proposed changes, etc.) to make changes to the PR until it meets the project requirements.
 . Once it is ready to be included in the next version, the pull request is then merged back into `develop`.
-//TODO Link to PR check list
 
 //TODO Add feature_branches image
 
@@ -263,14 +263,14 @@ image::develop_base_PR.png[]
 At this point, GitHub will tell you whether your branch could be automatically merged into `develop` or whether
 there are conflicts to be fixed.
 
-===== Case 1: GitHub is able to automatically merge your branch
+==== Case 1: GitHub is able to automatically merge your branch
 
 image::feature1_PR_autom_merge_OK.png[]
 
 This means that either your branch was up to date with develop or there were no conflicts.
 In this case, just go ahead and fill in the PR title and message, then click "Create pull request".
 
-===== Case 2: GitHub can't merge your branch automatically
+==== Case 2: GitHub can't merge your branch automatically
 
 image::feature1_PR_autom_merge_KO.png[]
 
@@ -317,7 +317,7 @@ Some content from feature 1 and some content that has been changed on develop si
 ----
 git add dummy1.txt <1>
 git commit <2>
-git push
+git push <3>
 ----
 <1> Add the manually merged file to the changes to be committed
 <2> Commit the changes to finish the merge
@@ -341,16 +341,27 @@ with the PR author.
 
 === Merging a Pull Request
 
-//TODO Finish and add GitHub commands
+Once the pull request meets all the criteria from the above check list, you can merge it into the `develop` branch.
 
-Once the PR meets all these criteria:
-* Merge the PR into `develop`
-* Set the associated issue to `Done` in JIRA
+. Go to the pull request page on GitHub
+. Check that the base branch for the pull request is `develop`. This information is visible at the top of the page.
++
+image::existing_PR_check_base.png[]
+
+. If that is not the case, you can edit the base branch by clicking the `Edit` button in the top right corner.
+//TODO Check if in this case the PR build is re-run ? If not conflicts or build issues might go un-detected
+
+. Click the `merge pull request` button at the bottom of the PR page
+
+. Go to the https://opfab.atlassian.net[JIRA] page for the corresponding issue and
++
+* Set the `Fix version` field to `Next Version`
+* Set the `Status` field to `Done`
 
 === Preparing a release
 
 Work in progress
-//TODO
+//TODO, maybe just link to release?
 
 === Preparing a hotfix
 
