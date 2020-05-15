@@ -63,15 +63,14 @@ Work in Progress
 
 == Contributing Code or Documentation
 
-include::workflow.adoc[leveloffset=+1]
+include::workflow.adoc[leveloffset=+2]
 
 === Code Guidelines
 
 //TODO add style guidelines
 
-* We don't mention specific authors by name in each file (in Javadoc or in the
-documentation for example), so as not to have to maintain these mentions (since this
-information is tracked by git anyway).
+* We don't mention specific authors by name in each file (in Javadoc or in the documentation for example), so as not
+to have to maintain these mentions (since this information is tracked by git anyway).
 
 include::documentation.adoc[leveloffset=+2]
 

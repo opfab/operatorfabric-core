@@ -26,7 +26,7 @@ services:
       - "89:8080"
       - "90:9990"
   web-ui:
-    image: "lfeoperatorfabric/of-web-ui:snapshot"
+    image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
     #user: ${USER_ID}:${USER_GID}
     ports:
       - "2200:80"
