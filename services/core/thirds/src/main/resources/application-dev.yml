@@ -1,5 +1,24 @@
 server:
   port: 2100
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
+  cloud:
+    discovery:
+      enabled: false
+    config:
+      discovery:
+        enabled: false
+      enabled: false
+
 operatorfabric.thirds:
   storage:
-    path: "./build/dev-data/thirds-storage"
+    path: "./services/core/thirds/build/docker-volume/thirds-storage"
+
+#here we put urls for all feign clients
+users:
+  ribbon:
+    listOfServers: http://localhost:2103
