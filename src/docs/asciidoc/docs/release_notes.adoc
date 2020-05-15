@@ -17,7 +17,7 @@
 == Tasks
 
 * [OC-892] Add in documentation that it is not possible to use dot in json field names 
-
+* [OC-692] Fix Sonar and refactoring LigthCard references
 
 
 

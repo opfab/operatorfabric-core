@@ -10,7 +10,6 @@ package org.lfenergy.operatorfabric.cards.consultation.repositories;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
-import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -62,7 +61,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         return findByIdWithUser(template, id, user, ArchivedCardConsultationData.class);
     }
 
-    public Mono<Page<LightCardConsultationData>> findWithUserAndParams(Tuple2<User, MultiValueMap<String, String>> params) {
+    public Mono<Page<LightCard>> findWithUserAndParams(Tuple2<User, MultiValueMap<String, String>> params) {
         Query query = createQueryFromUserAndParams(params);
         Query countQuery = createQueryFromUserAndParams(params);
 
@@ -70,13 +69,11 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         Pageable pageableRequest = createPageableFromParams(params.getT2());
         if (pageableRequest.isPaged()) {
             return template.find(query.with(pageableRequest), LightCard.class, ARCHIVED_CARDS_COLLECTION)
-                    .map(lightCard -> (LightCardConsultationData) lightCard)
                     .collectList()
                     .zipWith(template.count(countQuery, LightCard.class, ARCHIVED_CARDS_COLLECTION))
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, tuple.getT2()));
         } else {
             return template.find(query, LightCard.class, ARCHIVED_CARDS_COLLECTION)
-                    .map(lightCard -> (LightCardConsultationData) lightCard)
                     .collectList()
                     .map(results -> new PageImpl<>(results));
         }

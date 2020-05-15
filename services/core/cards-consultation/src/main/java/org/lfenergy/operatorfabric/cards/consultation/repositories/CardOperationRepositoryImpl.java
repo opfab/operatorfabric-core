@@ -31,7 +31,10 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Slf4j
 public class CardOperationRepositoryImpl implements CardOperationRepository {
 
-    public static final String PUBLISH_DATE_FIELD = "publishDate";
+    public static final String ENTITY_RECIPIENTS = "entityRecipients";
+	public static final String GROUP_RECIPIENTS = "groupRecipients";
+	public static final String ORPHANED_USERS = "orphanedUsers";
+	public static final String PUBLISH_DATE_FIELD = "publishDate";
     public static final String START_DATE_FIELD = "startDate";
     public static final String END_DATE_FIELD = "endDate";
     public static final String CARDS_FIELD = "cards";
@@ -125,12 +128,12 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
         List<String> entitiesList = (entities != null ? Arrays.asList(entities) : new ArrayList<>());
 
         return  new Criteria().orOperator(
-                where("orphanedUsers").in(login),
-                where("groupRecipients").in(groupsList).andOperator(new Criteria().orOperator(
-                        Criteria.where("entityRecipients").exists(false), Criteria.where("entityRecipients").size(0))),
-                where("entityRecipients").in(entitiesList).andOperator(new Criteria().orOperator(
-                        Criteria.where("groupRecipients").exists(false), Criteria.where("groupRecipients").size(0))),
-                where("entityRecipients").in(entitiesList).and("groupRecipients").in(groupsList));
+                where(ORPHANED_USERS).in(login),
+                where(GROUP_RECIPIENTS).in(groupsList).andOperator(new Criteria().orOperator(
+                        Criteria.where(ENTITY_RECIPIENTS).exists(false), Criteria.where(ENTITY_RECIPIENTS).size(0))),
+                where(ENTITY_RECIPIENTS).in(entitiesList).andOperator(new Criteria().orOperator(
+                        Criteria.where(GROUP_RECIPIENTS).exists(false), Criteria.where(GROUP_RECIPIENTS).size(0))),
+                where(ENTITY_RECIPIENTS).in(entitiesList).and(GROUP_RECIPIENTS).in(groupsList));
     }
 
     private Criteria publishDateCriteria(Instant latestPublication) {
