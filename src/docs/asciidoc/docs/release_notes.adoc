@@ -9,16 +9,24 @@
 == Issues
 
 * [OC-876] User Service : Implement group in JWT Token Option
-* [OC-402] As an Operator I want the archive screen to display an explicit message if no cards are found that match my filters
+* [OC-402] As an Operator I want the archive screen to display an explicit message if no cards are found that match my
+filters
 
 == Bugs
 * [OC-772] Bug on archives screen: clear results when exiting archive page.
 
 == Tasks
 
-* [OC-892] Add in documentation that it is not possible to use dot in json field names 
-
-
+* [OC-892] Add in documentation that it is not possible to use dot in json field names
+* [OC-845] Implement Git flow as our contribution and release workflow
++
+We have transitioned from a GitHub flow to a Git flow. See the documentation to see how it impacted our
+link:./single_page_doc.html#CICD[CICD pipeline]
+and how it translate into our link:./single_page_doc.html#_contribution_workflow[contribution workflow]
+(submitting a pull request etc.).
++
+IMPORTANT: Now, the current state of developments is pushed daily to Docker Hub with the tag `SNAPSHOT`
+(rather than `snapshot` as before).
 
 
 
