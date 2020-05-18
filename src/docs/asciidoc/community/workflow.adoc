@@ -4,7 +4,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-:imagesdir: ../images
+
 
 :git_flow_post: https://nvie.com/posts/a-successful-git-branching-model/
 
@@ -31,9 +31,7 @@ project, which is a parameter for certain build tasks and for our CICD pipeline.
 
 //TODO Create diagram with all branches
 
-=== Main branches
-
-==== `develop` branch
+=== `develop` branch
 
 //TODO Add main branches image
 
@@ -52,7 +50,7 @@ ifdef::single-page-doc[<<CICD, CICD documentation>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/CICD/index.adoc, CICD documentation>>]
 for details).
 
-==== `master` branch
+=== `master` branch
 
 _"When the source code in the develop branch reaches a stable point and is ready to be released, all of the changes
 should be merged back into master somehow and then tagged with a release number."_
@@ -63,9 +61,7 @@ Any commit on `master` triggers a Travis build generating and pushing documentat
 corresponding release version. If the `ci_latest` keyword is used in the commit message, the docker images are also
 tagged with `latest`.
 
-=== Supporting branches
-
-==== Feature branches
+=== Feature branches
 
 Feature branches are used to develop new features or fix bugs *for the next release*. The version number for this next
 release is usually not known during the developments as it is its final contents that will determine whether it's a
@@ -105,7 +101,7 @@ This allows the branch, PR and commits to be directly accessible from the JIRA i
 //TODO Link to section describing JIRA workflow once it's written
 //TODO When should we delete supporting branches?
 
-==== Release branches
+=== Release branches
 
 Once developments are in a release-ready state and have been tested on the `develop` branch, a release branch should
 be created off `develop` to prepare the merge into master.
@@ -133,7 +129,7 @@ All commits on `master` should be merge commits from `release` branches, direct 
 
 Example: The valid branch name for the branch bringing 1.3.0.RELEASE into `master` is 1.3.0.release
 
-==== Hotfix
+=== Hotfix branches
 
 //TODO
 Work in progress: detail hotfix branches lifecycle and constraints.
@@ -328,13 +324,14 @@ automatically.
 
 image::feature1_PR_autom_merge_OK.png[]
 
+
 === Reviewing a Pull Request
 
 As of today, only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
 stop anyone interested in the topic of a PR to comment and review it.
 
 [[review_checklist]]
-include::review_checklist.adoc[leveloffset=+1]
+include::review_checklist.adoc[leveloffset=+3]
 
 If the PR doesn't meet some of these criteria, use the GitHub review process to suggest changes and discuss problems
 with the PR author.
@@ -358,12 +355,11 @@ image::existing_PR_check_base.png[]
 * Set the `Fix version` field to `Next Version`
 * Set the `Status` field to `Done`
 
-=== Preparing a release
+=== Creating a release
 
-Work in progress
-//TODO, maybe just link to release?
+//TODO Link to release process
 
-=== Preparing a hotfix
+=== Creating a hotfix
 
 Work in progress
 //TODO
