@@ -106,7 +106,7 @@ export class AuthenticationService {
     instantiateAuthModeHandler(mode: string): AuthenticationModeHandler {
         if (mode.toLowerCase() === 'implicit') {
             this.implicitConf = {...this.implicitConf, issuer: this.delegateUrl, clientId: this.clientId,clearHashAfterLogin: false};
-            return new ImplicitAuthenticationHandler(this, this.store, sessionStorage,this.oauthService,this.guidService,this.router,this.implicitConf,);
+            return new ImplicitAuthenticationHandler(this, this.store, sessionStorage,this.oauthService,this.guidService,this.router,this.implicitConf,this.givenNameClaim,this.familyNameClaim);
         }
         return new PasswordOrCodeAuthenticationHandler(this, this.store);
     }
@@ -307,7 +307,8 @@ export class AuthenticationService {
             jwt[this.givenNameClaim],
             jwt[this.familyNameClaim]
         );
-    }        // await this.oauthService.tryLogin();
+    }       
+
     /**
      * helper method to put the jwt token into an appropriate string usable as an http header
      */
@@ -435,7 +436,9 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
         , private oauthService: OAuthService
         , private guidService: GuidService
         , private router :Router
-        , private implicitConf) {
+        , private implicitConf
+        , private givenNameClaim
+        , private familyNameClaim) {
     }
 
     initializeAuthentication(currentLocationHref: string) {
@@ -475,11 +478,13 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
 
     public providePayloadForSuccessfulAuthentication(): PayloadForSuccessfulAuthentication {
         const identityClaims = this.oauthService.getIdentityClaims();
+        const givenName = identityClaims[this.givenNameClaim];
+        const familyName = identityClaims[this.familyNameClaim];
         const identifier = identityClaims['sub'];
         const clientId = this.guidService.getCurrentGuid();
         const token = this.oauthService.getAccessToken();
         const expirationDate = new Date(this.oauthService.getAccessTokenExpiration());
-        return new PayloadForSuccessfulAuthentication(identifier, clientId, token, expirationDate);
+        return new PayloadForSuccessfulAuthentication(identifier, clientId, token, expirationDate,givenName,familyName);
     }
 
 
