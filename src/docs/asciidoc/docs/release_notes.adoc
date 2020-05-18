@@ -14,27 +14,35 @@
 
 == Bugs
 * [OC-772] Bug on archives screen: clear results when exiting archive page.
-* [OC-898] In implicit mode, firstname and last name are not displayed
-* [OC-775] Card's detail remain displayed when selecting another criteria that doesn't return any result
+* [OC-898] In implicit mode, first name and last name are not displayed
+* [OC-775] Cards details remain displayed when selecting another criteria that doesn't return any result
 
 == Tasks
 
 * [OC-892] Add in documentation that it is not possible to use dot in json field names
 * [OC-845] Implement Git flow as our contribution and release workflow
 +
-We have transitioned from a GitHub flow to a Git flow. See the documentation to see how it impacted our
+_We have transitioned from a GitHub flow to a Git flow. See the documentation to see how it impacted our
 link:./single_page_doc.html#CICD[CICD pipeline]
 and how it translate into our link:./single_page_doc.html#_contribution_workflow[contribution workflow]
-(submitting a pull request etc.).
+(submitting a pull request etc.)._
 +
 [IMPORTANT]
 ====
-Now, the current state of developments is pushed daily to Docker Hub with the tag `SNAPSHOT`
-(rather than `snapshot` as before).
+_Now, the current state of developments is pushed daily to Docker Hub with the tag `SNAPSHOT`
+(rather than `snapshot` as before)._
 ====
 
 * [OC-836] Remove netflix stack (eureka registry server) and config server for thirds microservice
 * [OC-888] Fix SonarCloud Frontend issues
 * [OC-692] Fix SonarCloud Backend issues
+* [OC-891] Removed mainRecipient
+* [OC-899] Deploy and dev-env docker-compose should use SNAPSHOT version on develop branch
++
+_When working on branch `develop`, the `deploy` docker-compose will rely on `SNAPSHOT` docker images generated daily.
+This lets you test OperatorFabric with the latest merged code. If you're interested in running a particular release on
+the other hand, you should checkout the associated X.X.X.RELEASE tag on `master`. The same is true for the
+`dev-environment` docker-compose._
+
 
 
