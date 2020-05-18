@@ -9,5 +9,5 @@
     <!-- ngFor is needed so the iframe is created rather than updated each time the iframe url changes.
     Otherwise, the update of the src property creates a duplicate entry in the browser history, messing with the back button
     -->
-    <iframe class="fill-available no-border" *ngFor="let url of [selectedIframeURL];" [src]="url" title="Third-party iframe"></iframe>
+    <iframe class="fill-available no-border" *ngFor="let url of [iframeURL];" [src]="url" title="Third-party iframe"></iframe>
 </div>

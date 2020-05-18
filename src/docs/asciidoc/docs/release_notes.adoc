@@ -48,6 +48,7 @@ the other hand, you should checkout the associated X.X.X.RELEASE tag on `master`
 
 * [OC-907] Remove Keycloak from test-quality-environment docker-compose
 * [OC-885] User Service : Perimeter model evolution
+* [OC-909] Simplify third menu code (Front) 
 
 
 

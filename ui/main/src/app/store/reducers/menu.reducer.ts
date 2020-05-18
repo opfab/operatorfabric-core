@@ -37,20 +37,6 @@ export function reducer(
             };
         }
 
-        case MenuActionTypes.SelectMenuLinkSuccess: {
-            return {
-                ...state,
-                selected_iframe_url: action.payload.iframe_url
-            }
-        }
-
-        case MenuActionTypes.SelectMenuLinkFailure: {
-            return {
-                ...state,
-                error: `error while retrieving third-party menu url: '${action.payload.error}'`
-            };
-        }
-
         default: {
             return state;
         }
