@@ -8,11 +8,8 @@
 
 = Thirds Business service
 
-OperatorFabric Thirds Business service is a Spring MVC application
+OperatorFabric Thirds Business service is a Spring MVC standalone application
 bootstrapped using SpringBoot.
-
-In our spring micro service architecture this service depends on Eureka
-Registry.
 
 == Mandatory configuration, Profiles and default properties
 

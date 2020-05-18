@@ -36,5 +36,17 @@ spring:
           - Path=/thirds/**
         filters:
           - RewritePath=/thirds/(?<path>.*), /thirds/$\{path}
+      - id: cards
+        uri: http://cards-consultation:2104
+        predicates:
+          - Path=/cards/**
+        filters:
+          - RewritePath=/cards/(?<path>.*), /$\{path}
+      - id: archives
+        uri: http://cards-consultation:2104
+        predicates:
+          - Path=/archives/**
+        filters:
+          - RewritePath=/archives/(?<path>.*), /$\{path}
 operatorfabric.gateway.configs:
   - web-ui.json

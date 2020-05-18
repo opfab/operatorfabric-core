@@ -1,4 +1,5 @@
+server:
+  port: 2104
 spring:
-  data:
-    mongodb:
-      database: operator-fabric
+  application:
+    name: cards-consultation
