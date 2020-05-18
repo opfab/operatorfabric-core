@@ -25,6 +25,7 @@ They are located into the following folders within the `${OF_HOME}/services/infr
 * `docker-configurations`: used by docker at run time.
 
 EXAMPLE: the configuration for `dev` before compilation is done in the following files:
+
     - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/application.yml`;
     - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/client-gateway.ym`;
     - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/web-ui.yml`.

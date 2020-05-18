@@ -1,3 +1,5 @@
+server:
+  port: 2104
 spring:
   cloud:
     discovery:
