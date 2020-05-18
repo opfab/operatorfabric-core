@@ -73,7 +73,6 @@ public class ArchivedCardConsultationData implements Card {
     private Object data;
     @Indexed
     private int shardKey;
-    private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> userRecipients;

@@ -43,7 +43,6 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
                 .endDate(source.getDate("endDate") == null ? null : source.getDate("endDate").toInstant())
                 .publishDate(source.getDate("publishDate") == null ? null : source.getDate("publishDate").toInstant())
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
-                .mainRecipient(source.getString("mainRecipient"))
         ;
         Document titleDoc = (Document) source.get("title");
         if(titleDoc!=null)
