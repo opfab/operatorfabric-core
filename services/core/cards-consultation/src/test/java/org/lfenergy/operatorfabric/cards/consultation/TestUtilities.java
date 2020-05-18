@@ -180,7 +180,7 @@ public class TestUtilities {
         archivedCard.setShardKey(Math.toIntExact(archivedCard.getStartDate().toEpochMilli() % 24 * 1000));
     }
 
-    public static boolean checkIfCardActiveInRange(LightCardConsultationData card, Instant rangeStart, Instant rangeEnd) {
+    public static boolean checkIfCardActiveInRange(LightCard card, Instant rangeStart, Instant rangeEnd) {
 
         Instant cardStart = card.getStartDate();
         Instant cardEnd = card.getEndDate();
@@ -203,7 +203,7 @@ public class TestUtilities {
         return result;
     }
 
-    public static boolean checkIfPageIsSorted(Page<LightCardConsultationData> page) {
+    public static boolean checkIfPageIsSorted(Page<LightCard> page) {
 
         if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;
@@ -221,7 +221,7 @@ public class TestUtilities {
 
     }
 
-    public static boolean checkIfCardsFromPageMeetCriteria(Page<LightCardConsultationData> page, Predicate<LightCardConsultationData> criteria) {
+    public static boolean checkIfCardsFromPageMeetCriteria(Page<LightCard> page, Predicate<LightCard> criteria) {
 
         if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;

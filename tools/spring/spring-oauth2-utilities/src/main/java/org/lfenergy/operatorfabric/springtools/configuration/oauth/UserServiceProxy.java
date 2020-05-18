@@ -9,6 +9,7 @@
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
 import org.lfenergy.operatorfabric.users.model.User;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  *
  *
  */
-//@FeignClient(value = "users", primary = false)
+@FeignClient("users")
 public interface UserServiceProxy {
     @GetMapping(value = "/users/{login}",
        produces = { "application/json" })

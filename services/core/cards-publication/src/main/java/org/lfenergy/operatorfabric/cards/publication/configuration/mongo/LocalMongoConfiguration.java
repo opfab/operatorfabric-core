@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Component
 public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
-
+	@SuppressWarnings("rawtypes")
     public List<Converter> converterList() {
         List<Converter> converterList = new ArrayList<>();
         converterList.add(new I18nReadConverter());

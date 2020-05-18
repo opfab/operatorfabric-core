@@ -10,7 +10,6 @@ package org.lfenergy.operatorfabric.users.configuration.oauth2;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2GenericConfiguration;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
@@ -37,7 +36,7 @@ import java.util.Optional;
 
 /**
  * Specific authentication configuration for the Users service It is necessary
- * because when converting the jwt token the {@link OAuth2GenericConfiguration}
+ * because when converting the jwt token the OAuth2GenericConfiguration
  * relies on a user service cache and proxy to get user details, which is
  * useless in the case of the Users Service itself. Token conversion was made
  * necessary because access depending on roles is now used in the

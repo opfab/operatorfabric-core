@@ -145,9 +145,9 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         const startValues = this.startTime.split(":");
         if (startValues.length>1) {
             startHour = Number(startValues[0]);
-            if (startHour===NaN) startHour=0;
+            if (Number.isNaN(startHour)) startHour=0;
             startMin = Number(startValues[1]);
-            if (startMin===NaN) startMin=0;
+            if (Number.isNaN(startMin)) startMin=0;
         }
 
 
@@ -156,9 +156,9 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         const endValues = this.endTime.split(":");
         if (endValues.length>1) {
             endHour = Number(endValues[0]);
-            if (endHour===NaN) endHour=0;
+            if (Number.isNaN(endHour)) endHour=0;
             endMin = Number(endValues[1]);
-            if (endMin===NaN) endMin=0;
+            if (Number.isNaN(endMin)) endMin=0;
         }
 
 

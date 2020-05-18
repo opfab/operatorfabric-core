@@ -100,7 +100,9 @@ public class PathUtils {
    */
   public static boolean silentDelete(Path source) {
     try {
-      delete(source);
+      if(source.toFile().exists()){
+        delete(source);
+      }
       return true;
     } catch (IOException e) {
       log.warn("Unable to silent delete "+source.toString(),e);

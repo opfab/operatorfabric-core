@@ -25,9 +25,15 @@ link:./single_page_doc.html#CICD[CICD pipeline]
 and how it translate into our link:./single_page_doc.html#_contribution_workflow[contribution workflow]
 (submitting a pull request etc.).
 +
-IMPORTANT: Now, the current state of developments is pushed daily to Docker Hub with the tag `SNAPSHOT`
+[IMPORTANT]
+====
+Now, the current state of developments is pushed daily to Docker Hub with the tag `SNAPSHOT`
 (rather than `snapshot` as before).
+====
 
+* [OC-836] Remove netflix stack (eureka registry server) and config server for thirds microservice
+* [OC-888] Fix SonarCloud Frontend issues
+* [OC-692] Fix SonarCloud Backend issues 
 
 
 
