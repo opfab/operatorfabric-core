@@ -9,11 +9,12 @@
 == Issues
 
 * [OC-876] User Service : Implement group in JWT Token Option
-* [OC-402] As an Operator I want the archive screen to display an explicit message if no cards are found that match my
-filters
+* [OC-402] As an Operator I want the archive screen to display an explicit message if no cards are found that match my filters
+* [OC-868] As an admin I would like to be able to hide the time filtrer : https://opfab.github.io/documentation/current/deployment/#_web_ui
 
 == Bugs
 * [OC-772] Bug on archives screen: clear results when exiting archive page.
+* [OC-775] Card's detail remain displayed when selecting another criteria that doesn't return any result
 
 == Tasks
 
@@ -33,8 +34,6 @@ Now, the current state of developments is pushed daily to Docker Hub with the ta
 
 * [OC-836] Remove netflix stack (eureka registry server) and config server for thirds microservice
 * [OC-888] Fix SonarCloud Frontend issues
-* [OC-692] Fix SonarCloud Backend issues 
-* [OC-891] Removed mainRecipient
-
+* [OC-692] Fix SonarCloud Backend issues
 
 

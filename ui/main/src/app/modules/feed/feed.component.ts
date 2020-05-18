@@ -45,7 +45,7 @@ export class FeedComponent implements OnInit, AfterViewInit {
             doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
         }});
         this.store.select(buildConfigSelector('feed.notify')).subscribe(
-            (notif) => {
+            (notif) => {                
                 if (notif) {
                     this.notifyService.requestPermission();
                 }
