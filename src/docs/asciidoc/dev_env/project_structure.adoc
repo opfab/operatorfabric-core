@@ -14,6 +14,7 @@
 ----
 project
 ├──bin
+├──CICD
 │   └─ travis
 ├──client
 │   ├──cards (cards-client-data)
@@ -33,8 +34,7 @@ project
 ├──web-ui
 ├──src
 |   ├──docs
-|   │   ├──asciidoc
-|   │   └──modelio
+|   │   └──asciidoc
 |   └──main
 |       ├──docker
 |       └──headers
@@ -54,9 +54,9 @@ project
 
 == Content Details
 
-* link:https://github.com/opfab/operatorfabric-core/tree/master/bin[bin]: contains useful scripts
-** link:https://github.com/opfab/operatorfabric-core/tree/master/bin/travis[travis]: travis script for documentation generation and
-upload to opfab.github.io repository
+* link:https://github.com/opfab/operatorfabric-core/tree/master/bin[bin]: contains useful scripts for dev purposes
+** link:https://github.com/opfab/operatorfabric-core/tree/master/CICD/travis[travis]: scripts used by Travis for the
+build process
 * link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]: contains REST APIs simple beans definition, may be
 used by external projects
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/client/cards[cards (cards-client-data)]: simple beans regarding cards
@@ -90,7 +90,6 @@ the OperatorFabric UI
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs[docs]
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs/asciidoc[asciidoc]: General documentation (Architecture,
 Getting Started Guide, etc.)
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/docs/modelio[modelio]: Archive containing documentation diagrams
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main[main]
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker[docker]: contains docker-compose files to help with
 tests and demonstrations
@@ -142,7 +141,7 @@ definition must declare two files:
 
 Services project all have docker image generated in their build cycle. See
 ifdef::single-page-doc[<<gradle_tasks, Gradle Tasks>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/dev_env/index.adoc#gradle_tasks, Gradle Tasks>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#gradle_tasks, Gradle Tasks>>]
 for details.
 
 Per project configuration :

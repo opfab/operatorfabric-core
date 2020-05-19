@@ -11,7 +11,7 @@
 
 WARNING: The steps below assume that you have installed and are using
 https://sdkman.io/[sdkman] and
-https://github.com/creationix/nvm[nvm] to manage tool versions ( for java,
+https://github.com/nvm-sh/nvm[nvm] to manage tool versions ( for java,
 gradle, node and npm).
 
 There are several ways to get started with `OperatorFabric`. Please look into
