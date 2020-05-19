@@ -249,9 +249,9 @@ image::feature1_new_PR.png[]
 
 [IMPORTANT]
 ====
-On this screen, by default the base branch for the PR is `master` because it is the repository's default
-branch. However, feature branches are meant to be merged back into `develop`, not `master`, so you should select
-`develop` in the base branch dropdown list.
+Make sure that the base branch for the PR is `develop`, because feature branches are meant to be merged back into
+`develop`. This should be the default value since `develop` is the default branch on this repository, but if not, select
+it in the base branch dropdown list.
 
 image::develop_base_PR.png[]
 ====
@@ -324,7 +324,6 @@ automatically.
 
 image::feature1_PR_autom_merge_OK.png[]
 
-
 === Reviewing a Pull Request
 
 As of today, only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
@@ -355,11 +354,9 @@ image::existing_PR_check_base.png[]
 * Set the `Fix version` field to `Next Version`
 * Set the `Status` field to `Done`
 
-=== Creating a release
+=== Creating a release or hotfix
 
-//TODO Link to release process
-
-=== Creating a hotfix
-
-Work in progress
-//TODO
+See the
+ifdef::single-page-doc[<<release_process, release process>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/CICD/index.adoc#release_process, release process>>]
+described in our CICD documentation for details.

@@ -4,11 +4,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
 [[release_process]]
 = Release process
 
-[[version_numbers]]
 == Version numbers
 
 We work with two types of versions:
@@ -31,7 +29,7 @@ It is thus crucial to double-check the content of this file before any push (tri
 
 Before releasing a version, you need to prepare the release.
 
-=== Check the release notes
+=== Checking the release notes
 
 . Click the `Next Release` from
 link:https://opfab.atlassian.net/projects/OC?orderField=RANK&selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=all[JIRA the release list]
@@ -51,7 +49,7 @@ explanations if need be.
 . In the release page, change the name from "Next Version" to "X.X.X.RELEASE"
 //TODO Check that renaming works ok, no side effects. Otherwise we will move issues to a new version
 
-=== Create a release branch and prepare the release
+=== Creating a release branch and preparing the release
 
 . Create a branch off the `develop` branch named `X.X.X.release` (note the lowercase `release` to distinguish it from
 `X.X.X.RELEASE` tags).
@@ -113,7 +111,7 @@ Wait for the build to complete (around 20 minutes) and check that all stages hav
 This ensures that the code builds, tests are OK and there is no error preventing documentation or Docker images
 generation.
 
-=== Merge the release branch into master
+=== Merging the release branch into `master`
 
 Once the release branch build is passing, you should merge the release branch into `master` to bring the new
 developments into `master` and trigger the CICD tasks associated with a release (Docker images for DockerHub and
@@ -135,7 +133,7 @@ git push origin X.X.X.RELEASE <6>
 <6> Push the tag
 
 //TODO ci_latest commit in merge message? Can there be conflicts?
-// TODO Should go through a PR (more risks to go to the wrong branch now that develop is default)?
+// TODO Should go through a PR for prelim check ?(more risks to go to the wrong branch now that develop is default)?
 
 . Check that the build is correctly triggered
 +
@@ -177,7 +175,7 @@ In the "Releases" screen, release `X.X.X.RELEASE`.
 
 . Send an email to the opfab-announce@lists.lfenergy.org mailing list with a link to the release notes on the website.
 
-== Preparing next version
+== Preparing the next version
 
 IMPORTANT: You should wait for all the tasks associated with creating the X.X.X.RELEASE
 version to finish and make sure that they've had the expected output before starting the

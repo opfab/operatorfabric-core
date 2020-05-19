@@ -12,7 +12,7 @@ This section describes the projects requirements regardless of
 installation options.
 Please see
 ifdef::single-page-doc[<<setup_dev_env, Setting up your environment>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/dev_env/index.adoc#setup_dev_env, Setting up your environment>>] below for details on:
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#setup_dev_env, Setting up your environment>>] below for details on:
 
 * setting up a development environment with these prerequisites
 * building and running OperatorFabric
