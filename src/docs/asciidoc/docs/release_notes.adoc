@@ -39,6 +39,7 @@ _Now, the current state of developments is pushed daily to Docker Hub with the t
 * [OC-692] Fix SonarCloud Backend issues
 * [OC-891] Removed mainRecipient
 * [OC-899] Deploy and dev-env docker-compose should use SNAPSHOT version on develop branch
+* [OC-897] added operation delete for the resource thirds
 +
 _When working on branch `develop`, the `deploy` docker-compose will rely on `SNAPSHOT` docker images generated daily.
 This lets you test OperatorFabric with the latest merged code. If you're interested in running a particular release on

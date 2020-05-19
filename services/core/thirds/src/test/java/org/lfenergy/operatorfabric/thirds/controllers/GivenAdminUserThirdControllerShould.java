@@ -109,6 +109,7 @@ class GivenAdminUserThirdControllerShould {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.version", is("0.1")));
     }
+    
 
     @Test
     void fetchCssResource() throws Exception {
@@ -338,20 +339,43 @@ class GivenAdminUserThirdControllerShould {
             ;
 
         }
-
+        
         @Nested
         @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
-        class DeleteContent {
-            @Test
-            void clean() throws Exception {
-                mockMvc.perform(delete("/thirds"))
-                        .andExpect(status().isOk());
-                mockMvc.perform(get("/thirds"))
-                        .andExpect(status().isOk())
-                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$", hasSize(0)));
+        class DeleteOnlyOneThird {
+        	
+        	static final String bundleName = "first";
+        	
+        	@Test
+            void deleteGivenBundle() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName));
+                result
+                        .andExpect(status().isNoContent());
             }
+        	
+        	@Test
+            void deleteGivenBundleNotFoundError() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/impossible_a_third_with_this_exact_name_exists"));
+                result
+                        .andExpect(status().isNotFound());
+            }
+        	
+        	@Nested
+            @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
+            class DeleteContent {
+                @Test
+                void clean() throws Exception {
+                    mockMvc.perform(delete("/thirds"))
+                            .andExpect(status().isOk());
+                    mockMvc.perform(get("/thirds"))
+                            .andExpect(status().isOk())
+                            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(jsonPath("$", hasSize(0)));
+                }
+            }
+        	
         }
+        
     }
 
 }

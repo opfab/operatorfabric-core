@@ -229,20 +229,43 @@ class GivenNonAdminUserThirdControllerShould {
 
 
         }
-
+        
         @Nested
         @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
-        class DeleteContent {
-            @Test
-            void clean() throws Exception {
-                mockMvc.perform(delete("/thirds"))
+        class DeleteOnlyOneThird {
+        	
+        	static final String bundleName = "first";
+        	
+        	@Test
+            void deleteGivenBundle() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName));
+                result
                         .andExpect(status().isForbidden());
-                mockMvc.perform(get("/thirds"))
-                        .andExpect(status().isOk())
-                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$", hasSize(1)));
             }
+        	
+        	@Test
+            void deleteGivenBundleNotFoundError() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/impossible_a_third_with_this_exact_name_exists"));
+                result
+                        .andExpect(status().isForbidden());
+            }
+        	
+        	@Nested
+            @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
+            class DeleteContent {
+                @Test
+                void clean() throws Exception {
+                    mockMvc.perform(delete("/thirds"))
+                            .andExpect(status().isForbidden());
+                    mockMvc.perform(get("/thirds"))
+                            .andExpect(status().isOk())
+                            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(jsonPath("$", hasSize(1)));
+                }
+            }
+        	
         }
+        
     }
 
 }
