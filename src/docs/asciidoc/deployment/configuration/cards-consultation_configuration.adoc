@@ -11,8 +11,6 @@
 OperatorFabric Cards-Consultation Business service is a Spring Webflux application
 bootstrapped using SpringBoot.
 
-In our spring micro service architecture this service depends on Eureka
-Registry.
 
 == Mandatory configuration, Profiles and default properties
 
@@ -30,40 +28,16 @@ For other configuration see:
 
 === default properties
 
-Note that you must provide a bootstrap file with a convenient registry configuration
-
-_bootstrap.yml_
-
-[source]
-----
-include::examples/cards-consultation/bootstrap.yml[]
-----
-
-_bootstrap-docker.yml_
-
-[source]
-----
-include::examples/cards-consultation/bootstrap-docker.yml[]
-----
-
-_bootstrap-dev.yml_
-
-[source]
-----
-include::examples/cards-consultation/bootstrap-dev.yml[]
-----
-
-The bootstrap-docker.yml file is a replacement bootstrap file we use for our
+The application-docker.yml file is a replacement application file we use for our
 docker images configuration.
 
-The bootstrap-dev.yml file is a replacement bootstrap file we use for our
+The application-dev.yml file is a replacement application file we use for our
 development environment
 
 The above embedded configurations are the basic settings of the application:
 
 * it sets its service name
-* it sets the configuration name to use (which configuration file to retrieve)
-* it must set the registry service (example in bootstrap-docker.yml)
+
 
 === Sample development configuration
 
@@ -98,8 +72,6 @@ The default profiles activated are docker and native.
 
 === Available environment variables for docker image
 
-* REGISTRY_HOST: Registry service host
-* REGISTRY_PORT: Registry service port
 * JAVA_OPTIONS: Additional java options
 
 == Specifying configuration properties when launching on Kubernetes
@@ -108,6 +80,4 @@ In progress
 
 === Available environment variables when launching on Kubernetes
 
-* REGISTRY_HOST: Registry service host
-* REGISTRY_PORT: Registry service port
 * JAVA_OPTIONS: Additional java options
