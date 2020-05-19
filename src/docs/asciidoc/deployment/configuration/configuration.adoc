@@ -21,8 +21,9 @@
 OperatorFabric has multiple services to configure. These configurations are managed by a Configuration Service, of which
 they can be several instances to ensure availability.
 
+See the
 ifdef::single-page-doc[<<architecture, architecture documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/architecture/index.adoc, architecture documentation>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/architecture/index.adoc#architecture, architecture documentation>>]
 for more information on the different services.
 
 All services are SpringBoot applications and use jetty as an embedded servlet container. As such, they share some common
@@ -43,10 +44,10 @@ Note that a few things cannot be set in the configuration served by the configur
 right at the application startup for example) and
 must be set in each service bootstrap configuration file. In this regard,
 ifdef::single-page-doc[<<cloud_config_service_config, Cloud Configuration Service>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/deployment/index.adoc#cloud_config_service_config, Cloud Configuration Service>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#cloud_config_service_config, Cloud Configuration Service>>]
 and
 ifdef::single-page-doc[<<cloud_registry_service_config, Cloud Registry Service>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/deployment/index.adoc#cloud_registry_service_config, Cloud Registry Service>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#cloud_registry_service_config, Cloud Registry Service>>]
 services have specific configuration but for other services, they all require
 the same minimal information:
 
@@ -85,7 +86,7 @@ In the above example you can see that we need to configure:
 We only use URI configuration for mongo through the usage of the ```spring.data.mongodb.uris```,
 it allows us to share the same configuration behavior for simple or cluster
 configuration and with both spring classic and reactive mongo configuration.
-See link:{mongo_doc}/connection-string/[mongo connection string] for the complete URI syntax.
+See link:{mongo_doc}connection-string/[mongo connection string] for the complete URI syntax.
 
 === Define time to live for archived cards
 

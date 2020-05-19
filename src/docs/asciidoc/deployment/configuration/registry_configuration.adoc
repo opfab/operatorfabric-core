@@ -15,7 +15,7 @@ bootstrapped using SpringBoot.
 In our spring micro service architecture Eureka Registry instances are the second
 services to bootstrap, its configuration relies on the
 ifdef::single-page-doc[<<cloud_config_service_config, Cloud Configuration Service>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/deployment/index.adoc#cloud_config_service_config, Cloud Configuration Service>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#cloud_config_service_config, Cloud Configuration Service>>]
 .
 
 == Mandatory configuration, Profiles and default properties

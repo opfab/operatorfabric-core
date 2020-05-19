@@ -4,14 +4,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
-
-// Before moving to opfab.github.io
-//TODO Check links
-//TODO Find tool to automatically check all links after rendering (and images?)
-//TODO Avoid copying docs (release and single page) in current, remove existing copies (links would be KO anyway)
-//TODO Put imagedir in build
-
 // After moving
 //TODO Remove unnecessary custom id anchors (script it?)
 //TODO Look at todo in documents, create issues
@@ -21,7 +13,6 @@
 //TODO Test examples to see if they are still accurate
 //TODO Check all images
 //TODO Add HSA archive doc
-//TODO Add CICD doc
 //TODO Cross-reference troubleshooting and organize into sections
 //TODO Get new roadmap and make it prettier
 //TODO Set API properties (URL etc.) in config files
@@ -41,7 +32,6 @@
 //TODO FInd a way to keep navbar (asciidoctor plugin? modifying index.html for swagger UI? customizing asciidoc template?)
 // Issue for previous versions?
 
-//TODO Try moving :imagesdir:{gradle-rootdir} to build config
 //TODO Update asciidoctor plugin (v10)
 //TODO Create macro or block so that the special behaviour of inter-doc links for the single page doc doesn't have to be specified everytime
 //TODO Add link back to summary (only for html?)
@@ -53,6 +43,5 @@
 //TODO Replace file copies by includes from code
 //TODO Read back notes
 //TODO Find a way to share common resources (js, images) between apis
-//TODO What should we do with posts?
 //TODO Test pdf output (images, links)
 

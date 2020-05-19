@@ -60,7 +60,7 @@ and re-launching the build should solve this issue.
 +++ <details><summary> +++
 **Java version not available when setting up environment**
 +++ </summary><div> +++
-When sourcing the link:https://github.com/opfab/operatorfabric-core/tree/master/bin/load_environment_light.sh[load_environment_light]
+When sourcing the link:https://github.com/opfab/operatorfabric-core/blob/master/bin/load_environment_light.sh[load_environment_light]
 script to set up your environment, you might get the following error message:
 
 .Error message
@@ -73,7 +73,7 @@ Stop! java 8.0.192-zulu is not available. Possible causes:
 ----
 
 Select the next available version and update
-link:https://github.com/opfab/operatorfabric-core/tree/master/bin/load_environment_light.sh[load_environment_light] accordingly before
+link:https://github.com/opfab/operatorfabric-core/blob/master/bin/load_environment_light.sh[load_environment_light] accordingly before
 sourcing it again.
 
 .Possible causes & resolution

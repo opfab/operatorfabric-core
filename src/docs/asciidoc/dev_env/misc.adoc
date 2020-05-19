@@ -18,7 +18,7 @@
 * java -jar [sub-projectPath]/build/libs/[sub-project].jar
 –spring.config.additional-location=file:[filepath]
 NB : properties may be set using ".properties" file or ".yml" file. See
-https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[Spring
+https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config[Spring
 Boot configuration] for more info.
 * Generic property list extract :
 ** server.port (defaults to 8080) : embedded server port
