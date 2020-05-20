@@ -86,12 +86,13 @@
       "publisher": "Emetteur",
       "process": "Processus",
       "tags": "Etiquettes",
-      "publishDateFrom": "Publication à partir de",
-      "publishDateTo": "Publication jusqu'à",
+      "publishDateFrom": "Publié à partir de",
+      "publishDateTo": "Publié jusqu'à",
       "activeFrom": "Active à partir de",
       "activeTo": "Active jusqu'à"
     },
     "search": "Rechercher",
+    "clear": "Effacer",
     "noResult": "Votre recherche ne correspond à aucun résultat."
 
   },
