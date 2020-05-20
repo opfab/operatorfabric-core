@@ -25,23 +25,21 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
 }
 """
 
-    * def perimeter15_1_R =
+    * def perimeter15_1 =
 """
 {
-  "id" : "perimeterKarate15_1_R",
+  "id" : "perimeterKarate15_1",
   "process" : "process15",
-  "state" : "state1",
-  "rights" : "Read"
-}
-"""
-
-    * def perimeter15_1_RR =
-"""
-{
-  "id" : "perimeterKarate15_1_RR",
-  "process" : "process15",
-  "state" : "state1",
-  "rights" : "ReadAndRespond"
+  "stateRights" : [
+      {
+        "state" : "state1",
+        "right" : "Read"
+      },
+      {
+        "state" : "state2",
+        "right" : "All"
+      }
+  ]
 }
 """
 
@@ -50,18 +48,21 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
 {
   "id" : "perimeterKarate15_2",
   "process" : "process15",
-  "state" : "state2",
-  "rights" : "ReadAndWrite"
+  "stateRights" : [
+      {
+        "state" : "state1",
+        "right" : "ReadAndRespond"
+      },
+      {
+        "state" : "state2",
+        "right" : "ReadAndWrite"
+      }
+  ]
 }
 """
     * def tso1operatorArray =
 """
 [   "tso1-operator"
-]
-"""
-    * def group15group16Array =
-"""
-[   "groupKarate15", "groupKarate16"
 ]
 """
     * def group15Array =
@@ -128,28 +129,15 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     And status 200
 
 
-  Scenario: Create perimeter15_1_R
+  Scenario: Create perimeter15_1
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request perimeter15_1_R
+    And request perimeter15_1
     When method post
     Then status 201
-    And match response.id == perimeter15_1_R.id
-    And match response.process == perimeter15_1_R.process
-    And match response.state == perimeter15_1_R.state
-    And match response.rights == perimeter15_1_R.rights
-
-
-  Scenario: Create perimeter15_1_RR
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter15_1_RR
-    When method post
-    Then status 201
-    And match response.id == perimeter15_1_RR.id
-    And match response.process == perimeter15_1_RR.process
-    And match response.state == perimeter15_1_RR.state
-    And match response.rights == perimeter15_1_RR.rights
+    And match response.id == perimeter15_1.id
+    And match response.process == perimeter15_1.process
+    And match response.stateRights == perimeter15_1.stateRights
 
 
   Scenario: Create perimeter15_2
@@ -160,28 +148,19 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     Then status 201
     And match response.id == perimeter15_2.id
     And match response.process == perimeter15_2.process
-    And match response.state == perimeter15_2.state
-    And match response.rights == perimeter15_2.rights
+    And match response.stateRights == perimeter15_2.stateRights
 
 
-  Scenario: Put group15 and group16 for perimeter15_1_R
-    Given url opfabUrl + 'users/perimeters/'+ perimeter15_1_R.id + '/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request group15group16Array
-    When method put
-    Then status 200
-
-
-  Scenario: Put group15 for perimeter15_2
-    Given url opfabUrl + 'users/perimeters/'+ perimeter15_2.id + '/groups'
+  Scenario: Put group15 for perimeter15_1
+    Given url opfabUrl + 'users/perimeters/'+ perimeter15_1.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
     And request group15Array
     When method put
     Then status 200
 
 
-  Scenario: Put group16 for perimeter15_1_RR
-    Given url opfabUrl + 'users/perimeters/'+ perimeter15_1_RR.id + '/groups'
+  Scenario: Put group16 for perimeter15_2
+    Given url opfabUrl + 'users/perimeters/'+ perimeter15_2.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
     And request group16Array
     When method put
@@ -195,7 +174,7 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     Then status 200
     And match response.userData.login == 'tso1-operator'
     And assert response.computedPerimeters.length == 2
-    And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReadAndRespond"}, {"process":"process15","state":"state2","rights":"ReadAndWrite"}]
+    And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReadAndRespond"}, {"process":"process15","state":"state2","rights":"All"}]
 
 
   Scenario: Delete user tso1-operator from group15

@@ -13,8 +13,12 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
 {
   "id" : "perimeterKarate1_2",
   "process" : "process1",
-  "state" : "state2",
-  "rights" : "Read"
+  "stateRights" : [
+    {
+      "state" : "state2",
+      "right" : "Read"
+    }
+  ]
 }
 """
 
@@ -23,8 +27,12 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
 {
   "id" : "perimeterKarate1_2",
   "process" : "process1",
-  "state" : "state2",
-  "rights" : "ReadAndWrite"
+  "stateRights" : [
+    {
+      "state" : "state2",
+      "right" : "ReadAndWrite"
+    }
+  ]
 }
 """
 
@@ -44,8 +52,8 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
     Then status 201
     And match response.id == perimeter.id
     And match response.process == perimeter.process
-    And match response.state == perimeter.state
-    And match response.rights == perimeter.rights
+    And match response.stateRights == perimeter.stateRights
+
 
   Scenario: Update the perimeter
     #Update the perimeter, expected response 200
@@ -56,8 +64,8 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
     Then status 200
     And match response.id == perimeterUpdated.id
     And match response.process == perimeterUpdated.process
-    And match response.state == perimeterUpdated.state
-    And match response.rights == perimeterUpdated.rights
+    And match response.stateRights == perimeterUpdated.stateRights
+
 
   Scenario: Without authentication
     # authentication required, response expected 401
@@ -65,6 +73,7 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
     And request perimeterUpdated
     When method put
     Then status 401
+
 
   Scenario: With a simple user
     # update perimeter wrong user response expected 403
@@ -74,12 +83,14 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
     When method put
     Then status 403
 
+
   Scenario: error 400 : bad request format
     Given url opfabUrl + 'users/perimeters/' + perimeterUpdated.id
     And header Authorization = 'Bearer ' + authToken
     And request perimeterError
     When method put
     Then status 400
+
 
   Scenario: error 400 : perimeter id in path not corresponding to the one in body
     Given url opfabUrl + 'users/perimeters/perimeterIdNotCorresponding'

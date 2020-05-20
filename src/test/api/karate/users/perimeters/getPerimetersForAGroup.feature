@@ -20,9 +20,13 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
 """
 {
   "id" : "perimeterKarate12_1",
-  "process" : "process12",
-  "state" : "state1",
-  "rights" : "Read"
+  "process" : "process12_1",
+  "stateRights" : [
+    {
+      "state" : "state1",
+      "right" : "Read"
+    }
+  ]
 }
 """
 
@@ -30,9 +34,13 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
 """
 {
   "id" : "perimeterKarate12_2",
-  "process" : "process12",
-  "state" : "state2",
-  "rights" : "ReadAndWrite"
+  "process" : "process12_2",
+  "stateRights" : [
+    {
+      "state" : "state1",
+      "right" : "ReadAndWrite"
+    }
+  ]
 }
 """
     * def group12Array =
@@ -60,8 +68,7 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
     Then status 201
     And match response.id == perimeter12_1.id
     And match response.process == perimeter12_1.process
-    And match response.state == perimeter12_1.state
-    And match response.rights == perimeter12_1.rights
+    And match response.stateRights == perimeter12_1.stateRights
 
 
   Scenario: Create perimeter12_2
@@ -72,8 +79,7 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
     Then status 201
     And match response.id == perimeter12_2.id
     And match response.process == perimeter12_2.process
-    And match response.state == perimeter12_2.state
-    And match response.rights == perimeter12_2.rights
+    And match response.stateRights == perimeter12_2.stateRights
 
 
   Scenario: Put group12 for perimeter12_1
@@ -121,4 +127,4 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
     When method get
     Then status 200
     And assert response.length == 2
-    And match response contains only [{"id":"perimeterKarate12_1","process":"process12","state":"state1","rights":"Read"}, {"id":"perimeterKarate12_2","process":"process12","state":"state2","rights":"ReadAndWrite"}]
+    And match response contains only [{"id":"perimeterKarate12_1","process":"process12_1","stateRights":[{"state":"state1","right":"Read"}]},{"id":"perimeterKarate12_2","process":"process12_2","stateRights":[{"state":"state1","right":"ReadAndWrite"}]}]

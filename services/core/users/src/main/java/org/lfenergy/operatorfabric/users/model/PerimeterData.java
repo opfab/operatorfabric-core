@@ -7,12 +7,12 @@
 
 package org.lfenergy.operatorfabric.users.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.*;
 
 /**
  * Perimeter Model, documented at {@link Perimeter}
@@ -29,6 +29,20 @@ public class PerimeterData implements Perimeter {
     @Id
     private String id;
     private String process;
-    private String state;
-    private RightsEnum rights;
+
+    @JsonIgnore
+    @Singular
+    private List<? extends StateRight> stateRights;
+
+    @Override
+    public void setStateRights(List<? extends StateRight> stateRights) {
+        this.stateRights = new ArrayList<>(stateRights);
+    }
+
+    @Override
+    public List<? extends StateRight> getStateRights() {
+        if(stateRights == null)
+            return Collections.emptyList();
+        return new ArrayList<>(stateRights);
+    }
 }
