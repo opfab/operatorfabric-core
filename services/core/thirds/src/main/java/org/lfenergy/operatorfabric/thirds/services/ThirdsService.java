@@ -332,6 +332,25 @@ public class ThirdsService implements ResourceLoaderAware {
             return this.completeCache.get(name).get(apiVersion);
         else return null;
     }
+    
+    /**
+     * Deletes {@link Third} for specified name
+     * @param name       third name 
+     * @throws IOException 
+     */
+    public void delete(String name) throws IOException {
+    	if (!defaultCache.containsKey(name)) {
+    		throw new FileNotFoundException("Unable to find a bundle with the given name");
+    	}
+    	//third root
+    	Path thirdRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
+                .getAbsolutePath())
+                .resolve(name)
+                .normalize();
+    	//delete third root from disk
+    	PathUtils.delete(thirdRootPath);
+    	removeFromCacheSafe(name);
+    }
 
     /**
      * Resets data (only used in tests)
@@ -360,6 +379,21 @@ public class ThirdsService implements ResourceLoaderAware {
      */
     private synchronized void loadCacheSafe() {
         loadCache();
+    }
+    
+    /**
+     * Remove third from cache thread safe
+     * @param name       third name
+     */
+    private synchronized void removeFromCacheSafe(String name) {
+    	Object removed = defaultCache.remove(name);
+    	if (removed!=null) {
+    		log.debug("removed third:{} from defaultCache", name);
+    	}
+    	removed = completeCache.remove(name);
+    	if (removed!=null) {
+    		log.debug("removed third:{} from completeCache", name);
+    	}
     }
 
 }

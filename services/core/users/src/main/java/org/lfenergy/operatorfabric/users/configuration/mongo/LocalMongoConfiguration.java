@@ -12,7 +12,7 @@ import org.lfenergy.operatorfabric.springtools.configuration.mongo.AbstractLocal
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +25,11 @@ public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
 
     @Override
     public List<Converter> converterList() {
-        return Collections.emptyList();
+
+        List<Converter> converterList = new ArrayList<>();
+        converterList.add(new StateRightReadConverter());
+        converterList.add(new StateRightWriteConverter());
+
+        return converterList;
     }
 }

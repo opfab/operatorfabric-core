@@ -3,6 +3,7 @@
 rm -rf target
 
 java -jar karate.jar                    \
+      thirds/deleteBundle.feature `#nice to be the very first one`\
       thirds/uploadBundle.feature       \
       thirds/getAThird.feature          \
       thirds/getCss.feature             \
@@ -11,4 +12,3 @@ java -jar karate.jar                    \
       thirds/getThirdActions.feature    \
       thirds/getThirds.feature          \
       thirds/getThirdTemplate.feature
-

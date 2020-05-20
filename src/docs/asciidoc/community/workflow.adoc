@@ -330,7 +330,9 @@ As of today, only developers from the `reviewers` group can merge pull requests 
 stop anyone interested in the topic of a PR to comment and review it.
 
 [[review_checklist]]
-include::review_checklist.adoc[leveloffset=+3]
+****
+include::{gradle-rootdir}/PULL_REQUEST_TEMPLATE.adoc[tag=review_checklist]
+****
 
 If the PR doesn't meet some of these criteria, use the GitHub review process to suggest changes and discuss problems
 with the PR author.

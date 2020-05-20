@@ -34,23 +34,21 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
 }
 """
 
-    * def perimeter10_1_R =
+    * def perimeter10_1 =
 """
 {
-  "id" : "perimeterKarate10_1_R",
+  "id" : "perimeterKarate10_1",
   "process" : "process10",
-  "state" : "state1",
-  "rights" : "Read"
-}
-"""
-
-    * def perimeter10_1_RR =
-"""
-{
-  "id" : "perimeterKarate10_1_RR",
-  "process" : "process10",
-  "state" : "state1",
-  "rights" : "ReadAndRespond"
+  "stateRights" : [
+    {
+      "state" : "state1",
+      "right" : "Read"
+    },
+    {
+      "state" : "state2",
+      "right" : "ReadAndWrite"
+    }
+  ]
 }
 """
 
@@ -59,18 +57,56 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
 {
   "id" : "perimeterKarate10_2",
   "process" : "process10",
-  "state" : "state2",
-  "rights" : "ReadAndWrite"
+  "stateRights" : [
+    {
+      "state" : "state1",
+      "right" : "All"
+    },
+    {
+      "state" : "state2",
+      "right" : "All"
+    }
+  ]
+}
+"""
+    * def perimeter10_1_bis =
+"""
+{
+  "id" : "perimeterKarate10_1",
+  "process" : "process10",
+  "stateRights" : [
+    {
+      "state" : "state2",
+      "right" : "ReadAndWrite"
+    },
+    {
+      "state" : "state1",
+      "right" : "Read"
+    }
+  ]
+}
+"""
+
+    * def perimeter10_2_bis =
+"""
+{
+  "id" : "perimeterKarate10_2",
+  "process" : "process10",
+  "stateRights" : [
+    {
+      "state" : "state2",
+      "right" : "All"
+    },
+    {
+      "state" : "state1",
+      "right" : "All"
+    }
+  ]
 }
 """
     * def user10Array =
 """
 [   "loginKarate10"
-]
-"""
-    * def group10group11Array =
-"""
-[   "groupKarate10", "groupKarate11"
 ]
 """
     * def group10Array =
@@ -133,28 +169,15 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     And status 200
 
 
-  Scenario: Create perimeter10_1_R
+  Scenario: Create perimeter10_1
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
-    And request perimeter10_1_R
+    And request perimeter10_1
     When method post
     Then status 201
-    And match response.id == perimeter10_1_R.id
-    And match response.process == perimeter10_1_R.process
-    And match response.state == perimeter10_1_R.state
-    And match response.rights == perimeter10_1_R.rights
-
-
-  Scenario: Create perimeter10_1_RR
-    Given url opfabUrl + 'users/perimeters'
-    And header Authorization = 'Bearer ' + authToken
-    And request perimeter10_1_RR
-    When method post
-    Then status 201
-    And match response.id == perimeter10_1_RR.id
-    And match response.process == perimeter10_1_RR.process
-    And match response.state == perimeter10_1_RR.state
-    And match response.rights == perimeter10_1_RR.rights
+    And match response.id == perimeter10_1.id
+    And match response.process == perimeter10_1.process
+    And match response.stateRights contains only perimeter10_1.stateRights
 
 
   Scenario: Create perimeter10_2
@@ -165,27 +188,19 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     Then status 201
     And match response.id == perimeter10_2.id
     And match response.process == perimeter10_2.process
-    And match response.state == perimeter10_2.state
-    And match response.rights == perimeter10_2.rights
+    And match response.stateRights contains only perimeter10_2.stateRights
 
 
-  Scenario: Put group10 and group11 for perimeter10_1_R
-    Given url opfabUrl + 'users/perimeters/'+ perimeter10_1_R.id + '/groups'
-    And header Authorization = 'Bearer ' + authToken
-    And request group10group11Array
-    When method put
-    Then status 200
-
-
-  Scenario: Put group10 for perimeter10_2
-    Given url opfabUrl + 'users/perimeters/'+ perimeter10_2.id + '/groups'
+  Scenario: Put group10 for perimeter10_1
+    Given url opfabUrl + 'users/perimeters/'+ perimeter10_1.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
     And request group10Array
     When method put
     Then status 200
 
-  Scenario: Put group11 for perimeter10_1_RR
-    Given url opfabUrl + 'users/perimeters/'+ perimeter10_1_RR.id + '/groups'
+
+  Scenario: Put group11 for perimeter10_2
+    Given url opfabUrl + 'users/perimeters/'+ perimeter10_2.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
     And request group11Array
     When method put
@@ -216,10 +231,10 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
 
 
   Scenario: get all perimeters for user10
-    #the result should be only perimeter10_1_R, perimeterKarate10_2 and perimeterKarate10_1_RR (because we don't want a duplicate)
     Given url opfabUrl + 'users/users/' + user10.login + '/perimeters'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And assert response.length == 3
-    And match response contains only [{"id":"perimeterKarate10_1_R","process":"process10","state":"state1","rights":"Read"}, {"id":"perimeterKarate10_2","process":"process10","state":"state2","rights":"ReadAndWrite"}, {"id":"perimeterKarate10_1_RR","process":"process10","state":"state1","rights":"ReadAndRespond"}]
+    And assert response.length == 2
+    And match response contains perimeter10_1
+    And match response contains perimeter10_2

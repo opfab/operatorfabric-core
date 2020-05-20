@@ -14,8 +14,12 @@ Feature: delete group from a perimeter (endpoint tested : DELETE /perimeters/{id
 {
   "id" : "perimeterKarate2_1",
   "process" : "process2",
-  "state" : "state1",
-  "rights" : "ReadAndWrite"
+  "stateRights" : [
+    {
+      "state" : "state1",
+      "right" : "ReadAndWrite"
+    }
+  ]
 }
 """
 
@@ -44,8 +48,7 @@ Feature: delete group from a perimeter (endpoint tested : DELETE /perimeters/{id
     Then status 201
     And match response.id == perimeterKarate2_1.id
     And match response.process == perimeterKarate2_1.process
-    And match response.state == perimeterKarate2_1.state
-    And match response.rights == perimeterKarate2_1.rights
+    And match response.stateRights == perimeterKarate2_1.stateRights
 
 
   Scenario: Create the group (if everything is ok, the group already exists)

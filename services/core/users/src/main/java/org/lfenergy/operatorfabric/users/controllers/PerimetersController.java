@@ -15,6 +15,7 @@ import org.lfenergy.operatorfabric.users.model.Perimeter;
 import org.lfenergy.operatorfabric.users.model.PerimeterData;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
+import org.lfenergy.operatorfabric.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
@@ -41,10 +42,13 @@ public class PerimetersController implements PerimetersApi {
     public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
     public static final String BAD_GROUP_LIST_MSG = "Bad group list : group %s not found";
     public static final String NO_MATCHING_PERIMETER_ID_MSG = "Payload Perimeter id does not match URL Perimeter id";
+    public static final String DUPLICATE_STATE_IN_PERIMETER = "Bad stateRights list : there is one or more duplicate state(s) in the perimeter";
     @Autowired
     private PerimeterRepository perimeterRepository;
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private UserService userService;
 
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
      *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
@@ -73,6 +77,14 @@ public class PerimetersController implements PerimetersApi {
     @Override
     public Perimeter createPerimeter(HttpServletRequest request, HttpServletResponse response, Perimeter perimeter) throws Exception {
         if(perimeterRepository.findById(perimeter.getId()).orElse(null) == null){
+
+            if(! userService.isEachStateUniqueInPerimeter(perimeter)){
+                throw new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.BAD_REQUEST)
+                                .message(DUPLICATE_STATE_IN_PERIMETER)
+                                .build());
+            }
             response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
             response.setStatus(201);
             return perimeterRepository.save((PerimeterData)perimeter);
@@ -142,15 +154,22 @@ public class PerimetersController implements PerimetersApi {
     @Override
     public Perimeter updatePerimeter(HttpServletRequest request, HttpServletResponse response, String id, Perimeter perimeter) throws Exception {
         //id from perimeter body parameter should match id path parameter
-        if(!perimeter.getId().equals(id)){
+        if (!perimeter.getId().equals(id)){
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
                             .message(NO_MATCHING_PERIMETER_ID_MSG)
                             .build());
         }
+        else if (! userService.isEachStateUniqueInPerimeter(perimeter)){
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(DUPLICATE_STATE_IN_PERIMETER)
+                            .build());
+        }
         else {
-            if(perimeterRepository.findById(perimeter.getId()).orElse(null) == null)
+            if (perimeterRepository.findById(perimeter.getId()).orElse(null) == null)
                 response.setStatus(201);
             else
                 response.setStatus(200);

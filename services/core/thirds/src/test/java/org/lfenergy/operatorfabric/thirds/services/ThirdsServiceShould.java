@@ -12,12 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.thirds.model.Third;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,6 +34,8 @@ import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
 import static org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum.*;
 import static org.lfenergy.operatorfabric.utilities.PathUtils.copy;
 import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 /**
@@ -214,14 +218,28 @@ class ThirdsServiceShould {
         throw e;
       }
     }
-
+    
     @Nested
-    class DeleteContent {
-      @Test
-      void clean() throws IOException {
-        service.clear();
-        assertThat(service.listThirds()).hasSize(0);
-      }
+    class DeleteOnlyOneThird {
+    	
+    	static final String bundleName = "first";
+    	
+    	@Test
+        void deleteGivenBundle() throws Exception {
+    		Path bundleDir = testDataDir.resolve(bundleName);
+    		Assertions.assertTrue(Files.isDirectory(bundleDir));
+            service.delete(bundleName);
+            Assertions.assertFalse(Files.isDirectory(bundleDir));
+        }
+
+	    @Nested
+	    class DeleteContent {
+	      @Test
+	      void clean() throws IOException {
+	        service.clear();
+	        assertThat(service.listThirds()).hasSize(0);
+	      }
+	    }
     }
   }
 }

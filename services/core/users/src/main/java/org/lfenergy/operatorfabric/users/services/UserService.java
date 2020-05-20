@@ -11,15 +11,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.GroupData;
+import org.lfenergy.operatorfabric.users.model.Perimeter;
 import org.lfenergy.operatorfabric.users.model.PerimeterData;
+import org.lfenergy.operatorfabric.users.model.StateRight;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -65,6 +66,23 @@ public class UserService {
             foundPerimeters.add(foundPerimeter);
         }
         return foundPerimeters;
+    }
+
+    public boolean isEachStateUniqueInPerimeter(Perimeter perimeter){
+
+        if ((perimeter != null) && (perimeter.getStateRights().size() > 1)) {
+
+            Set<String> mySet = new HashSet<>();
+            for (StateRight stateRight : perimeter.getStateRights()) {
+
+                String state = stateRight.getState();
+                if (! mySet.contains(state))
+                    mySet.add(state);
+                else
+                    return false;
+            }
+        }
+        return true;
     }
 }
 

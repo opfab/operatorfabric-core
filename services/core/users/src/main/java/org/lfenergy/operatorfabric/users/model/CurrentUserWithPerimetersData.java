@@ -56,14 +56,19 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
 
         //First, we build a MultiKeyMap with key is (process, state) and value is a list of rights
         perimeters.forEach(perimeter -> {
-            List<RightsEnum> currentList = multimapWithListOfRights.get(perimeter.getProcess(), perimeter.getState());
 
-            if (currentList != null) {
-                currentList.add(perimeter.getRights());
-                multimapWithListOfRights.put(perimeter.getProcess(), perimeter.getState(), currentList);
-            }
-            else
-                multimapWithListOfRights.put(perimeter.getProcess(), perimeter.getState(), new ArrayList<>(Arrays.asList(perimeter.getRights())));
+            List<StateRightData> stateRights = (List<StateRightData>) perimeter.getStateRights();
+
+            stateRights.forEach(stateRight -> {
+                List<RightsEnum> currentList = multimapWithListOfRights.get(perimeter.getProcess(), stateRight.getState());
+
+                if (currentList != null) {
+                    currentList.add(stateRight.getRight());
+                    multimapWithListOfRights.put(perimeter.getProcess(), stateRight.getState(), currentList);
+                }
+                else
+                    multimapWithListOfRights.put(perimeter.getProcess(), stateRight.getState(), new ArrayList<>(Arrays.asList(stateRight.getRight())));
+            });
         });
 
         //Then, for each value in MultiKeyMap, we merge the rights in only one right
