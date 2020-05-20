@@ -44,6 +44,7 @@ _When working on branch `develop`, the `deploy` docker-compose will rely on `SNA
 This lets you test OperatorFabric with the latest merged code. If you're interested in running a particular release on
 the other hand, you should checkout the associated X.X.X.RELEASE tag on `master`. The same is true for the
 `dev-environment` docker-compose._
+* [OC-907] Remove Keycloak from test-quality-environment docker-compose
 
 
 
