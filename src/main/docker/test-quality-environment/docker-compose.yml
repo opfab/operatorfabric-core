@@ -13,18 +13,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
-  keycloak:
-    image: jboss/keycloak:6.0.1
-    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/realms/export
-    environment:
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=admin
-      - DB_VENDOR=H2
-    volumes:
-      - ../realms:/realms
-    ports:
-      - "89:8080"
-      - "90:9990"
   sonarqube:
     image: sonarqube:latest
     ports:
