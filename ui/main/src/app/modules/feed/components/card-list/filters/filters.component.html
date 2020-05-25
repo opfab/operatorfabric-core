@@ -7,14 +7,25 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div class="rounded opfab-feedbar-bgcolor">
-    <div class="row nomarginrow" >
-        <of-type-filter></of-type-filter>
-        <div *ngIf="!(hideTimerTags$|async)">
-            <of-time-filter></of-time-filter>
+<div class="rounded opfab-feedbar-bgcolor ">
+    <div class="d-flex justify-content-between nomarginrow">
+        <div>
+            <of-type-filter></of-type-filter>
+            <span *ngIf="!(hideTimerTags$|async)">
+                <of-time-filter></of-time-filter>
+            </span>
+            <of-severity-sort></of-severity-sort>
         </div>
-        <of-severity-sort></of-severity-sort>
+
+
+        <div class="mr-2 mt-1">
+            <span *ngIf="!(cardsSubscriptionOpen$|async)">
+                <em class="fas fa-spinner fa-spin" ></em>
+            </span>
+        </div>
+
     </div>
+
     <div *ngIf="!(hideTags$|async)">
         <of-tags-filter></of-tags-filter>
     </div>

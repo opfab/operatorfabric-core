@@ -11,8 +11,13 @@ import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
-import {TimeService} from '@ofServices/time.service';
 import {NotifyService} from '@ofServices/notify.service';
+import {AppState} from '@ofStore/index';
+import {Store} from '@ngrx/store';
+import {
+    CardSubscriptionOpen,
+    CardSubscriptionClosed
+} from '@ofActions/cards-subscription.actions';
 
 @Injectable()
 export class CardService {
@@ -26,7 +31,7 @@ export class CardService {
     constructor(private httpClient: HttpClient,
                 private notifyService: NotifyService,
                 private guidService: GuidService,
-                private timeService: TimeService,
+                private store: Store<AppState>,
                 private authService: AuthenticationService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
@@ -77,8 +82,14 @@ export class CardService {
                     return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                 };
                 eventSource.onerror = error => {
-                    console.error(`error occurred from ES: ${error.toString()}`);
+                    this.store.dispatch(new CardSubscriptionClosed());
+                    console.error('error occurred in card subscription:',error);
                 };
+                eventSource.onopen = open => {
+                    this.store.dispatch(new CardSubscriptionOpen());
+                    console.log(`open card subscription`);
+                };
+
 
             } catch (error) {
                 console.error('an error occurred', error);

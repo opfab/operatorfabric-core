@@ -38,6 +38,8 @@ import {UserEffects} from '@ofEffects/user.effects';
 
 import {TranslateEffects} from '@ofEffects/translate.effects';
 
+import {CardsSubscriptionState} from '@ofStates/cards-subscription.state';
+import {cardsSubscriptionReducer} from '@ofStore/reducers/cards-subscription.reducer';
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -49,6 +51,7 @@ export interface AppState {
     settings: SettingsState;
     archive: ArchiveState;
     user: UserState;
+    cardsSubscription: CardsSubscriptionState;
 }
 
 export const appEffects = [
@@ -76,7 +79,8 @@ export const appReducer: ActionReducerMap<AppState> = {
     config: configReducer,
     settings: settingsReducer,
     archive: archiveReducer,
-    user: userReducer
+    user: userReducer,
+    cardsSubscription: cardsSubscriptionReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production
