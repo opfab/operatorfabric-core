@@ -1,4 +1,13 @@
 spring:
+  application:
+    name: cards-publication
+  cloud:
+    discovery:
+      enabled: false
+    config:
+      discovery:
+        enabled: false
+      enabled: false
   data:
     mongodb:
       database: operator-fabric
