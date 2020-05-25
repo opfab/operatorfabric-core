@@ -79,12 +79,6 @@ public class GatewayConfig {
                         })
                         .uri("lb://CONFIG")
                 )
-                .route("users",
-                        r-> r
-                                .path("/users/**")
-                                .filters(f->f.rewritePath("/users/(?<path>.*)", "/$\\{path}"))
-                                .uri("lb://USERS")
-                )
                 .build();
     }
 }

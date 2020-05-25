@@ -1,16 +1,30 @@
-server:
-  port: 2103
-
-message: common message
+#  POPULATE THE USER DATABASE ON INIT
+# !!!! WARNNING: VALUES SHOULD BE CHANGED FOR PRODUCTION MODE !!!!
+#
 management:
   endpoints:
     web:
       exposure:
         include: '*'
-
-security:
-  basic:
-    enabled: false
+spring:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    config:
+      discovery:
+        enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/auth/realms/dev/protocol/openid-connect/certs
+  data:
+    mongodb:
+      uris:
+        - mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
 
 operatorfabric:
   security:
@@ -20,28 +34,8 @@ operatorfabric:
       login-claim: preferred_username
       expire-claim: exp
 
-spring:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-  security:
-    provider-url: http://localhost:89
-    provider-realm: dev
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
-  data:
-    mongodb:
-      uris:
-        - mongodb://root:password@localhost:27017/operator-fabric?authSource=admin&authMode=scram-sha1
-
 operatorfabric.users.default:
   users:
-    - login: admin
-      groupSet: [ADMIN]
     - login: admin
       groups: ["ADMIN"]
       entities: ["ENTITY1","ENTITY2"]
@@ -54,9 +48,6 @@ operatorfabric.users.default:
       groups: ["TSO2", "TRANS"]
       entities: ["ENTITY2"]
   groups:
-    - id: ADMIN
-      name: ADMINISTRATORS
-      description: The admin group
     - id: ADMIN
       name: ADMINISTRATORS
       description: The admin group
@@ -91,6 +82,3 @@ operatorfabric.users.default:
     - id: ENTITY4
       name: Entity 4 name
       description: Entity 4 short description
-  user-settings:
-    - login: rte-operator
-      description: Da Operator Rulez
