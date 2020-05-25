@@ -54,6 +54,7 @@ the other hand, you should checkout the associated X.X.X.RELEASE tag on `master`
 * [OC-885] User Service : Perimeter model evolution
 * [OC-909] Simplify third menu code (Front) 
 * [OC-911] Changing sounds due to incompatible license
+* [OC-904] thirds service - added delete version of a third, minor changes on general synch working
 
 
 

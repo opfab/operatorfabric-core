@@ -8,8 +8,34 @@
 
 package org.lfenergy.operatorfabric.thirds.controllers;
 
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
+import static org.lfenergy.operatorfabric.utilities.PathUtils.copy;
+import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
@@ -25,21 +51,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
-import static org.lfenergy.operatorfabric.utilities.PathUtils.copy;
-import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -73,6 +85,7 @@ class GivenAdminUserThirdControllerShould {
         this.mockMvc = webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
+        service.loadCache();
     }
 
     @AfterAll
@@ -81,13 +94,19 @@ class GivenAdminUserThirdControllerShould {
         if (Files.exists(testDataDir))
             Files.walk(testDataDir, 1).forEach(p -> silentDelete(p));
     }
+    
+    /*@BeforeEach
+    void setupEach() throws Exception {
+        copy(Paths.get("./src/test/docker/volume/thirds-storage"), testDataDir);
+        service.loadCacheSafe();
+    }*/
 
     @Test
     void listThirds() throws Exception {
         mockMvc.perform(get("/thirds"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$", hasSize(2)))
         ;
     }
 
@@ -332,7 +351,7 @@ class GivenAdminUserThirdControllerShould {
             mockMvc.perform(get("/thirds"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$", hasSize(2)));
+                    .andExpect(jsonPath("$", hasSize(3)));
 
             mockMvc.perform(get("/thirds/second/css/nostyle"))
                     .andExpect(status().isNotFound())
@@ -346,11 +365,69 @@ class GivenAdminUserThirdControllerShould {
         	
         	static final String bundleName = "first";
         	
+        	@BeforeEach
+        	void setupEach() throws Exception {        		
+			  if (Files.exists(testDataDir))
+			      Files.walk(testDataDir, 1).forEach(p -> silentDelete(p));
+			    copy(Paths.get("./src/test/docker/volume/thirds-storage"), testDataDir);
+			    service.loadCache();
+			  }
+        	
+        	@Test
+            void deleteBundleByNameAndVersionWhichNotBeingDeafult() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName+"/versions/0.1"));
+                result
+                        .andExpect(status().isNoContent());
+                result = mockMvc.perform(get("/thirds/"+bundleName+"?version=0.1"));
+                result
+                        .andExpect(status().isNotFound());
+            }
+        	
+        	@Test
+            void deleteBundleByNameAndVersionWhichBeingDeafult() throws Exception {
+        		mockMvc.perform(delete("/thirds/"+bundleName+"/versions/v1")).andExpect(status().isNoContent());
+        		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName+"/versions/0.1"));
+                result
+                        .andExpect(status().isNoContent());
+                result = mockMvc.perform(get("/thirds/"+bundleName));
+                result
+                        .andExpect(status().isOk())
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(jsonPath("$.version", is(not("v1"))));
+            }
+        	
+        	@Test
+            void deleteBundleByNameAndVersionHavingOnlyOneVersion() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/third/versions/2.1"));
+                result
+                        .andExpect(status().isNoContent());
+                result = mockMvc.perform(get("/thirds/third"));
+                result
+                        .andExpect(status().isNotFound());
+            }
+        	
+        	@Test
+            void deleteBundleByNameAndVersionWhichNotExisting() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/second/versions/impossible_someone_really_so_crazy_to_give_this_name_to_a_version"));
+                result
+                        .andExpect(status().isNotFound());
+        	}
+        	
+        	@Test
+            void deleteBundleByNameWhichNotExistingAndVersion() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/impossible_someone_really_so_crazy_to_give_this_name_to_a_bundle/versions/2.1"));
+                result
+                        .andExpect(status().isNotFound());
+        	}
+        	
         	@Test
             void deleteGivenBundle() throws Exception {
         		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName));
                 result
                         .andExpect(status().isNoContent());
+                result = mockMvc.perform(get("/thirds/"+bundleName));
+                result
+                        .andExpect(status().isNotFound());
             }
         	
         	@Test
@@ -359,6 +436,8 @@ class GivenAdminUserThirdControllerShould {
                 result
                         .andExpect(status().isNotFound());
             }
+        	
+        	
         	
         	@Nested
             @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
