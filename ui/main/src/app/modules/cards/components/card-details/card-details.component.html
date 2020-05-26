@@ -10,6 +10,10 @@
     <button type="button" class="close" aria-label="Close" (click)="closeDetails()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card"></of-detail>
+    <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card"
+                  (responseData)='getResponseData($event)'></of-detail>
+
+    <button class="btn mt-3 mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists'
+              translate [translateParams]="responseDataParameters" (click)='action()'>{{btnText}}</button>
   </div>
 </of-details>

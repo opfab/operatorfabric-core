@@ -6,7 +6,7 @@
  */
 
 
-import {Component, ElementRef, Input, OnInit, SimpleChanges, OnChanges} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, SimpleChanges, OnChanges, Output, EventEmitter} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
 import {ThirdsService} from '@ofServices/thirds.service';
 import {HandlebarsService} from '../../services/handlebars.service';
@@ -26,6 +26,9 @@ import { switchMap } from 'rxjs/operators';
     templateUrl: './detail.component.html',
 })
 export class DetailComponent implements OnInit, OnChanges {
+
+    @Output() responseData = new EventEmitter<ThirdResponse>();
+
     public active = false;
     @Input() detail: Detail;
     @Input() card: Card;
@@ -91,6 +94,7 @@ export class DetailComponent implements OnInit, OnChanges {
         this.thirds.queryThirdFromCard(this.card).pipe(
             switchMap(thirdElt => {
                 responseData = thirdElt.processes[this.card.process].states[this.card.state].response;
+                this.responseData.emit(responseData);
                 return this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card, this.userContext, responseData));
             })
         )

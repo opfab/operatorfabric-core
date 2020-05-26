@@ -13,7 +13,7 @@ import {from, Observable, of, throwError} from 'rxjs';
 import {TranslateLoader} from '@ngx-translate/core';
 import {catchError, filter, map, reduce, switchMap, tap} from 'rxjs/operators';
 import {LightCard} from '@ofModel/light-card.model';
-import {Action, Third, ThirdMenu} from '@ofModel/thirds.model';
+import {Action, Third, ThirdMenu, ResponseBtnColorEnum} from '@ofModel/thirds.model';
 import {Card} from '@ofModel/card.model';
 
 @Injectable()
@@ -160,6 +160,18 @@ export class ThirdsService {
             }
             return new Map<string, Action>();
         }));
+    }
+    getResponseBtnColorEnumValue(responseBtnColorEnum: ResponseBtnColorEnum): string {
+        switch (responseBtnColorEnum) {
+            case 'RED':
+                return 'btn-danger';
+            case 'GREEN':
+                return 'btn-success'
+            case 'YELLOW':
+                return 'btn-warning';
+            default:
+                return 'btn-success';
+        }
     }
 }
 
