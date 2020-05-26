@@ -154,6 +154,11 @@ public class CardProcessingService {
                                 "constraint violation : TimeSpan.end must be after TimeSpan.start", null);
                 }
             }
+
+        // constraint check : process and state must not contain "." (because we use it as a separator)
+        if ((c.getProcess() != null && c.getProcess().contains(Character.toString('.')))  ||
+                (c.getState() != null && c.getState().contains(Character.toString('.'))))
+            throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
     }
 
     /**

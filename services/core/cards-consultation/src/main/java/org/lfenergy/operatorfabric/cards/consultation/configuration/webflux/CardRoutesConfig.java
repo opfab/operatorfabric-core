@@ -50,7 +50,7 @@ public class CardRoutesConfig implements UserExtractor {
     private HandlerFunction<ServerResponse> cardGetRoute() {
         return request ->
                 extractUserFromJwtToken(request)
-                        .flatMap(user -> cardRepository.findByIdWithUser(request.pathVariable("id"),user))
+                        .flatMap(currentUserWithPerimeters -> cardRepository.findByIdWithUser(request.pathVariable("id"),currentUserWithPerimeters))
                         .flatMap(card -> ok().contentType(MediaType.APPLICATION_JSON).body(fromObject(card)))
                         .switchIfEmpty(notFound().build());
     }

@@ -25,6 +25,7 @@ import org.lfenergy.operatorfabric.cards.consultation.model.*;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.model.TitlePositionEnum;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -126,21 +127,24 @@ public class CardRepositoryShould {
         List<String> entities = new ArrayList<>();
         entities.add("entity2");
         currentUser.setEntities(entities);
-        StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo,currentUser))
+        CurrentUserWithPerimeters currentUserWithPerimeters = new CurrentUserWithPerimeters();
+        currentUserWithPerimeters.setUserData(currentUser);
+
+        StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo, currentUserWithPerimeters))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo.minusMillis(1000),currentUser))
+        StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo.minusMillis(1000), currentUserWithPerimeters))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo.plusMillis(1000),currentUser))
+        StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo.plusMillis(1000), currentUserWithPerimeters))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS2");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusOne);
@@ -159,21 +163,24 @@ public class CardRepositoryShould {
         List<String> entities = new ArrayList<>();
         entities.add("entity1");
         currentUser.setEntities(entities);
-        StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo,currentUser))
+        CurrentUserWithPerimeters currentUserWithPerimeters = new CurrentUserWithPerimeters();
+        currentUserWithPerimeters.setUserData(currentUser);
+
+        StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo, currentUserWithPerimeters))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo.plusMillis(1000),currentUser))
+        StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo.plusMillis(1000), currentUserWithPerimeters))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo.minusMillis(1000),currentUser))
+        StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo.minusMillis(1000), currentUserWithPerimeters))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS6");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusThree);

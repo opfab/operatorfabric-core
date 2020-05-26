@@ -54,7 +54,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         headers.put("dummyHeaderKey","dummyHeaderValue");
         Map<String, Object> claim = new HashMap<>();
         claim.put("sub",customUser.login());
-        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(principal);
+        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(principal.getUserData());
 
         Authentication auth = new OpFabJwtAuthenticationToken(
                 new Jwt(tokenValue, issuedAt,expiresAt,headers,claim

@@ -17,6 +17,7 @@ import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -40,6 +41,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@CompoundIndex(name = "process_state", def = "{'process' : 1, 'state' : 1}")
 public class CardPublicationData implements Card {
 
     @Builder.Default
@@ -101,6 +103,8 @@ public class CardPublicationData implements Card {
     @Singular
     @Indexed
     private List<String> externalRecipients;
+    @Indexed
+    private String processStateKey;
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
@@ -108,9 +112,11 @@ public class CardPublicationData implements Card {
         if (null == this.uid)
         	this.uid = UUID.randomUUID().toString();
         this.setShardKey(Math.toIntExact(this.getStartDate().toEpochMilli() % 24 * 1000));
-        if(this.getTimeSpans()!=null)
-            for(TimeSpan ts:this.getTimeSpans())
-                ((TimeSpanPublicationData)ts).init();
+        if (this.getTimeSpans() != null) {
+            for (TimeSpan ts : this.getTimeSpans())
+                ((TimeSpanPublicationData) ts).init();
+        }
+        this.processStateKey = process + "." + state;
     }
 
     public LightCardPublicationData toLightCard() {

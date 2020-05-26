@@ -12,7 +12,7 @@ package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.data.domain.Page;
 import org.springframework.util.MultiValueMap;
 
@@ -21,6 +21,6 @@ import reactor.util.function.Tuple2;
 
 public interface ArchivedCardCustomRepository extends UserUtilitiesCommonToCardRepository<ArchivedCardConsultationData> {
 
-    Mono<Page<LightCard>> findWithUserAndParams(Tuple2<User,MultiValueMap<String, String>> params);
+    Mono<Page<LightCard>> findWithUserAndParams(Tuple2<CurrentUserWithPerimeters,MultiValueMap<String, String>> params);
 
 }

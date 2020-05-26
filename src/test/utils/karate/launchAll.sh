@@ -11,8 +11,9 @@ java -jar karate.jar                                        \
       cards/post2CardsRouting.feature                       \
       cards/post6CardsSeverity.feature                      \
       cards/post4CardsSeverityAsync.feature                 \
-      cards/post2CardsForEntities.feature                   \
+      cards/postCardsForEntities.feature                   \
       cards/post2CardsOnlyForEntities.feature               \
+      cards/post2CardsOnlyForEntitiesWithPerimeters.feature \
       cards/delete6CardsSeverity.feature                    \
       cards/post3BigCards.feature                           \
       cards/post3BigCardsAsync.feature                      \

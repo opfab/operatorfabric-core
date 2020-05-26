@@ -15,6 +15,7 @@ import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportDat
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,8 +56,8 @@ public class CardController {
     @ResponseStatus(HttpStatus.CREATED)
     public @Valid Mono<CardCreationReportData> createUserCards(@Valid @RequestBody Flux<CardPublicationData> cards, Principal principal){
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-        User user= (User) jwtPrincipal.getPrincipal();
-        return cardProcessingService.processUserCards(cards,user);
+        User user = ((CurrentUserWithPerimeters) jwtPrincipal.getPrincipal()).getUserData();
+        return cardProcessingService.processUserCards(cards, user);
 
     }
 

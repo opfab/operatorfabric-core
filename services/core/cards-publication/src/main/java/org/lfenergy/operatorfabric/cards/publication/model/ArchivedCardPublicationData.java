@@ -73,6 +73,8 @@ public class ArchivedCardPublicationData implements Card {
     @Indexed
     private List<String> entityRecipients;
     private List<String> externalRecipients;
+    @Indexed
+    private String processStateKey;
 
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
@@ -97,7 +99,7 @@ public class ArchivedCardPublicationData implements Card {
         this.groupRecipients = card.getGroupRecipients() == null ? null : new ArrayList<>(card.getGroupRecipients());
         this.entityRecipients = card.getEntityRecipients() == null ? null : new ArrayList<>(card.getEntityRecipients());
         this.externalRecipients = card.getExternalRecipients() == null ? null : new ArrayList<>(card.getExternalRecipients());
-
+        this.processStateKey = process + "." + state;
     }
 
 }

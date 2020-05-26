@@ -16,6 +16,7 @@ import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperations
 import org.lfenergy.operatorfabric.cards.consultation.controllers.CardOperationsGetParameters;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardSubscriptionDto;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -102,7 +103,7 @@ public class CardSubscriptionRoutesConfig {
                 .map(principal->{
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
                     return CardOperationsGetParameters.builder()
-                            .user((User) jwtPrincipal.getPrincipal())
+                            .user((User) ((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal()).getUserData())
                             .clientId(request.queryParam("clientId").orElse(null))
                             .rangeStart(parseAsInstant(request.queryParam("rangeStart").orElse(null)))
                             .rangeEnd(parseAsInstant(request.queryParam("rangeEnd").orElse(null)))
@@ -123,7 +124,7 @@ public class CardSubscriptionRoutesConfig {
                 .map(t->{
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) t.getT1();
                     CardOperationsGetParameters.CardOperationsGetParametersBuilder builder = CardOperationsGetParameters.builder()
-                            .user((User) jwtPrincipal.getPrincipal())
+                            .user(((CurrentUserWithPerimeters)jwtPrincipal.getPrincipal()).getUserData())
                             .clientId(request.queryParam("clientId").orElse(null))
                             .rangeStart(t.getT2().getRangeStart())
                             .rangeEnd(t.getT2().getRangeEnd())

@@ -10,7 +10,6 @@
 
 package org.lfenergy.operatorfabric.users.controllers;
 
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.GroupData;
@@ -20,8 +19,6 @@ import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.bus.ServiceMatcher;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,13 +50,6 @@ public class PerimetersController implements PerimetersApi {
     @Autowired
     private UserService userService;
 
-    /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
-     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
-    @Autowired
-    private ServiceMatcher busServiceMatcher;
-    @Autowired
-    private ApplicationEventPublisher publisher;
-
     @Override
     public Void addPerimeterGroups(HttpServletRequest request, HttpServletResponse response, String id, List<String> groups) throws Exception {
 
@@ -71,7 +61,7 @@ public class PerimetersController implements PerimetersApi {
 
         for (GroupData groupData : foundGroups) {
             groupData.addPerimeter(id);
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), groupData.getId()));
+            userService.publishUpdatedUserEvent(groupData.getId());
         }
         groupRepository.saveAll(foundGroups);
         return null;
@@ -105,10 +95,10 @@ public class PerimetersController implements PerimetersApi {
         //Retrieve groups from repository
         List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(id);
 
-        if(foundGroups != null) {
+        if (foundGroups != null) {
             for (GroupData groupData : foundGroups) {
                 groupData.deletePerimeter(id);
-                //publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), groupData.getId()));
+                userService.publishUpdatedUserEvent(groupData.getId());
             }
             groupRepository.saveAll(foundGroups);
         }
@@ -129,9 +119,10 @@ public class PerimetersController implements PerimetersApi {
                         .build()
         ));
 
-        if(foundGroup != null) {
+        if (foundGroup != null) {
             foundGroup.deletePerimeter(idParameter);
-            //publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+
+            userService.publishUpdatedUserEvent(foundGroup.getId());
             groupRepository.save(foundGroup);
         }
         return null;
@@ -178,6 +169,13 @@ public class PerimetersController implements PerimetersApi {
                 response.setStatus(200);
 
             response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
+
+            //Retrieve groups from repository
+            List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(id);
+            if (foundGroups != null) {
+                for (GroupData groupData : foundGroups)
+                    userService.publishUpdatedUserEvent(groupData.getId());
+            }
             return perimeterRepository.save((PerimeterData)perimeter);
         }
     }
@@ -201,7 +199,7 @@ public class PerimetersController implements PerimetersApi {
                             g.deletePerimeter(id);
                             newGroupsInPerimeter.remove(g.getId());
                             //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
-                            //publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getId()));
+                            userService.publishUpdatedUserEvent(g.getId());
                         }).collect(Collectors.toList());
 
         groupRepository.saveAll(toUpdate);

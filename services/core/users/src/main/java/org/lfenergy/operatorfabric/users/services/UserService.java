@@ -13,13 +13,14 @@ package org.lfenergy.operatorfabric.users.services;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.GroupData;
-import org.lfenergy.operatorfabric.users.model.Perimeter;
-import org.lfenergy.operatorfabric.users.model.PerimeterData;
-import org.lfenergy.operatorfabric.users.model.StateRight;
+import org.lfenergy.operatorfabric.users.model.*;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
+import org.lfenergy.operatorfabric.users.repositories.UserRepository;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.bus.ServiceMatcher;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,18 @@ public class UserService {
     public static final String PERIMETER_ID_IMPOSSIBLE_TO_FETCH_MSG = "Perimeter id impossible to fetch : %s";
 
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private GroupRepository groupRepository;
     @Autowired
     private PerimeterRepository perimeterRepository;
+
+    /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
+     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
+    @Autowired
+    private ServiceMatcher busServiceMatcher;
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     /** Retrieve groups from repository for groups list, throwing an error if a group id is not found
      * */
@@ -86,6 +96,15 @@ public class UserService {
             }
         }
         return true;
+    }
+
+    //Retrieve users from repository for the group and publish an UpdatedUserEvent
+    public void publishUpdatedUserEvent(String groupId){
+        List<UserData> foundUsers = userRepository.findByGroupSetContaining(groupId);
+        if (foundUsers != null) {
+            for (UserData userData : foundUsers)
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+        }
     }
 }
 

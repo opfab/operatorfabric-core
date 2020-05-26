@@ -39,5 +39,6 @@ java -jar karate.jar                                         \
       users/perimeters/getPerimetersForAGroup.feature        \
       users/perimeters/updatePerimetersForAGroup.feature     \
       users/perimeters/addPerimetersForAGroup.feature        \
-      users/perimeters/getCurrentUserWithPerimeters.feature
+      users/perimeters/getCurrentUserWithPerimeters.feature  \
+      users/perimeters/postCardRoutingPerimeters.feature
 
