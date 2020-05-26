@@ -71,6 +71,7 @@ ext {
             compress       : "org.apache.commons:commons-compress:${versions['apache.commons.compress']}",
             feignMock      : "io.github.openfeign:feign-mock:${versions['feign']}",
             feignJackson   : "io.github.openfeign:feign-jackson:${versions['feign']}",
+            jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:${versions['jacksonAnnotations']}",
             collections4   : "org.apache.commons:commons-collections4:${versions['apache.commons.collections4']}"
     ]
 

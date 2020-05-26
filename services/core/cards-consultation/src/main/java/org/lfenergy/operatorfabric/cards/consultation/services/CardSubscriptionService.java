@@ -12,7 +12,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
@@ -81,16 +81,16 @@ public class CardSubscriptionService {
      * @return the CardSubscription object which controls publisher instantiation
      */
     public synchronized CardSubscription subscribe(
-            User user,
+            CurrentUserWithPerimeters currentUserWithPerimeters,
             String clientId,
             Instant rangeStart,
             Instant rangeEnd,
             boolean filterNotification) {
-        String subId = CardSubscription.computeSubscriptionId(user.getLogin(), clientId);
+        String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), clientId);
         CardSubscription cardSubscription = cache.get(subId);
         // The builder may seem declare a bit to early but it allows usage in both branch of the later condition
         CardSubscription.CardSubscriptionBuilder cardSubscriptionBuilder = CardSubscription.builder()
-           .user(user)
+           .currentUserWithPerimeters(currentUserWithPerimeters)
            .clientId(clientId)
            .amqpAdmin(amqpAdmin)
            .userExchange(this.userExchange)
@@ -183,16 +183,16 @@ public class CardSubscriptionService {
     /**
      * <p>Find existing subscription</p>
      * <p>NB: May throw {@link IllegalStateException} if any of the parameters is missing</p>
-     * @param user Users whom subsciption we search
-     * @param uiId Unique client id whom subsciption we search
+     * @param currentUserWithPerimeters Users whom subscription we search
+     * @param uiId Unique client id whom subscription we search
      * @return
      */
-    public CardSubscription findSubscription(User user,String uiId) {
-        if(user == null)
+    public CardSubscription findSubscription(CurrentUserWithPerimeters currentUserWithPerimeters, String uiId) {
+        if(currentUserWithPerimeters == null)
             throw new IllegalArgumentException("user is a mandatory parameter of CardSubscriptionService#findSubscription");
         if(uiId == null)
             throw new IllegalArgumentException("uiId is a mandatory parameter of CardSubscriptionService#findSubscription");
-        String subId = CardSubscription.computeSubscriptionId(user.getLogin(), uiId);
+        String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), uiId);
         return cache.get(subId);
     }
 

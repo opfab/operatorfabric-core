@@ -20,7 +20,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
@@ -30,6 +30,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public class CardSubscription {
     private String groupQueueName;
     private long current = 0;
     @Getter
-    private User user;
+    private CurrentUserWithPerimeters currentUserWithPerimeters;
     @Getter
     private String id;
     @Getter
@@ -89,7 +91,7 @@ public class CardSubscription {
      * @param connectionFactory AMQP connection  factory to instantiate listeners
      */
     @Builder
-    public CardSubscription(User user,
+    public CardSubscription(CurrentUserWithPerimeters currentUserWithPerimeters,
                             String clientId,
                             Runnable doOnCancel,
                             AmqpAdmin amqpAdmin,
@@ -99,17 +101,17 @@ public class CardSubscription {
                             Instant rangeStart,
                             Instant rangeEnd,
                             Boolean filterNotification) {
-        if(user!=null)
-            this.id = computeSubscriptionId(user.getLogin(), clientId);
-        this.user = user;
+        if (currentUserWithPerimeters != null)
+            this.id = computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), clientId);
+        this.currentUserWithPerimeters = currentUserWithPerimeters;
         this.amqpAdmin = amqpAdmin;
         this.userExchange = userExchange;
         this.groupExchange = groupExchange;
         this.connectionFactory = connectionFactory;
         this.clientId = clientId;
-        if(user!=null) {
-            this.userQueueName = computeSubscriptionId(user.getLogin(), this.clientId);
-            this.groupQueueName = computeSubscriptionId(user.getLogin() + GROUPS_SUFFIX, this.clientId);
+        if (currentUserWithPerimeters != null) {
+            this.userQueueName = computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), this.clientId);
+            this.groupQueueName = computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin() + GROUPS_SUFFIX, this.clientId);
         }
         this.rangeStart = rangeStart;
         this.rangeEnd = rangeEnd;
@@ -138,13 +140,13 @@ public class CardSubscription {
         this.userMlc = createMessageListenerContainer(this.userQueueName);
         this.groupMlc = createMessageListenerContainer(groupQueueName);
         amqpPublisher = Flux.create(emitter -> {
-            registerListener(userMlc, emitter,this.user.getLogin());
-            registerListenerForGroups(groupMlc, emitter,this.user.getLogin()+ GROUPS_SUFFIX);
+            registerListener(userMlc, emitter,this.currentUserWithPerimeters.getUserData().getLogin());
+            registerListenerForGroups(groupMlc, emitter,this.currentUserWithPerimeters.getUserData().getLogin()+ GROUPS_SUFFIX);
             emitter.onRequest(v -> {
                 log.info("STARTING subscription");
-                log.info("LISTENING to messages on User[{}] queue",this.user.getLogin());
+                log.info("LISTENING to messages on User[{}] queue",this.currentUserWithPerimeters.getUserData().getLogin());
                 userMlc.start();
-                log.info("LISTENING to messages on Group[{}Groups] queue",this.user.getLogin());
+                log.info("LISTENING to messages on Group[{}Groups] queue",this.currentUserWithPerimeters.getUserData().getLogin());
                 groupMlc.start();
                 startingPublishDate = Instant.now();
             });
@@ -201,13 +203,13 @@ public class CardSubscription {
      * @return
      */
     private Queue createUserQueue() {
-        log.info("CREATE User[{}] queue",this.user.getLogin());
+        log.info("CREATE User[{}] queue",this.currentUserWithPerimeters.getUserData().getLogin());
         Queue queue = QueueBuilder.nonDurable(this.userQueueName).build();
         amqpAdmin.declareQueue(queue);
         Binding binding = BindingBuilder
            .bind(queue)
            .to(this.userExchange)
-           .with(this.user.getLogin());
+           .with(this.currentUserWithPerimeters.getUserData().getLogin());
         amqpAdmin.declareBinding(binding);
         log.info("CREATED User[{}] queue",this.userQueueName);
         return queue;
@@ -219,7 +221,7 @@ public class CardSubscription {
      * @return
      */
     private Queue createGroupQueue() {
-        log.info("CREATE Group[{}Groups] queue",this.user.getLogin());
+        log.info("CREATE Group[{}Groups] queue",this.currentUserWithPerimeters.getUserData().getLogin());
         Queue queue = QueueBuilder.nonDurable(this.groupQueueName).build();
         amqpAdmin.declareQueue(queue);
 
@@ -280,31 +282,59 @@ public class CardSubscription {
 
     /**
      * @param messageBody message body received from rabbitMQ
-     * @return true if the message received is either :
-     * 1) intended for one of the user's groups and there is no entityRecipients in the card
-     * 2) or intended for one of the user's entities and there is no groupRecipients in the card
-     * 3) or intended for one of the user's groups and also for one of the user's entities
+     * @return true if the message received must be seen by the connected user.
+     * Rules for receiving cards :
+     *     1) If the card is sent to entity A and group B, then to receive it,
+     *        the user must be part of A AND (be part of B OR have the right for the process/state of the card)
+     *     2) If the card is sent to entity A only, then to receive it, the user must be part of A and have the right for the process/state of the card
+     *     3) If the card is sent to group B only, then to receive it, the user must be part of B
      */
     public boolean checkIfUserMustReceiveTheCard(final String messageBody){
         try {
+            List<String> processStateList = new ArrayList<>();
+            if (currentUserWithPerimeters.getComputedPerimeters() != null)
+                currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter ->
+                        processStateList.add(perimeter.getProcess() + "." + perimeter.getState()));
+
             JSONObject obj = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(messageBody);
             JSONArray groupRecipientsIdsArray = (JSONArray) obj.get("groupRecipientsIds");
             JSONArray entityRecipientsIdsArray = (JSONArray) obj.get("entityRecipientsIds");
-            List<String> userGroups = user.getGroups();
-            List<String> userEntities = user.getEntities();
+            JSONArray cards = (JSONArray) obj.get("cards");
+            String typeOperation = (obj.get("type") != null) ? (String) obj.get("type") : "";
 
-            if (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()) { //no entityRecipients in the card
+            JSONObject cardsObj = (cards != null) ? (JSONObject) cards.get(0) : null;    //there is always only one card in the array
+
+            String processStateKey = (cardsObj != null) ? cardsObj.get("process") + "." + cardsObj.get("state") : "";
+
+            List<String> userGroups = currentUserWithPerimeters.getUserData().getGroups();
+            List<String> userEntities = currentUserWithPerimeters.getUserData().getEntities();
+
+            if (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()) { //card sent to group only
                 return (userGroups != null) && (groupRecipientsIdsArray != null)
                         && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
             }
-            else if (groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty()){ //entityRecipients present in the card and no groupRecipients
-                return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray));
+            if (groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty()){ //card sent to entity only
+                if (typeOperation.equals("DELETE"))
+                    return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray));
+
+                return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray))
+                        && (!Collections.disjoint(Arrays.asList(processStateKey), processStateList));
             }
-            else{ //entityRecipients and groupRecipients present in the card
-                return (userEntities != null) && (userGroups != null)
+
+            if (typeOperation.equals("DELETE"))
+                return ((userEntities != null) && (userGroups != null)      //card sent to entity and group
                         && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
-                        && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
-            }
+                        && !Collections.disjoint(userGroups, groupRecipientsIdsArray))
+                        ||
+                        ((userEntities != null) && !Collections.disjoint(userEntities, entityRecipientsIdsArray));
+
+            return ((userEntities != null) && (userGroups != null)      //card sent to entity and group
+                    && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
+                    && !Collections.disjoint(userGroups, groupRecipientsIdsArray))
+                    ||
+                    ((userEntities != null)
+                    && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
+                    && !Collections.disjoint(Arrays.asList(processStateKey), processStateList));
         }
         catch(ParseException e){ log.error("ERROR during received message parsing", e); }
         return false;

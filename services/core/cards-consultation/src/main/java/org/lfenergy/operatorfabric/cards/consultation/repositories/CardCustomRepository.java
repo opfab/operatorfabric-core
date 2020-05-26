@@ -11,7 +11,7 @@
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
@@ -21,8 +21,6 @@ import java.time.Instant;
 * */
 public interface CardCustomRepository extends UserUtilitiesCommonToCardRepository<CardConsultationData> {
 
-    Mono<CardConsultationData> findNextCardWithUser(Instant pivotalInstant, User user);
-    Mono<CardConsultationData> findPreviousCardWithUser(Instant pivotalInstant
-                                                  , User user
-    );
+    Mono<CardConsultationData> findNextCardWithUser(Instant pivotalInstant, CurrentUserWithPerimeters currentUserWithPerimeters);
+    Mono<CardConsultationData> findPreviousCardWithUser(Instant pivotalInstant, CurrentUserWithPerimeters currentUserWithPerimeters);
 }

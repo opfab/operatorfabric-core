@@ -10,6 +10,9 @@
 
 package org.lfenergy.operatorfabric.users.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * Rights for a process/state (process/state/rights then associated to one or more group(s))
  *
@@ -23,8 +26,30 @@ package org.lfenergy.operatorfabric.users.model;
  *
  */
 public enum RightsEnum {
-    READ,
-    READANDWRITE,
-    READANDRESPOND,
-    ALL
+    READ("Read"),
+    READANDWRITE("ReadAndWrite"),
+    READANDRESPOND("ReadAndRespond"),
+    ALL("All");
+
+    private String value;
+
+    RightsEnum(String value) {
+        this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static RightsEnum fromValue(String text) {
+        for (RightsEnum b : RightsEnum.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 }

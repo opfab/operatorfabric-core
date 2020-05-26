@@ -60,42 +60,14 @@ Feature: Cards
     Given url opfabUrl + 'cards/cards/api_test_process2card1Entities_1'
     And header Authorization = 'Bearer ' + authToken
     When method get
-    Then status 200
-    And match response.data.message == 'message (card 1) published for entities ENTITY1 and ENTITY2'
-    And match response.entityRecipients[0] == 'ENTITY1'
-    And match response.entityRecipients[1] == 'ENTITY2'
-    And def cardUid1 = response.uid
+    Then status 404
 
 
   # Get card 2
     Given url opfabUrl + 'cards/cards/api_test_process2card1Entities_2'
     And header Authorization = 'Bearer ' + authToken
     When method get
-    Then status 200
-    And match response.data.message == 'message (card 2) published for entities ENTITY1 and ENTITY2'
-    And match response.entityRecipients[0] == 'ENTITY1'
-    And match response.entityRecipients[1] == 'ENTITY2'
-    And def cardUid2 = response.uid
-
-
-  # Get card 1 from archives
-    Given url opfabUrl + 'cards/archives/' + cardUid1
-    And header Authorization = 'Bearer ' + authToken
-    When method get
-    Then status 200
-    And match response.data.message == 'message (card 1) published for entities ENTITY1 and ENTITY2'
-    And match response.entityRecipients[0] == 'ENTITY1'
-    And match response.entityRecipients[1] == 'ENTITY2'
-
-
-  # Get card 2 from archives
-    Given url opfabUrl + 'cards/archives/' + cardUid2
-    And header Authorization = 'Bearer ' + authToken
-    When method get
-    Then status 200
-    And match response.data.message == 'message (card 2) published for entities ENTITY1 and ENTITY2'
-    And match response.entityRecipients[0] == 'ENTITY1'
-    And match response.entityRecipients[1] == 'ENTITY2'
+    Then status 404
 
 
   Scenario: Update the second card with "entityRecipients":["ENTITY4"]

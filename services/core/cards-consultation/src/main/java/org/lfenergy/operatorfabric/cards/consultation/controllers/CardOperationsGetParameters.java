@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Singular;
 import lombok.Value;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 
 import java.time.Instant;
 import java.util.List;
@@ -50,7 +50,7 @@ public class CardOperationsGetParameters {
     /**
      * Filter only cards for which this user is a recipient
      * */
-    private User user;
+    private CurrentUserWithPerimeters currentUserWithPerimeters;
 
     /**
      * List of cards that should not be loaded

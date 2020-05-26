@@ -56,9 +56,9 @@ public class CardRoutesConfig implements UserExtractor {
     private HandlerFunction<ServerResponse> cardGetRoute() {
         return request ->
                 extractUserFromJwtToken(request)
-                        .flatMap(user -> Mono.just(user).zipWith(cardRepository.findByIdWithUser(request.pathVariable("id"),user)))
+                        .flatMap(currentUserWithPerimeters -> Mono.just(currentUserWithPerimeters).zipWith(cardRepository.findByIdWithUser(request.pathVariable("id"),currentUserWithPerimeters)))
                         .doOnNext(t -> t.getT2().setHasBeenAcknowledged(
-                        		t.getT2().getUsersAcks() != null && t.getT2().getUsersAcks().contains(t.getT1().getLogin())))
+                        		t.getT2().getUsersAcks() != null && t.getT2().getUsersAcks().contains(t.getT1().getUserData().getLogin())))
                         .flatMap(t -> ok().contentType(MediaType.APPLICATION_JSON).body(fromValue(t.getT2())))
                         .switchIfEmpty(notFound().build());
     }

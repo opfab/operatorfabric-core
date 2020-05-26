@@ -16,6 +16,7 @@ import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsult
 import reactor.core.publisher.Flux;
 
 import java.time.Instant;
+import java.util.List;
 
 public interface CardOperationRepository {
 
@@ -37,7 +38,8 @@ public interface CardOperationRepository {
      * @param entities          only cards received by at least one of these entities (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<CardOperation> findUrgent(Instant latestPublication, Instant rangeStart, Instant rangeEnd, String login, String[] groups, String[] entities);
+    Flux<CardOperation> findUrgent(Instant latestPublication, Instant rangeStart, Instant rangeEnd,
+                                   String login, String[] groups, String[] entities, List<String> processStateList);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and starting after <code>rangeStart</code>
@@ -50,7 +52,8 @@ public interface CardOperationRepository {
      * @param entities          only cards received by at least one of these entities (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<CardOperation> findFutureOnly(Instant latestPublication, Instant rangeStart, String login, String[] groups, String[] entities);
+    Flux<CardOperation> findFutureOnly(Instant latestPublication, Instant rangeStart,
+                                       String login, String[] groups, String[] entities, List<String> processStateList);
 
     /**
      * Finds Card published earlier than <code>latestPublication</code> and ending before <code>rangeEnd</code>
@@ -63,5 +66,6 @@ public interface CardOperationRepository {
      * @param entities          only cards received by at least one of these entities (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<CardOperation> findPastOnly(Instant latestPublication, Instant rangeEnd, String login, String[] groups, String[] entities);
+    Flux<CardOperation> findPastOnly(Instant latestPublication, Instant rangeEnd,
+                                     String login, String[] groups, String[] entities, List<String> processStateList);
 }

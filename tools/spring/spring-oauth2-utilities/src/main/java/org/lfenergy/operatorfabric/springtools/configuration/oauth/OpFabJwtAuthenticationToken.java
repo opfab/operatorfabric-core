@@ -12,6 +12,7 @@
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
 import lombok.Getter;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -38,6 +39,12 @@ public class OpFabJwtAuthenticationToken extends JwtAuthenticationToken {
      */
     public OpFabJwtAuthenticationToken(Jwt jwt, User principal, Collection<? extends GrantedAuthority>
        authorities) {
+        super(jwt, authorities);
+        this.principal = principal;
+    }
+
+    public OpFabJwtAuthenticationToken(Jwt jwt, CurrentUserWithPerimeters principal, Collection<? extends GrantedAuthority>
+            authorities) {
         super(jwt, authorities);
         this.principal = principal;
     }
