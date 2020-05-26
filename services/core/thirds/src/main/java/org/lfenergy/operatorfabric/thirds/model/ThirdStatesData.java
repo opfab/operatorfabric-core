@@ -26,6 +26,7 @@ public class ThirdStatesData implements ThirdStates {
     private List<? extends Detail> detailsData;
     @Singular("actionsData")
     private Map<String, ActionData> actionsData;
+    private ResponseData responseData;
 
     @Override
     public void setDetails(List<? extends Detail> details) {
@@ -47,4 +48,13 @@ public class ThirdStatesData implements ThirdStates {
         this.actionsData = new HashMap<>((Map<String,ActionData>) actionsData);
     }
 
+    @Override
+    public Response getResponse() {
+        return responseData;
+    }
+
+    @Override
+    public void setResponse(Response responseData) {
+        this.responseData = (ResponseData) responseData;
+    }
 }

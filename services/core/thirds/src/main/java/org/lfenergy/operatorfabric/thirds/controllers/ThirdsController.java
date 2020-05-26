@@ -201,6 +201,13 @@ public class ThirdsController implements ThirdsApi {
                 .getDetails();
     }
 
+    @Override
+    public Response getResponse(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName,
+                                String stateName, String apiVersion) {
+        return getState(request, response, thirdName, processName, stateName, apiVersion)
+                .getResponse();
+    }
+
 	@Override
 	public Void deleteBundle(HttpServletRequest request, HttpServletResponse response, String thirdName)
 			throws Exception {
@@ -244,6 +251,4 @@ public class ThirdsController implements ThirdsApi {
 					message, e);
 		}
 	}
-    
-    
 }
