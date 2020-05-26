@@ -67,9 +67,18 @@ export class State {
     /* istanbul ignore next */
     constructor(
         readonly details?: Detail[],
-        readonly actions?: OfMap<Action>
+        readonly actions?: OfMap<Action>,
+        readonly response?: ThirdResponse
     ) {
     }
+}
+
+export class ThirdResponse {
+    /* istanbul ignore next */
+    constructor(
+        readonly lock?: boolean,
+        readonly state?: string
+    ) { }
 }
 
 export enum ActionType {

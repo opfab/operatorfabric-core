@@ -107,7 +107,7 @@ describe('Handlebars Services', () => {
         });
         const simpleTemplate = 'English template {{card.data.name}}';
         it('compile simple template', (done) => {
-            handlebarsService.executeTemplate('testTemplate', new DetailContext(card, userContext))
+            handlebarsService.executeTemplate('testTemplate', new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('English template something');
                     done();
@@ -122,7 +122,7 @@ describe('Handlebars Services', () => {
 
         function expectIfCond(card, v1, cond, v2, expectedResult: string, done) {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     console.debug(`testing [${v1} ${cond} ${v2}], result ${result}, expected ${expectedResult}`);
                     expect(result).toEqual(expectedResult,
@@ -202,7 +202,7 @@ describe('Handlebars Services', () => {
         });
         it('compile arrayAtIndexLength', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('3');
                     done();
@@ -216,7 +216,7 @@ describe('Handlebars Services', () => {
         })
         it('compile arrayAtIndexLength Alt', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('3');
                     done();
@@ -230,7 +230,7 @@ describe('Handlebars Services', () => {
         });
         it('compile split', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('split');
                     done();
@@ -244,7 +244,7 @@ describe('Handlebars Services', () => {
         });
         it('compile split for each', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('-a-split-string');
                     done();
@@ -259,7 +259,7 @@ describe('Handlebars Services', () => {
 
         function expectMath(v1, op, v2, expectedResult, done) {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual(`${expectedResult}`);
                     done();
@@ -289,7 +289,7 @@ describe('Handlebars Services', () => {
         });
         it('compile arrayAtIndex', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('2');
                     done();
@@ -303,7 +303,7 @@ describe('Handlebars Services', () => {
         });
         it('compile arrayAtIndex alt', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('2');
                     done();
@@ -317,7 +317,7 @@ describe('Handlebars Services', () => {
         });
         it('compile slice', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('2 3 ');
                     done();
@@ -332,7 +332,7 @@ describe('Handlebars Services', () => {
 
         it('compile slice to end', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('2 3 4 5 ');
                     done();
@@ -347,7 +347,7 @@ describe('Handlebars Services', () => {
 
         it('compile each sort no field', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('Idle Chapman Cleese Palin Gillian Jones ');
                     done();
@@ -361,7 +361,7 @@ describe('Handlebars Services', () => {
         });
         it('compile each sort primitive properties', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('Idle Chapman Cleese Palin Gillian Jones ');
                     done();
@@ -376,7 +376,7 @@ describe('Handlebars Services', () => {
 
         it('compile each sort primitive array', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('0 1 2 3 4 5 ');
                     done();
@@ -391,7 +391,7 @@ describe('Handlebars Services', () => {
 
         it('compile each sort', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('Chapman Cleese Gillian Idle Jones Palin ');
                     done();
@@ -409,7 +409,7 @@ describe('Handlebars Services', () => {
             });
             translate.use("en");
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('English value');
                     done();
@@ -427,7 +427,7 @@ describe('Handlebars Services', () => {
             });
             translate.use("en");
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('English value: FOO');
                     done();
@@ -445,7 +445,7 @@ describe('Handlebars Services', () => {
             });
             translate.use("en");
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('English value: BAR');
                     done();
@@ -459,7 +459,7 @@ describe('Handlebars Services', () => {
         });
         it('compile numberFormat using en locale fallback', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result)
                         .toEqual(new Intl.NumberFormat('en', {style: "currency", currency: "EUR"})
@@ -473,24 +473,24 @@ describe('Handlebars Services', () => {
                 call.flush('{{numberFormat card.data.numbers.[5] style="currency" currency="EUR"}}');
             });
         });
-        xit('compile dateFormat now (using en locale fallback)', (done) => {
+        it('compile dateFormat now (using en locale fallback)', (done) => {
             now.locale('en')
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
-                    expect(result).toEqual(now.format('MMMM Do YYYY, h:mm:ss a'));
+                    expect(result).toEqual(now.format('MMMM Do YYYY'));
                     done();
                 });
             let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{dateFormat (now "") format="MMMM Do YYYY, h:mm:ss a"}}');
+                call.flush('{{dateFormat (now "") format="MMMM Do YYYY"}}');
             });
         });
         it('compile preserveSpace', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('\u00A0\u00A0\u00A0');
                     done();
@@ -504,7 +504,7 @@ describe('Handlebars Services', () => {
         });
         it('compile svg', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     const lines = result.split('\n');
                     expect(lines.length).toEqual(4);
@@ -523,7 +523,7 @@ describe('Handlebars Services', () => {
         });
         it('compile action', (done) => {
             const templateName = Guid.create().toString();
-            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext))
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).toEqual('<button action-id="action-id"><i></i></button>');
                     done();

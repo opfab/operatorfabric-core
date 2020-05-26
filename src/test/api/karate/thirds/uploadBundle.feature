@@ -47,3 +47,14 @@ Feature: Bundle
     When method post
     Then print response
     And status 201
+  
+  
+  Scenario: Post Bundle for testing the action
+
+    # Push bundle
+    Given url opfabUrl + 'thirds'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart field file = read('resources/bundle_test_action.tar.gz')
+    When method post
+    Then print response
+    And status 201
