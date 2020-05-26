@@ -13,6 +13,7 @@
   "singleContentTypes": false,
   "importMappings" : {
     "ActionEnum": "org.lfenergy.operatorfabric.thirds.model.ActionEnum",
+    "ResponseBtnColorEnum": "org.lfenergy.operatorfabric.thirds.model.ResponseBtnColorEnum",
     "EpochDate": "java.time.Instant",
     "LongInteger": "java.lang.Long"
   }

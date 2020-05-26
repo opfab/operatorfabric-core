@@ -98,5 +98,8 @@
   "button": {
     "ok": "OK",
     "cancel": "Cancel"
+  },
+  "action": {
+    "btnTitle": "VALIDATE ANSWERS"
   }
 }

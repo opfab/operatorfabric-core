@@ -7,9 +7,9 @@ Feature: getResponseThird
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
-    * def thirdName = 'TEST'
+    * def thirdName = 'TEST_ACTION'
     * def process = 'process'
-    * def state = 'firstState'
+    * def state = 'response_full'
     * def version = 1
 
     Scenario: get third response
@@ -19,8 +19,7 @@ Feature: getResponseThird
       When method get
       Then print response
       And status 200
-      And print response.lock
-      And print response.state
+      And match response == {"btnText":{"parameters":null,"key":"action.text"},"btnColor":"RED","lock":true,"state":"responseState"}
 
 
 
