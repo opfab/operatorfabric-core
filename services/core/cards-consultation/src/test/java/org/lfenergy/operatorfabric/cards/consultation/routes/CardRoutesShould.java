@@ -11,7 +11,16 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.routes;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.configureRecipientReferencesAndStartDate;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.instantiateOneCardConsultationData;
+
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -31,14 +40,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.test.StepVerifier;
-
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardRoutesConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -101,6 +105,59 @@ public class CardRoutesShould {
                         .isEqualToComparingFieldByFieldRecursively(simpleCard);
             });
         }
+        
+        @Test
+        public void findOutCardByUserWithHisOwnAck(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            simpleCard.setUsersAcks(Arrays.asList("userWithGroup","some-operator"));
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardConsultationData.class).value(card -> {
+		        assertThat(card.getHasBeenAcknowledged()).isTrue();});
+    
+        }
+        
+        @Test
+        public void findOutCardByUserWithoutHisOwnAck(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            simpleCard.setUsersAcks(Arrays.asList("any-operator","some-operator"));
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardConsultationData.class).value(card -> {
+		        assertThat(card.getHasBeenAcknowledged()).isFalse();});
+    
+        }
+        
+        @Test
+        public void findOutCardWithoutAcks(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardConsultationData.class).value(card -> {
+		        assertThat(card.getHasBeenAcknowledged()).isFalse();});
+    
+        }
     }
 
     @Nested
@@ -119,7 +176,7 @@ public class CardRoutesShould {
                     .expectStatus().isForbidden()
             ;
         }
-
+        
     }
 
     @Nested

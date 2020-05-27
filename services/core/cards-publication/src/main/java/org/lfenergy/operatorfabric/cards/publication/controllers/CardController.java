@@ -18,6 +18,7 @@ import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthe
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -65,4 +66,20 @@ public class CardController {
     public void deleteCards(@PathVariable String processId){
         cardProcessingService.deleteCard(processId);
     }
+    
+    /**
+     * POST userAcknowledgement for a card updating the card
+     * @param card Id to create publisher
+     * @return contains number of acknowledgement created and optional message
+     */
+    @PostMapping("/{cardId}/userAcknowledgement")
+    @ResponseStatus(HttpStatus.CREATED)
+	public @Valid Mono<CardCreationReportData> userAcknowledgement(Principal principal,
+			@PathVariable("cardId") String cardId, ServerHttpResponse response) {
+    	return cardProcessingService.processUserAcknowledgement(principal.getName(), cardId).doOnNext(ccrd -> {
+			if (ccrd.getCount() == 0)
+				response.setStatusCode(HttpStatus.OK);
+		});
+    }
+    
 }

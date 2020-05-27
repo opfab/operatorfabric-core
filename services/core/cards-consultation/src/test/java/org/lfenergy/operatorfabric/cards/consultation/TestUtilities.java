@@ -56,18 +56,35 @@ public class TestUtilities {
     /* Utilities regarding Cards */
 
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null);
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, null);
+    }
+    
+    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String[] userAcks) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, userAcks);
     }
 
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities);
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities,null);
+    }
+    
+    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities, String[] userAcks) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities, userAcks);
+    }
+    
+    public static CardConsultationData createSimpleCard(String processSuffix
+            , Instant publication
+            , Instant start
+            , Instant end
+            , String login, String[] groups, String[] entities) {
+    	return createSimpleCard(processSuffix, publication, start, end, login, groups, entities, null);
     }
 
     public static CardConsultationData createSimpleCard(String processSuffix
             , Instant publication
             , Instant start
             , Instant end
-            , String login, String[] groups, String[] entities) {
+            , String login, String[] groups, String[] entities
+            , String[] userAcks) {    	
         CardConsultationData.CardConsultationDataBuilder cardBuilder = CardConsultationData.builder()
                 .processId("PROCESS" + processSuffix)
                 .publisher("PUBLISHER")
@@ -77,7 +94,8 @@ public class TestUtilities {
                 .severity(SeverityEnum.ALARM)
                 .title(I18nConsultationData.builder().key("title").build())
                 .summary(I18nConsultationData.builder().key("summary").build())
-                .recipient(computeRecipient(login, groups));
+                .recipient(computeRecipient(login, groups))
+                .usersAcks(userAcks!=null ? Arrays.asList(userAcks) : null);
 
         if (groups != null && groups.length > 0)
             cardBuilder.groupRecipients(Arrays.asList(groups));
@@ -301,7 +319,8 @@ public class TestUtilities {
                 .excludeField(FieldPredicates.named("orphanedUsers"))
                 .scanClasspathForConcreteTypes(true)
                 .overrideDefaultInitialization(false)
-                .ignoreRandomizationErrors(true);
+                .ignoreRandomizationErrors(true)
+                .excludeField(predicate->predicate.getName().equals("usersAcks"));
 
         return new EasyRandom(parameters);
     }

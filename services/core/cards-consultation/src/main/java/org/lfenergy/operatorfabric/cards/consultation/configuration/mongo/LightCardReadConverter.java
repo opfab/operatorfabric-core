@@ -27,11 +27,11 @@ import java.util.List;
  *
  */
 @Slf4j
-public class LightCardReadConverter implements Converter<Document, LightCard> {
+public class LightCardReadConverter implements Converter<Document, LightCardConsultationData> {
     private I18nReadConverter i18nReadConverter = new I18nReadConverter();
     private TimeSpanReadConverter timeSpanConverter = new TimeSpanReadConverter();
     @Override
-    public LightCard convert(Document source) {
+    public LightCardConsultationData convert(Document source) {
         LightCardConsultationData.LightCardConsultationDataBuilder builder = LightCardConsultationData.builder();
         builder
                 .publisher(source.getString("publisher"))
@@ -46,6 +46,7 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
                 .endDate(source.getDate("endDate") == null ? null : source.getDate("endDate").toInstant())
                 .publishDate(source.getDate("publishDate") == null ? null : source.getDate("publishDate").toInstant())
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
+                .usersAcks(source.getList("usersAcks", String.class))
         ;
         Document titleDoc = (Document) source.get("title");
         if(titleDoc!=null)

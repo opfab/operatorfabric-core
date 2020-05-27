@@ -11,12 +11,16 @@
 package org.lfenergy.operatorfabric.cards.publication.services;
 
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
+import com.mongodb.client.result.UpdateResult;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,5 +63,14 @@ public class CardRepositoryService {
 
         return this.template.findOne(findCardByIdWithoutDataField, CardPublicationData.class);
     }
+
+	public CardCreationReportData addUserAck(String name, String cardId) {
+		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("id").is(cardId)), 
+				new Update().addToSet("usersAcks", name),CardPublicationData.class);
+		int modifiedCount = updateFirst.getModifiedCount() > 0 ? 1 : 0;
+		return new CardCreationReportData(modifiedCount,"userAck added");
+	}
+    
+    
 
 }

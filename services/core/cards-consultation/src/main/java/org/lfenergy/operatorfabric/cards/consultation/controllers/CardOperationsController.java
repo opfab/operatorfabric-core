@@ -14,6 +14,8 @@ package org.lfenergy.operatorfabric.cards.consultation.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+
+import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardSubscriptionDto;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription;
@@ -134,7 +136,7 @@ public class CardOperationsController {
     }
 
     private Flux<String> fetchOldCards0(Instant referencePublishDate, Instant start, Instant end, User user) {
-        Flux<String> oldCards;
+        Flux<CardOperation> oldCards;
         referencePublishDate = referencePublishDate == null ? Instant.now() : referencePublishDate;
         String login = user.getLogin();
         String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
@@ -144,16 +146,25 @@ public class CardOperationsController {
             entities = user.getEntities().toArray(new String[user.getEntities().size()]);
 
         if (end != null && start != null) {
-            oldCards = cardRepository.findUrgentJSON(referencePublishDate, start, end, login, groups, entities);
+            oldCards = cardRepository.findUrgent(referencePublishDate, start, end, login, groups, entities);
         } else if (end != null) {
-            oldCards = cardRepository.findPastOnlyJSON(referencePublishDate, end, login, groups, entities);
+            oldCards = cardRepository.findPastOnly(referencePublishDate, end, login, groups, entities);
         } else if (start != null) {
-            oldCards = cardRepository.findFutureOnlyJSON(referencePublishDate, start, login, groups, entities);
+            oldCards = cardRepository.findFutureOnly(referencePublishDate, start, login, groups, entities);
         } else {
             log.info("Not loading published cards as no range is provided");
             oldCards = Flux.empty();
         }
-        return oldCards;
+        return oldCards.map(this::writeValueAsString);
+    }
+    
+    private String writeValueAsString(CardOperation cardOperation) {
+        try {
+            return mapper.writeValueAsString(cardOperation);
+        } catch (JsonProcessingException e) {
+            log.error(String.format("Unable to linearize %s to Json",cardOperation.getClass().getSimpleName()),e);
+            return null;
+        }
     }
 
 

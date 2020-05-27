@@ -14,7 +14,7 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-
+import org.springframework.data.annotation.Transient;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -64,6 +64,9 @@ public class LightCardPublicationData implements LightCard {
     @Setter(AccessLevel.NONE)    
     @Singular("timeSpan")
     private Set<TimeSpan> timeSpansSet;
+    
+    @Transient
+    private Boolean hasBeenAcknowledged;
 
     /**
      * return timespans, may be null

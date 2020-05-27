@@ -26,10 +26,10 @@ import java.util.List;
  *
  */
 @Slf4j
-public class CardOperationReadConverter implements Converter<Document, CardOperation> {
+public class CardOperationReadConverter implements Converter<Document, CardOperationConsultationData> {
     LightCardReadConverter cardConverter = new LightCardReadConverter();
     @Override
-    public CardOperation convert(Document source) {
+    public CardOperationConsultationData convert(Document source) {
         CardOperationConsultationData.CardOperationConsultationDataBuilder builder = CardOperationConsultationData.builder();
         builder.number(source.getLong("number"))
                 .publishDate(source.getDate("publishDate").toInstant());
@@ -38,7 +38,7 @@ public class CardOperationReadConverter implements Converter<Document, CardOpera
             builder.type(CardOperationTypeEnum.valueOf(type));
 
         try {
-            List<Document> cards = (List<Document>) source.get("cards");
+            List<Document> cards = (List<Document>) source.get("rawCards");
             if(cards!=null)
                 for(Document cardDoc:cards){
                     builder.card(cardConverter.convert(cardDoc));

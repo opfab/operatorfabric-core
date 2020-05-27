@@ -11,7 +11,10 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 
@@ -39,7 +42,21 @@ public class CardOperationConsultationData implements CardOperation {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> cardIds;
-    @Singular
+    
+    @Singular("card")
+    @JsonIgnore
+    private List<LightCardConsultationData> rawCards;
+    
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<? extends LightCard> cards;
+    @JsonProperty("cards")
+    public List< ? extends LightCard> getCards(){
+    	return rawCards;
+    }
+
+	@Override
+	//Used only by tests for deserialization
+	public void setCards(List<? extends LightCard> cards) {
+		this.setRawCards((List<LightCardConsultationData>)cards);
+	}
+    
 }
