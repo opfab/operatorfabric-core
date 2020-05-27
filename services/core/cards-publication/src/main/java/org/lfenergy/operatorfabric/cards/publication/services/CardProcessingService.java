@@ -26,8 +26,6 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
-
 import java.time.Instant;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -192,8 +190,8 @@ public class CardProcessingService {
         }
     }
 
-	public @Valid Mono<CardCreationReportData> processUserAcknowledgement(String name, String cardId) {
-		return Mono.just(cardRepositoryService.addUserAck(name, cardId));
+	public Mono<UserAckOperationResult> processUserAcknowledgement(Mono<String> cardUid, String userName) {
+		return cardUid.map(_cardUid -> cardRepositoryService.addUserAck(userName, _cardUid));
 	}
         
     /**
@@ -208,6 +206,10 @@ public class CardProcessingService {
         double cardWindowDurationMillis = windowDurationMillis / count;
         log.debug("{} cards handled in {} ms each (total: {})", count, cardWindowDurationMillis, windowDurationMillis);
     }
+
+	public Mono<UserAckOperationResult> deleteUserAcknowledgement(Mono<String> cardUid, String userName) {
+		return cardUid.map(_cardUid -> cardRepositoryService.deleteUserAck(userName, _cardUid));
+	}
 
 	
 

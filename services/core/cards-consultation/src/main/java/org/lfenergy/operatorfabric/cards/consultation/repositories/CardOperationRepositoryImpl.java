@@ -154,6 +154,6 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
 
 	private Consumer<CardOperationConsultationData> transformCardOperationFactory(String login) {
 		return cardOperation -> cardOperation.getRawCards().forEach(lightCard -> lightCard.setHasBeenAcknowledged(
-				lightCard.getUsersAcks() != null ? lightCard.getUsersAcks().contains(login) : false));
+				lightCard.getUsersAcks() != null && lightCard.getUsersAcks().contains(login)));
 	}
 }
