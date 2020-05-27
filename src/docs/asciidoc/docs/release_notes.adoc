@@ -18,8 +18,8 @@
 * [OC-775] Cards details remain displayed when selecting another criteria that doesn't return any result
 
 == Tasks
+* [OC-836] Remove netflix stack (eureka registry server) and config server for users microservice
 * [OC-838] Remove netflix stack (eureka registry server) and config server for cards-publication microservice
-
 * [OC-892] Add in documentation that it is not possible to use dot in json field names
 * [OC-845] Implement Git flow as our contribution and release workflow
 +
