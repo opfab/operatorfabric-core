@@ -95,6 +95,9 @@ public class CardPublicationData implements Card {
     @Singular
     @Indexed
     private List<String> entityRecipients;
+    @Singular
+    @Indexed
+    private List<String> externalRecipients;
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;

@@ -69,6 +69,7 @@ public class ArchivedCardPublicationData implements Card {
     private List<? extends TimeSpan> timeSpans;
     @Indexed
     private List<String> entityRecipients;
+    private List<String> externalRecipients;
 
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
@@ -92,6 +93,8 @@ public class ArchivedCardPublicationData implements Card {
         this.userRecipients = card.getUserRecipients() == null ? null : new ArrayList<>(card.getUserRecipients());
         this.groupRecipients = card.getGroupRecipients() == null ? null : new ArrayList<>(card.getGroupRecipients());
         this.entityRecipients = card.getEntityRecipients() == null ? null : new ArrayList<>(card.getEntityRecipients());
+        this.externalRecipients = card.getExternalRecipients() == null ? null : new ArrayList<>(card.getExternalRecipients());
+
     }
 
 }

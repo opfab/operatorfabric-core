@@ -70,3 +70,42 @@ Feature: fetchArchive
     When method get
     Then status 404
 
+
+    Scenario: fetchArchiveCard with new attribute externalRecipients
+
+        * def card =
+"""
+{
+	"publisher" : "api_test123",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "process1",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"externalRecipients" : ["api_test2","api_test16566111"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"a message"}
+}
+"""
+
+# Push card
+        Given url opfabPublishCardUrl + 'cards'
+        And request card
+        When method post
+        Then status 201
+        And match response.count == 1
+
+
+#get card with user tso1-operator
+        Given url opfabUrl + 'cards/cards/api_test123_process1'
+        And header Authorization = 'Bearer ' + authToken
+        When method get
+        Then status 200
+        And match response.externalRecipients[1] == "api_test16566111"
+        And def cardUid = response.uid

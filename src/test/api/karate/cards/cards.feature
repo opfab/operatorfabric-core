@@ -189,3 +189,42 @@ Feature: Cards
     When method post
     Then status 201
     And match response.count == 0
+
+
+  Scenario:  Post card with new attribute externalRecipients
+
+    * def card =
+"""
+{
+	"publisher" : "api_testExternalRecipients1",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "process1",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"externalRecipients" : ["api_test2","api_test165"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"}
+}
+"""
+
+# Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1
+
+#get card with user tso1-operator and new attribute externalRecipients
+    Given url opfabUrl + 'cards/cards/api_testExternalRecipients1_process1'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response.externalRecipients[1] == "api_test165"
+    And def cardUid = response.uid
