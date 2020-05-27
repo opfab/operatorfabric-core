@@ -8,7 +8,7 @@
 
 = Users Business service
 
-OperatorFabric Cards-Consultation Business service is a Spring Webflux application
+OperatorFabric Users Business service is a Spring Webflux application
 bootstrapped using SpringBoot.
 
 == Mandatory configuration, Profiles and default properties
