@@ -66,8 +66,18 @@
                   [attr.height]="dims.height"
                   class="realTimeLine opfab-timeline-realtimebar-color"
         ></svg:rect>
-        <svg:g *ngFor="let circle of circles" (mouseenter)="feedCircleHovered(circle)" ngx-tooltip
-            [tooltipTemplate]="tooltipTemplate">
+        <svg:g *ngFor="let circle of circles" type="button">
+
+        <svg:g *ngIf="(circle.count>1)" (click)="feedCircleHovered(circle)" container="body"   [ngbPopover]="tooltipTemplate"  [autoClose]="true">
+            <svg:circle [attr.cx]="xScale(circle.date)"
+                [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
+                [attr.opacity]="0.7" />
+            <text  [attr.x]="xScale(circle.date)"
+                [attr.y]="yScale(circle.circleYPosition)" text-anchor="middle" font-weight="bold" stroke-width="0px"
+                [attr.font-size]="13" dy=".3em">{{circle.count}} </text>
+        </svg:g>
+
+        <svg:g *ngIf="(circle.count==1)" (click)="showCard(circle.summary[0].cardId)" >
             <svg:circle [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
                 [attr.opacity]="0.7" />
@@ -76,9 +86,14 @@
                 [attr.font-size]="13" dy=".3em">{{circle.count}} </text>
         </svg:g>
     </svg:g>
+    </svg:g>
     <ng-template #tooltipTemplate>
-        {{currentCircleHovered.dateOrPeriod}} <br/>
-        Count: {{currentCircleHovered.count}} <br/>
-        Summary: <p *ngFor="let title of currentCircleHovered.summary"style="padding: 0px;margin: 0px;line-height: 10px">{{title.summaryDate}}<span class="nav-link" translate [translateParams]="title.parameters">{{title.i18nPrefix + title.key}}</span></p>
+        <div *ngFor="let title of currentCircleHovered.summary"style="padding: 0px;margin: 0px;line-height: 8px">
+           <br/>
+            <button class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
+                {{title.summaryDate}}  
+                <span translate [translateParams]="title.parameters" >{{title.i18nPrefix + title.key}}</span>
+            </button>
+        </div>
     </ng-template>
 </ngx-charts-chart>

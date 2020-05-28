@@ -21,7 +21,7 @@
     <div class="d-flex card-body p-0 border-0" *ngIf="open || !open">
         <div class="badge-border rounded-bottom-left bg-sev-{{lightCard.severity.toString()|lowercase}} col-1"></div>
         <div class="card-text p-1">
-            <span translate [translateParams]="lightCard.summary.parameters" *ngIf="open">{{i18nPrefix + lightCard.summary.key}}</span>
+            <span translate [translateParams]="lightCard.summary.parameters" *ngIf="open" ><div id="opfab-selected-card" >{{i18nPrefix + lightCard.summary.key}} </div></span>
                 <div *ngIf="actionsAppear">
                     <of-action *ngFor="let action of getActions()"
                         [action]="action"
