@@ -82,7 +82,8 @@ public class ArchivedCardConsultationData implements Card {
     @Singular
     @Indexed
     private List<String> entityRecipients;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
+    private List<String> externalRecipients;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends TimeSpan> timeSpans;
 }

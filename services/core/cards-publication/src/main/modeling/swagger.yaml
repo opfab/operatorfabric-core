@@ -361,6 +361,12 @@ definitions:
         type: array
         items:
           type: string
+      externalRecipients:
+        description: List of  external recipients
+        readOnly: true
+        type: array
+        items:
+          type: string
       entityRecipients:
         description: List of entity recipients
         type: array

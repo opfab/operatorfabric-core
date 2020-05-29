@@ -82,6 +82,9 @@ public class CardConsultationData implements Card {
     @Singular
     @Indexed
     private List<String> entityRecipients;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
+    private List<String> externalRecipients;
     @Singular
     private List<? extends TimeSpan> timeSpans;
 }
