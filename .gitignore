@@ -119,3 +119,4 @@ src/test/utils/karate/karate.jar
 ui/main/node_modules
 ui/main/reports
 ui/main/report.html
+ui/main/package-lock.json
