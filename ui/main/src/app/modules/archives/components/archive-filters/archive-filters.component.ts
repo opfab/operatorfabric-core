@@ -84,8 +84,9 @@ export class ArchiveFiltersComponent implements OnInit {
         if (checkElement(FilterDateTypes, key)) {
           const {date, time} = element;
           if (date) {
-            const dateString = transformToTimestamp(date, time);
-            params.set(key, [this.timeService.toNgBTimestamp(dateString)]);
+
+            const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
+            if (timeStamp!== 'NaN') params.set(key, [timeStamp]);
           }
         } else {
           if (element.length) {
@@ -108,7 +109,7 @@ export class ArchiveFiltersComponent implements OnInit {
         this.store.dispatch(new FlushArchivesResult());
         this.archiveForm.get("tags").setValue('');
         this.archiveForm.get("process").setValue('');
-        this.archiveForm.get("publishDateFrom").setValue({date :'', time:{hour: 0, minute: 0}});
+        this.archiveForm.get("publishDateFrom").setValue({date :'' , time:{hour: 0, minute: 0}});
         this.archiveForm.get("publishDateTo").setValue({date :'', time:{hour: 0, minute: 0}});
         this.archiveForm.get("activeFrom").setValue({date :'', time:{hour: 0, minute: 0}});
         this.archiveForm.get("activeTo").setValue({date :'', time:{hour: 0, minute: 0}});
