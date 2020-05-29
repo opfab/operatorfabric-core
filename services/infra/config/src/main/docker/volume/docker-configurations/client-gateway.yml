@@ -48,5 +48,11 @@ spring:
           - Path=/archives/**
         filters:
           - RewritePath=/archives/(?<path>.*), /$\{path}
+      - id: users
+        uri: http://users:8080
+        predicates:
+          - Path=/users/**
+        filters:
+          - RewritePath=/users/(?<path>.*), /$\{path}
 operatorfabric.gateway.configs:
   - web-ui.json
