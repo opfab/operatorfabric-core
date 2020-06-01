@@ -15,7 +15,6 @@ import {OAuthLogger,OAuthService,UrlHelperService}from 'angular-oauth2-oidc';
 export const emptyAppState4Test:AppState = {
     router: null,
     feed: null,
-    timeline: null,
     authentication: null,
     card: null,
     menu: null,
