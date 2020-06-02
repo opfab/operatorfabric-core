@@ -13,8 +13,6 @@ import {
     LoadMenu,
     LoadMenuFailure,
     LoadMenuSuccess,
-    SelectMenuLinkFailure,
-    SelectMenuLinkSuccess
 } from "@ofActions/menu.actions";
 
 describe('Menu Reducer', () => {
@@ -95,43 +93,5 @@ describe('Menu Reducer', () => {
         });
     });
 
-    describe('SelectMenuLinkSuccess', () => {
-        it('should set selected_iframe_url to corresponding payload', () => {
-            const previousState: MenuState = {
-                menu: getRandomMenus(),
-                loading: true,
-                error: getRandomAlphanumericValue(5, 12),
-                selected_iframe_url:getRandomAlphanumericValue(5, 12)
-            };
 
-            const actual_selected_iframe_url = getRandomAlphanumericValue(3,10);
-            const actualState = reducer(previousState, new SelectMenuLinkSuccess({iframe_url: actual_selected_iframe_url}));
-            expect(actualState).not.toBe(previousState);
-            expect(actualState).not.toEqual(previousState);
-            expect(actualState.menu).toEqual(previousState.menu);
-            expect(actualState.error).toEqual(previousState.error);
-            expect(actualState.loading).toEqual(previousState.loading);
-            expect(actualState.selected_iframe_url).toEqual(actual_selected_iframe_url);
-        });
-    });
-
-    describe('SelectMenuLinkFailure', () => {
-        it('should set error to specific message', () => {
-            const previousState: MenuState = {
-                menu: getRandomMenus(),
-                loading: true,
-                error: getRandomAlphanumericValue(5, 12),
-                selected_iframe_url:getRandomAlphanumericValue(5, 12)
-            };
-
-            const actual_error = new Error(getRandomAlphanumericValue(3,10));
-            const actualState = reducer(previousState, new SelectMenuLinkFailure({error: actual_error}));
-            expect(actualState).not.toBe(previousState);
-            expect(actualState).not.toEqual(previousState);
-            expect(actualState.menu).toEqual(previousState.menu);
-            expect(actualState.error).not.toBeNull();
-            expect(actualState.loading).toEqual(previousState.loading);
-            expect(actualState.selected_iframe_url).toEqual(previousState.selected_iframe_url);
-        });
-    });
 });

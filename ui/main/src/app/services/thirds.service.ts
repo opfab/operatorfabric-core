@@ -60,7 +60,6 @@ export class ThirdsService {
             params
         });
     }
-
     queryMenuEntryURL(thirdMenuId: string, thirdMenuVersion: string, thirdMenuEntryId: string): Observable<string> {
         return this.queryThird(thirdMenuId, thirdMenuVersion).pipe(
             switchMap(third => {
@@ -78,7 +77,7 @@ export class ThirdsService {
             map(menuEntry => menuEntry.url)
         );
     }
-
+    
     fetchHbsTemplate(publisher: string, version: string, name: string, locale: string): Observable<string> {
         const params = new HttpParams()
             .set('locale', locale)

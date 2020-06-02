@@ -7,10 +7,10 @@
 
 
 import {Component, OnInit} from '@angular/core';
-import {selectMenuStateSelectedIframeURL,} from "@ofSelectors/menu.selectors";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {ActivatedRoute} from '@angular/router';
+import { ThirdsService } from '@ofServices/thirds.service';
+
 
 @Component({
   selector: 'of-iframedisplay',
@@ -19,22 +19,21 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 })
 export class IframeDisplayComponent implements OnInit {
 
-  private _selectedIframeURL: SafeUrl;
+  public iframeURL: SafeUrl;
 
-  constructor(private store: Store<AppState>,
-              private sanitizer: DomSanitizer
+  constructor(
+              private sanitizer: DomSanitizer,
+              private route: ActivatedRoute,
+              private thirdService : ThirdsService
   ) { }
 
   ngOnInit() {
-
-    this.store.select(selectMenuStateSelectedIframeURL).subscribe( iframeURL => {
-      this._selectedIframeURL = this.sanitizer.bypassSecurityTrustResourceUrl(iframeURL);
-    })
-
-  }
-
-  get selectedIframeURL(): SafeUrl {
-    return this._selectedIframeURL;
+    this.route.paramMap.subscribe( paramMap => 
+        this.thirdService.queryMenuEntryURL(paramMap.get("menu_id"),paramMap.get("menu_version"),paramMap.get("menu_entry_id"))
+          .subscribe( url =>
+              this.iframeURL = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+          )
+    )
   }
 
 }
