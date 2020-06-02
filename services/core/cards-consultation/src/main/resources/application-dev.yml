@@ -44,7 +44,6 @@ management:
       exposure:
         include: '*'
 
-
 #here we put urls for all feign clients
 users:
   ribbon:

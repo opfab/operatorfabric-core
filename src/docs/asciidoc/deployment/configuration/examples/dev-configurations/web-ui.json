@@ -104,8 +104,8 @@
     "oauth2": {
       "client-id": "opfab-client",
       "flow": {
-        "delagate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client",
-        "mode": "CODE",
+        "delagate-url": "http://localhost:89/auth/realms/dev",
+        "mode": "IMPLICIT",
         "provider": "Opfab Keycloak"
       }
     },

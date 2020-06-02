@@ -83,6 +83,21 @@ services:
     - DEPENDS_ON=CONFIG
     volumes:
       - "../../../../src/main/docker/certificates:/certificates_to_add"
+  actions:
+    container_name: actions
+    depends_on:
+      - thirds
+    image: "lfeoperatorfabric/of-actions-business-service:SNAPSHOT"
+    user: ${USER_ID}:${USER_GID}
+    ports:
+      - "2105:8080"
+      - "4105:5005"
+    environment:
+      - REGISTRY_HOST=registry
+      - REGISTRY_PORT=8080
+      - DEPENDS_ON=CONFIG
+    volumes:
+      - "../../../../src/main/docker/certificates:/certificates_to_add"
   web-ui:
     image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
     ports:

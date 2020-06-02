@@ -10,84 +10,105 @@
 
 = Security Configuration
 
-== Common configuration
+Configure the security concern througout several files:
 
-This concern is configured within the `${OF_HOME}/services/infra/config` project
-into 3 distinct files:
+* `application.yml` of each `core service`;
+* `web-ui.jsom` served by the `web-ui` service;
+* `default.conf` of the `web-ui` service.
 
-* `application.yml`;
-* `web-ui.yml`;
-* `client-gateway.yml`.
+Each service use the `application.yml` file for its generic configuration. Customise the service using a dedicated `spring profile` or using a customised `application.yml`. Launch the service with a given profile to override all or part of the service properties.
+There are two profiles awailable `dev` and `docker`. The associated files are respectivly `application-dev.yml` and `application-docker.yml` located in `src/main/resources`
+of each `core service` root folder.
 
-They are located into the following folders within the `${OF_HOME}/services/infra/config/java/src/main/docker/volume` folder:
+== Run time
 
-* `dev-configurations`: to be use into `dev` mode;
-* `docker-configurations`: used by docker at run time.
+Provide the `spring profile` as parameter of the CLI launching the service. Override the default `application.yml` by placing a customized `application.yml` in a folder named `config` created in the folder of the service `jar`.
 
-EXAMPLE: the configuration for `dev` before compilation is done in the following files:
+== Within Docker images
 
-    - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/application.yml`;
-    - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/client-gateway.ym`;
-    - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/web-ui.yml`.
+By construction, the `application-docker.yml` configures the docker running service. To override this configuration, use a docker volume mapped to `/config/application.yml` path
+within the images.
 
-For test purposes in `dev` mode, it's possible to edit files located into ``${OF_HOME}/services/infra/config/build/docker-volume/dev-configurations`.
-Be aware that those changes will be lost after a new compilation or even a simple re-run of the project.
-
-This configuration files follow the `springframework` configuration convention. Within a same file it's possible to
-use `link:https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions[SpEL ${}]` convention. For example,  `${AnotheProperty}` allows to re-use the value of `AnotherProperty` already declared.
-It helps to avoid typos or missing to report some changes. An example could be find below into the `delegate-url` property.
-
-=== application.yml
+== application.yml
 
 |===
 |name|default|mandatory?|Description
 
 |operatorfabric.security.oauth2.client-id|null|yes| Oauth2 client id used by OperatorFabric may be specific for each service
-|operatorfabric.security.oauth2.client-secret|null|yes| Oauth2 client secret used by OperatorFabric may be specific for each service
 |operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as user login or id
 |operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim is used as token expiration timestamp
-|spring.security.oauth2.resourceserver.jwt.provider-url|null|yes|The keycloak instance url
-|spring.security.oauth2.resourceserver.jwt.provider-realm|null|yes|The realm name within the keycloak instance
+|spring.security.provider-url|null|no|The keycloak instance url. Helper properties used in `application-dev.yml`
+|spring.security.provider-realm|null|no|The realm name within the keycloak instance. Helper properties used in `application-dev.yml`
+|spring.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificat used to verify the jwt signature
 |===
 
-example of `application.yml`
+[NOTE]
+====
+**example of `application-dev.yml`**
 
-[source]
+[source,yml]
 ----
 operatorfabric:
     security:
         oauth2:
             client-id: opfab-client
-            client-secret: opfab-keycloak-secret
         jwt:
             login-claim: preferred_username
             expire-claim: exp
+spring:
+  security:
+    provider-url: http://localhost:89
+    provider-realm: dev
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
 ----
+where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one 
+and where `jwt-set-uri` reuses `provider-url` and `provider-realm` properties.
 
-where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one.
+**example of `application-docker.yml`**
 
-=== client-gateway.yml
+[source,yml]
+----
+operatorfabric:
+    security:
+        oauth2:
+            client-id: opfab-client
+        jwt:
+            login-claim: preferred_username
+            expire-claim: exp
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/auth/realms/dev/protocol/openid-connect/certs
+----
+where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one
+and
+where `jwt-set-uri` property value is directly set.
 
-include::client-gateway_filters-and-cors-configuration.adoc[leveloffset=+2]
+====
 
-=== web-ui.yml
+=== `web-ui.json`
 
-For OAuth2 security concerns into this file, there are two way to configure it, based on the Oauth2 chosen flow.
+For OAuth2 security concerns into this file, there are two ways to configure it, based on the Oauth2 chosen flow.
 There are two common properties:
 
-- `operatorfabric.security.oauth2.flow.provider` which corresponds to the OAuth2 provider.
-- `operatorfabric.security.realm-url`: which is the OAuth2 realm provider under which the OpertaroFabric client is declared.
-- `operatorfabric.security.provider-url`: which is the The keycloak server instance.
+- `operatorfabric.security.oauth2.flow.provider` which corresponds to the OAuth2 provider;
+- `operatorfabric.security.realm-url`: which is the OAuth2 realm provider under which the OpertaroFabric client is declared;
+- `operatorfabric.security.provider-url`: which is the keycloak server instance.
 
-== OAuth2 Flows and specific configuration
+=== OAuth2 Flows and specific configuration
 
 There are 3 OAuth2 Authentication flows available into OperatorFabric UI:
 
-- password grant: referred as PASSWORD mode flow;
-- code flow : referred as  CODE mode flow;
-- implicit flow: referred as IMPLICIT mode flow.
+- password grant: referred as `PASSWORD` mode flow;
+- code flow : referred as `CODE` mode flow;
+- implicit flow: referred as `IMPLICIT` mode flow.
 
-=== OAuth2 IMPLICIT Flow
+==== OAuth2 IMPLICIT Flow
 
 It had its own way of configuration.
 To enable IMPLICIT Flow authentication the following properties need to be set:
@@ -95,55 +116,64 @@ To enable IMPLICIT Flow authentication the following properties need to be set:
 - `operatorfabric.security.oauth2.flow.mode` to `IMPLICIT`;
 - `operatorfabric.security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the `.well-known/openid-configuration` end-point used for authentication configuration.
 
-==== Example of configuration for IMPLICIT Flow 
+===== Example of configuration for IMPLICIT Flow 
 
-[source]
+[source,json]
 ----
-operatorfabric:
-  keycloak:
-    realm: dev
-  security:
-    oauth2:
-      flow:
-        mode: IMPLICIT
-        provider: Opfab Keycloak
-        delagate-url: http://localhost:89/auth/realms/${operatorfabric.keycloak.realm}
+{
+  "operatorfabric": {
+    "security": {
+      "oauth2": {
+        "flow": {
+          "mode": "IMPLICIT",
+          "provider": "Opfab Keycloak",
+          "delegate-url": "http://localhost:89/auth/realms/dev"
+        }
+      }
+    }
+  }
+}
 ----
 
-Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value of the `operatorfabric.keycloak.realm` declared earlier, `dev` here.
-For keycloak instance used for dev purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred. The 
-url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
+Within the `delegate-url` property `dev` is the keycloak client realm of OperatorFabric.
+For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred.
+The url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
 
+==== OAuth2 PASSWORD or CODE Flows
 
-=== OAuth2 PASSWORD or CODE Flows
-
-These two modes share the same way of declaring the delegate URL. The default configuration for dev is set to `CODE` and work straight away.
+These two modes share the same way of declaring the delegate URL.
+`CODE` is the default mode of authentication for `deploy` docker-compose environment.
 
 - `operatorfabric.security.oauth2.flow.mode` to `PASSWORD` or `CODE`;
 - `operatorfabric.security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the protocol used for authentication.
 
-==== Example of Configuration For CODE Flow
+===== Example of Configuration For CODE Flow
 
-[source]
+[source,json]
 ----
-operatorfabric:
-  keycloak:
-    realm: dev
-  security:
-    oauth2:
-      flow:
-        mode: CODE
-        provider: Opfab Keycloak
-        delagate-url: http://localhost:89/auth/realms/${operatorfabric.keycloak.realm}/protocol/openid-connect/auth?response_type=code&client_id=opfab-client
+{
+  "operatorfabric": {
+    "security": {
+      "oauth2": {
+        "flow": {
+          "mode": "CODE",
+          "provider": "Opfab Keycloak",
+          "delaeate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client"
+        }
+      }
+    }
+  }
+}
 ----
 
-Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value(also `dev` here) of the `operatorfabric.keycloak.realm` declared earlier.
-Here, the `client-id` value is `opfab-client` which is define as client under the `realm` named dev on the dev keycloak instance.
+Within the `delegate-url` property `dev` is the keycloak client realm of OperatorFabric.
+For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred.
+Here, the `client-id` value is `opfab-client` which is define as client under the `realm` named `dev` on the dev keycloak instance.
 
-== Using token
+=== Using token
 //TODO Move to dev_env ?
 
-=== Get a token
+==== Get a token
 
 End point: `http://localhost:2002/auth/token`
 
@@ -152,16 +182,16 @@ Method: `POST`
 Body arguments:
 
 - client_id: `string` constant=`clientIdPassword`;
- - grant_type: `string` constant=`password`;
- - username: `string` any value, must match an OperatorFabric registered user
-name;
- - password: `string` any value;
+- grant_type: `string` constant=`password`;
+- username: `string` any value, must match an OperatorFabric registered user name;
+- password: `string` any value;
 
 The following examples will be for `admin` user.
 
-==== Curl
+===== Curl
 
 command:
+
 ....
 curl -s -X POST -d 
 "username=admin&password=test&grant_type=password&client_id=clientIdPassword" 
@@ -169,6 +199,7 @@ http://localhost:2002/auth/token
 ....
 
 example of expected result:
+
 ....
 {"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cC
 I6MTU1MjY1OTczOCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOi
@@ -191,7 +222,7 @@ ires_in":1799,"scope":"read
 user_info","jti":"02d82e85-13f0-4678-974d-18eb06215a65"}
 ....
 
-==== Httpie
+===== Httpie
 
 ....
 http --form POST http://localhost:2002/auth/token username=admin password=test 
@@ -199,6 +230,7 @@ grant_type=password client_id=clientIdPassword
 ....
 
 example of expected result:
+
 ....
 .HTTP/1.1 200 OK
 Cache-Control: no-store
@@ -237,17 +269,14 @@ qO-fkjTVRjy_LBXGq9zkn0ZeQ3BUe1GuthvGjaA",
 }
 ....
 
-=== Extract token
+==== Extract token
 
-From the previous results, the data need to be considered to be authenticated 
-by OperatorFabric services is the content of the `"access_token"` attribute of 
-the body response. 
+From the previous results, the data need to be considered to be authenticated by OperatorFabric services is the content of the `"access_token"` attribute of the body response.
 
-Once this value extracted, it need to be passed at the end of the value of the 
-http HEADER of type `Authorization:Bearer`.
+Once this value extracted, it need to be passed at the end of the value of the http HEADER of type `Authorization:Bearer`.
 example from previous results:
 
-==== Curl
+===== Curl
 
 ....
 Authorization:Bearer 
@@ -261,7 +290,7 @@ PZwhluhxq0D2zPK1OSzqiezsd5kX5V8XI4MipDhaAbPYroL94banZTn9RmmAKZCAYVM-mmHbjk8mF89f
 L9rKf9EUNhxOG6GE0MDqB3LLLcyQ6sYUmpqdP5Z94IkAN-FpC7k93_-RDw
 ....
 
-==== Httpie
+===== Httpie
 
 ....
 Authorization:Bearer 
@@ -275,10 +304,9 @@ scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeApKdfDJ
 6o4szR71SIFCBERxCH9TyUxsFywWL3e-YnXMiP2J08eB8O4YwhYQEFqB8Q
 ....
 
+==== Check a token
 
-=== Check a token 
-
-==== Curl
+===== Curl
 
 from previous example
 
@@ -308,8 +336,7 @@ which gives the following example of result:
 }
 ....
 
-
-==== Httpie
+===== Httpie
 
 from previous example:
 

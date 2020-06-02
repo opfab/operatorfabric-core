@@ -22,20 +22,22 @@ SPA:: stands for *Single Page Application*
 
 === Linux
 
+=== Front End development
 //TODO Explain that the back needs to be running to be able to test in 4200. Replace steps below by link to appropriate doc
 
+OperatorFabric uses 4 external services to run properly :
+ 
+ * an event queue: RabbitMQ;
+ * a no SQL database: MongoDB;
+ * an authentication provider: keycloak;
+ * a web server: Nginx.
+Those instances are available as docker images in the project. Use `docker-compose` and the `${OF_HOME}/src/main/docker/dev-environment/docker-compose.yml`
+to run them.
 After launching docker containers, use the following command line `$OF_HOME/bin/run_all.sh start` to run the application.
 Once the whole application is ready, you should have the following output in your terminal:
 
 [source, shell]
 ----
-##########################################################
-Starting client-gateway-cloud-service, debug port: 5008
-
-##########################################################
-pid file: $OF_HOME/services/infra/client-gateway/build/PIDFILE
-Started with pid: 7479
-
 ##########################################################
 Starting users-business-service, debug port: 5009
 
@@ -57,7 +59,7 @@ Starting cards-publication-business-service, debug port: 5012
 pid file: $OF_HOME/services/core/cards-publication/build/PIDFILE
 ----
 
-Wait a moment before trying to connect to the`SPA`, leaving time for the`client-gateway` to boot up completely.
+Wait a moment before trying to connect to the`SPA`, leaving time for the OperatorFabricServices to boot up completely.
 
 The `SPA`, on a local machine, is available at the following Url: `http://localhost:2002/ui/`.
 
@@ -71,7 +73,9 @@ To test the reception of cards, you can use the following script to create dummy
 ${OF_HOME}/services/core/cards-publication/src/main/bin/push_cards_loop.sh
 ----
 
-Once logged in, with that script running in the background, you should be able to see some cards displayed in `http://localhost:2002/ui/feed`.
+For more realistic card sending use, once Karate env correctly configured, the Karate script called `${OF_HOME}/src/test/api/karate/launchAllCards.sh`.
+
+Once logged in, after one of those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/ui/feed`.
 
 
 == Build
