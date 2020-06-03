@@ -7,6 +7,7 @@ plugins {
     id "signing"
     id "org.owasp.dependencycheck" version "5.2.0"
     id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'org.sonarqube' version '3.0' apply false
 }
 
 ext.versions = new Properties()
@@ -141,13 +142,17 @@ subprojects {
     version operatorfabric.version
     apply plugin: "com.github.jk1.dependency-license-report"
     apply plugin: 'org.owasp.dependencycheck'
+    
 
     if (project.name != 'main-user-interface') {
         task securityReport {
             dependsOn 'dependencyCheckAnalyze'
         }
-    }
+    }   
     
+    if (project.parent.path.startsWith(':services:')){
+        apply plugin: 'org.sonarqube'
+    }
 
     licenseReport {
         renderers = [new InventoryHtmlReportRenderer()]
