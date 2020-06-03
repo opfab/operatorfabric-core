@@ -5,9 +5,6 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-
-
-
 = OperatorFabric Community
 
 The aim of this document is to present the OperatorFabric community, its code of conduct and to welcome contributors!
@@ -75,6 +72,8 @@ include::workflow.adoc[leveloffset=+2]
 to have to maintain these mentions (since this information is tracked by git anyway).
 
 include::documentation.adoc[leveloffset=+2]
+
+include::copyright.adoc[leveloffset=+2]
 
 == Project Governance
 

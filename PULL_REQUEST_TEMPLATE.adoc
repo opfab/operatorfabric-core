@@ -30,4 +30,6 @@ to be on the release notes).
 * Build and run OpFab locally to see the new feature or bug fix at work. In the case of a new feature, it's also a way
 of making sure that the configuration documentation is correct and easily understandable.
 * Depending on the scope of the PR , build docker images and test in docker mode
+* Check that the copyright header has been updated on the changed files if need be, and in the case of a first-time
+    contributor, make sure they're added to the AUTHORS.txt file.
 // end::review_checklist[]
