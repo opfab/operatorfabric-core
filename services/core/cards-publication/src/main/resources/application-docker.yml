@@ -28,3 +28,7 @@ operatorfabric:
       login-claim: preferred_username
       expire-claim: exp
 
+#here we put urls for all feign clients
+users:
+  ribbon:
+    listOfServers: users:8080

@@ -10,6 +10,7 @@ package org.lfenergy.operatorfabric.cards.publication;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperatorFabricMongo;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.EnableReactiveOperatorFabricOAuth2;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +22,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @SpringBootApplication
 @Slf4j
 @RefreshScope
+@EnableReactiveOperatorFabricOAuth2
 @EnableOperatorFabricMongo
 @ImportResource("classpath:/amqp.xml")
 public class CardPublicationApplication {

@@ -9,10 +9,11 @@ dependencies {
     annotationProcessor boot.annotationConfiguration
 
     compile boot.starterWebflux
-    compile project(':tools:spring:spring-mongo-utilities')
     compile project(':client:cards-client-data')
-
+    compile project(':tools:spring:spring-mongo-utilities')
+    compile project(':tools:spring:spring-oauth2-utilities')
     testCompile testing.reactor
+    testCompile project(':tools:spring:spring-test-utilities')
 }
 
 bootJar {

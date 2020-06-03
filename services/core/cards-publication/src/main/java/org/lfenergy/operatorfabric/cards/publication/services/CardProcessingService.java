@@ -12,6 +12,8 @@ import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.services.processors.UserCardProcessor;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -21,7 +23,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
-import java.util.*;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -42,6 +44,9 @@ public class CardProcessingService {
     private CardNotificationService cardNotificationService;
     @Autowired
     private CardRepositoryService cardRepositoryService;
+    @Autowired
+    private UserCardProcessor userCardProcessor;
+
 
 
     public Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards) {
@@ -58,8 +63,28 @@ public class CardProcessingService {
                 });
     }
 
+    public Mono<CardCreationReportData> processUserCards(Flux<CardPublicationData> pushedCards, User user) {
+        long windowStart = Instant.now().toEpochMilli();
+        Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
+        cards=registerValidationProcess(cards);
+        cards= userCardPublisherProcess(cards,user);
+        return registerPersistenceAndNotificationProcess(cards, windowStart)
+                .doOnNext(count -> log.debug("{} pushed Cards persisted", count))
+                .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
+                .onErrorResume(e -> {
+                    log.error("Unexpected error during pushed Cards persistence", e);
+                    return Mono.just(
+                            new CardCreationReportData(0, "Error, unable to handle pushed Cards: " + e.getMessage()));
+                });
+    }
+
+
     private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards) {
         return cards.doOnNext(ignoreErrorDo(recipientProcessor::processAll));
+    }
+
+    private Flux<CardPublicationData> userCardPublisherProcess(Flux<CardPublicationData> cards, User user) {
+        return cards.doOnNext(card-> userCardProcessor.processPublisher(card,user));
     }
 
     private static Consumer<CardPublicationData> ignoreErrorDo(Consumer<CardPublicationData> onNext) {
@@ -77,7 +102,6 @@ public class CardProcessingService {
      * process.
      *
      * @param cards
-     * @param publishDate
      * @return
      */
     private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards) {

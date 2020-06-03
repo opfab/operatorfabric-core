@@ -7,5 +7,6 @@ java -jar karate.jar                              \
       cards/fetchArchivedCard.feature             \
       cards/fetchArchivedCardsWithParams.feature  \
       cards/getCardSubscription.feature           \
+      cards/userCards.feature                     \
       #cards/updateCardSubscription.feature
 
