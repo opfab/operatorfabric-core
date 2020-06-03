@@ -1,3 +1,10 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
 Please read through the checklist below to make sure that you haven't forgotten anything before submitting your PR.
 Then, remove the text and replace it with your PR comment.
 
