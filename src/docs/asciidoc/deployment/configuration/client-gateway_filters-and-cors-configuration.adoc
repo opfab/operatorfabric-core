@@ -8,63 +8,134 @@
 
 
 
-= Filters and CORS configuration
+= NGINX revers proxy and CORS configuration
 
-== Authentication Server
+OperatorFabric cConfigures Nginx with a custom `default.conf` file used as a docker
+volume in the `web-ui` docker container.
 
-In the configuration service `client-gateway.yml` file:
+== Reverse proxy
 
-    * The application must set up a route to the oauth server
-    ** `/auth/token(?<path>.*)`: must match the oauth2 token entry point;
-    ** `/auth/code/(?<params>.*)`: must match the auth entry point with specific query
-  parameters like `response_type=code&client_id=[client id]&$\{params}`;
-    ** `/auth/check_token`: must match token introspection entry point
-    * The application must add request header for each request:
-    ** `AddRequestHeader: Authorization, Basic`: followed, separated with a space, by the `OAuth2 client-id` and the `OAuth2 client-secret` encoded in base64.
-    * The application may set up CORS rules if api are to be accessed from browser outside of
-the deployment domain
+The reverse proxy configuration answers the front-end needs.
 
-Configuration example of the filters, for the docker dev keycloak:
-```
-spring.cloud.gateway.routes[0].filters:
-        - RewritePath=/auth/token(?<path>.*), /auth/realms/dev/protocol/openid-connect/token$\{path}
-        - RewritePath=/auth/code/(?<params>.*), /auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&$\{params}
-        - RewritePath=/auth/check_token, /auth/realms/dev/protocol/openid-connect/token/introspect
-        - AddRequestHeader=Authorization, Basic b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==
-```
+There are two different configurations depending on docker-compose environment.
 
-where:
+The configuration contains the docker DNS provider as a resolver to find services within
+the docker-compose network, such as `keycloak` in the http context (above server context).
 
-- `spring.cloud.gateway.routes.uri`: is your keycloak instance
-- `spring.cloud.gateway.routes[0]` is the routes with `id` equals to `auth`;
-- `/realms/dev`: is the keycloak realm where `opfab-client` is defined.
-- `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==`: is the base64 encoded string of `opfab-client:opfab-keycloak-secret` with
-`opfab-client` as client-id and `opfab-keycloak-secret` its client secret.
+[source]
+====
+# docker-compose DNS used to resolved keycloak services
+resolver 127.0.0.11 ipv6=off;
+====
 
 
-== Action Service
+=== `dev-environment` docker-compose
 
-In the  configuration service `client-gateway.yml` file, the application must set up the `URI` of the `Action Service`.
+In this configuration, NGINX server maps front-end end-point calls
+against the ports exposed by the running `core` services. As the NGINX server lives in the docker-compose network,
+it accesses the native local services using the `172.17.0.1` ip.
 
-To do so, the `spring.cloud.gateway.routes.id="action".uri` property is set with the actual value of this service.
+==== Cards example
+[source]
+====
+    location /cards/ {
+## CORS configuration omitted
+       proxy_set_header Host $http_host;
+       proxy_pass http://172.17.0.1:2104/;
+    }
 
-In the case of a development set-up, this value is `http://localhost:2105` where `2105` 
-is the default port as set in the `application.yml` used by the `Action service` as configuration.
+====
 
-`client-gateway.yml` of the `dev-configuration` as example:
-```
-spring:
-  cloud:
-    gateway:
-      routes:
-      - id: actions
-        uri: http://localhost:2105
-        predicates:
-        - Path=/actions/**
-        filters:
-        - RewritePath=/actions/(?<path>.*), /$\{path}
 
-```
+=== `deploy` docker-compose
 
-As explained earlier, the key to configure is `uri` of the `spring.cloud.gateway.routes` with the `id`
-equals to `actions`.
+In this configuration, NGINX server maps front-end end-point calls against the `core` services in docker containers.
+As all services run in the docker-compose environment, the mapping use directly their name with the `8080` port.
+
+==== Cards example
+[source]
+====
+    location /cards/ {
+       proxy_set_header Host $http_host;
+       proxy_pass http://cards-consultation:8080/;
+    }
+====
+
+=== Common Authentication Configuration
+
+To correctly reach the Authentication Provider, there are 3 properties to configures :
+
+- $KeycloakBaseUrl: the url of the Authentication provider;
+- $OperatorFabricRealm: the realm associated with OperatorFabric in the Authentication Provider (Keycloak):
+- $ClientPairOFAuthentication: a base64 encoded string of the client id and associated secret id separated by a colon(':').
+
+For both of the following examples, the encoded string corresponds to `opfab-client:opfab-keycloak-secret`.
+
+=== `dev-environment` example
+[source]
+====
+# Url of the Authentication provider
+    set $KeycloakBaseUrl "http://keycloak:8080";
+# Realm associated to OperatorFabric within the Authentication provider
+    set $OperatorFabricRealm "dev";
+
+# base64 encoded pair of authentication in the form of 'client-id:secret-id'
+set $ClientPairOFAuthentication "b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==" ;
+====
+
+=== `deploy` example
+[source]
+====
+# Url of the Authentication provider
+    set $KeycloakBaseUrl "http://keycloak:8080";
+# Realm associated to OperatorFabric within the Authentication provider
+    set $OperatorFabricRealm "dev";
+
+# base64 encoded pair of authentication in the form of 'client-id:secret-id'
+set $ClientPairOFAuthentication "b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==" ;
+====
+== CORS for `ng serve`
+
+The `dev-environment` docker-compose configuration is already compatible. See the end of this section to enable it into
+`deploy` one.
+
+Here is the way to declare in NGINX the headers needed in general to enable CORS.
+
+[source]
+====
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Credentials' 'true';
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+    add_header 'Access-Control-Allow-Headers' 'authorization';
+====
+
+But as the `ng serve` is proxying all its requests, the http `OPTION` method needs specific headers.
+As NGINX doesn't seem to mutualize header declaration, the declaration of the former ones is also mandatory as seen in the above example.
+
+[source]
+====
+      if ($request_method = 'OPTIONS') {
+          add_header 'Access-Control-Allow-Origin' '*';
+          add_header 'Access-Control-Allow-Credentials' 'true';
+          add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+          add_header 'Access-Control-Allow-Headers' 'authorization';
+          add_header 'Content-Length' 0;
+          add_header 'Vary' 'Origin';
+          add_header 'Vary' 'Access-Control-Request-Method' ;
+          add_header 'Vary' 'Access-Control-Request-Headers';
+
+          return 204;
+           }
+====
+
+The convention is to send a `204` status back.
+
+This configuration needs to be repeated in each mapping.
+
+== Use `ng serve` with `deploy` docker-compose
+
+Modify `${OF_HOME}/src/main/docker/docker-compose.yml` as following.
+
+For the `web-ui` service declaration change `./default.conf` with `./default-web-dev.conf`.
+
+Then run your `docker-compose` or stop and re-run the `web-ui` service for the change to be activated.
