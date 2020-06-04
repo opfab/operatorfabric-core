@@ -70,6 +70,7 @@ class GivenNonAdminUserThirdControllerShould {
         this.mockMvc = webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
+        service.loadCache();
     }
 
     @AfterAll
@@ -84,7 +85,7 @@ class GivenNonAdminUserThirdControllerShould {
         mockMvc.perform(get("/thirds"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$", hasSize(2)))
         ;
     }
 
@@ -225,7 +226,7 @@ class GivenNonAdminUserThirdControllerShould {
             mockMvc.perform(get("/thirds"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$", hasSize(1)));
+                    .andExpect(jsonPath("$", hasSize(2)));
 
 
         }
@@ -235,6 +236,21 @@ class GivenNonAdminUserThirdControllerShould {
         class DeleteOnlyOneThird {
         	
         	static final String bundleName = "first";
+        	
+        	@BeforeEach
+            void setup() throws Exception {
+        		if (Files.exists(testDataDir))
+  			      Files.walk(testDataDir, 1).forEach(p -> silentDelete(p));
+  			    copy(Paths.get("./src/test/docker/volume/thirds-storage"), testDataDir);
+  			    service.loadCache();
+            }
+        	
+        	@Test
+            void deleteBundleByNameAndVersionWhichNotBeingDeafult() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName+"/versions/0.1"));
+                result
+                        .andExpect(status().isForbidden());
+            }
         	
         	@Test
             void deleteGivenBundle() throws Exception {
@@ -260,7 +276,7 @@ class GivenNonAdminUserThirdControllerShould {
                     mockMvc.perform(get("/thirds"))
                             .andExpect(status().isOk())
                             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                            .andExpect(jsonPath("$", hasSize(1)));
+                            .andExpect(jsonPath("$", hasSize(2)));
                 }
             }
         	

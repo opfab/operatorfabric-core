@@ -397,6 +397,36 @@ paths:
           description: No such third
         '401':
           description: Authentication required
+  
+  '/thirds/{thirdName}/versions/{version}':
+    delete:
+      tags:
+        - thirds
+      summary: Deletion of existing version of Third data
+      description: Deletion of existing version of Third data
+      operationId: deleteBundleVersion
+      produces:
+        - application/json
+      parameters:
+        - name: thirdName
+          in: path
+          description: Name of Third to delete
+          required: true
+          type: string
+        - name: version
+          in: path
+          description: Version of Third to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: OK          
+        '401':
+          description: Authentication required
+        '404':
+          description: Not found  
+        '500':
+          description: Unable to delete submitted version of bundle
 definitions:
 
   ActionEnum:

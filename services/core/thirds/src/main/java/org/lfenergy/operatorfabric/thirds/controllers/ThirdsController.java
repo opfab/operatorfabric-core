@@ -212,10 +212,33 @@ public class ThirdsController implements ThirdsApi {
 					.message("Bundle not found").error(e.getMessage()).build(),
 					"Bundle directory not found", e);
 		} catch (IOException e) {
-			log.error("IOException while deleting bundle directory", e);
+			String message = "IOException while deleting bundle directory";
+			log.error(message, e);
 			throw new ApiErrorException(ApiError.builder().status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.message("unable to delete submitted bundle").error(e.getMessage()).build(),
-					"IOException while deleting bundle directory", e);
+					message, e);
+		}
+	}
+
+	@Override
+	public Void deleteBundleVersion(HttpServletRequest request, HttpServletResponse response, String thirdName,
+			String version) throws Exception {
+		try {
+			service.deleteVersion(thirdName,version);
+			// leaving response body empty
+			response.setStatus(204);
+			return null;
+		} catch (FileNotFoundException e) {
+			log.error("Bundle directory not found when wanted to delete bundle", e);
+			throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+					.message("Bundle not found").error(e.getMessage()).build(),
+					"Bundle directory not found", e);
+		} catch (IOException e) {
+			String message = "IOException while deleting bundle directory";
+			log.error(message, e);
+			throw new ApiErrorException(ApiError.builder().status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.message("unable to delete submitted bundle").error(e.getMessage()).build(),
+					message, e);
 		}
 	}
     
