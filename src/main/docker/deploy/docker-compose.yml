@@ -26,62 +26,8 @@ services:
     ports:
     - "89:8080"
     - "90:9990"
-  config:
-    container_name: config
-    depends_on:
-     - rabbitmq
-    image: "lfeoperatorfabric/of-configuration-cloud-service:SNAPSHOT"
-    user: ${USER_ID}:${USER_GID}
-    ports:
-     - "2000:8080"
-     - "4000:5005"
-    expose:
-     - "8080"
-    environment:
-     - RABBITMQ_HOST=rabbitmq
-     - RABBITMQ_PORT=5672
-     - RABBITMQ_USER=guest
-     - RABBITMQ_PASSWORD=guest
-     - REGISTRY_HOST=registry
-     - REGISTRY_PORT=8080
-    volumes:
-     - "../../../../src/main/docker/certificates:/certificates_to_add"
-     - "../../../../services/infra/config/src/main/docker/volume/docker-configurations:/service-config"
-  registry:
-    container_name: registry
-    depends_on:
-     - config
-    image: "lfeoperatorfabric/of-registry-cloud-service:SNAPSHOT"
-    user: ${USER_ID}:${USER_GID}
-    ports:
-     - "2001:8080"
-     - "4001:5005"
-    expose:
-     - "8080"
-    environment:
-     - CONFIG_HOST=config
-     - CONFIG_PORT=8080
-    volumes:
-      - "../../../../src/main/docker/certificates:/certificates_to_add"
-  client_gateway:
-    container_name: client_gateway
-    depends_on:
-     - registry
-    image: "lfeoperatorfabric/of-client-gateway-cloud-service:SNAPSHOT"
-    user: ${USER_ID}:${USER_GID}
-    ports:
-     - "2002:8080"
-     - "4002:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
-    volumes:
-      - "../../../../src/main/docker/certificates:/certificates_to_add"
   users:
     container_name: users
-    depends_on:
-     - registry
     image: "lfeoperatorfabric/of-users-business-service:SNAPSHOT"
     user: ${USER_ID}:${USER_GID}
     ports:
@@ -95,9 +41,9 @@ services:
       - "../../../../src/main/docker/certificates:/certificates_to_add"
   thirds:
     container_name: thirds
-    depends_on:
-     - registry
     image: "lfeoperatorfabric/of-thirds-business-service:SNAPSHOT"
+    depends_on:
+      - mongodb
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2100:8080"
@@ -111,9 +57,9 @@ services:
      - "../../../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
   cards-publication:
     container_name: cards-publication
-    depends_on:
-     - registry
     image: "lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT"
+    depends_on:
+      - mongodb
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2102:8080"
@@ -126,8 +72,6 @@ services:
       - "../../../../src/main/docker/certificates:/certificates_to_add"
   cards-consultation:
     container_name: cards-consultation
-    depends_on:
-     - registry
     image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
     user: ${USER_ID}:${USER_GID}
     ports:
@@ -142,19 +86,26 @@ services:
   actions:
     container_name: actions
     depends_on:
-    - registry
+      - thirds
     image: "lfeoperatorfabric/of-actions-business-service:SNAPSHOT"
     user: ${USER_ID}:${USER_GID}
     ports:
-    - "2105:8080"
-    - "4105:5005"
+      - "2105:8080"
+      - "4105:5005"
     environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
+      - REGISTRY_HOST=registry
+      - REGISTRY_PORT=8080
+      - DEPENDS_ON=CONFIG
     volumes:
       - "../../../../src/main/docker/certificates:/certificates_to_add"
   web-ui:
     image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
     ports:
-    - "2200:80"
+    - "2002:80"
+    depends_on:
+      - users
+      - thirds
+      - cards-consultation
+    volumes:
+      - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"
+      - "./default.conf:/etc/nginx/conf.d/default.conf"

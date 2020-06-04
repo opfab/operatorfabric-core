@@ -29,6 +29,8 @@ services:
     image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
     #user: ${USER_ID}:${USER_GID}
     ports:
-      - "2200:80"
+      - "2002:80"
     volumes:
-      - "../dev-environment/favicon.ico:/usr/share/nginx/html/favicon.ico"
+      - "./favicon.ico:/usr/share/nginx/html/favicon.ico"
+      - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"
+      - "./default.conf:/etc/nginx/conf.d/default.conf"

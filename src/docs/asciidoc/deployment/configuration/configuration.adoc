@@ -170,7 +170,6 @@ As the result, the group will be [ATTR1, ATTR2, roleA, roleB, roleC, USER, roleB
 include::actions_configuration.adoc[leveloffset=+2]
 include::cards-consultation_configuration.adoc[leveloffset=+2]
 include::cards-publication_configuration.adoc[leveloffset=+2]
-include::client-gateway_configuration.adoc[leveloffset=+2]
 include::config_configuration.adoc[leveloffset=+2]
 include::registry_configuration.adoc[leveloffset=+2]
 include::thirds_configuration.adoc[leveloffset=+2]

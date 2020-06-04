@@ -29,10 +29,6 @@ project
 │   │   ├──src
 │   │   ├──thirds (third-party-business-service)
 │   │   └──users (users-business-service)
-│   └──infra
-│       ├──client-gateway (client-gateway-cloud-service)
-│       ├──config (configuration-cloud-service)
-│       └──registry (registry-cloud-service)
 ├──web-ui
 ├──src
 |   ├──docs
@@ -78,14 +74,6 @@ microservices
 Third-party information management service
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/users[users (users-business-service)]: Users management
 service
-** link:https://github.com/opfab/operatorfabric-core/tree/master/services/infra[infra]: contains infrastructure microservices
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/infra/client-gateway[client-gateway
-(client-gateway-cloud-service)]: spring-gateway client side only gateway
-microservice, used to serve public apis and web ui
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/infra/config[config (configuration-cloud-service)]:
-spring-configuration centralized configuration microservice
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/infra/registry[registry (registry-cloud-service)]: eureka
-microservice registry
 * link:https://github.com/opfab/operatorfabric-core/tree/master/web-ui[web-ui]: project based on Nginx server to serve
 the OperatorFabric UI
 * link:https://github.com/opfab/operatorfabric-core/tree/master/src[src]
