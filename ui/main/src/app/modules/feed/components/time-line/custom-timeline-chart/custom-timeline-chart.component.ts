@@ -15,8 +15,12 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import * as _ from 'lodash';
 import { BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
-import {Store} from "@ngrx/store";
+import {select,Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
+import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import * as feedSelectors from '@ofSelectors/feed.selectors';
+
 
 
 @Component({
@@ -27,7 +31,7 @@ import {AppState} from "@ofStore/index";
 })
 export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit {
 
-
+  subscription: Subscription;
   public xTicks: Array<any> = [];
   public xTicksOne: Array<any> = [];
   public xTicksTwo: Array<any> = [];
@@ -54,9 +58,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   // TOOLTIP
   public currentCircleHovered;
   public circles;
-
-
-  @Input() cardsData;
+  public cardsData;
+  
   @Input() prod; // Workaround for testing, the variable is not set  in unit test an true in production mode 
   @Input() domainId;
   @Input() followClockTick;
@@ -85,6 +88,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   ngOnInit(): void {
     this.initGraph();
     this.updateRealTimeDate();
+    this.initDataPipe();
   }
 
   // set inside ngx-charts library verticalSpacing variable to 10
@@ -217,6 +221,40 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
   }
  
+
+
+  initDataPipe(): void {
+    this.subscription = this.store.pipe(select(feedSelectors.selectFilteredFeed))
+    .pipe(debounceTime(200), distinctUntilChanged())
+    .subscribe(value => this.getAllCardsToDrawOnTheTimeLine(value));
+  }
+
+
+  getAllCardsToDrawOnTheTimeLine(cards) {
+    const myCardsTimeline = [];
+    for (const card of cards) {
+        if (card.timeSpans && card.timeSpans.length > 0) {
+            card.timeSpans.forEach(timeSpan => {
+                const myCardTimelineTimespans = {
+                    date: timeSpan.start, 
+                    severity: card.severity, publisher: card.publisher,
+                    publisherVersion: card.publisherVersion, summary: card.title
+                };
+                myCardsTimeline.push(myCardTimelineTimespans);
+            });
+        } else {
+            const myCardTimeline = {
+                date: card.startDate,
+                severity: card.severity, publisher: card.publisher,
+                publisherVersion: card.publisherVersion, summary: card.title
+            };
+            myCardsTimeline.push(myCardTimeline);
+        }
+    }
+    this.cardsData = myCardsTimeline;
+    this.createCircles();
+}
+
 
   createCircles(): void {
 

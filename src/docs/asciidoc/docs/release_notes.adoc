@@ -15,6 +15,7 @@
 * [OC-868] As an admin I would like to be able to hide the time filtrer : https://opfab.github.io/documentation/current/deployment/#_web_ui
 * [OC-900] Modifiy the CardPublication service with a new field : externalRecipients
 * [OC-864] As a user I want to be able to reset archives filters so I can change my search criteria => Add a space between the search button and the Minutes field
+* [OC-939] Synchronize timeline with feed (When a filter is set in the feed, it applies as well in the timeline (severity, tags or business period))
 
 
 == Bugs
