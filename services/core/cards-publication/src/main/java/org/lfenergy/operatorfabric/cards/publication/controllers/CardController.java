@@ -14,6 +14,8 @@ package org.lfenergy.operatorfabric.cards.publication.controllers;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 /**
  * Synchronous controller
@@ -34,6 +37,8 @@ public class CardController {
     @Autowired
     private CardProcessingService cardProcessingService;
 
+
+
     /**
      * POST cards to create/update new cards
      * @param cards cards to create publisher
@@ -43,6 +48,15 @@ public class CardController {
     @ResponseStatus(HttpStatus.CREATED)
     public @Valid Mono<CardCreationReportData> createCards(@Valid @RequestBody Flux<CardPublicationData> cards){
         return cardProcessingService.processCards(cards);
+
+    }
+
+    @PostMapping("/userCard")
+    @ResponseStatus(HttpStatus.CREATED)
+    public @Valid Mono<CardCreationReportData> createUserCards(@Valid @RequestBody Flux<CardPublicationData> cards, Principal principal){
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        User user= (User) jwtPrincipal.getPrincipal();
+        return cardProcessingService.processUserCards(cards,user);
 
     }
 

@@ -10,7 +10,6 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
-import com.mongodb.client.result.DeleteResult;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
@@ -29,6 +28,7 @@ import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardRecei
 import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -88,6 +88,24 @@ class CardProcessServiceShould {
         @BeforeEach
         public void cleanBefore() {
                 testCardReceiver.clear();
+        }
+
+        private User user;
+
+
+        public  CardProcessServiceShould(){
+                user = new User();
+                user.setLogin("ret-operator");
+                user.setFirstName("Test");
+                user.setLastName("User");
+                List<String> groups = new ArrayList<>();
+                groups.add("rte");
+                groups.add("operator");
+                user.setGroups(groups);
+                List<String> entities = new ArrayList<>();
+                entities.add("newPublisherId");
+                entities.add("entity2");
+                user.setEntities(entities);
         }
 
         private Flux<CardPublicationData> generateCards() {
@@ -153,6 +171,20 @@ class CardProcessServiceShould {
         }
 
         @Test
+        void createUserCards() {
+                CardPublicationData card=CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
+                        .processId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+                        .title(I18nPublicationData.builder().key("title").build())
+                        .summary(I18nPublicationData.builder().key("summary").build())
+                        .startDate(Instant.now())
+                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .build();
+                StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card),user))
+                        .expectNextMatches(r -> r.getCount().equals(1)).verifyComplete();
+                checkCardPublisherId(card);
+        }
+
+        @Test
         void createCardsWithError() {
                 StepVerifier.create(cardProcessingService.processCards(Flux
                                 .concat(Flux.just(generateWrongCardData("PUBLISHER_1", "PROCESS_1")), generateCards())))
@@ -211,6 +243,17 @@ class CardProcessServiceShould {
                         return true;
                 } else {
                         log.warn("Expected card count " + expectedCount + " but was " + count);
+                        return false;
+                }
+        }
+
+        private boolean checkCardPublisherId(CardPublicationData card) {
+
+                CardPublicationData c = cardRepository.findByProcessId(card.getProcessId()).block();
+                if (user.getEntities().get(0).equals(card.getPublisher())) {
+                        return true;
+                } else {
+                        log.warn("Expected card publisher id is " + user.getEntities().get(0) + " but it was " + card.getPublisher());
                         return false;
                 }
         }
