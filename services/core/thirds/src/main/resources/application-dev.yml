@@ -6,13 +6,6 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
-  cloud:
-    discovery:
-      enabled: false
-    config:
-      discovery:
-        enabled: false
-      enabled: false
 
 operatorfabric.thirds:
   storage:

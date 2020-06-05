@@ -16,5 +16,3 @@ operatorfabric:
   card-notification.window:
     size: 100
     timeout: 1000
-spring.cloud.discovery.enabled: false
-eureka.client.enabled: false

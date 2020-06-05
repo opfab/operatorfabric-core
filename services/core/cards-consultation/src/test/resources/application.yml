@@ -9,5 +9,3 @@ spring:
     port: 5672
     username: guest
     password: guest
-spring.cloud.discovery.enabled: false
-eureka.client.enabled: false

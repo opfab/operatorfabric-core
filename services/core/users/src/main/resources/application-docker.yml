@@ -12,10 +12,6 @@ spring:
     port: 5672
     username: guest
     password: guest
-  cloud:
-    config:
-      discovery:
-        enabled: true
   security:
     oauth2:
       resourceserver:

@@ -19,7 +19,6 @@ import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepositor
 import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
@@ -33,7 +32,6 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
  */
 @SpringBootApplication
 @Slf4j
-@RefreshScope
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories(basePackageClasses = {CardRepository.class, ArchivedCardRepository.class})
 @ImportResource("classpath:/amqp.xml")
