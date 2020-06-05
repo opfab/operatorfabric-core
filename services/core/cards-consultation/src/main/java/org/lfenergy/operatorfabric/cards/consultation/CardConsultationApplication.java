@@ -16,7 +16,6 @@ import org.lfenergy.operatorfabric.springtools.configuration.mongo.EnableOperato
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.EnableReactiveOperatorFabricOAuth2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
@@ -24,7 +23,6 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 
 @SpringBootApplication
 @Slf4j
-@RefreshScope
 @EnableReactiveOperatorFabricOAuth2
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories

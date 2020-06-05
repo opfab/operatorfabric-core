@@ -1,13 +1,6 @@
 server:
   port: 2104
 spring:
-  cloud:
-    discovery:
-      enabled: false
-    config:
-      discovery:
-        enabled: false
-      enabled: false
   rabbitmq:
     host: localhost
     port: 5672

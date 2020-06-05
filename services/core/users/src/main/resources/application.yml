@@ -1,13 +1,6 @@
 spring:
   application:
     name: users
-  cloud:
-    discovery:
-      enabled: false
-    config:
-      discovery:
-        enabled: false
-      enabled: false
   data:
     mongodb:
       database: operator-fabric

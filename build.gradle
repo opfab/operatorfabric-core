@@ -47,15 +47,10 @@ ext {
 
     cloud = [
             dependencies          : "org.springframework.cloud:spring-cloud-dependencies:${versions['spring.cloud']}",
-            configMonitor         : "org.springframework.cloud:spring-cloud-config-monitor",
-            starterConfigServer   : "org.springframework.cloud:spring-cloud-config-server",
-            starterConfigClient   : "org.springframework.cloud:spring-cloud-starter-config",
             starterBus            : "org.springframework.cloud:spring-cloud-starter-bus-amqp",
             starterStream         : "org.springframework.cloud:spring-cloud-starter-stream-rabbit",
             starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
-            eurekaServer          : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server',
-            eurekaClient          : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
-            gateway               : 'org.springframework.cloud:spring-cloud-starter-gateway'
+            ribbon                : "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
     ]
 
     testing = [

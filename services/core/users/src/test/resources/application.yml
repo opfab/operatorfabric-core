@@ -4,8 +4,6 @@ spring:
       uris:
         - mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1
       database: operator-fabric-test
-spring.cloud.discovery.enabled: false
-eureka.client.enabled: false
 
 operatorfabric:
   security:
