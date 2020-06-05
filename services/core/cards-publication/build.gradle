@@ -2,7 +2,7 @@ dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
     compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
-    compile  cloud.starterBus, cloud.eurekaClient
+    compile  cloud.starterBus, cloud.ribbon
     compile boot.starterAop
 
     compileOnly boot.annotationConfiguration

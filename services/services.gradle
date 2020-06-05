@@ -38,7 +38,6 @@ subprojects {
 
         dependencies {
             compile boot.actuator
-            compile cloud.starterConfigClient
             annotationProcessor misc.lombok
             implementation misc.lombok
 
