@@ -21,7 +21,8 @@ export const emptyAppState4Test:AppState = {
     config: null,
     settings: null,
     archive:null,
-    user:null
+    user:null,
+    cardsSubscription:null
 };
 
 export const AuthenticationImportHelperForSpecs = [AuthenticationService,
