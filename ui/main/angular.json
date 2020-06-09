@@ -34,7 +34,8 @@
               "src/assets/styles/styles.scss"
             ],
             "scripts": [
-              "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js"
+              "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
+              "src/assets/js/templateGateway.js"
             ]
           },
           "configurations": {

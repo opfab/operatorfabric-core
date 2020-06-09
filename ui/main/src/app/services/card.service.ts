@@ -26,6 +26,7 @@ export class CardService {
     readonly cardOperationsUrl: string;
     readonly cardsUrl: string;
     readonly archivesUrl: string;
+    readonly cardsPubUrl: string;
     private subscriptionTime = 0;
 
     constructor(private httpClient: HttpClient,
@@ -37,6 +38,7 @@ export class CardService {
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
         this.archivesUrl = `${environment.urls.cards}/archives`;
+        this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
     }
 
     loadCard(id: string): Observable<Card> {
@@ -147,5 +149,10 @@ export class CardService {
         filters.forEach((values, key) => values.forEach(value => params = params.append(key, value)));
         // const tmp = new HttpParams().set('publisher', 'defaultPublisher').set('size', '10');
         return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
+    }
+
+    postResponseCard(card: Card) {
+        const headers = this.authService.getSecurityHeader();
+        return this.httpClient.post<Card>(`${this.cardsPubUrl}/userCard`, card, { headers });
     }
 }

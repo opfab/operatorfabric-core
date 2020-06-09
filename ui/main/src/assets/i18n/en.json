@@ -98,5 +98,13 @@
   "button": {
     "ok": "OK",
     "cancel": "Cancel"
+  },
+  "response": {
+    "btnTitle": "VALIDATE ANSWERS",
+    "error": {
+      "submit": "The card could not been sent",
+      "form": "The form is not correctly filled"
+    },
+    "submitSuccess": "Action succeeded"
   }
 }

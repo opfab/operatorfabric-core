@@ -15,6 +15,7 @@ import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.lfenergy.operatorfabric.cards.publication.services.processors.UserCardProcessor;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,8 @@ public class CardProcessingService {
     private CardRepositoryService cardRepositoryService;
     @Autowired
     private UserCardProcessor userCardProcessor;
+    @Autowired
+    private ExternalAppClientImpl externalAppClient;
 
 
 
@@ -71,6 +74,7 @@ public class CardProcessingService {
         Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
         cards=registerValidationProcess(cards);
         cards= userCardPublisherProcess(cards,user);
+        cards= sendCardToExternalAppProcess(cards);
         return registerPersistenceAndNotificationProcess(cards, windowStart)
                 .doOnNext(count -> log.debug("{} pushed Cards persisted", count))
                 .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
@@ -88,6 +92,10 @@ public class CardProcessingService {
 
     private Flux<CardPublicationData> userCardPublisherProcess(Flux<CardPublicationData> cards, User user) {
         return cards.doOnNext(card-> userCardProcessor.processPublisher(card,user));
+    }
+
+    private Flux<CardPublicationData> sendCardToExternalAppProcess(Flux<CardPublicationData> cards) {
+        return cards.doOnNext(card-> externalAppClient.sendCardToExternalApplication(card));
     }
 
     private static Consumer<CardPublicationData> ignoreErrorDo(Consumer<CardPublicationData> onNext) {

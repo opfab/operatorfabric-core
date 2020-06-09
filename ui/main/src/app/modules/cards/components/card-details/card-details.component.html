@@ -9,10 +9,28 @@
 
 
 <of-details [card]="card" [style.visibility]="card ? 'visible' : 'hidden'">
+
   <div *ngIf="card">
     <button type="button" class="close" aria-label="Close" (click)="closeDetails()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card"></of-detail>
+    <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card"
+                  (responseData)='getResponseData($event)'></of-detail>
+
+    <div *ngFor='let msg of messages | keyvalue'>
+      <div *ngIf='msg.value.display' class="alert alert-dismissible fade show text-center"
+                  [class.alert-danger]='msg.value.color == "red"'
+                  [class.alert-success]='msg.value.color == "green"'
+                  role="alert" translate>
+        {{msg.value.msg}}
+        <button (click)='msg.value.display = false' type="button" class="close" data-dismiss="alert"
+                  aria-label="Close">
+          <span class="text-danger" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+
+    <button class="btn mt-3 mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists'
+              translate [translateParams]="responseDataParameters" (click)='submitResponse()'>{{btnText}}</button>
   </div>
 </of-details>

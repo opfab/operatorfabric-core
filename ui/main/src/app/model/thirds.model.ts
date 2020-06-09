@@ -61,9 +61,26 @@ export class State {
     /* istanbul ignore next */
     constructor(
         readonly details?: Detail[],
-        readonly actions?: OfMap<Action>
+        readonly actions?: OfMap<Action>,
+        readonly response?: ThirdResponse
     ) {
     }
+}
+
+export class ThirdResponse {
+    /* istanbul ignore next */
+    constructor(
+        readonly lock?: boolean,
+        readonly state?: string,
+        readonly btnColor?: ResponseBtnColorEnum,
+        readonly btnText?: I18n
+    ) { }
+}
+
+export enum ResponseBtnColorEnum {
+    RED = 'RED',
+    GREEN = 'GREEN',
+    YELLOW = 'YELLOW'
 }
 
 export enum ActionType {

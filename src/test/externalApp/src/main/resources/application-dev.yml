@@ -1,0 +1,18 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: externalApp
+  output:
+    ansi:
+      enabled: DETECT
+logging:
+  file: logs/dev_app.log
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.controllers: DEBUG
+    org.springframework.service: DEBUG
+    org.hibernate: DEBUG

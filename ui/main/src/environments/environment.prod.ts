@@ -6,6 +6,7 @@ export const environment = {
         authentication: '/ui/',
         auth: '/auth',
         cards: '/cards',
+        cardspub: '/cardspub',
         users: '/users',
         archives : '',
         thirds: '/thirds',
