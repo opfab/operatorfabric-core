@@ -124,7 +124,7 @@ export class CardOperationEffects {
             ofType(LightCardActionTypes.LoadLightCardsSuccess),
             map((a: LoadLightCardsSuccess) => a.payload.lightCards), //retrieve list of added light cards from action payload
             withLatestFrom(this.store.select(selectCardStateSelectedId)), //retrieve currently selected card
-            switchMap(([lightCards, selectedCardId]) => lightCards.filter(card => card.id.indexOf(selectedCardId) >= 0)), //keep only lightCards matching the process id of current selected card
+            switchMap(([lightCards, selectedCardId]) => lightCards.filter(card => card.id===selectedCardId)), //keep only lightCards matching the process id of current selected card
             map(lightCard => new LoadCard({id: lightCard.id})) //if any, trigger refresh by firing LoadCard
         )
     ;

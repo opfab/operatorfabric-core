@@ -23,12 +23,16 @@ import { selectIdentifier } from '@ofStore/selectors/authentication.selectors';
 import { switchMap } from 'rxjs/operators';
 import { Severity } from '@ofModel/light-card.model';
 import { CardService } from '@ofServices/card.service';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+
 declare const ext_form: any;
 
 const RESPONSE_FORM_ERROR_MSG_I18N_KEY = 'response.error.form';
 const RESPONSE_SUBMIT_ERROR_MSG_I18N_KEY = 'response.error.submit';
 const RESPONSE_SUBMIT_SUCCESS_MSG_I18N_KEY = 'response.submitSuccess';
 const RESPONSE_BUTTON_TITLE_I18N_KEY = 'response.btnTitle';
+
 
 @Component({
     selector: 'of-card-details',
@@ -42,6 +46,7 @@ export class CardDetailsComponent implements OnInit {
     details: Detail[];
     currentPath: any;
     responseData: ThirdResponse;
+    unsubscribe$: Subject<void> = new Subject<void>();
     messages = {
         submitError: {
             display: false,
@@ -59,6 +64,7 @@ export class CardDetailsComponent implements OnInit {
             color: 'green'
         }
     }
+
 
     constructor(private store: Store<AppState>,
         private thirdsService: ThirdsService,
@@ -90,6 +96,7 @@ export class CardDetailsComponent implements OnInit {
 
     ngOnInit() {
         this.store.select(cardSelectors.selectCardStateSelected)
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe(card => {
                 this.card = card;
                 if (card) {
@@ -99,7 +106,9 @@ export class CardDetailsComponent implements OnInit {
                     } else {
                         this.details = [];
                     }
-                    this.thirdsService.queryThird(this.card.publisher, this.card.publisherVersion).subscribe(third => {
+                    this.thirdsService.queryThird(this.card.publisher, this.card.publisherVersion)
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe(third => {
                             if (third) {
                                 const state = third.extractState(this.card);
                                 if (state != null) {
@@ -111,7 +120,9 @@ export class CardDetailsComponent implements OnInit {
                     ;
                 }
             });
-            this.store.select(selectCurrentUrl).subscribe(url => {
+            this.store.select(selectCurrentUrl)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(url => {
                 if (url) {
                     const urlParts = url.split('/');
                     this.currentPath = urlParts[1];
@@ -192,4 +203,9 @@ export class CardDetailsComponent implements OnInit {
                                                 ext_form.formErrorMsg : RESPONSE_FORM_ERROR_MSG_I18N_KEY;
         }
     }
+
+    ngOnDestroy(){
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+      }
 }

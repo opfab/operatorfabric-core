@@ -396,3 +396,8 @@ outputs :
   <li>Michael Pallin</li>
 </ul>
 ....
+
+== Charts 
+
+The library https://www.chartjs.org/[charts.js] is integrate in operator fabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/thirds/resources/bundle_api_test[src/test/utils/karate/thirds/resources/bundle_test_api]).
+

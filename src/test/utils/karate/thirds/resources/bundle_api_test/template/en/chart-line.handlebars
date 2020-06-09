@@ -1,0 +1,49 @@
+
+<br>
+<h1 style="text-align:center">
+Daily electrical consumption forcast
+</h1>
+
+
+<table width="100%">
+    <tr> 
+        <td width="25%"></td>
+<td><canvas id="myChart" width='600' height='400' ></canvas> </td>
+<td  width="25%"></td>
+    </tr>
+</table>
+
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var opfabColor = getComputedStyle(document.body).getPropertyValue('--opfab-text-color');
+
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['0h', '4h', '8h', '12h', '16h', '20h','24h'],
+        datasets: [{
+             label: 'Daily Electrical consumption',
+            data : [{{card.data.values}}],
+            fill : false,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)'
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    fontColor: opfabColor
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    fontColor: opfabColor
+                }
+            }]
+        }
+    }
+});
+
+</script>

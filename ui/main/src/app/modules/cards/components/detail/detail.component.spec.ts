@@ -77,9 +77,7 @@ describe('DetailComponent', () => {
         fixture = TestBed.createComponent(DetailComponent);
         component = fixture.componentInstance;
     });
-    // afterEach( ()=>{
-    //     httpMock.verify();
-    // })
+
 
     it('should create', () => {
         const processesMap = new OfMap();
@@ -119,7 +117,7 @@ describe('DetailComponent', () => {
             state: 'state01',
         });
         component.detail = component.card.details[0];
-        component.ngOnInit();
+        component.ngOnChanges();
         let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/templates/template1`);
         expect(calls.length).toEqual(1);
         calls.forEach(call=>{
@@ -138,6 +136,7 @@ describe('DetailComponent', () => {
         component.detail = details[getRandomIndex(details)];
         const styles = component.detail.styles;
         expect(component.card).toBeTruthy();
+        component.ngOnChanges();
         setTimeout( ()=>{
             fixture.detectChanges();
             const linkChildren = fixture.debugElement.queryAll(By.css('link'));

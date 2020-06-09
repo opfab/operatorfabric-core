@@ -27,7 +27,7 @@ import { switchMap } from 'rxjs/operators';
     selector: 'of-detail',
     templateUrl: './detail.component.html',
 })
-export class DetailComponent implements OnInit, OnChanges {
+export class DetailComponent implements OnChanges {
 
     @Output() responseData = new EventEmitter<ThirdResponse>();
 
@@ -45,11 +45,7 @@ export class DetailComponent implements OnInit, OnChanges {
                 private sanitizer: DomSanitizer,
                 private store: Store<AppState>,
                 private translate: TranslateService ) {
-    }
 
-    ngOnInit() {
-        this.initializeHrefsOfCssLink();
-        this.initializeHandlebarsTemplates();
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this.userContext = new UserContext(
                 authState.identifier,
@@ -57,19 +53,14 @@ export class DetailComponent implements OnInit, OnChanges {
                 authState.firstName,
                 authState.lastName
             );
-        });
+        }); 
+
     }
+
     ngOnChanges(): void {
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
-        this.store.select(selectAuthenticationState).subscribe(authState => {
-            this.userContext = new UserContext(
-                authState.identifier,
-                authState.token,
-                authState.firstName,
-                authState.lastName
-            );
-        });
+
     }
 
     private initializeHrefsOfCssLink() {
@@ -81,9 +72,6 @@ export class DetailComponent implements OnInit, OnChanges {
                 // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
                 this.hrefsOfCssLink.push(safeCssUrl);
-
-                console.log(`this is the safe resource Url for css '${safeCssUrl.toString()}'
-                and with local version '${safeCssUrl.toLocaleString()}'`);
             });
         }
     }
@@ -105,11 +93,10 @@ export class DetailComponent implements OnInit, OnChanges {
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
-                    });
+                    },10);
                 }
             );
     }
-
 
     get htmlContent() {
         return this._htmlContent;
