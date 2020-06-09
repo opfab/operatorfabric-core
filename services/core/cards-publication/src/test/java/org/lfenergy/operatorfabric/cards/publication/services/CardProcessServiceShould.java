@@ -233,21 +233,6 @@ class CardProcessServiceShould {
     }
 
     @Test
-    void createUserCardsWithError() {
-        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
-                .processId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now())
-                .externalRecipients(new ArrayList<>())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                .build();
-        StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card), user))
-                .expectNextMatches(r -> r.getCount().equals(0)).verifyComplete();
-        checkCardCount(0);
-    }
-
-    @Test
     void createCardsWithError() {
         StepVerifier.create(cardProcessingService.processCards(Flux
                 .concat(Flux.just(generateWrongCardData("PUBLISHER_1", "PROCESS_1")), generateCards())))

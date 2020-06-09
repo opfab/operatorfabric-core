@@ -38,16 +38,10 @@ public class ExternalAppClientImpl implements ExternalAppClient {
 
         Optional<List<String>> externalRecipientsFromCard = Optional.ofNullable(card.getExternalRecipients());
 
-        if(!externalRecipientsFromCard.isPresent() || externalRecipientsFromCard.get().isEmpty()) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.BAD_GATEWAY)
-                    .message(NO_EXTERNALRECIPIENTS_MESSAGE)
-                    .build());
-        }
+        if (externalRecipientsFromCard.isPresent() && !externalRecipientsFromCard.get().isEmpty()) {
 
-
-        externalRecipientsFromCard.get().stream()
-                    .forEach(item->{
+            externalRecipientsFromCard.get().stream()
+                    .forEach(item -> {
                         String externalRecipientUrl = externalRecipients
                                 .entrySet()
                                 .stream()
@@ -58,11 +52,14 @@ public class ExternalAppClientImpl implements ExternalAppClient {
                                         .status(HttpStatus.BAD_GATEWAY)
                                         .message(EMPTY_URL_MESSAGE)
                                         .build()));
-                        callExternalApplication(card,externalRecipientUrl);
+                        callExternalApplication(card, externalRecipientUrl);
                     });
+        }else {
+            log.warn("No external recipients found in the card {}", card.getId(), card.getPublisher());
+        }
     }
 
-    private void callExternalApplication(CardPublicationData card, String externalRecipientUrl){
+    private void callExternalApplication(CardPublicationData card, String externalRecipientUrl) {
         try {
             log.debug("Start to Send card {} To {} ", card.getId(), card.getPublisher());
 
@@ -93,7 +90,7 @@ public class ExternalAppClientImpl implements ExternalAppClient {
                     .status(HttpStatus.BAD_GATEWAY)
                     .message(EMPTY_URL_MESSAGE)
                     .build());
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_GATEWAY)
                     .message(UNEXPECTED_REMOTE_MESSAGE)
