@@ -1,7 +1,5 @@
-
-
 import {Component, OnInit} from '@angular/core';
-import {Card, Detail} from '@ofModel/card.model';
+import {Card, Detail, RecipientEnum} from '@ofModel/card.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
@@ -11,7 +9,14 @@ import { Router } from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import { ThirdResponse } from '@ofModel/thirds.model';
 import { Map } from '@ofModel/map';
+import { UserService } from '@ofServices/user.service';
+import { selectIdentifier } from '@ofStore/selectors/authentication.selectors';
+import { switchMap } from 'rxjs/operators';
+import { Severity } from '@ofModel/light-card.model';
+import { CardService } from '@ofServices/card.service';
 declare const ext_form: any;
+
+const FORM_ERROR_MSG_I18N_KEY = 'action.error.form';
 
 @Component({
     selector: 'of-card-details',
@@ -25,9 +30,28 @@ export class CardDetailsComponent implements OnInit {
     details: Detail[];
     currentPath: any;
     responseData: ThirdResponse;
+    messages = {
+        submitError: {
+            display: false,
+            msg: 'action.error.submit',
+            color: 'red'
+        },
+        formError: {
+            display: false,
+            msg: FORM_ERROR_MSG_I18N_KEY,
+            color: 'red'
+        },
+        submitSuccess: {
+            display: false,
+            msg: 'action.submitSuccess',
+            color: 'green'
+        }
+    }
 
     constructor(private store: Store<AppState>,
         private thirdsService: ThirdsService,
+        private userService: UserService,
+        private cardService: CardService,
         private router: Router) {
     }
 
@@ -90,7 +114,7 @@ export class CardDetailsComponent implements OnInit {
         this.responseData = $event;
     }
 
-    action() {
+    submitAction() {
 
         let formData = {};
 
@@ -103,10 +127,55 @@ export class CardDetailsComponent implements OnInit {
         ext_form.validyForm(formData);
         
         if (ext_form.isValid) {
-            console.log('TODO ==> send card to cards-publication');
+
+            this.store.select(selectIdentifier)
+                .pipe(
+                    switchMap(id => this.userService.askUserApplicationRegistered(id))
+                )
+                .subscribe(user => {
+
+                    const card: Card = {
+                        uid: null,
+                        id: null,
+                        publishDate: null,
+                        publisher: user.entities[0],
+                        publisherVersion: this.card.publisherVersion,
+                        process: this.card.process,
+                        processId: this.card.processId,
+                        state: this.responseData.state,
+                        startDate: this.card.startDate,
+                        endDate: this.card.endDate,
+                        severity: Severity.INFORMATION,
+                        entityRecipients: this.card.entityRecipients,
+                        externalRecipients: this.card.externalRecipients,
+                        title: this.card.title,
+                        summary: this.card.summary,
+                        data: formData,
+                        recipient: {
+                            type: RecipientEnum.USER,
+                            identity: 'admin'
+                        }
+                        // parentCardId: this.card.id
+                    }
+
+                    this.cardService.postActionCard(card)
+                        .subscribe(
+                            rep => {
+                                console.log(rep);
+                                this.messages.submitSuccess.display = true;
+                            },
+                            err => {
+                                this.messages.submitError.display = true;
+                                console.error(err);
+                            }
+                        )
+                });
         
         } else {
-            console.log('TODO ==> handle form invalid');
+
+            this.messages.formError.display = true;
+            this.messages.formError.msg = (ext_form.formErrorMsg || ext_form.formErrorMsg != '') ?
+                                                ext_form.formErrorMsg : FORM_ERROR_MSG_I18N_KEY;
         }
     }
 }

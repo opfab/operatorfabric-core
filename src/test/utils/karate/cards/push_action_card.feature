@@ -61,6 +61,7 @@ Feature: Cards
         "identity": null,
         "preserveMain": null
     },
+    "entityRecipients": ["RTE"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -123,6 +124,7 @@ Feature: Cards
         "identity": null,
         "preserveMain": null
     },
+    "entityRecipients": ["RTE"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -185,6 +187,7 @@ Feature: Cards
         "identity": null,
         "preserveMain": null
     },
+    "entityRecipients": ["RTE"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -247,6 +250,7 @@ Feature: Cards
         "identity": null,
         "preserveMain": null
     },
+    "entityRecipients": ["RTE"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,

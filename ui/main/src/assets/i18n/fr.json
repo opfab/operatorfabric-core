@@ -101,6 +101,11 @@
     "cancel": "Annuler"
   },
   "action": {
-    "btnTitle": "VALIDER REPONSES"
+    "btnTitle": "VALIDER REPONSES",
+    "error": {
+      "submit": "La carte n'a pas pu être envoyée",
+      "form": "Le formulaire n'est pas correctement rempli"
+    },
+    "submitSuccess": "Action effectuée"
   }
 }

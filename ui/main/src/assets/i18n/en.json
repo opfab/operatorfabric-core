@@ -100,6 +100,11 @@
     "cancel": "Cancel"
   },
   "action": {
-    "btnTitle": "VALIDATE ANSWERS"
+    "btnTitle": "VALIDATE ANSWERS",
+    "error": {
+      "submit": "The card could not been sent",
+      "form": "The form is not correctly filled"
+    },
+    "submitSuccess": "Action succeeded"
   }
 }

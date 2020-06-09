@@ -20,8 +20,11 @@ export class Card {
         readonly lttd?: number,
         readonly title?: I18n,
         readonly summary?: I18n,
-        readonly  data?: any,
-        readonly  details?: Detail[],
+        readonly data?: any,
+        readonly details?: Detail[],
+        readonly entityRecipients?: string[],
+        readonly externalRecipients?: string[],
+        readonly recipient?: Recipient
     ) {
     }
 }
@@ -40,4 +43,16 @@ export class Detail {
         readonly templateName: string,
         readonly styles: string[]) {
     }
+}
+
+export class Recipient {
+    constructor(
+        readonly type?: RecipientEnum,
+        readonly recipients?: Recipient[],
+        readonly identity?: string
+    ) {}
+}
+
+export enum RecipientEnum {
+    DEADEND, GROUP, UNION, USER
 }

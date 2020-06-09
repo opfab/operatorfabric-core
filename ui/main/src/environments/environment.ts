@@ -10,6 +10,7 @@ export const environment = {
         authentication: '',
         auth: 'http://localhost:2002/auth',
         cards: 'http://localhost:2002/cards',
+        cardspub: 'http://localhost:2002/cardspub',
         users: 'http://localhost:2002/users',
         archives: '',
         thirds: 'http://localhost:2002/thirds',
