@@ -100,7 +100,7 @@
     "ok": "OK",
     "cancel": "Annuler"
   },
-  "action": {
+  "response": {
     "btnTitle": "VALIDER REPONSES",
     "error": {
       "submit": "La carte n'a pas pu être envoyée",

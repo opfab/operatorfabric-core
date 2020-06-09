@@ -13,7 +13,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "TEST_ACTION",
+    "publisher": "api_test_externalRecipient1",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId1",
@@ -76,7 +76,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "TEST_ACTION",
+    "publisher": "api_test_externalRecipient1",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId2",
@@ -139,7 +139,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "TEST_ACTION",
+    "publisher": "api_test_externalRecipient1",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId3",
@@ -202,7 +202,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "TEST_ACTION",
+    "publisher": "api_test_externalRecipient1",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId4",

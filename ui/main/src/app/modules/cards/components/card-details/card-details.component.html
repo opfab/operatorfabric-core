@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <button class="btn mt-3 mr-3 btn-block {{btnColor}}" style="float: right;" *ngIf='responseDataExists'
-              translate [translateParams]="responseDataParameters" (click)='submitAction()'>{{btnText}}</button>
+    <button class="btn mt-3 mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists'
+              translate [translateParams]="responseDataParameters" (click)='submitResponse()'>{{btnText}}</button>
   </div>
 </of-details>

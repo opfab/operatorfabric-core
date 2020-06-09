@@ -16,7 +16,10 @@ import { Severity } from '@ofModel/light-card.model';
 import { CardService } from '@ofServices/card.service';
 declare const ext_form: any;
 
-const FORM_ERROR_MSG_I18N_KEY = 'action.error.form';
+const RESPONSE_FORM_ERROR_MSG_I18N_KEY = 'response.error.form';
+const RESPONSE_SUBMIT_ERROR_MSG_I18N_KEY = 'response.error.submit';
+const RESPONSE_SUBMIT_SUCCESS_MSG_I18N_KEY = 'response.submitSuccess';
+const RESPONSE_BUTTON_TITLE_I18N_KEY = 'response.btnTitle';
 
 @Component({
     selector: 'of-card-details',
@@ -33,17 +36,17 @@ export class CardDetailsComponent implements OnInit {
     messages = {
         submitError: {
             display: false,
-            msg: 'action.error.submit',
+            msg: RESPONSE_SUBMIT_ERROR_MSG_I18N_KEY,
             color: 'red'
         },
         formError: {
             display: false,
-            msg: FORM_ERROR_MSG_I18N_KEY,
+            msg: RESPONSE_FORM_ERROR_MSG_I18N_KEY,
             color: 'red'
         },
         submitSuccess: {
             display: false,
-            msg: 'action.submitSuccess',
+            msg: RESPONSE_SUBMIT_SUCCESS_MSG_I18N_KEY,
             color: 'green'
         }
     }
@@ -68,7 +71,8 @@ export class CardDetailsComponent implements OnInit {
     }
      
     get btnText(): string {
-        return this.responseData.btnText ? this.i18nPrefix + this.responseData.btnText.key : 'action.btnTitle';
+        return this.responseData.btnText ?
+                    this.i18nPrefix + this.responseData.btnText.key : RESPONSE_BUTTON_TITLE_I18N_KEY;
     }
 
     get responseDataParameters(): Map<string> {
@@ -114,7 +118,7 @@ export class CardDetailsComponent implements OnInit {
         this.responseData = $event;
     }
 
-    submitAction() {
+    submitResponse() {
 
         let formData = {};
 
@@ -147,7 +151,7 @@ export class CardDetailsComponent implements OnInit {
                         endDate: this.card.endDate,
                         severity: Severity.INFORMATION,
                         entityRecipients: this.card.entityRecipients,
-                        externalRecipients: this.card.externalRecipients,
+                        externalRecipients: [this.card.publisher],
                         title: this.card.title,
                         summary: this.card.summary,
                         data: formData,
@@ -158,10 +162,11 @@ export class CardDetailsComponent implements OnInit {
                         // parentCardId: this.card.id
                     }
 
-                    this.cardService.postActionCard(card)
+                    this.cardService.postResponseCard(card)
                         .subscribe(
                             rep => {
                                 console.log(rep);
+                                this.messages.formError.display = false;
                                 this.messages.submitSuccess.display = true;
                             },
                             err => {
@@ -174,8 +179,8 @@ export class CardDetailsComponent implements OnInit {
         } else {
 
             this.messages.formError.display = true;
-            this.messages.formError.msg = (ext_form.formErrorMsg || ext_form.formErrorMsg != '') ?
-                                                ext_form.formErrorMsg : FORM_ERROR_MSG_I18N_KEY;
+            this.messages.formError.msg = (ext_form.formErrorMsg && ext_form.formErrorMsg != '') ?
+                                                ext_form.formErrorMsg : RESPONSE_FORM_ERROR_MSG_I18N_KEY;
         }
     }
 }

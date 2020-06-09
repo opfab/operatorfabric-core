@@ -99,7 +99,7 @@
     "ok": "OK",
     "cancel": "Cancel"
   },
-  "action": {
+  "response": {
     "btnTitle": "VALIDATE ANSWERS",
     "error": {
       "submit": "The card could not been sent",

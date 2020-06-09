@@ -151,7 +151,7 @@ export class CardService {
         return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
     }
 
-    postActionCard(card: Card) {
+    postResponseCard(card: Card) {
         const headers = this.authService.getSecurityHeader();
         return this.httpClient.post<Card>(`${this.cardsPubUrl}/userCard`, card, { headers });
     }
