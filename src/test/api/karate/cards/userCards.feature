@@ -13,7 +13,7 @@ Feature: UserCards
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "api_test_externalRecipient1",
 	"publisherVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
@@ -22,6 +22,7 @@ Feature: UserCards
 				"type" : "GROUP",
 				"identity" : "TSO1"
 			},
+	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -41,7 +42,7 @@ Feature: UserCards
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "api_test_externalRecipient1",
 	"publisherVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
@@ -50,6 +51,7 @@ Feature: UserCards
 				"type" : "GROUP",
 				"identity" : "TSO1"
 			},
+	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -70,7 +72,7 @@ Feature: UserCards
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "api_test_externalRecipient1",
 	"publisherVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
@@ -79,6 +81,7 @@ Feature: UserCards
 				"type" : "GROUP",
 				"identity" : "TSO1"
 			},
+	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -94,7 +97,3 @@ Feature: UserCards
     When method post
     Then status 201
     And match response.count == 1
-
-
-
-
