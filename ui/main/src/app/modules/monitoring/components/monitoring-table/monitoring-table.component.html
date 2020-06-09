@@ -1,0 +1,25 @@
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>time</th>
+            <th colspan="2">Business  Period</th>
+            <th>title</th>
+            <th>summary</th>
+            <th>trigger</th>
+            <th>Coordination status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr mdbTableCol *ngFor="let line of result">
+            <td>{{displayTime(line.creationDateTime)}}</td>
+            <td>{{displayTime(line.beginningOfBusinessPeriod)}}</td>
+            <td>{{displayTime(line.endOfBusinessPeriod)}}</td>
+            <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
+            <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
+            <td>{{line.trigger}}</td>
+            <td [ngStyle]="{'background-color': line.coordinationStatus}"></td>
+            <td>{{line.cardId}}</td>
+        </tr>
+    </tbody>
+</table>

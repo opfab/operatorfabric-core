@@ -12,8 +12,8 @@
 import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 import { ArchiveFiltersComponent, FilterDateTypes, checkElement, transformToTimestamp } from './archive-filters.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MultiFilterComponent } from './multi-filter/multi-filter.component';
-import { DatetimeFilterComponent } from './datetime-filter/datetime-filter.component';
+import { MultiFilterComponent } from '../../../../components/share/multi-filter/multi-filter.component';
+import { DatetimeFilterComponent } from '../../../../components/share/datetime-filter/datetime-filter.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store, StoreModule } from '@ngrx/store';
 import { appReducer, AppState } from '@ofStore/index';

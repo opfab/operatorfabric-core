@@ -8,20 +8,19 @@
  */
 
 
-
-import { Component, OnDestroy, OnInit , Input} from '@angular/core';
-import { buildFilterSelector } from "@ofSelectors/feed.selectors";
-import { FilterType } from "@ofServices/filter.service";
-import { Filter } from "@ofModel/feed-filter.model";
-import { Store } from "@ngrx/store";
-import { AppState } from "@ofStore/index";
-import {  Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { ApplyFilter } from "@ofActions/feed.actions";
+import {Component, OnDestroy, OnInit, Input} from '@angular/core';
+import {buildFilterSelector} from '@ofSelectors/feed.selectors';
+import {FilterType} from '@ofServices/filter.service';
+import {Filter} from '@ofModel/feed-filter.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {ApplyFilter} from '@ofActions/feed.actions';
 import flatpickr from 'flatpickr';
-import { French } from 'flatpickr/dist/l10n/fr.js';
-import { english } from 'flatpickr/dist/l10n/default.js';
-import { buildSettingsOrConfigSelector } from "@ofSelectors/settings.x.config.selectors";
+import {French} from 'flatpickr/dist/l10n/fr.js';
+import {english} from 'flatpickr/dist/l10n/default.js';
+import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
 import * as moment from 'moment-timezone';
 
 
@@ -32,7 +31,7 @@ import * as moment from 'moment-timezone';
 
 export class TimeFilterComponent implements OnInit, OnDestroy {
     private ngUnsubscribe$ = new Subject<void>();
-    
+
     private startDate;
     private endDate;
     private oldStartDate;
@@ -51,7 +50,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
     @Input() filterByPublishDate:boolean;
 
 
-    constructor(private store: Store<AppState>,) {
+    constructor(private store: Store<AppState>) {
     }
 
     ngOnDestroy() {
@@ -67,7 +66,6 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         else this.filterType = FilterType.BUSINESSDATE_FILTER;
         this.subscribeToChangeInFilter();
     }
-    
 
     private subscribeToChangeInFilter():void
     {
@@ -91,8 +89,8 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
     }
 
     /**
-     *  We need for each local to add it programmaticly
-     * 
+     *  We need for each local to add it programmatically
+     *
      */
     private changeLocaleForDatePicker(locale: string): void {
         switch (locale) {
@@ -105,12 +103,12 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
     }
 
 
-    /** 
-     * The date picker component is not using timezone defined by the user via the settings but the navigator timezone 
-     * 
-     * We need to get the date in the navigator time reference 
-     * 
-    */
+    /**
+     * The date picker component is not using timezone defined by the user via the settings but the navigator timezone
+     *
+     * We need to get the date in the navigator time reference
+     *
+     */
 
     private getDateForDatePicker(date): Date {
 
@@ -118,23 +116,25 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         const newDate = moment(date).subtract(realOffset, 'hour');
 
         const hours = moment(date).toDate().getHours();
-        if (hours - realOffset < 0) newDate.add(1, 'day');
+        if (hours - realOffset < 0) {
+            newDate.add(1, 'day');
+        }
         return newDate.toDate();
     }
 
 
-     /** the date picker component is not using timezone defined by the user via the settings but the navigator timezone 
-     * 
-     *  This fonction give the offset in hours between browser timezone  and opfab timezone 
-     *  --> a Value of x meaning that the browser time is x hours late than the opfab time 
-     * 
-    */
-   private getRealOffSet(date): number {
-    const settingsOffset = moment(date).utcOffset() / 60;
-    const browserOffset = - moment(date).toDate().getTimezoneOffset() / 60;
-    return browserOffset - settingsOffset;
+    /** the date picker component is not using timezone defined by the user via the settings but the navigator timezone
+     *
+     *  This function give the offset in hours between browser timezone  and opfab timezone
+     *  --> a Value of x meaning that the browser time is x hours late than the opfab time
+     *
+     */
+    private getRealOffSet(date): number {
+        const settingsOffset = moment(date).utcOffset() / 60;
+        const browserOffset = -moment(date).toDate().getTimezoneOffset() / 60;
+        return browserOffset - settingsOffset;
 
-}
+    }
 
 
     /**
@@ -197,12 +197,12 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
 
     }
 
-    /** 
-     *  The date picker component is not using timezone defined by the user via the settings but the navigator timezone 
-     * 
+    /**
+     *  The date picker component is not using timezone defined by the user via the settings but the navigator timezone
+     *
      *  We need to convert it in the settings timezone
-     * 
-    */
+     *
+     */
 
     private convertDateFromDatePickerToMillis(dateFromDatePicker, hour, minute): number {
         const realOffset = this.getRealOffSet(dateFromDatePicker);
@@ -210,14 +210,17 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         // Put moment at start of day in the  browser timezone reference
         const newStartDate = moment(dateFromDatePicker).add(realOffset, 'hour');
         const newStartDateStartOfDay = moment(newStartDate).startOf('day');
-        if ((realOffset + hour) >= 24) newStartDateStartOfDay.subtract(1, 'day');
+        if ((realOffset + hour) >= 24) {
+            newStartDateStartOfDay.subtract(1, 'day');
+        }
 
-        // add minutes an hours form the input in the form 
-        const newDateWithTime = moment(newStartDateStartOfDay).add('hour', hour).add('minutes', minute);
+        // add minutes an hours form the input in the form
+        const newDateWithTime = moment(newStartDateStartOfDay)
+            .add(hour, 'hour' )
+            .add(minute, 'minutes');
 
         
         return newDateWithTime.valueOf();
     }
-
 
 }

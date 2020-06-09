@@ -22,7 +22,8 @@ import {tap} from 'rxjs/operators';
 import * as _ from 'lodash';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
-import { ConfigService} from "@ofServices/config.service";
+import { ConfigService} from '@ofServices/config.service';
+import {QueryAllProcesses} from '@ofActions/process.action';
 
 @Component({
     selector: 'of-navbar',
@@ -46,7 +47,7 @@ export class NavbarComponent implements OnInit {
 
     nightDayMode = false;
 
-    constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService,private  configService: ConfigService) {
+    constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService, private  configService: ConfigService) {
     }
 
     ngOnInit() {
@@ -61,6 +62,7 @@ export class NavbarComponent implements OnInit {
                 _.fill(this.expandedMenu, false);
             }));
         this.store.dispatch(new LoadMenu());
+        this.store.dispatch(new QueryAllProcesses());
 
 
         const logo = this.configService.getConfigValue('logo.base64');
@@ -95,9 +97,8 @@ export class NavbarComponent implements OnInit {
             }
         }
 
-        const hiddenMenus = this.configService.getConfigValue('navbar.hidden',[]);
+        const hiddenMenus = this.configService.getConfigValue('navbar.hidden', []);
         this.navigationRoutes = navigationRoutes.filter(route => !hiddenMenus.includes(route.path));
-   
     }
 
     logOut() {

@@ -1,0 +1,53 @@
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+<form [formGroup]="loggingForm" #currentForm="ngForm">
+    <div class="container-fluid">
+        <div class="form-row nomarginrow justify-content-center">
+            <div class="col-lg-3 col-md-4 nopaddingrow">
+                <div class="row" style='margin-right:0;margin-left:0;'>
+                    <div [ngClass]="{ 'col-md-12':true}">
+                        <of-multi-filter i18nRootLabelKey="logging.filters."
+                                         [parentForm]="loggingForm"
+                                         filterPath="process"
+                                         [valuesInObservable]="processData"></of-multi-filter>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 archive-filter">
+                <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
+                                    labelKey="archive.filters."></of-datetime-filter>
+            </div>
+            <div class="col-lg-2 col-md-4 archive-filter">
+                <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
+                                    labelKey="archive.filters."></of-datetime-filter>
+            </div>
+            <div class="col-lg-2 col-md-4 archive-filter">
+                <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
+                                    labelKey="archive.filters."></of-datetime-filter>
+            </div>
+            <div class="col-lg-2 col-md-4 archive-filter">
+                <of-datetime-filter filterPath="activeTo" formControlName="activeTo"
+                                    labelKey="archive.filters."></of-datetime-filter>
+            </div>
+            <div class="col-lg-auto col-md-2" style="margin-top:30px;margin-left:11px">
+                <div class="form-group">
+                    <div class="row">
+                        <button type="button" class="btn btn-primary archive-radius" (click)="sendQuery()">
+                            <em class="fas fa-search"></em>
+                        </button>
+                        <button type="button" id="reset" class="btn btn-primary archive-radius"
+                                (click)="currentForm.resetForm()">
+                            <em class="fas fa-undo"></em>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

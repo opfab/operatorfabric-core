@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {I18n} from "@ofModel/i18n.model";
+import {I18n} from '@ofModel/i18n.model';
 
 export class LightCard {
     /* istanbul ignore next */
@@ -35,7 +35,7 @@ export class LightCard {
 }
 
 export enum Severity {
-    ALARM = "ALARM", ACTION = "ACTION", INFORMATION = "INFORMATION", COMPLIANT = "COMPLIANT"
+    ALARM = 'ALARM', ACTION = 'ACTION', INFORMATION = 'INFORMATION', COMPLIANT = 'COMPLIANT'
 }
 
 export function severityOrdinal(severity: Severity) {

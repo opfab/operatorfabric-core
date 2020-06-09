@@ -33,7 +33,7 @@ import java.util.Map;
 public class ProcessData implements Process {
 
   private String id;
-  private String name;
+  private I18n name;
   private String version;
   @Singular
   private List<String> templates;

@@ -10,9 +10,9 @@
 
 
 export interface GlobalStyleState {
-    style : string
+    style: string;
 }
 
-export const globalStyleInitialState : GlobalStyleState = {
-    style : null
-}
+export const globalStyleInitialState: GlobalStyleState = {
+    style: null
+};

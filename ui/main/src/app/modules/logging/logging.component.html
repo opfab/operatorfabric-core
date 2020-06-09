@@ -6,11 +6,16 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-
-<div class="form-group" [formGroup]="parentForm">
-  <label for="filter" translate>archive.filters.{{filterPath}}</label>
-  <select multiple class="form-control" size='2' [formControlName]="filterPath">
-    <option *ngFor="let v of preparedList" value="{{v.value}}">{{v.label|async}}</option>
-  </select>
+<div class="row logging-page">
+    <div class="col-12">
+        <of-logging-filters [processData]="processValueForFilter"></of-logging-filters>
+    </div>
 </div>
+
+<div  *ngIf="(loggingResult$|async) as line ; else noResult">
+    <of-logging-table [results]="line"></of-logging-table>
+</div>
+
+<ng-template #noResult>
+    <div class="alert alert-info" *ngIf="canDisplayNoResultMessage" translate>logging.noResult</div>
+</ng-template>

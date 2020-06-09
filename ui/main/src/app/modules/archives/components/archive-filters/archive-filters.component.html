@@ -7,34 +7,34 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<form [formGroup]="archiveForm">
+<form [formGroup]="archiveForm" #currentForm="ngForm">
   <div class="container-fluid">
     <div class="form-row nomarginrow justify-content-center">
       <div class="col-lg-3 col-md-4 nopaddingrow" *ngIf="tags||processes">
         <div class="row" style='margin-right:0;margin-left:0;'>
           <div *ngIf="tags"
                [ngClass]="{'col-md-6': (tags && processes), 'col-md-12': ( tags && !processes), 'archive-filter': true}">
-            <of-multi-filter [parentForm]="archiveForm" filterPath="tags"
+            <of-multi-filter i18nRootLabelKey="archive.filters." [parentForm]="archiveForm" filterPath="tags"
                              [values]="tags"></of-multi-filter>
           </div>
           <div *ngIf="processes"
                [ngClass]="{'col-md-6': ( tags && processes), 'col-md-12': (!tags && processes), 'archive-filter': true}">
-            <of-multi-filter [parentForm]="archiveForm" filterPath="process"
+            <of-multi-filter i18nRootLabelKey="archive.filters." [parentForm]="archiveForm" filterPath="process"
                              [values]="processes"></of-multi-filter>
           </div>
         </div>
       </div>
       <div class="col-lg-2 col-md-4 archive-filter">
-        <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"></of-datetime-filter>
+        <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom" labelKey="archive.filters."></of-datetime-filter>
       </div>
       <div class="col-lg-2 col-md-4 archive-filter">
-        <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"></of-datetime-filter>
+        <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo" labelKey="archive.filters."></of-datetime-filter>
       </div>
       <div class="col-lg-2 col-md-4 archive-filter">
-        <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"></of-datetime-filter>
+        <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom" labelKey="archive.filters."></of-datetime-filter>
       </div>
       <div class="col-lg-2 col-md-4 archive-filter">
-        <of-datetime-filter filterPath="activeTo" formControlName="activeTo"></of-datetime-filter>
+        <of-datetime-filter filterPath="activeTo" formControlName="activeTo" labelKey="archive.filters."></of-datetime-filter>
       </div>
       <div class="col-lg-auto col-md-2" style="margin-top:30px;margin-left:11px">
         <div class="form-group">
@@ -42,7 +42,7 @@
                 <button type="button" class="btn btn-primary archive-radius" (click)="sendQuery()">
                   <em class="fas fa-search"></em>
                 </button>
-              <button type="button" id="reset" class="btn btn-primary archive-radius" (click)="clearFilters()">
+              <button type="button" id="reset" class="btn btn-primary archive-radius" (click)="currentForm.resetForm()">
                  <em class="fas fa-undo"></em>
               </button>
           </div>

@@ -1,6 +1,6 @@
 {
   "id": "second",
-  "name": "process.title",
+  "name": {"key":"process.title"},
   "version": "2.0",
   "templates": [
     "template"
@@ -14,6 +14,7 @@
   ],
   "states": {
     "firstState": {
+      "name": {"key": "process.title"},
       "details": [
         {
           "title": {

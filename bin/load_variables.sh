@@ -31,7 +31,6 @@ echo OF_HOME=$OF_HOME
 echo OF_CORE=$OF_CORE
 echo OF_CLIENT=$OF_CLIENT
 echo OF_TOOLS=$OF_TOOLS
-echo OF_INFRA=$OF_INFRA
 echo
 echo "OperatorFabric version is $OF_VERSION"
 index=0

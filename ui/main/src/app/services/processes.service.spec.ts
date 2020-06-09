@@ -8,26 +8,25 @@
  */
 
 
-
 import {getTestBed, TestBed} from '@angular/core/testing';
 
 import {BusinessconfigI18nLoaderFactory, ProcessesService} from './processes.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
-import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
-import {RouterTestingModule} from "@angular/router/testing";
-import {Store, StoreModule} from "@ngrx/store";
-import {appReducer, AppState} from "@ofStore/index";
-import {generateBusinessconfigWithVersion, getOneRandomLightCard, getRandomAlphanumericValue} from "@tests/helpers";
+import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
+import {RouterTestingModule} from '@angular/router/testing';
+import {Store, StoreModule} from '@ngrx/store';
+import {appReducer, AppState} from '@ofStore/index';
+import {generateBusinessconfigWithVersion, getOneRandomLightCard, getRandomAlphanumericValue} from '@tests/helpers';
 import * as _ from 'lodash';
-import {LightCard} from "@ofModel/light-card.model";
-import {AuthenticationService} from "@ofServices/authentication/authentication.service";
-import {GuidService} from "@ofServices/guid.service";
-import {Process, Menu, MenuEntry} from "@ofModel/processes.model";
-import {EffectsModule} from "@ngrx/effects";
-import {MenuEffects} from "@ofEffects/menu.effects";
-import {UpdateTranslation} from "@ofActions/translate.actions";
-import {TranslateEffects} from "@ofEffects/translate.effects";
+import {LightCard} from '@ofModel/light-card.model';
+import {AuthenticationService} from '@ofServices/authentication/authentication.service';
+import {GuidService} from '@ofServices/guid.service';
+import {Menu, MenuEntry, Process} from '@ofModel/processes.model';
+import {EffectsModule} from '@ngrx/effects';
+import {MenuEffects} from '@ofEffects/menu.effects';
+import {UpdateTranslation} from '@ofActions/translate.actions';
+import {TranslateEffects} from '@ofEffects/translate.effects';
 
 describe('Processes Services', () => {
     let injector: TestBed;
@@ -65,9 +64,9 @@ describe('Processes Services', () => {
         httpMock = injector.get(HttpTestingController);
         processesService = TestBed.get(ProcessesService);
         translateService = injector.get(TranslateService);
-        translateService.addLangs(["en", "fr"]);
-        translateService.setDefaultLang("en");
-        translateService.use("en");
+        translateService.addLangs(['en', 'fr']);
+        translateService.setDefaultLang('en');
+        translateService.use('en');
     });
     afterEach(() => {
         httpMock.verify();
@@ -81,14 +80,14 @@ describe('Processes Services', () => {
             processesService.computeMenu().subscribe(
                 result => fail('expected message not raised'),
                 error => expect(error.status).toBe(0));
-            let calls = httpMock.match(req => req.url == `${environment.urls.processes}/`);
+            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/`);
             expect(calls.length).toEqual(1);
-            calls[0].error(new ErrorEvent('Network message'))
+            calls[0].error(new ErrorEvent('Network message'));
         });
         it('should compute menu from processes data', () => {
             processesService.computeMenu().subscribe(
                 result => {
-                    expect(result.length).toBe(2); //2 Processes -> 2 Menus
+                    expect(result.length).toBe(2); // 2 Processes -> 2 Menus
                     expect(result[0].label).toBe('process1.menu.label');
                     expect(result[0].id).toBe('process1');
                     expect(result[1].label).toBe('process2.menu.label');
@@ -105,19 +104,19 @@ describe('Processes Services', () => {
                     expect(result[1].entries[0].id).toBe('id3');
                     expect(result[1].entries[0].url).toBe('link3');
                 });
-            let calls = httpMock.match(req => req.url == `${environment.urls.processes}/`);
+            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/`);
             expect(calls.length).toEqual(1);
             calls[0].flush([
                 new Process(
-                    'process1', '1', 'process1.label', [], [], [],'process1.menu.label',
+                    'process1', '1', 'process1.label', [], [], [], 'process1.menu.label',
                     [new MenuEntry('id1', 'label1', 'link1'),
                         new MenuEntry('id2', 'label2', 'link2')]
                 ),
                 new Process(
-                    'process2', '1', 'process2.label', [], [], [],'process2.menu.label',
+                    'process2', '1', 'process2.label', [], [], [], 'process2.menu.label',
                     [new MenuEntry('id3', 'label3', 'link3')]
                 )
-            ])
+            ]);
         });
 
     });
@@ -128,32 +127,32 @@ describe('Processes Services', () => {
         };
         it('should return different files for each language', () => {
             processesService.fetchHbsTemplate('testPublisher', '0', 'testTemplate', 'en')
-                .subscribe((result) => expect(result).toEqual('English template {{card.data.name}}'))
+                .subscribe((result) => expect(result).toEqual('English template {{card.data.name}}'));
             processesService.fetchHbsTemplate('testPublisher', '0', 'testTemplate', 'fr')
-                .subscribe((result) => expect(result).toEqual('Template Français {{card.data.name}}'))
-            let calls = httpMock.match(req => req.url == `${environment.urls.processes}/testPublisher/templates/testTemplate`)
+                .subscribe((result) => expect(result).toEqual('Template Français {{card.data.name}}'));
+            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/testPublisher/templates/testTemplate`);
             expect(calls.length).toEqual(2);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush(templates[call.request.params.get('locale')]);
-            })
-        })
+            });
+        });
     });
-    
+
     it('should update translate service upon new card arrival', (done) => {
-        let card = getOneRandomLightCard();
-        let i18n = {}
+        const card = getOneRandomLightCard();
+        const i18n = {};
         _.set(i18n, `en.${card.title.key}`, 'en title');
         _.set(i18n, `en.${card.summary.key}`, 'en summary');
         _.set(i18n, `fr.${card.title.key}`, 'titre fr');
         _.set(i18n, `fr.${card.summary.key}`, 'résumé fr');
-        const setTranslationSpy = spyOn(translateService, "setTranslation").and.callThrough();
-        const getLangsSpy = spyOn(translateService, "getLangs").and.callThrough();
+        const setTranslationSpy = spyOn(translateService, 'setTranslation').and.callThrough();
+        const getLangsSpy = spyOn(translateService, 'getLangs').and.callThrough();
         const translationToUpdate = generateBusinessconfigWithVersion(card.publisher, new Set([card.processVersion]));
         store.dispatch(
             new UpdateTranslation({versions: translationToUpdate})
         );
-        let calls = httpMock.match(req => req.url == `${environment.urls.processes}/testPublisher/i18n`);
+        const calls = httpMock.match(req => req.url === `${environment.urls.processes}/testPublisher/i18n`);
         expect(calls.length).toEqual(2);
 
         expect(calls[0].request.method).toBe('GET');
@@ -162,26 +161,26 @@ describe('Processes Services', () => {
         flushI18nJson(calls[1], i18n);
         setTimeout(() => {
             expect(setTranslationSpy.calls.count()).toEqual(2);
-            translateService.use('fr')
+            translateService.use('fr');
             translateService.get(cardPrefix(card) + card.title.key)
-                .subscribe(value => expect(value).toEqual('titre fr'))
+                .subscribe(value => expect(value).toEqual('titre fr'));
             translateService.get(cardPrefix(card) + card.summary.key)
-                .subscribe(value => expect(value).toEqual('résumé fr'))
-            translateService.use('en')
+                .subscribe(value => expect(value).toEqual('résumé fr'));
+            translateService.use('en');
             translateService.get(cardPrefix(card) + card.title.key)
-                .subscribe(value => expect(value).toEqual('en title'))
+                .subscribe(value => expect(value).toEqual('en title'));
             translateService.get(cardPrefix(card) + card.summary.key)
-                .subscribe(value => expect(value).toEqual('en summary'))
+                .subscribe(value => expect(value).toEqual('en summary'));
             done();
         }, 1000);
     });
-    
+
     it('should compute url with encoding special characters', () => {
         const urlFromPublishWithSpaces = processesService.computeBusinessconfigCssUrl('publisher with spaces'
             , getRandomAlphanumericValue(3, 12)
             , getRandomAlphanumericValue(2.5));
         expect(urlFromPublishWithSpaces.includes(' ')).toEqual(false);
-        let dico = new Map();
+        const dico = new Map();
         dico.set('À', '%C3%80');
         dico.set('à', '%C3%A0');
         dico.set('É', '%C3%89');
@@ -196,8 +195,8 @@ describe('Processes Services', () => {
         dico.set('ù', '%C3%B9');
         dico.set('Ï', '%C3%8F');
         dico.set('ï', '%C3%AF');
-        let stringToTest = "";
-        for (let char of dico.keys()) {
+        let stringToTest = '';
+        for (const char of dico.keys()) {
             stringToTest += char;
         }
         const urlFromPublishWithAccentuatedChar = processesService.computeBusinessconfigCssUrl(`publisherWith${stringToTest}`
@@ -205,18 +204,20 @@ describe('Processes Services', () => {
             , getRandomAlphanumericValue(3, 4));
         dico.forEach((value, key) => {
             expect(urlFromPublishWithAccentuatedChar.includes(key)).toEqual(false);
-            //`should normally contain '${value}'`
+            // `should normally contain '${value}'`
             expect(urlFromPublishWithAccentuatedChar.includes(value)).toEqual(true);
         });
-        const urlWithSpacesInVersion = processesService.computeBusinessconfigCssUrl(getRandomAlphanumericValue(5, 12), getRandomAlphanumericValue(5.12),
+        const urlWithSpacesInVersion = processesService.computeBusinessconfigCssUrl(getRandomAlphanumericValue(5, 12)
+            , getRandomAlphanumericValue(5.12),
             'some spaces in version');
         expect(urlWithSpacesInVersion.includes(' ')).toEqual(false);
 
-        const urlWithAccentuatedCharsInVersion = processesService.computeBusinessconfigCssUrl(getRandomAlphanumericValue(5, 12), getRandomAlphanumericValue(5.12)
+        const urlWithAccentuatedCharsInVersion = processesService.computeBusinessconfigCssUrl(getRandomAlphanumericValue(5, 12)
+            , getRandomAlphanumericValue(5.12)
             , `${stringToTest}InVersion`);
         dico.forEach((value, key) => {
             expect(urlWithAccentuatedCharsInVersion.includes(key)).toEqual(false);
-            //`should normally contain '${value}'`
+            // `should normally contain '${value}'`
             expect(urlWithAccentuatedCharsInVersion.includes(value)).toEqual(true);
         });
 
@@ -224,32 +225,32 @@ describe('Processes Services', () => {
     describe('#queryProcess', () => {
         const businessconfig = new Process('testPublisher', '0', 'businessconfig.label');
         it('should load businessconfig from remote server', () => {
-            processesService.queryProcess('testPublisher', '0',)
-                .subscribe((result) => expect(result).toEqual(businessconfig))
-            let calls = httpMock.match(req => req.url == `${environment.urls.processes}/testPublisher/`)
+            processesService.queryProcess('testPublisher', '0')
+                .subscribe((result) => expect(result).toEqual(businessconfig));
+            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/testPublisher/`);
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush(businessconfig);
-            })
-        })
+            });
+        });
     });
     describe('#queryProcess', () => {
         const businessconfig = new Process('testPublisher', '0', 'businessconfig.label');
         it('should load and cache businessconfig from remote server', () => {
-            processesService.queryProcess('testPublisher', '0',)
+            processesService.queryProcess('testPublisher', '0')
                 .subscribe((result) => {
                     expect(result).toEqual(businessconfig);
-                    processesService.queryProcess('testPublisher', '0',)
-                        .subscribe((result) => expect(result).toEqual(businessconfig));
-                })
-            let calls = httpMock.match(req => req.url == `${environment.urls.processes}/testPublisher/`)
+                    processesService.queryProcess('testPublisher', '0')
+                        .subscribe((extracted) => expect(extracted).toEqual(businessconfig));
+                });
+            const calls = httpMock.match(req => req.url === `${environment.urls.processes}/testPublisher/`);
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
                 call.flush(businessconfig);
-            })
-        })
+            });
+        });
     });
 
 })
@@ -257,8 +258,8 @@ describe('Processes Services', () => {
 
 function flushI18nJson(request: TestRequest, json: any, prefix?: string) {
     const locale = request.request.params.get('locale');
-    console.debug(`flushing ${request.request.urlWithParams}`);
-    console.debug(`request is ${request.cancelled ? '' : 'not'} canceled`);
+    // console.debug(`flushing ${request.request.urlWithParams}`);
+    // console.debug(`request is ${request.cancelled ? '' : 'not'} canceled`);
     request.flush(_.get(json, prefix ? `${locale}.${prefix}` : locale));
 }
 
