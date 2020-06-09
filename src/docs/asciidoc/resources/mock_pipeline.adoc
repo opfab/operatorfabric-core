@@ -77,8 +77,16 @@ Project key and display name : *org.lfenergy.operatorfabric:operatorfabric-core-
 Then choose "Public" and click "Set Up".
 . This redirects to the the following message :
 https://sonarcloud.io/project/configuration?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core-mock[We initialized your project on SonarCloud, now it's up to you to launch analyses!]
-Now we need to provide Travis with a token to use to access SonarCloud.
-. To generate a token, go to https://sonarcloud.io/account/security/[Account/Security]
++
+. Now we need to make Sonar aware of our different branch types and of the fact that we have `develop` and not `master`
+as our default branch on GitHub.
+Under branches/administration:
+** Change the "long living branches pattern" to  `(master|develop)`
+** Delete the `develop` branch if one had been created
+** Rename the main branch from `master` to `develop`
++
+. Now we need to provide Travis with a token to use to access SonarCloud.
+To generate a token, go to https://sonarcloud.io/account/security/[Account/Security]
 +
 There are two options to pass this token to Travis:
 +
