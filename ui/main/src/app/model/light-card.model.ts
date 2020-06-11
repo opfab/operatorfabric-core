@@ -7,10 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {I18n} from "@ofModel/i18n.model";
-import {Action} from "@ofModel/thirds.model";
 
 export class LightCard {
     /* istanbul ignore next */
@@ -30,8 +27,7 @@ export class LightCard {
         readonly tags?: string[],
         readonly timeSpans?: TimeSpan[],
         readonly process?: string,
-        readonly state?: string,
-        readonly actions?:Map<string,Action>
+        readonly state?: string
     ) {
     }
 }

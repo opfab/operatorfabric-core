@@ -19,10 +19,7 @@ import {map, takeUntil} from 'rxjs/operators';
 import {buildConfigSelector} from '@ofSelectors/config.selectors';
 import {TranslateService} from '@ngx-translate/core';
 import {TimeService} from '@ofServices/time.service';
-import {Action} from '@ofModel/thirds.model';
 import {Subject} from 'rxjs';
-import { AddActionsAppear } from '@ofStore/actions/card.actions';
-import { selectCardActionsAppearState } from '@ofStore/selectors/card.selectors';
 
 @Component({
     selector: 'of-card',
@@ -37,8 +34,6 @@ export class CardComponent implements OnInit, OnDestroy {
     protected _i18nPrefix: string;
     dateToDisplay: string;
     actionsUrlPath: string;
-    private actions: Action[];
-    actionsAppear = false;
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -66,13 +61,6 @@ export class CardComponent implements OnInit, OnDestroy {
             .subscribe(computedDate => this.dateToDisplay = computedDate);
 
         this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processId}/states/${card.state}/actions`;
-        // check if the current card is in the store
-        this.store.select(selectCardActionsAppearState).subscribe(d => {
-            const currentSelected = card.id;
-            if (d.includes(currentSelected)) {
-                this.actionsAppear = true;
-            }
-        });
     }
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {
@@ -95,27 +83,7 @@ export class CardComponent implements OnInit, OnDestroy {
     }
 
     public select() {
-        this.store.dispatch(new AddActionsAppear(this.lightCard.id));
         this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
-    }
-
-    /* necessary otherwise action buttons are weirdly refresh */
-    getActions() {
-        if (!this.actions) {
-            this.actions = this.transformActionMapToArray();
-        }
-        return this.actions;
-    }
-
-    transformActionMapToArray() {
-        const actions = this.lightCard.actions;
-        if (actions) {
-            const entries = Array.from(actions.entries());
-            return entries.map<Action>(([key, action]: [string, Action]) => {
-                return {...action, key: key}
-            });
-        }
-        return [];
     }
 
     get i18nPrefix(): string {

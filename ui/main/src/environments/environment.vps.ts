@@ -19,12 +19,12 @@ export const environment = {
       authentication: '',
         auth: 'http://opfab.rte-europe.com:2002/auth',
         cards: 'http://opfab.rte-europe.com:2002/cards',
+        cardspub: 'http://opfab.rte-europe.com:2002/cardspub',
         users: 'http://opfab.rte-europe.com:2002/users',
         archives : '',
         thirds: 'http://opfab.rte-europe.com:2002/thirds',
         config: 'http://opfab.rte-europe.com:2002/config/web-ui.json',
-      time: 'http://opfab.rte-europe.com:2002/time',
-      actions: 'http://opfab.rte-europe.com:2002/action'
+      time: 'http://opfab.rte-europe.com:2002/time'
     },
   paths: {
     i18n: '/ui/assets/i18n/'

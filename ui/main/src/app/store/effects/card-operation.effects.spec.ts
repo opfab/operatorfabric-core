@@ -70,8 +70,7 @@ describe('CardOperationEffects', () => {
                 card: {
                     selected: selectedLightCard,
                     loading: false,
-                    error: null,
-                    actionsAppear: []
+                    error: null
                 }
             });
 
@@ -99,8 +98,7 @@ describe('CardOperationEffects', () => {
                 card: {
                     selected: selectedLightCard,
                     loading: false,
-                    error: null,
-                    actionsAppear: []
+                    error: null
                 }
             });
 

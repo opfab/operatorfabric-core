@@ -15,12 +15,10 @@ export interface CardState {
     selected: Card;
     loading: boolean;
     error: string;
-    actionsAppear: string[];
 }
 
 export const cardInitialState: CardState = {
     selected: null,
     loading: false,
-    error: null,
-    actionsAppear: []
+    error: null
 };

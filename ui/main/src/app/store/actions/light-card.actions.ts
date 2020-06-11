@@ -11,7 +11,6 @@
 
 import {Action} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
-import {Action as ThirdAction, ActionStatus} from '@ofModel/thirds.model';
 
 export enum LightCardActionTypes {
     LoadLightCards = '[LCard] Load',
@@ -25,12 +24,7 @@ export enum LightCardActionTypes {
     UpdatedSubscription = '[LCard] UpdateSubscription',
     HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
     RemoveLightCard = '[LCard] Remove a card',
-    AddThirdActions = '[LCard] Adds some Third Actions to existing card',
     UpdateALightCard = '[LCard] Update a Light Card',
-    UpdateAnAction = '[LCard] Update one Action of a LightCard',
-    UpdateAnActionFailure = '[LCard] No actions where available to update for the current selected card in the state',
-    ThirdActionAlreadyLoaded = '[LCard] Light Card contains actions',
-    ThirdActionAlreadyUpdated = '[LCard] Third Action unchanged',
     DelayedLightCardUpdate = '[LCard] update Light Card actions later',
     LightCardAlreadyUpdated = '[LCard] Light Card already Updated'
 }
@@ -120,45 +114,10 @@ export class RemoveLightCard implements Action {
     }
 }
 
-export class AddThirdActions implements Action {
-    readonly type = LightCardActionTypes.AddThirdActions;
-
-    constructor(public payload: { card: LightCard, actions: Map<string, ThirdAction> }) {
-    }
-}
-
 export class UpdateALightCard implements Action {
     readonly type = LightCardActionTypes.UpdateALightCard;
 
     constructor(public payload: { card: LightCard }) {
-    }
-}
-
-export class UpdateAnAction implements Action {
-    readonly type = LightCardActionTypes.UpdateAnAction;
-
-    constructor(public payload: { cardId: string, actionKey: string, status: ActionStatus }) {
-    }
-}
-
-export class UpdateAnActionFailure implements Action {
-    readonly type = LightCardActionTypes.UpdateAnActionFailure;
-
-    constructor() {
-    }
-}
-
-export class ThirdActionAlreadyLoaded implements Action {
-    readonly type = LightCardActionTypes.ThirdActionAlreadyLoaded;
-
-    constructor() {
-    }
-}
-
-export class ThirdActionAlreadyUpdated implements Action {
-    readonly type = LightCardActionTypes.ThirdActionAlreadyUpdated;
-
-    constructor() {
     }
 }
 
@@ -186,12 +145,7 @@ export type LightCardActions =
     | UpdatedSubscription
     | HandleUnexpectedError
     | EmptyLightCards
-    | AddThirdActions
     | UpdateALightCard
-    | UpdateAnAction
-    | UpdateAnActionFailure
-    | ThirdActionAlreadyLoaded
-    | ThirdActionAlreadyUpdated
     | DelayedLightCardUpdate
     | LightCardAlreadyUpdated
     | RemoveLightCard;

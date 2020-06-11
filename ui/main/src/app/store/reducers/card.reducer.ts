@@ -63,18 +63,6 @@ export function reducer(
                 error: `error while loading a Card: '${action.payload.error}'`
             };
         }
-        case CardActionTypes.AddActionsAppear: {
-            let actionsAppear = [];
-            if (state.actionsAppear.includes(action.payload)) {
-                actionsAppear = [...state.actionsAppear];
-            } else {
-                actionsAppear = [...state.actionsAppear, action.payload];
-            }
-            return {
-                ...state,
-                actionsAppear
-            };
-        }
 
         default: {
             return state;

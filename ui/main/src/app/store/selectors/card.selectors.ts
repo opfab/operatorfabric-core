@@ -22,5 +22,3 @@ export const selectCardStateSelectedDetails =  createSelector(selectCardStateSel
 export const selectCardStateSelectedId =  createSelector(selectCardStateSelected, (card: Card) => {
     return card == null ? null : card.id;
 });
-
-export const selectCardActionsAppearState = createSelector(selectCardState, (cardState: CardState) => cardState.actionsAppear);
