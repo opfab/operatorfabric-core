@@ -92,6 +92,9 @@ public class CardConsultationData implements Card {
     @Singular
     @Indexed
     private List<String> entityRecipients;
+    @Singular("entitiesAllowedToRespond")
+    @Indexed
+    private List<String> entitiesAllowedToRespond;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> externalRecipients;

@@ -96,6 +96,9 @@ public class CardPublicationData implements Card {
     @Singular
     @JsonIgnore
     private List<String> orphanedUsers;
+    @Singular("entitiesAllowedToRespond")
+    @Indexed
+    private List<String> entitiesAllowedToRespond;
     @Singular
     @Indexed
     private List<String> entityRecipients;

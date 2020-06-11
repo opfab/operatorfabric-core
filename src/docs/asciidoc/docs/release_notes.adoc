@@ -9,6 +9,8 @@
 = Version SNAPSHOT
 
 == Issues
+* [OC-916] Back : Add entitiesAllowedToRespond in the card
+* [OC-917] Front : Show action on ui , only if the entity of the user is in entitiesAllowedToRespond
 * [OC-874] Send the card to a third server
 * [OC-875] New endpoint cards/userCard to receive users cards
 * [OC-876] User Service : Implement group in JWT Token Option

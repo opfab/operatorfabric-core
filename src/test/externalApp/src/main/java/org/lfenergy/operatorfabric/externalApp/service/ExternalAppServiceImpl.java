@@ -13,11 +13,6 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 
 	@Override
 	public void displayMessage(Optional<JsonNode> requestBody) {
-
-		log.info(" ******************************************************");
-		log.info(" ***********  Welcom to External Application **********");
-		log.info(" ******************************************************");
-
 		log.info("card reception from Crad Publictaion Service {} : \n\n", requestBody);
 	}
 
