@@ -1,11 +1,20 @@
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 
 
-import { Component, OnInit, Input } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import {UpdateArchivePage} from '@ofActions/archive.actions';
 import {Store, select} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import { selectArchiveCount } from '@ofStore/selectors/archive.selectors';
-import { tap, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 

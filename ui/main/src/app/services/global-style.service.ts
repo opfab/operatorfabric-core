@@ -1,3 +1,12 @@
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
 
 
 import {Inject} from "@angular/core";
@@ -7,7 +16,7 @@ import {Inject} from "@angular/core";
 })
 export class GlobalStyleService {
 
-    private static style: String;
+    private static style: string;
     private static rootStyleSheet ;
     private static rootRulesNumber;
 
@@ -26,11 +35,11 @@ export class GlobalStyleService {
         
     }
 
-    getStyle(): String {
+    getStyle(): string {
         return GlobalStyleService.style ;
     }
 
-    setStyle(style: String) {
+    setStyle(style: string) {
         GlobalStyleService.style = style;
         switch (style) {
             case "DAY": {
@@ -49,7 +58,7 @@ export class GlobalStyleService {
         }
     }
 
-    private setCss(cssRule:String)
+    private setCss(cssRule:string)
     {
      if (GlobalStyleService.rootRulesNumber) GlobalStyleService.rootStyleSheet.deleteRule(GlobalStyleService.rootRulesNumber);  
      GlobalStyleService.rootRulesNumber = GlobalStyleService.rootStyleSheet.insertRule(cssRule, GlobalStyleService.rootStyleSheet.cssRules.length);

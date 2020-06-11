@@ -1,3 +1,12 @@
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
 
 import {
   ChangeDetectorRef,
@@ -12,7 +21,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { scaleLinear, scaleTime } from 'd3-scale';
-import * as _ from 'lodash';
 import { BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
 import {select,Store} from "@ngrx/store";
@@ -36,8 +44,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public xTicks: Array<any> = [];
   public xTicksOne: Array<any> = [];
   public xTicksTwo: Array<any> = [];
-  public xTicksOneFormat: String;
-  public xTicksTwoFormat: String;
+  public xTicksOneFormat: string;
+  public xTicksTwoFormat: string;
   public underDayPeriod: boolean = false;
   public dateFirstTick: string;
   public oldWidth: number = 0;
