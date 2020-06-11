@@ -4,9 +4,8 @@ import {Injectable} from "@angular/core";
 import {Action, Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {Actions, Effect, ofType} from "@ngrx/effects";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {
-    ROUTER_NAVIGATED,
     ROUTER_NAVIGATION,
     ROUTER_REQUEST,
     RouterNavigationAction,

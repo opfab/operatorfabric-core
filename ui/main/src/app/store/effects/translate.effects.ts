@@ -117,7 +117,7 @@ export class TranslateEffects {
         });
         
         return this.consolidateThirdAndVersions(thirdsAndVersions);
-    };
+    }
 
     @Effect()
     verifyTranslationNeedForMenus:Observable<TranslateActions> = this.actions$
@@ -193,5 +193,5 @@ export class TranslateEffects {
 
 class TransitionalThirdWithItSVersion {
     constructor(public third:string, public version:string){}
-};
+}
 

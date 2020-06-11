@@ -2,7 +2,6 @@
 
 import {AppState} from '@ofStore/index';
 import {createSelector} from '@ngrx/store';
-import * as _ from 'lodash';
 import {ArchiveState} from '@ofStates/archive.state';
 
 export const selectArchive = (state: AppState) => state.archive;

@@ -13,7 +13,7 @@ import {environment} from '@env/environment';
 @Injectable()
 export class I18nService {
 
-    private static loadedLocales = new Set<String>();
+    private static loadedLocales = new Set<string>();
     private static localUrl = '/assets/i18n/';
     private _locale: string;
     private _timeZone: string;

@@ -7,7 +7,7 @@ import {Inject} from "@angular/core";
 })
 export class GlobalStyleService {
 
-    private static style: String;
+    private static style: string;
     private static rootStyleSheet ;
     private static rootRulesNumber;
 
@@ -26,11 +26,11 @@ export class GlobalStyleService {
         
     }
 
-    getStyle(): String {
+    getStyle(): string {
         return GlobalStyleService.style ;
     }
 
-    setStyle(style: String) {
+    setStyle(style: string) {
         GlobalStyleService.style = style;
         switch (style) {
             case "DAY": {
@@ -49,7 +49,7 @@ export class GlobalStyleService {
         }
     }
 
-    private setCss(cssRule:String)
+    private setCss(cssRule:string)
     {
      if (GlobalStyleService.rootRulesNumber) GlobalStyleService.rootStyleSheet.deleteRule(GlobalStyleService.rootRulesNumber);  
      GlobalStyleService.rootRulesNumber = GlobalStyleService.rootStyleSheet.insertRule(cssRule, GlobalStyleService.rootStyleSheet.cssRules.length);

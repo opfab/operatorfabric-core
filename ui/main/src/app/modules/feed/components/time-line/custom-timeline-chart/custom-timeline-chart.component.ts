@@ -12,7 +12,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { scaleLinear, scaleTime } from 'd3-scale';
-import * as _ from 'lodash';
 import { BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
 import {select,Store} from "@ngrx/store";
@@ -35,8 +34,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public xTicks: Array<any> = [];
   public xTicksOne: Array<any> = [];
   public xTicksTwo: Array<any> = [];
-  public xTicksOneFormat: String;
-  public xTicksTwoFormat: String;
+  public xTicksOneFormat: string;
+  public xTicksTwoFormat: string;
   public underDayPeriod: boolean = false;
   public dateFirstTick: string;
   public oldWidth: number = 0;
@@ -400,7 +399,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.currentCircleHovered = myCircle;
   }
 
-  getXTickOneFormatting = (value): String => {
+  getXTickOneFormatting = (value): string => {
 
     const isFirstOfJanuary = (value.valueOf() === moment(value).startOf('year').valueOf());
     switch (this.domainId) {
@@ -421,7 +420,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
   }
 
-  getXTickTwoFormatting = (value): String => {
+  getXTickTwoFormatting = (value): string => {
     const isFirstOfJanuary = (value.valueOf() === moment(value).startOf('year').valueOf());
     switch (this.domainId) {
       case 'TR':

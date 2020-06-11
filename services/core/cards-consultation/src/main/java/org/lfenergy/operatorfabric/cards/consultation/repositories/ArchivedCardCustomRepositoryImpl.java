@@ -108,8 +108,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         query.with(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)));
 
-        //TODO Improvement Pass only items from params that are interesting to each method, not the whole map (split it)..
-
         /* Handle special parameters */
 
         // Publish date range

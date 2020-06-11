@@ -1,10 +1,10 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import {Observable, combineLatest} from 'rxjs';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {buildConfigSelector} from '@ofSelectors/config.selectors';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from '@ofStore/index';
+import { buildConfigSelector } from '@ofSelectors/config.selectors';
 import { FormGroup, FormControl } from '@angular/forms';
 import { SendArchiveQuery ,FlushArchivesResult} from '@ofStore/actions/archive.actions';
 import { DateTimeNgb } from '@ofModel/datetime-ngb.model';

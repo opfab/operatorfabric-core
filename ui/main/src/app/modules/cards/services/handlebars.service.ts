@@ -1,7 +1,6 @@
 
 
 import {Injectable} from "@angular/core";
-import {Card} from "@ofModel/card.model";
 import * as Handlebars from "handlebars/dist/handlebars.js"
 import {TranslateService} from "@ngx-translate/core";
 import * as moment from 'moment';

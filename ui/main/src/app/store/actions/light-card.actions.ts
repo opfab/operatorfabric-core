@@ -3,7 +3,6 @@
 import {Action} from '@ngrx/store';
 import {LightCard} from '@ofModel/light-card.model';
 import {Action as ThirdAction, ActionStatus} from '@ofModel/thirds.model';
-import {Update} from "@ngrx/entity";
 
 export enum LightCardActionTypes {
     LoadLightCards = '[LCard] Load',

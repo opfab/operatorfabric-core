@@ -7,9 +7,7 @@ import {select, Store} from '@ngrx/store';
 import {catchError, map, tap} from 'rxjs/operators';
 import {AppState} from '@ofStore/index';
 import {selectArchiveLightCards, selectArchiveLightCardSelection,selectArchiveLoading} from '@ofSelectors/archive.selectors';
-import { ActivatedRoute } from '@angular/router';
 import { FlushArchivesResult } from '@ofStore/actions/archive.actions';
-import {buildConfigSelector} from '@ofSelectors/config.selectors';
 
 @Component({
   selector: 'of-archives',

@@ -6,9 +6,7 @@ import {LightCard, Severity} from "@ofModel/light-card.model";
 import {from} from "rxjs";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
-import {selectFilteredFeed} from "@ofSelectors/feed.selectors";
 import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
-import {buildConfigSelector} from "@ofSelectors/config.selectors";
 
 @Injectable()
 export class SoundNotificationService {

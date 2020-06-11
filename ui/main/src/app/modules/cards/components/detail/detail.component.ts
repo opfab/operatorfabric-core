@@ -1,6 +1,6 @@
 
 
-import {Component, ElementRef, Input, OnInit, SimpleChanges, OnChanges, Output, EventEmitter} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, OnChanges, Output, EventEmitter} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
 import {ThirdsService} from '@ofServices/thirds.service';
 import {HandlebarsService} from '../../services/handlebars.service';

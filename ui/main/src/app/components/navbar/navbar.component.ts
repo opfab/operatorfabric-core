@@ -31,9 +31,9 @@ export class NavbarComponent implements OnInit {
     
 
     customLogo: string;
-    height: Number;
-    width: Number;
-    limitSize: Boolean;
+    height: number;
+    width: number;
+    limitSize: boolean;
 
     nightDayMode = false;
     private static nightMode: BehaviorSubject<boolean>;

@@ -1,12 +1,10 @@
 
 
-import {Component, Input, OnInit} from '@angular/core';
-import {LightCard} from '@ofModel/light-card.model';
-import {Observable, of} from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { LightCard } from '@ofModel/light-card.model';
+import { Observable } from 'rxjs';
 import { AppState } from '@ofStore/index';
-import { Store, select } from '@ngrx/store';
-import { catchError, tap } from 'rxjs/operators';
-import { selectArchiveLightCards } from '@ofStore/selectors/archive.selectors';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'of-archive-list',

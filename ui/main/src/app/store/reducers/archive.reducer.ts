@@ -1,7 +1,7 @@
 
 
 import { archiveInitialState, ArchiveState } from '@ofStates/archive.state';
-import { ArchiveActions, ArchiveActionTypes, FlushArchivesResult } from '@ofActions/archive.actions';
+import { ArchiveActions, ArchiveActionTypes } from '@ofActions/archive.actions';
 
 
 

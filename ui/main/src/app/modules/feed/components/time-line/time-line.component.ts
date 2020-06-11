@@ -5,7 +5,6 @@ import { of, Subscription } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { catchError} from 'rxjs/operators';
 import { AppState } from '@ofStore/index';
-import * as _ from 'lodash';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 import * as moment from 'moment';

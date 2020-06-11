@@ -1,11 +1,11 @@
 
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {UpdateArchivePage} from '@ofActions/archive.actions';
 import {Store, select} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import { selectArchiveCount } from '@ofStore/selectors/archive.selectors';
-import { tap, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 

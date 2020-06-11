@@ -29,7 +29,7 @@ export class MenuLinkComponent implements OnInit {
           } else if (v == 'IFRAME') {
             this.menusOpenInIframes = true;
           } else {
-            if (!(v == 'BOTH')) {
+            if (v != 'BOTH') {
               console.log("MenuLinkComponent - Property navbar.thirdmenus.type has an unexpected value: "+v+". Default (BOTH) will be applied.")
             }
             this.menusOpenInBoth = true;

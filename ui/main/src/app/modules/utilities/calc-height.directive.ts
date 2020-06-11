@@ -2,7 +2,7 @@
 
 import {
     Directive, ElementRef,
-    Input, HostListener, OnInit
+    Input, HostListener
 } from '@angular/core';
 import {debounceTime} from "rxjs/operators";
 import {Subject} from "rxjs";

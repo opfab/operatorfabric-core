@@ -3,7 +3,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
-import {catchError, filter, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {Guid} from 'guid-typescript';
 import {
     CheckAuthenticationStatus,
@@ -16,7 +16,7 @@ import {
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
 import {AppState} from '@ofStore/index';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {buildConfigSelector} from '@ofSelectors/config.selectors';
 import * as jwt_decode from 'jwt-decode';
 import * as _ from 'lodash';

@@ -3,7 +3,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {Observable, of, zip} from 'rxjs';
+import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
 import {ThirdsService} from "@ofServices/thirds.service";

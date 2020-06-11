@@ -8,7 +8,6 @@ import { Store } from "@ngrx/store";
 import { AppState } from "@ofStore/index";
 import {  Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import * as _ from "lodash";
 import { ApplyFilter } from "@ofActions/feed.actions";
 import flatpickr from 'flatpickr';
 import { French } from 'flatpickr/dist/l10n/fr.js';

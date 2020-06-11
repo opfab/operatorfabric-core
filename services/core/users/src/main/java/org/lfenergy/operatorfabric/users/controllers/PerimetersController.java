@@ -108,7 +108,6 @@ public class PerimetersController implements PerimetersApi {
         if(foundGroups != null) {
             for (GroupData groupData : foundGroups) {
                 groupData.deletePerimeter(id);
-                //publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), groupData.getId()));
             }
             groupRepository.saveAll(foundGroups);
         }
@@ -131,7 +130,6 @@ public class PerimetersController implements PerimetersApi {
 
         if(foundGroup != null) {
             foundGroup.deletePerimeter(idParameter);
-            //publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
             groupRepository.save(foundGroup);
         }
         return null;
@@ -200,8 +198,6 @@ public class PerimetersController implements PerimetersApi {
                         .peek(g-> {
                             g.deletePerimeter(id);
                             newGroupsInPerimeter.remove(g.getId());
-                            //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
-                            //publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getId()));
                         }).collect(Collectors.toList());
 
         groupRepository.saveAll(toUpdate);
