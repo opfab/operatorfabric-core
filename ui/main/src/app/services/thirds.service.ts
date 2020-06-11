@@ -15,8 +15,7 @@ import {environment} from '@env/environment';
 import {from, Observable, of, throwError} from 'rxjs';
 import {TranslateLoader} from '@ngx-translate/core';
 import {catchError, filter, map, reduce, switchMap, tap} from 'rxjs/operators';
-import {LightCard} from '@ofModel/light-card.model';
-import {Action, Third, ThirdMenu, ResponseBtnColorEnum} from '@ofModel/thirds.model';
+import {Third, ThirdMenu, ResponseBtnColorEnum} from '@ofModel/thirds.model';
 import {Card} from '@ofModel/card.model';
 
 @Injectable()
@@ -141,28 +140,6 @@ export class ThirdsService {
         );
     }
 
-
-    fetchActionMapFromLightCard(card: LightCard) {
-        return this.fetchActionMap(card.publisher, card.process, card.state, card.publisherVersion);
-    }
-
-    fetchActionMap(publisher: string, process: string, state: string, apiVersion?: string) {
-        let params: HttpParams;
-        if (apiVersion) {
-            params = new HttpParams().set('apiVersion', apiVersion);
-        }
-        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`, {
-            params,
-            responseType: 'text'
-        }).pipe(map((json: string) => {
-            // json empty in this case no action
-            if (json.length > 1) {
-                const obj = JSON.parse(json);
-                return new Map<string, Action>(Object.entries(obj));
-            }
-            return new Map<string, Action>();
-        }));
-    }
     getResponseBtnColorEnumValue(responseBtnColorEnum: ResponseBtnColorEnum): string {
         switch (responseBtnColorEnum) {
             case 'RED':

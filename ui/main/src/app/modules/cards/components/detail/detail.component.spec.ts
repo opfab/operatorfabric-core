@@ -31,7 +31,7 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {environment} from '@env/environment';
 import {By} from '@angular/platform-browser';
 import {of} from 'rxjs';
-import {Action, ActionType, Process, State} from '@ofModel/thirds.model';
+import {Process, State} from '@ofModel/thirds.model';
 import {Map as OfMap} from '@ofModel/map';
 import {Detail} from '@ofModel/card.model';
 import {RouterTestingModule} from '@angular/router/testing';

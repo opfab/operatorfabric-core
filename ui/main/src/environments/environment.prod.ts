@@ -20,8 +20,7 @@ export const environment = {
         archives : '',
         thirds: '/thirds',
         config: '/config/web-ui.json',
-        time: '/time',
-        actions: '/actions'
+        time: '/time'
 
     },
     paths: {

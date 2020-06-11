@@ -23,7 +23,6 @@ import {ConfigService} from '@ofServices/config.service';
 import {I18nService} from '@ofServices/i18n.service';
 import {SettingsService} from '@ofServices/settings.service';
 import { UserService } from './user.service';
-import {ThirdActionService} from '@ofServices/third-action.service';
 import { NotifyService } from '@ofServices/notify.service';
 import {SoundNotificationService} from "@ofServices/sound-notification.service";
 import {GlobalStyleService} from "@ofServices/global-style.service";
@@ -48,7 +47,6 @@ import {GlobalStyleService} from "@ofServices/global-style.service";
         FilterService,
         I18nService,
         UserService,
-        ThirdActionService,
         NotifyService,
         SoundNotificationService,
         GlobalStyleService

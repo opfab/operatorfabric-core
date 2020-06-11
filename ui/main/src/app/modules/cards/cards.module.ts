@@ -19,17 +19,13 @@ import {TranslateModule} from "@ngx-translate/core";
 import {ThirdsService} from "../../services/thirds.service";
 import {HandlebarsService} from "./services/handlebars.service";
 import {UtilitiesModule} from "../utilities/utilities.module";
-import {ActionComponent} from './components/action/action.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {ConfirmModalComponent} from "./components/action/confirm-modal/confirm-modal.component";
 
 @NgModule({
   declarations: [CardComponent
       , CardDetailsComponent
       , DetailsComponent
-      , DetailComponent
-      , ActionComponent
-      , ConfirmModalComponent],
+      , DetailComponent],
   imports: [
     CommonModule,
       TranslateModule,
@@ -40,10 +36,9 @@ import {ConfirmModalComponent} from "./components/action/confirm-modal/confirm-m
         , CardDetailsComponent
         , DetailsComponent
         , DetailComponent
-        , ConfirmModalComponent
     ],
     providers: [HandlebarsService],
-    entryComponents: [ConfirmModalComponent]
+    entryComponents: []
 })
 export class CardsModule {
     static forRoot(): ModuleWithProviders{

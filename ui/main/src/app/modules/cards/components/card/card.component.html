@@ -22,14 +22,6 @@
         <div class="badge-border rounded-bottom-left bg-sev-{{lightCard.severity.toString()|lowercase}} col-1"></div>
         <div class="card-text p-1">
             <span translate [translateParams]="lightCard.summary.parameters" *ngIf="open" ><div id="opfab-selected-card" >{{i18nPrefix + lightCard.summary.key}} </div></span>
-                <div *ngIf="actionsAppear">
-                    <of-action *ngFor="let action of getActions()"
-                        [action]="action"
-                        [i18nPrefix]="i18nPrefix"
-                        [actionUrlPath]="actionsUrlPath"
-                        [lightCardId]="lightCard.id">
-                    </of-action>
-                </div>
         </div>
     </div>
 </div>

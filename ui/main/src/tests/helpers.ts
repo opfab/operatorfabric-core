@@ -14,7 +14,7 @@ import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {Card, Detail, TitlePosition} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap, Map} from "@ofModel/map";
-import {Action, ActionType, Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import {Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import {Page} from '@ofModel/page.model';
 import {AppState} from "@ofStore/index";
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
@@ -95,9 +95,7 @@ export function getOneRandomThird(thirdTemplate?:any): Third {
         let stateCount = getPositiveRandomNumberWithinRange(1,3);
         for(let j=0; j<stateCount;j++){
             states[getRandomAlphanumericValue(3,10)]=
-                new State(
-                    getRandomCardDetails(),
-                    getRandomActions());
+                new State(getRandomCardDetails());
         }
         processes[getRandomAlphanumericValue(3,10)]=new Process(states);
     }
@@ -186,15 +184,6 @@ export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCar
     const lightCards = getSeveralRandomLightCards(totalElements);
     const randomPage = new Page<LightCard>(totalPages, totalElements, lightCards);
     return randomPage;
-}
-
-export function getRandomActions() {
-    let actions:OfMap<Action> = new OfMap();
-    actions['visible1']=new Action(ActionType.URL, getRandomI18nData());
-    actions['visible2']=new Action(ActionType.URL, getRandomI18nData());
-    actions['hidden1']= new Action(ActionType.URL, getRandomI18nData(), true, 'buttonStyle');
-    actions['hidden2']= new Action(ActionType.URL, getRandomI18nData(), true);
-    return actions;
 }
 
 export function getOneRandomCard(cardTemplate?:any): Card {

@@ -16,8 +16,7 @@ import {
     selectCardState,
     selectCardStateSelected,
     selectCardStateSelectedDetails,
-    selectCardStateSelectedId,
-    selectCardActionsAppearState
+    selectCardStateSelectedId
 } from '@ofSelectors/card.selectors';
 
 describe('CardSelectors', () => {
@@ -40,9 +39,5 @@ describe('CardSelectors', () => {
         expect(selectCardStateSelected(testAppState)).toEqual(selectedState.selected);
         expect(selectCardStateSelectedDetails(testAppState)).toEqual(selectedState.selected.details);
         expect(selectCardStateSelectedId(testAppState)).toEqual(selectedState.selected.id);
-    });
-    it('should select the card appear array', () => {
-        const testAppState = {...emptyAppState, card: selectedState};
-        expect(selectCardActionsAppearState(testAppState)).toEqual(selectedState.actionsAppear);
     });
 });
