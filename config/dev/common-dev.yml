@@ -1,5 +1,3 @@
-server:
-  port: 2104
 spring:
   rabbitmq:
     host: localhost
@@ -37,7 +35,3 @@ management:
       exposure:
         include: '*'
 
-#here we put urls for all feign clients
-users:
-  ribbon:
-    listOfServers: http://localhost:2103

@@ -1,0 +1,14 @@
+
+spring:
+  application:
+    name: thirds
+
+
+operatorfabric.thirds:
+  storage:
+    path: "/thirds-storage"
+
+#here we put urls for all feign clients
+users:
+  ribbon:
+    listOfServers: users:8080

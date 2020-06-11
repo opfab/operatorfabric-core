@@ -80,7 +80,7 @@ During `OperatorFabric` development the running docker images of `MongoDB`, `Ra
 The `docker-compose` can be run in detached mode:
 [source,shell]
 ----
-cd ${OF_HOME}/src/main/docker/dev-environment/
+cd ${OF_HOME}/config/dev/dev-environment/
 docker-compose up -d
 ----
 
