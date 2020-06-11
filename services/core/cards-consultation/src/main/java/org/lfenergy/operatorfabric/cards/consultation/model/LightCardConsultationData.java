@@ -11,16 +11,27 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.springframework.data.annotation.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Singular;
 
 /**
  * <p>Please use builder to instantiate</p>
@@ -59,6 +70,11 @@ public class LightCardConsultationData implements LightCard {
     @Setter(AccessLevel.NONE)
     @Singular("timeSpan")
     private Set<TimeSpan> timeSpansSet;
+    
+    @JsonIgnore
+    private List<String> usersAcks;
+    @Transient
+    private Boolean hasBeenAcknowledged;
 
     /**
      * return timespans, may return null
@@ -94,7 +110,7 @@ public class LightCardConsultationData implements LightCard {
                 .severity(other.getSeverity())
                 .title(I18nConsultationData.copy(other.getTitle()))
                 .summary(I18nConsultationData.copy(other.getSummary()))
-                ;
+                .hasBeenAcknowledged(false);
         if(other.getTags()!=null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());
         if(other.getTimeSpans()!=null && !other.getTimeSpans().isEmpty())

@@ -73,6 +73,9 @@ public class ArchivedCardPublicationData implements Card {
     @Indexed
     private List<String> entityRecipients;
     private List<String> externalRecipients;
+    
+    @Transient
+    private Boolean hasBeenAcknowledged;
 
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();

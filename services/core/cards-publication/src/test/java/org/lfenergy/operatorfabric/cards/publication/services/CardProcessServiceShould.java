@@ -455,5 +455,44 @@ class CardProcessServiceShould {
         Assertions.assertThat(resultingData).isNull();
 
     }
+        
+    @Test
+    void processUserAcknowledgement() {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 1;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.get(0).setUsersAcks(null);
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                        .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                        "The number of registered cards should be '%d' but is " + "'%d' actually",
+                        numberOfCards, block).isEqualTo(numberOfCards);
+
+        CardPublicationData firstCard = cards.get(0);
+        Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card doesn't contain any ack at the beginning").isNullOrEmpty();
+        
+        String cardId = firstCard.getId();
+        
+        CardCreationReportData ccrd = cardProcessingService.processUserAcknowledgement("aaa", cardId).block();
+        Assertions.assertThat(ccrd.getCount()).as("Expecting CardCreationReportData.count==1").isEqualTo(1);
+        
+        CardPublicationData cardReloaded = cardRepository.findById(cardId).block();
+        Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly an ack by user aaa").containsExactly("aaa");              
+        
+        ccrd = cardProcessingService.processUserAcknowledgement("bbb", cardId).block();
+        Assertions.assertThat(ccrd.getCount()).as("Expecting CardCreationReportData.count==1").isEqualTo(1);
+        
+        cardReloaded = cardRepository.findById(cardId).block();
+        Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly two acks by users aaa and bbb").containsExactly("aaa","bbb");
+        //try to insert aaa again
+        ccrd = cardProcessingService.processUserAcknowledgement("aaa", cardId).block();
+        Assertions.assertThat(ccrd.getCount()).as("Expecting CardCreationReportData.count==0 trying to insert ack by aaa twice").isEqualTo(0);
+        
+        cardReloaded = cardRepository.findById(cardId).block();
+        Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting  Card after ack processing contains exactly two acks by users aaa(only once) and bbb").containsExactly("aaa","bbb");
+    }
+
 
 }

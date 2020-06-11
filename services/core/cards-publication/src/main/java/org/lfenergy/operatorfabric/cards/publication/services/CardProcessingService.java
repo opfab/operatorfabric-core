@@ -26,6 +26,8 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+
 import java.time.Instant;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -185,6 +187,10 @@ public class CardProcessingService {
         }
     }
 
+	public @Valid Mono<CardCreationReportData> processUserAcknowledgement(String name, String cardId) {
+		return Mono.just(cardRepositoryService.addUserAck(name, cardId));
+	}
+        
     /**
      * Logs card count and elapsed time since window start
      *
@@ -197,4 +203,8 @@ public class CardProcessingService {
         double cardWindowDurationMillis = windowDurationMillis / count;
         log.debug("{} cards handled in {} ms each (total: {})", count, cardWindowDurationMillis, windowDurationMillis);
     }
+
+	
+
+	
 }

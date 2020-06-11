@@ -17,6 +17,7 @@ import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -101,6 +102,11 @@ public class CardPublicationData implements Card {
     @Singular
     @Indexed
     private List<String> externalRecipients;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<String> usersAcks;
+    
+    @Transient
+    private Boolean hasBeenAcknowledged;
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;

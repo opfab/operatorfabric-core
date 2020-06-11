@@ -13,6 +13,7 @@ package org.lfenergy.operatorfabric.cards.consultation.repositories;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
+import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -71,13 +72,13 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         //Handle Paging
         Pageable pageableRequest = createPageableFromParams(params.getT2());
         if (pageableRequest.isPaged()) {
-            return template.find(query.with(pageableRequest), LightCard.class, ARCHIVED_CARDS_COLLECTION)
-                    .collectList()
+            return template.find(query.with(pageableRequest), LightCardConsultationData.class, ARCHIVED_CARDS_COLLECTION)
+                    .cast(LightCard.class).collectList()
                     .zipWith(template.count(countQuery, LightCard.class, ARCHIVED_CARDS_COLLECTION))
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, tuple.getT2()));
         } else {
-            return template.find(query, LightCard.class, ARCHIVED_CARDS_COLLECTION)
-                    .collectList()
+            return template.find(query, LightCardConsultationData.class, ARCHIVED_CARDS_COLLECTION)
+            		.cast(LightCard.class).collectList()
                     .map(results -> new PageImpl<>(results));
         }
         //The class used as a parameter for the find & count methods is LightCard (and not LightCardConsultationData) to make use of the existing LightCardReadConverter
