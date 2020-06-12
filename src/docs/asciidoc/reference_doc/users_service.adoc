@@ -56,7 +56,7 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/i
 === Entities
 Entities are used to send cards to several users without a name specifically. The information about membership to an
 entity is stored in the user information. Examples using entities can be found 
-ifdef::single-page-doc[<<card_recipients, recipients section>>]
+ifdef::single-page-doc[<<_send_to_several_users, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_send_to_several_users, here>>]
 .
 
