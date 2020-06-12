@@ -1,34 +1,11 @@
 #  POPULATE THE USER DATABASE ON INIT
 # !!!! WARNNING: VALUES SHOULD BE CHANGED FOR PRODUCTION MODE !!!!
 #
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-spring:
-  rabbitmq:
-    host: rabbitmq
-    port: 5672
-    username: guest
-    password: guest
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://keycloak:8080/auth/realms/dev/protocol/openid-connect/certs
-  data:
-    mongodb:
-      uris:
-        - mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
 
-operatorfabric:
-  security:
-    oauth2:
-      client-id: opfab-client
-    jwt:
-      login-claim: preferred_username
-      expire-claim: exp
+spring:
+  application:
+    name: users
+
 
 operatorfabric.users.default:
   users:

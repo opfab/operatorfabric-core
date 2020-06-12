@@ -66,7 +66,7 @@ GRADLE_OPTIONS=" "
 if [ "$offline" = true ]; then
     GRADLE_OPTIONS="$GRADLE_OPTIONS --offline"
 fi
-PRJ_STRC_FIELDS=4
+PRJ_STRC_FIELDS=5
 
 declare -a dependentProjects
 i=0
@@ -75,6 +75,7 @@ for bservice in "${businessServices[@]}"; do
  dependentProjects[$i+1]="services/core/$bservice"
  dependentProjects[$i+2]=0
  dependentProjects[$i+3]=""
+ dependentProjects[$i+4]=$bservice
  i=$((i+$PRJ_STRC_FIELDS))
 done
 
@@ -90,8 +91,8 @@ startProject(){
       bootstrapLocation=${OF_HOME}/$3/src/main/resources/bootstrap-dev.yml
       debugOptions=-agentlib:jdwp=transport=dt_socket,address=$2,server=y,suspend=n
 
-      applicationOptions="--spring.profiles.active=native,dev --spring.cloud.bootstrap.location=${bootstrapLocation}"
-
+      applicationOptions="--spring.profiles.active=dev --spring.config.location=classpath:/application.yml,file:${OF_HOME}/config/dev/ --spring.config.name=common,$4"
+      echo "applicationOptions: $applicationOptions"
       echo "pid file: $projectBuildPath/PIDFILE"
       if [ -f $projectBuildPath/PIDFILE ] ; then
         pid=$(<$projectBuildPath/PIDFILE)
@@ -126,7 +127,7 @@ startCommand() {
 
     for ((i=0; i<${#dependentProjects[*]}; ));
     do
-      startProject ${dependentProjects[i]} $debugPort ${dependentProjects[i+1]}
+      startProject ${dependentProjects[i]} $debugPort ${dependentProjects[i+1]} ${dependentProjects[i+4]}
       debugPort=$((debugPort+1))
       i=$((i+$PRJ_STRC_FIELDS))
     done

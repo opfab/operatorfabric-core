@@ -1,0 +1,10 @@
+server:
+  port: 2104
+spring:
+  application:
+    name: cards-consultation
+
+#here we put urls for all feign clients
+users:
+  ribbon:
+    listOfServers: http://localhost:2103

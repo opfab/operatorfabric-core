@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: actions
+
+operatorfabric:
+  services:
+    base-url:
+      cards: http://cards-consultation:8080
+      thirds: http://thirds:8080
+      users: http://users:8080

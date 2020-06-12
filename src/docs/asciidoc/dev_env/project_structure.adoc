@@ -22,6 +22,10 @@ project
 │   ├──cards (cards-client-data)
 │   ├──src
 │   └──users (users-client-data)
+├──config
+│   ├──dev
+│   ├──docker
+│   └──keycloak
 ├──services
 │   ├──core
 │   │   ├──cards-consultation (cards-consultation-business-service)
@@ -57,6 +61,7 @@ project
 build process
 * link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]: contains REST APIs simple beans definition, may be
 used by external projects
+* link:https://github.com/opfab/operatorfabric-core/tree/master/client[config]: contains external configurations for all services , keycloak and docker-compose files to help with tests and demonstrations
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/client/cards[cards (cards-client-data)]: simple beans regarding cards
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/client/src[src]: contains swagger templates for link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]
 code generation
