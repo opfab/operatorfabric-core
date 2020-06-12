@@ -49,6 +49,7 @@ public class CardConsultationData implements Card {
     private String uid ;
     @Id
     private String id;
+    private String parentCardId;
     private String publisher;
     private String publisherVersion;
     private String process;

@@ -13,7 +13,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "TEST_ACTION",
+    "publisher": "test_action",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId1",
@@ -77,7 +77,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "TEST_ACTION",
+    "publisher": "test_action",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId2",
@@ -141,7 +141,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "TEST_ACTION",
+    "publisher": "test_action",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId3",
@@ -205,7 +205,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "TEST_ACTION",
+    "publisher": "test_action",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId4",
@@ -268,7 +268,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "TEST_ACTION",
+    "publisher": "test_action",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId1",

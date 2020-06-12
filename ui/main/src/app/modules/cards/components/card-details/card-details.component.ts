@@ -164,8 +164,7 @@ export class CardDetailsComponent implements OnInit {
         for (let [key, value] of [...new FormData(formElement)]) {
             (key in formData) ? formData[key].push(value) : formData[key] = [value];
         }
-        console.log(formData);
-
+        
         ext_form.validyForm(formData);
 
         if (ext_form.isValid) {
@@ -190,16 +189,22 @@ export class CardDetailsComponent implements OnInit {
                 recipient: {
                     type: RecipientEnum.USER,
                     identity: 'admin'
-                }
-                // parentCardId: this.card.id
+                },
+                parentCardId: this.card.uid
             }
 
             this.cardService.postResponseCard(card)
                 .subscribe(
                     rep => {
-                        console.log(rep);
-                        this.messages.formError.display = false;
-                        this.messages.submitSuccess.display = true;
+                        if (rep['count'] == 0 && rep['message'].includes('Error')) {
+                            this.messages.submitError.display = true;
+                            console.error(rep);
+                        
+                        } else {
+                            console.log(rep);
+                            this.messages.formError.display = false;
+                            this.messages.submitSuccess.display = true;
+                        }
                     },
                     err => {
                         this.messages.submitError.display = true;

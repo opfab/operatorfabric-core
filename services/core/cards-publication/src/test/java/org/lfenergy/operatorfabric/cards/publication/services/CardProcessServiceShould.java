@@ -74,6 +74,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import javax.validation.ConstraintViolationException;
+
 /**
  * <p>
  * </p>
@@ -277,11 +279,11 @@ class CardProcessServiceShould {
         await().atMost(5, TimeUnit.SECONDS).until(() -> !newCard.getOrphanedUsers().isEmpty());
         await().atMost(5, TimeUnit.SECONDS).until(() -> testCardReceiver.getEricQueue().size() >= 1);
         CardPublicationData persistedCard = cardRepository.findById(newCard.getId()).block();
-        assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard, "orphanedUsers");
+        assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardId", "orphanedUsers");
 
         ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid())
                 .block();
-        assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(newCard, "uid", "id", "deletionDate",
+        assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardId", "uid", "id", "deletionDate",
                 "actions", "timeSpans");
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
         assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
@@ -325,6 +327,7 @@ class CardProcessServiceShould {
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.forEach(c -> c.setParentCardId(null));
 
         cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
                 .subscribe();
@@ -397,6 +400,7 @@ class CardProcessServiceShould {
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.forEach(c -> c.setParentCardId(null));
 
         cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
                 .subscribe();
@@ -439,6 +443,7 @@ class CardProcessServiceShould {
         List<CardPublicationData> card = instantiateSeveralRandomCards(easyRandom, 1);
         String fakeDataContent = easyRandom.nextObject(String.class);
         CardPublicationData publishedCard = card.get(0);
+        publishedCard.setParentCardId(null);
         publishedCard.setData(fakeDataContent);
 
         cardProcessingService.processCards(Flux.just(card.toArray(new CardPublicationData[1]))).subscribe();
@@ -465,6 +470,7 @@ class CardProcessServiceShould {
         int numberOfCards = 1;
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
         cards.get(0).setUsersAcks(null);
+        cards.get(0).setParentCardId(null);
         cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
                         .subscribe();
 
@@ -504,6 +510,8 @@ class CardProcessServiceShould {
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
         cards.get(0).setUsersAcks(Arrays.asList("someUser","someOtherUser"));
         cards.get(1).setUsersAcks(null);
+        cards.get(0).setParentCardId(null);
+        cards.get(1).setParentCardId(null);
         cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
                         .subscribe();
 
@@ -536,4 +544,72 @@ class CardProcessServiceShould {
     }
 
 
+    @Test
+    void validate_processOk() {
+
+        StepVerifier.create(cardProcessingService.processCards(Flux.just(
+                CardPublicationData.builder()
+                        .uid("uid_1")
+                        .publisher("PUBLISHER_1").publisherVersion("O")
+                        .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                        .title(I18nPublicationData.builder().key("title").build())
+                        .summary(I18nPublicationData.builder().key("summary").build())
+                        .startDate(Instant.now())
+                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .timeSpan(TimeSpanPublicationData.builder()
+                                .start(Instant.ofEpochMilli(123l)).build())
+                        .build()))).expectNextMatches(r -> r.getCount().equals(1)).verifyComplete();
+
+        CardPublicationData card = CardPublicationData.builder()
+                .parentCardId("uid_1")
+                .publisher("PUBLISHER_1").publisherVersion("O")
+                .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .build();
+
+        cardProcessingService.validate(card);
+    }
+
+    @Test
+    void validate_parentCardId_NotUidPresentInDb() {
+
+        CardPublicationData card = CardPublicationData.builder()
+                .parentCardId("uid_1")
+                .publisher("PUBLISHER_1").publisherVersion("O")
+                .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .build();
+        try {
+            cardProcessingService.validate(card);
+        } catch (ConstraintViolationException e) {
+            Assertions.assertThat(e.getMessage()).isEqualTo("The parentCardId " + card.getParentCardId() + " is not the uid of any card");
+        }
+    }
+
+    @Test
+    void validate_noParentCardId_processOk() {
+
+        CardPublicationData card = CardPublicationData.builder()
+                .publisher("PUBLISHER_1").publisherVersion("O")
+                .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .timeSpan(TimeSpanPublicationData.builder()
+                        .start(Instant.ofEpochMilli(123l)).build())
+                .build();
+
+        cardProcessingService.validate(card);
+    }
 }

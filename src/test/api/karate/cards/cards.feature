@@ -196,7 +196,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "api_testExternalRecipients1",
+	"publisher" : "api_test",
 	"publisherVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
@@ -222,7 +222,7 @@ Feature: Cards
     And match response.count == 1
 
 #get card with user tso1-operator and new attribute externalRecipients
-    Given url opfabUrl + 'cards/cards/api_testExternalRecipients1_process1'
+    Given url opfabUrl + 'cards/cards/api_test_process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -237,7 +237,7 @@ Scenario:  Post card with no recipient but entityRecipients
 	"publisher" : "api_test",
 	"publisherVersion" : "1",
 	"process"  :"defaultProcess",
-	"processId" : "process1",
+	"processId" : "process2",
 	"state": "messageState",
 	"entityRecipients" : ["TSO1"],
 	"severity" : "INFORMATION",
@@ -254,3 +254,72 @@ Scenario:  Post card with no recipient but entityRecipients
     When method post
     Then status 201
     And match response.count == 1
+
+Scenario:  Post card with parentCardId not correct
+
+    * def card =
+"""
+{
+	"publisher" : "api_test",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "process1",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"},
+	"parentCardId": "1"
+}
+"""
+
+# Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 0
+    And match response.message contains "The parentCardId 1 is not the uid of any card"
+
+Scenario:  Post card with correct parentCardId
+
+    #get parent card uid
+    Given url opfabUrl + 'cards/cards/api_test_process1'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And def cardUid = response.uid
+
+	* def card =
+"""
+{
+	"publisher" : "api_test",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "process1",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"}
+}
+"""
+	* card.parentCardId = cardUid
+
+# Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1
+    And match response.message == "All pushedCards were successfully handled"
