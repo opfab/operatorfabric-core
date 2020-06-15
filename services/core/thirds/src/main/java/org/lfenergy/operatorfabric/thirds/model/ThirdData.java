@@ -45,7 +45,8 @@ public class ThirdData implements Third {
   @Singular("menuEntryData")
   @JsonIgnore
   private List<? extends ThirdMenuEntry> menuEntriesData;
-  private String i18nLabelKey;
+  private String i18nLabelKey;  
+  
 
   @Override
   public Map<String, ? extends ThirdProcesses> getProcesses(){
