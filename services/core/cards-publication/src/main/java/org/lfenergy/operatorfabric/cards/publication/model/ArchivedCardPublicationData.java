@@ -13,6 +13,7 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -73,7 +74,9 @@ public class ArchivedCardPublicationData implements Card {
     @Indexed
     private List<String> entityRecipients;
     private List<String> externalRecipients;
-    
+    @Singular("entitiesAllowedToRespond")
+    private List<String> entitiesAllowedToRespond;
+
     @Transient
     private Boolean hasBeenAcknowledged;
 
@@ -100,6 +103,7 @@ public class ArchivedCardPublicationData implements Card {
         this.groupRecipients = card.getGroupRecipients() == null ? null : new ArrayList<>(card.getGroupRecipients());
         this.entityRecipients = card.getEntityRecipients() == null ? null : new ArrayList<>(card.getEntityRecipients());
         this.externalRecipients = card.getExternalRecipients() == null ? null : new ArrayList<>(card.getExternalRecipients());
+        this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null : new ArrayList<>(card.getEntitiesAllowedToRespond());
 
     }
 

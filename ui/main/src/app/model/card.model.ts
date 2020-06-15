@@ -33,6 +33,7 @@ export class Card {
         readonly details?: Detail[],
         readonly entityRecipients?: string[],
         readonly externalRecipients?: string[],
+        readonly entitiesAllowedToRespond?: string[],
         readonly recipient?: Recipient
     ) {
     }

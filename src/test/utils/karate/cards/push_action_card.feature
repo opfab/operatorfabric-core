@@ -13,7 +13,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "api_test_externalRecipient1",
+    "publisher": "TEST_ACTION",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId1",
@@ -54,19 +54,20 @@ Feature: Cards
             {
                 "type": "GROUP",
                 "recipients": null,
-                "identity": "RTE",
+                "identity": "TSO1",
                 "preserveMain": null
             }
         ],
         "identity": null,
         "preserveMain": null
     },
-    "entityRecipients": ["RTE"],
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
     "data": {
-        "data1": "data1 content"
+        "data1": "data1 data1 testtttttttttt content"
     }
 }
 """
@@ -76,7 +77,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "api_test_externalRecipient1",
+    "publisher": "TEST_ACTION",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId2",
@@ -117,14 +118,15 @@ Feature: Cards
             {
                 "type": "GROUP",
                 "recipients": null,
-                "identity": "RTE",
+                "identity": "TSO1",
                 "preserveMain": null
             }
         ],
         "identity": null,
         "preserveMain": null
     },
-    "entityRecipients": ["RTE"],
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -139,7 +141,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "api_test_externalRecipient1",
+    "publisher": "TEST_ACTION",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId3",
@@ -180,14 +182,15 @@ Feature: Cards
             {
                 "type": "GROUP",
                 "recipients": null,
-                "identity": "RTE",
+                "identity": "TSO1",
                 "preserveMain": null
             }
         ],
         "identity": null,
         "preserveMain": null
     },
-    "entityRecipients": ["RTE"],
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -202,7 +205,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "api_test_externalRecipient1",
+    "publisher": "TEST_ACTION",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId4",
@@ -243,14 +246,78 @@ Feature: Cards
             {
                 "type": "GROUP",
                 "recipients": null,
-                "identity": "RTE",
+                "identity": "TSO1",
                 "preserveMain": null
             }
         ],
         "identity": null,
         "preserveMain": null
     },
-    "entityRecipients": ["RTE"],
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1"],
+    "mainRecipient": null,
+    "userRecipients": null,
+    "groupRecipients": null,
+    "data": {
+        "data1": "data1 content"
+    }
+}
+"""
+      * def card_response_without_entity_in_entitiesAllowedToRespond =
+"""
+{
+    "uid": null,
+    "id": null,
+    "publisher": "TEST_ACTION",
+    "publisherVersion": "1",
+    "process": "process",
+    "processId": "processId1",
+    "state": "response_full",
+    "publishDate": 1589376144000,
+    "deletionDate": null,
+    "lttd": null,
+    "startDate": 1589580000000,
+    "endDate": 1590184800000,
+    "severity": "ACTION",
+    "media": null,
+    "tags": [
+        "tag1"
+    ],
+    "timeSpans": [
+        {
+            "start": 1589376144000,
+            "end": 1590184800000,
+            "display": null
+        }
+    ],
+    "details": null,
+    "title": {
+        "key": "cardFeed.title",
+        "parameters": {
+            "title": "Test action - without entity in entitiesAllowedToRespond"
+        }
+    },
+    "summary": {
+        "key": "cardFeed.summary",
+        "parameters": {
+        "summary": "Test the action without entity in entitiesAllowedToRespond"
+        }
+    },
+    "recipient": {
+        "type": "UNION",
+        "recipients": [
+            {
+                "type": "GROUP",
+                "recipients": null,
+                "identity": "TSO1",
+                "preserveMain": null
+            }
+        ],
+        "identity": null,
+        "preserveMain": null
+    },
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["TSO1"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -291,3 +358,11 @@ Feature: Cards
     When method post
     Then status 201
     And match response.count == 1
+
+# Push card - card response without entity in entity  in entitiesAllowedToRespond
+      Given url opfabPublishCardUrl + 'cards'
+
+      And request card_response_without_entity_in_entitiesAllowedToRespond
+      When method post
+      Then status 201
+      And match response.count == 1
