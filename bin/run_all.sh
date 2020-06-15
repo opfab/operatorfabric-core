@@ -104,6 +104,7 @@ startProject(){
       else
         mkdir -p $projectBuildPath/logs
 #        set -x
+        cd $OF_HOME
         java -Xss512k -XX:MaxRAM=512m $debugOptions \
              -jar $projectBuildPath/libs/$1-$version.jar \
              $applicationOptions 2>&1 > $projectBuildPath/logs/$(date -I).log &
@@ -186,6 +187,8 @@ statusCommand(){
   echo "##########################################################"
 
 }
+### always start processing from OF_HOME
+cd ${OF_HOME}
 
 case $command in
   start)
