@@ -76,7 +76,6 @@ Replacing SNAPSHOT with X.X.X.RELEASE in swagger.yaml files
 Using X.X.X.RELEASE for lfeoperatorfabric images in deploy docker-compose file
 The following files have been updated:
 M VERSION
-M services/core/actions/src/main/modeling/swagger.yaml
 M services/core/cards-publication/src/main/modeling/swagger.yaml
 M services/core/thirds/src/main/modeling/swagger.yaml
 M services/core/users/src/main/modeling/swagger.yaml

@@ -13,7 +13,7 @@ OF_HOME=$(realpath $DIR/..)
 CURRENT_PATH=$(pwd)
 
 resetConfiguration=true
-businessServices=( "users" "cards-consultation" "cards-publication" "thirds" "actions")
+businessServices=( "users" "cards-consultation" "cards-publication" "thirds")
 offline=false
 
 function join_by { local IFS="$1"; shift; echo "$*"; }
