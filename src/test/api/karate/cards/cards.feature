@@ -228,3 +228,29 @@ Feature: Cards
     Then status 200
     And match response.externalRecipients[1] == "api_test165"
     And def cardUid = response.uid
+
+Scenario:  Post card with no recipient but entityRecipients
+
+    * def card =
+"""
+{
+	"publisher" : "api_test",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "process1",
+	"state": "messageState",
+	"entityRecipients" : ["TSO1"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"}
+}
+"""
+
+# Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1
