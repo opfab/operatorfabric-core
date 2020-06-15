@@ -72,7 +72,11 @@ export class CardDetailsComponent implements OnInit {
     }
 
     get isActionEnabled(): boolean {
-        return this.card.entitiesAllowedToRespond.includes(this.user.entities[0]);;
+        if (!this.card.entitiesAllowedToRespond)  {
+            console.log("Card error : no field entitiesAllowedToRespond");
+            return false;
+        }
+        return this.card.entitiesAllowedToRespond.includes(this.user.entities[0]);
     }
 
 
