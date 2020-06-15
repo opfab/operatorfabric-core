@@ -1,0 +1,67 @@
+{
+  "process": {
+    "title": "Test: Processus",
+    "summary": "Cela résume la carte",
+    "detail": {
+      "tab": {
+        "first": "Premier onglet",
+        "second": "Deuxième onglet"
+      }
+    },
+    "action": {
+      "first": "Première action"
+    }
+  },
+  "third": {
+    "label": "Tier de test third"
+  },
+  "menu": {
+    "first": "Premier item",
+    "second": "Deuxieme item"
+  },
+  "opfab": {
+    "card": {
+      "template": {
+        "template1": {
+          "name": "Contingencies"
+        },
+        "tab1": {
+          "name": "template-tab1"
+        },
+        "tab2": {
+          "name": "template-tab2"
+        },
+        "tab3": {
+          "name": "template-tab3"
+        },
+        "tab4": {
+          "name": "template-tab4"
+        },
+        "tab5": {
+          "name": "template-tab5"
+        }
+      }
+    }
+  },
+  "apogeesea": {
+    "card": {
+      "summary": "{{contingenciesSize}} défauts",
+      "contingencies": {
+        "0":"0 défaut",
+        "1": "1 défaut"
+      },
+      "title": "{{content}}",
+      "details": {
+        "generic": "Défauts",
+        "pf": {
+          "1": "PF-5’",
+          "2": "PF-10’",
+          "3": "PF-15’",
+          "4": "PF-20’",
+          "5": "PF-25’",
+          "6": "PF-30’"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,452 @@
+<div id="apogee-contingencies">
+    <input type="text" id="inputContingencies" onkeyup="findContingenciesAndConstraints()"
+           placeholder="Recherche défauts..">
+    <input type="text" id="inputConstraints" onkeyup="findContingenciesAndConstraints()"
+           placeholder="Recherche contraintes..">
+    <br/>
+
+    {{#if card.data.networkLimitViolationsN }}
+        <div>
+
+            <button class="accordion">Contraintes en N</button>
+
+            <div class="panel" style="display:none">
+                <br>
+                <table class="darkTable">
+                    <thead>
+                    </tr>
+                    <th style="width:440px">Contraintes</th>
+                    {{#card.data.networkLimitViolationsN.0.networkContexts}}
+
+                        <th style="width:100px">
+
+                            <div class="tooltipApogee">{{dateFormat date format="HH:mm"}}
+                                <span class="tooltiptext">
+                          Type:  {{detail.type}} <br/>
+                          Date de Calcul: {{dateFormat detail.computationDate format="HH:mm"}} <br/>
+                          Date du réseau :{{dateFormat date format="HH:mm"}} <br/>
+                       </span>
+                            </div>
+                        </th>
+
+                    {{/card.data.networkLimitViolationsN.0.networkContexts}}
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+                    {{#card.data.networkLimitViolationsN}}
+
+                        <tr>
+                            <td style="width:440px">
+                                {{name}} {{#if detail.cDisplayExists}} ({{detail.constraintDisplayLabel}}) {{else}}
+                                ({{detail.constraintDisplayLabel}} {{detail.acceptableDuration}} {{#if detail.acceptableDuration }} s {{/if }}) {{/if}}
+                            </td>
+
+                            {{#values}}
+
+                                <td style="width:100px">
+                                    <div class="tooltipApogee" {{#if detail.worstConstraint}} style="font-weight:bold" {{/if }}>  {{#if value}} {{value}} {{/if}}
+                                        <table class="tooltiptext">
+
+                                            <tr>
+                                                <td>Ouvrage</td>
+                                                <td>{{../name}}</td>
+                                            </tr>
+
+                                            {{#if detail.cDisplayExistsValue}}
+                                               <tr>
+                                                  <td>Contrainte</td>
+                                                  <td> {{#if value}} {{value}} de {{/if}} {{ detail.displayLabelValue}} </td>
+                                               </tr>
+                                             {{else}}
+                                                <tr>
+                                                  <td>Contrainte</td>
+                                                  <td> {{#if value}} {{value}} de {{/if}} {{ detail.displayLabelValue}} {{ detail.acceptableDurationValue}} {{#if detail.acceptableDurationValue}} s {{/if}}
+                                                   </td>
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.sideValue}}
+                                                <tr>
+                                                    <td>Côté</td>
+                                                    {{#if (bool detail.sideValue '==' 'ONE')}}
+                                                        <td>Origine</td>
+                                                    {{else}}
+                                                        <td>Extrémité</td>
+                                                    {{/if}}
+                                                    <td/>
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.limit}}
+                                                <tr>
+                                                    <td>Limite</td>
+                                                    <td>{{numberFormat detail.limit maximumFractionDigits="0"}} A</td>
+                                                    <td/>
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.preValue}}
+                                                <tr>
+                                                    <td>Valeur Pré-défaut</td>
+                                                    <td>{{numberFormat detail.preValue maximumFractionDigits="0"}} A</td>
+                                                    {{#if detail.preValueMw}}
+                                                        <td>{{numberFormat detail.preValueMw maximumFractionDigits="0"}} MW</td>
+                                                    {{else}}
+                                                        <td/>
+                                                    {{/if}}
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.value}}
+                                                <tr>
+                                                    <td>Valeur</td>
+                                                    <td>{{numberFormat detail.value maximumFractionDigits="0"}} A</td>
+                                                    {{#if detail.valueMw}}
+                                                        <td>{{numberFormat detail.valueMw maximumFractionDigits="0"}} MW</td>
+                                                    {{else}}
+                                                        <td/>
+                                                    {{/if}}
+                                                </tr>
+                                            {{/if}}
+
+                                        </table>
+                                    </div>
+
+                                </td>
+                            {{/values}}
+                        </tr>
+                    {{/card.data.networkLimitViolationsN}}
+
+                    </tbody>
+
+                </table>
+                <br>
+            </div>
+            <br/>
+        </div>
+    {{/if }}
+
+
+    {{#card.data.networkContingencies}}
+
+    <div>
+
+        <button class="accordion">{{name}}</button>
+
+        <div class="panel" style="display:none">
+            <br/>
+
+            {{#if this.networkLimitViolations }}
+
+                <table class="darkTable">
+                    <thead>
+                    <tr>
+                        <th style="width:440px">Contraintes</th>
+                        {{#networkLimitViolations.0.networkContexts}}
+
+                            <th style="width:100px">
+                                <div class="tooltipApogee">{{dateFormat date format="HH:mm"}}
+                                    <span class="tooltiptext">
+                          Type:  {{detail.type}} <br/>
+                          Date de Calcul: {{dateFormat   detail.computationDate  format="HH:mm"}} <br/>
+                          Date réseau :{{dateFormat date format="HH:mm"}} <br/>
+                        </span>
+                                </div>
+                            </th>
+
+                        {{/networkLimitViolations.0.networkContexts}}
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {{#networkLimitViolations}}
+
+                        <tr>
+                            <td style="width:440px">
+                               {{name}} {{#if detail.cDisplayExists}} ({{detail.constraintDisplayLabel}}) {{else}}
+                               ({{detail.constraintDisplayLabel}} {{detail.acceptableDuration}} {{#if detail.acceptableDuration }} s {{/if }}) {{/if}}
+                            </td>
+
+                            {{#values}}
+                                <td style="width:100px">
+                                    <div class="tooltipApogee" {{#if detail.worstConstraint}} style="font-weight:bold" {{/if }}>  {{#if value}} {{value}} {{/if}}
+                                        <table class="tooltiptext">
+
+                                            <tr>
+                                                <td>Ouvrage</td>
+                                                <td>{{../name}}</td>
+                                            </tr>
+
+                                            {{#if detail.cDisplayExistsValue}}
+                                               <tr>
+                                                  <td>Contrainte</td>
+                                                  <td> {{#if value}} {{value}} de {{/if}} {{ detail.displayLabelValue}} </td>
+                                               </tr>
+                                             {{else}}
+                                                <tr>
+                                                  <td>Contrainte</td>
+                                                  <td> {{#if value}} {{value}} de {{/if}} {{ detail.displayLabelValue}} {{ detail.acceptableDurationValue}} {{#if detail.acceptableDurationValue}} s {{/if}}
+                                                   </td>
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.sideValue}}
+                                                <tr>
+                                                    <td>Côté</td>
+                                                    {{#if (bool detail.sideValue '==' 'ONE')}}
+                                                        <td>Origine</td>
+                                                    {{else}}
+                                                        <td>Extrémité</td>
+                                                    {{/if}}
+                                                    <td/>
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.limit}}
+                                                <tr>
+                                                    <td>Limite</td>
+                                                    <td>{{numberFormat detail.limit maximumFractionDigits="0"}} A</td>
+                                                    <td/>
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.preValue}}
+                                                <tr>
+                                                    <td>Valeur Pré-défaut</td>
+                                                    <td>{{numberFormat detail.preValue maximumFractionDigits="0"}} A</td>
+                                                    {{#if detail.preValueMw}}
+                                                        <td>{{numberFormat detail.preValueMw maximumFractionDigits="0"}} MW</td>
+                                                    {{else}}
+                                                        <td/>
+                                                    {{/if}}
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.value}}
+                                                <tr>
+                                                    <td>Valeur</td>
+                                                    <td>{{numberFormat detail.value maximumFractionDigits="0"}} A</td>
+                                                    {{#if detail.valueMw}}
+                                                        <td>{{numberFormat detail.valueMw maximumFractionDigits="0"}} MW</td>
+                                                    {{else}}
+                                                        <td/>
+                                                    {{/if}}
+                                                </tr>
+                                            {{/if}}
+
+                                        </table>
+                                    </div>
+
+                                </td>
+
+                            {{/values}}
+
+                        </tr>
+
+                    {{/networkLimitViolations}}
+
+                    </tbody>
+
+                </table>
+            {{/if }}
+            <br/>
+
+            {{#networkRemedials}}
+                <p class="{{detail.status}}">Parade: {{name}}</p>
+                {{#if this.networkLimitViolations }}
+                    <table class="darkTable">
+                        <thead>
+                        <tr>
+                            <th style="width:440px">Contraintes</th>
+
+                            {{#networkLimitViolations.0.networkContexts}}
+
+                                <th>
+                                    <div class="tooltipApogee">{{dateFormat date format="HH:mm"}}
+                                        <span class="tooltiptext">
+                     Type:  {{detail.type}} <br/>
+                     Date de Calcul: {{dateFormat   detail.computationDate  format="HH:mm"}} <br/>
+                          Date réseau :{{dateFormat   date   format="HH:mm"}} <br/>
+                   </span>
+                                    </div>
+                                </th>
+                            {{/networkLimitViolations.0.networkContexts}}
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#networkLimitViolations}}
+                            <tr>
+                                <td style="min-width:440px">
+                                    {{name}} {{#if detail.cDisplayExists}} ({{detail.constraintDisplayLabel}}) {{else}}
+                                    ({{detail.constraintDisplayLabel}} {{detail.acceptableDuration}} {{#if detail.acceptableDuration }} s {{/if }}) {{/if}}
+                                </td>
+
+                                {{#values}}
+                                    <td style="width:100px">
+                                        <div class="tooltipApogee" {{#if detail.worstConstraint}} style="font-weight:bold" {{/if }}>  {{#if value}} {{value}} {{/if}}
+                                        <table class="tooltiptext">
+
+                                            <tr>
+                                                <td>Ouvrage</td>
+                                                <td>{{../name}}</td>
+                                            </tr>
+
+                                            {{#if detail.cDisplayExistsValue}}
+                                               <tr>
+                                                  <td>Contrainte</td>
+                                                  <td> {{#if value}} {{value}} de {{/if}} {{ detail.displayLabelValue}} </td>
+                                               </tr>
+                                             {{else}}
+                                                <tr>
+                                                  <td>Contrainte</td>
+                                                  <td> {{#if value}} {{value}} de {{/if}} {{ detail.displayLabelValue}} {{ detail.acceptableDurationValue}} {{#if detail.acceptableDurationValue}} s {{/if}}
+                                                   </td>
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.sideValue}}
+                                                <tr>
+                                                    <td>Côté</td>
+                                                    {{#if (bool detail.sideValue '==' 'ONE')}}
+                                                        <td>Origine</td>
+                                                    {{else}}
+                                                        <td>Extrémité</td>
+                                                    {{/if}}
+                                                    <td/>
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.limit}}
+                                                <tr>
+                                                    <td>Limite</td>
+                                                    <td>{{numberFormat detail.limit maximumFractionDigits="0"}} A</td>
+                                                    <td/>
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.preValue}}
+                                                <tr>
+                                                    <td>Valeur Pré-défaut</td>
+                                                    <td>{{numberFormat detail.preValue maximumFractionDigits="0"}} A</td>
+                                                    {{#if detail.preValueMw}}
+                                                        <td>{{numberFormat detail.preValueMw maximumFractionDigits="0"}} MW</td>
+                                                    {{else}}
+                                                        <td/>
+                                                    {{/if}}
+                                                </tr>
+                                            {{/if}}
+
+                                            {{#if detail.value}}
+                                                <tr>
+                                                    <td>Valeur</td>
+                                                    <td>{{numberFormat detail.value maximumFractionDigits="0"}} A</td>
+                                                    {{#if detail.valueMw}}
+                                                        <td>{{numberFormat detail.valueMw maximumFractionDigits="0"}} MW</td>
+                                                    {{else}}
+                                                        <td/>
+                                                    {{/if}}
+                                                </tr>
+                                            {{/if}}
+
+                                        </table>
+                                        </div>
+                                    </td>
+                                {{/values}}
+                            </tr>
+
+                        {{/networkLimitViolations}}
+
+                        </tbody>
+                    </table>
+                {{/if }}
+                <br/>
+            {{/networkRemedials}}
+
+        </div>
+
+    </div>
+    {{/card.data.networkContingencies}}
+
+</div>
+
+
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function (e) {
+                e.stopImmediatePropagation();
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+
+                } else {
+                    panel.style.display = "block";
+
+                }
+            });
+        }
+
+
+        function findContingenciesAndConstraints() {
+            // Declare variables
+            var inputContingencies, filterContingencies, inputConstraints, filterConstraints, contingencies, buttons, i,
+                    txtValue, panel;
+
+            inputContingencies = document.getElementById('inputContingencies');
+            filterContingencies = inputContingencies.value.toUpperCase();
+
+            inputConstraints = document.getElementById('inputConstraints');
+            filterConstraints = inputConstraints.value.toUpperCase();
+
+            contingencies = document.getElementById("apogee-contingencies");
+            buttons = contingencies.getElementsByTagName('button');
+
+            // Loop through all list items, and hide those who don't match the search query
+            for (i = 0; i < buttons.length; i++) {
+                txtValue = buttons[i].textContent || buttons[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filterContingencies) > -1) {
+
+                    if (filterConstraints == "") {
+                        buttons[i].parentNode.style.display = "";
+                    } else {
+                        panel = buttons[i].nextElementSibling;
+                        buttons[i].parentNode.style.display = findConstraints(panel, filterConstraints);
+                    }
+                } else {
+
+                    if (filterConstraints == "") {
+                        buttons[i].parentNode.style.display = "none";
+                    } else {
+                        panel = buttons[i].nextElementSibling;
+                        buttons[i].parentNode.style.display = findConstraints(panel, filterConstraints);
+                    }
+                }
+            }
+        }
+
+        function findConstraints(panel, filterConstraints) {
+            // Declare variables
+            var tables, i, j, txtValue;
+
+            tables = panel.getElementsByClassName("darkTable");
+
+            for (i = 0; i < tables.length; i++) {
+                for (j = 1; j < tables[i].rows.length; j++) {
+                    txtValue = tables[i].rows[j].cells[0].textContent || tables[i].rows[j].cells[0].innerText;
+
+                    if (txtValue.toUpperCase().indexOf(filterConstraints) > -1) {
+                        return "";
+                    }
+                }
+            }
+
+            return "none";
+        }
+    </script>

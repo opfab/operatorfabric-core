@@ -1,0 +1,313 @@
+.V_R_CMP_NOK {
+    color: #D200D2;
+}
+
+.V_R_AV {
+    color: red;
+}
+
+.NO_V {
+    color: #00BE00;
+}
+
+#inputContingencies {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputConstraints {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputContingenciesTab1 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputConstraintsTab1 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputContingenciesTab2 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputConstraintsTab2 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputContingenciesTab3 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputConstraintsTab3 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputContingenciesTab4 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputConstraintsTab4 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputContingenciesTab5 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputConstraintsTab5 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputContingenciesTab6 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+#inputConstraintsTab6 {
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    margin: 12px;
+}
+
+.panel {
+    border: 1px;
+    border-style: solid;
+    padding-left: 30px;
+}
+
+#apogee-contingencies .accordion {
+    background-color: #777777;
+    cursor: pointer;
+
+    width: 100%;
+    border: 1px;
+    border-style: solid;
+    margin-top: 10px;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+#apogee-contingencies .active, .accordion1:hover {
+    background-color: #b3b3b3;
+}
+
+#apogee-contingencies1 .accordion1 {
+    background-color: #777777;
+    cursor: pointer;
+
+    width: 100%;
+    border: 1px;
+    border-style: solid;
+    margin-top: 10px;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+#apogee-contingencies1 .active, .accordion1:hover {
+    background-color: #b3b3b3;
+}
+
+#apogee-contingencies2 .accordion2 {
+    background-color: #777777;
+    cursor: pointer;
+
+    width: 100%;
+    border: 1px;
+    border-style: solid;
+    margin-top: 10px;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+#apogee-contingencies2 .active, .accordion1:hover {
+    background-color: #b3b3b3;
+}
+
+#apogee-contingencies3 .accordion3 {
+    background-color: #777777;
+    cursor: pointer;
+
+    width: 100%;
+    border: 1px;
+    border-style: solid;
+    margin-top: 10px;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+#apogee-contingencies3 .active, .accordion1:hover {
+    background-color: #b3b3b3;
+}
+
+#apogee-contingencies4 .accordion4 {
+    background-color: #777777;
+    cursor: pointer;
+
+    width: 100%;
+    border: 1px;
+    border-style: solid;
+    margin-top: 10px;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+#apogee-contingencies4 .active, .accordion1:hover {
+    background-color: #b3b3b3;
+}
+
+#apogee-contingencies5 .accordion5 {
+    background-color: #777777;
+    cursor: pointer;
+
+    width: 100%;
+    border: 1px;
+    border-style: solid;
+    margin-top: 10px;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+#apogee-contingencies5 .active, .accordion1:hover {
+    background-color: #b3b3b3;
+}
+
+#apogee-contingencies6 .accordion6 {
+    background-color: #777777;
+    cursor: pointer;
+
+    width: 100%;
+    border: 1px;
+    border-style: solid;
+    margin-top: 10px;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+#apogee-contingencies6 .active, .accordion1:hover {
+    background-color: #b3b3b3;
+}
+
+table.darkTable {
+    text-align: center;
+    border-collapse: collapse;
+    border: 1px;
+    font-family: Times, "Times New Roman", Georgia, serif;
+}
+
+table.darkTable td, table.darkTable th {
+    border: 1px solid #4A4A4A;
+}
+
+table.darkTable tbody td {
+    font-size: 15px;
+    color: #E6E6E6;
+}
+
+table.darkTable tr:nth-child(even) {
+    background: #888888;
+}
+
+table.darkTable thead {
+    background: #000000;
+    border-bottom: 3px solid #000000;
+}
+
+table.darkTable thead th {
+    font-size: 15px;
+    font-weight: bold;
+    color: #E6E6E6;
+    text-align: center;
+    border-left: 2px solid #4A4A4A;
+
+}
+
+table.darkTable thead th:first-child {
+    border-left: none;
+}
+
+
+
+.tooltipApogee {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted #787878;
+}
+
+.tooltipApogee .tooltiptext {
+    visibility: hidden;
+    width: 350px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 0 5px ;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+
+    margin-top: -200px;
+    margin-left: 30px;
+
+}
+
+.tooltipApogee:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltipApogee td {
+    background-color: black;
+}

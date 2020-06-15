@@ -13,7 +13,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "api_test_externalRecipient1",
+    "publisher": "TEST_ACTION",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId1",
@@ -54,15 +54,15 @@ Feature: Cards
             {
                 "type": "GROUP",
                 "recipients": null,
-                "identity": "RTE",
+                "identity": "TSO1",
                 "preserveMain": null
             }
         ],
         "identity": null,
         "preserveMain": null
     },
-    "entityRecipients": ["RTE"],
-    "entitiesAllowedToRespond": ["RTE"],
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -77,7 +77,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "api_test_externalRecipient1",
+    "publisher": "TEST_ACTION",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId2",
@@ -118,15 +118,15 @@ Feature: Cards
             {
                 "type": "GROUP",
                 "recipients": null,
-                "identity": "RTE",
+                "identity": "TSO1",
                 "preserveMain": null
             }
         ],
         "identity": null,
         "preserveMain": null
     },
-    "entityRecipients": ["RTE"],
-    "entitiesAllowedToRespond": ["RTE"],
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -141,7 +141,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "api_test_externalRecipient1",
+    "publisher": "TEST_ACTION",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId3",
@@ -182,15 +182,15 @@ Feature: Cards
             {
                 "type": "GROUP",
                 "recipients": null,
-                "identity": "RTE",
+                "identity": "TSO1",
                 "preserveMain": null
             }
         ],
         "identity": null,
         "preserveMain": null
     },
-    "entityRecipients": ["RTE"],
-    "entitiesAllowedToRespond": ["RTE"],
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -205,7 +205,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "api_test_externalRecipient1",
+    "publisher": "TEST_ACTION",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId4",
@@ -246,15 +246,15 @@ Feature: Cards
             {
                 "type": "GROUP",
                 "recipients": null,
-                "identity": "RTE",
+                "identity": "TSO1",
                 "preserveMain": null
             }
         ],
         "identity": null,
         "preserveMain": null
     },
-    "entityRecipients": ["RTE"],
-    "entitiesAllowedToRespond": ["RTE"],
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -268,7 +268,7 @@ Feature: Cards
 {
     "uid": null,
     "id": null,
-    "publisher": "api_test_externalRecipient1",
+    "publisher": "TEST_ACTION",
     "publisherVersion": "1",
     "process": "process",
     "processId": "processId1",
@@ -309,14 +309,14 @@ Feature: Cards
             {
                 "type": "GROUP",
                 "recipients": null,
-                "identity": "RTE",
+                "identity": "TSO1",
                 "preserveMain": null
             }
         ],
         "identity": null,
         "preserveMain": null
     },
-    "entityRecipients": ["RTE"],
+    "entityRecipients": ["ENTITY1"],
     "entitiesAllowedToRespond": ["TSO1"],
     "mainRecipient": null,
     "userRecipients": null,
