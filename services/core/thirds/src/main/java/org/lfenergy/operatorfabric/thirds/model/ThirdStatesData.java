@@ -27,6 +27,7 @@ public class ThirdStatesData implements ThirdStates {
     @Singular("actionsData")
     private Map<String, ActionData> actionsData;
     private ResponseData responseData;
+    private Boolean acknowledgmentAllowed;
 
     @Override
     public void setDetails(List<? extends Detail> details) {

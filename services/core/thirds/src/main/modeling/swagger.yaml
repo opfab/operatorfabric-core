@@ -531,7 +531,7 @@ definitions:
         type: array
         description: describes the menu items to add to UI navbar
         items:
-          $ref: '#/definitions/ThirdMenuEntry'
+          $ref: '#/definitions/ThirdMenuEntry'      
       processes:
         type: object
         additionalProperties:
@@ -554,6 +554,9 @@ definitions:
                       $ref: '#/definitions/Action'
                   response:
                     $ref: '#/definitions/Response'
+                  acknowledgmentAllowed:
+                    type: boolean
+                    description: This flag indicates the possibility for a card of this kind to be acknowledged on user basis
     required:
       - name
       - version
