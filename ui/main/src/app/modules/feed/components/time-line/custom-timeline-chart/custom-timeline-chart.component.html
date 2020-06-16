@@ -91,8 +91,10 @@
         <div *ngFor="let title of currentCircleHovered.summary"style="padding: 0px;margin: 0px;line-height: 8px">
            <br/>
             <button class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
+                <div style="text-align:left">
                 {{title.summaryDate}}  
-                <span translate [translateParams]="title.parameters" >{{title.i18nPrefix + title.key}}</span>
+                <span translate [translateParams]="title.parameters" style="text-align:left;">{{title.i18nPrefix + title.key}}</span>
+                </div>
             </button>
         </div>
     </ng-template>
