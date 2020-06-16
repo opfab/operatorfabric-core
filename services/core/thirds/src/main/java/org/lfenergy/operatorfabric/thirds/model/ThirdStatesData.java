@@ -28,6 +28,8 @@ public class ThirdStatesData implements ThirdStates {
     private Map<String, ActionData> actionsData;
     private ResponseData responseData;
     private Boolean acknowledgmentAllowed;
+    private String color;
+    private String name;
 
     @Override
     public void setDetails(List<? extends Detail> details) {

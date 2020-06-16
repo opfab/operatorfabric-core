@@ -23,6 +23,7 @@ public class ThirdProcessesData implements ThirdProcesses{
 
     @Singular("statesData")
     private Map<String,ThirdStatesData> statesData;
+    private String name;
 
     @Override
     public Map<String, ? extends ThirdStates> getStates(){
