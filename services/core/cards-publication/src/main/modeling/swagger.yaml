@@ -393,7 +393,6 @@ definitions:
       - startDate
       - title
       - summary
-      - recipient
     example:
       uid: 12345
       id: cardIdFromMyProcess
