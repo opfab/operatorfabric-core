@@ -9,5 +9,6 @@ java -jar karate.jar                              \
       cards/getCardSubscription.feature           \
       cards/userCards.feature                     \
       cards/cardsUserAcks.feature                 \
+      cards/userAcknowledgmentUpdateCheck.feature \
       #cards/updateCardSubscription.feature
 
