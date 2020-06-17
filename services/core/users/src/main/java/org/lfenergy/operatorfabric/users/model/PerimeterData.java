@@ -46,6 +46,6 @@ public class PerimeterData implements Perimeter {
     public List<? extends StateRight> getStateRights() {
         if(stateRights == null)
             return Collections.emptyList();
-        return new ArrayList<>(stateRights);
+        return stateRights;
     }
 }

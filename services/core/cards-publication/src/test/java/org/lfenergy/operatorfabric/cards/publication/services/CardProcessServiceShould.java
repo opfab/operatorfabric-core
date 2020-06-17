@@ -130,7 +130,7 @@ class CardProcessServiceShould {
     public CardProcessServiceShould() {
 
         user = new User();
-        user.setLogin("ret-operator");
+        user.setLogin("dummyUser");
         user.setFirstName("Test");
         user.setLastName("User");
         List<String> groups = new ArrayList<>();

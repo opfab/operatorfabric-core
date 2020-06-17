@@ -13,6 +13,7 @@ package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
 import feign.FeignException;
 import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -40,6 +41,15 @@ public class UserServiceCache {
     @Cacheable(value = "user", key = "{#principalId}")
     public User fetchUserFromCacheOrProxy(String principalId) throws FeignException {
         return proxy.fetchUser(principalId);
+    }
+
+    /** Retrieve current user data with his perimeters from cache or from Users service through proxy
+     * @param principalId of the user to be retrieved
+     * @return {@link CurrentUserWithPerimeters}
+     */
+    @Cacheable(value = "user", key = "{#principalId}")
+    public CurrentUserWithPerimeters fetchCurrentUserWithPerimetersFromCacheOrProxy(String principalId) throws FeignException {
+        return proxy.fetchCurrentUserWithPerimeters();
     }
 
     /** Clear all cached user data

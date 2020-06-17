@@ -205,7 +205,7 @@ public class CardRoutesShould {
 
             CardConsultationData simpleCard5 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard5, "", now,
-                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive (because the user doesn't have the right for process/state)
 
             CardConsultationData simpleCard6 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard6, "", now,
@@ -263,14 +263,7 @@ public class CardRoutesShould {
                     .verify();
             assertThat(cardRoutes).isNotNull();
             webTestClient.get().uri("/cards/{id}", simpleCard5.getId()).exchange()
-                    .expectStatus().isOk()
-                    .expectBody(CardConsultationData.class).value(card -> {
-                assertThat(card)
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(),
-                                "tags", "details", "userRecipients","orphanedUsers")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard5);
-            });
+                    .expectStatus().isNotFound();
 
             StepVerifier.create(repository.save(simpleCard6))
                     .expectNextCount(1)

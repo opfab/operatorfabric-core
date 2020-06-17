@@ -37,6 +37,7 @@ subprojects {
         testRuntimeOnly testing.junit5Engine
         testImplementation testing.junit5Api
         testCompile boot.starterTest, testing.assertJ, misc.lombok
+        compile misc.jacksonAnnotations
     }
 
     sourceSets {

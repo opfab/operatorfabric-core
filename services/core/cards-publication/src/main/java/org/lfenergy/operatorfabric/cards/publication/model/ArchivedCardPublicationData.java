@@ -79,6 +79,8 @@ public class ArchivedCardPublicationData implements Card {
 
     @Transient
     private Boolean hasBeenAcknowledged;
+    @Indexed
+    private String processStateKey;
 
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
@@ -104,7 +106,7 @@ public class ArchivedCardPublicationData implements Card {
         this.entityRecipients = card.getEntityRecipients() == null ? null : new ArrayList<>(card.getEntityRecipients());
         this.externalRecipients = card.getExternalRecipients() == null ? null : new ArrayList<>(card.getExternalRecipients());
         this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null : new ArrayList<>(card.getEntitiesAllowedToRespond());
-
+        this.processStateKey = process + "." + state;
     }
 
 }

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
@@ -61,11 +62,10 @@ public class CardSubscriptionServiceShould {
     private CardSubscriptionService service;
     @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
-
-    private User user;
+    private CurrentUserWithPerimeters currentUserWithPerimeters;
 
     public CardSubscriptionServiceShould(){
-        user = new User();
+        User user = new User();
         user.setLogin("testuser");
         user.setFirstName("Test");
         user.setLastName("User");
@@ -79,11 +79,14 @@ public class CardSubscriptionServiceShould {
         entities.add("testentity1");
         entities.add("testentity2");
         user.setEntities(entities);
+
+        currentUserWithPerimeters = new CurrentUserWithPerimeters();
+        currentUserWithPerimeters.setUserData(user);
     }
 
     @Test
     public void createAndDeleteSubscription(){
-        CardSubscription subscription = service.subscribe(user, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.evict(subscription.getId());
@@ -94,7 +97,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void deleteSubscriptionWithDelay(){
-        CardSubscription subscription = service.subscribe(user, TEST_ID, null,null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null,null, false);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.scheduleEviction(subscription.getId());
@@ -105,7 +108,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void reviveSubscription(){
-        CardSubscription subscription = service.subscribe(user, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.scheduleEviction(subscription.getId());
@@ -116,7 +119,7 @@ public class CardSubscriptionServiceShould {
         }catch (ConditionTimeoutException e){
             //nothing, everything is alright
         }
-        CardSubscription subscription2 = service.subscribe(user, TEST_ID, null, null, false);
+        CardSubscription subscription2 = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
         Assertions.assertThat(subscription2).isSameAs(subscription);
         try {
             await().atMost(6, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
@@ -131,7 +134,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void receiveCards(){
-        CardSubscription subscription = service.subscribe(user, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
         StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher());
         taskScheduler.schedule(createSendMessageTask(),new Date(System.currentTimeMillis() + 1000));
         verifier
@@ -143,14 +146,14 @@ public class CardSubscriptionServiceShould {
 
     private Runnable createSendMessageTask() {
         return () ->{
-            rabbitTemplate.convertAndSend(userExchange.getName(),user.getLogin(),"test message 1");
-            rabbitTemplate.convertAndSend(userExchange.getName(),user.getLogin(),"test message 2");
+            rabbitTemplate.convertAndSend(userExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),"test message 1");
+            rabbitTemplate.convertAndSend(userExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),"test message 2");
         };
     }
 
     @Test
     public void testCheckIfUserMustReceiveTheCard() {
-        CardSubscription subscription = service.subscribe(user, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
 
         //groups only
         String messageBody1 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"]}";  //true
@@ -180,9 +183,9 @@ public class CardSubscriptionServiceShould {
         Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody3)).isTrue();
         Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody4)).isFalse();
 
-        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody5)).isTrue();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody5)).isFalse();
         Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody6)).isFalse();
-        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody7)).isTrue();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody7)).isFalse();
         Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody8)).isFalse();
 
         Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody9)).isTrue();

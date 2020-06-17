@@ -11,6 +11,7 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,4 +27,8 @@ public interface UserServiceProxy {
     @GetMapping(value = "/users/{login}",
        produces = { "application/json" })
     User fetchUser(@PathVariable("login") String login) ;
+
+    @GetMapping(value = "/CurrentUserWithPerimeters",
+            produces = { "application/json" })
+    CurrentUserWithPerimeters fetchCurrentUserWithPerimeters() ;
 }

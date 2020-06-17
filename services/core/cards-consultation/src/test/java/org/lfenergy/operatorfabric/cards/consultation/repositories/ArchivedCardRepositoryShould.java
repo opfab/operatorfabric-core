@@ -17,6 +17,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,6 +60,11 @@ public class ArchivedCardRepositoryShould {
     private static User user3 = new User();
     private static User user4 = new User();
     private static User user5 = new User();
+    private static CurrentUserWithPerimeters currentUser1 = new CurrentUserWithPerimeters();
+    private static CurrentUserWithPerimeters currentUser2 = new CurrentUserWithPerimeters();
+    private static CurrentUserWithPerimeters currentUser3 = new CurrentUserWithPerimeters();
+    private static CurrentUserWithPerimeters currentUser4 = new CurrentUserWithPerimeters();
+    private static CurrentUserWithPerimeters currentUser5 = new CurrentUserWithPerimeters();
 
     private static Instant now = Instant.now();
     private static Instant nowPlusHalf = now.plus(30, ChronoUnit.MINUTES);
@@ -90,23 +96,28 @@ public class ArchivedCardRepositoryShould {
         user1.setLogin(login1);
         user1.addGroupsItem("someGroup");
         user1.addGroupsItem("someOtherGroup");
+        currentUser1.setUserData(user1);
         //Groups only
 
         user2.setLogin(login2);
         user2.addGroupsItem("rte");
+        currentUser2.setUserData(user2);
         //Group only
 
         user3.setLogin(login3);
+        currentUser3.setUserData(user3);
         //No group and no entity
 
         user4.setLogin(login4);
         user4.addEntitiesItem("someEntity");
         user4.addEntitiesItem("someOtherEntity");
+        currentUser4.setUserData(user4);
         //Entities only
 
         user5.setLogin(login5);
         user5.addGroupsItem("group1");
         user5.addEntitiesItem("entity1");
+        currentUser5.setUserData(user5);
         //Group and entity
     }
 
@@ -197,7 +208,7 @@ public class ArchivedCardRepositoryShould {
 
         persistCard(archivedCard);
 
-        StepVerifier.create(repository.findByIdWithUser(id, user1))
+        StepVerifier.create(repository.findByIdWithUser(id, currentUser1))
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(id);
                     assertThat(card.getPublisher()).isEqualTo("PUBLISHER");
@@ -216,7 +227,7 @@ public class ArchivedCardRepositoryShould {
 
         persistCard(archivedCard);
 
-        StepVerifier.create(repository.findByIdWithUser(id, user2))
+        StepVerifier.create(repository.findByIdWithUser(id, currentUser2))
                 .expectComplete()
                 .verify();
     }
@@ -231,7 +242,7 @@ public class ArchivedCardRepositoryShould {
         queryParams.add("publisher",thirdPublisher);
         queryParams.add("processId","PROCESS1");
 
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 //The card from thirdPublisher is returned first because it has the latest publication date
@@ -255,7 +266,7 @@ public class ArchivedCardRepositoryShould {
 
         queryParams.add("publisher","noSuchPublisher");
 
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -279,7 +290,7 @@ public class ArchivedCardRepositoryShould {
         queryParams.add("publishDateFrom", Long.toString(start.toEpochMilli()));
         queryParams.add("publishDateTo",Long.toString(end.toEpochMilli()));
 
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -306,7 +317,7 @@ public class ArchivedCardRepositoryShould {
 
         queryParams.add("publishDateFrom", Long.toString(start.toEpochMilli()));
 
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -333,7 +344,7 @@ public class ArchivedCardRepositoryShould {
 
         queryParams.add("publishDateTo",Long.toString(end.toEpochMilli()));
 
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -362,7 +373,7 @@ public class ArchivedCardRepositoryShould {
         queryParams.add("activeFrom", Long.toString(start.toEpochMilli()));
         queryParams.add("activeTo", Long.toString(end.toEpochMilli()));
 
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -389,7 +400,7 @@ public class ArchivedCardRepositoryShould {
 
         queryParams.add("activeFrom", Long.toString(start.toEpochMilli()));
 
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -421,7 +432,7 @@ public class ArchivedCardRepositoryShould {
 
         //Page 1
         queryParams.add("page","0");
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -443,7 +454,7 @@ public class ArchivedCardRepositoryShould {
 
         //Page 2
         queryParams.set("page","1");
-        params = of(user1,queryParams);
+        params = of(currentUser1,queryParams);
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
                     int expectedNbOfElements = 7;
@@ -464,7 +475,7 @@ public class ArchivedCardRepositoryShould {
 
         //Page 3
         queryParams.set("page","2");
-        params = of(user1,queryParams);
+        params = of(currentUser1,queryParams);
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
                     int expectedNbOfElements = 7;
@@ -495,7 +506,7 @@ public class ArchivedCardRepositoryShould {
 
         queryParams.add("activeTo", Long.toString(end.toEpochMilli()));
 
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -530,7 +541,7 @@ public class ArchivedCardRepositoryShould {
         Instant publishTo = now;
         queryParams.add("publishDateTo",Long.toString(publishTo.toEpochMilli()));
 
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -557,7 +568,7 @@ public class ArchivedCardRepositoryShould {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
         //Cards visible by user1
-        Tuple2<User, MultiValueMap<String, String>> params = of(user1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -577,7 +588,7 @@ public class ArchivedCardRepositoryShould {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
         //Cards visible by someone from group "rte"
-        Tuple2<User, MultiValueMap<String, String>> params = of(user2,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser2,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .assertNext(page -> {
@@ -597,7 +608,7 @@ public class ArchivedCardRepositoryShould {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
         //Cards visible by user3 (who has no groups at all)
-        Tuple2<User, MultiValueMap<String, String>> params = of(user3,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser3,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .expectNextCount(1)
@@ -612,7 +623,7 @@ public class ArchivedCardRepositoryShould {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
         //Cards visible by someone from entity "someEntity"
-        Tuple2<User, MultiValueMap<String, String>> params = of(user4,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser4,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .expectNextCount(1)
@@ -627,7 +638,7 @@ public class ArchivedCardRepositoryShould {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
         //Cards visible by someone from group "group1" and from entity "entity1"
-        Tuple2<User, MultiValueMap<String, String>> params = of(user5,queryParams);
+        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser5,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
                 .expectNextCount(1)
