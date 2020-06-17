@@ -70,7 +70,8 @@ export class State {
     /* istanbul ignore next */
     constructor(
         readonly details?: Detail[],
-        readonly response?: ThirdResponse
+        readonly response?: ThirdResponse,
+        readonly acknowledgementAllowed?: boolean
     ) {
     }
 }

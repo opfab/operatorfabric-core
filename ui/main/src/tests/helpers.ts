@@ -198,6 +198,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.startDate? cardTemplate.startDate:startTime,
         cardTemplate.endDate?cardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.severity?cardTemplate.severity:getRandomSeverity(),
+        false,
         cardTemplate.process?cardTemplate.process:getRandomAlphanumericValue(3, 24),
         cardTemplate.processId?cardTemplate.processId:getRandomAlphanumericValue(3, 24),
         cardTemplate.state?cardTemplate.state:getRandomAlphanumericValue(3, 24),

@@ -25,7 +25,7 @@ public class ThirdStatesData implements ThirdStates {
     @Singular("detailsData")
     private List<? extends Detail> detailsData;
     private ResponseData responseData;
-    private Boolean acknowledgmentAllowed;
+    private Boolean acknowledgementAllowed;
     private String color;
     private String name;
 

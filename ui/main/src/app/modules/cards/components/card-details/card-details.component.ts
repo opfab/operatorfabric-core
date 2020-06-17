@@ -7,7 +7,7 @@ import { ThirdsService } from "@ofServices/thirds.service";
 import { ClearLightCardSelection } from '@ofStore/actions/light-card.actions';
 import { Router } from '@angular/router';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
-import { ThirdResponse } from '@ofModel/thirds.model';
+import { ThirdResponse, Third } from '@ofModel/thirds.model';
 import { Map } from '@ofModel/map';
 import { UserService } from '@ofServices/user.service';
 import { selectIdentifier } from '@ofStore/selectors/authentication.selectors';
@@ -25,7 +25,10 @@ const RESPONSE_FORM_ERROR_MSG_I18N_KEY = 'response.error.form';
 const RESPONSE_SUBMIT_ERROR_MSG_I18N_KEY = 'response.error.submit';
 const RESPONSE_SUBMIT_SUCCESS_MSG_I18N_KEY = 'response.submitSuccess';
 const RESPONSE_BUTTON_TITLE_I18N_KEY = 'response.btnTitle';
-
+const ACK_BUTTON_TEXTS_I18N_KEY = ['cardAcknowledgment.button.ack', 'cardAcknowledgment.button.unack'];
+const ACK_BUTTON_COLORS = ['btn-primary', 'btn-danger'];
+const ACK_BUTTON_ICONS = ['check_box_outline_blank', 'check_box'];
+const RESPONSE_ACK_ERROR_MSG_I18N_KEY = 'response.error.ack';
 
 @Component({
     selector: 'of-card-details',
@@ -38,6 +41,7 @@ export class CardDetailsComponent implements OnInit {
     card: Card;
     user: User;
     details: Detail[];
+    acknowledgementAllowed: boolean;
     currentPath: any;
     responseData: ThirdResponse;
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -97,6 +101,22 @@ export class CardDetailsComponent implements OnInit {
         return this.responseData.btnText ? this.responseData.btnText.parameters : undefined;
     }
 
+    get isAcknowledgementAllowed(): boolean {
+        return this.acknowledgementAllowed ? this.acknowledgementAllowed : false;
+    }
+
+    get btnAckText(): string {
+        return this.card.hasBeenAcknowledged ? ACK_BUTTON_TEXTS_I18N_KEY[+this.card.hasBeenAcknowledged] : ACK_BUTTON_TEXTS_I18N_KEY[+false];
+    }
+
+    get btnAckColor(): string {
+        return this.card.hasBeenAcknowledged ? ACK_BUTTON_COLORS[+this.card.hasBeenAcknowledged] : ACK_BUTTON_COLORS[+false];
+    }
+
+    get btnAckIcon(): string {
+        return this.card.hasBeenAcknowledged ? ACK_BUTTON_ICONS[+this.card.hasBeenAcknowledged] : ACK_BUTTON_ICONS[+false];
+    }
+
     ngOnInit() {
         this.store.select(cardSelectors.selectCardStateSelected)
             .pipe(takeUntil(this.unsubscribe$))
@@ -116,6 +136,7 @@ export class CardDetailsComponent implements OnInit {
                                 const state = third.extractState(this.card);
                                 if (state != null) {
                                     this.details.push(...state.details);
+                                    this.acknowledgementAllowed = state.acknowledgementAllowed;
                                 }
                             }
                         },
@@ -142,7 +163,6 @@ export class CardDetailsComponent implements OnInit {
             },
                 error => console.log(`something went wrong while trying to ask user application registered service with user id : ${id} `)
             );
-
 
     }
     closeDetails() {
@@ -181,6 +201,7 @@ export class CardDetailsComponent implements OnInit {
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
                 severity: Severity.INFORMATION,
+                hasBeenAcknowledged: false,
                 entityRecipients: this.card.entityRecipients,
                 externalRecipients: [this.card.publisher],
                 title: this.card.title,
@@ -217,6 +238,34 @@ export class CardDetailsComponent implements OnInit {
             this.messages.formError.display = true;
             this.messages.formError.msg = (ext_form.formErrorMsg && ext_form.formErrorMsg != '') ?
                 ext_form.formErrorMsg : RESPONSE_FORM_ERROR_MSG_I18N_KEY;
+        }
+    }
+
+    acknowledge(){
+        if (this.card.hasBeenAcknowledged == true){
+            this.cardService.deleteUserAcnowledgement(this.card).subscribe(resp => { 
+                if (resp.status == 200 || resp.status == 204) {
+                    var tmp = {... this.card};
+                    tmp.hasBeenAcknowledged = false;
+                    this.card = tmp;
+                } else {
+                    console.error("the remote acknowledgement endpoint returned an error status(%d)",resp.status);
+                    this.messages.formError.display = true;
+                    this.messages.formError.msg = RESPONSE_ACK_ERROR_MSG_I18N_KEY;
+                }
+            });
+        } else {
+            this.cardService.postUserAcnowledgement(this.card).subscribe(resp => { 
+                if (resp.status == 201 || resp.status == 200) {
+                    var tmp = {... this.card};
+                    tmp.hasBeenAcknowledged = true;
+                    this.card = tmp;
+                } else {
+                    console.error("the remote acknowledgement endpoint returned an error status(%d)",resp.status);
+                    this.messages.formError.display = true;
+                    this.messages.formError.msg = RESPONSE_ACK_ERROR_MSG_I18N_KEY;
+                }
+            });
         }
     }
 
