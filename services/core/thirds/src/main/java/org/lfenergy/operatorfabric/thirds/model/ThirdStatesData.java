@@ -24,8 +24,6 @@ import java.util.Map;
 public class ThirdStatesData implements ThirdStates {
     @Singular("detailsData")
     private List<? extends Detail> detailsData;
-    @Singular("actionsData")
-    private Map<String, ActionData> actionsData;
     private ResponseData responseData;
     private Boolean acknowledgmentAllowed;
     private String color;
@@ -39,16 +37,6 @@ public class ThirdStatesData implements ThirdStates {
     @Override
     public List<? extends Detail> getDetails(){
         return detailsData;
-    }
-
-    @Override
-    public Map<String, ? extends Action> getActions(){
-        return actionsData;
-    }
-
-    @Override
-    public void setActions(Map<String, ? extends Action> actionsData){
-        this.actionsData = new HashMap<>((Map<String,ActionData>) actionsData);
     }
 
     @Override

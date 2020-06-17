@@ -22,15 +22,7 @@
               },
               "templateName": "template"
             }
-          ],
-          "actions": {
-            "action1": {
-              "type": "URL",
-              "label": {
-                "key": "my.card.my.action.label"
-              }
-            }
-          }
+          ]
         }
       }
     }

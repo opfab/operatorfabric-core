@@ -222,7 +222,6 @@ class ThirdsServiceShould {
         assertThat(t.getProcesses().size()).isEqualTo(1);
         assertThat(t.getProcesses().get("testProcess").getStates().size()).isEqualTo(1);
         assertThat(t.getProcesses().get("testProcess").getStates().get("firstState").getDetails().size()).isEqualTo(1);
-        assertThat(t.getProcesses().get("testProcess").getStates().get("firstState").getActions().size()).isEqualTo(1);
         assertThat(service.listThirds()).hasSize(3);
       } catch (IOException e) {
         log.trace("rethrowing exception");
