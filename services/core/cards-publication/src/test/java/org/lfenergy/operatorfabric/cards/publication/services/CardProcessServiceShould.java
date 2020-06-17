@@ -10,7 +10,30 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
-import lombok.extern.slf4j.Slf4j;
+import static java.nio.charset.Charset.forName;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.jeasy.random.FieldPredicates.named;
+import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
@@ -25,51 +48,31 @@ import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardReceiver;
-import org.lfenergy.operatorfabric.cards.publication.model.*;
+import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
+import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.Recipient;
+import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.TimeSpanPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
-import org.lfenergy.operatorfabric.cards.publication.services.clients.ExternalAppClient;
-import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.User;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpMethod;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
-
-
-import static java.nio.charset.Charset.forName;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
-import static org.jeasy.random.FieldPredicates.named;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 
 /**
  * <p>
@@ -457,7 +460,7 @@ class CardProcessServiceShould {
     }
         
     @Test
-    void processUserAcknowledgement() {
+    void processAddUserAcknowledgement() {
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 1;
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
@@ -470,28 +473,66 @@ class CardProcessServiceShould {
                         "The number of registered cards should be '%d' but is " + "'%d' actually",
                         numberOfCards, block).isEqualTo(numberOfCards);
 
-        CardPublicationData firstCard = cards.get(0);
+        CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).block();
         Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card doesn't contain any ack at the beginning").isNullOrEmpty();
         
-        String cardId = firstCard.getId();
+        String cardUid = firstCard.getUid();
         
-        CardCreationReportData ccrd = cardProcessingService.processUserAcknowledgement("aaa", cardId).block();
-        Assertions.assertThat(ccrd.getCount()).as("Expecting CardCreationReportData.count==1").isEqualTo(1);
+        UserAckOperationResult res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "aaa").block();
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
-        CardPublicationData cardReloaded = cardRepository.findById(cardId).block();
+        CardPublicationData cardReloaded = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly an ack by user aaa").containsExactly("aaa");              
         
-        ccrd = cardProcessingService.processUserAcknowledgement("bbb", cardId).block();
-        Assertions.assertThat(ccrd.getCount()).as("Expecting CardCreationReportData.count==1").isEqualTo(1);
+        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "bbb").block();
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
-        cardReloaded = cardRepository.findById(cardId).block();
+        cardReloaded = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly two acks by users aaa and bbb").containsExactly("aaa","bbb");
         //try to insert aaa again
-        ccrd = cardProcessingService.processUserAcknowledgement("aaa", cardId).block();
-        Assertions.assertThat(ccrd.getCount()).as("Expecting CardCreationReportData.count==0 trying to insert ack by aaa twice").isEqualTo(0);
+        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "aaa").block();
+        Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).as("Expecting no addition because already done").isTrue();
         
-        cardReloaded = cardRepository.findById(cardId).block();
+        cardReloaded = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting  Card after ack processing contains exactly two acks by users aaa(only once) and bbb").containsExactly("aaa","bbb");
+    }
+    
+    @Test
+    void processDeleteUserAcknowledgement() {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 2;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.get(0).setUsersAcks(Arrays.asList("someUser","someOtherUser"));
+        cards.get(1).setUsersAcks(null);
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                        .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                        "The number of registered cards should be '%d' but is " + "'%d' actually",
+                        numberOfCards, block).isEqualTo(numberOfCards);
+
+        CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).block();
+        Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card contains exactly 2 user acks").hasSize(2);
+        
+        String cardUid = firstCard.getUid();
+        
+        UserAckOperationResult res = cardProcessingService.deleteUserAcknowledgement(Mono.just(cardUid), "someUser").block();
+        firstCard = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card1 doesn't contain someUser's card acknowledgement").containsExactly("someOtherUser");
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).isTrue();
+        
+        res = cardProcessingService.deleteUserAcknowledgement(Mono.just(cardUid), "someUser").block();
+        firstCard = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card1 doesn't contain someUser card acknowledgement").containsExactly("someOtherUser");
+        Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).isTrue();
+        
+        CardPublicationData secondCard = cardRepository.findById(cards.get(1).getId()).block();;
+        String secondCardUid = secondCard.getUid();
+        res = cardProcessingService.deleteUserAcknowledgement(Mono.just(secondCardUid), "someUser").block();
+        secondCard = cardRepository.findByUid(secondCardUid).block();
+        Assertions.assertThat(secondCard.getUsersAcks()).as("Expecting no errors from deleting unexisting user ack from a card(card2) not having any user ack").isNullOrEmpty();
+        Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).isTrue();
     }
 
 

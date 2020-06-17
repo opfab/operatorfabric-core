@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -95,7 +92,7 @@ public class CardOperationsControllerShould {
     @Autowired
     private CardRepository repository;
 
-    private CurrentUserWithPerimeters currentUserWithPerimeters;
+    private CurrentUserWithPerimeters currentUserWithPerimeters, userForUserAckTest;
 
     public CardOperationsControllerShould(){
         User user = new User();
@@ -110,9 +107,23 @@ public class CardOperationsControllerShould {
         entities.add("entity1");
         entities.add("entity2");
         user.setEntities(entities);
-
         currentUserWithPerimeters = new CurrentUserWithPerimeters();
         currentUserWithPerimeters.setUserData(user);
+        
+        user = new User();
+        user.setLogin("rte-operator");
+        user.setFirstName("Test2");
+        user.setLastName("User2");
+        groups = new ArrayList<>();
+        groups.add("rte");
+        groups.add("operator");
+        user.setGroups(groups);
+        entities = new ArrayList<>();
+        entities.add("entity1");
+        entities.add("entity2");
+        user.setEntities(entities);
+        userForUserAckTest = new CurrentUserWithPerimeters();
+        userForUserAckTest.setUserData(user);
     }
 
     @AfterEach
@@ -315,11 +326,11 @@ public class CardOperationsControllerShould {
            .verifyComplete();
     }
 
-    /*@Test
+    @Test
     public void receiveCardsCheckUserAcks() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
-                        .currentUserWithPerimeters(currentUserWithPerimeters)
+                        .currentUserWithPerimeters(userForUserAckTest)
                         .clientId(TEST_ID)
                         .rangeStart(nowMinusThree)
                         .rangeEnd(nowPlusOne)
@@ -338,7 +349,7 @@ public class CardOperationsControllerShould {
                 })
                 .expectComplete()
                 .verify();
-    }*/
+    }
 
     private Runnable createSendMessageTask() {
         return () -> {

@@ -11,6 +11,10 @@
 
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
+import java.security.Principal;
+
+import javax.validation.Valid;
+
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
@@ -20,12 +24,16 @@ import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import javax.validation.Valid;
-import java.security.Principal;
 
 /**
  * Synchronous controller
@@ -71,16 +79,36 @@ public class CardController {
     /**
      * POST userAcknowledgement for a card updating the card
      * @param card Id to create publisher
-     * @return contains number of acknowledgement created and optional message
      */
-    @PostMapping("/{cardId}/userAcknowledgement")
+    @PostMapping("/userAcknowledgement/{cardUid}")
     @ResponseStatus(HttpStatus.CREATED)
-	public @Valid Mono<CardCreationReportData> userAcknowledgement(Principal principal,
-			@PathVariable("cardId") String cardId, ServerHttpResponse response) {
-    	return cardProcessingService.processUserAcknowledgement(principal.getName(), cardId).doOnNext(ccrd -> {
-			if (ccrd.getCount() == 0)
-				response.setStatusCode(HttpStatus.OK);
-		});
+    public Mono<Void> postUserAcknowledgement(Principal principal,
+			@PathVariable("cardUid") String cardUid, ServerHttpResponse response) {
+    	return cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), principal.getName()).doOnNext(result -> {
+    		if (!result.isCardFound()) {
+    			response.setStatusCode(HttpStatus.NOT_FOUND);
+    		} else if (!result.getOperationDone()) {
+    			response.setStatusCode(HttpStatus.OK);
+    		}
+		}).then();
     }
-    
+
+    /**
+     * DELETE userAcknowledgement for a card to updating that card
+     * @param card Id to create publisher
+     */
+	@DeleteMapping("/userAcknowledgement/{cardUid}")
+	@ResponseStatus(HttpStatus.OK)
+	public Mono<Void> deleteUserAcknowledgement(Principal principal, @PathVariable("cardUid") String cardUid,
+			ServerHttpResponse response) {		
+		return cardProcessingService.deleteUserAcknowledgement(Mono.just(cardUid),
+					principal.getName()).doOnNext(result -> {
+			if (!result.isCardFound()) {
+				response.setStatusCode(HttpStatus.NOT_FOUND);
+			} else if (!result.getOperationDone()) {
+				response.setStatusCode(HttpStatus.NO_CONTENT);
+			}
+		} ).then();
+	}
+
 }

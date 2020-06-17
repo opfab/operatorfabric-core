@@ -11,7 +11,6 @@
 package org.lfenergy.operatorfabric.cards.publication.services;
 
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -64,11 +63,30 @@ public class CardRepositoryService {
         return this.template.findOne(findCardByIdWithoutDataField, CardPublicationData.class);
     }
 
-	public CardCreationReportData addUserAck(String name, String cardId) {
-		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("id").is(cardId)), 
+	public UserAckOperationResult addUserAck(String name, String cardUid) {
+		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
 				new Update().addToSet("usersAcks", name),CardPublicationData.class);
-		int modifiedCount = updateFirst.getModifiedCount() > 0 ? 1 : 0;
-		return new CardCreationReportData(modifiedCount,"userAck added");
+		log.debug("added {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+				cardUid);
+		return toUserAckOperationResult(updateFirst);
+	}
+
+	public UserAckOperationResult deleteUserAck(String userName, String cardUid) {
+		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
+				new Update().pull("usersAcks", userName), CardPublicationData.class);
+		log.debug("removed {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+				cardUid);
+		return toUserAckOperationResult(updateFirst);
+	}
+	
+	private UserAckOperationResult toUserAckOperationResult(UpdateResult updateResult) {
+		UserAckOperationResult res = null;
+		if (updateResult.getMatchedCount() == 0) {
+			res = UserAckOperationResult.cardNotFound();
+		} else {
+			res = UserAckOperationResult.cardFound().operationDone(updateResult.getModifiedCount() > 0);
+		}
+		return res;
 	}
     
     

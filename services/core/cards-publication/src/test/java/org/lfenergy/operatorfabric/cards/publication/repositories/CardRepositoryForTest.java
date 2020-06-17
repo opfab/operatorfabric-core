@@ -24,4 +24,6 @@ import reactor.core.publisher.Mono;
 public interface CardRepositoryForTest extends ReactiveMongoRepository<CardPublicationData,String> {
 
     public Mono<CardPublicationData> findByProcessId(String processId);
+    
+    public Mono<CardPublicationData> findByUid(String Uid);
 }
