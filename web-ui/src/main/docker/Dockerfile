@@ -13,3 +13,5 @@ ENV https_proxy=""
 ENV HTTP_PROXY_AUTH=""
 RUN env
 COPY distribution /usr/share/nginx/html/
+COPY start-webui.sh /
+CMD ["/bin/sh", "/start-webui.sh"]
