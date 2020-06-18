@@ -16,11 +16,11 @@ Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : 
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "Read"
+      "right" : "Receive"
     },
     {
       "state" : "state2",
-      "right" : "ReadAndWrite"
+      "right" : "ReceiveAndWrite"
     }
   ]
 }
@@ -34,7 +34,7 @@ Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : 
  "stateRights" : [
     {
       "state" : "state1",
-      "right" : "ReadAndRespond"
+      "right" : "Write"
     }
   ]
 }
@@ -111,7 +111,7 @@ Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : 
     Then status 200
     And match response.userData.login == 'tso1-operator'
     And assert response.computedPerimeters.length == 2
-    And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReadAndRespond"}, {"process":"process15","state":"state2","rights":"ReadAndWrite"}]
+    And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReceiveAndWrite"}, {"process":"process15","state":"state2","rights":"ReceiveAndWrite"}]
 
 
   Scenario: Delete TSO1 group from perimeter15_1

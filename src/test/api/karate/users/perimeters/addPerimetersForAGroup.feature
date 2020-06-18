@@ -24,7 +24,7 @@ Feature: Add perimeters for a group (endpoint tested : PATCH /groups/{id}/perime
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "Read"
+      "right" : "Receive"
     }
   ]
 }
@@ -38,7 +38,7 @@ Feature: Add perimeters for a group (endpoint tested : PATCH /groups/{id}/perime
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "ReadAndWrite"
+      "right" : "ReceiveAndWrite"
     }
   ]
 }
@@ -151,7 +151,7 @@ Feature: Add perimeters for a group (endpoint tested : PATCH /groups/{id}/perime
     When method get
     Then status 200
     And assert response.length == 1
-    And match response contains only [{"id":"perimeterKarate14_1","process":"process14_1","stateRights":[{"state":"state1","right":"Read"}]}]
+    And match response contains only [{"id":"perimeterKarate14_1","process":"process14_1","stateRights":[{"state":"state1","right":"Receive"}]}]
 
 
   Scenario: Add perimeter14_2 for group14
@@ -168,4 +168,4 @@ Feature: Add perimeters for a group (endpoint tested : PATCH /groups/{id}/perime
     When method get
     Then status 200
     And assert response.length == 2
-    And match response contains only [{"id":"perimeterKarate14_1","process":"process14_1","stateRights":[{"state":"state1","right":"Read"}]}, {"id":"perimeterKarate14_2","process":"process14_2","stateRights":[{"state":"state1","right":"ReadAndWrite"}]}]
+    And match response contains only [{"id":"perimeterKarate14_1","process":"process14_1","stateRights":[{"state":"state1","right":"Receive"}]}, {"id":"perimeterKarate14_2","process":"process14_2","stateRights":[{"state":"state1","right":"ReceiveAndWrite"}]}]

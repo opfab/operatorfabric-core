@@ -42,11 +42,11 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "Read"
+      "right" : "Receive"
     },
     {
       "state" : "state2",
-      "right" : "ReadAndWrite"
+      "right" : "ReceiveAndWrite"
     }
   ]
 }
@@ -60,46 +60,11 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "All"
+      "right" : "ReceiveAndWrite"
     },
     {
       "state" : "state2",
-      "right" : "All"
-    }
-  ]
-}
-"""
-    * def perimeter10_1_bis =
-"""
-{
-  "id" : "perimeterKarate10_1",
-  "process" : "process10",
-  "stateRights" : [
-    {
-      "state" : "state2",
-      "right" : "ReadAndWrite"
-    },
-    {
-      "state" : "state1",
-      "right" : "Read"
-    }
-  ]
-}
-"""
-
-    * def perimeter10_2_bis =
-"""
-{
-  "id" : "perimeterKarate10_2",
-  "process" : "process10",
-  "stateRights" : [
-    {
-      "state" : "state2",
-      "right" : "All"
-    },
-    {
-      "state" : "state1",
-      "right" : "All"
+      "right" : "ReceiveAndWrite"
     }
   ]
 }
