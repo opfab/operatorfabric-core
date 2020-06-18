@@ -23,6 +23,8 @@ import com.mongodb.client.result.UpdateResult;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 /**
  * 
  * Responsible of Write of Cards in card and archiveCard mongo collection
@@ -31,12 +33,15 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class CardRepositoryService {
-	
-	
 
     @Autowired
     private MongoTemplate template;
-	
+
+    public Optional<CardPublicationData> findByUid(String uid) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("uid").is(uid));
+        return Optional.ofNullable(template.findOne(query, CardPublicationData.class));
+    }
 	
     public void saveCard(CardPublicationData card) {
         log.debug("preparing to write {}", card.toString());

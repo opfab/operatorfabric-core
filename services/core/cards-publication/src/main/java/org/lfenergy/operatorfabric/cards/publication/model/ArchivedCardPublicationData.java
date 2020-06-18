@@ -41,6 +41,7 @@ public class ArchivedCardPublicationData implements Card {
     private String uid;
     @Id
     private String id;
+    private String parentCardId;
     @NotNull
     private String publisher;
     private String publisherVersion;
@@ -84,6 +85,7 @@ public class ArchivedCardPublicationData implements Card {
 
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
+        this.parentCardId = card.getParentCardId();
         this.publisher = card.getPublisher();
         this.publisherVersion = card.getPublisherVersion();
         this.publishDate = card.getPublishDate();

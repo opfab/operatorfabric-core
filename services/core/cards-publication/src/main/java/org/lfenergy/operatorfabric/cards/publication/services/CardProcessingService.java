@@ -27,6 +27,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -53,12 +54,17 @@ public class CardProcessingService {
     @Autowired
     private ExternalAppClientImpl externalAppClient;
 
+    private Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards, Optional<User> user) {
 
-
-    public Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards) {
         long windowStart = Instant.now().toEpochMilli();
         Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
         cards = registerValidationProcess(cards);
+
+        if (user.isPresent()) {
+            cards = userCardPublisherProcess(cards,user.get());
+            cards = sendCardToExternalAppProcess(cards);
+        }
+
         return registerPersistenceAndNotificationProcess(cards, windowStart)
                 .doOnNext(count -> log.debug("{} pushed Cards persisted", count))
                 .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
@@ -69,20 +75,12 @@ public class CardProcessingService {
                 });
     }
 
+    public Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards) {
+        return processCards(pushedCards, Optional.empty());
+    }
+
     public Mono<CardCreationReportData> processUserCards(Flux<CardPublicationData> pushedCards, User user) {
-        long windowStart = Instant.now().toEpochMilli();
-        Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
-        cards=registerValidationProcess(cards);
-        cards= userCardPublisherProcess(cards,user);
-        cards= sendCardToExternalAppProcess(cards);
-        return registerPersistenceAndNotificationProcess(cards, windowStart)
-                .doOnNext(count -> log.debug("{} pushed Cards persisted", count))
-                .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
-                .onErrorResume(e -> {
-                    log.error("Unexpected error during pushed Cards persistence", e);
-                    return Mono.just(
-                            new CardCreationReportData(0, "Error, unable to handle pushed Cards: " + e.getMessage()));
-                });
+        return processCards(pushedCards, Optional.of(user));
     }
 
 
@@ -130,7 +128,14 @@ public class CardProcessingService {
      * @throws ConstraintViolationException if there is an error during validation
      *                                      based on object annotation configuration
      */
-    private void validate(CardPublicationData c) throws ConstraintViolationException {
+    void validate(CardPublicationData c) throws ConstraintViolationException {
+
+        String parentCardId = c.getParentCardId();
+        if (Optional.ofNullable(parentCardId).isPresent()) {
+            if (!cardRepositoryService.findByUid(parentCardId).isPresent()) {
+                throw new ConstraintViolationException("The parentCardId " + parentCardId + " is not the uid of any card", null);
+            }
+        }
 
         Set<ConstraintViolation<CardPublicationData>> results = localValidatorFactoryBean.validate(c);
         if (!results.isEmpty())

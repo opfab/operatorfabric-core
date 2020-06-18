@@ -49,6 +49,7 @@ public class CardPublicationData implements Card {
     private String uid = UUID.randomUUID().toString();
     @Id
     private String id;
+    private String parentCardId;
     @NotNull
     private String publisher;
     @NotNull
