@@ -80,7 +80,7 @@ During `OperatorFabric` development the running docker images of `MongoDB`, `Ra
 The `docker-compose` can be run in detached mode:
 [source,shell]
 ----
-cd ${OF_HOME}/config/dev/dev-environment/
+cd ${OF_HOME}/config/dev
 docker-compose up -d
 ----
 
@@ -110,11 +110,9 @@ docker-compose -f ${OF_HOME}/src/main/docker/test-environment/docker-compose.yml
 [source,shell]
 ----
 cd ${OF_HOME}
-docker-compose -f ${OF_HOME}/src/main/docker/dev-environment/docker-compose.yml up -d
+docker-compose -f ${OF_HOME}/config/dev/docker-compose.yml up -d
 bin/run_all.sh start
 ----
-
-WARNING: the `${OF_HOME}/bin/run_all.sh` must be launched from `${OF_HOME}` otherwise some runtime exception will occur.
 
 TIP: See `bin/run_all.sh -h` for details.
 

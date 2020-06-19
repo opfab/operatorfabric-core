@@ -8,83 +8,37 @@
 
 
 
-= Web UI
+= Web UI Configuration
 
 OperatorFabric Web UI service is built on top of a link:https://www.nginx.com/[NGINX] server.
 It  serves the Angular SPA to browsers and act as a reverse proxy for other services.
 
 == NGINX configuration
 
-An external `default.conf` file configures the OperatorFabric Nginx instance named `web-ui` service.
-Those files are mounted as docker volumes.
-There are three of them in OperatoFabric. The two named `default.conf` in `${OF_HOME}/src/main/docker/deploy`
-and `${OF_HOME}/src/main/docker/dev-environment`. They are the default ones, hence the name. The one in `dev-environment`
-by setting permissive `CORS` rules enables web development using `ng serve` within the `ui/main` project.
-It's possible to use `ng serve` with the `deploy` docker-compose version also. To do so use the conf file named
-`default-web-dev.conf` by configuring the `${OF_HOME}/src/main/docker/deploy/docker-compose.yml` with the following line:
+
+An external `nginx.conf` file configures the OperatorFabric Nginx instance named `web-ui` service.
+Those files are mounted as docker volumes. There are two of them in OperatoFabric one in `config/dev` and one in `config/docker`. 
+
+The one in `config/dev` is set with 
+ permissive `CORS` rules to enable web development using `ng serve` within the `ui/main` project.It's possible to use `ng serve` with the one in `config/docker` version also. To do so use the conf file named
+`nginx-cors-permissive.conf` by configuring the `/docker-compose.yml` with the following line:
 ----
-- "./default-web-dev.conf:/etc/nginx/conf.d/default.conf"
+- "./nginx-cors-permissive.conf:/etc/nginx/conf.d/default.conf"
 ----
 instead of:
 ----
-- "./default.conf:/etc/nginx/conf.d/default.conf"
+- "./nginx.conf:/etc/nginx/conf.d/default.conf"
 ----
-
-=== Authentication Provider configuration
-
-==== Nginx Configuration
 
 [WARNING]
 ====
-The line customized must end with à semi-colon (';') otherwise the Nginx server will stop immediately
+The line customized in the nginx configuration file must end with à semi-colon (';') otherwise the Nginx server will stop immediately
 ====
 
-The UI calls need some mapping to reach the Authentication Provider. In the default OperatorFabric configuration it's a
-`docker keycloak instance`, called `keycloak` in the project `docker-compose.yml` files.
 
-There are 3 properties to configure within `default.conf` file:
+== Service specific properties
 
-* `$KeycloakBaseUrl`: the base url of keycloak;
-* `$OperatorFabricRealm`: the realm configure within keycloak instance to provide authentication to OperatorFabric;
-* `$ClientPairOFAuthentication`: base64 encoded string of the pair of client authentication used by OperatorFabric
-to log to the Authentication Provider (keycloak). The cient-id and the client-secret are separated by a colon(':').
-
-[NOTE]
-====
-**Example of the `deploy` configuration**
-----
-# Url of the Authentication provider
-    set $KeycloakBaseUrl "http://keycloak:8080";
-# Realm associated to OperatorFabric within the Authentication provider
-    set $OperatorFabricRealm "dev";
-
-# base64 encoded pair of authentication in the form of 'client-id:secret-id'
-    set $ClientPairOFAuthentication "b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==" ;
-----
-
-where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded string of
-`opfab-client:opfab-keycloak-secret` with `opfab-client` as client-id and `opfab-keycloak-secret` its client secret.
-====
-
-==== Front-End Configuration
-
-There are 3 OAuth2 modes of connection for the UI :
-* `PASSWORD`: password mode managed directly by the UI. It's the fallback solution when no mode is configured,
-or the currently configured is not handle by the UI;
-*  `CODE`: correspond to the OAuth2 code flow mode;
-* `IWPLICIT`: OAuth2 implicit flow needing a specific configuration (cf section below).
-
-The first two use the same url configuration.
-
-Please refer to the link:https://docs.nginx.com/[NGINX documentation] for more details for any required customisations.
-
-
-
-=== Service specific properties
-
-The properties lie in the `web-ui.json`. There are two of them one in the `${OF_HOME}/src/main/docker/deploy` folder
-and in the `${OF_HOME}/src/main/docker/dev-environment` folder.
-The following table describes their meaning and  how to use them.
+The properties lie in the `web-ui.json`.The following table describes their meaning and  how to use them. An example file can be found in the config/docker directory.
 
 |===
 |name|default|mandatory?|Description
@@ -193,48 +147,5 @@ It should look like:
 
 |===
 
-=== Sample development configuration
-
-[source,json]
-----
-include::examples/dev-configurations/web-ui.json[]
-----
-
-=== Sample docker image configuration
-
-[source, json]
-----
-include::examples/docker-configurations/web-ui.json[]
-----
-
-== Specifying external configuration properties when launching a jar file
-
-See link:{springboot_doc}/reference/htmlsingle/#boot-features-external-config-application-property-files[Application Property Files]
-on how to set up an external spring property or yml file.
-
-See link:{springboot_doc}/reference/htmlsingle/#howto-set-active-spring-profiles[Set the Active Spring Profiles] for specifying alternate profile.
 
 
-== Specifying configuration properties when launching a docker image
-
-OperatorFabric docker images expect optional property file to be stored within the `/service-config` container folder.
-To make custom property or yml files available, bind relevant files to this path using a docker volume.
-
-There is yet no alternate profile available for `Cards-Publication` service run time.
-The default activated profiles are `docker` and `native`.
-
-=== Available environment variables for docker image
-
-* REGISTRY_HOST: Registry service host
-* REGISTRY_PORT: Registry service port
-* JAVA_OPTIONS: Additional java options
-
-== Specifying configuration properties when launching on Kubernetes
-
-In progress
-
-=== Available environment variables when launching on Kubernetes
-
-* REGISTRY_HOST: Registry service host
-* REGISTRY_PORT: Registry service port
-* JAVA_OPTIONS: Additional java options

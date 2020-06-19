@@ -28,7 +28,7 @@ below for details on:
 * Docker Compose with 2.1+ file format support
 * Chrome (needed for UI tests in build)
 
-NOTE: the current Jdk used for the project is Java 8.0.242-zulu.
+NOTE: the current Jdk used for the project is Java 8.0.252-zulu.
 
 IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
 https://github.com/nvm-sh/nvm[nvm] to manage tools versions.

@@ -20,8 +20,6 @@ SPA:: stands for *Single Page Application*
 
 == Run
 
-=== Linux
-
 === Front End development
 //TODO Explain that the back needs to be running to be able to test in 4200. Replace steps below by link to appropriate doc
 
@@ -31,7 +29,7 @@ OperatorFabric uses 4 external services to run properly :
  * a no SQL database: MongoDB;
  * an authentication provider: keycloak;
  * a web server: Nginx.
-Those instances are available as docker images in the project. Use `docker-compose` and the `${OF_HOME}/src/main/docker/dev-environment/docker-compose.yml`
+Those instances are available as docker images in the project. Use `docker-compose` and the `${OF_HOME}/config/dev/docker-compose.yml`
 to run them.
 After launching docker containers, use the following command line `$OF_HOME/bin/run_all.sh start` to run the application.
 Once the whole application is ready, you should have the following output in your terminal:

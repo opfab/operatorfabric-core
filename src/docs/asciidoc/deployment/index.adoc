@@ -21,20 +21,22 @@ Service images are all based on link:https://hub.docker.com/_/openjdk[openjdk:8-
 
 For simple one instance per service deployment, you can find a sample
 deployment as a docker-compose file
-link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker/deploy[here]
+link:https://github.com/opfab/operatorfabric-core/tree/master/config/docker[here]
 
-include::certificates.adoc[leveloffset=+1]
 
 To run OperatorFabric in development mode, see
 ifdef::single-page-doc[<<dev_env, the development environment documentation>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/dev_env/index.adoc#dev_env, the development environment documentation>>]
 .
 
-include::RABBITMQ.adoc[leveloffset=+1]
+
 
 include::configuration/configuration.adoc[leveloffset=+1]
 
+include::RABBITMQ.adoc[leveloffset=+1]
+
 include::users_groups_admin.adoc[leveloffset=+1]
+
 
 include::port_table.adoc[leveloffset=+1]
 

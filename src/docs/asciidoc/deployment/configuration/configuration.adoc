@@ -10,9 +10,6 @@
 
 :springboot_doc: https://docs.spring.io/spring-boot/docs/2.1.2.RELEASE/
 :spring_doc: https://docs.spring.io/spring/docs/5.1.4.RELEASE/
-:spring_cloud_config_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.1.0.RELEASE/
-:spring_cloud_netflix_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-netflix/2.1.0.RC3/
-:spring_cloud_gateway_doc: https://cloud.spring.io/spring-cloud-static/spring-cloud-gateway/2.1.0.RELEASE/
 :mongo_doc: https://docs.mongodb.com/manual/reference/
 :spring_amqp_doc: https://docs.spring.io/spring-amqp/docs/2.1.3.RELEASE/reference/htmlsingle/
 //TODO Check if versions are correct
@@ -20,8 +17,7 @@
 
 = Configuration
 
-OperatorFabric has multiple services to configure. These configurations are managed by a Configuration Service, of which
-they can be several instances to ensure availability.
+OperatorFabric has multiple services to configure. 
 
 See the
 ifdef::single-page-doc[<<architecture, architecture documentation>>]
@@ -35,53 +31,69 @@ configuration which is described in the following documentation:
  * link:{springboot_doc}/reference/htmlsingle/#boot-features-external-config[Springboot external configuration]
  * link:{springboot_doc}/reference/htmlsingle/#common-application-properties[Common application properties from Springboot documentation]
 
-== Global configuration
 
-Aside from the one for the configuration service, all configurations are gathered as resources in the
-configuration service (under /services/infra/config/src/main/docker/volume).
-//TODO Add core base url to be able to turn it into a link?
-//TODO Explain dev vs docker conf
+Configuration is centralized in the config directory, the  sub-directory dev is specific for development environnement and the sub-directory docker is a specific configuration to use in a full docker environnement.
 
-Note that a few things cannot be set in the configuration served by the configuration service (because its needed
-right at the application startup for example) and
-must be set in each service bootstrap configuration file. In this regard,
-ifdef::single-page-doc[<<cloud_config_service_config, Cloud Configuration Service>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#cloud_config_service_config, Cloud Configuration Service>>]
-and
-ifdef::single-page-doc[<<cloud_registry_service_config, Cloud Registry Service>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#cloud_registry_service_config, Cloud Registry Service>>]
-services have specific configuration but for other services, they all require
-the same minimal information:
+== Business service configuration
 
-* *mandatory* service name(spring.application.name)
-* *mandatory* configuration name (spring.cloud.config.name)
-* *mandatory* configuration fetch from registry enabled (spring.cloud.config.discovery.enabled: true)
-* *mandatory* configuration service name in registry (spring.cloud.config.discovery.service-id)
-* *mandatory* eureka registration (eureka.client.register-with-eureka: true and
-eureka.client.fetch-registry: true)
-* *mandatory* eureka registry urls (eureka.client.service-url.defaultZone)
-* configuration fail fast (spring.cloud.config.fail-fast)
-* configuration fetch maximum retry (spring.cloud.config.retry.max-attempts)
 
-In most situation, you do not need to change the default bootstrap
-configuration for those services. Make a copy of the default bootstrap (inside
-the jar or from the sources) and set eureka up (see above).
+=== Shared business service configuration
 
-The different services also share a common configuration you can setup in the
-config service backend. Those common configuration may be set up in the backend ```application.yml``` file.
+The configuration shared by all business services is in a yaml file, you can find an example with the file /config/docker/common-docker.yml.
 
-[source]
-----
-include::examples/common_application.yml[]
-----
-//TODO Replace it with link to actual application.yml ?
+=== Business service specific configurations
 
-In the above example you can see that we need to configure:
+Each business service has a specific yaml configuration file. It contains a least the name of the service: 
 
-* RabbitMQ (See link:{spring_amqp_doc}/reference/htmlsingle/[spring-amqp doc])
-* MongoDB
-* Eureka (See link:{spring_cloud_netflix_doc}/single/spring-cloud-netflix.html#_service_discovery_eureka_clients[spring eureka])
-* OperatorFabric
+[source, yml]
+spring:
+  application:
+    name: thirds
+
+It can contain as well references to other services, for example : 
+[source, yml]
+users:
+  ribbon:
+    listOfServers: users:8080
+
+Examples of configuration of each business service can be found either in config/docker
+
+
+==== Thirds service
+
+The third service has this specific property : 
+
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.thirds.storage.path|null|no|File path to data storage folder
+
+|===
+
+
+==== Users service
+
+The user service has theses specific properties :
+
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.users.default.users|null|no| Array of user objects to create upon startup if they don't exist
+|operatorfabric.users.default.user-settings|null|no| Array of user settings objects to create upon startup if they don't exist
+|operatorfabric.users.default.groups|null|no| Array of group objects to create upon startup if they don't exist
+|operatorfabric.users.default.entities|null|no| Array of entity objects to create upon startup if they don't exist
+
+|===
+
+
+include::web-ui_configuration.adoc[leveloffset=+1]
+
+
+[[opfab_spec_conf]]
+
+include::security_configuration.adoc[leveloffset=+1]
+
+
 
 == OperatorFabric Mongo configuration
 
@@ -106,72 +118,3 @@ db.archivedCards.createIndex( { "publishDate": 1 }, { expireAfterSeconds: 864000
 IMPORTANT: You cannot use createIndex() to change the value of expireAfterSeconds of an existing index.
 Instead use the link:https://docs.mongodb.com/manual/reference/command/collMod/#dbcmd.collMod[collMod] database command in conjunction with the index collection flag. Otherwise, to
 change the value of the option of an existing index, you must drop the index first and recreate.
-
-[[opfab_spec_conf]]
-== OperatorFabric Specific configuration
-
-Below are description of OperatorFabric specific configuration properties.
-
-Note that other components may have specific configuration, see the relevant
-sub-sections.
-
-include::security_configuration.adoc[leveloffset=+2]
-//TODO Should it all be here? Maybe move detailed explanations out of configuration... might be difficult to tease it apart
-
-=== User creation
-
-Setting automated user creation==. Creation user requires a user id. Given name and family name are optional.
-
-|===
-|name|default|mandatory?|Description
-
-|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as a user login or id
-|operatorfabric.security.jwt.given-name-claim|given-name|no| Jwt claim is used to set the user's given name
-|operatorfabric.security.jwt.family-name-claim|family-name|no| Jwt claim is used to set the user's family name
-|===
-
-
-=== Alternative way to manage groups (and/or entities)
-
-By default, `OperatorFabric` manages groups (and/or entities) through the user's collection in the database. Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token. The administrator of the authentication service has to set what claims define a group (and/or entity). In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve those groups (and/or entities).
-  
-|===
-|name|default|mandatory?|Description
-
-|operatorfabric.security.jwt.groups.mode|OPERATOR_FABRIC|no| Set the group mode, possible values JWT or OPERATOR_FABRIC 
-|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandard.path||no| path in the JWT to retrieve the claim that defines a group
-|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardArray.path||no| path in the JWT to retrieve the claim that defines an array of groups
-|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.path||no| path in the JWT to retrieve the claim that defines a list of group
-|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.separator||no| set the separator value of the list of group
-|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.path||no| path in the JWT to check if that path does exist, if it does, use the roleValue as a group 
-|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.roleValue||no| set the value of the group if the path exists
-|operatorfabric.security.jwt.entitiesIdClaim||no| set the name of the field in the token
-|operatorfabric.security.jwt.gettingEntitiesFromToken||no| boolean indicating if you want the entities of the user to come from the token and not mongoDB (possible values : true/false)
-|===
-
-_application.yml_
-
-[source]
-----
-include::./examples/application_JWT_group_config.yml[]
-----
-
-_JWT example_
-
-[source]
-----
-include::./examples/jwt_example.json[]
-----
-
-As the result, the group will be [ATTR1, ATTR2, roleA, roleB, roleC, USER, roleBBB, roleAAA]
-
-== Service-specific configuration
-
-include::cards-consultation_configuration.adoc[leveloffset=+2]
-include::cards-publication_configuration.adoc[leveloffset=+2]
-include::config_configuration.adoc[leveloffset=+2]
-include::registry_configuration.adoc[leveloffset=+2]
-include::thirds_configuration.adoc[leveloffset=+2]
-include::users_configuration.adoc[leveloffset=+2]
-include::web-ui_configuration.adoc[leveloffset=+2]
-
