@@ -13,6 +13,6 @@
     <label for="setting" translate>settings.{{settingPath}}</label>
     <input type="email" *ngIf="disabled" class="form-control" id="setting" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField" disabled>
     <input type="email" *ngIf="!disabled" class="form-control" id="setting" formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
-    <span class="text-danger" *ngIf="!form.valid">Incorrect submission</span>
+    <span class="text-danger" *ngIf="!form.valid" translate > settings.invalidEmail</span>
   </div>
 </form>
