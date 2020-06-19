@@ -44,7 +44,6 @@ export class DatetimeFilterComponent implements ControlValueAccessor {
   // Methode call when archive-filter.component.ts set value to 0 
   writeValue(val: any): void {
     this.disabled = true;
-    this.resetTime();
     val && this.datetimeForm.setValue(val, { emitEvent: false });
   }
 
