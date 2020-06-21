@@ -1,7 +1,10 @@
 Please read through the checklist below to make sure that you haven't forgotten anything before submitting your PR.
-Then, remove the text and replace it with your PR comment.
+Then, remove the text and replace it with the information and comments that should go into the release notes.
 
 // tag::review_checklist[]
+* The PR comment contains a brief explanation of the impact of these developments, and a pointer
+to the relevant documentation if need be. Otherwise, it should why this development doesn't need
+to be on the release notes.
 * Check that Travis build is passing (for both branch and PR)
 * Check that the base branch (i.e. the branch into which we want to merge changes) is correct: for feature branches
 pull requests, this branch should be `develop`.
@@ -17,9 +20,6 @@ logic and not the framework itself)
 * Cypress UI tests have been updated
 * Documentation has been updated (especially if configuration is needed)
 * Configuration examples have been updated (both for dev and docker)
-* The release notes has been updated with the a brief explanation of the impact of these developments, and a pointer
-to the relevant documentation if need be. Otherwise, the PR message contains an explanation as to why it doesn't need
-to be on the release notes).
 * Build and run OpFab locally to see the new feature or bug fix at work. In the case of a new feature, it's also a way
 of making sure that the configuration documentation is correct and easily understandable.
 * Depending on the scope of the PR , build docker images and test in docker mode
