@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric ThirdParty Management API
-  version: SNAPSHOT
+  version: 1.4.0.RELEASE
   title: Thirds Management
   termsOfService: ''
   contact:

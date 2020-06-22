@@ -28,7 +28,7 @@ services:
     - "90:9990"
   users:
     container_name: users
-    image: "lfeoperatorfabric/of-users-business-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-users-business-service:1.4.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2103:8080"
@@ -41,7 +41,7 @@ services:
       - "../certificates:/certificates_to_add"
   thirds:
     container_name: thirds
-    image: "lfeoperatorfabric/of-thirds-business-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-thirds-business-service:1.4.0.RELEASE"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -57,7 +57,7 @@ services:
      - "../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
   cards-publication:
     container_name: cards-publication
-    image: "lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-publication-business-service:1.4.0.RELEASE"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -72,7 +72,7 @@ services:
       - "../certificates:/certificates_to_add"
   cards-consultation:
     container_name: cards-consultation
-    image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-consultation-business-service:1.4.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2104:8080"
@@ -84,7 +84,7 @@ services:
     volumes:
       - "../certificates:/certificates_to_add"
   web-ui:
-    image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
+    image: "lfeoperatorfabric/of-web-ui:1.4.0.RELEASE"
     ports:
     - "2002:80"
     depends_on:
