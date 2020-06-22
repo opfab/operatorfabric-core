@@ -10,7 +10,7 @@
 
 = Security Configuration
 
-Configure the security concern througout several files:
+Configure the security concern throughout several files:
 
 * `nginx.conf` of the nginx server
 * `config/dev/common-dev.yml`  or `config/docker/common-docker.yml`, called common.yml in the following chapters
@@ -196,9 +196,13 @@ Setting automated user creation==. Creation user requires a user id. Given name 
 |===
 
 
+[[jwt_mode]]
 == Alternative way to manage groups (and/or entities)
 
-By default, `OperatorFabric` manages groups (and/or entities) through the user\'s collection in the database. Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token. The administrator of the authentication service has to set what claims define a group (and/or entity). In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve those groups (and/or entities).
+By default, `OperatorFabric` manages groups (and/or entities) through the user\'s collection in the database.
+Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token.
+The administrator of the authentication service has to set what claims define a group (and/or entity).
+In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve those groups (and/or entities).
   
 |===
 |name|default|mandatory?|Description

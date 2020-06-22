@@ -15,9 +15,8 @@ It  serves the Angular SPA to browsers and act as a reverse proxy for other serv
 
 == NGINX configuration
 
-
 An external `nginx.conf` file configures the OperatorFabric Nginx instance named `web-ui` service.
-Those files are mounted as docker volumes. There are two of them in OperatoFabric one in `config/dev` and one in `config/docker`. 
+Those files are mounted as docker volumes. There are two of them in OperatorFabric, one in `config/dev` and one in `config/docker`.
 
 The one in `config/dev` is set with 
  permissive `CORS` rules to enable web development using `ng serve` within the `ui/main` project.It's possible to use `ng serve` with the one in `config/docker` version also. To do so use the conf file named

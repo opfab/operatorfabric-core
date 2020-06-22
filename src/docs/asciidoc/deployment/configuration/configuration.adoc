@@ -31,33 +31,37 @@ configuration which is described in the following documentation:
  * link:{springboot_doc}/reference/htmlsingle/#boot-features-external-config[Springboot external configuration]
  * link:{springboot_doc}/reference/htmlsingle/#common-application-properties[Common application properties from Springboot documentation]
 
-
-Configuration is centralized in the config directory, the  sub-directory dev is specific for development environnement and the sub-directory docker is a specific configuration to use in a full docker environnement.
+Configuration is centralized in the *config* directory, the *dev* sub-directory is specific to development environments
+while the *docker* sub-directory is a specific configuration meant for use in a full docker environment.
 
 == Business service configuration
 
-
 === Shared business service configuration
 
-The configuration shared by all business services is in a yaml file, you can find an example with the file /config/docker/common-docker.yml.
+The configuration shared by all business services is in a yaml file, you can find an example with the file
+/config/docker/common-docker.yml.
 
 === Business service specific configurations
 
-Each business service has a specific yaml configuration file. It contains a least the name of the service: 
+Each business service has a specific yaml configuration file. It should a least contain the name of the service:
 
-[source, yml]
+[source, yaml]
+----
 spring:
   application:
     name: thirds
+----
 
-It can contain as well references to other services, for example : 
-[source, yml]
+It can contain references to other services as well, for example :
+[source, yaml]
+----
 users:
   ribbon:
     listOfServers: users:8080
+----
 
-Examples of configuration of each business service can be found either in config/docker
-
+Examples of configuration of each business service can be found either under config/docker or config/dev depending on
+the type of deployment you're looking for.
 
 ==== Thirds service
 
@@ -73,7 +77,7 @@ The third service has this specific property :
 
 ==== Users service
 
-The user service has theses specific properties :
+The user service has these specific properties :
 
 |===
 |name|default|mandatory?|Description
@@ -90,10 +94,7 @@ include::web-ui_configuration.adoc[leveloffset=+1]
 
 
 [[opfab_spec_conf]]
-
 include::security_configuration.adoc[leveloffset=+1]
-
-
 
 == OperatorFabric Mongo configuration
 
