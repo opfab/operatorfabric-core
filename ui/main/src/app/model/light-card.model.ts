@@ -20,6 +20,7 @@ export class LightCard {
         readonly startDate: number,
         readonly endDate: number,
         readonly severity: Severity,
+        readonly hasBeenAcknowledged: boolean = false,
         readonly processId?: string,
         readonly lttd?: number,
         readonly title?: I18n,
@@ -27,7 +28,9 @@ export class LightCard {
         readonly tags?: string[],
         readonly timeSpans?: TimeSpan[],
         readonly process?: string,
-        readonly state?: string
+        readonly state?: string,
+
+
     ) {
     }
 }

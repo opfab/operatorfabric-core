@@ -15,7 +15,7 @@ import {CardOperation} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication/authentication.service';
 import {Card} from '@ofModel/card.model';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
 import {LightCard} from '@ofModel/light-card.model';
@@ -36,6 +36,7 @@ export class CardService {
     readonly cardsUrl: string;
     readonly archivesUrl: string;
     readonly cardsPubUrl: string;
+    readonly userAckUrl: string;
     private subscriptionTime = 0;
 
     constructor(private httpClient: HttpClient,
@@ -48,6 +49,7 @@ export class CardService {
         this.cardsUrl = `${environment.urls.cards}/cards`;
         this.archivesUrl = `${environment.urls.cards}/archives`;
         this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
+        this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
     }
 
     loadCard(id: string): Observable<Card> {
@@ -163,5 +165,13 @@ export class CardService {
     postResponseCard(card: Card) {
         const headers = this.authService.getSecurityHeader();
         return this.httpClient.post<Card>(`${this.cardsPubUrl}/userCard`, card, { headers });
+    }
+
+    postUserAcnowledgement(card: Card): Observable<HttpResponse<void>> {
+        return this.httpClient.post<void>(`${this.userAckUrl}/${card.uid}`,null,{ observe: 'response' });        
+    }
+
+    deleteUserAcnowledgement(card: Card): Observable<HttpResponse<void>> {
+        return this.httpClient.delete<void>(`${this.userAckUrl}/${card.uid}`,{ observe: 'response' });        
     }
 }

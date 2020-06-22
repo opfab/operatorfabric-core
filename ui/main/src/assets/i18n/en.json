@@ -103,8 +103,15 @@
     "btnTitle": "VALIDATE ANSWERS",
     "error": {
       "submit": "The card could not been sent",
-      "form": "The form is not correctly filled"
+      "form": "The form is not correctly filled",
+      "ack": "Unable to change acknowledgement of this card for an error of remote system"
     },
     "submitSuccess": "Action succeeded"
+  },
+  "cardAcknowledgment": {
+    "button": {
+      "ack": "Acknowledge an close",
+      "unack": "Cancel acknowledgement"
+    }
   }
 }

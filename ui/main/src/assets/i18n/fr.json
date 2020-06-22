@@ -107,5 +107,11 @@
       "form": "Le formulaire n'est pas correctement rempli"
     },
     "submitSuccess": "Action effectuée"
+  },
+  "cardAcknowledgment": {
+    "button": {
+      "ack": "Acquitter et fermer",
+      "unack": "Annuler l'acquitement"
+    }
   }
 }

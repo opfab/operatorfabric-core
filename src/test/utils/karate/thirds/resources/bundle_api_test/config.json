@@ -23,7 +23,8 @@
 								"style"
 							]
 						}
-					]
+					],
+					"acknowledgementAllowed": false
 				},
 				"chartState": {
 					"details": [
@@ -36,7 +37,8 @@
 								"style"
 							]
 						}
-					]
+					],
+					"acknowledgementAllowed": false
 				},
 				"chartLineState": {
 					"details": [
@@ -49,7 +51,8 @@
 								"style"
 							]
 						}
-					]
+					],
+					"acknowledgementAllowed": true
 				}
 			}
 		}

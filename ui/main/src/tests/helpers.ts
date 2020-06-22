@@ -165,12 +165,13 @@ export function getOneRandomLightCard(lightCardTemplate?:any): LightCard {
         lightCardTemplate.startDate? lightCardTemplate.startDate:startTime,
         lightCardTemplate.endDate?lightCardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         lightCardTemplate.severity?lightCardTemplate.severity:getRandomSeverity(),
+        false,
         getRandomAlphanumericValue(3, 24),
         lightCardTemplate.lttd?lightCardTemplate.lttd:generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
         lightCardTemplate.tags?lightCardTemplate.tags:null,
-        lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null
+        lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null,
     );
     return oneCard;
 }
@@ -198,6 +199,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.startDate? cardTemplate.startDate:startTime,
         cardTemplate.endDate?cardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.severity?cardTemplate.severity:getRandomSeverity(),
+        false,
         cardTemplate.process?cardTemplate.process:getRandomAlphanumericValue(3, 24),
         cardTemplate.processId?cardTemplate.processId:getRandomAlphanumericValue(3, 24),
         cardTemplate.state?cardTemplate.state:getRandomAlphanumericValue(3, 24),
