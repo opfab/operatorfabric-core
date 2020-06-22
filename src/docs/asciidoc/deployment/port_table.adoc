@@ -15,7 +15,8 @@
 By default all service built artifacts are configured with server.port set
 to 8080
 
-If you run the services using `bootRun` Gradle task, the `run_all.sh` script or the deploy docker-compose,
+If you run the services using `bootRun` Gradle task, the `run_all.sh` script or the full docker docker-compose
+(found under config/docker),
 the used ports are:
 
 |===

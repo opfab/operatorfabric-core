@@ -77,19 +77,20 @@ Current version is SNAPSHOT (based on VERSION file)
 Preparing X.X.X.RELEASE
 Updating version for pipeline in VERSION file
 Replacing SNAPSHOT with X.X.X.RELEASE in swagger.yaml files
-Using X.X.X.RELEASE for lfeoperatorfabric images in deploy docker-compose file
+Using X.X.X.RELEASE for lfeoperatorfabric images in dev and docker environment docker-compose files
 The following files have been updated:
-M VERSION
-M services/core/cards-publication/src/main/modeling/swagger.yaml
-M services/core/thirds/src/main/modeling/swagger.yaml
-M services/core/users/src/main/modeling/swagger.yaml
-M src/main/docker/deploy/docker-compose.yml
+ M VERSION
+ M config/dev/docker-compose.yml
+ M config/docker/docker-compose.yml
+ M services/core/cards-publication/src/main/modeling/swagger.yaml
+ M services/core/thirds/src/main/modeling/swagger.yaml
+ M services/core/users/src/main/modeling/swagger.yaml
 ----
 +
 This script performs the following changes:
 +
 * Replace SNAPSHOT with X.X.X.RELEASE in swagger.yaml files and the VERSION file at the root operator-fabric folder
-* Change the version from W.W.W.RELEASE (previous release) to X.X.X.RELEASE in the deploy docker-compose file
+* Change the version from SNAPSHOT to X.X.X.RELEASE in the docker-compose files for dev and docker deployments
 +
 . Commit the changes with the template message:
 +

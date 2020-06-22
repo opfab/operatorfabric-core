@@ -67,7 +67,7 @@ cd operatorfabric-core
 . Launch our demo docker-compose file
 +
 ----
-./src/main/docker/deploy/docker-compose.sh
+./config/docker/docker-compose.sh
 ----
 
 . After a little while, log into the application UI at *localhost:2002/ui/* using admin/test as credentials.

@@ -20,10 +20,11 @@ With a favicon named `favicon.ico` is in the same folder of the `docker-compose.
 
 Use a `Ctrl+F5` to force the `favicon.ico` refresh.
 
-The `dev-environment` is an example of a such case, where the `favicon.ico` is a gray scale version of the original one.
+The docker-compose found under config/dev is an example of a such case, where the `favicon.ico` is a gray scale
+version of the original one.
 
-This instance is available into 2 `docker-compose` environments. One  for deployment which is under
-`${OF_HOME}/src/main/docker/deploy`  and one for development which is under `${OF_HOME}/src/main/docker/dev-environment`.
+This image is part of two `docker-compose` environments. One for deployment which is under
+`${OF_HOME}/config/docker` and one for development which is under `${OF_HOME}/config/dev`.
 
 Just in case, and keep it in mind, the `keycloak` docker image has been removed from the `/test-/docker-compose.yml` file.
 
