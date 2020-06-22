@@ -50,16 +50,11 @@ instance).
 |===
 |Port | |
 
-|2000 |config |Configuration service http (REST)
-|2001 |registry |Registry service http (REST)
-|2002 |gateway |Gateway service http (REST+html)
+|2002 |web-ui | Web ui and gateway  (Nginx server)
 |2100 |thirds |Third party management service http (REST)
 |2102 |cards-publication |card publication service http (REST)
 |2103 |users |Users management service http (REST)
 |2104 |cards-consultation |card consultation service http (REST)
-|4000 |config |java debug port
-|4001 |registry |java debug port
-|4002 |gateway |java debug port
 |4100 |thirds |java debug port
 |4102 |cards-publication |java debug port
 |4103 |users |java debug port

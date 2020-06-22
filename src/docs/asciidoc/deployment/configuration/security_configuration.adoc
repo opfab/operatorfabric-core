@@ -10,26 +10,54 @@
 
 = Security Configuration
 
-Configure the security concern througout several files:
+Configure the security concern throughout several files:
 
-* `application.yml` of each `core service`;
-* `web-ui.jsom` served by the `web-ui` service;
-* `default.conf` of the `web-ui` service.
+* `nginx.conf` of the nginx server
+* `config/dev/common-dev.yml`  or `config/docker/common-docker.yml`, called common.yml in the following chapters
+* `web-ui.json` served by the `web-ui` service;
 
-Each service use the `application.yml` file for its generic configuration. Customise the service using a dedicated `spring profile` or using a customised `application.yml`. Launch the service with a given profile to override all or part of the service properties.
-There are two profiles awailable `dev` and `docker`. The associated files are respectivly `application-dev.yml` and `application-docker.yml` located in `src/main/resources`
-of each `core service` root folder.
 
-== Run time
+== Authentication configuration 
 
-Provide the `spring profile` as parameter of the CLI launching the service. Override the default `application.yml` by placing a customized `application.yml` in a folder named `config` created in the folder of the service `jar`.
 
-== Within Docker images
+There are 3 OAuth2 Authentication flows available into OperatorFabric UI:
 
-By construction, the `application-docker.yml` configures the docker running service. To override this configuration, use a docker volume mapped to `/config/application.yml` path
-within the images.
+- password grant: referred as `PASSWORD` mode flow;
+- code flow : referred as `CODE` mode flow;
+- implicit flow: referred as `IMPLICIT` mode flow.
 
-== application.yml
+=== Nginx Configuration
+
+
+The UI calls need some mapping to reach the Authentication Provider. In the default OperatorFabric configuration it's a
+`docker keycloak instance`, called `keycloak` in the project `docker-compose.yml` files.
+
+There are 3 properties to configure within `nginx.conf` file:
+
+* `$KeycloakBaseUrl`: the base url of keycloak;
+* `$OperatorFabricRealm`: the realm configure within keycloak instance to provide authentication to OperatorFabric;
+* `$ClientPairOFAuthentication`: base64 encoded string of the pair of client authentication used by OperatorFabric
+to log to the Authentication Provider (keycloak). The cient-id and the client-secret are separated by a colon(':').
+
+[NOTE]
+====
+**Example of the `docker` configuration**
+----
+# Url of the Authentication provider
+    set $KeycloakBaseUrl "http://keycloak:8080";
+# Realm associated to OperatorFabric within the Authentication provider
+    set $OperatorFabricRealm "dev";
+
+# base64 encoded pair of authentication in the form of 'client-id:secret-id'
+    set $ClientPairOFAuthentication "b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==" ;
+----
+
+where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded string of
+`opfab-client:opfab-keycloak-secret` with `opfab-client` as client-id and `opfab-keycloak-secret` its client secret.
+====
+
+
+=== Configuration file common.yml
 
 |===
 |name|default|mandatory?|Description
@@ -37,14 +65,14 @@ within the images.
 |operatorfabric.security.oauth2.client-id|null|yes| Oauth2 client id used by OperatorFabric may be specific for each service
 |operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as user login or id
 |operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim is used as token expiration timestamp
-|spring.security.provider-url|null|no|The keycloak instance url. Helper properties used in `application-dev.yml`
-|spring.security.provider-realm|null|no|The realm name within the keycloak instance. Helper properties used in `application-dev.yml`
+|spring.security.provider-url|null|no|The keycloak instance url. 
+|spring.security.provider-realm|null|no|The realm name within the keycloak instance. 
 |spring.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificat used to verify the jwt signature
 |===
 
 [NOTE]
 ====
-**example of `application-dev.yml`**
+**example of `common.yml`**
 
 [source,yml]
 ----
@@ -66,34 +94,9 @@ spring:
 ----
 where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one 
 and where `jwt-set-uri` reuses `provider-url` and `provider-realm` properties.
-
-**example of `application-docker.yml`**
-
-[source,yml]
-----
-operatorfabric:
-    security:
-        oauth2:
-            client-id: opfab-client
-        jwt:
-            login-claim: preferred_username
-            expire-claim: exp
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://keycloak:8080/auth/realms/dev/protocol/openid-connect/certs
-----
-where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one
-and
-where `jwt-set-uri` property value is directly set.
-
 ====
 
-Each service needs to be configured with such files.
-
-=== `web-ui.json`
+=== Configuration file web-ui.json
 
 Nginx web server serves this file. OperatorFabric creates and uses a custom Docker image containing an Nginx server with a docker volume containing this file. The two docker-compose environments contain an example of it. The path in the image to it is `/usr/share/nginx/html/opfab/web-ui.json`. 
 
@@ -108,15 +111,10 @@ There are several common properties:
 - `security.oauth2.flow.mode`: technical way to be authenticated by the Autentication provider.
 
 
-=== OAuth2 Flows and specific configuration
 
-There are 3 OAuth2 Authentication flows available into OperatorFabric UI:
 
-- password grant: referred as `PASSWORD` mode flow;
-- code flow : referred as `CODE` mode flow;
-- implicit flow: referred as `IMPLICIT` mode flow.
+=== OAuth2 PASSWORD or CODE Flows
 
-==== OAuth2 PASSWORD or CODE Flows
 
 These two modes share the same way of declaring the delegate URL.
 `CODE` is the default mode of authentication for `deploy` docker-compose environment.
@@ -124,7 +122,8 @@ These two modes share the same way of declaring the delegate URL.
 - `security.oauth2.flow.mode` to `PASSWORD` or `CODE`;
 - `security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the protocol used for authentication.
 
-===== Example of Configuration For CODE Flow
+==== Example of Configuration For CODE Flow
+
 
 [source,json]
 ----
@@ -148,7 +147,8 @@ Within the `delegate-url` property `dev` is the keycloak client realm of Operato
 For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred.
 Here, the `client-id` value is `opfab-client` which is define as client under the `realm` named `dev` on the dev keycloak instance.
 
-==== OAuth2 IMPLICIT Flow
+=== OAuth2 IMPLICIT Flow
+
 
 It had its own way of configuration.
 To enable IMPLICIT Flow authentication the following properties need to be set:
@@ -156,7 +156,8 @@ To enable IMPLICIT Flow authentication the following properties need to be set:
 - `security.oauth2.flow.mode` to `IMPLICIT`;
 - `security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the `.well-known/openid-configuration` end-point used for authentication configuration.
 
-===== Example of configuration for IMPLICIT Flow 
+==== Example of configuration for IMPLICIT Flow 
+
 
 [source,json]
 ----
@@ -181,3 +182,58 @@ To enable IMPLICIT Flow authentication the following properties need to be set:
 Within the `delegate-url` property `dev` is the keycloak client realm of OperatorFabric.
 For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred.
 The url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
+
+== User creation
+
+Setting automated user creation==. Creation user requires a user id. Given name and family name are optional.
+
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as a user login or id
+|operatorfabric.security.jwt.given-name-claim|given-name|no| Jwt claim is used to set the user's given name
+|operatorfabric.security.jwt.family-name-claim|family-name|no| Jwt claim is used to set the user's family name
+|===
+
+
+[[jwt_mode]]
+== Alternative way to manage groups (and/or entities)
+
+By default, `OperatorFabric` manages groups (and/or entities) through the user\'s collection in the database.
+Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token.
+The administrator of the authentication service has to set what claims define a group (and/or entity).
+In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve those groups (and/or entities).
+  
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.security.jwt.groups.mode|OPERATOR_FABRIC|no| Set the group mode, possible values JWT or OPERATOR_FABRIC 
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandard.path||no| path in the JWT to retrieve the claim that defines a group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardArray.path||no| path in the JWT to retrieve the claim that defines an array of groups
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.path||no| path in the JWT to retrieve the claim that defines a list of group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.separator||no| set the separator value of the list of group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.path||no| path in the JWT to check if that path does exist, if it does, use the roleValue as a group 
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.roleValue||no| set the value of the group if the path exists
+|operatorfabric.security.jwt.entitiesIdClaim||no| set the name of the field in the token
+|operatorfabric.security.jwt.gettingEntitiesFromToken||no| boolean indicating if you want the entities of the user to come from the token and not mongoDB (possible values : true/false)
+|===
+
+_application.yml_
+
+[source]
+----
+include::./examples/application_JWT_group_config.yml[]
+----
+
+_JWT example_
+
+[source]
+----
+include::./examples/jwt_example.json[]
+----
+
+As the result, the group will be [ATTR1, ATTR2, roleA, roleB, roleC, USER, roleBBB, roleAAA]
+
+
+
+include::certificates.adoc[leveloffset=+1]

@@ -37,9 +37,13 @@ project
 ├──src
 |   ├──docs
 |   │   └──asciidoc
-|   └──main
-|       ├──docker
-|       └──headers
+|   |──main
+|   |    ├──docker
+|   |    └──headers
+|   |──test
+|   |    ├──api
+|   |    ├──cypress
+|   |    └──utils
 ├──tools
 │   ├──generic
 │   │   ├──test-utilities
@@ -61,11 +65,11 @@ project
 build process
 * link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]: contains REST APIs simple beans definition, may be
 used by external projects
-* link:https://github.com/opfab/operatorfabric-core/tree/master/client[config]: contains external configurations for all services , keycloak and docker-compose files to help with tests and demonstrations
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/client/cards[cards (cards-client-data)]: simple beans regarding cards
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/client/src[src]: contains swagger templates for link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]
 code generation
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/client/users[users (users-client-data)]: simple beans regarding users
+* link:https://github.com/opfab/operatorfabric-core/tree/master/config[config]: contains external configurations for all services , keycloak and docker-compose files to help with tests and demonstrations
 * link:https://github.com/opfab/operatorfabric-core/tree/master/services[services]: contains the microservices that make up
 OperatorFabric
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core[core]: contains core business microservices
@@ -89,6 +93,10 @@ Getting Started Guide, etc.)
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/docker[docker]: contains docker-compose files to help with
 tests and demonstrations
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/main/headers[headers]: contains license header files
+** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test[test]
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/api[api] : karate code for automatic api testing (non-regression tests)
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/cypress[cypress] : cypress code for automatic ui testing
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/utils[utils] : karate code for manual testing 
 * link:https://github.com/opfab/operatorfabric-core/tree/master/tools[tools]
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/generic[generic]: Generic (as opposed to Spring-related)
 utility code
