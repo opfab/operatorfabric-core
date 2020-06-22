@@ -119,8 +119,8 @@ And match response.count == 1
 			"publisher" : "api_test",
 			"publisherVersion" : "1",
 			"process"  :"defaultProcess",
-			"processId" : "process3",
-			"state": "messageState",
+			"processId" : "processProcess",
+			"state": "processState",
 			"recipient" : {
 						"type" : "GROUP",
 						"identity" : "TSO1"
@@ -128,8 +128,8 @@ And match response.count == 1
 			"severity" : "COMPLIANT",
 			"startDate" : startDate,
 			"summary" : {"key" : "defaultProcess.summary"},
-			"title" : {"key" : "defaultProcess.title"},
-			"data" : {"message":" Compliant Card "},
+			"title" : {"key" : "process.title"},
+			"data" : {"state":"calcul1","stateName":"CALCUL1"},
 			"timeSpans" : [
 				{"start" : startDate},
 				{"start" : endDate}

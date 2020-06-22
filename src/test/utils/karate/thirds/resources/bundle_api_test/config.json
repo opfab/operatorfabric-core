@@ -4,7 +4,9 @@
 	"templates": [
 		"template",
 		"chart",
-		"chart-line"
+		"chart-line",
+		"svg",
+		"process"
 	],
 	"csses": [
 		"style"
@@ -25,6 +27,19 @@
 						}
 					],
 					"acknowledgementAllowed": false
+				},
+				"processState": {
+					"details": [
+						{
+							"title": {
+								"key": "process.title"
+							},
+							"templateName": "process",
+							"styles": [
+								"style"
+							]
+						}
+					]
 				},
 				"chartState": {
 					"details": [
