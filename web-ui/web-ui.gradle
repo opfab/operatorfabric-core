@@ -18,7 +18,16 @@ docker {
 	name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
 	tags "latest", "${project.version}"
 	labels(['project': "${project.group}"])
-	copySpec.from("../ui/main/build/distribution").into("distribution")
+	copySpec.with {
+				from('../ui/main/build/distribution') {
+					include '**'
+					into 'distribution'
+				}
+				from('src/main/docker') {
+					include 'start-webui.sh'
+					into '.'
+				}
+			}
 	buildArgs(['http_proxy'     : apk.proxy.uri,
 			   'https_proxy'    : apk.proxy.uri,
 			   'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
