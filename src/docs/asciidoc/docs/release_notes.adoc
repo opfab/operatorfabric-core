@@ -8,60 +8,7 @@
 
 = Version SNAPSHOT
 
-== Issues
-* [OC-916] Back : Add entitiesAllowedToRespond in the card
-* [OC-917] Front : Show action on ui , only if the entity of the user is in entitiesAllowedToRespond
-* [OC-874] Send the card to a third server
-* [OC-875] New endpoint cards/userCard to receive users cards
-* [OC-876] User Service : Implement group in JWT Token Option
-* [OC-402] As an Operator I want the archive screen to display an explicit message if no cards are found that match my filters
-* [OC-868] As an admin I would like to be able to hide the time filtrer : https://opfab.github.io/documentation/current/deployment/#_web_ui
-* [OC-900] Modifiy the CardPublication service with a new field : externalRecipients
-* [OC-864] As a user I want to be able to reset archives filters so I can change my search criteria => Add a space between the search button and the Minutes field
-* [OC-939] Synchronize timeline with feed (When a filter is set in the feed, it applies as well in the timeline (severity, tags or business period))
-* [OC-960] Back : remove old action service
-* [OC-962] Back: remove reference to action in third
-
-== Bugs
-* [OC-772] Bug on archives screen: clear results when exiting archive page.
-* [OC-898] In implicit mode, first name and last name are not displayed
-* [OC-775] Cards details remain displayed when selecting another criteria that doesn't return any result
-
-== Tasks
-* [OC-836] Remove netflix stack (eureka registry server) and config server for users microservice
-* [OC-838] Remove netflix stack (eureka registry server) and config server for cards-publication microservice
-* [OC-892] Add in documentation that it is not possible to use dot in json field names
-* [OC-845] Implement Git flow as our contribution and release workflow
-+
-_We have transitioned from a GitHub flow to a Git flow. See the documentation to see how it impacted our
-link:./single_page_doc.html#CICD[CICD pipeline]
-and how it translate into our link:./single_page_doc.html#_contribution_workflow[contribution workflow]
-(submitting a pull request etc.)._
-+
-[IMPORTANT]
-====
-_Now, the current state of developments is pushed daily to Docker Hub with the tag `SNAPSHOT`
-(rather than `snapshot` as before)._
-====
-
-* [OC-838] Remove netflix stack (eureka registry server) and config server for cards-consultation microservice
-* [OC-836] Remove netflix stack (eureka registry server) and config server for thirds microservice
-* [OC-888] Fix SonarCloud Frontend issues
-* [OC-692] Fix SonarCloud Backend issues
-* [OC-891] Removed mainRecipient
-* [OC-899] Deploy and dev-env docker-compose should use SNAPSHOT version on develop branch
-* [OC-897] added operation delete for the resource thirds
-+
-_When working on branch `develop`, the `deploy` docker-compose will rely on `SNAPSHOT` docker images generated daily.
-This lets you test OperatorFabric with the latest merged code. If you're interested in running a particular release on
-the other hand, you should checkout the associated X.X.X.RELEASE tag on `master`. The same is true for the
-`dev-environment` docker-compose._
-
-* [OC-907] Remove Keycloak from test-quality-environment docker-compose
-* [OC-885] User Service : Perimeter model evolution
-* [OC-909] Simplify third menu code (Front) 
-* [OC-911] Changing sounds due to incompatible license
-* [OC-904] thirds service - added delete version of a third, minor changes on general synch working
-
-
+//The release notes are managed in an outside repository to avoid constantly having conflicts when merging PRs on the
+//develop branch. See https://github.com/opfab/release-notes/.
+//The content from this repository is then pasted back to this file during the release process.
 

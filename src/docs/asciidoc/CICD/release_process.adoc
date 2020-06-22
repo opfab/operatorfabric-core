@@ -39,17 +39,11 @@ to get the release notes (click "Release notes" under the version name at the to
 +
 image::release_notes.png[Release notes link]
 . Make sure that the
-link:https://github.com/opfab/operatorfabric-core/blob/master/src/docs/asciidoc/docs/release_notes.adoc[release_notes.adoc]
+link:https://github.com/opfab/release-notes/blob/master/release_notes.adoc[release_notes.adoc]
 file lists all the issues, bugs, tags or feature requests that are relevant for OperatorFabric users along with
 explanations if need be.
 
 . Based on the content of this version and the rules listed above, determine the version number for next version.
-
-. In the release_notes.adoc file, replace the `Version SNAPSHOT` title by `Version X.X.X.RELEASE`
-//TODO Make that part of prepare version script
-
-. In the release page, change the name from "Next Version" to "X.X.X.RELEASE"
-//TODO Check that renaming works ok, no side effects. Otherwise we will move issues to a new version
 
 === Creating a release branch and preparing the release
 
@@ -59,6 +53,16 @@ explanations if need be.
 ```
 git checkout -b X.X.X.release
 ```
+
+. Cut the contents from the release_notes.adoc file from the
+link:https://github.com/opfab/release-notes/[release-notes repository] and paste it to the release_notes.adoc file
+found under *src/docs/asciidoc/docs*.
+
+. Replace the `Version SNAPSHOT` title by `Version X.X.X.RELEASE`
+//TODO Make that part of prepare version script
+
+. In the release page, change the name from "Next Version" to "X.X.X.RELEASE"
+//TODO Check that renaming works ok, no side effects. Otherwise we will move issues to a new version
 
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
@@ -187,7 +191,6 @@ new version will make rolling back or correcting any mistake on the release more
 
 . In the "Releases" screen create a new release called `Next Release`.
 
-=== On the `develop` branch
+=== On the release-notes repository
 
-. Change the release_notes.adoc file back to an "empty" template with `Version SNAPSHOT` as a title.
-//TODO Find a way to avoid this
+. Remove the items listed in the release_notes.adoc file so it's ready for the next version.

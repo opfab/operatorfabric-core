@@ -1,3 +1,10 @@
+// Copyright (c) 2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
 = Using OAuth2 token with the CLI
 
 == Get a token
@@ -8,10 +15,10 @@ Method: `POST`
 
 Body arguments:
 
-- client_id: `string` constant=`clientIdPassword`;
-- grant_type: `string` constant=`password`;
+* client_id: `string` constant=`clientIdPassword`;
+* grant_type: `string` constant=`password`;
 - username: `string` any value, must match an OperatorFabric registered user name;
-- password: `string` any value;
+* password: `string` any value;
 
 The following examples will be for `admin` user.
 
@@ -19,15 +26,15 @@ The following examples will be for `admin` user.
 
 command:
 
-....
+----
 curl -s -X POST -d 
 "username=admin&password=test&grant_type=password&client_id=clientIdPassword" 
 http://localhost:2002/auth/token
-....
+----
 
 example of expected result:
 
-....
+----
 {"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cC
 I6MTU1MjY1OTczOCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOi
 IwMmQ4MmU4NS0xM2YwLTQ2NzgtOTc0ZC0xOGViMDYyMTVhNjUiLCJjbGllbnRfaWQiOiJjbGllbnRJZF
@@ -47,18 +54,18 @@ GlN9zDzWhKxr49I-zPZg0XecgE9j4WITkFoDVwI-AfDJ3sGXDi5AN55Sz1j633QoqVjhtc0lO50WPVk5
 YT7gU8HLj27EfX-6vjnGfNb8oeq189-NX100QHZM9Wgm79mIm4sRgwhpv-zzdDAkeb3uwIpb8g","exp
 ires_in":1799,"scope":"read 
 user_info","jti":"02d82e85-13f0-4678-974d-18eb06215a65"}
-....
+----
 
 === Httpie
 
-....
+----
 http --form POST http://localhost:2002/auth/token username=admin password=test 
 grant_type=password client_id=clientIdPassword
-....
+----
 
 example of expected result:
 
-....
+----
 .HTTP/1.1 200 OK
 Cache-Control: no-store
 Content-Type: application/json;charset=utf-8
@@ -94,7 +101,7 @@ qO-fkjTVRjy_LBXGq9zkn0ZeQ3BUe1GuthvGjaA",
     "scope": "read user_info",
     "token_type": "bearer"
 }
-....
+----
 
 == Extract token
 
@@ -105,7 +112,7 @@ example from previous results:
 
 === Curl
 
-....
+----
 Authorization:Bearer 
 eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY1OTczOCw
 iYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiIwMmQ4MmU4NS0xM2Y
@@ -115,11 +122,11 @@ OXT3bUhQwPOgggZDO0lv2U1klwB94c8Cb6rErzd3yjJ8wcVcnFLO4KxrjYZZxdKVAz0CkMKqng4kQeQm
 _1UShsQXGLl48ezbjXyJn6mAl0oS4ExeiVsx_kYGEdqjyb5CiNaAzyx0J-J5jVDSJew1rj5EiSybuy83
 PZwhluhxq0D2zPK1OSzqiezsd5kX5V8XI4MipDhaAbPYroL94banZTn9RmmAKZCAYVM-mmHbjk8mF89f
 L9rKf9EUNhxOG6GE0MDqB3LLLcyQ6sYUmpqdP5Z94IkAN-FpC7k93_-RDw
-....
+----
 
 === Httpie
 
-....
+----
 Authorization:Bearer 
 eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY2MDAzOSw
 iYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI2MjQzMDliMS03Yzg
@@ -129,7 +136,7 @@ PWx3DFHAHUxkfSX0-R4OO6iG2Zu7abzToAZNVLwk107LH_lWXOMQBriGx3d2aSgCf1yx_wI3lHDd8ST8
 fxV7uNeolzywYavSpMGfgz9GXLzmnyeuPH4oy7eyPk9BwWVi0d7a_0d-EfhE1T8eaiDfymzzNXJ4Bge8
 scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeApKdfDJ
 6o4szR71SIFCBERxCH9TyUxsFywWL3e-YnXMiP2J08eB8O4YwhYQEFqB8Q
-....
+----
 
 == Check a token
 
@@ -137,7 +144,7 @@ scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeApKdfDJ
 
 from previous example
 
-....
+----
 curl -s -X POST -d 
 "token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY1
 OTczOCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiIwMmQ4MmU4
@@ -148,11 +155,11 @@ g4kQeQm_1UShsQXGLl48ezbjXyJn6mAl0oS4ExeiVsx_kYGEdqjyb5CiNaAzyx0J-J5jVDSJew1rj5Ei
 Sybuy83PZwhluhxq0D2zPK1OSzqiezsd5kX5V8XI4MipDhaAbPYroL94banZTn9RmmAKZCAYVM-mmHbj
 k8mF89fL9rKf9EUNhxOG6GE0MDqB3LLLcyQ6sYUmpqdP5Z94IkAN-FpC7k93_-RDw" 
 http://localhost:2002/auth/check_token
-....
+----
 
 which gives the following example of result:
 
-....
+----
 {
     "sub":"admin",
     "scope":["read","user_info"],
@@ -161,13 +168,13 @@ which gives the following example of result:
     "jti":"02d82e85-13f0-4678-974d-18eb06215a65",
     "client_id":"clientIdPassword"
 }
-....
+----
 
 === Httpie
 
 from previous example:
 
-....
+----
 http --form POST http://localhost:2002/auth/check_token 
 token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY2M
 DAzOSwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI2MjQzMDliM
@@ -177,11 +184,11 @@ Fa5Bd3PWx3DFHAHUxkfSX0-R4OO6iG2Zu7abzToAZNVLwk107LH_lWXOMQBriGx3d2aSgCf1yx_wI3lH
 Dd8ST8fxV7uNeolzywYavSpMGfgz9GXLzmnyeuPH4oy7eyPk9BwWVi0d7a_0d-EfhE1T8eaiDfymzzNX
 J4Bge8scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeA
 pKdfDJ6o4szR71SIFCBERxCH9TyUxsFywWL3e-YnXMiP2J08eB8O4YwhYQEFqB8Q
-....
+----
 
 which gives the following example of result:
 
-....
+----
 
 HTTP/1.1 200 OK
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -209,19 +216,17 @@ transfer-encoding: chunked
     ],
     "sub": "admin"
 }
-....
+----
 
 == Extract token
 
 The utility `jq`, not always available on every Linux distro, parse json input and can extract requested json path value. 
 Here is a way to do so.
 
-[source,bash]
-====
+[source,shell]
 ----
  curl -d "username=&dminpassword=test&grant_type=password&client_id=opfab-client&secret=opfab-keycloack-secret" "http://localhost:2002/auth/token" | jq -r .access_token
 ----
-====
 
  
 The `-r` opttion, for raw, leaves the output without any quotes.
