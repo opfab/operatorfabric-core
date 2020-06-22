@@ -1,10 +1,12 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
+
+
 
 [[architecture]]
 = OperatorFabric Architecture
@@ -21,7 +23,7 @@ deals with and then showing how this translates into the technical architecture.
 OperatorFabric is based on the concept of *cards*, which contain data regarding events that are relevant for the
 operator.
 A third party tool publishes cards and the cards are received on the screen of the operators. Depending on the type
-of the cards, the operator can send back information to the third party via an "action".
+of the cards, the operator can send back information to the third party via a "response card".
 
 === Business components
 
@@ -29,10 +31,9 @@ image::FunctionalDiagram.jpg[functional diagram]
 
 To do the job, the following business components are defined :
 
-- Card Publication : this component receives the cards from third party tools
+- Card Publication : this component receives the cards from third party tools or users
 - Card Consultation : this component delivers the cards to the operators and provide access to all cards exchanged (archives)
-- Actions : this component receives the action from the operator and send it to the third party tool
-- Card rendering and process definition : this component stores the information for the card rendering (templates, internationalization, ...) and a light description of the process associate (states, actions, ...). This configuration data can be provided either by an administrator or by a third party tool.
+- Card rendering and process definition : this component stores the information for the card rendering (templates, internationalization, ...) and a light description of the process associate (states, response card, ...). This configuration data can be provided either by an administrator or by a third party tool.
 - User Management : this component is used to manage users, groups and entities.
 
 === Business objects 
@@ -42,18 +43,17 @@ The business objects can be represented as follows :
 image::BusinessObjects.jpg[business objects diagram]
 
 * Card : the core business object which contains the data to show to the user(or operator) 
-* Publisher : the third party which publishes cards
-* User : the operator receiving cards and responding via actions
+* Publisher : the third party which publishes or receives cards
+* User : the operator receiving cards and responding via response cards
 * Group : a group (containing a list of users)
 * Entity : an entity (containing a list of users)
 * Process : the process the card is dealing with 
 * State : the step in the process
 * Card Rendering : data for card rendering 
-* Action : a list of possible actions for a specific state in a process
 
 == Technical Architecture
 
-The architecture is based on micro-services. All business services are accessible via REST API.
+The architecture is based on independant modules. All business services are accessible via REST API.
 
 image::LogicalDiagram.jpg[functional diagram]
 
@@ -69,26 +69,17 @@ We find here the business component seen before:
 	** internationalization information
  
  
-All business components are based on https://spring.io/projects/spring-boot[SpringBoot] and packaged via https://www.docker.com/[Docker]. 
+Except form the UI, which is based on angular, all business components are based on https://spring.io/projects/spring-boot[SpringBoot] and packaged via https://www.docker.com/[Docker]. 
 
 https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html[Spring WebFlux] is used to provide the card in a fluid way.
 
 === Technical components 
  
-==== Registry
-
-It is the central component where all services are registered. It serves as a reference point for the gateway and other
-services to find information about the running services instance and allow for local load balancing of accesses. It is implemented by https://spring.io/projects/spring-cloud-netflix[Spring Cloud Netflix] . 
 
 ==== Gateway
 
 It provides a filtered view of the APIS and static served pages for external access through browsers or other http
-compliant accesses. It provides the rooting and load balancing for accessing the micro-services from outside. It is implemented by https://cloud.spring.io/spring-cloud-gateway/reference/html/[Spring Cloud Gateway].
-
-==== Configuration
-
-A configuration service is not mandatory in a micro-services architecture but may allow for better sharing of common configuration and
-to dispatch global configuration changes to all services. It is implemented via https://cloud.spring.io/spring-cloud-config/reference/html/[Spring Cloud Config].
+compliant accesses. It provides the rooting for accessing the services from outside. It is a nginx server package with docker, this component contains the angular UI component.
 
 ==== Broker
 

@@ -1,16 +1,19 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
 
 
+
 import {Component, OnInit} from '@angular/core';
-import {selectMenuStateSelectedIframeURL,} from "@ofSelectors/menu.selectors";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {ActivatedRoute} from '@angular/router';
+import { ThirdsService } from '@ofServices/thirds.service';
+
 
 @Component({
   selector: 'of-iframedisplay',
@@ -19,22 +22,21 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 })
 export class IframeDisplayComponent implements OnInit {
 
-  private _selectedIframeURL: SafeUrl;
+  public iframeURL: SafeUrl;
 
-  constructor(private store: Store<AppState>,
-              private sanitizer: DomSanitizer
+  constructor(
+              private sanitizer: DomSanitizer,
+              private route: ActivatedRoute,
+              private thirdService : ThirdsService
   ) { }
 
   ngOnInit() {
-
-    this.store.select(selectMenuStateSelectedIframeURL).subscribe( iframeURL => {
-      this._selectedIframeURL = this.sanitizer.bypassSecurityTrustResourceUrl(iframeURL);
-    })
-
-  }
-
-  get selectedIframeURL(): SafeUrl {
-    return this._selectedIframeURL;
+    this.route.paramMap.subscribe( paramMap => 
+        this.thirdService.queryMenuEntryURL(paramMap.get("menu_id"),paramMap.get("menu_version"),paramMap.get("menu_entry_id"))
+          .subscribe( url =>
+              this.iframeURL = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+          )
+    )
   }
 
 }

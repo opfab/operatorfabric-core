@@ -1,21 +1,26 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
 
 
+
 import { Component, OnInit } from '@angular/core';
-import {Observable, combineLatest} from 'rxjs';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {buildConfigSelector} from '@ofSelectors/config.selectors';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from '@ofStore/index';
+import { buildConfigSelector } from '@ofSelectors/config.selectors';
 import { FormGroup, FormControl } from '@angular/forms';
-import { SendArchiveQuery } from '@ofStore/actions/archive.actions';
+import { SendArchiveQuery ,FlushArchivesResult} from '@ofStore/actions/archive.actions';
 import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
 import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { TimeService } from '@ofServices/time.service';
+import { TranslateService } from '@ngx-translate/core';
+
 
 export enum FilterDateTypes {
   PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -51,11 +56,11 @@ export class ArchiveFiltersComponent implements OnInit {
 
   archiveForm: FormGroup;
 
-  constructor(private store: Store<AppState>, private timeService: TimeService) {
+  constructor(private store: Store<AppState>, private timeService: TimeService,private translateService: TranslateService) {
     this.archiveForm = new FormGroup({
       tags: new FormControl(''),
       process: new FormControl(),
-      publishDateFrom: new FormControl(''),
+      publishDateFrom: new FormControl(),
       publishDateTo: new FormControl(''),
       activeFrom: new FormControl(''),
       activeTo: new FormControl(''),
@@ -82,8 +87,9 @@ export class ArchiveFiltersComponent implements OnInit {
         if (checkElement(FilterDateTypes, key)) {
           const {date, time} = element;
           if (date) {
-            const dateString = transformToTimestamp(date, time);
-            params.set(key, [this.timeService.toNgBTimestamp(dateString)]);
+
+            const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
+            if (timeStamp!== 'NaN') params.set(key, [timeStamp]);
           }
         } else {
           if (element.length) {
@@ -102,6 +108,16 @@ export class ArchiveFiltersComponent implements OnInit {
     this.first$.subscribe(first => params.set('page', [first.toString()]));
     this.store.dispatch(new SendArchiveQuery({params}));
   }
+    clearFilters(): void {
+        this.store.dispatch(new FlushArchivesResult());
+        this.archiveForm.get("tags").setValue('');
+        this.archiveForm.get("process").setValue('');
+        this.archiveForm.get("publishDateFrom").setValue({date :'' , time:{hour: 0, minute: 0}});
+        this.archiveForm.get("publishDateTo").setValue({date :'', time:{hour: 0, minute: 0}});
+        this.archiveForm.get("activeFrom").setValue({date :'', time:{hour: 0, minute: 0}});
+        this.archiveForm.get("activeTo").setValue({date :'', time:{hour: 0, minute: 0}});
+    }
+
 
 }
 

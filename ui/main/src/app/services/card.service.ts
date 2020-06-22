@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {Injectable} from '@angular/core';
@@ -17,8 +20,13 @@ import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
-import {TimeService} from '@ofServices/time.service';
 import {NotifyService} from '@ofServices/notify.service';
+import {AppState} from '@ofStore/index';
+import {Store} from '@ngrx/store';
+import {
+    CardSubscriptionOpen,
+    CardSubscriptionClosed
+} from '@ofActions/cards-subscription.actions';
 
 @Injectable()
 export class CardService {
@@ -27,17 +35,19 @@ export class CardService {
     readonly cardOperationsUrl: string;
     readonly cardsUrl: string;
     readonly archivesUrl: string;
+    readonly cardsPubUrl: string;
     private subscriptionTime = 0;
 
     constructor(private httpClient: HttpClient,
                 private notifyService: NotifyService,
                 private guidService: GuidService,
-                private timeService: TimeService,
+                private store: Store<AppState>,
                 private authService: AuthenticationService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
         this.archivesUrl = `${environment.urls.cards}/archives`;
+        this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
     }
 
     loadCard(id: string): Observable<Card> {
@@ -83,8 +93,14 @@ export class CardService {
                     return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                 };
                 eventSource.onerror = error => {
-                    console.error(`error occurred from ES: ${error.toString()}`);
+                    this.store.dispatch(new CardSubscriptionClosed());
+                    console.error('error occurred in card subscription:',error);
                 };
+                eventSource.onopen = open => {
+                    this.store.dispatch(new CardSubscriptionOpen());
+                    console.log(`open card subscription`);
+                };
+
 
             } catch (error) {
                 console.error('an error occurred', error);
@@ -142,5 +158,10 @@ export class CardService {
         filters.forEach((values, key) => values.forEach(value => params = params.append(key, value)));
         // const tmp = new HttpParams().set('publisher', 'defaultPublisher').set('size', '10');
         return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
+    }
+
+    postResponseCard(card: Card) {
+        const headers = this.authService.getSecurityHeader();
+        return this.httpClient.post<Card>(`${this.cardsPubUrl}/userCard`, card, { headers });
     }
 }

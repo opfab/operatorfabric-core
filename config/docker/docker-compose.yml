@@ -1,0 +1,96 @@
+version: '2.1'
+services:
+  mongodb:
+    image: mongo:4.1.1-xenial
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+#      - "15674:15674"
+  keycloak:
+    image: jboss/keycloak:6.0.1
+    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export
+    environment:
+    - KEYCLOAK_USER=admin
+    - KEYCLOAK_PASSWORD=admin
+    - DB_VENDOR=H2
+    volumes:
+    - ../keycloak:/keycloak
+    ports:
+    - "89:8080"
+    - "90:9990"
+  users:
+    container_name: users
+    image: "lfeoperatorfabric/of-users-business-service:1.4.0.RELEASE"
+    user: ${USER_ID}:${USER_GID}
+    ports:
+     - "2103:8080"
+     - "4103:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    volumes:
+      - "../certificates:/certificates_to_add"
+  thirds:
+    container_name: thirds
+    image: "lfeoperatorfabric/of-thirds-business-service:1.4.0.RELEASE"
+    depends_on:
+      - mongodb
+    user: ${USER_ID}:${USER_GID}
+    ports:
+     - "2100:8080"
+     - "4100:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    volumes:
+     - "../certificates:/certificates_to_add"
+     - "../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
+  cards-publication:
+    container_name: cards-publication
+    image: "lfeoperatorfabric/of-cards-publication-business-service:1.4.0.RELEASE"
+    depends_on:
+      - mongodb
+    user: ${USER_ID}:${USER_GID}
+    ports:
+     - "2102:8080"
+     - "4102:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    volumes:
+      - "../certificates:/certificates_to_add"
+  cards-consultation:
+    container_name: cards-consultation
+    image: "lfeoperatorfabric/of-cards-consultation-business-service:1.4.0.RELEASE"
+    user: ${USER_ID}:${USER_GID}
+    ports:
+     - "2104:8080"
+     - "4104:5005"
+    environment:
+    - REGISTRY_HOST=registry
+    - REGISTRY_PORT=8080
+    - DEPENDS_ON=CONFIG
+    volumes:
+      - "../certificates:/certificates_to_add"
+  web-ui:
+    image: "lfeoperatorfabric/of-web-ui:1.4.0.RELEASE"
+    ports:
+    - "2002:80"
+    depends_on:
+      - users
+      - thirds
+      - cards-consultation
+    volumes:
+      - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"
+      - "./ngnix.conf:/etc/nginx/conf.d/default.conf"

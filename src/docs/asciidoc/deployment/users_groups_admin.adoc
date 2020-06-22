@@ -1,16 +1,20 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
 
-== Users, Groups and Entities Administration
+
+
+= Users, Groups and Entities Administration
 
 A new operator call John Doe, who has OAuth granted right to connect ot current `OperatorFabric` instance, need to receive cards within current `OperatorFabric` instance. As a user of OperatorFabric, he needs to be added to the system with a `login` (john-doe-operator), his `firstName` (John) and his `lastName` (Doe).
 operator
 As there is no `Administration GUI` for the moment, it must be performed through command line, as detailed in the Users API.
+
+== Users 
 
 === List all users
 

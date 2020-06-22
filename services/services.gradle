@@ -38,7 +38,6 @@ subprojects {
 
         dependencies {
             compile boot.actuator
-            compile cloud.starterConfigClient
             annotationProcessor misc.lombok
             implementation misc.lombok
 
@@ -97,22 +96,15 @@ subprojects {
             }
         }
 
-        // Docker
-        //For X.X.X.SNAPSHOT versions, docker images should be pushed with "snapshot" tag as the version number isn't
-        //important since the content evolves every day (see OC-579)
-        //For X.X.X.RELEASE versions, docker images are pushed with the full version number
-        ext.isSnapshot = version.endsWith(".SNAPSHOT")
-        if (isSnapshot) {
-            ext.dockerVersionTag = "snapshot"
-        } else {
-            ext.dockerVersionTag = "${project.version}"
-        }
-
         docker {
             name "lfeoperatorfabric/of-${project.name.toLowerCase()}"
-            tags 'latest', dockerVersionTag
+            tags "latest", "${project.version}"
             labels (['project':"${project.group}"])
-            files jar.archivePath, 'src/main/resources/bootstrap-docker.yml', 'src/main/resources/application-docker.yml', '../../../src/main/docker/java-config-dependent-docker-entrypoint.sh', '../../../src/main/docker/java-config-docker-entrypoint.sh', '../../../src/main/docker/java-registry-docker-entrypoint.sh','../../../src/main/docker/add-certificates.sh'
+            files( jar.archivePath
+                    , "../../../config/docker/common-docker.yml"
+                    , "../../../config/docker/${project.name.toLowerCase().replaceAll("-business-service","")}-docker.yml"
+                    , '../../../src/main/docker/java-config-docker-entrypoint.sh'
+                    ,'../../../src/main/docker/add-certificates.sh')
             buildArgs(['JAR_FILE'       : "${jar.archiveName}",
                        'http_proxy'     : apk.proxy.uri,
                        'https_proxy'    : apk.proxy.uri,

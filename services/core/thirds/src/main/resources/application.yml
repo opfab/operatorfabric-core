@@ -1,3 +1,4 @@
-operatorfabric.thirds:
-  storage:
-    path: "/configuration/thirds-storage"
+spring:
+  data:
+    mongodb:
+      database: operator-fabric

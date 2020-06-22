@@ -1,0 +1,129 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Copyright Headers
+
+All source files and documentation files for the project should bear copyright headers.
+
+== Header templates
+
+In the case of source files (*.java, *.css or *.scss, *.html, *.ts, etc.), we are working with the
+link:http://mozilla.org/MPL/2.0/[Mozilla Public License, v. 2.0], so the header should be something like this:
+
+```
+Copyright (c) YYYY-YYYY, Entity Name (website or contact info)
+See AUTHORS.txt
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+SPDX-License-Identifier: MPL-2.0
+This file is part of the OperatorFabric project.
+```
+
+In the case of documentation files (*.adoc), we use the
+link:https://creativecommons.org/licenses/by/4.0/[Creative Commons Attribution 4.0 International license], so the
+header should be:
+
+```
+Copyright (c) YYYY-YYYY, Entity Name (website or contact info)
+See AUTHORS.txt
+This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+If a copy of the license was not distributed with this
+file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+SPDX-License-Identifier: CC-BY-4.0
+```
+
+These templates should of course be converted to comments depending on the file type. See src/main/headers for examples.
+
+Please make sure to include the appropriate header when creating new files and to update the existing one when
+making changes to a file.
+
+In the case of a first time contribution, the GitHub username of the person making the contribution should also be
+added to the AUTHORS file.
+
+== Examples
+
+=== Creating a new file
+
+Let's say a developer from entity Entity X creates a new java file in 2020. The header should read:
+
+```
+Copyright (c) 2020, Entity X (http://www.entityX.org)
+See AUTHORS.txt
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+SPDX-License-Identifier: MPL-2.0
+This file is part of the OperatorFabric project.
+```
+
+=== Updating a file
+
+Given an existing java file with the following header:
+
+```
+Copyright (c) 2020, Entity X (http://www.entityX.org)
+See AUTHORS.txt
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+SPDX-License-Identifier: MPL-2.0
+This file is part of the OperatorFabric project.
+```
+
+If a developer from entity Entity X edits it in 2021, the header should now read:
+
+```
+Copyright (c) 2020-2021, Entity X (http://www.entityX.org)
+See AUTHORS.txt
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+SPDX-License-Identifier: MPL-2.0
+This file is part of the OperatorFabric project.
+```
+
+However, if a developer from entity Entity X edits it in 2022, but no one from Entity X had touched it in 2021,
+the header should now read:
+
+```
+Copyright (c) 2020, 2022 Entity X (http://www.entityX.org)
+See AUTHORS.txt
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+SPDX-License-Identifier: MPL-2.0
+This file is part of the OperatorFabric project.
+```
+
+=== Multiple contributors
+
+Given an existing java file with the following header:
+
+```
+Copyright (c) 2020-2021, Entity X (http://www.entityX.org)
+See AUTHORS.txt
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+SPDX-License-Identifier: MPL-2.0
+This file is part of the OperatorFabric project.
+```
+
+If a developer from entity Entity Y edits it in 2021, the header should now read:
+
+```
+Copyright (c) 2020-2021, Entity X (http://www.entityX.org)
+Copyright (c) 2021, Entity Y (http://www.entityY.org)
+See AUTHORS.txt
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+SPDX-License-Identifier: MPL-2.0
+This file is part of the OperatorFabric project.
+```
+

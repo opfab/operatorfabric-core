@@ -1,8 +1,11 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)                 -->
-<!--                                                                     -->
-<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
-<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
-<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 
 <ngx-charts-chart
         [view]="[width, height]" xmlns:svg="http://www.w3.org/1999/svg"
@@ -63,8 +66,18 @@
                   [attr.height]="dims.height"
                   class="realTimeLine opfab-timeline-realtimebar-color"
         ></svg:rect>
-        <svg:g *ngFor="let circle of circles" (mouseenter)="feedCircleHovered(circle)" ngx-tooltip
-            [tooltipTemplate]="tooltipTemplate">
+        <svg:g *ngFor="let circle of circles" type="button">
+
+        <svg:g *ngIf="(circle.count>1)" (click)="feedCircleHovered(circle)" container="body"   [ngbPopover]="tooltipTemplate"  [autoClose]="true">
+            <svg:circle [attr.cx]="xScale(circle.date)"
+                [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
+                [attr.opacity]="0.7" />
+            <text  [attr.x]="xScale(circle.date)"
+                [attr.y]="yScale(circle.circleYPosition)" text-anchor="middle" font-weight="bold" stroke-width="0px"
+                [attr.font-size]="13" dy=".3em">{{circle.count}} </text>
+        </svg:g>
+
+        <svg:g *ngIf="(circle.count==1)" (click)="showCard(circle.summary[0].cardId)" >
             <svg:circle [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
                 [attr.opacity]="0.7" />
@@ -73,9 +86,16 @@
                 [attr.font-size]="13" dy=".3em">{{circle.count}} </text>
         </svg:g>
     </svg:g>
+    </svg:g>
     <ng-template #tooltipTemplate>
-        {{currentCircleHovered.dateOrPeriod}} <br/>
-        Count: {{currentCircleHovered.count}} <br/>
-        Summary: <p *ngFor="let title of currentCircleHovered.summary"style="padding: 0px;margin: 0px;line-height: 10px">{{title.summaryDate}}<span class="nav-link" translate [translateParams]="title.parameters">{{title.i18nPrefix + title.key}}</span></p>
+        <div *ngFor="let title of currentCircleHovered.summary"style="padding: 0px;margin: 0px;line-height: 8px">
+           <br/>
+            <button class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
+                <div style="text-align:left">
+                {{title.summaryDate}}  
+                <span translate [translateParams]="title.parameters" style="text-align:left;">{{title.i18nPrefix + title.key}}</span>
+                </div>
+            </button>
+        </div>
     </ng-template>
 </ngx-charts-chart>

@@ -1,8 +1,11 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)                 -->
-<!--                                                                     -->
-<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
-<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
-<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 
 
 <div class="row archives-page">
@@ -10,11 +13,19 @@
         <of-archive-filters></of-archive-filters>
     </div>
 </div>
-<div class="row">
-    <div class="col-3">
-        <of-archive-list [lightCards]="lightCards$|async" [selection]="selection$"></of-archive-list>
+
+<div  [style.display]="(!(loadingIsTrue)) ? 'none' : undefined">
+    <div class="alert alert-info" [style.display]="(!(isEmptyMessage)) ? 'none' : undefined">
+        <h1><label translate>archive.noResult</label></h1>
     </div>
-    <div class="col-9">
-        <router-outlet></router-outlet>
+    <div [style.display]="((isEmptyMessage)) ? 'none' : undefined">
+        <div class="row">
+            <div class="col-3">
+                <of-archive-list [lightCards]="lightCards$|async" [selection]="selection$"></of-archive-list>
+            </div>
+            <div class="col-9">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
     </div>
 </div>

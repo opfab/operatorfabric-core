@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.thirds.controllers;
@@ -133,28 +136,6 @@ public class ThirdsController implements ThirdsApi {
         service.clear();
     }
 
-    @Override
-    public Map<String, ? extends Action> getActions(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String apiVersion) {
-        return getState(request, response, thirdName, processName, stateName, apiVersion)
-                .getActions();
-    }
-
-    @Override
-    public Action getAction(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String actionKey, String apiVersion) {
-        ThirdStates state = getState(request, response, thirdName, processName, stateName, apiVersion);
-        Map<String, ? extends Action> actions = state.getActions();
-        if (actions != null && actions.containsKey(actionKey))
-            return actions.get(actionKey);
-    String message = String.format("Unknown action for third party service process %s state %s and action key %s", processName, stateName, actionKey);
-    throw new ApiErrorException(
-            ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(message)
-                    .build(),
-            message
-    );
-  }
-
     private ThirdStates getState(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String apiVersion) {
         ThirdStates state = null;
         Third third = getThird(request, response, thirdName, apiVersion);
@@ -197,4 +178,55 @@ public class ThirdsController implements ThirdsApi {
         return getState(request, response, thirdName, processName, stateName, apiVersion)
                 .getDetails();
     }
+
+    @Override
+    public Response getResponse(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName,
+                                String stateName, String apiVersion) {
+        return getState(request, response, thirdName, processName, stateName, apiVersion)
+                .getResponse();
+    }
+
+	@Override
+	public Void deleteBundle(HttpServletRequest request, HttpServletResponse response, String thirdName)
+			throws Exception {
+		try {
+			service.delete(thirdName);
+			// leaving response body empty
+			response.setStatus(204);
+			return null;
+		} catch (FileNotFoundException e) {
+			log.error("Bundle directory not found when wanted to delete bundle", e);
+			throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+					.message("Bundle not found").error(e.getMessage()).build(),
+					"Bundle directory not found", e);
+		} catch (IOException e) {
+			String message = "IOException while deleting bundle directory";
+			log.error(message, e);
+			throw new ApiErrorException(ApiError.builder().status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.message("unable to delete submitted bundle").error(e.getMessage()).build(),
+					message, e);
+		}
+	}
+
+	@Override
+	public Void deleteBundleVersion(HttpServletRequest request, HttpServletResponse response, String thirdName,
+			String version) throws Exception {
+		try {
+			service.deleteVersion(thirdName,version);
+			// leaving response body empty
+			response.setStatus(204);
+			return null;
+		} catch (FileNotFoundException e) {
+			log.error("Bundle directory not found when wanted to delete bundle", e);
+			throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+					.message("Bundle not found").error(e.getMessage()).build(),
+					"Bundle directory not found", e);
+		} catch (IOException e) {
+			String message = "IOException while deleting bundle directory";
+			log.error(message, e);
+			throw new ApiErrorException(ApiError.builder().status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.message("unable to delete submitted bundle").error(e.getMessage()).build(),
+					message, e);
+		}
+	}
 }

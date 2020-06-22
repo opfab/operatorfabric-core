@@ -1,16 +1,18 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 package org.lfenergy.operatorfabric.springtools.configuration.oauth;
 
-import feign.Client;
-import feign.Feign;
-import feign.FeignException;
-import feign.RequestInterceptor;
+import feign.*;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +20,11 @@ import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProper
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsProperties;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.groups.GroupsUtils;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -44,7 +45,6 @@ import java.util.List;
 @Configuration
 @EnableFeignClients
 @EnableCaching
-@EnableDiscoveryClient
 @Import({UserServiceCache.class
         ,BusConfiguration.class
         ,UpdateUserEventListener.class
@@ -95,37 +95,36 @@ public class OAuth2GenericConfiguration {
     }
 
     @Bean
-    public UserServiceProxy userServiceProxy(Client client
-            /*Encoder encoder, Decoder decoder, Contract contract,*/
-    ){
-        return Feign.builder()
-                .client(client)
-                .encoder(new JacksonEncoder())
-                .decoder(new JacksonDecoder())
-                .contract(new SpringMvcContract())
-                .requestInterceptor(new OAuth2FeignRequestInterceptor())
-                .target(UserServiceProxy.class,"http://USERS");
+    public Encoder jacksonEncoder() {
+        return new JacksonEncoder();
     }
-    
-    
+
+    @Bean
+    public Decoder jacksonDecoder() {
+        return new JacksonDecoder();
+    }
+
+
+
     public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) {
         
         String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim());
         OAuth2JwtProcessingUtilities.token.set(jwt);
        
-        User user = userServiceCache.fetchUserFromCacheOrProxy(principalId);
-		OAuth2JwtProcessingUtilities.token.remove();
-        
-        	// override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
+        CurrentUserWithPerimeters currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalId);
+        OAuth2JwtProcessingUtilities.token.remove();
+        User user = currentUserWithPerimeters.getUserData();
+
+        // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
 		if (groupsProperties.getMode() == GroupsMode.JWT) user.setGroups(getGroupsList(jwt));
         
         if (jwtProperties.gettingEntitiesFromToken) user.setEntities(getEntitiesFromToken(jwt));
 
-		List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);	
+		List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
 		
 		log.debug("user [{}] has these roles '{}' through the {} mode and entities {}",principalId,authorities,groupsProperties.getMode(),user.getEntities());
         
-        return new OpFabJwtAuthenticationToken(jwt, user, authorities);
+        return new OpFabJwtAuthenticationToken(jwt, currentUserWithPerimeters, authorities);
     }
     
 

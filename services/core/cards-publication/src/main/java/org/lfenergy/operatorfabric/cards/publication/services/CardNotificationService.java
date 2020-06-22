@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.publication.services;
@@ -12,22 +15,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
-import org.lfenergy.operatorfabric.cards.publication.model.Card;
-import org.lfenergy.operatorfabric.cards.publication.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.publication.model.CardOperationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import java.time.Duration;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * <p>Aim of this service whose sole externally accessible method is
- * {@link #notifyCard(CardOperationData, CardOperationTypeEnum)} is to
+ * {@link #notifyOneCard(CardPublicationData, CardOperationTypeEnum)} is to
  * prepare data and notify AMQP exchange of it. Information about card
  * publication and deletion is then accessible to other services or
  * entities through bindings to these exchanges.
@@ -67,11 +64,11 @@ public class CardNotificationService {
         CardOperationData cardOperation = builderEncapsulator.builder().build();
         card.getUserRecipients().forEach(user -> pushCardInRabbit(cardOperation,"USER_EXCHANGE", user));
 
-        List listOfGroupRecipients = new ArrayList();
+        List<String> listOfGroupRecipients = new ArrayList<>();
         card.getGroupRecipients().forEach(group -> listOfGroupRecipients.add(group));
         cardOperation.setGroupRecipientsIds(listOfGroupRecipients);
 
-        List listOfEntityRecipients = new ArrayList();
+        List<String> listOfEntityRecipients = new ArrayList<>();
         if (card.getEntityRecipients() != null)
             card.getEntityRecipients().forEach(entity -> listOfEntityRecipients.add(entity));
         cardOperation.setEntityRecipientsIds(listOfEntityRecipients);

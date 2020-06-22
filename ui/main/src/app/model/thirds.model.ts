@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {Card, Detail} from "@ofModel/card.model";
@@ -67,78 +70,28 @@ export class State {
     /* istanbul ignore next */
     constructor(
         readonly details?: Detail[],
-        readonly actions?: OfMap<Action>
+        readonly response?: ThirdResponse
     ) {
     }
 }
 
-export enum ActionType {
-    EXTERNAL = 'EXTERNAL',
-    JNLP = 'JNLP',
-    URL = 'URL'
-
-}
-
-export class Action {
+export class ThirdResponse {
     /* istanbul ignore next */
     constructor(
-        readonly type: ActionType,
-        readonly label: I18n,
-        readonly hidden: boolean = false,
-        readonly buttonStyle: string = '',
-        readonly lockAction: boolean = false,
-        readonly updateStateBeforeAction: boolean = false,
-        readonly called: boolean = false,
-        readonly key?: string
-    ) {
-    }
-
+        readonly lock?: boolean,
+        readonly state?: string,
+        readonly btnColor?: ResponseBtnColorEnum,
+        readonly btnText?: I18n
+    ) { }
 }
 
-export const emptyAction = new Action(null, null);
+export enum ResponseBtnColorEnum {
+    RED = 'RED',
+    GREEN = 'GREEN',
+    YELLOW = 'YELLOW'
+}
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-
-export class ActionStatus {
-    constructor(
-        readonly label: I18n,
-        readonly hidden: boolean = false,
-        readonly buttonStyle: string = '',
-        readonly updateStateBeforeAction: boolean = false,
-        readonly lockAction: boolean = false,
-    ) {
-    }
-}
-
-export const emptyActionStatus = new ActionStatus(null);
-
-/*
-for some reasons lodash equals take attribute order declaration in account to compute object equality
-needed by LightCardEffects updateAThirdAction Effect and by checkIfReceivedStatusIsDifferentFromCurrentOne method of ThirdActionService .
- */
-export function extractActionStatusFromPseudoActionStatus(tAction: object): ActionStatus {
-    let label = new I18n('');
-    const i18n = tAction['label'];
-    if (i18n) {
-        const params = i18n['parameters'];
-        if (params) {
-            Object.setPrototypeOf(params, OfMap.prototype);
-            label = new I18n(i18n['key'], params);
-        } else {
-            label = new I18n(i18n['key']);
-        }
-
-    }
-    const result = new ActionStatus(
-        label
-        , tAction['hidden']
-        , tAction['buttonStyle']
-        , tAction['updateStateBeforeAction']
-        , tAction['lockAction']
-    );
-    return result;
-}
-
 
 export enum InputType {
     TEXT,

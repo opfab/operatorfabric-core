@@ -1,10 +1,12 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
+
+
 
 = Service port table
 
@@ -13,30 +15,23 @@
 By default all service built artifacts are configured with server.port set
 to 8080
 
-If you run the services using `bootRun` Gradle task, the `run_all.sh` script or the deploy docker-compose,
+If you run the services using `bootRun` Gradle task, the `run_all.sh` script or the full docker docker-compose
+(found under config/docker),
 the used ports are:
 
 |===
 |Port |Service |Forwards to |Description
 
 |89 |KeyCloak |89 |KeyCloak api port
-|2000 |config |8080 |Configuration service http (REST)
-|2001 |registry |8080 |Registry service http (REST)
-|2002 |gateway |8080 |Gateway service http (REST+html)
+|2002 |web-ui |8080 | Web ui and gateway  (Nginx server)
 |2100 |thirds |8080 |Third party management service http (REST)
 |2102 |cards-publication |8080 |Cards publication service http (REST)
 |2103 |users |8080 |Users management service http (REST)
 |2104 |cards-consultation |8080 |Cards consultation service http (REST)
-|2105 |actions |8080 |Actions service http (REST)
-|2200 |web-ui |8080 |Web UI (Nginx server)
-|4000 |config |5005 |java debug port
-|4001 |registry |5005 |java debug port
-|4002 |gateway |5005 |java debug port
 |4100 |thirds |5005 |java debug port
 |4102 |cards-publication |5005 |java debug port
 |4103 |users |5005 |java debug port
 |4104 |cards-consultation |5005 |java debug port
-|4105 |actions |5005 |java debug port
 |27017 |mongo |27017 |mongo api port
 |5672 |rabbitmq |5672 |amqp api port
 |15672 |rabbitmq |15672 |rabbitmq api port

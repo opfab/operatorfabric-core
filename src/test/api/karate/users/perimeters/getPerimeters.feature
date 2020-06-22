@@ -17,8 +17,7 @@ Feature: Get perimeters (endpoint tested : GET /perimeters)
     Then status 200
     And def perimeterId = response[0].id
     And def perimeterProcess = response[0].process
-    And def perimeterState = response[0].state
-    And def perimeterRights = response[0].rights
+    And def perimeterStateRights = response[0].stateRights
 
 
     # Get the first perimeter
@@ -28,8 +27,7 @@ Feature: Get perimeters (endpoint tested : GET /perimeters)
     Then status 200
     And match response.id == perimeterId
     And match response.process == perimeterProcess
-    And match response.state == perimeterState
-    And match response.rights == perimeterRights
+    And match response.stateRights == perimeterStateRights
 
 
   Scenario: get perimeters without authentication

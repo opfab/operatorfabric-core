@@ -16,5 +16,7 @@ operatorfabric:
   card-notification.window:
     size: 100
     timeout: 1000
-spring.cloud.discovery.enabled: false
-eureka.client.enabled: false
+externalRecipients-url: "{\
+           api_test_externalRecipient1: \"http://localhost:8090/test\", \
+           api_test_externalRecipient2: \"http://localhost:8090/test\" \
+           }"

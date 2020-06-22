@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
@@ -28,8 +31,9 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {environment} from '@env/environment';
 import {By} from '@angular/platform-browser';
 import {of} from 'rxjs';
-import {Action, ActionType, Process, State} from '@ofModel/thirds.model';
+import {Process, State} from '@ofModel/thirds.model';
 import {Map as OfMap} from '@ofModel/map';
+import {Detail} from '@ofModel/card.model';
 import {RouterTestingModule} from '@angular/router/testing';
 
 describe('DetailComponent', () => {
@@ -65,27 +69,55 @@ describe('DetailComponent', () => {
         injector = getTestBed();
         httpMock = injector.get(HttpTestingController);
         thirdsService = TestBed.get(ThirdsService);
+
+
     }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(DetailComponent);
         component = fixture.componentInstance;
     });
-    // afterEach( ()=>{
-    //     httpMock.verify();
-    // })
+
 
     it('should create', () => {
-        component.card = getOneRandomCard();
+        const processesMap = new OfMap();
+        const statesMap = new OfMap();
+        const details = [new Detail(null, getRandomI18nData(), null, 'template3', null),
+            new Detail(null, getRandomI18nData(), null, 'template4', null)];
+        statesMap['state01'] = new State(details);
+        processesMap['process01'] = new Process(statesMap);
+        const third = getOneRandomThird({
+            processes: processesMap
+        });
+        spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
+        component.card = getOneRandomCard({
+            process: 'process01',
+            processId: 'process01_01',
+            state: 'state01',
+        });
         component.detail = component.card.details[0];
+
         fixture.detectChanges();
         expect(component).toBeTruthy();
     });
     it('should load template with script', ()=>{
-        spyOn(thirdsService, 'queryThird').and.returnValue(of(getOneRandomThird()));
-        component.card = getOneRandomCard();
+                const processesMap = new OfMap();
+        const statesMap = new OfMap();
+        const details = [new Detail(null, getRandomI18nData(), null, 'template3', null),
+            new Detail(null, getRandomI18nData(), null, 'template4', null)];
+        statesMap['state01'] = new State(details);
+        processesMap['process01'] = new Process(statesMap);
+        const third = getOneRandomThird({
+            processes: processesMap
+        });
+        spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
+        component.card = getOneRandomCard({
+            process: 'process01',
+            processId: 'process01_01',
+            state: 'state01',
+        });
         component.detail = component.card.details[0];
-        component.ngOnInit();
+        component.ngOnChanges();
         let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/templates/template1`);
         expect(calls.length).toEqual(1);
         calls.forEach(call=>{
@@ -97,60 +129,14 @@ describe('DetailComponent', () => {
         expect(fixture.nativeElement.children[0].children[0].localName).toEqual('div');
         expect(fixture.nativeElement.children[0].children[1].localName).toEqual('script');
     });
-    it('should load template with action', (done)=>{
-        const processesMap:OfMap<Process> = new OfMap();
-        const statesMap:OfMap<State> = new OfMap();
-        const actionMap:OfMap<Action> = new OfMap();
-        actionMap['hidden2']=new Action(ActionType.URL, getRandomI18nData(), true,'btn-light');
-        actionMap['hidden1']=new Action(ActionType.URL, getRandomI18nData(), true,'buttonStyle');
-        statesMap['state01']=new State(null,actionMap);
-        processesMap['process01']=new Process(statesMap);
-        const third = getOneRandomThird({
-            processes:processesMap
-        });
 
-        spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
-        component.card = getOneRandomCard({
-            process: 'process01',
-            processId: 'process01_1',
-            state: 'state01',
-        });
-        component.detail = component.card.details[0];
-        // component.ngOnInit();
-        fixture.detectChanges();
-        let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/templates/template1`);
-        expect(calls.length).toEqual(1);
-        calls.forEach(call=>{
-            call.flush('{{{action "hidden1"}}}{{{action "hidden2"}}}')
-        });
-        fixture.detectChanges();
-        expect(component).toBeTruthy();
-        setTimeout(()=>{
-            fixture.detectChanges();
-            expect(fixture.nativeElement.children[0].localName).toEqual('div');
-            expect(fixture.nativeElement.children[0].children[0].localName).toEqual('button');
-            expect(fixture.nativeElement.children[0].children[0].attributes[0].nodeName).toEqual('action-id');
-            expect(fixture.nativeElement.children[0].children[0].attributes[0].nodeValue).toEqual('hidden1');
-            expect(fixture.nativeElement.children[0].children[1].localName).toEqual('button');
-            expect(fixture.nativeElement.children[0].children[1].attributes[0].nodeName).toEqual('action-id');
-            expect(fixture.nativeElement.children[0].children[1].attributes[0].nodeValue).toEqual('hidden2');
-            fixture.detectChanges();
-            expect(fixture.nativeElement.children[0].children[0].classList[0]).toEqual('btn');
-            expect(fixture.nativeElement.children[0].children[0].classList[1]).toEqual('buttonStyle');
-            expect(fixture.nativeElement.children[0].children[1].classList[0]).toEqual('btn');
-            expect(fixture.nativeElement.children[0].children[1].classList[1]).toEqual('btn-light');
-            const alertSpy = spyOn(window, 'alert').and.callThrough();
-            fixture.nativeElement.children[0].children[0].click();
-            expect(alertSpy.calls.count()).toEqual(1);
-            done();
-        },1000);
-    });
     it('should create css link when styles are set in the details', (done)=>{
         component.card = getOneRandomCardWithRandomDetails();
         const details = component.card.details
         component.detail = details[getRandomIndex(details)];
         const styles = component.detail.styles;
         expect(component.card).toBeTruthy();
+        component.ngOnChanges();
         setTimeout( ()=>{
             fixture.detectChanges();
             const linkChildren = fixture.debugElement.queryAll(By.css('link'));

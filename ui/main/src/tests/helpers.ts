@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
@@ -11,7 +14,7 @@ import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {Card, Detail, TitlePosition} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap, Map} from "@ofModel/map";
-import {Action, ActionType, Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
+import {Process, State, Third, ThirdMenu, ThirdMenuEntry} from "@ofModel/thirds.model";
 import {Page} from '@ofModel/page.model';
 import {AppState} from "@ofStore/index";
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
@@ -21,14 +24,14 @@ import {OAuthLogger,OAuthService,UrlHelperService}from 'angular-oauth2-oidc';
 export const emptyAppState4Test:AppState = {
     router: null,
     feed: null,
-    timeline: null,
     authentication: null,
     card: null,
     menu: null,
     config: null,
     settings: null,
     archive:null,
-    user:null
+    user:null,
+    cardsSubscription:null
 };
 
 export const AuthenticationImportHelperForSpecs = [AuthenticationService,
@@ -92,9 +95,7 @@ export function getOneRandomThird(thirdTemplate?:any): Third {
         let stateCount = getPositiveRandomNumberWithinRange(1,3);
         for(let j=0; j<stateCount;j++){
             states[getRandomAlphanumericValue(3,10)]=
-                new State(
-                    getRandomCardDetails(),
-                    getRandomActions());
+                new State(getRandomCardDetails());
         }
         processes[getRandomAlphanumericValue(3,10)]=new Process(states);
     }
@@ -165,7 +166,6 @@ export function getOneRandomLightCard(lightCardTemplate?:any): LightCard {
         lightCardTemplate.endDate?lightCardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         lightCardTemplate.severity?lightCardTemplate.severity:getRandomSeverity(),
         getRandomAlphanumericValue(3, 24),
-        getRandomAlphanumericValue(3, 24),
         lightCardTemplate.lttd?lightCardTemplate.lttd:generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
@@ -186,15 +186,6 @@ export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCar
     return randomPage;
 }
 
-export function getRandomActions() {
-    let actions:OfMap<Action> = new OfMap();
-    actions['visible1']=new Action(ActionType.URL, getRandomI18nData());
-    actions['visible2']=new Action(ActionType.URL, getRandomI18nData());
-    actions['hidden1']= new Action(ActionType.URL, getRandomI18nData(), true, 'buttonStyle');
-    actions['hidden2']= new Action(ActionType.URL, getRandomI18nData(), true);
-    return actions;
-}
-
 export function getOneRandomCard(cardTemplate?:any): Card {
     cardTemplate = cardTemplate?cardTemplate:{};
     const today = new Date().getTime();
@@ -207,7 +198,6 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.startDate? cardTemplate.startDate:startTime,
         cardTemplate.endDate?cardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.severity?cardTemplate.severity:getRandomSeverity(),
-        getRandomAlphanumericValue(3, 24),
         cardTemplate.process?cardTemplate.process:getRandomAlphanumericValue(3, 24),
         cardTemplate.processId?cardTemplate.processId:getRandomAlphanumericValue(3, 24),
         cardTemplate.state?cardTemplate.state:getRandomAlphanumericValue(3, 24),

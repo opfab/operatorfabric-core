@@ -1,18 +1,17 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
 
-import { Component, OnInit, Input, forwardRef } from '@angular/core';
+
+import { Component,Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, FormGroup, FormControl,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
   NG_VALUE_ACCESSOR,
-  NG_VALIDATORS,
-  Validator} from '@angular/forms';
+  } from '@angular/forms';
 
 @Component({
   selector: 'of-datetime-filter',
@@ -22,14 +21,10 @@ import { ControlValueAccessor, FormGroup, FormControl,
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => DatetimeFilterComponent),
     multi: true
-  }, {
-   provide: NG_VALIDATORS,
-   useExisting: forwardRef(() => DatetimeFilterComponent),
-   multi: true
- }
+  }
 ]
 })
-export class DatetimeFilterComponent implements ControlValueAccessor, Validator {
+export class DatetimeFilterComponent implements ControlValueAccessor {
 
   disabled = true;
   time = {hour: 0, minute: 0};
@@ -40,30 +35,33 @@ export class DatetimeFilterComponent implements ControlValueAccessor, Validator 
   });
   constructor() {
     this.onChanges();
+    this.resetTime();
+
   }
   /* istanbul ignore next */
   public onTouched: () => void = () => {};
-  /* istanbul ignore next */
+ 
+  // Methode call when archive-filter.component.ts set value to 0 
   writeValue(val: any): void {
+    this.disabled = true;
     val && this.datetimeForm.setValue(val, { emitEvent: false });
   }
-  /* istanbul ignore next */
+
   registerOnChange(fn: any): void {
     this.datetimeForm.valueChanges.subscribe(fn);
   }
-  /* istanbul ignore next */
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-  /* istanbul ignore next */
+
   setDisabledState?(isDisabled: boolean): void {
     isDisabled ? this.datetimeForm.disable() : this.datetimeForm.enable();
   }
-  /* istanbul ignore next */
-  validate(c: AbstractControl): ValidationErrors | null {
-    return this.datetimeForm.valid ? null : { invalidForm: {valid: false, message: 'datetimeForm fields are invalid'}};
-  }
-  /* istanbul ignore next */
+
+
+
+  // Set time to enable when a date has been set
   onChanges(): void {
     this.datetimeForm.get('date').valueChanges.subscribe(val => {
       if (val) {
@@ -71,12 +69,18 @@ export class DatetimeFilterComponent implements ControlValueAccessor, Validator 
       }
     });
   }
-  /* istanbul ignore next */
+
+  // Set time to disable when date is empty 
   onChange(event): void {
     if (event.target.value === '') {
       this.disabled = true;
-      this.time = {hour: 0, minute: 0};
+      this.resetTime();
     }
+  }
+
+  resetTime()
+  {
+    this.datetimeForm.get('time').setValue({hour: 0, minute: 0});
   }
 
 }

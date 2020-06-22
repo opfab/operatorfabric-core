@@ -1,5 +1,0 @@
-server:
-  port: 2100
-operatorfabric.thirds:
-  storage:
-    path: "./build/dev-data/thirds-storage"

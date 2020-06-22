@@ -1,24 +1,34 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import java.time.Instant;
+import java.util.List;
+
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.Instant;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Singular;
 
 /**
  * <p>Please use builder to instantiate</p>
@@ -39,6 +49,7 @@ public class CardConsultationData implements Card {
     private String uid ;
     @Id
     private String id;
+    private String parentCardId;
     private String publisher;
     private String publisherVersion;
     private String process;
@@ -70,7 +81,6 @@ public class CardConsultationData implements Card {
     private Object data;
     @Indexed
     private int shardKey;
-    private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> userRecipients;
@@ -83,6 +93,18 @@ public class CardConsultationData implements Card {
     @Singular
     @Indexed
     private List<String> entityRecipients;
+    @Singular("entitiesAllowedToRespond")
+    @Indexed
+    private List<String> entitiesAllowedToRespond;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular
+    private List<String> externalRecipients;
     @Singular
     private List<? extends TimeSpan> timeSpans;
+    @JsonIgnore
+    private List<String> usersAcks;
+    @Transient
+    private Boolean hasBeenAcknowledged;
+    
+    
 }

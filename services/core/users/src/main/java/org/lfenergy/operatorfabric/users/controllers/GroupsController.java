@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.users.controllers;
@@ -15,6 +18,7 @@ import org.lfenergy.operatorfabric.users.model.*;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
+import org.lfenergy.operatorfabric.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.ServiceMatcher;
 import org.springframework.context.ApplicationEventPublisher;
@@ -49,6 +53,8 @@ public class GroupsController implements GroupsApi {
     private UserRepository userRepository;
     @Autowired
     private PerimeterRepository perimeterRepository;
+    @Autowired
+    private UserService userService;
 
     /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
@@ -204,6 +210,8 @@ public class GroupsController implements GroupsApi {
         retrievePerimeters(perimeters);
 
         group.setPerimeters(perimeters);
+        userService.publishUpdatedUserEvent(id);
+
         groupRepository.save(group);
         return null;
     }
@@ -219,6 +227,9 @@ public class GroupsController implements GroupsApi {
 
         for (String perimeter : perimeters)
             group.addPerimeter(perimeter);
+
+        userService.publishUpdatedUserEvent(id);
+
         groupRepository.save(group);
         return null;
     }

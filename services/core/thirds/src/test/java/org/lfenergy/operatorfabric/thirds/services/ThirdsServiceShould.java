@@ -1,23 +1,23 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.thirds.services;
 
-import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Condition;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
-import org.lfenergy.operatorfabric.thirds.model.Third;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
+import static org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum.CSS;
+import static org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum.I18N;
+import static org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum.TEMPLATE;
+import static org.lfenergy.operatorfabric.utilities.PathUtils.copy;
+import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,11 +27,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.lfenergy.operatorfabric.test.AssertUtils.assertException;
-import static org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum.*;
-import static org.lfenergy.operatorfabric.utilities.PathUtils.copy;
-import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
+import org.apache.commons.io.FileUtils;
+import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
+import org.lfenergy.operatorfabric.thirds.model.Third;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -44,15 +57,17 @@ import static org.lfenergy.operatorfabric.utilities.PathUtils.silentDelete;
 @SpringBootTest(classes = {IntegrationTestApplication.class})
 @Slf4j
 @ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ThirdsServiceShould {
 
   private static Path testDataDir = Paths.get("./build/test-data/thirds-storage");
   @Autowired
   private ThirdsService service;
 
-  @BeforeAll
-  static void prepare() throws IOException {
+  @BeforeEach
+  void prepare() throws IOException {
     copy(Paths.get("./src/test/docker/volume/thirds-storage"), testDataDir);
+    service.loadCache();
   }
 
   @AfterAll
@@ -63,7 +78,7 @@ class ThirdsServiceShould {
 
   @Test
   void listThirds() {
-    assertThat(service.listThirds()).hasSize(1);
+    assertThat(service.listThirds()).hasSize(2);
   }
 
   @Test
@@ -207,21 +222,123 @@ class ThirdsServiceShould {
         assertThat(t.getProcesses().size()).isEqualTo(1);
         assertThat(t.getProcesses().get("testProcess").getStates().size()).isEqualTo(1);
         assertThat(t.getProcesses().get("testProcess").getStates().get("firstState").getDetails().size()).isEqualTo(1);
-        assertThat(t.getProcesses().get("testProcess").getStates().get("firstState").getActions().size()).isEqualTo(1);
-        assertThat(service.listThirds()).hasSize(2);
+        assertThat(service.listThirds()).hasSize(3);
       } catch (IOException e) {
         log.trace("rethrowing exception");
         throw e;
       }
     }
-
+    
     @Nested
-    class DeleteContent {
-      @Test
-      void clean() throws IOException {
-        service.clear();
-        assertThat(service.listThirds()).hasSize(0);
-      }
+    class DeleteOnlyOneThird {
+    	
+    	static final String bundleName = "first";
+    	
+    	static final String CONFIG_FILE_NAME = "config.json";
+    	
+    	@BeforeEach
+		void prepare() throws IOException {
+		  if (Files.exists(testDataDir))
+		      Files.walk(testDataDir, 1).forEach(p -> silentDelete(p));
+		    copy(Paths.get("./src/test/docker/volume/thirds-storage"), testDataDir);
+		    service.loadCache();
+		}
+
+    	@Test
+        void deleteBundleByNameAndVersionWhichNotBeingDeafult() throws Exception {
+    		Path bundleDir = testDataDir.resolve(bundleName);
+    		Path bundleVersionDir = bundleDir.resolve("0.1");
+    		Assertions.assertTrue(Files.isDirectory(bundleDir));
+    		Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
+            service.deleteVersion(bundleName,"0.1");
+            Assertions.assertNull(service.fetch(bundleName, "0.1"));
+            Third third = service.fetch(bundleName);
+            Assertions.assertNotNull(third);
+            Assertions.assertFalse(third.getVersion().equals("0.1"));
+            Assertions.assertTrue(Files.isDirectory(bundleDir));
+            Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
+    	}
+    	
+    	@Test
+        void deleteBundleByNameAndVersionWhichBeingDeafult1() throws Exception {
+    		Path bundleDir = testDataDir.resolve(bundleName);
+    		Third third = service.fetch(bundleName);
+    		Assertions.assertTrue(third.getVersion().equals("v1"));
+    		Path bundleVersionDir = bundleDir.resolve("v1");
+    		Path bundleNewDefaultVersionDir = bundleDir.resolve("0.1");
+    		FileUtils.touch(bundleNewDefaultVersionDir.toFile());//this is to be sure this version is the last modified
+    		Assertions.assertTrue(Files.isDirectory(bundleDir));
+    		Assertions.assertTrue(Files.isDirectory(bundleVersionDir));    		
+            service.deleteVersion(bundleName,"v1");
+            Assertions.assertNull(service.fetch(bundleName, "v1"));
+            third = service.fetch(bundleName);
+            Assertions.assertNotNull(third);
+            Assertions.assertTrue(third.getVersion().equals("0.1"));
+            Assertions.assertTrue(Files.isDirectory(bundleDir));
+            Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
+            Assertions.assertTrue(Files.isDirectory(bundleNewDefaultVersionDir));
+            Assertions.assertTrue(FileUtils.contentEquals(bundleDir.resolve(CONFIG_FILE_NAME).toFile(),
+    				bundleNewDefaultVersionDir.resolve(CONFIG_FILE_NAME).toFile()));
+    	}
+    	
+    	@Test
+        void deleteBundleByNameAndVersionWhichBeingDeafult2() throws Exception {
+    		Path bundleDir = testDataDir.resolve(bundleName);
+    		final Third third = service.fetch(bundleName);
+    		Assertions.assertTrue(third.getVersion().equals("v1"));
+    		Path bundleVersionDir = bundleDir.resolve("v1");
+    		Path bundleNewDefaultVersionDir = bundleDir.resolve("0.5");
+    		FileUtils.touch(bundleNewDefaultVersionDir.toFile());//this is to be sure this version is the last modified
+    		Assertions.assertTrue(Files.isDirectory(bundleDir));
+    		Assertions.assertTrue(Files.isDirectory(bundleVersionDir));    		
+            service.deleteVersion(bundleName,"v1");
+            Assertions.assertNull(service.fetch(bundleName, "v1"));
+            Third _third = service.fetch(bundleName);
+            Assertions.assertNotNull(_third);
+            Assertions.assertTrue(_third.getVersion().equals("0.5"));
+            Assertions.assertTrue(Files.isDirectory(bundleDir));
+            Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
+            Assertions.assertTrue(Files.isDirectory(bundleNewDefaultVersionDir));
+            Assertions.assertTrue(FileUtils.contentEquals(bundleDir.resolve(CONFIG_FILE_NAME).toFile(),
+    				bundleNewDefaultVersionDir.resolve(CONFIG_FILE_NAME).toFile()));
+    	}
+    	
+    	@Test
+        void deleteBundleByNameAndVersionWhichNotExisting() throws Exception {
+    		Assertions.assertThrows(FileNotFoundException.class, () -> {service.deleteVersion(bundleName,"impossible_someone_really_so_crazy_to_give_this_name_to_a_version");});
+    	}
+    	
+    	@Test
+        void deleteBundleByNameWhichNotExistingAndVersion() throws Exception {
+    		Assertions.assertThrows(FileNotFoundException.class, () -> {service.deleteVersion("impossible_someone_really_so_crazy_to_give_this_name_to_a_bundle","1.0");});
+    	}
+    	
+    	@Test
+        void deleteBundleByNameAndVersionHavingOnlyOneVersion() throws Exception {
+    		Path bundleDir = testDataDir.resolve("third");
+    		Assertions.assertTrue(Files.isDirectory(bundleDir));
+            service.deleteVersion("third","2.1");
+            Assertions.assertNull(service.fetch("third","2.1"));
+            Assertions.assertNull(service.fetch("third"));            
+            Assertions.assertFalse(Files.isDirectory(bundleDir));
+    	}
+    	
+    	@Test
+        void deleteGivenBundle() throws Exception {
+    		Path bundleDir = testDataDir.resolve(bundleName);
+    		Assertions.assertTrue(Files.isDirectory(bundleDir));
+            service.delete(bundleName);
+            Assertions.assertFalse(Files.isDirectory(bundleDir));
+        }
+
+	    @Nested
+	    class DeleteContent {
+	      @Test
+	      void clean() throws IOException {
+	        service.clear();
+	        assertThat(service.listThirds()).hasSize(0);
+	      }
+	    }
     }
   }
 }

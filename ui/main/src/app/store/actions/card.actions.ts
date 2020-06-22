@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {Action} from '@ngrx/store';
@@ -17,8 +20,7 @@ export enum CardActionTypes {
     LoadArchivedCard = '[Card] Load Archived Card',
     LoadArchivedCardSuccess = '[Card] Load Archived Card Success',
     LoadArchivedCardFailure = '[Card] Load Archived Card Fail',
-    HandleUnexpectedError = '[Card] Handle unexpected error related to card issue',
-    AddActionsAppear = '[Card] Add Actions Appear'
+    HandleUnexpectedError = '[Card] Handle unexpected error related to card issue'
 }
 // needed by NGRX entities
 export class ClearCard implements Action {
@@ -72,12 +74,6 @@ export class HandleUnexpectedError implements Action {
     constructor(public payload: {error: Error}) {}
 }
 
-export class AddActionsAppear implements Action {
-    readonly type = CardActionTypes.AddActionsAppear;
-    /* istanbul ignore next */
-    constructor(public payload: string) {}
-}
-
 export type CardActions = ClearCard
     | LoadCard
     | LoadCardSuccess
@@ -85,5 +81,4 @@ export type CardActions = ClearCard
     | LoadArchivedCard
     | LoadArchivedCardSuccess
     | LoadArchivedCardFailure
-    | HandleUnexpectedError
-    | AddActionsAppear;
+    | HandleUnexpectedError;

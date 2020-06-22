@@ -1,15 +1,19 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.publication.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -37,6 +41,7 @@ public class ArchivedCardPublicationData implements Card {
     private String uid;
     @Id
     private String id;
+    private String parentCardId;
     @NotNull
     private String publisher;
     private String publisherVersion;
@@ -69,9 +74,18 @@ public class ArchivedCardPublicationData implements Card {
     private List<? extends TimeSpan> timeSpans;
     @Indexed
     private List<String> entityRecipients;
+    private List<String> externalRecipients;
+    @Singular("entitiesAllowedToRespond")
+    private List<String> entitiesAllowedToRespond;
+
+    @Transient
+    private Boolean hasBeenAcknowledged;
+    @Indexed
+    private String processStateKey;
 
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
+        this.parentCardId = card.getParentCardId();
         this.publisher = card.getPublisher();
         this.publisherVersion = card.getPublisherVersion();
         this.publishDate = card.getPublishDate();
@@ -92,6 +106,9 @@ public class ArchivedCardPublicationData implements Card {
         this.userRecipients = card.getUserRecipients() == null ? null : new ArrayList<>(card.getUserRecipients());
         this.groupRecipients = card.getGroupRecipients() == null ? null : new ArrayList<>(card.getGroupRecipients());
         this.entityRecipients = card.getEntityRecipients() == null ? null : new ArrayList<>(card.getEntityRecipients());
+        this.externalRecipients = card.getExternalRecipients() == null ? null : new ArrayList<>(card.getExternalRecipients());
+        this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null : new ArrayList<>(card.getEntitiesAllowedToRespond());
+        this.processStateKey = process + "." + state;
     }
 
 }

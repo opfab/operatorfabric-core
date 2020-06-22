@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: users
   data:
     mongodb:
       database: operator-fabric

@@ -1,15 +1,18 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {Observable, of, zip} from 'rxjs';
+import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {AppState} from "@ofStore/index";
 import {ThirdsService} from "@ofServices/thirds.service";
@@ -18,9 +21,6 @@ import {
     LoadMenuFailure,
     LoadMenuSuccess,
     MenuActionTypes,
-    SelectMenuLink,
-    SelectMenuLinkFailure,
-    SelectMenuLinkSuccess
 } from "@ofActions/menu.actions";
 import {Router} from "@angular/router";
 
@@ -50,27 +50,6 @@ export class MenuEffects {
             })
         );
 
-    /**
-     * This {Observable} listens for {MenuActionTypes.SelectMenuLink} type.
-     * It then tries to get the corresponding menu link from the {ThirdsService}.
-     * If successful, it fires a {SelectMenuLinkSuccess} action with the result as payload.
-     * If not, it fires a {SelectMenuLinkFailure} action with the error as payload and navigates back to the index page
-     *
-     * @name resolveThirdPartyLink
-     */
-    @Effect()
-    resolveThirdPartyLink: Observable<Action> = this.actions$
-        .pipe(
-            ofType<SelectMenuLink>(MenuActionTypes.SelectMenuLink),
-            switchMap(action => this.service.queryMenuEntryURL(action.payload.menu_id, action.payload.menu_version, action.payload.menu_entry_id)),
-            map(url =>
-                new SelectMenuLinkSuccess({iframe_url: url})
-            ),
-            catchError(err => {
-                console.error(err);
-                this.router.navigate(['/']); //On error, redirect to index page
-                return of(new SelectMenuLinkFailure(err));
-            })
-        );
+
 
 }

@@ -1,20 +1,19 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
 
 
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, of, Subscription } from 'rxjs';
-import { LightCard } from '@ofModel/light-card.model';
+import { of, Subscription } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { catchError} from 'rxjs/operators';
 import { AppState } from '@ofStore/index';
-import { SetCardDataTimeline } from '@ofActions/timeline.actions';
-import * as _ from 'lodash';
-import * as feedSelectors from '@ofSelectors/feed.selectors';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 import * as moment from 'moment';
@@ -24,8 +23,7 @@ import * as moment from 'moment';
     templateUrl: './time-line.component.html',
 })
 export class TimeLineComponent implements OnInit, OnDestroy {
-    lightCards$: Observable<LightCard[]>;
-    subscription: Subscription;
+
     localSubscription: Subscription;
 
     public confDomain = [];
@@ -42,9 +40,6 @@ export class TimeLineComponent implements OnInit, OnDestroy {
             l => moment.locale(l)
         )
 
-        this.subscription = this.store.pipe(select(feedSelectors.selectFeed))
-            .pipe(debounceTime(300), distinctUntilChanged())
-            .subscribe(value => this.sendAllCardsToDrawOnTheTimeLine(value));
     }
 
     loadConfiguration() {
@@ -91,34 +86,9 @@ export class TimeLineComponent implements OnInit, OnDestroy {
         });
     }
 
-    sendAllCardsToDrawOnTheTimeLine(cards) {
-        const myCardsTimeline = [];
-        for (const card of cards) {
-            if (card.timeSpans && card.timeSpans.length > 0) {
-                card.timeSpans.forEach(timeSpan => {
-                    const myCardTimelineTimespans = {
-                        date: timeSpan.start, 
-                        severity: card.severity, publisher: card.publisher,
-                        publisherVersion: card.publisherVersion, summary: card.title
-                    };
-                    myCardsTimeline.push(myCardTimelineTimespans);
-                });
-            } else {
-                const myCardTimeline = {
-                    date: card.startDate,
-                    severity: card.severity, publisher: card.publisher,
-                    publisherVersion: card.publisherVersion, summary: card.title
-                };
-                myCardsTimeline.push(myCardTimeline);
-            }
-        }
-        this.store.dispatch(new SetCardDataTimeline({ cardsTimeline: myCardsTimeline }));
-    }
 
     ngOnDestroy() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
+
         if (this.localSubscription) {
             this.localSubscription.unsubscribe();
         }

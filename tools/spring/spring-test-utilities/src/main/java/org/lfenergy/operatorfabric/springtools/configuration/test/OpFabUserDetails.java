@@ -1,13 +1,17 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.springtools.configuration.test;
 
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,14 +27,16 @@ import static org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2
  *
  *
  */
-public class OpFabUserDetails extends User implements UserDetails {
+public class OpFabUserDetails extends CurrentUserWithPerimeters implements UserDetails {
 
     public OpFabUserDetails(String login, String firstName, String lastName, List<String> roles, List<String> entities){
-        login(login);
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setGroups(roles);
-        this.setEntities(entities);
+        User userdata = new User();
+        userdata.setLogin(login);
+        userdata.setFirstName(firstName);
+        userdata.setLastName(lastName);
+        userdata.setGroups(roles);
+        userdata.setEntities(entities);
+        this.setUserData(userdata);
     }
 
     /**
@@ -40,7 +46,7 @@ public class OpFabUserDetails extends User implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return computeAuthorities(this);
+        return computeAuthorities(this.getUserData());
     }
 
     /**

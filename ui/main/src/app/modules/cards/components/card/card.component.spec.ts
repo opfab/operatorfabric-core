@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
@@ -22,11 +25,9 @@ import {Router} from '@angular/router';
 import 'moment/locale/fr';
 import {TimeService} from '@ofServices/time.service';
 import {I18nService} from '@ofServices/i18n.service';
-import {ActionComponent} from '../action/action.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
-import { AddActionsAppear } from '@ofStore/actions/card.actions';
 
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
@@ -56,7 +57,7 @@ describe('CardComponent', () => {
                 }),
                 NgbModule
             ],
-            declarations: [CardComponent, ActionComponent],
+            declarations: [CardComponent],
             providers: [
                 {provide: store, useClass: Store},
                 {provide: Router, useValue: routerSpy},
@@ -111,17 +112,6 @@ describe('CardComponent', () => {
         expect(lightCardDetailsComp.open).toBeFalsy();
         lightCardDetailsComp.select();
         expect(router.navigate).toHaveBeenCalledWith(['/' + lightCardDetailsComp.currentPath, 'cards', lightCard.id]);
-    });
-    it('should select card and set the appear array', () => {
-        const lightCard = getOneRandomLightCard();
-        lightCardDetailsComp.lightCard = lightCard;
-        lightCardDetailsComp.ngOnInit();
-        fixture.detectChanges();
-
-        expect(lightCardDetailsComp.open).toBeFalsy();
-        lightCardDetailsComp.select();
-        expect(store.dispatch).toHaveBeenCalled();
-        expect(store.dispatch).toHaveBeenCalledWith(new AddActionsAppear(lightCard.id));
     });
 
     it('should handle non existent timestamp with an empty string', () => {

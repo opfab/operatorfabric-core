@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.consultation.configuration.mongo;
@@ -23,10 +26,10 @@ import java.util.List;
  *
  */
 @Slf4j
-public class CardOperationReadConverter implements Converter<Document, CardOperation> {
+public class CardOperationReadConverter implements Converter<Document, CardOperationConsultationData> {
     LightCardReadConverter cardConverter = new LightCardReadConverter();
     @Override
-    public CardOperation convert(Document source) {
+    public CardOperationConsultationData convert(Document source) {
         CardOperationConsultationData.CardOperationConsultationDataBuilder builder = CardOperationConsultationData.builder();
         builder.number(source.getLong("number"))
                 .publishDate(source.getDate("publishDate").toInstant());
@@ -35,7 +38,7 @@ public class CardOperationReadConverter implements Converter<Document, CardOpera
             builder.type(CardOperationTypeEnum.valueOf(type));
 
         try {
-            List<Document> cards = (List<Document>) source.get("cards");
+            List<Document> cards = (List<Document>) source.get("rawCards");
             if(cards!=null)
                 for(Document cardDoc:cards){
                     builder.card(cardConverter.convert(cardDoc));

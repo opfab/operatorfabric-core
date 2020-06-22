@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {CardFeedState} from '@ofStates/feed.state';
@@ -34,20 +37,6 @@ export function reducer(
                 ...state,
                 loading: false,
                 error: `error while loading menu: '${action.payload.error}'`
-            };
-        }
-
-        case MenuActionTypes.SelectMenuLinkSuccess: {
-            return {
-                ...state,
-                selected_iframe_url: action.payload.iframe_url
-            }
-        }
-
-        case MenuActionTypes.SelectMenuLinkFailure: {
-            return {
-                ...state,
-                error: `error while retrieving third-party menu url: '${action.payload.error}'`
             };
         }
 

@@ -1,10 +1,12 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
+
+
 
 //TODO Remove unnecessary anchors
 
@@ -162,6 +164,11 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/i
 Determines where custom information is store. The content in this attribute, is purely `publisher` choice.
 This content, as long as it's in `json` format can be used to display details. For the way the details are
 displayed, see below.
+
+
+[WARNING]
+You must not use dot in json field names. In this case, the card will be refused with following message :  "Error, unable to handle pushed Cards: Map key xxx.xxx contains dots but no replacement was configured!""
+
 
 == Presentation Information of the card
 

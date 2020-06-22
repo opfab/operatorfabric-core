@@ -1,4 +1,3 @@
 spring:
-  data:
-    mongodb:
-      database: operator-fabric
+  application:
+    name: cards-consultation

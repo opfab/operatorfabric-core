@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.consultation.routes;
@@ -140,7 +143,7 @@ public class ArchivedCardRoutesShould {
 
             ArchivedCardConsultationData simpleCard5 = createSimpleArchivedCard(1, publisher, Instant.now(),
                     Instant.now(), Instant.now().plusSeconds(3600), "",
-                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive (because the user doesn't have the right for process/state)
 
             ArchivedCardConsultationData simpleCard6 = createSimpleArchivedCard(1, publisher, Instant.now(),
                     Instant.now(), Instant.now().plusSeconds(3600), "",
@@ -196,13 +199,7 @@ public class ArchivedCardRoutesShould {
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
             webTestClient.get().uri("/archives/{id}", simpleCard5.getId()).exchange()
-                    .expectStatus().isOk()
-                    .expectBody(ArchivedCardConsultationData.class).value(card -> {
-                assertThat(card)
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(), "tags", "details", "userRecipients", "groupRecipients", "timeSpans")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard5);
-            });
+                    .expectStatus().isNotFound();
 
             StepVerifier.create(repository.save(simpleCard6))
                     .expectNextCount(1)

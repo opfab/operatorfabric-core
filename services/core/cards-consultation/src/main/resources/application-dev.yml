@@ -1,7 +1,0 @@
-server:
-  port: 2104
-spring:
-  data:
-    mongodb:
-      uris:
-        - mongodb://root:password@localhost:27017

@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {Injectable} from '@angular/core';
@@ -12,8 +15,7 @@ import {environment} from '@env/environment';
 import {from, Observable, of, throwError} from 'rxjs';
 import {TranslateLoader} from '@ngx-translate/core';
 import {catchError, filter, map, reduce, switchMap, tap} from 'rxjs/operators';
-import {LightCard} from '@ofModel/light-card.model';
-import {Action, Third, ThirdMenu} from '@ofModel/thirds.model';
+import {Third, ThirdMenu, ResponseBtnColorEnum} from '@ofModel/thirds.model';
 import {Card} from '@ofModel/card.model';
 
 @Injectable()
@@ -60,7 +62,6 @@ export class ThirdsService {
             params
         });
     }
-
     queryMenuEntryURL(thirdMenuId: string, thirdMenuVersion: string, thirdMenuEntryId: string): Observable<string> {
         return this.queryThird(thirdMenuId, thirdMenuVersion).pipe(
             switchMap(third => {
@@ -78,7 +79,7 @@ export class ThirdsService {
             map(menuEntry => menuEntry.url)
         );
     }
-
+    
     fetchHbsTemplate(publisher: string, version: string, name: string, locale: string): Observable<string> {
         const params = new HttpParams()
             .set('locale', locale)
@@ -139,27 +140,17 @@ export class ThirdsService {
         );
     }
 
-
-    fetchActionMapFromLightCard(card: LightCard) {
-        return this.fetchActionMap(card.publisher, card.process, card.state, card.publisherVersion);
-    }
-
-    fetchActionMap(publisher: string, process: string, state: string, apiVersion?: string) {
-        let params: HttpParams;
-        if (apiVersion) {
-            params = new HttpParams().set('apiVersion', apiVersion);
+    getResponseBtnColorEnumValue(responseBtnColorEnum: ResponseBtnColorEnum): string {
+        switch (responseBtnColorEnum) {
+            case 'RED':
+                return 'btn-danger';
+            case 'GREEN':
+                return 'btn-success'
+            case 'YELLOW':
+                return 'btn-warning';
+            default:
+                return 'btn-success';
         }
-        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/${process}/${state}/actions`, {
-            params,
-            responseType: 'text'
-        }).pipe(map((json: string) => {
-            // json empty in this case no action
-            if (json.length > 1) {
-                const obj = JSON.parse(json);
-                return new Map<string, Action>(Object.entries(obj));
-            }
-            return new Map<string, Action>();
-        }));
     }
 }
 

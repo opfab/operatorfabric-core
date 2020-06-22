@@ -18,7 +18,8 @@
         "first": "{{value}} cliqué",
         "second": "Résolution secondaire",
         "third": "Pour ({{value}}, c'est fait.)"
-      },
+      }
+    }
   },
   "third":{
     "label": "Tier de test"

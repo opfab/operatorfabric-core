@@ -1,19 +1,22 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)                 -->
-<!--                                                                     -->
-<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
-<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
-<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 
 <ng-container [formGroup]="datetimeForm">
     <div class="form-row nomarginrow">
-        <div class="form-group col-md-8 nopaddingrow">
+        <div class="form-group col-8 nopaddingrow">
             <label for="date" translate>archive.filters.{{filterPath}}</label>
             <input (change)="onChange($event)" class="form-control" type="text" ngbDatepicker #nsd="ngbDatepicker" id="date" formControlName="date" (focus)="nsd.toggle()"
             placeholder="YYYY-MM-DD"/>
         </div>
-        <fieldset [disabled]="disabled" class="col-md-4 nopaddingrow">
+        <fieldset [disabled]="disabled" class="col-4 nopaddingrow">
             <legend class="accessibility">Time</legend>
-            <ngb-timepicker [(ngModel)]="time" formControlName="time"></ngb-timepicker>
+            <ngb-timepicker formControlName="time" ></ngb-timepicker>
         </fieldset>
     </div>
 </ng-container>

@@ -1,6 +1,3 @@
-#spring.cloud.discovery.enabled: false
-#eureka.client.enabled: false
-
 operatorfabric:
   security:
     jwt:
@@ -26,4 +23,3 @@ operatorfabric:
             - path: "pathE1/pathE2/RoleClaimOptionalE1"
               roleValue: "RoleClaimOptionalE1"            
           
-      

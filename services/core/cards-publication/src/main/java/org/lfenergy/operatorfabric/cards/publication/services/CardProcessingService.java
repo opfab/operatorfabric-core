@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
@@ -12,6 +15,9 @@ import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.services.clients.impl.ExternalAppClientImpl;
+import org.lfenergy.operatorfabric.cards.publication.services.processors.UserCardProcessor;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -21,7 +27,8 @@ import reactor.core.publisher.Mono;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
-import java.util.*;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -42,12 +49,22 @@ public class CardProcessingService {
     private CardNotificationService cardNotificationService;
     @Autowired
     private CardRepositoryService cardRepositoryService;
+    @Autowired
+    private UserCardProcessor userCardProcessor;
+    @Autowired
+    private ExternalAppClientImpl externalAppClient;
 
+    private Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards, Optional<User> user) {
 
-    public Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards) {
         long windowStart = Instant.now().toEpochMilli();
         Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
         cards = registerValidationProcess(cards);
+
+        if (user.isPresent()) {
+            cards = userCardPublisherProcess(cards,user.get());
+            cards = sendCardToExternalAppProcess(cards);
+        }
+
         return registerPersistenceAndNotificationProcess(cards, windowStart)
                 .doOnNext(count -> log.debug("{} pushed Cards persisted", count))
                 .map(count -> new CardCreationReportData(count, "All pushedCards were successfully handled"))
@@ -58,8 +75,25 @@ public class CardProcessingService {
                 });
     }
 
+    public Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards) {
+        return processCards(pushedCards, Optional.empty());
+    }
+
+    public Mono<CardCreationReportData> processUserCards(Flux<CardPublicationData> pushedCards, User user) {
+        return processCards(pushedCards, Optional.of(user));
+    }
+
+
     private Flux<CardPublicationData> registerRecipientProcess(Flux<CardPublicationData> cards) {
         return cards.doOnNext(ignoreErrorDo(recipientProcessor::processAll));
+    }
+
+    private Flux<CardPublicationData> userCardPublisherProcess(Flux<CardPublicationData> cards, User user) {
+        return cards.doOnNext(card-> userCardProcessor.processPublisher(card,user));
+    }
+
+    private Flux<CardPublicationData> sendCardToExternalAppProcess(Flux<CardPublicationData> cards) {
+        return cards.doOnNext(card-> externalAppClient.sendCardToExternalApplication(card));
     }
 
     private static Consumer<CardPublicationData> ignoreErrorDo(Consumer<CardPublicationData> onNext) {
@@ -77,7 +111,6 @@ public class CardProcessingService {
      * process.
      *
      * @param cards
-     * @param publishDate
      * @return
      */
     private Flux<CardPublicationData> registerValidationProcess(Flux<CardPublicationData> cards) {
@@ -95,7 +128,14 @@ public class CardProcessingService {
      * @throws ConstraintViolationException if there is an error during validation
      *                                      based on object annotation configuration
      */
-    private void validate(CardPublicationData c) throws ConstraintViolationException {
+    void validate(CardPublicationData c) throws ConstraintViolationException {
+
+        String parentCardId = c.getParentCardId();
+        if (Optional.ofNullable(parentCardId).isPresent()) {
+            if (!cardRepositoryService.findByUid(parentCardId).isPresent()) {
+                throw new ConstraintViolationException("The parentCardId " + parentCardId + " is not the uid of any card", null);
+            }
+        }
 
         Set<ConstraintViolation<CardPublicationData>> results = localValidatorFactoryBean.validate(c);
         if (!results.isEmpty())
@@ -119,6 +159,11 @@ public class CardProcessingService {
                                 "constraint violation : TimeSpan.end must be after TimeSpan.start", null);
                 }
             }
+
+        // constraint check : process and state must not contain "." (because we use it as a separator)
+        if ((c.getProcess() != null && c.getProcess().contains(Character.toString('.')))  ||
+                (c.getState() != null && c.getState().contains(Character.toString('.'))))
+            throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
     }
 
     /**
@@ -150,6 +195,10 @@ public class CardProcessingService {
         }
     }
 
+	public Mono<UserAckOperationResult> processUserAcknowledgement(Mono<String> cardUid, String userName) {
+		return cardUid.map(_cardUid -> cardRepositoryService.addUserAck(userName, _cardUid));
+	}
+        
     /**
      * Logs card count and elapsed time since window start
      *
@@ -162,4 +211,12 @@ public class CardProcessingService {
         double cardWindowDurationMillis = windowDurationMillis / count;
         log.debug("{} cards handled in {} ms each (total: {})", count, cardWindowDurationMillis, windowDurationMillis);
     }
+
+	public Mono<UserAckOperationResult> deleteUserAcknowledgement(Mono<String> cardUid, String userName) {
+		return cardUid.map(_cardUid -> cardRepositoryService.deleteUserAck(userName, _cardUid));
+	}
+
+	
+
+	
 }

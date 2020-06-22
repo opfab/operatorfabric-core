@@ -1,10 +1,12 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
+
+
 
 = OperatorFabric Users Service
 
@@ -35,27 +37,28 @@ The access to this service has to be authorized, in the `OAuth2` service used by
 
 ==== Automated user creation
 
-In case of a user does exist in a provided authentication service but he does not exist in the `OperatorFabric` instance, when he is authenticated and connected
-for the first time in the `OperatorFabric` instance, the user is automatically created in the system without attached group or entity.
-The administration of the groups and entities is dealt by the administrator manually. More details about automated user creation
+In case of a user does exist in a provided authentication service but he does not exist in the `OperatorFabric`
+instance, when he is authenticated and connected for the first time in the `OperatorFabric` instance, the user is
+automatically created in the system without attached group or entity.
+The administration of the groups and entities is dealt by the administrator manually.
+More details about automated user creation
 ifdef::single-page-doc[<<opfab_spec_conf, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#opfab_spec_conf, here>>]
 .
 
 === Groups
-opfab_spec_conf
 The notion of group is loose and can be used to simulate role in `OperatorFabric`.
 Groups are used to send cards to several users without a name specifically. The information about membership to a
 group is stored in the user information. The rules used to send cards are described in the
 ifdef::single-page-doc[<<card_recipients, recipients section>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference/index.adoc#card_recipients, recipients section>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_recipients, recipients section>>]
 .
 
 === Entities
 Entities are used to send cards to several users without a name specifically. The information about membership to an
-entity is stored in the user information. The rules used to send cards are described in the
-ifdef::single-page-doc[<<card_recipients, recipients section>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference/index.adoc#card_recipients, recipients section>>]
+entity is stored in the user information. Examples using entities can be found 
+ifdef::single-page-doc[<<_send_to_several_users, here>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_send_to_several_users, here>>]
 .
 
 ==== Alternative way to manage groups
@@ -64,6 +67,6 @@ The standard way to handle groups in `OperatorFabric` instance is dealt on the u
 There is an alternative way to manage groups through the authentication token, the groups are defined by the
 administrator of the authentication service.
 See
-ifdef::single-page-doc[<<opfab_spec_conf, here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#opfab_spec_conf, here>>]
+ifdef::single-page-doc[<<jwt_mode, here>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#jwt_mode, here>>]
 for more details to use this feature.

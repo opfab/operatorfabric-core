@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.publication.model;
@@ -11,7 +14,7 @@ package org.lfenergy.operatorfabric.cards.publication.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-
+import org.springframework.data.annotation.Transient;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -56,15 +59,20 @@ public class LightCardPublicationData implements LightCard {
     private List<String> tags;
     private I18n title;
     private I18n summary;
-    private String mainRecipient;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)    
     @Singular("timeSpan")
-    private Set<TimeSpanPublicationData> timeSpansSet;
+    private Set<TimeSpan> timeSpansSet;
+    
+    @Transient
+    private Boolean hasBeenAcknowledged;
 
     /**
      * return timespans, may be null
      * @return
      */
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Override
     public List<TimeSpan> getTimeSpans() {
         if(this.timeSpansSet!=null)
@@ -75,8 +83,9 @@ public class LightCardPublicationData implements LightCard {
     @Override
     public void setTimeSpans(List<? extends TimeSpan> timeSpans) {
         if(timeSpans != null)
-            this.timeSpansSet = new HashSet(timeSpans);
+            this.timeSpansSet = new HashSet<>(timeSpans);
 
     }
+    
 
 }

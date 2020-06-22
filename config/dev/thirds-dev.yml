@@ -1,0 +1,14 @@
+server:
+  port: 2100
+spring:
+  application:
+    name: thirds
+
+operatorfabric.thirds:
+  storage:
+    path: "./services/core/thirds/build/docker-volume/thirds-storage"
+
+#here we put urls for all feign clients
+users:
+  ribbon:
+    listOfServers: http://localhost:2103

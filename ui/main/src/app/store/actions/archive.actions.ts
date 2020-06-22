@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {Action} from '@ngrx/store';
@@ -16,8 +19,8 @@ export enum ArchiveActionTypes {
     ArchiveQuerySuccess = '[Archive] Query was successful',
     UpdateArchivePage = '[Archive] Update query result page',
     HandleUnexpectedError = '[Archive] Handle unexpected error related to archived card issue',
-    SelectArchivedLightCard = '[Archive] Select one archived light card'
-
+    SelectArchivedLightCard = '[Archive] Select one archived light card',
+    FlushArchivesResult = '[Archive] Flush archives result'
 }
 
 export class UpdateArchiveFilter implements Action {
@@ -25,6 +28,12 @@ export class UpdateArchiveFilter implements Action {
     /* istanbul ignore next */
     constructor(public payload: {filters: Map<string, string[]>}) {}
 }
+
+
+export class FlushArchivesResult implements Action {
+    readonly type = ArchiveActionTypes.FlushArchivesResult;
+}
+
 
 export class SendArchiveQuery implements Action {
     readonly type = ArchiveActionTypes.SendArchiveQuery;
@@ -63,4 +72,5 @@ export type ArchiveActions = UpdateArchiveFilter
     | HandleUnexpectedError
     | ArchiveQuerySuccess
     | UpdateArchivePage
-    | SelectArchivedLightCard;
+    | SelectArchivedLightCard
+    | FlushArchivesResult;

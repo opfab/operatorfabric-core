@@ -1,22 +1,46 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
-import lombok.extern.slf4j.Slf4j;
+import static java.nio.charset.Charset.forName;
+import static org.awaitility.Awaitility.await;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.FieldPredicates;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
@@ -26,28 +50,21 @@ import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
+import org.lfenergy.operatorfabric.springtools.configuration.test.OpFabUserDetails;
+import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import static java.nio.charset.Charset.forName;
-import static org.awaitility.Awaitility.await;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 
 /**
  * <p></p>
@@ -61,16 +78,12 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 @Slf4j
 @Tag("end-to-end")
 @Tag("mongo")
-class CardControllerShould {
+class CardControllerShould extends CardControllerShouldBase {
 
-    @Autowired
-    private CardRepositoryForTest cardRepository;
+    
     @Autowired
     private ArchivedCardRepositoryForTest archiveRepository;
-    @Autowired
-    private WebTestClient webTestClient;
-
-
+    
 
     @AfterEach
     public void cleanAfter() {
@@ -203,33 +216,7 @@ class CardControllerShould {
 
 
     }
-
-    private List<CardPublicationData> instantiateCardPublicationData(EasyRandom randomGenerator, int cardNumber) {
-        return randomGenerator.objects(CardPublicationData.class, cardNumber).collect(Collectors.toList());
-    }
-
-    @NotNull
-    private EasyRandom instantiateEasyRandom() {
-        LocalDate today = LocalDate.now();
-        LocalDate tomorrow = today.plus(1, ChronoUnit.DAYS);
-
-        LocalTime nine = LocalTime.of(9, 0);
-        LocalTime fifteen = LocalTime.of(17, 0);
-
-        EasyRandomParameters parameters = new EasyRandomParameters()
-                .seed(5467L)
-                .objectPoolSize(100)
-                .randomizationDepth(3)
-                .charset(forName("UTF-8"))
-                .timeRange(nine, fifteen)
-                .dateRange(today, tomorrow)
-                .stringLengthRange(5, 50)
-                .collectionSizeRange(1, 10)
-                .excludeField(FieldPredicates.named("data"))
-                .scanClasspathForConcreteTypes(true)
-                .overrideDefaultInitialization(false)
-                .ignoreRandomizationErrors(true);
-
-        return new EasyRandom(parameters);
-    }
+    
+	    
+    
 }

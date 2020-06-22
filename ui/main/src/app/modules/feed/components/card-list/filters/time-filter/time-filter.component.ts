@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -14,7 +17,6 @@ import { Store } from "@ngrx/store";
 import { AppState } from "@ofStore/index";
 import {  Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import * as _ from "lodash";
 import { ApplyFilter } from "@ofActions/feed.actions";
 import flatpickr from 'flatpickr';
 import { French } from 'flatpickr/dist/l10n/fr.js';
@@ -145,9 +147,9 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         const startValues = this.startTime.split(":");
         if (startValues.length>1) {
             startHour = Number(startValues[0]);
-            if (startHour===NaN) startHour=0;
+            if (Number.isNaN(startHour)) startHour=0;
             startMin = Number(startValues[1]);
-            if (startMin===NaN) startMin=0;
+            if (Number.isNaN(startMin)) startMin=0;
         }
 
 
@@ -156,9 +158,9 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         const endValues = this.endTime.split(":");
         if (endValues.length>1) {
             endHour = Number(endValues[0]);
-            if (endHour===NaN) endHour=0;
+            if (Number.isNaN(endHour)) endHour=0;
             endMin = Number(endValues[1]);
-            if (endMin===NaN) endMin=0;
+            if (Number.isNaN(endMin)) endMin=0;
         }
 
 

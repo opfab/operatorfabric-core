@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.consultation.configuration.mongo;
@@ -24,11 +27,11 @@ import java.util.List;
  *
  */
 @Slf4j
-public class LightCardReadConverter implements Converter<Document, LightCard> {
+public class LightCardReadConverter implements Converter<Document, LightCardConsultationData> {
     private I18nReadConverter i18nReadConverter = new I18nReadConverter();
     private TimeSpanReadConverter timeSpanConverter = new TimeSpanReadConverter();
     @Override
-    public LightCard convert(Document source) {
+    public LightCardConsultationData convert(Document source) {
         LightCardConsultationData.LightCardConsultationDataBuilder builder = LightCardConsultationData.builder();
         builder
                 .publisher(source.getString("publisher"))
@@ -43,7 +46,7 @@ public class LightCardReadConverter implements Converter<Document, LightCard> {
                 .endDate(source.getDate("endDate") == null ? null : source.getDate("endDate").toInstant())
                 .publishDate(source.getDate("publishDate") == null ? null : source.getDate("publishDate").toInstant())
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
-                .mainRecipient(source.getString("mainRecipient"))
+                .usersAcks(source.getList("usersAcks", String.class))
         ;
         Document titleDoc = (Document) source.get("title");
         if(titleDoc!=null)

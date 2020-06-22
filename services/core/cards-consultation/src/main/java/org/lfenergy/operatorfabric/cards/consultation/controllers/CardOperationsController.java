@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.consultation.controllers;
@@ -11,13 +14,15 @@ package org.lfenergy.operatorfabric.cards.consultation.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+
+import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardSubscriptionDto;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -26,6 +31,8 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuples;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>Handles cards access at the rest level. Depends on {@link CardSubscriptionService} for business logic</p>
@@ -62,7 +69,7 @@ public class CardOperationsController {
                         //init subscription if needed
                         CardSubscription subscription = null;
                         if (t.isNotification()) {
-                            subscription = cardSubscriptionService.subscribe(t.getUser(), t.getClientId(), t.getRangeStart(), t.getRangeEnd(), false);
+                            subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId(), t.getRangeStart(), t.getRangeEnd(), false);
                             subscription.publishInto(fetchOldCards(subscription));
                             return subscription.getPublisher();
                         } else {
@@ -85,11 +92,11 @@ public class CardOperationsController {
         return parameters
                 .map(p -> {
                     try {
-                        CardSubscription oldSubscription = cardSubscriptionService.findSubscription(p.getUser(), p.getClientId());
+                        CardSubscription oldSubscription = cardSubscriptionService.findSubscription(p.getCurrentUserWithPerimeters(), p.getClientId());
                         if (oldSubscription != null) {
                             log.info("Found subscription: {}", oldSubscription.getId());
                         } else {
-                            log.info("No subscription found for {}#{}", p.getUser().getLogin(), p.getClientId());
+                            log.info("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
                         }
                         return Tuples.of(p, oldSubscription);
                     } catch (IllegalArgumentException e) {
@@ -121,36 +128,52 @@ public class CardOperationsController {
     private Flux<String> fetchOldCards(CardSubscription subscription) {
         Instant start = subscription.getRangeStart();
         Instant end = subscription.getRangeEnd();
-        return fetchOldCards0(subscription.getStartingPublishDate(), start, end, subscription.getUser());
+        return fetchOldCards0(subscription.getStartingPublishDate(), start, end, subscription.getCurrentUserWithPerimeters());
     }
 
     private Flux<String> fetchOldCards(CardOperationsGetParameters parameters) {
         Instant start = parameters.getRangeStart();
         Instant end = parameters.getRangeEnd();
-        return fetchOldCards0(null, start, end, parameters.getUser());
+        return fetchOldCards0(null, start, end, parameters.getCurrentUserWithPerimeters());
     }
 
-    private Flux<String> fetchOldCards0(Instant referencePublishDate, Instant start, Instant end, User user) {
-        Flux<String> oldCards;
+    private Flux<String> fetchOldCards0(Instant referencePublishDate, Instant start, Instant end, CurrentUserWithPerimeters currentUserWithPerimeters) {
+        Flux<CardOperation> oldCards;
         referencePublishDate = referencePublishDate == null ? Instant.now() : referencePublishDate;
-        String login = user.getLogin();
-        String[] groups = user.getGroups().toArray(new String[user.getGroups().size()]);
+        String login = currentUserWithPerimeters.getUserData().getLogin();
+        String[] groups = currentUserWithPerimeters.getUserData().getGroups().toArray(
+                new String[currentUserWithPerimeters.getUserData().getGroups().size()]);
 
         String[] entities = new String[]{};
-        if (user.getEntities() != null)
-            entities = user.getEntities().toArray(new String[user.getEntities().size()]);
+        if (currentUserWithPerimeters.getUserData().getEntities() != null)
+            entities = currentUserWithPerimeters.getUserData().getEntities().toArray(
+                    new String[currentUserWithPerimeters.getUserData().getEntities().size()]);
+
+        List<String> processStateList = new ArrayList<>();
+        if (currentUserWithPerimeters.getComputedPerimeters() != null)
+            currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter ->
+                    processStateList.add(perimeter.getProcess() + "." + perimeter.getState()));
 
         if (end != null && start != null) {
-            oldCards = cardRepository.findUrgentJSON(referencePublishDate, start, end, login, groups, entities);
+            oldCards = cardRepository.findUrgent(referencePublishDate, start, end, login, groups, entities, processStateList);
         } else if (end != null) {
-            oldCards = cardRepository.findPastOnlyJSON(referencePublishDate, end, login, groups, entities);
+            oldCards = cardRepository.findPastOnly(referencePublishDate, end, login, groups, entities, processStateList);
         } else if (start != null) {
-            oldCards = cardRepository.findFutureOnlyJSON(referencePublishDate, start, login, groups, entities);
+            oldCards = cardRepository.findFutureOnly(referencePublishDate, start, login, groups, entities, processStateList);
         } else {
             log.info("Not loading published cards as no range is provided");
             oldCards = Flux.empty();
         }
-        return oldCards;
+        return oldCards.map(this::writeValueAsString);
+    }
+
+    private String writeValueAsString(CardOperation cardOperation) {
+        try {
+            return mapper.writeValueAsString(cardOperation);
+        } catch (JsonProcessingException e) {
+            log.error(String.format("Unable to linearize %s to Json",cardOperation.getClass().getSimpleName()),e);
+            return null;
+        }
     }
 
 

@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.consultation;
@@ -53,18 +56,35 @@ public class TestUtilities {
     /* Utilities regarding Cards */
 
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null);
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, null);
+    }
+    
+    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String[] userAcks) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, null, null, null, userAcks);
     }
 
     public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
-        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities);
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities,null);
+    }
+    
+    public static CardConsultationData createSimpleCard(int processSuffix, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities, String[] userAcks) {
+        return createSimpleCard(Integer.toString(processSuffix), publication, start, end, login, groups, entities, userAcks);
+    }
+    
+    public static CardConsultationData createSimpleCard(String processSuffix
+            , Instant publication
+            , Instant start
+            , Instant end
+            , String login, String[] groups, String[] entities) {
+    	return createSimpleCard(processSuffix, publication, start, end, login, groups, entities, null);
     }
 
     public static CardConsultationData createSimpleCard(String processSuffix
             , Instant publication
             , Instant start
             , Instant end
-            , String login, String[] groups, String[] entities) {
+            , String login, String[] groups, String[] entities
+            , String[] userAcks) {    	
         CardConsultationData.CardConsultationDataBuilder cardBuilder = CardConsultationData.builder()
                 .processId("PROCESS" + processSuffix)
                 .publisher("PUBLISHER")
@@ -74,7 +94,8 @@ public class TestUtilities {
                 .severity(SeverityEnum.ALARM)
                 .title(I18nConsultationData.builder().key("title").build())
                 .summary(I18nConsultationData.builder().key("summary").build())
-                .recipient(computeRecipient(login, groups));
+                .recipient(computeRecipient(login, groups))
+                .usersAcks(userAcks!=null ? Arrays.asList(userAcks) : null);
 
         if (groups != null && groups.length > 0)
             cardBuilder.groupRecipients(Arrays.asList(groups));
@@ -180,7 +201,7 @@ public class TestUtilities {
         archivedCard.setShardKey(Math.toIntExact(archivedCard.getStartDate().toEpochMilli() % 24 * 1000));
     }
 
-    public static boolean checkIfCardActiveInRange(LightCardConsultationData card, Instant rangeStart, Instant rangeEnd) {
+    public static boolean checkIfCardActiveInRange(LightCard card, Instant rangeStart, Instant rangeEnd) {
 
         Instant cardStart = card.getStartDate();
         Instant cardEnd = card.getEndDate();
@@ -203,7 +224,7 @@ public class TestUtilities {
         return result;
     }
 
-    public static boolean checkIfPageIsSorted(Page<LightCardConsultationData> page) {
+    public static boolean checkIfPageIsSorted(Page<LightCard> page) {
 
         if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;
@@ -221,7 +242,7 @@ public class TestUtilities {
 
     }
 
-    public static boolean checkIfCardsFromPageMeetCriteria(Page<LightCardConsultationData> page, Predicate<LightCardConsultationData> criteria) {
+    public static boolean checkIfCardsFromPageMeetCriteria(Page<LightCard> page, Predicate<LightCard> criteria) {
 
         if (page.getContent() == null || page.getContent().isEmpty()) {
             return true;
@@ -298,7 +319,8 @@ public class TestUtilities {
                 .excludeField(FieldPredicates.named("orphanedUsers"))
                 .scanClasspathForConcreteTypes(true)
                 .overrideDefaultInitialization(false)
-                .ignoreRandomizationErrors(true);
+                .ignoreRandomizationErrors(true)
+                .excludeField(predicate->predicate.getName().equals("usersAcks"));
 
         return new EasyRandom(parameters);
     }

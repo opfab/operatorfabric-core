@@ -1,0 +1,376 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+:git_flow_post: https://nvie.com/posts/a-successful-git-branching-model/
+
+= Contribution Workflow
+
+//TODO Make sure everything that is stated is enforced (or log it in an issue)
+//TODO Check base branch for PRs
+//TODO Limit which branches can be merged into develop or master
+//TODO Manage who can merge/push into master, merge into develop, create release branches?
+
+The project started out using a
+link:https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow[Feature Branch workflow], but
+as the project team grew and we needed to manage support to previous releases we decided to switch to a workflow
+based on the
+link:{git_flow_post}[Git Flow workflow], starting after version 1.3.0.RELEASE.
+
+The principles for this workflow were first described in the blog post linked above, and this document attempts to
+summarize how we adapted it to our project. Statements in quotes are from the original blog post.
+
+NOTE: In this document, *"repository version"* refers to the version defined in the VERSION file at the root of the
+project, which is a parameter for certain build tasks and for our CICD pipeline.
+
+== Principles
+
+//TODO Create diagram with all branches
+
+=== `develop` branch
+
+//TODO Add main branches image
+
+The role of the `develop` branch is quite similar to that of the `master` branch in our previous "Feature Branch"
+workflow.
+
+The `develop` branch is where feature branches are branched off from, and where they're merged back to. This way,
+the HEAD of the `develop` branch _"always reflects a state with the latest delivered development changes for the next
+release"_.
+
+The repository version on the `develop` branch should always be `SNAPSHOT`.
+
+The daily CRON Travis job generating the documentation and docker images for the `SNAPSHOT` version are run from
+this branch (see our
+ifdef::single-page-doc[<<CICD, CICD documentation>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/CICD/index.adoc, CICD documentation>>]
+for details).
+
+=== `master` branch
+
+_"When the source code in the develop branch reaches a stable point and is ready to be released, all of the changes
+should be merged back into master somehow and then tagged with a release number."_
+
+This means that any commit on master is a production-ready release, be it a patch, a minor or a major version.
+
+Any commit on `master` triggers a Travis build generating and pushing documentation and docker images for the
+corresponding release version. If the `ci_latest` keyword is used in the commit message, the docker images are also
+tagged with `latest`.
+
+=== Feature branches
+
+Feature branches are used to develop new features or fix bugs *for the next release*. The version number for this next
+release is usually not known during the developments as it is its final contents that will determine whether it's a
+major or minor version (or even a simple patch).
+By contrast, hotfix branches fix bugs in existing releases and give rise to new patches.
+
+The lifecycle of feature branches is as follows:
+
+. A new feature branch is branched off `develop` before starting work on a feature or bug.
+. Once the developments are deemed ready by the developer(s) working on the feature, a pull request should be created
+for this branch.
+. New pull requests are discussed during daily meetings to assign someone from the Reviewers group to the issue.
+. The pull request author and reviewer(s) then make use of the
+link:https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests[Git Hub pull requests]
+features (comments, proposed changes, etc.) to make changes to the PR until it meets the project requirements.
+. Once it is ready to be included in the next version, the pull request is then merged back into `develop`.
+
+//TODO Add feature_branches image
+
+*Naming convention:* Feature branches names should always start with the reference of the JIRA issue they're addressing,
+optionally followed by additional information if several branches are associated with a given JIRA issue.
+
+.Examples of valid feature branch names:
+* OC-123
+* OC-123_Documentation
+* OC-123_1
+
+.Examples of invalid feature branch names:
+* 123
+* OC123
+* SomeTextDescribingTheBranch
+
+Commit messages should also start with the JIRA issue ID between brackets: `[OC-123] My commit message`
+
+This allows the branch, PR and commits to be directly accessible from the JIRA issue.
+
+//TODO Link to section describing JIRA workflow once it's written
+//TODO When should we delete supporting branches?
+
+=== Release branches
+
+Once developments are in a release-ready state and have been tested on the `develop` branch, a release branch should
+be created off `develop` to prepare the merge into master.
+
+NOTE: _"All features that are targeted for the release-to-be-built must be merged in to develop at this point in time.
+All features targeted at future releases may not—they must wait until after the release branch is branched off."_
+
+IMPORTANT: By contrast to what is described in the link:{git_flow_post}[original blog post], for now we have chosen to
+only create the release branch once the developments are completely ready and tested on the develop branch, so that no
+fixes should be made on the release branch. This simplifies things because it means that release branches don't have to
+be merged back into `develop`.
+
+Once the `X.X.X.release` branch has been created, a new commit should be made on this branch to change the repository
+version from `SNAPSHOT` to `X.X.X.RELEASE`.
+Then, pushing the branch will trigger a build and a "dry-run" generation of documentation and docker images. The aim
+is to detect any issue with this generation before moving to master.
+
+Finally, the `X.X.X.release` can be merged into `master`, triggering
+The resulting merge commit on `master` should then be tagged with `X.X.X.RELEASE`.
+
+All commits on `master` should be merge commits from `release` branches, direct pushes on master will be disabled.
+
+*Naming convention:* The name of a release branch should match the repository version it is meant to merge into
+`master` but in lower case to avoid confusion with release tags on master.
+
+Example: The valid branch name for the branch bringing 1.3.0.RELEASE into `master` is 1.3.0.release
+
+=== Hotfix branches
+
+//TODO
+Work in progress: detail hotfix branches lifecycle and constraints.
+
+*Naming convention:* Hotfix branches names should always start with "HF_" and the reference of the JIRA issue they're
+addressing, optionally followed by additional information if several branches are associated with a given JIRA issue.
+
+.Examples of valid hotfix branch names:
+* HF_OC-123
+* HF_OC-123_Documentation
+* HF_OC-123_1
+
+.Examples of invalid hotfix branch names:
+* 123
+* OC-123
+* OC123
+* HF_SomeTextDescribingTheFix
+* SomeTextDescribingTheFix
+
+== Examples and commands
+
+The aim of this section is to illustrate how our workflow works on a concrete example, complete with the required
+`git` commands.
+
+=== Initial state
+
+In the initial state of our example, only `develop` and `master` exist.
+
+The repository version in `master` is `1.3.0.RELEASE`, and the `develop` branch has just been branched off it. Commits
+have been added to `develop` to change the repository version to `SNAPSHOT` and implement the changes necessary for
+Git flow.
+
+=== Starting work on a new feature
+
+Let's say we want to start working on feature OC-Feature1 described in our JIRA.
+
+----
+git checkout develop <1>
+git pull <2>
+git checkout -b OC-Feature1 <3>
+----
+<1> Check out the `develop` branch
+<2> Make sure it is up to date with the remote (=GitHub repository)
+<3> Create a `OC-Feature1` off the `develop` branch
+
+Then, you can start working on the feature and commit your work to the branch.
+
+----
+git commit -m "[OC-Feature1] Developments for OC-Feature1"
+----
+
+At any point during your work you can push your feature branch to the GitHub repository, to back your work up, let
+others look at your work or contribute to the feature, and also to trigger a build (see above).
+To do this, just run:
+----
+git push
+----
+
+[NOTE]
+====
+If it's your first push to this branch, Git will prompt you to define the remote branch to be associated with
+your local branch with the following command:
+----
+git push --set-upstream origin OC-Feature1
+----
+====
+
+You can re-work, squash your commits and push as many times as you want on a feature branch, but try limiting pushes so
+as to make good use of the build resources provided by Travis.
+Force pushes are allowed on feature branches.
+
+To see your branch (and the status of the associated builds):
+
+. Go to the https://github.com/opfab/operatorfabric-core[operatorfabric-core repository on GitHub]
+. Click the `branches` tab
+
+image::branches_tab.png[]
+
+You can see your OC-Feature1 branch, and the green check mark next to it indicates that the associated build(s) is/are
+passing.
+
+Clicking this check mark displays a pop-up describing the associated build(s), and clicking "Details" redirects you
+to the build report on Travis.
+
+image::build_checkmark_popup.png[]
+
+[NOTE]
+====
+Feel free to add a copyright header (on top of the existing ones) to files you create or amend. See src/main/headers
+for examples.
+====
+
+=== Submitting a pull request
+
+Once you are satisfied with the state of your developments, you can submit it as a pull request.
+
+[IMPORTANT]
+====
+Before submitting your branch as a pull request, please squash/fix your commits so as to reduce the number of commits
+and comment them accordingly. In the end, the division of changes into commits should make the PR easier to understand
+and review.
+====
+
+You should also take a look at the
+ifdef::single-page-doc[<<review_checklist, review check list>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#review_checklist, review check list>>]
+below to make sure your branch meets its criteria.
+
+Once you feel your branch is ready, submit a pull request. Open pull requests are then reviewed by the core maintainers
+to assign a reviewer to each of them.
+
+//TODO Explain process for forks/external PRs
+To do so, go to the `branches` tab of the repository as described above.
+Click the "New Pull Request" button for your branch.
+
+image::feature1_new_PR.png[]
+
+If you haven't done so before, *read through the PR checklist* pasted in the comment block, and then *replace it with your
+own comment* containing a short summary of the PR goal and any information that should go into the release notes.
+It's especially important for PRs that have a direct impact on existing OperatorFabric deployments, to alert administrators
+of the impacts of deploying a new version and help them with the migration.
+Whenever possible/relevant, a link to the corresponding documentation is appreciated.
+
+image::PR_comment.png[]
+
+[IMPORTANT]
+====
+Make sure that the base branch for the PR is `develop`, because feature branches are meant to be merged back into
+`develop`. This should be the default value since `develop` is the default branch on this repository, but if not, select
+it in the base branch dropdown list.
+
+image::develop_base_PR.png[]
+====
+
+At this point, GitHub will tell you whether your branch could be automatically merged into `develop` or whether
+there are conflicts to be fixed.
+
+==== Case 1: GitHub is able to automatically merge your branch
+
+image::feature1_PR_autom_merge_OK.png[]
+
+This means that either your branch was up to date with develop or there were no conflicts.
+In this case, just go ahead and fill in the PR title and message, then click "Create pull request".
+
+==== Case 2: GitHub can't merge your branch automatically
+
+image::feature1_PR_autom_merge_KO.png[]
+
+This means that there are conflicts with the current state of the `develop` branch on GitHub.
+To fix these conflicts, you need to update your local copy of the develop branch and merge it into your feature branch.
+
+----
+git checkout develop <1>
+git pull <2>
+git checkout OC-Feature1 <3>
+git merge develop <4>
+----
+<1> Check out the `develop` branch
+<2> Make sure it is up to date with the remote (=GitHub repository)
+<3> Check out the `OC-Feature1` branch
+<4> Merge the new commits from `develop` into the feature branch
+
+Then, handle any conflicts from the merge. For example, let's say there is a conflict on file `dummy1.txt`:
+
+----
+Auto-merging dummy1.txt
+CONFLICT (add/add): Merge conflict in dummy1.txt
+Automatic merge failed; fix conflicts and then commit the result.
+----
+
+Open file `dummy1.txt`:
+
+.dummy1.txt
+----
+<<<<<<< HEAD
+Some content from feature 1.
+=======
+Some content that has been changed on develop since Feature 1 branched off.
+>>>>>>> develop
+----
+
+Update the content to reflect the changes that you want to keep:
+
+.dummy1.txt
+----
+Some content from feature 1 and some content that has been changed on develop since Feature 1 branched off.
+----
+
+----
+git add dummy1.txt <1>
+git commit <2>
+git push <3>
+----
+<1> Add the manually merged file to the changes to be committed
+<2> Commit the changes to finish the merge
+<3> Push the changes to GitHub
+
+Now, if you go back to GitHub and try to create a pull request again, GitHub should indicate that it is able to merge
+automatically.
+
+image::feature1_PR_autom_merge_OK.png[]
+
+=== Reviewing a Pull Request
+
+As of today, only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
+stop anyone interested in the topic of a PR to comment and review it.
+
+[[review_checklist]]
+****
+include::{gradle-rootdir}/PULL_REQUEST_TEMPLATE.adoc[tag=review_checklist]
+****
+
+If the PR doesn't meet some of these criteria, use the GitHub review process to suggest changes and discuss problems
+with the PR author.
+
+=== Merging a Pull Request
+
+Once the pull request meets all the criteria from the above check list, you can merge it into the `develop` branch.
+
+. Go to the pull request page on GitHub
+. Check that the base branch for the pull request is `develop`. This information is visible at the top of the page.
++
+image::existing_PR_check_base.png[]
+
+. If that is not the case, you can edit the base branch by clicking the `Edit` button in the top right corner.
+//TODO Check if in this case the PR build is re-run ? If not conflicts or build issues might go un-detected
+
+. Click the `merge pull request` button at the bottom of the PR page
+
+. Go to the https://opfab.atlassian.net[JIRA] page for the corresponding issue and
++
+* Set the `Fix version` field to `Next Version`
+* Set the `Status` field to `Done`
+
+. Go to the link:https://github.com/opfab/release-notes/[release-notes repository] and add the issue to the list with
+the information provided in the PR comments.
+
+
+=== Creating a release or hotfix
+
+See the
+ifdef::single-page-doc[<<release_process, release process>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/CICD/index.adoc#release_process, release process>>]
+described in our CICD documentation for details.

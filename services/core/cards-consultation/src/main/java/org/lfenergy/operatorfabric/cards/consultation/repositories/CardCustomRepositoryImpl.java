@@ -1,15 +1,18 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -30,8 +33,8 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         this.template = template;
     }
 
-    public Mono<CardConsultationData> findByIdWithUser(String processId, User user) {
-        return findByIdWithUser(template, processId, user, CardConsultationData.class);
+    public Mono<CardConsultationData> findByIdWithUser(String processId, CurrentUserWithPerimeters currentUserWithPerimeters) {
+        return findByIdWithUser(template, processId, currentUserWithPerimeters, CardConsultationData.class);
     }
 
     /**
@@ -39,16 +42,16 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
      * The cards are filtered such as the requesting user is among theirs recipients.
      *
      * @param pivotalInstant specified reference date
-     * @param user           requesting user
+     * @param currentUserWithPerimeters requesting user
      * @return Card result or empty Mono
      */
-    public Mono<CardConsultationData> findNextCardWithUser(Instant pivotalInstant, User user) {
+    public Mono<CardConsultationData> findNextCardWithUser(Instant pivotalInstant, CurrentUserWithPerimeters currentUserWithPerimeters) {
         Query query = new Query();
         Criteria criteria = Criteria.where(START_DATE)
 
                 .gte(pivotalInstant);// search in the future
 
-        query.addCriteria(criteria.andOperator(this.computeUserCriteria(user)));
+        query.addCriteria(criteria.andOperator(this.computeUserCriteria(currentUserWithPerimeters)));
         query.with(Sort.by(new Sort.Order(
 
                 Sort.Direction.ASC// sort for the nearer cards in the future first
@@ -63,16 +66,16 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
      * The cards are filtered such as the requesting user is among theirs recipients.
      *
      * @param pivotalInstant specified reference date
-     * @param user           requesting user
+     * @param currentUserWithPerimeters requesting user
      * @return Card result or empty Mono
      */
-    public Mono<CardConsultationData> findPreviousCardWithUser(Instant pivotalInstant, User user) {
+    public Mono<CardConsultationData> findPreviousCardWithUser(Instant pivotalInstant, CurrentUserWithPerimeters currentUserWithPerimeters) {
         Query query = new Query();
         Criteria criteria = Criteria.where(START_DATE)
 
                 .lte(pivotalInstant);// search in the past
 
-        query.addCriteria(criteria.andOperator(this.computeUserCriteria(user)));
+        query.addCriteria(criteria.andOperator(this.computeUserCriteria(currentUserWithPerimeters)));
         query.with(Sort.by(new Sort.Order(
 
                 Sort.Direction.DESC// sort for the most recent cards first

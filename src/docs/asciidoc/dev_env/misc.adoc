@@ -1,10 +1,12 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
+
+
 
 = Useful recipes
 
@@ -18,7 +20,7 @@
 * java -jar [sub-projectPath]/build/libs/[sub-project].jar
 –spring.config.additional-location=file:[filepath]
 NB : properties may be set using ".properties" file or ".yml" file. See
-https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[Spring
+https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config[Spring
 Boot configuration] for more info.
 * Generic property list extract :
 ** server.port (defaults to 8080) : embedded server port

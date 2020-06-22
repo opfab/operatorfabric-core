@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import * as fromRouter from '@ngrx/router-store';
@@ -18,7 +21,6 @@ import {CardOperationEffects} from '@ofEffects/card-operation.effects';
 import {AuthenticationEffects} from '@ofEffects/authentication.effects';
 import {RouterEffects} from 'ngrx-router';
 import {CardFeedState} from '@ofStates/feed.state';
-import {reducer as timelineReducer} from '@ofStore/reducers/timeline.reducer';
 import {reducer as lightCardReducer} from '@ofStore/reducers/light-card.reducer';
 import {reducer as cardReducer} from '@ofStore/reducers/card.reducer';
 import {reducer as configReducer} from '@ofStore/reducers/config.reducer';
@@ -34,7 +36,6 @@ import {LightCardEffects} from '@ofEffects/light-card.effects';
 import {FeedFiltersEffects} from '@ofEffects/feed-filters.effects';
 import {ConfigState} from '@ofStates/config.state';
 import {ConfigEffects} from '@ofEffects/config.effects';
-import {TimelineState} from '@ofStates/timeline.state';
 import {SettingsState} from '@ofStates/settings.state';
 import {SettingsEffects} from '@ofEffects/settings.effects';
 import {ArchiveState} from '@ofStates/archive.state';
@@ -46,11 +47,12 @@ import {UserEffects} from '@ofEffects/user.effects';
 
 import {TranslateEffects} from '@ofEffects/translate.effects';
 
+import {CardsSubscriptionState} from '@ofStates/cards-subscription.state';
+import {cardsSubscriptionReducer} from '@ofStore/reducers/cards-subscription.reducer';
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
     feed: CardFeedState;
-    timeline: TimelineState;
     authentication: AuthState;
     card: CardState;
     menu: MenuState;
@@ -58,6 +60,7 @@ export interface AppState {
     settings: SettingsState;
     archive: ArchiveState;
     user: UserState;
+    cardsSubscription: CardsSubscriptionState;
 }
 
 export const appEffects = [
@@ -79,14 +82,14 @@ export const appEffects = [
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
     feed: lightCardReducer,
-    timeline: timelineReducer,
     authentication: authenticationReducer,
     card: cardReducer,
     menu: menuReducer,
     config: configReducer,
     settings: settingsReducer,
     archive: archiveReducer,
-    user: userReducer
+    user: userReducer,
+    cardsSubscription: cardsSubscriptionReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production

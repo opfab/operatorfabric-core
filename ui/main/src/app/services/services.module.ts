@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
@@ -20,7 +23,6 @@ import {ConfigService} from '@ofServices/config.service';
 import {I18nService} from '@ofServices/i18n.service';
 import {SettingsService} from '@ofServices/settings.service';
 import { UserService } from './user.service';
-import {ThirdActionService} from '@ofServices/third-action.service';
 import { NotifyService } from '@ofServices/notify.service';
 import {SoundNotificationService} from "@ofServices/sound-notification.service";
 import {GlobalStyleService} from "@ofServices/global-style.service";
@@ -45,7 +47,6 @@ import {GlobalStyleService} from "@ofServices/global-style.service";
         FilterService,
         I18nService,
         UserService,
-        ThirdActionService,
         NotifyService,
         SoundNotificationService,
         GlobalStyleService

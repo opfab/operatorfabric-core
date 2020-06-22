@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.users;
@@ -65,8 +68,6 @@ class ApplicationShould {
 
         List<EntityData> defaultEntities = entityRepository.findAll();
 
-        List<PerimeterData> defaultPerimeters = perimeterRepository.findAll();
-
         assertThat(defaultGroups).hasSize(1);
         assertThat(defaultUsers.get(0).getLogin()).isEqualTo("admin");
         assertThat(defaultGroups.get(0).getId()).isEqualTo("ADMIN");
@@ -76,12 +77,6 @@ class ApplicationShould {
         assertThat(defaultEntities.get(0).getId()).isEqualTo("ENTITYADMIN");
         assertThat(defaultEntities.get(0).getName()).isEqualTo("Entity admin");
         assertThat(defaultEntities.get(0).getDescription()).isEqualTo("The admin entity");
-
-        assertThat(defaultPerimeters).hasSize(1);
-        assertThat(defaultPerimeters.get(0).getId()).isEqualTo("PERIMETERADMIN");
-        assertThat(defaultPerimeters.get(0).getProcess()).isEqualTo("*");
-        assertThat(defaultPerimeters.get(0).getState()).isEqualTo("*");
-        assertThat(defaultPerimeters.get(0).getRights()).isEqualTo(RightsEnum.READANDWRITE);
     }
 
 }

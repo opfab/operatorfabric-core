@@ -1,19 +1,26 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)                 -->
-<!--                                                                     -->
-<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
-<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
-<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 
 <form [formGroup]="archiveForm">
   <div class="container-fluid">
-    <div class="form-row nomarginrow">
+    <div class="form-row nomarginrow justify-content-center">
       <div class="col-lg-3 col-md-4 nopaddingrow" *ngIf="(tags$|async) || (processes$|async)">
         <div class="row" style='margin-right:0;margin-left:0;'>
-          <div *ngIf="tags$|async" [ngClass]="{'col-md-6': ((tags$|async) && (processes$|async)), 'col-md-12': ((tags$|async) && !(processes$|async)), 'archive-filter': true}">
-            <of-multi-filter [parentForm]="archiveForm" filterPath="tags" [values]="tags$|async"></of-multi-filter>
+          <div *ngIf="tags$|async"
+               [ngClass]="{'col-md-6': ((tags$|async) && (processes$|async)), 'col-md-12': ((tags$|async) && !(processes$|async)), 'archive-filter': true}">
+            <of-multi-filter [parentForm]="archiveForm" filterPath="tags"
+                             [values]="tags$|async"></of-multi-filter>
           </div>
-          <div *ngIf="processes$|async" [ngClass]="{'col-md-6': ((tags$|async) && (processes$|async)), 'col-md-12': (!(tags$|async) && (processes$|async)), 'archive-filter': true}">
-            <of-multi-filter [parentForm]="archiveForm" filterPath="process" [values]="processes$|async"></of-multi-filter>
+          <div *ngIf="processes$|async"
+               [ngClass]="{'col-md-6': ((tags$|async) && (processes$|async)), 'col-md-12': (!(tags$|async) && (processes$|async)), 'archive-filter': true}">
+            <of-multi-filter [parentForm]="archiveForm" filterPath="process"
+                             [values]="processes$|async"></of-multi-filter>
           </div>
         </div>
       </div>
@@ -29,10 +36,15 @@
       <div class="col-lg-2 col-md-4 archive-filter">
         <of-datetime-filter filterPath="activeTo" formControlName="activeTo"></of-datetime-filter>
       </div>
-      <div class="col-lg-1 col-md-1 nopaddingrow" style="margin-top:30px;">
-        <div class="form-group login-form">
-          <div class="form-group">
-            <button type="button" class="btn btn-primary w-100 archive-radius" (click)="sendQuery()" translate>archive.search</button>
+      <div class="col-lg-auto col-md-2" style="margin-top:30px;margin-left:11px">
+        <div class="form-group">
+          <div class="row">
+                <button type="button" class="btn btn-primary archive-radius" (click)="sendQuery()">
+                  <em class="fas fa-search"></em>
+                </button>
+              <button type="button" id="reset" class="btn btn-primary archive-radius" (click)="clearFilters()">
+                 <em class="fas fa-undo"></em>
+              </button>
           </div>
         </div>
       </div>

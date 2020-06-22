@@ -1,10 +1,12 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
+
+
 
 = Pipeline Configuration
 
@@ -21,17 +23,64 @@ to the account of any member of the team.
 
 == CICD Pipeline
 
+=== GitHub
+
+Work in progress
+//TODO Describe two repos, groups, branch protection rules
+
 === Travis CI
 
-We use Travis CI to manage our pipeline. As of today, it is composed of 3 stages:
+We use Travis CI to manage our pipeline. As of today, it is composed of 7 stages:
 [horizontal]
-test-assemble:: Run on every push regardless of the branch, does the build and produces test reports.
-It also triggers a sonar-scanner analysis and pushes the results to SonarCloud (except for external pull requests).
-doc:: Run only on the master branch, for the daily cron jobs or if a commit is push with a message containing
-ci_documentation. It generates the documentation (adoc, javadoc, compodoc, reports) and pushes it to the opfab.github.io
+test-sonar:: Builds the commit, runs tests and sonar analysis
+test:: Similar to `test-sonar` but without sonar analysis
+doc:: Generates the documentation (from asciidoc sources and API documentation) and pushes it to the opfab.github.io
 repository to update the website.
-docker:: Run only on the master branch, for the daily cron jobs or if a commit is push with a message containing
-ci_docker. It generates the docker images for the current version and pushes them to DockerHub.
+doc-dry-run:: Generates the documentation without pushing it
+docker-push-version:: Builds Docker images, tags them with the current version (either `SNAPSHOT` or `X.X.X.RELEASE`) and
+pushes them to DockerHub
+docker-push-latest:: Builds Docker images, tags them with `latest` and pushes them to DockerHub
+docker-tag-version:: Builds Docker images and tags them with the current version, without pushing them anywhere. This
+stage can be triggered when we just want to check that the images can be built without actually updating them on DockerHub.
+
+Among these stages, four can be considered "sensitive" because they push public content that serves as a reference for
+the project (docker images, documentation and to a lesser extent, sonar analysis), meaning we don't want it tampered with.
+These stages are `test-sonar`, `doc` and the two `docker-push` stages.
+
+These stages are triggered depending on:
+
+* branch type
+* event type (CRON job, push or pull request)
+* commit message hooks
+
+In the table below:
+[horizontal]
+doc hook:: stands for adding the keyword `ci_documentation` to the commit message
+docker hook:: stands for adding the keyword `ci_docker` to the commit message
+latest hook:: stands for adding the keyword `ci_latest` to the commit message
+
+.Summary of stage triggers
+[caption="", cols="3,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1,^1", stripes=even]
+|==========================
+h|      4+h|develop h|release 2+h|master 3+h|feature or hotfix h| pull request
+h|Stage              h|CRON h|push h|doc hook h|docker hook h|push h|push h|latest hook h|push h|doc hook h|docker hook h|push
+e|test-sonar          |X|X| | |X|X| |X| | |internal
+e|test                | | | | | | | | | | |external
+e|doc                 |X| |X| | |X| | | | |
+e|doc-dry-run         | | | | |X| | | |X| |
+e|docker-push-version |X| | |X| |X| | | | |
+e|docker-push-latest  | | | | | | |X| | | |
+e|docker-tag-version  | | | | |X| | | | |X|
+|==========================
+
+* The `test-sonar` phase is ran for every build except those triggered by external PRs (i.e. originating from a fork
+of the repository). This is because the `sonar-scanner` step it comprises requires access to an encrypted token
+(to be able to push the analysis to
+https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core[SonarCloud], see below for details)
+that is not shared with external PRs for security reasons, so this would cause the stage (and the build) to fail.
+This is why in the case of external PRs the `test` phase is ran instead (leaving out sonar-scanner).
+
+//TODO Finish explanations
 
 === SonarCloud
 
@@ -51,6 +100,6 @@ visible on the website because it needs to be built by GitHub pages, and this ca
 depending on how busy the service is.
 
 === DockerHub
-To be allowed to push images to DockerHub, Travis needs to be authenticated. This is done by setting the dockerhub
+To be allowed to push images to DockerHub, Travis needs to be authenticated. This is done by setting the DockerHub
 login and password of the technical account as environment variables through Travis settings and referencing them in
 the .travis.yml file.

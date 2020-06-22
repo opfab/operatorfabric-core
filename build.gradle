@@ -7,6 +7,7 @@ plugins {
     id "signing"
     id "org.owasp.dependencycheck" version "5.2.0"
     id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'org.sonarqube' version '3.0' apply false
 }
 
 ext.versions = new Properties()
@@ -47,15 +48,10 @@ ext {
 
     cloud = [
             dependencies          : "org.springframework.cloud:spring-cloud-dependencies:${versions['spring.cloud']}",
-            configMonitor         : "org.springframework.cloud:spring-cloud-config-monitor",
-            starterConfigServer   : "org.springframework.cloud:spring-cloud-config-server",
-            starterConfigClient   : "org.springframework.cloud:spring-cloud-starter-config",
             starterBus            : "org.springframework.cloud:spring-cloud-starter-bus-amqp",
             starterStream         : "org.springframework.cloud:spring-cloud-starter-stream-rabbit",
             starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign",
-            eurekaServer          : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server',
-            eurekaClient          : 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
-            gateway               : 'org.springframework.cloud:spring-cloud-starter-gateway'
+            ribbon                : "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
     ]
 
     testing = [
@@ -75,6 +71,7 @@ ext {
             compress       : "org.apache.commons:commons-compress:${versions['apache.commons.compress']}",
             feignMock      : "io.github.openfeign:feign-mock:${versions['feign']}",
             feignJackson   : "io.github.openfeign:feign-jackson:${versions['feign']}",
+            jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:${versions['jacksonAnnotations']}",
             collections4   : "org.apache.commons:commons-collections4:${versions['apache.commons.collections4']}"
     ]
 
@@ -124,9 +121,12 @@ asciidoctor {
                 revnumber           : operatorfabric.version,
                 revdate             : operatorfabric.revisionDate,
                 sectnums            : '',
+                sectnumlevels       : '4',
+                sectanchors         : '',
                 toc                 : 'left',
-                toclevels           : '3',
+                toclevels           : '4',
                 icons               : 'font',
+                imagesdir           : '../images',
                 "hide-uri-scheme"   : '',
                 "source-highlighter": 'coderay'
 }
@@ -138,13 +138,17 @@ subprojects {
     version operatorfabric.version
     apply plugin: "com.github.jk1.dependency-license-report"
     apply plugin: 'org.owasp.dependencycheck'
+    
 
     if (project.name != 'main-user-interface') {
         task securityReport {
             dependsOn 'dependencyCheckAnalyze'
         }
-    }
+    }   
     
+    if (project.parent.path.startsWith(':services:')){
+        apply plugin: 'org.sonarqube'
+    }
 
     licenseReport {
         renderers = [new InventoryHtmlReportRenderer()]

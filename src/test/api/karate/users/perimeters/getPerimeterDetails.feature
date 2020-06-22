@@ -13,8 +13,12 @@ Feature: Get perimeter details (endpoint tested : GET /perimeters/{id})
 {
   "id" : "perimeterKarate3_1",
   "process" : "process3",
-  "state" : "state1",
-  "rights" : "Read"
+  "stateRights" : [
+    {
+      "state" : "state1",
+      "right" : "Read"
+      }
+  ]
 }
 """
 
@@ -28,8 +32,7 @@ Feature: Get perimeter details (endpoint tested : GET /perimeters/{id})
     Then status 201
     And match response.id == perimeter.id
     And match response.process == perimeter.process
-    And match response.state == perimeter.state
-    And match response.rights == perimeter.rights
+    And match response.stateRights == perimeter.stateRights
 
 
   Scenario: get perimeter details
@@ -38,8 +41,7 @@ Feature: Get perimeter details (endpoint tested : GET /perimeters/{id})
     When method get
     Then match response.id == perimeter.id
     And match response.process == perimeter.process
-    And match response.state == perimeter.state
-    And match response.rights == perimeter.rights
+    And match response.stateRights == perimeter.stateRights
     And status 200
 
 

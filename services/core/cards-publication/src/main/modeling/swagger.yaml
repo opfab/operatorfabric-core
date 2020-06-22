@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: OperatorFabric Card Consumer Service
-  version: 1.3.0.RELEASE
+  version: 1.4.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -288,6 +288,10 @@ definitions:
         type: string
         description: Unique card ID (as defined in the associated process)
         readOnly: true
+      parentCardId:
+        type: string
+        description: The id of the parent card (optional)
+        readOnly: true
       publisher:
         type: string
         description: Publishing service unique ID
@@ -361,6 +365,18 @@ definitions:
         type: array
         items:
           type: string
+      externalRecipients:
+        description: List of  external recipients
+        readOnly: true
+        type: array
+        items:
+          type: string
+      entitiesAllowedToRespond:
+        description: List of entities that have to respond
+        type: array
+        items:
+          type: string
+        example: ["tso1","tso2"]
       entityRecipients:
         description: List of entity recipients
         type: array
@@ -370,6 +386,9 @@ definitions:
       data:
         type: object
         description: Business data
+      hasBeenAcknowledged:
+        type: boolean
+        description: Is true if the card was acknoledged at least by one user  
     required:
       - processId
       - publisher
@@ -378,7 +397,6 @@ definitions:
       - startDate
       - title
       - summary
-      - recipient
     example:
       uid: 12345
       id: cardIdFromMyProcess
@@ -515,6 +533,9 @@ definitions:
         description: List of business time span associated to card
         items:
           $ref: '#/definitions/TimeSpan'
+      hasBeenAcknowledged:
+        type: boolean
+        description: Is true if the card was acknoledged at least by one user
     example:
       uid: 12345
       id: cardIdFromMyProcess
@@ -877,3 +898,40 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
+  '/cards/userAcknowledgement/{id}':
+    parameters:
+      - in: path
+        name: id
+        type: string
+        required: true
+        description: "The id parameter is constructed as follows : {publisher}_{processId}"
+    post:
+      operationId: postUserAcknowledgement
+      tags:
+        - cards
+        - update
+        - acknowledgement
+      summary: update current card adding a user acknowledgement
+      description: update current card users acknowledgements, adding a new item, by card id and authenticated user
+      responses:
+        '201':
+          description: Created
+        '200':
+          description: No action done, the item already exists
+        '404':
+          description: Try to remove item from unexisting card
+    delete:
+      operationId: deleteUserAcknowledgement
+      tags:
+        - cards
+        - delete
+        - acknowledgement
+      summary: update current card removing a user acknowledgement
+      description: update current card users acknowledgements, removing an item, by card id and authenticated user
+      responses:
+        '200':
+          description: Item removed
+        '204':
+          description: Try to remove unexisting item
+        '404':
+          description: Try to remove item from unexisting card

@@ -22,6 +22,7 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 			"process"  :"defaultProcess",
 			"processId" : "process2",
 			"state": "messageState",
+			"tags":["test","test2"],
 			"recipient" : {
 						"type" : "GROUP",
 						"identity" : "TSO1"
@@ -72,7 +73,8 @@ And match response.count == 1
 			"publisherVersion" : "1",
 			"process"  :"defaultProcess",
 			"processId" : "process2b",
-			"state": "messageState",
+			"state": "chartState",
+			"tags" : ["test2"],
 			"recipient" : {
 						"type" : "GROUP",
 						"identity" : "TSO1"
@@ -80,8 +82,8 @@ And match response.count == 1
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
 			"summary" : {"key" : "defaultProcess.summary"},
-			"title" : {"key" : "defaultProcess.title"},
-			"data" : {"message":" Information card number 2"},
+			"title" : {"key" : "chartDetail.title"},
+			"data" : {"values":[12, 19, 3, 5, 2, 3]},
 			"timeSpans" : [
 				{"start" : startDate},
 				{"start" : endDate}
@@ -205,7 +207,7 @@ And match response.count == 1
 			"publisherVersion" : "1",
 			"process"  :"defaultProcess",
 			"processId" : "process5",
-			"state": "messageState",
+			"state": "chartLineState",
 			"recipient" : {
 						"type" : "GROUP",
 						"identity" : "TSO1"
@@ -213,8 +215,8 @@ And match response.count == 1
 			"severity" : "ALARM",
 			"startDate" : startDate,
 			"summary" : {"key" : "defaultProcess.summary"},
-			"title" : {"key" : "defaultProcess.title"},
-			"data" : {"message":" First Alarm card"},
+			"title" : {"key" : "chartLine.title"},
+			"data" : {"values":[10000, 11000, 30000, 45000, 30000, 35000,10000]}
 		}
 
 	return JSON.stringify(card);

@@ -1,355 +1,239 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
+
+
 
 = Security Configuration
 
-== Common configuration
+Configure the security concern throughout several files:
 
-This concern is configured within the `${OF_HOME}/services/infra/config` project
-into 3 distinct files:
+* `nginx.conf` of the nginx server
+* `config/dev/common-dev.yml`  or `config/docker/common-docker.yml`, called common.yml in the following chapters
+* `web-ui.json` served by the `web-ui` service;
 
-* `application.yml`;
-* `web-ui.yml`;
-* `client-gateway.yml`.
 
-They are located into the following folders within the `${OF_HOME}/services/infra/config/java/src/main/docker/volume` folder:
+== Authentication configuration 
 
-* `dev-configurations`: to be use into `dev` mode;
-* `docker-configurations`: used by docker at run time.
 
-EXAMPLE: the configuration for `dev` before compilation is done in the following files:
-    - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/application.yml`;
-    - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/client-gateway.ym`;
-    - `${OF_HOME}/services/infra/config/java/src/main/docker/volume/dev-configurations/web-ui.yml`.
+There are 3 OAuth2 Authentication flows available into OperatorFabric UI:
 
-For test purposes in `dev` mode, it's possible to edit files located into ``${OF_HOME}/services/infra/config/build/docker-volume/dev-configurations`.
-Be aware that those changes will be lost after a new compilation or even a simple re-run of the project.
+- password grant: referred as `PASSWORD` mode flow;
+- code flow : referred as `CODE` mode flow;
+- implicit flow: referred as `IMPLICIT` mode flow.
 
-This configuration files follow the `springframework` configuration convention. Within a same file it's possible to
-use `link:https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions[SpEL ${}]` convention. For example,  `${AnotheProperty}` allows to re-use the value of `AnotherProperty` already declared.
-It helps to avoid typos or missing to report some changes. An example could be find below into the `delegate-url` property.
+=== Nginx Configuration
 
-=== application.yml
+
+The UI calls need some mapping to reach the Authentication Provider. In the default OperatorFabric configuration it's a
+`docker keycloak instance`, called `keycloak` in the project `docker-compose.yml` files.
+
+There are 3 properties to configure within `nginx.conf` file:
+
+* `$KeycloakBaseUrl`: the base url of keycloak;
+* `$OperatorFabricRealm`: the realm configure within keycloak instance to provide authentication to OperatorFabric;
+* `$ClientPairOFAuthentication`: base64 encoded string of the pair of client authentication used by OperatorFabric
+to log to the Authentication Provider (keycloak). The cient-id and the client-secret are separated by a colon(':').
+
+[NOTE]
+====
+**Example of the `docker` configuration**
+----
+# Url of the Authentication provider
+    set $KeycloakBaseUrl "http://keycloak:8080";
+# Realm associated to OperatorFabric within the Authentication provider
+    set $OperatorFabricRealm "dev";
+
+# base64 encoded pair of authentication in the form of 'client-id:secret-id'
+    set $ClientPairOFAuthentication "b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==" ;
+----
+
+where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded string of
+`opfab-client:opfab-keycloak-secret` with `opfab-client` as client-id and `opfab-keycloak-secret` its client secret.
+====
+
+
+=== Configuration file common.yml
 
 |===
 |name|default|mandatory?|Description
 
 |operatorfabric.security.oauth2.client-id|null|yes| Oauth2 client id used by OperatorFabric may be specific for each service
-|operatorfabric.security.oauth2.client-secret|null|yes| Oauth2 client secret used by OperatorFabric may be specific for each service
 |operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as user login or id
 |operatorfabric.security.jwt.expire-claim|exp|no| Jwt claim is used as token expiration timestamp
-|spring.security.oauth2.resourceserver.jwt.provider-url|null|yes|The keycloak instance url
-|spring.security.oauth2.resourceserver.jwt.provider-realm|null|yes|The realm name within the keycloak instance
+|spring.security.provider-url|null|no|The keycloak instance url. 
+|spring.security.provider-realm|null|no|The realm name within the keycloak instance. 
+|spring.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificat used to verify the jwt signature
 |===
 
-example of `application.yml`
+[NOTE]
+====
+**example of `common.yml`**
 
-[source]
+[source,yml]
 ----
 operatorfabric:
     security:
         oauth2:
             client-id: opfab-client
-            client-secret: opfab-keycloak-secret
         jwt:
             login-claim: preferred_username
             expire-claim: exp
-----
-
-where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one.
-
-=== client-gateway.yml
-
-include::client-gateway_filters-and-cors-configuration.adoc[leveloffset=+2]
-
-=== web-ui.yml
-
-For OAuth2 security concerns into this file, there are two way to configure it, based on the Oauth2 chosen flow.
-There are two common properties:
-
-- `operatorfabric.security.oauth2.flow.provider` which corresponds to the OAuth2 provider.
-- `operatorfabric.security.realm-url`: which is the OAuth2 realm provider under which the OpertaroFabric client is declared.
-- `operatorfabric.security.provider-url`: which is the The keycloak server instance.
-
-== OAuth2 Flows and specific configuration
-
-There are 3 OAuth2 Authentication flows available into OperatorFabric UI:
-
-- password grant: referred as PASSWORD mode flow;
-- code flow : referred as  CODE mode flow;
-- implicit flow: referred as IMPLICIT mode flow.
-
-=== OAuth2 IMPLICIT Flow
-
-It had its own way of configuration.
-To enable IMPLICIT Flow authentication the following properties need to be set:
-
-- `operatorfabric.security.oauth2.flow.mode` to `IMPLICIT`;
-- `operatorfabric.security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the `.well-known/openid-configuration` end-point used for authentication configuration.
-
-==== Example of configuration for IMPLICIT Flow 
-
-[source]
-----
-operatorfabric:
-  keycloak:
-    realm: dev
+spring:
   security:
+    provider-url: http://localhost:89
+    provider-realm: dev
     oauth2:
-      flow:
-        mode: IMPLICIT
-        provider: Opfab Keycloak
-        delagate-url: http://localhost:89/auth/realms/${operatorfabric.keycloak.realm}
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
 ----
+where `operatorfabric.security.jwt.expire-claim` could have been omitted because having the same value as the default one 
+and where `jwt-set-uri` reuses `provider-url` and `provider-realm` properties.
+====
 
-Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value of the `operatorfabric.keycloak.realm` declared earlier, `dev` here.
-For keycloak instance used for dev purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred. The 
-url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
+=== Configuration file web-ui.json
+
+Nginx web server serves this file. OperatorFabric creates and uses a custom Docker image containing an Nginx server with a docker volume containing this file. The two docker-compose environments contain an example of it. The path in the image to it is `/usr/share/nginx/html/opfab/web-ui.json`. 
+
+For OAuth2 security concerns into this file, there are two ways to configure it, based on the Oauth2 chosen flow.
+There are several common properties:
+
+- `security.realm-url`: OAuth2 provider realm under which the OpertaroFabric client is declared;
+- `security.provider-url`: url of the keycloak server instance.
+- `security.logout-url`: url used when a user is logged out of the UI;
+- `security.oauth2.flow.provider`: name of the OAuth2 provider;
+- `security.oauth2.flow.delegate-url`: url used to connect to the Authentication provider;
+- `security.oauth2.flow.mode`: technical way to be authenticated by the Autentication provider.
+
+
 
 
 === OAuth2 PASSWORD or CODE Flows
 
-These two modes share the same way of declaring the delegate URL. The default configuration for dev is set to `CODE` and work straight away.
 
-- `operatorfabric.security.oauth2.flow.mode` to `PASSWORD` or `CODE`;
-- `operatorfabric.security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the protocol used for authentication.
+These two modes share the same way of declaring the delegate URL.
+`CODE` is the default mode of authentication for `deploy` docker-compose environment.
+
+- `security.oauth2.flow.mode` to `PASSWORD` or `CODE`;
+- `security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the protocol used for authentication.
 
 ==== Example of Configuration For CODE Flow
 
+
+[source,json]
+----
+{
+    "security": {
+      "oauth2": {
+        "flow": {
+          "mode": "CODE",
+          "provider": "Opfab Keycloak",
+          "delegate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client"
+      },
+      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/ui/",
+    "provider-realm": "dev",
+    "provider-url": "http://localhost:89"
+    }
+  }
+}
+----
+
+Within the `delegate-url` property `dev` is the keycloak client realm of OperatorFabric.
+For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred.
+Here, the `client-id` value is `opfab-client` which is define as client under the `realm` named `dev` on the dev keycloak instance.
+
+=== OAuth2 IMPLICIT Flow
+
+
+It had its own way of configuration.
+To enable IMPLICIT Flow authentication the following properties need to be set:
+
+- `security.oauth2.flow.mode` to `IMPLICIT`;
+- `security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the `.well-known/openid-configuration` end-point used for authentication configuration.
+
+==== Example of configuration for IMPLICIT Flow 
+
+
+[source,json]
+----
+{
+  "operatorfabric": {
+    "security": {
+      "oauth2": {
+        "flow": {
+          "mode": "IMPLICIT",
+          "provider": "Opfab Keycloak",
+          "delegate-url": "http://localhost:89/auth/realms/dev"
+      },
+      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/ui/",
+    "provider-realm": "dev",
+    "provider-url": "http://localhost:89"
+      }
+    }
+  }
+}
+----
+
+Within the `delegate-url` property `dev` is the keycloak client realm of OperatorFabric.
+For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registred.
+The url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
+
+== User creation
+
+Setting automated user creation==. Creation user requires a user id. Given name and family name are optional.
+
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.security.jwt.login-claim|sub|no| Jwt claim is used as a user login or id
+|operatorfabric.security.jwt.given-name-claim|given-name|no| Jwt claim is used to set the user's given name
+|operatorfabric.security.jwt.family-name-claim|family-name|no| Jwt claim is used to set the user's family name
+|===
+
+
+[[jwt_mode]]
+== Alternative way to manage groups (and/or entities)
+
+By default, `OperatorFabric` manages groups (and/or entities) through the user\'s collection in the database.
+Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token.
+The administrator of the authentication service has to set what claims define a group (and/or entity).
+In the `Operator-Fabric` configuration, the opfab administrator has to set properties to retrieve those groups (and/or entities).
+  
+|===
+|name|default|mandatory?|Description
+
+|operatorfabric.security.jwt.groups.mode|OPERATOR_FABRIC|no| Set the group mode, possible values JWT or OPERATOR_FABRIC 
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandard.path||no| path in the JWT to retrieve the claim that defines a group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardArray.path||no| path in the JWT to retrieve the claim that defines an array of groups
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.path||no| path in the JWT to retrieve the claim that defines a list of group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.separator||no| set the separator value of the list of group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.path||no| path in the JWT to check if that path does exist, if it does, use the roleValue as a group 
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.roleValue||no| set the value of the group if the path exists
+|operatorfabric.security.jwt.entitiesIdClaim||no| set the name of the field in the token
+|operatorfabric.security.jwt.gettingEntitiesFromToken||no| boolean indicating if you want the entities of the user to come from the token and not mongoDB (possible values : true/false)
+|===
+
+_application.yml_
+
 [source]
 ----
-operatorfabric:
-  keycloak:
-    realm: dev
-  security:
-    oauth2:
-      flow:
-        mode: CODE
-        provider: Opfab Keycloak
-        delagate-url: http://localhost:89/auth/realms/${operatorfabric.keycloak.realm}/protocol/openid-connect/auth?response_type=code&client_id=opfab-client
+include::./examples/application_JWT_group_config.yml[]
 ----
 
-Within the `delegate-url` property the `${operatorfabric.keycloak.realm}` refers to the value(also `dev` here) of the `operatorfabric.keycloak.realm` declared earlier.
-Here, the `client-id` value is `opfab-client` which is define as client under the `realm` named dev on the dev keycloak instance.
+_JWT example_
 
-== Using token
-//TODO Move to dev_env ?
+[source]
+----
+include::./examples/jwt_example.json[]
+----
 
-=== Get a token
-
-End point: `http://localhost:2002/auth/token`
-
-Method: `POST`
-
-Body arguments:
-
-- client_id: `string` constant=`clientIdPassword`;
- - grant_type: `string` constant=`password`;
- - username: `string` any value, must match an OperatorFabric registered user
-name;
- - password: `string` any value;
-
-The following examples will be for `admin` user.
-
-==== Curl
-
-command:
-....
-curl -s -X POST -d 
-"username=admin&password=test&grant_type=password&client_id=clientIdPassword" 
-http://localhost:2002/auth/token
-....
-
-example of expected result:
-....
-{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cC
-I6MTU1MjY1OTczOCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOi
-IwMmQ4MmU4NS0xM2YwLTQ2NzgtOTc0ZC0xOGViMDYyMTVhNjUiLCJjbGllbnRfaWQiOiJjbGllbnRJZF
-Bhc3N3b3JkIiwic2NvcGUiOlsicmVhZCIsInVzZXJfaW5mbyJdfQ.SDg-BEzzonIVXfVBnnfq0oMbs_0
-rWVtFGAZzRHj7KPgaOXT3bUhQwPOgggZDO0lv2U1klwB94c8Cb6rErzd3yjJ8wcVcnFLO4KxrjYZZxdK
-VAz0CkMKqng4kQeQm_1UShsQXGLl48ezbjXyJn6mAl0oS4ExeiVsx_kYGEdqjyb5CiNaAzyx0J-J5jVD
-SJew1rj5EiSybuy83PZwhluhxq0D2zPK1OSzqiezsd5kX5V8XI4MipDhaAbPYroL94banZTn9RmmAKZC
-AYVM-mmHbjk8mF89fL9rKf9EUNhxOG6GE0MDqB3LLLcyQ6sYUmpqdP5Z94IkAN-FpC7k93_-RDw","to
-ken_type":"bearer","refresh_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWI
-iOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ1c2VyX2luZm8iXSwiYXRpIjoiMDJkODJlODUtMTNmMC0
-0Njc4LTk3NGQtMThlYjA2MjE1YTY1IiwiZXhwIjoxNTUyNzAxMTM4LCJhdXRob3JpdGllcyI6WyJST0x
-FX0FETUlOIiwiUk9MRV9VU0VSIl0sImp0aSI6IjMwOWY2ZDllLWNmOGEtNDg0YS05ZjMxLWViOTAxYzk
-4YTFkYSIsImNsaWVudF9pZCI6ImNsaWVudElkUGFzc3dvcmQifQ.jnZDt6TX2BvlmdT5JV-A7eHTJz_s
-lC5fHrJFVI58ly6N7AUUfxebG_52pmuVHYULSKqTJXaLR866r-EnD4BJlzhk476FtgtVx1nazTpLFRLb
-8qDCxeLrzClQBkzcxOt6VPxB3CD9QImx3bcsDwjkPxofUDmdg8AxZfGTu0PNbvO8TKLXEkeCztLFvSJM
-GlN9zDzWhKxr49I-zPZg0XecgE9j4WITkFoDVwI-AfDJ3sGXDi5AN55Sz1j633QoqVjhtc0lO50WPVk5
-YT7gU8HLj27EfX-6vjnGfNb8oeq189-NX100QHZM9Wgm79mIm4sRgwhpv-zzdDAkeb3uwIpb8g","exp
-ires_in":1799,"scope":"read 
-user_info","jti":"02d82e85-13f0-4678-974d-18eb06215a65"}
-....
-
-==== Httpie
-
-....
-http --form POST http://localhost:2002/auth/token username=admin password=test 
-grant_type=password client_id=clientIdPassword
-....
-
-example of expected result:
-....
-.HTTP/1.1 200 OK
-Cache-Control: no-store
-Content-Type: application/json;charset=utf-8
-Date: Fri, 15 Mar 2019 13:57:19 GMT
-Pragma: no-cache
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-transfer-encoding: chunked
-
-{
-    "access_token": 
-"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY2MDAzOS
-wiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI2MjQzMDliMS03Yz
-g3LTRjZGMtODQ0My0wMTI0NTE1Zjg3ZjgiLCJjbGllbnRfaWQiOiJjbGllbnRJZFBhc3N3b3JkIiwic2
-NvcGUiOlsicmVhZCIsInVzZXJfaW5mbyJdfQ.VO4OZL7ycqNez0cHzM5WPuklr0r6SAOkUdUV2qFa5Bd
-3PWx3DFHAHUxkfSX0-R4OO6iG2Zu7abzToAZNVLwk107LH_lWXOMQBriGx3d2aSgCf1yx_wI3lHDd8ST
-8fxV7uNeolzywYavSpMGfgz9GXLzmnyeuPH4oy7eyPk9BwWVi0d7a_0d-EfhE1T8eaiDfymzzNXJ4Bge
-8scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeApKdfD
-J6o4szR71SIFCBERxCH9TyUxsFywWL3e-YnXMiP2J08eB8O4YwhYQEFqB8Q",
-    "expires_in": 1799,
-    "jti": "624309b1-7c87-4cdc-8443-0124515f87f8",
-    "refresh_token": 
-"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLC
-J1c2VyX2luZm8iXSwiYXRpIjoiNjI0MzA5YjEtN2M4Ny00Y2RjLTg0NDMtMDEyNDUxNWY4N2Y4IiwiZX
-hwIjoxNTUyNzAxNDM5LCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sImp0aS
-I6ImRiYzMxNTJiLTM4YTUtNGFmZC1hY2VmLWVkZTI4MjJkOTE3YyIsImNsaWVudF9pZCI6ImNsaWVudE
-lkUGFzc3dvcmQifQ.Ezd8kbfNQHOOvUCNNN4UmOOkncHiT9QVEM63FiW1rq0uXDa3xfBGil8geM5MsP0
-7Q2He-mynkFb8sGNDrAXTdO-8r5o4a60zWrktrMg2QH4icC1lyeZpiwZxe6675QpLpSeMlXt9PdYj-pb
-14lrRookxXP5xMQuIMteZpbtby7LuuNAbNrjveZ1bZ4WMi7zltUzcYUuqHlP1AYPteGRrJVKXiuPpoDv
-gwMsEk2SkgyyACI7SdZZs8IT9IGgSsIjjgTMQKzj8P6yYxNLUynEW4o5y1s2aAOV0xKrzkln9PchH9zN
-qO-fkjTVRjy_LBXGq9zkn0ZeQ3BUe1GuthvGjaA",
-    "scope": "read user_info",
-    "token_type": "bearer"
-}
-....
-
-=== Extract token
-
-From the previous results, the data need to be considered to be authenticated 
-by OperatorFabric services is the content of the `"access_token"` attribute of 
-the body response. 
-
-Once this value extracted, it need to be passed at the end of the value of the 
-http HEADER of type `Authorization:Bearer`.
-example from previous results:
-
-==== Curl
-
-....
-Authorization:Bearer 
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY1OTczOCw
-iYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiIwMmQ4MmU4NS0xM2Y
-wLTQ2NzgtOTc0ZC0xOGViMDYyMTVhNjUiLCJjbGllbnRfaWQiOiJjbGllbnRJZFBhc3N3b3JkIiwic2N
-vcGUiOlsicmVhZCIsInVzZXJfaW5mbyJdfQ.SDg-BEzzonIVXfVBnnfq0oMbs_0rWVtFGAZzRHj7KPga
-OXT3bUhQwPOgggZDO0lv2U1klwB94c8Cb6rErzd3yjJ8wcVcnFLO4KxrjYZZxdKVAz0CkMKqng4kQeQm
-_1UShsQXGLl48ezbjXyJn6mAl0oS4ExeiVsx_kYGEdqjyb5CiNaAzyx0J-J5jVDSJew1rj5EiSybuy83
-PZwhluhxq0D2zPK1OSzqiezsd5kX5V8XI4MipDhaAbPYroL94banZTn9RmmAKZCAYVM-mmHbjk8mF89f
-L9rKf9EUNhxOG6GE0MDqB3LLLcyQ6sYUmpqdP5Z94IkAN-FpC7k93_-RDw
-....
-
-==== Httpie
-
-....
-Authorization:Bearer 
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY2MDAzOSw
-iYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI2MjQzMDliMS03Yzg
-3LTRjZGMtODQ0My0wMTI0NTE1Zjg3ZjgiLCJjbGllbnRfaWQiOiJjbGllbnRJZFBhc3N3b3JkIiwic2N
-vcGUiOlsicmVhZCIsInVzZXJfaW5mbyJdfQ.VO4OZL7ycqNez0cHzM5WPuklr0r6SAOkUdUV2qFa5Bd3
-PWx3DFHAHUxkfSX0-R4OO6iG2Zu7abzToAZNVLwk107LH_lWXOMQBriGx3d2aSgCf1yx_wI3lHDd8ST8
-fxV7uNeolzywYavSpMGfgz9GXLzmnyeuPH4oy7eyPk9BwWVi0d7a_0d-EfhE1T8eaiDfymzzNXJ4Bge8
-scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeApKdfDJ
-6o4szR71SIFCBERxCH9TyUxsFywWL3e-YnXMiP2J08eB8O4YwhYQEFqB8Q
-....
+As the result, the group will be [ATTR1, ATTR2, roleA, roleB, roleC, USER, roleBBB, roleAAA]
 
 
-=== Check a token 
 
-==== Curl
-
-from previous example
-
-....
-curl -s -X POST -d 
-"token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY1
-OTczOCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiIwMmQ4MmU4
-NS0xM2YwLTQ2NzgtOTc0ZC0xOGViMDYyMTVhNjUiLCJjbGllbnRfaWQiOiJjbGllbnRJZFBhc3N3b3Jk
-Iiwic2NvcGUiOlsicmVhZCIsInVzZXJfaW5mbyJdfQ.SDg-BEzzonIVXfVBnnfq0oMbs_0rWVtFGAZzR
-Hj7KPgaOXT3bUhQwPOgggZDO0lv2U1klwB94c8Cb6rErzd3yjJ8wcVcnFLO4KxrjYZZxdKVAz0CkMKqn
-g4kQeQm_1UShsQXGLl48ezbjXyJn6mAl0oS4ExeiVsx_kYGEdqjyb5CiNaAzyx0J-J5jVDSJew1rj5Ei
-Sybuy83PZwhluhxq0D2zPK1OSzqiezsd5kX5V8XI4MipDhaAbPYroL94banZTn9RmmAKZCAYVM-mmHbj
-k8mF89fL9rKf9EUNhxOG6GE0MDqB3LLLcyQ6sYUmpqdP5Z94IkAN-FpC7k93_-RDw" 
-http://localhost:2002/auth/check_token
-....
-
-which gives the following example of result:
-
-....
-{
-    "sub":"admin",
-    "scope":["read","user_info"],
-    "active":true,"exp":1552659738,
-    "authorities":["ROLE_ADMIN","ROLE_USER"],
-    "jti":"02d82e85-13f0-4678-974d-18eb06215a65",
-    "client_id":"clientIdPassword"
-}
-....
-
-
-==== Httpie
-
-from previous example:
-
-....
-http --form POST http://localhost:2002/auth/check_token 
-token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY2M
-DAzOSwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI2MjQzMDliM
-S03Yzg3LTRjZGMtODQ0My0wMTI0NTE1Zjg3ZjgiLCJjbGllbnRfaWQiOiJjbGllbnRJZFBhc3N3b3JkI
-iwic2NvcGUiOlsicmVhZCIsInVzZXJfaW5mbyJdfQ.VO4OZL7ycqNez0cHzM5WPuklr0r6SAOkUdUV2q
-Fa5Bd3PWx3DFHAHUxkfSX0-R4OO6iG2Zu7abzToAZNVLwk107LH_lWXOMQBriGx3d2aSgCf1yx_wI3lH
-Dd8ST8fxV7uNeolzywYavSpMGfgz9GXLzmnyeuPH4oy7eyPk9BwWVi0d7a_0d-EfhE1T8eaiDfymzzNX
-J4Bge8scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeA
-pKdfDJ6o4szR71SIFCBERxCH9TyUxsFywWL3e-YnXMiP2J08eB8O4YwhYQEFqB8Q
-....
-
-which gives the following example of result:
-
-....
-
-HTTP/1.1 200 OK
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Content-Type: application/json;charset=utf-8
-Date: Fri, 15 Mar 2019 14:19:31 GMT
-Expires: 0
-Pragma: no-cache
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-transfer-encoding: chunked
-
-{
-    "active": true,
-    "authorities": [
-        "ROLE_ADMIN",
-        "ROLE_USER"
-    ],
-    "client_id": "clientIdPassword",
-    "exp": 1552660039,
-    "jti": "624309b1-7c87-4cdc-8443-0124515f87f8",
-    "scope": [
-        "read",
-        "user_info"
-    ],
-    "sub": "admin"
-}
-....
+include::certificates.adoc[leveloffset=+1]

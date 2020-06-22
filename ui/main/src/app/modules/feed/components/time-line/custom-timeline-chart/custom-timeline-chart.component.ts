@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 import {
   ChangeDetectorRef,
@@ -18,11 +21,15 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { scaleLinear, scaleTime } from 'd3-scale';
-import * as _ from 'lodash';
 import { BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
-import {Store} from "@ngrx/store";
+import {select,Store} from "@ngrx/store";
+import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppState} from "@ofStore/index";
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import * as feedSelectors from '@ofSelectors/feed.selectors';
 
 
 @Component({
@@ -33,12 +40,12 @@ import {AppState} from "@ofStore/index";
 })
 export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit {
 
-
+  subscription: Subscription;
   public xTicks: Array<any> = [];
   public xTicksOne: Array<any> = [];
   public xTicksTwo: Array<any> = [];
-  public xTicksOneFormat: String;
-  public xTicksTwoFormat: String;
+  public xTicksOneFormat: string;
+  public xTicksTwoFormat: string;
   public underDayPeriod: boolean = false;
   public dateFirstTick: string;
   public oldWidth: number = 0;
@@ -55,14 +62,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   public translateGraph: string;
   public translateXTicksTwo: string;
   public xRealTimeLine: moment.Moment;
+  private currentPath : string;
 
 
   // TOOLTIP
   public currentCircleHovered;
   public circles;
-
-
-  @Input() cardsData;
+  public cardsData;
+  
   @Input() prod; // Workaround for testing, the variable is not set  in unit test an true in production mode 
   @Input() domainId;
   @Input() followClockTick;
@@ -84,13 +91,20 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>(); 
   @Output() widthChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef,private store: Store<AppState>) {
+  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef,private store: Store<AppState>,private router: Router) {
     super(chartElement, zone, cd);
   }
 
   ngOnInit(): void {
+    this.store.select(selectCurrentUrl).subscribe(url => {
+      if (url) {
+          const urlParts = url.split('/');
+          this.currentPath = urlParts[1];
+      }
+  });
     this.initGraph();
     this.updateRealTimeDate();
+    this.initDataPipe();
   }
 
   // set inside ngx-charts library verticalSpacing variable to 10
@@ -224,6 +238,43 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
  
 
+
+  initDataPipe(): void {
+    this.subscription = this.store.pipe(select(feedSelectors.selectFilteredFeed))
+    .pipe(debounceTime(200), distinctUntilChanged())
+    .subscribe(value => this.getAllCardsToDrawOnTheTimeLine(value));
+  }
+
+
+  getAllCardsToDrawOnTheTimeLine(cards) {
+    const myCardsTimeline = [];
+    for (const card of cards) {
+        if (card.timeSpans && card.timeSpans.length > 0) {
+            card.timeSpans.forEach(timeSpan => {
+                const myCardTimelineTimespans = {
+                    date: timeSpan.start, 
+                    id: card.id,
+                    severity: card.severity, publisher: card.publisher,
+                    publisherVersion: card.publisherVersion, summary: card.title
+                };
+                myCardsTimeline.push(myCardTimelineTimespans);
+            });
+        } else {
+            const myCardTimeline = {
+                date: card.startDate,
+                id: card.id,
+                severity: card.severity, publisher: card.publisher,
+                publisherVersion: card.publisherVersion, summary: card.title
+            };
+            myCardsTimeline.push(myCardTimeline);
+        }
+    }
+    this.cardsData = myCardsTimeline;
+    this.createCircles();
+}
+
+
+
   createCircles(): void {
 
     this.circles = [];
@@ -278,6 +329,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               circle.count ++;
               circle.end = cards[cardIndex].date;
               circle.summary.push({
+                cardId : cards[cardIndex].id,
                 parameters: cards[cardIndex].summary.parameters,
                 key: cards[cardIndex].summary.key,
                 summaryDate: moment(cards[cardIndex].date).format('DD/MM - HH:mm :'),
@@ -355,6 +407,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     return '';
   }
 
+  showCard(cardId): void {
+    console.log("cardId=" , cardId);
+    this.router.navigate(['/' + this.currentPath, 'cards', cardId]);
+    this.scrollToSelectedCard();
+  }
+
+  scrollToSelectedCard()
+  {
+    // wait for 500ms to be sure the card is selected and scroll to the card with his id (opfab-selected-card)
+    setTimeout(() => { document.getElementById("opfab-selected-card").scrollIntoView({behavior: "smooth", block: "center"});},500);
+  }
+
   checkInsideDomain(date): boolean {
     const domain = this.xDomain;
     return date >= domain[0] && date <= domain[1];
@@ -368,7 +432,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.currentCircleHovered = myCircle;
   }
 
-  getXTickOneFormatting = (value): String => {
+  getXTickOneFormatting = (value): string => {
 
     const isFirstOfJanuary = (value.valueOf() === moment(value).startOf('year').valueOf());
     switch (this.domainId) {
@@ -389,7 +453,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
   }
 
-  getXTickTwoFormatting = (value): String => {
+  getXTickTwoFormatting = (value): string => {
     const isFirstOfJanuary = (value.valueOf() === moment(value).startOf('year').valueOf());
     switch (this.domainId) {
       case 'TR':

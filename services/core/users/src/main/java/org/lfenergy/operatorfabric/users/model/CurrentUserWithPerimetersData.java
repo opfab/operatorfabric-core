@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.users.model;
@@ -56,14 +59,19 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
 
         //First, we build a MultiKeyMap with key is (process, state) and value is a list of rights
         perimeters.forEach(perimeter -> {
-            List<RightsEnum> currentList = multimapWithListOfRights.get(perimeter.getProcess(), perimeter.getState());
 
-            if (currentList != null) {
-                currentList.add(perimeter.getRights());
-                multimapWithListOfRights.put(perimeter.getProcess(), perimeter.getState(), currentList);
-            }
-            else
-                multimapWithListOfRights.put(perimeter.getProcess(), perimeter.getState(), new ArrayList<>(Arrays.asList(perimeter.getRights())));
+            List<StateRightData> stateRights = (List<StateRightData>) perimeter.getStateRights();
+
+            stateRights.forEach(stateRight -> {
+                List<RightsEnum> currentList = multimapWithListOfRights.get(perimeter.getProcess(), stateRight.getState());
+
+                if (currentList != null) {
+                    currentList.add(stateRight.getRight());
+                    multimapWithListOfRights.put(perimeter.getProcess(), stateRight.getState(), currentList);
+                }
+                else
+                    multimapWithListOfRights.put(perimeter.getProcess(), stateRight.getState(), new ArrayList<>(Arrays.asList(stateRight.getRight())));
+            });
         });
 
         //Then, for each value in MultiKeyMap, we merge the rights in only one right

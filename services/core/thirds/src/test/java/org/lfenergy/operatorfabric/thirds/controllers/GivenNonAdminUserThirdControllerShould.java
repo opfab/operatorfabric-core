@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.thirds.controllers;
@@ -70,6 +73,7 @@ class GivenNonAdminUserThirdControllerShould {
         this.mockMvc = webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
+        service.loadCache();
     }
 
     @AfterAll
@@ -84,7 +88,7 @@ class GivenNonAdminUserThirdControllerShould {
         mockMvc.perform(get("/thirds"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$", hasSize(2)))
         ;
     }
 
@@ -225,24 +229,62 @@ class GivenNonAdminUserThirdControllerShould {
             mockMvc.perform(get("/thirds"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$", hasSize(1)));
+                    .andExpect(jsonPath("$", hasSize(2)));
 
 
         }
-
+        
         @Nested
         @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
-        class DeleteContent {
-            @Test
-            void clean() throws Exception {
-                mockMvc.perform(delete("/thirds"))
-                        .andExpect(status().isForbidden());
-                mockMvc.perform(get("/thirds"))
-                        .andExpect(status().isOk())
-                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(jsonPath("$", hasSize(1)));
+        class DeleteOnlyOneThird {
+        	
+        	static final String bundleName = "first";
+        	
+        	@BeforeEach
+            void setup() throws Exception {
+        		if (Files.exists(testDataDir))
+  			      Files.walk(testDataDir, 1).forEach(p -> silentDelete(p));
+  			    copy(Paths.get("./src/test/docker/volume/thirds-storage"), testDataDir);
+  			    service.loadCache();
             }
+        	
+        	@Test
+            void deleteBundleByNameAndVersionWhichNotBeingDeafult() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName+"/versions/0.1"));
+                result
+                        .andExpect(status().isForbidden());
+            }
+        	
+        	@Test
+            void deleteGivenBundle() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName));
+                result
+                        .andExpect(status().isForbidden());
+            }
+        	
+        	@Test
+            void deleteGivenBundleNotFoundError() throws Exception {
+        		ResultActions result = mockMvc.perform(delete("/thirds/impossible_a_third_with_this_exact_name_exists"));
+                result
+                        .andExpect(status().isForbidden());
+            }
+        	
+        	@Nested
+            @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
+            class DeleteContent {
+                @Test
+                void clean() throws Exception {
+                    mockMvc.perform(delete("/thirds"))
+                            .andExpect(status().isForbidden());
+                    mockMvc.perform(get("/thirds"))
+                            .andExpect(status().isOk())
+                            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(jsonPath("$", hasSize(2)));
+                }
+            }
+        	
         }
+        
     }
 
 }

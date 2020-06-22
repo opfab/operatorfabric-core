@@ -1,15 +1,19 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 package org.lfenergy.operatorfabric.cards.consultation.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.ArchivedCardRepository;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -71,12 +75,12 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
      * @param request the http request
      * @return a Tuple containing the principal as a {@link User} and query parameters as a {@link MultiValueMap}
      */
-    private Mono<Tuple2<User,MultiValueMap<String, String>>> extractParameters(ServerRequest request) {
+    private Mono<Tuple2<CurrentUserWithPerimeters,MultiValueMap<String, String>>> extractParameters(ServerRequest request) {
         return request.principal()
                 .map( principal ->  {
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-                    User user = (User) jwtPrincipal.getPrincipal();
-                    return of(user,request.queryParams());
+                    CurrentUserWithPerimeters c = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+                    return of(c, request.queryParams());
                 });
     }
 

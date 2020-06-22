@@ -1,17 +1,25 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.consultation.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -23,9 +31,8 @@ import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
-import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription;
 import org.lfenergy.operatorfabric.cards.consultation.services.CardSubscriptionService;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
@@ -35,19 +42,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
 
 /**
  * <p></p>
@@ -90,11 +92,11 @@ public class CardOperationsControllerShould {
     @Autowired
     private CardRepository repository;
 
-    private User user;
+    private CurrentUserWithPerimeters currentUserWithPerimeters, userForUserAckTest;
 
     public CardOperationsControllerShould(){
-        user = new User();
-        user.setLogin("ret-operator");
+        User user = new User();
+        user.setLogin("dummyUser");
         user.setFirstName("Test");
         user.setLastName("User");
         List<String> groups = new ArrayList<>();
@@ -105,6 +107,23 @@ public class CardOperationsControllerShould {
         entities.add("entity1");
         entities.add("entity2");
         user.setEntities(entities);
+        currentUserWithPerimeters = new CurrentUserWithPerimeters();
+        currentUserWithPerimeters.setUserData(user);
+        
+        user = new User();
+        user.setLogin("rte-operator");
+        user.setFirstName("Test2");
+        user.setLastName("User2");
+        groups = new ArrayList<>();
+        groups.add("rte");
+        groups.add("operator");
+        user.setGroups(groups);
+        entities = new ArrayList<>();
+        entities.add("entity1");
+        entities.add("entity2");
+        user.setEntities(entities);
+        userForUserAckTest = new CurrentUserWithPerimeters();
+        userForUserAckTest.setUserData(user);
     }
 
     @AfterEach
@@ -118,7 +137,7 @@ public class CardOperationsControllerShould {
         StepVerifier.create(repository.deleteAll()).expectComplete().verify();
         int processNo = 0;
         //create past cards
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"})))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"}, new String[]{"rte-operator","some-operator"})))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -126,7 +145,7 @@ public class CardOperationsControllerShould {
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"})))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"}, new String[]{"any-operator","some-operator"})))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -188,7 +207,7 @@ public class CardOperationsControllerShould {
     public void receiveNotificationCards() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
-                        .user(user)
+                        .currentUserWithPerimeters(currentUserWithPerimeters)
                         .clientId(TEST_ID)
                         .test(false)
                         .notification(true).build()
@@ -210,7 +229,7 @@ public class CardOperationsControllerShould {
     public void receiveOlderCards() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
-                        .user(user)
+                        .currentUserWithPerimeters(currentUserWithPerimeters)
                         .clientId(TEST_ID)
                         .test(false)
                         .rangeStart(now)
@@ -236,7 +255,7 @@ public class CardOperationsControllerShould {
     public void receiveOlderCardsAndNotification() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
-                        .user(user)
+                        .currentUserWithPerimeters(currentUserWithPerimeters)
                         .clientId(TEST_ID)
                         .test(false)
                         .rangeStart(now)
@@ -279,7 +298,7 @@ public class CardOperationsControllerShould {
         return () -> {
             log.info("execute update subscription task");
             Mono<CardOperationsGetParameters> parameters = Mono.just(CardOperationsGetParameters.builder()
-                    .user(user)
+                    .currentUserWithPerimeters(currentUserWithPerimeters)
                     .clientId(TEST_ID)
                     .test(false)
                     .rangeStart(nowMinusThree)
@@ -296,7 +315,7 @@ public class CardOperationsControllerShould {
     public void receiveFaultyCards() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
-                        .user(user)
+                        .currentUserWithPerimeters(currentUserWithPerimeters)
                         .test(false)
                         .notification(true).build()
         ));
@@ -305,6 +324,31 @@ public class CardOperationsControllerShould {
         verifier
            .expectNext("{\"status\":\"BAD_REQUEST\",\"message\":\"\\\"clientId\\\" is a mandatory request parameter\"}")
            .verifyComplete();
+    }
+
+    @Test
+    public void receiveCardsCheckUserAcks() {
+        Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
+                CardOperationsGetParameters.builder()
+                        .currentUserWithPerimeters(userForUserAckTest)
+                        .clientId(TEST_ID)
+                        .rangeStart(nowMinusThree)
+                        .rangeEnd(nowPlusOne)
+                        .test(false)
+                        .notification(false).build()
+        ));
+        StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
+        verifier
+                .assertNext(op->{
+                	assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS0");
+                	assertThat(op.getCards().get(2).getHasBeenAcknowledged()).isTrue();
+                	assertThat(op.getCards().get(3).getId()).isEqualTo("PUBLISHER_PROCESS2");
+                	assertThat(op.getCards().get(3).getHasBeenAcknowledged()).isFalse();
+                	assertThat(op.getCards().get(4).getId()).isEqualTo("PUBLISHER_PROCESS4");
+                	assertThat(op.getCards().get(4).getHasBeenAcknowledged()).isFalse();
+                })
+                .expectComplete()
+                .verify();
     }
 
     private Runnable createSendMessageTask() {
@@ -317,7 +361,8 @@ public class CardOperationsControllerShould {
                         .card(LightCardConsultationData.copy(TestUtilities.createSimpleCard("notif2", nowPlusOne, nowPlusTwo, nowPlusThree, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"})))
                 ;
 
-                rabbitTemplate.convertAndSend(userExchange.getName(), user.getLogin(), mapper.writeValueAsString(builder.build()));
+                rabbitTemplate.convertAndSend(userExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),
+                                              mapper.writeValueAsString(builder.build()));
             } catch (JsonProcessingException e) {
                 log.error("Error during test data generation",e);
             }

@@ -1,8 +1,11 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)                 -->
-<!--                                                                     -->
-<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
-<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
-<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.            -->
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 
 
 <nav class="navbar navbar-expand-lg fixed-top  opfab-navbar">
@@ -65,11 +68,11 @@
     <ul class="navbar-nav navbar-right">
       <li *ngIf="(nightDayMode)">
         <button type="button" class="btn p-1 btn-outline-light opfab-nightday-icon border-0" *ngIf="(!(getNightMode()|async))" (click)='switchToNightMode()' >
-          <i  class="fas fa-moon"></i>
+          <em  class="fas fa-moon"></em>
       </button>
 
       <button type="button" class="btn p-1 btn-outline-light opfab-nightday-icon border-0" *ngIf="(getNightMode()|async)" (click)='switchToDayMode()' >
-        <i class="fas fa-sun"></i>
+        <em class="fas fa-sun"></em>
     </button>
       </li>
       <li class="nav-item dropdown align-middle">

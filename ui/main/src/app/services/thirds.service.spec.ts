@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {getTestBed, TestBed} from '@angular/core/testing';
@@ -248,27 +251,6 @@ describe('Thirds Services', () => {
             })
         })
     });
-
-    describe('#queryMenuEntryURL', () => {
-
-        it('should retrieve menu entry url if provided parameters are correct', (done) => {
-            const third = new Third(
-                't1', '', 'tLabel1', [], [], [],
-                [new ThirdMenuEntry('id1', 'label1', 'link1'),
-                    new ThirdMenuEntry('id2', 'label2', 'link2')]
-            )
-            thirdsService.queryMenuEntryURL('t1', '1', 'id2').subscribe(
-                result => {
-                    expect(result).toBe('link2');
-                    done();
-                }
-            )
-            let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/t1/`);
-            expect(calls.length).toEqual(1);
-            calls[0].flush(third)
-        })
-
-    })
 
 })
 ;

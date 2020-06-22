@@ -1,17 +1,19 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
+
+
 
 [[setup_dev_env]]
 = Setting up your development environment
 
 WARNING: The steps below assume that you have installed and are using
 https://sdkman.io/[sdkman] and
-https://github.com/creationix/nvm[nvm] to manage tool versions ( for java,
+https://github.com/nvm-sh/nvm[nvm] to manage tool versions ( for java,
 gradle, node and npm).
 
 There are several ways to get started with `OperatorFabric`. Please look into
@@ -63,10 +65,10 @@ required. Use the `${OF_HOME}/src/main/docker/test-quality-environment/docker-co
 
 To generate the quality report use the following command:
 [source,shell]
----
+----
 cd ${OF_HOME}
 ./gradlew jacocoTestReport
----
+----
 
 To export the different report into the `SonarQube` docker instance you need to install and use link:https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/[SonarScanner].
 
@@ -78,7 +80,7 @@ During `OperatorFabric` development the running docker images of `MongoDB`, `Ra
 The `docker-compose` can be run in detached mode:
 [source,shell]
 ----
-cd ${OF_HOME}/src/main/docker/dev-environment/
+cd ${OF_HOME}/config/dev
 docker-compose up -d
 ----
 
@@ -108,11 +110,9 @@ docker-compose -f ${OF_HOME}/src/main/docker/test-environment/docker-compose.yml
 [source,shell]
 ----
 cd ${OF_HOME}
-docker-compose -f ${OF_HOME}/src/main/docker/dev-environment/docker-compose.yml up -d
+docker-compose -f ${OF_HOME}/config/dev/docker-compose.yml up -d
 bin/run_all.sh start
 ----
-
-WARNING: the `${OF_HOME}/bin/run_all.sh` must be launched from `${OF_HOME}` otherwise some runtime exception will occur.
 
 TIP: See `bin/run_all.sh -h` for details.
 

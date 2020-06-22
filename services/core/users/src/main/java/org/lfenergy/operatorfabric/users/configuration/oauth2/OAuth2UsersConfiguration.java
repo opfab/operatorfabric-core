@@ -1,16 +1,18 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.users.configuration.oauth2;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2GenericConfiguration;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.lfenergy.operatorfabric.springtools.configuration.oauth.jwt.JwtProperties;
@@ -30,12 +32,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Specific authentication configuration for the Users service It is necessary
- * because when converting the jwt token the {@link OAuth2GenericConfiguration}
+ * because when converting the jwt token the OAuth2GenericConfiguration
  * relies on a user service cache and proxy to get user details, which is
  * useless in the case of the Users Service itself. Token conversion was made
  * necessary because access depending on roles is now used in the
@@ -91,6 +95,9 @@ public class OAuth2UsersConfiguration {
                     // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
                     user.setGroups(getGroupsList(jwt));
                 }
+
+                if (jwtProperties.gettingEntitiesFromToken) user.setEntities(getEntitiesFromToken(jwt));
+
                 List<GrantedAuthority> authorities = computeAuthorities(user);
 
                 log.debug("user [{}] has these roles {} through the {} mode"
@@ -142,5 +149,13 @@ public class OAuth2UsersConfiguration {
      */
     public List<String> getGroupsList(Jwt jwt) {
         return groupsUtils.createGroupsList(jwt);
+    }
+
+    private List<String> getEntitiesFromToken(Jwt jwt){
+        String entitiesId = jwt.getClaimAsString(jwtProperties.getEntitiesIdClaim());
+        List<String> enititiesIdList = new ArrayList<>();
+        if (entitiesId!=null)  enititiesIdList.addAll(Arrays.asList(entitiesId.split(";")));
+        return enititiesIdList;
+
     }
 }

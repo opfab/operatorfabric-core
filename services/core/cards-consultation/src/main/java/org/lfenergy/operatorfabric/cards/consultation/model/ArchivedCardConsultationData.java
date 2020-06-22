@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.consultation.model;
@@ -40,6 +43,7 @@ public class ArchivedCardConsultationData implements Card {
     private String uid;
     @Id
     private String id;
+    private String parentCardId;
     private String publisher;
     private String publisherVersion;
     private String process;
@@ -73,7 +77,6 @@ public class ArchivedCardConsultationData implements Card {
     private Object data;
     @Indexed
     private int shardKey;
-    private String mainRecipient;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> userRecipients;
@@ -83,7 +86,14 @@ public class ArchivedCardConsultationData implements Card {
     @Singular
     @Indexed
     private List<String> entityRecipients;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @Singular("entitiesAllowedToRespond")
+    @Indexed
+    private List<String> entitiesAllowedToRespond;
     @Singular
+    private List<String> externalRecipients;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends TimeSpan> timeSpans;
+    
+    @Transient
+    private Boolean hasBeenAcknowledged;
 }

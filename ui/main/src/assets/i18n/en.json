@@ -86,15 +86,25 @@
       "publisher": "Publisher",
       "process": "Process",
       "tags": "Tags",
-      "publishDateFrom": "Publish Date From",
-      "publishDateTo": "Publish Date To",
+      "publishDateFrom": "Publish From",
+      "publishDateTo": "Publish To",
       "activeFrom": "Active From",
       "activeTo": "Active To"
     },
-    "search": "Search"
+    "search": "Search",
+    "clear": "Clear",
+    "noResult": "Your search did not match any results."
   },
   "button": {
     "ok": "OK",
     "cancel": "Cancel"
+  },
+  "response": {
+    "btnTitle": "VALIDATE ANSWERS",
+    "error": {
+      "submit": "The card could not been sent",
+      "form": "The form is not correctly filled"
+    },
+    "submitSuccess": "Action succeeded"
   }
 }

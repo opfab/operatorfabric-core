@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {Injectable} from '@angular/core';
@@ -121,7 +124,7 @@ export class CardOperationEffects {
             ofType(LightCardActionTypes.LoadLightCardsSuccess),
             map((a: LoadLightCardsSuccess) => a.payload.lightCards), //retrieve list of added light cards from action payload
             withLatestFrom(this.store.select(selectCardStateSelectedId)), //retrieve currently selected card
-            switchMap(([lightCards, selectedCardId]) => lightCards.filter(card => card.id.indexOf(selectedCardId) >= 0)), //keep only lightCards matching the process id of current selected card
+            switchMap(([lightCards, selectedCardId]) => lightCards.filter(card => card.id===selectedCardId)), //keep only lightCards matching the process id of current selected card
             map(lightCard => new LoadCard({id: lightCard.id})) //if any, trigger refresh by firing LoadCard
         )
     ;

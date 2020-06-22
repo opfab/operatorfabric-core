@@ -1,14 +1,26 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.cards.consultation.routes;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.configureRecipientReferencesAndStartDate;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.instantiateOneCardConsultationData;
+
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -28,14 +40,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.test.StepVerifier;
-
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardRoutesConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -98,6 +105,59 @@ public class CardRoutesShould {
                         .isEqualToComparingFieldByFieldRecursively(simpleCard);
             });
         }
+        
+        @Test
+        public void findOutCardByUserWithHisOwnAck(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            simpleCard.setUsersAcks(Arrays.asList("userWithGroup","some-operator"));
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardConsultationData.class).value(card -> {
+		        assertThat(card.getHasBeenAcknowledged()).isTrue();});
+    
+        }
+        
+        @Test
+        public void findOutCardByUserWithoutHisOwnAck(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            simpleCard.setUsersAcks(Arrays.asList("any-operator","some-operator"));
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardConsultationData.class).value(card -> {
+		        assertThat(card.getHasBeenAcknowledged()).isFalse();});
+    
+        }
+        
+        @Test
+        public void findOutCardWithoutAcks(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardConsultationData.class).value(card -> {
+		        assertThat(card.getHasBeenAcknowledged()).isFalse();});
+    
+        }
     }
 
     @Nested
@@ -116,7 +176,7 @@ public class CardRoutesShould {
                     .expectStatus().isForbidden()
             ;
         }
-
+        
     }
 
     @Nested
@@ -145,7 +205,7 @@ public class CardRoutesShould {
 
             CardConsultationData simpleCard5 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard5, "", now,
-                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must receive
+                    null, new String[]{"OTHER_ENTITY", "SOME_ENTITY"});//must not receive (because the user doesn't have the right for process/state)
 
             CardConsultationData simpleCard6 = instantiateOneCardConsultationData();
             configureRecipientReferencesAndStartDate(simpleCard6, "", now,
@@ -203,14 +263,7 @@ public class CardRoutesShould {
                     .verify();
             assertThat(cardRoutes).isNotNull();
             webTestClient.get().uri("/cards/{id}", simpleCard5.getId()).exchange()
-                    .expectStatus().isOk()
-                    .expectBody(CardConsultationData.class).value(card -> {
-                assertThat(card)
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(),
-                                "tags", "details", "userRecipients","orphanedUsers")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard5);
-            });
+                    .expectStatus().isNotFound();
 
             StepVerifier.create(repository.save(simpleCard6))
                     .expectNextCount(1)

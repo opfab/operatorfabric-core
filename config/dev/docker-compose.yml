@@ -1,0 +1,36 @@
+version: '2.1'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15674:15674"
+  mongodb:
+    image: mongo:4.1.1-xenial
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+  keycloak:
+    image: jboss/keycloak:6.0.1
+    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=H2
+    volumes:
+      - ../keycloak:/keycloak
+    ports:
+      - "89:8080"
+      - "90:9990"
+  web-ui:
+    image: "lfeoperatorfabric/of-web-ui:1.4.0.RELEASE"
+    #user: ${USER_ID}:${USER_GID}
+    ports:
+      - "2002:80"
+    volumes:
+      - "./favicon.ico:/usr/share/nginx/html/favicon.ico"
+      - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"
+      - "./ngnix.conf:/etc/nginx/conf.d/default.conf"

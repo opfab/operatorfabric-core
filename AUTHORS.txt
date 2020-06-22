@@ -1,0 +1,22 @@
+Authors (GitHub usernames) in alphabetical order
+
+We decided against emails and first/last names in order not to make that information easily available to robots.
+
+agigox
+AlexGuironnetRTE
+bendaoudmba
+davidbinderRTE
+freddidierRTE
+HanaeSafiRTE
+jeandemanded
+JeroenGommans
+JulienBapt
+rlg-rte
+rte-amal
+samichehade
+taoufikbermaki
+vitorg
+vlo-rte
+youhou1515
+
+

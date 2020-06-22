@@ -1,13 +1,15 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 package org.lfenergy.operatorfabric.users.controllers;
 
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.GroupData;
@@ -15,9 +17,8 @@ import org.lfenergy.operatorfabric.users.model.Perimeter;
 import org.lfenergy.operatorfabric.users.model.PerimeterData;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
+import org.lfenergy.operatorfabric.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.bus.ServiceMatcher;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,17 +42,13 @@ public class PerimetersController implements PerimetersApi {
     public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
     public static final String BAD_GROUP_LIST_MSG = "Bad group list : group %s not found";
     public static final String NO_MATCHING_PERIMETER_ID_MSG = "Payload Perimeter id does not match URL Perimeter id";
+    public static final String DUPLICATE_STATE_IN_PERIMETER = "Bad stateRights list : there is one or more duplicate state(s) in the perimeter";
     @Autowired
     private PerimeterRepository perimeterRepository;
     @Autowired
     private GroupRepository groupRepository;
-
-    /* These are Spring Cloud Bus beans used to fire an event (UpdatedUserEvent) every time a user is modified.
-     *  Other services handle this event by clearing their user cache for the given user. See issue #64*/
     @Autowired
-    private ServiceMatcher busServiceMatcher;
-    @Autowired
-    private ApplicationEventPublisher publisher;
+    private UserService userService;
 
     @Override
     public Void addPerimeterGroups(HttpServletRequest request, HttpServletResponse response, String id, List<String> groups) throws Exception {
@@ -64,7 +61,7 @@ public class PerimetersController implements PerimetersApi {
 
         for (GroupData groupData : foundGroups) {
             groupData.addPerimeter(id);
-            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), groupData.getId()));
+            userService.publishUpdatedUserEvent(groupData.getId());
         }
         groupRepository.saveAll(foundGroups);
         return null;
@@ -73,6 +70,14 @@ public class PerimetersController implements PerimetersApi {
     @Override
     public Perimeter createPerimeter(HttpServletRequest request, HttpServletResponse response, Perimeter perimeter) throws Exception {
         if(perimeterRepository.findById(perimeter.getId()).orElse(null) == null){
+
+            if(! userService.isEachStateUniqueInPerimeter(perimeter)){
+                throw new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.BAD_REQUEST)
+                                .message(DUPLICATE_STATE_IN_PERIMETER)
+                                .build());
+            }
             response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
             response.setStatus(201);
             return perimeterRepository.save((PerimeterData)perimeter);
@@ -90,10 +95,10 @@ public class PerimetersController implements PerimetersApi {
         //Retrieve groups from repository
         List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(id);
 
-        if(foundGroups != null) {
+        if (foundGroups != null) {
             for (GroupData groupData : foundGroups) {
                 groupData.deletePerimeter(id);
-                //publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), groupData.getId()));
+                userService.publishUpdatedUserEvent(groupData.getId());
             }
             groupRepository.saveAll(foundGroups);
         }
@@ -114,9 +119,10 @@ public class PerimetersController implements PerimetersApi {
                         .build()
         ));
 
-        if(foundGroup != null) {
+        if (foundGroup != null) {
             foundGroup.deletePerimeter(idParameter);
-            //publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+
+            userService.publishUpdatedUserEvent(foundGroup.getId());
             groupRepository.save(foundGroup);
         }
         return null;
@@ -142,20 +148,34 @@ public class PerimetersController implements PerimetersApi {
     @Override
     public Perimeter updatePerimeter(HttpServletRequest request, HttpServletResponse response, String id, Perimeter perimeter) throws Exception {
         //id from perimeter body parameter should match id path parameter
-        if(!perimeter.getId().equals(id)){
+        if (!perimeter.getId().equals(id)){
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
                             .message(NO_MATCHING_PERIMETER_ID_MSG)
                             .build());
         }
+        else if (! userService.isEachStateUniqueInPerimeter(perimeter)){
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(DUPLICATE_STATE_IN_PERIMETER)
+                            .build());
+        }
         else {
-            if(perimeterRepository.findById(perimeter.getId()).orElse(null) == null)
+            if (perimeterRepository.findById(perimeter.getId()).orElse(null) == null)
                 response.setStatus(201);
             else
                 response.setStatus(200);
 
             response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
+
+            //Retrieve groups from repository
+            List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(id);
+            if (foundGroups != null) {
+                for (GroupData groupData : foundGroups)
+                    userService.publishUpdatedUserEvent(groupData.getId());
+            }
             return perimeterRepository.save((PerimeterData)perimeter);
         }
     }
@@ -179,7 +199,7 @@ public class PerimetersController implements PerimetersApi {
                             g.deletePerimeter(id);
                             newGroupsInPerimeter.remove(g.getId());
                             //Fire an UpdatedUserEvent for all users that are updated because they're removed from the group
-                            //publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), u.getId()));
+                            userService.publishUpdatedUserEvent(g.getId());
                         }).collect(Collectors.toList());
 
         groupRepository.saveAll(toUpdate);

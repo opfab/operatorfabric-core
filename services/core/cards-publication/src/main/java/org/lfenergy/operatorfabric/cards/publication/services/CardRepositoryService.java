@@ -1,14 +1,15 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
-import lombok.extern.slf4j.Slf4j;
-import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,12 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import java.lang.reflect.Field;
+
+import com.mongodb.client.result.UpdateResult;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
 
 /**
  * 
@@ -31,26 +37,15 @@ public class CardRepositoryService {
     @Autowired
     private MongoTemplate template;
 
+    public Optional<CardPublicationData> findByUid(String uid) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("uid").is(uid));
+        return Optional.ofNullable(template.findOne(query, CardPublicationData.class));
+    }
+	
     public void saveCard(CardPublicationData card) {
-
         log.debug("preparing to write {}", card.toString());
-        Document objDocument = new Document();
-        template.getConverter().write(card, objDocument);
-
-        Update update = new Update();
-        // work around OC-709 : "Change card update mechanism in Mongo"
-        for (Field f : CardPublicationData.class.getDeclaredFields()) {
-            try {
-                f.setAccessible(true);
-                if (f.get(card) == null)
-                    update.unset(f.getName());
-            } catch (IllegalAccessException e) {
-                log.error("Unable to access to field" + f.getName(), e);
-            }
-        }
-        objDocument.entrySet().forEach(e -> update.set(e.getKey(), e.getValue()));
-        this.template.upsert(Query.query(Criteria.where("_id").is(card.getId())), update, CardPublicationData.class);
-
+        template.save(card);
     }
 
     public void saveCardToArchive(ArchivedCardPublicationData card) {
@@ -72,5 +67,33 @@ public class CardRepositoryService {
 
         return this.template.findOne(findCardByIdWithoutDataField, CardPublicationData.class);
     }
+
+	public UserAckOperationResult addUserAck(String name, String cardUid) {
+		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
+				new Update().addToSet("usersAcks", name),CardPublicationData.class);
+		log.debug("added {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+				cardUid);
+		return toUserAckOperationResult(updateFirst);
+	}
+
+	public UserAckOperationResult deleteUserAck(String userName, String cardUid) {
+		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
+				new Update().pull("usersAcks", userName), CardPublicationData.class);
+		log.debug("removed {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+				cardUid);
+		return toUserAckOperationResult(updateFirst);
+	}
+	
+	private UserAckOperationResult toUserAckOperationResult(UpdateResult updateResult) {
+		UserAckOperationResult res = null;
+		if (updateResult.getMatchedCount() == 0) {
+			res = UserAckOperationResult.cardNotFound();
+		} else {
+			res = UserAckOperationResult.cardFound().operationDone(updateResult.getModifiedCount() > 0);
+		}
+		return res;
+	}
+    
+    
 
 }

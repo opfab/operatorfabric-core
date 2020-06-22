@@ -1,15 +1,38 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.thirds.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import javax.annotation.PostConstruct;
+
 import org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum;
 import org.lfenergy.operatorfabric.thirds.model.Third;
 import org.lfenergy.operatorfabric.thirds.model.ThirdData;
@@ -21,17 +44,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Thirds Service for managing Third properties and resources
@@ -41,18 +58,25 @@ import java.util.stream.Stream;
 @Slf4j
 public class ThirdsService implements ResourceLoaderAware {
 
-    private static final String PATH_PREFIX = "file:";
+	private static final String PATH_PREFIX = "file:";
     private static final String CONFIG_FILE_NAME = "config.json";
     @Value("${operatorfabric.thirds.storage.path}")
     private String storagePath;
     private ObjectMapper objectMapper;
     private Map<String, Third> defaultCache;
-    private Map<String, Map<String, Third>> completeCache;
+    private Table<String,String, Third> completeCache;
     private ResourceLoader resourceLoader;
 
     @Autowired
     public ThirdsService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+        this.completeCache = HashBasedTable.create();
+        this.defaultCache = new HashMap<>();
+    }
+    
+    @PostConstruct
+    private void init() {
+    	loadCache();
     }
 
     /**
@@ -60,24 +84,15 @@ public class ThirdsService implements ResourceLoaderAware {
      *
      * @return registered thirds
      */
-    public List<Third> listThirds() {
-        loadCacheIfNeeded();
-        return new ArrayList<>(defaultCache.values());
-    }
-
-    /**
-     * Loads third data cache if not already loaded
-     */
-    private synchronized void loadCacheIfNeeded() {
-        if (defaultCache == null) {
-            loadCache();
-        }
-    }
+	public List<Third> listThirds() {
+		return new ArrayList<>(defaultCache.values());		
+	}
+    
 
     /**
      * Loads third data to defaultCache (not thread safe {@link #loadCacheSafe()})
      */
-    private void loadCache() {
+    public void loadCache() {
         log.info("loading thirds from {}", new File(storagePath).getAbsolutePath());
         try {
             Map<String, Map<String, Third>> completeResult = new HashMap<>();
@@ -90,9 +105,11 @@ public class ThirdsService implements ResourceLoaderAware {
                             loadCache0(f, Third::getVersion, null)
                     )
             );
-
-            this.defaultCache = result;
-            this.completeCache = completeResult;
+			this.completeCache.clear();			
+            this.defaultCache.clear();
+            this.defaultCache.putAll(result);
+			completeResult.keySet().forEach(k1 -> completeResult.get(k1).keySet()
+					.forEach(k2 -> completeCache.put(k1, k2, completeResult.get(k1).get(k2))));            
         } catch (IOException e) {
             log.warn("Unreadable Third config files at  {}", storagePath);
         }
@@ -159,9 +176,8 @@ public class ThirdsService implements ResourceLoaderAware {
      */
     public Resource fetchResource(String thirdName, ResourceTypeEnum type, String version, String locale,
                                   String name) throws FileNotFoundException {
-        loadCacheIfNeeded();
-        Map<String, Third> versions = completeCache.get(thirdName);
-        if (versions == null)
+        Map<String, Third> versions = completeCache.row(thirdName);
+        if (versions.isEmpty())
             throw new FileNotFoundException("No resource exist for " + thirdName);
 
         Third third;
@@ -194,7 +210,7 @@ public class ThirdsService implements ResourceLoaderAware {
                 (type.isLocalized() && !type.equals(ResourceTypeEnum.I18N) ? (locale + File.separator) : "") +
                 finalName + type.getSuffix();
         log.info("loading resource: {}", resourcePath);
-        return this.resourceLoader.getResource(resourcePath);
+        return this.resourceLoader.getResource(resourcePath);        
     }
 
     /**
@@ -209,7 +225,7 @@ public class ThirdsService implements ResourceLoaderAware {
      */
     private void validateResourceParameters(String thirdName, ResourceTypeEnum type, String name, String version,
                                             String locale) throws FileNotFoundException {
-        Third third = completeCache.get(thirdName).get(version);
+        Third third = completeCache.get(thirdName,version);
         if (type.isLocalized() && locale == null)
             throw new FileNotFoundException("Unable to determine resource for undefined locale");
         switch (type) {
@@ -235,7 +251,6 @@ public class ThirdsService implements ResourceLoaderAware {
      * @return fetch {@link Third} or null if it does not exist
      */
     public Third fetch(String name) {
-        loadCacheIfNeeded();
         return fetch(name, null);
     }
 
@@ -266,21 +281,22 @@ public class ThirdsService implements ResourceLoaderAware {
      * @return the new or updated third data
      * @throws IOException if error arise during stream reading
      */
-    public Third updateThird(InputStream is) throws IOException {
-        Path rootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath()
-        ).normalize();
-        if (!rootPath.toFile().exists())
-            throw new FileNotFoundException("No directory available to unzip bundle");
-        // create a temporary output folder
-        Path outPath = rootPath.resolve(UUID.randomUUID().toString());
-        try {
-            //extract tar.gz to output folder
-            PathUtils.unTarGz(is, outPath);
-            //load config
-            return updateThird0(outPath);
-        } finally {
-            PathUtils.silentDelete(outPath);
-        }
+    public synchronized Third updateThird(InputStream is) throws IOException {    	
+    	Path rootPath = Paths
+				.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+				.normalize();
+		if (!rootPath.toFile().exists())
+			throw new FileNotFoundException("No directory available to unzip bundle");
+		// create a temporary output folder
+		Path outPath = rootPath.resolve(UUID.randomUUID().toString());
+		try {
+			//extract tar.gz to output folder
+			PathUtils.unTarGz(is, outPath);
+			//load config
+			return updateThird0(outPath);
+		} finally {
+			PathUtils.silentDelete(outPath);
+		}
     }
 
     /**
@@ -312,7 +328,8 @@ public class ThirdsService implements ResourceLoaderAware {
         PathUtils.copy(existingVersionPath.resolve(CONFIG_FILE_NAME), existingConfigPath);
 
         //update caches
-        loadCacheSafe();
+        defaultCache.put(third.getName(),third);
+        completeCache.put(third.getName(), third.getVersion(), third);
         //retieve newly loaded third from cache
         return fetch(third.getName(), third.getVersion());
     }
@@ -325,20 +342,95 @@ public class ThirdsService implements ResourceLoaderAware {
      * @return fetch {@link Third} or null if it does not exist
      */
     public Third fetch(String name, String apiVersion) {
-        loadCacheIfNeeded();
         if (apiVersion == null)
             return this.defaultCache.get(name);
-        if (this.completeCache.containsKey(name))
-            return this.completeCache.get(name).get(apiVersion);
-        else return null;
+        if (this.completeCache.contains(name,apiVersion))
+            return this.completeCache.get(name,apiVersion);
+        else return null;        
     }
+    
+    /**
+     * Deletes {@link Third} for specified name
+     * @param name       third name 
+     * @throws IOException 
+     */
+    public synchronized void delete(String name) throws IOException {
+		if (!defaultCache.containsKey(name)) {
+    		throw new FileNotFoundException("Unable to find a bundle with the given name");
+    	}
+    	//third root
+    	Path thirdRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
+                .getAbsolutePath())
+                .resolve(name)
+                .normalize();
+    	//delete third root from disk
+    	PathUtils.delete(thirdRootPath);
+    	log.debug("removed third:{} from filesystem", name);
+    	removeFromCache(name);    	
+    }
+    
+    /**
+     * Deletes {@link Third} for specified name and version
+     * @param name       third name
+     * @param version    third version 
+     * @throws IOException 
+     */
+	public synchronized void deleteVersion(String name, String version) throws IOException {		
+		if (!completeCache.contains(name,version)) {
+			throw new FileNotFoundException("Unable to find a bundle with the given name and version");
+		}
+		Third third = defaultCache.get(name);
+		Path thirdRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
+                .getAbsolutePath())
+                .resolve(name)
+                .normalize();
+		/* case: bundle has only one version(this control is put here to skip if it's possible
+		 * heavy operations like file system access)
+		 */
+		if ((third.getVersion().equals(version)) && 
+				completeCache.row(name).size() == 1) {
+			//delete the whole bundle				
+	    	//delete third root from disk
+			PathUtils.delete(thirdRootPath);
+			log.debug("removed third:{} from filesystem", name);
+			removeFromCache(name);
+		} else {//case: multiple versions => to delete only the given version
+			Path thirdVersionPath = thirdRootPath.resolve(version);
+			if (third.getVersion().equals(version)) {//case: version to delete is the default one => root config replacement
+				//replace default
+				//choose the most recent through filesystem walk				
+				try (Stream<Path> files = Files.list(thirdRootPath)
+						.filter(p -> !p.equals(thirdVersionPath) && Files.isDirectory(p)
+						&& completeCache.contains(name, p.getFileName().toString()))) {
+					Optional<Path> versionBecomingNewDefault = files
+							.max(this::comparePathsByModifiedTimeManagingException);
+					if (versionBecomingNewDefault.isPresent()) {
+						Path versionBecomingNewDefaultPath = versionBecomingNewDefault.get();
+						Files.copy(versionBecomingNewDefaultPath.resolve(CONFIG_FILE_NAME),
+								thirdRootPath.resolve(CONFIG_FILE_NAME), StandardCopyOption.REPLACE_EXISTING);
+						Third defaultThird = completeCache.get(name,
+								versionBecomingNewDefaultPath.getFileName().toString());
+						defaultCache.put(name, defaultThird);
+					} else {
+						throw new IOException("Inconsistent file system state");
+					} 
+				} catch(UncheckedIOException e) {
+					throw e.getCause();
+				}				
+			}
+			//delete version folder
+			PathUtils.delete(thirdVersionPath);
+			log.debug("removed third:{} whith version:{} from filesystem", name, version);
+			completeCache.remove(name,version);
+		}
+	}
 
     /**
      * Resets data (only used in tests)
      *
      * @throws IOException multiple underlying cases (file system access, file system manipulation - deletion)
      */
-    public void clear() throws IOException {
+    public void clear() throws IOException {    	
         Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath);
         File file = resource.getFile();
         if(file.exists()) {
@@ -346,20 +438,34 @@ public class ThirdsService implements ResourceLoaderAware {
                 pathStream
                         .forEach(PathUtils::silentDelete);
             }finally {
-                this.completeCache = null;
-                this.defaultCache = null;
+                this.completeCache.clear();
+                this.defaultCache.clear();
             }
         }else{
-            this.completeCache = null;
-            this.defaultCache = null;
+            this.completeCache.clear();
+            this.defaultCache.clear();
         }
     }
-
+        
     /**
-     * Reloads cache thread safe
+     * Remove third from caches
+     * @param name       third name
      */
-    private synchronized void loadCacheSafe() {
-        loadCache();
+    private void removeFromCache(String name) {
+    	Object removed = defaultCache.remove(name);
+    	if (removed!=null) {
+    		log.debug("removed third:{} from defaultCache", name);
+    	}    	
+    	completeCache.row(name).clear();
+    	log.debug("removed third:{} from completeCache", name);
+    }
+    
+    private int comparePathsByModifiedTimeManagingException(Path p1,Path p2) {
+    	try {
+			return Files.getLastModifiedTime(p1).compareTo(Files.getLastModifiedTime(p2));
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
     }
 
 }

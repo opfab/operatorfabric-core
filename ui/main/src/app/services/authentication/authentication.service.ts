@@ -1,15 +1,18 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
-import {catchError, filter, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {Guid} from 'guid-typescript';
 import {
     CheckAuthenticationStatus,
@@ -22,7 +25,7 @@ import {
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
 import {AppState} from '@ofStore/index';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {buildConfigSelector} from '@ofSelectors/config.selectors';
 import * as jwt_decode from 'jwt-decode';
 import * as _ from 'lodash';
@@ -106,7 +109,7 @@ export class AuthenticationService {
     instantiateAuthModeHandler(mode: string): AuthenticationModeHandler {
         if (mode.toLowerCase() === 'implicit') {
             this.implicitConf = {...this.implicitConf, issuer: this.delegateUrl, clientId: this.clientId,clearHashAfterLogin: false};
-            return new ImplicitAuthenticationHandler(this, this.store, sessionStorage,this.oauthService,this.guidService,this.router,this.implicitConf,);
+            return new ImplicitAuthenticationHandler(this, this.store, sessionStorage,this.oauthService,this.guidService,this.router,this.implicitConf,this.givenNameClaim,this.familyNameClaim);
         }
         return new PasswordOrCodeAuthenticationHandler(this, this.store);
     }
@@ -307,7 +310,8 @@ export class AuthenticationService {
             jwt[this.givenNameClaim],
             jwt[this.familyNameClaim]
         );
-    }        // await this.oauthService.tryLogin();
+    }       
+
     /**
      * helper method to put the jwt token into an appropriate string usable as an http header
      */
@@ -435,7 +439,9 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
         , private oauthService: OAuthService
         , private guidService: GuidService
         , private router :Router
-        , private implicitConf) {
+        , private implicitConf
+        , private givenNameClaim
+        , private familyNameClaim) {
     }
 
     initializeAuthentication(currentLocationHref: string) {
@@ -475,11 +481,13 @@ export class ImplicitAuthenticationHandler implements AuthenticationModeHandler 
 
     public providePayloadForSuccessfulAuthentication(): PayloadForSuccessfulAuthentication {
         const identityClaims = this.oauthService.getIdentityClaims();
+        const givenName = identityClaims[this.givenNameClaim];
+        const familyName = identityClaims[this.familyNameClaim];
         const identifier = identityClaims['sub'];
         const clientId = this.guidService.getCurrentGuid();
         const token = this.oauthService.getAccessToken();
         const expirationDate = new Date(this.oauthService.getAccessTokenExpiration());
-        return new PayloadForSuccessfulAuthentication(identifier, clientId, token, expirationDate);
+        return new PayloadForSuccessfulAuthentication(identifier, clientId, token, expirationDate,givenName,familyName);
     }
 
 

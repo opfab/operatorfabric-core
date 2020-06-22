@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 package org.lfenergy.operatorfabric.users.model;
 
@@ -19,22 +22,19 @@ public class CurrentUserWithPerimetersDataShould {
         Perimeter p1 = PerimeterData.builder().
                 id("perimeterKarate10_1_RR").
                 process("process10").
-                state("state1").
-                rights(RightsEnum.READANDRESPOND).build();
+                stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READANDRESPOND),
+                                                        new StateRightData("state2", RightsEnum.READANDWRITE)))).
+                build();
+
         Perimeter p2 = PerimeterData.builder().
-                id("perimeterKarate10_2").
-                process("process10").
-                state("state2").
-                rights(RightsEnum.READANDWRITE).build();
-        Perimeter p3 = PerimeterData.builder().
-                id("perimeterKarate10_1_R").
-                process("process10").
-                state("state1").
-                rights(RightsEnum.READ).build();
+                    id("perimeterKarate10_1_R").
+                    process("process10").
+                    stateRights(new HashSet<>(Arrays.asList(new StateRightData("state2", RightsEnum.READANDWRITE)))).
+                    build();
 
         CurrentUserWithPerimetersData c = new CurrentUserWithPerimetersData();
 
-        c.computePerimeters(new HashSet<>(Arrays.asList(p1, p2, p3)));
+        c.computePerimeters(new HashSet<>(Arrays.asList(p1, p2)));
 
         ComputedPerimeterData c1 = ComputedPerimeterData.builder().process("process10").state("state1").rights(RightsEnum.READANDRESPOND).build();
         ComputedPerimeterData c2 = ComputedPerimeterData.builder().process("process10").state("state2").rights(RightsEnum.READANDWRITE).build();

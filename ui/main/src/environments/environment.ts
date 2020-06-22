@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 // This file can be replaced during build by using the `fileReplacements` array.
@@ -16,12 +19,12 @@ export const environment = {
         authentication: '',
         auth: 'http://localhost:2002/auth',
         cards: 'http://localhost:2002/cards',
+        cardspub: 'http://localhost:2002/cardspub',
         users: 'http://localhost:2002/users',
         archives: '',
         thirds: 'http://localhost:2002/thirds',
         config: 'http://localhost:2002/config/web-ui.json',
-        time: 'http://localhost:2002/time',
-        actions: 'http://localhost:2002/actions'
+        time: 'http://localhost:2002/time'
     },
     paths: {
         i18n: '/assets/i18n/'

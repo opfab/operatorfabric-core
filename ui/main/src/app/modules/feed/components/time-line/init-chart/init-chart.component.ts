@@ -1,20 +1,22 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { Observable, of, Subscription } from 'rxjs';
-import { select, Store } from '@ngrx/store';
+import {  Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
-import * as timelineSelectors from '@ofSelectors/timeline.selectors';
-import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FilterType } from '@ofServices/filter.service';
 import { ApplyFilter } from '@ofActions/feed.actions';
+
 
 const forwardWeekConf = {
   start: { year: 0, month: 0, week: 1, day: 0, hour: 0, minute: 0, second: 0 },
@@ -34,7 +36,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public cardsData: any[];
   public myDomain: number[];
   public domainId: string;
-  data$: Observable<any[]>;
   subscription: Subscription;
 
   // required for domain movements specifications
@@ -58,7 +59,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.initDomains();
-    this.initDataPipe();
   }
 
   /**
@@ -183,16 +183,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
     }));
   }
 
-
-  initDataPipe(): void {
-    this.data$ = this.store.pipe(
-      select(timelineSelectors.selectTimelineSelection),
-      catchError(err => of([]))
-    );
-    this.subscription = this.data$.pipe(debounceTime(300), distinctUntilChanged()).subscribe(value => {
-      this.cardsData  = _.cloneDeep(value);
-    });
-  }
 
   /**
  * unsubscribe every subscription made on this file

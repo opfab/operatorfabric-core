@@ -1,18 +1,16 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: ../images
+
+
 
 = Scripts (bin and CICD)
 
 [horizontal]
-bin/build_all.sh:: builds all artifacts as gradle is not able to manage
-inter project dependencies
-bin/clean_all.sh:: remove IDE data (project configuration, build output
-directory) - idea, vsc
 bin/load_environment_light.sh:: sets up environment when *sourced* (java
 version, gradle version, maven version, node version)
 bin/load_environment_ramdisk.sh:: sets up environment and links build
@@ -48,16 +46,11 @@ instance).
 |===
 |Port | |
 
-|2000 |config |Configuration service http (REST)
-|2001 |registry |Registry service http (REST)
-|2002 |gateway |Gateway service http (REST+html)
+|2002 |web-ui | Web ui and gateway  (Nginx server)
 |2100 |thirds |Third party management service http (REST)
 |2102 |cards-publication |card publication service http (REST)
 |2103 |users |Users management service http (REST)
 |2104 |cards-consultation |card consultation service http (REST)
-|4000 |config |java debug port
-|4001 |registry |java debug port
-|4002 |gateway |java debug port
 |4100 |thirds |java debug port
 |4102 |cards-publication |java debug port
 |4103 |users |java debug port

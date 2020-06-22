@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 package org.lfenergy.operatorfabric.users.controllers;
@@ -12,10 +15,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.users.application.UnitTestApplication;
 import org.lfenergy.operatorfabric.users.application.configuration.WithMockOpFabUser;
-import org.lfenergy.operatorfabric.users.model.GroupData;
-import org.lfenergy.operatorfabric.users.model.PerimeterData;
-import org.lfenergy.operatorfabric.users.model.RightsEnum;
-import org.lfenergy.operatorfabric.users.model.UserData;
+import org.lfenergy.operatorfabric.users.model.*;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.UserRepository;
@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -116,7 +116,7 @@ class GroupsControllerShould {
            .id("MONTY")
            .name("Monty Pythons")
            .description("A bunch of humorous fellows")
-           .perimeter("PERIMETER1_1").perimeter("PERIMETER1_2")
+           .perimeter("PERIMETER1_1").perimeter("PERIMETER2")
            .build();
         g2 = GroupData.builder()
            .id("WANDA")
@@ -127,21 +127,32 @@ class GroupsControllerShould {
         groupRepository.insert(g1);
         groupRepository.insert(g2);
 
-        PerimeterData p1, p2;
+        PerimeterData p1, p2, p3;
+
         p1 = PerimeterData.builder()
                 .id("PERIMETER1_1")
                 .process("process1")
-                .state("state1")
-                .rights(RightsEnum.READ)
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READ),
+                                                         new StateRightData("state2", RightsEnum.READANDWRITE))))
                 .build();
+
         p2 = PerimeterData.builder()
                 .id("PERIMETER1_2")
                 .process("process1")
-                .state("state2")
-                .rights(RightsEnum.READANDWRITE)
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READANDRESPOND),
+                                                         new StateRightData("state2", RightsEnum.ALL))))
                 .build();
+
+        p3 = PerimeterData.builder()
+                .id("PERIMETER2")
+                .process("process2")
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.ALL),
+                                                         new StateRightData("state2", RightsEnum.READ))))
+                .build();
+
         perimeterRepository.insert(p1);
         perimeterRepository.insert(p2);
+        perimeterRepository.insert(p3);
     }
 
     @AfterEach
@@ -626,15 +637,26 @@ class GroupsControllerShould {
 
         @Test
         void fetchAllPerimetersForAGroup() throws Exception {
-            //MONTY group has perimeters PERIMETER1_1 and PERIMETER1_2.
+            //MONTY group has perimeters PERIMETER1_1 and PERIMETER2.
             ResultActions result1 = mockMvc.perform(get("/groups/MONTY/perimeters"));
             result1
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(2)))
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_2\" && @.process == \"process1\" && @.state == \"state2\" && @.rights == \"ReadAndWrite\")]").exists())
-            ;
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER1_1\" && " +
+                            "@.process == \"process1\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists())
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER2\" && " +
+                            "@.process == \"process2\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"All\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Read\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"All\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Read\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists());
 
             //WANDA group has perimeter PERIMETER1_1.
             ResultActions result2 = mockMvc.perform(get("/groups/WANDA/perimeters"));
@@ -642,7 +664,13 @@ class GroupsControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(1)))
-                    .andExpect(jsonPath("$.[?(@.id == \"PERIMETER1_1\" && @.process == \"process1\" && @.state == \"state1\" && @.rights == \"Read\")]").exists())
+                    .andExpect(jsonPath("$.[?(" +
+                            "@.id == \"PERIMETER1_1\" && " +
+                            "@.process == \"process1\" && " +
+                            "@.stateRights.length() == 2 && " +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "@.stateRights.[0] != @.stateRights.[1])]").exists())
             ;
         }
 
@@ -674,7 +702,7 @@ class GroupsControllerShould {
             //If the perimeters list isn't correct, no group should be updated
             GroupData monty = groupRepository.findById("MONTY").get();
             assertThat(monty).isNotNull();
-            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
 
             GroupData wanda = groupRepository.findById("WANDA").get();
             assertThat(wanda).isNotNull();
@@ -738,7 +766,7 @@ class GroupsControllerShould {
             GroupData monty = groupRepository.findById("MONTY").get();
             assertThat(monty).isNotNull();
             assertThat(monty.getPerimeters()).hasSize(2);
-            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
         }
 
         @Test
@@ -776,7 +804,7 @@ class GroupsControllerShould {
         void addGroupToPerimetersWithBadRequest() throws Exception {
             mockMvc.perform(patch("/groups/WANDA/perimeters")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("[\"PERIMETER1_2\",\"unknownPerimeterSoFar\"]")
+                    .content("[\"PERIMETER2\",\"unknownPerimeterSoFar\"]")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -788,7 +816,7 @@ class GroupsControllerShould {
             GroupData monty = groupRepository.findById("MONTY").get();
             assertThat(monty).isNotNull();
             assertThat(monty.getPerimeters()).hasSize(2);
-            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
 
             GroupData wanda = groupRepository.findById("WANDA").get();
             assertThat(wanda).isNotNull();
@@ -807,22 +835,22 @@ class GroupsControllerShould {
         void addGroupToPerimeters() throws Exception {
             mockMvc.perform(patch("/groups/WANDA/perimeters")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("[\"PERIMETER1_2\"]")
+                    .content("[\"PERIMETER2\"]")
             )
                     .andExpect(status().isOk())
             ;
 
-            //WANDA group must contain PERIMETER1_1 and PERIMETER1_2
+            //WANDA group must contain PERIMETER1_1 and PERIMETER2
             GroupData wanda = groupRepository.findById("WANDA").get();
             assertThat(wanda).isNotNull();
             assertThat(wanda.getPerimeters()).hasSize(2);
-            assertThat(wanda.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+            assertThat(wanda.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
 
             //MONTY group must not be changed
             GroupData monty = groupRepository.findById("MONTY").get();
             assertThat(monty).isNotNull();
             assertThat(monty.getPerimeters()).hasSize(2);
-            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
+            assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
         }
     }
 

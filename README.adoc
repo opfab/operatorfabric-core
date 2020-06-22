@@ -1,8 +1,10 @@
-// Copyright (c) 2020, RTE (http://www.rte-france.com)
-//
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
 
 :imagesdir: src/docs/asciidoc/images
 
@@ -14,7 +16,7 @@
 
 image:https://img.shields.io/badge/license-MPL_2.0-blue.svg[MPL-2.0
 License,link=https://www.mozilla.org/en-US/MPL/2.0/]
-image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=master[Build
+image:https://travis-ci.org/opfab/operatorfabric-core.svg?branch=develop[Build
 Status,link=https://travis-ci.org/opfab/operatorfabric-core]
 image:https://sonarcloud.io/api/project_badges/measure?project=org.lfenergy.operatorfabric%3Aoperatorfabric-core&metric=alert_status[Quality
 Gate,link=https://sonarcloud.io/dashboard?id=org.lfenergy.operatorfabric%3Aoperatorfabric-core]
@@ -65,7 +67,7 @@ cd operatorfabric-core
 . Launch our demo docker-compose file
 +
 ----
-./src/main/docker/deploy/docker-compose.sh
+./config/docker/docker-compose.sh
 ----
 
 . After a little while, log into the application UI at *localhost:2002/ui/* using admin/test as credentials.

@@ -1,9 +1,12 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
@@ -11,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -58,26 +61,24 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         this.template = template;
     }
 
-    public Mono<ArchivedCardConsultationData> findByIdWithUser(String id, User user) {
-        return findByIdWithUser(template, id, user, ArchivedCardConsultationData.class);
+    public Mono<ArchivedCardConsultationData> findByIdWithUser(String id, CurrentUserWithPerimeters currentUserWithPerimeters) {
+        return findByIdWithUser(template, id, currentUserWithPerimeters, ArchivedCardConsultationData.class);
     }
 
-    public Mono<Page<LightCardConsultationData>> findWithUserAndParams(Tuple2<User, MultiValueMap<String, String>> params) {
+    public Mono<Page<LightCard>> findWithUserAndParams(Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params) {
         Query query = createQueryFromUserAndParams(params);
         Query countQuery = createQueryFromUserAndParams(params);
 
         //Handle Paging
         Pageable pageableRequest = createPageableFromParams(params.getT2());
         if (pageableRequest.isPaged()) {
-            return template.find(query.with(pageableRequest), LightCard.class, ARCHIVED_CARDS_COLLECTION)
-                    .map(lightCard -> (LightCardConsultationData) lightCard)
-                    .collectList()
+            return template.find(query.with(pageableRequest), LightCardConsultationData.class, ARCHIVED_CARDS_COLLECTION)
+                    .cast(LightCard.class).collectList()
                     .zipWith(template.count(countQuery, LightCard.class, ARCHIVED_CARDS_COLLECTION))
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, tuple.getT2()));
         } else {
-            return template.find(query, LightCard.class, ARCHIVED_CARDS_COLLECTION)
-                    .map(lightCard -> (LightCardConsultationData) lightCard)
-                    .collectList()
+            return template.find(query, LightCardConsultationData.class, ARCHIVED_CARDS_COLLECTION)
+            		.cast(LightCard.class).collectList()
                     .map(results -> new PageImpl<>(results));
         }
         //The class used as a parameter for the find & count methods is LightCard (and not LightCardConsultationData) to make use of the existing LightCardReadConverter
@@ -97,18 +98,16 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         }
     }
 
-    private Query createQueryFromUserAndParams(Tuple2<User, MultiValueMap<String, String>> params) {
+    private Query createQueryFromUserAndParams(Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params) {
 
         Query query = new Query();
 
         List<Criteria> criteria = new ArrayList<>();
 
-        User user = params.getT1();
+        CurrentUserWithPerimeters currentUserWithPerimeters = params.getT1();
         MultiValueMap<String, String> queryParams = params.getT2();
 
         query.with(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)));
-
-        //TODO Improvement Pass only items from params that are interesting to each method, not the whole map (split it)..
 
         /* Handle special parameters */
 
@@ -122,7 +121,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         criteria.addAll(regularParametersCriteria(queryParams));
 
         /* Add user criteria */
-        criteria.addAll(computeCriteriaList4User(user));
+        criteria.addAll(computeCriteriaList4User(currentUserWithPerimeters));
 
         if (!criteria.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));

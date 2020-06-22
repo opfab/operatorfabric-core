@@ -1,14 +1,17 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
- *
+/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
  */
+
 
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {from, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Action, Store} from '@ngrx/store';
 import {
     AcceptLogIn,
@@ -16,19 +19,14 @@ import {
     AcceptLogOutSuccess,
     AuthenticationActions,
     AuthenticationActionTypes,
-    CheckAuthenticationStatus,
-    CheckImplicitFlowAuthenticationStatus,
-    InitAuthStatus,
     RejectLogIn,
     TryToLogIn,
-    TryToLogOut,
-    UnAuthenticationFromImplicitFlow
+    TryToLogOut
 } from '@ofActions/authentication.actions';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {catchError, flatMap, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '@ofStore/index';
 import {Router} from '@angular/router';
-import {ConfigActionTypes, LoadConfigSuccess} from '@ofActions/config.actions';
 import {selectCode} from '@ofSelectors/authentication.selectors';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
