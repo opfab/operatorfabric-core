@@ -165,12 +165,13 @@ export function getOneRandomLightCard(lightCardTemplate?:any): LightCard {
         lightCardTemplate.startDate? lightCardTemplate.startDate:startTime,
         lightCardTemplate.endDate?lightCardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         lightCardTemplate.severity?lightCardTemplate.severity:getRandomSeverity(),
+        false,
         getRandomAlphanumericValue(3, 24),
         lightCardTemplate.lttd?lightCardTemplate.lttd:generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
         lightCardTemplate.tags?lightCardTemplate.tags:null,
-        lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null
+        lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null,
     );
     return oneCard;
 }

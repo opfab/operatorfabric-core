@@ -27,7 +27,6 @@ const RESPONSE_SUBMIT_SUCCESS_MSG_I18N_KEY = 'response.submitSuccess';
 const RESPONSE_BUTTON_TITLE_I18N_KEY = 'response.btnTitle';
 const ACK_BUTTON_TEXTS_I18N_KEY = ['cardAcknowledgment.button.ack', 'cardAcknowledgment.button.unack'];
 const ACK_BUTTON_COLORS = ['btn-primary', 'btn-danger'];
-const ACK_BUTTON_ICONS = ['check_box_outline_blank', 'check_box'];
 const RESPONSE_ACK_ERROR_MSG_I18N_KEY = 'response.error.ack';
 
 @Component({
@@ -111,10 +110,6 @@ export class CardDetailsComponent implements OnInit {
 
     get btnAckColor(): string {
         return this.card.hasBeenAcknowledged ? ACK_BUTTON_COLORS[+this.card.hasBeenAcknowledged] : ACK_BUTTON_COLORS[+false];
-    }
-
-    get btnAckIcon(): string {
-        return this.card.hasBeenAcknowledged ? ACK_BUTTON_ICONS[+this.card.hasBeenAcknowledged] : ACK_BUTTON_ICONS[+false];
     }
 
     ngOnInit() {
@@ -257,9 +252,7 @@ export class CardDetailsComponent implements OnInit {
         } else {
             this.cardService.postUserAcnowledgement(this.card).subscribe(resp => { 
                 if (resp.status == 201 || resp.status == 200) {
-                    var tmp = {... this.card};
-                    tmp.hasBeenAcknowledged = true;
-                    this.card = tmp;
+                    this.closeDetails();
                 } else {
                     console.error("the remote acknowledgement endpoint returned an error status(%d)",resp.status);
                     this.messages.formError.display = true;

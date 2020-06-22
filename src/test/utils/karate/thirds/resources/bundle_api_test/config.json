@@ -24,7 +24,7 @@
 							]
 						}
 					],
-					"acknowledgementAllowed": true
+					"acknowledgementAllowed": false
 				},
 				"chartState": {
 					"details": [
@@ -38,7 +38,7 @@
 							]
 						}
 					],
-					"acknowledgementAllowed": true
+					"acknowledgementAllowed": false
 				},
 				"chartLineState": {
 					"details": [

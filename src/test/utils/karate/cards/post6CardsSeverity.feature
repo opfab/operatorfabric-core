@@ -209,8 +209,11 @@ And match response.count == 1
 			"processId" : "process5",
 			"state": "chartLineState",
 			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
+					"type":"UNION",
+					"recipients":[
+						{ "type": "GROUP", "identity":"TSO1"},
+						{ "type": "GROUP", "identity":"TSO2"}
+						]
 					},
 			"severity" : "ALARM",
 			"startDate" : startDate,
