@@ -11,10 +11,6 @@
 = Scripts (bin and CICD)
 
 [horizontal]
-bin/build_all.sh:: builds all artifacts as gradle is not able to manage
-inter project dependencies
-bin/clean_all.sh:: remove IDE data (project configuration, build output
-directory) - idea, vsc
 bin/load_environment_light.sh:: sets up environment when *sourced* (java
 version, gradle version, maven version, node version)
 bin/load_environment_ramdisk.sh:: sets up environment and links build

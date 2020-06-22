@@ -106,8 +106,8 @@ gradle-app.setting
 .sonar
 .scannerwork
 
-# ignoring .env file needed by docker-compose in deploy containers
-**/deploy/.env
+# ignoring .env file needed by docker-compose
+config/**/.env
 
 # Karate DSL results 
 src/test/api/karate/target/**/*

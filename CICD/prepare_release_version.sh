@@ -56,10 +56,10 @@ find . -name swagger.yaml | xargs sed -i "s/\(version: *\)$oldVersion/\1$newVers
 # The issue is that if the value has been mistakenly modified and is not $oldVersion, it won't be updated
 # TODO Find a better solution or add a check
 
-echo "Using $newVersion for lfeoperatorfabric images in deploy and dev-environment docker-compose files"
+echo "Using $newVersion for lfeoperatorfabric images in dev and docker environment docker-compose files"
 # String example for regexp: image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
-sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./src/main/docker/deploy/docker-compose.yml;
-sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./src/main/docker/dev-environment/docker-compose.yml;
+sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/docker/docker-compose.yml;
+sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/dev/docker-compose.yml;
 
 echo "The following files have been updated: "
 echo | git status --porcelain
