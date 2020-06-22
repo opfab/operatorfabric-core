@@ -10,5 +10,7 @@ java -jar karate.jar                              \
       cards/userCards.feature                     \
       cards/cardsUserAcks.feature                 \
       cards/userAcknowledgmentUpdateCheck.feature \
+      cards/postCardWithNoProcess.feature         \
+      cards/postCardWithNoState.feature           \
       #cards/updateCardSubscription.feature
 

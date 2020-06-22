@@ -54,9 +54,11 @@ public class CardPublicationData implements Card {
     private String publisher;
     @NotNull
     private String publisherVersion;
+    @NotNull
     private String process;
     @NotNull
     private String processId;
+    @NotNull
     private String state;
     @NotNull
     private I18n title;

@@ -109,6 +109,8 @@ class AsyncCardControllerShould {
               .summary(I18nPublicationData.builder().key("summary").build())
               .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+              .process("process1")
+              .state("state1")
               .build(),
            CardPublicationData.builder()
               .publisher("PUBLISHER_2")
@@ -119,6 +121,8 @@ class AsyncCardControllerShould {
               .summary(I18nPublicationData.builder().key("summary").build())
               .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+              .process("process2")
+              .state("state2")
               .build(),
            CardPublicationData.builder()
               .publisher("PUBLISHER_2")
@@ -129,6 +133,8 @@ class AsyncCardControllerShould {
               .summary(I18nPublicationData.builder().key("summary").build())
               .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+              .process("process3")
+              .state("state3")
               .build(),
            CardPublicationData.builder()
               .publisher("PUBLISHER_1")
@@ -139,6 +145,8 @@ class AsyncCardControllerShould {
               .summary(I18nPublicationData.builder().key("summary").build())
               .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+              .process("process4")
+              .state("state4")
               .build(),
            CardPublicationData.builder()
               .publisher("PUBLISHER_1")
@@ -149,6 +157,8 @@ class AsyncCardControllerShould {
               .summary(I18nPublicationData.builder().key("summary").build())
               .startDate(Instant.now())
               .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+              .process("process5")
+              .state("state5")
               .build()
         );
     }
