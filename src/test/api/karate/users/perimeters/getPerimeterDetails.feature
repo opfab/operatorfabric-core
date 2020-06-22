@@ -16,7 +16,7 @@ Feature: Get perimeter details (endpoint tested : GET /perimeters/{id})
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "Read"
+      "right" : "Receive"
       }
   ]
 }

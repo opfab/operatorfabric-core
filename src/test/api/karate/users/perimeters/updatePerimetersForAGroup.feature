@@ -24,11 +24,11 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "Read"
+      "right" : "Receive"
     },
     {
       "state" : "state2",
-      "right" : "ReadAndRespond"
+      "right" : "Write"
     }
   ]
 }
@@ -42,11 +42,11 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "All"
+      "right" : "ReceiveAndWrite"
     },
     {
       "state" : "state2",
-      "right" : "All"
+      "right" : "ReceiveAndWrite"
     }
   ]
 }
@@ -159,7 +159,7 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     When method get
     Then status 200
     And assert response.length == 1
-    And match response contains only [{"id":"perimeterKarate13_1","process":"process13","stateRights":[{"state":"state1","right":"Read"},{"state":"state2","right":"ReadAndRespond"}]}]
+    And match response contains only [{"id":"perimeterKarate13_1","process":"process13","stateRights":[{"state":"state1","right":"Receive"},{"state":"state2","right":"Write"}]}]
 
 
   Scenario: Put perimeter13_2 for group13
@@ -176,4 +176,4 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     When method get
     Then status 200
     And assert response.length == 1
-    And match response contains only [{"id":"perimeterKarate13_2","process":"process13","stateRights":[{"state":"state1","right":"All"},{"state":"state2","right":"All"}]}]
+    And match response contains only [{"id":"perimeterKarate13_2","process":"process13","stateRights":[{"state":"state1","right":"ReceiveAndWrite"},{"state":"state2","right":"ReceiveAndWrite"}]}]

@@ -16,7 +16,7 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
   "stateRights" : [
     {
       "state" : "state2",
-      "right" : "Read"
+      "right" : "Receive"
     }
   ]
 }
@@ -30,7 +30,7 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
   "stateRights" : [
     {
       "state" : "state2",
-      "right" : "ReadAndWrite"
+      "right" : "ReceiveAndWrite"
     }
   ]
 }

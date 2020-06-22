@@ -153,22 +153,22 @@ class UsersControllerShould {
         p1 = PerimeterData.builder()
                 .id("PERIMETER1_1")
                 .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READ),
-                                                         new StateRightData("state2", RightsEnum.READANDWRITE))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE),
+                                                         new StateRightData("state2", RightsEnum.RECEIVEANDWRITE))))
                 .build();
 
         p2 = PerimeterData.builder()
                 .id("PERIMETER1_2")
                 .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READANDRESPOND),
-                                                         new StateRightData("state2", RightsEnum.ALL))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE),
+                                                         new StateRightData("state2", RightsEnum.WRITE))))
                 .build();
 
         p3 = PerimeterData.builder()
                 .id("PERIMETER2")
                 .process("process2")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.ALL),
-                                                         new StateRightData("state2", RightsEnum.READ))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE),
+                                                         new StateRightData("state2", RightsEnum.RECEIVE))))
                 .build();
 
         perimeterRepository.insert(p1);
@@ -591,15 +591,15 @@ class UsersControllerShould {
                             "@.id == \"PERIMETER1_1\" && " +
                             "@.process == \"process1\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Receive\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReceiveAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Receive\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReceiveAndWrite\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists())
                     .andExpect(jsonPath("$.[?(" +
                             "@.id == \"PERIMETER2\" && " +
                             "@.process == \"process2\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"All\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Read\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"All\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Read\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Write\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Receive\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Write\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Receive\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists());
 
             //User gchapman is part of Monty Pythons group whose perimeters are PERIMETER1_1 and PERIMETER2.
@@ -612,15 +612,15 @@ class UsersControllerShould {
                             "@.id == \"PERIMETER1_1\" && " +
                             "@.process == \"process1\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Receive\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReceiveAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Receive\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReceiveAndWrite\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists())
                     .andExpect(jsonPath("$.[?(" +
                             "@.id == \"PERIMETER2\" && " +
                             "@.process == \"process2\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"All\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Read\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"All\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Read\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Write\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Receive\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Write\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Receive\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists());
 
             //User kkline is part of Wanda group whose perimeter is PERIMETER1_1.
@@ -633,8 +633,8 @@ class UsersControllerShould {
                             "@.id == \"PERIMETER1_1\" && " +
                             "@.process == \"process1\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Receive\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReceiveAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Receive\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReceiveAndWrite\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists());
         }
 
@@ -704,15 +704,15 @@ class UsersControllerShould {
                             "@.id == \"PERIMETER1_1\" && " +
                             "@.process == \"process1\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Receive\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReceiveAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Receive\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReceiveAndWrite\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists())
                     .andExpect(jsonPath("$.[?(" +
                             "@.id == \"PERIMETER2\" && " +
                             "@.process == \"process2\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"All\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Read\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"All\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Read\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Write\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Receive\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Write\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Receive\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists());
         }
 

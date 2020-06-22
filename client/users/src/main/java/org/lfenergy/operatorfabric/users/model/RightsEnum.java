@@ -26,10 +26,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  *
  */
 public enum RightsEnum {
-    READ("Read"),
-    READANDWRITE("ReadAndWrite"),
-    READANDRESPOND("ReadAndRespond"),
-    ALL("All");
+    RECEIVE("Receive"),
+    WRITE("Write"),
+    RECEIVEANDWRITE("ReceiveAndWrite");
 
     private String value;
 

@@ -130,40 +130,60 @@ public class CardProcessingService {
      */
     void validate(CardPublicationData c) throws ConstraintViolationException {
 
-        String parentCardId = c.getParentCardId();
-        if (Optional.ofNullable(parentCardId).isPresent()) {
-            if (!cardRepositoryService.findByUid(parentCardId).isPresent()) {
-                throw new ConstraintViolationException("The parentCardId " + parentCardId + " is not the uid of any card", null);
-            }
-        }
+        // constraint check : parentCardId must exist
+        if (! checkIsParentCardIdExisting(c))
+            throw new ConstraintViolationException("The parentCardId " + c.getParentCardId() + " is not the uid of any card", null);
 
         Set<ConstraintViolation<CardPublicationData>> results = localValidatorFactoryBean.validate(c);
         if (!results.isEmpty())
             throw new ConstraintViolationException(results);
 
         // constraint check : endDate must be after startDate
-        Instant endDateInstant = c.getEndDate();
-        Instant startDateInstant = c.getStartDate();
-        if ((endDateInstant != null) && (startDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0))
+        if (! checkIsEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : endDate must be after startDate", null);
 
-        // constraint check : timeSpans list : each end date must be after his start
-        // date
-        if (c.getTimeSpans() != null)
+        // constraint check : timeSpans list : each end date must be after his start date
+        if (! checkIsAllTimeSpanEndDateAfterStartDate(c))
+            throw new ConstraintViolationException("constraint violation : TimeSpan.end must be after TimeSpan.start", null);
+
+        // constraint check : process and state must not contain "." (because we use it as a separator)
+        if (! checkIsDotCharacterNotInProcessAndState(c))
+            throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
+    }
+
+    boolean checkIsParentCardIdExisting(CardPublicationData c){
+        String parentCardId = c.getParentCardId();
+        if (Optional.ofNullable(parentCardId).isPresent()) {
+            if (!cardRepositoryService.findByUid(parentCardId).isPresent()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean checkIsEndDateAfterStartDate(CardPublicationData c) {
+        Instant endDateInstant = c.getEndDate();
+        Instant startDateInstant = c.getStartDate();
+        return ! ((endDateInstant != null) && (startDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0));
+    }
+
+    boolean checkIsDotCharacterNotInProcessAndState(CardPublicationData c) {
+        return ! ((c.getProcess() != null && c.getProcess().contains(Character.toString('.'))) ||
+                  (c.getState() != null && c.getState().contains(Character.toString('.'))));
+    }
+
+    boolean checkIsAllTimeSpanEndDateAfterStartDate(CardPublicationData c) {
+        if (c.getTimeSpans() != null) {
             for (int i = 0; i < c.getTimeSpans().size(); i++) {
                 if (c.getTimeSpans().get(i) != null) {
                     Instant endInstant = c.getTimeSpans().get(i).getEnd();
                     Instant startInstant = c.getTimeSpans().get(i).getStart();
                     if ((endInstant != null) && (startInstant != null) && (endInstant.compareTo(startInstant) < 0))
-                        throw new ConstraintViolationException(
-                                "constraint violation : TimeSpan.end must be after TimeSpan.start", null);
+                        return false;
                 }
             }
-
-        // constraint check : process and state must not contain "." (because we use it as a separator)
-        if ((c.getProcess() != null && c.getProcess().contains(Character.toString('.')))  ||
-                (c.getState() != null && c.getState().contains(Character.toString('.'))))
-            throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
+        }
+        return true;
     }
 
     /**

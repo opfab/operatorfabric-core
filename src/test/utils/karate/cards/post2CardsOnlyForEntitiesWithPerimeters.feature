@@ -16,11 +16,11 @@ Feature: Cards
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "Read"
+        "right" : "Receive"
       },
       {
         "state" : "state2",
-        "right" : "ReadAndWrite"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }

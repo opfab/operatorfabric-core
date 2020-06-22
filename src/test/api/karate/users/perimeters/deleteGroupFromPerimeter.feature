@@ -17,7 +17,7 @@ Feature: delete group from a perimeter (endpoint tested : DELETE /perimeters/{id
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "ReadAndWrite"
+      "right" : "ReceiveAndWrite"
     }
   ]
 }

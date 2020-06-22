@@ -309,34 +309,53 @@ public class CardSubscription {
             List<String> userGroups = currentUserWithPerimeters.getUserData().getGroups();
             List<String> userEntities = currentUserWithPerimeters.getUserData().getEntities();
 
-            if (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()) { //card sent to group only
-                return (userGroups != null) && (groupRecipientsIdsArray != null)
-                        && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
-            }
-            if (groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty()){ //card sent to entity only
-                if (typeOperation.equals("DELETE"))
-                    return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray));
+            if (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()) //card sent to group only
+                return checkInCaseOfCardSentToGroupOnly(userGroups, groupRecipientsIdsArray);
 
-                return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray))
-                        && (!Collections.disjoint(Arrays.asList(processStateKey), processStateList));
-            }
+            if (groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty())   //card sent to entity only
+                return checkInCaseOfCardSentToEntityOnly(userEntities, entityRecipientsIdsArray, typeOperation,
+                                                         processStateKey, processStateList);
 
-            if (typeOperation.equals("DELETE"))
-                return ((userEntities != null) && (userGroups != null)      //card sent to entity and group
-                        && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
-                        && !Collections.disjoint(userGroups, groupRecipientsIdsArray))
-                        ||
-                        ((userEntities != null) && !Collections.disjoint(userEntities, entityRecipientsIdsArray));
-
-            return ((userEntities != null) && (userGroups != null)      //card sent to entity and group
-                    && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
-                    && !Collections.disjoint(userGroups, groupRecipientsIdsArray))
-                    ||
-                    ((userEntities != null)
-                    && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
-                    && !Collections.disjoint(Arrays.asList(processStateKey), processStateList));
+            //card sent to entity and group
+            return checkInCaseOfCardSentToEntityAndGroup(userEntities, userGroups, entityRecipientsIdsArray,
+                                                         groupRecipientsIdsArray, typeOperation, processStateKey,
+                                                         processStateList);
         }
         catch(ParseException e){ log.error("ERROR during received message parsing", e); }
         return false;
+    }
+
+    boolean checkInCaseOfCardSentToGroupOnly(List<String> userGroups, JSONArray groupRecipientsIdsArray) {
+        return (userGroups != null) && (groupRecipientsIdsArray != null)
+                && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
+    }
+
+    boolean checkInCaseOfCardSentToEntityOnly(List<String> userEntities, JSONArray entityRecipientsIdsArray,
+                                             String typeOperation, String processStateKey,
+                                             List<String> processStateList) {
+        if (typeOperation.equals("DELETE"))
+            return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray));
+
+        return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray))
+                && (!Collections.disjoint(Arrays.asList(processStateKey), processStateList));
+    }
+
+    boolean checkInCaseOfCardSentToEntityAndGroup(List<String> userEntities, List<String> userGroups,
+                                                  JSONArray entityRecipientsIdsArray, JSONArray groupRecipientsIdsArray,
+                                                  String typeOperation, String processStateKey, List<String> processStateList) {
+        if (typeOperation.equals("DELETE"))
+            return ((userEntities != null) && (userGroups != null)
+                    && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
+                    && !Collections.disjoint(userGroups, groupRecipientsIdsArray))
+                    ||
+                    ((userEntities != null) && !Collections.disjoint(userEntities, entityRecipientsIdsArray));
+
+        return ((userEntities != null) && (userGroups != null)
+                && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
+                && !Collections.disjoint(userGroups, groupRecipientsIdsArray))
+                ||
+                ((userEntities != null)
+                        && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
+                        && !Collections.disjoint(Arrays.asList(processStateKey), processStateList));
     }
 }
