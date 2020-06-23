@@ -158,6 +158,8 @@ class CardProcessServiceShould {
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
+                        .process("process1")
+                        .state("state1")
                         .build(),
                 CardPublicationData.builder().publisher("PUBLISHER_2").publisherVersion("O")
                         .processId("PROCESS_1").severity(SeverityEnum.INFORMATION)
@@ -165,6 +167,8 @@ class CardProcessServiceShould {
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .process("process2")
+                        .state("state2")
                         .build(),
                 CardPublicationData.builder().publisher("PUBLISHER_2").publisherVersion("O")
                         .processId("PROCESS_2").severity(SeverityEnum.COMPLIANT)
@@ -172,6 +176,8 @@ class CardProcessServiceShould {
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .process("process3")
+                        .state("state3")
                         .build(),
                 CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
                         .processId("PROCESS_2").severity(SeverityEnum.INFORMATION)
@@ -179,6 +185,8 @@ class CardProcessServiceShould {
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .process("process4")
+                        .state("state4")
                         .build(),
                 CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
                         .processId("PROCESS_1").severity(SeverityEnum.INFORMATION)
@@ -186,6 +194,8 @@ class CardProcessServiceShould {
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .process("process5")
+                        .state("state5")
                         .build());
     }
 
@@ -224,6 +234,8 @@ class CardProcessServiceShould {
                 .startDate(Instant.now())
                 .externalRecipients(externalRecipients)
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .process("process1")
+                .state("state1")
                 .build();
 
         mockServer.expect(ExpectedCount.once(),
@@ -274,6 +286,8 @@ class CardProcessServiceShould {
                         .build())
                 .entityRecipients(entityRecipients)
                 .timeSpan(TimeSpanPublicationData.builder().start(Instant.ofEpochMilli(123l)).build())
+                .process("process1")
+                .state("state1")
                 .build();
         cardProcessingService.processCards(Flux.just(newCard)).subscribe();
         await().atMost(5, TimeUnit.SECONDS).until(() -> !newCard.getOrphanedUsers().isEmpty());
@@ -558,6 +572,8 @@ class CardProcessServiceShould {
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
+                        .process("process1")
+                        .state("state1")
                         .build()))).expectNextMatches(r -> r.getCount().equals(1)).verifyComplete();
 
         CardPublicationData card = CardPublicationData.builder()
@@ -570,6 +586,8 @@ class CardProcessServiceShould {
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
+                .process("process2")
+                .state("state2")
                 .build();
 
         cardProcessingService.validate(card);
@@ -608,6 +626,8 @@ class CardProcessServiceShould {
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
+                .process("process1")
+                .state("state1")
                 .build();
 
         cardProcessingService.validate(card);
