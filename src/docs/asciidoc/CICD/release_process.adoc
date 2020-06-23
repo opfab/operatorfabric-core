@@ -5,6 +5,8 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
+:jira_release_page: https://opfab.atlassian.net/projects/OC?orderField=RANK&selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=all
+:opfab_core_repo: https://github.com/opfab/operatorfabric-core
 
 [[release_process]]
 = Release process
@@ -34,7 +36,7 @@ Before releasing a version, you need to prepare the release.
 === Checking the release notes
 
 . Click the `Next Release` from
-link:https://opfab.atlassian.net/projects/OC?orderField=RANK&selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=all[JIRA the release list]
+link:{jira_release_page}[JIRA the release list]
 to get the release notes (click "Release notes" under the version name at the top) listing new features, fixed bugs etc...
 +
 image::release_notes.png[Release notes link]
@@ -47,8 +49,8 @@ explanations if need be.
 
 === Creating a release branch and preparing the release
 
-. Create a branch off the `develop` branch named `X.X.X.release` (note the lowercase `release` to distinguish it from
-`X.X.X.RELEASE` tags).
+. On the link:{opfab_core_repo}[operatorfabric-core repository], create a branch off the `develop` branch named
+`X.X.X.release` (note the lowercase `release` to distinguish it from `X.X.X.RELEASE` tags).
 +
 ```
 git checkout -b X.X.X.release
@@ -56,13 +58,13 @@ git checkout -b X.X.X.release
 
 . Cut the contents from the release_notes.adoc file from the
 link:https://github.com/opfab/release-notes/[release-notes repository] and paste it to the release_notes.adoc file
-found under *src/docs/asciidoc/docs*.
+found under *src/docs/asciidoc/docs* in the link:{opfab_core_repo}[operatorfabric-core repository].
 
-. Replace the `Version SNAPSHOT` title by `Version X.X.X.RELEASE`
+. In the link:{opfab_core_repo}[operatorfabric-core repository] release-notes.adoc file, replace the `Version SNAPSHOT`
+title by `Version X.X.X.RELEASE`
 //TODO Make that part of prepare version script
 
-. In the release page, change the name from "Next Version" to "X.X.X.RELEASE"
-//TODO Check that renaming works ok, no side effects. Otherwise we will move issues to a new version
+. In the link:{jira_release_page}[releases page on JIRA], change the name from "Next Version" to "X.X.X.RELEASE"
 
 . Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
@@ -127,25 +129,28 @@ documentation).
 git checkout master <1>
 git pull <2>
 git merge X.X.X.release <3>
-git tag X.X.X.RELEASE <4>
-git push <5>
-git push origin X.X.X.RELEASE <6>
 ----
 <1> Check out the `master` branch
 <2> Make sure your local copy is up to date
 <3> Merge the `X.X.X.release` branch into `master`
+
+IMPORTANT: If you also want the new docker images to be tagged `latest` (as should be the case for most release
+versions), you should add the keyword `ci_latest` to the merge commit message.
+
+----
+git tag X.X.X.RELEASE <4>
+git push <5>
+git push origin X.X.X.RELEASE <6>
+----
 <4> Tag the commit with the `X.X.X.RELEASE` tag
 <5> Push the commits to update the remote `master` branch
 <6> Push the tag
-
-//TODO ci_latest commit in merge message? Can there be conflicts?
-// TODO Should go through a PR for prelim check ?(more risks to go to the wrong branch now that develop is default)?
 
 . Check that the build is correctly triggered
 +
 You can check the status of the build job triggered by the commit on
 link:https://travis-ci.org/opfab/operatorfabric-core/branches[Travis CI].
-The build job should have the following four stages:
+The build job should have the following four stages (or three if the images aren't tagged as latest)
 +
 image::master_branch_build.png[Running build for master branch screenshot]
 +
@@ -153,7 +158,7 @@ Wait for the build to complete (around 20 minutes) and check that all stages hav
 
 . Check that the `X.X.X.RELEASE` images have been generated and pushed to DockerHub.
 
-. Check that the `latest` images have been updated on DockerHub.
+. Check that the `latest` images have been updated on DockerHub (if this has been triggered).
 
 . Check that the documentation has been generated and pushed to the GitHub pages website
 .. Check the version and revision date at the top of the documents in the current documentation
@@ -164,14 +169,17 @@ and that the links work.
 . Check that the tag was correctly pushed to GitHub and is visible under the
 https://github.com/opfab/operatorfabric-core/releases[releases page] for the repository.
 
-=== Checking deploy docker-compose
+=== Checking the docker-compose files
 
-The deploy docker-compose file should always rely on the latest RELEASE version
-available on DockerHub. Once the CI pipeline triggered by the previous steps has completed successfully,
-and you can see X.X.X.RELEASE images for all services on DockerHub, you should:
+While the docker-compose files should always point to the SNAPSHOT images while on the `develop` branch, on the `master`
+branch they should rely on the latest RELEASE version available on DockerHub. Once the CI pipeline triggered by the
+previous steps has completed successfully, and you can see X.X.X.RELEASE images for all services on DockerHub, you should:
 
 . Remove your locally built X.X.X.RELEASE images if any
-. Run the deploy docker-compose file to make sure it pulls the images from DockerHub and behaves as intended.
+. Run the config/demo docker-compose file to make sure it pulls the images from DockerHub and behaves as intended.
+
+People who want to experiment with OperatorFabric are pointed to this docker-compose so it's important to make sure
+that it's working correctly.
 
 === In Jira
 
@@ -180,6 +188,9 @@ In the "Releases" screen, release `X.X.X.RELEASE`.
 == Advertising the new release on the LFE mailing list
 
 . Send an email to the opfab-announce@lists.lfenergy.org mailing list with a link to the release notes on the website.
+
+NOTE: Here is the link to the link:https://lists.lfenergy.org/g/main[administration website for the LFE mailing lists]
+in case there is an issue.
 
 == Preparing the next version
 
@@ -190,8 +201,20 @@ new version will make rolling back or correcting any mistake on the release more
 
 === In Jira
 
-. In the "Releases" screen create a new release called `Next Release`.
+In the "Releases" screen create a new release called `Next Release`.
 
 === On the release-notes repository
 
-. Remove the items listed in the release_notes.adoc file so it's ready for the next version.
+Remove the items listed in the release_notes.adoc file so it's ready for the next version.
+
+=== On the operatorfabric-core repository
+
+Now that the release branch has served its purpose, it should be deleted so as not to clutter the repository and to
+avoid confusion with the actual release commit tagged on `master`.
+
+----
+git branch -d X.X.X.release <1>
+​git push origin --delete X.X.X.release <2>
+----
+<1> Delete the branch locally
+<2> Remove it from GitHub
