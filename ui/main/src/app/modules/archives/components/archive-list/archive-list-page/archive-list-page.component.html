@@ -9,7 +9,8 @@
 
 <ngb-pagination *ngIf="(collectionSize$ | async) > (size$ | async)"
   [collectionSize]="collectionSize$ | async"
-  [page]="first$ | async"
+  [page]="page"
+  [pageSize]="size$ | async"
   (pageChange)="updateResultPage($event)"
   [maxSize]="3"
   [rotate]="true">

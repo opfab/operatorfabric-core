@@ -2,9 +2,6 @@
   "archive": {
     "filters": {
       "page": {
-        "first": [
-          "0"
-        ],
         "size": [
           "10"
         ]
@@ -13,18 +10,6 @@
         "list": [
           "process",
           "someOtherProcess"
-        ]
-      },
-      "publisher": {
-        "list": [
-          {
-            "label": "Test Publisher",
-            "value": "TEST"
-          },
-          {
-            "label": "Test Publisher 2",
-            "value": "TEST2"
-          }
         ]
       },
       "tags": {

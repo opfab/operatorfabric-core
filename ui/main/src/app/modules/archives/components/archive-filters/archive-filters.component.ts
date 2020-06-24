@@ -10,7 +10,9 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable,Subject} from 'rxjs';
+
+import {takeUntil} from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { buildConfigSelector } from '@ofSelectors/config.selectors';
@@ -20,6 +22,7 @@ import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
 import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { TimeService } from '@ofServices/time.service';
 import { TranslateService } from '@ngx-translate/core';
+
 
 
 export enum FilterDateTypes {
@@ -51,10 +54,9 @@ export class ArchiveFiltersComponent implements OnInit {
 
   tags$: Observable<string []>;
   processes$: Observable<string []>;
-  size$: Observable<number>;
-  first$: Observable<number>;
-
+  size: number =10;
   archiveForm: FormGroup;
+  unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private store: Store<AppState>, private timeService: TimeService,private translateService: TranslateService) {
     this.archiveForm = new FormGroup({
@@ -71,8 +73,11 @@ export class ArchiveFiltersComponent implements OnInit {
   ngOnInit() {
     this.tags$ = this.store.select(buildConfigSelector('archive.filters.tags.list'));
     this.processes$ = this.store.select(buildConfigSelector('archive.filters.process.list'));
-    this.size$ = this.store.select(buildConfigSelector('archive.filters.page.size'));
-    this.first$ = this.store.select(buildConfigSelector('archive.filters.page.first'));
+    this.store.select(buildConfigSelector('archive.filters.page.size'))
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(configSize => {
+        this.size = configSize;
+      })
   }
 
   /**
@@ -104,10 +109,11 @@ export class ArchiveFiltersComponent implements OnInit {
   sendQuery(): void {
     const {value} = this.archiveForm;
     const params = this.filtersToMap(value);
-    this.size$.subscribe(size => params.set('size', [size.toString()]));
-    this.first$.subscribe(first => params.set('page', [first.toString()]));
+    params.set('size', [this.size.toString()]);
+    params.set('page',['0']);
     this.store.dispatch(new SendArchiveQuery({params}));
   }
+
     clearFilters(): void {
         this.store.dispatch(new FlushArchivesResult());
         this.archiveForm.get("tags").setValue('');
@@ -119,5 +125,9 @@ export class ArchiveFiltersComponent implements OnInit {
     }
 
 
+    ngOnDestroy(){
+      this.unsubscribe$.next();
+      this.unsubscribe$.complete();
+    }
 }
 
