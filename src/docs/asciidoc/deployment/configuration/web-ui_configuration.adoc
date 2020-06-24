@@ -93,7 +93,6 @@ while clicking the icon opens in a new tab.
 
 
 |operatorfabric.archive.filters.page.size||no|The page size of archive filters
-|operatorfabric.archive.filters.page.first||no|The first page start of archiving module
 |operatorfabric.archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
 |operatorfabric.archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
 |operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 

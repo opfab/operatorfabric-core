@@ -13,9 +13,10 @@ import { Component, OnInit } from '@angular/core';
 import {UpdateArchivePage} from '@ofActions/archive.actions';
 import {Store, select} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import { selectArchiveCount } from '@ofStore/selectors/archive.selectors';
+import { selectArchiveCount,selectArchiveFilters} from '@ofStore/selectors/archive.selectors';
 import { catchError } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { of, Observable,Subject } from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 
 @Component({
@@ -25,9 +26,11 @@ import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 })
 export class ArchiveListPageComponent implements OnInit {
 
+  page: number = 0;
   collectionSize$: Observable<number>;
-  first$: Observable<number>;
   size$: Observable<number>;
+  unsubscribe$: Subject<void> = new Subject<void>();
+
   constructor(private store: Store<AppState>) {}
   ngOnInit(): void {
     this.collectionSize$ = this.store.pipe(
@@ -35,10 +38,25 @@ export class ArchiveListPageComponent implements OnInit {
       catchError(err => of(0))
     );
     this.size$ = this.store.select(buildConfigSelector('archive.filters.page.size'));
-    this.first$ = this.store.select(buildConfigSelector('archive.filters.page.first'));
+
+    this.store.select(selectArchiveFilters)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(filters => {
+        const pageFilter = filters.get("page");
+        // page on ngb-pagination component start at 1 , and page on backend start at 0 
+        if (pageFilter) this.page = +pageFilter[0] + 1;
+      })
+
   }
 
   updateResultPage(currentPage): void {
+
+    // page on ngb-pagination component start at 1 , and page on backend start at 0 
     this.store.dispatch(new UpdateArchivePage({page: currentPage - 1}));
+  }
+
+  ngOnDestroy(){
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
