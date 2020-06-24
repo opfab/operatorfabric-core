@@ -16,7 +16,7 @@ import {CardDetailsComponent} from "./components/card-details/card-details.compo
 import {DetailsComponent} from "./components/details/details.component";
 import {DetailComponent} from "./components/detail/detail.component";
 import {TranslateModule} from "@ngx-translate/core";
-import {ThirdsService} from "../../services/thirds.service";
+import {ProcessesService} from "@ofServices/processes.service";
 import {HandlebarsService} from "./services/handlebars.service";
 import {UtilitiesModule} from "../utilities/utilities.module";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
@@ -44,7 +44,7 @@ export class CardsModule {
     static forRoot(): ModuleWithProviders{
         return {
             ngModule: CardsModule,
-            providers: [ThirdsService]
+            providers: [ProcessesService]
         }
     }
 }

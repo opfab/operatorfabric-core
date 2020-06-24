@@ -63,6 +63,6 @@ export class DetailsComponent extends ResizableComponent implements AfterViewIni
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes['card'].currentValue)
-            this._i18nPrefix = changes['card'].currentValue.publisher+'.'+changes['card'].currentValue.publisherVersion+'.';
+            this._i18nPrefix = changes['card'].currentValue.process+'.'+changes['card'].currentValue.processVersion+'.';
     }
 }

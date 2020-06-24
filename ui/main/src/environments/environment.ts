@@ -22,7 +22,7 @@ export const environment = {
         cardspub: 'http://localhost:2002/cardspub',
         users: 'http://localhost:2002/users',
         archives: '',
-        thirds: 'http://localhost:2002/thirds',
+        processes: 'http://localhost:2002/thirds/processes',
         config: 'http://localhost:2002/config/web-ui.json',
         time: 'http://localhost:2002/time'
     },

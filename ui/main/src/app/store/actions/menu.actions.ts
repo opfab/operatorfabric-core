@@ -10,7 +10,7 @@
 
 
 import {Action} from '@ngrx/store';
-import {ThirdMenu} from "@ofModel/thirds.model";
+import {Menu} from "@ofModel/processes.model";
 
 export enum MenuActionTypes {
     LoadMenu = '[Menu] Load Menu',
@@ -39,7 +39,7 @@ export class LoadMenuSuccess implements Action {
     readonly type = MenuActionTypes.LoadMenuSuccess;
 
     /* istanbul ignore next */
-    constructor(public payload: { menu: ThirdMenu[] }) {
+    constructor(public payload: { menu: Menu[] }) {
     }
 }
 

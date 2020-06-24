@@ -19,7 +19,7 @@ import {appReducer, AppState, storeConfig} from '@ofStore/index';
 import { IconComponent } from './icon/icon.component';
 import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
-import {ThirdsService} from '@ofServices/thirds.service';
+import {ProcessesService} from '@ofServices/processes.service';
 import {By} from '@angular/platform-browser';
 import {InfoComponent} from './info/info.component';
 import {TimeService} from '@ofServices/time.service';
@@ -67,7 +67,7 @@ describe('NavbarComponent', () => {
             declarations: [NavbarComponent, IconComponent, CustomLogoComponent, InfoComponent, MenuLinkComponent],
             providers: [
                 Store,
-                ThirdsService,
+                ProcessesService,
                 TimeService,
                 AuthenticationImportHelperForSpecs,
                 GlobalStyleService

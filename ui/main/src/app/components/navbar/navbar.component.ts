@@ -18,7 +18,7 @@ import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {LoadMenu} from '@ofActions/menu.actions';
 import {selectMenuStateMenu} from '@ofSelectors/menu.selectors';
 import {Observable, BehaviorSubject} from 'rxjs';
-import {ThirdMenu} from '@ofModel/thirds.model';
+import {Menu} from '@ofModel/processes.model';
 import {tap} from 'rxjs/operators';
 import * as _ from 'lodash';
 import {buildConfigSelector} from '@ofStore/selectors/config.selectors';
@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit {
     navbarCollapsed = true;
     navigationRoutes = navigationRoutes;
     currentPath: string[];
-    private _thirdMenus: Observable<ThirdMenu[]>;
+    private _thirdMenus: Observable<Menu[]>;
     expandedMenu: boolean[] = [];
     expandedUserMenu = false;
     

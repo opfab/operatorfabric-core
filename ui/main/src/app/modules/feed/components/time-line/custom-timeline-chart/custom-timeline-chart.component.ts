@@ -255,7 +255,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                     date: timeSpan.start, 
                     id: card.id,
                     severity: card.severity, publisher: card.publisher,
-                    publisherVersion: card.publisherVersion, summary: card.title
+                    processVersion: card.processVersion, summary: card.title
                 };
                 myCardsTimeline.push(myCardTimelineTimespans);
             });
@@ -264,7 +264,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                 date: card.startDate,
                 id: card.id,
                 severity: card.severity, publisher: card.publisher,
-                publisherVersion: card.publisherVersion, summary: card.title
+                processVersion: card.processVersion, summary: card.title
             };
             myCardsTimeline.push(myCardTimeline);
         }
@@ -333,7 +333,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                 parameters: cards[cardIndex].summary.parameters,
                 key: cards[cardIndex].summary.key,
                 summaryDate: moment(cards[cardIndex].date).format('DD/MM - HH:mm :'),
-                i18nPrefix: cards[cardIndex].publisher + '.' + cards[cardIndex].publisherVersion + '.'
+                i18nPrefix: cards[cardIndex].publisher + '.' + cards[cardIndex].processVersion + '.'
               });
               cardIndex++;
             }
