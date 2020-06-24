@@ -79,7 +79,8 @@
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",
     "playSoundForCompliant": "Conforme",
-    "playSoundForInformation": "Information"
+    "playSoundForInformation": "Information",
+    "invalidEmail": "Adresse email invalide"
   },
   "archive": {
     "filters": {
