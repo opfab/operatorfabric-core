@@ -10,30 +10,7 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
-import static java.nio.charset.Charset.forName;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
-import static org.jeasy.random.FieldPredicates.named;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
@@ -48,16 +25,10 @@ import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardReceiver;
-import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.Recipient;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.TimeSpanPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -68,13 +39,29 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
-
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import javax.validation.ConstraintViolationException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import static java.nio.charset.Charset.forName;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.jeasy.random.FieldPredicates.named;
+import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 /**
  * <p>
@@ -129,8 +116,8 @@ class CardProcessServiceShould {
         }
 
 
-
         private User user;
+        private CurrentUserWithPerimeters currentUserWithPerimeters;
 
     public CardProcessServiceShould() {
 
@@ -146,6 +133,15 @@ class CardProcessServiceShould {
         entities.add("newPublisherId");
         entities.add("entity2");
         user.setEntities(entities);
+        currentUserWithPerimeters = new CurrentUserWithPerimeters();
+        currentUserWithPerimeters.setUserData(user);
+        ComputedPerimeter c1 = new ComputedPerimeter();
+        c1.setProcess("PROCESS_CARD_USER") ;
+        c1.setState("STATE1");
+        c1.setRights(RightsEnum.RECEIVEANDWRITE);
+        List list=new ArrayList<ComputedPerimeter>();
+        list.add(c1);
+        currentUserWithPerimeters.setComputedPerimeters(list);
     }
 
     private Flux<CardPublicationData> generateCards() {
@@ -221,12 +217,13 @@ class CardProcessServiceShould {
 
         CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
                 .processId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+                .process("PROCESS_CARD_USER")
+                .state("STATE1")
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .externalRecipients(externalRecipients)
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                .process("process1")
                 .state("state1")
                 .build();
 
@@ -236,9 +233,10 @@ class CardProcessServiceShould {
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
 
-        StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card), user))
+        StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card), currentUserWithPerimeters))
                 .expectNextMatches(r -> r.getCount().equals(1)).verifyComplete();
         checkCardPublisherId(card);
+
     }
 
     @Test

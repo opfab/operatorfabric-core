@@ -1,5 +1,6 @@
 #/bin/sh
 
+
 rm -rf target
 
 java -jar karate.jar                              \
@@ -21,4 +22,5 @@ java -jar karate.jar                              \
       cards/post1BigCards.feature                 
       #cards/updateCardSubscription.feature
       #cards/delete3BigCards.feature               
+
 
