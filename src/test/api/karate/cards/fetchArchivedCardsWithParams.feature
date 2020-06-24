@@ -12,7 +12,7 @@ Feature: Archives
 
 [{
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card1",
 	"state": "messageState",
@@ -30,7 +30,7 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card2",
 	"state": "messageState",
@@ -48,7 +48,7 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card3",
 	"state": "messageState",
@@ -66,7 +66,7 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card4",
 	"state": "messageState",
@@ -84,7 +84,7 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card5",
 	"state": "messageState",
@@ -102,7 +102,7 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card6",
 	"state": "messageState",
@@ -121,7 +121,7 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card7",
 	"state": "messageState",
@@ -139,7 +139,7 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card8",
 	"state": "messageState",
@@ -157,7 +157,7 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card9",
 	"endDate" : 1583733122000,
@@ -176,7 +176,7 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card10",
 	"state": "messageState",
@@ -198,7 +198,7 @@ Feature: Archives
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "2",
+	"processVersion" : "2",
 	"process"  :"defaultProcess",
 	"processId" : "process10",
 	"state": "messageState",

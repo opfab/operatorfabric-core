@@ -9,14 +9,14 @@ Feature: get stylesheet
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
-    * def thirdName = 'api_test'
+    * def process = 'api_test'
     * def cssName = 'style'
-    * def thirdVersion = 2
+    * def version = 2
     * def templateLanguage = 'en'
 
 Scenario:Check stylesheet
 
-    Given url opfabUrl + 'thirds/' + thirdName + '/css/' + cssName + '?version=' + thirdVersion
+    Given url opfabUrl + '/thirds/processes/' + process + '/css/' + cssName + '?version=' + version
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
@@ -24,20 +24,20 @@ Scenario:Check stylesheet
 
   Scenario:Check stylesheet without authentication
 
-    Given url opfabUrl + 'thirds/' + thirdName + '/css/' + cssName + '?version=' + thirdVersion
+    Given url opfabUrl + '/thirds/processes/' + process + '/css/' + cssName + '?version=' + version
     When method GET
     Then status 200
 
   Scenario:Check stylesheet with normal user
 
-    Given url opfabUrl + 'thirds/' + thirdName + '/css/' + cssName + '?version=' + thirdVersion
+    Given url opfabUrl + '/thirds/processes/' + process + '/css/' + cssName + '?version=' + version
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method GET
     Then status 200
 
   Scenario: Check stylesheet for an nonexisting css version
 
-    Given url opfabUrl + 'thirds/' + thirdName + '/css/' + cssName + '?version=9999999999'
+    Given url opfabUrl + '/thirds/processes/' + process + '/css/' + cssName + '?version=9999999999'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then print response
@@ -45,7 +45,7 @@ Scenario:Check stylesheet
 
   Scenario: Check stylesheet for an nonexisting third
 
-   Given url opfabUrl + 'thirds/unknownThird/css/style?version=2'
+   Given url opfabUrl + '/thirds/processes/unknownThird/css/style?version=2'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then print response

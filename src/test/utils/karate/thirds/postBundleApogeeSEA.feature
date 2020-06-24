@@ -9,16 +9,16 @@ Feature: Bundle
   Scenario: Post Bundle for big cards 
 
     # Push bundle
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + 'thirds/processes'
     And header Authorization = 'Bearer ' + authToken
     And multipart field file = read('resources/bundle_api_test_apogee.tar.gz')
     When method post
     Then status 201
 
     # Check bundle
-    Given url opfabUrl + 'thirds/APOGEESEA'
+    Given url opfabUrl + 'thirds/processes/APOGEESEA'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response.name == 'APOGEESEA'
+    And match response.id == 'APOGEESEA'
 

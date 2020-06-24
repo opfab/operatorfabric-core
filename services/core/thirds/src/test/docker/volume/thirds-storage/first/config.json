@@ -1,5 +1,5 @@
 {
-  "name": "first",
+  "id": "first",
   "version": "v1",
   "templates": [
     "template1"
@@ -12,25 +12,21 @@
     "fr",
     "en"
   ],
-  "processes": {
-    "testProcess": {
-      "states": {
-        "testState": {
-          "details": [
-            {
-              "title": {
-                "key": "template.title"
-              },
-              "templateName": "template"
-            }
-          ],
-          "actions": {
-            "testAction": {
-              "type": "URL",
-              "label": {
-                "key": "my.card.my.action.label"
-              }
-            }
+  "states": {
+    "testState": {
+      "details": [
+        {
+          "title": {
+            "key": "template.title"
+          },
+          "templateName": "template"
+        }
+      ],
+      "actions": {
+        "testAction": {
+          "type": "URL",
+          "label": {
+            "key": "my.card.my.action.label"
           }
         }
       }

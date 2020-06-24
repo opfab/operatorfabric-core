@@ -6,7 +6,7 @@ Feature: getI18n
     * def authToken = signIn.authToken
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
     * def authTokenAsTSO = signInAsTSO.authToken
-    * def thirdName = 'api_test'
+    * def process = 'api_test'
     * def templateName = 'template'
     * def thirdVersion = 2
     * def fileLanguage = 'en'
@@ -14,7 +14,7 @@ Feature: getI18n
   Scenario: Check i18n file
 
     # Check template
-    Given url opfabUrl + 'thirds/'+ thirdName +'/i18n/' + '?locale=' + fileLanguage + '&version='+ thirdVersion
+    Given url opfabUrl + '/thirds/processes/'+ process +'/i18n/' + '?locale=' + fileLanguage + '&version='+ thirdVersion
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
@@ -22,14 +22,14 @@ Feature: getI18n
 
   Scenario: Check i18n file without authentication
 
-    Given url opfabUrl + 'thirds/'+ thirdName +'/i18n/' + '?locale=' + fileLanguage + '&version='+ thirdVersion
+    Given url opfabUrl + '/thirds/processes/'+ process +'/i18n/' + '?locale=' + fileLanguage + '&version='+ thirdVersion
     When method GET
     Then status 401
     And print response
 
   Scenario: Check unknown i18n file version
 
-    Given url opfabUrl + 'thirds/'+ thirdName +'/i18n/' + '?locale=' + fileLanguage + '&version=9999999'
+    Given url opfabUrl + '/thirds/processes/'+ process +'/i18n/' + '?locale=' + fileLanguage + '&version=9999999'
     And header Authorization = 'Bearer ' + authToken
     When method GET
    Then print response
@@ -39,7 +39,7 @@ Feature: getI18n
 
   Scenario: Check unknown i18n file language
 
-    Given url opfabUrl + 'thirds/'+ thirdName +'/i18n/' + '?locale=DD' + '&version='+ thirdVersion
+    Given url opfabUrl + '/thirds/processes/'+ process +'/i18n/' + '?locale=DD' + '&version='+ thirdVersion
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then print response
@@ -47,7 +47,7 @@ Feature: getI18n
 
   Scenario: Check i18n for an unknown third
 
-    Given url opfabUrl + 'thirds/unknownThird/i18n/' + '?locale=fr' + '&version='+ thirdVersion
+    Given url opfabUrl + '/thirds/processes/unknownThird/i18n/' + '?locale=fr' + '&version='+ thirdVersion
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then print response
