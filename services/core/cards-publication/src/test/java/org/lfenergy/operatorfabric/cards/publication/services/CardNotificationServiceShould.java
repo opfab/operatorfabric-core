@@ -70,7 +70,7 @@ class CardNotificationServiceShould {
         Instant start = Instant.now().plusSeconds(3600);
         CardPublicationData newCard = CardPublicationData.builder()
            .publisher("PUBLISHER_1")
-           .publisherVersion("0.0.1")
+           .processVersion("0.0.1")
            .processId("PROCESS_1")
            .severity(SeverityEnum.ALARM)
            .startDate(start)

@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Tag("mongo")
 @WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
 @TestInstance(Lifecycle.PER_CLASS)
-public class CardControllerProcessAcknoledgementShould extends CardControllerShouldBase {
+public class CardControllerProcessAcknowledgementShould extends CardControllerShouldBase {
 
 	String cardUid;
 	String cardNeverContainsAcksUid;

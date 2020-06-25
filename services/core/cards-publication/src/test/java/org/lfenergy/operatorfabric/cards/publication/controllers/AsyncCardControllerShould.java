@@ -52,7 +52,7 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 @Slf4j
 @Tag("end-to-end")
 @Tag("mongo")
-class AsyncCardControllerShould {
+class AsyncCardControllerShould extends CardControllerShouldBase {
 
     @Autowired
     private CardRepositoryForTest cardRepository;
@@ -70,10 +70,10 @@ class AsyncCardControllerShould {
     @Test
     void createSyncCards() {
         this.webTestClient.post().uri("/async/cards").accept(MediaType.APPLICATION_JSON)
-           .body(generateCards(), CardPublicationData.class)
-           .exchange()
-           .expectStatus()
-           .value(is(HttpStatus.ACCEPTED.value()));
+                .body(generateCards(), CardPublicationData.class)
+                .exchange()
+                .expectStatus()
+                .value(is(HttpStatus.ACCEPTED.value()));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkCardCount(4));
         await().atMost(5, TimeUnit.SECONDS).until(() -> checkArchiveCount(5));
     }
@@ -98,68 +98,4 @@ class AsyncCardControllerShould {
         }
     }
 
-    private Flux<CardPublicationData> generateCards() {
-        return Flux.just(
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_1")
-              .publisherVersion("O")
-              .processId("PROCESS_1")
-              .severity(SeverityEnum.ALARM)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .process("process1")
-              .state("state1")
-              .build(),
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_2")
-              .publisherVersion("O")
-              .processId("PROCESS_1")
-              .severity(SeverityEnum.INFORMATION)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .process("process2")
-              .state("state2")
-              .build(),
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_2")
-              .publisherVersion("O")
-              .processId("PROCESS_2")
-              .severity(SeverityEnum.COMPLIANT)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .process("process3")
-              .state("state3")
-              .build(),
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_1")
-              .publisherVersion("O")
-              .processId("PROCESS_2")
-              .severity(SeverityEnum.INFORMATION)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .process("process4")
-              .state("state4")
-              .build(),
-           CardPublicationData.builder()
-              .publisher("PUBLISHER_1")
-              .publisherVersion("O")
-              .processId("PROCESS_1")
-              .severity(SeverityEnum.INFORMATION)
-              .title(I18nPublicationData.builder().key("title").build())
-              .summary(I18nPublicationData.builder().key("summary").build())
-              .startDate(Instant.now())
-              .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-              .process("process5")
-              .state("state5")
-              .build()
-        );
-    }
 }

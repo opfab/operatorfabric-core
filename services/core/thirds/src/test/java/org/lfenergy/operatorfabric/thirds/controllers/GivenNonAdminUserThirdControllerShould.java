@@ -15,7 +15,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
-import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
+import org.lfenergy.operatorfabric.thirds.services.ProcessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -65,7 +65,7 @@ class GivenNonAdminUserThirdControllerShould {
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
-    private ThirdsService service;
+    private ProcessesService service;
 
     @BeforeAll
     void setup() throws Exception {
@@ -84,8 +84,8 @@ class GivenNonAdminUserThirdControllerShould {
     }
 
     @Test
-    void listThirds() throws Exception {
-        mockMvc.perform(get("/thirds"))
+    void listProcesses() throws Exception {
+        mockMvc.perform(get("/thirds/processes"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -94,7 +94,7 @@ class GivenNonAdminUserThirdControllerShould {
 
     @Test
     void fetch() throws Exception {
-        ResultActions result = mockMvc.perform(get("/thirds/first"));
+        ResultActions result = mockMvc.perform(get("/thirds/processes/first"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -104,7 +104,7 @@ class GivenNonAdminUserThirdControllerShould {
 
     @Test
     void fetchWithVersion() throws Exception {
-        ResultActions result = mockMvc.perform(get("/thirds/first?version=0.1"));
+        ResultActions result = mockMvc.perform(get("/thirds/processes/first?version=0.1"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -112,15 +112,15 @@ class GivenNonAdminUserThirdControllerShould {
     }
 
     @Test
-    void fetchNonExistingThirds() throws Exception {
-        mockMvc.perform(get("/thirds/DOES_NOT_EXIST"))
+    void fetchNonExistingProcesses() throws Exception {
+        mockMvc.perform(get("/thirds/processes/DOES_NOT_EXIST"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void fetchCssResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/thirds/first/css/style1")
+                get("/thirds/processes/first/css/style1")
                         .accept("text/css"));
         result
                 .andExpect(status().isOk())
@@ -130,7 +130,7 @@ class GivenNonAdminUserThirdControllerShould {
                         "}")))
         ;
         result = mockMvc.perform(
-                get("/thirds/first/css/style1?version=0.1")
+                get("/thirds/processes/first/css/style1?version=0.1")
                         .accept("text/css"));
         result
                 .andExpect(status().isOk())
@@ -144,7 +144,7 @@ class GivenNonAdminUserThirdControllerShould {
     @Test
     void fetchTemplateResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/thirds/first/templates/template1?locale=fr")
+                get("/thirds/processes/first/templates/template1?locale=fr")
                         .accept("application/handlebars")
         );
         result
@@ -153,7 +153,7 @@ class GivenNonAdminUserThirdControllerShould {
                 .andExpect(content().string(is("{{service}} fr")))
         ;
         result = mockMvc.perform(
-                get("/thirds/first/templates/template?version=0.1&locale=fr")
+                get("/thirds/processes/first/templates/template?version=0.1&locale=fr")
                         .accept("application/handlebars"));
         result
                 .andExpect(status().isOk())
@@ -161,7 +161,7 @@ class GivenNonAdminUserThirdControllerShould {
                 .andExpect(content().string(is("{{service}} fr 0.1")))
         ;
         result = mockMvc.perform(
-                get("/thirds/first/templates/template?locale=en&version=0.1")
+                get("/thirds/processes/first/templates/template?locale=en&version=0.1")
                         .accept("application/handlebars"));
         result
                 .andExpect(status().isOk())
@@ -169,7 +169,7 @@ class GivenNonAdminUserThirdControllerShould {
                 .andExpect(content().string(is("{{service}} en 0.1")))
         ;
         result = mockMvc.perform(
-                get("/thirds/first/templates/templateIO?locale=fr&version=0.1")
+                get("/thirds/processes/first/templates/templateIO?locale=fr&version=0.1")
                         .accept("application/json", "application/handlebars"));
         result
                 .andExpect(status().is4xxClientError())
@@ -180,7 +180,7 @@ class GivenNonAdminUserThirdControllerShould {
     @Test
     void fetchI18nResource() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/thirds/first/i18n?locale=fr")
+                get("/thirds/processes/first/i18n?locale=fr")
                         .accept("text/plain")
         );
         result
@@ -189,7 +189,7 @@ class GivenNonAdminUserThirdControllerShould {
                 .andExpect(content().string(is("card.title=\"Titre $1\"")))
         ;
         result = mockMvc.perform(
-                get("/thirds/first/i18n?locale=en")
+                get("/thirds/processes/first/i18n?locale=en")
                         .accept("text/plain")
         );
         result
@@ -198,7 +198,7 @@ class GivenNonAdminUserThirdControllerShould {
                 .andExpect(content().string(is("card.title=\"Title $1\"")))
         ;
         result = mockMvc.perform(
-                get("/thirds/first/i18n?locale=en&version=0.1")
+                get("/thirds/processes/first/i18n?locale=en&version=0.1")
                         .accept("text/plain")
         );
         result
@@ -209,7 +209,7 @@ class GivenNonAdminUserThirdControllerShould {
 
         assertException(FileNotFoundException.class).isThrownBy(() ->
                 mockMvc.perform(
-                        get("/thirds/first/i18n?locale=de&version=0.1")
+                        get("/thirds/processes/first/i18n?locale=de&version=0.1")
                                 .accept("text/plain")
                 ));
     }
@@ -222,11 +222,11 @@ class GivenNonAdminUserThirdControllerShould {
             Path pathToBundle = Paths.get("./build/test-data/bundles/second-2.1.tar.gz");
             MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz", "application/gzip", Files
                     .readAllBytes(pathToBundle));
-            mockMvc.perform(multipart("/thirds/second").file(bundle))
+            mockMvc.perform(multipart("/thirds/processes/second").file(bundle))
                     .andExpect(status().isForbidden())
             ;
 
-            mockMvc.perform(get("/thirds"))
+            mockMvc.perform(get("/thirds/processes"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(2)));
@@ -236,7 +236,7 @@ class GivenNonAdminUserThirdControllerShould {
         
         @Nested
         @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
-        class DeleteOnlyOneThird {
+        class DeleteOnlyOneProcess {
         	
         	static final String bundleName = "first";
         	
@@ -250,21 +250,21 @@ class GivenNonAdminUserThirdControllerShould {
         	
         	@Test
             void deleteBundleByNameAndVersionWhichNotBeingDeafult() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName+"/versions/0.1"));
+        		ResultActions result = mockMvc.perform(delete("/thirds/processes/"+bundleName+"/versions/0.1"));
                 result
                         .andExpect(status().isForbidden());
             }
         	
         	@Test
             void deleteGivenBundle() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/thirds/"+bundleName));
+        		ResultActions result = mockMvc.perform(delete("/thirds/processes/"+bundleName));
                 result
                         .andExpect(status().isForbidden());
             }
         	
         	@Test
             void deleteGivenBundleNotFoundError() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/thirds/impossible_a_third_with_this_exact_name_exists"));
+        		ResultActions result = mockMvc.perform(delete("/thirds/processes/impossible_a_third_with_this_exact_name_exists"));
                 result
                         .andExpect(status().isForbidden());
             }
@@ -274,9 +274,9 @@ class GivenNonAdminUserThirdControllerShould {
             class DeleteContent {
                 @Test
                 void clean() throws Exception {
-                    mockMvc.perform(delete("/thirds"))
+                    mockMvc.perform(delete("/thirds/processes"))
                             .andExpect(status().isForbidden());
-                    mockMvc.perform(get("/thirds"))
+                    mockMvc.perform(get("/thirds/processes"))
                             .andExpect(status().isOk())
                             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                             .andExpect(jsonPath("$", hasSize(2)));

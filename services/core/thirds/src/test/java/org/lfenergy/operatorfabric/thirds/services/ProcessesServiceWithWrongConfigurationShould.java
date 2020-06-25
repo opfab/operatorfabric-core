@@ -21,22 +21,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-/**
- * <p></p>
- * Created on 17/04/18
- *
- */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class})
 @Slf4j
 @ActiveProfiles("service_error")
-public class ThirdsServiceWithWrongConfigurationShould {
+public class ProcessesServiceWithWrongConfigurationShould {
 
   @Autowired
-  ThirdsService service;
+  ProcessesService service;
 
   @Test
   void listErroneousThirds() {
-    Assertions.assertThat(service.listThirds()).hasSize(0);
+    Assertions.assertThat(service.listProcesses()).hasSize(0);
   }
 }

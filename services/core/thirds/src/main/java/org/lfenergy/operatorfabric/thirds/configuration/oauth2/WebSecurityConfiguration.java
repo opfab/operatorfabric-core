@@ -32,7 +32,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String THIRDS_PATH = "/thirds/**";
-    private static final String STYLE_URL_PATTERN = "/thirds/*/css/*";
+    private static final String STYLE_URL_PATTERN = "/thirds/processes/*/css/*";
     
     @Autowired
     private Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter;
@@ -53,7 +53,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, THIRDS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.PUT, THIRDS_PATH).hasRole(ADMIN_ROLE)
                 .antMatchers(HttpMethod.DELETE, THIRDS_PATH).hasRole(ADMIN_ROLE)
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+        ;
                 
     }
 

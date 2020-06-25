@@ -195,9 +195,10 @@ public class CardRepositoryShould {
     public void persistCard() {
         CardConsultationData card =
                 CardConsultationData.builder()
-                        .processId("PROCESS")
+                        .processId("PROCESS_ID")
+                        .process("PROCESS")
                         .publisher("PUBLISHER")
-                        .publisherVersion("0")
+                        .processVersion("0")
                         .startDate(Instant.now())
                         .severity(SeverityEnum.ALARM)
                         .title(I18nConsultationData.builder().key("title").build())
@@ -230,7 +231,7 @@ public class CardRepositoryShould {
                 .expectComplete()
                 .verify();
 
-        StepVerifier.create(repository.findById("PUBLISHER_PROCESS"))
+        StepVerifier.create(repository.findById("PUBLISHER_PROCESS_ID"))
                 .expectNextMatches(computeCardPredicate(card))
                 .expectComplete()
                 .verify();
@@ -293,10 +294,10 @@ public class CardRepositoryShould {
                 .verify();
     }
 
-    private void assertCard(CardOperation op, int cardIndex, Object processName, Object publisher, Object publisherVersion) {
+    private void assertCard(CardOperation op, int cardIndex, Object processName, Object publisher, Object processVersion) {
         assertThat(op.getCards().get(cardIndex).getId()).isEqualTo(processName);
         assertThat(op.getCards().get(cardIndex).getPublisher()).isEqualTo(publisher);
-        assertThat(op.getCards().get(cardIndex).getPublisherVersion()).isEqualTo(publisherVersion);
+        assertThat(op.getCards().get(cardIndex).getProcessVersion()).isEqualTo(processVersion);
     }
 
     @Test

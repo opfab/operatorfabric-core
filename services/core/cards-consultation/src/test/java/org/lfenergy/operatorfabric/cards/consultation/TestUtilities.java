@@ -86,9 +86,10 @@ public class TestUtilities {
             , String login, String[] groups, String[] entities
             , String[] userAcks) {    	
         CardConsultationData.CardConsultationDataBuilder cardBuilder = CardConsultationData.builder()
+                .process("PROCESS")
                 .processId("PROCESS" + processSuffix)
                 .publisher("PUBLISHER")
-                .publisherVersion("0")
+                .processVersion("0")
                 .startDate(start)
                 .endDate(end != null ? end : null)
                 .severity(SeverityEnum.ALARM)
@@ -175,8 +176,9 @@ public class TestUtilities {
     public static ArchivedCardConsultationData createSimpleArchivedCard(String processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
         ArchivedCardConsultationData.ArchivedCardConsultationDataBuilder archivedCardBuilder = ArchivedCardConsultationData.builder()
                 .processId("PROCESS" + processSuffix)
+                .process("PROCESS")
                 .publisher(publisher)
-                .publisherVersion("0")
+                .processVersion("0")
                 .startDate(start)
                 .endDate(end != null ? end : null)
                 .severity(SeverityEnum.ALARM)

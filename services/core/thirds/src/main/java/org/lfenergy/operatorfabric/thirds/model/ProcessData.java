@@ -15,13 +15,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Third Model, documented at {@link Third}
+ * Process Model, documented at {@link Process}
  *
  * {@inheritDoc}
  *
@@ -31,47 +32,41 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @Slf4j
-public class ThirdData implements Third {
+public class ProcessData implements Process {
 
+  private String id;
   private String name;
   private String version;
   @Singular
   private List<String> templates;
   @Singular
   private List<String> csses;
-  @Singular("processesData")
-  @JsonIgnore
-  private Map<String,ThirdProcessesData> processesData;
+  private String menuLabel;
   @Singular("menuEntryData")
   @JsonIgnore
-  private List<? extends ThirdMenuEntry> menuEntriesData;
-  private String i18nLabelKey;  
-  
+  private List<? extends MenuEntry> menuEntriesData;
+  @Singular("stateData")
+  private Map<String, ProcessStatesData> statesData;
 
   @Override
-  public Map<String, ? extends ThirdProcesses> getProcesses(){
-    return processesData;
+  public Map<String, ? extends ProcessStates> getStates(){
+    return statesData;
   }
 
   @Override
-  public void setProcesses(Map<String, ? extends ThirdProcesses> processesData){
-    try { 
-      this.processesData = new HashMap<>((Map<String,ThirdProcessesData>) processesData);
-    }
-    catch (ClassCastException exception) {
-      log.error("Unexpected Error arose ", exception);
-    }
+  public void setStates(Map<String, ? extends ProcessStates> statesData){
+    this.statesData = new HashMap<>((Map<String, ProcessStatesData>) statesData);
   }
 
   @Override
-  public List<? extends ThirdMenuEntry> getMenuEntries(){
+  public List<? extends MenuEntry> getMenuEntries(){
     return menuEntriesData;
   }
 
   @Override
-  public void setMenuEntries(List<? extends ThirdMenuEntry> menuEntries){
+  public void setMenuEntries(List<? extends MenuEntry> menuEntries){
     try {
-      this.menuEntriesData = new ArrayList<>((List < ThirdMenuEntryData >) menuEntries);
+      this.menuEntriesData = new ArrayList<>((List <MenuEntryData>) menuEntries);
     }
     catch (ClassCastException exception) {
       log.error("Unexpected Error arose ", exception);

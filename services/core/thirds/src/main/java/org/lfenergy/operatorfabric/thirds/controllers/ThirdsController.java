@@ -15,12 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.thirds.model.*;
-import org.lfenergy.operatorfabric.thirds.services.ThirdsService;
+import org.lfenergy.operatorfabric.thirds.model.Process;
+import org.lfenergy.operatorfabric.thirds.services.ProcessesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,16 +43,16 @@ import java.util.Map;
 public class ThirdsController implements ThirdsApi {
 
     public static final String UNABLE_TO_LOAD_FILE_MSG = "Unable to load submitted file";
-    private ThirdsService service;
+    private ProcessesService service;
 
     @Autowired
-    public ThirdsController(ThirdsService service) {
+    public ThirdsController(ProcessesService service) {
         this.service = service;
     }
 
     @Override
-    public byte[] getCss(HttpServletRequest request, HttpServletResponse response, String thirdName, String cssFileName, String apiVersion) throws IOException {
-        Resource resource = service.fetchResource(thirdName, ResourceTypeEnum.CSS, apiVersion, cssFileName);
+    public byte[] getCss(HttpServletRequest request, HttpServletResponse response, String processName, String cssFileName, String version) throws IOException {
+        Resource resource = service.fetchResource(processName, ResourceTypeEnum.CSS, version, cssFileName);
         return loadResource(resource);
     }
 
@@ -71,41 +71,42 @@ public class ThirdsController implements ThirdsApi {
     }
 
     @Override
-    public byte[] getI18n(HttpServletRequest request, HttpServletResponse response, String thirdName, String locale, String apiVersion) throws IOException {
-        Resource resource = service.fetchResource(thirdName, ResourceTypeEnum.I18N, apiVersion, locale, null);
+    public byte[] getI18n(HttpServletRequest request, HttpServletResponse response, String processName, String locale, String version) throws IOException {
+        Resource resource = service.fetchResource(processName, ResourceTypeEnum.I18N, version, locale, null);
         return loadResource(resource);
     }
 
+
     @Override
-    public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String thirdName, String templateName, String locale, String apiVersion) throws
+    public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String processName, String templateName, String locale, String version) throws
             IOException {
         Resource resource;
-        resource = service.fetchResource(thirdName, ResourceTypeEnum.TEMPLATE, apiVersion, locale, templateName);
+        resource = service.fetchResource(processName, ResourceTypeEnum.TEMPLATE, version, locale, templateName);
         return loadResource(resource);
     }
 
     @Override
-    public Third getThird(HttpServletRequest request, HttpServletResponse response, @PathVariable String thirdName, String apiVersion) {
-        Third third = service.fetch(thirdName, apiVersion);
-        if (third == null) {
+    public Process getProcess(HttpServletRequest request, HttpServletResponse response, String processId, String version) {
+        Process process = service.fetch(processId, version);
+        if (process == null) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.NOT_FOUND)
-                    .message(String.format("Third with name %s was not found", thirdName))
+                    .message(String.format("Process with id %s was not found", processId))
                     .build());
         }
-        return third;
+        return process;
     }
 
     @Override
-    public List<Third> getThirds(HttpServletRequest request, HttpServletResponse response) {
-        return service.listThirds();
+    public List<Process> getProcesses(HttpServletRequest request, HttpServletResponse response) {
+        return service.listProcesses();
     }
 
     @Override
-    public Third uploadBundle(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
+    public Process uploadBundle(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
         try (InputStream is = file.getInputStream()) {
-            Third result = service.updateThird(is);
-            response.addHeader("Location", request.getContextPath() + "/thirds/" + result.getName());
+            Process result = service.updateProcess(is);
+            response.addHeader("Location", request.getContextPath() + "/thirds/processes/" + result.getId());
             response.setStatus(201);
             return result;
         } catch (FileNotFoundException e) {
@@ -136,27 +137,16 @@ public class ThirdsController implements ThirdsApi {
         service.clear();
     }
 
-    private ThirdStates getState(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String apiVersion) {
-        ThirdStates state = null;
-        Third third = getThird(request, response, thirdName, apiVersion);
-        if (third != null) {
-            ThirdProcesses process = third.getProcesses().get(processName);
-            if (process != null) {
-                state = process.getStates().get(stateName);
-                if (state == null) {
-                    throw new ApiErrorException(
-                            ApiError.builder()
-                                    .status(HttpStatus.NOT_FOUND)
-                                    .message("Unknown state for third party service process")
-                                    .build(),
-                            UNABLE_TO_LOAD_FILE_MSG
-                    );
-                }
-            } else {
+    private ProcessStates getState(HttpServletRequest request, HttpServletResponse response, String processName, String stateName, String version) {
+        ProcessStates state = null;
+        Process process = getProcess(request, response, processName, version);
+        if (process != null) {
+            state = process.getStates().get(stateName);
+            if (state == null) {
                 throw new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.NOT_FOUND)
-                                .message("Unknown process for third party service")
+                                .message("Unknown state for third party service process")
                                 .build(),
                         UNABLE_TO_LOAD_FILE_MSG
                 );
@@ -165,7 +155,7 @@ public class ThirdsController implements ThirdsApi {
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.NOT_FOUND)
-                            .message("Unknown third party service")
+                            .message("Unknown process")
                             .build(),
                     UNABLE_TO_LOAD_FILE_MSG
             );
@@ -174,23 +164,23 @@ public class ThirdsController implements ThirdsApi {
     }
 
     @Override
-    public List<? extends Detail> getDetails(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName, String stateName, String apiVersion) {
-        return getState(request, response, thirdName, processName, stateName, apiVersion)
+    public List<? extends Detail> getDetails(HttpServletRequest request, HttpServletResponse response, String processName, String stateName, String version) {
+        return getState(request, response, processName, stateName, version)
                 .getDetails();
     }
 
     @Override
-    public Response getResponse(HttpServletRequest request, HttpServletResponse response, String thirdName, String processName,
-                                String stateName, String apiVersion) {
-        return getState(request, response, thirdName, processName, stateName, apiVersion)
+    public Response getResponse(HttpServletRequest request, HttpServletResponse response, String processName,
+                                String stateName, String version) {
+        return getState(request, response, processName, stateName, version)
                 .getResponse();
     }
 
 	@Override
-	public Void deleteBundle(HttpServletRequest request, HttpServletResponse response, String thirdName)
+	public Void deleteBundle(HttpServletRequest request, HttpServletResponse response, String processName)
 			throws Exception {
 		try {
-			service.delete(thirdName);
+			service.delete(processName);
 			// leaving response body empty
 			response.setStatus(204);
 			return null;
@@ -209,10 +199,10 @@ public class ThirdsController implements ThirdsApi {
 	}
 
 	@Override
-	public Void deleteBundleVersion(HttpServletRequest request, HttpServletResponse response, String thirdName,
+	public Void deleteBundleVersion(HttpServletRequest request, HttpServletResponse response, String processName,
 			String version) throws Exception {
 		try {
-			service.deleteVersion(thirdName,version);
+			service.deleteVersion(processName,version);
 			// leaving response body empty
 			response.setStatus(204);
 			return null;
