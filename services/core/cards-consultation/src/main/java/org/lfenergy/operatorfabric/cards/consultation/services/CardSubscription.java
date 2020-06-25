@@ -48,6 +48,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class CardSubscription {
     public static final String GROUPS_SUFFIX = "Groups";
+    public static final String DELETE_OPERATION = "DELETE";
     private String userQueueName;
     private String groupQueueName;
     private long current = 0;
@@ -309,8 +310,15 @@ public class CardSubscription {
             List<String> userGroups = currentUserWithPerimeters.getUserData().getGroups();
             List<String> userEntities = currentUserWithPerimeters.getUserData().getEntities();
 
+            //for the DELETE operation (before ADD or UPDATE), entityRecipientsIdsArray and groupRecipientsIdsArray
+            //must be null
+            if (typeOperation.equals(DELETE_OPERATION) &&
+                (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()) &&
+                (groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty()))
+                return true;
+
             if (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()) //card sent to group only
-                return checkInCaseOfCardSentToGroupOnly(userGroups, groupRecipientsIdsArray);
+                return checkInCaseOfCardSentToGroupOnly(typeOperation, userGroups, groupRecipientsIdsArray);
 
             if (groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty())   //card sent to entity only
                 return checkInCaseOfCardSentToEntityOnly(userEntities, entityRecipientsIdsArray, typeOperation,
@@ -325,7 +333,10 @@ public class CardSubscription {
         return false;
     }
 
-    boolean checkInCaseOfCardSentToGroupOnly(List<String> userGroups, JSONArray groupRecipientsIdsArray) {
+    boolean checkInCaseOfCardSentToGroupOnly(String typeOperation, List<String> userGroups, JSONArray groupRecipientsIdsArray) {
+        if (typeOperation.equals(DELETE_OPERATION))
+            return true;
+
         return (userGroups != null) && (groupRecipientsIdsArray != null)
                 && !Collections.disjoint(userGroups, groupRecipientsIdsArray);
     }
@@ -333,7 +344,7 @@ public class CardSubscription {
     boolean checkInCaseOfCardSentToEntityOnly(List<String> userEntities, JSONArray entityRecipientsIdsArray,
                                              String typeOperation, String processStateKey,
                                              List<String> processStateList) {
-        if (typeOperation.equals("DELETE"))
+        if (typeOperation.equals(DELETE_OPERATION))
             return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray));
 
         return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray))
@@ -343,7 +354,7 @@ public class CardSubscription {
     boolean checkInCaseOfCardSentToEntityAndGroup(List<String> userEntities, List<String> userGroups,
                                                   JSONArray entityRecipientsIdsArray, JSONArray groupRecipientsIdsArray,
                                                   String typeOperation, String processStateKey, List<String> processStateList) {
-        if (typeOperation.equals("DELETE"))
+        if (typeOperation.equals(DELETE_OPERATION))
             return ((userEntities != null) && (userGroups != null)
                     && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
                     && !Collections.disjoint(userGroups, groupRecipientsIdsArray))

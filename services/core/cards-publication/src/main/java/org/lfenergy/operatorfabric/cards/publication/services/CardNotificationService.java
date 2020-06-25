@@ -61,7 +61,18 @@ public class CardNotificationService {
                 builderEncapsulator.builder().cardId(card.getId());
 
         }
+
         CardOperationData cardOperation = builderEncapsulator.builder().build();
+
+        if (type == CardOperationTypeEnum.ADD || type == CardOperationTypeEnum.UPDATE) {
+            CardOperationTypeEnum original = cardOperation.getType();
+            cardOperation.setType(CardOperationTypeEnum.DELETE);
+            cardOperation.setCardIds(Arrays.asList(card.getId()));
+            pushCardInRabbit(cardOperation, "GROUP_EXCHANGE", "");
+            cardOperation.setType(original);
+            cardOperation.setCardIds(Collections.emptyList());
+        }
+
         card.getUserRecipients().forEach(user -> pushCardInRabbit(cardOperation,"USER_EXCHANGE", user));
 
         List<String> listOfGroupRecipients = new ArrayList<>();

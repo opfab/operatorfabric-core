@@ -301,7 +301,10 @@ class CardProcessServiceShould {
                 "actions", "timeSpans");
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
         assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
-        assertThat(testCardReceiver.getGroupQueue().size()).isEqualTo(1);
+
+        // In the group queue, we have one message for deleting the card (DELETE operation) and one message for adding
+        // the card (ADD operation)  (more information in OC-297)
+        assertThat(testCardReceiver.getGroupQueue().size()).isEqualTo(2);
     }
 
     private boolean checkCardCount(long expectedCount) {
