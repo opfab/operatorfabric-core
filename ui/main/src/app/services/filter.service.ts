@@ -63,7 +63,7 @@ export class FilterService {
     }
 
 
-    private initTimeFilter() {
+    private initBusinessDateFilter() {
         return new Filter(
             (card:LightCard, status) => {
                 if (!!status.start && !!status.end) {
@@ -77,19 +77,38 @@ export class FilterService {
                 } else if (!!status.end) {
                     return card.startDate <= status.end;
                 }
-                console.warn("Unexpected time filter situation");
+                console.warn("Unexpected business date filter situation");
                 return false;
             },
             false,
             {start: new Date().valueOf()-2*60*60*1000, end: new Date().valueOf()+48*60*60*1000})
     }
 
+    private initPublishDateFilter() {
+        return new Filter(
+            (card:LightCard, status) => {
+                if (!!status.start && !!status.end) {
+                    return status.start <= card.publishDate && card.publishDate <= status.end
+
+                } else if (!!status.start) {
+                    return status.start <= card.publishDate;
+                } else if (!!status.end) {
+                    return card.publishDate <= status.end;
+                }
+                return true;
+            },
+            false,
+            {start: null, end: null})
+    }
+
+
 
     private initFilters(): Map<string, Filter> {
         console.log(new Date().toISOString(),"BUG OC-604 filter.service.ts init filter");
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
-        filters.set(FilterType.TIME_FILTER, this.initTimeFilter());
+        filters.set(FilterType.BUSINESSDATE_FILTER, this.initBusinessDateFilter());
+        filters.set(FilterType.PUBLISHDATE_FILTER, this.initPublishDateFilter());
         filters.set(FilterType.TAG_FILTER, this.initTagFilter());
         console.log(new Date().toISOString(),"BUG OC-604 filter.service.ts init filter done");
         return filters;
@@ -100,6 +119,7 @@ export enum FilterType {
     TYPE_FILTER,
     RECIPIENT_FILTER,
     TAG_FILTER,
-    TIME_FILTER,
+    BUSINESSDATE_FILTER,
+    PUBLISHDATE_FILTER,
     TEST_FILTER
 }

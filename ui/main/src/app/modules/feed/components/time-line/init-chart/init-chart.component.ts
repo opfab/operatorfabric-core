@@ -178,7 +178,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     this.myDomain = [startDomain, endDomain];
 
     this.store.dispatch(new ApplyFilter({
-      name: FilterType.TIME_FILTER, active: true,
+      name: FilterType.BUSINESSDATE_FILTER, active: true,
       status: { start: startDomain, end: endDomain }
     }));
   }

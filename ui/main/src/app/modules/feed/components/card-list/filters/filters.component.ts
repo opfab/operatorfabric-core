@@ -9,23 +9,27 @@
 
 
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 import { selectSubscriptionOpen } from '@ofStore/selectors/cards-subscription.selectors';
+import {  Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'of-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.scss']
 })
-export class FiltersComponent implements OnInit {
+export class FiltersComponent implements OnInit,OnDestroy {
 
   hideTags$: Observable<boolean>;
   hideTimerTags$: Observable<boolean>;
   cardsSubscriptionOpen$ : Observable<boolean>;
+  filterByPublishDate : boolean = true;
+  private ngUnsubscribe$ = new Subject<void>();
 
   constructor(private store: Store<AppState>) { }
 
@@ -33,5 +37,17 @@ export class FiltersComponent implements OnInit {
     this.hideTags$ = this.store.select(buildConfigSelector('settings.tags.hide'));
     this.hideTimerTags$ = this.store.select(buildConfigSelector('feed.card.hideTimeFilter'));
     this.cardsSubscriptionOpen$ = this.store.select(selectSubscriptionOpen);
+    
+    // When time line is hide , we use a date filter by business date and not publish date
+    this.store.select(buildConfigSelector('feed.timeline.hide'))
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe(
+        hideTimeLine => this.filterByPublishDate = !hideTimeLine
+      )
   }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
+}
 }

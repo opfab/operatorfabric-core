@@ -38,6 +38,7 @@
       "timeout": 600000
     },
     "timeline": {
+      "hide": false,
       "domains": [
         "TR",
         "J",

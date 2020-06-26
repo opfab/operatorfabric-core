@@ -100,7 +100,7 @@ export class CardOperationEffects {
         .pipe(
             // loads card operations only after authentication of a default user ok.
             ofType(FeedActionTypes.ApplyFilter),
-            filter((af: ApplyFilter) => af.payload.name == FilterType.TIME_FILTER),
+            filter((af: ApplyFilter) => af.payload.name == FilterType.BUSINESSDATE_FILTER),
             switchMap((af: ApplyFilter) =>
                 {
                     console.log(new Date().toISOString(),"BUG OC-604 card-operation.effect.ts update subscription af.payload.status.start  = ",af.payload.status.start,"af.payload.status.end",af.payload.status.end);

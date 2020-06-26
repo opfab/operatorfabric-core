@@ -99,7 +99,8 @@
   },
   "button": {
     "ok": "OK",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "reset": "Effacer"
   },
   "response": {
     "btnTitle": "VALIDER REPONSES",
