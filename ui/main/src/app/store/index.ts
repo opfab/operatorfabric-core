@@ -27,6 +27,7 @@ import {reducer as configReducer} from '@ofStore/reducers/config.reducer';
 import {reducer as settingsReducer} from '@ofStore/reducers/settings.reducer';
 import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
 import {reducer as archiveReducer} from '@ofStore/reducers/archive.reducer';
+import {reducer as globalStyleReducer} from '@ofStore/reducers/global-style.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 import {CardState} from '@ofStates/card.state';
 import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
@@ -49,6 +50,7 @@ import {TranslateEffects} from '@ofEffects/translate.effects';
 
 import {CardsSubscriptionState} from '@ofStates/cards-subscription.state';
 import {cardsSubscriptionReducer} from '@ofStore/reducers/cards-subscription.reducer';
+import {GlobalStyleState } from './states/global-style.state';
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -61,6 +63,7 @@ export interface AppState {
     archive: ArchiveState;
     user: UserState;
     cardsSubscription: CardsSubscriptionState;
+    globalStyle : GlobalStyleState;
 }
 
 export const appEffects = [
@@ -89,7 +92,8 @@ export const appReducer: ActionReducerMap<AppState> = {
     settings: settingsReducer,
     archive: archiveReducer,
     user: userReducer,
-    cardsSubscription: cardsSubscriptionReducer
+    cardsSubscription: cardsSubscriptionReducer,
+    globalStyle: globalStyleReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production

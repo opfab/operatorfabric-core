@@ -9,7 +9,7 @@
 
 
 
-import {Component, ElementRef, Input, OnInit, OnChanges, Output, EventEmitter} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, Output, EventEmitter} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
 import {ThirdsService} from '@ofServices/thirds.service';
 import {HandlebarsService} from '../../services/handlebars.service';
@@ -19,9 +19,11 @@ import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
+import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {TranslateService} from '@ngx-translate/core';
-import { switchMap } from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import { switchMap,skip,takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'of-detail',
@@ -38,6 +40,7 @@ export class DetailComponent implements OnChanges {
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _htmlContent: SafeHtml;
     private userContext: UserContext;
+    unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor(private element: ElementRef,
                 private thirds: ThirdsService,
@@ -54,7 +57,18 @@ export class DetailComponent implements OnChanges {
                 authState.lastName
             );
         }); 
+        this.reloadTemplateWhenGlobalStyleChange();
 
+
+    }
+
+    // for certains type of template , we need to reload it to take into account
+    // the new css style (for example with chart done with chart.js)
+    private reloadTemplateWhenGlobalStyleChange()
+    {
+        this.store.select(selectGlobalStyleState)
+        .pipe(takeUntil(this.unsubscribe$),skip(1))
+        .subscribe(style => this.initializeHandlebarsTemplates());
     }
 
     ngOnChanges(): void {
@@ -116,4 +130,9 @@ export class DetailComponent implements OnChanges {
             script.parentNode.replaceChild(scriptCopy, script);
         }
     }
+
+    ngOnDestroy(){
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+      }
 }
