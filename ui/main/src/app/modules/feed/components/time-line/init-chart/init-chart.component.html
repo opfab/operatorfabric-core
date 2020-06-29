@@ -14,6 +14,9 @@
     </button>
     <div id="btn-menu-timeline">
       <ul>
+        <li>
+          <div class="opfab-text" *ngIf='hideTimeLine'><span translate>timeline.businessPeriod </span> : {{startDate}} -- {{endDate}} &nbsp; &nbsp; </div>
+        </li>
         <li style="margin-right: 1rem;">
           <button class="circle-btn opfab-button-color" (click)="moveDomain(false)">
             <em class="fas fa-angle-double-left "></em>
@@ -29,6 +32,14 @@
             <em class="fas fa-angle-double-right"></em>
           </button>
         </li>
+        <li style="margin-left: 1rem">
+          <button *ngIf="!hideTimeLine" class="circle-btn opfab-button-color" (click)="showOrHideTimeline()">
+            <em class="fas fa-caret-up"></em>
+          </button>
+          <button *ngIf="hideTimeLine" class="circle-btn opfab-button-color" (click)="showOrHideTimeline()">
+            <em class="fas fa-caret-down"></em>
+          </button>
+        </li>
       </ul>
     </div>
   </div>
@@ -41,7 +52,7 @@
 
    (zoomChange) call when custom timeline chart change his domain
   -->
-  <of-custom-timeline-chart class="of-custom-timeline-chart"
+  <of-custom-timeline-chart *ngIf="!hideTimeLine" class="of-custom-timeline-chart"
                              [prod]="true"
                              [domainId]="domainId"
                              [valueDomain]="myDomain"

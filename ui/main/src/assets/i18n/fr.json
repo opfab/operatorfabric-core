@@ -7,6 +7,7 @@
     "about": "À propos"
   },
   "timeline" : {
+    "businessPeriod": "Periode métier", 
     "buttonTitle" : { 
       "TR": "TR",
       "J" : "J",

@@ -16,6 +16,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { FilterType } from '@ofServices/filter.service';
 import { ApplyFilter } from '@ofActions/feed.actions';
+import { TimeService } from '@ofServices/time.service';
 
 
 const forwardWeekConf = {
@@ -48,8 +49,12 @@ export class InitChartComponent implements OnInit, OnDestroy {
   public buttonHomeActive: boolean;
   public buttonList;
 
+  public hideTimeLine = false;
+  public startDate;
+  public endDate;
 
-  constructor(private store: Store<AppState>) {
+
+  constructor(private store: Store<AppState>,private time :TimeService ) {
   }
 
 
@@ -58,6 +63,8 @@ export class InitChartComponent implements OnInit, OnDestroy {
    * and call timeline initialization functions
    */
   ngOnInit() {
+    const hideTimeLineInStorage = localStorage.getItem('opfab.hideTimeLine'); 
+    this.hideTimeLine = (hideTimeLineInStorage === 'true');
     this.initDomains();
   }
 
@@ -176,11 +183,28 @@ export class InitChartComponent implements OnInit, OnDestroy {
 
     console.log(new Date().toISOString(), "BUG OC-604 init-chart.components.ts setStartAndEndDomain() , startDomain= ", startDomain, ",endDomain=", endDomain);
     this.myDomain = [startDomain, endDomain];
+    //this.dateToShowWhenHidingTimeLine = "Business periode from to" + this.time.formatDateTime(new Date(startDomain)) + "to " + new Date(endDomain);
+    this.startDate = this.getDateFormatting(startDomain);
+    this.endDate = this.getDateFormatting(endDomain);
 
     this.store.dispatch(new ApplyFilter({
       name: FilterType.TIME_FILTER, active: true,
       status: { start: startDomain, end: endDomain }
     }));
+  }
+
+
+  getDateFormatting(value): string {
+    const date = moment(value);
+    switch (this.domainId) {
+      case 'TR': return date.format("L LT");
+      case 'J': return date.format("L");
+      case '7D':return date.format("L LT");
+      case 'W': return date.format("L");
+      case 'M': return date.format("L");
+      case 'Y': return date.format("yyyy");
+      default: return date.format('L LT');
+    }
   }
 
 
@@ -285,6 +309,14 @@ export class InitChartComponent implements OnInit, OnDestroy {
     }
   }
 
+  showOrHideTimeline()
+  {
+    this.hideTimeLine = !this.hideTimeLine;
+    localStorage.setItem('opfab.hideTimeLine',this.hideTimeLine.toString());
+   // need to relcalculate frame size 
+   // event is catch by calc-height-directive.ts 
+    window.dispatchEvent(new Event('resize'));
+  }
 
 }
 
