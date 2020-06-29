@@ -71,7 +71,7 @@ a|card time display mode in the feed. Values :
  - PUBLICATION: displays card with publication date;
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
-|operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen
+|operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen. If the timeline is not loaded , the time filter on the feed is filtering on business date otherwise it is filtering on publish date.
 |operatorfabric.feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filtrer in the feed page
 |operatorfabric.feed.notify|false|no|If set to true, new cards are notified in the OS through web-push notifications
 |operatorfabric.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed

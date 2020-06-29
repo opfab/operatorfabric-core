@@ -9,7 +9,7 @@
 
 
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit , Input} from '@angular/core';
 import { buildFilterSelector } from "@ofSelectors/feed.selectors";
 import { FilterType } from "@ofServices/filter.service";
 import { Filter } from "@ofModel/feed-filter.model";
@@ -42,6 +42,13 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
     private oldStartTime;
     private endTime;
     private oldEndTime;
+    private filterType = FilterType.PUBLISHDATE_FILTER;
+
+    // when filter by publish date instead of business date
+    // endDate and startDate are optionnal and there is a button to reset all the field 
+    // this is not the case otherwise 
+
+    @Input() filterByPublishDate:boolean;
 
 
     constructor(private store: Store<AppState>,) {
@@ -53,28 +60,33 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocaleForDatePicker(locale))
+        this.store.select(buildSettingsOrConfigSelector('locale'))
+            .pipe(takeUntil(this.ngUnsubscribe$))
+            .subscribe(locale => this.changeLocaleForDatePicker(locale));
+        if (this.filterByPublishDate) this.filterType = FilterType.PUBLISHDATE_FILTER;
+        else this.filterType = FilterType.BUSINESSDATE_FILTER;
         this.subscribeToChangeInFilter();
     }
     
 
     private subscribeToChangeInFilter():void
     {
-        this.store.select(buildFilterSelector(FilterType.TIME_FILTER))
+        this.store.select(buildFilterSelector(this.filterType))
                   .pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
-            if (next) {
-
-                this.startDate = this.getDateForDatePicker(next.status.start);
-                this.startTime = moment(next.status.start).format('HH:mm');
-                this.oldStartDate = this.startDate;
-                this.oldStartTime = this.startTime;
-
-                this.endDate = this.getDateForDatePicker(next.status.end);
-                this.endTime = moment(next.status.end).format('HH:mm');
-                this.oldEndDate = this.endDate;
-                this.oldEndTime = this.endTime;
-
-            }
+                      if (next) {
+                          if (next.status.start) {
+                              this.startDate = this.getDateForDatePicker(next.status.start);
+                              this.startTime = moment(next.status.start).format('HH:mm');
+                              this.oldStartDate = this.startDate;
+                              this.oldStartTime = this.startTime;
+                          }
+                          if (next.status.end) {
+                              this.endDate = this.getDateForDatePicker(next.status.end);
+                              this.endTime = moment(next.status.end).format('HH:mm');
+                              this.oldEndDate = this.endDate;
+                              this.oldEndTime = this.endTime;
+                          }
+                      }
         });
     }
 
@@ -136,42 +148,51 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
     }
 
 
-
+    /**
+     *  use when user click on Reset button 
+     */
+    public resetDate(): void {
+        this.startDate = null;
+        this.endDate = null;
+        this.startTime = null;
+        this.endTime = null;
+    }
     /**
      *  use when user click on Confirm button
      */
     public setNewFilterValue(): void {
 
-        let startHour =0;
-        let startMin =0;
-        const startValues = this.startTime.split(":");
-        if (startValues.length>1) {
-            startHour = Number(startValues[0]);
-            if (Number.isNaN(startHour)) startHour=0;
-            startMin = Number(startValues[1]);
-            if (Number.isNaN(startMin)) startMin=0;
+        let startHour = 0;
+        let startMin = 0;
+        if (this.startTime) {
+            const startValues = this.startTime.split(":");
+            if (startValues.length > 1) {
+                startHour = Number(startValues[0]);
+                if (Number.isNaN(startHour)) startHour = 0;
+                startMin = Number(startValues[1]);
+                if (Number.isNaN(startMin)) startMin = 0;
+            }
         }
-
-
-        let endHour =0;
-        let endMin =0;
-        const endValues = this.endTime.split(":");
-        if (endValues.length>1) {
-            endHour = Number(endValues[0]);
-            if (Number.isNaN(endHour)) endHour=0;
-            endMin = Number(endValues[1]);
-            if (Number.isNaN(endMin)) endMin=0;
+        let endHour = 23;
+        let endMin = 59;
+        if (this.endTime) {
+            const endValues = this.endTime.split(":");
+            if (endValues.length > 1) {
+                endHour = Number(endValues[0]);
+                if (Number.isNaN(endHour)) endHour = 0;
+                endMin = Number(endValues[1]);
+                if (Number.isNaN(endMin)) endMin = 0;
+            }
         }
-
+        let status = { start: null, end: null };
+        if (this.startDate) status.start = this.convertDateFromDatePickerToMillis(this.startDate, startHour, startMin);
+        if (this.endDate) status.end = this.convertDateFromDatePickerToMillis(this.endDate, endHour, endMin);
 
         this.store.dispatch(
             new ApplyFilter({
-                name: FilterType.TIME_FILTER,
+                name: this.filterType,
                 active: true,
-                status: {
-                    start: this.convertDateFromDatePickerToMillis(this.startDate, startHour, startMin),
-                    end: this.convertDateFromDatePickerToMillis(this.endDate, endHour, endMin)
-                }
+                status: status
             }))
 
     }
@@ -194,6 +215,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         // add minutes an hours form the input in the form 
         const newDateWithTime = moment(newStartDateStartOfDay).add('hour', hour).add('minutes', minute);
 
+        
         return newDateWithTime.valueOf();
     }
 

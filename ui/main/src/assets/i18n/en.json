@@ -98,7 +98,9 @@
   },
   "button": {
     "ok": "OK",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "reset" : "Reset"
+
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",

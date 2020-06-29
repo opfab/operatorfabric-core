@@ -21,31 +21,36 @@ function buildTestCards() {
     testCards = testCards.concat(getSeveralRandomLightCards(2, {
         startDate: Date.parse("2019-04-10T00:00"),
         endDate: Date.parse("2019-04-10T23:59"),
+        publishDate: Date.parse("2019-04-10T00:00"),
         tags: ['tag1']
     }));
     testCards = testCards.concat(getSeveralRandomLightCards(2, {
         startDate: Date.parse("2019-04-10T00:00"),
         endDate: Date.parse("2019-04-10T06:00"),
+        publishDate: Date.parse("2019-04-10T00:00"),
         tags: ['tag2']
     }));
     testCards = testCards.concat(getSeveralRandomLightCards(2, {
         startDate: Date.parse("2019-04-10T00:00"),
         endDate: Date.parse("2019-04-10T09:00"),
+        publishDate: Date.parse("2019-04-10T00:00"),
         tags: ['tag1']
     }));
     testCards = testCards.concat(getSeveralRandomLightCards(2, {
         startDate: Date.parse("2019-04-10T15:00"),
         endDate: Date.parse("2019-04-10T23:59"),
+        publishDate: Date.parse("2019-04-10T15:00"),
         tags: ['tag2']
     }));
     testCards = testCards.concat(getSeveralRandomLightCards(2, {
         startDate: Date.parse("2019-04-10T17:00"),
         endDate: Date.parse("2019-04-10T23:59"),
+        publishDate: Date.parse("2019-04-10T17:00"),
         tags: ['tag1']
     }));
-    testCards = testCards.concat(getSeveralRandomLightCards(2, {startDate: Date.parse("2019-04-10T00:00")}));
-    testCards = testCards.concat(getSeveralRandomLightCards(2, {startDate: Date.parse("2019-04-10T15:00")}));
-    testCards = testCards.concat(getSeveralRandomLightCards(2, {startDate: Date.parse("2019-04-10T17:00")}));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {startDate: Date.parse("2019-04-10T00:00"),publishDate: Date.parse("2019-04-10T00:00")}));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {startDate: Date.parse("2019-04-10T15:00"),publishDate: Date.parse("2019-04-10T15:00")}));
+    testCards = testCards.concat(getSeveralRandomLightCards(2, {startDate: Date.parse("2019-04-10T17:00"),publishDate: Date.parse("2019-04-10T17:00")}));
     return testCards;
 }
 
@@ -67,38 +72,75 @@ describe('FilterService', () => {
     });
     describe('time filter', () => {
         it('should not filter if inactive', () => {
-            const timeFilter = service.defaultFilters().get(FilterType.TIME_FILTER);
+            const businessDateFilter = service.defaultFilters().get(FilterType.BUSINESSDATE_FILTER);
             let testCards = buildTestCards();
-            timeFilter.status.start = Date.parse("2019-04-10T08:00");
-            timeFilter.status.end = Date.parse("2019-04-10T16:00");
-            timeFilter.active = false;
+            businessDateFilter.status.start = Date.parse("2019-04-10T08:00");
+            businessDateFilter.status.end = Date.parse("2019-04-10T16:00");
+            businessDateFilter.active = false;
 
-            const filteredCards = testCards.filter((card) => timeFilter.applyFilter(card));
+            const filteredCards = testCards.filter((card) => businessDateFilter.applyFilter(card));
             expect(filteredCards.length).toBe(16)
         });
         it('should filter whith start and end', () => {
             let testCards = buildTestCards();
-            const timeFilter = service.defaultFilters().get(FilterType.TIME_FILTER);
-            timeFilter.status.start = Date.parse("2019-04-10T08:00");
-            timeFilter.status.end = Date.parse("2019-04-10T16:00");
-            timeFilter.active = true;
-            const filteredCards = testCards.filter((card) => timeFilter.applyFilter(card));
+            const businessDateFilter = service.defaultFilters().get(FilterType.BUSINESSDATE_FILTER);
+            businessDateFilter.status.start = Date.parse("2019-04-10T08:00");
+            businessDateFilter.status.end = Date.parse("2019-04-10T16:00");
+            businessDateFilter.active = true;
+            const filteredCards = testCards.filter((card) => businessDateFilter.applyFilter(card));
             expect(filteredCards.length).toBe(10);
         });
         it('should filter whith start', () => {
             let testCards = buildTestCards();
-            const timeFilter = service.defaultFilters().get(FilterType.TIME_FILTER);
-            timeFilter.status.start = Date.parse("2019-04-10T08:00");
-            timeFilter.active = true;
-            const filteredCards = testCards.filter((card) => timeFilter.applyFilter(card));
+            const businessDateFilter = service.defaultFilters().get(FilterType.BUSINESSDATE_FILTER);
+            businessDateFilter.status.start = Date.parse("2019-04-10T08:00");
+            businessDateFilter.active = true;
+            const filteredCards = testCards.filter((card) => businessDateFilter.applyFilter(card));
             expect(filteredCards.length).toBe(14);
         });
         it('should filter whith end', () => {
             let testCards = buildTestCards();
-            const timeFilter = service.defaultFilters().get(FilterType.TIME_FILTER);
-            timeFilter.status.end = Date.parse("2019-04-10T16:00");
-            timeFilter.active = true;
-            const filteredCards = testCards.filter((card) => timeFilter.applyFilter(card));
+            const businessDateFilter = service.defaultFilters().get(FilterType.BUSINESSDATE_FILTER);
+            businessDateFilter.status.end = Date.parse("2019-04-10T16:00");
+            businessDateFilter.active = true;
+            const filteredCards = testCards.filter((card) => businessDateFilter.applyFilter(card));
+            expect(filteredCards.length).toBe(12);
+        });
+    });
+    describe('publishDate filter', () => {
+        it('should not filter if inactive', () => {
+            const publishDateFilter = service.defaultFilters().get(FilterType.PUBLISHDATE_FILTER);
+            let testCards = buildTestCards();
+            publishDateFilter.status.start = Date.parse("2019-04-10T08:00");
+            publishDateFilter.status.end = Date.parse("2019-04-10T16:00");
+            publishDateFilter.active = false;
+
+            const filteredCards = testCards.filter((card) => publishDateFilter.applyFilter(card));
+            expect(filteredCards.length).toBe(16)
+        });
+        it('should filter whith start and end', () => {
+            let testCards = buildTestCards();
+            const publishDateFilter = service.defaultFilters().get(FilterType.PUBLISHDATE_FILTER);
+            publishDateFilter.status.start = Date.parse("2019-04-10T08:00");
+            publishDateFilter.status.end = Date.parse("2019-04-10T16:00");
+            publishDateFilter.active = true;
+            const filteredCards = testCards.filter((card) => publishDateFilter.applyFilter(card));
+            expect(filteredCards.length).toBe(4);
+        });
+        it('should filter whith start', () => {
+            let testCards = buildTestCards();
+            const publishDateFilter = service.defaultFilters().get(FilterType.PUBLISHDATE_FILTER);
+            publishDateFilter.status.start = Date.parse("2019-04-10T08:00");
+            publishDateFilter.active = true;
+            const filteredCards = testCards.filter((card) => publishDateFilter.applyFilter(card));
+            expect(filteredCards.length).toBe(8);
+        });
+        it('should filter whith end', () => {
+            let testCards = buildTestCards();
+            const publishDateFilter = service.defaultFilters().get(FilterType.PUBLISHDATE_FILTER);
+            publishDateFilter.status.end = Date.parse("2019-04-10T16:00");
+            publishDateFilter.active = true;
+            const filteredCards = testCards.filter((card) => publishDateFilter.applyFilter(card));
             expect(filteredCards.length).toBe(12);
         });
     });

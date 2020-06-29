@@ -66,7 +66,7 @@ describe('TimeFilterComponent', () => {
         const start = moment();
         const end = moment().add('month',1);
         store.dispatch(new ApplyFilter({
-            name: FilterType.TIME_FILTER,
+            name: FilterType.BUSINESSDATE_FILTER,
             active: true,
             status: {
                 start: start.valueOf(),

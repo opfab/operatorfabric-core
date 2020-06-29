@@ -12,7 +12,7 @@
         <div>
             <of-type-filter></of-type-filter>
             <span *ngIf="!(hideTimerTags$|async)">
-                <of-time-filter></of-time-filter>
+                <of-time-filter [filterByPublishDate]="filterByPublishDate"></of-time-filter>
             </span>
             <of-severity-sort></of-severity-sort>
         </div>
