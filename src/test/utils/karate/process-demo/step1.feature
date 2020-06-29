@@ -13,7 +13,7 @@ Scenario: Step1
 		var card = {
 			"publisher" : "api_test",
 			"processVersion" : "1",
-			"process"  :"defaultProcess",
+			"process"  :"api_test",
 			"processId" : "processProcess",
 			"state": "processState",
 			"recipient" : {

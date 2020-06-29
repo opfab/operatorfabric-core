@@ -4,7 +4,8 @@
 	"templates": [
 		"template",
 		"chart",
-		"chart-line"
+		"chart-line",
+		"process"
 	],
 	"csses": [
 		"style"
@@ -22,7 +23,7 @@
 							]
 						}
 					],
-					"acknowledgementAllowed": true
+					"acknowledgementAllowed": false
 				},
 				"chartState": {
 					"details": [
@@ -36,7 +37,7 @@
 							]
 						}
 					],
-					"acknowledgementAllowed": true
+					"acknowledgementAllowed": false
 				},
 				"chartLineState": {
 					"details": [
@@ -51,6 +52,20 @@
 						}
 					],
 					"acknowledgementAllowed": true
+				},
+				"processState": {
+					"details": [
+						{
+							"title": {
+								"key": "process.title"
+							},
+							"templateName": "process",
+							"styles": [
+								"style"
+							]
+						}
+					],
+					"acknowledgementAllowed": false
 				}
 			}
 		}

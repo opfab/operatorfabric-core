@@ -19,7 +19,7 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 		var card = {
 			"publisher" : "api_test",
 			"processVersion" : "1",
-			"process"  :"defaultProcess",
+			"process"  :"api_test",
 			"processId" : "process2",
 			"state": "messageState",
 			"tags":["test","test2"],
@@ -71,7 +71,7 @@ And match response.count == 1
 		var card = {
 			"publisher" : "api_test",
 			"processVersion" : "1",
-			"process"  :"defaultProcess",
+			"process"  :"api_test",
 			"processId" : "process2b",
 			"state": "chartState",
 			"tags" : ["test2"],
@@ -118,7 +118,7 @@ And match response.count == 1
 		var card = {
 			"publisher" : "api_test",
 			"processVersion" : "1",
-			"process"  :"defaultProcess",
+			"process"  :"api_test",
 			"processId" : "processProcess",
 			"state": "processState",
 			"recipient" : {
@@ -163,7 +163,7 @@ And match response.count == 1
 		var card = {
 			"publisher" : "api_test",
 			"processVersion" : "1",
-			"process"  :"defaultProcess",
+			"process"  :"api_test",
 			"processId" : "process4",
 			"state": "messageState",
 			"recipient" : {
@@ -205,7 +205,7 @@ And match response.count == 1
 		var card = {
 			"publisher" : "api_test",
 			"processVersion" : "1",
-			"process"  :"defaultProcess",
+			"process"  :"api_test",
 			"processId" : "process5",
 			"state": "chartLineState",
 			"recipient" : {
@@ -246,7 +246,7 @@ And match response.count == 1
 		var card = {
 			"publisher" : "api_test",
 			"processVersion" : "1",
-			"process"  :"defaultProcess",
+			"process"  :"api_test",
 			"processId" : "process5b",
 			"state": "messageState",
 			"recipient" : {
