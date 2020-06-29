@@ -1,18 +1,15 @@
 {
-	"name": "api_test",
+	"id": "api_test",
 	"version": "1",
 	"templates": [
 		"template",
 		"chart",
 		"chart-line",
-		"svg",
 		"process"
 	],
 	"csses": [
 		"style"
 	],
-	"processes": {
-		"defaultProcess": {
 			"states": {
 				"messageState": {
 					"details": [
@@ -27,19 +24,6 @@
 						}
 					],
 					"acknowledgementAllowed": false
-				},
-				"processState": {
-					"details": [
-						{
-							"title": {
-								"key": "process.title"
-							},
-							"templateName": "process",
-							"styles": [
-								"style"
-							]
-						}
-					]
 				},
 				"chartState": {
 					"details": [
@@ -68,8 +52,20 @@
 						}
 					],
 					"acknowledgementAllowed": true
+				},
+				"processState": {
+					"details": [
+						{
+							"title": {
+								"key": "process.title"
+							},
+							"templateName": "process",
+							"styles": [
+								"style"
+							]
+						}
+					],
+					"acknowledgementAllowed": false
 				}
 			}
 		}
-	}
-}

@@ -1,6 +1,5 @@
 {
-	"defaultProcess":{
-		"title":"Message",
-		"summary":"Message received"
+	"detail":{
+		"title":"Message"
 	}
 }

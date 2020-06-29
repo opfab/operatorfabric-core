@@ -38,7 +38,7 @@ Feature: Cards
 [
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"process1",
 	"processId" : "process2card1Entities_1",
 	"state": "state1",
@@ -54,7 +54,7 @@ Feature: Cards
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"process1",
 	"processId" : "process2card1Entities_2",
 	"state": "state2",
@@ -151,7 +151,7 @@ Feature: Cards
 [
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"process1",
 	"processId" : "process2card1Entities_2",
 	"state": "state2",

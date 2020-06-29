@@ -13,7 +13,7 @@ Feature: fetchArchive
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process_archive_1",
 	"state": "messageState",
@@ -77,7 +77,7 @@ Feature: fetchArchive
 """
 {
 	"publisher" : "api_test123",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
 	"state": "messageState",

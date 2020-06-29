@@ -12,7 +12,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ActivatedRoute} from '@angular/router';
-import { ThirdsService } from '@ofServices/thirds.service';
+import { ProcessesService } from '@ofServices/processes.service';
 
 
 @Component({
@@ -27,7 +27,7 @@ export class IframeDisplayComponent implements OnInit {
   constructor(
               private sanitizer: DomSanitizer,
               private route: ActivatedRoute,
-              private thirdService : ThirdsService
+              private thirdService : ProcessesService
   ) { }
 
   ngOnInit() {

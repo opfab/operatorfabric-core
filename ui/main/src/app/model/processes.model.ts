@@ -8,37 +8,35 @@
  */
 
 
-
 import {Card, Detail} from "@ofModel/card.model";
 import {I18n} from "@ofModel/i18n.model";
 import {Map as OfMap} from "@ofModel/map";
 
-export class Third {
+export class Process {
     /* istanbul ignore next */
     constructor(
-        readonly name: string,
+        readonly id: string,
         readonly version: string,
-        readonly i18nLabelKey: string,
+        readonly name?: string,
         readonly templates?: string[],
         readonly csses?: string[],
         readonly locales?: string[],
-        readonly menuEntries?: ThirdMenuEntry[],
-        readonly processes?: OfMap<Process>
+        readonly menuLabel?: string,
+        readonly menuEntries?: MenuEntry[],
+        readonly states?: OfMap<State>
     ) {
     }
 
     public extractState(card: Card): State {
-        if (card.process && this.processes[card.process]) {
-            const process = this.processes[card.process];
-            if (card.state && process.states[card.state]) {
-                return process.states[card.state];
-            }
+        if (card.state && this.states[card.state]) {
+            return this.states[card.state];
+        } else {
+            return null;
         }
-        return null;
     }
 }
 
-export class ThirdMenuEntry {
+export class MenuEntry {
     /* istanbul ignore next */
     constructor(
         readonly id: string,
@@ -48,21 +46,13 @@ export class ThirdMenuEntry {
     }
 }
 
-export class ThirdMenu {
+export class Menu {
     /* istanbul ignore next */
     constructor(
         readonly id: string,
         readonly version: string,
         readonly label: string,
-        readonly entries: ThirdMenuEntry[]) {
-    }
-}
-
-export class Process {
-    /* istanbul ignore next */
-    constructor(
-        readonly states?: OfMap<State>
-    ) {
+        readonly entries: MenuEntry[]) {
     }
 }
 
@@ -70,13 +60,13 @@ export class State {
     /* istanbul ignore next */
     constructor(
         readonly details?: Detail[],
-        readonly response?: ThirdResponse,
+        readonly response?: Response,
         readonly acknowledgementAllowed?: boolean
     ) {
     }
 }
 
-export class ThirdResponse {
+export class Response {
     /* istanbul ignore next */
     constructor(
         readonly lock?: boolean,

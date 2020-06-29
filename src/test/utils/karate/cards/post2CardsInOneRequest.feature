@@ -13,7 +13,7 @@ Scenario: Post two  Cards in one request
 [
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card1",
 	"state": "messageState",
@@ -29,7 +29,7 @@ Scenario: Post two  Cards in one request
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card2",
 	"state": "messageState",

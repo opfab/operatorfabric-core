@@ -1,0 +1,248 @@
+= Refactoring of configuration management (publisher->process) OC-979 (Temporary document)
+
+== Motivation for the change
+
+The initial situation was to have a `Thirds` concept that was meant to represent third-party applications that publish
+content (cards) to OperatorFabric.
+As such, a Third was both the sender of the message and the unit of configuration for resources for card rendering.
+
+[NOTE]
+Because of that mix of concerns, naming was not consistent across the different services in the backend and frontend as
+this object could be referred to using the following terms:
+* Third
+* ThirdParty
+* Bundle
+* Publisher
+
+But now that we're aiming for cards to be sent by entities, users (see Free Message feature) or external services, it
+doesn't make sense to tie the rendering of the card ("Which configuration bundle should I take the templates and
+details from?") to its publisher ("Who/What emitted this card and who/where should I reply?").
+
+== Changes to the model
+
+To do this, we decided that the `publisher` of a card would now have the sole meaning of `emitter`, and that the link
+to the configuration bundle to use to render a card would now be based on its `process` field.
+
+=== On the Thirds model
+
+We used to have a `Third` object which had an array of `Process` objects as one of its properties.
+Now, the `Process` object replaces the `Third` object and this new object combines the properties of the old `Third`
+and `Process` objects (menuEntries, states, etc.).
+
+[IMPORTANT]
+In particular, this means that while in the past one bundle could "contain" several processes, now there can be only
+one process by bundle.
+
+The `Third` object used to have a `name` property that was actually its unique identifier (used to retrieve it through
+the API for example).
+It also had a `i18nLabelKey` property that was meant to be the i18n key to determine the display name of the
+corresponding third, but so far it was only used to determine the display name of the associated menu in the navbar in
+case there where several menu entries associated with this third.
+
+Below is a summary of the changes to the `config.json` file that all this entails:
+
+|===
+|Field before |Field after |Usage
+
+|name
+|id
+|Unique identifier of the bundle. Used to match the `publisher` field in associated cards, should now match `process`
+
+|
+|name
+|I18n key for process display name. Will probably be used for Free Message and maybe filters
+
+|i18nLabelKey
+|menuLabel
+|I18n key for menu display name in case there are several menu entries attached to the process
+
+|processes array is a root property, states array being a property of a given process
+|states array is a root property
+|
+|===
+
+Here is an example of a simple config.json file:
+
+.Before
+[source,json]
+----
+{
+  "name": "TEST",
+  "version": "1",
+  "defaultLocale": "fr",
+  "templates": [
+    "security",
+    "unschedulledPeriodicOp",
+    "operation",
+    "template1",
+    "template2"
+  ],
+  "csses": [
+    "tabs",
+    "accordions",
+    "filter",
+    "operations",
+    "security"
+  ],
+  "menuEntries": [
+    {"id": "uid test 0","url": "https://opfab.github.io/","label": "menu.first"},
+    {"id": "uid test 1","url": "https://www.la-rache.com","label": "menu.second"}
+  ],
+  "i18nLabelKey": "third.label",
+  "processes": {
+    "process": {
+      "states": {
+        "firstState": {
+          "details": [
+            {
+              "title": {
+                "key": "template.title"
+              },
+              "templateName": "operation"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+----
+
+.After
+[source,json]
+----
+{
+  "id": "TEST",
+  "version": "1",
+  "name": "process.label",
+  "defaultLocale": "fr",
+  "templates": [
+    "security",
+    "unschedulledPeriodicOp",
+    "operation",
+    "template1",
+    "template2"
+  ],
+  "csses": [
+    "tabs",
+    "accordions",
+    "filter",
+    "operations",
+    "security"
+  ],
+  "menuLabel": "menu.label",
+  "menuEntries": [
+    {"id": "uid test 0","url": "https://opfab.github.io/","label": "menu.first"},
+    {"id": "uid test 1","url": "https://www.la-rache.com","label": "menu.second"}
+  ],
+  "states": {
+    "firstState": {
+      "details": [
+        {
+          "title": {
+            "key": "template.title"
+          },
+          "templateName": "operation"
+        }
+      ]
+    }
+  }
+}
+----
+
+[IMPORTANT]
+You should also make sure that the new i18n label keys that you introduce match what is defined in the i18n
+folder of the bundle.
+
+=== On the Cards model
+
+|===
+|Field before |Field after |Usage
+
+|publisherVersion
+|processVersion
+|Identifies the version of the bundle. It was renamed for consistency now that bundles are linked to processes not
+publishers
+
+|process
+|process
+|This field is now required and should match the id field of the process (bundle) to use to render the card.
+|===
+
+These changes impact both current cards from the feed and archived cards.
+
+== Changes to the endpoints
+
+The `/thirds` endpoint becomes `thirds/processes` in preparation of OC-978.
+
+== Migration guide
+
+This section outlines the necessary steps to migrate existing data.
+
+. Backup your existing bundles and existing Mongo data.
+//TODO Add details?
+
+. Edit your bundles as detailed above. In particular, if you had bundles containing several processes, you will need to
+split them into several bundles. The `id` of the bundles should match the `process` field in the corresponding cards.
+
+. Run the following scripts in the mongo shell to copy the value of `publisherVersion` to a new `processVersion` field
+for all cards (current and archived):
+//TODO Detail steps to mongo shell ?
++
+.Current cards
+[source, shell]
+----
+db.cards.aggregate(
+[
+{ "$addFields": { "processVersion": "$publisherVersion" }},
+{ "$out": "cards" }
+]
+)
+----
++
+.Archived cards
+[source, shell]
+----
+db.archivedCards.aggregate(
+[
+{ "$addFields": { "processVersion": "$publisherVersion" }},
+{ "$out": "archivedCards" }
+]
+)
+----
+
+. Make sure you have no cards without process using the following mongo shell commands:
++
+[source, shell]
+----
+db.cards.find({ process: null})
+----
++
+[source, shell]
+----
+db.archivedCards.find({ process: null})
+----
+
+. If it turns out to be the case, you will need to set a process value for all these cards to finish the migration. You
+can do it either manually through Compass or using a mongo shell command. For example, to set the process to "SOME_PROCESS"
+for all cards with an empty process, use:
++
+[source, shell]
+----
+db.cards.updateMany(
+{ process: null },
+{
+$set: { "process": "SOME_PROCESS"}
+}
+)
+----
++
+[source, shell]
+----
+db.archivedCards.updateMany(
+{ process: null },
+{
+$set: { "process": "SOME_PROCESS"}
+}
+)
+----

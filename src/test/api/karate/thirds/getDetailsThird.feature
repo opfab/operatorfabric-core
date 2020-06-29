@@ -6,15 +6,14 @@ Feature: getDetailsThird
     * def authToken = signIn.authToken
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
     * def authTokenAsTSO = signInAsTSO.authToken
-
-    * def thirdName = 'api_test'
-    * def process = 'defaultProcess'
+    
+    * def process = 'api_test'
     * def state = 'messageState'
     * def version = 2
 
     Scenario: get third details
 
-      Given url opfabUrl + '/thirds/' + thirdName + '/' + process + '/' + state + '/details?apiVersion=' + version
+      Given url opfabUrl + '/thirds/processes/' + process + '/' + state + '/details?version=' + version
       And header Authorization = 'Bearer ' + authToken
       When method get
       Then print response
@@ -25,7 +24,7 @@ Feature: getDetailsThird
 
   Scenario: get third details without authentication
 
-    Given url opfabUrl + '/thirds/' + thirdName + '/' + process + '/' + state + '/details?apiVersion=' + version
+    Given url opfabUrl + '/thirds/processes/' + process + '/' + state + '/details?version=' + version
     When method get
     Then print response
     And status 401
@@ -33,7 +32,7 @@ Feature: getDetailsThird
 
   Scenario: get third details without authentication
 
-    Given url opfabUrl + '/thirds/unknownThird/' + process + '/' + state + '/details?apiVersion=' + version
+    Given url opfabUrl + '/thirds/unknownThird/' + process + '/' + state + '/details?version=' + version
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then print response

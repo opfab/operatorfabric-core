@@ -11,10 +11,10 @@
 
 import {Component, ElementRef, Input, OnChanges, Output, EventEmitter} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
-import {ThirdsService} from '@ofServices/thirds.service';
+import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {Third, ThirdResponse} from '@ofModel/thirds.model';
+import {Process, Response} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -31,7 +31,7 @@ import { switchMap,skip,takeUntil } from 'rxjs/operators';
 })
 export class DetailComponent implements OnChanges {
 
-    @Output() responseData = new EventEmitter<ThirdResponse>();
+    @Output() responseData = new EventEmitter<Response>();
 
     public active = false;
     @Input() detail: Detail;
@@ -43,7 +43,7 @@ export class DetailComponent implements OnChanges {
     unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor(private element: ElementRef,
-                private thirds: ThirdsService,
+                private processesService: ProcessesService,
                 private handlebars: HandlebarsService,
                 private sanitizer: DomSanitizer,
                 private store: Store<AppState>,
@@ -79,10 +79,10 @@ export class DetailComponent implements OnChanges {
 
     private initializeHrefsOfCssLink() {
         if (this.detail && this.detail.styles) {
-            const publisher = this.card.publisher;
-            const publisherVersion = this.card.publisherVersion;
+            const process = this.card.process;
+            const processVersion = this.card.processVersion;
             this.detail.styles.forEach(style => {
-                const cssUrl = this.thirds.computeThirdCssUrl(publisher, style, publisherVersion);
+                const cssUrl = this.processesService.computeThirdCssUrl(process, style, processVersion);
                 // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
                 this.hrefsOfCssLink.push(safeCssUrl);
@@ -91,13 +91,11 @@ export class DetailComponent implements OnChanges {
     }
 
     private initializeHandlebarsTemplates() {
+        let responseData: Response;
 
-        let responseData: ThirdResponse;
-        let third: Third;
-
-        this.thirds.queryThirdFromCard(this.card).pipe(
-            switchMap(thirdElt => {
-                responseData = thirdElt.processes[this.card.process].states[this.card.state].response;
+        this.processesService.queryProcessFromCard(this.card).pipe(
+            switchMap(process => {
+                responseData = process.states[this.card.state].response;
                 this.responseData.emit(responseData);
                 return this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card, this.userContext, responseData));
             })

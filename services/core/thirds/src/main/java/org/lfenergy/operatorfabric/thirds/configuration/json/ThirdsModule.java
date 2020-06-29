@@ -13,6 +13,7 @@ package org.lfenergy.operatorfabric.thirds.configuration.json;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.lfenergy.operatorfabric.thirds.model.*;
+import org.lfenergy.operatorfabric.thirds.model.Process;
 
 /**
  * Jackson (JSON) Business Module configuration
@@ -22,9 +23,9 @@ import org.lfenergy.operatorfabric.thirds.model.*;
 public class ThirdsModule extends SimpleModule {
 
     public ThirdsModule() {
-        addAbstractTypeMapping(ThirdMenuEntry.class, ThirdMenuEntryData.class);
-        addAbstractTypeMapping(ThirdProcesses.class,ThirdProcessesData.class);
-        addAbstractTypeMapping(ThirdStates.class,ThirdStatesData.class);
+        addAbstractTypeMapping(MenuEntry.class, MenuEntryData.class);
+        addAbstractTypeMapping(Process.class,ProcessData.class);
+        addAbstractTypeMapping(ProcessStates.class, ProcessStatesData.class);
         addAbstractTypeMapping(Detail.class,DetailData.class);
         addAbstractTypeMapping(I18n.class,I18nData.class);
         addAbstractTypeMapping(Response.class,ResponseData.class);

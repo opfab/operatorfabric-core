@@ -16,7 +16,7 @@ import * as moment from 'moment';
 import {Map} from "@ofModel/map";
 import {Observable, of} from "rxjs";
 import {map, tap} from "rxjs/operators";
-import {ThirdsService} from "../../../services/thirds.service";
+import {ProcessesService} from "@ofServices/processes.service";
 import {Guid} from "guid-typescript";
 import {DetailContext} from "@ofModel/detail-context.model";
 import {Store} from "@ngrx/store";
@@ -31,7 +31,7 @@ export class HandlebarsService {
 
     constructor(
                 private translate: TranslateService,
-                private thirds: ThirdsService,
+                private thirds: ProcessesService,
                 private store: Store<AppState>){
         this.registerPreserveSpace();
         this.registerNumberFormat();
@@ -60,18 +60,18 @@ export class HandlebarsService {
     }
 
     public executeTemplate(templateName: string, context: DetailContext):Observable<string> {
-        return this.queryTemplate(context.card.publisher,context.card.publisherVersion,templateName).pipe(
+        return this.queryTemplate(context.card.process,context.card.processVersion,templateName).pipe(
             map(t=>t(context)));
     }
 
-    private queryTemplate(publisher:string, version:string, name: string):Observable<Function> {
+    private queryTemplate(process:string, version:string, name: string):Observable<Function> {
         const locale = this._locale;
-        const key = `${publisher}.${version}.${name}.${locale}`;
+        const key = `${process}.${version}.${name}.${locale}`;
         let template = this.templateCache[key];
         if(template){
            return of(template);
         }
-        return this.thirds.fetchHbsTemplate(publisher,version,name,locale).pipe(
+        return this.thirds.fetchHbsTemplate(process,version,name,locale).pipe(
             map(s=>Handlebars.compile(s)),
             tap(t=>this.templateCache[key]=t)
         );

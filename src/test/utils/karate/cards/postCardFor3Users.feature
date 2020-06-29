@@ -17,7 +17,7 @@ Scenario: Post Card
 
 		var card = {
 				"publisher" : "api_test",
-				"publisherVersion" : "1",
+				"processVersion" : "1",
 				"process"  :"defaultProcess",
 				"processId" : "process3users",
 				"state": "messageState",

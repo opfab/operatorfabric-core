@@ -109,11 +109,13 @@ gradle-app.setting
 # ignoring .env file needed by docker-compose
 config/**/.env
 
-# Karate DSL results 
-src/test/api/karate/target/**/*
-src/test/api/karate/karate.jar
-src/test/utils/karate/target/**/*
-src/test/utils/karate/karate.jar
+# Karate tests
+## Results
+src/test/**/karate/target/**/*
+## Karate jar
+src/test/**/karate.jar
+## Tar.gz bundles
+src/test/**/karate/**/*.tar.gz
 
 # UI
 ui/main/node_modules

@@ -11,7 +11,7 @@
 
 import {getTestBed, TestBed} from '@angular/core/testing';
 
-import {ThirdsI18nLoaderFactory, ThirdsService} from '../../../services/thirds.service';
+import {ThirdsI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
@@ -29,7 +29,8 @@ import {UserContext} from "@ofModel/user-context.model";
 import {DetailContext} from "@ofModel/detail-context.model";
 
 function computeTemplateUri(templateName) {
-    return `${environment.urls.thirds}/testPublisher/templates/${templateName}`;
+    return `${environment.urls.processes}/testProcess/templates/${templateName}`;
+    //TODO OC-979 Why is the publisher (now the process) hardcoded? It needs to match the one set by default in getOneRandomCard.
 }
 
 describe('Handlebars Services', () => {
@@ -50,7 +51,7 @@ describe('Handlebars Services', () => {
                     loader: {
                         provide: TranslateLoader,
                         useFactory: ThirdsI18nLoaderFactory,
-                        deps: [ThirdsService]
+                        deps: [ProcessesService]
                     },
                     useDefaultLang: false
                 })
@@ -58,7 +59,7 @@ describe('Handlebars Services', () => {
             providers: [
                 {provide: 'TimeEventSource', useValue: null},
                 {provide: store, useClass: Store},
-                ThirdsService,
+                ProcessesService,
                 HandlebarsService,
                 AuthenticationImportHelperForSpecs
             ]
@@ -548,5 +549,5 @@ function flushI18nJson(request: TestRequest, json: any) {
 }
 
 function prefix(card: LightCard) {
-    return card.publisher + '.' + card.publisherVersion + '.';
+    return card.publisher + '.' + card.processVersion + '.';
 }

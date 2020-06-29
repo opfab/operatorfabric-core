@@ -33,9 +33,9 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import org.lfenergy.operatorfabric.thirds.model.Process;
 import org.lfenergy.operatorfabric.thirds.model.ResourceTypeEnum;
-import org.lfenergy.operatorfabric.thirds.model.Third;
-import org.lfenergy.operatorfabric.thirds.model.ThirdData;
+import org.lfenergy.operatorfabric.thirds.model.ProcessData;
 import org.lfenergy.operatorfabric.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,24 +51,24 @@ import com.google.common.collect.Table;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Thirds Service for managing Third properties and resources
+ * Processes Service for managing business processes definition and resources
  *
  */
 @Service
 @Slf4j
-public class ThirdsService implements ResourceLoaderAware {
+public class ProcessesService implements ResourceLoaderAware {
 
 	private static final String PATH_PREFIX = "file:";
     private static final String CONFIG_FILE_NAME = "config.json";
     @Value("${operatorfabric.thirds.storage.path}")
     private String storagePath;
     private ObjectMapper objectMapper;
-    private Map<String, Third> defaultCache;
-    private Table<String,String, Third> completeCache;
+    private Map<String, Process> defaultCache;
+    private Table<String,String, Process> completeCache;
     private ResourceLoader resourceLoader;
 
     @Autowired
-    public ThirdsService(ObjectMapper objectMapper) {
+    public ProcessesService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         this.completeCache = HashBasedTable.create();
         this.defaultCache = new HashMap<>();
@@ -80,55 +80,56 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Lists all registered thirds
+     * Lists all registered processes
      *
-     * @return registered thirds
+     * @return registered processes
      */
-	public List<Third> listThirds() {
+	public List<Process> listProcesses() {
 		return new ArrayList<>(defaultCache.values());		
 	}
     
 
     /**
-     * Loads third data to defaultCache (not thread safe {@link #loadCacheSafe()})
+     * Loads process data to defaultCache (not thread safe)
      */
     public void loadCache() {
-        log.info("loading thirds from {}", new File(storagePath).getAbsolutePath());
+        log.info("loading processes from {}", new File(storagePath).getAbsolutePath());
         try {
-            Map<String, Map<String, Third>> completeResult = new HashMap<>();
+            Map<String, Map<String, Process>> completeResult = new HashMap<>();
             Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath);
-            //load default Thirds and recursively loads versioned Thirds
-            Map<String, Third> result = loadCache0(root.getFile(),
-                    Third::getName,
-                    (f, t) -> completeResult.put(
-                            t.getName(),
-                            loadCache0(f, Third::getVersion, null)
+            //load default Processes and recursively loads versioned Processes
+            Map<String, Process> result = loadCache0(root.getFile(),
+                    Process::getId,
+                    (f, p) -> completeResult.put(
+                            p.getId(),
+                            loadCache0(f, Process::getVersion, null)
                     )
             );
 			this.completeCache.clear();			
             this.defaultCache.clear();
             this.defaultCache.putAll(result);
-			completeResult.keySet().forEach(k1 -> completeResult.get(k1).keySet()
+			completeResult.keySet()
+                    .forEach(k1 -> completeResult.get(k1).keySet()
 					.forEach(k2 -> completeCache.put(k1, k2, completeResult.get(k1).get(k2))));            
         } catch (IOException e) {
-            log.warn("Unreadable Third config files at  {}", storagePath);
+            log.warn("Unreadable Process config files at  {}", storagePath);
         }
 
     }
 
     /**
-     * Loads a cache for Third resource bundle. Loops over a folder sub folders (depth 1) to find config.json files.
-     * These files contain Json serialized {@link ThirdData} objects.
+     * Loads a cache for Process resource bundle. Loops over a folder sub folders (depth 1) to find config.json files.
+     * These files contain Json serialized {@link ProcessData} objects.
      *
      * @param root         lookup folder
-     * @param keyExtractor key cache extractor from loaded {@link ThirdData}
+     * @param keyExtractor key cache extractor from loaded {@link ProcessData}
      * @param onEachActor  do something on each subfolder. Optional.
      * @return loaded cache
      */
-    private Map<String, Third> loadCache0(File root,
-                                          Function<Third, String> keyExtractor,
-                                          BiConsumer<File, Third> onEachActor) {
-        Map<String, Third> result = new HashMap<>();
+    private Map<String, Process> loadCache0(File root,
+                                          Function<Process, String> keyExtractor,
+                                          BiConsumer<File, Process> onEachActor) {
+        Map<String, Process> result = new HashMap<>();
         if (root.listFiles() != null)
             Arrays.stream(root.listFiles())
                     .filter(File::isDirectory)
@@ -136,12 +137,12 @@ public class ThirdsService implements ResourceLoaderAware {
                                 File[] configFile = f.listFiles((sf, name) -> name.equals(CONFIG_FILE_NAME));
                                 if (configFile.length >= 1) {
                                     try {
-                                        ThirdData third = objectMapper.readValue(configFile[0], ThirdData.class);
-                                        result.put(keyExtractor.apply(third), third);
+                                        ProcessData process = objectMapper.readValue(configFile[0], ProcessData.class);
+                                        result.put(keyExtractor.apply(process), process);
                                         if (onEachActor != null)
-                                            onEachActor.accept(f, third);
+                                            onEachActor.accept(f, process);
                                     } catch (IOException e) {
-                                        log.warn("Unreadable Third config file "+ f.getAbsolutePath(), e);
+                                        log.warn("Unreadable process config file "+ f.getAbsolutePath(), e);
                                     }
                                 }
                             }
@@ -152,46 +153,46 @@ public class ThirdsService implements ResourceLoaderAware {
     /**
      * Computes resource handle
      *
-     * @param thirdName Third name
+     * @param processId Process id
      * @param type      resource type
      * @param name      resource name
      * @return resource handle
      * @throws FileNotFoundException if corresponding file does not exist
      */
-    public Resource fetchResource(String thirdName, ResourceTypeEnum type, String name) throws
+    public Resource fetchResource(String processId, ResourceTypeEnum type, String name) throws
             FileNotFoundException {
-        return fetchResource(thirdName, type, null, null, name);
+        return fetchResource(processId, type, null, null, name);
     }
 
     /**
      * Computes resource handle
      *
-     * @param thirdName Third name
+     * @param processId Process id
      * @param type      resource type
-     * @param version   third configuration version
+     * @param version   process configuration version
      * @param locale    chosen locale use default if not set
      * @param name      resource name
      * @return resource handle
      * @throws FileNotFoundException if corresponding file does not exist
      */
-    public Resource fetchResource(String thirdName, ResourceTypeEnum type, String version, String locale,
+    public Resource fetchResource(String processId, ResourceTypeEnum type, String version, String locale,
                                   String name) throws FileNotFoundException {
-        Map<String, Third> versions = completeCache.row(thirdName);
+        Map<String, Process> versions = completeCache.row(processId);
         if (versions.isEmpty())
-            throw new FileNotFoundException("No resource exist for " + thirdName);
+            throw new FileNotFoundException("No resource exist for " + processId);
 
-        Third third;
+        Process process;
         String finalVersion = version;
 
         if ((version == null) || (version.length() == 0)){
-            finalVersion = this.fetch(thirdName).getVersion();
+            finalVersion = this.fetch(processId).getVersion();
         }
 
-        third = versions.get(finalVersion);
+        process = versions.get(finalVersion);
 
-        if (third == null)
-            throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + thirdName);
-        validateResourceParameters(thirdName, type, name, finalVersion, locale);
+        if (process == null)
+            throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + processId);
+        validateResourceParameters(processId, type, name, finalVersion, locale);
         String finalName;
         if (type == ResourceTypeEnum.I18N) {
             finalName = locale;
@@ -201,7 +202,7 @@ public class ThirdsService implements ResourceLoaderAware {
         String resourcePath = PATH_PREFIX +
                 storagePath +
                 File.separator +
-                thirdName +
+                processId +
                 File.separator +
                 finalVersion +
                 File.separator +
@@ -216,28 +217,28 @@ public class ThirdsService implements ResourceLoaderAware {
     /**
      * Validates resource existence
      *
-     * @param thirdName module name
+     * @param processId process id
      * @param type      resource type
      * @param name      resource name
      * @param version   module version
      * @param locale    resource locale
      * @throws FileNotFoundException when resource does not exist
      */
-    private void validateResourceParameters(String thirdName, ResourceTypeEnum type, String name, String version,
+    private void validateResourceParameters(String processId, ResourceTypeEnum type, String name, String version,
                                             String locale) throws FileNotFoundException {
-        Third third = completeCache.get(thirdName,version);
+        Process process = completeCache.get(processId,version);
         if (type.isLocalized() && locale == null)
             throw new FileNotFoundException("Unable to determine resource for undefined locale");
         switch (type) {
             case CSS:
-                if (!third.getCsses().contains(name))
-                    throw new FileNotFoundException("Unknown css resource for " + thirdName + ":" + version);
+                if (!process.getCsses().contains(name))
+                    throw new FileNotFoundException("Unknown css resource for " + processId + ":" + version);
                 break;
             case I18N:
                 break;
             case TEMPLATE:
-                if (!third.getTemplates().contains(name))
-                    throw new FileNotFoundException("Unknown template " + name + " for " + thirdName + ":" + version);
+                if (!process.getTemplates().contains(name))
+                    throw new FileNotFoundException("Unknown template " + name + " for " + processId + ":" + version);
                 break;
             default:
                 throw new FileNotFoundException("Unable to find resource for unknown resource type");
@@ -245,28 +246,28 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Fetch {@link Third} for specified name and default version
+     * Fetch {@link Process} for specified id and default version
      *
-     * @param name third name
-     * @return fetch {@link Third} or null if it does not exist
+     * @param id process id
+     * @return fetch {@link Process} or null if it does not exist
      */
-    public Third fetch(String name) {
-        return fetch(name, null);
+    public Process fetch(String id) {
+        return fetch(id, null);
     }
 
     /**
      * Computes resource handle
      *
-     * @param thirdName Third name
+     * @param processId Process id
      * @param type      resource type
-     * @param version   third configuration version
+     * @param version   process configuration version
      * @param name      resource name
      * @return resource handle
      * @throws FileNotFoundException if corresponding resource does not exist
      */
-    public Resource fetchResource(String thirdName, ResourceTypeEnum type, String version, String name) throws
+    public Resource fetchResource(String processId, ResourceTypeEnum type, String version, String name) throws
             FileNotFoundException {
-        return fetchResource(thirdName, type, version, null, name);
+        return fetchResource(processId, type, version, null, name);
     }
 
     @Override
@@ -275,13 +276,13 @@ public class ThirdsService implements ResourceLoaderAware {
     }
 
     /**
-     * Updates or creates third from a new bundle
+     * Updates or creates process from a new bundle
      *
      * @param is bundle input stream
-     * @return the new or updated third data
+     * @return the new or updated process data
      * @throws IOException if error arise during stream reading
      */
-    public synchronized Third updateThird(InputStream is) throws IOException {    	
+    public synchronized Process updateProcess(InputStream is) throws IOException {
     	Path rootPath = Paths
 				.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
 				.normalize();
@@ -293,33 +294,33 @@ public class ThirdsService implements ResourceLoaderAware {
 			//extract tar.gz to output folder
 			PathUtils.unTarGz(is, outPath);
 			//load config
-			return updateThird0(outPath);
+			return updateProcess0(outPath);
 		} finally {
 			PathUtils.silentDelete(outPath);
 		}
     }
 
     /**
-     * Updates or creates third from disk saved bundle
+     * Updates or creates process from disk saved bundle
      *
      * @param outPath path to the bundle
-     * @return he new or updated third data
+     * @return the new or updated process data
      * @throws IOException multiple underlying case (Json read, file system access, file system manipulation - copy,
      *                     move)
      */
-    private Third updateThird0(Path outPath) throws IOException {
-        // load Third from config
+    private Process updateProcess0(Path outPath) throws IOException {
+        // load Process from config
         Path outConfigPath = outPath.resolve(CONFIG_FILE_NAME);
-        ThirdData third = objectMapper.readValue(outConfigPath.toFile(), ThirdData.class);
-        //third root
+        ProcessData process = objectMapper.readValue(outConfigPath.toFile(), ProcessData.class);
+        //process root
         Path existingRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
                 .getAbsolutePath())
-                .resolve(third.getName())
+                .resolve(process.getId())
                 .normalize();
-        //third default config
+        //process default config
         Path existingConfigPath = existingRootPath.resolve(CONFIG_FILE_NAME);
-        //third versioned root
-        Path existingVersionPath = existingRootPath.resolve(third.getVersion());
+        //process versioned root
+        Path existingVersionPath = existingRootPath.resolve(process.getVersion());
         //move versioned dir
         PathUtils.silentDelete(existingVersionPath);
         PathUtils.moveDir(outPath, existingVersionPath);
@@ -328,89 +329,89 @@ public class ThirdsService implements ResourceLoaderAware {
         PathUtils.copy(existingVersionPath.resolve(CONFIG_FILE_NAME), existingConfigPath);
 
         //update caches
-        defaultCache.put(third.getName(),third);
-        completeCache.put(third.getName(), third.getVersion(), third);
-        //retieve newly loaded third from cache
-        return fetch(third.getName(), third.getVersion());
+        defaultCache.put(process.getId(),process);
+        completeCache.put(process.getId(), process.getVersion(), process);
+        //retieve newly loaded process from cache
+        return fetch(process.getId(), process.getVersion());
     }
 
     /**
-     * Fetches {@link Third} for specified name and default version
+     * Fetches {@link Process} for specified id and version
      *
-     * @param name       third name
-     * @param apiVersion {@link Third} version, if null falls back to default version (latest upload)
-     * @return fetch {@link Third} or null if it does not exist
+     * @param id process id
+     * @param version {@link Process} version, if null falls back to default version (latest upload)
+     * @return fetch {@link Process} or null if it does not exist
      */
-    public Third fetch(String name, String apiVersion) {
-        if (apiVersion == null)
-            return this.defaultCache.get(name);
-        if (this.completeCache.contains(name,apiVersion))
-            return this.completeCache.get(name,apiVersion);
+    public Process fetch(String id, String version) {
+        if (version == null)
+            return this.defaultCache.get(id);
+        if (this.completeCache.contains(id,version))
+            return this.completeCache.get(id,version);
         else return null;        
     }
     
     /**
-     * Deletes {@link Third} for specified name
-     * @param name       third name 
+     * Deletes {@link Process} for specified id
+     * @param id process id
      * @throws IOException 
      */
-    public synchronized void delete(String name) throws IOException {
-		if (!defaultCache.containsKey(name)) {
-    		throw new FileNotFoundException("Unable to find a bundle with the given name");
+    public synchronized void delete(String id) throws IOException {
+		if (!defaultCache.containsKey(id)) {
+    		throw new FileNotFoundException("Unable to find a bundle with the given id");
     	}
-    	//third root
-    	Path thirdRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
+    	//process root
+    	Path processRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
                 .getAbsolutePath())
-                .resolve(name)
+                .resolve(id)
                 .normalize();
-    	//delete third root from disk
-    	PathUtils.delete(thirdRootPath);
-    	log.debug("removed third:{} from filesystem", name);
-    	removeFromCache(name);    	
+    	//delete process root from disk
+    	PathUtils.delete(processRootPath);
+    	log.debug("removed process:{} from filesystem", id);
+    	removeFromCache(id);
     }
     
     /**
-     * Deletes {@link Third} for specified name and version
-     * @param name       third name
-     * @param version    third version 
+     * Deletes {@link Process} for specified id and version
+     * @param id       process id
+     * @param version    process version
      * @throws IOException 
      */
-	public synchronized void deleteVersion(String name, String version) throws IOException {		
-		if (!completeCache.contains(name,version)) {
-			throw new FileNotFoundException("Unable to find a bundle with the given name and version");
+	public synchronized void deleteVersion(String id, String version) throws IOException {
+		if (!completeCache.contains(id,version)) {
+			throw new FileNotFoundException("Unable to find a bundle with the given id and version");
 		}
-		Third third = defaultCache.get(name);
-		Path thirdRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
+		Process process = defaultCache.get(id);
+		Path processRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
                 .getAbsolutePath())
-                .resolve(name)
+                .resolve(id)
                 .normalize();
 		/* case: bundle has only one version(this control is put here to skip if it's possible
 		 * heavy operations like file system access)
 		 */
-		if ((third.getVersion().equals(version)) && 
-				completeCache.row(name).size() == 1) {
+		if ((process.getVersion().equals(version)) &&
+				completeCache.row(id).size() == 1) {
 			//delete the whole bundle				
-	    	//delete third root from disk
-			PathUtils.delete(thirdRootPath);
-			log.debug("removed third:{} from filesystem", name);
-			removeFromCache(name);
+	    	//delete process root from disk
+			PathUtils.delete(processRootPath);
+			log.debug("removed process:{} from filesystem", id);
+			removeFromCache(id);
 		} else {//case: multiple versions => to delete only the given version
-			Path thirdVersionPath = thirdRootPath.resolve(version);
-			if (third.getVersion().equals(version)) {//case: version to delete is the default one => root config replacement
+			Path processVersionPath = processRootPath.resolve(version);
+			if (process.getVersion().equals(version)) {//case: version to delete is the default one => root config replacement
 				//replace default
 				//choose the most recent through filesystem walk				
-				try (Stream<Path> files = Files.list(thirdRootPath)
-						.filter(p -> !p.equals(thirdVersionPath) && Files.isDirectory(p)
-						&& completeCache.contains(name, p.getFileName().toString()))) {
+				try (Stream<Path> files = Files.list(processRootPath)
+						.filter(p -> !p.equals(processVersionPath) && Files.isDirectory(p)
+						&& completeCache.contains(id, p.getFileName().toString()))) {
 					Optional<Path> versionBecomingNewDefault = files
 							.max(this::comparePathsByModifiedTimeManagingException);
 					if (versionBecomingNewDefault.isPresent()) {
 						Path versionBecomingNewDefaultPath = versionBecomingNewDefault.get();
 						Files.copy(versionBecomingNewDefaultPath.resolve(CONFIG_FILE_NAME),
-								thirdRootPath.resolve(CONFIG_FILE_NAME), StandardCopyOption.REPLACE_EXISTING);
-						Third defaultThird = completeCache.get(name,
+								processRootPath.resolve(CONFIG_FILE_NAME), StandardCopyOption.REPLACE_EXISTING);
+						Process defaultProcess = completeCache.get(id,
 								versionBecomingNewDefaultPath.getFileName().toString());
-						defaultCache.put(name, defaultThird);
+						defaultCache.put(id, defaultProcess);
 					} else {
 						throw new IOException("Inconsistent file system state");
 					} 
@@ -419,9 +420,9 @@ public class ThirdsService implements ResourceLoaderAware {
 				}				
 			}
 			//delete version folder
-			PathUtils.delete(thirdVersionPath);
-			log.debug("removed third:{} whith version:{} from filesystem", name, version);
-			completeCache.remove(name,version);
+			PathUtils.delete(processVersionPath);
+			log.debug("removed process:{} whith version:{} from filesystem", id, version);
+			completeCache.remove(id,version);
 		}
 	}
 
@@ -448,16 +449,16 @@ public class ThirdsService implements ResourceLoaderAware {
     }
         
     /**
-     * Remove third from caches
-     * @param name       third name
+     * Remove process from caches
+     * @param id       process id
      */
-    private void removeFromCache(String name) {
-    	Object removed = defaultCache.remove(name);
+    private void removeFromCache(String id) {
+    	Object removed = defaultCache.remove(id);
     	if (removed!=null) {
-    		log.debug("removed third:{} from defaultCache", name);
+    		log.debug("removed process:{} from defaultCache", id);
     	}    	
-    	completeCache.row(name).clear();
-    	log.debug("removed third:{} from completeCache", name);
+    	completeCache.row(id).clear();
+    	log.debug("removed process:{} from completeCache", id);
     }
     
     private int comparePathsByModifiedTimeManagingException(Path p1,Path p2) {

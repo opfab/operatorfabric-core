@@ -17,7 +17,7 @@ public class ExternalAppApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		log.info(" ******************************************************");
-		log.info(" ***********  Welcom to External Application **********");
+		log.info(" ***********  Welcome to External Application **********");
 		log.info(" ******************************************************");
 	}
 

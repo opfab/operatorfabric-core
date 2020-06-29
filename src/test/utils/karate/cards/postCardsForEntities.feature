@@ -15,7 +15,7 @@ Feature: Cards
 [
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card1Entities_1",
 	"state": "messageState",
@@ -32,7 +32,7 @@ Feature: Cards
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card1Entities_2",
 	"state": "messageState",
@@ -95,7 +95,7 @@ Feature: Cards
 [
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card1Entities_2",
 	"state": "messageState",
@@ -148,7 +148,7 @@ Feature: Cards
 [
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "processToVerifyRoutingForUserWithNoEntity_1",
 	"state": "messageState",

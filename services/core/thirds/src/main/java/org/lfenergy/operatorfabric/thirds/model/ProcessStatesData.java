@@ -21,7 +21,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ThirdStatesData implements ThirdStates {
+public class ProcessStatesData implements ProcessStates {
     @Singular("detailsData")
     private List<? extends Detail> detailsData;
     private ResponseData responseData;
@@ -48,4 +48,10 @@ public class ThirdStatesData implements ThirdStates {
     public void setResponse(Response responseData) {
         this.responseData = (ResponseData) responseData;
     }
+
+    @Override
+    public Boolean getAcknowledgmentAllowed() { return this.acknowledgementAllowed; }
+
+    @Override
+    public void setAcknowledgmentAllowed(Boolean acknowledgmentAllowed) { this.acknowledgementAllowed = acknowledgmentAllowed; }
 }

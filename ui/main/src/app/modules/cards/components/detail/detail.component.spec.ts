@@ -15,12 +15,12 @@ import {DetailComponent} from './detail.component';
 import {
     getOneRandomCard,
     getOneRandomCardWithRandomDetails,
-    getOneRandomThird,
+    getOneRandomProcess,
     getRandomI18nData,
     getRandomIndex,
     AuthenticationImportHelperForSpecs
 } from '@tests/helpers';
-import {ThirdsI18nLoaderFactory, ThirdsService} from '../../../../services/thirds.service';
+import {ThirdsI18nLoaderFactory, ProcessesService} from '../../../../services/processes.service';
 import {ServicesModule} from '@ofServices/services.module';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {StoreModule} from '@ngrx/store';
@@ -31,7 +31,7 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {environment} from '@env/environment';
 import {By} from '@angular/platform-browser';
 import {of} from 'rxjs';
-import {Process, State} from '@ofModel/thirds.model';
+import {Process, State} from '@ofModel/processes.model';
 import {Map as OfMap} from '@ofModel/map';
 import {Detail} from '@ofModel/card.model';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -41,7 +41,7 @@ describe('DetailComponent', () => {
     let fixture: ComponentFixture<DetailComponent>;
     let injector: TestBed;
     let httpMock: HttpTestingController;
-    let thirdsService: ThirdsService;
+    let processesService: ProcessesService;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -54,13 +54,13 @@ describe('DetailComponent', () => {
                     loader: {
                         provide: TranslateLoader,
                         useFactory: ThirdsI18nLoaderFactory,
-                        deps: [ThirdsService]
+                        deps: [ProcessesService]
                     },
                     useDefaultLang: false
                 })
             ],
             declarations: [DetailComponent],
-            providers: [ThirdsService, HandlebarsService,
+            providers: [ProcessesService, HandlebarsService,
                 {provide:'TimeEventSource',useValue:null},
                 TimeService,
             AuthenticationImportHelperForSpecs]
@@ -68,7 +68,7 @@ describe('DetailComponent', () => {
             .compileComponents();
         injector = getTestBed();
         httpMock = injector.get(HttpTestingController);
-        thirdsService = TestBed.get(ThirdsService);
+        processesService = TestBed.get(ProcessesService);
 
 
     }));
@@ -80,16 +80,15 @@ describe('DetailComponent', () => {
 
 
     it('should create', () => {
-        const processesMap = new OfMap();
         const statesMap = new OfMap();
         const details = [new Detail(null, getRandomI18nData(), null, 'template3', null),
             new Detail(null, getRandomI18nData(), null, 'template4', null)];
         statesMap['state01'] = new State(details);
-        processesMap['process01'] = new Process(statesMap);
-        const third = getOneRandomThird({
-            processes: processesMap
+        const process = getOneRandomProcess({
+            id: 'process01',
+            states: statesMap
         });
-        spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
+        spyOn(processesService, 'queryProcess').and.returnValue(of(process));
         component.card = getOneRandomCard({
             process: 'process01',
             processId: 'process01_01',
@@ -101,24 +100,27 @@ describe('DetailComponent', () => {
         expect(component).toBeTruthy();
     });
     it('should load template with script', ()=>{
-                const processesMap = new OfMap();
         const statesMap = new OfMap();
         const details = [new Detail(null, getRandomI18nData(), null, 'template3', null),
             new Detail(null, getRandomI18nData(), null, 'template4', null)];
         statesMap['state01'] = new State(details);
-        processesMap['process01'] = new Process(statesMap);
-        const third = getOneRandomThird({
-            processes: processesMap
+
+        const process = getOneRandomProcess({
+            id: 'process01',
+            version: '1',
+            states: statesMap
         });
-        spyOn(thirdsService, 'queryThird').and.returnValue(of(third));
+        spyOn(processesService, 'queryProcess').and.returnValue(of(process));
+
         component.card = getOneRandomCard({
             process: 'process01',
             processId: 'process01_01',
+            processVersion: '1',
             state: 'state01',
         });
         component.detail = component.card.details[0];
         component.ngOnChanges();
-        let calls = httpMock.match(req => req.url == `${environment.urls.thirds}/testPublisher/templates/template1`);
+        let calls = httpMock.match(req => req.url == `${environment.urls.processes}/process01/templates/template1`);
         expect(calls.length).toEqual(1);
         calls.forEach(call=>{
           call.flush('<div>div</div><script type="text/javascript">console.debug("log")</script>')

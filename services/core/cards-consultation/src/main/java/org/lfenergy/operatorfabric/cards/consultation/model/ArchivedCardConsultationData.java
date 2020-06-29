@@ -45,7 +45,7 @@ public class ArchivedCardConsultationData implements Card {
     private String id;
     private String parentCardId;
     private String publisher;
-    private String publisherVersion;
+    private String processVersion;
     private String process;
     private String processId;
     private String state;

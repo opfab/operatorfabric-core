@@ -27,8 +27,8 @@ import {
 import {LightCard} from "@ofModel/light-card.model";
 import {Map} from "@ofModel/map";
 import * as _ from 'lodash';
-import {ThirdsService} from "@ofServices/thirds.service";
-import {ThirdMenu} from "@ofModel/thirds.model";
+import {ProcessesService} from "@ofServices/processes.service";
+import {Menu} from "@ofModel/processes.model";
 import {LoadMenuSuccess, MenuActionTypes} from "@ofActions/menu.actions";
 
 @Injectable()
@@ -38,7 +38,7 @@ export class TranslateEffects {
     constructor(private store: Store<AppState>
         , private actions$: Actions
         , private translate: TranslateService
-        , private thirdService: ThirdsService
+        , private thirdService: ProcessesService
     ) {
     }
 
@@ -122,7 +122,7 @@ export class TranslateEffects {
     static extractPublisherAssociatedWithDistinctVersionsFromCards(cards: LightCard[]): Map<Set<string>> {
         let thirdsAndVersions: TransitionalThirdWithItSVersion[];
         thirdsAndVersions = cards.map(card => {
-            return new TransitionalThirdWithItSVersion(card.publisher,card.publisherVersion);
+            return new TransitionalThirdWithItSVersion(card.publisher,card.processVersion);
         });
         
         return this.consolidateThirdAndVersions(thirdsAndVersions);
@@ -133,7 +133,7 @@ export class TranslateEffects {
         .pipe(
             ofType(MenuActionTypes.LoadMenuSuccess)
             , map((loadedMenusAction:LoadMenuSuccess)=>loadedMenusAction.payload.menu)
-            , map((menus:ThirdMenu[])=>TranslateEffects.extractPublisherAssociatedWithDistinctVersionsFrom(menus))
+            , map((menus:Menu[])=>TranslateEffects.extractPublisherAssociatedWithDistinctVersionsFrom(menus))
             , switchMap((versions: Map<Set<string>>)=>this.extractI18nToUpdate(versions))
             , map((publisherAndVersions:Map<Set<string>>)=>TranslateEffects.sendTranslateAction(publisherAndVersions))
 
@@ -141,7 +141,7 @@ export class TranslateEffects {
         );
 
 
-    static extractPublisherAssociatedWithDistinctVersionsFrom(menus: ThirdMenu[]):Map<Set<string>>{
+    static extractPublisherAssociatedWithDistinctVersionsFrom(menus: Menu[]):Map<Set<string>>{
         
         const thirdsAndVersions = menus.map(menu=>{
             return new TransitionalThirdWithItSVersion(menu.id,menu.version);

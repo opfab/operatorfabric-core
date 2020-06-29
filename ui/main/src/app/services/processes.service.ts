@@ -15,57 +15,57 @@ import {environment} from '@env/environment';
 import {from, Observable, of, throwError} from 'rxjs';
 import {TranslateLoader} from '@ngx-translate/core';
 import {catchError, filter, map, reduce, switchMap, tap} from 'rxjs/operators';
-import {Third, ThirdMenu, ResponseBtnColorEnum} from '@ofModel/thirds.model';
+import {Process, Menu, ResponseBtnColorEnum} from '@ofModel/processes.model';
 import {Card} from '@ofModel/card.model';
 
 @Injectable()
-export class ThirdsService {
-    readonly thirdsUrl: string;
+export class ProcessesService {
+    readonly processesUrl: string;
     private urlCleaner: HttpUrlEncodingCodec;
-    private thirdCache = new Map();
+    private processCache = new Map();
 
     constructor(private httpClient: HttpClient,
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
-        this.thirdsUrl = `${environment.urls.thirds}`;
+        this.processesUrl = `${environment.urls.processes}`;
     }
 
-    queryThirdFromCard(card: Card): Observable<Third> {
-        return this.queryThird(card.publisher, card.publisherVersion);
+    queryProcessFromCard(card: Card): Observable<Process> {
+        return this.queryProcess(card.process, card.processVersion);
     }
 
-    queryThird(thirdName: string, version: string): Observable<Third> {
-        const key = `${thirdName}.${version}`;
-        const third = this.thirdCache.get(key);
-        if (third) {
-            return of(third);
+    queryProcess(id: string, version: string): Observable<Process> {
+        const key = `${id}.${version}`;
+        const process = this.processCache.get(key);
+        if (process) {
+            return of(process);
         }
-        return this.fetchThird(thirdName, version)
+        return this.fetchProcess(id, version)
             .pipe(
                 tap(t => {
                     if (t) {
-                        Object.setPrototypeOf(t, Third.prototype);
+                        Object.setPrototypeOf(t, Process.prototype);
                     }
                 }),
                 tap(t => {
                     if (t) {
-                        this.thirdCache.set(key, t);
+                        this.processCache.set(key, t);
                     }
                 })
             );
     }
 
-    private fetchThird(publisher: string, version: string): Observable<Third> {
+    private fetchProcess(id: string, version: string): Observable<Process> {
         const params = new HttpParams()
             .set('version', version);
-        return this.httpClient.get<Third>(`${this.thirdsUrl}/${publisher}/`, {
+        return this.httpClient.get<Process>(`${this.processesUrl}/${id}/`, {
             params
         });
     }
-    queryMenuEntryURL(thirdMenuId: string, thirdMenuVersion: string, thirdMenuEntryId: string): Observable<string> {
-        return this.queryThird(thirdMenuId, thirdMenuVersion).pipe(
-            switchMap(third => {
-                const entry = third.menuEntries.filter(e => e.id === thirdMenuEntryId);
+    queryMenuEntryURL(id: string, version: string, menuEntryId: string): Observable<string> {
+        return this.queryProcess(id, version).pipe(
+            switchMap(process => {
+                const entry = process.menuEntries.filter(e => e.id === menuEntryId);
                 if (entry.length === 1) {
                     return entry;
                 } else {
@@ -80,11 +80,11 @@ export class ThirdsService {
         );
     }
     
-    fetchHbsTemplate(publisher: string, version: string, name: string, locale: string): Observable<string> {
+    fetchHbsTemplate(process: string, version: string, name: string, locale: string): Observable<string> {
         const params = new HttpParams()
             .set('locale', locale)
             .set('version', version);
-        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/templates/${name}`, {
+        return this.httpClient.get(`${this.processesUrl}/${process}/templates/${name}`, {
             params,
             responseType: 'text'
         });
@@ -92,7 +92,7 @@ export class ThirdsService {
 
     computeThirdCssUrl(publisher: string, styleName: string, version: string) {
         // manage url character encoding
-        const resourceUrl = this.urlCleaner.encodeValue(`${this.thirdsUrl}/${publisher}/css/${styleName}`);
+        const resourceUrl = this.urlCleaner.encodeValue(`${this.processesUrl}/${publisher}/css/${styleName}`);
         const versionParam = new HttpParams().set('version', version);
         return `${resourceUrl}?${versionParam.toString()}`;
     }
@@ -116,7 +116,7 @@ export class ThirdsService {
              */
             params = params.set('version', version);
         }
-        return this.httpClient.get(`${this.thirdsUrl}/${publisher}/i18n`, {params})
+        return this.httpClient.get(`${this.processesUrl}/${publisher}/i18n`, {params})
             .pipe(
                 map(this.convertJsonToI18NObject(locale, publisher, version))
                 , catchError(error => {
@@ -126,14 +126,14 @@ export class ThirdsService {
             );
     }
 
-    computeThirdsMenu(): Observable<ThirdMenu[]> {
-        return this.httpClient.get<Third[]>(`${this.thirdsUrl}/`).pipe(
-            switchMap(ts => from(ts)),
-            filter((t: Third) => !(!t.menuEntries)),
-            map(t =>
-                new ThirdMenu(t.name, t.version, t.i18nLabelKey, t.menuEntries)
+    computeMenu(): Observable<Menu[]> {
+        return this.httpClient.get<Process[]>(`${this.processesUrl}/`).pipe(
+            switchMap(processes => from(processes)),
+            filter((process: Process) => !(!process.menuEntries)),
+            map(process =>
+                new Menu(process.id, process.version, process.menuLabel, process.menuEntries)
             ),
-            reduce((menus: ThirdMenu[], menu: ThirdMenu) => {
+            reduce((menus: Menu[], menu: Menu) => {
                 menus.push(menu);
                 return menus;
             }, [])
@@ -156,7 +156,7 @@ export class ThirdsService {
 
 export class ThirdsI18nLoader implements TranslateLoader {
 
-    constructor(thirdsService: ThirdsService) {
+    constructor(thirdsService: ProcessesService) {
     }
 
     getTranslation(lang: string): Observable<any> {
@@ -165,6 +165,6 @@ export class ThirdsI18nLoader implements TranslateLoader {
 
 }
 
-export function ThirdsI18nLoaderFactory(thirdsService: ThirdsService): TranslateLoader {
+export function ThirdsI18nLoaderFactory(thirdsService: ProcessesService): TranslateLoader {
     return new ThirdsI18nLoader(thirdsService);
 }
