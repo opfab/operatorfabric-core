@@ -68,6 +68,8 @@ public class LightCardPublicationData implements LightCard {
     @Transient
     private Boolean hasBeenAcknowledged;
 
+    private String parentCardId;
+
     /**
      * return timespans, may be null
      * @return

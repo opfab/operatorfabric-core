@@ -38,6 +38,7 @@ export class CardDetailsComponent implements OnInit {
 
     protected _i18nPrefix: string;
     card: Card;
+    childCards: Card[];
     user: User;
     details: Detail[];
     acknowledgementAllowed: boolean;
@@ -113,10 +114,11 @@ export class CardDetailsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.store.select(cardSelectors.selectCardStateSelected)
+        this.store.select(cardSelectors.selectCardStateSelectedWithChildCards)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(card => {
+            .subscribe(([card, childCards]: [Card, Card[]]) => {
                 this.card = card;
+                this.childCards = childCards;
                 if (card) {
                     this._i18nPrefix = `${card.publisher}.${card.publisherVersion}.`;
                     if (card.details) {
@@ -202,10 +204,7 @@ export class CardDetailsComponent implements OnInit {
                 title: this.card.title,
                 summary: this.card.summary,
                 data: formData,
-                recipient: {
-                    type: RecipientEnum.USER,
-                    identity: 'admin'
-                },
+                recipient: this.card.recipient,
                 parentCardId: this.card.uid
             }
 

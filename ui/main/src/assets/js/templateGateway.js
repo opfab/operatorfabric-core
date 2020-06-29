@@ -6,5 +6,6 @@ function ext_action(responseData){
 let ext_form = {
     validyForm: function(formData=null) {
         return this.isValid = undefined;
-    }
+    },
+    childCards: []
 };

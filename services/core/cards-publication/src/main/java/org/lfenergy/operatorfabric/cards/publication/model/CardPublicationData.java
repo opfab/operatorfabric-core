@@ -135,6 +135,7 @@ public class CardPublicationData implements Card {
         LightCardPublicationData.LightCardPublicationDataBuilder result = LightCardPublicationData.builder()
                 .id(this.getId())
                 .uid(this.getUid())
+                .parentCardId(this.getParentCardId())
                 .publisher(this.getPublisher())
                 .publisherVersion(this.getPublisherVersion())
                 .process(this.getProcess())

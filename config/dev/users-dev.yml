@@ -14,7 +14,11 @@ operatorfabric.users.default:
       groups: ["ADMIN"]
       entities: ["ENTITY1","ENTITY2"]
     - login: rte-operator
-      groups: ["RTE","ADMIN","TRANS"]
+      groups: ["RTE","ADMIN","TRANS","TSO1"]
+      entities: ["ENTITY1"]
+    - login: tso1-operator-admin
+      groups: ["TSO1","TRANS","ADMIN"]
+      entities: ["ENTITY1"]
     - login: tso1-operator
       groups: ["TSO1","TRANS"]
       entities: ["ENTITY1"]

@@ -26,6 +26,7 @@ describe('Card Reducer', () => {
             const unknowAction = {} as any;
             const previousState: CardState = {
                 selected: getOneRandomCard(),
+                selectedChildCards: [],
                 loading: false,
                 error: getRandomAlphanumericValue(5, 12)
             };
@@ -44,6 +45,7 @@ describe('Card Reducer', () => {
         it('should leave state load to true', () => {
             const previousState: CardState = {
                 selected: null,
+                selectedChildCards: [],
                 loading: true,
                 error: null
             }
@@ -58,6 +60,7 @@ describe('Card Reducer', () => {
             const actualCard = getOneRandomCard();
             const previousState: CardState = {
                 selected: actualCard,
+                selectedChildCards: [],
                 loading: true,
                 error: null
             };
@@ -75,12 +78,13 @@ describe('Card Reducer', () => {
             const previousCard = getOneRandomCard();
             const previousState: CardState = {
                 selected: previousCard,
+                selectedChildCards: [],
                 loading: true,
                 error: getRandomAlphanumericValue(5, 12)
             };
 
             const actualCard = getOneRandomCard();
-            const actualState = reducer(previousState, new LoadCardSuccess({card: actualCard}));
+            const actualState = reducer(previousState, new LoadCardSuccess({card: actualCard, childCards: []}));
             expect(actualState).not.toBe(previousState);
             expect(actualState).not.toEqual(previousState);
             expect(actualState.error).toEqual(previousState.error);
@@ -94,6 +98,7 @@ describe('Card Reducer', () => {
             const previousCard = getOneRandomCard();
             const previousState: CardState = {
                 selected: previousCard,
+                selectedChildCards: [],
                 loading: true,
                 error: getRandomAlphanumericValue(5, 12)
             };

@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
@@ -35,6 +36,10 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
     public Mono<CardConsultationData> findByIdWithUser(String processId, CurrentUserWithPerimeters currentUserWithPerimeters) {
         return findByIdWithUser(template, processId, currentUserWithPerimeters, CardConsultationData.class);
+    }
+
+    public Flux<CardConsultationData> findByParentCardId(String parentUid) {
+        return findByParentCardId(template, parentUid, CardConsultationData.class);
     }
 
     /**

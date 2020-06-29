@@ -13,12 +13,14 @@ import {Card} from '@ofModel/card.model';
 
 export interface CardState {
     selected: Card;
+    selectedChildCards: Card[];
     loading: boolean;
     error: string;
 }
 
 export const cardInitialState: CardState = {
     selected: null,
+    selectedChildCards: [],
     loading: false,
     error: null
 };

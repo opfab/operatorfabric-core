@@ -15,7 +15,7 @@ import {AppState} from '@ofStore/index';
 import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
-import {catchError} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {buildConfigSelector} from '@ofSelectors/config.selectors';
 import * as moment from 'moment';
 import { NotifyService } from '@ofServices/notify.service';
@@ -37,6 +37,7 @@ export class FeedComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.lightCards$ = this.store.pipe(
             select(feedSelectors.selectSortedFilteredLightCards),
+            map(lightCards => lightCards.filter(lightCard => !lightCard.parentCardId)),
             catchError(err => of([]))
         );
         this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);
