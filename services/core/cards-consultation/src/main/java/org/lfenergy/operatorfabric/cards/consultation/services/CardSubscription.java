@@ -48,6 +48,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class CardSubscription {
     public static final String GROUPS_SUFFIX = "Groups";
+    public static final String DELETE_OPERATION = "DELETE";
     private String userQueueName;
     private String groupQueueName;
     private long current = 0;
@@ -194,6 +195,11 @@ public class CardSubscription {
                 log.info("PUBLISHING message from {}",queueName);
                 emitter.next(messageBody);
             }
+            else {  // In case of ADD or UPDATE, we send a delete card operation (to delete the card from the feed, more information in OC-297)
+                String deleteMessage = createDeleteCardMessageForUserNotRecipient(messageBody);
+                if (! deleteMessage.isEmpty())
+                    emitter.next(deleteMessage);
+            }
         });
     }
 
@@ -280,6 +286,26 @@ public class CardSubscription {
         fetchOldCards.subscribe(next->this.externalSink.next(next));
     }
 
+    public String createDeleteCardMessageForUserNotRecipient(String messageBody){
+        try {
+            JSONObject obj = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(messageBody);
+            String typeOperation = (obj.get("type") != null) ? (String) obj.get("type") : "";
+
+            if (typeOperation.equals("ADD") || typeOperation.equals("UPDATE")){
+                JSONArray cards = (JSONArray) obj.get("cards");
+                JSONObject cardsObj = (cards != null) ? (JSONObject) cards.get(0) : null;    //there is always only one card in the array
+                String idCard = (cardsObj != null) ? (String) cardsObj.get("id") : "";
+
+                obj.replace("type", DELETE_OPERATION);
+                obj.appendField("cardIds", Arrays.asList(idCard));
+                return obj.toJSONString();
+            }
+        }
+        catch(ParseException e){ log.error("ERROR during received message parsing", e); }
+
+        return "";
+    }
+
     /**
      * @param messageBody message body received from rabbitMQ
      * @return true if the message received must be seen by the connected user.
@@ -333,7 +359,7 @@ public class CardSubscription {
     boolean checkInCaseOfCardSentToEntityOnly(List<String> userEntities, JSONArray entityRecipientsIdsArray,
                                              String typeOperation, String processStateKey,
                                              List<String> processStateList) {
-        if (typeOperation.equals("DELETE"))
+        if (typeOperation.equals(DELETE_OPERATION))
             return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray));
 
         return (userEntities != null) && (!Collections.disjoint(userEntities, entityRecipientsIdsArray))
@@ -343,7 +369,7 @@ public class CardSubscription {
     boolean checkInCaseOfCardSentToEntityAndGroup(List<String> userEntities, List<String> userGroups,
                                                   JSONArray entityRecipientsIdsArray, JSONArray groupRecipientsIdsArray,
                                                   String typeOperation, String processStateKey, List<String> processStateList) {
-        if (typeOperation.equals("DELETE"))
+        if (typeOperation.equals(DELETE_OPERATION))
             return ((userEntities != null) && (userGroups != null)
                     && !Collections.disjoint(userEntities, entityRecipientsIdsArray)
                     && !Collections.disjoint(userGroups, groupRecipientsIdsArray))
