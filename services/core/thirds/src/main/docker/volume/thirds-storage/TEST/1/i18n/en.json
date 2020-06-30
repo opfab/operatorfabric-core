@@ -1,5 +1,5 @@
 {
-  "process":{
+  "TEST":{
     "title": "Test: Process {{value}}",
     "summary": "This sums up the content of the card: {{value}}",
     "detail": {
@@ -21,10 +21,11 @@
       }
 }
   },
-  "third":{
-    "label": "Test 3rd"
+  "process":{
+    "label": "Test Process"
   },
   "menu":{
+    "label": "Test Process Menu",
     "first":"First Entry",
     "second":"Second Entry"
   },

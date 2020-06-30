@@ -132,7 +132,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     component.cardsData = [card1];
@@ -155,7 +155,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     component.cardsData = [card1];
@@ -176,7 +176,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     component.cardsData = [card1];
@@ -197,7 +197,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
 
@@ -206,7 +206,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: { parameters: 'param', key: 'process' },
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     component.cardsData = [card1,card2];
@@ -229,7 +229,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     const card2 = {
@@ -237,7 +237,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: { parameters: 'param', key: 'process' },
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     component.cardsData = [card1,card2];
@@ -260,7 +260,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     const card2 = {
@@ -268,7 +268,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'INFORMATION',
       summary: { parameters: 'param', key: 'process' },
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     component.cardsData = [card1,card2];
@@ -291,7 +291,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     const card2 = {
@@ -299,7 +299,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: { parameters: 'param', key: 'process' },
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     const card3 = {
@@ -307,7 +307,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: { parameters: 'param', key: 'process' },
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     component.cardsData = [card1,card2,card3];
@@ -331,7 +331,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
 
@@ -340,7 +340,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: { parameters: 'param', key: 'process' },
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     const card3 = {
@@ -348,7 +348,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: { parameters: 'param', key: 'process' },
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
 
@@ -371,7 +371,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: {parameters: 'param', key: 'process'},
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
 
@@ -380,7 +380,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: { parameters: 'param', key: 'process' },
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
     const card3 = {
@@ -388,7 +388,7 @@ describe('CustomTimelineChartComponent', () => {
       severity: 'ALARM',
       summary: { parameters: 'param', key: 'process' },
       publisher: 'TEST',
-      publisherVersion: '1',
+      processVersion: '1',
     };
 
 

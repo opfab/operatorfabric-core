@@ -10,7 +10,7 @@ Feature: getThirds
 
     Scenario: Push a bundle
           # Push bundle
-      Given url opfabUrl + 'thirds'
+      Given url opfabUrl + '/thirds/processes'
       And header Authorization = 'Bearer ' + authToken
       And multipart field file = read('resources/bundle_api_test.tar.gz')
       When method post
@@ -20,7 +20,7 @@ Feature: getThirds
   Scenario: List existing Third
 
     # Check bundle
-    Given url opfabUrl + 'thirds/'
+    Given url opfabUrl + '/thirds/processes/'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
@@ -31,7 +31,7 @@ Feature: getThirds
 
     # Check bundle
 
-    Given url opfabUrl + 'thirds/'
+    Given url opfabUrl + '/thirds/processes/'
     When method GET
     Then print response
     And status 401

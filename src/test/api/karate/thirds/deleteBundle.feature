@@ -2,7 +2,7 @@ Feature: deleteBundle
 
   Background:
    #Getting token for admin and tso1-operator user calling getToken.feature
-   #Using callonce to make the call just once at the beginnig   
+   #Using callonce to make the call just once at the beginning
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken   
    #The "." in the middle of the following file path is just a trick to force 
@@ -13,7 +13,7 @@ Feature: deleteBundle
 
     Scenario: Push a bundle
           # Push bundle
-      Given url opfabUrl + 'thirds'
+      Given url opfabUrl + '/thirds/processes'
       And header Authorization = 'Bearer ' + authToken
       And multipart field file = read('resources/bundle_api_test.tar.gz')
       When method post
@@ -22,14 +22,14 @@ Feature: deleteBundle
 
   Scenario: Delete a Third without authentication
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     When method DELETE
     Then print response
     And status 401
 
   Scenario: Delete a Third Version with a authentication having insufficient privileges
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method DELETE
     Then print response
@@ -37,7 +37,7 @@ Feature: deleteBundle
 
   Scenario: Delete a Third
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authToken
     When method DELETE
     Then status 204
@@ -46,14 +46,14 @@ Feature: deleteBundle
 
   Scenario: check bundle doesn't exist anymore
     # Check bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 404
 
   Scenario: Delete a not existing Third
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authToken
     When method DELETE
     Then status 404

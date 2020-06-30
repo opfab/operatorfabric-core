@@ -1,5 +1,5 @@
 {
-  "process":{
+  "TEST":{
     "title": "Test: Processus {{value}}",
     "summary": "Cela résume la carte: {{value}}",
     "detail": {
@@ -21,10 +21,11 @@
       }
     }
   },
-  "third":{
-    "label": "Tier de test"
+  "process":{
+    "label": "Processus de test"
   },
   "menu":{
+    "label": "Menu du Processus de Test",
     "first":"Premier item",
     "second":"Deuxieme item"
   },

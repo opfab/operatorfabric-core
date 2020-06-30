@@ -12,7 +12,7 @@ Feature: Cards
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
 	"state": "messageState",
@@ -44,7 +44,7 @@ Feature: Cards
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
 	"state": "messageState",
@@ -103,7 +103,7 @@ Feature: Cards
 [
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card1",
 	"state": "messageState",
@@ -119,7 +119,7 @@ Feature: Cards
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2card2",
 	"state": "messageState",
@@ -151,7 +151,7 @@ Feature: Cards
 [
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2CardsIncludingOneCardKO1",
 	"state": "messageState",
@@ -167,7 +167,7 @@ Feature: Cards
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2CardsIncludingOneCardKO2",
 	"state": "messageState",
@@ -197,7 +197,7 @@ Feature: Cards
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
 	"state": "messageState",
@@ -235,7 +235,7 @@ Scenario:  Post card with no recipient but entityRecipients
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2",
 	"state": "messageState",
@@ -261,7 +261,7 @@ Scenario:  Post card with parentCardId not correct
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
 	"state": "messageState",
@@ -299,7 +299,7 @@ Scenario:  Post card with correct parentCardId
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
 	"state": "messageState",

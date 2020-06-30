@@ -1,5 +1,5 @@
 {
-  "name": "test_action",
+  "id": "test_action",
   "version": "1",
   "defaultLocale": "fr",
   "templates": [
@@ -9,86 +9,82 @@
   ],
   "menuEntries": [
   ],
-  "processes": {
-    "process": {
-      "states": {
-        "response_full": {
-          "response": {
-            "lock": true,
-            "state": "responseState",
-            "btnColor": "RED",
-            "btnText": {
-              "key": "action.text"
-            }
+  "states": {
+    "response_full": {
+      "response": {
+        "lock": true,
+        "state": "responseState",
+        "btnColor": "RED",
+        "btnText": {
+          "key": "action.text"
+        }
+      },
+      "details": [
+        {
+          "title": {
+            "key": "cardDetails.title"
           },
-          "details": [
-            {
-              "title": {
-                "key": "cardDetails.title"
-              },
-              "templateName": "template1",
-              "styles": [
-                "main"
-              ]
-            }
-          ]
-        },
-        "btnColor_missing": {
-          "response": {
-            "lock": true,
-            "state": "responseState",
-            "btnText": {
-              "key": "action.text"
-            }
-          },
-          "details": [
-            {
-              "title": {
-                "key": "cardDetails.title"
-              },
-              "templateName": "template1",
-              "styles": [
-                "main"
-              ]
-            }
-          ]
-        },
-        "btnText_missing": {
-          "response": {
-            "lock": true,
-            "state": "responseState",
-            "btnColor": "RED"
-          },
-          "details": [
-            {
-              "title": {
-                "key": "cardDetails.title"
-              },
-              "templateName": "template1",
-              "styles": [
-                "main"
-              ]
-            }
-          ]
-        },
-        "btnColor_btnText_missings": {
-          "response": {
-            "lock": true,
-            "state": "responseState"
-          },
-          "details": [
-            {
-              "title": {
-                "key": "cardDetails.title"
-              },
-              "templateName": "template1",
-              "styles": [
-                "main"
-              ]
-            }
+          "templateName": "template1",
+          "styles": [
+            "main"
           ]
         }
-      }
+      ]
+    },
+    "btnColor_missing": {
+      "response": {
+        "lock": true,
+        "state": "responseState",
+        "btnText": {
+          "key": "action.text"
+        }
+      },
+      "details": [
+        {
+          "title": {
+            "key": "cardDetails.title"
+          },
+          "templateName": "template1",
+          "styles": [
+            "main"
+          ]
+        }
+      ]
+    },
+    "btnText_missing": {
+      "response": {
+        "lock": true,
+        "state": "responseState",
+        "btnColor": "RED"
+      },
+      "details": [
+        {
+          "title": {
+            "key": "cardDetails.title"
+          },
+          "templateName": "template1",
+          "styles": [
+            "main"
+          ]
+        }
+      ]
+    },
+    "btnColor_btnText_missings": {
+      "response": {
+        "lock": true,
+        "state": "responseState"
+      },
+      "details": [
+        {
+          "title": {
+            "key": "cardDetails.title"
+          },
+          "templateName": "template1",
+          "styles": [
+            "main"
+          ]
+        }
+      ]
     }
   }
 }

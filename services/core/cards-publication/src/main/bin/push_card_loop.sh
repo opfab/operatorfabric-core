@@ -3,8 +3,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-publisher=defaultPublisher
-process=defaultProcess
+publisher=TEST_PUBLISHER
+process=TEST
 content=empty
 interval=5
 url=http://localhost:2102/cards
@@ -144,7 +144,7 @@ piece_of_data(){
     fi
     piece=$'{\n'
     piece+="  \"publisher\": \"$1\", "$'\n'
-    piece+="  \"publisherVersion\": \"1\", "$'\n'
+    piece+="  \"processVersion\": \"1\", "$'\n'
     piece+="  \"process\": \"$2\", "$'\n'
     piece+="  \"processId\": \"$2$6\", "$'\n'
     piece+="  \"state\": \"firstState\", "$'\n'

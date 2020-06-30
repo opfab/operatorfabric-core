@@ -18,7 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store, StoreModule } from '@ngrx/store';
 import { appReducer, AppState } from '@ofStore/index';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
-import { ThirdsI18nLoaderFactory, ThirdsService } from '@ofServices/thirds.service';
+import { ThirdsI18nLoaderFactory, ProcessesService } from '@ofServices/processes.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TimeService } from '@ofServices/time.service';
 import { Router } from '@angular/router';
@@ -57,7 +57,7 @@ describe('ArchiveFiltersComponent', () => {
           loader: {
               provide: TranslateLoader,
               useFactory: ThirdsI18nLoaderFactory,
-              deps: [ThirdsService]
+              deps: [ProcessesService]
           },
           useDefaultLang: false
         })
@@ -70,7 +70,7 @@ describe('ArchiveFiltersComponent', () => {
       providers: [
         {provide: store, useClass: Store},
         {provide: Router, useValue: routerSpy},
-        ThirdsService,
+        ProcessesService,
         {provide: 'TimeEventSource', useValue: null},
         TimeService,
         I18nService,

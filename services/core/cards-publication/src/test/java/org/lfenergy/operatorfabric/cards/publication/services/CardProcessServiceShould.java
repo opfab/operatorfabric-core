@@ -150,7 +150,7 @@ class CardProcessServiceShould {
 
     private Flux<CardPublicationData> generateCards() {
         return Flux.just(
-                CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
                         .processId("PROCESS_1").severity(SeverityEnum.ALARM)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -161,7 +161,7 @@ class CardProcessServiceShould {
                         .process("process1")
                         .state("state1")
                         .build(),
-                CardPublicationData.builder().publisher("PUBLISHER_2").publisherVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_2").process("PROCESS_2").processVersion("O")
                         .processId("PROCESS_1").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -170,7 +170,7 @@ class CardProcessServiceShould {
                         .process("process2")
                         .state("state2")
                         .build(),
-                CardPublicationData.builder().publisher("PUBLISHER_2").publisherVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_2").process("PROCESS_2").processVersion("O")
                         .processId("PROCESS_2").severity(SeverityEnum.COMPLIANT)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -179,7 +179,7 @@ class CardProcessServiceShould {
                         .process("process3")
                         .state("state3")
                         .build(),
-                CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
                         .processId("PROCESS_2").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -188,7 +188,7 @@ class CardProcessServiceShould {
                         .process("process4")
                         .state("state4")
                         .build(),
-                CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
                         .processId("PROCESS_1").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -199,16 +199,8 @@ class CardProcessServiceShould {
                         .build());
     }
 
-    private CardPublicationData generateCardData(String publisher, String process) {
-        return CardPublicationData.builder().publisher(publisher).publisherVersion("O").processId(process)
-                .severity(SeverityEnum.INFORMATION)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build()).startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build()).build();
-    }
-
     private CardPublicationData generateWrongCardData(String publisher, String process) {
-        return CardPublicationData.builder().publisher(publisher).publisherVersion("O").processId(process)
+        return CardPublicationData.builder().publisher(publisher).processVersion("O").processId(process)
                 .build();
     }
 
@@ -227,7 +219,7 @@ class CardProcessServiceShould {
         ArrayList<String> externalRecipients = new ArrayList<>();
         externalRecipients.add("api_test_externalRecipient1");
 
-        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
                 .processId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
@@ -272,7 +264,8 @@ class CardProcessServiceShould {
         entityRecipients.add("TSO1");
         entityRecipients.add("TSO2");
         CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")
-                .publisherVersion("0.0.1").processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .process("PROCESS_1")
+                .processVersion("0.0.1").processId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .startDate(start).title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1")
                         .build())
@@ -564,7 +557,8 @@ class CardProcessServiceShould {
         StepVerifier.create(cardProcessingService.processCards(Flux.just(
                 CardPublicationData.builder()
                         .uid("uid_1")
-                        .publisher("PUBLISHER_1").publisherVersion("O")
+                        .publisher("PUBLISHER_1").processVersion("O")
+                        .process("PROCESS_1")
                         .processId("PROCESS_1").severity(SeverityEnum.ALARM)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -578,7 +572,8 @@ class CardProcessServiceShould {
 
         CardPublicationData card = CardPublicationData.builder()
                 .parentCardId("uid_1")
-                .publisher("PUBLISHER_1").publisherVersion("O")
+                .publisher("PUBLISHER_1").processVersion("O")
+                .process("PROCESS_1")
                 .processId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
@@ -598,7 +593,8 @@ class CardProcessServiceShould {
 
         CardPublicationData card = CardPublicationData.builder()
                 .parentCardId("uid_1")
-                .publisher("PUBLISHER_1").publisherVersion("O")
+                .publisher("PUBLISHER_1").processVersion("O")
+                .process("PROCESS_1")
                 .processId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
@@ -618,7 +614,8 @@ class CardProcessServiceShould {
     void validate_noParentCardId_processOk() {
 
         CardPublicationData card = CardPublicationData.builder()
-                .publisher("PUBLISHER_1").publisherVersion("O")
+                .publisher("PUBLISHER_1").processVersion("O")
+                .process("PROCESS_1")
                 .processId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())

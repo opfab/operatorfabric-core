@@ -12,7 +12,7 @@ Feature: Bundle
   Scenario: Post Bundle
 
     # Push bundle
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + '/thirds/processes'
     And header Authorization = 'Bearer ' + authToken
     And multipart field file = read('resources/bundle_api_test.tar.gz')
     When method post
@@ -21,7 +21,7 @@ Feature: Bundle
 
   Scenario: Post Bundle without authentication
     # for the time being returns 403 instead of 401
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + '/thirds/processes'
     And multipart field file = read('resources/bundle_api_test.tar.gz')
     When method post
     Then print response
@@ -30,7 +30,7 @@ Feature: Bundle
 
   Scenario: Post Bundle without admin role
         # for the time being returns 401 instead of 403
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + '/thirds/processes'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And multipart field file = read('resources/bundle_api_test.tar.gz')
     When method post
@@ -41,7 +41,7 @@ Feature: Bundle
   Scenario: Post Bundle for the same publisher but with another version
 
     # Push bundle
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + '/thirds/processes'
     And header Authorization = 'Bearer ' + authToken
     And multipart field file = read('resources/bundle_api_test_v2.tar.gz')
     When method post
@@ -52,7 +52,7 @@ Feature: Bundle
   Scenario: Post Bundle for testing the action
 
     # Push bundle
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + '/thirds/processes'
     And header Authorization = 'Bearer ' + authToken
     And multipart field file = read('resources/bundle_test_action.tar.gz')
     When method post

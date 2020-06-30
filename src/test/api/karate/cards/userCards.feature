@@ -14,7 +14,7 @@ Feature: UserCards
 """
 {
 	"publisher" : "api_test_externalRecipient1",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
 	"state": "messageState",
@@ -43,7 +43,7 @@ Feature: UserCards
 """
 {
 	"publisher" : "api_test_externalRecipient1",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
 	"state": "messageState",
@@ -73,7 +73,7 @@ Feature: UserCards
 """
 {
 	"publisher" : "api_test_externalRecipient1",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process1",
 	"state": "messageState",

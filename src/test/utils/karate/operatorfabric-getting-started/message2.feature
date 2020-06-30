@@ -9,7 +9,7 @@ Feature: Message with two different bundle versions
   Scenario: Post Bundles
 
     # Push bundle message version 2
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + 'thirds/processes/'
     And header Authorization = 'Bearer ' + authToken
     And multipart field file = read('resources/bundles/bundle_message_v2.tar.gz')
     When method post

@@ -15,7 +15,7 @@ Scenario: Post Card only for group TSO1
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2",
 	"state": "messageState",
@@ -77,7 +77,7 @@ Scenario: Post Card for groups TSO1 and TSO2
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2tso",
 	"state": "messageState",

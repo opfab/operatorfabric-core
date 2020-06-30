@@ -7,14 +7,13 @@ Feature: getResponseThird
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
-    * def thirdName = 'TEST_ACTION'
-    * def process = 'process'
+    * def process = 'test_action'
     * def state = 'response_full'
     * def version = 1
 
     Scenario: get third response
 
-      Given url opfabUrl + '/thirds/' + thirdName + '/' + process + '/' + state + '/response?apiVersion=' + version
+      Given url opfabUrl + '/thirds/processes/' + process + '/' + state + '/response?version=' + version
       And header Authorization = 'Bearer ' + authToken
       When method get
       Then print response
@@ -25,7 +24,7 @@ Feature: getResponseThird
 
   Scenario: get third response without authentication
 
-    Given url opfabUrl + '/thirds/' + thirdName + '/' + process + '/' + state + '/response?apiVersion=' + version
+    Given url opfabUrl + '/thirds/processes/' + process + '/' + state + '/response?version=' + version
     When method get
     Then print response
     And status 401
@@ -33,7 +32,7 @@ Feature: getResponseThird
 
   Scenario: get third response without authentication
 
-    Given url opfabUrl + '/thirds/unknownThird/' + process + '/' + state + '/response?apiVersion=' + version
+    Given url opfabUrl + '/thirds/unknownThird/' + process + '/' + state + '/response?version=' + version
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then print response

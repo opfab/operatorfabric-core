@@ -19,7 +19,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ThirdsI18nLoaderFactory, ThirdsService} from '@ofServices/thirds.service';
+import {ThirdsI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
 import {ServicesModule} from '@ofServices/services.module';
 import {Router} from '@angular/router';
 import 'moment/locale/fr';
@@ -51,7 +51,7 @@ describe('CardComponent', () => {
                     loader: {
                         provide: TranslateLoader,
                         useFactory: ThirdsI18nLoaderFactory,
-                        deps: [ThirdsService]
+                        deps: [ProcessesService]
                     },
                     useDefaultLang: false
                 }),
@@ -61,7 +61,7 @@ describe('CardComponent', () => {
             providers: [
                 {provide: store, useClass: Store},
                 {provide: Router, useValue: routerSpy},
-                ThirdsService,
+                ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
                 TimeService, I18nService
             ]}).compileComponents();
@@ -86,18 +86,15 @@ describe('CardComponent', () => {
     it('should create and display minimal light card information', () => {
         const lightCard = getOneRandomLightCard();
         // extract expected data
-        const id = lightCard.id;
-        const uid = lightCard.uid;
+        const process = lightCard.process;
         const title = lightCard.title.key;
-        const summaryValue = lightCard.summary.key;
-        const publisher = lightCard.publisher;
-        const version = lightCard.publisherVersion;
+        const version = lightCard.processVersion;
 
         lightCardDetailsComp.lightCard = lightCard;
 
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('.card-title').innerText).toEqual(publisher + '.' + version + '.' + title);
+        expect(fixture.nativeElement.querySelector('.card-title').innerText).toEqual(process + '.' + version + '.' + title);
         expect(fixture.nativeElement.querySelector('.card-body > p')).toBeFalsy();
     });
     it('should select card', () => {

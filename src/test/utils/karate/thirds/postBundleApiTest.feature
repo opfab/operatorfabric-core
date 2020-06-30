@@ -9,16 +9,16 @@ Feature: Bundle
   Scenario: Post Bundle
 
     # Push bundle
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + 'thirds/processes'
     And header Authorization = 'Bearer ' + authToken
     And multipart field file = read('resources/bundle_api_test.tar.gz')
     When method post
     Then status 201
 
     # Check bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + 'thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response.name == 'api_test'
+    And match response.id == 'api_test'
 

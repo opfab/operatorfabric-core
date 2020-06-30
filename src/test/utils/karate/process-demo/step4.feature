@@ -12,8 +12,8 @@ Scenario: Step1
 
 		var card = {
 			"publisher" : "api_test",
-			"publisherVersion" : "1",
-			"process"  :"defaultProcess",
+			"processVersion" : "1",
+			"process"  :"api_test",
 			"processId" : "processProcess",
 			"state": "processState",
 			"recipient" : {

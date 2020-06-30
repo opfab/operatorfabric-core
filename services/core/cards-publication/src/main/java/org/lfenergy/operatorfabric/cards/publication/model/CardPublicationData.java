@@ -53,7 +53,7 @@ public class CardPublicationData implements Card {
     @NotNull
     private String publisher;
     @NotNull
-    private String publisherVersion;
+    private String processVersion;
     @NotNull
     private String process;
     @NotNull
@@ -137,7 +137,7 @@ public class CardPublicationData implements Card {
                 .uid(this.getUid())
                 .parentCardId(this.getParentCardId())
                 .publisher(this.getPublisher())
-                .publisherVersion(this.getPublisherVersion())
+                .processVersion(this.getProcessVersion())
                 .process(this.getProcess())
                 .processId(this.getProcessId())
                 .state(this.getState())

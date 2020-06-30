@@ -14,7 +14,7 @@ Scenario: Post 4 Cards in asynchronous mode
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process2",
 	"state": "messageState",
@@ -48,7 +48,7 @@ Then status 202
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process3",
 	"state": "messageState",
@@ -80,7 +80,7 @@ Then status 202
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process4",
 	"state": "messageState",
@@ -112,7 +112,7 @@ Then status 202
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "process5",
 	"state": "messageState",

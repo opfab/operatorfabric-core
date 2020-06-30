@@ -12,7 +12,7 @@ Feature: Cards
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"processId" : "process1WithNoProcessField",
 	"state": "messageState",
 	"recipient" : {

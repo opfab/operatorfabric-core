@@ -17,7 +17,7 @@ import {TokenInjector} from './interceptors.service';
 import {CardService} from './card.service';
 import {GuidService} from '@ofServices/guid.service';
 import {TimeService} from '@ofServices/time.service';
-import {ThirdsService} from '@ofServices/thirds.service';
+import {ProcessesService} from '@ofServices/processes.service';
 import {FilterService} from '@ofServices/filter.service';
 import {ConfigService} from '@ofServices/config.service';
 import {I18nService} from '@ofServices/i18n.service';
@@ -38,7 +38,7 @@ import { AppService } from './app.service';
         CardService,
         AuthenticationService,
         TimeService,
-        ThirdsService,
+        ProcessesService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInjector,

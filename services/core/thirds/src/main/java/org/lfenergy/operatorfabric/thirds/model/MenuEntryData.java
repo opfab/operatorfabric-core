@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThirdMenuEntryData implements ThirdMenuEntry {
+public class MenuEntryData implements MenuEntry {
 
     private String id;
     private String url;

@@ -3,11 +3,11 @@ import { Card, Detail, RecipientEnum } from '@ofModel/card.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
-import { ThirdsService } from "@ofServices/thirds.service";
+import { ProcessesService } from "@ofServices/processes.service";
 import { ClearLightCardSelection } from '@ofStore/actions/light-card.actions';
 import { Router } from '@angular/router';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
-import { ThirdResponse, Third } from '@ofModel/thirds.model';
+import { Response, Process } from '@ofModel/processes.model';
 import { Map } from '@ofModel/map';
 import { UserService } from '@ofServices/user.service';
 import { selectIdentifier } from '@ofStore/selectors/authentication.selectors';
@@ -43,7 +43,7 @@ export class CardDetailsComponent implements OnInit {
     details: Detail[];
     acknowledgementAllowed: boolean;
     currentPath: any;
-    responseData: ThirdResponse;
+    responseData: Response;
     unsubscribe$: Subject<void> = new Subject<void>();
     messages = {
         submitError: {
@@ -65,7 +65,7 @@ export class CardDetailsComponent implements OnInit {
 
 
     constructor(private store: Store<AppState>,
-        private thirdsService: ThirdsService,
+        private thirdsService: ProcessesService,
         private userService: UserService,
         private cardService: CardService,
         private router: Router) {
@@ -120,13 +120,13 @@ export class CardDetailsComponent implements OnInit {
                 this.card = card;
                 this.childCards = childCards;
                 if (card) {
-                    this._i18nPrefix = `${card.publisher}.${card.publisherVersion}.`;
+                    this._i18nPrefix = `${card.process}.${card.processVersion}.`;
                     if (card.details) {
                         this.details = [...card.details];
                     } else {
                         this.details = [];
                     }
-                    this.thirdsService.queryThird(this.card.publisher, this.card.publisherVersion)
+                    this.thirdsService.queryProcess(this.card.process, this.card.processVersion)
                     .pipe(takeUntil(this.unsubscribe$))
                     .subscribe(third => {
                             if (third) {
@@ -137,7 +137,7 @@ export class CardDetailsComponent implements OnInit {
                                 }
                             }
                         },
-                        error => console.log(`something went wrong while trying to fetch third for ${this.card.publisher} with ${this.card.publisherVersion} version.`)
+                        error => console.log(`something went wrong while trying to fetch process for ${this.card.process} with ${this.card.processVersion} version.`)
                     );
                 }
             });
@@ -191,7 +191,7 @@ export class CardDetailsComponent implements OnInit {
                 id: null,
                 publishDate: null,
                 publisher: this.user.entities[0],
-                publisherVersion: this.card.publisherVersion,
+                processVersion: this.card.processVersion,
                 process: this.card.process,
                 processId: this.card.processId,
                 state: this.responseData.state,

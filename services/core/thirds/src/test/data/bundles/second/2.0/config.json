@@ -1,5 +1,6 @@
 {
-  "name": "second",
+  "id": "second",
+  "name": "process.title",
   "version": "2.0",
   "templates": [
     "template"
@@ -11,25 +12,21 @@
     "fr",
     "en"
   ],
-  "processes": {
-    "testProcess": {
-      "states": {
-        "firstState": {
-          "details": [
-            {
-              "title": {
-                "key": "template.title"
-              },
-              "templateName": "template"
-            }
-          ],
-          "actions": {
-            "action1": {
-              "type": "URL",
-              "label": {
-                "key": "my.card.my.action.label"
-              }
-            }
+  "states": {
+    "firstState": {
+      "details": [
+        {
+          "title": {
+            "key": "template.title"
+          },
+          "templateName": "template"
+        }
+      ],
+      "actions": {
+        "action1": {
+          "type": "URL",
+          "label": {
+            "key": "my.card.my.action.label"
           }
         }
       }

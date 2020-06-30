@@ -22,7 +22,7 @@ export const environment = {
         cardspub: 'http://opfab.rte-europe.com:2002/cardspub',
         users: 'http://opfab.rte-europe.com:2002/users',
         archives : '',
-        thirds: 'http://opfab.rte-europe.com:2002/thirds',
+        processes: 'http://opfab.rte-europe.com:2002/thirds/processes',
         config: 'http://opfab.rte-europe.com:2002/config/web-ui.json',
       time: 'http://opfab.rte-europe.com:2002/time'
     },

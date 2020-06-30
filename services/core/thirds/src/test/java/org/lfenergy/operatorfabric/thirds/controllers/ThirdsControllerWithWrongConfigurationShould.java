@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @ActiveProfiles("service_error")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
-public class ThirdsServiceWithWrongConfigurationShould {
+public class ThirdsControllerWithWrongConfigurationShould {
 
   private MockMvc mockMvc;
 
@@ -59,11 +59,11 @@ public class ThirdsServiceWithWrongConfigurationShould {
   }
 
   @Test
-  void listErroneousThirds() throws Exception {
+  void notAllowBundlesToBePosted() throws Exception {
     Path pathToBundle = Paths.get("./build/test-data/bundles/second-2.1.tar.gz");
     MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz", "application/gzip", Files
        .readAllBytes(pathToBundle));
-    mockMvc.perform(multipart("/thirds").file(bundle))
+    mockMvc.perform(multipart("/thirds/processes").file(bundle))
        .andExpect(status().isBadRequest());
   }
 }

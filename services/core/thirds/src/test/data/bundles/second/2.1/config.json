@@ -1,5 +1,6 @@
 {
-  "name": "second",
+  "id": "second",
+  "name": "process.title",
   "version": "2.1",
   "templates": [
     "template"

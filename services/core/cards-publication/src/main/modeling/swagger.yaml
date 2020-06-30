@@ -294,16 +294,16 @@ definitions:
         readOnly: true
       publisher:
         type: string
-        description: Publishing service unique ID
-      publisherVersion:
+        description: Unique ID of the entity or service publishing the card
+      processVersion:
         type: string
-        description: Publishing service version
+        description: Version of the associated process
       process:
         type: string
-        description: associated process name
+        description: ID of the associated process
       processId:
         type: string
-        description: Unique process ID of the associated process instance
+        description: ID of the associated process instance
       state:
         type: string
         description: associated process state name
@@ -388,11 +388,12 @@ definitions:
         description: Business data
       hasBeenAcknowledged:
         type: boolean
-        description: Is true if the card was acknoledged at least by one user  
+        description: Is true if the card was acknowledged at least by one user
     required:
-      - processId
       - publisher
-      - publisherVersion
+      - process
+      - processVersion
+      - processId
       - severity
       - startDate
       - title
@@ -401,7 +402,7 @@ definitions:
       uid: 12345
       id: cardIdFromMyProcess
       publisher: MyService
-      publisherVersion: 0.0.1
+      processVersion: 0.0.1
       process: MyProcess
       processId: MyProcess_001
       state: started
@@ -488,7 +489,7 @@ definitions:
       publisher:
         type: string
         description: Publishing service unique ID
-      publisherVersion:
+      processVersion:
         type: string
         description: Publishing service version
       process:
@@ -543,7 +544,7 @@ definitions:
       uid: 12345
       id: cardIdFromMyProcess
       publisher: MyService
-      publisherVersion: 0.0.1
+      processVersion: 0.0.1
       processId: MyProcess_001
       lttd: 1546387230000
       startDate: 1546387200000

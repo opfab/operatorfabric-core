@@ -13,7 +13,7 @@ Feature: deleteBundleVersion
 
     Scenario: Push a bundle v1
           # Push bundle
-      Given url opfabUrl + 'thirds'
+      Given url opfabUrl + '/thirds/processes'
       And header Authorization = 'Bearer ' + authToken
       And multipart field file = read('resources/bundle_api_test.tar.gz')
       When method post
@@ -22,7 +22,7 @@ Feature: deleteBundleVersion
 
     Scenario: Push a bundle v2
           # Push bundle
-      Given url opfabUrl + 'thirds'
+      Given url opfabUrl + '/thirds/processes'
       And header Authorization = 'Bearer ' + authToken
       And multipart field file = read('resources/bundle_api_test_v2.tar.gz')
       When method post
@@ -31,14 +31,14 @@ Feature: deleteBundleVersion
 
   Scenario: Delete a Third Version without authentication
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test/versions/1'
+    Given url opfabUrl + '/thirds/processes/api_test/versions/1'
     When method DELETE
     Then print response
     And status 401
 
   Scenario: Delete a Third Version with a authentication having insufficient privileges
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test/versions/1'
+    Given url opfabUrl + '/thirds/processes/api_test/versions/1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method DELETE
     Then print response
@@ -47,16 +47,16 @@ Feature: deleteBundleVersion
   Scenario: check bundle default version
 
     # Check bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response.name == 'api_test'
+    And match response.id == 'api_test'
     And match response.version == '2'
 
   Scenario: Delete a Third Version is being the default version
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test/versions/2'
+    Given url opfabUrl + '/thirds/processes/api_test/versions/2'
     And header Authorization = 'Bearer ' + authToken
     When method DELETE
     Then status 204
@@ -66,25 +66,25 @@ Feature: deleteBundleVersion
   Scenario: check bundle default version is changed
 
     # Check bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response.name == 'api_test'
+    And match response.id == 'api_test'
     And match response.version != '2'
     And print 'new default version for api_test bundle is ', response.version
 
   Scenario: check bundle version 2 doesn't exist anymore
 
     # Check bundle
-    Given url opfabUrl + 'thirds/api_test/2'
+    Given url opfabUrl + '/thirds/processes/api_test/2'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 404    
 
   Scenario: Push a bundle v2
           # Push bundle
-      Given url opfabUrl + 'thirds'
+      Given url opfabUrl + '/thirds/processes'
       And header Authorization = 'Bearer ' + authToken
       And multipart field file = read('resources/bundle_api_test_v2.tar.gz')
       When method post
@@ -94,17 +94,17 @@ Feature: deleteBundleVersion
   Scenario: check bundle default version is not 1
 
     # Check bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response.name == 'api_test'
+    And match response.id == 'api_test'
     And match response.version != '1'
     And print 'New default version for api_test bundle is ', response.version
 
 Scenario: Delete a Third Version is not being the default version
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test/versions/1'
+    Given url opfabUrl + '/thirds/processes/api_test/versions/1'
     And header Authorization = 'Bearer ' + authToken
     When method DELETE
     Then status 204
@@ -114,24 +114,24 @@ Scenario: Delete a Third Version is not being the default version
   Scenario: check bundle default version is not 1
 
     # Check bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response.name == 'api_test'
+    And match response.id == 'api_test'
     And match response.version != '1'
 
   Scenario: check bundle version 1 doesn't exist anymore
 
     # Check bundle
-    Given url opfabUrl + 'thirds/api_test/1'
+    Given url opfabUrl + '/thirds/processes/api_test/1'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 404    
 
   Scenario: Delete a not existing Third version
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test/versions/3'
+    Given url opfabUrl + '/thirds/processes/api_test/versions/3'
     And header Authorization = 'Bearer ' + authToken
     When method DELETE
     Then status 404
@@ -139,7 +139,7 @@ Scenario: Delete a Third Version is not being the default version
 
 Scenario: Delete a Third Version is being also the only one hold in the bundle
     # Delete bundle
-    Given url opfabUrl + 'thirds/api_test/versions/2'
+    Given url opfabUrl + '/thirds/processes/api_test/versions/2'
     And header Authorization = 'Bearer ' + authToken
     When method DELETE
     Then status 204
@@ -148,8 +148,7 @@ Scenario: Delete a Third Version is being also the only one hold in the bundle
 
 Scenario: check bundle doesn't exist anymore
     # Check bundle
-    Given url opfabUrl + 'thirds/api_test'
+    Given url opfabUrl + '/thirds/processes/api_test'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 404
-    

@@ -43,7 +43,7 @@ public class LightCardPublicationData implements LightCard {
     @NotNull
     private String id ;
     private String publisher;
-    private String publisherVersion;
+    private String processVersion;
     private String process;
     @NotNull
     private String processId;

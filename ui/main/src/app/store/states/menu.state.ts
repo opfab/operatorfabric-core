@@ -9,10 +9,10 @@
 
 
 
-import {ThirdMenu} from "@ofModel/thirds.model";
+import {Menu} from "@ofModel/processes.model";
 
 export interface MenuState{
-    menu: ThirdMenu[],
+    menu: Menu[],
     loading: boolean,
     error:string,
     selected_iframe_url: string

@@ -36,7 +36,7 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
         builder
                 .publisher(source.getString("publisher"))
                 .parentCardId(source.getString("parentCardId"))
-                .publisherVersion(source.getString("publisherVersion"))
+                .processVersion(source.getString("processVersion"))
                 .uid(source.getString("uid"))
                 .id(source.getString("_id"))
                 .process(source.getString("process"))

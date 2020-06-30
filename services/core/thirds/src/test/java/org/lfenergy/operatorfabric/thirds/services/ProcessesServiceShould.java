@@ -8,7 +8,6 @@
  */
 
 
-
 package org.lfenergy.operatorfabric.thirds.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.thirds.application.IntegrationTestApplication;
-import org.lfenergy.operatorfabric.thirds.model.Third;
+import org.lfenergy.operatorfabric.thirds.model.Process;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,23 +45,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import lombok.extern.slf4j.Slf4j;
 
-
-/**
- * <p></p>
- * Created on 16/04/18
- *
- *
- */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class})
 @Slf4j
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ThirdsServiceShould {
+class ProcessesServiceShould {
 
   private static Path testDataDir = Paths.get("./build/test-data/thirds-storage");
   @Autowired
-  private ThirdsService service;
+  private ProcessesService service;
 
   @BeforeEach
   void prepare() throws IOException {
@@ -77,20 +69,20 @@ class ThirdsServiceShould {
   }
 
   @Test
-  void listThirds() {
-    assertThat(service.listThirds()).hasSize(2);
+  void listProcesses() {
+    assertThat(service.listProcesses()).hasSize(2);
   }
 
   @Test
   void fetch() {
-    Third firstThird = service.fetch("first");
-    assertThat(firstThird).hasFieldOrPropertyWithValue("version", "v1");
+    Process firstProcess = service.fetch("first");
+    assertThat(firstProcess).hasFieldOrPropertyWithValue("version", "v1");
   }
 
   @Test
   void fetchWithVersion() {
-    Third firstThird = service.fetch("first", "0.1");
-    assertThat(firstThird).hasFieldOrPropertyWithValue("version", "0.1");
+    Process firstProcess = service.fetch("first", "0.1");
+    assertThat(firstProcess).hasFieldOrPropertyWithValue("version", "0.1");
   }
 
   @Test
@@ -213,16 +205,15 @@ class ThirdsServiceShould {
   @Nested
   class CreateContent {
     @RepeatedTest(2)
-    void updateThird() throws IOException {
+    void updateProcess() throws IOException {
       Path pathToBundle = Paths.get("./build/test-data/bundles/second-2.0.tar.gz");
       try (InputStream is = Files.newInputStream(pathToBundle)) {
-        Third t = service.updateThird(is);
-        assertThat(t).hasFieldOrPropertyWithValue("name", "second");
-        assertThat(t).hasFieldOrPropertyWithValue("version", "2.0");
-        assertThat(t.getProcesses().size()).isEqualTo(1);
-        assertThat(t.getProcesses().get("testProcess").getStates().size()).isEqualTo(1);
-        assertThat(t.getProcesses().get("testProcess").getStates().get("firstState").getDetails().size()).isEqualTo(1);
-        assertThat(service.listThirds()).hasSize(3);
+        Process process = service.updateProcess(is);
+        assertThat(process).hasFieldOrPropertyWithValue("id", "second");
+        assertThat(process).hasFieldOrPropertyWithValue("version", "2.0");
+        assertThat(process.getStates().size()).isEqualTo(1);
+        assertThat(process.getStates().get("firstState").getDetails().size()).isEqualTo(1);
+        assertThat(service.listProcesses()).hasSize(3);
       } catch (IOException e) {
         log.trace("rethrowing exception");
         throw e;
@@ -245,16 +236,16 @@ class ThirdsServiceShould {
 		}
 
     	@Test
-        void deleteBundleByNameAndVersionWhichNotBeingDeafult() throws Exception {
+        void deleteBundleByNameAndVersionWhichNotBeingDefault() throws Exception {
     		Path bundleDir = testDataDir.resolve(bundleName);
     		Path bundleVersionDir = bundleDir.resolve("0.1");
     		Assertions.assertTrue(Files.isDirectory(bundleDir));
     		Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
             service.deleteVersion(bundleName,"0.1");
             Assertions.assertNull(service.fetch(bundleName, "0.1"));
-            Third third = service.fetch(bundleName);
-            Assertions.assertNotNull(third);
-            Assertions.assertFalse(third.getVersion().equals("0.1"));
+            Process process = service.fetch(bundleName);
+            Assertions.assertNotNull(process);
+            Assertions.assertFalse(process.getVersion().equals("0.1"));
             Assertions.assertTrue(Files.isDirectory(bundleDir));
             Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
     	}
@@ -262,8 +253,8 @@ class ThirdsServiceShould {
     	@Test
         void deleteBundleByNameAndVersionWhichBeingDeafult1() throws Exception {
     		Path bundleDir = testDataDir.resolve(bundleName);
-    		Third third = service.fetch(bundleName);
-    		Assertions.assertTrue(third.getVersion().equals("v1"));
+    		Process process = service.fetch(bundleName);
+    		Assertions.assertTrue(process.getVersion().equals("v1"));
     		Path bundleVersionDir = bundleDir.resolve("v1");
     		Path bundleNewDefaultVersionDir = bundleDir.resolve("0.1");
     		FileUtils.touch(bundleNewDefaultVersionDir.toFile());//this is to be sure this version is the last modified
@@ -271,9 +262,9 @@ class ThirdsServiceShould {
     		Assertions.assertTrue(Files.isDirectory(bundleVersionDir));    		
             service.deleteVersion(bundleName,"v1");
             Assertions.assertNull(service.fetch(bundleName, "v1"));
-            third = service.fetch(bundleName);
-            Assertions.assertNotNull(third);
-            Assertions.assertTrue(third.getVersion().equals("0.1"));
+            process = service.fetch(bundleName);
+            Assertions.assertNotNull(process);
+            Assertions.assertTrue(process.getVersion().equals("0.1"));
             Assertions.assertTrue(Files.isDirectory(bundleDir));
             Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
             Assertions.assertTrue(Files.isDirectory(bundleNewDefaultVersionDir));
@@ -282,10 +273,10 @@ class ThirdsServiceShould {
     	}
     	
     	@Test
-        void deleteBundleByNameAndVersionWhichBeingDeafult2() throws Exception {
+        void deleteBundleByNameAndVersionWhichBeingDefault2() throws Exception {
     		Path bundleDir = testDataDir.resolve(bundleName);
-    		final Third third = service.fetch(bundleName);
-    		Assertions.assertTrue(third.getVersion().equals("v1"));
+    		final Process process = service.fetch(bundleName);
+    		Assertions.assertTrue(process.getVersion().equals("v1"));
     		Path bundleVersionDir = bundleDir.resolve("v1");
     		Path bundleNewDefaultVersionDir = bundleDir.resolve("0.5");
     		FileUtils.touch(bundleNewDefaultVersionDir.toFile());//this is to be sure this version is the last modified
@@ -293,9 +284,9 @@ class ThirdsServiceShould {
     		Assertions.assertTrue(Files.isDirectory(bundleVersionDir));    		
             service.deleteVersion(bundleName,"v1");
             Assertions.assertNull(service.fetch(bundleName, "v1"));
-            Third _third = service.fetch(bundleName);
-            Assertions.assertNotNull(_third);
-            Assertions.assertTrue(_third.getVersion().equals("0.5"));
+            Process _process = service.fetch(bundleName);
+            Assertions.assertNotNull(_process);
+            Assertions.assertTrue(_process.getVersion().equals("0.5"));
             Assertions.assertTrue(Files.isDirectory(bundleDir));
             Assertions.assertFalse(Files.isDirectory(bundleVersionDir));
             Assertions.assertTrue(Files.isDirectory(bundleNewDefaultVersionDir));
@@ -336,7 +327,7 @@ class ThirdsServiceShould {
 	      @Test
 	      void clean() throws IOException {
 	        service.clear();
-	        assertThat(service.listThirds()).hasSize(0);
+	        assertThat(service.listProcesses()).hasSize(0);
 	      }
 	    }
     }

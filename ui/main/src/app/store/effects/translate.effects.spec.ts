@@ -26,7 +26,7 @@ import {Actions} from "@ngrx/effects";
 import {LoadLightCardsSuccess} from "@ofActions/light-card.actions";
 import {hot} from "jasmine-marbles";
 import {TranslateService} from "@ngx-translate/core";
-import {ThirdsService} from "@ofServices/thirds.service";
+import {ProcessesService} from "@ofServices/processes.service";
 import SpyObj = jasmine.SpyObj;
 
 // useful to generate some random version or publisher names
@@ -40,7 +40,7 @@ describe('Translation effect when extracting publisher and their version from Li
         const cardTemplate = {publisher: getRandomAlphanumericValue(9)};	
         const testACard = getOneRandomCard(cardTemplate);	
         const publisher = testACard.publisher;	
-        const version = new Set([testACard.publisherVersion]);	
+        const version = new Set([testACard.processVersion]);
         const result = TranslateEffects.extractPublisherAssociatedWithDistinctVersionsFromCards([testACard]);	
         expect(result).toBeTruthy();	
         expect(result[publisher]).toEqual(version);	
@@ -51,9 +51,9 @@ describe('Translation effect when extracting publisher and their version from Li
         const third1 = getRandomAlphanumericValue(7);	
         const templateCard1withRandomVersion = {publisher: third1};	
         const version0 = getRandomAlphanumericValue(3);	
-        const templateCard0FixedVersion = {...templateCard0withRandomVersion, publisherVersion: version0};	
+        const templateCard0FixedVersion = {...templateCard0withRandomVersion, processVersion: version0};
         const version1 = getRandomAlphanumericValue(5);	
-        const templateCard1FixedVersion = {...templateCard1withRandomVersion, publisherVersion: version1};	
+        const templateCard1FixedVersion = {...templateCard1withRandomVersion, processVersion: version1};
         const cards: LightCard[] = [];	
         const numberOfFreeVersion = 5;	
         for (let i = 0; i < numberOfFreeVersion; ++i) {	
@@ -194,7 +194,7 @@ describe('Translation effect reacting to successfully loaded Light Cards', () =>
     let storeMock: SpyObj<Store<AppState>>;	
     let localAction$: Actions;	
     let translateServMock: SpyObj<TranslateService>;	
-    let thirdServMock: SpyObj<ThirdsService>;	
+    let thirdServMock: SpyObj<ProcessesService>;
 
     beforeEach(() => {	
         storeMock = jasmine.createSpyObj('Store', ['select', 'dispatch']);	

@@ -1,4 +1,3 @@
-
 <center>
 <h1> Process en status {{card.data.stateName}} </h1>
 
@@ -11,7 +10,6 @@
 <input id="test" value="{{card.data.state}}" hidden></input>
 <input id="error" value="{{card.data.error}}" hidden></input>
 <script>
-
 var rect = "rect_" + document.getElementById("test").getAttribute("value");
 console.log("rect to color  = " + rect);
 var stateColor = "#aaffaa";
@@ -19,4 +17,4 @@ if (document.getElementById("error").getAttribute("value")=="true") stateColor="
 console.log("color  = " + stateColor );
 document.getElementById(rect).setAttribute("fill",stateColor);
 </script>
-</center>
+</center> 

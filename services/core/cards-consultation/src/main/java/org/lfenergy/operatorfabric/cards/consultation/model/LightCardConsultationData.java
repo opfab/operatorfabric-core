@@ -42,7 +42,7 @@ public class LightCardConsultationData implements LightCard {
     private String uid;
     private String id;
     private String publisher;
-    private String publisherVersion;
+    private String processVersion;
     private String process;
     private String processId;
     private String state;
