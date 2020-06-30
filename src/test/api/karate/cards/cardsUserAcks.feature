@@ -15,7 +15,7 @@ Feature: CardsUserAcknowledgement
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process1",
 	"state": "messageState",
 	"recipient" : {

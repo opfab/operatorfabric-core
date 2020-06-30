@@ -1,7 +1,7 @@
 {
 	"publisher" : "message-publisher",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"message-publisher",
 	"processId" : "hello-world-1",
 	"state": "messageState",
 	"recipient" : {

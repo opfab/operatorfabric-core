@@ -15,7 +15,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process1",
 	"state": "messageState",
 	"recipient" : {
@@ -67,7 +67,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process1",
 	"state": "messageState2",
 	"recipient" : {
