@@ -13,7 +13,7 @@ Feature: Archives
 [{
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card1",
 	"state": "messageState",
 	"recipient" : {
@@ -31,7 +31,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card2",
 	"state": "messageState",
 	"recipient" : {
@@ -49,7 +49,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card3",
 	"state": "messageState",
 	"recipient" : {
@@ -67,7 +67,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card4",
 	"state": "messageState",
 	"recipient" : {
@@ -85,7 +85,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card5",
 	"state": "messageState",
 	"recipient" : {
@@ -103,7 +103,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card6",
 	"state": "messageState",
 	"recipient" : {
@@ -122,7 +122,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card7",
 	"state": "messageState",
 	"recipient" : {
@@ -140,7 +140,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card8",
 	"state": "messageState",
 	"recipient" : {
@@ -158,7 +158,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card9",
 	"endDate" : 1583733122000,
 	"state": "messageState",
@@ -177,7 +177,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2card10",
 	"state": "messageState",
 	"recipient" : {
@@ -199,7 +199,7 @@ Feature: Archives
 {
 	"publisher" : "api_test",
 	"processVersion" : "2",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process10",
 	"state": "messageState",
 	"recipient" : {
@@ -290,7 +290,7 @@ Feature: Archives
      And assert response.numberOfElements >= 10
 
   Scenario: filter process
-    Given url opfabUrl + 'cards/archives/' +'?process=defaultProcess'
+    Given url opfabUrl + 'cards/archives/' +'?process=api_test'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200

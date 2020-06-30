@@ -38,7 +38,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "cardForGroup",
 	"state": "messageState",
 	"recipient" : {
@@ -60,7 +60,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "cardForEntityWithoutPerimeter",
 	"state": "messageState",
 	"recipient" : {
@@ -104,7 +104,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "cardForEntityAndGroup",
 	"state": "defaultState",
 	"recipient" : {
@@ -208,7 +208,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.data.message == 'a message'
+    And match response.card.data.message == 'a message'
 
 
   Scenario: Get the card 'cardForEntityWithoutPerimeter'
@@ -223,7 +223,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.data.message == 'a message'
+    And match response.card.data.message == 'a message'
 
 
   Scenario: Get the card 'cardForEntityAndGroup'
@@ -231,7 +231,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.data.message == 'a message'
+    And match response.card.data.message == 'a message'
 
 
   Scenario: Get the card 'cardForEntityAndOtherGroupAndPerimeter'
@@ -239,4 +239,4 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.data.message == 'a message'
+    And match response.card.data.message == 'a message'

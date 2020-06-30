@@ -18,7 +18,7 @@ Scenario: Post Card
 		var card = {
 				"publisher" : "api_test",
 				"processVersion" : "1",
-				"process"  :"defaultProcess",
+				"process"  :"api_test",
 				"processId" : "process3users",
 				"state": "messageState",
 				"recipient": {
@@ -58,8 +58,8 @@ Given url opfabUrl + 'cards/cards/api_test_process3users'
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
-And match response.data.message == 'a message for 3 users (tso1-operator, tso2-operator and admin)'
-And def cardUid = response.uid
+And match response.card.data.message == 'a message for 3 users (tso1-operator, tso2-operator and admin)'
+And def cardUid = response.card.uid
 
 
 #get card from archives with user tso1-operator
