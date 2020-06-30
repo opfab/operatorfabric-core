@@ -5,6 +5,7 @@ rm -rf target
 # Be careful : patchUserSettings must be before fetchUserSettings
 
 java -jar karate.jar                                         \
+      common/checkExpiredToken.feature                       \
       users/createUsers.feature                              \
       users/groups/createGroups.feature                      \
       users/groups/addUsersToGroup.feature                   \
