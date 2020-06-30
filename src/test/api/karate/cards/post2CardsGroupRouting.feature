@@ -16,7 +16,7 @@ Scenario: Post Card only for group TSO1
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2",
 	"state": "messageState",
 	"recipient" : {
@@ -44,8 +44,8 @@ Given url opfabUrl + 'cards/cards/api_test_process2'
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
-And match response.data.message == 'a message for group TSO1'
-And def cardUid = response.uid
+And match response.card.data.message == 'a message for group TSO1'
+And def cardUid = response.card.uid
 
 
 #get card from archives with  user tso1-operator
@@ -78,7 +78,7 @@ Scenario: Post Card for groups TSO1 and TSO2
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"process"  :"defaultProcess",
+	"process"  :"api_test",
 	"processId" : "process2tso",
 	"state": "messageState",
 	"recipient": {
@@ -109,8 +109,8 @@ Given url opfabUrl + 'cards/cards/api_test_process2tso'
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
-And match response.data.message == 'a message for groups TSO1 and TSO2'
-And def cardUid = response.uid
+And match response.card.data.message == 'a message for groups TSO1 and TSO2'
+And def cardUid = response.card.uid
 
 
 #get card from archives with user tso1-operator
@@ -126,8 +126,8 @@ Given url opfabUrl + 'cards/cards/api_test_process2tso'
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 200
-And match response.data.message == 'a message for groups TSO1 and TSO2'
-And def cardUid = response.uid
+And match response.card.data.message == 'a message for groups TSO1 and TSO2'
+And def cardUid = response.card.uid
 
 
 #get card from archives with user tso2-operator should be possible

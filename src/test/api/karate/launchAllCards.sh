@@ -12,5 +12,13 @@ java -jar karate.jar                              \
       cards/userAcknowledgmentUpdateCheck.feature \
       cards/postCardWithNoProcess.feature         \
       cards/postCardWithNoState.feature           \
+      cards/postCardFor3Users.feature             \
+      cards/deleteCardFor3Users.feature           \
+      cards/post2CardsInOneRequest.feature        \
+      cards/post1CardThenUpdateThenDelete.feature \
+      cards/getArchive.feature                    \
+      cards/post2CardsGroupRouting.feature        \
+      cards/post1BigCards.feature                 
       #cards/updateCardSubscription.feature
+      #cards/delete3BigCards.feature               
 

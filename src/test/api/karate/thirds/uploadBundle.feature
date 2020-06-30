@@ -58,3 +58,14 @@ Feature: Bundle
     When method post
     Then print response
     And status 201
+
+    Scenario: Post Bundle for big card (apogee)
+
+    # Push bundle
+    Given url opfabUrl + '/thirds/processes'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart field file = read('resources/bundle_api_test_apogee.tar.gz')
+    When method post
+    Then print response
+    And status 201
+
