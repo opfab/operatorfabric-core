@@ -33,7 +33,6 @@ export class CardComponent implements OnInit, OnDestroy {
     currentPath: any;
     protected _i18nPrefix: string;
     dateToDisplay: string;
-    actionsUrlPath: string;
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -59,8 +58,6 @@ export class CardComponent implements OnInit, OnDestroy {
             .pipe(map(config => this.computeDisplayedDates(config, card)))
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
-
-        this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processInstanceId}/states/${card.state}/actions`; //TODO OC-979 THis should be removed ?
     }
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {
