@@ -43,8 +43,8 @@ Feature: fetchArchive
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.data.message == 'a message'
-    And def cardUid = response.uid
+    And match response.card.data.message == 'a message'
+    And def cardUid = response.card.uid
 
 #get card form archives with user tso1-operator
 
@@ -107,5 +107,5 @@ Feature: fetchArchive
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200
-        And match response.externalRecipients[1] == "api_test16566111"
+        And match response.card.externalRecipients[1] == "api_test16566111"
         And def cardUid = response.uid

@@ -15,10 +15,13 @@ import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.lfenergy.operatorfabric.cards.consultation.utils.CardFieldNamesUtils.PARENT_CARD_ID;
 
 public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
@@ -29,6 +32,12 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
 
         return template.findOne(query, clazz);
+    }
+
+    default Flux<T> findByParentCardId(ReactiveMongoTemplate template, String parentUid, Class<T> clazz) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(PARENT_CARD_ID).is(parentUid));
+        return template.find(query, clazz);
     }
 
     default List<Criteria> computeCriteriaToFindCardByProcessIdWithUser(String processId, CurrentUserWithPerimeters currentUserWithPerimeters) {
@@ -85,4 +94,5 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
     }
 
     Mono<T> findByIdWithUser(String id, CurrentUserWithPerimeters user);
+    Flux<T> findByParentCardId(String parentCardUid);
 }

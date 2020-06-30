@@ -43,7 +43,7 @@ export class LoadCardSuccess implements Action {
     readonly type = CardActionTypes.LoadCardSuccess;
 
     /* istanbul ignore next */
-    constructor(public payload: { card: Card }) {}
+    constructor(public payload: { card: Card, childCards: Card[] }) {}
 }
 
 export class LoadArchivedCard implements Action {

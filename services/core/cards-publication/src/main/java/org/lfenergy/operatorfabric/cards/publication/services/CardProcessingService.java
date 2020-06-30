@@ -131,7 +131,7 @@ public class CardProcessingService {
     void validate(CardPublicationData c) throws ConstraintViolationException {
 
         // constraint check : parentCardId must exist
-        if (! checkIsParentCardIdExisting(c))
+        if (!checkIsParentCardIdExisting(c))
             throw new ConstraintViolationException("The parentCardId " + c.getParentCardId() + " is not the uid of any card", null);
 
         Set<ConstraintViolation<CardPublicationData>> results = localValidatorFactoryBean.validate(c);

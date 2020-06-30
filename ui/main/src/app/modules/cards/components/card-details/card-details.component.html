@@ -14,7 +14,7 @@
     <button type="button" class="close" aria-label="Close" (click)="closeDetails()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card"
+    <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card" [childCards]="childCards"
                   (responseData)='getResponseData($event)'></of-detail>
 
     <div *ngFor='let msg of messages | keyvalue'>

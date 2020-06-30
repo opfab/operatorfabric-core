@@ -31,6 +31,7 @@ export function reducer(
             return {
                 ...state,
                 selected: action.payload.card,
+                selectedChildCards: action.payload.childCards,
                 loading: false
             };
         }

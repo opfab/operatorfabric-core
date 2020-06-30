@@ -72,7 +72,7 @@ Feature: Cards
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.data.message == 'new message'
+    And match response.card.data.message == 'new message'
     And def cardUid = response.uid
 
     #get card without  authentication
@@ -226,7 +226,7 @@ Feature: Cards
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.externalRecipients[1] == "api_test165"
+    And match response.card.externalRecipients[1] == "api_test165"
     And def cardUid = response.uid
 
 Scenario:  Post card with no recipient but entityRecipients
@@ -293,7 +293,7 @@ Scenario:  Post card with correct parentCardId
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And def cardUid = response.uid
+    And def cardUid = response.card.uid
 
 	* def card =
 """
@@ -323,3 +323,107 @@ Scenario:  Post card with correct parentCardId
     Then status 201
     And match response.count == 1
     And match response.message == "All pushedCards were successfully handled"
+
+Scenario: Push card and its two child cards, then get the parent card
+
+    * def parentCard =
+"""
+{
+	"publisher" : "api_test",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "process1",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"}
+}
+"""
+
+# Push parent card
+    Given url opfabPublishCardUrl + 'cards'
+    And request parentCard
+    When method post
+    Then status 201
+    And match response.count == 1
+    And match response.message == "All pushedCards were successfully handled"
+
+#get parent card uid
+    Given url opfabUrl + 'cards/cards/api_test_process1'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And def parentCardUid = response.card.uid
+
+# Push two child cards
+    * def childCard1 =
+"""
+{
+	"publisher" : "api_test",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "processChild1",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"}
+}
+"""
+	* childCard1.parentCardId = parentCardUid
+
+	* def childCard2 =
+"""
+{
+	"publisher" : "api_test",
+	"publisherVersion" : "1",
+	"process"  :"defaultProcess",
+	"processId" : "processChild2",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title2"},
+	"data" : {"message":"test externalRecipients"}
+}
+"""
+	* childCard2.parentCardId = parentCardUid
+
+# Push the two child cards
+    Given url opfabPublishCardUrl + 'cards'
+    And request childCard1
+    When method post
+    Then status 201
+    And match response.count == 1
+    And match response.message == "All pushedCards were successfully handled"
+
+# Push the two child cards
+    Given url opfabPublishCardUrl + 'cards'
+    And request childCard2
+    When method post
+    Then status 201
+    And match response.count == 1
+    And match response.message == "All pushedCards were successfully handled"
+
+# Get the parent card with its two child cards
+
+    Given url opfabUrl + 'cards/cards/api_test_process1'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+	And assert response.childCards.length == 2

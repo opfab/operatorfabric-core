@@ -29,8 +29,7 @@ export class LightCard {
         readonly timeSpans?: TimeSpan[],
         readonly process?: string,
         readonly state?: string,
-
-
+        readonly parentCardId?: string,
     ) {
     }
 }

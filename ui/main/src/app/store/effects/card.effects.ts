@@ -45,9 +45,7 @@ export class CardEffects {
     loadById: Observable<Action> = this.actions$.pipe(
         ofType<LoadCard>(CardActionTypes.LoadCard),
         switchMap(action => this.service.loadCard(action.payload.id)),
-        map((card: Card) => {
-            return new LoadCardSuccess({card: card});
-        }),
+        map(cardData => new LoadCardSuccess({card: cardData.card, childCards: cardData.childCards})),
         catchError((err, caught) => {
             this.store.dispatch(new LoadCardFailure(err));
             return caught;
@@ -58,9 +56,7 @@ export class CardEffects {
     loadArchivedById: Observable<Action> = this.actions$.pipe(
         ofType<LoadArchivedCard>(CardActionTypes.LoadArchivedCard),
         switchMap(action => this.service.loadArchivedCard(action.payload.id)),
-        map((card: Card) => {
-            return new LoadArchivedCardSuccess({card: card});
-        }),
+        map((card: Card) => new LoadArchivedCardSuccess({card: card})),
         catchError((err, caught) => {
             this.store.dispatch(new LoadArchivedCardFailure(err));
             return caught;

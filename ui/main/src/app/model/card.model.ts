@@ -68,3 +68,10 @@ export class Recipient {
 export enum RecipientEnum {
     DEADEND, GROUP, UNION, USER
 }
+
+export class CardData {
+    constructor(
+        readonly card: Card,
+        readonly childCards: Card[]
+    ) {}
+}

@@ -11,23 +11,29 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.configuration.webflux;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromValue;
-import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.server.HandlerFunction;
-import org.springframework.web.reactive.function.server.RequestPredicates;
-import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.RouterFunctions;
-import org.springframework.web.reactive.function.server.ServerResponse;
-
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
+import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Slf4j
 @Configuration
@@ -57,14 +63,23 @@ public class CardRoutesConfig implements UserExtractor {
         return request ->
                 extractUserFromJwtToken(request)
                         .flatMap(currentUserWithPerimeters -> Mono.just(currentUserWithPerimeters).zipWith(cardRepository.findByIdWithUser(request.pathVariable("id"),currentUserWithPerimeters)))
-                        .doOnNext(t -> t.getT2().setHasBeenAcknowledged(
-                        		t.getT2().getUsersAcks() != null && t.getT2().getUsersAcks().contains(t.getT1().getUserData().getLogin())))
-                        .flatMap(t -> ok().contentType(MediaType.APPLICATION_JSON).body(fromValue(t.getT2())))
+                        .flatMap(userCardT2 -> Mono.just(userCardT2).zipWith(cardRepository.findByParentCardId(userCardT2.getT2().getUid()).collectList()))
+                        .doOnNext(t2 -> {
+                            CurrentUserWithPerimeters user = t2.getT1().getT1();
+                            CardConsultationData card = t2.getT1().getT2();
+                            card.setHasBeenAcknowledged(card.getUsersAcks() != null && card.getUsersAcks().contains(user.getUserData().getLogin()));
+                        })
+                        .flatMap(t2 -> {
+                            CardConsultationData card = t2.getT1().getT2();
+                            List<CardConsultationData> childCards = t2.getT2();
+                            return ok()
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .body(fromValue(CardData.builder().card(card).childCards(childCards).build()));
+                        })
                         .switchIfEmpty(notFound().build());
     }
 
     private HandlerFunction<ServerResponse> cardOptionRoute() {
         return request -> ok().build();
     }
-
 }

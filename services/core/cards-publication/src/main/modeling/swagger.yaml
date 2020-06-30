@@ -537,6 +537,9 @@ definitions:
       hasBeenAcknowledged:
         type: boolean
         description: Is true if the card was acknoledged at least by one user
+      parentCardId:
+        type: string
+        description: The uid of its parent card if it's a child card
     example:
       uid: 12345
       id: cardIdFromMyProcess

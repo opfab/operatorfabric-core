@@ -12,6 +12,7 @@ package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
@@ -21,6 +22,7 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.MultiValueMap;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
@@ -63,6 +65,10 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
     public Mono<ArchivedCardConsultationData> findByIdWithUser(String id, CurrentUserWithPerimeters currentUserWithPerimeters) {
         return findByIdWithUser(template, id, currentUserWithPerimeters, ArchivedCardConsultationData.class);
+    }
+
+    public Flux<ArchivedCardConsultationData> findByParentCardId(String parentUid) {
+        return findByParentCardId(template, parentUid, ArchivedCardConsultationData.class);
     }
 
     public Mono<Page<LightCard>> findWithUserAndParams(Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params) {

@@ -42,8 +42,8 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == false
-    And def uid = response.uid
+    And match response.card.hasBeenAcknowledged == false
+    And def uid = response.card.uid
 
 #make an acknoledgement to the card with tso1
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
@@ -57,8 +57,8 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == true
-    And match response.uid == uid
+    And match response.card.hasBeenAcknowledged == true
+    And match response.card.uid == uid
 
     
 
@@ -95,8 +95,8 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == false
-    And match response.uid != uid
+    And match response.card.hasBeenAcknowledged == false
+    And match response.card.uid != uid
 
     
   Scenario: Delete the test card

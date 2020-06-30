@@ -77,6 +77,5 @@ export const selectSortedFilterLightCardIds = createSelector(
 export const selectSortedFilteredLightCards = createSelector(
     selectFeedCardEntities,
     selectSortedFilterLightCardIds,
-    ( entities, sortedIds ) => {
-        return sortedIds.map( id => entities[id]);
-    })
+    ( entities, sortedIds ) => sortedIds.map( id => entities[id])
+)

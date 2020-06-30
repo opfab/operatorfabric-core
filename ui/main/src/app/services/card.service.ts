@@ -14,7 +14,7 @@ import {Observable, of, Subject} from 'rxjs';
 import {CardOperation} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication/authentication.service';
-import {Card} from '@ofModel/card.model';
+import {Card, CardData} from '@ofModel/card.model';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
@@ -52,8 +52,8 @@ export class CardService {
         this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
     }
 
-    loadCard(id: string): Observable<Card> {
-        return this.httpClient.get<Card>(`${this.cardsUrl}/${id}`);
+    loadCard(id: string): Observable<CardData> {
+        return this.httpClient.get<CardData>(`${this.cardsUrl}/${id}`);
     }
 
     getCardOperation(): Observable<CardOperation> {

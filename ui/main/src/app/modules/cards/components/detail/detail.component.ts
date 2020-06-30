@@ -9,7 +9,7 @@
 
 
 
-import {Component, ElementRef, Input, OnChanges, Output, EventEmitter} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, Output, EventEmitter, OnInit, OnDestroy} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
@@ -22,32 +22,80 @@ import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {TranslateService} from '@ngx-translate/core';
-import {Subject} from 'rxjs';
-import { switchMap,skip,takeUntil } from 'rxjs/operators';
+import { switchMap, skip, map, takeUntil } from 'rxjs/operators';
+import { selectLastCards } from '@ofStore/selectors/feed.selectors';
+import { CardService } from '@ofServices/card.service';
+import { Observable, zip, Subject } from 'rxjs';
+import { LightCard } from '@ofModel/light-card.model';
+import { AppService, PageType } from '@ofServices/app.service';
+
+declare const ext_form: any;
 
 @Component({
     selector: 'of-detail',
     templateUrl: './detail.component.html',
 })
-export class DetailComponent implements OnChanges {
+export class DetailComponent implements OnChanges, OnInit, OnDestroy {
 
     @Output() responseData = new EventEmitter<Response>();
 
     public active = false;
     @Input() detail: Detail;
     @Input() card: Card;
+    @Input() childCards: Card[];
     currentCard: Card;
+    unsubscribe$: Subject<void> = new Subject<void>();
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _htmlContent: SafeHtml;
     private userContext: UserContext;
-    unsubscribe$: Subject<void> = new Subject<void>();
+    private lastCards$: Observable<LightCard[]>;
+
+    ngOnInit() {
+
+        if (this._appService.pageType == PageType.FEED) {
+
+            this.lastCards$ = this.store.select(selectLastCards);
+
+            this.lastCards$
+                    .pipe(
+                        takeUntil(this.unsubscribe$),
+                        map(lastCards =>
+                                lastCards.filter(card =>
+                                    card.parentCardId == this.card.uid &&
+                                    !this.childCards.map(childCard => childCard.uid).includes(card.uid))
+                        ),
+                        map(childCards => childCards.map(c => this.cardService.loadCard(c.id)))
+                    )
+                    .subscribe(childCardsObs => {
+                        zip(...childCardsObs)
+                            .pipe(map(cards => cards.map(cardData => cardData.card)))
+                            .subscribe(newChildCards => {
+
+                                const reducer = (accumulator, currentValue) => {
+                                    accumulator[currentValue.id] = currentValue;
+                                    return accumulator;
+                                };
+
+                                this.childCards = Object.values({
+                                    ...this.childCards.reduce(reducer, {}),
+                                    ...newChildCards.reduce(reducer, {}),
+                                });
+
+                                ext_form.childCards = this.childCards;
+                                ext_form.applyChildCards();
+                            })
+                    })
+        }
+    }
 
     constructor(private element: ElementRef,
                 private processesService: ProcessesService,
                 private handlebars: HandlebarsService,
                 private sanitizer: DomSanitizer,
                 private store: Store<AppState>,
-                private translate: TranslateService ) {
+                private translate: TranslateService,
+                private cardService: CardService,
+                private _appService: AppService ) {
 
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this.userContext = new UserContext(
@@ -74,7 +122,6 @@ export class DetailComponent implements OnChanges {
     ngOnChanges(): void {
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
-
     }
 
     private initializeHrefsOfCssLink() {
@@ -97,7 +144,7 @@ export class DetailComponent implements OnChanges {
             switchMap(process => {
                 responseData = process.states[this.card.state].response;
                 this.responseData.emit(responseData);
-                return this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card, this.userContext, responseData));
+                return this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card, this.childCards, this.userContext, responseData));
             })
         )
             .subscribe(
@@ -132,5 +179,5 @@ export class DetailComponent implements OnChanges {
     ngOnDestroy(){
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
-      }
+    }
 }
