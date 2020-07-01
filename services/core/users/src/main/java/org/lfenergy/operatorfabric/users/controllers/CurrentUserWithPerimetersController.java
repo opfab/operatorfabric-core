@@ -39,9 +39,10 @@ public class CurrentUserWithPerimetersController implements CurrentUserWithPerim
     public CurrentUserWithPerimeters fetchCurrentUserWithPerimeters(HttpServletRequest request, HttpServletResponse response) throws Exception{
 
         User userData = extractUserFromJwtToken(request);
+        CurrentUserWithPerimetersData currentUserWithPerimetersData = new CurrentUserWithPerimetersData();
         if (userData != null) {
             List<String> groups = userData.getGroups(); //First, we recover the groups to which the user belongs
-            CurrentUserWithPerimetersData currentUserWithPerimetersData = CurrentUserWithPerimetersData.builder().userData(userData).build();
+            currentUserWithPerimetersData.setUserData(userData);
 
             if ((groups != null) && (!groups.isEmpty())) {     //Then, we recover the groups data
                 List<GroupData> groupsData = userService.retrieveGroups(groups);
@@ -59,6 +60,6 @@ public class CurrentUserWithPerimetersController implements CurrentUserWithPerim
                 }
             }
         }
-        return null;
+        return currentUserWithPerimetersData;
     }
 }
