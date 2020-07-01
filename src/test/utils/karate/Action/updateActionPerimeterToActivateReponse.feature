@@ -7,30 +7,12 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
     * def signInAsTSO = call read('../common/getToken.feature') { username: 'tso1-operator'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
-           #defining perimeters
-    * def perimeter =
-"""
-{
-  "id" : "perimeterKarate15_1",
-  "process" : "process",
-  "stateRights" : [
-      {
-        "state" : "state1",
-        "right" : "Receive"
-      },
-      {
-        "state" : "responseState",
-        "right" : "Receive"
-      }
-  ]
-}
-"""
 
     * def perimeterUpdated =
 """
 {
-  "id" : "perimeterKarate15_1",
-  "process" : "process",
+  "id" : "perimeterAction",
+  "process" : "processAction",
   "stateRights" : [
       {
         "state" : "state1",
@@ -44,21 +26,10 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
 }
 """
 
-    * def perimeterError =
-"""
-{
-  "virtualField" : "virtual"
-}
-"""
-
   Scenario: Update the perimeter
     #Update the perimeter, expected response 200
-    Given url opfabUrl + 'users/perimeters/' + perimeterUpdated.id
+    Given url opfabUrl + 'users/perimeters/perimeterAction'
     And header Authorization = 'Bearer ' + authToken
     And request perimeterUpdated
     When method put
     Then status 200
-    And match response.id == perimeterUpdated.id
-    And match response.process == perimeterUpdated.process
-    And match response.stateRights == perimeterUpdated.stateRights
-

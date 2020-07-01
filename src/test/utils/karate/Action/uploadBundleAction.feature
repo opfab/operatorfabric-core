@@ -1,4 +1,4 @@
-Feature: API - uploadBundleAction
+Feature: uploadBundleAction
 
   Background:
     # Get admin token
@@ -13,9 +13,9 @@ Feature: API - uploadBundleAction
   Scenario: Post Bundle for testing the action
 
     # Push bundle
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + '/thirds/processes'
     And header Authorization = 'Bearer ' + authToken
-    And multipart field file = read('bundle/bundle_test_action_v2.tar.gz')
+    And multipart field file = read('bundle_test_action.tar.gz')
     When method post
     Then print response
     And status 201
