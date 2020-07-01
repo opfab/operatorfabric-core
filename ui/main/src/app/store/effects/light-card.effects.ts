@@ -53,4 +53,5 @@ export class LightCardEffects {
             ),
             delay(500)
         );
+        
 }

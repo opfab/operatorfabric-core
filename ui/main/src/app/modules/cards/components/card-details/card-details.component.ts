@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
 import { ProcessesService } from "@ofServices/processes.service";
-import { ClearLightCardSelection } from '@ofStore/actions/light-card.actions';
+import { ClearLightCardSelection, DelayedLightCardUpdate } from '@ofStore/actions/light-card.actions';
 import { Router } from '@angular/router';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
 import { Response} from '@ofModel/processes.model';
@@ -12,17 +12,20 @@ import { Map } from '@ofModel/map';
 import { UserService } from '@ofServices/user.service';
 import { selectIdentifier } from '@ofStore/selectors/authentication.selectors';
 import { switchMap } from 'rxjs/operators';
-import { Severity } from '@ofModel/light-card.model';
+import { Severity, LightCard } from '@ofModel/light-card.model';
 import { CardService } from '@ofServices/card.service';
 import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {takeUntil, take} from 'rxjs/operators';
 import { AppService, PageType } from '@ofServices/app.service';
 
 import { User } from '@ofModel/user.model';
 import { UserWithPerimeters, RightsEnum, userRight } from '@ofModel/userWithPerimeters.model';
 
 import { id } from '@swimlane/ngx-charts';
+import {fetchLightCard} from "@ofSelectors/feed.selectors";
+
 declare const templateGateway: any;
+
 
 const RESPONSE_FORM_ERROR_MSG_I18N_KEY = 'response.error.form';
 const RESPONSE_SUBMIT_ERROR_MSG_I18N_KEY = 'response.error.submit';
@@ -218,7 +221,15 @@ export class CardDetailsComponent implements OnInit {
         this.responseData = $event;
     }
 
-
+    updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
+        this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
+        .subscribe((lightCard : LightCard) => {
+            var updatedLighCard = { ... lightCard };
+            updatedLighCard.hasBeenAcknowledged = hasBeenAcknowledged;
+            var delayedLightCardUpdate = new DelayedLightCardUpdate({card: updatedLighCard});
+            this.store.dispatch(delayedLightCardUpdate);    
+        });
+    }
 
     submitResponse() {
 
@@ -289,6 +300,7 @@ export class CardDetailsComponent implements OnInit {
                     var tmp = { ... this.card };
                     tmp.hasBeenAcknowledged = false;
                     this.card = tmp;
+                    this.updateAcknowledgementOnLightCard(false);
                 } else {
                     console.error("the remote acknowledgement endpoint returned an error status(%d)", resp.status);
                     this.messages.formError.display = true;
@@ -298,6 +310,7 @@ export class CardDetailsComponent implements OnInit {
         } else {
             this.cardService.postUserAcnowledgement(this.card).subscribe(resp => {
                 if (resp.status == 201 || resp.status == 200) {
+                    this.updateAcknowledgementOnLightCard(true);
                     this.closeDetails();
                 } else {
                     console.error("the remote acknowledgement endpoint returned an error status(%d)", resp.status);

@@ -101,7 +101,18 @@ export class FilterService {
             {start: null, end: null})
     }
 
-
+    private initAcknowledgementFilter() {
+        return new Filter(
+            (card:LightCard, status) => {
+                const result =
+                status && card.hasBeenAcknowledged || 
+                !status && !card.hasBeenAcknowledged;
+                return result;
+            },
+            true,
+            false
+        );
+    }
 
     private initFilters(): Map<string, Filter> {
         console.log(new Date().toISOString(),"BUG OC-604 filter.service.ts init filter");
@@ -110,6 +121,7 @@ export class FilterService {
         filters.set(FilterType.BUSINESSDATE_FILTER, this.initBusinessDateFilter());
         filters.set(FilterType.PUBLISHDATE_FILTER, this.initPublishDateFilter());
         filters.set(FilterType.TAG_FILTER, this.initTagFilter());
+        filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
         console.log(new Date().toISOString(),"BUG OC-604 filter.service.ts init filter done");
         return filters;
     }
@@ -121,5 +133,6 @@ export enum FilterType {
     TAG_FILTER,
     BUSINESSDATE_FILTER,
     PUBLISHDATE_FILTER,
+    ACKNOWLEDGEMENT_FILTER,
     TEST_FILTER
 }
