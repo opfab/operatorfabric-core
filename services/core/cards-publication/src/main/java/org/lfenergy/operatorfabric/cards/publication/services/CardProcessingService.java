@@ -17,7 +17,7 @@ import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportDat
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.lfenergy.operatorfabric.cards.publication.services.processors.UserCardProcessor;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -54,7 +54,7 @@ public class CardProcessingService {
     @Autowired
     private ExternalAppClientImpl externalAppClient;
 
-    private Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards, Optional<User> user) {
+    private Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards, Optional<CurrentUserWithPerimeters> user) {
 
         long windowStart = Instant.now().toEpochMilli();
         Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
@@ -79,7 +79,7 @@ public class CardProcessingService {
         return processCards(pushedCards, Optional.empty());
     }
 
-    public Mono<CardCreationReportData> processUserCards(Flux<CardPublicationData> pushedCards, User user) {
+    public Mono<CardCreationReportData> processUserCards(Flux<CardPublicationData> pushedCards, CurrentUserWithPerimeters user) {
         return processCards(pushedCards, Optional.of(user));
     }
 
@@ -88,7 +88,7 @@ public class CardProcessingService {
         return cards.doOnNext(ignoreErrorDo(recipientProcessor::processAll));
     }
 
-    private Flux<CardPublicationData> userCardPublisherProcess(Flux<CardPublicationData> cards, User user) {
+    private Flux<CardPublicationData> userCardPublisherProcess(Flux<CardPublicationData> cards, CurrentUserWithPerimeters user) {
         return cards.doOnNext(card-> userCardProcessor.processPublisher(card,user));
     }
 

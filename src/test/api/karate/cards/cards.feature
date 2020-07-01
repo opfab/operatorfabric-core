@@ -5,6 +5,8 @@ Feature: Cards
 
     * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
     * def authToken = signIn.authToken
+    * def signInUserWithNoGroupNoEntity = call read('../common/getToken.feature') { username: 'userwithnogroupnoentity'}
+    * def authTokenUserWithNoGroupNoEntity = signInUserWithNoGroupNoEntity.authToken
 
   Scenario: Post card
 
@@ -427,3 +429,48 @@ Scenario: Push card and its two child cards, then get the parent card
     When method get
     Then status 200
 	And assert response.childCards.length == 2
+
+
+Scenario: Push a card for a user with no group and no entity
+
+    * def cardForUserWithNoGroupNoEntity =
+"""
+{
+	"publisher" : "api_test",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processId" : "processForUserWithNoGroupNoEntity",
+	"state": "messageState",
+	"recipient" : {
+				"type" : "USER",
+				"identity" : "userwithnogroupnoentity"
+			},
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message for user with no group and no entity"}
+}
+"""
+
+# Push card for user with no group and no entity
+    Given url opfabPublishCardUrl + 'cards'
+    And request cardForUserWithNoGroupNoEntity
+    When method post
+    Then status 201
+    And match response.count == 1
+
+#get card with user userwithnogroupnoentity
+    Given url opfabUrl + 'cards/cards/api_test_processForUserWithNoGroupNoEntity'
+    And header Authorization = 'Bearer ' + authTokenUserWithNoGroupNoEntity
+    When method get
+    Then status 200
+    And match response.card.data.message == 'a message for user with no group and no entity'
+    And def cardUid = response.card.uid
+
+#get card from archives with user userwithnogroupnoentity
+    Given url opfabUrl + 'cards/archives/' + cardUid
+    And header Authorization = 'Bearer ' + authTokenUserWithNoGroupNoEntity
+    When method get
+    Then status 200
+    And match response.data.message == 'a message for user with no group and no entity'

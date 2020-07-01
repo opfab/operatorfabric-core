@@ -112,7 +112,7 @@ public class ArchivedCardRoutesShould {
                     .verify();
             assertThat(archivedCardRoutes).isNotNull();
             webTestClient.get().uri("/archives/{id}",simpleCard.getId()).exchange()
-                    .expectStatus().isForbidden()
+                    .expectStatus().isNotFound()
             ;
         }
 

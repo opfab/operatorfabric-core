@@ -173,7 +173,7 @@ public class CardRoutesShould {
                     .verify();
             assertThat(cardRoutes).isNotNull();
             webTestClient.get().uri("/cards/{id}",simpleCard.getId()).exchange()
-                    .expectStatus().isForbidden()
+                    .expectStatus().isNotFound()
             ;
         }
         
