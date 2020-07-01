@@ -15,24 +15,25 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card" [childCards]="childCards"
-                  (responseData)='getResponseData($event)'></of-detail>
+      (responseData)='getResponseData($event)'></of-detail>
 
     <div *ngFor='let msg of messages | keyvalue'>
       <div *ngIf='msg.value.display' class="alert alert-dismissible fade show text-center"
-                  [class.alert-danger]='msg.value.color == "red"'
-                  [class.alert-success]='msg.value.color == "green"'
-                  role="alert" translate>
+        [class.alert-danger]='msg.value.color == "red"' [class.alert-success]='msg.value.color == "green"' role="alert"
+        translate>
         {{msg.value.msg}}
-        <button (click)='msg.value.display = false' type="button" class="close" data-dismiss="alert"
-                  aria-label="Close">
+        <button (click)='msg.value.display = false' type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span class="text-danger" aria-hidden="true">&times;</span>
         </button>
       </div>
     </div>
 
-    <button class="btn mt-3 mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists && isActionEnabled'
-              translate [translateParams]="responseDataParameters" (click)='submitResponse()'>{{btnText}}</button>
-    <button class="btn mt-3 mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed'
-              translate (click)='acknowledge()'>{{btnAckText}}</button>
+
+    <div *ngIf="!isArchivePageType">
+      <button class="btn mt-3 mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists && isActionEnabled'
+        translate [translateParams]="responseDataParameters" (click)='submitResponse()'>{{btnText}}</button>
+      <button class="btn mt-3 mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed' translate
+        (click)='acknowledge()'>{{btnAckText}}</button>
+    </div>
   </div>
 </of-details>

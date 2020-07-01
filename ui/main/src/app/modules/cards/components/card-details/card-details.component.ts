@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Card, Detail, RecipientEnum } from '@ofModel/card.model';
+import { Card, Detail} from '@ofModel/card.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
@@ -7,15 +7,17 @@ import { ProcessesService } from "@ofServices/processes.service";
 import { ClearLightCardSelection } from '@ofStore/actions/light-card.actions';
 import { Router } from '@angular/router';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
-import { Response, Process } from '@ofModel/processes.model';
+import { Response} from '@ofModel/processes.model';
 import { Map } from '@ofModel/map';
 import { UserService } from '@ofServices/user.service';
 import { selectIdentifier } from '@ofStore/selectors/authentication.selectors';
 import { switchMap } from 'rxjs/operators';
 import { Severity } from '@ofModel/light-card.model';
 import { CardService } from '@ofServices/card.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import { AppService, PageType } from '@ofServices/app.service';
+
 import { User } from '@ofModel/user.model';
 import { UserWithPerimeters, RightsEnum, userRight } from '@ofModel/userWithPerimeters.model';
 
@@ -71,7 +73,8 @@ export class CardDetailsComponent implements OnInit {
         private thirdsService: ProcessesService,
         private userService: UserService,
         private cardService: CardService,
-        private router: Router) {
+        private router: Router,
+        private _appService: AppService) {
     }
 
     get responseDataExists(): boolean {
@@ -90,6 +93,10 @@ export class CardDetailsComponent implements OnInit {
 
         return this.card.entitiesAllowedToRespond.includes(this.user.entities[0])
             && this.hasPrivilegetoRespond;
+    }
+
+    get isArchivePageType(){
+        return this._appService.pageType == PageType.ARCHIVE;
     }
 
 
