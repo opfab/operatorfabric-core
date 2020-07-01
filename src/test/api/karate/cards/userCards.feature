@@ -64,16 +64,6 @@ Feature: UserCards tests
 ]
 """
 
-  Scenario: Get current user with perimeters with tso1-operator
-    Given url opfabUrl + 'users/CurrentUserWithPerimeters'
-    And header Authorization = 'Bearer ' + authTokenAsTSO
-    When method get
-    Then status 200
-    And match response.userData.login == 'tso1-operator'
-    And assert response.computedPerimeters.length == 0
-
-
-
   Scenario: Create groupKarate
     Given url opfabUrl + 'users/groups'
     And header Authorization = 'Bearer ' + authToken
@@ -122,17 +112,6 @@ Feature: UserCards tests
     And request groupArray
     When method put
     Then status 200
-
-
-  Scenario: Get current user with perimeters with tso1-operator
-    Given url opfabUrl + 'users/CurrentUserWithPerimeters'
-    And header Authorization = 'Bearer ' + authTokenAsTSO
-    When method get
-    Then status 200
-    And match response.userData.login == 'tso1-operator'
-    And assert response.computedPerimeters.length == 4
-    And match response.computedPerimeters contains only [{"process":"process_2","state":"state2","rights":"Receive"},{"process":"process_2","state":"state1","rights":"Write"},{"process":"process_1","state":"state1","rights":"Receive"},{"process":"process_1","state":"state2","rights":"ReceiveAndWrite"}]
-
 
 
     * def card =
