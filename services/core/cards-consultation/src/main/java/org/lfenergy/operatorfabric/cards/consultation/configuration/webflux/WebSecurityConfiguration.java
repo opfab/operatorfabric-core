@@ -16,13 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authorization.AuthorizationContext;
 import reactor.core.publisher.Mono;
 
 
@@ -64,23 +61,6 @@ public class WebSecurityConfiguration {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeExchange()
-                .pathMatchers("/cards/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
-                .pathMatchers("/cardSubscription/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
-                .pathMatchers("/archives/**").access(WebSecurityConfiguration::currentUserHasAnyRole)
                 .anyExchange().authenticated();
-
     }
-
-    /**
-     * */
-    private static Mono<AuthorizationDecision> currentUserHasAnyRole(Mono<Authentication> authentication, AuthorizationContext context) {
-        return authentication
-                .filter(Authentication::isAuthenticated)
-                .flatMapIterable(Authentication::getAuthorities)
-                .hasElements()
-                .map(AuthorizationDecision::new)
-                .defaultIfEmpty(new AuthorizationDecision(false));
-    }
-
-
 }
