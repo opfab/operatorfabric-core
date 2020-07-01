@@ -53,7 +53,7 @@ public class CardConsultationData implements Card {
     private String publisher;
     private String processVersion;
     private String process;
-    private String processId;
+    private String processInstanceId;
     private String state;
     private I18n title;
     private I18n summary;

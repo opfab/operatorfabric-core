@@ -51,8 +51,8 @@ public class ThirdsController implements ThirdsApi {
     }
 
     @Override
-    public byte[] getCss(HttpServletRequest request, HttpServletResponse response, String processName, String cssFileName, String version) throws IOException {
-        Resource resource = service.fetchResource(processName, ResourceTypeEnum.CSS, version, cssFileName);
+    public byte[] getCss(HttpServletRequest request, HttpServletResponse response, String processId, String cssFileName, String version) throws IOException {
+        Resource resource = service.fetchResource(processId, ResourceTypeEnum.CSS, version, cssFileName);
         return loadResource(resource);
     }
 
@@ -71,17 +71,17 @@ public class ThirdsController implements ThirdsApi {
     }
 
     @Override
-    public byte[] getI18n(HttpServletRequest request, HttpServletResponse response, String processName, String locale, String version) throws IOException {
-        Resource resource = service.fetchResource(processName, ResourceTypeEnum.I18N, version, locale, null);
+    public byte[] getI18n(HttpServletRequest request, HttpServletResponse response, String processId, String locale, String version) throws IOException {
+        Resource resource = service.fetchResource(processId, ResourceTypeEnum.I18N, version, locale, null);
         return loadResource(resource);
     }
 
 
     @Override
-    public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String processName, String templateName, String locale, String version) throws
+    public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String processId, String templateName, String locale, String version) throws
             IOException {
         Resource resource;
-        resource = service.fetchResource(processName, ResourceTypeEnum.TEMPLATE, version, locale, templateName);
+        resource = service.fetchResource(processId, ResourceTypeEnum.TEMPLATE, version, locale, templateName);
         return loadResource(resource);
     }
 
@@ -137,9 +137,9 @@ public class ThirdsController implements ThirdsApi {
         service.clear();
     }
 
-    private ProcessStates getState(HttpServletRequest request, HttpServletResponse response, String processName, String stateName, String version) {
+    private ProcessStates getState(HttpServletRequest request, HttpServletResponse response, String processId, String stateName, String version) {
         ProcessStates state = null;
-        Process process = getProcess(request, response, processName, version);
+        Process process = getProcess(request, response, processId, version);
         if (process != null) {
             state = process.getStates().get(stateName);
             if (state == null) {
@@ -164,23 +164,23 @@ public class ThirdsController implements ThirdsApi {
     }
 
     @Override
-    public List<? extends Detail> getDetails(HttpServletRequest request, HttpServletResponse response, String processName, String stateName, String version) {
-        return getState(request, response, processName, stateName, version)
+    public List<? extends Detail> getDetails(HttpServletRequest request, HttpServletResponse response, String processId, String stateName, String version) {
+        return getState(request, response, processId, stateName, version)
                 .getDetails();
     }
 
     @Override
-    public Response getResponse(HttpServletRequest request, HttpServletResponse response, String processName,
+    public Response getResponse(HttpServletRequest request, HttpServletResponse response, String processId,
                                 String stateName, String version) {
-        return getState(request, response, processName, stateName, version)
+        return getState(request, response, processId, stateName, version)
                 .getResponse();
     }
 
 	@Override
-	public Void deleteBundle(HttpServletRequest request, HttpServletResponse response, String processName)
+	public Void deleteBundle(HttpServletRequest request, HttpServletResponse response, String processId)
 			throws Exception {
 		try {
-			service.delete(processName);
+			service.delete(processId);
 			// leaving response body empty
 			response.setStatus(204);
 			return null;
@@ -199,10 +199,10 @@ public class ThirdsController implements ThirdsApi {
 	}
 
 	@Override
-	public Void deleteBundleVersion(HttpServletRequest request, HttpServletResponse response, String processName,
+	public Void deleteBundleVersion(HttpServletRequest request, HttpServletResponse response, String processId,
 			String version) throws Exception {
 		try {
-			service.deleteVersion(processName,version);
+			service.deleteVersion(processId,version);
 			// leaving response body empty
 			response.setStatus(204);
 			return null;

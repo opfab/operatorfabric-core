@@ -167,6 +167,11 @@ publishers
 |process
 |process
 |This field is now required and should match the id field of the process (bundle) to use to render the card.
+
+
+|processId
+|processInstanceId
+|This field is just renamed , it represent an id of an instance of the process
 |===
 
 These changes impact both current cards from the feed and archived cards.

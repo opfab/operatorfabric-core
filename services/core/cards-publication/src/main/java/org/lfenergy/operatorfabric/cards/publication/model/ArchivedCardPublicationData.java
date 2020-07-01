@@ -47,7 +47,7 @@ public class ArchivedCardPublicationData implements Card {
     private String processVersion;
     private String process;
     @NotNull
-    private String processId;
+    private String processInstanceId;
     private String state;
     private I18n title;
     private I18n summary;
@@ -90,7 +90,7 @@ public class ArchivedCardPublicationData implements Card {
         this.processVersion = card.getProcessVersion();
         this.publishDate = card.getPublishDate();
         this.process = card.getProcess();
-        this.processId = card.getProcessId();
+        this.processInstanceId = card.getProcessInstanceId();
         this.state = card.getState();
         this.startDate = card.getStartDate();
         this.shardKey = card.getShardKey();

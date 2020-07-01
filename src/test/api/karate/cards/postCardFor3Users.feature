@@ -19,7 +19,7 @@ Scenario: Post Card
 				"publisher" : "api_test",
 				"processVersion" : "1",
 				"process"  :"api_test",
-				"processId" : "process3users",
+				"processInstanceId" : "process3users",
 				"state": "messageState",
 				"recipient": {
 							"type":"UNION",

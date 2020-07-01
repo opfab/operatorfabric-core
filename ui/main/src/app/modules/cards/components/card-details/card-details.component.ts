@@ -240,7 +240,7 @@ export class CardDetailsComponent implements OnInit {
                 publisher: this.user.entities[0],
                 processVersion: this.card.processVersion,
                 process: this.card.process,
-                processId: this.card.processId,
+                processInstanceId: this.card.processInstanceId,
                 state: this.responseData.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,

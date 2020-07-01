@@ -87,7 +87,7 @@ public class TestUtilities {
             , String[] userAcks) {    	
         CardConsultationData.CardConsultationDataBuilder cardBuilder = CardConsultationData.builder()
                 .process("PROCESS")
-                .processId("PROCESS" + processSuffix)
+                .processInstanceId("PROCESS" + processSuffix)
                 .publisher("PUBLISHER")
                 .processVersion("0")
                 .startDate(start)
@@ -152,7 +152,7 @@ public class TestUtilities {
     public static void prepareCard(CardConsultationData card, Instant publishDate) {
         card.setUid(UUID.randomUUID().toString());
         card.setPublishDate(publishDate);
-        card.setId(card.getPublisher() + "_" + card.getProcessId());
+        card.setId(card.getPublisher() + "_" + card.getProcessInstanceId());
         card.setShardKey(Math.toIntExact(card.getStartDate().toEpochMilli() % 24 * 1000));
     }
 
@@ -175,7 +175,7 @@ public class TestUtilities {
 
     public static ArchivedCardConsultationData createSimpleArchivedCard(String processSuffix, String publisher, Instant publication, Instant start, Instant end, String login, String[] groups, String[] entities) {
         ArchivedCardConsultationData.ArchivedCardConsultationDataBuilder archivedCardBuilder = ArchivedCardConsultationData.builder()
-                .processId("PROCESS" + processSuffix)
+                .processInstanceId("PROCESS" + processSuffix)
                 .process("PROCESS")
                 .publisher(publisher)
                 .processVersion("0")

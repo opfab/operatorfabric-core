@@ -44,7 +44,7 @@ public class LightCardConsultationData implements LightCard {
     private String publisher;
     private String processVersion;
     private String process;
-    private String processId;
+    private String processInstanceId;
     private String state;
     private Instant lttd;
     private Instant publishDate;
@@ -96,7 +96,7 @@ public class LightCardConsultationData implements LightCard {
                 .parentCardId(other.getParentCardId())
                 .process(other.getProcess())
                 .state(other.getState())
-                .processId(other.getProcessId())
+                .processInstanceId(other.getProcessInstanceId())
                 .lttd(other.getLttd())
                 .startDate(other.getStartDate())
                 .publishDate(other.getPublishDate())

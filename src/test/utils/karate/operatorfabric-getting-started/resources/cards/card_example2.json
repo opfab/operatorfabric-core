@@ -2,7 +2,7 @@
 	"publisher" : "message-publisher",
 	"processVersion" : "2",
 	"process"  :"message-publisher",
-	"processId" : "hello-world-2",
+	"processInstanceId" : "hello-world-2",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",

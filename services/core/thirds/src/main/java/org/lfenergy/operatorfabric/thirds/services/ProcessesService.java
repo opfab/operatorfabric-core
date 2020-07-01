@@ -153,15 +153,15 @@ public class ProcessesService implements ResourceLoaderAware {
     /**
      * Computes resource handle
      *
-     * @param processId Process id
+     * @param process Process 
      * @param type      resource type
      * @param name      resource name
      * @return resource handle
      * @throws FileNotFoundException if corresponding file does not exist
      */
-    public Resource fetchResource(String processId, ResourceTypeEnum type, String name) throws
+    public Resource fetchResource(String process, ResourceTypeEnum type, String name) throws
             FileNotFoundException {
-        return fetchResource(processId, type, null, null, name);
+        return fetchResource(process, type, null, null, name);
     }
 
     /**
@@ -258,16 +258,16 @@ public class ProcessesService implements ResourceLoaderAware {
     /**
      * Computes resource handle
      *
-     * @param processId Process id
+     * @param process Process id
      * @param type      resource type
      * @param version   process configuration version
      * @param name      resource name
      * @return resource handle
      * @throws FileNotFoundException if corresponding resource does not exist
      */
-    public Resource fetchResource(String processId, ResourceTypeEnum type, String version, String name) throws
+    public Resource fetchResource(String process, ResourceTypeEnum type, String version, String name) throws
             FileNotFoundException {
-        return fetchResource(processId, type, version, null, name);
+        return fetchResource(process, type, version, null, name);
     }
 
     @Override

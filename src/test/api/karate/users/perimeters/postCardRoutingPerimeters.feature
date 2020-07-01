@@ -39,7 +39,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "cardForGroup",
+	"processInstanceId" : "cardForGroup",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -61,7 +61,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "cardForEntityWithoutPerimeter",
+	"processInstanceId" : "cardForEntityWithoutPerimeter",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "USER"
@@ -83,7 +83,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"process1",
-	"processId" : "cardForEntityAndPerimeter",
+	"processInstanceId" : "cardForEntityAndPerimeter",
 	"state": "state1",
 	"recipient" : {
 				"type" : "USER"
@@ -105,7 +105,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "cardForEntityAndGroup",
+	"processInstanceId" : "cardForEntityAndGroup",
 	"state": "defaultState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -128,7 +128,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"process1",
-	"processId" : "cardForEntityAndOtherGroupAndPerimeter",
+	"processInstanceId" : "cardForEntityAndOtherGroupAndPerimeter",
 	"state": "state1",
 	"recipient" : {
 				"type" : "GROUP",

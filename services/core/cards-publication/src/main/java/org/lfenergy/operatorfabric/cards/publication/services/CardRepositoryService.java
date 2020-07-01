@@ -56,14 +56,14 @@ public class CardRepositoryService {
         this.template.remove(cardToDelete);
     }
 
-    public CardPublicationData findCardToDelete(String processId) {
+    public CardPublicationData findCardToDelete(String processInstanceId) {
         /**
          * Uses a projection instead the default 'findById' method. This projection
          * excludes data which can be unpredictably huge depending on publisher needs.
          */
         Query findCardByIdWithoutDataField = new Query();
         findCardByIdWithoutDataField.fields().exclude("data");
-        findCardByIdWithoutDataField.addCriteria(Criteria.where("Id").is(processId));
+        findCardByIdWithoutDataField.addCriteria(Criteria.where("Id").is(processInstanceId));
 
         return this.template.findOne(findCardByIdWithoutDataField, CardPublicationData.class);
     }

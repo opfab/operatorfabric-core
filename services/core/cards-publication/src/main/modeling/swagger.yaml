@@ -301,7 +301,7 @@ definitions:
       process:
         type: string
         description: ID of the associated process
-      processId:
+      processInstanceId:
         type: string
         description: ID of the associated process instance
       state:
@@ -393,7 +393,7 @@ definitions:
       - publisher
       - process
       - processVersion
-      - processId
+      - processInstanceId
       - severity
       - startDate
       - title
@@ -404,7 +404,7 @@ definitions:
       publisher: MyService
       processVersion: 0.0.1
       process: MyProcess
-      processId: MyProcess_001
+      processInstanceId: MyProcess_001
       state: started
       publishDate: 1546300800000
       deletionDate: 1546388200000
@@ -495,7 +495,7 @@ definitions:
       process:
         type: string
         description: associated process name
-      processId:
+      processInstanceId:
         type: string
         description: Unique process ID of the associated process instance
       state:
@@ -545,7 +545,7 @@ definitions:
       id: cardIdFromMyProcess
       publisher: MyService
       processVersion: 0.0.1
-      processId: MyProcess_001
+      processInstanceId: MyProcess_001
       lttd: 1546387230000
       startDate: 1546387200000
       endDate: 1546387250000
@@ -875,7 +875,7 @@ paths:
         name: id
         type: string
         required: true
-        description: "The id parameter is constructed as follows : {publisher}_{processId}"
+        description: "The id parameter is constructed as follows : {publisher}_{processInstanceId}"
     delete:
       operationId: deleteProcessCard
       tags:
@@ -908,7 +908,7 @@ paths:
         name: id
         type: string
         required: true
-        description: "The id parameter is constructed as follows : {publisher}_{processId}"
+        description: "The id parameter is constructed as follows : {publisher}_{processInstanceId}"
     post:
       operationId: postUserAcknowledgement
       tags:

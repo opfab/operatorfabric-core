@@ -212,7 +212,7 @@ public class ArchivedCardRepositoryShould {
                 .assertNext(card -> {
                     assertThat(card.getId()).isEqualTo(id);
                     assertThat(card.getPublisher()).isEqualTo("PUBLISHER");
-                    assertThat(card.getProcessId()).isEqualTo("PROCESS1");
+                    assertThat(card.getProcessInstanceId()).isEqualTo("PROCESS1");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                     assertThat(card.getEndDate()).isEqualTo(nowMinusOne);
                 })
@@ -237,10 +237,10 @@ public class ArchivedCardRepositoryShould {
 
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 
-        //Find cards with given publishers and a given processId
+        //Find cards with given publishers and a given processInstanceId
         queryParams.add("publisher",secondPublisher);
         queryParams.add("publisher",thirdPublisher);
-        queryParams.add("processId","PROCESS1");
+        queryParams.add("processInstanceId","PROCESS1");
 
         Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
@@ -250,9 +250,9 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalElements()).isEqualTo(2);
                     assertThat(page.getTotalPages()).isEqualTo(1);
                     assertThat(page.getContent().get(0).getPublisher()).isEqualTo(thirdPublisher);
-                    assertThat(page.getContent().get(0).getProcessId()).isEqualTo("PROCESS1");
+                    assertThat(page.getContent().get(0).getProcessInstanceId()).isEqualTo("PROCESS1");
                     assertThat(page.getContent().get(1).getPublisher()).isEqualTo(secondPublisher);
-                    assertThat(page.getContent().get(1).getProcessId()).isEqualTo("PROCESS1");
+                    assertThat(page.getContent().get(1).getProcessInstanceId()).isEqualTo("PROCESS1");
                 })
                 .expectComplete()
                 .verify();

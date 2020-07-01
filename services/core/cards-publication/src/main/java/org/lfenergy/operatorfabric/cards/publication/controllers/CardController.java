@@ -61,10 +61,10 @@ public class CardController {
 
     }
 
-    @DeleteMapping("/{processId}")
+    @DeleteMapping("/{processInstanceId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteCards(@PathVariable String processId){
-        cardProcessingService.deleteCard(processId);
+    public void deleteCards(@PathVariable String processInstanceId){
+        cardProcessingService.deleteCard(processInstanceId);
     }
     
     /**

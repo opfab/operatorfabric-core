@@ -91,7 +91,7 @@ describe('DetailComponent', () => {
         spyOn(processesService, 'queryProcess').and.returnValue(of(process));
         component.card = getOneRandomCard({
             process: 'process01',
-            processId: 'process01_01',
+            processInstanceId: 'process01_01',
             state: 'state01',
         });
         component.detail = component.card.details[0];
@@ -114,7 +114,7 @@ describe('DetailComponent', () => {
 
         component.card = getOneRandomCard({
             process: 'process01',
-            processId: 'process01_01',
+            processInstanceId: 'process01_01',
             processVersion: '1',
             state: 'state01',
         });

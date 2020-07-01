@@ -16,7 +16,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process1",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -68,7 +68,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process1",
+	"processInstanceId" : "process1",
 	"state": "messageState2",
 	"recipient" : {
 				"type" : "GROUP",

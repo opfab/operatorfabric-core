@@ -16,7 +16,7 @@ Feature: Cards
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process1",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -48,7 +48,7 @@ Feature: Cards
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process1",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -107,7 +107,7 @@ Feature: Cards
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card1",
+	"processInstanceId" : "process2card1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -123,7 +123,7 @@ Feature: Cards
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card2",
+	"processInstanceId" : "process2card2",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -155,7 +155,7 @@ Feature: Cards
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2CardsIncludingOneCardKO1",
+	"processInstanceId" : "process2CardsIncludingOneCardKO1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -171,7 +171,7 @@ Feature: Cards
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2CardsIncludingOneCardKO2",
+	"processInstanceId" : "process2CardsIncludingOneCardKO2",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -201,7 +201,7 @@ Feature: Cards
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process1",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -239,7 +239,7 @@ Scenario:  Post card with no recipient but entityRecipients
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2",
+	"processInstanceId" : "process2",
 	"state": "messageState",
 	"entityRecipients" : ["TSO1"],
 	"severity" : "INFORMATION",
@@ -265,7 +265,7 @@ Scenario:  Post card with parentCardId not correct
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process1",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -303,7 +303,7 @@ Scenario:  Post card with correct parentCardId
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process1",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -334,7 +334,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process1",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -370,7 +370,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"publisher" : "api_test",
 	"processVersion" :"1",
 	"process"  :"api_test",
-	"processId" : "processChild1",
+	"processInstanceId" : "processChild1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -391,7 +391,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "processChild2",
+	"processInstanceId" : "processChild2",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -439,7 +439,7 @@ Scenario: Push a card for a user with no group and no entity
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "processForUserWithNoGroupNoEntity",
+	"processInstanceId" : "processForUserWithNoGroupNoEntity",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "USER",

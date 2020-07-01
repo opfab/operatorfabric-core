@@ -14,7 +14,7 @@ Scenario: Step1
 			"publisher" : "api_test",
 			"processVersion" : "1",
 			"process"  :"api_test",
-			"processId" : "processProcess",
+			"processInstanceId" : "processProcess",
 			"state": "processState",
 			"recipient" : {
 						"type" : "GROUP",

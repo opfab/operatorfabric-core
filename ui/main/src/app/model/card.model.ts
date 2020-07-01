@@ -25,7 +25,7 @@ export class Card {
         readonly severity: Severity,        
         readonly hasBeenAcknowledged: boolean = false,
         readonly process?: string,
-        readonly processId?: string,
+        readonly processInstanceId?: string,
         readonly state?: string,
         readonly lttd?: number,
         readonly title?: I18n,

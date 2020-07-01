@@ -25,7 +25,7 @@ Feature: API - creatCardAction
             "publisher": "api_test_externalRecipient1",
             "processVersion": "1",
             "process": "processAction",
-            "processId": "processId1",
+            "processInstanceId": "processInstanceId1",
             "state": "response_full",
             "startDate": startDate,
             "severity": "ACTION",
