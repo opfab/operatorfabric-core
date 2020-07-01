@@ -14,10 +14,11 @@ import { selectIdentifier } from '@ofStore/selectors/authentication.selectors';
 import { switchMap } from 'rxjs/operators';
 import { Severity } from '@ofModel/light-card.model';
 import { CardService } from '@ofServices/card.service';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { User } from '@ofModel/user.model';
+import { UserWithPerimeters, RightsEnum, userRight } from '@ofModel/userWithPerimeters.model';
+
 import { id } from '@swimlane/ngx-charts';
 declare const ext_form: any;
 
@@ -40,6 +41,8 @@ export class CardDetailsComponent implements OnInit {
     card: Card;
     childCards: Card[];
     user: User;
+    hasPrivilegetoRespond: boolean = false;
+    userWithPerimeters: UserWithPerimeters;
     details: Detail[];
     acknowledgementAllowed: boolean;
     currentPath: any;
@@ -76,11 +79,17 @@ export class CardDetailsComponent implements OnInit {
     }
 
     get isActionEnabled(): boolean {
-        if (!this.card.entitiesAllowedToRespond)  {
+        if (!this.card.entitiesAllowedToRespond) {
             console.log("Card error : no field entitiesAllowedToRespond");
             return false;
         }
-        return this.card.entitiesAllowedToRespond.includes(this.user.entities[0]);
+
+        if (this.responseData != null && this.responseData != undefined) {
+            this.getPrivilegetoRespond(this.card, this.responseData);
+        }
+
+        return this.card.entitiesAllowedToRespond.includes(this.user.entities[0])
+            && this.hasPrivilegetoRespond;
     }
 
 
@@ -126,9 +135,10 @@ export class CardDetailsComponent implements OnInit {
                     } else {
                         this.details = [];
                     }
+                    this.messages.submitError.display = false;
                     this.thirdsService.queryProcess(this.card.process, this.card.processVersion)
-                    .pipe(takeUntil(this.unsubscribe$))
-                    .subscribe(third => {
+                        .pipe(takeUntil(this.unsubscribe$))
+                        .subscribe(third => {
                             if (third) {
                                 const state = third.extractState(this.card);
                                 if (state != null) {
@@ -137,11 +147,11 @@ export class CardDetailsComponent implements OnInit {
                                 }
                             }
                         },
-                        error => console.log(`something went wrong while trying to fetch process for ${this.card.process} with ${this.card.processVersion} version.`)
-                    );
+                            error => console.log(`something went wrong while trying to fetch process for ${this.card.process} with ${this.card.processVersion} version.`)
+                        );
                 }
             });
-        
+
         this.store.select(selectCurrentUrl)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(url => {
@@ -154,14 +164,44 @@ export class CardDetailsComponent implements OnInit {
         this.store.select(selectIdentifier)
             .pipe(takeUntil(this.unsubscribe$))
             .pipe(switchMap(userId => this.userService.askUserApplicationRegistered(userId))).subscribe(user => {
-                if(user){
+                if (user) {
                     this.user = user
                 }
             },
                 error => console.log(`something went wrong while trying to ask user application registered service with user id : ${id} `)
             );
 
+        this.userService.currentUserWithPerimeters()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(userWithPerimeters => {
+                if (userWithPerimeters) {
+                    this.userWithPerimeters = userWithPerimeters;
+                }
+            },
+                error => console.log(`something went wrong while trying to have currentUser with perimeters `)
+            );
+
     }
+
+
+
+    getPrivilegetoRespond(card: Card, responseData: Response) {
+
+        this.userWithPerimeters.computedPerimeters.forEach(perim => {
+            if ((perim.process === card.process) && (perim.state === responseData.state)
+                && (this.compareRightAction(perim.rights, RightsEnum.Write)
+                    || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+                this.hasPrivilegetoRespond = true;
+            }
+
+        })
+    }
+
+    compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
+        return (userRight(userRights) - userRight(rightsAction)) === 0;
+    }
+
+
     closeDetails() {
         this.store.dispatch(new ClearLightCardSelection());
         this.router.navigate(['/' + this.currentPath, 'cards']);
@@ -181,7 +221,7 @@ export class CardDetailsComponent implements OnInit {
         for (let [key, value] of [...new FormData(formElement)]) {
             (key in formData) ? formData[key].push(value) : formData[key] = [value];
         }
-        
+
         ext_form.validyForm(formData);
 
         if (ext_form.isValid) {
@@ -214,7 +254,7 @@ export class CardDetailsComponent implements OnInit {
                         if (rep['count'] == 0 && rep['message'].includes('Error')) {
                             this.messages.submitError.display = true;
                             console.error(rep);
-                        
+
                         } else {
                             console.log(rep);
                             this.messages.formError.display = false;
@@ -235,25 +275,25 @@ export class CardDetailsComponent implements OnInit {
         }
     }
 
-    acknowledge(){
-        if (this.card.hasBeenAcknowledged == true){
-            this.cardService.deleteUserAcnowledgement(this.card).subscribe(resp => { 
+    acknowledge() {
+        if (this.card.hasBeenAcknowledged == true) {
+            this.cardService.deleteUserAcnowledgement(this.card).subscribe(resp => {
                 if (resp.status == 200 || resp.status == 204) {
-                    var tmp = {... this.card};
+                    var tmp = { ... this.card };
                     tmp.hasBeenAcknowledged = false;
                     this.card = tmp;
                 } else {
-                    console.error("the remote acknowledgement endpoint returned an error status(%d)",resp.status);
+                    console.error("the remote acknowledgement endpoint returned an error status(%d)", resp.status);
                     this.messages.formError.display = true;
                     this.messages.formError.msg = RESPONSE_ACK_ERROR_MSG_I18N_KEY;
                 }
             });
         } else {
-            this.cardService.postUserAcnowledgement(this.card).subscribe(resp => { 
+            this.cardService.postUserAcnowledgement(this.card).subscribe(resp => {
                 if (resp.status == 201 || resp.status == 200) {
                     this.closeDetails();
                 } else {
-                    console.error("the remote acknowledgement endpoint returned an error status(%d)",resp.status);
+                    console.error("the remote acknowledgement endpoint returned an error status(%d)", resp.status);
                     this.messages.formError.display = true;
                     this.messages.formError.msg = RESPONSE_ACK_ERROR_MSG_I18N_KEY;
                 }
@@ -261,8 +301,8 @@ export class CardDetailsComponent implements OnInit {
         }
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
-      }
+    }
 }

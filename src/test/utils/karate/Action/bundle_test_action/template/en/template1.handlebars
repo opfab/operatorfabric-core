@@ -1,0 +1,55 @@
+<form id='opfab-form'>
+  <div class="form-row mt-3">
+    <div class="form-group col-md-4">
+      <label for="opfabOpinion">What do you think about OpFab ?</label>
+      <select id="opfabOpinion" name="opfabOpinion" class="form-control">
+        <option selected>It's very nice</option>
+        <option>It's nice</option>
+        <option>I don't like</option>
+      </select>
+    </div>
+  </div>
+</form>
+
+<div id="childs-div">
+
+  {{#if childCards.length}}
+
+    <p>Responses:</p>
+
+    {{#each childCards}}
+      <p>Entity {{this.publisher}} OpFab opinion: {{this.data.opfabOpinion.[0]}}</p>
+    {{/each}}
+  {{/if}}
+
+</div>
+
+<script>
+
+  function validateResponse(opfabOpinion) {
+    if (opfabOpinion == 'I don\'t like') {
+      ext_form.formErrorMsg = 'This answer is not acceptable';
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  ext_form.applyChildCards = () => {
+    let childsDiv = document.getElementById("childs-div");
+    childsDiv.innerHTML = '<p>Responses:</p>';
+    ext_form.childCards.forEach( (c, i) => {
+      let text = `<p>Entity ${c.publisher} OpFab opinion: ${c.data.opfabOpinion}</p>`;
+      childsDiv.innerHTML += text;
+    });
+  }
+
+  ext_form.validyForm = function(formData) {
+    if (validateResponse(formData.opfabOpinion[0])) {
+      this.isValid = true;
+    } else {
+      this.isValid = false;
+    }
+  }
+
+</script>
