@@ -71,7 +71,7 @@ class CardNotificationServiceShould {
         CardPublicationData newCard = CardPublicationData.builder()
            .publisher("PUBLISHER_1")
            .processVersion("0.0.1")
-           .processId("PROCESS_1")
+           .processInstanceId("PROCESS_1")
            .severity(SeverityEnum.ALARM)
            .startDate(start)
            .title(I18nPublicationData.builder().key("title").build())

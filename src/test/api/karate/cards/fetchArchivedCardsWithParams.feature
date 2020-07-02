@@ -14,7 +14,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card1",
+	"processInstanceId" : "process2card1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -32,7 +32,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card2",
+	"processInstanceId" : "process2card2",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -50,7 +50,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card3",
+	"processInstanceId" : "process2card3",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -68,7 +68,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card4",
+	"processInstanceId" : "process2card4",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -86,7 +86,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card5",
+	"processInstanceId" : "process2card5",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -104,7 +104,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card6",
+	"processInstanceId" : "process2card6",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -123,7 +123,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card7",
+	"processInstanceId" : "process2card7",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -141,7 +141,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card8",
+	"processInstanceId" : "process2card8",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -159,7 +159,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card9",
+	"processInstanceId" : "process2card9",
 	"endDate" : 1583733122000,
 	"state": "messageState",
 	"recipient" : {
@@ -178,7 +178,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card10",
+	"processInstanceId" : "process2card10",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -200,7 +200,7 @@ Feature: Archives
 	"publisher" : "api_test",
 	"processVersion" : "2",
 	"process"  :"api_test",
-	"processId" : "process10",
+	"processInstanceId" : "process10",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",

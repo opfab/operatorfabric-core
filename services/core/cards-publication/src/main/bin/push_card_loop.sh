@@ -124,7 +124,7 @@ plusOneHTen=$(($now + 4200000))
 plusTwoH=$(($now + 7200000))
 
 #$1 publisher
-#$2 processId
+#$2 processInstanceId
 #$3 startDate
 #$4 lttd
 #$5 endDate
@@ -146,7 +146,7 @@ piece_of_data(){
     piece+="  \"publisher\": \"$1\", "$'\n'
     piece+="  \"processVersion\": \"1\", "$'\n'
     piece+="  \"process\": \"$2\", "$'\n'
-    piece+="  \"processId\": \"$2$6\", "$'\n'
+    piece+="  \"processInstanceId\": \"$2$6\", "$'\n'
     piece+="  \"state\": \"firstState\", "$'\n'
 #    piece+="  \"startDate\": $3, "$'\n'
     piece+=$date

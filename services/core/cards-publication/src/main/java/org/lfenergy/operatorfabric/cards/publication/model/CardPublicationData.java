@@ -57,7 +57,7 @@ public class CardPublicationData implements Card {
     @NotNull
     private String process;
     @NotNull
-    private String processId;
+    private String processInstanceId;
     @NotNull
     private String state;
     @NotNull
@@ -120,7 +120,7 @@ public class CardPublicationData implements Card {
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
-        this.id = publisher + "_" + processId;
+        this.id = publisher + "_" + processInstanceId;
         if (null == this.uid)
         	this.uid = UUID.randomUUID().toString();
         this.setShardKey(Math.toIntExact(this.getStartDate().toEpochMilli() % 24 * 1000));
@@ -139,7 +139,7 @@ public class CardPublicationData implements Card {
                 .publisher(this.getPublisher())
                 .processVersion(this.getProcessVersion())
                 .process(this.getProcess())
-                .processId(this.getProcessId())
+                .processInstanceId(this.getProcessInstanceId())
                 .state(this.getState())
                 .lttd(this.getLttd())
                 .startDate(this.getStartDate())

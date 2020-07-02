@@ -104,7 +104,7 @@ class CardControllerShould extends CardControllerShouldBase {
 
     // removes cards
     @Test
-    void deleteSynchronously_An_ExistingCard_whenT_ItSProcessIdIsProvided() {
+    void deleteSynchronously_An_ExistingCard_whenT_ItSIdIsProvided() {
 
         EasyRandom randomGenerator = instantiateEasyRandom();
 
@@ -126,7 +126,7 @@ class CardControllerShould extends CardControllerShouldBase {
     }
 
     @Test
-    void keepTheCardRepository_Untouched_when_ARandomProcessId_isGiven() {
+    void keepTheCardRepository_Untouched_when_ARandomId_isGiven() {
 
         EasyRandom randomGenerator = instantiateEasyRandom();
 

@@ -147,7 +147,7 @@ class CardProcessServiceShould {
     private Flux<CardPublicationData> generateCards() {
         return Flux.just(
                 CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
-                        .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                        .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
@@ -158,7 +158,7 @@ class CardProcessServiceShould {
                         .state("state1")
                         .build(),
                 CardPublicationData.builder().publisher("PUBLISHER_2").process("PROCESS_2").processVersion("O")
-                        .processId("PROCESS_1").severity(SeverityEnum.INFORMATION)
+                        .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
@@ -167,7 +167,7 @@ class CardProcessServiceShould {
                         .state("state2")
                         .build(),
                 CardPublicationData.builder().publisher("PUBLISHER_2").process("PROCESS_2").processVersion("O")
-                        .processId("PROCESS_2").severity(SeverityEnum.COMPLIANT)
+                        .processInstanceId("PROCESS_2").severity(SeverityEnum.COMPLIANT)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
@@ -176,7 +176,7 @@ class CardProcessServiceShould {
                         .state("state3")
                         .build(),
                 CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
-                        .processId("PROCESS_2").severity(SeverityEnum.INFORMATION)
+                        .processInstanceId("PROCESS_2").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
@@ -185,7 +185,7 @@ class CardProcessServiceShould {
                         .state("state4")
                         .build(),
                 CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
-                        .processId("PROCESS_1").severity(SeverityEnum.INFORMATION)
+                        .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
@@ -196,7 +196,7 @@ class CardProcessServiceShould {
     }
 
     private CardPublicationData generateWrongCardData(String publisher, String process) {
-        return CardPublicationData.builder().publisher(publisher).processVersion("O").processId(process)
+        return CardPublicationData.builder().publisher(publisher).processVersion("O").processInstanceId(process)
                 .build();
     }
 
@@ -216,7 +216,7 @@ class CardProcessServiceShould {
         externalRecipients.add("api_test_externalRecipient1");
 
         CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
-                .processId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+                .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                 .process("PROCESS_CARD_USER")
                 .state("STATE1")
                 .title(I18nPublicationData.builder().key("title").build())
@@ -263,7 +263,7 @@ class CardProcessServiceShould {
         entityRecipients.add("TSO2");
         CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")
                 .process("PROCESS_1")
-                .processVersion("0.0.1").processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .processVersion("0.0.1").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .startDate(start).title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1")
                         .build())
@@ -306,8 +306,6 @@ class CardProcessServiceShould {
     }
 
     private boolean checkCardPublisherId(CardPublicationData card) {
-
-        CardPublicationData c = cardRepository.findByProcessId(card.getProcessId()).block();
         if (user.getEntities().get(0).equals(card.getPublisher())) {
             return true;
         } else {
@@ -327,7 +325,7 @@ class CardProcessServiceShould {
     }
 
     @Test
-    void deleteOneCard_with_it_s_ProcessId() {
+    void deleteOneCard_with_it_s_Id() {
 
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
@@ -343,17 +341,17 @@ class CardProcessServiceShould {
                 numberOfCards, block).isEqualTo(numberOfCards);
 
         CardPublicationData firstCard = cards.get(0);
-        String processId = firstCard.getId();
+        String id = firstCard.getId();
         ;
-        cardProcessingService.deleteCard(processId);
+        cardProcessingService.deleteCard(id);
 
         /* one card should be deleted(the first one) */
         int thereShouldBeOneCardLess = numberOfCards - 1;
 
         Assertions.assertThat(cardRepository.count().block())
                 .withFailMessage("The number of registered cards should be '%d' but is '%d' "
-                                + "when first added card is deleted(processId:'%s').",
-                        thereShouldBeOneCardLess, block, processId)
+                                + "when first added card is deleted(processInstanceId:'%s').",
+                        thereShouldBeOneCardLess, block, id)
                 .isEqualTo(thereShouldBeOneCardLess);
     }
 
@@ -401,7 +399,7 @@ class CardProcessServiceShould {
     }
 
     @Test
-    void deleteCards_Non_existentProcessId() {
+    void deleteCards_Non_existentId() {
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
@@ -415,8 +413,8 @@ class CardProcessServiceShould {
                 "The number of registered cards should be '%d' but is " + "'%d' actually",
                 numberOfCards, block).isEqualTo(numberOfCards);
 
-        final String processId = generateIdNotInCardRepository();
-        cardProcessingService.deleteCard(processId);
+        final String id = generateIdNotInCardRepository();
+        cardProcessingService.deleteCard(id);
 
         int expectedNumberOfCards = numberOfCards;/* no card should be deleted */
 
@@ -424,8 +422,8 @@ class CardProcessServiceShould {
         Assertions.assertThat(block)
                 .withFailMessage(
                         "The number of registered cards should remain '%d' but is '%d' "
-                                + "when an non-existing processId('%s') is used.",
-                        expectedNumberOfCards, block, processId)
+                                + "when an non-existing processInstanceId('%s') is used.",
+                        expectedNumberOfCards, block, id)
                 .isEqualTo(expectedNumberOfCards);
 
     }
@@ -458,7 +456,7 @@ class CardProcessServiceShould {
                 .withFailMessage("The number of registered cards should be '%d' but is '%d", 1, block)
                 .isEqualTo(1);
 
-        String computedCardId = publishedCard.getPublisher() + "_" + publishedCard.getProcessId();
+        String computedCardId = publishedCard.getPublisher() + "_" + publishedCard.getProcessInstanceId();
         CardPublicationData cardToDelete = cardRepositoryService.findCardToDelete(computedCardId);
 
         Assertions.assertThat(cardToDelete).isNotNull();
@@ -557,7 +555,7 @@ class CardProcessServiceShould {
                         .uid("uid_1")
                         .publisher("PUBLISHER_1").processVersion("O")
                         .process("PROCESS_1")
-                        .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                        .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
@@ -572,7 +570,7 @@ class CardProcessServiceShould {
                 .parentCardId("uid_1")
                 .publisher("PUBLISHER_1").processVersion("O")
                 .process("PROCESS_1")
-                .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
@@ -593,7 +591,7 @@ class CardProcessServiceShould {
                 .parentCardId("uid_1")
                 .publisher("PUBLISHER_1").processVersion("O")
                 .process("PROCESS_1")
-                .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
@@ -614,7 +612,7 @@ class CardProcessServiceShould {
         CardPublicationData card = CardPublicationData.builder()
                 .publisher("PUBLISHER_1").processVersion("O")
                 .process("PROCESS_1")
-                .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())

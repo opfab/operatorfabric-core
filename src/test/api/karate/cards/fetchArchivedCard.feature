@@ -15,7 +15,7 @@ Feature: fetchArchive
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process_archive_1",
+	"processInstanceId" : "process_archive_1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -79,7 +79,7 @@ Feature: fetchArchive
 	"publisher" : "api_test123",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process1",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",

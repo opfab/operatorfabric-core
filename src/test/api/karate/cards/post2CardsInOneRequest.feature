@@ -15,7 +15,7 @@ Scenario: Post two  Cards in one request
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card1",
+	"processInstanceId" : "process2card1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -31,7 +31,7 @@ Scenario: Post two  Cards in one request
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"api_test",
-	"processId" : "process2card2",
+	"processInstanceId" : "process2card2",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",

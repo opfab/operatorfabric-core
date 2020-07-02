@@ -37,7 +37,7 @@ Quite obviously it's the Third party which publish the card. This information is
 Refers the `version` of `publisher third` to use to render this card (i18n, title, summary and details).
 As through time, the presentation of a publisher card data changes, this changes are managed through `publisherVersion` in OperatorFabric. Each version is keep in the system in order to be able to display correctly old cards.
 
-==== Process Identifier (`processId`)
+==== Process Identifier (`processInstanceId`)
 
 It's the way to identify the process to which the card is associated. A card represent a state of a process.
 
@@ -213,7 +213,7 @@ card:
 {
 	"publisher":"TSO1",
 	"publisherVersion":"0.1",
-	"processId":"process-000",
+	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	...

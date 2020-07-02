@@ -46,7 +46,7 @@ public class LightCardPublicationData implements LightCard {
     private String processVersion;
     private String process;
     @NotNull
-    private String processId;
+    private String processInstanceId;
     private String state;
     private Instant lttd;
     private Instant publishDate;

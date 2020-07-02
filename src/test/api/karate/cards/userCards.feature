@@ -120,7 +120,7 @@ Feature: UserCards tests
 	"publisher" : "api_test_externalRecipient1",
 	"processVersion" : "1",
 	"process"  :"process_1",
-	"processId" : "process_1",
+	"processInstanceId" : "process_1",
 	"state": "state2",
 	"recipient" : {
 				"type" : "GROUP",
@@ -156,7 +156,7 @@ Feature: UserCards tests
 	"publisher" : "api_test_externalRecipient1",
 	"processVersion" : "1",
 	"process"  :"process_1",
-	"processId" : "process_1",
+	"processInstanceId" : "process_1",
 	"state": "state1",
 	"recipient" : {
 				"type" : "GROUP",
@@ -186,7 +186,7 @@ Feature: UserCards tests
 	"publisher" : "api_test_externalRecipient1",
 	"processVersion" : "1",
 	"process"  :"process_2",
-	"processId" : "process_2",
+	"processInstanceId" : "process_2",
 	"state": "state1",
 	"recipient" : {
 				"type" : "GROUP",

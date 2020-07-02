@@ -13,7 +13,7 @@ Feature: Cards
 {
 	"publisher" : "api_test",
 	"processVersion" : "1",
-	"processId" : "process1WithNoProcessField",
+	"processInstanceId" : "process1WithNoProcessField",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",

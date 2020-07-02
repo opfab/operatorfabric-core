@@ -206,9 +206,9 @@ public class CardProcessingService {
         });
     }
 
-    public void deleteCard(String processId) {
+    public void deleteCard(String processInstanceId) {
 
-        CardPublicationData cardToDelete = cardRepositoryService.findCardToDelete(processId);
+        CardPublicationData cardToDelete = cardRepositoryService.findCardToDelete(processInstanceId);
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
             cardRepositoryService.deleteCard(cardToDelete);

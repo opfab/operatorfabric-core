@@ -21,7 +21,7 @@ export class LightCard {
         readonly endDate: number,
         readonly severity: Severity,
         readonly hasBeenAcknowledged: boolean = false,
-        readonly processId?: string,
+        readonly processInstanceId?: string,
         readonly lttd?: number,
         readonly title?: I18n,
         readonly summary?: I18n,

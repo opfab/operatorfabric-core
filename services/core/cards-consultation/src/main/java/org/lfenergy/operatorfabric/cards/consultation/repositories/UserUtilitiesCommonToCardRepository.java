@@ -27,7 +27,7 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
     default Mono<T> findByIdWithUser(ReactiveMongoTemplate template, String id, CurrentUserWithPerimeters currentUserWithPerimeters, Class<T> clazz) {
         Query query = new Query();
-        List<Criteria> criteria = computeCriteriaToFindCardByProcessIdWithUser(id, currentUserWithPerimeters);
+        List<Criteria> criteria = computeCriteriaToFindCardByIdWithUser(id, currentUserWithPerimeters);
         if (!criteria.isEmpty())
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
 
@@ -40,9 +40,9 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         return template.find(query, clazz);
     }
 
-    default List<Criteria> computeCriteriaToFindCardByProcessIdWithUser(String processId, CurrentUserWithPerimeters currentUserWithPerimeters) {
+    default List<Criteria> computeCriteriaToFindCardByIdWithUser(String id, CurrentUserWithPerimeters currentUserWithPerimeters) {
         List<Criteria> criteria = new ArrayList<>();
-        criteria.add(Criteria.where("_id").is(processId));
+        criteria.add(Criteria.where("_id").is(id));
         criteria.addAll(computeCriteriaList4User(currentUserWithPerimeters));
         return criteria;
     }

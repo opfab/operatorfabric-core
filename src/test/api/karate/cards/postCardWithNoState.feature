@@ -14,7 +14,7 @@ Feature: Cards
 	"publisher" : "api_test",
 	"processVersion" : "1",
 	"process"  :"defaultProcess",
-	"processId" : "process1WithNoStateField",
+	"processInstanceId" : "process1WithNoStateField",
 	"recipient" : {
 				"type" : "GROUP",
 				"identity" : "TSO1"

@@ -200,7 +200,7 @@ export function getOneRandomCard(cardTemplate?:any): Card {
         cardTemplate.severity?cardTemplate.severity:getRandomSeverity(),
         false,
         cardTemplate.process?cardTemplate.process:'testProcess',
-        cardTemplate.processId?cardTemplate.processId:getRandomAlphanumericValue(3, 24),
+        cardTemplate.processInstanceId?cardTemplate.processInstanceId:getRandomAlphanumericValue(3, 24),
         cardTemplate.state?cardTemplate.state:getRandomAlphanumericValue(3, 24),
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),

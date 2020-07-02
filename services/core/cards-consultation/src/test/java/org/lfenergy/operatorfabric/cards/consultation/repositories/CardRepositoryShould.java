@@ -195,7 +195,7 @@ public class CardRepositoryShould {
     public void persistCard() {
         CardConsultationData card =
                 CardConsultationData.builder()
-                        .processId("PROCESS_ID")
+                        .processInstanceId("PROCESS_ID")
                         .process("PROCESS")
                         .publisher("PUBLISHER")
                         .processVersion("0")

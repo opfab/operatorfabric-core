@@ -60,7 +60,7 @@ export class CardComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(computedDate => this.dateToDisplay = computedDate);
 
-        this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processId}/states/${card.state}/actions`; //TODO OC-979 THis should be removed ?
+        this.actionsUrlPath = `/publisher/${card.publisher}/process/${card.processInstanceId}/states/${card.state}/actions`; //TODO OC-979 THis should be removed ?
     }
 
     computeDisplayedDates(config: string, lightCard: LightCard): string {

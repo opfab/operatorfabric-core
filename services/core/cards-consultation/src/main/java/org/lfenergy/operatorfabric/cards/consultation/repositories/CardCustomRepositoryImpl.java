@@ -34,8 +34,8 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         this.template = template;
     }
 
-    public Mono<CardConsultationData> findByIdWithUser(String processId, CurrentUserWithPerimeters currentUserWithPerimeters) {
-        return findByIdWithUser(template, processId, currentUserWithPerimeters, CardConsultationData.class);
+    public Mono<CardConsultationData> findByIdWithUser(String id, CurrentUserWithPerimeters currentUserWithPerimeters) {
+        return findByIdWithUser(template, id, currentUserWithPerimeters, CardConsultationData.class);
     }
 
     public Flux<CardConsultationData> findByParentCardId(String parentUid) {
