@@ -13,7 +13,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-#      - "15674:15674"
   keycloak:
     image: jboss/keycloak:6.0.1
     command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export
@@ -33,12 +32,10 @@ services:
     ports:
      - "2103:8080"
      - "4103:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
     volumes:
-      - "../certificates:/certificates_to_add"
+    - "../certificates:/certificates_to_add"
+    - "./users-docker.yml:/config/application.yml"
+    - "./common-docker.yml:/config/common-docker.yml"
   thirds:
     container_name: thirds
     image: "lfeoperatorfabric/of-thirds-business-service:SNAPSHOT"
@@ -48,13 +45,11 @@ services:
     ports:
      - "2100:8080"
      - "4100:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
     volumes:
      - "../certificates:/certificates_to_add"
      - "../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
+     - "./common-docker.yml:/config/common-docker.yml"
+     - "./thirds-docker.yml:/config/application-docker.yml"
   cards-publication:
     container_name: cards-publication
     image: "lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT"
@@ -64,12 +59,10 @@ services:
     ports:
      - "2102:8080"
      - "4102:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
     volumes:
       - "../certificates:/certificates_to_add"
+      - "./common-docker.yml:/config/common-docker.yml"
+      - "./cards-publication-docker.yml:/config/application-docker.yml"
   cards-consultation:
     container_name: cards-consultation
     image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
@@ -77,12 +70,10 @@ services:
     ports:
      - "2104:8080"
      - "4104:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
     volumes:
       - "../certificates:/certificates_to_add"
+      - "./common-docker.yml:/config/common-docker.yml"
+      - "./cards-consultation-docker.yml:/config/application-docker.yml"
   web-ui:
     image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
     ports:
