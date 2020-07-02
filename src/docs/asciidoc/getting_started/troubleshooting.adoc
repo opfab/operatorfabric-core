@@ -101,9 +101,9 @@ The previous server response is return for a request like:
 The bundle is lacking localized folder and doesn't contain the requested 
 localization.
 
-If you have access to the `card-publication` micro service source code you
+If you have access to the `thirds` micro service source code you
 should list the content of 
-`$CARDS_PUBLICATION_PROJECT/build/docker-volume/third-storage`
+`$THIRDS_PROJECT/build/docker-volume/third-storage`
 
 === Solution
 

@@ -6,17 +6,13 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 
+//TODO OC-979
+= Declaring a Process and its configuration
 
+The business configuration for processes is declared in the form of a bundle, as described below.
+Once this bundle fully created, it must be uploaded to the server through the Thirds service.
 
-= Declaring a Third Party Service
-
-This sections explains Third Party Service Configuration
-
-The third party service configuration is declared using a bundle which is described below.
-Once this bundle fully created, it must be uploaded to the server which will apply this configuration into current
-for further web UI calls.
-
-The way configuration is done is explained throughout examples before a more technical review of the configuration details.
+The way configuration is done is explained with examples before a more technical review of the configuration details.
 The following instructions describe tests to perform on OperatorFabric to understand how customization is working in it.
 The card data used here are sent automatically using a script as described
 ifdef::single-page-doc[<<card_sending_script, here>>]
@@ -26,11 +22,13 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/i
 == Requirements
 
 Those examples are played in an environment where an OperatorFabric instance (all micro-services) is running along
-a MongoDB Database and a RabbitMQ instances.
+a MongoDB Database and a RabbitMQ instance.
 
 == Bundle
 
-Third bundles customize the way third card details are displayed. Those `tar.gz` archives contain a descriptor file
+A bundle contains all the configuration regarding a given business process, describing for example the various steps
+of the process but also how the associated cards and card details should be displayed.
+Those `tar.gz` archives contain a descriptor file
 named `config.json`, eventually some `css files`, `i18n files` and `handlebars templates` to do so.
 
 For didactic purposes, in this section, the third name is `BUNDLE_TEST` (to match the parameters used by the script).
@@ -38,7 +36,7 @@ This bundle is localized for `en` and `fr`.
 
 As detailed in the `Third core service README` the bundle contains at least a metadata file called `config.json`,
 a `css` folder, an `i18n` folder and a `template` folder.
- All elements except the `config.json file` are optional.
+All elements except the `config.json file` are optional.
 
 The files of this example are organized as below:
 
@@ -59,78 +57,16 @@ bundle
         └── template2.handlebars
 ....
 
-To summarize, there are 5 directories and 8 files.
-
 === The config.json file
 
 It's a description file in `json` format. It lists the content of the bundle.
 
 *example*
 
-....
-{
-  "name": "BUNDLE_TEST",
-  "version": "1",
-  "csses": [
-    "bundleTest"
-  ],
-  "i18nLabelKey": "third-name-in-menu-bar",
-  "menuEntries": [
-    {
-      "id": "uid test 0",
-      "url": "https://opfab.github.io/whatisopfab/",
-      "label": "first-menu-entry"
-    },
-    {
-      "id": "uid test 0",
-      "url": "https://www.lfenergy.org/",
-      "label": "b-menu-entry"
-    },
-    {
-      "id": "uid test 1",
-      "url": "https://github.com/opfab/opfab.github.io",
-      "label": "the-other-menu-entry"
-    }
-  ],
-  "processes" : {
-      "simpleProcess" : {
-        "start" : {
-          "details" : [ {
-            "title" : {
-              "key" : "start.first.title"
-            },
-            "titleStyle" : "startTitle text-danger",
-            "templateName" : "template1"
-          } ],
-          "actions" : {
-            "finish" : {
-              "type" : "URL",
-              "url": "http://somewher.org/simpleProcess/finish",
-              "lockAction" : true,
-              "called" : false,
-              "updateStateBeforeAction" : false,
-              "hidden" : true,
-              "buttonStyle" : "buttonClass",
-              "label" : {
-                "key" : "my.card.my.action.label"
-              },
-            }
-          }
-        },
-        "end" : {
-          "details" : [ {
-            "title" : {
-              "key" : "end.first.title"
-            },
-            "titleStyle" : "startTitle text-info",
-            "templateName" : "template2",
-            "styles" : [ "bundleTest.css" ]
-          } ]
-        }
-      }
-    }
-}
-....
+[source,JSON]
+----
+include::../../../../services/core/thirds/src/main/docker/volume/thirds-storage/TEST/config.json[]
+----
 
 - name: third name;
 - version: enable the correct display, even the old ones as all versions are stored by the server. Your *card* has a version
@@ -156,11 +92,14 @@ for details.
 
 === i18n
 
-There are two ways of i18n for third service. The first one is done using l10n files which are located in the `i18n` folder, the second one throughout l10n name folder nested in the `template` folder.
+There are two ways of i18n for third service. The first one is done using l10n files which are located in the `i18n`
+folder, the second one throughout l10n name folder nested in the `template` folder.
 
 The `i18n` folder contains one json file per l10n.
 
-These localisation is used for integration of the third service into OperatorFabric, i.e. the label displayed for the third service, the label displayed for each tab of the details of the third card, the label of the actions in cards if any or the additional third entries in OperatorFabric(more on that at the chapter ????).
+These localisation is used for integration of the third service into OperatorFabric, i.e. the label displayed for the
+third service, the label displayed for each tab of the details of the third card, the label of the actions in cards if
+any or the additional third entries in OperatorFabric(more on that at the chapter ????).
 
 ====  Template folder
 
@@ -175,15 +114,19 @@ The choice of i18n keys is left to the Third service maintainer. The keys are re
 * `config.json` file:
 	** `i18nLabelKey`: key used for the label for the third service displayed in the main menu bar of OperatorFabric;
 	** `label` of `menu entry declaration`: key used to l10n the `menu entries` declared by the Third party in the bundle;
-* `card data`: values of `card title` and `card summary` refer to `i18n keys` as well as `key attribute` in the `card detail` section of the card data.
+* `card data`: values of `card title` and `card summary` refer to `i18n keys` as well as `key attribute` in the
+`card detail` section of the card data.
 
 *example*
 
-So in this example the third service is named `Bundle Test` with `BUNDLE_TEST` technical name. The bundle provide an english and a french l10n.
+So in this example the third service is named `Bundle Test` with `BUNDLE_TEST` technical name. The bundle provide an
+english and a french l10n.
 
-The example bundle defined an new menu entry given access to 3 entries. The title and the summary have to be l10n, so needs to be the 2 tabs titles.
+The example bundle defined an new menu entry given access to 3 entries. The title and the summary have to be l10n,
+so needs to be the 2 tabs titles.
 
-The name of the third service as displayed in the main menu bar of OperatorFabric. It will have the key `"third-name-in-menu-bar"`. The english l10n will be `Bundle Test` and the french one will be `Bundle de test`.
+The name of the third service as displayed in the main menu bar of OperatorFabric. It will have the key
+`"third-name-in-menu-bar"`. The english l10n will be `Bundle Test` and the french one will be `Bundle de test`.
 
 A name for the three entries in the third entry menu. Their keys will be in order `"first-menu-entry"`, `"b-menu-entry"` and `"the-other-menu-entry"` for an english l10n as `Entry One`, `Entry Two` and `Entry Three` and in french as `Entrée une`, `Entrée deux` and `Entrée trois`.
 
@@ -339,7 +282,7 @@ Regarding the card detail customization, all the examples in this section will b
 
 [[card_sending_script]]
 ....
-$OPERATOR_FABRIC_HOME/services/core/cards-publication/src/main/bin/push_card_loop.sh --publisher BUNDLE_TEST --process tests
+$OPERATOR_FABRIC_HOME/services/core/cards-publication/src/main/bin/push_card_loop.sh
 ....
 
 where:

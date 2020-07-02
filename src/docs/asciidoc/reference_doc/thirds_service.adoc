@@ -6,9 +6,8 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 
-
-
-= Thirds service
+//TODO OC-979
+= Thirds Service
 
 As stated above, third-party applications (or "thirds" for short) interact with OperatorFabric by sending cards.
 The Thirds service allows them to tell OperatorFabric
@@ -20,6 +19,6 @@ The Thirds service allows them to tell OperatorFabric
 In addition, it lets third-party applications define additional menu entries for the navbar (for example linking back
 to the third-party application) that can be integrated either as iframe or external links.
 
-include::publisher_definition.adoc[leveloffset=+1]
+include::process_definition.adoc[leveloffset=+1]
 
 include::bundle_technical_overview.adoc[leveloffset=+1]
