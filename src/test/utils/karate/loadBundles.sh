@@ -1,12 +1,12 @@
 #/bin/sh
 
 echo "Zip all bundles"
-cd thirds/resources
+cd businessconfig/resources
 ./packageBundles.sh
 cd ../..
 
 echo "Launch Karate test"
 java -jar karate.jar                           \
-      thirds/postBundleTestAction.feature      \
-      thirds/postBundleApiTest.feature         \
+      businessconfig/postBundleTestAction.feature      \
+      businessconfig/postBundleApiTest.feature         \
 

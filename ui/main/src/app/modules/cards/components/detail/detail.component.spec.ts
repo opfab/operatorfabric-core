@@ -20,7 +20,7 @@ import {
     getRandomIndex,
     AuthenticationImportHelperForSpecs
 } from '@tests/helpers';
-import {ThirdsI18nLoaderFactory, ProcessesService} from '../../../../services/processes.service';
+import {BusinessconfigI18nLoaderFactory, ProcessesService} from '../../../../services/processes.service';
 import {ServicesModule} from '@ofServices/services.module';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {StoreModule} from '@ngrx/store';
@@ -53,7 +53,7 @@ describe('DetailComponent', () => {
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
-                        useFactory: ThirdsI18nLoaderFactory,
+                        useFactory: BusinessconfigI18nLoaderFactory,
                         deps: [ProcessesService]
                     },
                     useDefaultLang: false

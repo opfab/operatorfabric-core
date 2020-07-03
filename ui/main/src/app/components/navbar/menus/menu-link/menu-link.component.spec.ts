@@ -97,7 +97,7 @@ describe('MenuLinkComponent', () => {
     // Tests on text link
     expect(rootElement.queryAll(By.css('div > a.text-link')).length).toBe(1);
     expect(rootElement.queryAll(By.css('div > a.text-link'))[0].nativeElement.attributes['href'].value)
-        .toEqual(encodeURI("/thirdparty/"+component.menu.id+"/"+component.menu.version+"/"+component.menuEntry.id));
+        .toEqual(encodeURI("/businessconfigparty/"+component.menu.id+"/"+component.menu.version+"/"+component.menuEntry.id));
     expect(rootElement.queryAll(By.css('div > a.text-link'))[0].nativeElement.attributes['target']).toBeUndefined();
   }
 
@@ -113,8 +113,8 @@ describe('MenuLinkComponent', () => {
     expect(rootElement.queryAll(By.css('div > a.icon-link'))[0].nativeElement.attributes['routerLink']).toBeUndefined();
   }
 
-  function defineFakeState(thirdmenusType : string): void {
-    if(!thirdmenusType) {
+  function defineFakeState(businessconfigmenusType : string): void {
+    if(!businessconfigmenusType) {
       spyOn(store, 'select').and.callThrough();
     } else {
       spyOn(store, 'select').and.callFake(buildFn => {
@@ -125,8 +125,8 @@ describe('MenuLinkComponent', () => {
                 config: {
                   navbar:
                       {
-                        thirdmenus: {
-                          type: thirdmenusType
+                        businessconfigmenus: {
+                          type: businessconfigmenusType
                         }
                       }
                 }

@@ -36,9 +36,9 @@ services:
     - "../certificates:/certificates_to_add"
     - "./users-docker.yml:/config/application.yml"
     - "./common-docker.yml:/config/common-docker.yml"
-  thirds:
-    container_name: thirds
-    image: "lfeoperatorfabric/of-thirds-business-service:SNAPSHOT"
+  businessconfig:
+    container_name: businessconfig
+    image: "lfeoperatorfabric/of-businessconfig-business-service:SNAPSHOT"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -47,9 +47,9 @@ services:
      - "4100:5005"
     volumes:
      - "../certificates:/certificates_to_add"
-     - "../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
+     - "../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage:/businessconfig-storage"
      - "./common-docker.yml:/config/common-docker.yml"
-     - "./thirds-docker.yml:/config/application-docker.yml"
+     - "./businessconfig-docker.yml:/config/application-docker.yml"
   cards-publication:
     container_name: cards-publication
     image: "lfeoperatorfabric/of-cards-publication-business-service:SNAPSHOT"
@@ -80,7 +80,7 @@ services:
     - "2002:80"
     depends_on:
       - users
-      - thirds
+      - businessconfig
       - cards-consultation
     volumes:
       - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"

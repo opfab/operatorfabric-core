@@ -28,7 +28,7 @@ Work in progress
 
 == Technical overview
 
-include::thirds_service.adoc[leveloffset=+1]
+include::businessconfig_service.adoc[leveloffset=+1]
 
 include::users_service.adoc[leveloffset=+1]
 

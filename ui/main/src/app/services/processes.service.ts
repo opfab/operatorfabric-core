@@ -90,7 +90,7 @@ export class ProcessesService {
         });
     }
 
-    computeThirdCssUrl(publisher: string, styleName: string, version: string) {
+    computeBusinessconfigCssUrl(publisher: string, styleName: string, version: string) {
         // manage url character encoding
         const resourceUrl = this.urlCleaner.encodeValue(`${this.processesUrl}/${publisher}/css/${styleName}`);
         const versionParam = new HttpParams().set('version', version);
@@ -154,9 +154,9 @@ export class ProcessesService {
     }
 }
 
-export class ThirdsI18nLoader implements TranslateLoader {
+export class BusinessconfigI18nLoader implements TranslateLoader {
 
-    constructor(thirdsService: ProcessesService) {
+    constructor(businessconfigService: ProcessesService) {
     }
 
     getTranslation(lang: string): Observable<any> {
@@ -165,6 +165,6 @@ export class ThirdsI18nLoader implements TranslateLoader {
 
 }
 
-export function ThirdsI18nLoaderFactory(thirdsService: ProcessesService): TranslateLoader {
-    return new ThirdsI18nLoader(thirdsService);
+export function BusinessconfigI18nLoaderFactory(businessconfigService: ProcessesService): TranslateLoader {
+    return new BusinessconfigI18nLoader(businessconfigService);
 }

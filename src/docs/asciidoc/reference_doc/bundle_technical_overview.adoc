@@ -10,8 +10,8 @@
 = Bundle Technical overview
 
 See
-ifdef::single-page-doc[link:../api/thirds/index.html[the model section]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/thirds/index.html[the model section]]
+ifdef::single-page-doc[link:../api/businessconfig/index.html[the model section]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html[the model section]]
 (at the bottom) of the swagger generated documentation for data structure.
 
 [[resource-serving]]
@@ -29,8 +29,8 @@ selector
 
 Internationalization (i18n) files are json file (JavaScript Object Notation).
 One file must be defined by module supported language. See
-ifdef::single-page-doc[link:../api/thirds/index.html[the model section]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/thirds/index.html[the model section]]
+ifdef::single-page-doc[link:../api/businessconfig/index.html[the model section]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html[the model section]]
 (at the bottom) of the swagger generated documentation for data structure.
 
 Sample json i18n file
@@ -397,5 +397,5 @@ outputs :
 
 == Charts 
 
-The library https://www.chartjs.org/[charts.js] is integrate in operator fabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/thirds/resources/bundle_api_test[src/test/utils/karate/thirds/resources/bundle_test_api]).
+The library https://www.chartjs.org/[charts.js] is integrate in operator fabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_api_test[src/test/utils/karate/businessconfig/resources/bundle_test_api]).
 

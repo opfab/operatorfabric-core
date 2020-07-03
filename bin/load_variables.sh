@@ -14,16 +14,16 @@ export OF_TOOLS=$OF_HOME/tools
 export OF_COMPONENTS=( "$OF_TOOLS/swagger-spring-generators" "$OF_TOOLS/generic/utilities" "$OF_TOOLS/generic/test-utilities"  )
 OF_COMPONENTS+=( "$OF_TOOLS/spring/spring-utilities" "$OF_TOOLS/spring/spring-mongo-utilities" "$OF_TOOLS/spring/spring-oauth2-utilities" )
 OF_COMPONENTS+=( "$OF_CLIENT/cards" "$OF_CLIENT/users")
-OF_COMPONENTS+=("$OF_CORE/thirds" "$OF_CORE/cards-publication" "$OF_CORE/cards-consultation" "$OF_CORE/users")
+OF_COMPONENTS+=("$OF_CORE/businessconfig" "$OF_CORE/cards-publication" "$OF_CORE/cards-consultation" "$OF_CORE/users")
 
 export OF_REL_COMPONENTS=( "tools/swagger-spring-generators" "tools/generic/utilities" "tools/generic/test-utilities" )
 OF_REL_COMPONENTS+=( "tools/spring/spring-utilities" "tools/spring/spring-mongo-utilities" "tools/spring/spring-oauth2-utilities" )
-OF_REL_COMPONENTS+=( "client/cards" "client/users" "client/thirds")
-OF_REL_COMPONENTS+=("services/core/thirds" "services/core/cards-publication" "services/core/cards-consultation" "services/core/users" )
+OF_REL_COMPONENTS+=( "client/cards" "client/users" "client/businessconfig")
+OF_REL_COMPONENTS+=("services/core/businessconfig" "services/core/cards-publication" "services/core/cards-consultation" "services/core/users" )
 
 export OF_VERSION=$(cat "$OF_HOME/VERSION")
 
-export OF_CLIENT_REL_COMPONENTS=( "cards" "users" "thirds")
+export OF_CLIENT_REL_COMPONENTS=( "cards" "users" "businessconfig")
 
 echo "OPERATORFABRIC ENVIRONMENT VARIABLES"
 

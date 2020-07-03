@@ -1,3 +1,0 @@
-operatorfabric.thirds:
-  storage:
-    path: "./build/test-data/not-exist"

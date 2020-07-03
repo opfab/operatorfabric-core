@@ -13,7 +13,7 @@ Feature: uploadBundleAction
   Scenario: Post Bundle for testing the action
 
     # Push bundle
-    Given url opfabUrl + '/thirds/processes'
+    Given url opfabUrl + '/businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
     And multipart field file = read('bundle_test_action.tar.gz')
     When method post

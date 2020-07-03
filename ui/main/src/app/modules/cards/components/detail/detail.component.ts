@@ -129,7 +129,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy {
             const process = this.card.process;
             const processVersion = this.card.processVersion;
             this.detail.styles.forEach(style => {
-                const cssUrl = this.processesService.computeThirdCssUrl(process, style, processVersion);
+                const cssUrl = this.processesService.computeBusinessconfigCssUrl(process, style, processVersion);
                 // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
                 this.hrefsOfCssLink.push(safeCssUrl);

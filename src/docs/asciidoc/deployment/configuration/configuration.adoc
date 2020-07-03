@@ -46,7 +46,7 @@ Each business service has a specific yaml configuration file. It should a least 
 ----
 spring:
   application:
-    name: thirds
+    name: businessconfig
 ----
 
 It can contain references to other services as well, for example :
@@ -60,14 +60,14 @@ users:
 Examples of configuration of each business service can be found either under config/docker or config/dev depending on
 the type of deployment you're looking for.
 
-==== Thirds service
+==== Businessconfig service
 
-The third service has this specific property : 
+The businessconfig service has this specific property : 
 
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.thirds.storage.path|null|no|File path to data storage folder
+|operatorfabric.businessconfig.storage.path|null|no|File path to data storage folder
 
 |===
 

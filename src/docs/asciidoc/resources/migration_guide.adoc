@@ -11,15 +11,15 @@
 
 === Motivation for the change
 
-The initial situation was to have a `Thirds` concept that was meant to represent third-party applications that publish
+The initial situation was to have a `Businessconfig` concept that was meant to represent businessconfig-party applications that publish
 content (cards) to OperatorFabric.
-As such, a Third was both the sender of the message and the unit of configuration for resources for card rendering.
+As such, a Businessconfig was both the sender of the message and the unit of configuration for resources for card rendering.
 
 [NOTE]
 Because of that mix of concerns, naming was not consistent across the different services in the backend and frontend as
 this object could be referred to using the following terms:
-* Third
-* ThirdParty
+* Businessconfig
+* BusinessconfigParty
 * Bundle
 * Publisher
 
@@ -32,21 +32,21 @@ details from?") to its publisher ("Who/What emitted this card and who/where shou
 To do this, we decided that the `publisher` of a card would now have the sole meaning of `emitter`, and that the link
 to the configuration bundle to use to render a card would now be based on its `process` field.
 
-==== On the Thirds model
+==== On the Businessconfig model
 
-We used to have a `Third` object which had an array of `Process` objects as one of its properties.
-Now, the `Process` object replaces the `Third` object and this new object combines the properties of the old `Third`
+We used to have a `Businessconfig` object which had an array of `Process` objects as one of its properties.
+Now, the `Process` object replaces the `Businessconfig` object and this new object combines the properties of the old `Businessconfig`
 and `Process` objects (menuEntries, states, etc.).
 
 [IMPORTANT]
 In particular, this means that while in the past one bundle could "contain" several processes, now there can be only
 one process by bundle.
 
-The `Third` object used to have a `name` property that was actually its unique identifier (used to retrieve it through
+The `Businessconfig` object used to have a `name` property that was actually its unique identifier (used to retrieve it through
 the API for example).
 It also had a `i18nLabelKey` property that was meant to be the i18n key to determine the display name of the
-corresponding third, but so far it was only used to determine the display name of the associated menu in the navbar in
-case there where several menu entries associated with this third.
+corresponding businessconfig, but so far it was only used to determine the display name of the associated menu in the navbar in
+case there where several menu entries associated with this businessconfig.
 
 Below is a summary of the changes to the `config.json` file that all this entails:
 
@@ -97,7 +97,7 @@ Here is an example of a simple config.json file:
     {"id": "uid test 0","url": "https://opfab.github.io/","label": "menu.first"},
     {"id": "uid test 1","url": "https://www.la-rache.com","label": "menu.second"}
   ],
-  "i18nLabelKey": "third.label",
+  "i18nLabelKey": "businessconfig.label",
   "processes": {
     "process": {
       "states": {
@@ -190,7 +190,7 @@ The id of the card is now build as process.processInstanceId an not anymore publ
 
 == Changes to the endpoints
 
-The `/thirds` endpoint becomes `thirds/processes` in preparation of OC-978.
+The `/businessconfig` endpoint becomes `businessconfig/processes` in preparation of OC-978.
 
 === Migration guide
 
@@ -198,7 +198,7 @@ This section outlines the necessary steps to migrate existing data.
 
 [IMPORTANT]
 You need to perform these steps before starting up the OperatorFabric instance because starting up services with the new
-version while there are still "old" bundles in the thirds storage will cause the thirds service to crash.
+version while there are still "old" bundles in the businessconfig storage will cause the businessconfig service to crash.
 
 . Backup your existing bundles and existing Mongo data.
 //TODO Add details?

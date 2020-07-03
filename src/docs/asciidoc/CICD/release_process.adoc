@@ -85,7 +85,7 @@ The following files have been updated:
  M config/dev/docker-compose.yml
  M config/docker/docker-compose.yml
  M services/core/cards-publication/src/main/modeling/swagger.yaml
- M services/core/thirds/src/main/modeling/swagger.yaml
+ M services/core/businessconfig/src/main/modeling/swagger.yaml
  M services/core/users/src/main/modeling/swagger.yaml
 ----
 +

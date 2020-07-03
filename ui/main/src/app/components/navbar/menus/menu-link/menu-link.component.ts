@@ -31,7 +31,7 @@ export class MenuLinkComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.select(buildConfigSelector('navbar.thirdmenus.type', 'BOTH'))
+    this.store.select(buildConfigSelector('navbar.businessconfigmenus.type', 'BOTH'))
         .subscribe(v=> {
           if(v == 'TAB') {
             this.menusOpenInTabs = true;
@@ -39,7 +39,7 @@ export class MenuLinkComponent implements OnInit {
             this.menusOpenInIframes = true;
           } else {
             if (v != 'BOTH') {
-              console.log("MenuLinkComponent - Property navbar.thirdmenus.type has an unexpected value: "+v+". Default (BOTH) will be applied.")
+              console.log("MenuLinkComponent - Property navbar.businessconfigmenus.type has an unexpected value: "+v+". Default (BOTH) will be applied.")
             }
             this.menusOpenInBoth = true;
           }

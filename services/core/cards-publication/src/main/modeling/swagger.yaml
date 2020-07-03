@@ -203,12 +203,12 @@ definitions:
         $ref: '#/definitions/TitlePositionEnum'
       templateName:
         description: >-
-          template unique name as defined by Third Party Bundle in Third Party
+          template unique name as defined by Businessconfig Party Bundle in Businessconfig Party
           Service
         type: string
       styles:
         description: >-
-          css files names to load as defined by Third Party Bundle in Third
+          css files names to load as defined by Businessconfig Party Bundle in Businessconfig
           Party Service
         type: array
         items:

@@ -24,11 +24,11 @@ the used ports are:
 
 |89 |KeyCloak |89 |KeyCloak api port
 |2002 |web-ui |8080 | Web ui and gateway  (Nginx server)
-|2100 |thirds |8080 |Third party management service http (REST)
+|2100 |businessconfig |8080 |Businessconfig party management service http (REST)
 |2102 |cards-publication |8080 |Cards publication service http (REST)
 |2103 |users |8080 |Users management service http (REST)
 |2104 |cards-consultation |8080 |Cards consultation service http (REST)
-|4100 |thirds |5005 |java debug port
+|4100 |businessconfig |5005 |java debug port
 |4102 |cards-publication |5005 |java debug port
 |4103 |users |5005 |java debug port
 |4104 |cards-consultation |5005 |java debug port

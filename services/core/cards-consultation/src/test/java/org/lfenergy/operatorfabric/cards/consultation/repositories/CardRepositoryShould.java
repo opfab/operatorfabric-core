@@ -107,7 +107,7 @@ public class CardRepositoryShould {
         persistCard(createSimpleCard(1, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, null));
         persistCard(createSimpleCard(processNo++, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, null));
         //create later published cards in future
-        // this one overrides third
+        // this one overrides businessconfig
         persistCard(createSimpleCard(3, nowPlusOne, nowPlusOne, nowPlusTwo, LOGIN, new String[]{"rte","operator"}, null));
         persistCard(createSimpleCard(processNo++, nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN, new String[]{"rte","operator"}, null));
     }

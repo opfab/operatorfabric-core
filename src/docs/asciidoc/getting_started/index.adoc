@@ -468,9 +468,9 @@ To view the card in the time line, you need to set times in the card using timeS
 ----
 
 For this example, we use a new publisher called "scheduledMaintenance-publisher". You won't need to post the
-corresponding bundle to the thirds service as it has been loaded in advance to be available out of the box (only for the
+corresponding bundle to the businessconfig service as it has been loaded in advance to be available out of the box (only for the
 getting started). If you want to take a look at its content you can find it under
-server/thirds-storage/scheduledMaintenance-publisher/1.
+server/businessconfig-storage/scheduledMaintenance-publisher/1.
 
 Before sending the provided card provided, you need to set the good time values as
 link:https://en.wikipedia.org/wiki/Epoch_(computing)[epoch] (ms) in the json. For each value you set, you will have a

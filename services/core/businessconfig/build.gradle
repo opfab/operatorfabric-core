@@ -1,0 +1,86 @@
+dependencies {
+    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
+    swaggerUI generator.swaggerUI
+    compile project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
+    compile  cloud.starterBus, cloud.ribbon
+    compile boot.starterAop
+    compile 'com.google.guava:guava:19.0'
+    compileOnly boot.annotationConfiguration
+    annotationProcessor boot.annotationConfiguration
+
+    compile boot.starterWeb, boot.starterJetty
+    compile project(':client:businessconfig-client-data')
+    compile project(':tools:spring:spring-oauth2-utilities')
+    testCompile project(':tools:spring:spring-test-utilities')
+}
+
+bootJar {
+    manifest {
+        attributes("Created-By"             : "Gradle ${gradle.gradleVersion}",
+                   "Specification-Title"    : "OperatorFabric Businessconfig Parties Manager",
+                   "Implementation-Title"   : "OperatorFabric Businessconfig Parties Manager",
+                   "Implementation-Version" : operatorfabric.version,
+                   "Specification-Version"  : operatorfabric.version
+        )
+    }
+}
+
+
+/////// CUSTOM TASKS
+// Test data tasks >>>>>
+task compressBundle1Data(type: Exec){
+    description 'generate tar.gz businessconfig party configuration data for tests in build/test-data'
+    workingDir "$project.projectDir/src/test/data/bundles/second/2.0/"
+    executable "bash"
+    args "-c", "tar -czf $project.projectDir/build/test-data/bundles/second-2.0.tar.gz *"
+}
+task compressBundle2Data(type: Exec){
+    description 'generate tar.gz businessconfig party configuration data for tests in build/test-data'
+    workingDir "$project.projectDir/src/test/data/bundles/second/2.1/"
+    executable "bash"
+    args "-c", "tar -czf $project.projectDir/build/test-data/bundles/second-2.1.tar.gz *"
+}
+
+task createDevData(type: Copy){
+    description 'prepare data in build/test-data for running bootRun task during development'
+    from 'src/main/docker/volume/businessconfig-storage'
+    into 'build/dev-data/businessconfig-storage'
+    doFirst{
+        logger.info "copying src/main/docker/volume/* to build/dev-data/businessconfig-storage/"
+    }
+}
+
+task prepareTestDataDir {
+    description 'prepare directory (build/test-data) for test data'
+    doFirst {
+        logger.info "creating $project.projectDir/build/test-data/"
+        new File("$project.projectDir/build/test-data/bundles/").mkdirs()
+    }
+}
+
+task prepareDevDataDir {
+    description 'prepare directory (build/dev-data) for bootRun task'
+    doFirst {
+        logger.info "creating $project.projectDir/build/dev-data/"
+        new File("$project.projectDir/build/dev-data/bundles/").mkdirs()
+    }
+}
+
+task copyCompileClasspathDependencies(type: Copy) {
+   // unlike copyDependencies, this one will catch lombok that must be sent to sonarqube
+   description 'copy compile classpath dependencies, catching lombok that must be sent for sonarqube'
+   from configurations.compileClasspath
+   into "$project.buildDir/libs_compile"
+   doFirst{
+       logger.info "copying configurations.compileClasspath to $project.buildDir/libs_compile"
+   }
+}
+
+createDevData.dependsOn prepareDevDataDir
+compressBundle1Data.dependsOn prepareTestDataDir
+compressBundle2Data.dependsOn prepareTestDataDir
+test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data
+unitTest.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data
+bootRun.dependsOn createDevData
+
+// <<<<< Test data tasks

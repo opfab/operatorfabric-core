@@ -52,7 +52,7 @@ last name, as well as their settings) can be performed either by the user in que
 Any action on a list of users or on the groups (or entities) (if authorization is managed in OperatorFabric) can only be performed by
 a user with the ADMIN role.
 
-.Thirds Service
+.Businessconfig Service
 Any write (create, update or delete) action on bundles can only be performed by a user with the ADMIN role. As such,
 administrators are responsible for the quality and security of the provided bundles.
 In particular, as it is possible to use scripts in templates, they should perform a security check to make sure that

@@ -10,7 +10,7 @@
 = Declaring a Process and its configuration
 
 The business configuration for processes is declared in the form of a bundle, as described below.
-Once this bundle fully created, it must be uploaded to the server through the Thirds service.
+Once this bundle fully created, it must be uploaded to the server through the Businessconfig service.
 
 The way configuration is done is explained with examples before a more technical review of the configuration details.
 The following instructions describe tests to perform on OperatorFabric to understand how customization is working in it.
@@ -31,10 +31,10 @@ of the process but also how the associated cards and card details should be disp
 Those `tar.gz` archives contain a descriptor file
 named `config.json`, eventually some `css files`, `i18n files` and `handlebars templates` to do so.
 
-For didactic purposes, in this section, the third name is `BUNDLE_TEST` (to match the parameters used by the script).
+For didactic purposes, in this section, the businessconfig name is `BUNDLE_TEST` (to match the parameters used by the script).
 This bundle is localized for `en` and `fr`.
 
-As detailed in the `Third core service README` the bundle contains at least a metadata file called `config.json`,
+As detailed in the `Businessconfig core service README` the bundle contains at least a metadata file called `config.json`,
 a `css` folder, an `i18n` folder and a `template` folder.
 All elements except the `config.json file` are optional.
 
@@ -65,15 +65,15 @@ It's a description file in `json` format. It lists the content of the bundle.
 
 [source,JSON]
 ----
-include::../../../../services/core/thirds/src/main/docker/volume/thirds-storage/TEST/config.json[]
+include::../../../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage/TEST/config.json[]
 ----
 
-- name: third name;
+- name: businessconfig name;
 - version: enable the correct display, even the old ones as all versions are stored by the server. Your *card* has a version
-field that will be matched to third configuration for correct rendering ;
+field that will be matched to businessconfig configuration for correct rendering ;
 - processes : list the available processes and their possible states; actions and templates are associated to states
 - css file template list as `csses`;
-- third name in the main bar menu as `i18nLabelKey`: optional, used if the third service add one or several entry in
+- businessconfig name in the main bar menu as `i18nLabelKey`: optional, used if the businessconfig service add one or several entry in
 the OperatorFabric main menu bar, see the
 ifdef::single-page-doc[<<menu_entries, menu entries>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#menu_entries, menu entries>>]
@@ -86,20 +86,20 @@ section for details;
 The mandatory declarations are `name` and `version` attributes.
 
 See the
-ifdef::single-page-doc[link:../api/thirds/index.html[Thirds API documentation]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/thirds/index.html[Thirds API documentation]]
+ifdef::single-page-doc[link:../api/businessconfig/index.html[Businessconfig API documentation]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html[Businessconfig API documentation]]
 for details.
 
 === i18n
 
-There are two ways of i18n for third service. The first one is done using l10n files which are located in the `i18n`
+There are two ways of i18n for businessconfig service. The first one is done using l10n files which are located in the `i18n`
 folder, the second one throughout l10n name folder nested in the `template` folder.
 
 The `i18n` folder contains one json file per l10n.
 
-These localisation is used for integration of the third service into OperatorFabric, i.e. the label displayed for the
-third service, the label displayed for each tab of the details of the third card, the label of the actions in cards if
-any or the additional third entries in OperatorFabric(more on that at the chapter ????).
+These localisation is used for integration of the businessconfig service into OperatorFabric, i.e. the label displayed for the
+businessconfig service, the label displayed for each tab of the details of the businessconfig card, the label of the actions in cards if
+any or the additional businessconfig entries in OperatorFabric(more on that at the chapter ????).
 
 ====  Template folder
 
@@ -109,26 +109,26 @@ The `template` folder must contain localized folder for the i18n of the card det
 
 If there is no i18n file or key is missing, the i18n key is displayed in OperatorFabric.
 
-The choice of i18n keys is left to the Third service maintainer. The keys are referenced in the following places:
+The choice of i18n keys is left to the Businessconfig service maintainer. The keys are referenced in the following places:
 
 * `config.json` file:
-	** `i18nLabelKey`: key used for the label for the third service displayed in the main menu bar of OperatorFabric;
-	** `label` of `menu entry declaration`: key used to l10n the `menu entries` declared by the Third party in the bundle;
+	** `i18nLabelKey`: key used for the label for the businessconfig service displayed in the main menu bar of OperatorFabric;
+	** `label` of `menu entry declaration`: key used to l10n the `menu entries` declared by the Businessconfig party in the bundle;
 * `card data`: values of `card title` and `card summary` refer to `i18n keys` as well as `key attribute` in the
 `card detail` section of the card data.
 
 *example*
 
-So in this example the third service is named `Bundle Test` with `BUNDLE_TEST` technical name. The bundle provide an
+So in this example the businessconfig service is named `Bundle Test` with `BUNDLE_TEST` technical name. The bundle provide an
 english and a french l10n.
 
 The example bundle defined an new menu entry given access to 3 entries. The title and the summary have to be l10n,
 so needs to be the 2 tabs titles.
 
-The name of the third service as displayed in the main menu bar of OperatorFabric. It will have the key
-`"third-name-in-menu-bar"`. The english l10n will be `Bundle Test` and the french one will be `Bundle de test`.
+The name of the businessconfig service as displayed in the main menu bar of OperatorFabric. It will have the key
+`"businessconfig-name-in-menu-bar"`. The english l10n will be `Bundle Test` and the french one will be `Bundle de test`.
 
-A name for the three entries in the third entry menu. Their keys will be in order `"first-menu-entry"`, `"b-menu-entry"` and `"the-other-menu-entry"` for an english l10n as `Entry One`, `Entry Two` and `Entry Three` and in french as `Entrée une`, `Entrée deux` and `Entrée trois`.
+A name for the three entries in the businessconfig entry menu. Their keys will be in order `"first-menu-entry"`, `"b-menu-entry"` and `"the-other-menu-entry"` for an english l10n as `Entry One`, `Entry Two` and `Entry Three` and in french as `Entrée une`, `Entrée deux` and `Entrée trois`.
 
 The title for the card and its summary. As the card used here are generated by the script of the `cards-publication` project we have to used the key declared there. So they are respectively `process.title` and `process.summary` with the following l10ns for english: `Card Title` and `Card short description`, and for french l10ns: `Titre de la carte` and `Courte description de la carte`.
 
@@ -137,7 +137,7 @@ A title for each (two of them) tab of the detail cards. As for card title and ca
 Here is the content of `en.json`
 ....
 {
-	"third-name-in-menu-bar":"Bundle Test",
+	"businessconfig-name-in-menu-bar":"Bundle Test",
 		"first-menu-entry":"Entry One",
 		"b-menu-entry":"Entry Two",
 		"the-other-menu-entry":"Entry Three",
@@ -156,7 +156,7 @@ Here is the content of `en.json`
 Here the content of `fr.json`
 ....
 {
-	"third-name-in-menu-bar":"Bundle de test",
+	"businessconfig-name-in-menu-bar":"Bundle de test",
 		"first-menu-entry":"Entrée une",
 		"b-menu-entry":"Entrée deux",
 		"the-other-menu-entry":"Entrée trois",
@@ -174,26 +174,26 @@ Here the content of `fr.json`
 ....
 
 Once the bundle is correctly uploaded, the way to verify if the i18n have been correctly uploaded is to use the GET 
-method of third api for i18n file.
+method of businessconfig api for i18n file.
 
 The endpoint is described
-ifdef::single-page-doc[link:../api/thirds/index.html#/thirds/getI18n[here]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/thirds/index.html#/thirds/getI18n[here]]
+ifdef::single-page-doc[link:../api/businessconfig/index.html#/businessconfig/getI18n[here]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html#/businessconfig/getI18n[here]]
 .
 
-The `locale` language, the `version` of the bundle and the `technical name` of the third party are needed to get
+The `locale` language, the `version` of the bundle and the `technical name` of the businessconfig party are needed to get
 json in the response.
 
-To verify if the french l10n data of the version 1 of the BUNDLE_TEST third party we could use the following
+To verify if the french l10n data of the version 1 of the BUNDLE_TEST businessconfig party we could use the following
 command line
 
-`curl -X GET "http://localhost:2100/thirds/BUNDLE_TEST/i18n?locale=fr&version=1" -H  "accept: application/json"`
+`curl -X GET "http://localhost:2100/businessconfig/BUNDLE_TEST/i18n?locale=fr&version=1" -H  "accept: application/json"`
 
 The service response with a 200 status and with the json corresponding to the defined fr.json file show below.
 
 ....
 {
-"third-name-in-menu-bar":"Bundle de test",
+"businessconfig-name-in-menu-bar":"Bundle de test",
 "first-menu-entry":"Entrée une",
 "b-menu-entry":"Entrée deux",
 "the-other-menu-entry":"Entrée trois",
@@ -215,7 +215,7 @@ The service response with a 200 status and with the json corresponding to the d
 
 Those elements are declared  in the `config.json` file of the bundle. 
 
-If there are several items to declare for a third service, a title for the third menu section need to be declared
+If there are several items to declare for a businessconfig service, a title for the businessconfig menu section need to be declared
 within the `i18nLabelKey` attribute, otherwise the first and only `menu entry` item is used to create an entry in the
 menu nav bar of OperatorFabric.
 
@@ -251,7 +251,7 @@ Here a sample with 3 menu entries.
 ....
 {
 	…
-	"i18nLabelKey":"third-name-in-menu-navbar",
+	"i18nLabelKey":"businessconfig-name-in-menu-navbar",
 	"menuEntries": [{
 			"id": "firstEntryIdentifier",
 			"url": "https://opfab.github.io/whatisopfab/",
@@ -263,9 +263,9 @@ Here a sample with 3 menu entries.
 			"label": "second-menu-entry"
 		} ,
 		{
-			"id": "thirdEntryIdentifier",
+			"id": "businessconfigEntryIdentifier",
 			"url": "https://opfab.github.io",
-			"label": "third-menu-entry"
+			"label": "businessconfig-menu-entry"
 		}]
 }
 ....
@@ -273,10 +273,10 @@ Here a sample with 3 menu entries.
 ==== Processes and States
 //==== Card details
 
-Processes and their states allows to match a Third Party service process specific state to a list of templates for card details and
+Processes and their states allows to match a Businessconfig Party service process specific state to a list of templates for card details and
 actions allowing specific card rendering for each state of the business process.
 
-The purpose of this section is to display elements of third card data in a custom format.
+The purpose of this section is to display elements of businessconfig card data in a custom format.
 
 Regarding the card detail customization, all the examples in this section will be based on the cards generated by the script existing in the `Cards-Publication` project. For the examples given here, this script is run with arguments detailed in the following command line:
 
@@ -288,7 +288,7 @@ $OPERATOR_FABRIC_HOME/services/core/cards-publication/src/main/bin/push_card_loo
 where:
 
 - `$OPERATOR_FABRIC_HOME` is the root folder of OperatorFabric where tests are performed;
-- `BUNDLE_TEST` is the name of the Third party;
+- `BUNDLE_TEST` is the name of the Businessconfig party;
 - `tests` is the name of the process referred by published cards.
 
 ===== configuration
@@ -317,7 +317,7 @@ A process definition is itself a dictionary of states, each key maps to a state 
 }
 ....
 
-An action aggregates both the mean to trigger action on the third party and data for an action button rendering:
+An action aggregates both the mean to trigger action on the businessconfig party and data for an action button rendering:
 
 * type - mandatory: for now only URL type is supported:
  ** URL: this action triggers a call to an external REST end point
@@ -335,7 +335,7 @@ specified using curly brackets. Available parameters:
 * updateStateBeforeAction: not yet implemented
 * called: not yet implemented
 
-For in depth information on the behavior needed for the third party rest endpoints refer to the Actions service reference.
+For in depth information on the behavior needed for the businessconfig party rest endpoints refer to the Actions service reference.
 
 
 ===== Templates
@@ -427,14 +427,14 @@ image::expected-result.png[Formatted root property]
 ==== Upload
 
 For this, the bundle is submitted to the OperatorFabric server using a POST http method as described in the
-ifdef::single-page-doc[<<../api/thirds/#/thirds/uploadBundle, Thirds Service API documentation>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/api/thirds/#/thirds/uploadBundle, Thirds Service API documentation>>]
+ifdef::single-page-doc[<<../api/businessconfig/#/businessconfig/uploadBundle, Businessconfig Service API documentation>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/api/businessconfig/#/businessconfig/uploadBundle, Businessconfig Service API documentation>>]
 .
 
 Example :
 ....
 cd $BUNDLE_FOLDER
-curl -X POST "http://localhost:2100/thirds" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "file=@bundle-test.tar.gz;type=application/gzip"
+curl -X POST "http://localhost:2100/businessconfig" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "file=@bundle-test.tar.gz;type=application/gzip"
 ....
 
 Where:
@@ -467,7 +467,7 @@ These command line should return a `200 http status` response with the details 
   "csses": [
     "bundleTest"
   ],
-  "i18nLabelKey": "third-name-in-menu-bar",
+  "i18nLabelKey": "businessconfig-name-in-menu-bar",
   "menuEntries": [
     {
       "id": "uid test 0",
