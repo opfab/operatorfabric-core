@@ -456,7 +456,7 @@ class CardProcessServiceShould {
                 .withFailMessage("The number of registered cards should be '%d' but is '%d", 1, block)
                 .isEqualTo(1);
 
-        String computedCardId = publishedCard.getPublisher() + "_" + publishedCard.getProcessInstanceId();
+        String computedCardId = publishedCard.getProcess() + "." + publishedCard.getProcessInstanceId();
         CardPublicationData cardToDelete = cardRepositoryService.findCardToDelete(computedCardId);
 
         Assertions.assertThat(cardToDelete).isNotNull();

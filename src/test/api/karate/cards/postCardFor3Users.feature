@@ -54,7 +54,7 @@ Then status 201
 And match response.count == 1
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/api_test_process3users' 
+Given url opfabUrl + 'cards/cards/api_test.process3users' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200

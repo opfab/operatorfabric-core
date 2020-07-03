@@ -218,8 +218,8 @@ public class CardOperationsControllerShould {
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(2);
                     assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESSnotif1");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESSnotif2");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESSnotif1");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESSnotif2");
                 })
            .thenCancel()
            .verify();
@@ -241,12 +241,12 @@ public class CardOperationsControllerShould {
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(6);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS6");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS7");
-                    assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS2");
-                    assertThat(op.getCards().get(3).getId()).isEqualTo("PUBLISHER_PROCESS4");
-                    assertThat(op.getCards().get(4).getId()).isEqualTo("PUBLISHER_PROCESS5");
-                    assertThat(op.getCards().get(5).getId()).isEqualTo("PUBLISHER_PROCESS8");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS6");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS7");
+                    assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS2");
+                    assertThat(op.getCards().get(3).getId()).isEqualTo("PROCESS.PROCESS4");
+                    assertThat(op.getCards().get(4).getId()).isEqualTo("PROCESS.PROCESS5");
+                    assertThat(op.getCards().get(5).getId()).isEqualTo("PROCESS.PROCESS8");
                 })
                 .expectComplete()
                 .verify();
@@ -267,27 +267,27 @@ public class CardOperationsControllerShould {
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(6);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS6");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS7");
-                    assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS2");
-                    assertThat(op.getCards().get(3).getId()).isEqualTo("PUBLISHER_PROCESS4");
-                    assertThat(op.getCards().get(4).getId()).isEqualTo("PUBLISHER_PROCESS5");
-                    assertThat(op.getCards().get(5).getId()).isEqualTo("PUBLISHER_PROCESS8");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS6");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS7");
+                    assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS2");
+                    assertThat(op.getCards().get(3).getId()).isEqualTo("PROCESS.PROCESS4");
+                    assertThat(op.getCards().get(4).getId()).isEqualTo("PROCESS.PROCESS5");
+                    assertThat(op.getCards().get(5).getId()).isEqualTo("PROCESS.PROCESS8");
                 })
                 .then(createSendMessageTask())
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(2);
                     assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESSnotif1");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESSnotif2");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESSnotif1");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESSnotif2");
                 })
                 .then(createUpdateSubscriptionTask())
                 .assertNext(op->{
                     assertThat(op.getCards().size()).isEqualTo(3);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS6");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS7");
-                    assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS0");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS6");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS7");
+                    assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS0");
 
                 })
                 .thenCancel()
@@ -340,11 +340,11 @@ public class CardOperationsControllerShould {
         StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
         verifier
                 .assertNext(op->{
-                	assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS0");
+                	assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS0");
                 	assertThat(op.getCards().get(2).getHasBeenAcknowledged()).isTrue();
-                	assertThat(op.getCards().get(3).getId()).isEqualTo("PUBLISHER_PROCESS2");
+                	assertThat(op.getCards().get(3).getId()).isEqualTo("PROCESS.PROCESS2");
                 	assertThat(op.getCards().get(3).getHasBeenAcknowledged()).isFalse();
-                	assertThat(op.getCards().get(4).getId()).isEqualTo("PUBLISHER_PROCESS4");
+                	assertThat(op.getCards().get(4).getId()).isEqualTo("PROCESS.PROCESS4");
                 	assertThat(op.getCards().get(4).getHasBeenAcknowledged()).isFalse();
                 })
                 .expectComplete()

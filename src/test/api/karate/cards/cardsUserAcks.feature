@@ -41,7 +41,7 @@ Feature: CardsUserAcknowledgement
     And match response.count == 1
     
 #get card with user tso1-operator and check not containing userAcks items
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -57,7 +57,7 @@ Feature: CardsUserAcknowledgement
     Then status 201
 
 #get card with user tso1-operator and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -65,7 +65,7 @@ Feature: CardsUserAcknowledgement
     And match response.card.uid == uid
 
 #get card with user tso2-operator and check containing no ack for him
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
@@ -81,7 +81,7 @@ Feature: CardsUserAcknowledgement
     Then status 201
 
 #get card with user tso1-operator and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -89,7 +89,7 @@ Feature: CardsUserAcknowledgement
     And match response.card.uid == uid
 
 #get card with user tso2-operator and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
@@ -111,7 +111,7 @@ Feature: CardsUserAcknowledgement
     When method delete
     Then status 200
 
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -132,6 +132,6 @@ Feature: CardsUserAcknowledgement
   Scenario: Delete the test card
 
     delete card
-    Given url opfabPublishCardUrl + 'cards/api_test_process1'
+    Given url opfabPublishCardUrl + 'cards/api_test.process1'
     When method delete
     Then status 200

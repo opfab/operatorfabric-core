@@ -204,7 +204,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
 
   Scenario: Get the card 'cardForGroup'
-    Given url opfabUrl + 'cards/cards/api_test_cardForGroup'
+    Given url opfabUrl + 'cards/cards/api_test.cardForGroup'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -212,14 +212,14 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
 
   Scenario: Get the card 'cardForEntityWithoutPerimeter'
-    Given url opfabUrl + 'cards/cards/api_test_cardForEntityWithoutPerimeter'
+    Given url opfabUrl + 'cards/cards/api_test.cardForEntityWithoutPerimeter'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404
 
 
   Scenario: Get the card 'cardForEntityAndPerimeter'
-    Given url opfabUrl + 'cards/cards/api_test_cardForEntityAndPerimeter'
+    Given url opfabUrl + 'cards/cards/process1.cardForEntityAndPerimeter'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -227,7 +227,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
 
   Scenario: Get the card 'cardForEntityAndGroup'
-    Given url opfabUrl + 'cards/cards/api_test_cardForEntityAndGroup'
+    Given url opfabUrl + 'cards/cards/api_test.cardForEntityAndGroup'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -235,7 +235,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 
 
   Scenario: Get the card 'cardForEntityAndOtherGroupAndPerimeter'
-    Given url opfabUrl + 'cards/cards/api_test_cardForEntityAndOtherGroupAndPerimeter'
+    Given url opfabUrl + 'cards/cards/process1.cardForEntityAndOtherGroupAndPerimeter'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200

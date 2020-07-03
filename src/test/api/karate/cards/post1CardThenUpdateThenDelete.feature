@@ -37,7 +37,7 @@ Then status 201
 And match response.count == 1
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/api_test_process1' 
+Given url opfabUrl + 'cards/cards/api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
@@ -82,7 +82,7 @@ Then status 201
 And match response.count == 1
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/api_test_process1' 
+Given url opfabUrl + 'cards/cards/api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
@@ -102,19 +102,19 @@ Scenario: Delete the card
 
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/api_test_process1' 
+Given url opfabUrl + 'cards/cards/api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
 And def cardUid = response.card.uid
 
 # delete card
-Given url opfabPublishCardUrl + 'cards/api_test_process1'
+Given url opfabPublishCardUrl + 'cards/api_test.process1'
 When method delete
 Then status 200
 
 #get card with user tso1-operator should return 404
-Given url opfabUrl + 'cards/cards/api_test_process1' 
+Given url opfabUrl + 'cards/cards/api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 404
