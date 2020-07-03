@@ -121,7 +121,7 @@ Unique identifier of the card in the OperatorFabric system. This attribute can b
 
 ==== id (`id`)
 
-State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`.
+State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`. The id is determined by 'OperatorFabric' as follow : process.processIntanceId
 
 
 === Other technical attributes

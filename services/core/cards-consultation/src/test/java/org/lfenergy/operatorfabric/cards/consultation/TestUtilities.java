@@ -152,7 +152,7 @@ public class TestUtilities {
     public static void prepareCard(CardConsultationData card, Instant publishDate) {
         card.setUid(UUID.randomUUID().toString());
         card.setPublishDate(publishDate);
-        card.setId(card.getPublisher() + "_" + card.getProcessInstanceId());
+        card.setId(card.getProcess() + "." + card.getProcessInstanceId());
         card.setShardKey(Math.toIntExact(card.getStartDate().toEpochMilli() % 24 * 1000));
     }
 

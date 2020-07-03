@@ -38,7 +38,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
     Then status 201
     And match response.count == 1
 
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -53,7 +53,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
     Then status 201
 
 #get card with user tso1-operator and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -91,7 +91,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And match response.count == 1
 
     #get card with user tso1-operator and check containing any ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -102,6 +102,6 @@ Feature: CardsUserAcknowledgementUpdateCheck
   Scenario: Delete the test card
 
     delete card
-    Given url opfabPublishCardUrl + 'cards/api_test_process1'
+    Given url opfabPublishCardUrl + 'cards/api_test.process1'
     When method delete
     Then status 200

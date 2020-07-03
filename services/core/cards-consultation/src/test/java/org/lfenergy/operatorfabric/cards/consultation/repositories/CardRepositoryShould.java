@@ -134,21 +134,21 @@ public class CardRepositoryShould {
 
         StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo, currentUserWithPerimeters))
                 .assertNext(card -> {
-                    assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
+                    assertThat(card.getId()).isEqualTo(card.getProcess() + ".PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
         StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo.minusMillis(1000), currentUserWithPerimeters))
                 .assertNext(card -> {
-                    assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
+                    assertThat(card.getId()).isEqualTo(card.getProcess() + ".PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
         StepVerifier.create(repository.findNextCardWithUser(nowMinusTwo.plusMillis(1000), currentUserWithPerimeters))
                 .assertNext(card -> {
-                    assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS2");
+                    assertThat(card.getId()).isEqualTo(card.getProcess() + ".PROCESS2");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusOne);
                 })
                 .expectComplete()
@@ -170,21 +170,21 @@ public class CardRepositoryShould {
 
         StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo, currentUserWithPerimeters))
                 .assertNext(card -> {
-                    assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
+                    assertThat(card.getId()).isEqualTo(card.getProcess() + ".PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
         StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo.plusMillis(1000), currentUserWithPerimeters))
                 .assertNext(card -> {
-                    assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS0");
+                    assertThat(card.getId()).isEqualTo(card.getProcess() + ".PROCESS0");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusTwo);
                 })
                 .expectComplete()
                 .verify();
         StepVerifier.create(repository.findPreviousCardWithUser(nowMinusTwo.minusMillis(1000), currentUserWithPerimeters))
                 .assertNext(card -> {
-                    assertThat(card.getId()).isEqualTo(card.getPublisher() + "_PROCESS6");
+                    assertThat(card.getId()).isEqualTo(card.getProcess() + ".PROCESS6");
                     assertThat(card.getStartDate()).isEqualTo(nowMinusThree);
                 })
                 .expectComplete()
@@ -231,7 +231,7 @@ public class CardRepositoryShould {
                 .expectComplete()
                 .verify();
 
-        StepVerifier.create(repository.findById("PUBLISHER_PROCESS_ID"))
+        StepVerifier.create(repository.findById("PROCESS.PROCESS_ID"))
                 .expectNextMatches(computeCardPredicate(card))
                 .expectComplete()
                 .verify();
@@ -247,7 +247,7 @@ public class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
+                    assertCard(op, 0, "PROCESS.PROCESS0", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();
@@ -258,7 +258,7 @@ public class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
+                    assertCard(op, 0, "PROCESS.PROCESS0", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();
@@ -270,9 +270,9 @@ public class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(3);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
-                    assertCard(op, 1, "PUBLISHER_PROCESS2", "PUBLISHER", "0");
-                    assertCard(op, 2, "PUBLISHER_PROCESS4", "PUBLISHER", "0");
+                    assertCard(op, 0, "PROCESS.PROCESS0", "PUBLISHER", "0");
+                    assertCard(op, 1, "PROCESS.PROCESS2", "PUBLISHER", "0");
+                    assertCard(op, 2, "PROCESS.PROCESS4", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();
@@ -282,13 +282,13 @@ public class CardRepositoryShould {
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertCard(op, 0, "PUBLISHER_PROCESS0", "PUBLISHER", "0");
+                    assertCard(op, 0, "PROCESS.PROCESS0", "PUBLISHER", "0");
                 })
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(2);
                     assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                    assertCard(op, 0, "PUBLISHER_PROCESS1", "PUBLISHER", "0");
-                    assertCard(op, 1, "PUBLISHER_PROCESS9", "PUBLISHER", "0");
+                    assertCard(op, 0, "PROCESS.PROCESS1", "PUBLISHER", "0");
+                    assertCard(op, 1, "PROCESS.PROCESS9", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();
@@ -309,9 +309,9 @@ public class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(3);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS4");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS5");
-                    assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS8");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS5");
+                    assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS8");
                 })
                 .expectComplete()
                 .verify();
@@ -322,10 +322,10 @@ public class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(4);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS2");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS4");
-                    assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS5");
-                    assertThat(op.getCards().get(3).getId()).isEqualTo("PUBLISHER_PROCESS8");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS4");
+                    assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS5");
+                    assertThat(op.getCards().get(3).getId()).isEqualTo("PROCESS.PROCESS8");
                 })
                 .expectComplete()
                 .verify();
@@ -336,16 +336,16 @@ public class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(4);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS2");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS4");
-                    assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS5");
-                    assertThat(op.getCards().get(3).getId()).isEqualTo("PUBLISHER_PROCESS8");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS4");
+                    assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS5");
+                    assertThat(op.getCards().get(3).getId()).isEqualTo("PROCESS.PROCESS8");
                 })
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(2);
                     assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS3");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS10");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS3");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS10");
                 })
                 .expectComplete()
                 .verify();
@@ -361,11 +361,11 @@ public class CardRepositoryShould {
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(5);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS6");
-                    assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS7");
-                    assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS0");
-                    assertThat(op.getCards().get(3).getId()).isEqualTo("PUBLISHER_PROCESS2");
-                    assertThat(op.getCards().get(4).getId()).isEqualTo("PUBLISHER_PROCESS4");
+                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS6");
+                    assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS7");
+                    assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS0");
+                    assertThat(op.getCards().get(3).getId()).isEqualTo("PROCESS.PROCESS2");
+                    assertThat(op.getCards().get(4).getId()).isEqualTo("PROCESS.PROCESS4");
                 })
                 .expectComplete()
                 .verify();
@@ -379,11 +379,11 @@ public class CardRepositoryShould {
                                                     new String[]{"entity1"}, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
-                	assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS0");
+                	assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
                 	assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
-                	assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS2");
+                	assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS2");
                 	assertThat(op.getCards().get(1).getHasBeenAcknowledged()).isFalse();
-                	assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS4");
+                	assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS4");
                 	assertThat(op.getCards().get(2).getHasBeenAcknowledged()).isTrue();
                 })
                 .expectComplete()
@@ -397,11 +397,11 @@ public class CardRepositoryShould {
                                                       new String[]{"entity2"}, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
-                	assertThat(op.getCards().get(0).getId()).isEqualTo("PUBLISHER_PROCESS2");
+                	assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
                 	assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
-                	assertThat(op.getCards().get(1).getId()).isEqualTo("PUBLISHER_PROCESS4");
+                	assertThat(op.getCards().get(1).getId()).isEqualTo("PROCESS.PROCESS4");
                 	assertThat(op.getCards().get(1).getHasBeenAcknowledged()).isTrue();
-                	assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS5");
+                	assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS5");
                 	assertThat(op.getCards().get(2).getHasBeenAcknowledged()).isFalse();
                 })
                 .expectComplete()
@@ -415,11 +415,11 @@ public class CardRepositoryShould {
         StepVerifier.create(repository.findUrgent(now, nowMinusOne, nowPlusOne, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity1"}, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
-                	assertThat(op.getCards().get(2).getId()).isEqualTo("PUBLISHER_PROCESS0");
+                	assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS0");
                 	assertThat(op.getCards().get(2).getHasBeenAcknowledged()).isFalse();
-                	assertThat(op.getCards().get(3).getId()).isEqualTo("PUBLISHER_PROCESS2");
+                	assertThat(op.getCards().get(3).getId()).isEqualTo("PROCESS.PROCESS2");
                 	assertThat(op.getCards().get(3).getHasBeenAcknowledged()).isFalse();
-                	assertThat(op.getCards().get(4).getId()).isEqualTo("PUBLISHER_PROCESS4");
+                	assertThat(op.getCards().get(4).getId()).isEqualTo("PROCESS.PROCESS4");
                 	assertThat(op.getCards().get(4).getHasBeenAcknowledged()).isTrue();
                 })
                 .expectComplete()

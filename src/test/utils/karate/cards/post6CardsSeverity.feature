@@ -20,7 +20,7 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 			"publisher" : "api_test",
 			"processVersion" : "1",
 			"process"  :"api_test",
-			"processInstanceId" : "process2",
+			"processInstanceId" : "process1",
 			"state": "messageState",
 			"tags":["test","test2"],
 			"recipient" : {
@@ -72,7 +72,7 @@ And match response.count == 1
 			"publisher" : "api_test",
 			"processVersion" : "1",
 			"process"  :"api_test",
-			"processInstanceId" : "process2b",
+			"processInstanceId" : "process2",
 			"state": "chartState",
 			"tags" : ["test2"],
 			"recipient" : {
@@ -119,7 +119,7 @@ And match response.count == 1
 			"publisher" : "api_test",
 			"processVersion" : "1",
 			"process"  :"api_test",
-			"processInstanceId" : "processProcess",
+			"processInstanceId" : "process3",
 			"state": "processState",
 			"recipient" : {
 						"type" : "GROUP",
@@ -247,7 +247,7 @@ And match response.count == 1
 			"publisher" : "api_test",
 			"processVersion" : "1",
 			"process"  :"api_test",
-			"processInstanceId" : "process5b",
+			"processInstanceId" : "process6",
 			"state": "messageState",
 			"recipient" : {
 						"type" : "GROUP",

@@ -185,7 +185,10 @@ publishers
 
 These changes impact both current cards from the feed and archived cards.
 
-=== Changes to the endpoints
+[IMPORTANT]
+The id of the card is now build as process.processInstanceId an not anymore publisherID_process.
+
+== Changes to the endpoints
 
 The `/thirds` endpoint becomes `thirds/processes` in preparation of OC-978.
 

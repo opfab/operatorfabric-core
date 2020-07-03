@@ -120,7 +120,7 @@ public class CardPublicationData implements Card {
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
-        this.id = publisher + "_" + processInstanceId;
+        this.id = process + "." + processInstanceId;
         if (null == this.uid)
         	this.uid = UUID.randomUUID().toString();
         this.setShardKey(Math.toIntExact(this.getStartDate().toEpochMilli() % 24 * 1000));

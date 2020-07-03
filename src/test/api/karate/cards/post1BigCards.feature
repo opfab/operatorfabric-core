@@ -20,7 +20,7 @@ And match response.count == 1
 
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/APOGEESEA_SEA0' 
+Given url opfabUrl + 'cards/cards/APOGEESEA.SEA0' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200

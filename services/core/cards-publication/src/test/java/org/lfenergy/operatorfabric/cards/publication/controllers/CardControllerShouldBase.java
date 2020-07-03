@@ -119,7 +119,7 @@ public abstract class CardControllerShouldBase {
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .process("process5")
+                        .process("process1")
                         .state("state5")
                         .build()
         );

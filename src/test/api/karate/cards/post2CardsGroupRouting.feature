@@ -40,7 +40,7 @@ Then status 201
 And match response.count == 1
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/api_test_process2' 
+Given url opfabUrl + 'cards/cards/api_test.process2' 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
@@ -57,7 +57,7 @@ And match response.data.message == 'a message for group TSO1'
 
 
 #get card with user tso2-operator should not be possible
-Given url opfabUrl + 'cards/cards/api_test_process2' 
+Given url opfabUrl + 'cards/cards/api_test.process2' 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 404
@@ -105,7 +105,7 @@ Then status 201
 And match response.count == 1
 
 #get card with user tso1-operator
-Given url opfabUrl + 'cards/cards/api_test_process2tso' 
+Given url opfabUrl + 'cards/cards/api_test.process2tso' 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
@@ -122,7 +122,7 @@ And match response.data.message == 'a message for groups TSO1 and TSO2'
 
 
 #get card with user tso2-operator should be possible
-Given url opfabUrl + 'cards/cards/api_test_process2tso' 
+Given url opfabUrl + 'cards/cards/api_test.process2tso' 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 200

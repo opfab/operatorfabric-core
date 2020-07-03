@@ -39,7 +39,7 @@ Feature: fetchArchive
 
 
 #get card with user tso1-operator
-    Given url opfabUrl + 'cards/cards/api_test_process_archive_1'
+    Given url opfabUrl + 'cards/cards/api_test.process_archive_1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -103,7 +103,7 @@ Feature: fetchArchive
 
 
 #get card with user tso1-operator
-        Given url opfabUrl + 'cards/cards/api_test123_process1'
+        Given url opfabUrl + 'cards/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200

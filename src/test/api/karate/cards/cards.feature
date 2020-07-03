@@ -70,7 +70,7 @@ Feature: Cards
     And match response.count == 1
 
 #get card with user tso1-operator
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -78,7 +78,7 @@ Feature: Cards
     And def cardUid = response.uid
 
     #get card without  authentication
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     When method get
     Then status 401
 
@@ -86,14 +86,14 @@ Feature: Cards
   Scenario: Delete the card
 
 #get card with user tso1-operator
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
     And def cardUid = response.uid
 
 # delete card
-    Given url opfabPublishCardUrl + 'cards/api_test_process1'
+    Given url opfabPublishCardUrl + 'cards/api_test.process1'
     When method delete
     Then status 200
 
@@ -224,7 +224,7 @@ Feature: Cards
     And match response.count == 1
 
 #get card with user tso1-operator and new attribute externalRecipients
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -291,7 +291,7 @@ Scenario:  Post card with parentCardId not correct
 Scenario:  Post card with correct parentCardId
 
     #get parent card uid
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -357,7 +357,7 @@ Scenario: Push card and its two child cards, then get the parent card
     And match response.message == "All pushedCards were successfully handled"
 
 #get parent card uid
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -424,7 +424,7 @@ Scenario: Push card and its two child cards, then get the parent card
 
 # Get the parent card with its two child cards
 
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -461,7 +461,7 @@ Scenario: Push a card for a user with no group and no entity
     And match response.count == 1
 
 #get card with user userwithnogroupnoentity
-    Given url opfabUrl + 'cards/cards/api_test_processForUserWithNoGroupNoEntity'
+    Given url opfabUrl + 'cards/cards/api_test.processForUserWithNoGroupNoEntity'
     And header Authorization = 'Bearer ' + authTokenUserWithNoGroupNoEntity
     When method get
     Then status 200
