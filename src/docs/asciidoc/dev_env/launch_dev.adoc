@@ -84,7 +84,7 @@ cd ${OF_HOME}/config/dev
 docker-compose up -d
 ----
 
-The configuration of the `web-ui` embeds a grayscale favicon which can be usefull to spot the `OperatorFabric` dev tab in the browser.
+The configuration of the `web-ui` embeds a grayscale favicon which can be useful to spot the `OperatorFabric` dev tab in the browser.
 Sometime a `CTRL+F5` on the tab is required to refresh the favicon.
 
 == Build OperatorFabric with Gradle

@@ -86,7 +86,7 @@ section of the reference documentation.
 ----
 {
 	"publisher" : "message-publisher",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process" :"defaultProcess",
 	"processId" : "hello-world-1",
 	"state" : "messageState",
@@ -114,7 +114,7 @@ We can send a new version of the card (updateCard.json):
 ----
 {
 	"publisher" : "message-publisher",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "hello-world-1",
 	"state"  $: "messageState",
@@ -284,7 +284,7 @@ You can send the following card to test your new bundle:
 ----
 {
 	"publisher" : "message-publisher",
-	"publisherVersion" : "2",
+	"processVersion" : "2",
 	"process"  :"defaultProcess",
 	"processId" : "hello-world-1",
 	"state": "messageState",
@@ -300,7 +300,7 @@ You can send the following card to test your new bundle:
 }
 ----
 
-To use the new bundle, we set publisherVersion to "2"
+To use the new bundle, we set processVersion to "2"
 
 To send the card:
 
@@ -397,7 +397,7 @@ We can now send cards and simulate the process, first we send a card at the begi
 ----
 {
 	"publisher" : "alert-publisher",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"criticalSituation",
 	"processId" : "alert1",
 	"state": "criticalSituation-begin",
@@ -442,7 +442,7 @@ To view the card in the time line, you need to set times in the card using timeS
 ----
  {
 	"publisher" : "scheduledMaintenance-publisher",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"maintenanceProcess",
 	"processId" : "maintenance-1",
 	"state": "planned",

@@ -62,6 +62,4 @@ IMPORTANT: The ADMIN role doesn't grant any special privileges when it comes to 
 archived), so a user with the ADMIN role will only see cards that have been addressed to them (or to one of their
 groups (or entities)), just like any other user.
 
-include::../OC-979_WIP.adoc[leveloffset=+1]
-
 
