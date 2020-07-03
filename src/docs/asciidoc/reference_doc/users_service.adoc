@@ -10,12 +10,12 @@
 
 = OperatorFabric Users Service
 
-The User service manages users, groups and entities.
+The User service manages users, groups, entities and perimeters (linked to groups).
 
 Users:: represent account information for a person destined to receive cards in the OperatorFabric instance.
 Groups::
 - represent set of users destined to receive collectively some cards.
-- can be used in a way to handle rights on card reception in OperatorFabric.
+- has a set of perimeters to define rights for card reception in OperatorFabric.
 Entities::
 - represent set of users destined to receive collectively some cards.
 - can be used in a way to handle rights on card reception in OperatorFabric.
@@ -25,9 +25,9 @@ WARNING: The user define here is an internal representation of the individual ca
 NOTE: In the following commands the `$token` is an authentication token currently valid for the `OAuth2` service used by the current `OperatorFabric` system.
 
 
-== Users, groups and entities
+== Users, groups, entities and perimeters
 
-User service manages users, groups and entities.
+User service manages users, groups, entities and perimeters.
 
 === Users
 
@@ -40,7 +40,7 @@ The access to this service has to be authorized, in the `OAuth2` service used by
 In case of a user does exist in a provided authentication service but he does not exist in the `OperatorFabric`
 instance, when he is authenticated and connected for the first time in the `OperatorFabric` instance, the user is
 automatically created in the system without attached group or entity.
-The administration of the groups and entities is dealt by the administrator manually.
+The administration of the groups, entities and perimeters is dealt by the administrator manually.
 More details about automated user creation
 ifdef::single-page-doc[<<opfab_spec_conf, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#opfab_spec_conf, here>>]
@@ -49,7 +49,7 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/inde
 === Groups
 The notion of group is loose and can be used to simulate role in `OperatorFabric`.
 Groups are used to send cards to several users without a name specifically. The information about membership to a
-group is stored in the user information. The rules used to send cards are described in the
+group is stored in the user information. A group contains a list of perimeters which define the rights of reception/writing for a couple process/state. The rules used to send cards are described in the
 ifdef::single-page-doc[<<card_recipients, recipients section>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_recipients, recipients section>>]
 .
@@ -60,6 +60,15 @@ entity is stored in the user information. Examples using entities can be found
 ifdef::single-page-doc[<<_send_to_several_users, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#_send_to_several_users, here>>]
 .
+
+=== Perimeters
+Perimeters are used to define rights for reading/writing cards. A perimeter is composed of an identifier (unique), a process name and a list of state/rights couple.
+Possible rights for receiving/writing cards are :
+
+- Receive : the rights for receiving a card
+- Write : the rights for writing a card, that is to say respond to a card or create a new card
+- ReceiveAndWrite : the rights for receiving and writing a card
+
 
 ==== Alternative way to manage groups
 

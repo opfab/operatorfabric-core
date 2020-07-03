@@ -78,14 +78,11 @@ The following example is nearly the same as the previous one except for the reci
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
 	"summary":{"key":"card.summary.key"},
-	"recipient":{
-		"type":"USER",
-	}
     "entityRecipients" : ["ENTITY1"]
 }
 ....
 
-Here, the recipient is an entity, the `ENTITY1`. So all users who are members of this entity will receive the card.
+Here, the recipient is an entity, the `ENTITY1`. So all users who are members of this entity AND who have the right for the process/state of the card will receive it.
 
 ==== Simple case (sending to a group and an entity)
 
@@ -109,8 +106,14 @@ The following example is nearly the same as the previous one except for the reci
 }
 ....
 
-Here, the recipients are a group and an entity, the `TSO1` group and `ENTITY1` entity. So all users who are both members
-of this group and this entity will receive the card.
+Here, the recipients are a group and an entity, the `TSO1` group and `ENTITY1` entity. To receive the card, there is two possibilities :
+
+* users must be members of one of the entities AND one of the groups
+
+OR
+
+* users must be members of one of the entities AND have the right for the process/state of the card
+
 
 ==== Complex case
 
