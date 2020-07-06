@@ -11,38 +11,33 @@
   </div>
 </form>
 
-<div id="childs-div">
-
-  <p>Réponses:</p>
-
-  {{#if childCards.length}}
-    {{#each childCards}}
-      <p>L'opinion d'OpFab de l'entité {{this.publisher}}: {{this.data.opfabOpinion.[0]}}</p>
-    {{/each}}
-  {{/if}}
-</div>
+<div id="childs-div"></div>
 
 <script>
 
+  var childCards = {{json childCards}};
+  templateGateway.childCards = childCards;
+
   function validateResponse(opfabOpinion) {
     if (opfabOpinion == 'C\'est nul') {
-      ext_form.formErrorMsg = 'Cette réponse n\'est pas acceptable';
+      templateGateway.formErrorMsg = 'Cette réponse n\'est pas acceptable';
       return false;
     } else {
       return true;
     }
   }
 
-  ext_form.applyChildCards = () => {
-    ext_form.childCards.forEach( (c, i) => {
+  templateGateway.applyChildCards = () => {
+    let childsDiv = document.getElementById("childs-div");
+    childsDiv.innerHTML = '<p>Réponses:</p>';
+    templateGateway.childCards.forEach( (c, i) => {
       let text = `<p>L'opinion d'OpFab de l'entité ${c.publisher}: ${c.data.opfabOpinion}</p>`;
-      let childsDiv = document.getElementById("childs-div");
-      childsDiv.innerHTML = '<p>Réponses:</p>';
       childsDiv.innerHTML += text;
-    });
   }
 
-  ext_form.validyForm = function(formData) {
+  templateGateway.applyChildCards();
+
+  templateGateway.validyForm = function(formData) {
     if (validateResponse(formData.opfabOpinion[0])) {
       this.isValid = true;
     } else {

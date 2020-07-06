@@ -56,6 +56,6 @@ Feature: Add perimeters/group for action test
   Scenario: Add users to a group
     Given url opfabUrl + 'users/groups/groupAction/users'
     And header Authorization = 'Bearer ' + authToken
-    And request ["tso1-operator"]
+    And request ["tso1-operator", "tso1-operator-admin", "rte-operator"]
     When method patch
     And status 200

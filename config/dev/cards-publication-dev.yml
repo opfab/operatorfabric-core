@@ -10,7 +10,7 @@ users:
     listOfServers: http://localhost:2103
 
 externalRecipients-url: "{\
-           test_action: \"http://localhost:8090/test\", \
+           processAction: \"http://localhost:8090/test\", \
            api_test_externalRecipient1: \"http://localhost:8090/test\", \
            api_test_externalRecipient2: \"http://localhost:8090/test\" \
            }"
