@@ -21,8 +21,6 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lfenergy.operatorfabric.cards.consultation.utils.CardFieldNamesUtils.PARENT_CARD_ID;
-
 public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
     default Mono<T> findByIdWithUser(ReactiveMongoTemplate template, String id, CurrentUserWithPerimeters currentUserWithPerimeters, Class<T> clazz) {
@@ -36,7 +34,7 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
     default Flux<T> findByParentCardId(ReactiveMongoTemplate template, String parentUid, Class<T> clazz) {
         Query query = new Query();
-        query.addCriteria(Criteria.where(PARENT_CARD_ID).is(parentUid));
+        query.addCriteria(Criteria.where("parentCardId").is(parentUid));
         return template.find(query, clazz);
     }
 

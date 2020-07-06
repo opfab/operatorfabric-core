@@ -3,7 +3,7 @@ function ext_action(responseData){
     // console.log('test')
 }
 
-let ext_form = {
+let templateGateway = {
     validyForm: function(formData=null) {
         return this.isValid = undefined;
     },

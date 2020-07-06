@@ -22,7 +22,7 @@ import { User } from '@ofModel/user.model';
 import { UserWithPerimeters, RightsEnum, userRight } from '@ofModel/userWithPerimeters.model';
 
 import { id } from '@swimlane/ngx-charts';
-declare const ext_form: any;
+declare const templateGateway: any;
 
 const RESPONSE_FORM_ERROR_MSG_I18N_KEY = 'response.error.form';
 const RESPONSE_SUBMIT_ERROR_MSG_I18N_KEY = 'response.error.submit';
@@ -229,9 +229,9 @@ export class CardDetailsComponent implements OnInit {
             (key in formData) ? formData[key].push(value) : formData[key] = [value];
         }
 
-        ext_form.validyForm(formData);
+        templateGateway.validyForm(formData);
 
-        if (ext_form.isValid) {
+        if (templateGateway.isValid) {
 
             const card: Card = {
                 uid: null,
@@ -240,7 +240,7 @@ export class CardDetailsComponent implements OnInit {
                 publisher: this.user.entities[0],
                 processVersion: this.card.processVersion,
                 process: this.card.process,
-                processInstanceId: this.card.processInstanceId,
+                processInstanceId: `${this.card.processInstanceId}_${this.user.entities[0]}`,
                 state: this.responseData.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
@@ -277,8 +277,8 @@ export class CardDetailsComponent implements OnInit {
         } else {
 
             this.messages.formError.display = true;
-            this.messages.formError.msg = (ext_form.formErrorMsg && ext_form.formErrorMsg != '') ?
-                ext_form.formErrorMsg : RESPONSE_FORM_ERROR_MSG_I18N_KEY;
+            this.messages.formError.msg = (templateGateway.formErrorMsg && templateGateway.formErrorMsg != '') ?
+                templateGateway.formErrorMsg : RESPONSE_FORM_ERROR_MSG_I18N_KEY;
         }
     }
 

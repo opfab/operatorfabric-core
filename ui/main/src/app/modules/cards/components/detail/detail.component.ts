@@ -29,7 +29,7 @@ import { Observable, zip, Subject } from 'rxjs';
 import { LightCard } from '@ofModel/light-card.model';
 import { AppService, PageType } from '@ofServices/app.service';
 
-declare const ext_form: any;
+declare const templateGateway: any;
 
 @Component({
     selector: 'of-detail',
@@ -81,8 +81,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy {
                                     ...newChildCards.reduce(reducer, {}),
                                 });
 
-                                ext_form.childCards = this.childCards;
-                                ext_form.applyChildCards();
+                                templateGateway.childCards = this.childCards;
+                                templateGateway.applyChildCards();
                             })
                     })
         }
