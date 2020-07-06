@@ -113,14 +113,52 @@ Feature: UserCards tests
     When method put
     Then status 200
 
+  Scenario: Push user card
+    * def card =
+"""
+{
+	"publisher" : "initial",
+	"processVersion" : "1",
+	"process"  :"initial",
+	"processInstanceId" : "initialCardProcess",
+	"state": "state2",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"externalRecipients" : ["api_test_externalRecipient1"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"}
+}
+
+"""
+
+# Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1
+
+
+#get card with user tso1-operator
+    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And def cardUid = response.card.uid
+
 
     * def card =
 """
 {
-	"publisher" : "api_test_externalRecipient1",
+	"publisher" : "cardTest2",
 	"processVersion" : "1",
 	"process"  :"process_1",
-	"processInstanceId" : "process_1",
+	"processInstanceId" : "process_id_w",
 	"state": "state2",
 	"recipient" : {
 				"type" : "GROUP",
@@ -153,11 +191,14 @@ Feature: UserCards tests
     * def card =
 """
 {
-	"publisher" : "api_test_externalRecipient1",
+	"publisher" : "cardTest2",
 	"processVersion" : "1",
 	"process"  :"process_1",
-	"processInstanceId" : "process_1",
+	"processInstanceId" : "process_id_x",
 	"state": "state1",
+	"process"  :"process_2",
+	"processInstanceId" : "process_o",
+	"state": "state2",
 	"recipient" : {
 				"type" : "GROUP",
 				"identity" : "TSO1"
@@ -180,14 +221,70 @@ Feature: UserCards tests
 
 
 
+    * card.parentCardId = cardUid
+    * card.state = "state1"
+
+
+# Push user card with good permiter ==> Write perimeter
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1
+
+
     * def card =
 """
 {
-	"publisher" : "api_test_externalRecipient1",
+	"publisher" : "initial",
 	"processVersion" : "1",
-	"process"  :"process_2",
-	"processInstanceId" : "process_2",
-	"state": "state1",
+	"process"  :"initial",
+	"processInstanceId" : "initialCardProcess",
+	"state": "final",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"externalRecipients" : ["api_test_externalRecipient1"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"}
+}
+
+"""
+
+# Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1
+
+# verifiy that child card was deleted after parent card update
+
+    Given url opfabUrl + 'cards/cards/process_1.process_id_x'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 404
+
+#get uid updted card with user tso1-operator
+    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And def cardUid = response.card.uid
+
+    * def card =
+"""
+{
+	"publisher" : "cardTest4",
+	"processVersion" : "1",
+	"process"  :"process_1",
+	"processInstanceId" : "process_id_4",
+	"state": "state2",
 	"recipient" : {
 				"type" : "GROUP",
 				"identity" : "TSO1"
@@ -200,14 +297,75 @@ Feature: UserCards tests
 	"data" : {"message":"a message"}
 }
 """
+    * card.parentCardId = cardUid
 
-# Push user card with good permiter ==> Write perimeter
+# Push user card with good permiter ==> ReceiveAndWrite perimeter
     Given url opfabPublishCardUrl + 'cards/userCard'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
     When method post
     Then status 201
     And match response.count == 1
+
+    Given url opfabUrl + 'cards/cards/process_1.process_id_4'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+
+
+    * def card =
+"""
+{
+	"publisher" : "cardTest5",
+	"processVersion" : "1",
+	"process"  :"process_1",
+	"processInstanceId" : "process_id_5",
+	"state": "state2",
+	"recipient" : {
+				"type" : "GROUP",
+				"identity" : "TSO1"
+			},
+	"externalRecipients" : ["api_test_externalRecipient1"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"}
+}
+"""
+    * card.parentCardId = cardUid
+
+# Push user card with good permiter ==> ReceiveAndWrite perimeter
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1
+
+    Given url opfabUrl + 'cards/cards/process_1.process_id_5'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+
+
+
+# delete parent card
+   Given url opfabPublishCardUrl + 'cards/initial.initialCardProcess'
+   When method delete
+   Then status 200
+
+# verifiy that the 2 child cards was deleted after parent card deletion
+
+    Given url opfabUrl + 'cards/cards/process_1.process_id_4'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 404
+
+    Given url opfabUrl + 'cards/cards/process_1.process_id_5'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 404
 
 
 
