@@ -107,7 +107,13 @@ Tags are intended as an additional way to filter cards in the feed of the GUI.
 
 ==== EntityRecipients (`entityRecipients`)
 
-Used to send to cards to entity : all users members of the listed entities will receive the card. If it is used in conjunction with groups recipients, users must be members of one of the entities AND one of the groups to receive the cards.
+Used to send cards to entity : all users members of the listed entities who have the right for the process/state of the card will receive it. If this field is used in conjunction with groups recipients, to receive the cards :
+
+* users must be members of one of the entities AND one of the groups to receive the cards.
+
+OR
+
+* users must be members of one of the entities AND have the right for the process/state of the card.
 
 === Last Time to Decide (`lttd`)
 
