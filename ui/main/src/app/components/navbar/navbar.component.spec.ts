@@ -137,16 +137,16 @@ describe('NavbarComponent', () => {
         expect(component.limitSize).toBe(undefined);
     });
 
-    it('should create plain link for single-entry third-party menu', () => {
+    it('should create plain link for single-entry businessconfig-party menu', () => {
         defineFakeState(MODE.HAS_CONFIG_WITH_MENU);   
 
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
         expect(rootElement.queryAll(By.css('li > div.nav-link')).length).toBe(1)
         expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a')).length).toBe(2) //Because there is two <a> for each menu entry: text link and icon
-        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/thirdparty,t2,1,id3") //As defined in ThirdsServiceMock
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/businessconfigparty,t2,1,id3") //As defined in BusinessconfigServiceMock
         expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a > fa-icon')).length).toBe(1)
-        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link3") //As defined in ThirdsServiceMock
+        expect(rootElement.queryAll(By.css('li > div.nav-link > of-menu-link > div a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link3") //As defined in BusinessconfigServiceMock
     });
 
     it('should create menu', () => {
@@ -154,11 +154,11 @@ describe('NavbarComponent', () => {
 
         const rootElement = fixture.debugElement;
         expect(component).toBeTruthy();
-        expect( rootElement.queryAll(By.css('li.dropdown.thirds-dropdown')).length).toBe(1)
-        expect( rootElement.queryAll(By.css('li.dropdown.thirds-dropdown > div a')).length).toBe(4) //Because there is now two <a> for each menu entry: text link and icon
-        expect( rootElement.queryAll(By.css('li.dropdown.thirds-dropdown > div a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/thirdparty,t1,1,id1") //As defined in ThirdsServiceMock
-        expect( rootElement.queryAll(By.css('li.dropdown.thirds-dropdown > div a > fa-icon')).length).toBe(2)
-        expect( rootElement.queryAll(By.css('li.dropdown.thirds-dropdown > div a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link1") //As defined in ThirdsServiceMock
+        expect( rootElement.queryAll(By.css('li.dropdown.businessconfig-dropdown')).length).toBe(1)
+        expect( rootElement.queryAll(By.css('li.dropdown.businessconfig-dropdown > div a')).length).toBe(4) //Because there is now two <a> for each menu entry: text link and icon
+        expect( rootElement.queryAll(By.css('li.dropdown.businessconfig-dropdown > div a'))[0].nativeElement.attributes['ng-reflect-router-link'].value).toEqual("/businessconfigparty,t1,1,id1") //As defined in BusinessconfigServiceMock
+        expect( rootElement.queryAll(By.css('li.dropdown.businessconfig-dropdown > div a > fa-icon')).length).toBe(2)
+        expect( rootElement.queryAll(By.css('li.dropdown.businessconfig-dropdown > div a > fa-icon'))[0].parent.nativeElement.attributes['href'].value).toEqual("link1") //As defined in BusinessconfigServiceMock
         expect( rootElement.queryAll(By.css('li.nav-item')).length).toBe(5)
     });
 

@@ -17,7 +17,7 @@ import {appReducer, AppState} from "../store/index";
 import {ConfigService} from "@ofServices/config.service";
 import {AcceptLogIn, PayloadForSuccessfulAuthentication} from "@ofActions/authentication.actions";
 
-describe('Thirds Services', () => {
+describe('Businessconfig Services', () => {
     let injector: TestBed;
     let configService: ConfigService;
     let httpMock: HttpTestingController;

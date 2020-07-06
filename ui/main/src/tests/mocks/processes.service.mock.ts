@@ -12,7 +12,7 @@ import {Observable, of} from "rxjs";
 import {Menu, MenuEntry} from "@ofModel/processes.model";
 
 export class ProcessesServiceMock {
-    computeThirdsMenu(): Observable<Menu[]>{
+    computeBusinessconfigMenu(): Observable<Menu[]>{
         return of([new Menu('t1', '1', 'tLabel1', [
             new MenuEntry('id1', 'label1', 'link1'),
             new MenuEntry('id2', 'label2', 'link2'),

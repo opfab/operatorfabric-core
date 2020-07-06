@@ -1,0 +1,26 @@
+{
+  "id": "APOGEESEA",
+  "version": "1",
+  "defaultLocale": "fr",
+  "locales": [
+    "fr",
+    "en"
+  ],
+  "templates": [
+    "template1",
+    "template-tab1",
+    "template-tab2",
+    "template-tab3",
+    "template-tab4",
+    "template-tab5",
+    "template-tab6"
+  ],
+  "csses": ["apogee-sea"],
+  "i18nLabelKey": "businessconfig.label",
+  "states": {
+    "APOGEESEA": {
+      "details": [ ],
+      "actions": { }
+    }
+  }
+}

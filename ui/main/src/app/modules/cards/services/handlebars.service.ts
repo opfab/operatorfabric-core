@@ -31,7 +31,7 @@ export class HandlebarsService {
 
     constructor(
                 private translate: TranslateService,
-                private thirds: ProcessesService,
+                private businessconfig: ProcessesService,
                 private store: Store<AppState>){
         this.registerPreserveSpace();
         this.registerNumberFormat();
@@ -71,7 +71,7 @@ export class HandlebarsService {
         if(template){
            return of(template);
         }
-        return this.thirds.fetchHbsTemplate(process,version,name,locale).pipe(
+        return this.businessconfig.fetchHbsTemplate(process,version,name,locale).pipe(
             map(s=>Handlebars.compile(s)),
             tap(t=>this.templateCache[key]=t)
         );

@@ -1,0 +1,35 @@
+{
+  "TEST":{
+    "title": "Test: Process {{value}}",
+    "summary": "This sums up the content of the card: {{value}}",
+    "detail": {
+      "tab": {
+        "first": "First Tab",
+        "second": "Second Tab"
+      }
+    },
+    "action":{ "new":
+    {
+      "first": "Action number {{value}}",
+      "second": "Second Action",
+      "businessconfig": "Businessconfig One ({{value}})"
+    },
+      "clicked": {
+        "first": "{{value}} clicked",
+        "second": "Resolved secondly",
+        "businessconfig": "For ({{value}}, it's done.)"
+      }
+}
+  },
+  "process":{
+    "label": "Test Process"
+  },
+  "menu":{
+    "label": "Test Process Menu",
+    "first":"First Entry",
+    "second":"Second Entry"
+  },
+  "template":{
+    "title": "Asset details"
+  }
+}

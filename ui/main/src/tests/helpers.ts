@@ -69,10 +69,10 @@ export function getRandomMenus(): Menu[] {
     return result;
 }
 
-export function getRandomThird(): Process[] {
+export function getRandomBusinessconfig(): Process[] {
     let result: Process[] = [];
-    let thirdCount = getPositiveRandomNumberWithinRange(1,3);
-    for (let i=0;i<thirdCount;i++){
+    let businessconfigCount = getPositiveRandomNumberWithinRange(1,3);
+    for (let i=0;i<businessconfigCount;i++){
         result.push(getOneRandomProcess());
     }
     return result;
@@ -349,11 +349,11 @@ export function shuffleArrayContentByFisherYatesLike<T>(array: Array<T>): Array<
     return result;
 }
 
-export function generateThirdWithVersion(thirdName?: string, versions?: Set<string>): Map<Set<string>> {
+export function generateBusinessconfigWithVersion(businessconfigName?: string, versions?: Set<string>): Map<Set<string>> {
     const result = new Map<Set<string>>();
-    const third = (thirdName) ? thirdName : getRandomAlphanumericValue(3, 5);
+    const businessconfig = (businessconfigName) ? businessconfigName : getRandomAlphanumericValue(3, 5);
     function getSomeVersions(){return getRandomAlphanumericValue(3,8)};
     const versionValues = (versions) ? versions : new Set( generateRandomArray(3, 6, getSomeVersions));
-    result[third] = versionValues;
+    result[businessconfig] = versionValues;
     return result;
 }

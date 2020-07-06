@@ -77,7 +77,7 @@ public class ArchivedCardRepositoryShould {
     private static Instant nowMinusThree = now.minus(3, ChronoUnit.HOURS);
     private static String firstPublisher = "PUBLISHER_1";
     private static String secondPublisher = "PUBLISHER_2";
-    private static String thirdPublisher = "PUBLISHER_3";
+    private static String businessconfigPublisher = "PUBLISHER_3";
 
     @Autowired
     private ArchivedCardRepository repository;
@@ -152,7 +152,7 @@ public class ArchivedCardRepositoryShould {
         //create cards with different publishers
         persistCard(createSimpleArchivedCard(1, secondPublisher, now, nowMinusTwo, nowMinusOne, login1, new String[]{"rte","operator"}, null));
 
-        persistCard(createSimpleArchivedCard(1, thirdPublisher, nowPlusTwo, now, null, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
+        persistCard(createSimpleArchivedCard(1, businessconfigPublisher, nowPlusTwo, now, null, login1, new String[]{"rte","operator"}, new String[]{"entity1","entity2"}));
 
         //create card sent to user3
         persistCard(createSimpleArchivedCard(1, firstPublisher, nowPlusOne, nowMinusTwo, nowMinusOne, login3, new String[]{"rte","operator"}, null));
@@ -239,17 +239,17 @@ public class ArchivedCardRepositoryShould {
 
         //Find cards with given publishers and a given processInstanceId
         queryParams.add("publisher",secondPublisher);
-        queryParams.add("publisher",thirdPublisher);
+        queryParams.add("publisher",businessconfigPublisher);
         queryParams.add("processInstanceId","PROCESS1");
 
         Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
 
         StepVerifier.create(repository.findWithUserAndParams(params))
-                //The card from thirdPublisher is returned first because it has the latest publication date
+                //The card from businessconfigPublisher is returned first because it has the latest publication date
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(2);
                     assertThat(page.getTotalPages()).isEqualTo(1);
-                    assertThat(page.getContent().get(0).getPublisher()).isEqualTo(thirdPublisher);
+                    assertThat(page.getContent().get(0).getPublisher()).isEqualTo(businessconfigPublisher);
                     assertThat(page.getContent().get(0).getProcessInstanceId()).isEqualTo("PROCESS1");
                     assertThat(page.getContent().get(1).getPublisher()).isEqualTo(secondPublisher);
                     assertThat(page.getContent().get(1).getProcessInstanceId()).isEqualTo("PROCESS1");
@@ -482,8 +482,8 @@ public class ArchivedCardRepositoryShould {
                     assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
                     int expectedNbOfPages = 3;
                     assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
-                    int expectedNbOfElementsForTheThirdPage = 1;
-                    assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheThirdPage);
+                    int expectedNbOfElementsForTheBusinessconfigPage = 1;
+                    assertThat(page.getContent().size()).isEqualTo(expectedNbOfElementsForTheBusinessconfigPage);
                     //Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, start, null))

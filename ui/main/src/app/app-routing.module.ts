@@ -29,8 +29,8 @@ const routes: Routes = [
         // canActivate: [AuthenticationGuard]
     },
     {
-        path: 'thirdparty',
-        loadChildren: () => import('./modules/thirdparty/thirdparty.module').then(m => m.ThirdpartyModule),
+        path: 'businessconfigparty',
+        loadChildren: () => import('./modules/businessconfigparty/businessconfigparty.module').then(m => m.BusinessconfigpartyModule),
         // canActivate: [AuthenticationGuard]
     },
     {

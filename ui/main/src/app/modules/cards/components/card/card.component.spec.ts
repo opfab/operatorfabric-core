@@ -19,7 +19,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ThirdsI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
+import {BusinessconfigI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
 import {ServicesModule} from '@ofServices/services.module';
 import {Router} from '@angular/router';
 import 'moment/locale/fr';
@@ -50,7 +50,7 @@ describe('CardComponent', () => {
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
-                        useFactory: ThirdsI18nLoaderFactory,
+                        useFactory: BusinessconfigI18nLoaderFactory,
                         deps: [ProcessesService]
                     },
                     useDefaultLang: false

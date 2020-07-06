@@ -11,14 +11,14 @@
 
 import {getTestBed, TestBed} from '@angular/core/testing';
 
-import {ThirdsI18nLoaderFactory, ProcessesService} from './processes.service';
+import {BusinessconfigI18nLoaderFactory, ProcessesService} from './processes.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Store, StoreModule} from "@ngrx/store";
 import {appReducer, AppState} from "@ofStore/index";
-import {generateThirdWithVersion, getOneRandomLightCard, getRandomAlphanumericValue} from "@tests/helpers";
+import {generateBusinessconfigWithVersion, getOneRandomLightCard, getRandomAlphanumericValue} from "@tests/helpers";
 import * as _ from 'lodash';
 import {LightCard} from "@ofModel/light-card.model";
 import {AuthenticationService} from "@ofServices/authentication/authentication.service";
@@ -45,7 +45,7 @@ describe('Processes Services', () => {
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
-                        useFactory: ThirdsI18nLoaderFactory,
+                        useFactory: BusinessconfigI18nLoaderFactory,
                         deps: [ProcessesService]
                     },
                     useDefaultLang: false
@@ -149,7 +149,7 @@ describe('Processes Services', () => {
         _.set(i18n, `fr.${card.summary.key}`, 'résumé fr');
         const setTranslationSpy = spyOn(translateService, "setTranslation").and.callThrough();
         const getLangsSpy = spyOn(translateService, "getLangs").and.callThrough();
-        const translationToUpdate = generateThirdWithVersion(card.publisher, new Set([card.processVersion]));
+        const translationToUpdate = generateBusinessconfigWithVersion(card.publisher, new Set([card.processVersion]));
         store.dispatch(
             new UpdateTranslation({versions: translationToUpdate})
         );
@@ -177,7 +177,7 @@ describe('Processes Services', () => {
     });
     
     it('should compute url with encoding special characters', () => {
-        const urlFromPublishWithSpaces = processesService.computeThirdCssUrl('publisher with spaces'
+        const urlFromPublishWithSpaces = processesService.computeBusinessconfigCssUrl('publisher with spaces'
             , getRandomAlphanumericValue(3, 12)
             , getRandomAlphanumericValue(2.5));
         expect(urlFromPublishWithSpaces.includes(' ')).toEqual(false);
@@ -200,7 +200,7 @@ describe('Processes Services', () => {
         for (let char of dico.keys()) {
             stringToTest += char;
         }
-        const urlFromPublishWithAccentuatedChar = processesService.computeThirdCssUrl(`publisherWith${stringToTest}`
+        const urlFromPublishWithAccentuatedChar = processesService.computeBusinessconfigCssUrl(`publisherWith${stringToTest}`
             , getRandomAlphanumericValue(3, 12)
             , getRandomAlphanumericValue(3, 4));
         dico.forEach((value, key) => {
@@ -208,11 +208,11 @@ describe('Processes Services', () => {
             //`should normally contain '${value}'`
             expect(urlFromPublishWithAccentuatedChar.includes(value)).toEqual(true);
         });
-        const urlWithSpacesInVersion = processesService.computeThirdCssUrl(getRandomAlphanumericValue(5, 12), getRandomAlphanumericValue(5.12),
+        const urlWithSpacesInVersion = processesService.computeBusinessconfigCssUrl(getRandomAlphanumericValue(5, 12), getRandomAlphanumericValue(5.12),
             'some spaces in version');
         expect(urlWithSpacesInVersion.includes(' ')).toEqual(false);
 
-        const urlWithAccentuatedCharsInVersion = processesService.computeThirdCssUrl(getRandomAlphanumericValue(5, 12), getRandomAlphanumericValue(5.12)
+        const urlWithAccentuatedCharsInVersion = processesService.computeBusinessconfigCssUrl(getRandomAlphanumericValue(5, 12), getRandomAlphanumericValue(5.12)
             , `${stringToTest}InVersion`);
         dico.forEach((value, key) => {
             expect(urlWithAccentuatedCharsInVersion.includes(key)).toEqual(false);
@@ -222,32 +222,32 @@ describe('Processes Services', () => {
 
     });
     describe('#queryProcess', () => {
-        const third = new Process('testPublisher', '0', 'third.label');
-        it('should load third from remote server', () => {
+        const businessconfig = new Process('testPublisher', '0', 'businessconfig.label');
+        it('should load businessconfig from remote server', () => {
             processesService.queryProcess('testPublisher', '0',)
-                .subscribe((result) => expect(result).toEqual(third))
+                .subscribe((result) => expect(result).toEqual(businessconfig))
             let calls = httpMock.match(req => req.url == `${environment.urls.processes}/testPublisher/`)
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush(third);
+                call.flush(businessconfig);
             })
         })
     });
     describe('#queryProcess', () => {
-        const third = new Process('testPublisher', '0', 'third.label');
-        it('should load and cache third from remote server', () => {
+        const businessconfig = new Process('testPublisher', '0', 'businessconfig.label');
+        it('should load and cache businessconfig from remote server', () => {
             processesService.queryProcess('testPublisher', '0',)
                 .subscribe((result) => {
-                    expect(result).toEqual(third);
+                    expect(result).toEqual(businessconfig);
                     processesService.queryProcess('testPublisher', '0',)
-                        .subscribe((result) => expect(result).toEqual(third));
+                        .subscribe((result) => expect(result).toEqual(businessconfig));
                 })
             let calls = httpMock.match(req => req.url == `${environment.urls.processes}/testPublisher/`)
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush(third);
+                call.flush(businessconfig);
             })
         })
     });
@@ -266,6 +266,6 @@ function cardPrefix(card: LightCard) {
     return card.publisher + '.' + card.processVersion + '.';
 }
 
-function thirdPrefix(menu: Menu) {
+function businessconfigPrefix(menu: Menu) {
     return menu.id + '.' + menu.version + '.';
 }

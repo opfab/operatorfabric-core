@@ -70,7 +70,7 @@ export class CardDetailsComponent implements OnInit {
 
 
     constructor(private store: Store<AppState>,
-        private thirdsService: ProcessesService,
+        private businessconfigService: ProcessesService,
         private userService: UserService,
         private cardService: CardService,
         private router: Router,
@@ -105,7 +105,7 @@ export class CardDetailsComponent implements OnInit {
     }
 
     get btnColor(): string {
-        return this.thirdsService.getResponseBtnColorEnumValue(this.responseData.btnColor);
+        return this.businessconfigService.getResponseBtnColorEnumValue(this.responseData.btnColor);
     }
 
     get btnText(): string {
@@ -143,11 +143,11 @@ export class CardDetailsComponent implements OnInit {
                         this.details = [];
                     }
                     this.messages.submitError.display = false;
-                    this.thirdsService.queryProcess(this.card.process, this.card.processVersion)
+                    this.businessconfigService.queryProcess(this.card.process, this.card.processVersion)
                         .pipe(takeUntil(this.unsubscribe$))
-                        .subscribe(third => {
-                            if (third) {
-                                const state = third.extractState(this.card);
+                        .subscribe(businessconfig => {
+                            if (businessconfig) {
+                                const state = businessconfig.extractState(this.card);
                                 if (state != null) {
                                     this.details.push(...state.details);
                                     this.acknowledgementAllowed = state.acknowledgementAllowed;

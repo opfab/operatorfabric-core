@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit {
     navbarCollapsed = true;
     navigationRoutes = navigationRoutes;
     currentPath: string[];
-    private _thirdMenus: Observable<Menu[]>;
+    private _businessconfigMenus: Observable<Menu[]>;
     expandedMenu: boolean[] = [];
     expandedUserMenu = false;
     
@@ -57,7 +57,7 @@ export class NavbarComponent implements OnInit {
                 this.currentPath = url.split('/');
             }
         });
-        this._thirdMenus = this.store.select(selectMenuStateMenu)
+        this._businessconfigMenus = this.store.select(selectMenuStateMenu)
             .pipe(tap(menus => {
                 this.expandedMenu = new Array<boolean>(menus.length);
                 _.fill(this.expandedMenu, false);
@@ -112,8 +112,8 @@ export class NavbarComponent implements OnInit {
         this.store.dispatch(new TryToLogOut());
     }
 
-    get thirdMenus() {
-        return this._thirdMenus;
+    get businessconfigMenus() {
+        return this._businessconfigMenus;
     }
 
     toggleMenu(index: number) {

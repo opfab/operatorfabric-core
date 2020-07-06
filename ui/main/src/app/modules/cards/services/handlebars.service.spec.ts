@@ -11,7 +11,7 @@
 
 import {getTestBed, TestBed} from '@angular/core/testing';
 
-import {ThirdsI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
+import {BusinessconfigI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
@@ -50,7 +50,7 @@ describe('Handlebars Services', () => {
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
-                        useFactory: ThirdsI18nLoaderFactory,
+                        useFactory: BusinessconfigI18nLoaderFactory,
                         deps: [ProcessesService]
                     },
                     useDefaultLang: false

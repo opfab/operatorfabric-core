@@ -192,7 +192,7 @@ public class CardOperationsControllerShould {
                 .expectComplete()
                 .verify();
         //create later published cards in future
-        // this one overrides third
+        // this one overrides businessconfig
         StepVerifier.create(repository.save(createSimpleCard(3, nowPlusOne, nowPlusOne, nowPlusTwo, "rte-operator", new String[]{"rte","operator"}, null)))
                 .expectNextCount(1)
                 .expectComplete()

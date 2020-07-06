@@ -48,7 +48,7 @@ If you want to check that the certificates were correctly added, you can do so w
 . Open a bash shell in the container you want to check
 +
 ....
-docker exec -it deploy_thirds_1 bash
+docker exec -it deploy_businessconfig_1 bash
 ....
 +
 . Run the following command

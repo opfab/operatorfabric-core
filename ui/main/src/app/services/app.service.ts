@@ -16,7 +16,7 @@ export class AppService {
             return PageType.FEED;
         } else if ( this._router.routerState.snapshot.url.startsWith("/archives") ) {
             return PageType.ARCHIVE;
-        } else if ( this._router.routerState.snapshot.url.startsWith("/thirdparty") ) {
+        } else if ( this._router.routerState.snapshot.url.startsWith("/businessconfigparty") ) {
             return PageType.THIRPARTY;
         } else if ( this._router.routerState.snapshot.url.startsWith("/setting") ) {
             return PageType.SETTING;
