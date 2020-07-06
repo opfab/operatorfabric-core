@@ -1,0 +1,137 @@
+{
+  "title": "OperatorFabric (Test)",
+  "logo": { 
+    "base64" : "PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgZmlsbD0iZ3JlZW4iPgogICAgPHBhdGggY2xhc3M9InN0MiIgZD0iTTI0Ljg3MSA0Ny4zMTNjLjQ1MS0xLjEyOC4yMjYtMi40MjUtLjY3Ny0zLjI3bC00LjIyOS00LjI4NmEzLjA1IDMuMDUgMCAwIDAtMy4yNy0uNjc3bC01LjAxOSAyLjA4Ni0yLjI1NSAxMy40MiAxMy40Mi0yLjI1NXpNNDEuMTY3IDExLjY3NWwtMi4wODYgNS4wMTljLS40NTEgMS4xMjgtLjIyNiAyLjQyNS42NzYgMy4yN2w0LjI4NiA0LjI4NmEzLjA1IDMuMDUgMCAwIDAgMy4yNy42NzdsNS4wMTktMi4wODcgMi4yNTUtMTMuNDJ6TTM3Ljc4NCA0Ny44MmMtLjQ1MS0xLjEyOC0xLjU3OS0xLjg2LTIuNzYzLTEuODZoLTYuMDljLTEuMjQgMC0yLjMxMi43MzItMi43NjMgMS44NmwtMi4wODYgNS4wNzUgNy44OTQgMTEuMTA4aC4wNTZsNy44OTUtMTEuMTA4ek01Mi44NCAyNC4xMzdsLTUuMDE5IDIuMDg3Yy0xLjEyOC40NS0xLjg2IDEuNTc4LTEuODYgMi43NjN2Ni4wMzNjMCAxLjI0LjczMiAyLjMxMiAxLjg2IDIuNzYzbDUuMDc1IDIuMDg2IDExLjEwOC03Ljg5NHpNNDcuMzEzIDM5LjA4Yy0xLjEyNy0uNDUxLTIuNDI0LS4yMjYtMy4yNy42NzdsLTQuMjg2IDQuMjg1YTMuMDUgMy4wNSAwIDAgMC0uNjc2IDMuMjdsMi4wODYgNS4wNzYgMTMuNDIgMi4yNTUtMi4yNTUtMTMuNDJ6TTExLjYyIDIyLjg0bDUuMDE4IDIuMDg3YzEuMTI4LjQ1IDIuNDI1LjIyNSAzLjI3MS0uNjc3bDQuMjg1LTQuMjg2YTMuMDUgMy4wNSAwIDAgMCAuNjc3LTMuMjdsLTIuMDg2LTUuMDE5TDkuMzY1IDkuNDJ6TTE2LjEzMSAzNy44NGMxLjEyOC0uNDUyIDEuODYtMS41OCAxLjg2LTIuNzY0di02LjA5YzAtMS4yNC0uNzMyLTIuMzExLTEuODYtMi43NjJsLTUuMDE5LTIuMDg3TC4wMDQgMzIuMDMxbDExLjEwOCA3Ljg5NXpNMjQuMDgyIDExLjExMmwyLjA4NiA1LjAxOGMuNDUxIDEuMTI4IDEuNTc5IDEuODYgMi43NjMgMS44Nmg2LjAzNGMxLjI0IDAgMi4zMTEtLjczMiAyLjc2My0xLjg2bDIuMDg2LTUuMDE4TDMxLjkyLjAwM3oiLz4KICA8L2c+CiAgPGcgZmlsbD0iIzc0NzNjMCI+CiAgICA8cGF0aCBjbGFzcz0ic3QzIiBkPSJNOS4zNjQgNTQuNjQzbDUuNjQgNS42MzkuMDU2LjA1NmMxLjUyMiAxLjUyMyA0LjA2Ljk1OSA0Ljg0OS0xLjAxNWwyLjg3Ni02LjkzNXpNNTQuNTg3IDkuNDJMNDguOTUgMy43MjVsLS4wNTctLjA1N2MtMS41MjItMS41MjItNC4wNi0uOTU4LTQuODQ5IDEuMDE1bC0yLjg3NiA2Ljk5MnpNMzkuODcgNTIuODk1bC03Ljg5NCAxMS4xMDhoOC4wNjNjMi4xNDMgMCAzLjU1My0yLjE5OSAyLjcwNy00LjE3MnpNNjMuOTQ4IDI0LjAyNGMwLTIuMTQyLTIuMi0zLjYwOC00LjE3My0yLjc2M2wtNi45MzYgMi44NzYgMTEuMTA5IDcuODk0ek01OS4yNjggNDQuMDQybC02LjkzNi0yLjg3NiAyLjI1NSAxMy40MiA1LjY0LTUuNjM4LjA1Ni0uMDU3YzEuNTIyLTEuNDY2Ljk1OC00LjAwMy0xLjAxNS00Ljg0OXpNNC42ODQgMTkuOTY0bDYuOTM2IDIuODc2TDkuMzY0IDkuNDJsLTUuNjM4IDUuNjM5LS4wNTcuMDU2Yy0xLjQ2NiAxLjQ2Ni0uOTU4IDQuMDA0IDEuMDE1IDQuODV6TTQuMTc3IDQyLjgwMmw2LjkzNS0yLjg3NkwuMDA0IDMyLjAzdjguMDY0YzAgMi4wODYgMi4yIDMuNDk2IDQuMTczIDIuNzA3ek0yNC4wODIgMTEuMTEyTDMxLjk3Ni4wMDNoLTguMDYzYy0yLjE0MyAwLTMuNTUzIDIuMi0yLjcwNyA0LjE3M3oiLz4KICA8L2c+CiAgPHBhdGggY2xhc3M9InN0NCIgZD0iTTQuNjg0IDQ0LjA0MmMtMS45NzMuNzktMi40OCAzLjM4My0xLjAxNSA0Ljg1bC4wNTcuMDU2IDUuNjM4IDUuNjM5IDIuMjU2LTEzLjQyek01MS45OTQgMjIuODRsNi44NzktMi44NzZjMS45NzQtLjc4OSAyLjQ4MS0zLjM4MyAxLjAxNS00Ljg0OWwtLjA1Ni0uMDU2LTUuNjQtNS42Mzl6TTIxLjA5MyA1OS44M2MtLjc5IDEuOTc0LjYyIDQuMTczIDIuNzA3IDQuMTczaDguMDA3bC03Ljg5NC0xMS4xMDh6TTU5LjM4IDQyLjgwMmMxLjk3NC43ODkgNC4xMTctLjYyIDQuMTE3LTIuNzA3di04LjA2NEw1Mi41IDM5LjkyNnpNNDMuNzYxIDU5LjI2N2MuNzkgMS45NzMgMy4zMjcgMi41MzcgNC44NSAxLjAxNWwuMDU2LS4wNTcgNS41ODItNS42MzgtMTMuMzA3LTIuMjU2ek0yMi42NzIgMTEuNjc1TDE5Ljc5NiA0Ljc0Yy0uNzktMS45NzQtMy4zMjctMi41MzgtNC44NS0xLjAxNWwtLjA1Ni4wNTZMOS4yNTIgOS40MnpNNC4xMiAyMS4yNjFjLTEuOTE3LS44NDUtNC4xMTYuNTY0LTQuMTE2IDIuNzA3djguMDYzbDExLjA1Mi03Ljg5NHpNMzkuNTg4IDExLjE2OGwyLjg3Ni02LjkzNmMuNzktMS45NzMtLjYyLTQuMTcyLTIuNzA3LTQuMTcySDMxLjc1eiIgZmlsbD0iI2ZmNjQ3ZCIvPgo8L3N2Zz4=",
+    "height":50,
+    "width": 50,
+    "limitSize":false
+  },
+  "archive": {
+    "filters": {
+      "page": {
+        "size": [
+          "5"
+        ]
+      },
+      "process": {
+        "list": [
+          "process1",
+          "process2",
+          "process3"
+        ]
+      },
+      "tags": {
+        "list": [
+          {
+            "label": "Test 1",
+            "value": "tag1"
+          },
+          {
+            "label": "Label for tag 2",
+            "value": "test2"
+          }
+        ]
+      }
+    }
+  },
+  "feed": {
+    "card": {
+      "hideTimeFilter": true,
+      "time": {
+        "display": "PUBLICATION"
+      },
+      "hideAckFilter": true
+    },
+    "notify": false,
+    "timeline": {
+      "hide" : false,
+      "domains": [
+        "7D",
+        "W",
+        "M",
+        "Y"
+      ]
+    }
+  },
+  "i10n": {
+    "supported": {
+      "time-zones": [
+        {
+          "label": "Headquarters timezone",
+          "value": "Europe/Paris"
+        },
+        {
+          "label": "Down Under",
+          "value": "Australia/Melbourne"
+        },
+        "Europe/London",
+        "Pacific/Samoa"
+      ]
+    }
+  },
+  "i18n": {
+    "supported": {
+      "locales": [
+        "en",
+        "fr",
+        "it",
+        "es"
+      ]
+    }
+  },
+  "security": {
+    "jwt": {
+      "expire-claim": "exp",
+      "login-claim": "preferred_username"
+    },
+    "logout-url": "/ui/",
+    "oauth2": {
+      "client-id": "opfab-client",
+      "flow": {
+        "delagate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client",
+        "mode": "PASSWORD",
+        "provider": "Opfab Keycloak"
+      }
+    },
+    "provider-realm": "dev",
+    "provider-url": "http://localhost:89"
+  },
+  "settings": {
+    "tags": {"hide":false},
+    "about": {
+      "firstapplication": {
+        "name": "First application",
+        "rank": 1,
+        "version": "v12.34.56"
+      },
+      "keycloack": {
+        "name": "Keycloak",
+        "rank": 2,
+        "version": "6.0.1"
+      },
+      "lastapplication": {
+        "name": "Very Super Wonderful Solution",
+        "version": "0.1.2-RELEASE"
+      },
+      "operatorfabric": {
+        "name": "OperatorFabric",
+        "rank": 0,
+        "version": "SNAPSHOT"
+      }
+    },
+    "infos": {
+      "description": true,
+      "dateformat":true,
+      "timeformat":true,
+      "datetimeformat":true,
+      "disable": false
+    },
+    "locale": "en",
+    "nightDayMode": false,
+    "styleWhenNightDayModeDesactivated" : "LEGACY"
+  },
+  "navbar": {
+    "hidden": ["logging","monitoring"],
+    "businessmenus" : {"type":"IFRAME"}
+  }
+}

@@ -18,7 +18,8 @@ import {AppState} from "@ofStore/index";
 import {FilterType} from "@ofServices/filter.service";
 import {ApplyFilter} from "@ofActions/feed.actions";
 import {LoadSettingsSuccess, SettingsActionTypes} from "@ofActions/settings.actions";
-import {buildConfigSelector} from "@ofSelectors/config.selectors";
+import {ConfigService} from "@ofServices/config.service";
+
 
 @Injectable()
 export class FeedFiltersEffects {
@@ -26,7 +27,8 @@ export class FeedFiltersEffects {
 
     /* istanbul ignore next */
     constructor(private store: Store<AppState>,
-                private actions$: Actions) {
+                private actions$: Actions,
+                private configService: ConfigService) {
 
     }
 
@@ -35,8 +37,8 @@ export class FeedFiltersEffects {
         .pipe(
 
             ofType<LoadSettingsSuccess>(SettingsActionTypes.LoadSettingsSuccess),
-            withLatestFrom(this.store.select(buildConfigSelector('settings.defaultTags'))),
-            map(([action,configTags])=>{
+            map(action=>{
+                const configTags = this.configService.getConfigValue('settings.defaultTags');
                 if(action.payload.settings.defaultTags && action.payload.settings.defaultTags.length>0)
                     return action.payload.settings.defaultTags;
                 else if (configTags && configTags.length > 0)

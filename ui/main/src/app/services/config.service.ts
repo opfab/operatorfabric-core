@@ -11,14 +11,17 @@
 
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
+import {map} from 'rxjs/operators';
 import {HttpClient} from "@angular/common/http";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import {environment} from "@env/environment";
+import * as _ from 'lodash';
 
 @Injectable()
 export class ConfigService {
     private configUrl: string;
+    private config;
 
     constructor(private httpClient: HttpClient,
                 private store: Store<AppState>) {
@@ -26,6 +29,16 @@ export class ConfigService {
     }
 
     fetchConfiguration(): Observable<any> {
-        return this.httpClient.get(`${this.configUrl}`)
+        return this.httpClient.get(`${this.configUrl}`).pipe(
+            map(
+            config => this.config = config));
+    }
+
+    getConfigValue(path:string, fallback: any = null)
+    {
+        let result = _.get(this.config,path,null);
+        if(!result && fallback)
+            return fallback;
+        return result;
     }
 }

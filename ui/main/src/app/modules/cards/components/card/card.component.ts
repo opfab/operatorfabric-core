@@ -15,11 +15,10 @@ import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {map, takeUntil} from 'rxjs/operators';
-import {buildConfigSelector} from '@ofSelectors/config.selectors';
-import {TranslateService} from '@ngx-translate/core';
+import {takeUntil} from 'rxjs/operators';
 import {TimeService} from '@ofServices/time.service';
 import {Subject} from 'rxjs';
+import { ConfigService} from "@ofServices/config.service";
 
 @Component({
     selector: 'of-card',
@@ -39,39 +38,40 @@ export class CardComponent implements OnInit, OnDestroy {
     /* istanbul ignore next */
     constructor(private router: Router,
                 private store: Store<AppState>,
-                private translate: TranslateService,
-                private time: TimeService
+                private time: TimeService,
+                private  configService: ConfigService
     ) {
     }
 
     ngOnInit() {
-        const card = this.lightCard;
-        this._i18nPrefix = `${card.process}.${card.processVersion}.`;
-        this.store.select(selectCurrentUrl).subscribe(url => {
-            if (url) {
-                const urlParts = url.split('/');
-                this.currentPath = urlParts[1];
-            }
-        });
-        this.store.select(buildConfigSelector('feed.card.time.display'))
-        // use configuration to compute date
-            .pipe(map(config => this.computeDisplayedDates(config, card)))
+        this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
+        this.store.select(selectCurrentUrl)
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(computedDate => this.dateToDisplay = computedDate);
+            .subscribe(url => {
+                if (url) {
+                    const urlParts = url.split('/');
+                    this.currentPath = urlParts[1];
+                }
+            });
+        this.computeDisplayedDate();
     }
 
-    computeDisplayedDates(config: string, lightCard: LightCard): string {
-        switch (config) {
+    computeDisplayedDate() {
+        switch (this.configService.getConfigValue('feed.card.time.display', 'BUSINESS')) {
             case 'NONE':
-                return '';
+                this.dateToDisplay = '';
+                break;
             case 'LTTD':
-                return this.handleDate(lightCard.lttd);
+                this.dateToDisplay = this.handleDate(this.lightCard.lttd);
+                break;
             case 'PUBLICATION':
-                return this.handleDate(lightCard.publishDate);
+                this.dateToDisplay = this.handleDate(this.lightCard.publishDate);
+                break;
             case 'BUSINESS_START':
-                return this.handleDate(lightCard.startDate);
+                this.dateToDisplay = this.handleDate(this.lightCard.startDate);
+                break;
             default:
-                return `${this.handleDate(lightCard.startDate)} - ${this.handleDate(lightCard.endDate)}`
+                this.dateToDisplay = `${this.handleDate(this.lightCard.startDate)} - ${this.handleDate(this.lightCard.endDate)}`;
         }
     }
 

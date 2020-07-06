@@ -10,12 +10,10 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import { Observable,Subject} from 'rxjs';
-
-import {takeUntil} from 'rxjs/operators';
+import { Subject} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
-import { buildConfigSelector } from '@ofSelectors/config.selectors';
+import {ConfigService} from "@ofServices/config.service";
 import { FormGroup, FormControl } from '@angular/forms';
 import { SendArchiveQuery ,FlushArchivesResult} from '@ofStore/actions/archive.actions';
 import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
@@ -52,13 +50,13 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
 })
 export class ArchiveFiltersComponent implements OnInit {
 
-  tags$: Observable<string []>;
-  processes$: Observable<string []>;
-  size: number =10;
+  tags: string [];
+  processes: string [];
+  size: number;
   archiveForm: FormGroup;
   unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private store: Store<AppState>, private timeService: TimeService,private translateService: TranslateService) {
+  constructor(private store: Store<AppState>, private timeService: TimeService,private translateService: TranslateService,private  configService: ConfigService) {
     this.archiveForm = new FormGroup({
       tags: new FormControl(''),
       process: new FormControl(),
@@ -71,13 +69,9 @@ export class ArchiveFiltersComponent implements OnInit {
 
 
   ngOnInit() {
-    this.tags$ = this.store.select(buildConfigSelector('archive.filters.tags.list'));
-    this.processes$ = this.store.select(buildConfigSelector('archive.filters.process.list'));
-    this.store.select(buildConfigSelector('archive.filters.page.size'))
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(configSize => {
-        this.size = configSize;
-      })
+    this.tags = this.configService.getConfigValue('archive.filters.tags.list'); 
+    this.processes = this.configService.getConfigValue('archive.filters.process.list'); 
+    this.size = this.configService.getConfigValue('archive.filters.page.size',10); 
   }
 
   /**

@@ -20,9 +20,9 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {Menu} from '@ofModel/processes.model';
 import {tap} from 'rxjs/operators';
 import * as _ from 'lodash';
-import {buildConfigSelector} from '@ofStore/selectors/config.selectors';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
+import { ConfigService} from "@ofServices/config.service";
 
 @Component({
     selector: 'of-navbar',
@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
 
     nightDayMode = false;
 
-    constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService) {
+    constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService,private  configService: ConfigService) {
     }
 
     ngOnInit() {
@@ -62,59 +62,42 @@ export class NavbarComponent implements OnInit {
             }));
         this.store.dispatch(new LoadMenu());
 
-        this.store.select(buildConfigSelector('logo.base64')).subscribe(
-            data => {
-                if (data) {
-                    this.customLogo = `data:image/svg+xml;base64,${data}`;
-                }
-            }
-        );
 
-        this.store.select(buildConfigSelector('logo.height')).subscribe(
-            height => {
-                if (height) {
-                    this.height = height;
-                }
-            }
-        );
+        const logo = this.configService.getConfigValue('logo.base64');
+        if (!!logo) {
+            this.customLogo = `data:image/svg+xml;base64,${logo}`;
+        }
+        const logo_height = this.configService.getConfigValue('logo.height');
+        if (!!logo_height) {
+            this.height = logo_height;
+        }
 
-        this.store.select(buildConfigSelector('logo.width')).subscribe(
-            width => {
-                if (width) {
-                    this.width = width;
-                }
-            }
-        );
-        this.store.select(buildConfigSelector('logo.limitSize')).subscribe(
-            (limitSize: boolean) => {
-                // BE CAREFUL, as a boolean it has to be test with undefined value to know if it has been set.
-                if (limitSize !== undefined && typeof (limitSize) === 'boolean') {
-                    this.limitSize = limitSize;
-                }
-            }
-        );
-        this.store.select(buildConfigSelector('settings')).subscribe(
-            (settings) => {
-                if (settings.nightDayMode) {
-                    this.nightDayMode = <boolean>settings.nightDayMode;
-                }
-                if (!this.nightDayMode) {
-                    if (settings.styleWhenNightDayModeDesactivated) {
-                        this.globalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
-                    }
-                } else {
-                    this.loadNightModeFromLocalStorage();
-                }
-            }
-        );
+        const logo_width = this.configService.getConfigValue('logo.width');
+        if (!!logo_width) {
+            this.width = logo_width;
+        }
 
-        this.store.select(buildConfigSelector('navbar.hidden')).subscribe(
-            (hiddenMenus: string[]) => {
-                if (!!hiddenMenus) {
-                    this.navigationRoutes = navigationRoutes.filter(route => !hiddenMenus.includes(route.path));
-                }
+        const logo_limitSize = this.configService.getConfigValue('logo.limitSize');
+        this.limitSize = (logo_limitSize === true);
+
+
+        const settings = this.configService.getConfigValue('settings');
+        if (settings) {
+            if (settings.nightDayMode) {
+                this.nightDayMode = <boolean>settings.nightDayMode;
             }
-        );
+            if (!this.nightDayMode) {
+                if (settings.styleWhenNightDayModeDesactivated) {
+                    this.globalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
+                }
+            } else {
+                this.loadNightModeFromLocalStorage();
+            }
+        }
+
+        const hiddenMenus = this.configService.getConfigValue('navbar.hidden',[]);
+        this.navigationRoutes = navigationRoutes.filter(route => !hiddenMenus.includes(route.path));
+   
     }
 
     logOut() {

@@ -1,4 +1,5 @@
 {
+  "title": "OperatorFabric (Dev Mode)",
   "archive": {
     "filters": {
       "page": {
@@ -35,9 +36,6 @@
       "hideAckFilter": false
     },
     "notify": false,
-    "subscription": {
-      "timeout": 600000
-    },
     "timeline": {
       "hide" : false,
       "domains": [
@@ -100,6 +98,7 @@
     "provider-url": "http://localhost:89"
   },
   "settings": {
+    "tags": {"hide":false},
     "about": {
       "firstapplication": {
         "name": "First application",
@@ -122,10 +121,15 @@
       }
     },
     "infos": {
-      "description": true
+      "description": true,
+      "disable": false
     },
     "locale": "en",
-    "nightDayMode": true
+    "nightDayMode": false,
+    "styleWhenNightDayModeDesactivated" : "NIGHT"
   },
-  "navbar": {"hidden": ["logging","monitoring"]}
+  "navbar": {
+    "hidden": ["logging","monitoring"],
+    "businessmenus" : {"type":"BOTH"}
+  }
 }

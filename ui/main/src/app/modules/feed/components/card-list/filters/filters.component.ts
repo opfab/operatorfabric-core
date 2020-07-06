@@ -9,47 +9,38 @@
 
 
 
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
-import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 import { selectSubscriptionOpen } from '@ofStore/selectors/cards-subscription.selectors';
-import {  Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { ConfigService} from "@ofServices/config.service";
 
 @Component({
   selector: 'of-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.scss']
 })
-export class FiltersComponent implements OnInit,OnDestroy {
+export class FiltersComponent implements OnInit {
 
-  hideTags$: Observable<boolean>;
-  hideTimerTags$: Observable<boolean>;
-  hideAckFilter$: Observable<boolean>;
+  hideAckFilter: boolean;
+  hideTags: boolean;
+  hideTimerTags: boolean;
   cardsSubscriptionOpen$ : Observable<boolean>;
   filterByPublishDate : boolean = true;
-  private ngUnsubscribe$ = new Subject<void>();
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,private  configService: ConfigService) { }
 
   ngOnInit() {
-    this.hideTags$ = this.store.select(buildConfigSelector('settings.tags.hide'));
-    this.hideTimerTags$ = this.store.select(buildConfigSelector('feed.card.hideTimeFilter'));
-    this.hideAckFilter$ = this.store.select(buildConfigSelector('feed.card.hideAckFilter'));
+    this.hideTags = this.configService.getConfigValue('settings.tags.hide',false); 
+    this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter',false); 
+    this.hideAckFilter = this.configService.getConfigValue('feed.card.hideAckFilter',false); 
     this.cardsSubscriptionOpen$ = this.store.select(selectSubscriptionOpen);
     
     // When time line is hide , we use a date filter by business date and not publish date
-    this.store.select(buildConfigSelector('feed.timeline.hide'))
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(
-        hideTimeLine => this.filterByPublishDate = !hideTimeLine
-      )
+    this.filterByPublishDate = !this.configService.getConfigValue('feed.timeline.hide',false); 
+
   }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
-}
+
 }

@@ -5,9 +5,9 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Migration Guide
+= Migration Guide from release 1.4.0 to release 1.5.0 
 
-== Refactoring of configuration management (publisher->process) OC-979 (Temporary document)
+== Refactoring of configuration management 
 
 === Motivation for the change
 
@@ -70,6 +70,7 @@ Below is a summary of the changes to the `config.json` file that all this entail
 |states array is a root property
 |
 |===
+
 
 Here is an example of a simple config.json file:
 
@@ -189,6 +190,10 @@ These changes impact both current cards from the feed and archived cards.
 [IMPORTANT]
 The id of the card is now build as process.processInstanceId an not anymore publisherID_process.
 
+== Change on the web-ui.json 
+
+The parameter operatorfabric.navbar.thirdmenus.type is rename operatorfabric.navbar.businessmenus.type
+
 == Component name 
 
 We also change the component name of third which is now named businessconfig.
@@ -197,7 +202,7 @@ We also change the component name of third which is now named businessconfig.
 
 The `/third` endpoint becomes `/businessconfig/processes`.
 
-=== Migration guide
+== Migration steps
 
 This section outlines the necessary steps to migrate existing data.
 
@@ -209,6 +214,9 @@ version while there are still "old" bundles in the businessconfig storage will c
 
 . Edit your bundles as detailed above. In particular, if you had bundles containing several processes, you will need to
 split them into several bundles. The `id` of the bundles should match the `process` field in the corresponding cards.
+
+- If you user operatorfabric.navbar.thirdmenus.type in web-ui.json, rename it to operatorfabric.navbar.businessmenus.type
+
 
 . Run the following scripts in the mongo shell to copy the value of `publisherVersion` to a new `processVersion` field
 for all cards (current and archived):
