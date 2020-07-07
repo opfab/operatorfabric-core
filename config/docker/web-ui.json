@@ -126,5 +126,5 @@
     "locale": "en",
     "nightDayMode": true
   },
-  "navbar": {"hidden": ["logging","monitoring","archives"]}
+  "navbar": {"hidden": ["logging","monitoring"]}
 }

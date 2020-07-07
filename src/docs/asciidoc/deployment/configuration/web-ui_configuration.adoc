@@ -130,6 +130,18 @@ It should look like:
 |operatorfabric.logo.width|150|no|The width of the logo (in px) (only taken into account if operatorfabric.logo.base64 is set).
 |operatorfabric.logo.limitSize|true|no|If it is true, the height limit is 32(px) and the width limit is 200(px), it means that if the height is over than 32, it will be set to 32, if the width is over than 200, it is set to 200. If it is false, no limit restriction for the height and the width. 
 |operatorfabric.title|OperatorFabric|no|Title of the application, displayed on the browser
+|navbar.hidden|["logging","monitoring"]|no
+a| Lists the application menu to hide in the navbar. +
+The `keys` used are the `route.path` declared in the `${OF_HOME}ui/main/src/app/app-routing.module.ts` file. +
+Currently the `application routes` are:
+
+- `feed`;
+- `archives`.
+
+There will be two new routes with the release of the `[OC-936]`:
+
+- `logging`;
+- `monitoring`.
 
 |===
 
