@@ -27,6 +27,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -57,7 +58,10 @@ public class CardProcessingService {
     private Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards, Optional<CurrentUserWithPerimeters> user) {
 
         long windowStart = Instant.now().toEpochMilli();
-        Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
+
+        //delete child cards process should be prior to cards updates
+        Flux<CardPublicationData> cards = deleteChildCardsProcess(pushedCards);
+        cards = registerRecipientProcess(cards);
         cards = registerValidationProcess(cards);
 
         if (user.isPresent()) {
@@ -74,6 +78,18 @@ public class CardProcessingService {
                             new CardCreationReportData(0, "Error, unable to handle pushed Cards: " + e.getMessage()));
                 });
     }
+
+    private Flux<CardPublicationData> deleteChildCardsProcess(Flux<CardPublicationData> cards) {
+        return cards.doOnNext(card->{
+            String idCard= card.getProcess()+"."+card.getProcessInstanceId();
+            Optional<List<CardPublicationData>> childCard=cardRepositoryService.findChildCard(cardRepositoryService.findCardById(idCard));
+            if(childCard.isPresent()){
+                deleteCards(childCard.get());
+            }
+        });
+    }
+
+
 
     public Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards) {
         return processCards(pushedCards, Optional.empty());
@@ -206,12 +222,21 @@ public class CardProcessingService {
         });
     }
 
+    public void deleteCards(List<CardPublicationData> cardPublicationData) {
+        cardPublicationData.forEach(x->deleteCard(x.getId()));
+    }
+
     public void deleteCard(String processInstanceId) {
 
-        CardPublicationData cardToDelete = cardRepositoryService.findCardToDelete(processInstanceId);
+        CardPublicationData cardToDelete = cardRepositoryService.findCardById(processInstanceId);
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
             cardRepositoryService.deleteCard(cardToDelete);
+            Optional<List<CardPublicationData>> childCard=cardRepositoryService.findChildCard(cardToDelete);
+            if(childCard.isPresent()){
+                childCard.get().forEach(x->deleteCard(x.getId()));
+            }
+
         }
     }
 

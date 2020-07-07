@@ -239,6 +239,70 @@ class CardProcessServiceShould {
 
     }
 
+
+    @Test
+    void childCards() throws URISyntaxException {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 1;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.forEach(c -> c.setParentCardId(null));
+
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                "The number of registered cards should be '%d' but is " + "'%d' actually",
+                numberOfCards, block).isEqualTo(numberOfCards);
+
+        CardPublicationData firstCard = cards.get(0);
+        String id = firstCard.getId();
+
+        ArrayList<String> externalRecipients = new ArrayList<>();
+        externalRecipients.add("api_test_externalRecipient1");
+
+        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
+                .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+                .process("PROCESS_CARD_USER")
+                .parentCardId(cards.get(0).getUid())
+                .state("STATE1")
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .externalRecipients(externalRecipients)
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .state("state1")
+                .build();
+
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI(EXTERNALAPP_URL)))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.ACCEPTED)
+                );
+
+        StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card), currentUserWithPerimeters))
+                .expectNextMatches(r -> r.getCount().equals(1)).verifyComplete();
+        checkCardPublisherId(card);
+
+
+
+        Assertions.assertThat(cardRepository.count().block())
+                .withFailMessage("The number of registered cards should be '%d' but is '%d' ",
+                        2, block)
+                .isEqualTo(2);
+
+        cardProcessingService.deleteCard(cards.get(0).getId());
+
+        Assertions.assertThat(cardRepository.count().block())
+                .withFailMessage("The number of registered cards should be '%d' but is '%d' "
+                                + "when first parent card is deleted(processInstanceId:'%s').",
+                        0, block, id)
+                .isEqualTo(0);
+
+
+
+    }
+
     @Test
     void createCardsWithError() {
         StepVerifier.create(cardProcessingService.processCards(Flux
@@ -457,7 +521,7 @@ class CardProcessServiceShould {
                 .isEqualTo(1);
 
         String computedCardId = publishedCard.getProcess() + "." + publishedCard.getProcessInstanceId();
-        CardPublicationData cardToDelete = cardRepositoryService.findCardToDelete(computedCardId);
+        CardPublicationData cardToDelete = cardRepositoryService.findCardById(computedCardId);
 
         Assertions.assertThat(cardToDelete).isNotNull();
 

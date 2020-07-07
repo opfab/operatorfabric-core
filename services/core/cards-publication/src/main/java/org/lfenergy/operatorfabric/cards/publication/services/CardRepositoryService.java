@@ -10,6 +10,8 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
+import com.mongodb.client.result.UpdateResult;
+import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.mongodb.client.result.UpdateResult;
-
-import lombok.extern.slf4j.Slf4j;
-
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -56,7 +56,9 @@ public class CardRepositoryService {
         this.template.remove(cardToDelete);
     }
 
-    public CardPublicationData findCardToDelete(String processInstanceId) {
+
+
+    public CardPublicationData findCardById(String processInstanceId) {
         /**
          * Uses a projection instead the default 'findById' method. This projection
          * excludes data which can be unpredictably huge depending on publisher needs.
@@ -66,6 +68,17 @@ public class CardRepositoryService {
         findCardByIdWithoutDataField.addCriteria(Criteria.where("Id").is(processInstanceId));
 
         return this.template.findOne(findCardByIdWithoutDataField, CardPublicationData.class);
+    }
+
+    public Optional<List<CardPublicationData>> findChildCard(CardPublicationData card) {
+
+        if (Objects.isNull(card)) return Optional.empty();
+        Query findCardByParentCardIdWithoutDataField = new Query();
+        findCardByParentCardIdWithoutDataField.fields().exclude("data");
+        findCardByParentCardIdWithoutDataField.addCriteria(Criteria.where("parentCardId").is(card.getUid()));
+        return Optional.ofNullable(template.find(findCardByParentCardIdWithoutDataField, CardPublicationData.class));
+
+
     }
 
 	public UserAckOperationResult addUserAck(String name, String cardUid) {
