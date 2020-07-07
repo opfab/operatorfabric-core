@@ -38,23 +38,28 @@ Once the whole application is ready, you should have the following output in you
 ----
 ##########################################################
 Starting users-business-service, debug port: 5009
-
 ##########################################################
 pid file: $OF_HOME/services/core/users/build/PIDFILE
 Started with pid: 7483
 
 ##########################################################
 Starting cards-consultation-business-service, debug port: 5011
-
 ##########################################################
 pid file: $OF_HOME/services/core/cards-consultation/build/PIDFILE
 Started with pid: 7493
 
 ##########################################################
 Starting cards-publication-business-service, debug port: 5012
-
 ##########################################################
 pid file: $OF_HOME/services/core/cards-publication/build/PIDFILE
+Started with pid: 7500
+
+##########################################################
+Starting businessconfig-business-service, debug port: 5008
+##########################################################
+pid file: $OF_HOME//services/core/businessconfig/build/PIDFILE
+Started with pid: 7501
+
 ----
 
 Wait a moment before trying to connect to the`SPA`, leaving time for the OperatorFabricServices to boot up completely.
@@ -71,7 +76,10 @@ To test the reception of cards, you can use the following script to create dummy
 ${OF_HOME}/services/core/cards-publication/src/main/bin/push_cards_loop.sh
 ----
 
-For more realistic card sending use, once Karate env correctly configured, the Karate script called `${OF_HOME}/src/test/api/karate/launchAllCards.sh`.
+For more realistic card sending use, once Karate env correctly configured, the Karate scripts called :
+
+** `${OF_HOME}/src/test/utils/karate/loadBundles.sh`
+** `${OF_HOME}/src/test/utils/karate/postTestCards.sh`
 
 Once logged in, after one of those scripts have been running, you should be able to see some cards displayed in `http://localhost:2002/ui/feed`.
 

@@ -26,8 +26,6 @@ Work in progress
 //TODO Explain timeline, archives?
 //TODO Go through each screen to explain buttons? Filters etc.
 
-== Technical overview
-
 include::businessconfig_service.adoc[leveloffset=+1]
 
 include::users_service.adoc[leveloffset=+1]

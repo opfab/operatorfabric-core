@@ -12,7 +12,7 @@ Before detailing the content of cards, let's show you what cards look like throu
 [[minimal_card]]
 == Minimal Card
 
-The OperatorFabric Card specification defines 8 mandatory attributes, but some optional attributes are needed for cards to be useful in OperatorFabric. Let's clarify those point through few examples of minimal cards and what happens when they're used as if.
+The OperatorFabric Card specification defines mandatory attributes, but some optional attributes are needed for cards to be useful in OperatorFabric. Let's clarify those point through few examples of minimal cards and what happens when they're used as if.
 
 === Send to One User
 The following card contains only the mandatory attributes.
@@ -21,7 +21,7 @@ The following card contains only the mandatory attributes.
 {
 	"publisher":"TSO1",
 	"processVersion":"0.1",
-    "process":"process",
+	"process":"process",
 	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
@@ -49,7 +49,7 @@ The following example is nearly the same as the previous one except for the reci
 {
 	"publisher":"TSO1",
 	"processVersion":"0.1",
-    "process":"process",
+	"process":"process",
 	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
@@ -64,25 +64,7 @@ The following example is nearly the same as the previous one except for the reci
 
 Here, the recipient is a group, the `TSO1`. So all users who are members of this group will receive the card.
 
-==== Simple case (sending to an entity)
 
-The following example is nearly the same as the previous one except for the recipient.
-
-....
-{
-	"publisher":"TSO1",
-	"processVersion":"0.1",
-    "process":"process",
-	"processInstanceId":"process-000",
-	"startDate":1546297200000,
-	"severity":"INFORMATION",
-	"title":{"key":"card.title.key"},
-	"summary":{"key":"card.summary.key"},
-    "entityRecipients" : ["ENTITY1"]
-}
-....
-
-Here, the recipient is an entity, the `ENTITY1`. So all users who are members of this entity AND who have the right for the process/state of the card will receive it.
 
 ==== Simple case (sending to a group and an entity)
 
@@ -92,7 +74,7 @@ The following example is nearly the same as the previous one except for the reci
 {
 	"publisher":"TSO1",
 	"processVersion":"0.1",
-    "process":"process",
+	"process":"process",
 	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
@@ -101,18 +83,35 @@ The following example is nearly the same as the previous one except for the reci
 	"recipient":{
 		"type":"GROUP",
         "identity":"TSO1"
-	}
-    "entityRecipients" : ["ENTITY1"]
+	},
+	"entityRecipients" : ["ENTITY1"]
 }
 ....
 
-Here, the recipients are a group and an entity, the `TSO1` group and `ENTITY1` entity. To receive the card, there is two possibilities :
+Here, the recipients are a group and an entity, the `TSO1` group and `ENTITY1` entity. So all users who are both members
+of this group and this entity will receive the card.
 
-* users must be members of one of the entities AND one of the groups
+==== Simple case (sending to an entity)
 
-OR
+The following example is nearly the same as the previous one except for the recipient.
 
-* users must be members of one of the entities AND have the right for the process/state of the card
+....
+{
+	"publisher":"TSO1",
+	"processVersion":"0.1",
+	"process":"process",
+	"processInstanceId":"process-000",
+	"startDate":1546297200000,
+	"severity":"INFORMATION",
+	"title":{"key":"card.title.key"},
+	"summary":{"key":"card.summary.key"},
+	"entityRecipients" : ["ENTITY1"]
+}
+....
+
+Here, the recipient is an entity and there is no more groups. So all users who has the right perimeter and who are members of this entity will receive the card. More information on perimeter can be found in 
+ifdef::single-page-doc[<<'users_service,user documentation'>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_service, user documentation>>]
 
 
 ==== Complex case
@@ -144,7 +143,7 @@ For this example we will use our previous example for the `TSO1` group with a `d
 {
 	"publisher":"TSO1",
 	"processVersion":"0.1",
-    "process":"process",
+	"process":"process",
 	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
@@ -180,7 +179,7 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 {
 	"publisher":"TEST_PUBLISHER",
 	"processVersion":"1",
-    "process":"TEST",
+	"process":"TEST",
 	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",

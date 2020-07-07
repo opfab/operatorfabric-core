@@ -47,7 +47,7 @@ instance).
 |Port | |
 
 |2002 |web-ui | Web ui and gateway  (Nginx server)
-|2100 |businessconfig |Businessconfig party management service http (REST)
+|2100 |businessconfig |Businessconfig service http (REST)
 |2102 |cards-publication |card publication service http (REST)
 |2103 |users |Users management service http (REST)
 |2104 |cards-consultation |card consultation service http (REST)

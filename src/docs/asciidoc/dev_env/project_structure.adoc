@@ -31,7 +31,7 @@ project
 │   │   ├──cards-consultation (cards-consultation-business-service)
 │   │   ├──cards-publication (cards-publication-business-service)
 │   │   ├──src
-│   │   ├──businessconfig (businessconfig-party-business-service)
+│   │   ├──businessconfig (businessconfig-business-service)
 │   │   └──users (users-business-service)
 ├──web-ui
 ├──src
@@ -79,7 +79,7 @@ OperatorFabric
 (cards-publication-business-service)]: Card publication service
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/src[src]: contains swagger templates for core business
 microservices
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/businessconfig[businessconfig (businessconfig-party-business-service)]:
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/businessconfig[businessconfig (businessconfig-business-service)]:
 Businessconfig-party information management service
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/services/core/users[users (users-business-service)]: Users management
 service
