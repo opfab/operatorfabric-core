@@ -11,21 +11,22 @@
 
 === Motivation for the change
 
-The initial situation was to have a `Businessconfig` concept that was meant to represent businessconfig-party applications that publish
+The initial situation was to have a `Third` concept that was meant to represent third-party applications that publish
 content (cards) to OperatorFabric.
 As such, a Businessconfig was both the sender of the message and the unit of configuration for resources for card rendering.
 
 [NOTE]
 Because of that mix of concerns, naming was not consistent across the different services in the backend and frontend as
 this object could be referred to using the following terms:
-* Businessconfig
-* BusinessconfigParty
+* Third
+* ThirdParty
 * Bundle
 * Publisher
 
 But now that we're aiming for cards to be sent by entities, users (see Free Message feature) or external services, it
 doesn't make sense to tie the rendering of the card ("Which configuration bundle should I take the templates and
 details from?") to its publisher ("Who/What emitted this card and who/where should I reply?").
+
 
 === Changes to the model
 
@@ -188,9 +189,13 @@ These changes impact both current cards from the feed and archived cards.
 [IMPORTANT]
 The id of the card is now build as process.processInstanceId an not anymore publisherID_process.
 
+== Component name 
+
+We also change the component name of third which is now named businessconfig.
+
 == Changes to the endpoints
 
-The `/businessconfig` endpoint becomes `businessconfig/processes` in preparation of OC-978.
+The `/third` endpoint becomes `/businessconfig/processes`.
 
 === Migration guide
 
@@ -201,7 +206,6 @@ You need to perform these steps before starting up the OperatorFabric instance b
 version while there are still "old" bundles in the businessconfig storage will cause the businessconfig service to crash.
 
 . Backup your existing bundles and existing Mongo data.
-//TODO Add details?
 
 . Edit your bundles as detailed above. In particular, if you had bundles containing several processes, you will need to
 split them into several bundles. The `id` of the bundles should match the `process` field in the corresponding cards.

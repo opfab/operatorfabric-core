@@ -6,18 +6,17 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 
-//TODO OC-979
 = Businessconfig Service
 
-As stated above, businessconfig-party applications (or "businessconfig" for short) interact with OperatorFabric by sending cards.
+As stated above, third applications interact with OperatorFabric by sending cards.
 The Businessconfig service allows them to tell OperatorFabric
 
 * how these cards should be rendered
 * what actions should be made available to the operators regarding a given card
 * if several languages are supported, how cards should be translated
 
-In addition, it lets businessconfig-party applications define additional menu entries for the navbar (for example linking back
-to the businessconfig-party application) that can be integrated either as iframe or external links.
+In addition, it lets third-party applications define additional menu entries for the navbar (for example linking back
+to the third-party application) that can be integrated either as iframe or external links.
 
 include::process_definition.adoc[leveloffset=+1]
 

@@ -46,11 +46,7 @@ during development
 ** copyCompileClasspathDependencies: copy compile classpath dependencies,
 catching lombok that must be sent for sonarqube
 
-=== infra/config
 
-* Test tasks
-** createDevData: prepare data in build/test-data for running bootRun task
-during development
 
 === tools/generic
 

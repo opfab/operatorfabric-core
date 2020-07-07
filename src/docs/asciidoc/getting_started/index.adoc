@@ -117,7 +117,7 @@ We can send a new version of the card (updateCard.json):
 	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processId" : "hello-world-1",
-	"state"  $: "messageState",
+	"state" : "messageState",
 	"recipient" : {
 				"type" : "GROUP",
 				"identity" : "TSO1"

@@ -22,7 +22,6 @@ card collection. This way, the current card reflects the current state of a proc
 In the archived cards collection however, both cards will be kept, so that the archived cards
 show all the states that a given process instance went through.
 
-//TODO Card examples
 
 == Archives screen in the UI
 
@@ -30,11 +29,14 @@ The Archives screen in the UI allows the users to query these archives with diff
 The layout of this screen is very similar to the Feed screen: the results are displayed in a
 (paginated) card list, and the user can display the associated card details by clicking a card in the list.
 
-IMPORTANT: The results of these queries are limited to cards that the user is allowed to see, either
-because this user is direct recipient of the card or because he belongs to a group (or entity) that is a recipient
-of the card. If a card is sent to an entity and a group, then this user must be part of both the group and the entity.
+The results of these queries are limited to cards that the user is allowed to see, either :
 
-//TODO Add screenshot
+** because this user is direct recipient of the card,
+** because he belongs to a group (or entity) that is a recipient,
+** or because he belongs to a group that has the right to receive the card (via definition of perimeters)
+
+If a card is sent to an entity and a group, then this user must be part of both the group and the entity.
+
 
 == Archive endpoints in the card-consultation API
 

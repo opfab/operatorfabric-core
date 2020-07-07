@@ -26,7 +26,7 @@ Boot configuration] for more info.
 ** server.port (defaults to 8080) : embedded server port
 * :services:core:businessconfig-party-service properties list extract :
 ** operatorfabric.businessconfig.storage.path (defaults to &quot;&quot;) : where to
-save/load OperatorFabric Businessconfig Party data
+save/load OperatorFabric Businessconfig  data
 
 == Generating docker images
 

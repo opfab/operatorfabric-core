@@ -7,7 +7,7 @@
 
 
 
-
+[[users_service]]
 = OperatorFabric Users Service
 
 The User service manages users, groups, entities and perimeters (linked to groups).
@@ -69,12 +69,10 @@ Possible rights for receiving/writing cards are :
 - Write : the rights for writing a card, that is to say respond to a card or create a new card
 - ReceiveAndWrite : the rights for receiving and writing a card
 
+=== Alternative way to manage groups and entities
 
-==== Alternative way to manage groups
-
-The standard way to handle groups in `OperatorFabric` instance is dealt on the user information.
-There is an alternative way to manage groups through the authentication token, the groups are defined by the
-administrator of the authentication service.
+The standard way to handle groups and entities in `OperatorFabric` instance is dealt on the user information.
+There is an alternative way to manage groups and entities through the authentication token, the groups and entities are defined by the administrator of the authentication service.
 See
 ifdef::single-page-doc[<<jwt_mode, here>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/deployment/index.adoc#jwt_mode, here>>]

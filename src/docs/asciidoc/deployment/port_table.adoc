@@ -24,7 +24,7 @@ the used ports are:
 
 |89 |KeyCloak |89 |KeyCloak api port
 |2002 |web-ui |8080 | Web ui and gateway  (Nginx server)
-|2100 |businessconfig |8080 |Businessconfig party management service http (REST)
+|2100 |businessconfig |8080 |Businessconfig management service http (REST)
 |2102 |cards-publication |8080 |Cards publication service http (REST)
 |2103 |users |8080 |Users management service http (REST)
 |2104 |cards-consultation |8080 |Cards consultation service http (REST)
