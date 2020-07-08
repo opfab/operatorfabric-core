@@ -67,7 +67,7 @@ public class LightCardConsultationData implements LightCard {
     @Transient
     private Boolean hasBeenAcknowledged;
 
-    private String parentCardId;
+    private String parentCardUid;
 
     /**
      * return timespans, may return null
@@ -93,7 +93,7 @@ public class LightCardConsultationData implements LightCard {
         LightCardConsultationDataBuilder builder = builder()
                 .uid(other.getUid())
                 .id(other.getId())
-                .parentCardId(other.getParentCardId())
+                .parentCardUid(other.getParentCardUid())
                 .process(other.getProcess())
                 .state(other.getState())
                 .processInstanceId(other.getProcessInstanceId())

@@ -11,9 +11,9 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
-import java.time.Instant;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -21,14 +21,8 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
+import java.time.Instant;
+import java.util.List;
 
 /**
  * <p>Please use builder to instantiate</p>
@@ -49,7 +43,7 @@ public class CardConsultationData implements Card {
     private String uid ;
     @Id
     private String id;
-    private String parentCardId;
+    private String parentCardUid;
     private String publisher;
     private String processVersion;
     private String process;

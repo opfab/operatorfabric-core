@@ -73,10 +73,10 @@ public class CardRepositoryService {
     public Optional<List<CardPublicationData>> findChildCard(CardPublicationData card) {
 
         if (Objects.isNull(card)) return Optional.empty();
-        Query findCardByParentCardIdWithoutDataField = new Query();
-        findCardByParentCardIdWithoutDataField.fields().exclude("data");
-        findCardByParentCardIdWithoutDataField.addCriteria(Criteria.where("parentCardId").is(card.getUid()));
-        return Optional.ofNullable(template.find(findCardByParentCardIdWithoutDataField, CardPublicationData.class));
+        Query findCardByParentCardUidWithoutDataField = new Query();
+        findCardByParentCardUidWithoutDataField.fields().exclude("data");
+        findCardByParentCardUidWithoutDataField.addCriteria(Criteria.where("parentCardUid").is(card.getUid()));
+        return Optional.ofNullable(template.find(findCardByParentCardUidWithoutDataField, CardPublicationData.class));
 
 
     }

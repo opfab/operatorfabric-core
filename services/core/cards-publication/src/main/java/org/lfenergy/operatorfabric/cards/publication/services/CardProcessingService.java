@@ -146,9 +146,9 @@ public class CardProcessingService {
      */
     void validate(CardPublicationData c) throws ConstraintViolationException {
 
-        // constraint check : parentCardId must exist
-        if (!checkIsParentCardIdExisting(c))
-            throw new ConstraintViolationException("The parentCardId " + c.getParentCardId() + " is not the uid of any card", null);
+        // constraint check : parentCardUid must exist
+        if (!checkIsParentCardUidExisting(c))
+            throw new ConstraintViolationException("The parentCardUid " + c.getParentCardUid() + " is not the uid of any card", null);
 
         Set<ConstraintViolation<CardPublicationData>> results = localValidatorFactoryBean.validate(c);
         if (!results.isEmpty())
@@ -167,10 +167,10 @@ public class CardProcessingService {
             throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
     }
 
-    boolean checkIsParentCardIdExisting(CardPublicationData c){
-        String parentCardId = c.getParentCardId();
-        if (Optional.ofNullable(parentCardId).isPresent()) {
-            if (!cardRepositoryService.findByUid(parentCardId).isPresent()) {
+    boolean checkIsParentCardUidExisting(CardPublicationData c){
+        String parentCardUid = c.getParentCardUid();
+        if (Optional.ofNullable(parentCardUid).isPresent()) {
+            if (!cardRepositoryService.findByUid(parentCardUid).isPresent()) {
                 return false;
             }
         }

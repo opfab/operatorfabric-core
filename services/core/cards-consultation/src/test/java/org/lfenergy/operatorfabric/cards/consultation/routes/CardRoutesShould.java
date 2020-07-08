@@ -145,7 +145,7 @@ public class CardRoutesShould {
         public void findOutCardWithoutAcks(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
-        	simpleCard.setParentCardId(null);
+        	simpleCard.setParentCardUid(null);
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
@@ -283,12 +283,12 @@ public class CardRoutesShould {
             configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, null, null);
 
             CardConsultationData childCard1 = instantiateOneCardConsultationData();
-            childCard1.setParentCardId("parentUid");
+            childCard1.setParentCardUid("parentUid");
             childCard1.setId(childCard1.getId() + "2");
             configureRecipientReferencesAndStartDate(childCard1, "userWithGroupAndEntity", now, null, null);
 
             CardConsultationData childCard2 = instantiateOneCardConsultationData();
-            childCard2.setParentCardId("parentUid");
+            childCard2.setParentCardUid("parentUid");
             childCard2.setId(childCard2.getId() + "3");
             configureRecipientReferencesAndStartDate(childCard2, "userWithGroupAndEntity", now, null, null);
 

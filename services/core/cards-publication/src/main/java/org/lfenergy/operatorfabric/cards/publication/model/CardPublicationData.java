@@ -49,7 +49,7 @@ public class CardPublicationData implements Card {
     private String uid = UUID.randomUUID().toString();
     @Id
     private String id;
-    private String parentCardId;
+    private String parentCardUid;
     @NotNull
     private String publisher;
     @NotNull
@@ -135,7 +135,7 @@ public class CardPublicationData implements Card {
         LightCardPublicationData.LightCardPublicationDataBuilder result = LightCardPublicationData.builder()
                 .id(this.getId())
                 .uid(this.getUid())
-                .parentCardId(this.getParentCardId())
+                .parentCardUid(this.getParentCardUid())
                 .publisher(this.getPublisher())
                 .processVersion(this.getProcessVersion())
                 .process(this.getProcess())

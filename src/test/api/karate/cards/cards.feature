@@ -257,7 +257,7 @@ Scenario:  Post card with no recipient but entityRecipients
     Then status 201
     And match response.count == 1
 
-Scenario:  Post card with parentCardId not correct
+Scenario:  Post card with parentCardUid not correct
 
     * def card =
 """
@@ -276,7 +276,7 @@ Scenario:  Post card with parentCardId not correct
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title2"},
 	"data" : {"message":"test externalRecipients"},
-	"parentCardId": "1"
+	"parentCardUid": "1"
 }
 """
 
@@ -286,9 +286,9 @@ Scenario:  Post card with parentCardId not correct
     When method post
     Then status 201
     And match response.count == 0
-    And match response.message contains "The parentCardId 1 is not the uid of any card"
+    And match response.message contains "The parentCardUid 1 is not the uid of any card"
 
-Scenario:  Post card with correct parentCardId
+Scenario:  Post card with correct parentCardUid
 
     #get parent card uid
     Given url opfabUrl + 'cards/cards/api_test.process1'
@@ -316,7 +316,7 @@ Scenario:  Post card with correct parentCardId
 	"data" : {"message":"test externalRecipients"}
 }
 """
-	* card.parentCardId = cardUid
+	* card.parentCardUid = cardUid
 
 # Push card
     Given url opfabPublishCardUrl + 'cards'
@@ -383,7 +383,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"data" : {"message":"test externalRecipients"}
 }
 """
-	* childCard1.parentCardId = parentCardUid
+	* childCard1.parentCardUid = parentCardUid
 
 	* def childCard2 =
 """
@@ -404,7 +404,7 @@ Scenario: Push card and its two child cards, then get the parent card
 	"data" : {"message":"test externalRecipients"}
 }
 """
-	* childCard2.parentCardId = parentCardUid
+	* childCard2.parentCardUid = parentCardUid
 
 # Push the two child cards
     Given url opfabPublishCardUrl + 'cards'
