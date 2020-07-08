@@ -114,7 +114,7 @@ asciidoctor {
     }
     resources {
         from('src/docs/asciidoc') {
-            include 'images/*'
+            include 'images/*','pdf/*'
         }
     }
     attributes  nofooter            : '',
