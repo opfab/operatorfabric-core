@@ -33,6 +33,7 @@ import {UtilitiesModule} from "../utilities/utilities.module";
 import { SeveritySortComponent } from './components/card-list/filters/severity-sort/severity-sort.component';
 import {FontAwesomeIconsModule} from "../utilities/fontawesome-icons.module";
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { AcknowledgementFilterComponent } from './components/card-list/filters/acknowledgement-filter/acknowledgement-filter.component';
 
 @NgModule({
     imports: [
@@ -55,7 +56,8 @@ import { FlatpickrModule } from 'angularx-flatpickr';
         CustomTimelineChartComponent,
         MouseWheelDirective,
         TagsFilterComponent,
-        SeveritySortComponent],
+        SeveritySortComponent,
+        AcknowledgementFilterComponent],
     exports: [FeedComponent],
     providers: [ {provide: TimeService, useClass: TimeService}]
 })

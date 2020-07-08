@@ -31,7 +31,8 @@
       "hideTimeFilter": false,
       "time": {
         "display": "BUSINESS"
-      }
+      },
+      "hideAckFilter": false
     },
     "notify": false,
     "subscription": {

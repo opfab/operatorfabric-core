@@ -40,6 +40,18 @@
         "information": {
           "label": "Information"
         }
+      },
+      "ack": {
+        "title": "Acknowledgement",
+        "acknowledged": {
+          "label": "Acknowledged"
+        },
+        "notacknowledged": {
+          "label": "Not acknowledged"
+        },
+        "all": {
+          "label": "All"
+        }
       }
     },
     "sort": {
@@ -114,7 +126,7 @@
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "Acknowledge an close",
+      "ack": "Acknowledge and close",
       "unack": "Cancel acknowledgement"
     }
   }

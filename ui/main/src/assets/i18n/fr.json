@@ -40,6 +40,18 @@
         "information": {
           "label": "Information"
         }
+      },
+      "ack": {
+        "title": "Acquittement",
+        "acknowledged": {
+          "label": "Acquittées"
+        },
+        "notacknowledged": {
+          "label": "Non acquittées"
+        },
+        "all": {
+          "label": "Toutes"
+        }
       }
     },
     "sort": {

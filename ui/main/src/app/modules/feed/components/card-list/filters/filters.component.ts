@@ -27,6 +27,7 @@ export class FiltersComponent implements OnInit,OnDestroy {
 
   hideTags$: Observable<boolean>;
   hideTimerTags$: Observable<boolean>;
+  hideAckFilter$: Observable<boolean>;
   cardsSubscriptionOpen$ : Observable<boolean>;
   filterByPublishDate : boolean = true;
   private ngUnsubscribe$ = new Subject<void>();
@@ -36,6 +37,7 @@ export class FiltersComponent implements OnInit,OnDestroy {
   ngOnInit() {
     this.hideTags$ = this.store.select(buildConfigSelector('settings.tags.hide'));
     this.hideTimerTags$ = this.store.select(buildConfigSelector('feed.card.hideTimeFilter'));
+    this.hideAckFilter$ = this.store.select(buildConfigSelector('feed.card.hideAckFilter'));
     this.cardsSubscriptionOpen$ = this.store.select(selectSubscriptionOpen);
     
     // When time line is hide , we use a date filter by business date and not publish date

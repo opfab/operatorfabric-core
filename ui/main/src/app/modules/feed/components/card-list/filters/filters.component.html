@@ -15,6 +15,9 @@
                 <of-time-filter [filterByPublishDate]="filterByPublishDate"></of-time-filter>
             </span>
             <of-severity-sort></of-severity-sort>
+            <span *ngIf="!(hideAckFilter$|async)">
+                <of-ack-filter></of-ack-filter>
+            </span>
         </div>
 
 
