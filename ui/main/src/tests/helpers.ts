@@ -171,6 +171,7 @@ export function getOneRandomLightCard(lightCardTemplate?:any): LightCard {
         getRandomI18nData(),
         lightCardTemplate.tags?lightCardTemplate.tags:null,
         lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null,
+        lightCardTemplate.process?lightCardTemplate.process:'testProcess'
     );
     return oneCard;
 }

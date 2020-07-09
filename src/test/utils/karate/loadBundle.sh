@@ -7,5 +7,5 @@ cd ../..
 
 echo "Launch Karate test"
 java -jar karate.jar                           \
-      businessconfig/postBundleApiTest.feature         \
+      businessconfig/postBundleDefaultProcess.feature         \
 

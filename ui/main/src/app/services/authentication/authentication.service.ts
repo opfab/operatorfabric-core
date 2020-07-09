@@ -87,7 +87,6 @@ export class AuthenticationService {
      * @param oauth2Conf - settings return by the back-end config service
      */
     assignConfigurationProperties(oauth2Conf) {
-        console.log("*****auth = ",oauth2Conf)
         this.clientId = _.get(oauth2Conf, 'oauth2.client-id', null);
         this.delegateUrl = _.get(oauth2Conf, 'oauth2.flow.delagate-url', null);
         this.loginClaim = _.get(oauth2Conf, 'jwt.login-claim', 'sub');
