@@ -90,23 +90,23 @@ export class ProcessesService {
         });
     }
 
-    computeBusinessconfigCssUrl(publisher: string, styleName: string, version: string) {
+    computeBusinessconfigCssUrl(process: string, styleName: string, version: string) {
         // manage url character encoding
-        const resourceUrl = this.urlCleaner.encodeValue(`${this.processesUrl}/${publisher}/css/${styleName}`);
+        const resourceUrl = this.urlCleaner.encodeValue(`${this.processesUrl}/${process}/css/${styleName}`);
         const versionParam = new HttpParams().set('version', version);
         return `${resourceUrl}?${versionParam.toString()}`;
     }
 
-    private convertJsonToI18NObject(locale, publisher: string, version: string) {
+    private convertJsonToI18NObject(locale, process: string, version: string) {
         return r => {
             const object = {};
-            object[publisher] = {};
-            object[publisher][version] = r;
+            object[process] = {};
+            object[process][version] = r;
             return object;
         };
     }
 
-    askForI18nJson(publisher: string, locale: string, version?: string): Observable<any> {
+    askForI18nJson(process: string, locale: string, version?: string): Observable<any> {
         let params = new HttpParams().set('locale', locale);
         if (version) {
             /*
@@ -116,11 +116,11 @@ export class ProcessesService {
              */
             params = params.set('version', version);
         }
-        return this.httpClient.get(`${this.processesUrl}/${publisher}/i18n`, {params})
+        return this.httpClient.get(`${this.processesUrl}/${process}/i18n`, {params})
             .pipe(
-                map(this.convertJsonToI18NObject(locale, publisher, version))
+                map(this.convertJsonToI18NObject(locale, process, version))
                 , catchError(error => {
-                    console.error(`error trying fetch i18n of '${publisher}' version:'${version}' for locale: '${locale}'`);
+                    console.error(`error trying fetch i18n of '${process}' version:'${version}' for locale: '${locale}'`);
                     return error;
                 })
             );

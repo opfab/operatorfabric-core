@@ -34,52 +34,7 @@ function getRandomStringOf8max() {
     return getRandomAlphanumericValue(3, 8);
 }
 
-describe('Translation effect when extracting publisher and their version from LightCards  ', () => {
-
-    it('should return the publisher of an input lightCard.', () => {	
-        const cardTemplate = {publisher: getRandomAlphanumericValue(9)};	
-        const testACard = getOneRandomCard(cardTemplate);	
-        const publisher = testACard.publisher;	
-        const version = new Set([testACard.processVersion]);
-        const result = TranslateEffects.extractPublisherAssociatedWithDistinctVersionsFromCards([testACard]);	
-        expect(result).toBeTruthy();	
-        expect(result[publisher]).toEqual(version);	
-    });
-    xit('should collect different publishers along with their different versions from LightCards', () => {
-        const businessconfig0 = getRandomAlphanumericValue(5);	
-        const templateCard0withRandomVersion = {publisher: businessconfig0};	
-        const businessconfig1 = getRandomAlphanumericValue(7);	
-        const templateCard1withRandomVersion = {publisher: businessconfig1};	
-        const version0 = getRandomAlphanumericValue(3);	
-        const templateCard0FixedVersion = {...templateCard0withRandomVersion, processVersion: version0};
-        const version1 = getRandomAlphanumericValue(5);	
-        const templateCard1FixedVersion = {...templateCard1withRandomVersion, processVersion: version1};
-        const cards: LightCard[] = [];	
-        const numberOfFreeVersion = 5;	
-        for (let i = 0; i < numberOfFreeVersion; ++i) {	
-            cards.push(getOneRandomCard(templateCard0withRandomVersion));	
-            cards.push(getOneRandomCard(templateCard1withRandomVersion));	
-        }	
-        for (let i = 0; i < 3; ++i) {	
-            cards.push(getOneRandomCard(templateCard0FixedVersion));	
-            cards.push(getOneRandomCard(templateCard1FixedVersion));	
-        }	
-        const underTest = TranslateEffects.extractPublisherAssociatedWithDistinctVersionsFromCards(cards);	
-        const OneCommonVersion = 1;	
-        const firstBusinessconfig = underTest[businessconfig0];	
-        const secondBusinessconfigVersion = underTest[businessconfig1];	
-        expect(Object.entries(underTest).length).toEqual(2);	
-        expect(firstBusinessconfig).toBeTruthy();	
-        expect(firstBusinessconfig.size).toEqual(numberOfFreeVersion + OneCommonVersion);	
-        expect(firstBusinessconfig.has(version0)).toBe(true);	
-        expect(secondBusinessconfigVersion).toBeTruthy();	
-        expect(secondBusinessconfigVersion.size).toEqual(numberOfFreeVersion + OneCommonVersion);	
-        expect(secondBusinessconfigVersion.has(version1)).toBe(true);	
-    });
-
-
-});
-describe('Translate effect when receiving publishers and their versions to upload', () => {
+describe('Translate effect when receiving processes and their versions to upload', () => {
 
     it('should send TranslationUptoDate if no version provided to update', () => {
         const underTest = TranslateEffects.sendTranslateAction(null);
@@ -96,7 +51,7 @@ describe('Translate effect when receiving publishers and their versions to uploa
 
 });
 
-describe('Translation effect when comparing publishers with versions ', () => {
+describe('Translation effect when comparing process with versions ', () => {
     it("shouldn't extract anything as long as input versions are already cached", () => {
         const businessconfigNotToUpdate = getRandomAlphanumericValue(5);
         const versionNotToUpdate = generateRandomArray(4, 9, getRandomStringOf8max);
@@ -111,7 +66,7 @@ describe('Translation effect when comparing publishers with versions ', () => {
         expect(underTest).not.toBeTruthy();
     });
 
-    it('should extract untracked versions of referenced publisher but not existing ones,' +
+    it('should extract untracked versions of referenced process but not existing ones,' +
         ' case with a mix of new and cached ones', () => {
 
         const referencedBusinessconfigWithVersions = generateBusinessconfigWithVersion();
@@ -136,7 +91,7 @@ describe('Translation effect when comparing publishers with versions ', () => {
             expect(_.includes(versionToUpdate, version)).toEqual(false);
         });
     });
-    it('should extract untracked versions of referenced publisher but not existing ones,' +
+    it('should extract untracked versions of referenced process but not existing ones,' +
         ' case with only new ones', () => {
         const referencedBusinessconfigWithVersions = new Map<Set<string>>();
 
@@ -163,7 +118,7 @@ describe('Translation effect when comparing publishers with versions ', () => {
         expect(underTestVersions[0]).toEqual(newVersions);
     });
 
-    it('should extract the publisher not referenced', () => {
+    it('should extract the process not referenced', () => {
 
         const reference = new Map<Set<string>>();
         const referencedVersions = ['version0', 'version1'];
@@ -171,16 +126,16 @@ describe('Translation effect when comparing publishers with versions ', () => {
         reference[referencedBusinessconfig] = new Set(referencedVersions);
 
 
-        const newPublisher = getRandomAlphanumericValue(8);
+        const newProcess = getRandomAlphanumericValue(8);
         const randomVersions = generateRandomArray(2, 5, getRandomStringOf8max);
 
         expect(randomVersions).toBeTruthy();
         const businessconfigInput = new Map<Set<string>>();
-        businessconfigInput[newPublisher] = new Set(randomVersions);
+        businessconfigInput[newProcess] = new Set(randomVersions);
         businessconfigInput[referencedBusinessconfig] = new Set(referencedVersions);
 
         const expectOutPut = new Map<Set<string>>();
-        expectOutPut[newPublisher] = new Set(randomVersions);
+        expectOutPut[newProcess] = new Set(randomVersions);
 
         const underTest = TranslateEffects.extractBusinessconfigToUpdate(businessconfigInput, reference);
         expect(underTest).toEqual(expectOutPut);

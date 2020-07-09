@@ -158,7 +158,6 @@ export class CardService {
     fetchArchivedCards(filters: Map<string, string[]>): Observable<Page<LightCard>> {
         let params = new HttpParams();
         filters.forEach((values, key) => values.forEach(value => params = params.append(key, value)));
-        // const tmp = new HttpParams().set('publisher', 'defaultPublisher').set('size', '10');
         return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
     }
 
