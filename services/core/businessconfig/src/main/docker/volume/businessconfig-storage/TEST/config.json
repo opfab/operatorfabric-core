@@ -31,7 +31,8 @@
           },
           "templateName": "operation"
         }
-      ]
+      ],
+      "acknowledgementAllowed": false
     }
   }
 }
