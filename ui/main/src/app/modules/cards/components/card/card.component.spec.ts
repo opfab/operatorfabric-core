@@ -130,16 +130,7 @@ describe('CardComponent', () => {
         expect(FiveJune2019at10AMDateString).toEqual('05/06/2019 10:00');
         });
 
-    it('should return an empty string if NONE is configured', () => {
-        const lightCard = getOneRandomLightCard();
-        const expectedEmptyDisplayedDate = lightCardDetailsComp.computeDisplayedDates('NONE', lightCard);
-        expect(expectedEmptyDisplayedDate).toEqual('');
-        });
-    it('should return interval if BUSINESS is configured', () => {
-        const lightCard = getOneRandomLightCard();
-        const expectedBuisnessInterval = lightCardDetailsComp.computeDisplayedDates('BUSINESS', lightCard);
-        verifyCorrectInterval(expectedBuisnessInterval);
-    });
+
 
     function verifyCorrectInterval(testedString: string) {
         const minimalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale = 39;
@@ -154,32 +145,5 @@ describe('CardComponent', () => {
         expect(testedLength).toBeGreaterThanOrEqual(min);
         expect(testedLength).toBeLessThanOrEqual(max);
     }
-
-    it('should return interval if there is no configuration', () => {
-        const lightCard = getOneRandomLightCard();
-        const expectedBusinessInterVal = lightCardDetailsComp.computeDisplayedDates(undefined, lightCard);
-        verifyCorrectInterval(expectedBusinessInterVal);
-    });
-
-    it('should return interval with unexpected configuration', () => {
-        const lightCard = getOneRandomLightCard();
-        const expectedBusinessInterVal = lightCardDetailsComp.computeDisplayedDates(getRandomAlphanumericValue(12), lightCard);
-        verifyCorrectInterval(expectedBusinessInterVal);
-    });
-
-    it( 'should return a single date with LTTD configuration', () => {
-       const expectDate = lightCardDetailsComp.computeDisplayedDates('LTTD', getOneRandomLightCard());
-       verifyCorrectString(expectDate, 18, 20);
-    });
-
-    it( 'should return a single date with BUSINESS_START configuration', () => {
-        const expectDate = lightCardDetailsComp.computeDisplayedDates('BUSINESS_START', getOneRandomLightCard());
-        verifyCorrectString(expectDate, 18, 20);
-    });
-
-    it( 'should return a single date with PUBLICATION configuration', () => {
-        const expectDate = lightCardDetailsComp.computeDisplayedDates('PUBLICATION', getOneRandomLightCard());
-        verifyCorrectString(expectDate, 18, 20);
-    });
 
 });

@@ -10,13 +10,12 @@
 
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { of, Subscription } from 'rxjs';
-import { select, Store } from '@ngrx/store';
-import { catchError} from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
-import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 import { buildSettingsOrConfigSelector } from '@ofStore/selectors/settings.x.config.selectors';
 import * as moment from 'moment';
+import { ConfigService} from "@ofServices/config.service";
 
 @Component({
     selector: 'of-time-line',
@@ -30,7 +29,7 @@ export class TimeLineComponent implements OnInit, OnDestroy {
     public domains: any;
 
 
-    constructor(private store: Store<AppState>) { }
+    constructor(private store: Store<AppState>,private  configService: ConfigService) { }
     ngOnInit() {
 
         this.loadConfiguration();
@@ -74,16 +73,14 @@ export class TimeLineComponent implements OnInit, OnDestroy {
 
 
     loadDomainsListFromConfiguration() {
-        this.store.pipe(select(buildConfigSelector('feed.timeline.domains')), catchError(() => of([]))).subscribe(d => {
-            if (d) {
-                d.map(domain => {
-                    if (Object.keys(this.domains).includes(domain)) {
-                        this.confDomain.push(this.domains[domain]);
-                    }
-                });
+
+        const domainsConf = this.configService.getConfigValue('feed.timeline.domains', ["TR", "J", "7D", "W", "M", "Y"]);
+        domainsConf.map(domain => {
+            if (Object.keys(this.domains).includes(domain)) {
+                this.confDomain.push(this.domains[domain]);
             }
-            
         });
+
     }
 
 

@@ -10,17 +10,17 @@
 <form [formGroup]="archiveForm">
   <div class="container-fluid">
     <div class="form-row nomarginrow justify-content-center">
-      <div class="col-lg-3 col-md-4 nopaddingrow" *ngIf="(tags$|async) || (processes$|async)">
+      <div class="col-lg-3 col-md-4 nopaddingrow" *ngIf="tags||processes">
         <div class="row" style='margin-right:0;margin-left:0;'>
-          <div *ngIf="tags$|async"
-               [ngClass]="{'col-md-6': ((tags$|async) && (processes$|async)), 'col-md-12': ((tags$|async) && !(processes$|async)), 'archive-filter': true}">
+          <div *ngIf="tags"
+               [ngClass]="{'col-md-6': (tags && processes), 'col-md-12': ( tags && !processes), 'archive-filter': true}">
             <of-multi-filter [parentForm]="archiveForm" filterPath="tags"
-                             [values]="tags$|async"></of-multi-filter>
+                             [values]="tags"></of-multi-filter>
           </div>
-          <div *ngIf="processes$|async"
-               [ngClass]="{'col-md-6': ((tags$|async) && (processes$|async)), 'col-md-12': (!(tags$|async) && (processes$|async)), 'archive-filter': true}">
+          <div *ngIf="processes"
+               [ngClass]="{'col-md-6': ( tags && processes), 'col-md-12': (!tags && processes), 'archive-filter': true}">
             <of-multi-filter [parentForm]="archiveForm" filterPath="process"
-                             [values]="processes$|async"></of-multi-filter>
+                             [values]="processes"></of-multi-filter>
           </div>
         </div>
       </div>

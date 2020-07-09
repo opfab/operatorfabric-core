@@ -14,7 +14,6 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {PatchSettings} from '@ofActions/settings.actions';
 import {buildSettingsSelector} from '@ofSelectors/settings.selectors';
-import {buildConfigSelector} from '@ofSelectors/config.selectors';
 import {Subject, timer} from 'rxjs';
 import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from 'rxjs/operators';
 import {FormGroup} from '@angular/forms';
@@ -32,7 +31,6 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
     @Input() public requiredField: boolean;
     private ngUnsubscribe$ = new Subject<void>();
     protected setting$;
-    protected placeholder$;
     form: FormGroup;
     private baseSettings = {};
 
@@ -60,8 +58,7 @@ export class BaseSettingComponent implements OnInit, OnDestroy {
                     )
                     .subscribe(next => this.dispatch(this.convert(next)))
             );
-        this.placeholder$ = this.store.select(buildConfigSelector(`settings.${this.settingPath}`))
-            .pipe(takeUntil(this.ngUnsubscribe$));
+
         this.store.select(selectIdentifier)
             .pipe(
                 takeUntil(this.ngUnsubscribe$),

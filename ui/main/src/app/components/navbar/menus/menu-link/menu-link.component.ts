@@ -10,9 +10,9 @@
 
 import {Component, Input, OnInit} from '@angular/core';
 import {Menu, MenuEntry} from "@ofModel/processes.model";
-import {buildConfigSelector} from "@ofSelectors/config.selectors";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
+import { ConfigService} from "@ofServices/config.service";
 
 @Component({
   selector: 'of-menu-link',
@@ -27,23 +27,23 @@ export class MenuLinkComponent implements OnInit {
   menusOpenInIframes: boolean;
   menusOpenInBoth: boolean;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>,private  configService: ConfigService) {
   }
 
   ngOnInit() {
-    this.store.select(buildConfigSelector('navbar.businessconfigmenus.type', 'BOTH'))
-        .subscribe(v=> {
-          if(v == 'TAB') {
-            this.menusOpenInTabs = true;
-          } else if (v == 'IFRAME') {
-            this.menusOpenInIframes = true;
-          } else {
-            if (v != 'BOTH') {
-              console.log("MenuLinkComponent - Property navbar.businessconfigmenus.type has an unexpected value: "+v+". Default (BOTH) will be applied.")
-            }
-            this.menusOpenInBoth = true;
-          }
-        })
+    const menuconfig = this.configService.getConfigValue('navbar.businessmenus.type', 'BOTH');
+
+    if (menuconfig == 'TAB') {
+      this.menusOpenInTabs = true;
+    } else if (menuconfig == 'IFRAME') {
+      this.menusOpenInIframes = true;
+    } else {
+      if (menuconfig != 'BOTH') {
+        console.log("MenuLinkComponent - Property navbar.businessconfigmenus.type has an unexpected value: " + menuconfig + ". Default (BOTH) will be applied.")
+      }
+      this.menusOpenInBoth = true;
+    }
+
   }
 }
 

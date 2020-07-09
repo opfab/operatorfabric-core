@@ -17,7 +17,7 @@ import { selectArchiveCount,selectArchiveFilters} from '@ofStore/selectors/archi
 import { catchError } from 'rxjs/operators';
 import { of, Observable,Subject } from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
+import {ConfigService} from "@ofServices/config.service";
 
 @Component({
   selector: 'of-archive-list-page',
@@ -28,16 +28,16 @@ export class ArchiveListPageComponent implements OnInit {
 
   page: number = 0;
   collectionSize$: Observable<number>;
-  size$: Observable<number>;
+  size: number;
   unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>,private configService : ConfigService) {}
   ngOnInit(): void {
     this.collectionSize$ = this.store.pipe(
       select(selectArchiveCount),
       catchError(err => of(0))
     );
-    this.size$ = this.store.select(buildConfigSelector('archive.filters.page.size'));
+    this.size = this.configService.getConfigValue('archive.filters.page.size',10); 
 
     this.store.select(selectArchiveFilters)
       .pipe(takeUntil(this.unsubscribe$))

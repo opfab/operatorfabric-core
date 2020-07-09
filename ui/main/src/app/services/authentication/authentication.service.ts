@@ -26,7 +26,7 @@ import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {buildConfigSelector} from '@ofSelectors/config.selectors';
+import {ConfigService} from "@ofServices/config.service";
 import * as jwt_decode from 'jwt-decode';
 import * as _ from 'lodash';
 import {User} from '@ofModel/user.model';
@@ -75,13 +75,10 @@ export class AuthenticationService {
         , private store: Store<AppState>
         , private oauthService: OAuthService
         , private router: Router
+        , private configService: ConfigService
     ) {
-        store.select(buildConfigSelector('security'))
-            .subscribe(oauth2Conf => {
-                this.assignConfigurationProperties(oauth2Conf);
-                this.authModeHandler = this.instantiateAuthModeHandler(this.mode);
-            });
-
+        this.assignConfigurationProperties(this.configService.getConfigValue('security'));
+        this.authModeHandler = this.instantiateAuthModeHandler(this.mode);
     }
 
 
@@ -90,6 +87,7 @@ export class AuthenticationService {
      * @param oauth2Conf - settings return by the back-end config service
      */
     assignConfigurationProperties(oauth2Conf) {
+        console.log("*****auth = ",oauth2Conf)
         this.clientId = _.get(oauth2Conf, 'oauth2.client-id', null);
         this.delegateUrl = _.get(oauth2Conf, 'oauth2.flow.delagate-url', null);
         this.loginClaim = _.get(oauth2Conf, 'jwt.login-claim', 'sub');
@@ -351,6 +349,8 @@ export class AuthenticationService {
     }
 
     public initializeAuthentication(): void {
+        this.assignConfigurationProperties(this.configService.getConfigValue('security'));
+        this.authModeHandler = this.instantiateAuthModeHandler(this.mode);
         this.authModeHandler.initializeAuthentication(window.location.href);
     }
 

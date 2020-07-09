@@ -9,12 +9,8 @@
 
 
 import {Component, OnInit} from '@angular/core';
-import {AppState} from '@ofStore/index';
-import {Store} from '@ngrx/store';
-import {buildConfigSelector} from '@ofSelectors/config.selectors';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 import _ from 'lodash';
+import {ConfigService} from "@ofServices/config.service";
 
 /**
  * extracts configured application names along with their version, and sort them using their rank if declared
@@ -35,14 +31,14 @@ export function extractNameWithVersionAndSortByRank(applicationReferences) {
 })
 export class AboutComponent implements OnInit {
 
-    aboutElements: Observable<any>;
+    aboutElements : any;
 
-    constructor(private store: Store<AppState>) {
+    constructor(private  configService: ConfigService) {
     }
 
     ngOnInit(): void {
-        this.aboutElements = this.store.select(buildConfigSelector( 'settings.about' ))
-            .pipe(map(applicationReferences => extractNameWithVersionAndSortByRank(applicationReferences)));
+        let aboutConfig = this.configService.getConfigValue('settings.about');
+        if (aboutConfig) this.aboutElements = extractNameWithVersionAndSortByRank(aboutConfig);
     }
 
 
