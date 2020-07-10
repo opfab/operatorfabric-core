@@ -13,19 +13,8 @@
 [horizontal]
 bin/load_environment_light.sh:: sets up environment when *sourced* (java
 version, gradle version, maven version, node version)
-bin/load_environment_ramdisk.sh:: sets up environment and links build
-subdirectories to a ramdisk when *sourced* at ~/tmp
 bin/run_all.sh:: runs all all services (see below)
 bin/setup_dockerized_environment.sh:: generate docker images for all services
-
-== load_environment_ramdisk.sh
-
-There are prerequisites before sourcing load_environment_ramdisk.sh:
-
-* Logged user needs sudo rights for mount
-* System needs to have enough free ram
-
-CAUTION: Never ever run a `gradle clean` or `./gradlew clean` to avoid deleting those links.
 
 == run_all.sh
 

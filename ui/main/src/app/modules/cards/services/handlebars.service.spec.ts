@@ -30,7 +30,7 @@ import {DetailContext} from "@ofModel/detail-context.model";
 
 function computeTemplateUri(templateName) {
     return `${environment.urls.processes}/testProcess/templates/${templateName}`;
-    //TODO OC-1009 Why is the publisher (now the process) hardcoded? It needs to match the one set by default in getOneRandomCard.
+    //TODO OC-1009 Why is the pprocess hardcoded? It needs to match the one set by default in getOneRandomCard.
 }
 
 describe('Handlebars Services', () => {
@@ -549,5 +549,5 @@ function flushI18nJson(request: TestRequest, json: any) {
 }
 
 function prefix(card: LightCard) {
-    return card.publisher + '.' + card.processVersion + '.';
+    return card.process + '.' + card.processVersion + '.';
 }

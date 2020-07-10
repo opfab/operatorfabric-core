@@ -11,14 +11,14 @@ Feature: Bundle
     # Push bundle
     Given url opfabUrl + 'businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
-    And multipart field file = read('resources/bundle_api_test.tar.gz')
+    And multipart field file = read('resources/bundle_defaultProcess.tar.gz')
     When method post
     Then status 201
 
     # Check bundle
-    Given url opfabUrl + 'businessconfig/processes/api_test'
+    Given url opfabUrl + 'businessconfig/processes/defaultProcess'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response.id == 'api_test'
+    And match response.id == 'defaultProcess'
 
