@@ -42,7 +42,7 @@
                 <button type="button" class="btn btn-primary archive-radius" (click)="sendQuery()">
                   <em class="fas fa-search"></em>
                 </button>
-              <button type="button" id="reset" class="btn btn-primary archive-radius" (click)="currentForm.resetForm()">
+              <button type="button" id="reset" class="btn btn-primary archive-radius" (click)="currentForm.resetForm();clearResult()">
                  <em class="fas fa-undo"></em>
               </button>
           </div>

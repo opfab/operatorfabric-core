@@ -15,7 +15,7 @@ import {Subject} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FormControl, FormGroup} from '@angular/forms';
-import {SendArchiveQuery} from '@ofStore/actions/archive.actions';
+import { SendArchiveQuery ,FlushArchivesResult} from '@ofStore/actions/archive.actions';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {TimeService} from '@ofServices/time.service';
@@ -108,6 +108,10 @@ export class ArchiveFiltersComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    clearResult(): void {
+        this.store.dispatch(new FlushArchivesResult());
     }
 
     sendQuery(): void {
