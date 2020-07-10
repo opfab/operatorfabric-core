@@ -26,16 +26,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
+import javax.validation.ConstraintViolation;
 
 import org.lfenergy.operatorfabric.businessconfig.model.Process;
-import org.lfenergy.operatorfabric.businessconfig.model.ResourceTypeEnum;
 import org.lfenergy.operatorfabric.businessconfig.model.ProcessData;
+import org.lfenergy.operatorfabric.businessconfig.model.ResourceTypeEnum;
 import org.lfenergy.operatorfabric.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +45,7 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashBasedTable;
@@ -66,12 +69,14 @@ public class ProcessesService implements ResourceLoaderAware {
     private Map<String, Process> defaultCache;
     private Table<String,String, Process> completeCache;
     private ResourceLoader resourceLoader;
-
+    private LocalValidatorFactoryBean validator;
+    
     @Autowired
-    public ProcessesService(ObjectMapper objectMapper) {
+    public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator) {
         this.objectMapper = objectMapper;
         this.completeCache = HashBasedTable.create();
         this.defaultCache = new HashMap<>();
+        this.validator = validator;
     }
     
     @PostConstruct
@@ -138,6 +143,11 @@ public class ProcessesService implements ResourceLoaderAware {
                                 if (configFile.length >= 1) {
                                     try {
                                         ProcessData process = objectMapper.readValue(configFile[0], ProcessData.class);
+                                        Optional<String> validationError = getConfigFileValidationErrors(process);
+                                        if (validationError.isPresent()) {
+                                        	log.warn("Unreadable process config file({}) because these validation errors: {}", f.getAbsolutePath(), validationError.get());
+                                        	return;
+                                        }
                                         result.put(keyExtractor.apply(process), process);
                                         if (onEachActor != null)
                                             onEachActor.accept(f, process);
@@ -467,6 +477,22 @@ public class ProcessesService implements ResourceLoaderAware {
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
+    }
+    
+    /**
+     * 
+     * @param process
+     * @return an optional holding the error if any, as a text message. A value of null means no errors 
+     */
+    private Optional<String> getConfigFileValidationErrors(Process process){    	
+    	Set<ConstraintViolation<Process>> errors = validator.validate(process);
+    	String resultMessage = null;
+        if (!errors.isEmpty()) {
+        	Optional<String> error = errors.stream().map(e -> String.format("the property '%s' %s", e.getPropertyPath(),e.getMessage()))
+        			.reduce((p,e) -> p.isEmpty()? e : p+"|"+e);
+        	resultMessage = error.orElse("unexpected format error");
+        }
+    	return Optional.ofNullable(resultMessage);
     }
 
 }
