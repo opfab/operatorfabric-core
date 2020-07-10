@@ -38,8 +38,8 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         return findByIdWithUser(template, id, currentUserWithPerimeters, CardConsultationData.class);
     }
 
-    public Flux<CardConsultationData> findByParentCardId(String parentUid) {
-        return findByParentCardId(template, parentUid, CardConsultationData.class);
+    public Flux<CardConsultationData> findByParentCardUid(String parentUid) {
+        return findByParentCardUid(template, parentUid, CardConsultationData.class);
     }
 
     /**

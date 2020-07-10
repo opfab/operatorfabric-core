@@ -32,9 +32,9 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         return template.findOne(query, clazz);
     }
 
-    default Flux<T> findByParentCardId(ReactiveMongoTemplate template, String parentUid, Class<T> clazz) {
+    default Flux<T> findByParentCardUid(ReactiveMongoTemplate template, String parentUid, Class<T> clazz) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("parentCardId").is(parentUid));
+        query.addCriteria(Criteria.where("parentCardUid").is(parentUid));
         return template.find(query, clazz);
     }
 
@@ -92,5 +92,5 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
     }
 
     Mono<T> findByIdWithUser(String id, CurrentUserWithPerimeters user);
-    Flux<T> findByParentCardId(String parentCardUid);
+    Flux<T> findByParentCardUid(String parentCardUid);
 }

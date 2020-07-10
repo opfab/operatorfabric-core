@@ -37,7 +37,7 @@ export class FeedComponent implements OnInit {
     ngOnInit() {
         this.lightCards$ = this.store.pipe(
             select(feedSelectors.selectSortedFilteredLightCards),
-            map(lightCards => lightCards.filter(lightCard => !lightCard.parentCardId)),
+            map(lightCards => lightCards.filter(lightCard => !lightCard.parentCardUid)),
             catchError(err => of([]))
         );
         this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);

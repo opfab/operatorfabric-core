@@ -12,7 +12,6 @@ package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.ArchivedCardConsultationData;
-import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
@@ -67,8 +66,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         return findByIdWithUser(template, id, currentUserWithPerimeters, ArchivedCardConsultationData.class);
     }
 
-    public Flux<ArchivedCardConsultationData> findByParentCardId(String parentUid) {
-        return findByParentCardId(template, parentUid, ArchivedCardConsultationData.class);
+    public Flux<ArchivedCardConsultationData> findByParentCardUid(String parentUid) {
+        return findByParentCardUid(template, parentUid, ArchivedCardConsultationData.class);
     }
 
     public Mono<Page<LightCard>> findWithUserAndParams(Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params) {

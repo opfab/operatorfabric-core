@@ -221,7 +221,7 @@ Feature: UserCards tests
 
 
 
-    * card.parentCardId = cardUid
+    * card.parentCardUid = cardUid
     * card.state = "state1"
 
 
@@ -297,7 +297,7 @@ Feature: UserCards tests
 	"data" : {"message":"a message"}
 }
 """
-    * card.parentCardId = cardUid
+    * card.parentCardUid = cardUid
 
 # Push user card with good permiter ==> ReceiveAndWrite perimeter
     Given url opfabPublishCardUrl + 'cards/userCard'
@@ -333,7 +333,7 @@ Feature: UserCards tests
 	"data" : {"message":"a message"}
 }
 """
-    * card.parentCardId = cardUid
+    * card.parentCardUid = cardUid
 
 # Push user card with good permiter ==> ReceiveAndWrite perimeter
     Given url opfabPublishCardUrl + 'cards/userCard'

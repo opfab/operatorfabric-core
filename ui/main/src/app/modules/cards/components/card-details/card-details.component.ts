@@ -263,7 +263,7 @@ export class CardDetailsComponent implements OnInit {
                 summary: this.card.summary,
                 data: formData,
                 recipient: this.card.recipient,
-                parentCardId: this.card.uid
+                parentCardUid: this.card.uid
             }
 
             this.cardService.postResponseCard(card)

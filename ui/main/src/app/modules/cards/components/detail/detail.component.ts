@@ -61,7 +61,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy {
                         takeUntil(this.unsubscribe$),
                         map(lastCards =>
                                 lastCards.filter(card =>
-                                    card.parentCardId == this.card.uid &&
+                                    card.parentCardUid == this.card.uid &&
                                     !this.childCards.map(childCard => childCard.uid).includes(card.uid))
                         ),
                         map(childCards => childCards.map(c => this.cardService.loadCard(c.id)))

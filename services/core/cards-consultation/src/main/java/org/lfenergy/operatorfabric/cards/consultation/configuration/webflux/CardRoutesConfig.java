@@ -11,16 +11,11 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.configuration.webflux;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
-import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
@@ -63,7 +57,7 @@ public class CardRoutesConfig implements UserExtractor {
         return request ->
                 extractUserFromJwtToken(request)
                         .flatMap(currentUserWithPerimeters -> Mono.just(currentUserWithPerimeters).zipWith(cardRepository.findByIdWithUser(request.pathVariable("id"),currentUserWithPerimeters)))
-                        .flatMap(userCardT2 -> Mono.just(userCardT2).zipWith(cardRepository.findByParentCardId(userCardT2.getT2().getUid()).collectList()))
+                        .flatMap(userCardT2 -> Mono.just(userCardT2).zipWith(cardRepository.findByParentCardUid(userCardT2.getT2().getUid()).collectList()))
                         .doOnNext(t2 -> {
                             CurrentUserWithPerimeters user = t2.getT1().getT1();
                             CardConsultationData card = t2.getT1().getT2();
