@@ -125,7 +125,7 @@
       "disable": false
     },
     "locale": "en",
-    "nightDayMode": false,
+    "nightDayMode": true,
     "styleWhenNightDayModeDesactivated" : "NIGHT"
   },
   "navbar": {
