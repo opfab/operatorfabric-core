@@ -34,6 +34,10 @@ export class ProcessesService {
         return this.queryProcess(card.process, card.processVersion);
     }
 
+    queryAllProcesses(): Observable<Process[]> {
+        return this.httpClient.get<Process[]>(this.processesUrl);
+
+    }
     queryProcess(id: string, version: string): Observable<Process> {
         const key = `${id}.${version}`;
         const process = this.processCache.get(key);
@@ -79,7 +83,7 @@ export class ProcessesService {
             map(menuEntry => menuEntry.url)
         );
     }
-    
+
     fetchHbsTemplate(process: string, version: string, name: string, locale: string): Observable<string> {
         const params = new HttpParams()
             .set('locale', locale)
@@ -145,7 +149,7 @@ export class ProcessesService {
             case 'RED':
                 return 'btn-danger';
             case 'GREEN':
-                return 'btn-success'
+                return 'btn-success';
             case 'YELLOW':
                 return 'btn-warning';
             default:

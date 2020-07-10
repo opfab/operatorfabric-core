@@ -11,11 +11,11 @@
 
 import {Injectable} from '@angular/core';
 import * as moment from 'moment-timezone';
-import {Moment} from "moment-timezone/moment-timezone";
-import {AppState} from "@ofStore/index";
-import {Store} from "@ngrx/store";
-import {buildSettingsOrConfigSelector} from "@ofSelectors/settings.x.config.selectors";
-import {isMoment} from "moment";
+import {Moment} from 'moment-timezone/moment-timezone';
+import {AppState} from '@ofStore/index';
+import {Store} from '@ngrx/store';
+import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
+import {isMoment} from 'moment';
 
 
 @Injectable()

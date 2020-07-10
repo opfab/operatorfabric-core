@@ -2,6 +2,8 @@
   "menu": {
     "feed": "Flux de cartes",
     "archives": "Archives",
+    "logging": "Logging",
+    "monitoring": "Monitoring",
     "logout": "Déconnexion",
     "settings": "Paramètres",
     "about": "À propos"
@@ -109,6 +111,19 @@
     "clear": "Effacer",
     "noResult": "Votre recherche ne correspond à aucun résultat."
 
+  },
+  "logging": {
+    "filters": {"process": "Service"},
+    "cardType": "Type de Carte",
+  "timeOfAction": "Moment de l'action",
+  "processName": "Nom du process",
+  "description": "Description",
+  "sender": "Envoyeur",
+    "noResult": "Aucun résultat"
+
+  },
+  "monitoring": {
+    "filters": {"process": "Processus"}
   },
   "button": {
     "ok": "OK",

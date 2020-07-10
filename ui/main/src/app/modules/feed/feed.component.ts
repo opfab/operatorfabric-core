@@ -31,7 +31,7 @@ export class FeedComponent implements OnInit {
     selection$: Observable<string>;
     hideTimeLine: boolean;
 
-    constructor(private store: Store<AppState>, private notifyService: NotifyService,private  configService: ConfigService) {
+    constructor(private store: Store<AppState>, private notifyService: NotifyService, private  configService: ConfigService) {
     }
 
     ngOnInit() {

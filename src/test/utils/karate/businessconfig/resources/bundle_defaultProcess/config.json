@@ -1,71 +1,90 @@
 {
-	"id": "defaultProcess",
-	"version": "1",
-	"templates": [
-		"template",
-		"chart",
-		"chart-line",
-		"process"
-	],
-	"csses": [
-		"style"
-	],
-			"states": {
-				"messageState": {
-					"details": [
-						{
-							"title": {
-								"key": "defaultProcess.title"
-							},
-							"templateName": "template",
-							"styles": [
-								"style"
-							]
-						}
-					],
-					"acknowledgementAllowed": true
-				},
-				"chartState": {
-					"details": [
-						{
-							"title": {
-								"key": "chartDetail.title"
-							},
-							"templateName": "chart",
-							"styles": [
-								"style"
-							]
-						}
-					],
-					"acknowledgementAllowed": true
-				},
-				"chartLineState": {
-					"details": [
-						{
-							"title": {
-								"key": "chartLine.title"
-							},
-							"templateName": "chart-line",
-							"styles": [
-								"style"
-							]
-						}
-					],
-					"acknowledgementAllowed": true
-				},
-				"processState": {
-					"details": [
-						{
-							"title": {
-								"key": "process.title"
-							},
-							"templateName": "process",
-							"styles": [
-								"style"
-							]
-						}
-					],
-					"acknowledgementAllowed": true
-				}
-			}
-		}
+  "id": "defaultProcess",
+  "name": {
+    "key": "Test api"
+  },
+  "version": "1",
+  "templates": [
+    "template",
+    "chart",
+    "chart-line",
+    "process"
+  ],
+  "csses": [
+    "style"
+  ],
+  "states": {
+    "messageState": {
+      "name": {
+        "key": "defaultProcess.title"
+      },
+      "color": "#FAF0AF",
+      "details": [
+        {
+          "title": {
+            "key": "defaultProcess.title"
+          },
+          "templateName": "template",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": false
+    },
+    "chartState": {
+      "name": {
+        "key": "cartDetail.title"
+      },
+      "color": "#f1c5c5",
+      "details": [
+        {
+          "title": {
+            "key": "chartDetail.title"
+          },
+          "templateName": "chart",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": false
+    },
+    "chartLineState": {
+      "name": {
+        "key": "chartLine.title"
+      },
+      "color": "#e5edb7",
+      "details": [
+        {
+          "title": {
+            "key": "chartLine.title"
+          },
+          "templateName": "chart-line",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },
+    "processState": {
+      "name": {
+        "key": "process.title"
+      },
+      "color": "#8bcdcd",
+      "details": [
+        {
+          "title": {
+            "key": "process.title"
+          },
+          "templateName": "process",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": false
+    }
+  }
+}

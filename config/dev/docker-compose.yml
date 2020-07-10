@@ -34,3 +34,4 @@ services:
       - "./favicon.ico:/usr/share/nginx/html/favicon.ico"
       - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"
       - "./ngnix.conf:/etc/nginx/conf.d/default.conf"
+      - "./loggingResults:/etc/nginx/html/logging"

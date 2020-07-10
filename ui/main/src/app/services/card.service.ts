@@ -8,7 +8,6 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {CardOperation} from '@ofModel/card-operation.model';
@@ -23,10 +22,12 @@ import {Page} from '@ofModel/page.model';
 import {NotifyService} from '@ofServices/notify.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {
-    CardSubscriptionOpen,
-    CardSubscriptionClosed
-} from '@ofActions/cards-subscription.actions';
+import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
+import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
+import {map} from 'rxjs/operators';
+import * as moment from 'moment';
+import {I18n} from '@ofModel/i18n.model';
+import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 
 @Injectable()
 export class CardService {
@@ -96,7 +97,7 @@ export class CardService {
                 };
                 eventSource.onerror = error => {
                     this.store.dispatch(new CardSubscriptionClosed());
-                    console.error('error occurred in card subscription:',error);
+                    console.error('error occurred in card subscription:', error);
                 };
                 eventSource.onopen = open => {
                     this.store.dispatch(new CardSubscriptionOpen());
@@ -156,21 +157,58 @@ export class CardService {
     }
 
     fetchArchivedCards(filters: Map<string, string[]>): Observable<Page<LightCard>> {
+        const params = this.convertFiltersIntoHttpParams(filters);
+        // const tmp = new HttpParams().set('publisher', 'defaultPublisher').set('size', '10');
+        return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
+    }
+
+    convertFiltersIntoHttpParams(filters: Map<string, string[]>): HttpParams {
         let params = new HttpParams();
         filters.forEach((values, key) => values.forEach(value => params = params.append(key, value)));
-        return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
+        return params;
     }
 
     postResponseCard(card: Card) {
         const headers = this.authService.getSecurityHeader();
-        return this.httpClient.post<Card>(`${this.cardsPubUrl}/userCard`, card, { headers });
+        return this.httpClient.post<Card>(`${this.cardsPubUrl}/userCard`, card, {headers});
     }
 
     postUserAcnowledgement(card: Card): Observable<HttpResponse<void>> {
-        return this.httpClient.post<void>(`${this.userAckUrl}/${card.uid}`,null,{ observe: 'response' });        
+        return this.httpClient.post<void>(`${this.userAckUrl}/${card.uid}`, null, {observe: 'response'});
     }
 
     deleteUserAcnowledgement(card: Card): Observable<HttpResponse<void>> {
-        return this.httpClient.delete<void>(`${this.userAckUrl}/${card.uid}`,{ observe: 'response' });        
+        return this.httpClient.delete<void>(`${this.userAckUrl}/${card.uid}`, {observe: 'response'});
+    }
+
+    fetchLoggingResults(filters: Map<string, string[]>): Observable<Page<LineOfLoggingResult>> {
+        return this.fetchArchivedCards(filters).pipe(
+            map((page: Page<LightCard>) => {
+                const cards = page.content;
+                const lines = cards.map((card: LightCard) => {
+                    const i18nPrefix = `${card.publisher}.${card.processVersion}.`;
+                    return ({
+                        cardType: card.severity.toLowerCase(),
+                        businessDate: moment(card.startDate),
+                        i18nKeyForProcessName: this.addPrefix(i18nPrefix, card.title),
+                        i18nKeyForDescription: this.addPrefix(i18nPrefix, card.summary),
+                        sender: card.publisher
+                    } as LineOfLoggingResult);
+                });
+                return {
+                    totalPages: page.totalPages,
+                    totalElements: page.totalElements,
+                    content: lines
+                } as Page<LineOfLoggingResult>;
+            })
+        );
+    }
+
+    addPrefix(i18nPrefix: string, initialI18n: I18n): I18n {
+        return { ...initialI18n, key: i18nPrefix + initialI18n.key} as I18n;
+    }
+
+    fetchMonitoringResults(filters: Map<string, string[]>): Observable<Page<LineOfMonitoringResult>> {
+        return null;
     }
 }

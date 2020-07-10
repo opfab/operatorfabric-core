@@ -9,8 +9,8 @@
 
 
 
-import {Severity} from "@ofModel/light-card.model";
-import {I18n} from "@ofModel/i18n.model";
+import {Severity} from '@ofModel/light-card.model';
+import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
     /* istanbul ignore next */
@@ -22,7 +22,7 @@ export class Card {
         readonly publishDate: number,
         readonly startDate: number,
         readonly endDate: number,
-        readonly severity: Severity,        
+        readonly severity: Severity,
         readonly hasBeenAcknowledged: boolean = false,
         readonly process?: string,
         readonly processInstanceId?: string,

@@ -8,55 +8,56 @@
  */
 
 
-
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UpdateArchivePage} from '@ofActions/archive.actions';
-import {Store, select} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import { selectArchiveCount,selectArchiveFilters} from '@ofStore/selectors/archive.selectors';
-import { catchError } from 'rxjs/operators';
-import { of, Observable,Subject } from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {ConfigService} from "@ofServices/config.service";
+import {ConfigService} from '@ofServices/config.service';
+import {selectArchiveCount, selectArchiveFilters} from '@ofStore/selectors/archive.selectors';
+import {catchError, takeUntil} from 'rxjs/operators';
+import {Observable, of, Subject} from 'rxjs';
 
 @Component({
-  selector: 'of-archive-list-page',
-  templateUrl: './archive-list-page.component.html',
-  styleUrls: ['./archive-list-page.component.scss']
+    selector: 'of-archive-list-page',
+    templateUrl: './archive-list-page.component.html',
+    styleUrls: ['./archive-list-page.component.scss']
 })
-export class ArchiveListPageComponent implements OnInit {
+export class ArchiveListPageComponent implements OnInit, OnDestroy {
+    page = 0;
+    collectionSize$: Observable<number>;
+    size: number;
+    unsubscribe$: Subject<void> = new Subject<void>();
 
-  page: number = 0;
-  collectionSize$: Observable<number>;
-  size: number;
-  unsubscribe$: Subject<void> = new Subject<void>();
+    constructor(private store: Store<AppState>, private configService: ConfigService) {
+    }
 
-  constructor(private store: Store<AppState>,private configService : ConfigService) {}
-  ngOnInit(): void {
-    this.collectionSize$ = this.store.pipe(
-      select(selectArchiveCount),
-      catchError(err => of(0))
-    );
-    this.size = this.configService.getConfigValue('archive.filters.page.size',10); 
+    ngOnInit(): void {
+        this.collectionSize$ = this.store.pipe(
+            select(selectArchiveCount),
+            catchError(err => of(0))
+        );
+        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
 
-    this.store.select(selectArchiveFilters)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(filters => {
-        const pageFilter = filters.get("page");
-        // page on ngb-pagination component start at 1 , and page on backend start at 0 
-        if (pageFilter) this.page = +pageFilter[0] + 1;
-      })
+        this.store.select(selectArchiveFilters)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(filters => {
+                const pageFilter = filters.get('page');
+                // page on ngb-pagination component start at 1 , and page on backend start at 0
+                if (pageFilter) {
+                    this.page = +pageFilter[0] + 1;
+                }
+            });
 
-  }
+    }
 
-  updateResultPage(currentPage): void {
+    updateResultPage(currentPage): void {
 
-    // page on ngb-pagination component start at 1 , and page on backend start at 0 
-    this.store.dispatch(new UpdateArchivePage({page: currentPage - 1}));
-  }
+        // page on ngb-pagination component start at 1 , and page on backend start at 0
+        this.store.dispatch(new UpdateArchivePage({page: currentPage - 1}));
+    }
 
-  ngOnDestroy(){
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
 }

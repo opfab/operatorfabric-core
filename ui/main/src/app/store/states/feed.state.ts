@@ -8,11 +8,10 @@
  */
 
 
-
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {LightCard, severityOrdinal} from '@ofModel/light-card.model';
-import {Filter} from "@ofModel/feed-filter.model";
-import {FilterType,FilterService} from "@ofServices/filter.service";
+import {Filter} from '@ofModel/feed-filter.model';
+import {FilterService, FilterType} from '@ofServices/filter.service';
 
 /**
  * The Feed State consist of:
@@ -30,26 +29,27 @@ export interface CardFeedState extends EntityState<LightCard> {
     lastCards: LightCard[];
     loading: boolean;
     error: string;
-    filters: Map<FilterType,Filter>;
+    filters: Map<FilterType, Filter>;
     sortBySeverity: boolean;
 }
 
-export function compareByStartDate(card1: LightCard, card2: LightCard){
-    return card1.startDate - card2.startDate
+export function compareByStartDate(card1: LightCard, card2: LightCard) {
+    return card1.startDate - card2.startDate;
 }
 
-export function compareBySeverity(card1: LightCard, card2: LightCard){
+export function compareBySeverity(card1: LightCard, card2: LightCard) {
     return severityOrdinal(card1.severity) - severityOrdinal(card2.severity);
 }
 
-export function compareByPublishDate(card1: LightCard, card2: LightCard){
+export function compareByPublishDate(card1: LightCard, card2: LightCard) {
     return card2.publishDate - card1.publishDate;
 }
 
-export function compareBySeverityPublishDate(card1: LightCard, card2: LightCard){
-    let result = compareBySeverity(card1,card2);
-    if(result == 0)
-        result = compareByPublishDate(card1,card2);
+export function compareBySeverityPublishDate(card1: LightCard, card2: LightCard) {
+    let result = compareBySeverity(card1, card2);
+    if (result === 0) {
+        result = compareByPublishDate(card1, card2);
+    }
     return result;
 }
 
@@ -61,13 +61,12 @@ export const LightCardAdapter: EntityAdapter<LightCard> = createEntityAdapter<Li
 });
 
 /**
- * Hack to solve OC-604 
- * Init is done using a service , to be refactor 
+ * Hack to solve OC-604
+ * Init is done using a service , to be refactor
  */
-function getDefaultFilter()
-{
-    let filterservice = new FilterService();
-    return filterservice.defaultFilters() ;
+function getDefaultFilter() {
+    const filterService = new FilterService();
+    return filterService.defaultFilters();
 }
 
 export const feedInitialState: CardFeedState = LightCardAdapter.getInitialState(

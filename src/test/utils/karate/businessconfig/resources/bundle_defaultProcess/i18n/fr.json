@@ -1,4 +1,5 @@
 {
+	"name": "test API",
 	"defaultProcess":{
 		"title":"Message",
 		"summary":"Message reçu"

@@ -10,13 +10,13 @@
 
 
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs";
 import {map} from 'rxjs/operators';
-import {HttpClient} from "@angular/common/http";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {environment} from "@env/environment";
 import * as _ from 'lodash';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {environment} from '@env/environment';
 
 @Injectable()
 export class ConfigService {
@@ -36,9 +36,10 @@ export class ConfigService {
 
     getConfigValue(path:string, fallback: any = null)
     {
-        let result = _.get(this.config,path,null);
-        if(!result && fallback)
+        const result = _.get(this.config, path, null);
+        if (!result && fallback) {
             return fallback;
+        }
         return result;
     }
 }

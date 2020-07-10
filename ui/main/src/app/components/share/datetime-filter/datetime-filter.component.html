@@ -10,8 +10,14 @@
 <ng-container [formGroup]="datetimeForm">
     <div class="form-row nomarginrow">
         <div class="form-group col-8 nopaddingrow">
-            <label for="date" translate>archive.filters.{{filterPath}}</label>
-            <input (change)="onChange($event)" class="form-control" type="text" ngbDatepicker #nsd="ngbDatepicker" id="date" formControlName="date" (focus)="nsd.toggle()"
+            <!--archive.filters.{{filterPath}}-->
+            <label for="date" translate>{{computeLabelKey()}}</label>
+            <input (change)="onChange($event)" class="form-control"
+                   type="text" ngbDatepicker
+                   #nsd="ngbDatepicker"
+                   id="date"
+                   formControlName="date"
+                   (focus)="nsd.toggle()"
             placeholder="YYYY-MM-DD"/>
         </div>
         <fieldset [disabled]="disabled" class="col-4 nopaddingrow">

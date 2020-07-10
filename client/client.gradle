@@ -121,7 +121,7 @@ subprojects {
                        from components.java
                        artifact sourcesJar
                        artifact javadocJar
-                       version='0.3.3'
+                       version="${project.version}"
        pom{
 		licenses{
 			license{
@@ -155,9 +155,9 @@ subprojects {
                }
 
        }
-    apply plugin: 'signing'
-    signing {
-		useGpgCmd()
-        	sign publishing.publications.mavenJava
-	    }
+//    apply plugin: 'signing'
+//    signing {
+//		useGpgCmd()
+//        	sign publishing.publications.mavenJava
+//	    }
 }

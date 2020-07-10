@@ -1,5 +1,5 @@
 {
-  "TEST":{
+  "TEST": {
     "title": "Test: Process {{value}}",
     "summary": "This sums up the content of the card: {{value}}",
     "detail": {
@@ -8,28 +8,29 @@
         "second": "Second Tab"
       }
     },
-    "action":{ "new":
-    {
-      "first": "Action number {{value}}",
-      "second": "Second Action",
-      "businessconfig": "Businessconfig One ({{value}})"
-    },
+    "action": {
+      "new": {
+        "first": "Action number {{value}}",
+        "second": "Second Action",
+        "businessconfig": "Businessconfig One ({{value}})"
+      },
       "clicked": {
         "first": "{{value}} clicked",
         "second": "Resolved secondly",
         "businessconfig": "For ({{value}}, it's done.)"
       }
-}
+    }
   },
-  "process":{
+  "process": {
     "label": "Test Process"
   },
-  "menu":{
+  "menu": {
     "label": "Test Process Menu",
-    "first":"First Entry",
-    "second":"Second Entry"
+    "first": "First Entry",
+    "second": "Second Entry"
   },
-  "template":{
+  "template": {
     "title": "Asset details"
-  }
+  },
+  "state": "First State"
 }
