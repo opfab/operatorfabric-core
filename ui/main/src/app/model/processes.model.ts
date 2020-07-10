@@ -8,33 +8,38 @@
  */
 
 
-import {Card, Detail} from "@ofModel/card.model";
-import {I18n} from "@ofModel/i18n.model";
-import {Map as OfMap} from "@ofModel/map";
+import {Card, Detail} from '@ofModel/card.model';
+import {I18n} from '@ofModel/i18n.model';
+import {Map as OfMap} from '@ofModel/map';
 
 export class Process {
     /* istanbul ignore next */
     constructor(
         readonly id: string,
         readonly version: string,
-        readonly name?: string,
+        readonly name?: I18n | string,
         readonly templates?: string[],
         readonly csses?: string[],
         readonly locales?: string[],
         readonly menuLabel?: string,
         readonly menuEntries?: MenuEntry[],
         readonly states?: OfMap<State>
-    ) {
+    ) { if ( !(name instanceof I18n)) {
+            name = new I18n(name);
+    }
     }
 
     public extractState(card: Card): State {
-        if (card.state && this.states[card.state]) {
+        if (!!this.states && !!card.state && this.states[card.state]) {
             return this.states[card.state];
         } else {
             return null;
         }
     }
 }
+
+export const unfouundProcess: Process = new Process('', '', new I18n('process.not-found'),
+     [], [], [], '', [], null);
 
 export class MenuEntry {
     /* istanbul ignore next */
@@ -61,7 +66,9 @@ export class State {
     constructor(
         readonly details?: Detail[],
         readonly response?: Response,
-        readonly acknowledgementAllowed?: boolean
+        readonly acknowledgementAllowed?: boolean,
+        readonly name?: I18n,
+        readonly color?: string
     ) {
     }
 }
@@ -73,7 +80,8 @@ export class Response {
         readonly state?: string,
         readonly btnColor?: ResponseBtnColorEnum,
         readonly btnText?: I18n
-    ) { }
+    ) {
+    }
 }
 
 export enum ResponseBtnColorEnum {

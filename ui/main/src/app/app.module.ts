@@ -8,7 +8,6 @@
  */
 
 
-
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -29,8 +28,10 @@ import {UtilitiesModule} from './modules/utilities/utilities.module';
 import {MenuLinkComponent} from './components/navbar/menus/menu-link/menu-link.component';
 import {CustomLogoComponent} from './components/navbar/custom-logo/custom-logo.component';
 import {OAuthModule} from 'angular-oauth2-oidc';
-import {AboutComponent} from "./modules/about/about.component";
-import {FontAwesomeIconsModule} from "./modules/utilities/fontawesome-icons.module";
+import {AboutComponent} from './modules/about/about.component';
+import {FontAwesomeIconsModule} from './modules/utilities/fontawesome-icons.module';
+import {LoggingModule} from './modules/logging/logging.module';
+import {MonitoringModule} from './modules/monitoring/monitoring.module';
 
 @NgModule({
     imports: [
@@ -47,6 +48,8 @@ import {FontAwesomeIconsModule} from "./modules/utilities/fontawesome-icons.modu
         TranslateModule.forRoot(),
         FontAwesomeIconsModule,
         UtilitiesModule,
+        LoggingModule,
+        MonitoringModule,
         AppRoutingModule
     ],
     declarations: [AppComponent,
@@ -56,7 +59,8 @@ import {FontAwesomeIconsModule} from "./modules/utilities/fontawesome-icons.modu
         InfoComponent,
         MenuLinkComponent,
         CustomLogoComponent,
-        AboutComponent],
+        AboutComponent
+    ],
     providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
     bootstrap: [AppComponent]
 })

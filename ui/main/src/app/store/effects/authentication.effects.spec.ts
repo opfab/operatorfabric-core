@@ -16,7 +16,6 @@ import {
     PayloadForSuccessfulAuthentication,
     RejectLogIn,
     TryToLogIn,
-    TryToLogOut
 } from '@ofActions/authentication.actions';
 
 import {async, TestBed} from '@angular/core/testing';
@@ -38,11 +37,10 @@ import {hot} from 'jasmine-marbles';
 import * as moment from 'moment';
 import {Message} from '@ofModel/message.model';
 import {CardService} from '@ofServices/card.service';
-import {EmptyLightCards} from '@ofActions/light-card.actions';
-import {ClearCard} from '@ofActions/card.actions';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import { TranslateModule, TranslateService} from "@ngx-translate/core";
+import { ConfigService } from '@ofServices/config.service';
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -52,6 +50,7 @@ describe('AuthenticationEffects', () => {
     let cardService: SpyObj<CardService>;
     let router: SpyObj<Router>;
     let translate: TranslateService;
+    let configService: SpyObj<ConfigService>;
 
     beforeEach(async(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -68,8 +67,11 @@ describe('AuthenticationEffects', () => {
                 'computeRedirectUri',
                 'regularCheckTokenValidity'
             ]);
+        
         const cardServiceSpy = createSpyObj('CardService'
             , ['unsubscribeCardOperation']);
+        const configServiceSpy = createSpyObj('ConfigService'
+        , ['fetchConfiguration']);
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
         TestBed.configureTestingModule({
             imports: [TranslateModule.forRoot()],
@@ -79,12 +81,14 @@ describe('AuthenticationEffects', () => {
                 {provide: AuthenticationService, useValue: authenticationServiceSpy},
                 {provide: CardService, useValue: cardServiceSpy},
                 {provide: Store, useValue: storeSpy},
-                {provide: Router, useValue: routerSpy}
+                {provide: Router, useValue: routerSpy},
+                {provide: ConfigService, useValue: configServiceSpy}
             ]
         });
 
         effects = TestBed.get(AuthenticationEffects);
         translate = TestBed.get(TranslateService);
+       
 
     }));
 
@@ -94,6 +98,7 @@ describe('AuthenticationEffects', () => {
         cardService = TestBed.get(CardService);
         router = TestBed.get(Router);
         mockStore = TestBed.get(Store);
+        configService = TestBed.get(ConfigService);
     });
 
     it('should be created', () => {
@@ -106,41 +111,24 @@ describe('AuthenticationEffects', () => {
             authenticationService.askTokenFromPassword.and.returnValue(of(
                 new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', new Date())
             ));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null,translate);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null,translate,configService);
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn))
         });
         it('should fail if JWT is not generated from backend', () => {
             const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
             authenticationService.askTokenFromPassword.and.returnValue(throwError('Something went wrong'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null,translate);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, null,translate,configService);
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn))
         });
     });
 
-    describe('TryToLogOut', () => {
-        it('should success and call clearAuthenticationInformation', () => {
-            const localAction$ = new Actions(hot('-a--', {a: new TryToLogOut()}));
-            setStorageWithUserData();
-            cardService.unsubscribeCardOperation.and.callFake(() => {});
-            mockStore.select.and.returnValue(of(null));
-            const authServiceSpy = createSpyObj('AuthenticationService',
-                ['clearAuthenticationInformation']);
-            effects = new AuthenticationEffects(mockStore, localAction$, authServiceSpy, cardService, null,translate);
-            expect(effects).toBeTruthy();
-            const localExpected = hot('-(abc)', {a: new EmptyLightCards(), b: new ClearCard(), c: new AcceptLogOut()});
-            expect(effects.TryToLogOut).toBeObservable(localExpected);
-            effects.TryToLogOut.subscribe(() => {
-                expect(authServiceSpy.clearAuthenticationInformation).toHaveBeenCalled();
-            });
-        });
-    });
     describe('AcceptLogout', () => {
         it('should success and navigate', () => {
             const localAction$ = new Actions(hot('-a--', {a: new AcceptLogOut()}));
             router.navigate.and.callThrough();
-            effects = new AuthenticationEffects(mockStore, localAction$, null, null, router,translate);
+            effects = new AuthenticationEffects(mockStore, localAction$, null, null, router,translate,configService);
             expect(effects).toBeTruthy();
             effects.AcceptLogOut.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogOutSuccess);
@@ -159,7 +147,7 @@ describe('AuthenticationEffects', () => {
             ));
             mockStore.select.and.returnValue(of(null));
             authenticationService.loadUserData.and.callFake(auth => of(auth));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate,configService);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn);
@@ -173,7 +161,7 @@ describe('AuthenticationEffects', () => {
                 new CheckTokenResponse('johndoe', 123, Guid.create().toString())
             ));
             mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate,configService);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
@@ -185,7 +173,7 @@ describe('AuthenticationEffects', () => {
             authenticationService.checkAuthentication.and.returnValue(throwError('no valid token'));
             authenticationService.askTokenFromCode.and.returnValue(throwError('no valid code'));
             mockStore.select.and.returnValue(of('code'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate);
+            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, router,translate,configService);
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);

@@ -8,7 +8,6 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {CardService} from '@ofServices/card.service';
@@ -23,16 +22,16 @@ import {
     RemoveLightCard,
     UpdatedSubscription
 } from '@ofActions/light-card.actions';
-import {Action, Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {ApplyFilter, FeedActionTypes} from "@ofActions/feed.actions";
-import {FilterType} from "@ofServices/filter.service";
-import {selectCardStateSelectedId} from "@ofSelectors/card.selectors";
-import {LoadCard} from "@ofActions/card.actions";
-import {CardOperationType} from "@ofModel/card-operation.model";
-import { UserActionsTypes } from '@ofStore/actions/user.actions';
-import {SoundNotificationService} from "@ofServices/sound-notification.service";
-import {selectSortedFilterLightCardIds} from "@ofSelectors/feed.selectors";
+import {Action, Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {ApplyFilter, FeedActionTypes} from '@ofActions/feed.actions';
+import {FilterType} from '@ofServices/filter.service';
+import {selectCardStateSelectedId} from '@ofSelectors/card.selectors';
+import {LoadCard} from '@ofActions/card.actions';
+import {CardOperationType} from '@ofModel/card-operation.model';
+import {UserActionsTypes} from '@ofStore/actions/user.actions';
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {selectSortedFilterLightCardIds} from '@ofSelectors/feed.selectors';
 
 @Injectable()
 export class CardOperationEffects {
@@ -77,10 +76,10 @@ export class CardOperationEffects {
             }));
 
 
-    @Effect({dispatch:false})
+    @Effect({dispatch: false})
     triggerSoundNotifications = this.actions$
-    /* Creating a dedicated effect was necessary because this handling needs to be done once the added cards have been
-     * processed since we take a look at the feed state to know if the card is currently visible or not */
+        /* Creating a dedicated effect was necessary because this handling needs to be done once the added cards have been
+         * processed since we take a look at the feed state to know if the card is currently visible or not */
         .pipe(
             ofType(LightCardActionTypes.LoadLightCardsSuccess),
             map((loadedCardAction: LoadLightCardsSuccess) => loadedCardAction.payload.lightCards),
@@ -90,7 +89,7 @@ export class CardOperationEffects {
             * list of visible cards using withLatestFrom. However, this hasn't cropped up in any of the tests so far so
             * we'll deal with it if the need arises.*/
             map(([lightCards, currentlyVisibleIds]) => {
-                    this.soundNotificationService.handleCards(lightCards,currentlyVisibleIds);
+                    this.soundNotificationService.handleCards(lightCards, currentlyVisibleIds);
                 }
             )
         );
@@ -100,20 +99,21 @@ export class CardOperationEffects {
         .pipe(
             // loads card operations only after authentication of a default user ok.
             ofType(FeedActionTypes.ApplyFilter),
-            filter((af: ApplyFilter) => af.payload.name == FilterType.BUSINESSDATE_FILTER),
-            switchMap((af: ApplyFilter) =>
-                {
-                    console.log(new Date().toISOString(),"BUG OC-604 card-operation.effect.ts update subscription af.payload.status.start  = ",af.payload.status.start,"af.payload.status.end",af.payload.status.end);
+            filter((af: ApplyFilter) => af.payload.name === FilterType.BUSINESSDATE_FILTER),
+            switchMap((af: ApplyFilter) => {
+                    console.log(new Date().toISOString()
+                        , 'BUG OC-604 card-operation.effect.ts update subscription af.payload.status.start  = '
+                        , af.payload.status.start, 'af.payload.status.end', af.payload.status.end);
                     return this.service.updateCardSubscriptionWithDates(af.payload.status.start, af.payload.status.end)
-                .pipe(
-                    map(() => {
-                        return new UpdatedSubscription();
-                    })
-                )
+                        .pipe(
+                            map(() => {
+                                return new UpdatedSubscription();
+                            })
+                        );
                 }
             ),
             catchError((error, caught) => {
-                this.store.dispatch(new HandleUnexpectedError({error: error}))
+                this.store.dispatch(new HandleUnexpectedError({error: error}));
                 return caught;
             })
         );
@@ -122,10 +122,10 @@ export class CardOperationEffects {
     refreshIfSelectedCard: Observable<Action> = this.actions$
         .pipe(
             ofType(LightCardActionTypes.LoadLightCardsSuccess),
-            map((a: LoadLightCardsSuccess) => a.payload.lightCards), //retrieve list of added light cards from action payload
-            withLatestFrom(this.store.select(selectCardStateSelectedId)), //retrieve currently selected card
-            switchMap(([lightCards, selectedCardId]) => lightCards.filter(card => card.id===selectedCardId)), //keep only lightCards matching the process id of current selected card
-            map(lightCard => new LoadCard({id: lightCard.id})) //if any, trigger refresh by firing LoadCard
+            map((a: LoadLightCardsSuccess) => a.payload.lightCards), // retrieve list of added light cards from action payload
+            withLatestFrom(this.store.select(selectCardStateSelectedId)), // retrieve currently selected card
+            switchMap(([lightCards, selectedCardId]) => lightCards.filter(card => card.id === selectedCardId)), // keep only lightCards matching the process id of current selected card
+            map(lightCard => new LoadCard({id: lightCard.id})) // if any, trigger refresh by firing LoadCard
         )
     ;
 }

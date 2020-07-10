@@ -25,7 +25,7 @@ public class ProcessStatesData implements ProcessStates {
     private ResponseData responseData;
     private Boolean acknowledgementAllowed;
     private String color;
-    private String name;
+    private I18n name;
 
     @Override
     public void setDetails(List<? extends Detail> details) {

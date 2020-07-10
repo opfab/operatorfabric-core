@@ -14,15 +14,15 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {AppState} from "@ofStore/index";
+import {AppState} from '@ofStore/index';
 import {ProcessesService} from "@ofServices/processes.service";
 import {
     LoadMenu,
     LoadMenuFailure,
     LoadMenuSuccess,
     MenuActionTypes,
-} from "@ofActions/menu.actions";
-import {Router} from "@angular/router";
+} from '@ofActions/menu.actions';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class MenuEffects {

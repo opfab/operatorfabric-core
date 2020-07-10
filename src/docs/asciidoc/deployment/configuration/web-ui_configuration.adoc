@@ -62,7 +62,6 @@ a|Url to redirect the browser to for authentication. Mandatory with:
 - CODE flow: must be the url with protocol choice and version as query parameters;
 - IMPLICIT flow: must be the url part before `.well-known/openid-configuration` (for example in dev configuration it's
  `http://localhost:89/auth/realms/dev`).
-|operatorfabric.feed.subscription.timeout|60000|no|Milliseconds between card subscription renewal
 |operatorfabric.feed.card.time.display|BUSINESS|no
 a|card time display mode in the feed. Values :
 
@@ -72,7 +71,10 @@ a|card time display mode in the feed. Values :
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
 |operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen. If the timeline is not loaded , the time filter on the feed is filtering on business date otherwise it is filtering on publish date.
-|operatorfabric.feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filtrer in the feed page
+|operatorfabric.feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filter in the feed page
+|operatorfabric.feed.card.hideAckFilter|false|no|Control if you want to show or hide the acknowledgement filter in the feed page
+
+|operatorfabric.feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
 |operatorfabric.feed.notify|false|no|If set to true, new cards are notified in the OS through web-push notifications
 |operatorfabric.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |operatorfabric.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
@@ -81,8 +83,8 @@ a|card time display mode in the feed. Values :
 |operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 |operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
-|operatorfabric.navbar.businessconfigmenus.type|BOTH|no
-a|Defines how businessconfigparty menu links are displayed in the navigation bar and how
+|operatorfabric.navbar.businessmenus.type|BOTH|no
+a|Defines how business menu links are displayed in the navigation bar and how
 they open. Possible values:
 
 - TAB: Only a text link is displayed, and clicking it opens the link in a new tab.
@@ -92,7 +94,7 @@ the navigation bar.
 while clicking the icon opens in a new tab.
 
 
-|operatorfabric.archive.filters.page.size||no|The page size of archive filters
+|operatorfabric.archive.filters.page.size|10|no|The page size of archive filters
 |operatorfabric.archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
 |operatorfabric.archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
 |operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 

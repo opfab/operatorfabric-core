@@ -8,17 +8,17 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable} from 'rxjs';
-import {filter, map, withLatestFrom} from 'rxjs/operators';
-import {Action, Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {FilterType} from "@ofServices/filter.service";
-import {ApplyFilter} from "@ofActions/feed.actions";
-import {LoadSettingsSuccess, SettingsActionTypes} from "@ofActions/settings.actions";
-import {buildConfigSelector} from "@ofSelectors/config.selectors";
+import {filter, map} from 'rxjs/operators';
+import {ConfigService} from '@ofServices/config.service';
+
+import {Action, Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {FilterService, FilterType} from '@ofServices/filter.service';
+import {ApplyFilter, ApplySeveralFilters, FeedActionTypes, ResetFilter} from '@ofActions/feed.actions';
+import {LoadSettingsSuccess, SettingsActionTypes} from '@ofActions/settings.actions';
 
 @Injectable()
 export class FeedFiltersEffects {
@@ -26,27 +26,35 @@ export class FeedFiltersEffects {
 
     /* istanbul ignore next */
     constructor(private store: Store<AppState>,
-                private actions$: Actions) {
+                private actions$: Actions,
+                private configService: ConfigService,
+                private service: FilterService) {
 
     }
 
     @Effect()
     initTagFilterOnLoadedSettings: Observable<Action> = this.actions$
         .pipe(
-
             ofType<LoadSettingsSuccess>(SettingsActionTypes.LoadSettingsSuccess),
-            withLatestFrom(this.store.select(buildConfigSelector('settings.defaultTags'))),
-            map(([action,configTags])=>{
-                if(action.payload.settings.defaultTags && action.payload.settings.defaultTags.length>0)
+            map(action => {
+                const configTags = this.configService.getConfigValue('settings.defaultTags');
+                if (action.payload.settings.defaultTags && action.payload.settings.defaultTags.length > 0) {
                     return action.payload.settings.defaultTags;
-                else if (configTags && configTags.length > 0)
+                } else if (configTags && configTags.length > 0) {
                     return configTags;
+                }
                 return null;
             }),
-            filter(v=>!!v),
-            map(v=> {
-                console.log(new Date().toISOString(),"BUG OC-604 feed_filters.effects.ts initTagFilterOnLoadedSettings ");
-                return new ApplyFilter({name:FilterType.TAG_FILTER,active:true,status:{tags:v}});
+            filter(v => !!v),
+            map(v => {
+                console.log(new Date().toISOString(), 'BUG OC-604 feed_filters.effects.ts initTagFilterOnLoadedSettings ');
+                return new ApplyFilter({name: FilterType.TAG_FILTER, active: true, status: {tags: v}});
             })
+        );
+    @Effect()
+    resetFeedFilter: Observable<Action> = this.actions$
+        .pipe(
+            ofType<ResetFilter>(FeedActionTypes.ResetFilter),
+            map(() => new ApplySeveralFilters({filterStatuses: this.service.defaultFilters()}))
         );
 }

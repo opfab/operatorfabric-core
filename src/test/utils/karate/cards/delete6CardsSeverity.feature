@@ -5,26 +5,26 @@ Scenario: Delete cards sent via postCardsSeverity.feature
 
 
 # delete cards
-Given url opfabPublishCardUrl + 'cards/api_test.process1'
+Given url opfabPublishCardUrl + 'cards/defaultProcess.process1'
 When method delete
 Then status 200
 
-Given url opfabPublishCardUrl + 'cards/api_test.process2'
+Given url opfabPublishCardUrl + 'cards/defaultProcess.process2'
 When method delete
 Then status 200
 
-Given url opfabPublishCardUrl + 'cards/api_test.process3'
+Given url opfabPublishCardUrl + 'cards/defaultProcess.process3'
 When method delete
 Then status 200
 
-Given url opfabPublishCardUrl + 'cards/api_test.process4'
+Given url opfabPublishCardUrl + 'cards/defaultProcess.process4'
 When method delete
 Then status 200
 
-Given url opfabPublishCardUrl + 'cards/api_test.process5'
+Given url opfabPublishCardUrl + 'cards/defaultProcess.process5'
 When method delete
 Then status 200
 
-Given url opfabPublishCardUrl + 'cards/api_test.process6'
+Given url opfabPublishCardUrl + 'cards/defaultProcess.process6'
 When method delete
 Then status 200

@@ -1,7 +1,9 @@
 {
   "id": "TEST",
   "version": "1",
-  "name": "process.label",
+  "name": {
+    "key": "TEST.1.process.label"
+  },
   "defaultLocale": "fr",
   "templates": [
     "security",
@@ -19,11 +21,23 @@
   ],
   "menuLabel": "menu.label",
   "menuEntries": [
-    {"id": "uid test 0","url": "https://opfab.github.io/","label": "menu.first"},
-    {"id": "uid test 1","url": "https://www.la-rache.com","label": "menu.second"}
+    {
+      "id": "uid test 0",
+      "url": "https://opfab.github.io/",
+      "label": "menu.first"
+    },
+    {
+      "id": "uid test 1",
+      "url": "https://www.la-rache.com",
+      "label": "menu.second"
+    }
   ],
   "states": {
     "firstState": {
+      "name": {
+        "key": "process.label"
+      },
+      "color": "blue",
       "details": [
         {
           "title": {
@@ -31,7 +45,8 @@
           },
           "templateName": "operation"
         }
-      ]
+      ],
+      "acknowledgementAllowed": false
     }
   }
 }

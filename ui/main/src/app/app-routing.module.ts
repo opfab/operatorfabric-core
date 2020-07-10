@@ -8,11 +8,12 @@
  */
 
 
-
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, Router, RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './components/login/login.component';
-import {AboutComponent} from "./modules/about/about.component";
+import {AboutComponent} from './modules/about/about.component';
+import {LoggingComponent} from './modules/logging/logging.component';
+import {MonitoringComponent} from './modules/monitoring/monitoring.component';
 
 const defaultPath = '/feed';
 const archivePath = 'archives';
@@ -21,22 +22,26 @@ const routes: Routes = [
     {
         path: 'feed',
         loadChildren: () => import('./modules/feed/feed.module').then(m => m.FeedModule),
-        // canActivate: [AuthenticationGuard]
+    },
+    {
+        path: 'monitoring',
+        component: MonitoringComponent
     },
     {
         path: archivePath,
         loadChildren: () => import('./modules/archives/archives.module').then(m => m.ArchivesModule),
-        // canActivate: [AuthenticationGuard]
+    },
+    {
+        path: 'logging',
+        component: LoggingComponent
     },
     {
         path: 'businessconfigparty',
         loadChildren: () => import('./modules/businessconfigparty/businessconfigparty.module').then(m => m.BusinessconfigpartyModule),
-        // canActivate: [AuthenticationGuard]
     },
     {
         path: 'settings',
         loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule),
-        // canActivate: [AuthenticationGuard]
     },
     {
         path: 'navbar',
@@ -49,7 +54,12 @@ const routes: Routes = [
     {path: '**', redirectTo: defaultPath}
 ];
 // TODO manage visible path more gently
-export const navigationRoutes: Routes = routes.slice(0, 2);
+const startIndex = 0;
+const numberOfHiddenRoutes = 4 ; // 'businessconfigparty', 'settings', 'navbar' and 'about'
+const manageIndexesWhichBeginAtZero = 1;
+const numberOfRoutes = routes.length;
+const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;
+export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisibleElements);
 
 /**
  * Redirect the page to the same place.

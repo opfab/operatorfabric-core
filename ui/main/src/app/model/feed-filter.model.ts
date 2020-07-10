@@ -8,8 +8,8 @@
  */
 
 
-
-import {LightCard} from "@ofModel/light-card.model";
+import {LightCard} from '@ofModel/light-card.model';
+import {FilterType} from '@ofServices/filter.service';
 
 /**
  * A Filter gather both the feed filtering behaviour and the filter status for
@@ -24,16 +24,24 @@ import {LightCard} from "@ofModel/light-card.model";
  * funktion
  */
 export class Filter {
+    /**
+     * Sequentially applies a chain of filters to a card
+     * @param card
+     * @param next
+     */
+    static chainFilter(card: LightCard, next: Filter[]) {
+        return !next || next.length === 0 || next[0].chainFilter(card, next.slice(1));
+    }
 
     /* istanbul ignore next */
     constructor(
-        readonly funktion: (LightCard,any) => boolean,
-        public active:boolean,
+        readonly funktion: (LightCard, any) => boolean,
+        public active: boolean,
         public status: any
     ) {
     }
 
-    clone():Filter {
+    clone(): Filter {
         return new Filter(
             this.funktion,
             this.active,
@@ -44,9 +52,9 @@ export class Filter {
      * apply the filter to the card, returns true if the card passes the filter, false otherwise
      * @param card
      */
-    applyFilter(card: LightCard):boolean{
-        if(this.active){
-            return this.funktion(card,this.status);
+    applyFilter(card: LightCard): boolean {
+        if (this.active) {
+            return this.funktion(card, this.status);
         }
         return true;
     }
@@ -57,18 +65,18 @@ export class Filter {
      * @param card
      * @param next
      */
-    chainFilter(card: LightCard, next: Filter[]){
-        if(this.applyFilter(card))
-            return !next || next.length == 0 || next[0].chainFilter(card,next.slice(1));
-        return false
+    chainFilter(card: LightCard, next: Filter[]) {
+        if (this.applyFilter(card)) {
+            return !next || next.length === 0 || next[0].chainFilter(card, next.slice(1));
+        }
+        return false;
     }
 
-    /**
-     * Sequentially applies a chain of filters to a card
-     * @param card
-     * @param next
-     */
-    static chainFilter(card: LightCard, next: Filter[]){
-        return !next||next.length == 0 || next[0].chainFilter(card,next.slice(1));
+}
+
+export class FilterStatus {
+    constructor(
+        public name: FilterType, public active: boolean, status: any
+    ) {
     }
 }

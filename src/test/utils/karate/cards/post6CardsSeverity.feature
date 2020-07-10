@@ -17,9 +17,9 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 	  endDate = new Date().valueOf() + 8*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
+			"publisher" : "publisher_test",
 			"processVersion" : "1",
-			"process"  :"api_test",
+			"process"  :"defaultProcess",
 			"processInstanceId" : "process1",
 			"state": "messageState",
 			"tags":["test","test2"],
@@ -69,9 +69,9 @@ And match response.count == 1
 	  endDate = new Date().valueOf() + 8*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
+			"publisher" : "publisher_test",
 			"processVersion" : "1",
-			"process"  :"api_test",
+			"process"  :"defaultProcess",
 			"processInstanceId" : "process2",
 			"state": "chartState",
 			"tags" : ["test2"],
@@ -116,9 +116,9 @@ And match response.count == 1
 	  endDate = new Date().valueOf() + 12*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
+			"publisher" : "publisher_test",
 			"processVersion" : "1",
-			"process"  :"api_test",
+			"process"  :"defaultProcess",
 			"processInstanceId" : "process3",
 			"state": "processState",
 			"recipient" : {
@@ -161,9 +161,9 @@ And match response.count == 1
 	  endDate = new Date().valueOf() + 6*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
+			"publisher" : "publisher_test",
 			"processVersion" : "1",
-			"process"  :"api_test",
+			"process"  :"defaultProcess",
 			"processInstanceId" : "process4",
 			"state": "messageState",
 			"recipient" : {
@@ -203,9 +203,9 @@ And match response.count == 1
       startDate = new Date().valueOf() + 1*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
+			"publisher" : "publisher_test",
 			"processVersion" : "1",
-			"process"  :"api_test",
+			"process"  :"defaultProcess",
 			"processInstanceId" : "process5",
 			"state": "chartLineState",
 			"recipient" : {
@@ -244,9 +244,9 @@ And match response.count == 1
       startDate = new Date().valueOf() + 2*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
+			"publisher" : "publisher_test",
 			"processVersion" : "1",
-			"process"  :"api_test",
+			"process"  :"defaultProcess",
 			"processInstanceId" : "process6",
 			"state": "messageState",
 			"recipient" : {

@@ -2,6 +2,8 @@
   "menu": {
     "feed": "Card Feed",
     "archives": "Archives",
+    "logging": "Logging",
+    "monitoring": "Monitoring",
     "logout": "Logout",
     "settings": "Settings",
     "about": "About"
@@ -108,6 +110,18 @@
     "search": "Search",
     "clear": "Clear",
     "noResult": "Your search did not match any results."
+  },
+  "logging": {
+    "filters": {"process": "Service"},
+    "cardType": "Card Type",
+    "timeOfAction": "Time of Action",
+    "processName": "Process Name",
+    "description": "Description",
+    "sender": "Sender",
+    "noResult": "No result"
+  },
+  "monitoring": {
+    "filters": {"process": "Process"}
   },
   "button": {
     "ok": "OK",

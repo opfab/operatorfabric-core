@@ -8,20 +8,19 @@
  */
 
 
-
 import {createSelector} from '@ngrx/store';
 import {compareByPublishDate, compareBySeverityPublishDate, LightCardAdapter} from '@ofStates/feed.state';
-import {AppState} from "@ofStore/index";
-import {Filter} from "@ofModel/feed-filter.model";
-import {LightCard} from "@ofModel/light-card.model";
-import {FilterType} from "@ofServices/filter.service";
+import {AppState} from '@ofStore/index';
+import {Filter} from '@ofModel/feed-filter.model';
+import {LightCard} from '@ofModel/light-card.model';
+import {FilterType} from '@ofServices/filter.service';
 
-export const selectLightCardsState = (state:AppState) => state.feed;
+export const selectLightCardsState = (state: AppState) => state.feed;
 
 export const {
-  selectIds: selectFeedCardIds,
-  selectAll: selectFeed,
-  selectEntities: selectFeedCardEntities
+    selectIds: selectFeedCardIds,
+    selectAll: selectFeed,
+    selectEntities: selectFeedCardEntities
 } = LightCardAdapter.getSelectors(selectLightCardsState);
 
 export const selectLightCardSelection = createSelector(
@@ -30,30 +29,33 @@ export const selectLightCardSelection = createSelector(
 export const selectLastCards = createSelector(selectLightCardsState,
     state => state.lastCards);
 export const selectFilter = createSelector(selectLightCardsState,
-    state => state.filters)
+    state => state.filters);
 const selectActiveFiltersArray = createSelector(selectFilter,
-    (filters) =>{
-      let result = [];
-      for(let v of filters.values()) {
-        if(v.active)
-          result.push(v);
-      }
-      return result;
-    })
+    (filters) => {
+        const result = [];
+        for (const v of filters.values()) {
+            if (v.active) {
+                result.push(v);
+            }
+        }
+        return result;
+    });
 
-export const selectFilteredFeed = createSelector(selectFeed,selectActiveFiltersArray,
-    (feed:LightCard[],filters:Filter[])=>{
-    if(filters && filters.length>0)
-      return feed.filter(card=>Filter.chainFilter(card,filters));
-    else return feed;
-    })
-export function buildFilterSelector(name:FilterType){
-    return createSelector(selectFilter,(filters)=>{
+export const selectFilteredFeed = createSelector(selectFeed, selectActiveFiltersArray,
+    (feed: LightCard[], filters: Filter[]) => {
+        if (filters && filters.length > 0) {
+            return feed.filter(card => Filter.chainFilter(card, filters));
+        }
+        return feed;
+    });
+
+export function buildFilterSelector(name: FilterType) {
+    return createSelector(selectFilter, (filters) => {
         return filters.get(name);
     });
 }
 
-export const fetchLightCard = lightCardId =>(state:AppState) => selectFeedCardEntities(state)[lightCardId]
+export const fetchLightCard = lightCardId => (state: AppState) => selectFeedCardEntities(state)[lightCardId];
 
 export const selectSortBySeverity = createSelector(selectLightCardsState,
     state => state.sortBySeverity);
@@ -61,21 +63,22 @@ export const selectSortBySeverity = createSelector(selectLightCardsState,
 export const selectSortedFilterLightCardIds = createSelector(
     selectFilteredFeed,
     selectSortBySeverity,
-    ( entityArray, sortBySeverity ) => {
-        function compareFn(sortBySeverity: boolean){
-            if(sortBySeverity) {
+    (entityArray, sortBySeverity) => {
+        function compareFn(needToSortBySeverity: boolean) {
+            if (needToSortBySeverity) {
                 return compareBySeverityPublishDate;
-            } else {
-                return compareByPublishDate;
             }
+            return compareByPublishDate;
         }
+
         return entityArray
-            .sort( compareFn(sortBySeverity) )
-            .map( entity => entity.id );
+            .sort(compareFn(sortBySeverity))
+            .map(entity => entity.id);
     });
 
 export const selectSortedFilteredLightCards = createSelector(
     selectFeedCardEntities,
     selectSortedFilterLightCardIds,
-    ( entities, sortedIds ) => sortedIds.map( id => entities[id])
-)
+    (entities, sortedIds) => {
+        return sortedIds.map(id => entities[id]);
+    });

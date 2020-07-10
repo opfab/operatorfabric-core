@@ -8,9 +8,8 @@
  */
 
 
-
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from "@angular/platform-browser";
+import {By} from '@angular/platform-browser';
 import {ArchivesComponent} from './archives.component';
 import {appReducer, AppState, storeConfig} from '@ofStore/index';
 import {Store, StoreModule} from '@ngrx/store';
@@ -21,12 +20,14 @@ import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {TranslateModule} from '@ngx-translate/core';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ServicesModule} from '@ofServices/services.module';
-import {ArchiveQuerySuccess} from '@ofStore/actions/archive.actions';
-import {FlushArchivesResult} from '@ofStore/actions/archive.actions';
+import {ArchiveQuerySuccess, FlushArchivesResult} from '@ofStore/actions/archive.actions';
 import {ArchiveListComponent} from './components/archive-list/archive-list.component';
 import {ArchiveFiltersComponent} from './components/archive-filters/archive-filters.component';
 import {getRandomPage} from '@tests/helpers';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
+import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
 
 describe('ArchivesComponent', () => {
     let component: ArchivesComponent;
@@ -41,7 +42,12 @@ describe('ArchivesComponent', () => {
                 RouterTestingModule,
                 StoreRouterConnectingModule,
                 HttpClientTestingModule,
-                TranslateModule.forRoot()],
+                TranslateModule.forRoot(),
+                FormsModule,
+                ReactiveFormsModule,
+                DatetimeFilterModule,
+                MultiFilterModule
+            ],
             declarations: [
                 ArchivesComponent,
                 ArchiveFiltersComponent,

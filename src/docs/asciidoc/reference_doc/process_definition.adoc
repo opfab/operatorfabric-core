@@ -71,7 +71,7 @@ include::../../../../services/core/businessconfig/src/main/docker/volume/busines
 - name: process name (i18n key);
 - version: enable the correct display, even the old ones as all versions are stored by the server. Your *card* has a version
 field that will be matched to businessconfig configuration for correct rendering ;
-- states  : list the available  states; actions and templates are associated to states
+- states  : list the available  states; actions and templates are associated to states, in the same way is the possibility of making the cards enabled for being acknowledged by user;
 - css file template list as `csses`;
 - menuLabel in the main bar menu as `i18nLabelKey`: optional, used if the businessconfig service add one or several entry in
 the OperatorFabric main menu bar, see the

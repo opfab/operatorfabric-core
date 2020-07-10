@@ -10,32 +10,28 @@
 
 
 import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {buildConfigSelector} from '@ofSelectors/config.selectors';
+import {ConfigService} from "@ofServices/config.service";
 
 @Component({
   selector: 'of-settings',
   templateUrl: './settings.component.html'
 })
 export class SettingsComponent implements OnInit {
-  locales$: Observable<string[]>;
-  timeZones$: Observable<string[]>;
-  hideTags$: Observable<boolean>;
-  disableInfos$: Observable<boolean>;
+  locales: string[];
+  timeZones: string[];
+  disableInfos: boolean;
   displayInfo: SettingsInputs;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,private  configService: ConfigService) { }
 
   ngOnInit() {
-    this.locales$ = this.store.select(buildConfigSelector('i18n.supported.locales'));
-    this.timeZones$ = this.store.select(buildConfigSelector('i10n.supported.time-zones'));
-    this.hideTags$ = this.store.select(buildConfigSelector('settings.tags.hide'));
-    this.disableInfos$ = this.store.select(buildConfigSelector('settings.infos.disable'));
-    this.store.select(buildConfigSelector('settings.infos')).subscribe((d: SettingsInputs) => {
-      this.displayInfo = d ;
-    });
+    this.locales = this.configService.getConfigValue('i18n.supported.locales');
+    this.timeZones = this.configService.getConfigValue('i10n.supported.time-zones');
+    this.disableInfos = this.configService.getConfigValue('settings.infos.disable');
+    this.displayInfo = this.configService.getConfigValue('settings.infos');
+
   }
 
 }

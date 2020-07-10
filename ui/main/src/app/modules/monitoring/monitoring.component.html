@@ -1,0 +1,23 @@
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div class="row" >
+    <div class="col-12">
+        <of-monitoring-filters
+                [processData]="processValueForFilter"
+        ></of-monitoring-filters>
+    </div>
+</div>
+
+<div *ngIf="(monitoringResult$|async) as line ; else noResult">
+    <of-monitoring-table [result]="monitoringResult$|async"></of-monitoring-table>
+</div>
+
+<ng-template #noResult>
+    <div class="alert alert-info"  translate>archive.noResult</div>
+</ng-template>

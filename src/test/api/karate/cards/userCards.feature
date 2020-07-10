@@ -351,9 +351,9 @@ Feature: UserCards tests
 
 
 # delete parent card
-   Given url opfabPublishCardUrl + 'cards/initial.initialCardProcess'
-   When method delete
-   Then status 200
+    Given url opfabPublishCardUrl + 'cards/initial.initialCardProcess'
+    When method delete
+    Then status 200
 
 # verifiy that the 2 child cards was deleted after parent card deletion
 

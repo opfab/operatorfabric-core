@@ -10,8 +10,8 @@
 
 
 import {CardFeedState} from '@ofStates/feed.state';
-import {menuInitialState, MenuState} from "@ofStates/menu.state";
-import {MenuActions, MenuActionTypes} from "@ofActions/menu.actions";
+import {menuInitialState, MenuState} from '@ofStates/menu.state';
+import {MenuActions, MenuActionTypes} from '@ofActions/menu.actions';
 
 export function reducer(
     state = menuInitialState,

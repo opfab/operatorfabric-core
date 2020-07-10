@@ -15,9 +15,10 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { AuthenticationService } from '@ofServices/authentication/authentication.service';
 import { LoadConfig } from '@ofActions/config.actions';
-import { buildConfigSelector, selectConfigLoaded, selectMaxedRetries } from '@ofSelectors/config.selectors';
+import { selectConfigLoaded, selectMaxedRetries } from '@ofSelectors/config.selectors';
 import { selectIdentifier } from '@ofSelectors/authentication.selectors';
 import { I18nService } from '@ofServices/i18n.service';
+import { ConfigService} from "@ofServices/config.service";
 
 @Component({
     selector: 'of-root',
@@ -37,7 +38,8 @@ export class AppComponent implements OnInit {
     constructor(private store: Store<AppState>,
         private i18nService: I18nService,
         private titleService: Title
-        , private authenticationService: AuthenticationService) {
+        , private authenticationService: AuthenticationService
+        ,private  configService: ConfigService) {
     }
 
     ngOnInit() {
@@ -45,7 +47,6 @@ export class AppComponent implements OnInit {
         this.loadConfiguration();
         this.launchAuthenticationProcessWhenConfigurationLoaded();
         this.waitForUserTobeAuthenticated();
-        this.setTitle();
     }
 
     private loadConfiguration() {
@@ -60,6 +61,8 @@ export class AppComponent implements OnInit {
             .select(selectConfigLoaded)
             .subscribe(loaded => {
                 if (loaded) {
+                    const title=this.configService.getConfigValue('title') ;
+                    if (!!title) this.titleService.setTitle(title);
                     this.authenticationService.initializeAuthentication();
                     this.useCodeOrImplicitFlow = this.authenticationService.isAuthModeCodeOrImplicitFlow();
                 }
@@ -75,11 +78,4 @@ export class AppComponent implements OnInit {
             });
     }
 
-    private setTitle() {
-        this.store
-            .select(buildConfigSelector('title', this.title))
-            .subscribe(data => {
-                this.titleService.setTitle(data);
-            });
-    }
 }

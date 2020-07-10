@@ -8,20 +8,19 @@
  */
 
 
-
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Card, Detail, TitlePosition} from "@ofModel/card.model";
-import {I18n} from "@ofModel/i18n.model";
-import {Map as OfMap, Map} from "@ofModel/map";
-import {Process, State, Menu, MenuEntry} from "@ofModel/processes.model";
+import {Process, State, Menu, MenuEntry} from '@ofModel/processes.model';
+import {Card, Detail, TitlePosition} from '@ofModel/card.model';
+import {I18n} from '@ofModel/i18n.model';
+import {Map as OfMap, Map} from '@ofModel/map';
 import {Page} from '@ofModel/page.model';
-import {AppState} from "@ofStore/index";
+import {AppState} from '@ofStore/index';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {GuidService} from '@ofServices/guid.service';
-import {OAuthLogger,OAuthService,UrlHelperService}from 'angular-oauth2-oidc';
+import {OAuthLogger, OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
 
-export const emptyAppState4Test:AppState = {
+export const emptyAppState4Test: AppState = {
     router: null,
     feed: null,
     authentication: null,
@@ -32,7 +31,10 @@ export const emptyAppState4Test:AppState = {
     archive:null,
     user:null,
     cardsSubscription:null,
-    globalStyle: null
+    globalStyle: null,
+    logging: null,
+    monitoring: null,
+    process: null
 };
 
 export const AuthenticationImportHelperForSpecs = [AuthenticationService,
@@ -45,13 +47,13 @@ export const AuthenticationImportHelperForSpecs = [AuthenticationService,
 export function getOneRandomMenu(): Menu {
     let entries: MenuEntry[]=[];
     let entryCount = getPositiveRandomNumberWithinRange(2,5);
-    for(let j=0;j<entryCount;j++){
+    for (let j = 0; j < entryCount; j++) {
         entries.push(new MenuEntry(
-            getRandomAlphanumericValue(3,10),
-            getRandomAlphanumericValue(3,10),
-            getRandomAlphanumericValue(3,10)
+            getRandomAlphanumericValue(3, 10),
+            getRandomAlphanumericValue(3, 10),
+            getRandomAlphanumericValue(3, 10)
             )
-        )
+        );
     }
     return new Menu(
         getRandomAlphanumericValue(3,10),
@@ -111,14 +113,6 @@ export function getOneRandomProcess(processTemplate?:any): Process {
 
 }
 
-//
-// export function getNewLightCardInstance(): LightCard{
-//     return new LightCard();
-// }
-//
-// export function getNewI8nDataInstance(): I18nData{
-//     return new I18nData();
-// }
 
 // fully random without any control
 export function getOneRandomAddCardOperation(): CardOperation {
@@ -131,15 +125,16 @@ export function getOneRandomAddCardOperation(): CardOperation {
         getSeveralRandomLightCards(numberOfCards)
     );
 }
-//heavily based on enum implementation
-export function  pickARandomItemOfAnEnum<E>(currentEnum:E):E {
-    const keys = Object.keys(currentEnum).filter(k=>{
-        let parsedInt = parseInt(k)
-        let isNum = !isNaN(parsedInt);
+
+// heavily based on enum implementation
+export function pickARandomItemOfAnEnum<E>(currentEnum: E): E {
+    const keys = Object.keys(currentEnum).filter(k => {
+        const parsedInt = parseInt(k);
+        const isNum = !isNaN(parsedInt);
         return isNum;
     });
     const randomIndex = getRandomIndex(keys);
-    let key = keys[randomIndex];
+    const key = keys[randomIndex];
     return currentEnum[key];
 }
 
@@ -152,32 +147,33 @@ export function getRandomIndex<E>(array: E[]){
     }
 }
 
-export function getOneRandomLightCard(lightCardTemplate?:any): LightCard {
-    lightCardTemplate = lightCardTemplate?lightCardTemplate:{};
+export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
+    lightCardTemplate = lightCardTemplate ? lightCardTemplate : {};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     const oneCard = new LightCard(getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.id?lightCardTemplate.id:getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.publisher?lightCardTemplate.publisher:'testPublisher',
-        lightCardTemplate.processVersion? lightCardTemplate.processVersion:getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.publishDate?lightCardTemplate.publishDate:today,
-        lightCardTemplate.startDate? lightCardTemplate.startDate:startTime,
-        lightCardTemplate.endDate?lightCardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        lightCardTemplate.severity?lightCardTemplate.severity:getRandomSeverity(),
+        lightCardTemplate.id ? lightCardTemplate.id : getRandomAlphanumericValue(3, 24),
+        lightCardTemplate.publisher ? lightCardTemplate.publisher : 'testPublisher',
+        lightCardTemplate.publisherVersion ? lightCardTemplate.publisherVersion : getRandomAlphanumericValue(3, 24),
+        lightCardTemplate.publishDate ? lightCardTemplate.publishDate : today,
+        lightCardTemplate.startDate ? lightCardTemplate.startDate : startTime,
+        lightCardTemplate.endDate ? lightCardTemplate.endDate : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        lightCardTemplate.severity ? lightCardTemplate.severity : getRandomSeverity(),
         false,
         getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.lttd?lightCardTemplate.lttd:generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
+        lightCardTemplate.lttd ? lightCardTemplate.lttd : generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
         lightCardTemplate.tags?lightCardTemplate.tags:null,
         lightCardTemplate.timeSpans?lightCardTemplate.timeSpans:null,
+        lightCardTemplate.process?lightCardTemplate.process:'testProcess'
     );
     return oneCard;
 }
 
 export function getRandomSeverity(): Severity {
-    const severities : Severity[] = [Severity.ALARM, Severity.ACTION, Severity.COMPLIANT, Severity.INFORMATION];
-    return severities[getPositiveRandomNumberWithinRange(0,3)];
+    const severities: Severity[] = [Severity.ALARM, Severity.ACTION, Severity.COMPLIANT, Severity.INFORMATION];
+    return severities[getPositiveRandomNumberWithinRange(0, 3)];
 }
 
 export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCard> {
@@ -186,78 +182,81 @@ export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCar
     return randomPage;
 }
 
+
 export function getOneRandomCard(cardTemplate?:any): Card {
-    cardTemplate = cardTemplate?cardTemplate:{};
+    cardTemplate = cardTemplate ? cardTemplate : {};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     const oneCard = new Card(getRandomAlphanumericValue(3, 24),
-        cardTemplate.id?cardTemplate.id:getRandomAlphanumericValue(3, 24),
-        cardTemplate.publisher?cardTemplate.publisher:getRandomAlphanumericValue(3, 24),
-        cardTemplate.processVersion?cardTemplate.processVersion:getRandomAlphanumericValue(3, 24),
-        cardTemplate.publishDate?cardTemplate.publishDate:today,
-        cardTemplate.startDate? cardTemplate.startDate:startTime,
-        cardTemplate.endDate?cardTemplate.endDate:startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        cardTemplate.severity?cardTemplate.severity:getRandomSeverity(),
+        cardTemplate.id ? cardTemplate.id : getRandomAlphanumericValue(3, 24),
+        cardTemplate.publisher ? cardTemplate.publisher : getRandomAlphanumericValue(3, 24),
+        cardTemplate.processVersion ? cardTemplate.processVersion : getRandomAlphanumericValue(3, 24),
+        cardTemplate.publishDate ? cardTemplate.publishDate : today,
+        cardTemplate.startDate ? cardTemplate.startDate : startTime,
+        cardTemplate.endDate ? cardTemplate.endDate : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        cardTemplate.severity ? cardTemplate.severity : getRandomSeverity(),
         false,
-        cardTemplate.process?cardTemplate.process:'testProcess',
-        cardTemplate.processInstanceId?cardTemplate.processInstanceId:getRandomAlphanumericValue(3, 24),
-        cardTemplate.state?cardTemplate.state:getRandomAlphanumericValue(3, 24),
+        cardTemplate.process ? cardTemplate.process : 'testProcess',
+        cardTemplate.processInstanceId ? cardTemplate.processInstanceId : getRandomAlphanumericValue(3, 24),
+        cardTemplate.state ? cardTemplate.state : getRandomAlphanumericValue(3, 24),
         generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
-        cardTemplate.data?cardTemplate.data:{data: "data"},
-        cardTemplate.details?cardTemplate.details:
-            [new Detail(null, getRandomI18nData(),null,"template1",null),
-                new Detail(null, getRandomI18nData(),null,"template2",null),]
+        cardTemplate.data ? cardTemplate.data : {data: "data"},
+        cardTemplate.details ? cardTemplate.details :
+            [new Detail(null, getRandomI18nData(), null, "template1", null),
+                new Detail(null, getRandomI18nData(), null, "template2", null),]
     );
     return oneCard;
 }
 
-export function getOneRandomCardWithRandomDetails(min=2,max=5,card?:any):Card{
-    const randomDetails = generateRandomArray(min,max,getOneRandomCardDetail);
-    card = card?card:{};
-    card.details=card.details?card.details:randomDetails;
+//so there are lot of keys missing here. WHy suddently make them disappear ?
+
+export function getOneRandomCardWithRandomDetails(min = 2, max = 5, card?: any): Card {
+    const randomDetails = generateRandomArray(min, max, getOneRandomCardDetail);
+    card = card ? card : {};
+    card.details = card.details ? card.details : randomDetails;
     return getOneRandomCard(card);
 }
 
-export function getRandomCardDetails(...cardDetailTemplates:any[]){
+export function getRandomCardDetails(...cardDetailTemplates: any[]) {
     let detailCount;
-    if(cardDetailTemplates){
+    if (cardDetailTemplates) {
         detailCount = cardDetailTemplates.length;
-    }else{
-        detailCount = getPositiveRandomNumberWithinRange(1,3);
+    } else {
+        detailCount = getPositiveRandomNumberWithinRange(1, 3);
     }
-    let result = [];
-    for(let i = 0; i<detailCount;i++) {
+    const result = [];
+    for (let i = 0; i < detailCount; i++) {
         result.push(getOneRandomCardDetail(cardDetailTemplates ? cardDetailTemplates[i] : null));
     }
     return result;
 }
 
-export function getOneRandomCardDetail(cardDetailTemplate?:any):Detail{
-    cardDetailTemplate = cardDetailTemplate?cardDetailTemplate:{};
+export function getOneRandomCardDetail(cardDetailTemplate?: any): Detail {
+    cardDetailTemplate = cardDetailTemplate ? cardDetailTemplate : {};
     const titlePosition = cardDetailTemplate.titlePosition ? cardDetailTemplate.titlePosition : pickARandomItemOfAnEnum(TitlePosition);
-    const titleKey = cardDetailTemplate.title?cardDetailTemplate.title:getRandomI18nData();
-    const titleStyle = cardDetailTemplate.titleStyle?cardDetailTemplate.titleStyle:getRandomAlphanumericValue(5,12);
+    const titleKey = cardDetailTemplate.title ? cardDetailTemplate.title : getRandomI18nData();
+    const titleStyle = cardDetailTemplate.titleStyle ? cardDetailTemplate.titleStyle : getRandomAlphanumericValue(5, 12);
     // const templateName = cardDetail.templateName?cardDetail.templateName:getRandomAlphanumericValue(4,12);
     const templateName = 'template1';
-    const genString = () => getRandomAlphanumericValue(5,13);
+    const genString = () => getRandomAlphanumericValue(5, 13);
 
-    const styles=generateRandomArray(1,5,genString);
-    return new Detail(titlePosition, titleKey,titleStyle,templateName,styles);
+    const styles = generateRandomArray(1, 5, genString);
+    return new Detail(titlePosition, titleKey, titleStyle, templateName, styles);
 }
 
-export function generateRandomArray<T>(min =1, max = 2, func:()=>T):Array<T>{
-    let size = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min,max);
+export function generateRandomArray<T>(min = 1, max = 2, func: () => T): Array<T> {
+    const size = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min, max);
     const array = [];
-    for(let i = 0; i<size;++i){
-        array[i]=func();
+    for (let i = 0; i < size; ++i) {
+        array[i] = func();
     }
 
     return array;
 }
 
-export function getSeveralRandomLightCards(numberOfCards = 1, cardTemplate?:any): LightCard[] {
+export function getSeveralRandomLightCards(numberOfCards = 1, cardTemplate?: any): LightCard[] {
     const finalNumberOfCards = forcePositiveAndOneMinimum(numberOfCards);
     const lightCards: LightCard[] = new Array(finalNumberOfCards);
     for (let i = 0; i < finalNumberOfCards; ++i) {
@@ -288,7 +287,7 @@ export function getPositiveRandomNumberWithinRange(min = 1, max?: number): numbe
 
 }
 
-export function generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min = 1, max = 1) {
+export function generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min = 1, max = 1): number{
     const minimum = forcePositiveAndOneMinimum(min);
     const maximum = handleMaxAgainstMin(minimum, max);
     return Math.floor(Math.random() * (maximum - minimum) + minimum);
@@ -334,7 +333,7 @@ export function appendFixedLengthAlphanumericValue(length = 1, base = ''): strin
 }
 
 export function shuffleArrayContentByFisherYatesLike<T>(array: Array<T>): Array<T> {
-    let workingArray = Object.assign([], array);
+    const workingArray = Object.assign([], array);
     let currentLengthOfRemainingArrayToShuffle = array.length;
     let valueHolderForPermutation: T;
     let currentIndex: number;
