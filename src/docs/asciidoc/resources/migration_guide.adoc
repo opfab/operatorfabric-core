@@ -215,32 +215,30 @@ version while there are still "old" bundles in the businessconfig storage will c
 . Edit your bundles as detailed above. In particular, if you had bundles containing several processes, you will need to
 split them into several bundles. The `id` of the bundles should match the `process` field in the corresponding cards.
 
-- If you user operatorfabric.navbar.thirdmenus.type in web-ui.json, rename it to operatorfabric.navbar.businessmenus.type
+. If you user operatorfabric.navbar.thirdmenus.type in web-ui.json, rename it to operatorfabric.navbar.businessmenus.type
+
+. Run the following scripts in the mongo shell to copy the value of `publisherVersion` to a new `processVersion` field and to copy the value of `processId` to a new `processInstanceId` field for all cards (current and archived):
 
 
-. Run the following scripts in the mongo shell to copy the value of `publisherVersion` to a new `processVersion` field
-for all cards (current and archived):
+
+
 //TODO Detail steps to mongo shell ?
 +
 .Current cards
 [source, shell]
 ----
-db.cards.aggregate(
-[
-{ "$addFields": { "processVersion": "$publisherVersion" }},
-{ "$out": "cards" }
-]
+db.cards.updateMany(
+{},
+{ $rename: { "publisherVersion": "processVersion", "processId": "processInstanceId" } }
 )
 ----
 +
 .Archived cards
 [source, shell]
 ----
-db.archivedCards.aggregate(
-[
-{ "$addFields": { "processVersion": "$publisherVersion" }},
-{ "$out": "archivedCards" }
-]
+db.archivedCards.updateMany(
+{},
+{ $rename: { "publisherVersion": "processVersion", "processId": "processInstanceId" } }
 )
 ----
 
