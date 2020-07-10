@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
 import { ProcessesService } from "@ofServices/processes.service";
-import { ClearLightCardSelection, DelayedLightCardUpdate } from '@ofStore/actions/light-card.actions';
+import { ClearLightCardSelection, UpdateALightCard } from '@ofStore/actions/light-card.actions';
 import { Router } from '@angular/router';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
 import { Response} from '@ofModel/processes.model';
@@ -226,8 +226,7 @@ export class CardDetailsComponent implements OnInit {
         .subscribe((lightCard : LightCard) => {
             var updatedLighCard = { ... lightCard };
             updatedLighCard.hasBeenAcknowledged = hasBeenAcknowledged;
-            var delayedLightCardUpdate = new DelayedLightCardUpdate({card: updatedLighCard});
-            this.store.dispatch(delayedLightCardUpdate);    
+            this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));    
         });
     }
 

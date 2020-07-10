@@ -35,7 +35,6 @@ import {CardState} from '@ofStates/card.state';
 import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
 import {MenuState} from '@ofStates/menu.state';
 import {MenuEffects} from '@ofEffects/menu.effects';
-import {LightCardEffects} from '@ofEffects/light-card.effects';
 import {FeedFiltersEffects} from '@ofEffects/feed-filters.effects';
 import {ConfigState} from '@ofStates/config.state';
 import {ConfigEffects} from '@ofEffects/config.effects';
@@ -86,7 +85,6 @@ export const appEffects = [
     CustomRouterEffects,
     AuthenticationEffects,
     MenuEffects,
-    LightCardEffects,
     FeedFiltersEffects,
     ArchiveEffects,
     UserEffects,
