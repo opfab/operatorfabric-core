@@ -17,6 +17,7 @@ import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
 import {ApplyFilter} from '@ofActions/feed.actions';
 import {TimeService} from '@ofServices/time.service';
+import { GlobalStyleService } from '@ofServices/global-style.service';
 
 
 const forwardWeekConf = {
@@ -54,7 +55,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     public endDate;
 
 
-    constructor(private store: Store<AppState>, private time: TimeService) {
+    constructor(private store: Store<AppState>, private time: TimeService,private globalStyleService: GlobalStyleService) {
     }
 
 
@@ -335,6 +336,13 @@ export class InitChartComponent implements OnInit, OnDestroy {
         // need to relcalculate frame size
         // event is catch by calc-height-directive.ts
         window.dispatchEvent(new Event('resize'));
+
+          // WORKAROUND to remove white background when user hide time line in Legacy mode 
+        if (this.globalStyleService.getStyle() === 'LEGACY') {
+            if (this.hideTimeLine) this.globalStyleService.setLegacyStyleWhenHideTimeLine();
+            else this.globalStyleService.setLegacyStyleWhenShowTimeLine();
+        }
+
     }
 
 }
