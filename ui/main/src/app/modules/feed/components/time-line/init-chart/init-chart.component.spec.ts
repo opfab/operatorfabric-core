@@ -23,6 +23,7 @@ import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
 import {TimeService} from '@ofServices/time.service';
+import {GlobalStyleService} from "@ofServices/global-style.service";
 
 
 describe('InitChartComponent', () => {
@@ -42,7 +43,8 @@ describe('InitChartComponent', () => {
       providers: [{provide: APP_BASE_HREF, useValue: '/'},
         {provide: Store, useClass: Store},
         {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
-        {provide: TimeService, useClass: TimeService}],
+        {provide: TimeService, useClass: TimeService},
+        {provide: GlobalStyleService, useClass: GlobalStyleService}],
       schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();
