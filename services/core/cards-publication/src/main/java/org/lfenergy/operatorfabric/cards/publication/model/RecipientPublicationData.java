@@ -31,7 +31,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class RecipientPublicationData implements Recipient {
-    @NotNull
     private RecipientEnum type;
     private String identity;
     @Singular

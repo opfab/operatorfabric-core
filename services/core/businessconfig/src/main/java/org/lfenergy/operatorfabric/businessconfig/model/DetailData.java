@@ -32,7 +32,6 @@ import java.util.List;
 public class DetailData implements Detail {
     private I18n title;
     private String titleStyle;
-    @NotNull
     private String templateName;
     @Singular
     private List<String> styles;

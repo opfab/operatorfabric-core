@@ -199,6 +199,7 @@ public class CardRepositoryShould {
                         .process("PROCESS")
                         .publisher("PUBLISHER")
                         .processVersion("0")
+                        .state("anyState")
                         .startDate(Instant.now())
                         .severity(SeverityEnum.ALARM)
                         .title(I18nConsultationData.builder().key("title").build())
