@@ -30,7 +30,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class I18nPublicationData implements I18n {
-    @NotNull
+    
     private String key;
     @Singular private Map<String,String> parameters;
 
