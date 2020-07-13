@@ -11,16 +11,12 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {CardService} from '@ofServices/card.service';
-import {Observable} from 'rxjs';
-import {catchError, filter, map, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, filter, map, switchMap,withLatestFrom} from 'rxjs/operators';
 import {
-    AddLightCardFailure,
     HandleUnexpectedError,
-    LightCardActions,
     LightCardActionTypes,
-    LoadLightCardsSuccess,
-    RemoveLightCard,
-    UpdatedSubscription
+    LoadLightCardsSuccess
 } from '@ofActions/light-card.actions';
 import {Action, Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -28,8 +24,6 @@ import {ApplyFilter, FeedActionTypes} from '@ofActions/feed.actions';
 import {FilterType} from '@ofServices/filter.service';
 import {selectCardStateSelectedId} from '@ofSelectors/card.selectors';
 import {LoadCard} from '@ofActions/card.actions';
-import {CardOperationType} from '@ofModel/card-operation.model';
-import {UserActionsTypes} from '@ofStore/actions/user.actions';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {selectSortedFilterLightCardIds} from '@ofSelectors/feed.selectors';
 
@@ -43,37 +37,6 @@ export class CardOperationEffects {
                 private soundNotificationService: SoundNotificationService) {
     }
 
-    @Effect()
-    subscribe: Observable<LightCardActions> = this.actions$
-        .pipe(
-            // loads card operations only after authentication of a default user ok.
-            ofType(UserActionsTypes.UserApplicationRegistered),
-            switchMap(() => this.service.getCardOperation()
-                .pipe(
-                    takeUntil(this.service.unsubscribe$),
-                    map(operation => {
-                        switch (operation.type) {
-                            case CardOperationType.ADD:
-                                return new LoadLightCardsSuccess({lightCards: operation.cards});
-                            case CardOperationType.DELETE:
-                                return new RemoveLightCard({cards: operation.cardIds});
-                            default:
-                                return new AddLightCardFailure(
-                                    {error: new Error(`unhandled action type '${operation.type}'`)}
-                                );
-                        }
-                    }),
-                    catchError((error, caught) => {
-                        this.store.dispatch(new AddLightCardFailure({error: error}));
-                        return caught;
-                    })
-                )
-            ),
-
-            catchError((error, caught) => {
-                this.store.dispatch(new HandleUnexpectedError({error: error}));
-                return caught;
-            }));
 
 
     @Effect({dispatch: false})
@@ -95,21 +58,13 @@ export class CardOperationEffects {
         );
 
     @Effect()
-    updateSubscription: Observable<LightCardActions> = this.actions$
+    updateSubscription: Observable<any> = this.actions$
         .pipe(
-            // loads card operations only after authentication of a default user ok.
             ofType(FeedActionTypes.ApplyFilter),
             filter((af: ApplyFilter) => af.payload.name === FilterType.BUSINESSDATE_FILTER),
             switchMap((af: ApplyFilter) => {
-                    console.log(new Date().toISOString()
-                        , 'BUG OC-604 card-operation.effect.ts update subscription af.payload.status.start  = '
-                        , af.payload.status.start, 'af.payload.status.end', af.payload.status.end);
-                    return this.service.updateCardSubscriptionWithDates(af.payload.status.start, af.payload.status.end)
-                        .pipe(
-                            map(() => {
-                                return new UpdatedSubscription();
-                            })
-                        );
+                    this.service.setSubscriptionDates(af.payload.status.start, af.payload.status.end);
+                    return of();
                 }
             ),
             catchError((error, caught) => {

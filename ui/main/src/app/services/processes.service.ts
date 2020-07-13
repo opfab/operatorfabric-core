@@ -77,7 +77,7 @@ export class ProcessesService {
                 }
             }),
             catchError((err, caught) => {
-                console.log(err);
+                console.log(new Date().toISOString(),err);
                 return throwError(err);
             }),
             map(menuEntry => menuEntry.url)
@@ -124,7 +124,7 @@ export class ProcessesService {
             .pipe(
                 map(this.convertJsonToI18NObject(locale, process, version))
                 , catchError(error => {
-                    console.error(`error trying fetch i18n of '${process}' version:'${version}' for locale: '${locale}'`);
+                    console.error(new Date().toISOString(),`error trying fetch i18n of '${process}' version:'${version}' for locale: '${locale}'`);
                     return error;
                 })
             );

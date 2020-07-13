@@ -72,7 +72,6 @@ ngAfterViewInit() {
                     if (!!cards && cards.length <= 0) {
                         return null;
                     }
-                console.log('=================> map of processes', this.mapOfProcesses);
                     return cards.map(card => {
                             let color = 'white';
                             const procId = card.process;
@@ -86,14 +85,8 @@ ngAfterViewInit() {
                                 const state = Process.prototype.extractState.call(currentProcess, card);
                                 if (!!state && !!state.color) {
                                     color = state.color;
-                                } else {
-                                    console.log('====================> no state or no color for state'
-                                        , state
-                                        , 'of proc', procId);
-                                }
-                            } else {
-                                console.log('===================> no process found for ', procId)
-                            }
+                                } 
+                            } 
                             return (
                                 {
                                     creationDateTime: moment(card.publishDate),

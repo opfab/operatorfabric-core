@@ -223,7 +223,7 @@ export class AuthenticationEffects {
                 }
                 ),
                 catchError(err => {
-                    console.error(err);
+                    console.error(new Date().toISOString(),err);
                     const parameters = new Map<string>();
                     parameters['message'] = err;
                     return of(this.handleRejectedLogin(new Message(err,
@@ -274,7 +274,6 @@ export class AuthenticationEffects {
     
     private resetState() {
         this.authService.clearAuthenticationInformation();
-        this.cardService.unsubscribeCardOperation();
         window.location.href = this.configService.getConfigValue('security.logout-url','https://opfab.github.io');
        
     }

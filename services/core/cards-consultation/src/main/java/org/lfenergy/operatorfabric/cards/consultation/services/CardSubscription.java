@@ -69,13 +69,6 @@ public class CardSubscription {
     private MessageListenerContainer userMlc;
     private MessageListenerContainer groupMlc;
     @Getter
-    @JsonInclude
-    private Instant rangeStart;
-    @Getter
-    @JsonInclude
-    private Instant rangeEnd;
-    private boolean filterNotification;
-    @Getter
     private Instant startingPublishDate;
     @Getter
     private boolean cleared = false;
@@ -98,10 +91,7 @@ public class CardSubscription {
                             AmqpAdmin amqpAdmin,
                             DirectExchange userExchange,
                             FanoutExchange groupExchange,
-                            ConnectionFactory connectionFactory,
-                            Instant rangeStart,
-                            Instant rangeEnd,
-                            Boolean filterNotification) {
+                            ConnectionFactory connectionFactory) {
         if (currentUserWithPerimeters != null)
             this.id = computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), clientId);
         this.currentUserWithPerimeters = currentUserWithPerimeters;
@@ -114,9 +104,6 @@ public class CardSubscription {
             this.userQueueName = computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), this.clientId);
             this.groupQueueName = computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin() + GROUPS_SUFFIX, this.clientId);
         }
-        this.rangeStart = rangeStart;
-        this.rangeEnd = rangeEnd;
-        this.filterNotification = filterNotification!=null && filterNotification;
     }
 
     public static String computeSubscriptionId(String prefix, String clientId) {
@@ -276,9 +263,7 @@ public class CardSubscription {
         return mlc;
     }
 
-    public void updateRange(Instant rangeStart, Instant rangeEnd) {
-        this.rangeStart = rangeStart;
-        this.rangeEnd = rangeEnd;
+    public void updateRange() {
         startingPublishDate = Instant.now();
     }
 

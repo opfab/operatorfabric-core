@@ -14,11 +14,13 @@ import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { AuthenticationService } from '@ofServices/authentication/authentication.service';
-import { LoadConfig } from '@ofActions/config.actions';
-import { selectConfigLoaded, selectMaxedRetries } from '@ofSelectors/config.selectors';
+import { LoadConfigSuccess } from '@ofActions/config.actions';
 import { selectIdentifier } from '@ofSelectors/authentication.selectors';
-import { I18nService } from '@ofServices/i18n.service';
 import { ConfigService} from "@ofServices/config.service";
+import {TranslateService} from '@ngx-translate/core';
+import { catchError } from 'rxjs/operators';
+import { I18nService } from '@ofServices/i18n.service';
+import { CardService } from '@ofServices/card.service';
 
 @Component({
     selector: 'of-root',
@@ -27,55 +29,65 @@ import { ConfigService} from "@ofServices/config.service";
 })
 export class AppComponent implements OnInit {
     readonly title = 'OperatorFabric';
-    isAuthenticated$ = false;
-    configLoaded = false;
+    isAuthenticated = false;
+    loaded = false;
     useCodeOrImplicitFlow = true;
-    private maxedRetries = false;
 
     /**
      * NB: I18nService is injected to trigger its constructor at application startup
      */
     constructor(private store: Store<AppState>,
-        private i18nService: I18nService,
         private titleService: Title
         , private authenticationService: AuthenticationService
-        ,private  configService: ConfigService) {
+        ,private  configService: ConfigService
+        , private translate: TranslateService
+        , private i18nService : I18nService
+        ,private cardService: CardService) {
     }
 
     ngOnInit() {
-
         this.loadConfiguration();
-        this.launchAuthenticationProcessWhenConfigurationLoaded();
-        this.waitForUserTobeAuthenticated();
+        this.initCardSubsriptionWhenUserAuthenticated();
     }
 
     private loadConfiguration() {
-        this.store.dispatch(new LoadConfig());
-        this.store
-            .select(selectMaxedRetries)
-            .subscribe((maxedRetries => this.maxedRetries = maxedRetries));
-    }
 
-    private launchAuthenticationProcessWhenConfigurationLoaded() {
-        this.store
-            .select(selectConfigLoaded)
-            .subscribe(loaded => {
-                if (loaded) {
-                    const title=this.configService.getConfigValue('title') ;
-                    if (!!title) this.titleService.setTitle(title);
-                    this.authenticationService.initializeAuthentication();
-                    this.useCodeOrImplicitFlow = this.authenticationService.isAuthModeCodeOrImplicitFlow();
-                }
-                this.configLoaded = loaded;
+          this.configService.fetchConfiguration().subscribe(config => {
+            console.log(new Date().toISOString(),`Configuration loaded (web-ui.json)`);
+            if (config.i18n.supported.locales) this.translate.addLangs(config.i18n.supported.locales);
+            this.setTitle();
+            this.store.dispatch(new LoadConfigSuccess({config: config}));
+            this.launchAuthenticationProcess();
+        })
+            catchError((err,caught) => {
+                console.error("Impossible to load configuration file web-ui.json",err);
+                return caught;
             });
+     
     }
 
-    private waitForUserTobeAuthenticated() {
+    private setTitle()
+    {
+        const title = this.configService.getConfigValue('title');
+        if (!!title) this.titleService.setTitle(title);
+    }
+
+    private launchAuthenticationProcess() {
+        console.log(new Date().toISOString(),`Launch authentification process`);
+        this.authenticationService.initializeAuthentication();
+        this.useCodeOrImplicitFlow = this.authenticationService.isAuthModeCodeOrImplicitFlow();
+    }
+
+    private initCardSubsriptionWhenUserAuthenticated() {
         this.store
             .select(selectIdentifier)
             .subscribe(identifier => {
-                if (identifier) this.isAuthenticated$ = true;
+                if (identifier) {
+                    console.log(new Date().toISOString(),`User ${identifier} logged`);
+                    this.isAuthenticated = true;
+                    this.cardService.initCardSubscription();
+                    this.cardService.initSubscription.subscribe( ()=> this.loaded = true);
+                }
             });
     }
-
 }

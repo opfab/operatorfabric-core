@@ -156,7 +156,7 @@ export class AuthenticationService {
             return this.httpClient.post<CheckTokenResponse>(this.checkTokenUrl, postData.toString(), {headers: headers}).pipe(
                 map(check => check),
                 catchError(function (error: any) {
-                    console.error(error);
+                    console.error(new Date().toISOString(),error);
                     return throwError(error);
                 })
             );
@@ -217,7 +217,7 @@ export class AuthenticationService {
             map((auth: AuthObject) => this.convert(auth)),
             tap(this.saveAuthenticationInformation),
             catchError(function (error: any) {
-                console.error(error);
+                console.error(new Date().toISOString(),error);
                 return throwError(error);
             }),
             switchMap((auth) => this.loadUserData(auth))

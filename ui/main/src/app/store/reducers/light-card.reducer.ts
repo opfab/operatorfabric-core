@@ -97,15 +97,7 @@ export function reducer(
 
         case FeedActionTypes.ApplyFilter: {
             const payload = action.payload;
-            console.log(new Date().toISOString()
-                , 'BUG OC-604 light-card.reducer.ts case FeedActionTypes.ApplyFilter filtername = ', payload.name);
-            console.log(new Date().toISOString()
-                , 'BUG OC-604 light-card.reducer.ts case FeedActionTypes.ApplyFilter filters = ', state.filters);
-
-
             if (state.filters.get(payload.name)) {
-                console.log(new Date().toISOString()
-                    , 'BUG OC-604 light-card.reducer.ts case FeedActionTypes.ApplyFilter state.filters = ', state.filters);
                 const filters = new Map(state.filters);
                 const filter = changeActivationAndStatusOfFilter(filters, payload);
                 filters.set(payload.name, filter);

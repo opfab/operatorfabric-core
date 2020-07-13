@@ -101,7 +101,7 @@ export class SoundNotificationService {
   playSound(sound : HTMLAudioElement) {
     sound.play().catch(error => {
       /* istanbul ignore next */
-      console.log("Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).");
+      console.log(new Date().toISOString(),"Notification sound wasn't played because the user hasn't interacted with the app yet (autoplay policy).");
       /* This is to handle the exception thrown due to the autoplay policy on Chrome. See https://goo.gl/xX8pDD */
     });
   }

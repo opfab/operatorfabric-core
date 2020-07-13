@@ -37,7 +37,6 @@ import {MenuState} from '@ofStates/menu.state';
 import {MenuEffects} from '@ofEffects/menu.effects';
 import {FeedFiltersEffects} from '@ofEffects/feed-filters.effects';
 import {ConfigState} from '@ofStates/config.state';
-import {ConfigEffects} from '@ofEffects/config.effects';
 import {SettingsState} from '@ofStates/settings.state';
 import {SettingsEffects} from '@ofEffects/settings.effects';
 import {ArchiveState} from '@ofStates/archive.state';
@@ -78,7 +77,6 @@ export interface AppState {
 
 export const appEffects = [
     CardEffects,
-    ConfigEffects,
     SettingsEffects,
     CardOperationEffects,
     RouterEffects,

@@ -169,7 +169,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
             }
         }
         this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf());
-        this.buttonHome = [startDomain, endDomain];
+        this.buttonHome = [startDomain.valueOf(), endDomain.valueOf()];
     }
 
 
@@ -181,9 +181,6 @@ export class InitChartComponent implements OnInit, OnDestroy {
      */
     setStartAndEndDomain(startDomain: number, endDomain: number): void {
 
-        console.log(new Date().toISOString()
-            , 'BUG OC-604 init-chart.components.ts setStartAndEndDomain() , startDomain= '
-            , startDomain, ',endDomain=', endDomain);
         this.myDomain = [startDomain, endDomain];
         this.startDate = this.getDateFormatting(startDomain);
         this.endDate = this.getDateFormatting(endDomain);

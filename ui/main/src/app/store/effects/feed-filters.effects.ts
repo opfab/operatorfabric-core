@@ -47,7 +47,6 @@ export class FeedFiltersEffects {
             }),
             filter(v => !!v),
             map(v => {
-                console.log(new Date().toISOString(), 'BUG OC-604 feed_filters.effects.ts initTagFilterOnLoadedSettings ');
                 return new ApplyFilter({name: FilterType.TAG_FILTER, active: true, status: {tags: v}});
             })
         );

@@ -86,7 +86,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void createAndDeleteSubscription(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.evict(subscription.getId());
@@ -97,7 +97,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void deleteSubscriptionWithDelay(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null,null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.scheduleEviction(subscription.getId());
@@ -108,7 +108,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void reviveSubscription(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.scheduleEviction(subscription.getId());
@@ -119,7 +119,7 @@ public class CardSubscriptionServiceShould {
         }catch (ConditionTimeoutException e){
             //nothing, everything is alright
         }
-        CardSubscription subscription2 = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription2 = service.subscribe(currentUserWithPerimeters, TEST_ID);
         Assertions.assertThat(subscription2).isSameAs(subscription);
         try {
             await().atMost(6, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
@@ -134,7 +134,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void receiveCards(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher());
         taskScheduler.schedule(createSendMessageTask(),new Date(System.currentTimeMillis() + 1000));
         verifier
@@ -153,7 +153,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void testCheckIfUserMustReceiveTheCard() {
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
 
         //groups only
         String messageBody1 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"]}";  //true
@@ -200,7 +200,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void testCreateDeleteCardMessageForUserNotRecipient(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
 
         String messageBodyAdd = "{\"cards\":[{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5b\",\"state\":\"messageState\",\"startDate\":1592396243446}],\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"TSO1\"],\"type\":\"ADD\"}";
         String messageBodyUpdate = "{\"cards\":[{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5c\",\"state\":\"messageState\",\"startDate\":1592396243446}],\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"TSO1\"],\"type\":\"UPDATE\"}";

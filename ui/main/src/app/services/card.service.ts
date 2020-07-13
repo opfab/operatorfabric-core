@@ -24,21 +24,27 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
 import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
-import {map} from 'rxjs/operators';
+import {map,catchError} from 'rxjs/operators';
 import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
+import {CardOperationType} from '@ofModel/card-operation.model';
+import {
+    AddLightCardFailure,
+    HandleUnexpectedError,
+    LoadLightCardsSuccess,
+    RemoveLightCard
+} from '@ofActions/light-card.actions';
 
 @Injectable()
 export class CardService {
-    private static MINIMUM_DELAY_FOR_SUBSCRIPTION = 1000;
-    readonly unsubscribe$ = new Subject<void>();
+    private static MINIMUM_DELAY_FOR_SUBSCRIPTION = 2000;
     readonly cardOperationsUrl: string;
     readonly cardsUrl: string;
     readonly archivesUrl: string;
     readonly cardsPubUrl: string;
     readonly userAckUrl: string;
-    private subscriptionTime = 0;
+    public initSubscription = new Subject<void>();
 
     constructor(private httpClient: HttpClient,
                 private notifyService: NotifyService,
@@ -57,14 +63,39 @@ export class CardService {
         return this.httpClient.get<CardData>(`${this.cardsUrl}/${id}`);
     }
 
-    getCardOperation(): Observable<CardOperation> {
-        const oneHourInMilliseconds = 60 * 60 * 1000;
-        const minus2Hour = new Date(new Date().valueOf() - 2 * oneHourInMilliseconds);
-        const plus48Hours = new Date(minus2Hour.valueOf() + 48 * oneHourInMilliseconds);
+
+    public initCardSubscription(){
+        this.getCardSubscription()
+            .subscribe(
+                operation => {
+                    switch (operation.type) {
+                        case CardOperationType.ADD:
+                            this.store.dispatch(new LoadLightCardsSuccess({ lightCards: operation.cards }));
+                            break;
+                        case CardOperationType.DELETE:
+                            this.store.dispatch(new RemoveLightCard({ cards: operation.cardIds }));
+                            break;
+                        default:
+                            this.store.dispatch(new AddLightCardFailure(
+                                { error: new Error(`unhandled action type '${operation.type}'`) })
+                            );  
+                    }
+                },(error)=> {
+                this.store.dispatch(new AddLightCardFailure({ error: error }));
+                }
+            );
+        catchError((error, caught) => {
+            this.store.dispatch(new HandleUnexpectedError({ error: error }));
+            return caught;
+        });
+    }
+
+
+    private getCardSubscription(): Observable<CardOperation> {
         // security header needed here as SSE request are not intercepted by our header interceptor
         const oneYearInMilliseconds = 31536000000;
-        return this.fetchCardOperation(new EventSourcePolyfill(
-            `${this.cardOperationsUrl}&notification=true&rangeStart=${minus2Hour.valueOf()}&rangeEnd=${plus48Hours.valueOf()}`
+        const eventSource = new EventSourcePolyfill(
+            `${this.cardOperationsUrl}&notification=true`
             , {
                 headers: this.authService.getSecurityHeader(),
                 /** We loose sometimes cards when reconnecting after a heartbeat timeout
@@ -73,19 +104,7 @@ export class CardService {
                  * Anyway the token will expire long before and the connection will restart
                  */
                 heartbeatTimeout: oneYearInMilliseconds
-            }));
-    }
-
-
-    unsubscribeCardOperation() {
-        this.unsubscribe$.next();
-    }
-
-    fetchCardOperation(eventSource: EventSourcePolyfill): Observable<CardOperation> {
-        this.subscriptionTime = new Date().getTime();
-        console.log(new Date().toISOString()
-            , 'BUG OC-604 card.services.ts fetch card set subscription time to '
-            , this.subscriptionTime);
+            })
         return Observable.create(observer => {
             try {
                 eventSource.onmessage = message => {
@@ -93,20 +112,24 @@ export class CardService {
                     if (!message) {
                         return observer.error(message);
                     }
-                    return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
+                    if (message.data === "INIT") {
+                        console.log(new Date().toISOString(),`Card subscription initialized`);
+                        this.initSubscription.next();
+                        this.initSubscription.complete();
+                    }
+                    else return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                 };
                 eventSource.onerror = error => {
                     this.store.dispatch(new CardSubscriptionClosed());
-                    console.error('error occurred in card subscription:', error);
+                    console.error(new Date().toISOString(),'Error occurred in card subscription:', error);
                 };
                 eventSource.onopen = open => {
                     this.store.dispatch(new CardSubscriptionOpen());
-                    console.log(`open card subscription`);
+                    console.log(new Date().toISOString(),`Open card subscription`);
                 };
-
-
+             
             } catch (error) {
-                console.error('an error occurred', error);
+                console.error(new Date().toISOString(),'an error occurred', error);
                 return observer.error(error);
             }
             return () => {
@@ -117,39 +140,14 @@ export class CardService {
         });
     }
 
-    public updateCardSubscriptionWithDates(rangeStart: number, rangeEnd: number): Observable<any> {
 
-        /**
-         * Hack to solve OC 604 bug
-         * Depending on the network conditions, it may appends that the subscription is not totally configured
-         * in the backend when we try to update it.
-         * To solve this , we wait a minimum delay after subscription creation request  to make an updateSubscribe request
-         *
-         * It as well possible to have a update subscription ask form NGRX before the create subscription,
-         * in this case we wait 2 times the minimum delay
-         *
-         * This solution should be replace with a more robust one (the backend should be modify to send
-         * an information saying the subscription is OK )
-         */
-        let timeout = 0;
-        const currentTime = new Date().getTime();
-        if (this.subscriptionTime === 0) {
-            timeout = CardService.MINIMUM_DELAY_FOR_SUBSCRIPTION * 2;
-        } else {
-            const delayAfterSubscription = currentTime - this.subscriptionTime;
-            if (delayAfterSubscription < CardService.MINIMUM_DELAY_FOR_SUBSCRIPTION) {
-                timeout = CardService.MINIMUM_DELAY_FOR_SUBSCRIPTION - delayAfterSubscription;
-            }
-        }
-        console.log(new Date().toISOString()
-            , `BUG OC-604 card.services.ts send  updateCardSubscriptionWithDates in ${timeout} ms`);
-        setTimeout(() => {
-            this.httpClient.post<any>(
-                `${this.cardOperationsUrl}`,
-                {rangeStart: rangeStart, rangeEnd: rangeEnd}).subscribe();
-        }, timeout);
+    public setSubscriptionDates(rangeStart: number, rangeEnd: number) {
 
-        return of();
+        console.log(new Date().toISOString(),`Set subscription date ${rangeStart} - ${rangeEnd}`);
+        this.httpClient.post<any>(
+            `${this.cardOperationsUrl}`,
+            { rangeStart: rangeStart, rangeEnd: rangeEnd }).subscribe();
+
     }
 
     loadArchivedCard(id: string): Observable<Card> {
