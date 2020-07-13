@@ -9,15 +9,10 @@
 
 
 <div class="app-content opfab-bgcolor" calcHeightDirective fixedHeightClass="fixed-height-main-layout" calcHeightClass="calc-height-main-layout" >
-    <of-navbar *ngIf="isAuthenticated$"></of-navbar>
-    <router-outlet *ngIf="isAuthenticated$ && configLoaded" ></router-outlet>
-    <of-login *ngIf="!isAuthenticated$ && !useCodeOrImplicitFlow"></of-login>
-    <div *ngIf="!configLoaded">
-    <span *ngIf="!maxedRetries">
+    <of-navbar *ngIf="loaded"></of-navbar>
+    <router-outlet *ngIf="loaded" ></router-outlet>
+    <of-login *ngIf="!isAuthenticated && !useCodeOrImplicitFlow"></of-login>
+    <div *ngIf="!loaded && useCodeOrImplicitFlow">
         Application is loading ...
-    </span>
-        <span *ngIf="maxedRetries">
-        Application is not available yet, please reload later (F5)
-    </span>
     </div>
 </div>

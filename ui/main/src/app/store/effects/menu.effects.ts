@@ -44,7 +44,7 @@ export class MenuEffects {
                 new LoadMenuSuccess({menu: menu})
             ),
             catchError((err, caught) => {
-                console.error(err);
+                console.error(new Date().toISOString(),err);
                 this.store.dispatch(new LoadMenuFailure(err));
                 return caught;
             })

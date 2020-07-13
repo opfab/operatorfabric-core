@@ -41,7 +41,7 @@ export class CustomLogoComponent implements OnInit {
   ngOnInit() {
     // default value, Administrator has to change explicitly
     if (this.base64 == undefined || this.base64 == '') {
-      console.error("no custom-logo base64 configured, no picture loaded");
+      console.error(new Date().toISOString(),"no custom-logo base64 configured, no picture loaded");
     }
     if (this.height == undefined)
       this.height = this.DEFAULT_HEIGHT;

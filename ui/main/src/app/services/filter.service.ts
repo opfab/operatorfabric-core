@@ -77,7 +77,7 @@ export class FilterService {
                 } else if (!!status.end) {
                     return card.startDate <= status.end;
                 }
-                console.warn('Unexpected business date filter situation');
+                console.warn(new Date().toISOString(),'Unexpected business date filter situation');
                 return false;
             },
             false,
@@ -130,7 +130,6 @@ export class FilterService {
     }
 
     private initFilters(): Map<string, Filter> {
-        console.log(new Date().toISOString(), 'BUG OC-604 filter.service.ts init filter');
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
         filters.set(FilterType.BUSINESSDATE_FILTER, this.initBusinessDateFilter());
@@ -138,7 +137,6 @@ export class FilterService {
         filters.set(FilterType.TAG_FILTER, this.initTagFilter());
         filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
         filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
-        console.log(new Date().toISOString(), 'BUG OC-604 filter.service.ts init filter done');
         return filters;
     }
 }

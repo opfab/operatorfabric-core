@@ -39,7 +39,7 @@ export class MenuLinkComponent implements OnInit {
       this.menusOpenInIframes = true;
     } else {
       if (menuconfig != 'BOTH') {
-        console.log("MenuLinkComponent - Property navbar.businessconfigmenus.type has an unexpected value: " + menuconfig + ". Default (BOTH) will be applied.")
+        console.log(new Date().toISOString(),"MenuLinkComponent - Property navbar.businessconfigmenus.type has an unexpected value: " + menuconfig + ". Default (BOTH) will be applied.")
       }
       this.menusOpenInBoth = true;
     }

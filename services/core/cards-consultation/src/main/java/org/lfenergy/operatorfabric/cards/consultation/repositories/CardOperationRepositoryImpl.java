@@ -32,20 +32,18 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Slf4j
 public class CardOperationRepositoryImpl implements CardOperationRepository {
 
-	public static final String ENTITY_RECIPIENTS = "entityRecipients";
-	public static final String GROUP_RECIPIENTS = "groupRecipients";
-    public static final String PROCESS_STATE_KEY = "processStateKey";
-	public static final String ORPHANED_USERS = "orphanedUsers";
-	public static final String PUBLISH_DATE_FIELD = "publishDate";
-	public static final String START_DATE_FIELD = "startDate";
-	public static final String END_DATE_FIELD = "endDate";
-	public static final String CARDS_FIELD = "rawCards";
-	public static final String TYPE_FIELD = "type";
+	private static final String ENTITY_RECIPIENTS = "entityRecipients";
+	private static final String GROUP_RECIPIENTS = "groupRecipients";
+    private static final String PROCESS_STATE_KEY = "processStateKey";
+	private static final String ORPHANED_USERS = "orphanedUsers";
+	private static final String PUBLISH_DATE_FIELD = "publishDate";
+	private static final String START_DATE_FIELD = "startDate";
+	private static final String END_DATE_FIELD = "endDate";
+	private static final String CARDS_FIELD = "rawCards";
+	private static final String TYPE_FIELD = "type";
 	private final ReactiveMongoTemplate template;
 	private ProjectionOperation projectStage;
 	private GroupOperation groupStage;
-	private SortOperation sortStage1;
-	private SortOperation sortStage2;
 
 	@Autowired
 	public CardOperationRepositoryImpl(ReactiveMongoTemplate template) {
@@ -56,43 +54,32 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
 	public void initCommonStages() {
 		projectStage = projectToLightCard();
 		groupStage = groupByPublishDate();
-		sortStage1 = Aggregation.sort(Sort.by(START_DATE_FIELD));
-		sortStage2 = Aggregation.sort(Sort.by(PUBLISH_DATE_FIELD));
 	}
 
 	@Override
-	public Flux<CardOperation> findUrgent(Instant latestPublication, Instant rangeStart, Instant rangeEnd, String login,
-			String[] groups, String[] entities, List<String> processStateList) {
-		return findUrgent0(CardOperationConsultationData.class, latestPublication, rangeStart, rangeEnd, login, groups,
-				entities, processStateList).doOnNext(transformCardOperationFactory(login)).cast(CardOperation.class);
-	}
-
-	@Override
-	public Flux<CardOperation> findFutureOnly(Instant latestPublication, Instant rangeStart, String login,
-			String[] groups, String[] entities, List<String> processStateList) {
-		return findFutureOnly0(CardOperationConsultationData.class, latestPublication, rangeStart, login, groups,
-				entities, processStateList).doOnNext(transformCardOperationFactory(login)).cast(CardOperation.class);
-	}
-
-	@Override
-	public Flux<CardOperation> findPastOnly(Instant latestPublication, Instant rangeEnd, String login, String[] groups,
-			String[] entities, List<String> processStateList) {
-		return findPastOnly0(CardOperationConsultationData.class, latestPublication, rangeEnd, login, groups, entities, processStateList)
-				.doOnNext(transformCardOperationFactory(login)).cast(CardOperation.class);
-	}
-
-	public <T> Flux<T> findUrgent0(Class<T> clazz, Instant latestPublication, Instant rangeStart, Instant rangeEnd,
+	public Flux<CardOperation> findCards(Instant latestPublication, Instant rangeStart, Instant rangeEnd,
 			String login, String[] groups, String[] entities, List<String> processStateList) {
+		
+		if ((rangeStart==null) && (rangeEnd==null)) return null;
 		MatchOperation queryStage = Aggregation.match(new Criteria().andOperator(publishDateCriteria(latestPublication),
-				userCriteria(login, groups, entities, processStateList),
-				new Criteria().orOperator(where(START_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
-						where(END_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
-						new Criteria().andOperator(where(START_DATE_FIELD).lt(rangeStart), new Criteria()
-								.orOperator(where(END_DATE_FIELD).is(null), where(END_DATE_FIELD).gt(rangeEnd))))));
+				userCriteria(login, groups, entities, processStateList),getCriteriaForRange(rangeStart,rangeEnd)
+				));
 		TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class,
-				queryStage, sortStage1, groupStage, projectStage, sortStage2);
+				queryStage, groupStage, projectStage);
 		aggregation.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
-		return template.aggregate(aggregation, clazz);
+		return template.aggregate(aggregation,CardOperationConsultationData.class)
+		.doOnNext(transformCardOperationFactory(login)).cast(CardOperation.class);
+	}
+
+	private Criteria getCriteriaForRange(Instant rangeStart,Instant rangeEnd)
+	{
+		
+		if (rangeStart==null) return where(END_DATE_FIELD).lt(rangeEnd);
+		if (rangeEnd==null) return where(START_DATE_FIELD).gt(rangeStart);
+		return new Criteria().orOperator(where(START_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
+		where(END_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
+		new Criteria().andOperator(where(START_DATE_FIELD).lt(rangeStart), new Criteria()
+				.orOperator(where(END_DATE_FIELD).is(null), where(END_DATE_FIELD).gt(rangeEnd))));
 	}
 
     /*
@@ -121,27 +108,6 @@ public class CardOperationRepositoryImpl implements CardOperationRepository {
 		return where(PUBLISH_DATE_FIELD).lte(latestPublication);
 	}
 
-	public <T> Flux<T> findFutureOnly0(Class<T> clazz, Instant latestPublication, Instant rangeStart, String login,
-			String[] groups, String[] entities, List<String> processStateList) {
-		MatchOperation queryStage = Aggregation.match(new Criteria().andOperator(publishDateCriteria(latestPublication),
-				userCriteria(login, groups, entities, processStateList), where(START_DATE_FIELD).gt(rangeStart)));
-
-		TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class,
-				queryStage, sortStage1, groupStage, projectStage, sortStage2);
-		aggregation.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
-		return template.aggregate(aggregation, clazz);
-	}
-
-	public <T> Flux<T> findPastOnly0(Class<T> clazz, Instant latestPublication, Instant rangeEnd, String login,
-			String[] groups, String[] entities, List<String> processStateList) {
-		MatchOperation queryStage = Aggregation.match(new Criteria().andOperator(publishDateCriteria(latestPublication),
-				userCriteria(login, groups, entities, processStateList), where(END_DATE_FIELD).lt(rangeEnd)));
-
-		TypedAggregation<CardConsultationData> aggregation = Aggregation.newAggregation(CardConsultationData.class,
-				queryStage, sortStage1, groupStage, projectStage, sortStage2);
-		aggregation.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
-		return template.aggregate(aggregation, clazz);
-	}
 
 	private ProjectionOperation projectToLightCard() {
 		return Aggregation.project(CARDS_FIELD).andExpression("_id").as(PUBLISH_DATE_FIELD).andExpression("[0]", "ADD")

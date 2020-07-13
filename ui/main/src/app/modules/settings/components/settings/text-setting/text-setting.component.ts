@@ -52,7 +52,6 @@ export class TextSettingComponent extends BaseSettingComponent implements OnInit
     }
 
     protected isEqual(formA, formB): boolean {
-        console.log('TextSettingComponent.isEqual called');
         return formA.setting === formB.setting;
     }
 

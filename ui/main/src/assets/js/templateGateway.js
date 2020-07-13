@@ -1,6 +1,5 @@
 function ext_action(responseData){
-    console.log(`opfab action called - ${responseData.lock} - ${responseData.state}`)
-    // console.log('test')
+    console.log(new Date().toISOString(),`opfab action called - ${responseData.lock} - ${responseData.state}`)
 }
 
 let templateGateway = {

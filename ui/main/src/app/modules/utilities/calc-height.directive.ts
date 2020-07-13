@@ -80,7 +80,6 @@ export class CalcHeightDirective {
         // Calculate available height by subtracting the heights of fixed elements from the total window height
         let availableHeight = parent.clientHeight - sumFixElemHeights;
 
-        //console.log("CalcHeightDirective "+fixedHeightClass+" "+parent.clientHeight+" "+sumFixElemHeights+" "+availableHeight);
 
         // Apply height and overflow
         Array.from(calcElements)

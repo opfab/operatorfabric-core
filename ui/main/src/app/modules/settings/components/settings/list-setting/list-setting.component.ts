@@ -71,7 +71,6 @@ export class ListSettingComponent extends BaseSettingComponent implements OnInit
     }
 
     protected isEqual(formA, formB): boolean {
-        console.log('ListSettingComponent.isEqual called');
         return formA.setting === formB.setting;
     }
 

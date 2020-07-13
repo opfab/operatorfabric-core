@@ -28,6 +28,12 @@ public interface CardOperationRepository {
      * <li>starting before <code>rangeStart</code> and ending after <code>rangeEnd</code></li>
      * <li>starting before <code>rangeStart</code> and never ending</li>
      * </ul>
+     * <br/>
+     * <ul>
+     * <li> if rangeStart is null , find cards with endDate < rangeEnd </li>
+     * <li> if rangeEnd is null , find cards with startDate > rangeStart </li>
+     * <li> if rangeStart and rangeEnd null , return null </li>
+     * </ul>
      * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code> or to <code>entities</code>
      *
      * @param latestPublication only cards published earlier than this will be fetched
@@ -38,34 +44,7 @@ public interface CardOperationRepository {
      * @param entities          only cards received by at least one of these entities (OR login)
      * @return projection to {@link CardOperationConsultationData} as a JSON String
      */
-    Flux<CardOperation> findUrgent(Instant latestPublication, Instant rangeStart, Instant rangeEnd,
+    Flux<CardOperation> findCards(Instant latestPublication, Instant rangeStart, Instant rangeEnd,
                                    String login, String[] groups, String[] entities, List<String> processStateList);
 
-    /**
-     * Finds Card published earlier than <code>latestPublication</code> and starting after <code>rangeStart</code>
-     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code> or to <code>entities</code>
-     *
-     * @param latestPublication only cards published earlier than this will be fetched
-     * @param rangeStart        start of future
-     * @param login             only cards received by this login (OR groups OR entities)
-     * @param groups            only cards received by at least one of these groups (OR login)
-     * @param entities          only cards received by at least one of these entities (OR login)
-     * @return projection to {@link CardOperationConsultationData} as a JSON String
-     */
-    Flux<CardOperation> findFutureOnly(Instant latestPublication, Instant rangeStart,
-                                       String login, String[] groups, String[] entities, List<String> processStateList);
-
-    /**
-     * Finds Card published earlier than <code>latestPublication</code> and ending before <code>rangeEnd</code>
-     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code> or to <code>entities</code>
-     *
-     * @param latestPublication only cards published earlier than this will be fetched
-     * @param rangeEnd          end of past
-     * @param login             only cards received by this login (OR groups OR entities)
-     * @param groups            only cards received by at least one of these groups (OR login)
-     * @param entities          only cards received by at least one of these entities (OR login)
-     * @return projection to {@link CardOperationConsultationData} as a JSON String
-     */
-    Flux<CardOperation> findPastOnly(Instant latestPublication, Instant rangeEnd,
-                                     String login, String[] groups, String[] entities, List<String> processStateList);
 }

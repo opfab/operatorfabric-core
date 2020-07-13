@@ -408,7 +408,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   showCard(cardId): void {
-    console.log("cardId=" , cardId);
     this.router.navigate(['/' + this.currentPath, 'cards', cardId]);
     this.scrollToSelectedCard();
   }

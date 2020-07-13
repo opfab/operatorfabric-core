@@ -29,12 +29,10 @@ export class UserService {
     }
 
     askUserApplicationRegistered(user: string): Observable<User> {
-        console.log("user in askUserApplicationRegistered service : " + user);
         return this.httpClient.get<User>(`${this.userUrl}/users/${user}`);
     }
 
     askCreateUser(userData: User): Observable<User> {
-        console.log("user in askCreateUser service : " + userData.login);
         return this.httpClient.put<User>(`${this.userUrl}/users/${userData.login}`, userData);
     }
 

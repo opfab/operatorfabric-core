@@ -50,15 +50,10 @@ export class TagsFilterComponent implements OnInit, OnDestroy {
                 .pipe(
                     takeUntil(this.ngUnsubscribe$),
                     distinctUntilChanged((formA, formB) => {
-                        console.log(new Date().toISOString()
-                            , 'BUG OC-604 tags-filter.component.ts ngOnInit() formA.tags='
-                            , formA.tags, ',formB.tags='
-                            , formB.tags);
                         return _.difference(formA.tags, formB.tags).length === 0 && _.difference(formB.tags, formA.tags).length === 0;
                     }),
                     debounce(() => timer(500)))
                 .subscribe(form => {
-                    console.log(new Date().toISOString(), 'BUG OC-604 tags-filter.component.ts ngOnInit() new ApplyFilter TAG_FILTER');
                     this.store.dispatch(
                         new ApplyFilter({
                             name: FilterType.TAG_FILTER,

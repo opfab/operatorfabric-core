@@ -54,7 +54,7 @@ export class TranslateEffects {
                 return forkJoin(this.mapLanguages(businessconfigWithTheirVersions)).pipe(
                     concatAll(),
                     catchError((error, caught) => {
-                        console.error('error while trying to update translation', error);
+                        console.error(new Date().toISOString(),'error while trying to update translation', error);
                         return caught;
                     }));
             })
