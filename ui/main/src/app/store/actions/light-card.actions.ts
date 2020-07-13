@@ -25,7 +25,6 @@ export enum LightCardActionTypes {
     HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
     RemoveLightCard = '[LCard] Remove a card',
     UpdateALightCard = '[LCard] Update a Light Card',
-    DelayedLightCardUpdate = '[LCard] update Light Card actions later',
     LightCardAlreadyUpdated = '[LCard] Light Card already Updated'
 }
 
@@ -121,12 +120,6 @@ export class UpdateALightCard implements Action {
     }
 }
 
-export class DelayedLightCardUpdate implements Action {
-    readonly type = LightCardActionTypes.DelayedLightCardUpdate;
-
-    constructor(public payload: { card: LightCard }) {
-    }
-}
 
 export class LightCardAlreadyUpdated implements Action {
     readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
@@ -146,6 +139,5 @@ export type LightCardActions =
     | HandleUnexpectedError
     | EmptyLightCards
     | UpdateALightCard
-    | DelayedLightCardUpdate
     | LightCardAlreadyUpdated
     | RemoveLightCard;

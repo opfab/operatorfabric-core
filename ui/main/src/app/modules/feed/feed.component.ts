@@ -15,7 +15,7 @@ import {AppState} from '@ofStore/index';
 import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map,delay} from 'rxjs/operators';
 import * as moment from 'moment';
 import { NotifyService } from '@ofServices/notify.service';
 import { ConfigService} from "@ofServices/config.service";
