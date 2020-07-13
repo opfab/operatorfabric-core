@@ -49,33 +49,34 @@ public class CardPublicationData implements Card {
     private String uid = UUID.randomUUID().toString();
     @Id
     private String id;
+
     private String parentCardUid;
-    @NotNull
+
     private String publisher;
-    @NotNull
+    
     private String processVersion;
-    @NotNull
+    
     private String process;
-    @NotNull
+    
     private String processInstanceId;
-    @NotNull
+    
     private String state;
-    @NotNull
+    
     private I18n title;
-    @NotNull
+    
     private I18n summary;
     @CreatedDate
     private Instant publishDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant deletionDate;
     private Instant lttd;
-    @NotNull
+    
     @Indexed
     private Instant startDate;
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
-    @NotNull
+    
     private SeverityEnum severity;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

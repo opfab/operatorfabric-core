@@ -398,6 +398,7 @@ definitions:
       - startDate
       - title
       - summary
+      - state
     example:
       uid: 12345
       id: cardIdFromMyProcess
@@ -540,6 +541,11 @@ definitions:
       parentCardUid:
         type: string
         description: The uid of its parent card if it's a child card
+    required:
+      - uid
+      - id
+      - processInstanceId
+      - startDate
     example:
       uid: 12345
       id: cardIdFromMyProcess

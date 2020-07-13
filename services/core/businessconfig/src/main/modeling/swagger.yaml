@@ -464,6 +464,8 @@ definitions:
         type: array
         items:
           type: string
+    required:
+      - templateName
     example:
       title:
         key: template.title

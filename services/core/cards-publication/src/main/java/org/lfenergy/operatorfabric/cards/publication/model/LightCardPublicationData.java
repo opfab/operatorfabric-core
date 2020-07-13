@@ -38,19 +38,15 @@ import java.util.Set;
 @NoArgsConstructor
 public class LightCardPublicationData implements LightCard {
 
-    @NotNull
     private String uid ;
-    @NotNull
     private String id ;
     private String publisher;
     private String processVersion;
     private String process;
-    @NotNull
     private String processInstanceId;
     private String state;
     private Instant lttd;
     private Instant publishDate;
-    @NotNull
     private Instant startDate;
     private Instant endDate;
     private SeverityEnum severity;

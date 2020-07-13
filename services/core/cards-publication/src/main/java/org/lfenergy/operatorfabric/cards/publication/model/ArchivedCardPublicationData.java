@@ -42,11 +42,10 @@ public class ArchivedCardPublicationData implements Card {
     @Id
     private String id;
     private String parentCardUid;
-    @NotNull
     private String publisher;
     private String processVersion;
     private String process;
-    @NotNull
+    
     private String processInstanceId;
     private String state;
     private I18n title;
@@ -56,7 +55,7 @@ public class ArchivedCardPublicationData implements Card {
     @Transient
     private Instant deletionDate;
     private Instant lttd;
-    @NotNull
+    
     @Indexed
     private Instant startDate;
     @Indexed
