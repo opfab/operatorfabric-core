@@ -20,7 +20,6 @@ import {
     CreateUserApplicationOnSuccess,
     UserActions,
     UserActionsTypes,
-    UserApplicationNotRegistered,
     UserApplicationRegistered
 } from '@ofStore/actions/user.actions';
 import {AcceptLogIn, AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
@@ -55,25 +54,13 @@ export class UserEffects {
                         map((user: User) => new UserApplicationRegistered({user})),
                         catchError((error, caught) => {
                             const userData: User = new User(userPayload.identifier, userPayload.firstName, userPayload.lastName);
-                            this.store.dispatch(new UserApplicationNotRegistered({error: error, user: userData}));
+                            this.store.dispatch(new CreateUserApplication({user: userData}));
                             return caught;
                         })
                     );
             })
         );
 
-    /**
-     * transition to the creation user application workflow
-     */
-    @Effect()
-    transition2CreateUserApplication: Observable<UserActions> = this.actions$
-        .pipe(
-            ofType(UserActionsTypes.UserApplicationNotRegistered),
-            map((action: UserApplicationNotRegistered) => {
-                const userDataPayload = action.payload.user;
-                return new CreateUserApplication({user: userDataPayload});
-            })
-        );
 
     /**
      * create the user application (first time in the application)

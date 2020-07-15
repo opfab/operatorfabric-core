@@ -14,7 +14,6 @@ import {Action} from '@ngrx/store';
 export enum UserActionsTypes {
 
     UserApplicationRegistered =         '[User] User application registered',
-    UserApplicationNotRegistered =      '[User] User application not registered',
     CreateUserApplication =             '[User] Create the User in the application',
     CreateUserApplicationOnSuccess =    '[User] Create the User in the application on success',
     CreateUserApplicationOnFailure =    '[User] Create the User in the application on failure',
@@ -25,12 +24,6 @@ export class UserApplicationRegistered implements Action {
     /* istanbul ignore next */ 
     readonly type = UserActionsTypes.UserApplicationRegistered;
     constructor(public payload : {user : User}) {}
-}
-
-export class UserApplicationNotRegistered implements Action {
-    /* istanbul ignore next */ 
-    readonly type = UserActionsTypes.UserApplicationNotRegistered;
-    constructor(public payload : {error : Error, user : User}) {}
 }
 
 export class CreateUserApplication implements Action {
@@ -60,7 +53,6 @@ export class HandleUnexpectedError implements Action {
 }
 
 export type UserActions = UserApplicationRegistered
-    | UserApplicationNotRegistered
     | CreateUserApplication
     | CreateUserApplicationOnSuccess
     | CreateUserApplicationOnFailure

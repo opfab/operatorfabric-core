@@ -10,7 +10,7 @@
 
 import { reducer } from "./user.reducer";
 import { userInitialState } from '@ofStore/states/user.state';
-import { UserApplicationNotRegistered, CreateUserApplicationOnSuccess, CreateUserApplicationOnFailure } from '@ofStore/actions/user.actions';
+import { CreateUserApplicationOnSuccess, CreateUserApplicationOnFailure } from '@ofStore/actions/user.actions';
 import { User } from '@ofModel/user.model';
 
 
@@ -24,16 +24,6 @@ describe('User Reducer', () => {
         });
     });
 
-    describe('UserApplicationNotRegistered action', () => {
-        it('should update UserApplicationNotRegistered', () => {
-
-            const userApplicationNonRegistered = new UserApplicationNotRegistered({ error: new Error(), user : new User("userNotRegistered", "aaa", "bbb" )});
-            const actualState = reducer(userInitialState, userApplicationNonRegistered);
-
-            expect(actualState.registered).toEqual(false);
-            expect(actualState.group).toBeNull();
-        });
-    })
 
     describe('CreateUserApplicationOnSuccess action', () => {
         it('should update CreateUserApplicationOnFailure', () => {
