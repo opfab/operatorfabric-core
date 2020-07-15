@@ -22,6 +22,6 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public interface CardRepository extends ReactiveMongoRepository<CardConsultationData, String>, CardOperationRepository, CardCustomRepository {
+public interface CardRepository extends ReactiveMongoRepository<CardConsultationData, String>,CardCustomRepository {
 
 }

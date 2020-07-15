@@ -345,10 +345,9 @@ class CardProcessServiceShould {
                 .state("state1")
                 .build();
         cardProcessingService.processCards(Flux.just(newCard)).subscribe();
-        await().atMost(5, TimeUnit.SECONDS).until(() -> !newCard.getOrphanedUsers().isEmpty());
         await().atMost(5, TimeUnit.SECONDS).until(() -> testCardReceiver.getEricQueue().size() >= 1);
         CardPublicationData persistedCard = cardRepository.findById(newCard.getId()).block();
-        assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardUid", "orphanedUsers");
+        assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardUid");
 
         ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid())
                 .block();

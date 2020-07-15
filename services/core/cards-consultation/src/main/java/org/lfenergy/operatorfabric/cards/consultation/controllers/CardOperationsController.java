@@ -125,22 +125,8 @@ public class CardOperationsController {
     private Flux<String> fetchOldCards0(Instant referencePublishDate, Instant start, Instant end, CurrentUserWithPerimeters currentUserWithPerimeters) {
         Flux<CardOperation> oldCards;
         referencePublishDate = referencePublishDate == null ? Instant.now() : referencePublishDate;
-        String login = currentUserWithPerimeters.getUserData().getLogin();
-        String[] groups = currentUserWithPerimeters.getUserData().getGroups().toArray(
-                new String[currentUserWithPerimeters.getUserData().getGroups().size()]);
-
-        String[] entities = new String[]{};
-        if (currentUserWithPerimeters.getUserData().getEntities() != null)
-            entities = currentUserWithPerimeters.getUserData().getEntities().toArray(
-                    new String[currentUserWithPerimeters.getUserData().getEntities().size()]);
-
-        List<String> processStateList = new ArrayList<>();
-        if (currentUserWithPerimeters.getComputedPerimeters() != null)
-            currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter ->
-                    processStateList.add(perimeter.getProcess() + "." + perimeter.getState()));
-
         if (end != null && start != null) {
-            oldCards = cardRepository.findCards(referencePublishDate, start, end, login, groups, entities, processStateList);
+            oldCards = cardRepository.getCardOperations(referencePublishDate, start, end, currentUserWithPerimeters);
         } else {
             log.info("Not loading published cards as no range is provided");
             oldCards = Flux.empty();

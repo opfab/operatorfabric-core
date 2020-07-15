@@ -7,27 +7,38 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardOperationConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
+import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Slf4j
 public class CardCustomRepositoryImpl implements CardCustomRepository {
 
+
+	private static final String PUBLISH_DATE_FIELD = "publishDate";
+	private static final String START_DATE_FIELD = "startDate";
+	private static final String END_DATE_FIELD = "endDate";
+
     private final ReactiveMongoTemplate template;
-    private static final String START_DATE = "startDate"; 
+
 
     @Autowired
     public CardCustomRepositoryImpl(ReactiveMongoTemplate template) {
@@ -42,51 +53,56 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         return findByParentCardUid(template, parentUid, CardConsultationData.class);
     }
 
-    /**
-     * Looks for the next card if any, whose startDate is before a specified date.
-     * The cards are filtered such as the requesting user is among theirs recipients.
-     *
-     * @param pivotalInstant specified reference date
-     * @param currentUserWithPerimeters requesting user
-     * @return Card result or empty Mono
-     */
-    public Mono<CardConsultationData> findNextCardWithUser(Instant pivotalInstant, CurrentUserWithPerimeters currentUserWithPerimeters) {
-        Query query = new Query();
-        Criteria criteria = Criteria.where(START_DATE)
 
-                .gte(pivotalInstant);// search in the future
+	@Override
+	public Flux<CardOperation> getCardOperations(Instant latestPublication, Instant rangeStart, Instant rangeEnd,
+	CurrentUserWithPerimeters currentUserWithPerimeters)
+	{
+		return findCards(latestPublication, rangeStart, rangeEnd, currentUserWithPerimeters).map(lightCard -> {
+			CardOperationConsultationData.CardOperationConsultationDataBuilder builder = CardOperationConsultationData.builder();
+			return builder.publishDate(lightCard.getPublishDate())
+					.type(CardOperationTypeEnum.ADD)
+					.card(LightCardConsultationData.copy(lightCard))
+					.build();				
+		});
+	}
+	
+    private Flux<CardConsultationData> findCards(Instant latestPublication, Instant rangeStart, Instant rangeEnd,
+	CurrentUserWithPerimeters currentUserWithPerimeters)
+	{	
+        Criteria criteria = new Criteria().andOperator(publishDateCriteria(latestPublication),
+                                                      computeCriteriaForUser(currentUserWithPerimeters),
+                                                      getCriteriaForRange(rangeStart,rangeEnd));
 
-        query.addCriteria(criteria.andOperator(this.computeUserCriteria(currentUserWithPerimeters)));
-        query.with(Sort.by(new Sort.Order(
+		Query query = new Query();
+		query.fields().exclude("data");
+        query.addCriteria(criteria);
+        log.info("launch query with user " +currentUserWithPerimeters.getUserData().getLogin());
+        return template.find(query, CardConsultationData.class).map(card -> {
+            log.info("Find card " + card.getId());
+			card.setHasBeenAcknowledged(card.getUsersAcks() != null && card.getUsersAcks().contains(currentUserWithPerimeters.getUserData().getLogin()));
+			return card;
+		});
 
-                Sort.Direction.ASC// sort for the nearer cards in the future first
+	}
 
-                , START_DATE)));
-        query.with(Sort.by(new Sort.Order(Sort.Direction.ASC, "_id")));
-        return template.findOne(query, CardConsultationData.class);
-    }
+	private Criteria getCriteriaForRange(Instant rangeStart,Instant rangeEnd)
+	{
+		
+		if (rangeStart==null) return where(END_DATE_FIELD).lt(rangeEnd);
+		if (rangeEnd==null) return where(START_DATE_FIELD).gt(rangeStart);
+		return new Criteria().orOperator(where(START_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
+		where(END_DATE_FIELD).gte(rangeStart).lte(rangeEnd),
+		new Criteria().andOperator(where(START_DATE_FIELD).lt(rangeStart), new Criteria()
+				.orOperator(where(END_DATE_FIELD).is(null), where(END_DATE_FIELD).gt(rangeEnd))));
+	}
 
-    /**
-     * Look for the next card if any whose startDate is after a specified date
-     * The cards are filtered such as the requesting user is among theirs recipients.
-     *
-     * @param pivotalInstant specified reference date
-     * @param currentUserWithPerimeters requesting user
-     * @return Card result or empty Mono
-     */
-    public Mono<CardConsultationData> findPreviousCardWithUser(Instant pivotalInstant, CurrentUserWithPerimeters currentUserWithPerimeters) {
-        Query query = new Query();
-        Criteria criteria = Criteria.where(START_DATE)
 
-                .lte(pivotalInstant);// search in the past
+	private Criteria publishDateCriteria(Instant latestPublication) {
+		return where(PUBLISH_DATE_FIELD).lte(latestPublication);
+	}
 
-        query.addCriteria(criteria.andOperator(this.computeUserCriteria(currentUserWithPerimeters)));
-        query.with(Sort.by(new Sort.Order(
 
-                Sort.Direction.DESC// sort for the most recent cards first
 
-                , START_DATE)));
-        query.with(Sort.by(new Sort.Order(Sort.Direction.ASC, "_id")));
-        return template.findOne(query, CardConsultationData.class);
-    }
+
 }
