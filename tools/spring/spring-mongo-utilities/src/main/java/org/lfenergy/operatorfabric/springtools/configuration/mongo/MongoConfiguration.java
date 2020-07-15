@@ -11,7 +11,10 @@
 
 package org.lfenergy.operatorfabric.springtools.configuration.mongo;
 
-import com.mongodb.*;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.connection.*;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
@@ -19,8 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.convert.CustomConversions;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
+import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
@@ -33,10 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-//import com.mongodb.async.client.MongoClientSettings;
 
 /**
  * Mongo configuration.
+ *  extends AbstractReactiveMongoConfiguration and overrides for custums
  * <ul>
  * <li>Standard cluster client configuration</li>
  * <li>Reactive cluster client configuration</li>
@@ -48,31 +51,29 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Configuration
-public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/ {
+public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
 
     @Autowired
     private OperatorFabricMongoProperties properties;
     @Autowired
     private AbstractLocalMongoConfiguration localConfiguration;
-    private MongoClient client;
+
 
     /**
      * @return reactive client
      */
     @Bean
-    public synchronized MongoClient reactiveMongoClient() {
-        if (client == null)
-            this.client = MongoClients.create(mongoSettings());
-        return client;
+    public  MongoClient reactiveMongoClient() {
+            return MongoClients.create(mongoSettings());
     }
+
 
     /**
      * @return standard client
      */
     @Bean
-    public com.mongodb.MongoClient mongoClient() {
-        MongoClientOptions.Builder optionsBuilder = new MongoClientOptions.Builder();
-        optionsBuilder.maxConnectionIdleTime(60000);
+    public com.mongodb.client.MongoClient mongoClientx() {
+
         List<ServerAddress> addrs = new ArrayList<>();
         MongoCredential credential = null;
 
@@ -85,23 +86,17 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/ {
                 credential = MongoCredential.createCredential(userInfo[0], "admin", userInfo[1].toCharArray());
             }
         }
-        com.mongodb.MongoClient client = new com.mongodb.MongoClient(addrs, credential, optionsBuilder.build());
-        return client;
+
+
+        return com.mongodb.client.MongoClients.create(
+                MongoClientSettings.builder().credential(credential).
+                        applyToConnectionPoolSettings(builder -> builder.maxConnectionIdleTime(60000,TimeUnit.SECONDS))
+                        .applyToClusterSettings(builder -> builder.hosts(addrs))
+                        .build());
+
     }
 
-    /**
-     * @return mapping converter with local conversions
-     */
-    @Bean
-    public MappingMongoConverter mappingMongoConverter() {
 
-        MappingMongoConverter converter = new MappingMongoConverter(ReactiveMongoTemplate.NO_OP_REF_RESOLVER,
-           mongoMappingContext());
-        converter.setCustomConversions(customConversions());
-        DefaultMongoTypeMapper typeMapper = new DefaultMongoTypeMapper(null);
-        converter.setTypeMapper(typeMapper);
-        return converter;
-    }
 
     /**
      * @return database name from configuration
@@ -110,16 +105,6 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/ {
         return properties.getDatabase();
     }
 
-    @Bean
-    public MongoMappingContext mongoMappingContext() {
-
-        MongoMappingContext mappingContext = new MongoMappingContext();
-//        mappingContext.setInitialEntitySet(getInitialEntitySet());
-//        mappingContext.setSimpleTypeHolder(customConversions().getSimpleTypeHolder());
-//        mappingContext.setFieldNamingStrategy(fieldNamingStrategy());
-
-        return mappingContext;
-    }
 
     /**
      * Called before entities are persisted to mongo, triggers bean validation
@@ -201,8 +186,19 @@ public class MongoConfiguration /*extends AbstractReactiveMongoConfiguration*/ {
     }
 
     @Bean
-    public CustomConversions customConversions() {
+    public MongoCustomConversions customConversions() {
         return new MongoCustomConversions(localConfiguration.converterList());
     }
 
+
+    @Bean
+    public MappingMongoConverter mappingMongoConverter(ReactiveMongoDatabaseFactory databaseFactory,
+                                                       MongoCustomConversions customConversions, MongoMappingContext mappingContext) {
+
+        MappingMongoConverter converter=super.mappingMongoConverter(databaseFactory,customConversions,mappingContext);
+        DefaultMongoTypeMapper typeMapper = new DefaultMongoTypeMapper(null);
+        converter.setTypeMapper(typeMapper);
+
+        return converter;
+    }
 }
