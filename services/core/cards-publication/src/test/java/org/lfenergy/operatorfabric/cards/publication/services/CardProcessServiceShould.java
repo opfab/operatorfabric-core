@@ -396,27 +396,18 @@ class CardProcessServiceShould {
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
         cards.forEach(c -> c.setParentCardUid(null));
 
-        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
-                .subscribe();
-
-        Long block = cardRepository.count().block();
-        Assertions.assertThat(block).withFailMessage(
-                "The number of registered cards should be '%d' but is " + "'%d' actually",
-                numberOfCards, block).isEqualTo(numberOfCards);
+        StepVerifier.create(cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards]))))
+                .expectNextMatches(r -> r.getCount().equals(numberOfCards)).verifyComplete();
 
         CardPublicationData firstCard = cards.get(0);
         String id = firstCard.getId();
-        ;
         cardProcessingService.deleteCard(id);
 
         /* one card should be deleted(the first one) */
         int thereShouldBeOneCardLess = numberOfCards - 1;
 
-        Assertions.assertThat(cardRepository.count().block())
-                .withFailMessage("The number of registered cards should be '%d' but is '%d' "
-                                + "when first added card is deleted(processInstanceId:'%s').",
-                        thereShouldBeOneCardLess, block, id)
-                .isEqualTo(thereShouldBeOneCardLess);
+        StepVerifier.create(cardRepository.count())
+                .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
     }
 
     // FIXME unify way test cards are created throughout tests

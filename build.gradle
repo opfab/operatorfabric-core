@@ -6,7 +6,7 @@ plugins {
     id "maven-publish"
     id "signing"
     id "org.owasp.dependencycheck" version "5.2.0"
-    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'org.springframework.boot' version '2.4.0-M1'
     id 'org.sonarqube' version '3.0' apply false
 }
 
@@ -31,6 +31,7 @@ ext {
             starterJetty            : "org.springframework.boot:spring-boot-starter-jetty:${versions['spring.boot']}",
             starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:${versions['spring.boot']}",
             starterSecurity         : "org.springframework.boot:spring-boot-starter-security:${versions['spring.boot']}",
+            starterMongo            : "org.springframework.boot:spring-boot-starter-data-mongodb:${versions['spring.boot']}",
             starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${versions['spring.boot']}",
             starterTest             : "org.springframework.boot:spring-boot-starter-test:${versions['spring.boot']}",
             starterValidation       : "org.springframework.boot:spring-boot-starter-validation:${versions['spring.boot']}",
@@ -196,5 +197,5 @@ tasks.withType(JavaCompile) {
 }
 
  wrapper {
-    gradleVersion = '6.1.1'
+    gradleVersion = '6.5.1'
 }

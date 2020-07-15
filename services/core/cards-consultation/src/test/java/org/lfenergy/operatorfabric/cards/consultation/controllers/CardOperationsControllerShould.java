@@ -11,17 +11,9 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.controllers;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -44,14 +36,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
 
 /**
  * <p></p>
@@ -267,7 +261,7 @@ public class CardOperationsControllerShould {
            .verifyComplete();
     }
 
-    @Test
+    //@Test
     public void receiveCardsCheckUserAcks() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()

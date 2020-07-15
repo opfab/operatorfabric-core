@@ -1,29 +1,23 @@
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.test.StepVerifier;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CardPublicationApplication.class)
@@ -39,6 +33,9 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 	String cardUid;
 	String cardNeverContainsAcksUid;
 	int cardNumber = 2;
+	@Autowired
+	private CardProcessingService cardProcessingService;
+
 
 	@BeforeAll
 	void setup() {
@@ -47,7 +44,8 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 		cardUid = cardsInRepository.get(0).getUid();
 		cardNeverContainsAcksUid = cardsInRepository.get(1).getUid();
 		cardsInRepository.get(1).setUsersAcks(null);
-		cardRepository.saveAll(cardsInRepository).subscribe();
+		StepVerifier.create(cardRepository.saveAll(cardsInRepository))
+				.expectNextCount(cardNumber).verifyComplete();
 	}
 
 	@AfterAll
@@ -165,7 +163,7 @@ public class CardControllerProcessAcknowledgementShould extends CardControllerSh
 
 	@Test
 	void processDeleteUnexistingUserAcknowledgementFromCardNeverHadOne() throws Exception {
-		Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
+
 		CardPublicationData card = cardRepository.findByUid(cardNeverContainsAcksUid).block();
 		Assertions.assertThat(card.getUsersAcks()).isNullOrEmpty();
 		webTestClient.delete().uri("/cards/userAcknowledgement/" + cardUid).exchange().expectStatus().isNoContent();
