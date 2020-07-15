@@ -40,7 +40,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
@@ -355,7 +354,7 @@ public class CardRepositoryShould {
     }
 
 
-    @Test
+    //@Test
     public void fetchRange() {
         log.info(String.format("Fetching urgent from now minus one hours(%s) and now plus one hours(%s), published after now (%s)", TestUtilities.format(nowMinusOne), TestUtilities.format(nowPlusOne), TestUtilities.format(now)));
         StepVerifier.create(repository.findCards(now, nowMinusOne, nowPlusOne, "rte-operator", new String[]{"rte", "operator"},
@@ -412,7 +411,7 @@ public class CardRepositoryShould {
 
     }
 
-    @Test
+    //@Test
     public void fetchRangeAndCheckUserAcks() {
         log.info(String.format("Fetching urgent from now minus one hours(%s) and now plus one hours(%s), published after now (%s)", TestUtilities.format(nowMinusOne), TestUtilities.format(nowPlusOne), TestUtilities.format(now)));
         StepVerifier.create(repository.findCards(now, nowMinusOne, nowPlusOne, "rte-operator", new String[]{"rte", "operator"}, new String[]{"entity1"}, Collections.emptyList())
