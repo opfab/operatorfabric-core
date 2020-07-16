@@ -151,7 +151,7 @@ Then status 201
 And match response.count == 1
 
 
-# Push an action card 
+# Push a question card 
 
     * def getCard = 
     """
@@ -161,19 +161,23 @@ And match response.count == 1
 	  endDate = new Date().valueOf() + 6*60*60*1000;
 
 		var card = {
-			"publisher" : "publisher_test",
+			"publisher" : "processAction",
 			"processVersion" : "1",
 			"process"  :"defaultProcess",
 			"processInstanceId" : "process4",
-			"state": "messageState",
+			"state": "questionState",
 			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
+					"type":"UNION",
+					"recipients":[
+						{ "type": "GROUP", "identity":"TSO1"},
+						{ "type": "GROUP", "identity":"TSO2"}
+						]
 					},
+			"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
 			"severity" : "ACTION",
 			"startDate" : startDate,
 			"summary" : {"key" : "defaultProcess.summary"},
-			"title" : {"key" : "defaultProcess.title"},
+			"title" : {"key" : "question.title"},
 			"data" : {"message":" Action Card"},
 			"timeSpans" : [
 				{"start" : startDate},

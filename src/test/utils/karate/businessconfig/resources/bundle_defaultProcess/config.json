@@ -8,7 +8,8 @@
     "template",
     "chart",
     "chart-line",
-    "process"
+    "process",
+    "question"
   ],
   "csses": [
     "style"
@@ -85,6 +86,33 @@
         }
       ],
       "acknowledgementAllowed": true
+    },
+    "questionState": {
+      "name": {
+        "key": "question.title"
+      },
+      "color": "#8bcdcd",
+      "response": {
+        "lock": true,
+        "state": "responseState",
+        "btnColor": "GREEN",
+        "btnText": {
+          "key": "question.button.text"
+        }
+      },
+      "details": [
+        {
+          "title": {
+            "key": "question.title"
+          },
+          "templateName": "question",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": false
     }
+
   }
 }
