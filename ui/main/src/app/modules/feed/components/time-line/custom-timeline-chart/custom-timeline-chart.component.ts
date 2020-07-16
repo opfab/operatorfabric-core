@@ -18,7 +18,8 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  OnDestroy
 } from '@angular/core';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions } from '@swimlane/ngx-charts';
@@ -27,8 +28,8 @@ import {select,Store} from "@ngrx/store";
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppState} from "@ofStore/index";
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subscription, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 
 
@@ -38,9 +39,9 @@ import * as feedSelectors from '@ofSelectors/feed.selectors';
   styleUrls: ['./custom-timeline-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit {
+export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit, OnDestroy {
 
-  subscription: Subscription;
+  private ngUnsubscribe$ = new Subject<void>();
   public xTicks: Array<any> = [];
   public xTicksOne: Array<any> = [];
   public xTicksTwo: Array<any> = [];
@@ -96,7 +97,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   }
 
   ngOnInit(): void {
-    this.store.select(selectCurrentUrl).subscribe(url => {
+    this.store.select(selectCurrentUrl).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(url => {
       if (url) {
           const urlParts = url.split('/');
           this.currentPath = urlParts[1];
@@ -106,6 +107,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.updateRealTimeDate();
     this.initDataPipe();
   }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
+}
 
   // set inside ngx-charts library verticalSpacing variable to 10
   // library need to rotate ticks one time for set verticalSpacing to 10px on ngx-charts-x-axis-ticks
@@ -240,8 +246,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
 
   initDataPipe(): void {
-    this.subscription = this.store.pipe(select(feedSelectors.selectFilteredFeed))
-    .pipe(debounceTime(200), distinctUntilChanged())
+    this.store.pipe(select(feedSelectors.selectFilteredFeed))
+    .pipe(takeUntil(this.ngUnsubscribe$),debounceTime(200), distinctUntilChanged())
     .subscribe(value => this.getAllCardsToDrawOnTheTimeLine(value));
   }
 

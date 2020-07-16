@@ -38,7 +38,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     public cardsData: any[];
     public myDomain: number[];
     public domainId: string;
-    subscription: Subscription;
+    
 
     // required for domain movements specifications
     public followClockTick: boolean;
@@ -213,14 +213,7 @@ export class InitChartComponent implements OnInit, OnDestroy {
     }
 
 
-    /**
-     * unsubscribe every subscription made on this file
-     */
     ngOnDestroy() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
-
     }
 
     /**

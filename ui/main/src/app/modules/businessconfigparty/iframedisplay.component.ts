@@ -13,6 +13,8 @@ import {Component, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ActivatedRoute} from '@angular/router';
 import { ProcessesService } from '@ofServices/processes.service';
+import { concatMap, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -22,7 +24,7 @@ import { ProcessesService } from '@ofServices/processes.service';
 })
 export class IframeDisplayComponent implements OnInit {
 
-  public iframeURL: SafeUrl;
+  public iframeURL: Observable<SafeUrl>;
 
   constructor(
               private sanitizer: DomSanitizer,
@@ -31,12 +33,11 @@ export class IframeDisplayComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe( paramMap => 
-        this.businessconfigService.queryMenuEntryURL(paramMap.get("menu_id"),paramMap.get("menu_version"),paramMap.get("menu_entry_id"))
-          .subscribe( url =>
-              this.iframeURL = this.sanitizer.bypassSecurityTrustResourceUrl(url)
-          )
-    )
+    this.iframeURL = this.route.paramMap.pipe(concatMap( paramMap =>
+      this.businessconfigService.queryMenuEntryURL(paramMap.get("menu_id"),paramMap.get("menu_version"),paramMap.get("menu_entry_id"))
+    )).pipe(map( this.sanitizer.bypassSecurityTrustResourceUrl ));
+    
+  
   }
 
 }
