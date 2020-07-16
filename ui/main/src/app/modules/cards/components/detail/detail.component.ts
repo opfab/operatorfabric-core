@@ -68,7 +68,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy {
                     )
                     .subscribe(childCardsObs => {
                         zip(...childCardsObs)
-                            .pipe(map(cards => cards.map(cardData => cardData.card)))
+                            .pipe(takeUntil(this.unsubscribe$),map(cards => cards.map(cardData => cardData.card)))
                             .subscribe(newChildCards => {
 
                                 const reducer = (accumulator, currentValue) => {
@@ -141,6 +141,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy {
         let responseData: Response;
 
         this.processesService.queryProcessFromCard(this.card).pipe(
+            takeUntil(this.unsubscribe$),
             switchMap(process => {
                 responseData = process.states[this.card.state].response;
                 this.responseData.emit(responseData);

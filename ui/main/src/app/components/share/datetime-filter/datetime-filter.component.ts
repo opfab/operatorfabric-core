@@ -8,9 +8,11 @@
  */
 
 
-import {Component, forwardRef, Input} from '@angular/core';
+import {Component, forwardRef, Input, OnInit, OnDestroy} from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'of-datetime-filter',
@@ -23,8 +25,9 @@ import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
     }
     ]
 })
-export class DatetimeFilterComponent implements ControlValueAccessor {
+export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
+    private ngUnsubscribe$ = new Subject<void>();
 
     @Input() labelKey: string;
     disabled = true;
@@ -43,6 +46,14 @@ export class DatetimeFilterComponent implements ControlValueAccessor {
 
     }
 
+    ngOnInit() {
+    }
+
+    ngOnDestroy() {
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
+    }
+
     /* istanbul ignore next */
     public onTouched: () => void = () => {
     }
@@ -58,7 +69,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor {
     }
 
     registerOnChange(fn: any): void {
-        this.datetimeForm.valueChanges.subscribe(fn);
+        this.datetimeForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(fn);
     }
 
     registerOnTouched(fn: any): void {
@@ -72,7 +83,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor {
 
     // Set time to enable when a date has been set
     onChanges(): void {
-        this.datetimeForm.get('date').valueChanges.subscribe(val => {
+        this.datetimeForm.get('date').valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(val => {
             if (val) {
                 this.disabled = false;
             }

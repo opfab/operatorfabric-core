@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Card, Detail} from '@ofModel/card.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
@@ -40,7 +40,7 @@ const RESPONSE_ACK_ERROR_MSG_I18N_KEY = 'response.error.ack';
     templateUrl: './card-details.component.html',
     styleUrls: ['./card-details.component.scss']
 })
-export class CardDetailsComponent implements OnInit {
+export class CardDetailsComponent implements OnInit, OnDestroy {
 
     protected _i18nPrefix: string;
     card: Card;
@@ -266,6 +266,7 @@ export class CardDetailsComponent implements OnInit {
             }
 
             this.cardService.postResponseCard(card)
+                .pipe(takeUntil(this.unsubscribe$))
                 .subscribe(
                     rep => {
                         if (rep['count'] == 0 && rep['message'].includes('Error')) {
