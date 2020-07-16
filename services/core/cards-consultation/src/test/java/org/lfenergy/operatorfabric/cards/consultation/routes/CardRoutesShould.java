@@ -101,7 +101,7 @@ public class CardRoutesShould {
                             assertThat(cardData.getCard())
                                 //This is necessary because empty lists are ignored in the returned JSON
                                 .usingComparatorForFields(new EmptyListComparator<String>(),
-                                        "tags", "details", "userRecipients","orphanedUsers")
+                                        "tags", "details", "userRecipients")
                                 .isEqualToComparingFieldByFieldRecursively(simpleCard));
         }
         
@@ -222,7 +222,7 @@ public class CardRoutesShould {
                             assertThat(cardData.getCard())
                                 //This is necessary because empty lists are ignored in the returned JSON
                                 .usingComparatorForFields(new EmptyListComparator<String>(),
-                                        "tags", "details", "userRecipients","orphanedUsers")
+                                        "tags", "details", "userRecipients")
                                 .isEqualToComparingFieldByFieldRecursively(simpleCard1));
 
             StepVerifier.create(repository.save(simpleCard2))
@@ -252,7 +252,7 @@ public class CardRoutesShould {
                             assertThat(cardData.getCard())
                                 //This is necessary because empty lists are ignored in the returned JSON
                                 .usingComparatorForFields(new EmptyListComparator<String>(),
-                                        "tags", "details", "userRecipients","orphanedUsers")
+                                        "tags", "details", "userRecipients")
                                 .isEqualToComparingFieldByFieldRecursively(simpleCard4));
 
             StepVerifier.create(repository.save(simpleCard5))
@@ -280,17 +280,17 @@ public class CardRoutesShould {
             CardConsultationData parentCard = instantiateOneCardConsultationData();
             parentCard.setUid("parentUid");
             parentCard.setId(parentCard.getId() + "1");
-            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, null, null);
+            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
 
             CardConsultationData childCard1 = instantiateOneCardConsultationData();
             childCard1.setParentCardUid("parentUid");
             childCard1.setId(childCard1.getId() + "2");
-            configureRecipientReferencesAndStartDate(childCard1, "userWithGroupAndEntity", now, null, null);
+            configureRecipientReferencesAndStartDate(childCard1, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
 
             CardConsultationData childCard2 = instantiateOneCardConsultationData();
             childCard2.setParentCardUid("parentUid");
             childCard2.setId(childCard2.getId() + "3");
-            configureRecipientReferencesAndStartDate(childCard2, "userWithGroupAndEntity", now, null, null);
+            configureRecipientReferencesAndStartDate(childCard2, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
 
             StepVerifier.create(repository.saveAll(Arrays.asList(parentCard, childCard1, childCard2)))
                     .expectNextCount(3)
@@ -314,7 +314,7 @@ public class CardRoutesShould {
             CardConsultationData parentCard = instantiateOneCardConsultationData();
             parentCard.setUid("parentUid");
             parentCard.setId(parentCard.getId() + "1");
-            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, null, null);
+            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
 
             StepVerifier.create(repository.save(parentCard))
                     .expectNextCount(1)

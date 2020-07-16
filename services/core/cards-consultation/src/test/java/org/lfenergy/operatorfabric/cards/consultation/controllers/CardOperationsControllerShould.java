@@ -210,22 +210,47 @@ public class CardOperationsControllerShould {
                         .rangeEnd(nowPlusThree)
                         .notification(false).build()
         ));
+        Set<String> cardIds = new HashSet<String>();
         StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
         verifier
                 .assertNext(op->{
-                    assertThat(op.getCards().size()).isEqualTo(6);
+                    assertThat(op.getCards().size()).isEqualTo(1);
                     assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    Set<String> cardIds = new HashSet<String>();
-                    for (int i=0;i<op.getCards().size();i++) cardIds.add(op.getCards().get(i).getId());
-                    assertThat(cardIds.contains("PROCESS.PROCESS7"));
-                    assertThat(cardIds.contains("PROCESS.PROCESS4"));
-                    assertThat(cardIds.contains("PROCESS.PROCESS5"));
-                    assertThat(cardIds.contains("PROCESS.PROCESS8"));
-                    assertThat(cardIds.contains("PROCESS.PROCESS2"));
-                    assertThat(cardIds.contains("PROCESS.PROCESS6"));
+                    cardIds.add(op.getCards().get(0).getId());
+                })
+                .assertNext(op->{
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        cardIds.add(op.getCards().get(0).getId());
+                })
+                .assertNext(op->{
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        cardIds.add(op.getCards().get(0).getId());
+                })
+                .assertNext(op->{
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        cardIds.add(op.getCards().get(0).getId());
+                })
+                .assertNext(op->{
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        cardIds.add(op.getCards().get(0).getId());
+                })
+                .assertNext(op->{
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        cardIds.add(op.getCards().get(0).getId());
                 })
                 .expectComplete()
                 .verify();
+        assertThat(cardIds.contains("PROCESS.PROCESS7"));
+        assertThat(cardIds.contains("PROCESS.PROCESS4"));
+        assertThat(cardIds.contains("PROCESS.PROCESS5"));
+        assertThat(cardIds.contains("PROCESS.PROCESS8"));
+        assertThat(cardIds.contains("PROCESS.PROCESS2"));
+        assertThat(cardIds.contains("PROCESS.PROCESS6"));
     }
     @Test
 
@@ -274,13 +299,19 @@ public class CardOperationsControllerShould {
         ));
         StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
         verifier
+                .assertNext(op->{})
+                .assertNext(op->{})
                 .assertNext(op->{
-                	assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS0");
-                	assertThat(op.getCards().get(2).getHasBeenAcknowledged()).isTrue();
-                	assertThat(op.getCards().get(3).getId()).isEqualTo("PROCESS.PROCESS2");
-                	assertThat(op.getCards().get(3).getHasBeenAcknowledged()).isFalse();
-                	assertThat(op.getCards().get(4).getId()).isEqualTo("PROCESS.PROCESS4");
-                	assertThat(op.getCards().get(4).getHasBeenAcknowledged()).isFalse();
+                	assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
+                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isTrue();
+                })
+                .assertNext(op->{
+                	assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
+                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
+                })
+                .assertNext(op->{
+                	assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
+                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
                 })
                 .expectComplete()
                 .verify();

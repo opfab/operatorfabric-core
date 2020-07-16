@@ -94,7 +94,9 @@ public class LightCardConsultationData implements LightCard {
                 .uid(other.getUid())
                 .id(other.getId())
                 .parentCardUid(other.getParentCardUid())
+                .publisher(other.getPublisher())
                 .process(other.getProcess())
+                .processVersion(other.getProcessVersion())
                 .state(other.getState())
                 .processInstanceId(other.getProcessInstanceId())
                 .lttd(other.getLttd())
@@ -104,7 +106,8 @@ public class LightCardConsultationData implements LightCard {
                 .severity(other.getSeverity())
                 .title(I18nConsultationData.copy(other.getTitle()))
                 .summary(I18nConsultationData.copy(other.getSummary()))
-                .hasBeenAcknowledged(false);
+                .hasBeenAcknowledged(other.getHasBeenAcknowledged());
+                
         if(other.getTags()!=null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());
         if(other.getTimeSpans()!=null && !other.getTimeSpans().isEmpty())

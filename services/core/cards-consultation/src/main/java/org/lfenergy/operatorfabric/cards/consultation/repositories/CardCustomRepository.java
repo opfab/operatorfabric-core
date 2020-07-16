@@ -7,20 +7,41 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.lfenergy.operatorfabric.cards.consultation.repositories;
 
-import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
-import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
-import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.util.List;
+
+import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardOperation;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import reactor.core.publisher.Flux;
+
 
 /*
 * <p>Needed to avoid trouble at runtime when springframework try to create mongo request for findByIdWithUser method</p>
 * */
 public interface CardCustomRepository extends UserUtilitiesCommonToCardRepository<CardConsultationData> {
 
-    Mono<CardConsultationData> findNextCardWithUser(Instant pivotalInstant, CurrentUserWithPerimeters currentUserWithPerimeters);
-    Mono<CardConsultationData> findPreviousCardWithUser(Instant pivotalInstant, CurrentUserWithPerimeters currentUserWithPerimeters);
+        /**
+     * Finds Card published earlier than <code>latestPublication</code> and either :
+     * <ul>
+     * <li>starting between <code>rangeStart</code>and <code>rangeEnd</code></li>
+     * <li>ending between <code>rangeStart</code>and <code>rangeEnd</code></li>
+     * <li>starting before <code>rangeStart</code> and ending after <code>rangeEnd</code></li>
+     * <li>starting before <code>rangeStart</code> and never ending</li>
+     * </ul>
+     * <br/>
+     * <ul>
+     * <li> if rangeStart is null , find cards with endDate < rangeEnd </li>
+     * <li> if rangeEnd is null , find cards with startDate > rangeStart </li>
+     * <li> if rangeStart and rangeEnd null , return null </li>
+     * </ul>
+     * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code> or to <code>entities</code>
+ 
+     */
+    Flux<CardOperation> getCardOperations(Instant latestPublication, Instant rangeStart, Instant rangeEnd,
+    CurrentUserWithPerimeters currentUserWithPerimeters);
+
 }

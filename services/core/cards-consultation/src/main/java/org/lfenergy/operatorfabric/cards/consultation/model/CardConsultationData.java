@@ -81,9 +81,6 @@ public class CardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> groupRecipients;
-    @JsonIgnore
-    @Singular
-    private List<String> orphanedUsers;
     @Singular
     @Indexed
     private List<String> entityRecipients;

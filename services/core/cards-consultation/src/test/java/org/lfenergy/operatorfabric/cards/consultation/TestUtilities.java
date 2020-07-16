@@ -104,7 +104,7 @@ public class TestUtilities {
         if (entities != null && entities.length > 0)
             cardBuilder.entityRecipients(Arrays.asList(entities));
         if (login != null)
-            cardBuilder.orphanedUser(login);
+            cardBuilder.userRecipient(login);
         CardConsultationData card = cardBuilder.build();
         prepareCard(card, publication);
         return card;
@@ -320,7 +320,6 @@ public class TestUtilities {
                 .stringLengthRange(5, 50)
                 .collectionSizeRange(1, 10)
                 .excludeField(FieldPredicates.named("data"))
-                .excludeField(FieldPredicates.named("orphanedUsers"))
                 .scanClasspathForConcreteTypes(true)
                 .overrideDefaultInitialization(false)
                 .ignoreRandomizationErrors(true)

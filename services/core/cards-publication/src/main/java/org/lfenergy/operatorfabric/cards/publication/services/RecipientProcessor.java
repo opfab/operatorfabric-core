@@ -41,7 +41,6 @@ public class RecipientProcessor {
         Recipient recipient = card.getRecipient();
         ComputedRecipient computedRecipient = processAll(recipient);
         card.setUserRecipients(new ArrayList<>(computedRecipient.getUsers()));
-        card.setOrphanedUsers(new ArrayList<>(computedRecipient.getOrphanUsers()));
         card.setGroupRecipients(new ArrayList<>(computedRecipient.getGroups()));
         return computedRecipient;
     }
@@ -50,7 +49,7 @@ public class RecipientProcessor {
      * Processes all recipient data associated with {{@link Recipient}} at the time of computation.
      *
      * @param recipient recipient to compute
-     * @return a structure containing results (groups, orphaned users, main user)
+     * @return a structure containing results (groups, users, main user)
      */
     public ComputedRecipient processAll(Recipient recipient) {
         if (recipient == null)
