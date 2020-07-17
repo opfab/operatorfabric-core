@@ -20,6 +20,9 @@ import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {TimeService} from '@ofServices/time.service';
 import {TranslateService} from '@ngx-translate/core';
+import { Router } from '@angular/router';
+import {takeUntil} from 'rxjs/operators';
+import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
 
 
 export enum FilterDateTypes {
@@ -54,9 +57,12 @@ export class ArchiveFiltersComponent implements OnInit, OnDestroy {
     size: number;
     archiveForm: FormGroup;
     unsubscribe$: Subject<void> = new Subject<void>();
+    currentPath: any;
+
 
     constructor(private store: Store<AppState>
         , private timeService: TimeService
+        , private router: Router
         , private translateService: TranslateService
         , private  configService: ConfigService) {
         this.archiveForm = new FormGroup({
@@ -74,6 +80,15 @@ export class ArchiveFiltersComponent implements OnInit, OnDestroy {
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.processes = this.configService.getConfigValue('archive.filters.process.list');
         this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+
+        this.store.select(selectCurrentUrl)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(url => {
+                if (url) {
+                    const urlParts = url.split('/');
+                    this.currentPath = urlParts[1];
+                }
+            });
     }
 
 
@@ -112,6 +127,7 @@ export class ArchiveFiltersComponent implements OnInit, OnDestroy {
 
     clearResult(): void {
         this.store.dispatch(new FlushArchivesResult());
+        this.router.navigate(['/' + this.currentPath]);
     }
 
     sendQuery(): void {
