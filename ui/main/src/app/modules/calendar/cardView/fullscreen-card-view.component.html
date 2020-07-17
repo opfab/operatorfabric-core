@@ -4,16 +4,18 @@
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
+
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+<mat-dialog-content>
 
 
-<of-details [card]="card" [style.visibility]="card ? 'visible' : 'hidden'">
-  <div *ngIf="card">
-    <button *ngIf="isButtonCloseVisible" type="button" class="close" aria-label="Close" (click)="closeDetails()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <of-detail *ngFor="let detail of (details)" [detail]="detail" [card]="card" [childCards]="childCards"
-        [user]="user" [currentPath]="_currentPath"></of-detail>
-  </div>
-</of-details>
+    <div>
+        <of-card-details> </of-card-details>
+      </div>
+
+</mat-dialog-content>

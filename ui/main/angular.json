@@ -30,6 +30,10 @@
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "node_modules/flatpickr/dist/flatpickr.css",
+              "node_modules/@fullcalendar/core/main.css",
+              "node_modules/@fullcalendar/daygrid/main.css",
+              "node_modules/@fullcalendar/timegrid/main.css",
+              "node_modules/@fullcalendar/bootstrap/main.css",
               "src/assets/styles/style.css",
               "src/assets/styles/styles.scss"
             ],
@@ -37,6 +41,7 @@
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
               "src/assets/js/templateGateway.js",
               "src/assets/js/Chart.min.js"
+              
             ]
           },
           "configurations": {

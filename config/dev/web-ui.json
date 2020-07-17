@@ -130,7 +130,7 @@
     "styleWhenNightDayModeDesactivated" : "NIGHT"
   },
   "navbar": {
-    "hidden": ["logging","monitoring","freemessage"],
+    "hidden": [],
     "businessmenus" : {"type":"BOTH"}
   }
 }
