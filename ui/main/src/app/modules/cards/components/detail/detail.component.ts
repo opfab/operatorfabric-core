@@ -9,7 +9,7 @@
 
 
 
-import {Component, ElementRef, Input, OnChanges, Output, EventEmitter, OnInit, OnDestroy} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, OnInit, OnDestroy, AfterViewChecked} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
@@ -22,41 +22,121 @@ import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {TranslateService} from '@ngx-translate/core';
-import { switchMap, skip, map, takeUntil } from 'rxjs/operators';
-import { selectLastCards } from '@ofStore/selectors/feed.selectors';
+import { switchMap, skip, map, takeUntil, take } from 'rxjs/operators';
+import { selectLastCards, fetchLightCard } from '@ofStore/selectors/feed.selectors';
 import { CardService } from '@ofServices/card.service';
 import { Observable, zip, Subject } from 'rxjs';
-import { LightCard } from '@ofModel/light-card.model';
+import { LightCard, Severity } from '@ofModel/light-card.model';
 import { AppService, PageType } from '@ofServices/app.service';
+import { User } from '@ofModel/user.model';
+import { Map } from '@ofModel/map';
+import { UserWithPerimeters, RightsEnum, userRight } from '@ofModel/userWithPerimeters.model';
+import { UpdateALightCard } from '@ofStore/actions/light-card.actions';
 
 declare const templateGateway: any;
 
+class Message {
+    text: string;
+    display: boolean;
+    color: ResponseMsgColor;
+}
+
+const enum ResponseI18nKeys {
+    FORM_ERROR_MSG = 'response.error.form',
+    SUBMIT_ERROR_MSG = 'response.error.submit',
+    SUBMIT_SUCCESS_MSG = 'response.submitSuccess',
+    BUTTON_TITLE = 'response.btnTitle'
+}
+
+const enum AckI18nKeys {
+    BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
+    BUTTON_TEXT_UNACK = 'cardAcknowledgment.button.unack',
+    ERROR_MSG = 'response.error.ack'
+}
+
+const enum AckButtonColors {
+    PRIMARY = 'btn-primary',
+    DANGER = 'btn-danger'
+}
+
+const enum ResponseMsgColor {
+    GREEN = 'alert-success',
+    RED = 'alert-danger'
+}
+
 @Component({
     selector: 'of-detail',
-    templateUrl: './detail.component.html',
+    templateUrl: './detail.component.html'
 })
-export class DetailComponent implements OnChanges, OnInit, OnDestroy {
+export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked {
 
-    @Output() responseData = new EventEmitter<Response>();
-
-    public active = false;
     @Input() detail: Detail;
     @Input() card: Card;
     @Input() childCards: Card[];
-    currentCard: Card;
+    @Input() user: User;
+    @Input() userWithPerimeters: UserWithPerimeters;
+    @Input() currentPath: string;
+
+    public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _htmlContent: SafeHtml;
-    private userContext: UserContext;
-    private lastCards$: Observable<LightCard[]>;
+    private _userContext: UserContext;
+    private _lastCards$: Observable<LightCard[]>;
+    private _responseData: Response;
+    private _hasPrivilegetoRespond: boolean = false;
+    private _acknowledgementAllowed: boolean;
+    message: Message = { display: false, text: undefined, color: undefined };
+
+    constructor(private element: ElementRef, private businessconfigService: ProcessesService,
+                private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
+                private store: Store<AppState>, private translate: TranslateService,
+                private cardService: CardService, private _appService: AppService) {
+
+        this.store.select(selectAuthenticationState).subscribe(authState => {
+            this._userContext = new UserContext(
+                authState.identifier,
+                authState.token,
+                authState.firstName,
+                authState.lastName
+            );
+        });
+        this.reloadTemplateWhenGlobalStyleChange();
+    }
+
+    // -------------------------- [OC-980] -------------------------- //
+    adaptTemplateSize() {
+        let cardTemplate = document.getElementById('div-card-template');
+        let diffWindow = cardTemplate.getBoundingClientRect();
+        let divMsg = document.getElementById('div-detail-msg');
+        let divBtn = document.getElementById('div-detail-btn');
+
+        let cardTemplateHeight = window.innerHeight-diffWindow.top;
+        if (divMsg) {
+            cardTemplateHeight -= divMsg.scrollHeight + 35;
+        }
+        if (divBtn) {
+            cardTemplateHeight -= divBtn.scrollHeight + 50;
+        }
+
+        cardTemplate.style.maxHeight = `${cardTemplateHeight}px`;
+        cardTemplate.style.overflowX = 'hidden';
+    }
+
+    ngAfterViewChecked() {
+        this.adaptTemplateSize();
+        window.onresize = this.adaptTemplateSize;
+        window.onload = this.adaptTemplateSize;
+    }
+    // -------------------------------------------------------------- //
 
     ngOnInit() {
 
         if (this._appService.pageType == PageType.FEED) {
 
-            this.lastCards$ = this.store.select(selectLastCards);
+            this._lastCards$ = this.store.select(selectLastCards);
 
-            this.lastCards$
+            this._lastCards$
                     .pipe(
                         takeUntil(this.unsubscribe$),
                         map(lastCards =>
@@ -88,26 +168,179 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy {
         }
     }
 
-    constructor(private element: ElementRef,
-                private processesService: ProcessesService,
-                private handlebars: HandlebarsService,
-                private sanitizer: DomSanitizer,
-                private store: Store<AppState>,
-                private translate: TranslateService,
-                private cardService: CardService,
-                private _appService: AppService ) {
+    get i18nPrefix() {
+        return `${this.card.process}.${this.card.processVersion}.`
+    }
 
-        this.store.select(selectAuthenticationState).subscribe(authState => {
-            this.userContext = new UserContext(
-                authState.identifier,
-                authState.token,
-                authState.firstName,
-                authState.lastName
-            );
-        }); 
-        this.reloadTemplateWhenGlobalStyleChange();
+    get isArchivePageType(){
+        return this._appService.pageType == PageType.ARCHIVE;
+    }
 
+    get responseDataParameters(): Map<string> {
+        return this._responseData.btnText ? this._responseData.btnText.parameters : undefined;
+    }
 
+    get btnColor(): string {
+        return this.businessconfigService.getResponseBtnColorEnumValue(this._responseData.btnColor);
+    }
+
+    get btnText(): string {
+        return this._responseData.btnText ?
+            this.i18nPrefix + this._responseData.btnText.key : ResponseI18nKeys.BUTTON_TITLE;
+    }
+
+    get responseDataExists(): boolean {
+        return this._responseData != null && this._responseData != undefined;
+    }
+
+    get isActionEnabled(): boolean {
+        if (!this.card.entitiesAllowedToRespond) {
+            console.log("Card error : no field entitiesAllowedToRespond");
+            return false;
+        }
+
+        if (this._responseData != null && this._responseData != undefined) {
+            this.getPrivilegetoRespond(this.card, this._responseData);
+        }
+
+        return this.card.entitiesAllowedToRespond.includes(this.user.entities[0])
+            && this._hasPrivilegetoRespond;
+    }
+
+    getPrivilegetoRespond(card: Card, responseData: Response) {
+
+        this.userWithPerimeters.computedPerimeters.forEach(perim => {
+            if ((perim.process === card.process) && (perim.state === responseData.state)
+                && (this.compareRightAction(perim.rights, RightsEnum.Write)
+                    || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+                this._hasPrivilegetoRespond = true;
+            }
+
+        })
+    }
+
+    compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
+        return (userRight(userRights) - userRight(rightsAction)) === 0;
+    }
+
+    get btnAckText(): string {
+        return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
+    }
+
+    get btnAckColor(): string {
+        return this.card.hasBeenAcknowledged ? AckButtonColors.DANGER : AckButtonColors.PRIMARY;
+    }
+
+    get isAcknowledgementAllowed(): boolean {
+        return this._acknowledgementAllowed ? this._acknowledgementAllowed : false;
+    }
+
+    submitResponse() {
+
+        let formData = {};
+
+        var formElement = document.getElementById("opfab-form") as HTMLFormElement;
+        for (let [key, value] of [...new FormData(formElement)]) {
+            (key in formData) ? formData[key].push(value) : formData[key] = [value];
+        }
+
+        templateGateway.validyForm(formData);
+
+        if (templateGateway.isValid) {
+
+            const card: Card = {
+                uid: null,
+                id: null,
+                publishDate: null,
+                publisher: this.user.entities[0],
+                processVersion: this.card.processVersion,
+                process: this.card.process,
+                processInstanceId: `${this.card.processInstanceId}_${this.user.entities[0]}`,
+                state: this._responseData.state,
+                startDate: this.card.startDate,
+                endDate: this.card.endDate,
+                severity: Severity.INFORMATION,
+                hasBeenAcknowledged: false,
+                entityRecipients: this.card.entityRecipients,
+                externalRecipients: [this.card.publisher],
+                title: this.card.title,
+                summary: this.card.summary,
+                data: formData,
+                recipient: this.card.recipient,
+                parentCardUid: this.card.uid
+            }
+
+            this.cardService.postResponseCard(card)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe(
+                    rep => {
+                        if (rep['count'] == 0 && rep['message'].includes('Error')) {
+                            this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG);
+                            console.error(rep);
+
+                        } else {
+                            console.log(rep);
+                            this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, ResponseMsgColor.GREEN);
+                        }
+                    },
+                    err => {
+                        this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG);
+                        console.error(err);
+                    }
+                )
+
+        } else {
+            (templateGateway.formErrorMsg && templateGateway.formErrorMsg != '') ?
+                this.displayMessage(templateGateway.formErrorMsg) :
+                this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG);
+        }
+    }
+
+    private displayMessage(text: string, color: ResponseMsgColor = ResponseMsgColor.RED) {
+        this.message = {
+            text: text,
+            color: color,
+            display: true
+        };
+    }
+
+    acknowledge() {
+        if (this.card.hasBeenAcknowledged == true) {
+            this.cardService.deleteUserAcnowledgement(this.card).subscribe(resp => {
+                if (resp.status == 200 || resp.status == 204) {
+                    var tmp = { ... this.card };
+                    tmp.hasBeenAcknowledged = false;
+                    this.card = tmp;
+                    this.updateAcknowledgementOnLightCard(false);
+                } else {
+                    console.error("the remote acknowledgement endpoint returned an error status(%d)", resp.status);
+                    this.displayMessage(AckI18nKeys.ERROR_MSG);
+                }
+            });
+        } else {
+            this.cardService.postUserAcnowledgement(this.card).subscribe(resp => {
+                if (resp.status == 201 || resp.status == 200) {
+                    this.updateAcknowledgementOnLightCard(true);
+                    this.closeDetails();
+                } else {
+                    console.error("the remote acknowledgement endpoint returned an error status(%d)", resp.status);
+                    this.displayMessage(AckI18nKeys.ERROR_MSG);
+                }
+            });
+        }
+    }
+
+    updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
+        this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
+        .subscribe((lightCard : LightCard) => {
+            var updatedLighCard = { ... lightCard };
+            updatedLighCard.hasBeenAcknowledged = hasBeenAcknowledged;
+            this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
+        });
+    }
+
+    closeDetails() {
+        this._appService.closeDetails(this.currentPath);
     }
 
     // for certains type of template , we need to reload it to take into account
@@ -129,7 +362,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy {
             const process = this.card.process;
             const processVersion = this.card.processVersion;
             this.detail.styles.forEach(style => {
-                const cssUrl = this.processesService.computeBusinessconfigCssUrl(process, style, processVersion);
+                const cssUrl = this.businessconfigService.computeBusinessconfigCssUrl(process, style, processVersion);
                 // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
                 this.hrefsOfCssLink.push(safeCssUrl);
@@ -138,14 +371,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private initializeHandlebarsTemplates() {
-        let responseData: Response;
 
-        this.processesService.queryProcessFromCard(this.card).pipe(
+        this.businessconfigService.queryProcessFromCard(this.card).pipe(
             takeUntil(this.unsubscribe$),
             switchMap(process => {
-                responseData = process.states[this.card.state].response;
-                this.responseData.emit(responseData);
-                return this.handlebars.executeTemplate(this.detail.templateName, new DetailContext(this.card, this.childCards, this.userContext, responseData));
+                const state = process.extractState(this.card);
+                this._responseData = state.response;
+                this._acknowledgementAllowed = state.acknowledgementAllowed;
+                return this.handlebars.executeTemplate(this.detail.templateName,
+                    new DetailContext(this.card, this.childCards, this._userContext, this._responseData));
             })
         )
             .subscribe(

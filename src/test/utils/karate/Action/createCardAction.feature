@@ -83,3 +83,75 @@ Feature: API - creatCardAction
     And match response.count == 1
     * def statusCode = responseStatus
     * def body = $
+
+  Scenario: Create a card - long format
+
+# Push an action card
+
+    * def getCard =
+    """
+    function() {
+
+      startDate = new Date().valueOf() + 4*60*60*1000;
+	  endDate = new Date().valueOf() + 6*60*60*1000;
+
+        var card =
+
+        {
+            "publisher": "processAction",
+            "processVersion": "1",
+            "process": "processAction",
+            "processInstanceId": "processInstanceId1",
+            "state": "longFormat",
+            "startDate": startDate,
+            "severity": "ACTION",
+            "tags": [
+                "tag1"
+            ],
+            "timeSpans": [
+                {
+                    "start": startDate
+                }
+            ],
+            "title": {
+                "key": "cardFeed.title",
+                "parameters": {
+                    "title": "Test action - Long format"
+                 }
+            },
+            "summary": {
+                "key": "cardFeed.summary",
+                "parameters": {
+                "summary": "Test the action with a long format"
+                }
+            },
+            "recipient": {
+                "type": "UNION",
+                "recipients": [
+                    {
+                        "type": "GROUP",
+                        "identity": "TSO1"
+                    }
+                ],
+
+            },
+            "entityRecipients": ["ENTITY1", "ENTITY2"],
+            "entitiesAllowedToRespond": ["TSO1","ENTITY1", "ENTITY2"],
+            "data": {
+                "data1": "data1 content"
+            }
+        }
+
+	return JSON.stringify(card);
+
+      }
+    """
+    * def card = call getCard
+
+    Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTso
+    And header Content-Type = 'application/json'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1

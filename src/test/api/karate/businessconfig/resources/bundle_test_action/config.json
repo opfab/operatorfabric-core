@@ -3,13 +3,34 @@
   "version": "1",
   "defaultLocale": "fr",
   "templates": [
-    "template1"
+    "template1",
+    "long-card"
   ],
   "csses": [
   ],
   "menuEntries": [
   ],
   "states": {
+    "longFormat": {
+      "response": {
+        "lock": true,
+        "state": "responseState",
+        "btnColor": "RED",
+        "btnText": {
+          "key": "action.text"
+        }
+      },
+      "details": [
+        {
+          "title": {
+            "key": "cardDetails.title"
+          },
+          "templateName": "long-card",
+          "styles": [
+          ]
+        }
+      ]
+    },
     "response_full": {
       "response": {
         "lock": true,
