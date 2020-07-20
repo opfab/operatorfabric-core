@@ -8,7 +8,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
   rabbitmq:
-    container_name: rabbitmq
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
