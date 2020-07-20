@@ -19,6 +19,7 @@ import {takeUntil} from 'rxjs/operators';
 import {TimeService} from '@ofServices/time.service';
 import {Subject} from 'rxjs';
 import { ConfigService} from "@ofServices/config.service";
+import { AppService, PageType } from '@ofServices/app.service';
 
 @Component({
     selector: 'of-card',
@@ -39,7 +40,8 @@ export class CardComponent implements OnInit, OnDestroy {
     constructor(private router: Router,
                 private store: Store<AppState>,
                 private time: TimeService,
-                private  configService: ConfigService
+                private  configService: ConfigService,
+                private _appService: AppService
     ) {
     }
 
@@ -85,6 +87,10 @@ export class CardComponent implements OnInit, OnDestroy {
 
     get i18nPrefix(): string {
         return this._i18nPrefix;
+    }
+
+    isArchivePageType(): boolean {
+        return this._appService.pageType == PageType.ARCHIVE;
     }
 
     ngOnDestroy(): void {

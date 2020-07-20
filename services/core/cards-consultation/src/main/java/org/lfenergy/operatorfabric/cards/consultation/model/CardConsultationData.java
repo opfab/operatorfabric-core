@@ -40,7 +40,7 @@ import java.util.List;
 @Document(collection = "cards")
 public class CardConsultationData implements Card {
 
-    private String uid ;
+    private String uid;
     @Id
     private String id;
     private String parentCardUid;
@@ -94,8 +94,12 @@ public class CardConsultationData implements Card {
     private List<? extends TimeSpan> timeSpans;
     @JsonIgnore
     private List<String> usersAcks;
+    @JsonIgnore
+    private List<String> usersReads;
     @Transient
     private Boolean hasBeenAcknowledged;
+    @Transient
+    private Boolean hasBeenRead;
     
     
 }

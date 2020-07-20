@@ -40,6 +40,8 @@ describe('CardComponent', () => {
 
     beforeEach(async(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
+        let myrout = {... routerSpy};
+        myrout.routerState = { snapshot : {url: "archives"}};
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
@@ -60,7 +62,7 @@ describe('CardComponent', () => {
             declarations: [CardComponent],
             providers: [
                 {provide: store, useClass: Store},
-                {provide: Router, useValue: routerSpy},
+                {provide: Router, useValue: myrout},
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
                 TimeService, I18nService

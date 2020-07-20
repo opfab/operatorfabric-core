@@ -10,6 +10,7 @@ java -jar karate.jar                              \
       cards/getCardSubscription.feature           \
       cards/userCards.feature                     \
       cards/cardsUserAcks.feature                 \
+      cards/cardsUserRead.feature                 \
       cards/userAcknowledgmentUpdateCheck.feature \
       cards/postCardWithNoProcess.feature         \
       cards/postCardWithNoState.feature           \

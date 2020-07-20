@@ -81,6 +81,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         return template.find(query, CardConsultationData.class).map(card -> {
             log.info("Find card " + card.getId());
 			card.setHasBeenAcknowledged(card.getUsersAcks() != null && card.getUsersAcks().contains(currentUserWithPerimeters.getUserData().getLogin()));
+			card.setHasBeenRead(card.getUsersReads() != null && card.getUsersReads().contains(currentUserWithPerimeters.getUserData().getLogin()));
 			return card;
 		});
 

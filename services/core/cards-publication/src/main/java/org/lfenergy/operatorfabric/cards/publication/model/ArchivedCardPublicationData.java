@@ -79,6 +79,8 @@ public class ArchivedCardPublicationData implements Card {
 
     @Transient
     private Boolean hasBeenAcknowledged;
+    @Transient
+    private Boolean hasBeenRead;
     @Indexed
     private String processStateKey;
 

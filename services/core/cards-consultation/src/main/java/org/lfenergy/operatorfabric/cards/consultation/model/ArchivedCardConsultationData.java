@@ -94,6 +94,10 @@ public class ArchivedCardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends TimeSpan> timeSpans;
     
+    @JsonIgnore
     @Transient
     private Boolean hasBeenAcknowledged;
+    @JsonIgnore
+    @Transient
+    private Boolean hasBeenRead;
 }

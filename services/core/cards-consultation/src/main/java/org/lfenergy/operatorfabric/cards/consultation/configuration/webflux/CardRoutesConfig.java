@@ -62,6 +62,7 @@ public class CardRoutesConfig implements UserExtractor {
                             CurrentUserWithPerimeters user = t2.getT1().getT1();
                             CardConsultationData card = t2.getT1().getT2();
                             card.setHasBeenAcknowledged(card.getUsersAcks() != null && card.getUsersAcks().contains(user.getUserData().getLogin()));
+                            card.setHasBeenRead(card.getUsersReads() != null && card.getUsersReads().contains(user.getUserData().getLogin()));
                         })
                         .flatMap(t2 -> {
                             CardConsultationData card = t2.getT1().getT2();

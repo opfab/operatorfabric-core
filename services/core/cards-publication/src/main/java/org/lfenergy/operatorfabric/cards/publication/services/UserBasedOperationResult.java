@@ -7,7 +7,7 @@ import lombok.ToString;
  * User acknowledgement result data
  */
 @ToString
-public class UserAckOperationResult {
+public class UserBasedOperationResult {
 
 	@Getter
 	private boolean cardFound;
@@ -15,13 +15,13 @@ public class UserAckOperationResult {
 	@Getter
 	private Boolean operationDone;
 
-	private UserAckOperationResult(boolean cardFound, Boolean operationDone) {
+	private UserBasedOperationResult(boolean cardFound, Boolean operationDone) {
 		this.cardFound = cardFound;
 		this.operationDone = operationDone;
 	}
 	
-	public static UserAckOperationResult cardNotFound() {
-		return new UserAckOperationResult(false, null);
+	public static UserBasedOperationResult cardNotFound() {
+		return new UserBasedOperationResult(false, null);
 	}
 	
 	public static UserAckOperationResultBuilder cardFound() {
@@ -32,8 +32,8 @@ public class UserAckOperationResult {
 		
 		private UserAckOperationResultBuilder() {}
 
-		public UserAckOperationResult operationDone(boolean operationDone) {
-			return new UserAckOperationResult(true, operationDone);
+		public UserBasedOperationResult operationDone(boolean operationDone) {
+			return new UserBasedOperationResult(true, operationDone);
 		}
 		
 	}

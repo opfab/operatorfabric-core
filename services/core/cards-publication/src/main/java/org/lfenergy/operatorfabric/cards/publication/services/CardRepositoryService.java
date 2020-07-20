@@ -81,28 +81,36 @@ public class CardRepositoryService {
 
     }
 
-	public UserAckOperationResult addUserAck(String name, String cardUid) {
+	public UserBasedOperationResult addUserAck(String name, String cardUid) {
 		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
 				new Update().addToSet("usersAcks", name),CardPublicationData.class);
 		log.debug("added {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
 				cardUid);
-		return toUserAckOperationResult(updateFirst);
+		return toUserBasedOperationResult(updateFirst);
+	}
+	
+	public UserBasedOperationResult addUserRead(String name, String cardUid) {
+		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
+				new Update().addToSet("usersReads", name),CardPublicationData.class);
+		log.debug("added {} occurrence of {}'s userReads in the card with uid: {}", updateFirst.getModifiedCount(),
+				cardUid);
+		return toUserBasedOperationResult(updateFirst);
 	}
 
-	public UserAckOperationResult deleteUserAck(String userName, String cardUid) {
+	public UserBasedOperationResult deleteUserAck(String userName, String cardUid) {
 		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
 				new Update().pull("usersAcks", userName), CardPublicationData.class);
 		log.debug("removed {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
 				cardUid);
-		return toUserAckOperationResult(updateFirst);
+		return toUserBasedOperationResult(updateFirst);
 	}
 	
-	private UserAckOperationResult toUserAckOperationResult(UpdateResult updateResult) {
-		UserAckOperationResult res = null;
+	private UserBasedOperationResult toUserBasedOperationResult(UpdateResult updateResult) {
+		UserBasedOperationResult res = null;
 		if (updateResult.getMatchedCount() == 0) {
-			res = UserAckOperationResult.cardNotFound();
+			res = UserBasedOperationResult.cardNotFound();
 		} else {
-			res = UserAckOperationResult.cardFound().operationDone(updateResult.getModifiedCount() > 0);
+			res = UserBasedOperationResult.cardFound().operationDone(updateResult.getModifiedCount() > 0);
 		}
 		return res;
 	}

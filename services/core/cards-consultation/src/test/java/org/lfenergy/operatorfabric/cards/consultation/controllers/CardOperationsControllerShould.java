@@ -88,7 +88,7 @@ public class CardOperationsControllerShould {
     @Autowired
     private CardRepository repository;
 
-    private CurrentUserWithPerimeters currentUserWithPerimeters, userForUserAckTest;
+    private CurrentUserWithPerimeters currentUserWithPerimeters, userForUserAckAndReadTest;
 
     public CardOperationsControllerShould(){
         User user = new User();
@@ -118,8 +118,8 @@ public class CardOperationsControllerShould {
         entities.add("entity1");
         entities.add("entity2");
         user.setEntities(entities);
-        userForUserAckTest = new CurrentUserWithPerimeters();
-        userForUserAckTest.setUserData(user);
+        userForUserAckAndReadTest = new CurrentUserWithPerimeters();
+        userForUserAckAndReadTest.setUserData(user);
     }
 
     @AfterEach
@@ -133,7 +133,7 @@ public class CardOperationsControllerShould {
         StepVerifier.create(repository.deleteAll()).expectComplete().verify();
         int processNo = 0;
         //create past cards
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"}, new String[]{"rte-operator","some-operator"})))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"}, new String[]{"rte-operator","some-operator"}, new String[]{"rte-operator","some-operator"})))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -141,7 +141,7 @@ public class CardOperationsControllerShould {
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
-        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"}, new String[]{"any-operator","some-operator"})))
+        StepVerifier.create(repository.save(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"}, new String[]{"any-operator","some-operator"}, new String[]{"any-operator","some-operator"})))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -286,35 +286,53 @@ public class CardOperationsControllerShould {
            .verifyComplete();
     }
 
-    //@Test
+    @Test
     public void receiveCardsCheckUserAcks() {
         Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
                 CardOperationsGetParameters.builder()
-                        .currentUserWithPerimeters(userForUserAckTest)
+                        .currentUserWithPerimeters(userForUserAckAndReadTest)
                         .clientId(TEST_ID)
                         .rangeStart(nowMinusThree)
                         .rangeEnd(nowPlusOne)
                         .test(false)
                         .notification(false).build()
         ));
-        StepVerifier.FirstStep<CardOperation> verifier = StepVerifier.create(publisher.map(s -> TestUtilities.readCardOperation(mapper, s)).doOnNext(TestUtilities::logCardOperation));
-        verifier
-                .assertNext(op->{})
-                .assertNext(op->{})
-                .assertNext(op->{
-                	assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
-                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isTrue();
-                })
-                .assertNext(op->{
-                	assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
-                })
-                .assertNext(op->{
-                	assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
-                })
-                .expectComplete()
-                .verify();
+        List<CardOperation> list = publisher.map(s -> TestUtilities.readCardOperation(mapper, s))
+        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCards().get(0).getId()))
+        		.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId()))
+    	.block();
+        
+		assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
+        assertThat(list.get(0).getCards().get(0).getHasBeenAcknowledged()).isTrue();
+        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
+        assertThat(list.get(1).getCards().get(0).getHasBeenAcknowledged()).isFalse();
+        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
+        assertThat(list.get(2).getCards().get(0).getHasBeenAcknowledged()).isFalse();
+    }
+    
+    @Test
+    public void receiveCardsCheckUserReads() {
+        Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
+                CardOperationsGetParameters.builder()
+                        .currentUserWithPerimeters(userForUserAckAndReadTest)
+                        .clientId(TEST_ID)
+                        .rangeStart(nowMinusThree)
+                        .rangeEnd(nowPlusOne)
+                        .test(false)
+                        .notification(false).build()
+        ));
+        
+        List<CardOperation> list = publisher.map(s -> TestUtilities.readCardOperation(mapper, s))
+        		.filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCards().get(0).getId()))
+        		.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId()))
+    	.block();
+        
+		assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
+        assertThat(list.get(0).getCards().get(0).getHasBeenRead()).isTrue();
+        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
+        assertThat(list.get(1).getCards().get(0).getHasBeenRead()).isFalse();
+        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
+        assertThat(list.get(2).getCards().get(0).getHasBeenRead()).isFalse();       
     }
 
     private Runnable createSendMessageTask() {
