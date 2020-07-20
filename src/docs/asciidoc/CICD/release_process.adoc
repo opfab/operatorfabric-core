@@ -138,13 +138,13 @@ IMPORTANT: If you also want the new docker images to be tagged `latest` (as shou
 versions), you should add the keyword `ci_latest` to the merge commit message.
 
 ----
-git tag X.X.X.RELEASE <4>
-git push <5>
-git push origin X.X.X.RELEASE <6>
+git tag X.X.X.RELEASE <1>
+git push <2>
+git push origin X.X.X.RELEASE <3>
 ----
-<4> Tag the commit with the `X.X.X.RELEASE` tag
-<5> Push the commits to update the remote `master` branch
-<6> Push the tag
+<1> Tag the commit with the `X.X.X.RELEASE` tag
+<2> Push the commits to update the remote `master` branch
+<3> Push the tag
 
 . Check that the build is correctly triggered
 +
