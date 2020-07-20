@@ -38,4 +38,4 @@ include::troubleshooting.adoc[leveloffset=+1]
 
 include::keycloak-configuration.adoc[leveloffset=+1]
 
-include::token.adoc[leveloffsets=+1]
+include::token.adoc[leveloffset=+1]
