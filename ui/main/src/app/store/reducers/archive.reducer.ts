@@ -37,6 +37,7 @@ export function reducer(
                 ...state,
                 resultPage: resultPage,
                 loading: false,
+                loaded: true,
                 firstLoading : true
             };
         }
@@ -52,6 +53,7 @@ export function reducer(
         case ArchiveActionTypes.SendArchiveQuery: {
           return {
                 ...state,
+                loaded: false,
                 firstLoading : true
             };
          }

@@ -14,10 +14,18 @@
     </div>
 </div>
 
-<div  [style.display]="(!(loadingIsTrue)) ? 'none' : undefined">
-    <div class="alert alert-info" [style.display]="(!(isEmptyMessage)) ? 'none' : undefined">
-        <h1><label translate>archive.noResult</label></h1>
+<div [style.display]="(!(loadingIsTrue)) ? 'none' : undefined">
+
+    <div class="text-center" *ngIf="!(loaded$|async)">
+        <div class="spinner-border " role="status"><span class="sr-only">Loading...</span></div>
     </div>
+
+    <ng-container *ngIf="loaded$|async">
+        <div class="alert alert-info" [style.display]="(!(isEmptyMessage)) ? 'none' : undefined">
+            <h1><label translate>archive.noResult</label></h1>
+        </div>
+    </ng-container>
+
     <div [style.display]="((isEmptyMessage)) ? 'none' : undefined">
         <div class="row">
             <div class="col-3">
@@ -28,4 +36,9 @@
             </div>
         </div>
     </div>
+
+
+
+
+
 </div>
