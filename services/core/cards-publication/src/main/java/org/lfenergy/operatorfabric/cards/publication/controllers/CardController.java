@@ -11,6 +11,7 @@
 
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
+import org.lfenergy.operatorfabric.aop.process.mongo.models.UserActionTraceData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.CardProcessingService;
@@ -75,7 +76,9 @@ public class CardController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Void> postUserAcknowledgement(Principal principal,
 			@PathVariable("cardUid") String cardUid, ServerHttpResponse response) {
-    	return cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), principal.getName()).doOnNext(result -> {
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+        return cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user.getUserData()).doOnNext(result -> {
     		if (!result.isCardFound()) {
     			response.setStatusCode(HttpStatus.NOT_FOUND);
     		} else if (!result.getOperationDone()) {
@@ -101,5 +104,12 @@ public class CardController {
 			}
 		} ).then();
 	}
+
+    @GetMapping("traces/ack/{cardUid}")
+    @ResponseStatus(HttpStatus.OK)
+    public @Valid Mono<UserActionTraceData> searchTraces(Principal principal, @PathVariable String cardUid){
+        return cardProcessingService.findTraceByCardUid(principal.getName(),cardUid);
+
+    }
 
 }

@@ -28,6 +28,7 @@ include 'tools:swagger-spring-generators'
 include 'tools:generic:utilities'
 include 'tools:spring:spring-utilities'
 include 'tools:spring:spring-mongo-utilities'
+include 'tools:spring:aop-process'
 include 'tools:spring:spring-oauth2-utilities'
 include 'tools:spring:spring-test-utilities'
 include 'tools:generic:test-utilities'
@@ -58,3 +59,5 @@ rootProject.children.each { project ->
     assert project.buildFile.exists()
     assert project.buildFile.isFile()
 }
+include 'aop-process'
+
