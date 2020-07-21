@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.aop.process.mongo.models.UserActionTraceData;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
@@ -28,6 +29,7 @@ import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardRecei
 import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
+import org.lfenergy.operatorfabric.cards.publication.repositories.TraceReposioryForTest;
 import org.lfenergy.operatorfabric.users.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -82,6 +84,9 @@ class CardProcessServiceShould {
 
     @Autowired
     private CardRepositoryForTest cardRepository;
+
+    @Autowired
+    private TraceReposioryForTest traceRepository;
 
     @Autowired
     private ArchivedCardRepositoryForTest archiveRepository;
@@ -540,26 +545,60 @@ class CardProcessServiceShould {
         Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card doesn't contain any ack at the beginning").isNullOrEmpty();
         
         String cardUid = firstCard.getUid();
-        
-        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "aaa").block();
+        user.setLogin("aaa");
+
+        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user).block();
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
         CardPublicationData cardReloaded = cardRepository.findByUid(cardUid).block();
-        Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly an ack by user aaa").containsExactly("aaa");              
-        
-        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "bbb").block();
+        Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly an ack by user aaa").containsExactly("aaa");
+
+        user.setLogin("bbb");
+        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user).block();
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly two acks by users aaa and bbb").containsExactly("aaa","bbb");
         //try to insert aaa again
-        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "aaa").block();
+        user.setLogin("aaa");
+        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user).block();
         Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).as("Expecting no addition because already done").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting  Card after ack processing contains exactly two acks by users aaa(only once) and bbb").containsExactly("aaa","bbb");
     }
-    
+
+
+    @Test
+    void processAddTraceAcknowledgement() {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 1;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.get(0).setUsersAcks(null);
+        cards.get(0).setParentCardUid(null);
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                "The number of registered cards should be '%d' but is " + "'%d' actually",
+                numberOfCards, block).isEqualTo(numberOfCards);
+
+        CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).block();
+        Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card doesn't contain any ack at the beginning").isNullOrEmpty();
+
+        String cardUid = firstCard.getUid();
+        user.setLogin("aaa");
+        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user).block();
+        Assertions.assertThat(UserBasedOperationResult.cardFound().operationDone(true).equals(res));
+        UserActionTraceData trace= cardProcessingService.findTraceByCardUid("aaa",cardUid).block();
+
+        Assertions.assertThat(trace.getAction()).as("Expecting Acknowledgment trace after ack ").isEqualToIgnoringCase("Acknowledgment");
+        Assertions.assertThat(trace.getUserName()).as("Expecting  Acknowledgment trace after ack with user name").isEqualTo("aaa");
+
+
+    }
+
     @Test
     void processDeleteUserAcknowledgement() {
         EasyRandom easyRandom = instantiateRandomCardGenerator();
@@ -581,7 +620,7 @@ class CardProcessServiceShould {
         Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card contains exactly 2 user acks").hasSize(2);
         
         String cardUid = firstCard.getUid();
-        
+
         UserBasedOperationResult res = cardProcessingService.deleteUserAcknowledgement(Mono.just(cardUid), "someUser").block();
         firstCard = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card1 doesn't contain someUser's card acknowledgement").containsExactly("someOtherUser");
@@ -617,24 +656,24 @@ class CardProcessServiceShould {
 
         CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).block();
         Assertions.assertThat(firstCard.getUsersReads()).as("Expecting Card doesn't contain any read at the beginning").isNullOrEmpty();
-        
+
         String cardUid = firstCard.getUid();
-        
+
         UserBasedOperationResult res = cardProcessingService.processUserRead(Mono.just(cardUid), "aaa").block();
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
-        
+
         CardPublicationData cardReloaded = cardRepository.findByUid(cardUid).block();
-        Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting Card after read processing contains exactly an read by user aaa").containsExactly("aaa");              
-        
+        Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting Card after read processing contains exactly an read by user aaa").containsExactly("aaa");
+
         res = cardProcessingService.processUserRead(Mono.just(cardUid), "bbb").block();
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
-        
+
         cardReloaded = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting Card after read processing contains exactly two read by users aaa and bbb").containsExactly("aaa","bbb");
         //try to insert aaa again
         res = cardProcessingService.processUserRead(Mono.just(cardUid), "aaa").block();
         Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).as("Expecting no addition because already done").isTrue();
-        
+
         cardReloaded = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting  Card after read processing contains exactly two read by users aaa(only once) and bbb").containsExactly("aaa","bbb");
     }

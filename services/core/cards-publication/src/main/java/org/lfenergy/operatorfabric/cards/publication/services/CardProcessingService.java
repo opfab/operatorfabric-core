@@ -11,6 +11,8 @@
 package org.lfenergy.operatorfabric.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.aop.process.AopTraceType;
+import org.lfenergy.operatorfabric.aop.process.mongo.models.UserActionTraceData;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
@@ -18,6 +20,7 @@ import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.lfenergy.operatorfabric.cards.publication.services.processors.UserCardProcessor;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -54,6 +57,8 @@ public class CardProcessingService {
     private UserCardProcessor userCardProcessor;
     @Autowired
     private ExternalAppClientImpl externalAppClient;
+    @Autowired
+    private TraceReposiory traceReposiory;
 
     private Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards, Optional<CurrentUserWithPerimeters> user) {
 
@@ -240,14 +245,15 @@ public class CardProcessingService {
         }
     }
 
-	public Mono<UserBasedOperationResult> processUserAcknowledgement(Mono<String> cardUid, String userName) {
-		return cardUid.map(_cardUid -> cardRepositoryService.addUserAck(userName, _cardUid));
+
+	public Mono<UserBasedOperationResult> processUserAcknowledgement(Mono<String> cardUid, User user) {
+		return cardUid.map(uid -> cardRepositoryService.addUserAck(user, uid));
 	}
-	
+
 	public Mono<UserBasedOperationResult> processUserRead(Mono<String> cardUid, String userName) {
-		return cardUid.map(_cardUid -> cardRepositoryService.addUserRead(userName, _cardUid));
+		return cardUid.map(uid -> cardRepositoryService.addUserRead(userName, uid));
 	}
-        
+
     /**
      * Logs card count and elapsed time since window start
      *
@@ -265,7 +271,9 @@ public class CardProcessingService {
 		return cardUid.map(_cardUid -> cardRepositoryService.deleteUserAck(userName, _cardUid));
 	}
 
-	
+    public Mono<UserActionTraceData> findTraceByCardUid(String name, String cardUid) {
+        return traceReposiory.findByCardUidAndActionAndUserName(cardUid, AopTraceType.ACK.getAction(),name);
+    }
 
 	
 }

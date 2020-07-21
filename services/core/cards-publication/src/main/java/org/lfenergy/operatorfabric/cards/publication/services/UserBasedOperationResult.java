@@ -3,6 +3,8 @@ package org.lfenergy.operatorfabric.cards.publication.services;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 /**
  * User acknowledgement result data
  */
@@ -36,5 +38,20 @@ public class UserBasedOperationResult {
 			return new UserBasedOperationResult(true, operationDone);
 		}
 		
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cardFound, operationDone);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		UserBasedOperationResult that = (UserBasedOperationResult) o;
+		return isCardFound() == that.isCardFound() &&
+				Objects.equals(getOperationDone(), that.getOperationDone());
 	}
 }

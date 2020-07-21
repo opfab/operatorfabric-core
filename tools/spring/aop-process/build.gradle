@@ -1,0 +1,5 @@
+dependencies {
+    compile boot.starterAop
+    compile project(':client:users-client-data')
+    compile project(':tools:spring:spring-mongo-utilities')
+}
