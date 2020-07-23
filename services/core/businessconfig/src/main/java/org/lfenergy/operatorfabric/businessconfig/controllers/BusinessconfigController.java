@@ -132,9 +132,11 @@ public class BusinessconfigController implements BusinessconfigApi {
         }
     }
 
-    @DeleteMapping
-    public void clear() throws IOException {
+    @Override
+    public Void clearProcesses(HttpServletRequest request, HttpServletResponse response) throws Exception {
         service.clear();
+        response.setStatus(204);
+        return null;
     }
 
     private ProcessStates getState(HttpServletRequest request, HttpServletResponse response, String processId, String stateName, String version) {

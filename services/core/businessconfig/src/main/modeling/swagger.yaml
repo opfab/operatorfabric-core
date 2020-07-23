@@ -56,6 +56,19 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
+    delete:
+      summary: Delete all existing process configuration data
+      description: Delete all existing process configuration data
+      operationId: clearProcesses
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: OK          
+        '401':
+          description: Authentication required
+        '500':
+          description: Unable to delete processes  
   '/businessconfig/processes/{processId}':
     get:
       summary: Access configuration data for a given process
