@@ -7,6 +7,7 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <table class="table table-dark">
+    <caption class="hidden-caption">List of archived cards selected by process name or by business dates or by active dates </caption>
     <thead>
     <tr>
         <th scope="col" translate >logging.cardType</th>
@@ -18,7 +19,7 @@
     </thead>
     <tbody>
         <tr mdbTableCol *ngFor="let element of results">
-            <td ><i class="fas fa-circle text-sev-{{element.cardType}}"></i></td>
+            <td ><em class="fas fa-circle text-sev-{{element.cardType}}"></em></td>
             <td>{{displayTime(element.businessDate)}}</td>
             <td translate [translateParams]="element.i18nKeyForProcessName.parameters">{{element.i18nKeyForProcessName.key}}</td>
             <td translate [translateParams]="element.i18nKeyForDescription.parameters">{{element.i18nKeyForDescription.key}}</td>

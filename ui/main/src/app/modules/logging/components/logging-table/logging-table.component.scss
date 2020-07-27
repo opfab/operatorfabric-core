@@ -10,3 +10,7 @@
 table {
   text-align: center;
 }
+// not displayed by still read by VoiceOver
+.hidden-caption {
+  visibility: collapse;
+}
