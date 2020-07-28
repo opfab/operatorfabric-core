@@ -121,7 +121,13 @@
     "noResult": "No result"
   },
   "monitoring": {
-    "filters": {"process": "Process"}
+    "filters": {"process": "Process"},
+    "time": "Time",
+    "businessPeriod": "Business Period",
+    "title": "Title",
+    "summary": "Summary",
+    "trigger": "Trigger",
+    "coordinationStatus": "Coordination Status"
   },
   "button": {
     "ok": "OK",
