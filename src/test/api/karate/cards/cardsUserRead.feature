@@ -73,7 +73,7 @@ Feature: CardsUserRead
     And match response.card.uid == uid
 
 
-#make a second acknoledgement to the card with tso2
+#Signal that card has been read card by tso2-operator
     Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
     And header Authorization = 'Bearer ' + authToken2
     And request ''
