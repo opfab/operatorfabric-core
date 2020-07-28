@@ -24,6 +24,7 @@ export class Card {
         readonly endDate: number,
         readonly severity: Severity,
         readonly hasBeenAcknowledged: boolean = false,
+        readonly hasBeenRead: boolean = false,
         readonly process?: string,
         readonly processInstanceId?: string,
         readonly state?: string,

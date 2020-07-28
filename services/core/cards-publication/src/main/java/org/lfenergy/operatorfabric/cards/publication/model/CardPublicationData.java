@@ -108,11 +108,15 @@ public class CardPublicationData implements Card {
     @Singular
     @Indexed
     private List<String> externalRecipients;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonIgnore
     private List<String> usersAcks;
+    @JsonIgnore
+    private List<String> usersReads;
 
     @Transient
     private Boolean hasBeenAcknowledged;
+    @Transient
+    private Boolean hasBeenRead;
     @Indexed
     private String processStateKey;
 

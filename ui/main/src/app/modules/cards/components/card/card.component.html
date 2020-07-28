@@ -17,8 +17,13 @@
                 [translateParams]="lightCard.title.parameters">{{i18nPrefix + lightCard.title.key}}</p>
             <p *ngIf="this.dateToDisplay" class="card-subtitle">({{this.dateToDisplay}})</p>            
         </div>        
-        <div class="ml-auto align-self-center pr-2" *ngIf="lightCard.hasBeenAcknowledged"><em class="fa fa-check"></em></div>
-    </div>    
+        <div class="ml-auto align-self-center pr-2">
+            <div class="d-flex align-items-end flex-column">
+                <div *ngIf="lightCard.hasBeenAcknowledged" class="p-2"><em class="fa fa-check"></em></div>
+                <div *ngIf="!isArchivePageType() && !lightCard.hasBeenRead" class="mt-auto p-2"><em class="fa fa-eye-slash"></em></div>
+              </div>
+        </div>            
+    </div>  
     <div class="d-flex card-body p-0 border-0" *ngIf="open || !open">
         <div class="badge-border rounded-bottom-left bg-sev-{{lightCard.severity.toString()|lowercase}} col-1"></div>
         <div class="card-text p-1">

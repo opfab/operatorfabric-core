@@ -63,6 +63,9 @@ public class LightCardPublicationData implements LightCard {
     
     @Transient
     private Boolean hasBeenAcknowledged;
+    
+    @Transient
+    public Boolean hasBeenRead;
 
     private String parentCardUid;
 

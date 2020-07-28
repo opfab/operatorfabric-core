@@ -66,6 +66,8 @@ public class LightCardConsultationData implements LightCard {
     private List<String> usersAcks;
     @Transient
     private Boolean hasBeenAcknowledged;
+    @Transient
+    private Boolean hasBeenRead;
 
     private String parentCardUid;
 
@@ -106,7 +108,8 @@ public class LightCardConsultationData implements LightCard {
                 .severity(other.getSeverity())
                 .title(I18nConsultationData.copy(other.getTitle()))
                 .summary(I18nConsultationData.copy(other.getSummary()))
-                .hasBeenAcknowledged(other.getHasBeenAcknowledged());
+                .hasBeenAcknowledged(other.getHasBeenAcknowledged())
+                .hasBeenRead(other.getHasBeenRead());
                 
         if(other.getTags()!=null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());

@@ -166,6 +166,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             })
                     })
         }
+        this.markAsRead();
     }
 
     get i18nPrefix() {
@@ -261,6 +262,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 endDate: this.card.endDate,
                 severity: Severity.INFORMATION,
                 hasBeenAcknowledged: false,
+                hasBeenRead: false,
                 entityRecipients: this.card.entityRecipients,
                 externalRecipients: [this.card.publisher],
                 title: this.card.title,
@@ -336,6 +338,25 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             var updatedLighCard = { ... lightCard };
             updatedLighCard.hasBeenAcknowledged = hasBeenAcknowledged;
             this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
+        });
+    }
+
+    markAsRead() {
+        if (this.card.hasBeenRead == false) {
+            this.cardService.postUserCardRead(this.card).subscribe(resp => {
+                if (resp.status == 201 || resp.status == 200) {
+                    this.updateReadOnLightCard(true);                    
+                }
+            });
+        }
+    }
+
+    updateReadOnLightCard(hasBeenRead: boolean) {
+        this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
+        .subscribe((lightCard : LightCard) => {
+            var updatedLighCard = { ... lightCard };
+            updatedLighCard.hasBeenRead = hasBeenRead;
+            this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));    
         });
     }
 

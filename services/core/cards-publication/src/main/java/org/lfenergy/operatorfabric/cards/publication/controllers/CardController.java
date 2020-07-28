@@ -83,6 +83,23 @@ public class CardController {
     		}
 		}).then();
     }
+    
+    /**
+     * POST userCardRead for a card
+     * @param cardUid of the card that has been read
+     */
+    @PostMapping("/userCardRead/{cardUid}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<Void> postUserCardRead(Principal principal,
+			@PathVariable("cardUid") String cardUid, ServerHttpResponse response) {
+    	return cardProcessingService.processUserRead(Mono.just(cardUid), principal.getName()).doOnNext(result -> {
+    		if (!result.isCardFound()) {
+    			response.setStatusCode(HttpStatus.NOT_FOUND);
+    		} else if (!result.getOperationDone()) {
+    			response.setStatusCode(HttpStatus.OK);
+    		}
+		}).then();
+    }
 
     /**
      * DELETE userAcknowledgement for a card to updating that card

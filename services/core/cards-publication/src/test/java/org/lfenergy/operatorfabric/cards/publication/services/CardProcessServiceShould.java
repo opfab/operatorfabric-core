@@ -541,7 +541,7 @@ class CardProcessServiceShould {
         
         String cardUid = firstCard.getUid();
         
-        UserAckOperationResult res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "aaa").block();
+        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "aaa").block();
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
         CardPublicationData cardReloaded = cardRepository.findByUid(cardUid).block();
@@ -582,7 +582,7 @@ class CardProcessServiceShould {
         
         String cardUid = firstCard.getUid();
         
-        UserAckOperationResult res = cardProcessingService.deleteUserAcknowledgement(Mono.just(cardUid), "someUser").block();
+        UserBasedOperationResult res = cardProcessingService.deleteUserAcknowledgement(Mono.just(cardUid), "someUser").block();
         firstCard = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card1 doesn't contain someUser's card acknowledgement").containsExactly("someOtherUser");
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).isTrue();
@@ -600,6 +600,44 @@ class CardProcessServiceShould {
         Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).isTrue();
     }
 
+    @Test
+    void processAddUserRead() {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 1;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.get(0).setUsersReads(null);
+        cards.get(0).setParentCardUid(null);
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                        .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                        "The number of registered cards should be '%d' but is " + "'%d' actually",
+                        numberOfCards, block).isEqualTo(numberOfCards);
+
+        CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).block();
+        Assertions.assertThat(firstCard.getUsersReads()).as("Expecting Card doesn't contain any read at the beginning").isNullOrEmpty();
+        
+        String cardUid = firstCard.getUid();
+        
+        UserBasedOperationResult res = cardProcessingService.processUserRead(Mono.just(cardUid), "aaa").block();
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
+        
+        CardPublicationData cardReloaded = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting Card after read processing contains exactly an read by user aaa").containsExactly("aaa");              
+        
+        res = cardProcessingService.processUserRead(Mono.just(cardUid), "bbb").block();
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
+        
+        cardReloaded = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting Card after read processing contains exactly two read by users aaa and bbb").containsExactly("aaa","bbb");
+        //try to insert aaa again
+        res = cardProcessingService.processUserRead(Mono.just(cardUid), "aaa").block();
+        Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).as("Expecting no addition because already done").isTrue();
+        
+        cardReloaded = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting  Card after read processing contains exactly two read by users aaa(only once) and bbb").containsExactly("aaa","bbb");
+    }
 
     @Test
     void validate_processOk() {

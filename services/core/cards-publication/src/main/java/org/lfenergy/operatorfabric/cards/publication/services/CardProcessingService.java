@@ -240,8 +240,12 @@ public class CardProcessingService {
         }
     }
 
-	public Mono<UserAckOperationResult> processUserAcknowledgement(Mono<String> cardUid, String userName) {
+	public Mono<UserBasedOperationResult> processUserAcknowledgement(Mono<String> cardUid, String userName) {
 		return cardUid.map(_cardUid -> cardRepositoryService.addUserAck(userName, _cardUid));
+	}
+	
+	public Mono<UserBasedOperationResult> processUserRead(Mono<String> cardUid, String userName) {
+		return cardUid.map(_cardUid -> cardRepositoryService.addUserRead(userName, _cardUid));
 	}
         
     /**
@@ -257,7 +261,7 @@ public class CardProcessingService {
         log.debug("{} cards handled in {} ms each (total: {})", count, cardWindowDurationMillis, windowDurationMillis);
     }
 
-	public Mono<UserAckOperationResult> deleteUserAcknowledgement(Mono<String> cardUid, String userName) {
+	public Mono<UserBasedOperationResult> deleteUserAcknowledgement(Mono<String> cardUid, String userName) {
 		return cardUid.map(_cardUid -> cardRepositoryService.deleteUserAck(userName, _cardUid));
 	}
 

@@ -158,6 +158,60 @@ public class CardRoutesShould {
 		                    cardData.getCard().getHasBeenAcknowledged()).isFalse());
     
         }
+        
+        @Test
+        public void findOutCardByUserWithHisOwnRead(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            simpleCard.setUsersReads(Arrays.asList("userWithGroup","some-operator"));
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardData.class).value(cardData ->
+                            assertThat(cardData.getCard().getHasBeenRead()).isTrue());
+    
+        }
+        
+        @Test
+        public void findOutCardByUserWithoutHisOwnRead(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            simpleCard.setUsersReads(Arrays.asList("any-operator","some-operator"));
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardData.class).value(cardData ->
+                            assertThat(cardData.getCard().getHasBeenRead()).isFalse());
+    
+        }
+        
+        @Test
+        public void findOutCardWithoutReads(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+        	simpleCard.setParentCardUid(null);
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardData.class).value(cardData -> assertThat(
+		                    cardData.getCard().getHasBeenRead()).isFalse());
+    
+        }
     }
 
     @Nested
