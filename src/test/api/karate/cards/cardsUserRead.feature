@@ -80,7 +80,7 @@ Feature: CardsUserRead
     When method post
     Then status 201
 
-#get card with user tso1-operator and check containing his ack
+#get card with user tso1-operator and check hasBeenRead is still set to true
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
