@@ -64,7 +64,7 @@ Feature: CardsUserRead
     And match response.card.hasBeenRead == true
     And match response.card.uid == uid
 
-#get card with user tso2-operator and check containing no ack for him
+#get card with user tso2-operator and check hasBeenRead is set to false
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
