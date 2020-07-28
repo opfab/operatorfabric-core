@@ -361,19 +361,19 @@ class GivenAdminUserBusinessconfigControllerShould {
                         .andExpect(status().isNotFound());
             }
 
-        	/*@Nested
+        	@Nested
             @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
             class DeleteContent {
                 @Test
                 void clean() throws Exception {
                     mockMvc.perform(delete("/businessconfig/processes"))
-                            .andExpect(status().isOk());
+                            .andExpect(status().isNoContent());
                     mockMvc.perform(get("/businessconfig/processes"))
                             .andExpect(status().isOk())
                             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                             .andExpect(jsonPath("$", hasSize(0)));
                 }
-            } */ //TODO Fix failing test OC-979
+            }
         	
         }
         
