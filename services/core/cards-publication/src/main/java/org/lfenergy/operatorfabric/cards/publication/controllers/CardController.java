@@ -85,8 +85,8 @@ public class CardController {
     }
     
     /**
-     * POST userAcknowledgement for a card updating the card
-     * @param card Id to create publisher
+     * POST userCardRead for a card
+     * @param cardUid of the card that has been read
      */
     @PostMapping("/userCardRead/{cardUid}")
     @ResponseStatus(HttpStatus.CREATED)
