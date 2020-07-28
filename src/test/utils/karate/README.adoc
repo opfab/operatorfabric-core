@@ -18,7 +18,7 @@ Run the following command lines form this folder.
 java -jar karate.jar myfeature.feature
 ....
 
-The result will be available on the target repository. 
+The result will be available in the `target` repository. 
 
 ### Ready made scripts
 
@@ -51,7 +51,7 @@ This command line open directly the mongo shell.
 
 ### Remove cards and archiveCards collections
 
-The following commands run into the container removes the whole collections of `cards` and `archivedCards`
+The following commands, run into the container, remove the whole collections of `cards` and `archivedCards`
 
 ....
 use operator-fabric
