@@ -49,7 +49,7 @@ Feature: CardsUserRead
     And def uid = response.card.uid
 
 
-#make an acknoledgement to the card with tso1
+#Signal that card has been read card by tso1-operator
     Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request ''
