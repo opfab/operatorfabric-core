@@ -40,7 +40,7 @@ Feature: CardsUserRead
     Then status 201
     And match response.count == 1
     
-#get card with user tso1-operator and check not containing userAcks items
+#get card with user tso1-operator and check it hasn't been read yet
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
