@@ -1,4 +1,0 @@
-docker exec -it test-quality-environment_mongodb_1 mongo --username root --password password --authenticationDatabase admin
-use operator-fabric
-db.cards.remove({})
-db.archivedCards.remove({})
