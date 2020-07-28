@@ -8,7 +8,7 @@ Feature: CardsUserRead
     * def signIn2 = callonce read('../common/./getToken.feature') { username: 'tso2-operator'}
     * def authToken2 = signIn2.authToken
 
-    Scenario: CardsUserAcknowledgement
+    Scenario: CardsUserRead
 
     * def card =
 """
