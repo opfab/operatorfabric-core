@@ -274,195 +274,155 @@ definitions:
           are set
     required:
       - start
+  BaseCard:
+    allOf:    
+    - $ref: '#/definitions/BaseLightCard'
+    - type: object
+      description: >-
+        A Card sums up information about the status of a given process instance of
+        the publishing service
+      properties:
+        deletionDate:
+          $ref: '#/definitions/EpochDate'
+          description: The date the card was deleted
+          readOnly: true      
+        details:
+          type: array
+          description: List of card associated details
+          items:
+            $ref: '#/definitions/Detail'            
+        userRecipients:
+          description: Complete list of user recipients at computation time
+          readOnly: true
+          type: array
+          items:
+            type: string
+        groupRecipients:
+          description: Complete list of group recipients at computation time
+          readOnly: true
+          type: array
+          items:
+            type: string
+        externalRecipients:
+          description: List of  external recipients
+          readOnly: true
+          type: array
+          items:
+            type: string
+        entitiesAllowedToRespond:
+          description: List of entities that have to respond
+          type: array
+          items:
+            type: string
+          example: ["tso1","tso2"]
+        entityRecipients:
+          description: List of entity recipients
+          type: array
+          items:
+            type: string
+          example: ["tso1","tso2"]
+        data:
+          type: object
+          description: Business data
+        #card_type:
+        #  type: string
+      #required: 
+      #    - card_type
+      #discriminator: card_type      
   Card:
-    type: object
-    description: >-
-      A Card sums up information about the status of a given process instance of
-      the publishing service
-    properties:
-      uid:
-        type: string
-        description: Unique card ID
-        readOnly: true
-      id:
-        type: string
-        description: Unique card ID (as defined in the associated process)
-        readOnly: true
-      parentCardUid:
-        type: string
-        description: The id of the parent card (optional)
-        readOnly: true
-      publisher:
-        type: string
-        description: Unique ID of the entity or service publishing the card
-      processVersion:
-        type: string
-        description: Version of the associated process
-      process:
-        type: string
-        description: ID of the associated process
-      processInstanceId:
-        type: string
-        description: ID of the associated process instance
-      state:
-        type: string
-        description: associated process state name
-      publishDate:
-        $ref: '#/definitions/EpochDate'
-        description: The date the card was published (meaning created by the card service)
-        readOnly: true
-      deletionDate:
-        $ref: '#/definitions/EpochDate'
-        description: The date the card was deleted
-        readOnly: true
-      lttd:
-        $ref: '#/definitions/EpochDate'
+    allOf:    
+      - $ref: '#/definitions/BaseCard'
+      - type: object
         description: >-
-          Last time to decide, after this date no action can be triggered on the
-          card
-      startDate:
-        $ref: '#/definitions/EpochDate'
-        description: Card validity start time
-      endDate:
-        $ref: '#/definitions/EpochDate'
-        description: Card validity end time (must be after startDate)
-      severity:
-        $ref: '#/definitions/SeverityEnum'
-        description: Card severity
-      tags:
-        type: array
-        items:
-          type: string
-        description: Tags associated with the card
-      timeSpans:
-        type: array
-        description: List of business time span associated to card
-        items:
-          $ref: '#/definitions/TimeSpan'
-      details:
-        type: array
-        description: List of card associated details
-        items:
-          $ref: '#/definitions/Detail'
-      title:
-        description: Card i18n title
-        $ref: '#/definitions/I18n'
-      summary:
-        description: Card i18n summary
-        $ref: '#/definitions/I18n'
-      recipient:
-        description: Recipient computation rule
-        $ref: '#/definitions/Recipient'
-      userRecipients:
-        description: Complete list of user recipients at computation time
-        readOnly: true
-        type: array
-        items:
-          type: string
-      groupRecipients:
-        description: Complete list of group recipients at computation time
-        readOnly: true
-        type: array
-        items:
-          type: string
-      externalRecipients:
-        description: List of  external recipients
-        readOnly: true
-        type: array
-        items:
-          type: string
-      entitiesAllowedToRespond:
-        description: List of entities that have to respond
-        type: array
-        items:
-          type: string
-        example: ["tso1","tso2"]
-      entityRecipients:
-        description: List of entity recipients
-        type: array
-        items:
-          type: string
-        example: ["tso1","tso2"]
-      data:
-        type: object
-        description: Business data
-      hasBeenAcknowledged:
-        type: boolean
-        description: Is true if the card was acknowledged by current user
-      hasBeenRead:
-        type: boolean
-        description: Is true if the card was read by current user  
-    required:
-      - publisher
-      - process
-      - processVersion
-      - processInstanceId
-      - severity
-      - startDate
-      - title
-      - summary
-      - state
-    example:
-      uid: 12345
-      id: cardIdFromMyProcess
-      publisher: MyService
-      processVersion: 0.0.1
-      process: MyProcess
-      processInstanceId: MyProcess_001
-      state: started
-      publishDate: 1546300800000
-      deletionDate: 1546388200000
-      lttd: 1546387230000
-      startDate: 1546387200000
-      endDate: 1546387250000
-      severity: ACTION
-      tags:
-        - MyService
-        - MyProcess
-        - ACTION
-      actions:
-        - type: URL
-          lockAction: true
-          called: false
-          updateStateBeforeAction: false
-          hidden: true
-          buttonStyle: button.css
-          label:
-            key: myCard.myAction.label
+          A Card sums up information about the status of a given process instance of
+          the publishing service
+        properties: 
+          uid:
+            type: string
+            description: Unique card ID
+          recipient:
+            description: Recipient computation rule
+            $ref: '#/definitions/Recipient'     
+          hasBeenAcknowledged:
+            type: boolean
+            description: Is true if the card was acknowledged by current user
+          hasBeenRead:
+            type: boolean
+            description: Is true if the card was read by current user  
+        example:
+          uid: 12345
+          id: cardIdFromMyProcess
+          publisher: MyService
+          processVersion: 0.0.1
+          process: MyProcess
+          processInstanceId: MyProcess_001
+          state: started
+          publishDate: 1546300800000
+          deletionDate: 1546388200000
+          lttd: 1546387230000
+          startDate: 1546387200000
+          endDate: 1546387250000
+          severity: ACTION
+          tags:
+            - MyService
+            - MyProcess
+            - ACTION
+          actions:
+            - type: URL
+              lockAction: true
+              called: false
+              updateStateBeforeAction: false
+              hidden: true
+              buttonStyle: button.css
+              label:
+                key: myCard.myAction.label
+                parameters:
+                  EN: My actions label
+                  FR: Mon intitule d'actions
+          details:
+            title:
+              key: myCard.title
+              parameters:
+                EN: My card title
+                FR: Mon titre de carte
+            titlePosition: UP
+            titleStyle: myTitleStyle.css
+            templateName: template1
+            styles:
+              - bundleTest.css
+              - otherStyle.css
+          title:
+            key: myservice.myprocess.title
             parameters:
-              EN: My actions label
-              FR: Mon intitule d'actions
-      details:
-        title:
-          key: myCard.title
-          parameters:
-            EN: My card title
-            FR: Mon titre de carte
-        titlePosition: UP
-        titleStyle: myTitleStyle.css
-        templateName: template1
-        styles:
-          - bundleTest.css
-          - otherStyle.css
-      title:
-        key: myservice.myprocess.title
-        parameters:
-          EN: My process name
-          FR: Mon nom de processus
-      summary:
-        key: myservice.myprocess.title.summary
-        parameters:
-          EN: Summary of card content
-          FR: Resume du contenu de la carte
-      recipient:
-        type: UNION
-        recipients:
-          - type: GROUP
-            identity: myGroupA
-          - type: GROUP
-            identity: myGroupB
-          - type: USER
-            identity: aGivenUser
+              EN: My process name
+              FR: Mon nom de processus
+          summary:
+            key: myservice.myprocess.title.summary
+            parameters:
+              EN: Summary of card content
+              FR: Resume du contenu de la carte
+          recipient:
+            type: UNION
+            recipients:
+              - type: GROUP
+                identity: myGroupA
+              - type: GROUP
+                identity: myGroupB
+              - type: USER
+                identity: aGivenUser
+  ArchivedCard:
+    allOf:    
+      - $ref: '#/definitions/BaseCard'
+      - type: object
+        description: >-
+          A Card sums up information about the status of a given process instance of
+          the publishing service
+        properties:
+          id:
+            type: string
+            description: Unique card ID for associated process
+        required:
+          - id
   Subscription:
     type: object
     description: LightCard Subscription object
@@ -477,31 +437,34 @@ definitions:
         type: array
         items:
           type: string
-  LightCard:
+  BaseLightCard:
     type: object
     description: >-
       LightCard bears the essential information of a Card, to be aggregated in
       CardOperations.
     readOnly: true
     properties:
-      uid:
-        type: string
-        description: Unique card ID
       id:
         type: string
-        description: Unique card ID for associated process
+        description: Unique card ID (as defined in the associated process)
+        #description: Unique card ID for associated process
+        #readOnly: true
       publisher:
         type: string
-        description: Publishing service unique ID
+        description: Unique ID of the entity or service publishing the card
+        #description: Publishing service unique ID
       processVersion:
         type: string
-        description: Publishing service version
+        description: Version of the associated process
+        #description: Publishing service version
       process:
         type: string
-        description: associated process name
+        description: ID of the associated process)
+        #description: associated process name
       processInstanceId:
         type: string
         description: Unique process ID of the associated process instance
+        #description: ID of the associated process instance
       state:
         type: string
         description: associated process state name
@@ -516,9 +479,12 @@ definitions:
       endDate:
         $ref: '#/definitions/EpochDate'
         description: Card validity end time
+        #description: Card validity end time (must be after startDate)
       publishDate:
         $ref: '#/definitions/EpochDate'
         description: Publication time of the Card
+        #description: The date the card was published (meaning created by the card service)
+        #readOnly: true
       severity:
         $ref: '#/definitions/SeverityEnum'
         description: Card severity
@@ -538,43 +504,72 @@ definitions:
         description: List of business time span associated to card
         items:
           $ref: '#/definitions/TimeSpan'
-      hasBeenAcknowledged:
-        type: boolean
-        description: Is true if the card was acknoledged by current user
-      hasBeenRead:
-        type: boolean
-        description: Is true if the card was read by current user  
       parentCardUid:
         type: string
-        description: The uid of its parent card if it's a child card
+        description: The id of the parent card (optional)
+        readOnly: true
+        #description: The uid of its parent card if it's a child card
+      #card_type:
+      #    type: string
+      #discriminator: card_type
     required:
-      - uid
-      - id
+      #- card_type
       - processInstanceId
       - startDate
-    example:
-      uid: 12345
-      id: cardIdFromMyProcess
-      publisher: MyService
-      processVersion: 0.0.1
-      processInstanceId: MyProcess_001
-      lttd: 1546387230000
-      startDate: 1546387200000
-      endDate: 1546387250000
-      severity: ACTION
-      tags:
-        - MyService
-        - MyProcess
-      title:
-        key: myservice.myprocess.title
-        parameters:
-          EN: My process name
-          FR: Mon nom de processus
-      summary:
-        key: myservice.myprocess.title.summary
-        parameters:
-          EN: Summary of card content
-          FR: Resume du contenu de la carte
+      - publisher
+      - process
+      - processVersion
+      - severity
+      - title
+      - summary
+      - state         
+  LightCard:
+      allOf:    
+        - $ref: '#/definitions/BaseLightCard'
+        - type: object
+          description: >-
+            LightCard bears the essential information of a Card, to be aggregated in
+            CardOperations.
+          readOnly: true
+          properties:
+            id:
+              type: string
+              description: Unique card ID for associated process
+            uid:
+              type: string
+              description: Unique card ID      
+            hasBeenAcknowledged:
+              type: boolean
+              description: Is true if the card was acknowledged by current user
+            hasBeenRead:
+              type: boolean
+              description: Is true if the card was read by current user  
+          required:
+            - id
+            - uid
+          example:
+            uid: 12345
+            id: cardIdFromMyProcess
+            publisher: MyService
+            processVersion: 0.0.1
+            processInstanceId: MyProcess_001
+            lttd: 1546387230000
+            startDate: 1546387200000
+            endDate: 1546387250000
+            severity: ACTION
+            tags:
+              - MyService
+              - MyProcess
+            title:
+              key: myservice.myprocess.title
+              parameters:
+                EN: My process name
+                FR: Mon nom de processus
+            summary:
+              key: myservice.myprocess.title.summary
+              parameters:
+                EN: Summary of card content
+                FR: Resume du contenu de la carte
   LightCardPage:
     type: object
     description: >-
@@ -876,7 +871,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/Card'
+            $ref: '#/definitions/ArchivedCard'
         '401':
           description: Authentication required
         '403':
