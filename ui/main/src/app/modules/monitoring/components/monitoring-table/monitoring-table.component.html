@@ -27,7 +27,10 @@
         <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
         <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
         <td>{{line.trigger}}</td>
-        <td [ngStyle]="{'background-color': line.coordinationStatus}"></td>
+        <td  translate  > <p class="status"
+                 [ngStyle]="{'background-color': line.coordinationStatusColor, 'color': line.coordinationStatusColor}">.</p>
+            {{line.coordinationStatus}}
+            </td>
         <td>{{line.cardId}}</td>
     </tr>
     </tbody>

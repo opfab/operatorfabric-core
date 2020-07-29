@@ -13,6 +13,15 @@ table {
   color: var(--opfab-lightcard-detail-textcolor);
 }
 
+.status {
+  float: left;
+  width: 10%;
+  height: 80%;
+  margin: 10%;
+  shape-outside: circle();
+  clip-path: circle();
+}
+
 // not displayed by still read by VoiceOver
 .hidden-caption {
   visibility: collapse;
