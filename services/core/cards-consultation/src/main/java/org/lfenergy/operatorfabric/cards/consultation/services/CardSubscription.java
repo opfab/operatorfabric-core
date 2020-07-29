@@ -11,7 +11,6 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.services;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -49,6 +48,7 @@ import java.util.List;
 public class CardSubscription {
     public static final String GROUPS_SUFFIX = "Groups";
     public static final String DELETE_OPERATION = "DELETE";
+    public static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";
     private String userQueueName;
     private String groupQueueName;
     private long current = 0;
@@ -182,7 +182,8 @@ public class CardSubscription {
                 log.info("PUBLISHING message from {}",queueName);
                 emitter.next(messageBody);
             }
-            else {  // In case of ADD or UPDATE, we send a delete card operation (to delete the card from the feed, more information in OC-297)
+            // In case of ADD or UPDATE, we send a delete card operation (to delete the card from the feed, more information in OC-297)
+            else if (! checkIfCardIsIntendedDirectlyForTheUser(messageBody)){
                 String deleteMessage = createDeleteCardMessageForUserNotRecipient(messageBody);
                 if (! deleteMessage.isEmpty())
                     emitter.next(deleteMessage);
@@ -286,9 +287,21 @@ public class CardSubscription {
                 return obj.toJSONString();
             }
         }
-        catch(ParseException e){ log.error("ERROR during received message parsing", e); }
+        catch(ParseException e){ log.error(ERROR_MESSAGE_PARSING, e); }
 
         return "";
+    }
+
+    // Check if the connected user is part of userRecipientsIds
+    boolean checkIfCardIsIntendedDirectlyForTheUser(final String messageBody) {
+        try {
+            JSONObject obj = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(messageBody);
+            JSONArray userRecipientsIdsArray = (JSONArray) obj.get("userRecipientsIds");
+
+            return (userRecipientsIdsArray != null && !Collections.disjoint(Arrays.asList(currentUserWithPerimeters.getUserData().getLogin()), userRecipientsIdsArray));
+        }
+        catch(ParseException e){ log.error(ERROR_MESSAGE_PARSING, e); }
+        return false;
     }
 
     /**
@@ -332,7 +345,7 @@ public class CardSubscription {
                                                          groupRecipientsIdsArray, typeOperation, processStateKey,
                                                          processStateList);
         }
-        catch(ParseException e){ log.error("ERROR during received message parsing", e); }
+        catch(ParseException e){ log.error(ERROR_MESSAGE_PARSING, e); }
         return false;
     }
 

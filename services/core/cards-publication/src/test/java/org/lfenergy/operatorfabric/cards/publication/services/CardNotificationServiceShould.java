@@ -22,6 +22,7 @@ import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardReceiver;
+import org.lfenergy.operatorfabric.cards.publication.model.CardOperationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
@@ -31,7 +32,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -112,5 +116,16 @@ class CardNotificationServiceShould {
         await().pollDelay(1, TimeUnit.SECONDS).until(()->true);
         assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
         assertThat(testCardReceiver.getGroupQueue().size()).isEqualTo(1);
+
+        CardOperationData cardOperationData = testCardReceiver.getGroupQueue().element();
+        List<String> groupRecipientsIds = cardOperationData.getGroupRecipientsIds();
+        assertThat(groupRecipientsIds.size()).isEqualTo(2);
+        assertThat(groupRecipientsIds.contains("mytso")).isTrue();
+        assertThat(groupRecipientsIds.contains("admin")).isTrue();
+
+        List<String> userRecipientsIds = cardOperationData.getUserRecipientsIds();
+        assertThat(userRecipientsIds.size()).isEqualTo(2);
+        assertThat(userRecipientsIds.contains("graham")).isTrue();
+        assertThat(userRecipientsIds.contains("eric")).isTrue();
     }
 }

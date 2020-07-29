@@ -50,6 +50,12 @@ public class CardOperationData implements CardOperation {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> entityRecipientsIds;
 
+    // This attribute is needed to know if we must send a delete card or no (see OC-297 and OC-1052),
+    // in case of a card is sent to a group the user doesn't belong to
+    @Singular
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<String> userRecipientsIds;
+
     /**
      * Class used to encapsulate builder in order to bypass javadoc inability to handle annotation processor generated classes
      */
