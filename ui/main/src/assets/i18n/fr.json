@@ -125,7 +125,7 @@
   "monitoring": {
     "filters": {"process": "Processus"},
     "time": "Date",
-    "businessPeriod": "Business Période",
+    "businessPeriod": "Période métier",
     "title": "Titre",
     "summary": "Résumé",
     "trigger": "Déclencheur",
