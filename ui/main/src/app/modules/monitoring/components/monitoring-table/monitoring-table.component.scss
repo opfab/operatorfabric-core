@@ -7,6 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
+table {
+  text-align: center;
+  background-color: var(--opfab-lightcard-detail-bgcolor);
+  color: var(--opfab-lightcard-detail-textcolor);
+}
+
 // not displayed by still read by VoiceOver
 .hidden-caption {
   visibility: collapse;
