@@ -28,12 +28,13 @@ export function isNumber(value: any): value is number {
     return !isNaN(toInteger(value));
 }
 
-export class DateTimeNgb extends NgbDateParserFormatter {
+export class DateTimeNgb {
 
     /* istanbul ignore next */
     constructor(readonly date?: NgbDateStruct, private time?: NgbTimeStruct) {
-        super();
     }
+
+    
 
     parse(value: string): NgbDateStruct {
         if (value) {
