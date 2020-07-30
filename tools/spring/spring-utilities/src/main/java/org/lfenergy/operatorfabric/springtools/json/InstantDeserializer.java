@@ -12,9 +12,11 @@
 package org.lfenergy.operatorfabric.springtools.json;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.JsonTokenId;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -35,13 +37,19 @@ public class InstantDeserializer extends StdDeserializer<Instant> {
     }
 
     @Override
-    public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Instant deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
 
-        JsonToken t = p.currentToken();
+        switch (parser.getCurrentTokenId()) {
+            case JsonTokenId.ID_START_OBJECT:
+                final ObjectNode node = new ObjectMapper().readValue(parser, ObjectNode.class);
+                return Instant.ofEpochSecond(Long.parseLong(node.get("epochSecond").toString()),Long.parseLong(node.get("nano").toString()));
 
-        if(t == JsonToken.VALUE_NUMBER_INT) {
-            return Instant.ofEpochMilli(p.getLongValue());
-        } else throw new IOException("Expected VALUE_NUMBER_INT token.");
+            case JsonTokenId.ID_NUMBER_INT:
+                return Instant.ofEpochMilli(parser.getLongValue());
+        }
+
+        throw new IOException("Expected VALUE_NUMBER_INT or START_OBJECT token.");
+
 
     }
 }
