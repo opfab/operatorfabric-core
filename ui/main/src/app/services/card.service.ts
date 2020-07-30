@@ -9,8 +9,8 @@
 
 
 import {Injectable} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
-import {CardOperation} from '@ofModel/card-operation.model';
+import {Observable, Subject} from 'rxjs';
+import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {EventSourcePolyfill} from 'ng-event-source';
 import {AuthenticationService} from './authentication/authentication.service';
 import {Card, CardData} from '@ofModel/card.model';
@@ -24,11 +24,10 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {CardSubscriptionClosed, CardSubscriptionOpen} from '@ofActions/cards-subscription.actions';
 import {LineOfLoggingResult} from '@ofModel/line-of-logging-result.model';
-import {map,catchError} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
-import {CardOperationType} from '@ofModel/card-operation.model';
 import {
     AddLightCardFailure,
     HandleUnexpectedError,
@@ -66,28 +65,28 @@ export class CardService {
     }
 
 
-    public initCardSubscription(){
+    public initCardSubscription() {
         this.getCardSubscription()
             .subscribe(
                 operation => {
                     switch (operation.type) {
                         case CardOperationType.ADD:
-                            this.store.dispatch(new LoadLightCardsSuccess({ lightCards: operation.cards }));
+                            this.store.dispatch(new LoadLightCardsSuccess({lightCards: operation.cards}));
                             break;
                         case CardOperationType.DELETE:
-                            this.store.dispatch(new RemoveLightCard({ cards: operation.cardIds }));
+                            this.store.dispatch(new RemoveLightCard({cards: operation.cardIds}));
                             break;
                         default:
                             this.store.dispatch(new AddLightCardFailure(
-                                { error: new Error(`unhandled action type '${operation.type}'`) })
-                            );  
+                                {error: new Error(`unhandled action type '${operation.type}'`)})
+                            );
                     }
-                },(error)=> {
-                this.store.dispatch(new AddLightCardFailure({ error: error }));
+                }, (error) => {
+                    this.store.dispatch(new AddLightCardFailure({error: error}));
                 }
             );
         catchError((error, caught) => {
-            this.store.dispatch(new HandleUnexpectedError({ error: error }));
+            this.store.dispatch(new HandleUnexpectedError({error: error}));
             return caught;
         });
     }
@@ -106,7 +105,7 @@ export class CardService {
                  * Anyway the token will expire long before and the connection will restart
                  */
                 heartbeatTimeout: oneYearInMilliseconds
-            })
+            });
         return Observable.create(observer => {
             try {
                 eventSource.onmessage = message => {
@@ -114,24 +113,25 @@ export class CardService {
                     if (!message) {
                         return observer.error(message);
                     }
-                    if (message.data === "INIT") {
-                        console.log(new Date().toISOString(),`Card subscription initialized`);
+                    if (message.data === 'INIT') {
+                        console.log(new Date().toISOString(), `Card subscription initialized`);
                         this.initSubscription.next();
                         this.initSubscription.complete();
+                    } else {
+                        return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                     }
-                    else return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                 };
                 eventSource.onerror = error => {
                     this.store.dispatch(new CardSubscriptionClosed());
-                    console.error(new Date().toISOString(),'Error occurred in card subscription:', error);
+                    console.error(new Date().toISOString(), 'Error occurred in card subscription:', error);
                 };
                 eventSource.onopen = open => {
                     this.store.dispatch(new CardSubscriptionOpen());
-                    console.log(new Date().toISOString(),`Open card subscription`);
+                    console.log(new Date().toISOString(), `Open card subscription`);
                 };
-             
+
             } catch (error) {
-                console.error(new Date().toISOString(),'an error occurred', error);
+                console.error(new Date().toISOString(), 'an error occurred', error);
                 return observer.error(error);
             }
             return () => {
@@ -145,10 +145,10 @@ export class CardService {
 
     public setSubscriptionDates(rangeStart: number, rangeEnd: number) {
 
-        console.log(new Date().toISOString(),`Set subscription date ${rangeStart} - ${rangeEnd}`);
+        console.log(new Date().toISOString(), 'Set subscription date', new Date(rangeStart), ' -', new Date(rangeEnd));
         this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
-            { rangeStart: rangeStart, rangeEnd: rangeEnd }).subscribe();
+            {rangeStart: rangeStart, rangeEnd: rangeEnd}).subscribe();
 
     }
 
@@ -190,7 +190,7 @@ export class CardService {
             map((page: Page<LightCard>) => {
                 const cards = page.content;
                 const lines = cards.map((card: LightCard) => {
-                    const i18nPrefix = `${card.publisher}.${card.processVersion}.`;
+                    const i18nPrefix = `${card.process}.${card.processVersion}.`;
                     return ({
                         cardType: card.severity.toLowerCase(),
                         businessDate: moment(card.startDate),
@@ -209,7 +209,7 @@ export class CardService {
     }
 
     addPrefix(i18nPrefix: string, initialI18n: I18n): I18n {
-        return { ...initialI18n, key: i18nPrefix + initialI18n.key} as I18n;
+        return {...initialI18n, key: i18nPrefix + initialI18n.key} as I18n;
     }
 
     fetchMonitoringResults(filters: Map<string, string[]>): Observable<Page<LineOfMonitoringResult>> {

@@ -7,13 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MonitoringComponent } from './monitoring.component';
+import {MonitoringComponent} from './monitoring.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
 import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
-import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState, storeConfig} from '@ofStore/index';
 import {ServicesModule} from '@ofServices/services.module';

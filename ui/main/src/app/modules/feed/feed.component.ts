@@ -15,12 +15,12 @@ import {AppState} from '@ofStore/index';
 import {Observable, of} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
-import {catchError, map,delay} from 'rxjs/operators';
+import {catchError, map, delay} from 'rxjs/operators';
 import * as moment from 'moment';
 import { NotifyService } from '@ofServices/notify.service';
-import { ConfigService} from "@ofServices/config.service";
+import { ConfigService} from '@ofServices/config.service';
 import { ApplyFilter } from '@ofStore/actions/feed.actions';
-import { FilterType } from '@ofServices/filter.service';
+import {BUSINESS_DATE_FILTER_INITIALISATION, FilterType} from '@ofServices/filter.service';
 
 @Component({
     selector: 'of-cards',
@@ -39,33 +39,32 @@ export class FeedComponent implements OnInit {
     ngOnInit() {
         this.lightCards$ = this.store.pipe(
             select(feedSelectors.selectSortedFilteredLightCards),
-            delay(0), // Solve error  : "Expression has changed after it was checked" --> See https://blog.angular-university.io/angular-debugging/
+            delay(0), // Solve error  : 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
             map(lightCards => lightCards.filter(lightCard => !lightCard.parentCardUid)),
             catchError(err => of([]))
         );
         this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);
-        this.hideTimeLine =  this.configService.getConfigValue('feed.timeline.hide',false);
-    
+        this.hideTimeLine =  this.configService.getConfigValue('feed.timeline.hide', false);
+
         this.initBusinessDateFilterIfTimelineIsHide();
-        
+
         moment.updateLocale('en', { week: {
             dow: 6, // First day of week is Saturday
             doy: 12 // First week of year must contain 1 January (7 + 6 - 1)
         }});
 
-        if (this.configService.getConfigValue('feed.notify',false)) this.notifyService.requestPermission();
+        if (this.configService.getConfigValue('feed.notify', false)) {
+            this.notifyService.requestPermission();
+        }
 
     }
 
     // if timeline is present , the filter is initialize by the timeline
     private initBusinessDateFilterIfTimelineIsHide() {
 
-        if (this.hideTimeLine) this.store.dispatch(
-            new ApplyFilter({
-                name: FilterType.BUSINESSDATE_FILTER,
-                active: true,
-                status : { start: new Date().valueOf() - 2 * 60 * 60 * 1000, end: new Date().valueOf() + 48 * 60 * 60 * 1000 }
-            }))
+        if (this.hideTimeLine) {
+            this.store.dispatch(new ApplyFilter(BUSINESS_DATE_FILTER_INITIALISATION));
+        }
 
     }
 

@@ -84,7 +84,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
     private _responseData: Response;
-    private _hasPrivilegetoRespond: boolean = false;
+    private _hasPrivilegeToRespond = false;
     private _acknowledgementAllowed: boolean;
     message: Message = { display: false, text: undefined, color: undefined };
 
@@ -106,12 +106,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     // -------------------------- [OC-980] -------------------------- //
     adaptTemplateSize() {
-        let cardTemplate = document.getElementById('div-card-template');
-        let diffWindow = cardTemplate.getBoundingClientRect();
-        let divMsg = document.getElementById('div-detail-msg');
-        let divBtn = document.getElementById('div-detail-btn');
+        const cardTemplate = document.getElementById('div-card-template');
+        const diffWindow = cardTemplate.getBoundingClientRect();
+        const divMsg = document.getElementById('div-detail-msg');
+        const divBtn = document.getElementById('div-detail-btn');
 
-        let cardTemplateHeight = window.innerHeight-diffWindow.top;
+        let cardTemplateHeight = window.innerHeight - diffWindow.top;
         if (divMsg) {
             cardTemplateHeight -= divMsg.scrollHeight + 35;
         }
@@ -132,7 +132,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnInit() {
 
-        if (this._appService.pageType == PageType.FEED) {
+        if (this._appService.pageType === PageType.FEED) {
 
             this._lastCards$ = this.store.select(selectLastCards);
 
@@ -141,14 +141,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         takeUntil(this.unsubscribe$),
                         map(lastCards =>
                                 lastCards.filter(card =>
-                                    card.parentCardUid == this.card.uid &&
+                                    card.parentCardUid === this.card.uid &&
                                     !this.childCards.map(childCard => childCard.uid).includes(card.uid))
                         ),
                         map(childCards => childCards.map(c => this.cardService.loadCard(c.id)))
                     )
                     .subscribe(childCardsObs => {
                         zip(...childCardsObs)
-                            .pipe(takeUntil(this.unsubscribe$),map(cards => cards.map(cardData => cardData.card)))
+                            .pipe(takeUntil(this.unsubscribe$), map(cards => cards.map(cardData => cardData.card)))
                             .subscribe(newChildCards => {
 
                                 const reducer = (accumulator, currentValue) => {
@@ -163,18 +163,18 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
                                 templateGateway.childCards = this.childCards;
                                 templateGateway.applyChildCards();
-                            })
-                    })
+                            });
+                    });
         }
         this.markAsRead();
     }
 
     get i18nPrefix() {
-        return `${this.card.process}.${this.card.processVersion}.`
+        return `${this.card.process}.${this.card.processVersion}.`;
     }
 
-    get isArchivePageType(){
-        return this._appService.pageType == PageType.ARCHIVE;
+    get isArchivePageType() {
+        return this._appService.pageType === PageType.ARCHIVE;
     }
 
     get responseDataParameters(): Map<string> {
@@ -191,21 +191,21 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     get responseDataExists(): boolean {
-        return this._responseData != null && this._responseData != undefined;
+        return this._responseData != null && this._responseData !== undefined;
     }
 
     get isActionEnabled(): boolean {
         if (!this.card.entitiesAllowedToRespond) {
-            console.log("Card error : no field entitiesAllowedToRespond");
+            console.log('Card error : no field entitiesAllowedToRespond');
             return false;
         }
 
-        if (this._responseData != null && this._responseData != undefined) {
+        if (this._responseData != null && this._responseData !== undefined) {
             this.getPrivilegetoRespond(this.card, this._responseData);
         }
 
         return this.card.entitiesAllowedToRespond.includes(this.user.entities[0])
-            && this._hasPrivilegetoRespond;
+            && this._hasPrivilegeToRespond;
     }
 
     getPrivilegetoRespond(card: Card, responseData: Response) {
@@ -214,10 +214,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             if ((perim.process === card.process) && (perim.state === responseData.state)
                 && (this.compareRightAction(perim.rights, RightsEnum.Write)
                     || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
-                this._hasPrivilegetoRespond = true;
+                this._hasPrivilegeToRespond = true;
             }
 
-        })
+        });
     }
 
     compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
@@ -238,10 +238,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     submitResponse() {
 
-        let formData = {};
+        const formData = {};
 
-        var formElement = document.getElementById("opfab-form") as HTMLFormElement;
-        for (let [key, value] of [...new FormData(formElement)]) {
+        const formElement = document.getElementById('opfab-form') as HTMLFormElement;
+        for (const [key, value] of [...new FormData(formElement)]) {
             (key in formData) ? formData[key].push(value) : formData[key] = [value];
         }
 
@@ -270,13 +270,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 data: formData,
                 recipient: this.card.recipient,
                 parentCardUid: this.card.uid
-            }
+            };
 
             this.cardService.postResponseCard(card)
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe(
                     rep => {
-                        if (rep['count'] == 0 && rep['message'].includes('Error')) {
+                        if (rep['count'] === 0 && rep['message'].includes('Error')) {
                             this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG);
                             console.error(rep);
 
@@ -289,10 +289,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG);
                         console.error(err);
                     }
-                )
+                );
 
         } else {
-            (templateGateway.formErrorMsg && templateGateway.formErrorMsg != '') ?
+            (templateGateway.formErrorMsg && templateGateway.formErrorMsg !== '') ?
                 this.displayMessage(templateGateway.formErrorMsg) :
                 this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG);
         }
@@ -307,25 +307,25 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     acknowledge() {
-        if (this.card.hasBeenAcknowledged == true) {
+        if (this.card.hasBeenAcknowledged) {
             this.cardService.deleteUserAcnowledgement(this.card).subscribe(resp => {
-                if (resp.status == 200 || resp.status == 204) {
-                    var tmp = { ... this.card };
+                if (resp.status === 200 || resp.status === 204) {
+                    const tmp = { ... this.card };
                     tmp.hasBeenAcknowledged = false;
                     this.card = tmp;
                     this.updateAcknowledgementOnLightCard(false);
                 } else {
-                    console.error("the remote acknowledgement endpoint returned an error status(%d)", resp.status);
+                    console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
                     this.displayMessage(AckI18nKeys.ERROR_MSG);
                 }
             });
         } else {
             this.cardService.postUserAcnowledgement(this.card).subscribe(resp => {
-                if (resp.status == 201 || resp.status == 200) {
+                if (resp.status === 201 || resp.status === 200) {
                     this.updateAcknowledgementOnLightCard(true);
                     this.closeDetails();
                 } else {
-                    console.error("the remote acknowledgement endpoint returned an error status(%d)", resp.status);
+                    console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
                     this.displayMessage(AckI18nKeys.ERROR_MSG);
                 }
             });
@@ -334,18 +334,18 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
         this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
-        .subscribe((lightCard : LightCard) => {
-            var updatedLighCard = { ... lightCard };
+        .subscribe((lightCard: LightCard) => {
+            const updatedLighCard = { ... lightCard };
             updatedLighCard.hasBeenAcknowledged = hasBeenAcknowledged;
             this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
         });
     }
 
     markAsRead() {
-        if (this.card.hasBeenRead == false) {
+        if ( !this.card.hasBeenRead ) {
             this.cardService.postUserCardRead(this.card).subscribe(resp => {
-                if (resp.status == 201 || resp.status == 200) {
-                    this.updateReadOnLightCard(true);                    
+                if (resp.status === 201 || resp.status === 200) {
+                    this.updateReadOnLightCard(true);
                 }
             });
         }
@@ -353,10 +353,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     updateReadOnLightCard(hasBeenRead: boolean) {
         this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
-        .subscribe((lightCard : LightCard) => {
-            var updatedLighCard = { ... lightCard };
-            updatedLighCard.hasBeenRead = hasBeenRead;
-            this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));    
+        .subscribe((lightCard: LightCard) => {
+            const updatedLightCard = { ... lightCard };
+            updatedLightCard.hasBeenRead = hasBeenRead;
+            this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
         });
     }
 
@@ -364,12 +364,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this._appService.closeDetails(this.currentPath);
     }
 
-    // for certains type of template , we need to reload it to take into account
+    // for certain types of template , we need to reload it to take into account
     // the new css style (for example with chart done with chart.js)
-    private reloadTemplateWhenGlobalStyleChange()
-    {
+    private reloadTemplateWhenGlobalStyleChange() {
         this.store.select(selectGlobalStyleState)
-        .pipe(takeUntil(this.unsubscribe$),skip(1))
+        .pipe(takeUntil(this.unsubscribe$), skip(1))
         .subscribe(style => this.initializeHandlebarsTemplates());
     }
 
@@ -408,7 +407,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
                     setTimeout(() => { // wait for DOM rendering
                         this.reinsertScripts();
-                    },10);
+                    }, 10);
                 }
             );
     }
@@ -432,7 +431,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         }
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

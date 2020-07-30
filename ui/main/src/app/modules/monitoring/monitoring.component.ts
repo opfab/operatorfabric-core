@@ -20,6 +20,8 @@ import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {selectProcesses} from '@ofSelectors/process.selector';
 import {Process} from '@ofModel/processes.model';
+import {ApplyFilter} from '@ofActions/feed.actions';
+import {BUSINESS_DATE_FILTER_INITIALISATION} from '@ofServices/filter.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -60,11 +62,6 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.loadMonitoringResults();
-
-    }
-
-    loadMonitoringResults() {
         this.monitoringResult$ = this.store.pipe(
             takeUntil(this.unsubscribe$),
             select(selectSortedFilteredLightCards),
@@ -108,8 +105,9 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
             ),
             catchError(err => of([]))
         );
-    }
+        this.store.dispatch(new ApplyFilter(BUSINESS_DATE_FILTER_INITIALISATION));
 
+    }
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
