@@ -14,6 +14,7 @@
   "importMappings" : {
     "ActionEnum": "org.lfenergy.operatorfabric.businessconfig.model.ActionEnum",
     "ResponseBtnColorEnum": "org.lfenergy.operatorfabric.businessconfig.model.ResponseBtnColorEnum",
+    "LinkTypeEnum":         "org.lfenergy.operatorfabric.businessconfig.model.LinkTypeEnum",
     "EpochDate": "java.time.Instant",
     "LongInteger": "java.lang.Long"
   }

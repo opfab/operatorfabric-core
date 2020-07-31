@@ -9,7 +9,7 @@
 
 
 import {Component, Input, OnInit} from '@angular/core';
-import {Menu, MenuEntry} from "@ofModel/processes.model";
+import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from "@ofModel/processes.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "@ofStore/index";
 import { ConfigService} from "@ofServices/config.service";
@@ -23,27 +23,18 @@ export class MenuLinkComponent implements OnInit {
 
   @Input() public menu: Menu;
   @Input() public menuEntry: MenuEntry;
-  menusOpenInTabs: boolean;
-  menusOpenInIframes: boolean;
-  menusOpenInBoth: boolean;
-
+  
   constructor(private store: Store<AppState>,private  configService: ConfigService) {
   }
 
+  LynkType = MenuEntryLinkTypeEnum
+
+  public hasLinkType(type: MenuEntryLinkTypeEnum) {
+    return this.menuEntry.linkType === type;
+  }
+
   ngOnInit() {
-    const menuconfig = this.configService.getConfigValue('navbar.businessmenus.type', 'BOTH');
-
-    if (menuconfig == 'TAB') {
-      this.menusOpenInTabs = true;
-    } else if (menuconfig == 'IFRAME') {
-      this.menusOpenInIframes = true;
-    } else {
-      if (menuconfig != 'BOTH') {
-        console.log(new Date().toISOString(),"MenuLinkComponent - Property navbar.businessconfigmenus.type has an unexpected value: " + menuconfig + ". Default (BOTH) will be applied.")
-      }
-      this.menusOpenInBoth = true;
-    }
-
+   
   }
 }
 

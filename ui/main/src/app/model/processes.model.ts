@@ -42,13 +42,23 @@ export const unfouundProcess: Process = new Process('', '', new I18n('process.no
      [], [], [], '', [], null);
 
 export class MenuEntry {
+
+    linkType: MenuEntryLinkTypeEnum = MenuEntryLinkTypeEnum.BOTH;
+
     /* istanbul ignore next */
     constructor(
         readonly id: string,
         readonly label: string,
-        readonly url: string
+        readonly url: string,
+        linkType?: MenuEntryLinkTypeEnum
     ) {
     }
+}
+
+export enum MenuEntryLinkTypeEnum {
+    TAB = 'TAB',
+    IFRAME = 'IFRAME',
+    BOTH = 'BOTH'
 }
 
 export class Menu {

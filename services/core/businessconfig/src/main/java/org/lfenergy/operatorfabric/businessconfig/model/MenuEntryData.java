@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class MenuEntryData implements MenuEntry {
@@ -25,5 +25,5 @@ public class MenuEntryData implements MenuEntry {
     private String id;
     private String url;
     private String label;
-
+    private LinkTypeEnum linkType = LinkTypeEnum.BOTH;
 }
