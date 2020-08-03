@@ -124,7 +124,7 @@ class CardControllerShould extends CardControllerShouldBase {
         Assertions.assertThat(cardRepository.count().block()).isEqualTo(numberOfCards - 1);
 
     }
-
+    
     @Test
     void keepTheCardRepository_Untouched_when_ARandomId_isGiven() {
 
@@ -149,7 +149,7 @@ class CardControllerShould extends CardControllerShouldBase {
         String testedId = randomGenerator.nextObject(String.class);
         this.webTestClient.delete().uri("/cards/" + testedId).accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isNotFound();
 
         Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
 

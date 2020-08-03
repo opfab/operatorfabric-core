@@ -25,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Optional;
 
 /**
  * Synchronous controller
@@ -63,8 +64,12 @@ public class CardController {
 
     @DeleteMapping("/{processInstanceId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteCards(@PathVariable String processInstanceId){
-        cardProcessingService.deleteCard(processInstanceId);
+    public Mono<Void> deleteCards(@PathVariable String processInstanceId, ServerHttpResponse response){
+        Optional<CardPublicationData> deletedCard = cardProcessingService.deleteCard(processInstanceId);
+        return Mono.just(deletedCard).doOnNext(dc -> {
+        if (!dc.isPresent()) {
+        	response.setStatusCode(HttpStatus.NOT_FOUND);
+        }}).then();
     }
     
     /**
