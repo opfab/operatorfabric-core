@@ -22,16 +22,6 @@ export function changeActivationAndStatusOfFilter(filters: Map<FilterType, Filte
     return filter;
 }
 
-// export function alternative(filters: Map<FilterType, Filter>
-//     , payload: { name: FilterType; active: boolean; status: any }): Filter {
-//     const filter = filters.get(payload.name).clone();
-//     return {
-//         ...filter
-//         , active: payload.active
-//         , status: payload.status
-//     };
-// }
-
 export function reducer(
     state: CardFeedState = feedInitialState,
     action: LightCardActions | FeedActions
@@ -124,10 +114,6 @@ export function reducer(
         case FeedActionTypes.ApplySeveralFilters: {
             const filterStatuses = action.payload.filterStatuses;
 
-            // const newFilters = new Map(state.filters);
-            // filterStatuses.forEach(filterStatus => {
-            //     const newFilter = changeActivationAndStatusOfFilter(newFilters, filterStatus);
-            // })
             return {
                 ...state,
                 filters: filterStatuses

@@ -168,7 +168,7 @@ export class CardService {
         return params;
     }
 
-    postResponseCard(card: Card) {
+    postResponseCard(card: Card): any {
         const headers = this.authService.getSecurityHeader();
         return this.httpClient.post<Card>(`${this.cardsPubUrl}/userCard`, card, {headers});
     }

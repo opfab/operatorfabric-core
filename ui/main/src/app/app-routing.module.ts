@@ -28,6 +28,10 @@ const routes: Routes = [
         component: MonitoringComponent
     },
     {
+        path: 'freemessage',
+        loadChildren: () => import('./modules/free-message/free-message.module').then(m => m.FreeMessageModule),
+    },
+    {
         path: archivePath,
         loadChildren: () => import('./modules/archives/archives.module').then(m => m.ArchivesModule),
     },

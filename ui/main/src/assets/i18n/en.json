@@ -6,11 +6,12 @@
     "monitoring": "Monitoring",
     "logout": "Logout",
     "settings": "Settings",
-    "about": "About"
+    "about": "About",
+    "freemessage": "New Card"
   },
   "timeline" : {
-    "businessPeriod": "Business period", 
-    "buttonTitle" : { 
+    "businessPeriod": "Business period",
+    "buttonTitle" : {
       "TR": "RT",
       "J" : "D",
       "7D":"7D",
@@ -135,6 +136,32 @@
     "cancel": "Cancel",
     "reset" : "Reset"
 
+  },
+  "free-message": {
+    "title": "Edit Free Message Notification",
+    "filters": {
+      "severity":  "Severity",
+      "process": "Process",
+      "state": "State",
+      "startDate":  "Start Date",
+      "endDate":  "End Date",
+      "comment": "Comment",
+      "entities": "Recipient"
+    },
+    "options": {
+      "severity": {
+        "ALARM": "Alarm",
+        "ACTION": "Action",
+        "COMPLIANT": "Compliant",
+        "INFORMATION": "Information"
+      }
+    },
+    "prepareCard": "Prepare Card before sending",
+    "confirmSending": "Send the following card?",
+    "accept": "Send",
+    "refuse": "Cancel",
+    "processInstanceId": "Id",
+    "state": "State"
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",

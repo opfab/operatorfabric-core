@@ -1,0 +1,45 @@
+{
+  "id": "FreeMessageExample",
+  "version": "1",
+  "name": {
+    "key": "process.label"
+  },
+  "templates": [
+    "template1",
+    "template2"
+  ],
+  "csses": [
+  ],
+  "states": {
+    "firstState": {
+      "name": {
+        "key": "firstState.label"
+      },
+      "color": "blue",
+      "details": [
+        {
+          "title": {
+            "key": "template1.title"
+          },
+          "templateName": "template1"
+        }
+      ],
+      "acknowledgementAllowed": false
+    },
+    "secondState": {
+      "name": {
+        "key": "secondState.label"
+      },
+      "color": "blue",
+      "details": [
+        {
+          "title": {
+            "key": "template2.title"
+          },
+          "templateName": "template2"
+        }
+      ],
+      "acknowledgementAllowed": false
+    }
+  }
+}

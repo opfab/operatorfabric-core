@@ -8,7 +8,6 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
 import * as moment from 'moment-timezone';
 import {Moment} from 'moment-timezone/moment-timezone';
@@ -62,7 +61,11 @@ export class TimeService {
     }
 
     public toNgBTimestamp(date): string {
-        return (this.parseString(date).valueOf()).toString();
+        return this.toNgBNumberTimestamp(date).toString();
+    }
+
+    public toNgBNumberTimestamp(date): number {
+        return this.parseString(date).valueOf()
     }
 
     public formatDateTime(timestamp: number): string;

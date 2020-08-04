@@ -309,7 +309,7 @@ parameters.
 <!--
 emergency.title=Emergency situation happened on {{date}}. Cause : {{cause}}.
 -->
-{{i18n "emergency.title" date="2018-06-14" cause="Broken Cofee Machine"}}
+{{i18n "emergency.title" date="2018-06-14" cause="Broken Coffee Machine"}}
 ....
 
 outputs

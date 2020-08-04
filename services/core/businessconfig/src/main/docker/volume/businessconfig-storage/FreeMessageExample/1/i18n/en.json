@@ -1,0 +1,19 @@
+{
+  "process": {
+    "label": "Test Process for Free Message",
+    "title": "Free Message Example - instance {{value}}",
+    "summary": "This card is an example of free message using version {{value}}"
+  },
+  "template1": {
+    "title": "Title of Template 1"
+  },
+  "template2": {
+    "title": "Title of Template 2"
+  },
+  "firstState": {
+    "label": "First Step"
+  },
+  "secondState": {
+    "label": "Second Step"
+  }
+}

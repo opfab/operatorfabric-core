@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<div  *ngIf="(loggingResult$|async) as line ; else noResult">
+<div  *ngIf="(loggingResult$|async) as line ; else noResult">
     <of-logging-table [results]="line"></of-logging-table>
 </div>
 

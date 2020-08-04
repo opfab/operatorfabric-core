@@ -9,7 +9,7 @@
 
 
 
-import {Severity} from '@ofModel/light-card.model';
+import {LightCard, Severity} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
@@ -75,4 +75,10 @@ export class CardData {
         readonly card: Card,
         readonly childCards: Card[]
     ) {}
+}
+
+export function fromCardToLightCard(card: Card): LightCard {
+    return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
+        , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.processInstanceId
+        , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardUid);
 }
