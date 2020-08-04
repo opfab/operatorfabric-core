@@ -10,7 +10,7 @@
 
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AppState} from "@ofStore/index";
+import {AppState} from '@ofStore/index';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {UserService} from '@ofServices/user.service';
 import {Observable} from 'rxjs';
@@ -18,14 +18,15 @@ import {
     CreateUserApplication,
     CreateUserApplicationOnFailure,
     CreateUserApplicationOnSuccess,
+    LoadAllEntities,
     UserActions,
     UserActionsTypes,
     UserApplicationRegistered
 } from '@ofStore/actions/user.actions';
 import {AcceptLogIn, AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {User} from '@ofModel/user.model';
-import {AuthenticationService} from "@ofServices/authentication/authentication.service";
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {Entity, User} from '@ofModel/user.model';
+import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 
 
 @Injectable()
@@ -99,4 +100,13 @@ export class UserEffects {
             })
         );
 
+    /**
+     * Query all existing entities from the Users service
+     */
+    @Effect()
+    loadAllEntities: Observable<UserActions> = this.actions$.pipe(
+        ofType(UserActionsTypes.QueryAllEntities),
+        switchMap(() => this.userService.queryAllEntities()),
+        map((allEntities: Entity[]) => new LoadAllEntities({entities: allEntities}))
+    );
 }

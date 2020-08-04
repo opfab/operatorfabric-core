@@ -17,17 +17,14 @@ export class Process {
     constructor(
         readonly id: string,
         readonly version: string,
-        readonly name?: I18n | string,
+        readonly name?: I18n,
         readonly templates?: string[],
         readonly csses?: string[],
         readonly locales?: string[],
         readonly menuLabel?: string,
         readonly menuEntries?: MenuEntry[],
         readonly states?: OfMap<State>
-    ) { if ( !(name instanceof I18n)) {
-            name = new I18n(name);
-    }
-    }
+    ) {}
 
     public extractState(card: Card): State {
         if (!!this.states && !!card.state && this.states[card.state]) {

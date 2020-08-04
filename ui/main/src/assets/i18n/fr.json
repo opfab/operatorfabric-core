@@ -6,24 +6,25 @@
     "monitoring": "Monitoring",
     "logout": "Déconnexion",
     "settings": "Paramètres",
-    "about": "À propos"
+    "about": "À propos",
+    "freemessage": "Nouvelle Carte"
   },
-  "timeline" : {
-    "businessPeriod": "Periode métier", 
-    "buttonTitle" : { 
+  "timeline": {
+    "businessPeriod": "Periode métier",
+    "buttonTitle": {
       "TR": "TR",
-      "J" : "J",
-      "7D":"7J",
-      "W" : "S",
-      "M" : "M",
-      "Y" : "A"
+      "J": "J",
+      "7D": "7J",
+      "W": "S",
+      "M": "M",
+      "Y": "A"
     }
   },
   "feed": {
     "filters": {
       "title": "Filtres",
-      "time":{
-        "title":"Temps",
+      "time": {
+        "title": "Temps",
         "start.label": "Début",
         "end.label": "Fin",
         "active.label": "Actif"
@@ -61,19 +62,19 @@
       "pub": "Triées par date de publication"
     }
   },
-  "login":{
+  "login": {
     "reset": "RaZ",
     "login": "Identifiant",
     "password": "Mot de passe",
-    "submit":{
-      "password":"Se connecter",
+    "submit": {
+      "password": "Se connecter",
       "code": "Se connecter avec {{name}}"
     },
-    "error":{
-      "authenticate":"Identifiant ou mot de passe incorrect",
-      "code":"Mauvais code d'authentification",
-      "unavailable":"Le service d'authentification n'est pas disponible",
-      "unexpected":"Une erreur inattendue a été détectée : {{error}}",
+    "error": {
+      "authenticate": "Identifiant ou mot de passe incorrect",
+      "code": "Mauvais code d'authentification",
+      "unavailable": "Le service d'authentification n'est pas disponible",
+      "unexpected": "Une erreur inattendue a été détectée : {{error}}",
       "disconnected": "Vous avez été deconnecté",
       "token": {
         "invalid": "Le jeton conservé est invalide",
@@ -81,7 +82,7 @@
       }
     }
   },
-  "settings":{
+  "settings": {
     "email": "Adresse email",
     "description": "Description",
     "locale": "Langue",
@@ -110,20 +111,22 @@
     "search": "Rechercher",
     "clear": "Effacer",
     "noResult": "Votre recherche ne correspond à aucun résultat."
-
   },
   "logging": {
-    "filters": {"process": "Service"},
+    "filters": {
+      "process": "Service"
+    },
     "cardType": "Type de Carte",
-  "timeOfAction": "Moment de l'action",
-  "processName": "Nom du process",
-  "description": "Description",
-  "sender": "Envoyeur",
+    "timeOfAction": "Moment de l'action",
+    "processName": "Nom du process",
+    "description": "Description",
+    "sender": "Envoyeur",
     "noResult": "Aucun résultat"
-
   },
   "monitoring": {
-    "filters": {"process": "Processus"},
+    "filters": {
+      "process": "Processus"
+    },
     "time": "Date",
     "businessPeriod": "Période métier",
     "title": "Titre",
@@ -136,6 +139,32 @@
     "ok": "OK",
     "cancel": "Annuler",
     "reset": "Effacer"
+  },
+  "free-message": {
+    "title": "Éditer la notification par Free Message",
+    "filters": {
+      "severity": "Sévérité",
+      "process": "Processus",
+      "state": "État",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "comment": "Commentaire",
+      "entities": "Recipiendaire"
+    },
+    "options": {
+      "severity": {
+        "ALARM": "Alarm",
+        "ACTION": "Action",
+        "COMPLIANT": "Compliant",
+        "INFORMATION": "Information",
+        "processInstanceId": "Identifiant",
+        "state": "État"
+      }
+    },
+    "prepareCard": "Preparation de la carte avant envoi",
+    "confirmSending": "Envoyer la carte suivante ?",
+    "accept": "Envoyer",
+    "refuse": "Annuler"
   },
   "response": {
     "btnTitle": "VALIDER REPONSES",

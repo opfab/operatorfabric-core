@@ -8,7 +8,6 @@
  */
 
 
-
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
@@ -18,8 +17,8 @@ import {AppState} from '@ofStore/index';
 import {takeUntil} from 'rxjs/operators';
 import {TimeService} from '@ofServices/time.service';
 import {Subject} from 'rxjs';
-import { ConfigService} from "@ofServices/config.service";
-import { AppService, PageType } from '@ofServices/app.service';
+import {ConfigService} from "@ofServices/config.service";
+import {AppService, PageType} from '@ofServices/app.service';
 
 @Component({
     selector: 'of-card',
@@ -28,8 +27,9 @@ import { AppService, PageType } from '@ofServices/app.service';
 })
 export class CardComponent implements OnInit, OnDestroy {
 
-    @Input() public open: boolean = false;
+    @Input() public open = false;
     @Input() public lightCard: LightCard;
+    @Input() public displayUnreadIcon = true;
     currentPath: any;
     protected _i18nPrefix: string;
     dateToDisplay: string;

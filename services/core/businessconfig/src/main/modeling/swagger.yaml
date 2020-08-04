@@ -367,11 +367,11 @@ definitions:
         type: string
         description: Identifier referencing this process. It should be unique across the OperatorFabric instance.
       name:
-        $ref: '#/definitions/I18n'
         description: >-
           i18n key for the label of this process
           The value attached to this key should be defined in each XX.json file in the i18n folder of the bundle (where
           XX stands for the locale iso code, for example 'EN')
+        $ref: '#/definitions/I18n'
       version:
         type: string
         description: Process configuration version
@@ -403,8 +403,8 @@ definitions:
               type: boolean
               description: This flag indicates the possibility for a card of this kind to be acknowledged on user basis
             name:
-              $ref: '#/definitions/I18n'
               description: i18n key for UI
+              $ref: '#/definitions/I18n'
             color:
               type: string
               description: use as a display cue in the UI
@@ -476,6 +476,8 @@ definitions:
       parameters:
         EN: My Title
         FR: Mon Titre
+    required:
+      - key
   Detail:
     description: Defines the rendering of card details. Each Detail object corresponds to a tab in the details pane.
     type: object

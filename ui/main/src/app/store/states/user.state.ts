@@ -7,14 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-
+import {Entity} from "@ofModel/user.model";
 
 export interface UserState {
     registered : boolean,
     group : string[]
+    allEntities: Entity[]
 }
 
 export const userInitialState : UserState = {
     registered : false,
-    group : null
+    group : null,
+    allEntities: null
 }
