@@ -28,6 +28,8 @@
               "src/silent-refresh.html"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "node_modules/flatpickr/dist/flatpickr.css",
               "src/assets/styles/style.css",
@@ -106,6 +108,8 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "src/assets/styles/style.css",
               "src/assets/styles/styles.scss"

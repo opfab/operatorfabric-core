@@ -110,7 +110,7 @@ The following example is nearly the same as the previous one except for the reci
 ....
 
 Here, the recipient is an entity and there is no more groups. So all users who has the right perimeter and who are members of this entity will receive the card. More information on perimeter can be found in 
-ifdef::single-page-doc[<<'users_service,user documentation'>>]
+ifdef::single-page-doc[<<users_service,user documentation>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_service, user documentation>>]
 
 

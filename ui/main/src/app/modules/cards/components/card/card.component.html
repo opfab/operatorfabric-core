@@ -20,7 +20,7 @@
         <div class="ml-auto align-self-center pr-2">
             <div class="d-flex align-items-end flex-column">
                 <div *ngIf="lightCard.hasBeenAcknowledged" class="p-2"><em class="fa fa-check"></em></div>
-                <div *ngIf="!isArchivePageType() && !lightCard.hasBeenRead" class="mt-auto p-2"><em class="fa fa-eye-slash"></em></div>
+                <div *ngIf="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead" class="mt-auto p-2"><em class="fa fa-eye-slash"></em></div>
               </div>
         </div>            
     </div>  
@@ -31,4 +31,3 @@
         </div>
     </div>    
 </div>
-    

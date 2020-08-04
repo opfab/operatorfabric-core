@@ -1,0 +1,35 @@
+<h4>Free Message Notification v2</h4>
+<h5>Template 1</h5>
+<p>A free message was sent with the following information:</p>
+
+<div>
+    <ul>
+        <li>uid: {{card.uid}}</li>
+        <li>id: {{card.id}}</li>
+        <li>process: {{card.process}}</li>
+        <li>processInstanceId: {{card.processInstanceId}}</li>
+        <li>processVersion: {{card.processVersion}}</li>
+        <li>state: {{card.state}}</li>
+        <li>severity: {{card.severity}}</li>
+        <li>publishDate: {{dateFormat card.publishDate format="DD/MM/YYYY HH:mm:ss"}} ({{card.publishDate}})</li>
+        <li>publisher: {{card.publisher}}</li>
+        <li>processVersion: {{card.processVersion}}</li>
+        <li>state: {{card.state.name}}</li>
+        <li>startDate: {{dateFormat card.startDate format="DD/MM/YYYY HH:mm:ss"}} ({{card.startDate}})</li>
+        <li>endDate: {{dateFormat card.endDate format="DD/MM/YYYY HH:mm:ss"}} ({{card.endDate}})</li>
+        <li>title (key): {{card.title.key}}</li>
+    </ul>
+
+    <p>Entity Recipients:</p>
+    <ul>
+        {{#each card.entityRecipients}}
+            <li>{{this}} </li>
+        {{/each}}
+    </ul>
+
+</div>
+<div>
+    Comment:
+    <p>{{card.data.comment}}</p>
+</div>
+

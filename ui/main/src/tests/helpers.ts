@@ -72,15 +72,6 @@ export function getRandomMenus(): Menu[] {
     return result;
 }
 
-export function getRandomBusinessconfig(): Process[] {
-    let result: Process[] = [];
-    let businessconfigCount = getPositiveRandomNumberWithinRange(1,3);
-    for (let i=0;i<businessconfigCount;i++){
-        result.push(getOneRandomProcess());
-    }
-    return result;
-}
-
 export function getOneRandomProcess(processTemplate?:any): Process {
     processTemplate=processTemplate?processTemplate:{};
     let entries:MenuEntry[]=[];
@@ -93,7 +84,6 @@ export function getOneRandomProcess(processTemplate?:any): Process {
             MenuEntryLinkTypeEnum.BOTH
         ))
     }
-    let processes= new OfMap();
     let states = new OfMap();
     let stateCount = getPositiveRandomNumberWithinRange(1,3);
     for(let j=0; j<stateCount;j++){

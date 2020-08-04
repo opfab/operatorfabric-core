@@ -36,7 +36,7 @@ export class LightCard {
 }
 
 export enum Severity {
-    ALARM = 'ALARM', ACTION = 'ACTION', INFORMATION = 'INFORMATION', COMPLIANT = 'COMPLIANT'
+    ALARM = 'ALARM', ACTION = 'ACTION', COMPLIANT = 'COMPLIANT', INFORMATION = 'INFORMATION'
 }
 
 export function severityOrdinal(severity: Severity) {
