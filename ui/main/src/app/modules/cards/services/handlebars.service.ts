@@ -48,6 +48,10 @@ export class HandlebarsService {
         this.registerBool();
         this.registerNow();
         this.registerJson();
+        this.registerKeyValue();
+        this.registerToBreakage();
+        this.registerArrayContains();
+        this.registerTimes();
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale))
     }
 
@@ -288,6 +292,50 @@ export class HandlebarsService {
     private registerPreserveSpace() {
         Handlebars.registerHelper("preserveSpace", function (value, options) {
             return value.replace(/ /g, '\u00A0')
+        });
+    }
+
+    private registerArrayContains() {
+        Handlebars.registerHelper('arrayContains', function(arr, value, options) {
+            return arr.includes(value);
+        });
+    }
+
+    private registerTimes() {
+        Handlebars.registerHelper('times', function(n, block) {
+            var accum = '';
+            for(var i = 0; i < n; ++i)
+                accum += block.fn(i);
+            return accum;
+        });
+    }
+
+    private registerToBreakage() {
+        Handlebars.registerHelper('toBreakage', function (word, breakage, options) {
+            switch (breakage) {
+                case 'lowercase':
+                    return word.toLowerCase();
+                default:
+                    console.error(`Invalid parameter ${breakage} for the toBreakage helper`);
+                    return 'ERROR';
+            }
+        });
+    }
+
+    private registerKeyValue() {
+        Handlebars.registerHelper('keyValue', function (obj, options) {
+            var buffer, key;
+            buffer = "";
+            for (key in obj) {
+                if (!Object.hasOwnProperty.call(obj, key)) {
+                    continue;
+                }
+                buffer += options.fn({
+                    key: key,
+                    value: obj[key]
+                }) || '';
+            }
+            return buffer;
         });
     }
 }
