@@ -60,7 +60,14 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And match response.card.hasBeenAcknowledged == true
     And match response.card.uid == uid
 
-    
+#get card with user tso1-operator and check containing his ack
+      Given url opfabPublishCardUrl + 'cards/traces/ack/' + uid
+      And header Authorization = 'Bearer ' + authToken
+      When method get
+      Then status 200
+      And match response.userName == "tso1-operator"
+      And match response.action == "Acknowledgment"
+
 
     * def cardUpdated =
 """

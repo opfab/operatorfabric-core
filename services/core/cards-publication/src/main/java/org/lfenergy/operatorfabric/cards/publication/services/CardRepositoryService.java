@@ -14,6 +14,7 @@ import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -81,9 +82,9 @@ public class CardRepositoryService {
 
     }
 
-	public UserBasedOperationResult addUserAck(String name, String cardUid) {
+	public UserBasedOperationResult addUserAck(User user, String cardUid) {
 		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
-				new Update().addToSet("usersAcks", name),CardPublicationData.class);
+				new Update().addToSet("usersAcks", user.getLogin()),CardPublicationData.class);
 		log.debug("added {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
 				cardUid);
 		return toUserBasedOperationResult(updateFirst);
