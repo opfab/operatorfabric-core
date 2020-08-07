@@ -338,6 +338,25 @@ definitions:
         description: >-
           i18n key for the label of this menu item.
           The value attached to this key should be defined in each XX.json file in the i18n folder of the bundle (where XX stands for the locale iso code, for example 'EN')
+      linkType:
+        $ref: '#/definitions/LinkTypeEnum'
+        default: BOTH
+        description: link type
+  
+  LinkTypeEnum:
+    type: string    
+    enum:
+      - TAB
+      - IFRAME
+      - BOTH
+    description: >-
+      Defines how business menu links are displayed in the navigation bar and how
+      they open. Possible values:
+      * TAB: Only a text link is displayed, and clicking it opens the link in a new tab.
+      * IFRAME: Only a text link is displayed, and clicking it opens the link in an iframe in the main content zone below
+        the navigation bar.
+      * BOTH: Both a text link and a little arrow icon are displayed. Clicking the text link opens the link in an iframe
+        while clicking the icon opens in a new tab.
 
   Process:
     type: object

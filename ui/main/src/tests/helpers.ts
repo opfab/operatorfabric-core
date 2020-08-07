@@ -10,7 +10,7 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
-import {Process, State, Menu, MenuEntry} from '@ofModel/processes.model';
+import {Process, State, Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/processes.model';
 import {Card, Detail, TitlePosition} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Map as OfMap, Map} from '@ofModel/map';
@@ -51,7 +51,8 @@ export function getOneRandomMenu(): Menu {
         entries.push(new MenuEntry(
             getRandomAlphanumericValue(3, 10),
             getRandomAlphanumericValue(3, 10),
-            getRandomAlphanumericValue(3, 10)
+            getRandomAlphanumericValue(3, 10),
+            MenuEntryLinkTypeEnum.BOTH
             )
         );
     }
@@ -88,7 +89,8 @@ export function getOneRandomProcess(processTemplate?:any): Process {
         entries.push(new MenuEntry(
             getRandomAlphanumericValue(3,10),
             getRandomAlphanumericValue(3,10),
-            getRandomAlphanumericValue(3,10)
+            getRandomAlphanumericValue(3,10),
+            MenuEntryLinkTypeEnum.BOTH
         ))
     }
     let processes= new OfMap();

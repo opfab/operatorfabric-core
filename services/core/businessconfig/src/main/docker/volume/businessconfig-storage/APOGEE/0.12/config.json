@@ -8,7 +8,7 @@
     "operation"
   ],
   "menuEntries": [
-    {"id": "uid test 0","url": "https://opfab.github.io/whatisopfab/","label": "menu.first"}
+    {"id": "uid test 0","url": "https://opfab.github.io/whatisopfab/","label": "menu.first", "linkType": "BOTH"}
   ],
   "csses": [
     "tabs",

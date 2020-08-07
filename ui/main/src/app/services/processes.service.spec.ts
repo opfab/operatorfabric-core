@@ -22,7 +22,7 @@ import * as _ from 'lodash';
 import {LightCard} from '@ofModel/light-card.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {GuidService} from '@ofServices/guid.service';
-import {Menu, MenuEntry, Process} from '@ofModel/processes.model';
+import {Menu, MenuEntry, Process, MenuEntryLinkTypeEnum} from '@ofModel/processes.model';
 import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
 import {UpdateTranslation} from '@ofActions/translate.actions';
@@ -109,12 +109,12 @@ describe('Processes Services', () => {
             calls[0].flush([
                 new Process(
                     'process1', '1', 'process1.label', [], [], [], 'process1.menu.label',
-                    [new MenuEntry('id1', 'label1', 'link1'),
-                        new MenuEntry('id2', 'label2', 'link2')]
+                    [new MenuEntry('id1', 'label1', 'link1', MenuEntryLinkTypeEnum.BOTH),
+                        new MenuEntry('id2', 'label2', 'link2', MenuEntryLinkTypeEnum.BOTH)]
                 ),
                 new Process(
                     'process2', '1', 'process2.label', [], [], [], 'process2.menu.label',
-                    [new MenuEntry('id3', 'label3', 'link3')]
+                    [new MenuEntry('id3', 'label3', 'link3', MenuEntryLinkTypeEnum.BOTH)]
                 )
             ]);
         });
