@@ -231,9 +231,9 @@ public class CardProcessingService {
         cardPublicationData.forEach(x->deleteCard(x.getId()));
     }
 
-    public void deleteCard(String processInstanceId) {
-
+    public Optional<CardPublicationData> deleteCard(String processInstanceId) {
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(processInstanceId);
+        Optional<CardPublicationData> deletedCard = Optional.ofNullable(cardToDelete);
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
             cardRepositoryService.deleteCard(cardToDelete);
@@ -241,8 +241,8 @@ public class CardProcessingService {
             if(childCard.isPresent()){
                 childCard.get().forEach(x->deleteCard(x.getId()));
             }
-
         }
+        return deletedCard;
     }
 
 

@@ -97,6 +97,11 @@ Feature: Cards
     When method delete
     Then status 200
 
+# delete card
+    Given url opfabPublishCardUrl + 'cards/not_existing_card_id'
+    When method delete
+    Then status 404
+
 
   Scenario: Post two cards in one request
 
