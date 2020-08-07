@@ -8,7 +8,6 @@
  */
 
 
-
 import {LightCard} from './light-card.model';
 
 export class CardOperation implements CardOperation {
@@ -22,9 +21,9 @@ export class CardOperation implements CardOperation {
     ) {
     }
 
-    static convertTypeIntoEnum(key:string, value:string){
-        if(key === 'type'){
-            return CardOperationType[value]
+    static convertTypeIntoEnum(key: string, value: string) {
+        if (key === 'type') {
+            return CardOperationType[value];
         }
         return value;
     }
@@ -32,5 +31,5 @@ export class CardOperation implements CardOperation {
 }
 
 export enum CardOperationType {
-    ADD , UPDATE, DELETE
+    ADD, UPDATE, DELETE
 }

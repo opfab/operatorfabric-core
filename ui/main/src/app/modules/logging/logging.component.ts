@@ -46,7 +46,7 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
                  */
                 return Array.prototype.map.call(allProcesses, (proc: Process) => {
                     const id = proc.id;
-                    return{value: id, label: proc.name};
+                    return{value: id, label: proc.name, i18nPrefix: `${id}.${proc.version}`};
                 });
             })
         );
