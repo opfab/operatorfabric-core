@@ -385,6 +385,89 @@ outputs :
 </ul>
 ....
 
+[[arrayContains]]
+==== arrayContains
+
+Verify if an array contains a specified element. If the array does contain the element, it returns true. Otherwise, it returns false.
+
+....
+<p {{#if (arrayContains colors 'red')}}class="text-danger"{{/if}}>test</p>
+....
+
+If the colors array contains 'red', the output is:
+
+....
+<p class="text-danger">test</p>
+....
+
+[[times]]
+==== times
+
+Allows to perform the same action a certain number of times. Internally, this uses a for loop.
+
+....
+{{#times 3}}
+  <p>test</p>
+{{/times}}
+....
+
+outputs :
+
+....
+<p>test</p>
+<p>test</p>
+<p>test</p>
+....
+
+[[toBreakage]]
+==== toBreakage
+
+Change the breakage of a string. The arguments that you can specify are:
+
+* lowercase => The string will be lowercased
+* uppercase => The string will be uppercased
+
+....
+{{toBreakage key 'lowercase'}}s
+....
+
+If the value of the key variable is "TEST", the output will be:
+
+....
+tests
+....
+
+[[keyValue]]
+==== keyValue
+
+This allows to traverse a map.
+
+Notice that this should normally be feasible by using the built-in each helper, but a client was having some troubles using it so we added this custom helper.
+
+....
+{{#keyValue studentGrades}}
+  <p>{{key}}: {{value}}</p>
+{{/keyValue}}
+....
+
+If the value of the studentGrades map is:
+
+....
+{
+  'student1': 15,
+  'student2': 12,
+  'student3': 9
+}
+....
+
+The output will be:
+
+....
+<p>student1: 15</p>
+<p>student2: 12</p>
+<p>student3: 9</p>
+....
+
 == Charts 
 
 The library https://www.chartjs.org/[charts.js] is integrate in operator fabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_api_test[src/test/utils/karate/businessconfig/resources/bundle_test_api]).
