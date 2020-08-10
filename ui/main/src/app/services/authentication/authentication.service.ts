@@ -88,7 +88,7 @@ export class AuthenticationService {
      */
     assignConfigurationProperties(oauth2Conf) {
         this.clientId = _.get(oauth2Conf, 'oauth2.client-id', null);
-        this.delegateUrl = _.get(oauth2Conf, 'oauth2.flow.delagate-url', null);
+        this.delegateUrl = _.get(oauth2Conf, 'oauth2.flow.delegate-url', null);
         this.loginClaim = _.get(oauth2Conf, 'jwt.login-claim', 'sub');
         this.givenNameClaim = _.get(oauth2Conf, 'jwt.given-name-claim', 'given_name');
         this.familyNameClaim = _.get(oauth2Conf, 'jwt.family-name-claim', 'family_name');
