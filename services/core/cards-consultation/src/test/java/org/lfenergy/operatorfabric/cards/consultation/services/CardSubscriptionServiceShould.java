@@ -199,6 +199,22 @@ public class CardSubscriptionServiceShould {
     }
 
     @Test
+    public void testCheckIfCardIsIntendedDirectlyForTheUser() {
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
+
+        String messageBody1 = "{\"userRecipientsIds\":[\"othertestuser1\", \"testuser\"]}";  //true
+        String messageBody2 = "{\"userRecipientsIds\":[\"othertestuser2\", \"othertestuser3\"]}";  //false
+
+        String messageBody3 = "{\"userRecipientsIds\":[]}";    //false
+        String messageBody4 = "{}";    //false
+
+        Assertions.assertThat(subscription.checkIfCardIsIntendedDirectlyForTheUser(messageBody1)).isTrue();
+        Assertions.assertThat(subscription.checkIfCardIsIntendedDirectlyForTheUser(messageBody2)).isFalse();
+        Assertions.assertThat(subscription.checkIfCardIsIntendedDirectlyForTheUser(messageBody3)).isFalse();
+        Assertions.assertThat(subscription.checkIfCardIsIntendedDirectlyForTheUser(messageBody4)).isFalse();
+    }
+
+    @Test
     public void testCreateDeleteCardMessageForUserNotRecipient(){
         CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
 

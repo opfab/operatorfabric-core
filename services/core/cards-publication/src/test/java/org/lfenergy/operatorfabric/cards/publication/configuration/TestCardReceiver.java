@@ -14,6 +14,7 @@ package org.lfenergy.operatorfabric.cards.publication.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.model.CardOperation;
+import org.lfenergy.operatorfabric.cards.publication.model.CardOperationData;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ import java.util.Queue;
 @Slf4j
 public class TestCardReceiver {
 
-    Queue<CardOperation> groupQueue = new LinkedList<>();
-    Queue<CardOperation> ericQueue = new LinkedList<>();
+    Queue<CardOperationData> groupQueue = new LinkedList<>();
+    Queue<CardOperationData> ericQueue = new LinkedList<>();
     private ObjectMapper mapper;
 
     @Autowired
@@ -45,7 +46,7 @@ public class TestCardReceiver {
     public void receiveGroup(Message message) throws IOException {
         String cardString = new String(message.getBody());
         log.info("receiving group card");
-        CardOperation card = mapper.readValue(cardString, CardOperation.class);
+        CardOperationData card = mapper.readValue(cardString, CardOperationData.class);
         groupQueue.add(card);
     }
 
@@ -53,7 +54,7 @@ public class TestCardReceiver {
     public void receiveUser(Message message) throws IOException {
         String cardString = new String(message.getBody());
         log.info("receiving user card");
-        CardOperation card = mapper.readValue(cardString, CardOperation.class);
+        CardOperationData card = mapper.readValue(cardString, CardOperationData.class);
         ericQueue.add(card);
     }
 
@@ -63,11 +64,11 @@ public class TestCardReceiver {
         ericQueue.clear();
     }
 
-    public Queue<CardOperation> getGroupQueue() {
+    public Queue<CardOperationData> getGroupQueue() {
         return groupQueue;
     }
 
-    public Queue<CardOperation> getEricQueue() {
+    public Queue<CardOperationData> getEricQueue() {
         return ericQueue;
     }
 }
