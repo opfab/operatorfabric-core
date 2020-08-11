@@ -89,7 +89,7 @@
     "oauth2": {
       "client-id": "opfab-client",
       "flow": {
-        "delagate-url": "http://localhost:89/auth/realms/dev",
+        "delegate-url": "http://localhost:89/auth/realms/dev",
         "mode": "IMPLICIT",
         "provider": "Opfab Keycloak"
       }

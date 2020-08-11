@@ -103,7 +103,7 @@ Nginx web server serves this file. OperatorFabric creates and uses a custom Dock
 For OAuth2 security concerns into this file, there are two ways to configure it, based on the Oauth2 chosen flow.
 There are several common properties:
 
-- `security.realm-url`: OAuth2 provider realm under which the OpertaroFabric client is declared;
+- `security.provider-realm`: OAuth2 provider realm under which the OpertaroFabric client is declared;
 - `security.provider-url`: url of the keycloak server instance.
 - `security.logout-url`: url used when a user is logged out of the UI;
 - `security.oauth2.flow.provider`: name of the OAuth2 provider;

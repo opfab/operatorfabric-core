@@ -42,7 +42,7 @@ The properties lie in the `web-ui.json`.The following table describes their mean
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.security.realm-url||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
+|operatorfabric.security.provider-realm||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
 |operatorfabric.security.provider-url||yes|The keycloak server instance
 |operatorfabric.security.logout-url||yes
 a|The keycloak logout URL. Is a composition of:
