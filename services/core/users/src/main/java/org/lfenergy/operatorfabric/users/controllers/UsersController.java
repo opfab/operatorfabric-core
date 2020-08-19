@@ -174,6 +174,24 @@ public class UsersController implements UsersApi {
         return Collections.emptyList();
     }
 
+    @Override
+    public Void deleteUser(HttpServletRequest request, HttpServletResponse response, String login) throws Exception{
+
+        //Retrieve user from repository for login, throwing an error if login is not found
+        UserData foundUser = userRepository.findById(login).orElseThrow(()->new ApiErrorException(
+                ApiError.builder()
+                        .status(HttpStatus.NOT_FOUND)
+                        .message(String.format(USER_NOT_FOUND_MSG, login))
+                        .build()
+        ));
+
+        if (foundUser != null) {
+            publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), foundUser.getLogin()));
+            userRepository.delete(foundUser);
+        }
+        return null;
+    }
+
     private UserData findUserOrThrow(String login) {
         return userRepository.findById(login).orElseThrow(
                 ()-> new ApiErrorException(

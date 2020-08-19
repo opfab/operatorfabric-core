@@ -363,6 +363,31 @@ paths:
           description: Authentication required
         '403':
           description: Authenticated users who are not admins can only update their own data
+    delete:
+      tags:
+        - users
+      summary: Remove user
+      description: Remove a user
+      operationId: deleteUser
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: login
+          description: User login
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Deleted
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required user not found
   '/users/{login}/settings':
     get:
       tags:

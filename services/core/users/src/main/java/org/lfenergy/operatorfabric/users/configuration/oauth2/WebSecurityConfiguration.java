@@ -40,6 +40,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static final String PERIMETERS_PATH = "/perimeters/**";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String IS_ADMIN_OR_OWNER = "hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)";
+    public static final String IS_ADMIN_AND_NOT_OWNER = "hasRole('ADMIN') and ! @webSecurityChecks.checkUserLogin(authentication,#login)";
     @Autowired
     WebSecurityChecks webSecurityChecks;
 
@@ -64,6 +65,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, USER_PATH).access(IS_ADMIN_OR_OWNER)
                 .antMatchers(HttpMethod.PUT, USER_PATH).access(IS_ADMIN_OR_OWNER)
+                .antMatchers(HttpMethod.DELETE, USER_PATH).access(IS_ADMIN_AND_NOT_OWNER)
                 .antMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
                 .antMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)
                 .antMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER)

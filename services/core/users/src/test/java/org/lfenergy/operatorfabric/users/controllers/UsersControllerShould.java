@@ -35,6 +35,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +44,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * <p></p>
@@ -649,6 +651,67 @@ class UsersControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
         }
+
+        @Test
+        void deleteUserWithNotFoundError() throws Exception {
+
+            mockMvc.perform(get("/users/unknownUserSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownUserSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(delete("/users/unknownUserSoFar")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownUserSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(get("/users/unknownUserSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(UsersController.USER_NOT_FOUND_MSG, "unknownUserSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+        }
+
+        @Test
+        void deleteUserWithErrorForbiddenToDeleteOneself() throws Exception {
+            mockMvc.perform(delete("/users/testAdminUser")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isForbidden())
+            ;
+        }
+
+        @Test
+        void deleteUser() throws Exception {
+            List<UserData> pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            assertThat(pythons.size()).isEqualTo(2);
+
+            List<UserData> wanda = userRepository.findByGroupSetContaining("Wanda");
+            assertThat(wanda.size()).isEqualTo(2);
+
+            // jcleese user is part of Monty Pythons group and Wanda group
+            mockMvc.perform(delete("/users/jcleese")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isOk())
+            ;
+
+            pythons = userRepository.findByGroupSetContaining("Monty Pythons");
+            assertThat(pythons.size()).isEqualTo(1);
+
+            wanda = userRepository.findByGroupSetContaining("Wanda");
+            assertThat(wanda.size()).isEqualTo(1);
+        }
     }
 
     @Nested
@@ -1002,6 +1065,16 @@ class UsersControllerShould {
             )
                     .andExpect(status().isForbidden())
             ;
+        }
+
+        @Test
+        void deleteUser() throws Exception {
+            mockMvc.perform(delete("/users/jcleese")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+
         }
     }
 }
