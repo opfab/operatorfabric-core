@@ -18,22 +18,16 @@ Feature: deleteUser
 }
 """
 
-    * def usersArray =
-"""
-[   "loginKarate2"
-]
-"""
 
   Scenario: Delete user for a non-existent user, expected response 404
-  # non-existent user, expected response 404
-    Given url opfabUrl + 'users/users/' + userForEndpointDeleteUser.login
+    Given url opfabUrl + 'users/users/NonExistentUser'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 404
 
 
-  # then we create the user
-  Scenario: create the user
+  # then we create a new user who will be deleted
+  Scenario: create a new user
     Given url opfabUrl + 'users/users'
     And header Authorization = 'Bearer ' + authToken
     And request userForEndpointDeleteUser
@@ -42,6 +36,13 @@ Feature: deleteUser
     And match response.login == userForEndpointDeleteUser.login
     And match response.firstName == userForEndpointDeleteUser.firstName
     And match response.lastName == userForEndpointDeleteUser.lastName
+
+
+  Scenario: we check that the user created previously exists
+    Given url opfabUrl + 'users/users/' + userForEndpointDeleteUser.login
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
 
 
   Scenario: delete user with no authentication, expected response 401
@@ -69,3 +70,10 @@ Feature: deleteUser
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
+
+
+  Scenario: we check that the user doesn't exist anymore, expected response 404
+    Given url opfabUrl + 'users/users/' + userForEndpointDeleteUser.login
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 404
