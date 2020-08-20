@@ -8,8 +8,7 @@
  */
 
 
-
-import {Component, ElementRef, Input, OnChanges, OnInit, OnDestroy, AfterViewChecked} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
@@ -22,16 +21,16 @@ import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {TranslateService} from '@ngx-translate/core';
-import { switchMap, skip, map, takeUntil, take } from 'rxjs/operators';
-import { selectLastCards, fetchLightCard } from '@ofStore/selectors/feed.selectors';
-import { CardService } from '@ofServices/card.service';
-import { Observable, zip, Subject } from 'rxjs';
-import { LightCard, Severity } from '@ofModel/light-card.model';
-import { AppService, PageType } from '@ofServices/app.service';
-import { User } from '@ofModel/user.model';
-import { Map } from '@ofModel/map';
-import { UserWithPerimeters, RightsEnum, userRight } from '@ofModel/userWithPerimeters.model';
-import { UpdateALightCard } from '@ofStore/actions/light-card.actions';
+import {map, skip, switchMap, take, takeUntil} from 'rxjs/operators';
+import {fetchLightCard, selectLastCards} from '@ofStore/selectors/feed.selectors';
+import {CardService} from '@ofServices/card.service';
+import {Observable, Subject, zip} from 'rxjs';
+import {LightCard, Severity} from '@ofModel/light-card.model';
+import {AppService, PageType} from '@ofServices/app.service';
+import {User} from '@ofModel/user.model';
+import {Map} from '@ofModel/map';
+import {RightsEnum, userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
 
 declare const templateGateway: any;
 
@@ -335,8 +334,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
         this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
         .subscribe((lightCard: LightCard) => {
-            const updatedLighCard = { ... lightCard };
-            updatedLighCard.hasBeenAcknowledged = hasBeenAcknowledged;
+            const updatedLighCard = { ... lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
             this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
         });
     }
@@ -354,8 +352,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     updateReadOnLightCard(hasBeenRead: boolean) {
         this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
         .subscribe((lightCard: LightCard) => {
-            const updatedLightCard = { ... lightCard };
-            updatedLightCard.hasBeenRead = hasBeenRead;
+            const updatedLightCard = { ... lightCard, hasBeenRead: hasBeenRead};
             this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
         });
     }
