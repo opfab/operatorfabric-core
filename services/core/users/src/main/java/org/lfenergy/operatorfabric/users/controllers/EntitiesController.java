@@ -90,8 +90,8 @@ public class EntitiesController implements EntitiesApi {
         //Only existing entities can be updated
          findEntityOrThrow(id);
 
-        //Retrieve users from repository for users list, throwing an error if a login is not found
-        deleteAllUsersForAnEntity(id);
+        //We delete the links between the users who are part of the entity to delete, and the entity
+        removeTheReferenceToTheEntityForMemberUsers(id);
         return null;
     }
 
@@ -181,8 +181,8 @@ public class EntitiesController implements EntitiesApi {
         // Only existing entity can be deleted
         EntityData foundEntityData = findEntityOrThrow(id);
 
-        // First we have to delete all the users who are part of the entity to delete
-        deleteAllUsersForAnEntity(id);
+        // First we have to delete the links between the users who are part of the entity to delete, and the entity
+        removeTheReferenceToTheEntityForMemberUsers(id);
 
         // Then we can delete the entity
         entityRepository.delete(foundEntityData);
@@ -190,7 +190,8 @@ public class EntitiesController implements EntitiesApi {
         return null;
     }
 
-    private void deleteAllUsersForAnEntity(String idEntity) {
+    // Remove the link between the entity and all its members (this link is in "user" mongo collection)
+    private void removeTheReferenceToTheEntityForMemberUsers(String idEntity) {
         List<UserData> foundUsers = userRepository.findByEntitiesContaining(idEntity);
 
         if (foundUsers != null) {

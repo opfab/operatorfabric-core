@@ -1169,6 +1169,31 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required perimeter not found
+    delete:
+      tags:
+        - perimeters
+      summary: Remove perimeter
+      description: Remove a perimeter
+      operationId: deletePerimeter
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Perimeter id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Deleted
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required perimeter not found
   '/perimeters/{id}/groups':
     put:
       tags:

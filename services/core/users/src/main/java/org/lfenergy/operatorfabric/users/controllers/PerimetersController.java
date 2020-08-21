@@ -10,11 +10,10 @@
 
 package org.lfenergy.operatorfabric.users.controllers;
 
+import org.lfenergy.operatorfabric.springtools.configuration.oauth.UpdatedUserEvent;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiError;
 import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
-import org.lfenergy.operatorfabric.users.model.GroupData;
-import org.lfenergy.operatorfabric.users.model.Perimeter;
-import org.lfenergy.operatorfabric.users.model.PerimeterData;
+import org.lfenergy.operatorfabric.users.model.*;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
 import org.lfenergy.operatorfabric.users.services.UserService;
@@ -89,19 +88,11 @@ public class PerimetersController implements PerimetersApi {
     @Override
     public Void deletePerimeterGroups(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
 
-        //Only existing perimeters can be updated
+        // Only existing perimeters can be updated
         findPerimeterOrThrow(id);
 
-        //Retrieve groups from repository
-        List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(id);
-
-        if (foundGroups != null) {
-            for (GroupData groupData : foundGroups) {
-                groupData.deletePerimeter(id);
-                userService.publishUpdatedUserEvent(groupData.getId());
-            }
-            groupRepository.saveAll(foundGroups);
-        }
+        // We delete the links between the groups that contain the perimeter, and the perimeter
+        removeTheReferenceToThePerimeterForConcernedGroups(id);
         return null;
     }
 
@@ -206,6 +197,34 @@ public class PerimetersController implements PerimetersApi {
         //For groups that are added to the perimeter, the event will be published by addPerimeterGroups.
         addPerimeterGroups(request, response, id, newGroupsInPerimeter);
         return null;
+    }
+
+    @Override
+    public Void deletePerimeter(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+
+        // Only existing perimeter can be deleted
+        PerimeterData foundPerimeterData = findPerimeterOrThrow(id);
+
+        // First we have to delete the links between the groups that contain the perimeter to delete, and the perimeter
+        removeTheReferenceToThePerimeterForConcernedGroups(id);
+
+        // Then we can delete the perimeter
+        perimeterRepository.delete(foundPerimeterData);
+        return null;
+    }
+
+    // Remove the link between the perimeter and the groups that own this perimeter (this link is in "group" mongo collection)
+    private void removeTheReferenceToThePerimeterForConcernedGroups(String idPerimeter) {
+
+        List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(idPerimeter);
+
+        if (foundGroups != null) {
+            for (GroupData groupData : foundGroups) {
+                groupData.deletePerimeter(idPerimeter);
+                userService.publishUpdatedUserEvent(groupData.getId());
+            }
+            groupRepository.saveAll(foundGroups);
+        }
     }
 
     private PerimeterData findPerimeterOrThrow(String id) {

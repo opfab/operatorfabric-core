@@ -45,3 +45,4 @@ java -jar karate.jar                                         \
       users/deleteUser.feature                               \
       users/entities/deleteEntity.feature                    \
       users/groups/deleteGroup.feature
+      users/perimeters/deletePerimeter.feature
