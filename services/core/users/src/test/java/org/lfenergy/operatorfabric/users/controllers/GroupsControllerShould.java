@@ -548,6 +548,66 @@ class GroupsControllerShould {
         }
 
         @Test
+        void deleteGroupWithNotFoundError() throws Exception {
+
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(delete("/groups/unknownGroupSoFar")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+        }
+
+        @Test
+        void deleteGroup() throws Exception {
+
+            UserData jcleese = userRepository.findById("jcleese").get();
+            assertThat(jcleese).isNotNull();
+            assertThat(jcleese.getGroups()).containsExactlyInAnyOrder("MONTY", "WANDA");
+
+            UserData gchapman = userRepository.findById("gchapman").get();
+            assertThat(gchapman).isNotNull();
+            assertThat(gchapman.getGroups()).containsExactlyInAnyOrder("MONTY");
+
+            assertThat(groupRepository.findById("MONTY")).isNotEmpty();
+
+            mockMvc.perform(delete("/groups/MONTY")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isOk())
+            ;
+
+            jcleese = userRepository.findById("jcleese").get();
+            assertThat(jcleese).isNotNull();
+            assertThat(jcleese.getGroups()).containsExactlyInAnyOrder("WANDA");
+
+            gchapman = userRepository.findById("gchapman").get();
+            assertThat(gchapman).isNotNull();
+            assertThat(gchapman.getGroups()).isEmpty();
+
+            assertThat(groupRepository.findById("MONTY")).isEmpty();
+        }
+
+        @Test
         void updateGroupsFromUsers() throws Exception {
             mockMvc.perform(put("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -969,6 +1029,15 @@ class GroupsControllerShould {
             mockMvc.perform(patch("/groups/WANDA/perimeters")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"PERIMETER1_2\"]")
+            )
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void deleteGroup() throws Exception {
+            mockMvc.perform(delete("/groups/MONTY")
+                    .contentType(MediaType.APPLICATION_JSON)
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
             ;

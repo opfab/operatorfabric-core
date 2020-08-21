@@ -727,7 +727,7 @@ class EntitiesControllerShould {
         }
 
         @Test
-        void deleteEntities() throws Exception {
+        void deleteEntity() throws Exception {
             mockMvc.perform(delete("/entities/ENTITY1")
                     .contentType(MediaType.APPLICATION_JSON)
             )

@@ -178,7 +178,7 @@ public class EntitiesController implements EntitiesApi {
     @Override
     public Void deleteEntity(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
 
-        // Only existing entities can be updated
+        // Only existing entity can be deleted
         EntityData foundEntityData = findEntityOrThrow(id);
 
         // First we have to delete all the users who are part of the entity to delete
@@ -190,12 +190,12 @@ public class EntitiesController implements EntitiesApi {
         return null;
     }
 
-    private void deleteAllUsersForAnEntity(String id) {
-        List<UserData> foundUsers = userRepository.findByEntitiesContaining(id);
+    private void deleteAllUsersForAnEntity(String idEntity) {
+        List<UserData> foundUsers = userRepository.findByEntitiesContaining(idEntity);
 
         if (foundUsers != null) {
             for (UserData userData : foundUsers) {
-                userData.deleteEntity(id);
+                userData.deleteEntity(idEntity);
                 publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
             }
             userRepository.saveAll(foundUsers);
