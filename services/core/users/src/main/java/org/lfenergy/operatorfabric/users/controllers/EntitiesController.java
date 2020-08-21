@@ -91,15 +91,7 @@ public class EntitiesController implements EntitiesApi {
          findEntityOrThrow(id);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
-        List<UserData> foundUsers = userRepository.findByEntitiesContaining(id);
-
-        if(foundUsers!=null) {
-            for (UserData userData : foundUsers) {
-                userData.deleteEntity(id);
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
-            }
-            userRepository.saveAll(foundUsers);
-        }
+        deleteAllUsersForAnEntity(id);
         return null;
     }
 
@@ -181,6 +173,33 @@ public class EntitiesController implements EntitiesApi {
         userRepository.saveAll(toUpdate);
         addEntityUsers(request, response, id, newUsersInEntity); //For users that are added to the entity, the event will be published by addEntityUsers.
         return null;
+    }
+
+    @Override
+    public Void deleteEntity(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+
+        // Only existing entities can be updated
+        EntityData foundEntityData = findEntityOrThrow(id);
+
+        // First we have to delete all the users who are part of the entity to delete
+        deleteAllUsersForAnEntity(id);
+
+        // Then we can delete the entity
+        entityRepository.delete(foundEntityData);
+
+        return null;
+    }
+
+    private void deleteAllUsersForAnEntity(String id) {
+        List<UserData> foundUsers = userRepository.findByEntitiesContaining(id);
+
+        if (foundUsers != null) {
+            for (UserData userData : foundUsers) {
+                userData.deleteEntity(id);
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+            }
+            userRepository.saveAll(foundUsers);
+        }
     }
 
     private EntityData findEntityOrThrow(String id) {

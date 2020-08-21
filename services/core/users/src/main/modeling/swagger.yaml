@@ -862,6 +862,31 @@ paths:
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required entity not found
+    delete:
+      tags:
+        - entities
+      summary: Remove entity
+      description: Remove an entity
+      operationId: deleteEntity
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Entity id
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Deleted
+        '400':
+          description: Bad request
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+        '404':
+          description: Required entity not found
   '/entities/{id}/users':
     put:
       tags:

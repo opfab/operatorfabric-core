@@ -699,6 +699,8 @@ class UsersControllerShould {
             List<UserData> wanda = userRepository.findByGroupSetContaining("Wanda");
             assertThat(wanda.size()).isEqualTo(2);
 
+            assertThat(userRepository.findById("jcleese")).isNotEmpty();
+
             // jcleese user is part of Monty Pythons group and Wanda group
             mockMvc.perform(delete("/users/jcleese")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -711,6 +713,8 @@ class UsersControllerShould {
 
             wanda = userRepository.findByGroupSetContaining("Wanda");
             assertThat(wanda.size()).isEqualTo(1);
+
+            assertThat(userRepository.findById("jcleese")).isEmpty();
         }
     }
 
