@@ -464,12 +464,12 @@ To get the dates in Epoch, you can use the following commands:
 
 For the first date: 
 ---- 
-date -d "+ 600 minutes" +%s%N | cut -b1-13
+date -d "+ 60 minutes" +%s%N | cut -b1-13
 ----
 
 And for the second 
 ---- 
-date -d "+ 900 minutes" +%s%N | cut -b1-13
+date -d "+ 120 minutes" +%s%N | cut -b1-13
 ----
 
 To send the card use the provided script in example4 directory 
@@ -548,7 +548,7 @@ Now let's create this perimeter :
 ----
 You can use this command line :
 ----
-curl -v -X POST http://localhost:2103/perimeters -H "Content-type:application/json" -H "Authorization:Bearer $token" --data @perimeter.json
+curl -X POST http://localhost:2103/perimeters -H "Content-type:application/json" -H "Authorization:Bearer $token" --data @perimeter.json
 ----
 
 or use the provided script :
@@ -566,7 +566,7 @@ The result should be a 201 Http status, and a json object such as:
 Now let's attach this perimeter to the TSO1 group.
 You can use this command line :
 ----
-curl -v -X PUT http://localhost:2103/perimeters/getting-startedPerimeter/groups -H "Content-type:application/json" -H "Authorization:Bearer $token" --data "[\"TSO1\"]"
+curl -X PUT http://localhost:2103/perimeters/getting-startedPerimeter/groups -H "Content-type:application/json" -H "Authorization:Bearer $token" --data "[\"TSO1\"]"
 ----
 
 or use the provided script :
@@ -576,7 +576,7 @@ or use the provided script :
 
 The result should be a 200 Http status.
 
-Now, if you see the result in the UI, you should see the card.
+Now, if you refresh the UI or send again the card, you should see the card.
 
 ==== Card sent to a group and an entity
 If a card is sent to a group and an entity, then there are 2 possibilities to receive this card :
