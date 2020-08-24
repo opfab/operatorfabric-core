@@ -753,6 +753,74 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist());
 
         }
+
+        @Test
+        void deletePerimeterWithNotFoundError() throws Exception {
+
+            mockMvc.perform(get("/perimeters/unknownPerimeterSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(PerimetersController.PERIMETER_NOT_FOUND_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(delete("/perimeters/unknownPerimeterSoFar")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(PerimetersController.PERIMETER_NOT_FOUND_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(get("/perimeters/unknownPerimeterSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(PerimetersController.PERIMETER_NOT_FOUND_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+        }
+
+        @Test
+        void deletePerimeter() throws Exception {
+
+            GroupData g1 = groupRepository.findById("G1").get();
+            assertThat(g1).isNotNull();
+            assertThat(g1.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
+
+            GroupData g2 = groupRepository.findById("G2").get();
+            assertThat(g2).isNotNull();
+            assertThat(g2.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1");
+
+            GroupData g3 = groupRepository.findById("G3").get();
+            assertThat(g3).isNotNull();
+            assertThat(g3.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_2");
+
+            assertThat(perimeterRepository.findById("PERIMETER1_1")).isNotEmpty();
+
+            mockMvc.perform(delete("/perimeters/PERIMETER1_1")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isOk())
+            ;
+
+            g1 = groupRepository.findById("G1").get();
+            assertThat(g1).isNotNull();
+            assertThat(g1.getPerimeters()).containsExactlyInAnyOrder("PERIMETER2");
+
+            g2 = groupRepository.findById("G2").get();
+            assertThat(g2).isNotNull();
+            assertThat(g2.getPerimeters()).isEmpty();
+
+            g3 = groupRepository.findById("G3").get();
+            assertThat(g3).isNotNull();
+            assertThat(g3.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_2");
+
+            assertThat(perimeterRepository.findById("PERIMETER1_1")).isEmpty();
+        }
     }
 
     @Nested
@@ -831,6 +899,15 @@ class PerimetersControllerShould {
             mockMvc.perform(put("/perimeters/PERIMETER1_2/groups")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"G2\"]")
+            )
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void deletePerimeter() throws Exception {
+            mockMvc.perform(delete("/perimeters/PERIMETER1_1")
+                    .contentType(MediaType.APPLICATION_JSON)
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
             ;
