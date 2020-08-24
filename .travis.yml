@@ -33,16 +33,16 @@ install:
   - CurrentNpmVersion="$(npm -version)"
   - if [ "${CurrentNpmVersion}" != "${EXPECTED_NPM_VERSION}" ] ; then npm i -g npm@${EXPECTED_NPM_VERSION} ; fi
   # Should be synch with ${OF_HOME}/bin/load_environment_light.sh. It's the first part of the sdk reference without vendor name
-  # for example the current configured in sdk has the following reference `8.0.262-zulu`
-  # the value of the following variable is `8.0.262` and its vendor name part is `-zulu`
-  - CURRENT_JDK_VERSION="8.0.262"
-  # need to substitute last dot by an underscore. Example value for the following: "1.8.0_262"
+  # for example the current configured in sdk has the following reference `8.0.265-zulu`
+  # the value of the following variable is `8.0.265` and its vendor name part is `-zulu`
+  - CURRENT_JDK_VERSION="8.0.265"
+  # need to substitute last dot by an underscore. Example value for the following: "1.8.0_265"
   # for java version higher than 8 the prefix `1.` should be removed
   - FULL_JDK_VERSION="1.${CURRENT_JDK_VERSION%.*}${CURRENT_JDK_VERSION/*./_}"
-  # example value for the following: "8.0.262-zulu"
+  # example value for the following: "8.0.265-zulu"
   - JDK_VERSION_4_SDKMAN="${CURRENT_JDK_VERSION}-zulu"
   # Use javac because the prompt is simpler than the java one
-  # skips the beginning should return 1.8.0_262. Here redirection '2>&1' needed to load prompt value otherwise variable is empty
+  # skips the beginning should return 1.8.0_265. Here redirection '2>&1' needed to load prompt value otherwise variable is empty
   - CurrentJavacVersionNumber="$(javac -version 2>&1 | cut -d ' ' -f 2)"
   # if javac version is different than expected then asks sdkman to use expected java version or install it if necessary
   # if sdkman can't use the expected java version then asks sdkman to install it. Sdkman is configured to use it as default (line 26)
