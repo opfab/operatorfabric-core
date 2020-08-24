@@ -122,22 +122,26 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         const busiEnd = this.monitoringForm.get('activeTo');
         if (this.hasFormControlValueChanged(busiStart)
             || this.hasFormControlValueChanged(busiEnd)) {
-            const end = this.extractDateOrDefaultOne(busiEnd, {
-                date: this.endDate
-                , time: this.endTime
-            });
+            const end = this.extractDateOrDefaultOne(busiEnd, null);
             const start = this.extractDateOrDefaultOne(busiStart, {
                 date: this.startDate
                 , time: this.startTime
             });
-            const businessDateFilter = {
-                name: FilterType.BUSINESSDATE_FILTER
-                , active: true
-                , status: {
-                    start: start,
-                    end: end
+            const businessDateFilter = (end >= 0) ? {
+                    name: FilterType.MONITOR_DATE_FILTER
+                    , active: true
+                    , status: {
+                        start: start,
+                        end: end
+                    }
+                } : {
+                    name: FilterType.MONITOR_DATE_FILTER
+                    , active: true
+                    , status: {
+                        start: start
+                    }
                 }
-            };
+            ;
             this.store.dispatch(new ApplyFilter(businessDateFilter));
         }
 
@@ -156,6 +160,9 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     extractDateOrDefaultOne(form: AbstractControl, defaultDate: any) {
         const val = form.value;
         const finallyUsedDate = (!!val && val !== '') ? val : defaultDate;
+        if (!finallyUsedDate) {
+            return -1;
+        }
         const converter = new DateTimeNgb(finallyUsedDate.date, finallyUsedDate.time);
         return converter.convertToNumber();
     }

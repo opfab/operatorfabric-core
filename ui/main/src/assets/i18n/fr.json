@@ -129,7 +129,8 @@
     "title": "Titre",
     "summary": "Résumé",
     "trigger": "Déclencheur",
-    "coordinationStatus": "Status de coordination"
+    "coordinationStatus": "Status de coordination",
+    "seeDetails": "Voir les détails"
   },
   "button": {
     "ok": "OK",

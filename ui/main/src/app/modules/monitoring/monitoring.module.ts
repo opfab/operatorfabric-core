@@ -19,6 +19,7 @@ import { MonitoringTableComponent } from './components/monitoring-table/monitori
 import { MonitoringPageComponent } from './components/monitoring-table/monitoring-page/monitoring-page.component';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
 import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
+import {AppRoutingModule} from '../../app-routing.module';
 
 
 
@@ -38,6 +39,7 @@ import {MultiFilterModule} from '../../components/share/multi-filter/multi-filte
       , NgbModule
       , DatetimeFilterModule
       , MultiFilterModule
+      , AppRoutingModule
   ]
 })
 export class MonitoringModule { }

@@ -9,5 +9,6 @@ export interface LineOfMonitoringResult {
     summary: I18n;
     trigger: string;
     coordinationStatus: string;
+    coordinationStatusColor: string;
     cardId: string;
 }

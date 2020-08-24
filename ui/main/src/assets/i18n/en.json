@@ -127,7 +127,8 @@
     "title": "Title",
     "summary": "Summary",
     "trigger": "Trigger",
-    "coordinationStatus": "Coordination Status"
+    "coordinationStatus": "Coordination Status",
+    "seeDetails": "see details"
   },
   "button": {
     "ok": "OK",

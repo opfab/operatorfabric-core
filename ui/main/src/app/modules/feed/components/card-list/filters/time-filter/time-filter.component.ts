@@ -67,8 +67,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         this.subscribeToChangeInFilter();
     }
 
-    private subscribeToChangeInFilter():void
-    {
+    private subscribeToChangeInFilter(): void {
         this.store.select(buildFilterSelector(this.filterType))
                   .pipe(takeUntil(this.ngUnsubscribe$)).subscribe((next: Filter) => {
                       if (next) {

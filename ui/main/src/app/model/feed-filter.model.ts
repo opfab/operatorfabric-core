@@ -20,7 +20,7 @@ import {FilterType} from '@ofServices/filter.service';
  *  * status: the status of the current filter
  *
  * Beware: we use a copy constructor for replication of filters as a store state so take care of funktion scope
- * in Filter implementation (Instanciation and Inheritance). This is the reason why we pass the filter status upon
+ * in Filter implementation (Instantiation and Inheritance). This is the reason why we pass the filter status upon
  * funktion
  */
 export class Filter {

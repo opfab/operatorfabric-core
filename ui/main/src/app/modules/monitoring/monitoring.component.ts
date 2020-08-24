@@ -20,6 +20,8 @@ import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {selectProcesses} from '@ofSelectors/process.selector';
 import {Process} from '@ofModel/processes.model';
+import {ApplyFilter} from '@ofActions/feed.actions';
+import {BUSINESS_DATE_FILTER_INITIALISATION} from '@ofServices/filter.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -51,7 +53,7 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.mapOfProcesses.set(id, proc);
                     filterValue.push({value: id, label: proc.name});
                 });
-                return filterValue ;
+                return filterValue;
             })
         );
     }
@@ -59,12 +61,7 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit() {
     }
 
-ngAfterViewInit() {
-    this.loadMonitoringResults();
-
-}
-
-    loadMonitoringResults() {
+    ngAfterViewInit() {
         this.monitoringResult$ = this.store.pipe(
             takeUntil(this.unsubscribe$),
             select(selectSortedFilteredLightCards),
@@ -74,6 +71,7 @@ ngAfterViewInit() {
                     }
                     return cards.map(card => {
                             let color = 'white';
+                            let name: I18n;
                             const procId = card.process;
                             if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId)) {
                                 const currentProcess = this.mapOfProcesses.get(procId);
@@ -85,17 +83,19 @@ ngAfterViewInit() {
                                 const state = Process.prototype.extractState.call(currentProcess, card);
                                 if (!!state && !!state.color) {
                                     color = state.color;
-                                } 
-                            } 
+                                    name = state.name;
+                                }
+                            }
                             return (
                                 {
                                     creationDateTime: moment(card.publishDate),
                                     beginningOfBusinessPeriod: moment(card.startDate),
                                     endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
-                                    title: this.prefixForTranslate(card, 'title'),
-                                    summary: this.prefixForTranslate(card, 'summary'),
+                                    title: this.prefixI18nKey(card, 'title'),
+                                    summary: this.prefixI18nKey(card, 'summary'),
                                     trigger: 'source ?',
-                                    coordinationStatus: color,
+                                    coordinationStatusColor: color,
+                                    coordinationStatus: this.prefixForTranslation(card, name.key),
                                     cardId: card.id
 
                                 } as LineOfMonitoringResult);
@@ -105,17 +105,21 @@ ngAfterViewInit() {
             ),
             catchError(err => of([]))
         );
-    }
+        this.store.dispatch(new ApplyFilter(BUSINESS_DATE_FILTER_INITIALISATION));
 
+    }
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
 
-    prefixForTranslate(card: LightCard, key: string): I18n {
+    prefixI18nKey(card: LightCard, key: string): I18n {
         const currentI18n = card[key] as I18n;
-        return new I18n(`${card.publisher}.${card.processVersion}.${currentI18n.key}`, currentI18n.parameters);
+        return new I18n(this.prefixForTranslation(card, currentI18n.key), currentI18n.parameters);
     }
 
+    prefixForTranslation(card: LightCard, key: string): string {
+        return `${card.process}.${card.processVersion}.${key}`;
+    }
 
 }

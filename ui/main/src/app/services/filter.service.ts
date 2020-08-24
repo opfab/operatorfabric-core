@@ -36,12 +36,10 @@ export class FilterService {
         const information = Severity.INFORMATION;
         return new Filter(
             (card, status) => {
-                const result =
-                    status.alarm && card.severity === alarm ||
+                return status.alarm && card.severity === alarm ||
                     status.action && card.severity === action ||
                     status.compliant && card.severity === compliant ||
                     status.information && card.severity === information;
-                return result;
             },
             true,
             {
@@ -77,18 +75,41 @@ export class FilterService {
                 } else if (!!status.end) {
                     return card.startDate <= status.end;
                 }
-                console.warn(new Date().toISOString(),'Unexpected business date filter situation');
+                console.warn(new Date().toISOString(), 'Unexpected business date filter situation');
                 return false;
             },
             false,
             {start: new Date().valueOf() - 2 * 60 * 60 * 1000, end: new Date().valueOf() + 48 * 60 * 60 * 1000});
     }
 
+    private initMonitorDateFilter() {
+        return new Filter(
+            (card: LightCard, status) => {
+                if (!!status.start && !!status.end) {
+                    const isCardStartOk = card.startDate >= status.start && card.startDate <= status.end;
+                    if (!card.endDate) {
+                        return false ;
+                    }
+                    const isCardEndOk = card.endDate >= status.start && card.endDate <= status.end;
+                    return isCardStartOk && isCardEndOk;
+                } else if (!!status.start) {
+                    return card.startDate >= status.start;
+                } else if (!!status.end) {
+                    return (!! card.endDate && card.endDate <= status.end ) || card.startDate <= status.end;
+                }
+                console.warn(new Date().toISOString(), 'Unexpected business date filter situation');
+                return false;
+            },
+            false,
+            {start: new Date().valueOf() - 2 * 60 * 60 * 1000});
+    }
+
+
     private initPublishDateFilter() {
         return new Filter(
             (card: LightCard, status) => {
                 if (!!status.start && !!status.end) {
-                    return status.start <= card.publishDate && card.publishDate <= status.end
+                    return status.start <= card.publishDate && card.publishDate <= status.end;
 
                 } else if (!!status.start) {
                     return status.start <= card.publishDate;
@@ -103,11 +124,9 @@ export class FilterService {
 
     private initAcknowledgementFilter() {
         return new Filter(
-            (card:LightCard, status) => {
-                const result =
-                status && card.hasBeenAcknowledged || 
-                !status && !card.hasBeenAcknowledged;
-                return result;
+            (card: LightCard, status) => {
+                return status && card.hasBeenAcknowledged ||
+                    !status && !card.hasBeenAcknowledged;
             },
             true,
             false
@@ -126,7 +145,7 @@ export class FilterService {
             },
             false,
             {processes: null}
-        )
+        );
     }
 
     private initFilters(): Map<string, Filter> {
@@ -137,6 +156,7 @@ export class FilterService {
         filters.set(FilterType.TAG_FILTER, this.initTagFilter());
         filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
         filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
+        filters.set(FilterType.MONITOR_DATE_FILTER, this.initMonitorDateFilter());
         return filters;
     }
 }
@@ -150,5 +170,14 @@ export enum FilterType {
     PUBLISHDATE_FILTER,
     ACKNOWLEDGEMENT_FILTER,
     TEST_FILTER,
-    PROCESS_FILTER
+    PROCESS_FILTER,
+    MONITOR_DATE_FILTER
+}
+export const BUSINESS_DATE_FILTER_INITIALISATION = {
+    name: FilterType.BUSINESSDATE_FILTER,
+    active: true,
+    status: {
+        start: new Date().valueOf() - 2 * 60 * 60 * 1000,
+        end: new Date().valueOf() + 48 * 60 * 60 * 1000
+    }
 }

@@ -27,8 +27,11 @@
         <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
         <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
         <td>{{line.trigger}}</td>
-        <td [ngStyle]="{'background-color': line.coordinationStatus}"></td>
-        <td>{{line.cardId}}</td>
+        <td  translate > <p class="status"
+                 [ngStyle]="{'background-color': line.coordinationStatusColor, 'color': line.coordinationStatusColor}">.</p>
+            {{line.coordinationStatus}}
+            </td>
+        <td><a routerLink="../feed/cards/{{line.cardId}}" translate>monitoring.seeDetails</a></td>
     </tr>
     </tbody>
 </table>
