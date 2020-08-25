@@ -44,5 +44,5 @@ java -jar karate.jar                                         \
       users/perimeters/postCardRoutingPerimeters.feature     \
       users/deleteUser.feature                               \
       users/entities/deleteEntity.feature                    \
-      users/groups/deleteGroup.feature
+      users/groups/deleteGroup.feature                       \
       users/perimeters/deletePerimeter.feature
