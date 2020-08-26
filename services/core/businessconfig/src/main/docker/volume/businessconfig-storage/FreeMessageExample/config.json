@@ -1,9 +1,7 @@
 {
   "id": "FreeMessageExample",
   "version": "2",
-  "name": {
-    "key": "process.label"
-  },
+  "name":  "process.label",
   "templates": [
     "template1",
     "template2"
@@ -12,9 +10,7 @@
   ],
   "states": {
     "firstState": {
-      "name": {
-        "key": "firstState.label"
-      },
+      "name":  "firstState.label",
       "color": "blue",
       "details": [
         {
@@ -27,9 +23,7 @@
       "acknowledgementAllowed": false
     },
     "secondState": {
-      "name": {
-        "key": "secondState.label"
-      },
+      "name":  "secondState.label",
       "color": "blue",
       "details": [
         {
