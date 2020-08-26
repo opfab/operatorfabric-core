@@ -24,6 +24,9 @@
   "process": {
     "label": "Test Process"
   },
+  "state": {
+    "label": "Test State"
+  },
   "menu": {
     "label": "Test Process Menu",
     "first": "First Entry",
@@ -31,6 +34,5 @@
   },
   "template": {
     "title": "Asset details"
-  },
-  "state": "First State"
+  }
 }

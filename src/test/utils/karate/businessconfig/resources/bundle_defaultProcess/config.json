@@ -1,8 +1,6 @@
 {
   "id": "defaultProcess",
-  "name": {
-    "key": "Test api"
-  },
+  "name": "Test api",
   "version": "1",
   "templates": [
     "template",
@@ -16,9 +14,7 @@
   ],
   "states": {
     "messageState": {
-      "name": {
-        "key": "defaultProcess.title"
-      },
+      "name":  "defaultProcess.title",
       "color": "#FAF0AF",
       "details": [
         {
@@ -34,9 +30,7 @@
       "acknowledgementAllowed": true
     },
     "chartState": {
-      "name": {
-        "key": "chartDetail.title"
-      },
+      "name": "chartDetail.title",
       "color": "#f1c5c5",
       "details": [
         {
@@ -52,9 +46,7 @@
       "acknowledgementAllowed": true
     },
     "chartLineState": {
-      "name": {
-        "key": "chartLine.title"
-      },
+      "name": "chartLine.title",
       "color": "#e5edb7",
       "details": [
         {
@@ -70,9 +62,7 @@
       "acknowledgementAllowed": true
     },
     "processState": {
-      "name": {
-        "key": "process.title"
-      },
+      "name": "process.title",
       "color": "#8bcdcd",
       "details": [
         {
@@ -88,9 +78,7 @@
       "acknowledgementAllowed": true
     },
     "questionState": {
-      "name": {
-        "key": "question.title"
-      },
+      "name": "question.title",
       "color": "#8bcdcd",
       "response": {
         "lock": true,

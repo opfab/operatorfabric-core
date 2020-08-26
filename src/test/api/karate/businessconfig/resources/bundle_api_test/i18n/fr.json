@@ -1,5 +1,9 @@
 {
 	"detail":{
 		"title":"Message"
+	},
+	"defaultProcess": {
+		"title" : "Titre de la carte",
+		"title2" : "Titre de la carte II"
 	}
 }
