@@ -791,8 +791,6 @@ paths:
                 description: 'Entity 2 short description'
         '401':
           description: Authentication required
-        '403':
-          description: Forbidden - ADMIN role necessary
     post:
       tags:
         - entities
