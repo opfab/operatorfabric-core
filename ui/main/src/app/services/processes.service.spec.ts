@@ -109,12 +109,12 @@ describe('Processes Services', () => {
             expect(calls.length).toEqual(1);
             calls[0].flush([
                 new Process(
-                    'process1', '1', new I18n( 'process1.label'), [], [], [], 'process1.menu.label',
+                    'process1', '1',  'process1.label', [], [], [], 'process1.menu.label',
                     [new MenuEntry('id1', 'label1', 'link1', MenuEntryLinkTypeEnum.BOTH),
                         new MenuEntry('id2', 'label2', 'link2', MenuEntryLinkTypeEnum.BOTH)]
                 ),
                 new Process(
-                    'process2', '1', new I18n('process2.label'), [], [], [], 'process2.menu.label',
+                    'process2', '1', 'process2.label', [], [], [], 'process2.menu.label',
                     [new MenuEntry('id3', 'label3', 'link3', MenuEntryLinkTypeEnum.BOTH)]
                 )
             ]);
@@ -223,7 +223,7 @@ describe('Processes Services', () => {
 
     });
     describe('#queryProcess', () => {
-        const businessconfig = new Process('testPublisher', '0', new I18n('businessconfig.label'));
+        const businessconfig = new Process('testPublisher', '0', 'businessconfig.label');
         it('should load businessconfig from remote server', () => {
             processesService.queryProcess('testPublisher', '0')
                 .subscribe((result) => expect(result).toEqual(businessconfig));
@@ -236,7 +236,7 @@ describe('Processes Services', () => {
         });
     });
     describe('#queryProcess', () => {
-        const businessconfig = new Process('testPublisher', '0', new I18n('businessconfig.label'));
+        const businessconfig = new Process('testPublisher', '0', 'businessconfig.label');
         it('should load and cache businessconfig from remote server', () => {
             processesService.queryProcess('testPublisher', '0')
                 .subscribe((result) => {
