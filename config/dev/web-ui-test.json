@@ -131,7 +131,7 @@
     "styleWhenNightDayModeDesactivated" : "LEGACY"
   },
   "navbar": {
-    "hidden": ["logging","monitoring"],
+    "hidden": [],
     "businessmenus" : {"type":"IFRAME"}
   }
 }
