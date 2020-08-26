@@ -4,6 +4,9 @@
   "templates": [
     "template1"
   ],
+  "menuEntries": [
+    {"id": "uid test 0","url": "https://opfab.github.io/whatisopfab/","label": "menu.first", "linkType": "BOTH"}
+  ],
   "csses": [
     "style1",
     "style2"

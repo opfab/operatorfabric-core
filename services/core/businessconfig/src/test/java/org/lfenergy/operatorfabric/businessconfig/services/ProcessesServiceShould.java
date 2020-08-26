@@ -306,11 +306,11 @@ class ProcessesServiceShould {
     	
     	@Test
         void deleteBundleByNameAndVersionHavingOnlyOneVersion() throws Exception {
-    		Path bundleDir = testDataDir.resolve("businessconfig");
+    		Path bundleDir = testDataDir.resolve("deletetest");
     		Assertions.assertTrue(Files.isDirectory(bundleDir));
-            service.deleteVersion("businessconfig","2.1");
-            Assertions.assertNull(service.fetch("businessconfig","2.1"));
-            Assertions.assertNull(service.fetch("businessconfig"));            
+            service.deleteVersion("deletetest","2.1");
+            Assertions.assertNull(service.fetch("deletetest","2.1"));
+            Assertions.assertNull(service.fetch("deletetest"));            
             Assertions.assertFalse(Files.isDirectory(bundleDir));
     	}
     	

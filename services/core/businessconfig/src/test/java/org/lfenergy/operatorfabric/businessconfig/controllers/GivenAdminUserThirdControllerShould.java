@@ -322,10 +322,10 @@ class GivenAdminUserBusinessconfigControllerShould {
         	
         	@Test
             void deleteBundleByNameAndVersionHavingOnlyOneVersion() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/businessconfig/processes/businessconfig/versions/2.1"));
+        		ResultActions result = mockMvc.perform(delete("/businessconfig/processes/deletetest/versions/2.1"));
                 result
                         .andExpect(status().isNoContent());
-                result = mockMvc.perform(get("/businessconfig/processes/businessconfig"));
+                result = mockMvc.perform(get("/businessconfig/processes/deletetest"));
                 result
                         .andExpect(status().isNotFound());
             }
