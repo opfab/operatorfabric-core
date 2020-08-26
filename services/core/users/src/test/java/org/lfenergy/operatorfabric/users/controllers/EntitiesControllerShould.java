@@ -664,7 +664,9 @@ class EntitiesControllerShould {
         void fetchAll() throws Exception {
             ResultActions result = mockMvc.perform(get("/entities"));
             result
-                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(2)))
             ;
         }
 
