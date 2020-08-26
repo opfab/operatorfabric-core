@@ -1,9 +1,7 @@
 {
   "id": "TEST",
   "version": "1",
-  "name": {
-    "key": "TEST.1.process.label"
-  },
+  "name": "process.label",
   "defaultLocale": "fr",
   "templates": [
     "security",
@@ -34,9 +32,7 @@
   ],
   "states": {
     "firstState": {
-      "name": {
-        "key": "process.label"
-      },
+      "name":  "state.label",
       "color": "blue",
       "details": [
         {

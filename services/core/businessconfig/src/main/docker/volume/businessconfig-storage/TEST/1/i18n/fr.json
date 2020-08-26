@@ -24,6 +24,9 @@
   "process":{
     "label": "Processus de test"
   },
+  "state": {
+    "label": "State de test"
+  },
   "menu":{
     "label": "Menu du Processus de Test",
     "first":"Premier item",
@@ -32,5 +35,4 @@
   "template": {
     "title": "Onglet TEST"
   },
-  "state": "État premier"
 }

@@ -60,7 +60,11 @@ Below is a summary of the changes to the `config.json` file that all this entail
 
 |
 |name
-|I18n key for process display name. Will probably be used for Free Message and maybe filters
+|I18n key for process display name. 
+
+|
+|states.mystate.name
+|I18n key for state display name. 
 
 |i18nLabelKey
 |menuLabel
@@ -148,6 +152,7 @@ Here is an example of a simple config.json file:
   ],
   "states": {
     "firstState": {
+      "name" :"mystate.label",
       "details": [
         {
           "title": {

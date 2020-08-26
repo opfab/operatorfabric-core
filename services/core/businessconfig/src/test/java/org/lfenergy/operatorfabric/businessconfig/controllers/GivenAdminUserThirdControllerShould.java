@@ -268,7 +268,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                     .andExpect(header().string("Location", "/businessconfig/processes/second"))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.id", is("second")))
-                    .andExpect(jsonPath("$.name.key", is("process.title")))
+                    .andExpect(jsonPath("$.name", is("process.title")))
                     .andExpect(jsonPath("$.version", is("2.1")))
             ;
 

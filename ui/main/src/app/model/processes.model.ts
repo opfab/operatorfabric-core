@@ -17,16 +17,14 @@ export class Process {
     constructor(
         readonly id: string,
         readonly version: string,
-        readonly name?: I18n | string,
+        readonly name?: string,
         readonly templates?: string[],
         readonly csses?: string[],
         readonly locales?: string[],
         readonly menuLabel?: string,
         readonly menuEntries?: MenuEntry[],
         readonly states?: OfMap<State>
-    ) { if ( !(name instanceof I18n)) {
-            name = new I18n(name);
-    }
+    ) { 
     }
 
     public extractState(card: Card): State {
@@ -38,7 +36,7 @@ export class Process {
     }
 }
 
-export const unfouundProcess: Process = new Process('', '', new I18n('process.not-found'),
+export const unfouundProcess: Process = new Process('', '', 'process.not-found',
      [], [], [], '', [], null);
 
 export class MenuEntry {
@@ -77,7 +75,7 @@ export class State {
         readonly details?: Detail[],
         readonly response?: Response,
         readonly acknowledgementAllowed?: boolean,
-        readonly name?: I18n,
+        readonly name?: string,
         readonly color?: string
     ) {
     }

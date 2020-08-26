@@ -71,7 +71,7 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                     return cards.map(card => {
                             let color = 'white';
-                            let name: I18n;
+                            let name: string;
                             const procId = card.process;
                             if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId)) {
                                 const currentProcess = this.mapOfProcesses.get(procId);
@@ -95,7 +95,7 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                                     summary: this.prefixI18nKey(card, 'summary'),
                                     trigger: 'source ?',
                                     coordinationStatusColor: color,
-                                    coordinationStatus: this.prefixForTranslation(card, name.key),
+                                    coordinationStatus: this.prefixForTranslation(card, name),
                                     cardId: card.id
 
                                 } as LineOfMonitoringResult);
