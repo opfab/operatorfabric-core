@@ -85,7 +85,7 @@ export class FreeMessageComponent implements OnDestroy {
             map((allProcesses: Process[]) => {
                 return allProcesses.map((proc: Process) => {
                     const _i18nPrefix = proc.id + '.' + proc.version + '.';
-                    const label = proc.name ? (new I18n(_i18nPrefix + proc.name.key, proc.name.parameters)) : proc.id;
+                    const label = proc.name ? (_i18nPrefix + proc.name) : proc.id;
                     return {
                         value: proc.id,
                         label: label
@@ -102,7 +102,7 @@ export class FreeMessageComponent implements OnDestroy {
                 if (selectedProcess) {
                     return Object.entries(selectedProcess.states).map(([id, state]: [string, State]) => {
                         const label = state.name ? (new I18n(this.getI18nPrefixFromProcess(selectedProcess)
-                            + state.name.key, state.name.parameters)) : id;
+                            + state.name)) : id;
                         return {
                             value: id,
                             label: label
@@ -139,7 +139,7 @@ export class FreeMessageComponent implements OnDestroy {
                 const processVersion = selectedProcess.version;
                 const formValueElement = formValue['state'];
                 const selectedState = selectedProcess.states[formValueElement];
-                const titleKey = selectedState.name ? selectedProcess.name : (new I18n(formValueElement));
+                const titleKey = (new I18n((selectedState.name) ? selectedProcess.name : formValueElement));
 
                 const now = new Date().getTime();
 
