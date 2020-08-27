@@ -72,12 +72,11 @@ export class AppComponent implements OnInit {
                 console.error('Impossible to load configuration file web-ui.json', err);
                 return caught;
             });
-
     }
 
     private setTitle() {
         const title = this.configService.getConfigValue('title');
-        if (!!title) this.titleService.setTitle(title);
+        if (!!title) { this.titleService.setTitle(title); }
     }
 
     private launchAuthenticationProcess() {

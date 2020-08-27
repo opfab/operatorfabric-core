@@ -30,6 +30,8 @@ body {
   min-width: 500px;
   background-color: $dark;
   height: 100vh;
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 .archives-page .form-control {
   border-radius: 5px;
@@ -59,4 +61,14 @@ select.form-control[multiple] {
 // Override color for today in calendar 
 .alert-info {
   background-color: var(--opfab-bgcolor);
+}
+
+html, body { height: 100%; }
+
+.cdk-overlay-container, .cdk-overlay-pane {
+     z-index: 9999 !important;
+}
+
+.mat-select-panel {
+    background-color: var(--opfab-bgcolor);
 }

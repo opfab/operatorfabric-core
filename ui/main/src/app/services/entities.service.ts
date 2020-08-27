@@ -11,6 +11,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
 import { CrudService } from './crud-service';
+import { ErrorService } from './error-service';
+import { catchError } from 'rxjs/operators';
 import { Observable, Subject} from 'rxjs';
 import { Entity } from '@ofModel/entity.model';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
@@ -19,28 +21,36 @@ import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class EntitiesService implements CrudService {
- 
+export class EntitiesService extends ErrorService implements CrudService {
+
  readonly entitiesUrl: string;
  private _entities: Entity[];
  private ngUnsubscribe = new Subject<void>();
-
   /**
    * @constructor
    * @param httpClient - Angular build-in
    */
   constructor(private httpClient: HttpClient) {
+    super();
     this.entitiesUrl = `${environment.urls.entities}`;
+  }
+  deleteById(id: string) {
+    const url = `${this.entitiesUrl}/` + id;
+    return this.httpClient.delete(url);
   }
 
   getAllEntities(): Observable<Entity[]> {
-    return this.httpClient.get<Entity[]>(`${this.entitiesUrl}`);
+    return this.httpClient.get<Entity[]>(`${this.entitiesUrl}`).pipe(
+      catchError((error: Response) => this.handleError)
+    );
   }
 
 
 
  updateEntity(entityData: Entity): Observable<Entity> {
-    return this.httpClient.post<Entity>(`${this.entitiesUrl}`, entityData);
+    return this.httpClient.post<Entity>(`${this.entitiesUrl}`, entityData).pipe(
+      catchError((error: Response) => this.handleError)
+    );
   }
 
 

@@ -4,6 +4,7 @@
     "calendar" : "Calendrier",
     "archives": "Archives",
     "logging": "Logging",
+    "admin": "Administration",
     "monitoring": "Monitoring",
     "logout": "Déconnexion",
     "settings": "Paramètres",
@@ -30,7 +31,7 @@
         "start.label": "Début",
         "end.label": "Fin",
         "active.label": "Actif",
-        "lttd.label" :"Terminée"
+        "lttd.label": "Terminée"
       },
       "type": {
         "title": "Type",
@@ -189,6 +190,54 @@
     "button": {
       "ack": "Acquitter et fermer",
       "unack": "Annuler l'acquitement"
+    }
+  },
+  "admin": {
+    "input": {
+      "user": {
+        "login": "Identifiant",
+        "lastname": "Nom",
+        "firstname": "Prénom",
+        "groups": "Groupes",
+        "entities": "Entitiés",
+        "add": "Ajouter un nouveau utilisateur",
+        "edit": "Editer",
+        "delete": "Supprimer",
+        "save": "Sauvegarder les changements",
+        "close": "Fermer",
+        "cancel": "Abondonner",
+        "confirm":"Confirmez..",
+        "user":"utilisateur",
+        "filter": "filtrer par ",
+        "filterAll": "filtrer toutes les colonnes"
+      },
+      "delete" :"Voulez vous vraiment supprimer l'utilisateur",
+      "login": {
+        "required": "L'identifiant est obligatoire .",
+        "minLength": "L'identifiant doit avoir au moins 4 caractères .",
+        "maxLength": "L'identifiant doit avoir au maximum 20 caractères .",
+        "alreadyTaken": "Cet identifiant est déjà pris."
+      },
+      "firstname": {
+        "required": "Le prénom est obligatoire .",
+        "maxLength": "Le prénom doit avoir  au maximum 20 caractères ."
+      },
+      "lastname": {
+        "required": "Le nom est obligatoire .",
+        "maxLength": "Le nom doit avoir  au maximum 20 caractères ."
+      },
+      "lines": "lignes"
+    },
+    "tabs": {
+      "users": "Gestion des utilisateurs",
+      "groups": "Gestion des groupes",
+      "entities": "Gestion des entités"
+    },
+    "pagination": {
+      "firstText": "Premier",
+      "lastText": "Dernier",
+      "nextText": "Suivant",
+      "prevText": "Précédent"
     }
   }
 }

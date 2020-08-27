@@ -85,6 +85,15 @@
         ><of-info></of-info></a>
         <div class="dropdown-menu dropdown-menu-right"
              [ngbCollapse]="!expandedUserMenu">
+          <div class="dropdown-item" [class.active]="currentPath && 'admin' === currentPath[1]" *ngIf="(displayAdmin)">
+            <a
+                    class="nav-link opfab-menu-link text-decoration-none"
+                    routerLink="/admin"
+                    routerLinkActive #rla="routerLinkActive"
+                    translate
+            >menu.admin</a>
+          </div>
+
           <div class="dropdown-item" [class.active]="currentPath && 'settings' === currentPath[1]">
             <a
                     class="nav-link opfab-menu-link text-decoration-none"

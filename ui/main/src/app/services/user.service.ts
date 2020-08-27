@@ -7,20 +7,23 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Injectable } from "@angular/core";
-import { environment } from "@env/environment";
+
+import { Injectable } from '@angular/core';
+import { environment } from '@env/environment';
 import { Observable, Subject } from 'rxjs';
 import { Entity, User } from '@ofModel/user.model';
-import { UserWithPerimeters } from "@ofModel/userWithPerimeters.model";
-import { HttpClient } from "@angular/common/http";
-import { CrudService } from "./crud-service";
+import { UserWithPerimeters } from '@ofModel/userWithPerimeters.model';
+import { HttpClient } from '@angular/common/http';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { tap } from 'rxjs/operators';
+import { GroupsService } from './groups.service';
+import { CrudService } from './crud-service';
+import { catchError } from 'rxjs/operators';
+import { ErrorService } from './error-service';
 
 @Injectable()
-export class UserService implements CrudService {
+export class UserService extends ErrorService implements CrudService {
   readonly userUrl: string;
-
   private _userWithPerimeters: UserWithPerimeters;
   private ngUnsubscribe = new Subject<void>();
 
@@ -28,12 +31,22 @@ export class UserService implements CrudService {
    * @constructor
    * @param httpClient - Angular build-in
    */
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private groupsService: GroupsService) {
+    super();
     this.userUrl = `${environment.urls.users}`;
   }
 
+  deleteById(login: string) {
+    const url = `${this.userUrl}/users/${login}`;
+    return this.httpClient.delete(url).pipe(
+      catchError((error: Response) => this.handleError(error))
+    );
+  }
+
   askUserApplicationRegistered(user: string): Observable<User> {
-    return this.httpClient.get<User>(`${this.userUrl}/users/${user}`);
+    return this.httpClient.get<User>(`${this.userUrl}/users/${user}`).pipe(
+      catchError((error: Response) => this.handleError)
+    );
   }
 
   askCreateUser(userData: User): Observable<User> {
@@ -50,7 +63,9 @@ export class UserService implements CrudService {
   }
 
   getAllUsers(): Observable<User[]> {
-    return this.httpClient.get<User[]>(`${this.userUrl}`);
+    return this.httpClient.get<User[]>(`${this.userUrl}`).pipe(
+      catchError((error: Response) => this.handleError)
+    );
   }
 
   getAll(): Observable<User[]> {
@@ -58,15 +73,20 @@ export class UserService implements CrudService {
   }
 
   updateUser(userData: User): Observable<User> {
-    return this.httpClient.post<User>(`${this.userUrl}`, userData);
+    return this.httpClient.post<User>(`${this.userUrl}`, userData).pipe(
+      catchError((error: Response) => this.handleError)
+    );
   }
 
   update(userData: User): Observable<User> {
     return this.updateUser(userData);
   }
+
   queryAllEntities(): Observable<Entity[]> {
     const url = `${this.userUrl}/entities`;
-    return this.httpClient.get<Entity[]>(url);
+    return this.httpClient.get<Entity[]>(url).pipe(
+      catchError((error: Response) => this.handleError)
+    );
 
   }
 
@@ -86,5 +106,14 @@ export class UserService implements CrudService {
 
   public getCurrentUserWithPerimeters(): UserWithPerimeters {
     return this._userWithPerimeters;
+  }
+
+  public isCurrentUserAdmin(): boolean {
+    if (!this._userWithPerimeters) {
+      this.currentUserWithPerimeters().subscribe((userWithPerimeters) => {
+        this._userWithPerimeters = userWithPerimeters;
+      }, (error) => console.error(new Date().toISOString(), 'an error occurred', error));
+    }
+    return (this.getCurrentUserWithPerimeters().userData.groups.filter(group => group === 'ADMIN').length > 0) ? true : false;
   }
 }

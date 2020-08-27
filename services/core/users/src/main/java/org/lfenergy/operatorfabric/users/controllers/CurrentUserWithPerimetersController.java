@@ -14,7 +14,7 @@ package org.lfenergy.operatorfabric.users.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.users.configuration.oauth2.UserExtractor;
 import org.lfenergy.operatorfabric.users.model.*;
-import org.lfenergy.operatorfabric.users.services.UserService;
+import org.lfenergy.operatorfabric.users.services.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +33,7 @@ import java.util.*;
 public class CurrentUserWithPerimetersController implements CurrentUserWithPerimetersApi, UserExtractor {
 
     @Autowired
-    private UserService userService;
+    private UserServiceImp userService;
 
     @Override
     public CurrentUserWithPerimeters fetchCurrentUserWithPerimeters(HttpServletRequest request, HttpServletResponse response) throws Exception{

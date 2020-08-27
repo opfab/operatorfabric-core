@@ -14,6 +14,7 @@ import {LoginComponent} from './components/login/login.component';
 import {AboutComponent} from './modules/about/about.component';
 import {LoggingComponent} from './modules/logging/logging.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
+import { AdminComponent } from './modules/admin/admin.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
 
 const defaultPath = '/feed';
@@ -60,7 +61,13 @@ const routes: Routes = [
         path: 'about',
         component: AboutComponent
     },
-    {path: '**', redirectTo: defaultPath}
+    {
+        path: 'admin',
+         loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
+    },
+    {   path: '**',
+        redirectTo: defaultPath
+    }
 ];
 // TODO manage visible path more gently
 const startIndex = 0;

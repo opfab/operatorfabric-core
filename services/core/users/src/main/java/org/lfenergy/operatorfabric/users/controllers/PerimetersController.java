@@ -16,7 +16,7 @@ import org.lfenergy.operatorfabric.springtools.error.model.ApiErrorException;
 import org.lfenergy.operatorfabric.users.model.*;
 import org.lfenergy.operatorfabric.users.repositories.PerimeterRepository;
 import org.lfenergy.operatorfabric.users.repositories.GroupRepository;
-import org.lfenergy.operatorfabric.users.services.UserService;
+import org.lfenergy.operatorfabric.users.services.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,7 @@ public class PerimetersController implements PerimetersApi {
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
-    private UserService userService;
+    private UserServiceImp userService;
 
     @Override
     public Void addPerimeterGroups(HttpServletRequest request, HttpServletResponse response, String id, List<String> groups) throws Exception {
