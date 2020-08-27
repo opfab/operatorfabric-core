@@ -21,7 +21,7 @@
   </div>
 
   <div id='div-detail-btn' *ngIf="!isArchivePageType" class="mb-3">
-    <button class="btn mr-3 {{btnColor}}" style="float: right;" 
+    <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists'
       translate [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
             (click)='submitResponse()'>{{btnText}}</button>
     <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed' translate
