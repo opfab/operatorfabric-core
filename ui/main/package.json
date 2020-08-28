@@ -43,6 +43,7 @@
     "@swimlane/ngx-charts": "^13.0.4",
     "@types/jwt-decode": "^2.2.1",
     "angular-oauth2-oidc": "^8.0.4",
+    "angular2-multiselect-dropdown": "^4.6.3",
     "angularx-flatpickr": "^6.3.1",
     "bootstrap": "^4.5.0",
     "core-js": "^2.6.3",

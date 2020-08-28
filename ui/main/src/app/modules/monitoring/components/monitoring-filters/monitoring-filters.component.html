@@ -4,10 +4,15 @@
             <div class="col-lg-3 col-md-4 nopaddingrow">
                 <div class="row" style='margin-right:0;margin-left:0;'>
                     <div [ngClass]="{ 'col-md-12':true}">
-                        <of-multi-filter i18nRootLabelKey="monitoring.filters."
-                                         [parentForm]="monitoringForm"
-                                         filterPath="process"
-                                         [valuesInObservable]="processData"></of-multi-filter>
+                        <of-multi-filter-2 filterPath="process"
+                                           id="process"
+                                           formControlName="process"
+                                           [parentForm]="monitoringForm"
+                                           [values]="dropdownList"
+                                           [(ngModel)]="dropdownList"
+                                           [dropdownSettings]="dropdownSettings"
+                                           i18nRootLabelKey="monitoring.filters."
+                        ></of-multi-filter-2>
                     </div>
                 </div>
             </div>
@@ -47,5 +52,4 @@
             </div>
         </div>
     </div>
-
 </form>

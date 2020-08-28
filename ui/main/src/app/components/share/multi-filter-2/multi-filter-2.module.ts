@@ -7,24 +7,24 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {MultiFilterComponent} from './multi-filter.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
-
+import {MultiFilter2Component} from './multi-filter-2.component';
+import {AngularMultiSelectModule} from 'angular2-multiselect-dropdown';
 
 @NgModule({
-  declarations: [MultiFilterComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    NgbModule
-  ],
-  exports: [MultiFilterComponent]
+    declarations: [MultiFilter2Component],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        NgbModule,
+        AngularMultiSelectModule
+    ],
+    exports: [MultiFilter2Component]
 })
-export class MultiFilterModule { }
+export class MultiFilter2Module { }

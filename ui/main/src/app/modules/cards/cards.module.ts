@@ -48,7 +48,7 @@ import { CountdownModule } from 'ngx-countdown';
 })
 
 export class CardsModule {
-    static forRoot(): ModuleWithProviders{
+    static forRoot(): ModuleWithProviders {
         return {
             ngModule: CardsModule,
             providers: [ProcessesService]

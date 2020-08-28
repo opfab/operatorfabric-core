@@ -8,13 +8,12 @@
 
 
 
-<form [formGroup]="form" id="time-filter-form">
-    <div class="form-group">
-        <label for="setting" translate>settings.{{settingPath}}</label>
-        <type-ahead id="setting"
-                    formControlName="setting"
-                    class="form-control tags-field rounded"
-                    [multi]="true"
-                    [custom]="true"></type-ahead>
-    </div>
-</form>
+<div [formGroup]="parentForm">
+    <!-- archive.filters.{{filterPath}} -->
+    <label translate>{{computeI18nLabelKey()}}</label>
+    <angular2-multiselect [data]="dropdownList"
+                          [(ngModel)]="selectedItems"
+                          [settings]="dropdownSettings"
+                          formControlName="{{filterPath}}"
+    ></angular2-multiselect>
+</div>
