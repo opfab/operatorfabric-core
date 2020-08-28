@@ -8,7 +8,7 @@
 
 
 
-= Cards Publication Service
+= Sending cards
 
 The Cards Publication Service exposes a REST API through which third-party applications, or "publishers" can post cards
 to OperatorFabric. It then handles those cards:
