@@ -32,7 +32,6 @@ import {AboutComponent} from './modules/about/about.component';
 import {FontAwesomeIconsModule} from './modules/utilities/fontawesome-icons.module';
 import {LoggingModule} from './modules/logging/logging.module';
 import {MonitoringModule} from './modules/monitoring/monitoring.module';
-import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
     imports: [
@@ -51,8 +50,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
         UtilitiesModule,
         LoggingModule,
         MonitoringModule,
-        AppRoutingModule,
-        ModalModule.forRoot()
+        AppRoutingModule
     ],
     declarations: [AppComponent,
         NavbarComponent,

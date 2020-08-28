@@ -18,9 +18,8 @@ import {ArchivesModule} from '../archives/archives.module';
 import {SingleFilterModule} from '../../components/share/single-filter/single-filter.module';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
 import {TextAreaModule} from '../../components/share/text-area/text-area.module';
-import {NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
-import {CardComponent} from '../cards/components/card/card.component';
 import {CardsModule} from '../cards/cards.module';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     declarations: [FreeMessageComponent],
@@ -34,9 +33,9 @@ import {CardsModule} from '../cards/cards.module';
         ArchivesModule,
         SingleFilterModule,
         DatetimeFilterModule,
-        NgbModalModule,
         TextAreaModule,
-        CardsModule
+        CardsModule,
+        NgbModule
     ]
 })
 export class FreeMessageModule {

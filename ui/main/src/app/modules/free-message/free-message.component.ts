@@ -26,7 +26,8 @@ import {selectAllEntities} from '@ofSelectors/user.selector';
 import {Entity, User} from '@ofModel/user.model';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
+import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
 @Component({
     selector: 'of-free-message',
@@ -39,6 +40,9 @@ export class FreeMessageComponent implements OnDestroy {
     message: string;
     error: any;
 
+    fetchedProcesses: Process[];
+    currentUser: User;
+
     severityOptions = Object.keys(Severity).map(severity => {
         return {
             value: severity,
@@ -48,7 +52,6 @@ export class FreeMessageComponent implements OnDestroy {
     processOptions$: Observable<any>;
     stateOptions$: Observable<any>;
     entityOptions$: Observable<any>;
-    modalRef: BsModalRef;
 
     card: Card;
 
@@ -56,6 +59,8 @@ export class FreeMessageComponent implements OnDestroy {
     readonly msg = 'Card will be resumed here soon!';
 
     public displaySendResult = false;
+
+    modalRef: NgbModalRef;
 
     displayForm() {
         return !this.displaySendResult;
@@ -66,7 +71,7 @@ export class FreeMessageComponent implements OnDestroy {
                 private cardService: CardService,
                 private userService: UserService,
                 private timeService: TimeService,
-                private modalService: BsModalService
+                private modalService: NgbModal
     ) {
 
         this.messageForm = new FormGroup({
@@ -121,55 +126,68 @@ export class FreeMessageComponent implements OnDestroy {
                 })
             )
         );
-    }
-
-    onSubmitForm(template: TemplateRef<any>) {
-        const formValue = this.messageForm.value;
-
         this.store.select(selectIdentifier)
             .pipe(
                 switchMap(id => this.userService.askUserApplicationRegistered(id)),
                 withLatestFrom(this.store.select(selectProcesses))
             )
             .subscribe(([user, allProcesses]: [User, Process[]]) => {
-                const processFormVal = formValue['process'];
-                const selectedProcess = allProcesses.find(process => {
-                    return process.id === processFormVal;
-                });
-                const processVersion = selectedProcess.version;
-                const formValueElement = formValue['state'];
-                const selectedState = selectedProcess.states[formValueElement];
-                const titleKey = (new I18n((selectedState.name) ? selectedProcess.name : formValueElement));
 
-                const now = new Date().getTime();
+                this.currentUser = user;
+                this.fetchedProcesses = allProcesses;
 
-                this.card = {
-                    uid: null,
-                    id: null,
-                    publishDate: null,
-                    publisher: user.entities[0],
-                    processVersion: processVersion,
-                    process: processFormVal,
-                    processInstanceId: Guid.create().toString(),
-                    state: formValueElement,
-                    startDate: formValue['startDate'] ? this.createTimestampFromValue(formValue['startDate']) : now,
-                    endDate: this.createTimestampFromValue(formValue['endDate']),
-                    severity: formValue['severity'],
-                    hasBeenAcknowledged: false,
-                    hasBeenRead: false,
-                    entityRecipients: [formValue['entities']],
-                    externalRecipients: null,
-                    title: titleKey,
-                    summary: new I18n('SUMMARY CONTENT TO BE DEFINED'), // TODO
-                    data: {
-                        comment: formValue['comment']
-                    },
-                    recipient: null
-                };
+
             });
-        this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+    }
 
+    onSubmitForm(template: TemplateRef<any>) {
+        const formValue = this.messageForm.value;
 
+        const processFormVal = formValue['process'];
+        const selectedProcess = this.fetchedProcesses.find(process => {
+            return process.id === processFormVal;
+        });
+        const processVersion = selectedProcess.version;
+        const formValueElement = formValue['state'];
+        const selectedState = selectedProcess.states[formValueElement];
+        const titleKey = (new I18n((selectedState.name) ? selectedProcess.name : formValueElement));
+        const now = new Date().getTime();
+
+        const generatedId = Guid.create().toString();
+
+        let tempCard = {
+            uid: generatedId,
+            id: generatedId,
+            publishDate: null,
+            publisher: this.currentUser.entities[0],
+            processVersion: processVersion,
+            process: processFormVal,
+            processInstanceId: generatedId,
+            state: formValueElement,
+            startDate: formValue['startDate'] ? this.createTimestampFromValue(formValue['startDate']) : now,
+            severity: formValue['severity'],
+            hasBeenAcknowledged: false,
+            hasBeenRead: false,
+            entityRecipients: [formValue['entities']],
+            externalRecipients: null,
+            title: titleKey,
+            summary: new I18n('SUMMARY CONTENT TO BE DEFINED'), // TODO
+            data: {
+                comment: formValue['comment']
+            },
+            recipient: null
+        } as Card;
+
+        const endDate = formValue['endDate'];
+        if (!!endDate) {
+            tempCard = {
+                ...tempCard,
+                endDate: this.createTimestampFromValue(endDate)
+            };
+        }
+
+        this.card = tempCard;
+        this.modalRef = this.modalService.open(template);
     }
 
     createTimestampFromValue = (value: any): number => {
@@ -197,19 +215,20 @@ export class FreeMessageComponent implements OnDestroy {
                 resp => {
                     this.message = '';
                     const msg = resp.message;
+                    // TODO better way to handle perimeter errors
                     if (!!msg && msg.includes('unable')) {
                         this.error = msg;
                     } else {
                         this.message = msg;
                     }
-                    this.modalRef.hide();
+                    this.modalRef.close(this.message);
                     this.displaySendResult = true;
                     this.messageForm.reset();
                 },
                 err => {
                     console.error(err);
                     this.error = err;
-                    this.modalRef.hide();
+                    this.modalRef.close(this.error);
                     this.displaySendResult = true;
                     this.messageForm.reset();
                 }
@@ -218,7 +237,7 @@ export class FreeMessageComponent implements OnDestroy {
 
     decline(): void {
         this.message = 'Declined!';
-        this.modalRef.hide();
+        this.modalRef.dismiss(this.message);
     }
 
     formatTime(time) {

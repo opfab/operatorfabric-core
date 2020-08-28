@@ -161,7 +161,8 @@
     "accept": "Send",
     "refuse": "Cancel",
     "processInstanceId": "Id",
-    "state": "State"
+    "state": "State",
+    "send-another-one": "Send another Card"
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",

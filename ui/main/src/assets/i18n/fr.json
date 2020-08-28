@@ -156,15 +156,16 @@
         "ALARM": "Alarm",
         "ACTION": "Action",
         "COMPLIANT": "Compliant",
-        "INFORMATION": "Information",
-        "processInstanceId": "Identifiant",
-        "state": "État"
+        "INFORMATION": "Information"
       }
     },
     "prepareCard": "Preparation de la carte avant envoi",
     "confirmSending": "Envoyer la carte suivante ?",
     "accept": "Envoyer",
-    "refuse": "Annuler"
+    "refuse": "Annuler",
+    "processInstanceId": "Identifiant",
+    "state": "État",
+    "send-another-one": "Envoyer une autre carte"
   },
   "response": {
     "btnTitle": "VALIDER REPONSES",

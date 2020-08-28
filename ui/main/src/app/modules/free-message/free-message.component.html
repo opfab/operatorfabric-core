@@ -6,7 +6,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="text-center text-secondary py-3" translate>free-message.title</div>
+<div class="text-center text-secondary py-3" translate xmlns="http://www.w3.org/1999/html">free-message.title</div>
 
 <form *ngIf="displayForm()" [formGroup]="messageForm">
     <div class="container">
@@ -73,17 +73,21 @@
     <div *ngIf="displaySendResult">
         {{message}}{{error}}
         <of-card *ngIf="noError()" [lightCard]="card"  [open]="true" [displayUnreadIcon]="false"></of-card>
-        <button type="button" class="btn btn-primary" (click)="sendAnotherFreeMessage()">Send another Free message
-        </button>
+    <br/>
+        <button type="button" class="btn btn-primary" (click)="sendAnotherFreeMessage()" translate>free-message.send-another-one</button>
     </div>
 
-<ng-template #resumeCardBeforeSend>
+<ng-template #resumeCardBeforeSend let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Bootstrap Modal</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="modal-body">
         <p translate translate>free-message.confirmSending</p>
         <div>
             <p>Free Message</p>
-<!--
--->
             <of-card [lightCard]="getLightCard()" [open]="true" [displayUnreadIcon]="false"></of-card>
             <p>Complementary data</p>
             <dl>
@@ -95,12 +99,15 @@
                 <dd>{{card.state}} </dd>
                 <dt translate>free-message.processInstanceId</dt>
                 <dd>{{card.processInstanceId}} </dd>
-	        <dt  translate>free-message.filters.entities</dt>
+                <dt  translate>free-message.filters.entities</dt>
                 <dd>{{card.entityRecipients}}</dd>
+                <dt >UID</dt>
+                <dd>{{card.uid}}</dd>
             </dl>
         </div>
-        <p>{{message}}</p>
-        <button type="button" class="btn btn-default" (click)="confirm()" translate>free-message.accept</button>
-        <button type="button" class="btn btn-primary" (click)="decline()" translate>free-message.refuse</button>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="decline()" translate>free-message.refuse</button>
+            <button type="button" class="btn btn-outline-dark" (click)="confirm()">Third</button>
+        </div>
     </div>
 </ng-template>
