@@ -28,7 +28,6 @@
               "src/silent-refresh.html"
             ],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "node_modules/flatpickr/dist/flatpickr.css",
               "src/assets/styles/style.css",
