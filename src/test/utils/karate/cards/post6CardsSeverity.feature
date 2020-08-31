@@ -254,8 +254,8 @@ And match response.count == 1
 			"processInstanceId" : "process6",
 			"state": "messageState",
 			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
+						"type" : "USER",
+						"identity" : "tso1-operator"
 					},
 			"severity" : "ALARM",
 			"startDate" : startDate,

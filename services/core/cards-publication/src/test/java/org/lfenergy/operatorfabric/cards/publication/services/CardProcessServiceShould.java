@@ -350,7 +350,6 @@ class CardProcessServiceShould {
                 .state("state1")
                 .build();
         cardProcessingService.processCards(Flux.just(newCard)).subscribe();
-        await().atMost(5, TimeUnit.SECONDS).until(() -> testCardReceiver.getEricQueue().size() >= 1);
         CardPublicationData persistedCard = cardRepository.findById(newCard.getId()).block();
         assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardUid");
 
@@ -359,8 +358,7 @@ class CardProcessServiceShould {
         assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardUid", "uid", "id", "deletionDate",
                 "actions", "timeSpans");
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
-        assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
-        assertThat(testCardReceiver.getGroupQueue().size()).isEqualTo(1);
+        assertThat(testCardReceiver.getCardQueue().size()).isEqualTo(1);
     }
 
     private boolean checkCardCount(long expectedCount) {
