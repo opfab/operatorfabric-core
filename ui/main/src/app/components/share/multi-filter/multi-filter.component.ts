@@ -46,6 +46,7 @@ export class MultiFilterComponent implements OnInit {
             if (!!this.valuesInObservable) {
                 this.valuesInObservable.pipe(
                     map((values: ({ value: string, label: (I18n | string), i18NPrefix?: string } | string)[]) => {
+                            this.preparedList = [];
                             for (const v of values) {
                                 this.preparedList.push(this.computeValueAndLabel(v));
                             }

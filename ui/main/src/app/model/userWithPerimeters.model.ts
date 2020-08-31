@@ -7,8 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-// tslint:disable-next-line: quotemark
-import { User } from "@ofModel/user.model";
+import { User } from '@ofModel/user.model';
 
 
 export class UserWithPerimeters {
@@ -31,7 +30,7 @@ export class ComputedPerimeter {
 
 
 export enum RightsEnum {
-    Write = "Write", ReceiveAndWrite = "ReceiveAndWrite", Receive = "Receive"
+    Write = 'Write', ReceiveAndWrite = 'ReceiveAndWrite', Receive = 'Receive'
 }
 
 

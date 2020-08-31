@@ -9,8 +9,8 @@
 
 
 
-import {Inject} from "@angular/core";
-import {Guid} from "guid-typescript";
+import {Inject} from '@angular/core';
+import {Guid} from 'guid-typescript';
 
 @Inject({
     providedIn: 'root'

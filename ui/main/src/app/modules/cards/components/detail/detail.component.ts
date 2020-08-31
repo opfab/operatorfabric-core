@@ -85,7 +85,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _responseData: Response;
     private _hasPrivilegeToRespond = false;
     private _acknowledgementAllowed: boolean;
-    message: Message = { display: false, text: undefined, color: undefined };
+    message: Message = {display: false, text: undefined, color: undefined};
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
                 private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
@@ -127,6 +127,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         window.onresize = this.adaptTemplateSize;
         window.onload = this.adaptTemplateSize;
     }
+
     // -------------------------------------------------------------- //
 
     ngOnInit() {
@@ -136,34 +137,34 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this._lastCards$ = this.store.select(selectLastCards);
 
             this._lastCards$
-                    .pipe(
-                        takeUntil(this.unsubscribe$),
-                        map(lastCards =>
-                                lastCards.filter(card =>
-                                    card.parentCardUid === this.card.uid &&
-                                    !this.childCards.map(childCard => childCard.uid).includes(card.uid))
-                        ),
-                        map(childCards => childCards.map(c => this.cardService.loadCard(c.id)))
-                    )
-                    .subscribe(childCardsObs => {
-                        zip(...childCardsObs)
-                            .pipe(takeUntil(this.unsubscribe$), map(cards => cards.map(cardData => cardData.card)))
-                            .subscribe(newChildCards => {
+                .pipe(
+                    takeUntil(this.unsubscribe$),
+                    map(lastCards =>
+                        lastCards.filter(card =>
+                            card.parentCardUid === this.card.uid &&
+                            !this.childCards.map(childCard => childCard.uid).includes(card.uid))
+                    ),
+                    map(childCards => childCards.map(c => this.cardService.loadCard(c.id)))
+                )
+                .subscribe(childCardsObs => {
+                    zip(...childCardsObs)
+                        .pipe(takeUntil(this.unsubscribe$), map(cards => cards.map(cardData => cardData.card)))
+                        .subscribe(newChildCards => {
 
-                                const reducer = (accumulator, currentValue) => {
-                                    accumulator[currentValue.id] = currentValue;
-                                    return accumulator;
-                                };
+                            const reducer = (accumulator, currentValue) => {
+                                accumulator[currentValue.id] = currentValue;
+                                return accumulator;
+                            };
 
-                                this.childCards = Object.values({
-                                    ...this.childCards.reduce(reducer, {}),
-                                    ...newChildCards.reduce(reducer, {}),
-                                });
-
-                                templateGateway.childCards = this.childCards;
-                                templateGateway.applyChildCards();
+                            this.childCards = Object.values({
+                                ...this.childCards.reduce(reducer, {}),
+                                ...newChildCards.reduce(reducer, {}),
                             });
-                    });
+
+                            templateGateway.childCards = this.childCards;
+                            templateGateway.applyChildCards();
+                        });
+                });
         }
         this.markAsRead();
     }
@@ -309,9 +310,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (this.card.hasBeenAcknowledged) {
             this.cardService.deleteUserAcnowledgement(this.card).subscribe(resp => {
                 if (resp.status === 200 || resp.status === 204) {
-                    const tmp = { ... this.card };
-                    tmp.hasBeenAcknowledged = false;
-                    this.card = tmp;
+                    this.card = {...this.card, hasBeenAcknowledged: false};
                     this.updateAcknowledgementOnLightCard(false);
                 } else {
                     console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
@@ -333,14 +332,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     updateAcknowledgementOnLightCard(hasBeenAcknowledged: boolean) {
         this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
-        .subscribe((lightCard: LightCard) => {
-            const updatedLighCard = { ... lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
-            this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
-        });
+            .subscribe((lightCard: LightCard) => {
+                const updatedLighCard = {...lightCard, hasBeenAcknowledged: hasBeenAcknowledged};
+                this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
+            });
     }
 
     markAsRead() {
-        if ( !this.card.hasBeenRead ) {
+        if (this.card.hasBeenRead === false) {
             this.cardService.postUserCardRead(this.card).subscribe(resp => {
                 if (resp.status === 201 || resp.status === 200) {
                     this.updateReadOnLightCard(true);
@@ -351,10 +350,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     updateReadOnLightCard(hasBeenRead: boolean) {
         this.store.select(fetchLightCard(this.card.id)).pipe(take(1))
-        .subscribe((lightCard: LightCard) => {
-            const updatedLightCard = { ... lightCard, hasBeenRead: hasBeenRead};
-            this.store.dispatch(new UpdateALightCard({card: updatedLightCard}));
-        });
+            .subscribe((lightCard: LightCard) => {
+                const updatedLighCard = {...lightCard, hasBeenRead: hasBeenRead};
+                this.store.dispatch(new UpdateALightCard({card: updatedLighCard}));
+            });
     }
 
     closeDetails() {
@@ -365,8 +364,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     // the new css style (for example with chart done with chart.js)
     private reloadTemplateWhenGlobalStyleChange() {
         this.store.select(selectGlobalStyleState)
-        .pipe(takeUntil(this.unsubscribe$), skip(1))
-        .subscribe(style => this.initializeHandlebarsTemplates());
+            .pipe(takeUntil(this.unsubscribe$), skip(1))
+            .subscribe(style => this.initializeHandlebarsTemplates());
     }
 
     ngOnChanges(): void {
