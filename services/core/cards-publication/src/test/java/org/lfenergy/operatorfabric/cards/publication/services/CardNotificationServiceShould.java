@@ -114,10 +114,9 @@ class CardNotificationServiceShould {
 
         cardNotificationService.notifyOneCard(newCard,CardOperationTypeEnum.ADD);
         await().pollDelay(1, TimeUnit.SECONDS).until(()->true);
-        assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
-        assertThat(testCardReceiver.getGroupQueue().size()).isEqualTo(1);
+        assertThat(testCardReceiver.getCardQueue().size()).isEqualTo(1);
 
-        CardOperationData cardOperationData = testCardReceiver.getGroupQueue().element();
+        CardOperationData cardOperationData = testCardReceiver.getCardQueue().element();
         List<String> groupRecipientsIds = cardOperationData.getGroupRecipientsIds();
         assertThat(groupRecipientsIds.size()).isEqualTo(2);
         assertThat(groupRecipientsIds.contains("mytso")).isTrue();

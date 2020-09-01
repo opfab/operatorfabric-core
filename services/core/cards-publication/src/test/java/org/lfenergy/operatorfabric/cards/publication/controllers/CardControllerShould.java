@@ -11,60 +11,37 @@
 
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
-import static java.nio.charset.Charset.forName;
+
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
+
+
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+
 
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
-import org.jeasy.random.EasyRandomParameters;
-import org.jeasy.random.FieldPredicates;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
-import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
-import org.lfenergy.operatorfabric.springtools.configuration.test.OpFabUserDetails;
-import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
+
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
+
 
 /**
  * <p></p>

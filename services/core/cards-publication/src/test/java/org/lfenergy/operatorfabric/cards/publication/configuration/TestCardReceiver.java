@@ -33,8 +33,7 @@ import java.util.Queue;
 @Slf4j
 public class TestCardReceiver {
 
-    Queue<CardOperationData> groupQueue = new LinkedList<>();
-    Queue<CardOperationData> ericQueue = new LinkedList<>();
+    Queue<CardOperationData> cardQueue = new LinkedList<>();
     private ObjectMapper mapper;
 
     @Autowired
@@ -42,33 +41,22 @@ public class TestCardReceiver {
         this.mapper = mapper;
     }
 
-    @RabbitListener(queues = "#{groupQueue.name}")
+    @RabbitListener(queues = "#{cardQueue.name}")
     public void receiveGroup(Message message) throws IOException {
         String cardString = new String(message.getBody());
         log.info("receiving group card");
         CardOperationData card = mapper.readValue(cardString, CardOperationData.class);
-        groupQueue.add(card);
+        cardQueue.add(card);
     }
 
-    @RabbitListener(queues = "#{userQueue.name}")
-    public void receiveUser(Message message) throws IOException {
-        String cardString = new String(message.getBody());
-        log.info("receiving user card");
-        CardOperationData card = mapper.readValue(cardString, CardOperationData.class);
-        ericQueue.add(card);
-    }
 
     public void clear(){
         log.info("clearing data");
-        groupQueue.clear();
-        ericQueue.clear();
+        cardQueue.clear();
     }
 
-    public Queue<CardOperationData> getGroupQueue() {
-        return groupQueue;
+    public Queue<CardOperationData> getCardQueue() {
+        return cardQueue;
     }
 
-    public Queue<CardOperationData> getEricQueue() {
-        return ericQueue;
-    }
 }

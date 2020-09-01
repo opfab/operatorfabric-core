@@ -9,8 +9,6 @@
 
             http://www.springframework.org/schema/rabbit
                 http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
-    <rabbit:fanout-exchange id="groupExchange" name="GROUP_EXCHANGE" auto-delete="false" durable="true">
+    <rabbit:fanout-exchange id="cardExchange" name="CARD_EXCHANGE" auto-delete="false" durable="true">
     </rabbit:fanout-exchange>
-    <rabbit:direct-exchange id="userExchange" name="USER_EXCHANGE" auto-delete="false" durable="true">
-    </rabbit:direct-exchange>
 </beans>

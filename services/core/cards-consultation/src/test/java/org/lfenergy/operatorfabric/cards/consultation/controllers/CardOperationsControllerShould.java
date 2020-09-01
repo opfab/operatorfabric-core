@@ -74,9 +74,7 @@ public class CardOperationsControllerShould {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
-    private FanoutExchange groupExchange;
-    @Autowired
-    private DirectExchange userExchange;
+    private FanoutExchange cardExchange;
     @Autowired
     private CardOperationsController controller;
     @Autowired
@@ -271,20 +269,6 @@ public class CardOperationsControllerShould {
         };
     }
 
-    @Test
-    public void receiveFaultyCards() {
-        Flux<String> publisher = controller.registerSubscriptionAndPublish(Mono.just(
-                CardOperationsGetParameters.builder()
-                        .currentUserWithPerimeters(currentUserWithPerimeters)
-                        .test(false)
-                        .notification(true).build()
-        ));
-        StepVerifier.FirstStep<String> verifier = StepVerifier.create(publisher);
-        taskScheduler.schedule(createSendMessageTask(), new Date(System.currentTimeMillis() + 2000));
-        verifier
-           .expectNext("{\"status\":\"BAD_REQUEST\",\"message\":\"\\\"clientId\\\" is a mandatory request parameter\"}")
-           .verifyComplete();
-    }
 
     @Test
     public void receiveCardsCheckUserAcks() {
@@ -335,22 +319,6 @@ public class CardOperationsControllerShould {
         assertThat(list.get(2).getCards().get(0).getHasBeenRead()).isFalse();       
     }
 
-    private Runnable createSendMessageTask() {
-        return () -> {
-            try {
-                log.info("execute send task");
-                CardOperationConsultationData.CardOperationConsultationDataBuilder builder = CardOperationConsultationData.builder();
-                builder.publishDate(nowPlusOne)
-                        .card(LightCardConsultationData.copy(TestUtilities.createSimpleCard("notif1", nowPlusOne, nowPlusTwo, nowPlusThree, "rte-operator", new String[]{"rte","operator"}, null)))
-                        .card(LightCardConsultationData.copy(TestUtilities.createSimpleCard("notif2", nowPlusOne, nowPlusTwo, nowPlusThree, "rte-operator", new String[]{"rte","operator"}, new String[]{"entity1","entity2"})))
-                ;
-
-                rabbitTemplate.convertAndSend(userExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),
-                                              mapper.writeValueAsString(builder.build()));
-            } catch (JsonProcessingException e) {
-                log.error("Error during test data generation",e);
-            }
-        };
-    }
+ 
 
 }
