@@ -525,4 +525,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.zoomChange.emit(direction);
   }
 
+  public get maxNumberLinesForBubblePopover() {
+    return Math.ceil(window.innerHeight / 60);
+  }
+
 }
