@@ -1,7 +1,7 @@
 
 
 
-<form id='opfab-form'>
+<form id='question-form'>
    <div class="form-group">
       <h1>  Indisponibilité  de 2 heures à prevoir pour la ligne HVDC france-angleterre </h1>
       <br/>
@@ -19,9 +19,6 @@
 <div id="childs-div"></div>
 
 <script>
-
-  var childCards = {{json childCards}};
-  templateGateway.childCards = childCards;
 
 
   templateGateway.applyChildCards = () => {
@@ -52,15 +49,24 @@
 
 
      childsDiv.innerHTML = responses ; 
-     console.log ("responses = " , responses);
     }
   }
 
   templateGateway.applyChildCards();
 
-  templateGateway.validyForm = function(formData) {
-      this.isValid = true;
-  }
+  templateGateway.validyForm = function() {
+
+    const formData = {};
+    const formElement = document.getElementById('question-form');
+    for (const [key, value] of [... new FormData(formElement)]) {
+        (key in formData) ? formData[key].push(value) : formData[key] = [value];
+    }
+      return {
+        valid: true,
+        formData: formData
+      };
+
+    }
 
 </script>
 

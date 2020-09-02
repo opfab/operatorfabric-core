@@ -16,7 +16,6 @@ import { Response } from './processes.model';
 export class DetailContext{
     constructor(
         readonly card: Card,
-        readonly childCards: Card[],
         readonly userContext: UserContext,
         readonly responseData: Response) {}
 }
