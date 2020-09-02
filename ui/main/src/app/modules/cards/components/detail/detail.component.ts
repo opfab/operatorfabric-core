@@ -138,7 +138,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnInit() {
 
-       
 
         if (this._appService.pageType === PageType.FEED) {
 
@@ -372,6 +371,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnChanges(): void {
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
+        this.message = {display: false, text: undefined, color: undefined};
     }
 
     private initializeHrefsOfCssLink() {
