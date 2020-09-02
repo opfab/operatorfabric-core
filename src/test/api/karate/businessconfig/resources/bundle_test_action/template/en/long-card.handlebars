@@ -31,18 +31,6 @@
   xhttp.open("GET", "https://opfab.github.io/", true);
   xhttp.send();
 
-  var childCards = {{json childCards}};
-  templateGateway.childCards = childCards;
-
-  function validateResponse(opfabOpinion) {
-    if (opfabOpinion == 'I don\'t like') {
-      templateGateway.formErrorMsg = 'This answer is not acceptable';
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   templateGateway.applyChildCards = () => {
     let childsDiv = document.getElementById("childs-div");
     childsDiv.innerHTML = '<p>Responses:</p>';
@@ -54,11 +42,36 @@
 
   templateGateway.applyChildCards();
 
-  templateGateway.validyForm = function(formData) {
-    if (validateResponse(formData.opfabOpinion[0])) {
-      this.isValid = true;
+  var errorMsg;
+
+  function validateResponse(opfabOpinion) {
+    if (opfabOpinion == 'I don\'t like') {
+      errorMsg = 'This answer is not acceptable';
+      return false;
     } else {
-      this.isValid = false;
+      return true;
+    }
+  }
+
+  templateGateway.validyForm = function() {
+
+    const formData = {};
+
+    const formElement = document.getElementById('opfab-form');
+    for (const [key, value] of [... new FormData(formElement)]) {
+        (key in formData) ? formData[key].push(value) : formData[key] = [value];
+    }
+
+    if (validateResponse(formData.opfabOpinion[0])) {
+      return {
+        valid: true,
+        formData: formData
+      };
+    } else {
+      return {
+        valid: false,
+        errorMsg: errorMsg
+      }
     }
   }
 

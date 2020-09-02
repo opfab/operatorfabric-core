@@ -40,6 +40,12 @@ class Message {
     color: ResponseMsgColor;
 }
 
+class FormResult {
+    valid: boolean;
+    errorMsg: string;
+    formData: any;
+}
+
 const enum ResponseI18nKeys {
     FORM_ERROR_MSG = 'response.error.form',
     SUBMIT_ERROR_MSG = 'response.error.submit',
@@ -131,6 +137,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     // -------------------------------------------------------------- //
 
     ngOnInit() {
+
+        templateGateway.childCards = this.childCards;
 
         if (this._appService.pageType === PageType.FEED) {
 
@@ -238,16 +246,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     submitResponse() {
 
-        const formData = {};
+        const formResult: FormResult = templateGateway.validyForm();
 
-        const formElement = document.getElementById('opfab-form') as HTMLFormElement;
-        for (const [key, value] of [...new FormData(formElement)]) {
-            (key in formData) ? formData[key].push(value) : formData[key] = [value];
-        }
-
-        templateGateway.validyForm(formData);
-
-        if (templateGateway.isValid) {
+        if (formResult.valid) {
 
             const card: Card = {
                 uid: null,
@@ -267,7 +268,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 externalRecipients: [this.card.publisher],
                 title: this.card.title,
                 summary: this.card.summary,
-                data: formData,
+                data: formResult.formData,
                 recipient: this.card.recipient,
                 parentCardUid: this.card.uid
             };
@@ -292,8 +293,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 );
 
         } else {
-            (templateGateway.formErrorMsg && templateGateway.formErrorMsg !== '') ?
-                this.displayMessage(templateGateway.formErrorMsg) :
+            (formResult.errorMsg && formResult.errorMsg !== '') ?
+                this.displayMessage(formResult.errorMsg) :
                 this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG);
         }
     }
