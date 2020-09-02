@@ -189,10 +189,6 @@ ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/i
 If no resource is found, either because there is no bundle for the given version or
 there is no resource for the given key, then the corresponding key is displayed in the details section of the GUI.
 
-See more documentation about bundles
-ifdef::single-page-doc[<<bundle_technical_overview, here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#bundle_technical_overview, here>>]
-.
 
 *example:*
 

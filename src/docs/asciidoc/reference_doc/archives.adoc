@@ -37,9 +37,3 @@ The results of these queries are limited to cards that the user is allowed to se
 
 If a card is sent to an entity and a group, then this user must be part of both the group and the entity.
 
-
-== Archive endpoints in the card-consultation API
-
-This Archives screen relies on dedicated endpoints in the card-consultation API, as described
-ifdef::single-page-doc[link:../api/cards/index.html#/archives[here]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/cards/index.html#/archives[here]]

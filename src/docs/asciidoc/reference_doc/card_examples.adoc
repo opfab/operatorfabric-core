@@ -110,8 +110,13 @@ The following example is nearly the same as the previous one except for the reci
 ....
 
 Here, the recipient is an entity and there is no more groups. So all users who has the right perimeter and who are members of this entity will receive the card. More information on perimeter can be found in 
+<<<<<<< HEAD
 ifdef::single-page-doc[<<users_service,user documentation>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_service, user documentation>>]
+=======
+ifdef::single-page-doc[<<'users_management,user documentation'>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_management, user documentation>>]
+>>>>>>> [OC-969] Add documentation for response cards
 
 
 ==== Complex case
@@ -168,8 +173,8 @@ there is no rendering configuration.
 
 When a card is selected in the feed (of the GUI), the data is displayed in the detail panel.
 The way details are formatted depends on the template contained in the bundle associated with the process as
-ifdef::single-page-doc[<<bundle_technical_overview, described here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#bundle_technical_overview, described here>>]
+ifdef::single-page-doc[<<template_description, described here>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#template_description, described here>>]
 . To have an effective example without to many actions to performed, the following example will use an already existing
 configuration.The one presents in the development version of OperatorFabric, for test purpose(`TEST` bundle).
 

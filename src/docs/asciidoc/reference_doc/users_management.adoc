@@ -7,8 +7,8 @@
 
 
 
-[[users_service]]
-= OperatorFabric Users Service
+[[users_management]]
+= User management 
 
 The User service manages users, groups, entities and perimeters (linked to groups).
 

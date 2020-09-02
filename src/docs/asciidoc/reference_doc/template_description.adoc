@@ -6,63 +6,9 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 
-[[bundle_technical_overview]]
-= Bundle Technical overview
+[[template_description]]
+= Templates
 
-See
-ifdef::single-page-doc[link:../api/businessconfig/index.html[the model section]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html[the model section]]
-(at the bottom) of the swagger generated documentation for data structure.
-
-[[resource-serving]]
-== Resource serving
-
-[[css]]
-=== CSS
-
-CSS 3 style sheet are supported, they allow custom styling of card template
-detail all css selector must be prefixed by the `.detail.template` parent
-selector
-
-[[internationalization]]
-=== Internationalization
-
-Internationalization (i18n) files are json file (JavaScript Object Notation).
-One file must be defined by module supported language. See
-ifdef::single-page-doc[link:../api/businessconfig/index.html[the model section]]
-ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/businessconfig/index.html[the model section]]
-(at the bottom) of the swagger generated documentation for data structure.
-
-Sample json i18n file
-
-....
-{ "emergency": 
-  {
-    "message": "Emergency situation happened on {{date}}. Cause : {{cause}}."
-    "module":
-      {
-        "name": "Emergency Module",
-        "description": "The emergency module managed emergencies"
-      }
-  }
-}
-....
-
-i18n messages may include parameters, these parameters are framed with double
-curly braces.
-
-The bundled json files name must conform to the following pattern : [lang].json
-
-ex:
-
-....
-fr.json
-en.json
-de.json
-....
-
-[[templates]]
-=== Templates
 
 Templates are https://handlebarsjs.com/[Handlebars] template files. Templates
 are fuelled with a scope structure composed of
@@ -81,8 +27,10 @@ for more information)
 In addition to Handlebars basic syntax and helpers, OperatorFabric defines the
 following helpers :
 
+== OperatorFabric specific handlebars helpers
+
 [[numberformat]]
-==== numberFormat
+=== numberFormat
 
 formats a number parameter using
 https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Nu
@@ -95,7 +43,7 @@ parameters (https://handlebarsjs.com/[see Handlebars doc Literals section]).
 ....
 
 [[dateformat]]
-==== dateFormat
+=== dateFormat
 
 formats the submitted parameters (millisecond since epoch) using
 https://momentjs.com/[mement.format]. The locale used is the current user
@@ -107,7 +55,7 @@ selected one, the format is "format" hash parameter
 ....
 
 [[slice]]
-==== slice
+=== slice
 
 extracts a sub array from ann array
 
@@ -156,7 +104,7 @@ outputs:
 ....
 
 [[now]]
-==== now
+=== now
 
 outputs the current date in millisecond from epoch. The date is computed from
 application internal time service and thus may be different from the date that
@@ -185,7 +133,7 @@ outputs
 for a local set to `FR_fr`
 
 [[preservespace]]
-==== preserveSpace
+=== preserveSpace
 
 preserves space in parameter string to avoid html standard space trimming.
 
@@ -194,7 +142,7 @@ preserves space in parameter string to avoid html standard space trimming.
 ....
 
 [[bool]]
-==== bool
+=== bool
 
 returns a boolean result value on an arithmetical operation (including object
 equality) or boolean operation.
@@ -229,7 +177,7 @@ examples:
 ....
 
 [[math]]
-==== math
+=== math
 
 returns the result of a mathematical operation.
 
@@ -254,7 +202,7 @@ example:
 ....
 
 [[split]]
-==== split
+=== split
 
 splits a string into an array based on a split string.
 
@@ -279,7 +227,7 @@ outputs
 ....
 
 [[svg]]
-==== svg
+=== svg
 
 outputs a svg tag with lazy loading, and missing image replacement message. The
 image url is the concatenation of an arbitrary number of helper arguments
@@ -290,7 +238,7 @@ computationPhaseOrdinal}}}
 ....
 
 [[i18n]]
-==== i18n
+=== i18n
 
 outputs a i18n result from a key and some parameters. There are two ways of
 configuration :
@@ -319,7 +267,7 @@ Emergency situation happened on 2018-06-14. Cause : Broken Cofee Machine
 ....
 
 [[sort]]
-==== sort
+=== sort
 
 sorts an array or some object's properties (first argument) using an optional
 field name (second argument) to sort the collection on this fields natural
@@ -386,7 +334,7 @@ outputs :
 ....
 
 [[arrayContains]]
-==== arrayContains
+=== arrayContains
 
 Verify if an array contains a specified element. If the array does contain the element, it returns true. Otherwise, it returns false.
 
@@ -401,7 +349,7 @@ If the colors array contains 'red', the output is:
 ....
 
 [[times]]
-==== times
+=== times
 
 Allows to perform the same action a certain number of times. Internally, this uses a for loop.
 
@@ -420,7 +368,7 @@ outputs :
 ....
 
 [[toBreakage]]
-==== toBreakage
+=== toBreakage
 
 Change the breakage of a string. The arguments that you can specify are:
 
@@ -438,7 +386,7 @@ tests
 ....
 
 [[keyValue]]
-==== keyValue
+=== keyValue
 
 This allows to traverse a map.
 
