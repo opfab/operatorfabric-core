@@ -396,7 +396,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 this._responseData = state.response;
                 this._acknowledgementAllowed = state.acknowledgementAllowed;
                 return this.handlebars.executeTemplate(this.detail.templateName,
-                    new DetailContext(this.card, this.childCards, this._userContext, this._responseData));
+                    new DetailContext(this.card,this._userContext, this._responseData));
             })
         )
             .subscribe(
