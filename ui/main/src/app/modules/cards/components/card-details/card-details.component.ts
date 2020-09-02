@@ -23,7 +23,6 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
     card: Card;
     childCards: Card[];
     user: User;
-    userWithPerimeters: UserWithPerimeters;
     details: Detail[];
     unsubscribe$: Subject<void> = new Subject<void>();
     private _currentPath: string;
@@ -73,16 +72,6 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                 }
             },
                 error => console.log(`something went wrong while trying to ask user application registered service with user id : ${userId}`)
-            );
-
-        this.userService.currentUserWithPerimeters()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(userWithPerimeters => {
-                if (userWithPerimeters) {
-                    this.userWithPerimeters = userWithPerimeters;
-                }
-            },
-                error => console.log(`something went wrong while trying to have currentUser with perimeters `)
             );
 
         this.store.select(selectCurrentUrl)

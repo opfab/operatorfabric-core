@@ -21,6 +21,8 @@ import {TranslateService} from '@ngx-translate/core';
 import { catchError } from 'rxjs/operators';
 import { I18nService } from '@ofServices/i18n.service';
 import { CardService } from '@ofServices/card.service';
+import { UserService } from '@ofServices/user.service';
+
 
 @Component({
     selector: 'of-root',
@@ -41,8 +43,9 @@ export class AppComponent implements OnInit {
         , private authenticationService: AuthenticationService
         ,private  configService: ConfigService
         , private translate: TranslateService
-        , private i18nService : I18nService
-        ,private cardService: CardService) {
+        , private i18nService: I18nService
+        , private cardService: CardService
+        , private userService: UserService) {
     }
 
     ngOnInit() {
@@ -63,7 +66,7 @@ export class AppComponent implements OnInit {
                 console.error("Impossible to load configuration file web-ui.json",err);
                 return caught;
             });
-     
+
     }
 
     private setTitle()
@@ -85,6 +88,7 @@ export class AppComponent implements OnInit {
                 if (identifier) {
                     console.log(new Date().toISOString(),`User ${identifier} logged`);
                     this.isAuthenticated = true;
+                    this.userService.loadUserWithPerimetersData();
                     this.cardService.initCardSubscription();
                     this.cardService.initSubscription.subscribe( ()=> this.loaded = true);
                 }
