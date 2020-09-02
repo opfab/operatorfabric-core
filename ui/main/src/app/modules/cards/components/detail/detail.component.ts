@@ -138,7 +138,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnInit() {
 
-        templateGateway.childCards = this.childCards;
+       
 
         if (this._appService.pageType === PageType.FEED) {
 
@@ -389,9 +389,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private initializeHandlebarsTemplates() {
 
+        templateGateway.childCards = this.childCards;
         this.businessconfigService.queryProcessFromCard(this.card).pipe(
             takeUntil(this.unsubscribe$),
             switchMap(process => {
+                
                 const state = process.extractState(this.card);
                 this._responseData = state.response;
                 this._acknowledgementAllowed = state.acknowledgementAllowed;
