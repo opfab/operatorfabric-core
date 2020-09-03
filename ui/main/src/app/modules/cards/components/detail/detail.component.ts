@@ -31,6 +31,7 @@ import {User} from '@ofModel/user.model';
 import {Map} from '@ofModel/map';
 import {RightsEnum, userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
+import { UserService } from '@ofServices/user.service';
 
 declare const templateGateway: any;
 
@@ -79,7 +80,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() card: Card;
     @Input() childCards: Card[];
     @Input() user: User;
-    @Input() userWithPerimeters: UserWithPerimeters;
     @Input() currentPath: string;
 
     public active = false;
@@ -96,7 +96,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
                 private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
                 private store: Store<AppState>, private translate: TranslateService,
-                private cardService: CardService, private _appService: AppService) {
+                private cardService: CardService, private _appService: AppService,
+                private userService:UserService) {
 
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
@@ -217,7 +218,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     getPrivilegetoRespond(card: Card, responseData: Response) {
 
-        this.userWithPerimeters.computedPerimeters.forEach(perim => {
+        this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
             if ((perim.process === card.process) && (perim.state === responseData.state)
                 && (this.compareRightAction(perim.rights, RightsEnum.Write)
                     || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {

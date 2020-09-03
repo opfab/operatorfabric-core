@@ -10,15 +10,18 @@
 
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
-import {Observable} from 'rxjs';
+import {Observable,Subject} from 'rxjs';
 import {Entity, User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {HttpClient} from '@angular/common/http';
+import {takeUntil} from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
 
     readonly userUrl: string;
+    private _userWithPerimeters: UserWithPerimeters;
+    private ngUnsubscribe = new Subject<void>();
 
     /**
      * @constructor
@@ -44,5 +47,20 @@ export class UserService {
         const url = `${this.userUrl}/entities`;
         return this.httpClient.get<Entity[]>(url);
 
+    }
+    public loadUserWithPerimetersData(): void {
+        this.currentUserWithPerimeters()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(
+                (userWithPerimeters) => {
+                    if (userWithPerimeters) {
+                        this._userWithPerimeters = userWithPerimeters;
+                    }
+                }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+            );
+    }
+
+    public getCurrentUserWithPerimeters(): UserWithPerimeters {
+        return this._userWithPerimeters;
     }
 }
