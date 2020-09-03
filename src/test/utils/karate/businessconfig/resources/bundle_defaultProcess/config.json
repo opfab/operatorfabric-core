@@ -7,10 +7,12 @@
     "chart",
     "chart-line",
     "process",
-    "question"
+    "question",
+    "contingencies"
   ],
   "csses": [
-    "style"
+    "style",
+    "contingencies"
   ],
   "states": {
     "messageState": {
@@ -72,6 +74,22 @@
           "templateName": "process",
           "styles": [
             "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },
+    "contingenciesState": {
+      "name": "contingencies.title",
+      "color": "#8bcdcd",
+      "details": [
+        {
+          "title": {
+            "key": "contingencies.title"
+          },
+          "templateName": "contingencies",
+          "styles": [
+            "contingencies"
           ]
         }
       ],

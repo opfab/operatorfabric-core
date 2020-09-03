@@ -7,5 +7,6 @@
 	"chartDetail" : { "title":"Un graphique"},
 	"chartLine" : { "title":"Prévison de consommation électrique"},
 	"process" : { "title":"Etat du processus"},
-	"question" : {"title": "Indisponibilité planifiée","button" : {"text" :"Envoyer votre réponse"}}
+	"question" : {"title": "Indisponibilité planifiée","button" : {"text" :"Envoyer votre réponse"}},
+	"contingencies": {"title" : "Contraintes réseau","summary":"Synthèse des contraintes sur le réseau français"}
 }
