@@ -22,7 +22,7 @@ The result will be available in the `target` repository.
 
 ### Ready made scripts
 
-#### Set up environment
+#### Fancy Cards 
 
 To display fancy cards into a running OperatorFabric instance:
 
@@ -30,12 +30,29 @@ To display fancy cards into a running OperatorFabric instance:
 ./loadBundle.sh && ./postTestCards.sh
 ....
 
-#### Clean up environment
+To clean up :
 
 ....
 ./deleteTestCards.sh
 ....
 
+
+#### Non regression tests
+
+You can launch operatorFabric non-regression tests via 3 scripts in src/test/api/karate:
+
+- launchAllBusinessconfig.sh
+- launchAllUsers.sh
+- launchAllCards.sh
+
+For the launchAllCards script to run properly, you need to start a third party test server : 
+
+....
+cd src/test/externalApp
+gradle bootRun
+....
+
+To have the test passed, you need to have a clean Mongo DB database.
 
 ## Clean Up Mongo DB
 
@@ -58,3 +75,6 @@ use operator-fabric
 db.cards.remove({})
 db.archivedCards.remove({})
 ....
+
+
+
