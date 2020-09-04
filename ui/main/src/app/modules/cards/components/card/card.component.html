@@ -15,19 +15,36 @@
         <div class="p-1" [class.text-truncate]="!open">
             <p class="card-title" translate
                 [translateParams]="lightCard.title.parameters">{{i18nPrefix + lightCard.title.key}}</p>
-            <p *ngIf="this.dateToDisplay" class="card-subtitle">({{this.dateToDisplay}})</p>            
-        </div>        
+            <p *ngIf="this.dateToDisplay" class="card-subtitle">({{this.dateToDisplay}})</p>
+        </div>
         <div class="ml-auto align-self-center pr-2">
             <div class="d-flex align-items-end flex-column">
                 <div *ngIf="lightCard.hasBeenAcknowledged" class="p-2"><em class="fa fa-check"></em></div>
                 <div *ngIf="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead" class="mt-auto p-2"><em class="fa fa-eye-slash"></em></div>
               </div>
-        </div>            
-    </div>  
+        </div>
+    </div>
     <div class="d-flex card-body p-0 border-0" *ngIf="open || !open">
         <div class="badge-border rounded-bottom-left bg-sev-{{lightCard.severity.toString()|lowercase}} col-1"></div>
         <div class="card-text p-1">
             <span *ngIf="open"><div id="opfab-selected-card" translate [translateParams]="lightCard.summary.parameters">{{i18nPrefix + lightCard.summary.key}}</div></span>
         </div>
-    </div>    
+    </div>
+    <div class="d-flex card-header p-0 border-0 light-card-detail">
+        <div class="badge-border rounded-bottom-left bg-sev-{{lightCard.severity.toString()|lowercase}} col-1"></div>
+        <div class="ml-auto align-self-center pr-2">
+            <div class="d-flex align-items-end flex-row" >
+                <div [hidden]="!this.enableLastTimeToAct">
+                    <div [hidden]="this.stopTime">
+                        <countdown #countdown class="lttd-timeleft" [config]='prettyConfig' (event)="onTimerFinished($event)" ></countdown>
+                        <em class="far fa-clock lttd-icon" style="color: yellow;"></em>
+                    </div>
+                    <div [hidden]="!this.stopTime">
+                        <span><label class="lttd-text" translate>feed.filters.time.lttd.label</label></span>
+                        <span><em class="far fa-clock lttd-icon" style="color: white;"></em></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

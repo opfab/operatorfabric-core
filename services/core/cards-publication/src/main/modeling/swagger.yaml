@@ -527,6 +527,12 @@ definitions:
         items:
           type: string
         description: Tags associated with the card
+      entitiesAllowedToRespond:
+        description: List of entities that have to respond
+        type: array
+        items:
+          type: string
+        example: ["tso1","tso2"]
       title:
         description: Card i18n title
         $ref: '#/definitions/I18n'

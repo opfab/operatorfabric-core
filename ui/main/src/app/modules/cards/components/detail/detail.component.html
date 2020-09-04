@@ -9,6 +9,7 @@
 
 
 <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
+samiiiiiiiiiiiiiiii
 <div id="div-card-template" [hidden]="!active" [innerHtml]="htmlContent"></div>
 
 <div class="my-3">
@@ -22,7 +23,8 @@
 
   <div id='div-detail-btn' *ngIf="!isArchivePageType" class="mb-3">
     <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists && isActionEnabled'
-      translate [translateParams]="responseDataParameters" (click)='submitResponse()'>{{btnText}}</button>
+      translate [translateParams]="responseDataParameters" [disabled]="lttdExpiredIsTrue"
+            (click)='submitResponse()'>{{btnText}}</button>
     <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed' translate
       (click)='acknowledge()'>{{btnAckText}}</button>
   </div>

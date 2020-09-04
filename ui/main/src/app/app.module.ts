@@ -32,11 +32,17 @@ import {AboutComponent} from './modules/about/about.component';
 import {FontAwesomeIconsModule} from './modules/utilities/fontawesome-icons.module';
 import {LoggingModule} from './modules/logging/logging.module';
 import {MonitoringModule} from './modules/monitoring/monitoring.module';
+import { CountdownModule, CountdownGlobalConfig, CountdownConfig } from 'ngx-countdown';
+
+
+export function countdownConfigFactory(): CountdownConfig {
+    return { format: `mm:ss` };
+  }
 
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
+        BrowserModule,        
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
@@ -50,7 +56,8 @@ import {MonitoringModule} from './modules/monitoring/monitoring.module';
         UtilitiesModule,
         LoggingModule,
         MonitoringModule,
-        AppRoutingModule
+        AppRoutingModule,
+        CountdownModule
     ],
     declarations: [AppComponent,
         NavbarComponent,
@@ -61,9 +68,13 @@ import {MonitoringModule} from './modules/monitoring/monitoring.module';
         CustomLogoComponent,
         AboutComponent
     ],
-    providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
+    providers: [{provide: LocationStrategy, useClass: HashLocationStrategy},
+        {provide: CountdownGlobalConfig, useFactory: countdownConfigFactory}
+    ],
     bootstrap: [AppComponent]
 })
+
+
 export class AppModule {
 
 }

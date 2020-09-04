@@ -47,8 +47,8 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .endDate(source.getDate("endDate") == null ? null : source.getDate("endDate").toInstant())
                 .publishDate(source.getDate("publishDate") == null ? null : source.getDate("publishDate").toInstant())
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
-                .usersAcks(source.getList("usersAcks", String.class))
-        ;
+                .usersAcks(source.getList("usersAcks", String.class));
+
         Document titleDoc = (Document) source.get("title");
         if(titleDoc!=null)
             builder.title(i18nReadConverter.convert(titleDoc));
@@ -62,6 +62,12 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
             for (String t : tags) {
                 builder.tag(t);
             }
+        List<String> entitiesAllowedToRespond = (List<String>) source.get("entitiesAllowedToRespond");
+        if (entitiesAllowedToRespond != null){
+            for (String entities : entitiesAllowedToRespond) {
+                builder.tag(entities);
+            }
+        }
         List<Document> timeSpans = (List<Document>) source.get("timeSpans");
         if (timeSpans != null)
             for (Document d : timeSpans) {

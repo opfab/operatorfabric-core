@@ -32,7 +32,8 @@
       "time": {
         "display": "BUSINESS"
       },
-      "hideAckFilter": false
+      "hideAckFilter": false,
+      "secondsBeforeLttdForClockDisplay": 180
     },
     "notify": false,
     "timeline": {

@@ -28,6 +28,7 @@ Feature: API - creatCardAction
             "processInstanceId": "processInstanceId1",
             "state": "response_full",
             "startDate": startDate,
+            "lttd": 1596024957,
             "severity": "ACTION",
             "tags": [
                 "tag1"
@@ -60,7 +61,7 @@ Feature: API - creatCardAction
 
             },
             "entityRecipients": ["ENTITY1"],
-            "entitiesAllowedToRespond": ["TSO1","ENTITY1"],
+            "entitiesAllowedToRespond": ["TSO1","ENTITY1", "ENTITY2"],
             "data": {
                 "data1": "data1 content"
             }
@@ -104,6 +105,8 @@ Feature: API - creatCardAction
             "processInstanceId": "processInstanceId1",
             "state": "longFormat",
             "startDate": startDate,
+            "lttd": 1596025857,
+
             "severity": "ACTION",
             "tags": [
                 "tag1"

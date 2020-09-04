@@ -8,7 +8,7 @@
  */
 
 
-import {AfterViewChecked, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewChecked, DoCheck, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Card, Detail} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
@@ -29,7 +29,7 @@ import {LightCard, Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {Map} from '@ofModel/map';
-import {RightsEnum, userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {RightsEnum, userRight} from '@ofModel/userWithPerimeters.model';
 import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
 import { UserService } from '@ofServices/user.service';
 
@@ -74,7 +74,7 @@ const enum ResponseMsgColor {
     selector: 'of-detail',
     templateUrl: './detail.component.html'
 })
-export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked {
+export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked,DoCheck {
 
     @Input() detail: Detail;
     @Input() card: Card;
@@ -91,6 +91,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _responseData: Response;
     private _hasPrivilegeToRespond = false;
     private _acknowledgementAllowed: boolean;
+    lttdExpiredIsTrue:boolean;
     message: Message = {display: false, text: undefined, color: undefined};
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
@@ -175,6 +176,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 });
         }
         this.markAsRead();
+    }
+
+    ngDoCheck() {
+        this.tchekLttdExpired();
+    }
+
+    tchekLttdExpired():void {
+        this.lttdExpiredIsTrue =  (this.card.lttd != null && Math.floor((this.card.lttd - new Date().getTime()) / 1000) <= 0);
     }
 
     get i18nPrefix() {
@@ -394,7 +403,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.businessconfigService.queryProcessFromCard(this.card).pipe(
             takeUntil(this.unsubscribe$),
             switchMap(process => {
-                
+
                 const state = process.extractState(this.card);
                 this._responseData = state.response;
                 this._acknowledgementAllowed = state.acknowledgementAllowed;

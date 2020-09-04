@@ -69,6 +69,8 @@ public class LightCardPublicationData implements LightCard {
 
     private String parentCardUid;
 
+    private List<String> entitiesAllowedToRespond;
+
     /**
      * return timespans, may be null
      * @return
