@@ -29,10 +29,10 @@
   },
   "menu":{
     "label": "Menu du Processus de Test",
-    "first":"Premier item",
-    "second":"Deuxieme item"
+    "first":"Documentation Operator Fabric",
+    "second":"LF Energy"
   },
   "template": {
     "title": "Onglet TEST"
-  },
+  }
 }

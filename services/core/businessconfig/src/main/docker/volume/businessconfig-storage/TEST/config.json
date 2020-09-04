@@ -22,12 +22,14 @@
     {
       "id": "uid test 0",
       "url": "https://opfab.github.io/",
-      "label": "menu.first"
+      "label": "menu.first",
+      "linkType" : "BOTH"
     },
     {
       "id": "uid test 1",
-      "url": "https://www.la-rache.com",
-      "label": "menu.second"
+      "url": "https://www.lfenergy.org/",
+      "label": "menu.second",
+      "linkType" : "TAB"
     }
   ],
   "states": {

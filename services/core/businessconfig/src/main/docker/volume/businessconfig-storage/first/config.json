@@ -1,14 +1,12 @@
 {
   "id": "first",
   "version": "v1",
-  "name": {
-    "key": "process.label"
-  },
+  "name":"process.label",
   "templates": [
     "template1"
   ],
   "menuEntries": [
-    {"id": "uid test 0","url": "https://opfab.github.io/whatisopfab/","label": "menu.first", "linkType": "BOTH"}
+    {"id": "uid test 0","url": "https://opfab.github.io/","label": "menu.first", "linkType": "BOTH"}
   ],
   "csses": [
     "style1",

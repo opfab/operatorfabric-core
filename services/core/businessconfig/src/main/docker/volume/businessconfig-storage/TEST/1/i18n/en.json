@@ -29,8 +29,8 @@
   },
   "menu": {
     "label": "Test Process Menu",
-    "first": "First Entry",
-    "second": "Second Entry"
+    "first":"Operator Fabric Documentation",
+    "second":"LF Energy"
   },
   "template": {
     "title": "Asset details"
