@@ -8,7 +8,7 @@
 [[response_cards]]
 = Response cards
 
-It is possible to ask some questions to the operator inside a card, when the operator submit the response, a card containing the response is emitted to a third-party tool.
+Within your template, you can allow the user to perform some action (respond to a form, answer a question, ...). The user fills these information and then clicks on a submit button. When he submits this action, a new card is created and emitted to a third-party tool.
 
 This card is called "a child card" as it is attached to the card where the question came from : "the parent card". This child card is also send to the users that have received the parent card. From the ui point of view, the information of the child cards can be integrated in real time in the parent card if configured. 
 
@@ -16,21 +16,19 @@ The process can be represented as follow :
 
 image::ResponseCardSequence.jpg[,align="center"]
 
-Notice that the response will be associated to the entity and not to the user, i.e the user respond on behalf of his entity. User can respond more than one time to a card (a future evolution could add the possibility to limit to one response per entity).
-
+Notice that the response will be associated to the entity and not to the user, i.e the user responds on behalf of his entity. A user can respond more than one time to a card (a future evolution could add the possibility to limit to one response per entity).
 
 You can view a screenshot of an example of card with responses : 
 
 image::ResponseCardScreenshot2.png[,align="center"]
 
-To use response card, you have to :
+== Steps needed to use a response card
 
+=== Define a third party tool
 
-== Define a third party tool 
+The response card is to be received by a third party application for business processing. The third-party application will receive the card as an HTTP POST request. The card is in json format (the same format as when we send a card). The field data in the json contains the user response.
 
-The response card is to be received by a third party for business processing, the third-party will received the card as an HTTP POST request. The card is in json format (the same format as when we send a card). The field data in the json contains the user response.
-
-The url of the third party receiving the response card is to be set in the .yml of the publication service.  Here is an example with two third parties configured.
+The url of the third party receiving the response card is to be set in the .yml of the publication service. Here is an example with two third parties configured.
 ....
 externalRecipients-url: "{\
            third-party1: \"http://thirdparty1/test1\", \
@@ -43,9 +41,9 @@ externalRecipients-url: "{\
 For the url, do not use localhost if you run OperatorFabric in a docker, as the publication-service will not be able to join your third party. 
 ====
 
-== Configure the response in config.json 
+=== Configure the response in config.json
 
-A card can have a response only if it s in a process/state that is configured for. To do that you need to setup the good  configuration in the config.json of the concerned process. Here is an example of configuration :
+A card can have a response only if it's in a process/state that is configured for. To do that you need to setup the good  configuration in the config.json of the concerned process. Here is an example of configuration :
 
 ....
 {
@@ -88,27 +86,26 @@ A card can have a response only if it s in a process/state that is configured fo
 
 We define here a state name "questionState" with a response field. Now, if we send a card with process "defaultProcess" and state "questionState" , the user will have the possibility to respond if he has the good privileges. 
 
-- The field "state" in the response field is used to define the state to use for the response (child card). 
+- The field "state" in the response field is used to define the state to use for the response (the child card).
 - The field "btnColor" define the color of the submit button for the response, it is optional and there is 3 possibilities : RED , GREEN , YELLOW 
 - The field "btnText"is the i18n key of the title of the submit button, it is optional.
 
 
-== Design the question form in the template 
+=== Design the question form in the template
 
 For the user to response you need to define the response form in the template with standard HTML syntax   
 
 To enable operator fabric to send the response, you need to implement a javascript function in your template called templateGateway.validyForm which return an object containing three fields :
 
-- valid : true if the user input is valid
-- errorMsg : message in case of invalid user input 
-- formData : the user input to send in the data field of the child card 
+- valid (_boolean_) : true if the user input is valid
+- errorMsg (_string_) : message in case of invalid user input. If valid is true this field is not necessary.
+- formData (_any_) : the user input to send in the data field of the child card. If valid is false this field is not necessary.
 
 This method will be called by OperatorFabric when user click on the button to send the response 
 
 You can find an example in the file src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars.
 
-
-== Define permissions 
+=== Define permissions
 
 To respond to a card a user must have the right privileges, it is done using "perimeters". The user must be in a group that is attached to a perimeter with  a right "Write" for the concerned process/state, the state being the response state defined in the config.json.
 
@@ -146,11 +143,11 @@ The question card is like a usual card except that you have a the field "entitie
 
 == Integrate child cards 
 
-For each user response, a child card containing the response is emitted and store in OperatorFabric like a normal card. It is not directly visible on the ui but this child card can be integrate in real time to the parent card of all user watching the card. To do that , you need  some code in the template to process child data : 
+For each user response, a child card containing the response is emitted and stored in OperatorFabric like a normal card. It is not directly visible on the ui but this child card can be integrated in real time to the parent card of all the users watching the card. To do that, you need  some code in the template to process child data:
 
-- You can access child cards via the javascript method templateGateway.childCards() which return an array of child cards. The structure of a child card is the same as the structure of a classic card.
+- You can access child cards via the javascript method templateGateway.childCards() which returns an array of the child cards. The structure of a child card is the same as the structure of a classic card.
 - As child cards are arriving in real time, you need to define a method call templateGateway.applyChildCards() which will be called by opfab each time the list of child cards is evolving.
-- You need to apply child cards when the cards is loading via a call to templateGateway.applyChildCards() 
+- You need to apply the updated child cards in your template via a call to _templateGateway.applyChildCards()_.
 
 
 You can find an example in the file src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars.
