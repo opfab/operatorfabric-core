@@ -158,6 +158,7 @@ And match response.count == 1
     function() {
 
       startDate = new Date().valueOf() + 4*60*60*1000;
+	  lttdDate = new Date().valueOf() + 60*1000*3;
 	  endDate = new Date().valueOf() + 6*60*60*1000;
 
 		var card = {
@@ -179,6 +180,7 @@ And match response.count == 1
 			"summary" : {"key" : "defaultProcess.summary"},
 			"title" : {"key" : "question.title"},
 			"data" : {"message":" Action Card"},
+			"lttd" : lttdDate,
 			"timeSpans" : [
 				{"start" : startDate},
 				{"start" : endDate}
