@@ -131,13 +131,15 @@ To add it to a group name for example "mygroup", you need to make a PATCH reques
 
 The question card is like a usual card except that you have a the field "entitiesAllowedToRespond" to set with the entities allowed to respond to the card . If the user is not in the entity , he will not be able to respond . 
 ....
-    ...
-	"process"  :"defaultProcess",
-	"processInstanceId" : "process4",
-	"state": "questionState",
-	"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
-	"severity" : "ACTION",
-	...
+
+...
+"process"  :"defaultProcess",
+"processInstanceId" : "process4",
+"state": "questionState",
+"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
+"severity" : "ACTION",
+...
+
 ....
 
 
@@ -146,8 +148,8 @@ The question card is like a usual card except that you have a the field "entitie
 For each user response, a child card containing the response is emitted and stored in OperatorFabric like a normal card. It is not directly visible on the ui but this child card can be integrated in real time to the parent card of all the users watching the card. To do that, you need  some code in the template to process child data:
 
 - You can access child cards via the javascript method templateGateway.childCards() which returns an array of the child cards. The structure of a child card is the same as the structure of a classic card.
-- As child cards are arriving in real time, you need to define a method call templateGateway.applyChildCards() which will be called by opfab each time the list of child cards is evolving.
-- You need to apply the updated child cards in your template via a call to _templateGateway.applyChildCards()_.
+- As child cards are arriving in real time, you need to define a method call templateGateway.applyChildCards() which will be called by OperatorFabric each time the list of child cards is evolving.
+- To integrate the child cards when loading the card you need to call to _templateGateway.applyChildCards()_. (OperatorFabric is not calling the method on card loading)
 
 
 You can find an example in the file src/test/utils/karate/businessconfig/resources/bundle_defaultProcess/template/en/question.handlebars.
