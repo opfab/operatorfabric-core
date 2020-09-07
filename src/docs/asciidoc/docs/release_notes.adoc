@@ -10,8 +10,8 @@
 
 == Features
 
-- **Routing** ([OC-950] [OC-830])  : New routing mechanism is now fully functionnal, it is possible to define card visiblity per process/state for groups using perimeters, see users documentation : https://opfab.github.io/documentation/current/reference_doc/#_users_management
-- **Response card (Smart notification) ** ([OC-918] [OC-915] [OC-982] [OC-914] [OC-966] [OC-980] [OC-1051] [OC-969] [OC-1071]) : It is now possible for the user to reply on a card if configured, see documentation : https://opfab.github.io/documentation/current/reference_doc/#_response_cards
+- **Routing** ([OC-950] [OC-830])  : New routing mechanism is now fully functionnal, it is possible to define card visiblity per process/state for groups using perimeters, see users documentation : https://opfab.github.io/documentation/current/reference_doc/#users_management
+- **Response card (Smart notification) ** ([OC-918] [OC-915] [OC-982] [OC-914] [OC-966] [OC-980] [OC-1051] [OC-969] [OC-1071]) : It is now possible for the user to reply on a card if configured, see documentation : https://opfab.github.io/documentation/current/reference_doc/#response_cards
 - ** Acknowlegment ** ([OC-922][OC-923][OC-1033]): It is now possible for the user to acknowlege cards with a button on the bottom-right of the card .The feed can also been filtered to show acknowledged or not acknowledged cards. It is as well possible for the user to "unacknowledge" a card previously acknowlegded .This functionnality is activated on a process state basis via the setting of acknowledgementAllowed to true in the  config.json of the bundles (example in /src/test/utils/karate/src/test/utils/karate/businessconfig/resources/bundle_api_test/config.json)
 
 - **Logging and monitoring** : [OC-1023] New screens to see cards in monitoring/logging views   (experimental)
@@ -59,7 +59,7 @@ Run `sdk install java 8.0.265-zulu` then `source ./bin/load_environment_light.sh
 - [OC-1041] Trace user actions, only acknowledgment for the moment
 - [OC-new-helpers] 4 new handlebars helpers added
 [NOTE]
-4 new handlebars helpers added: 'keyValue', 'arrayContains', 'times', 'toBreakage'. You can consult the documentation at the following url to check how to use them: https://opfab.github.io/documentation/current/docs/single_page_doc.html#templates
+4 new handlebars helpers added: 'keyValue', 'arrayContains', 'times', 'toBreakage'. You can consult the documentation at the following url to check how to use them: https://opfab.github.io/documentation/current/docs/single_page_doc.html#template_description
 - [OC-831] Update getting started documentation with routing mechanism
 - [OC-1065] Remove unused bundles
 - [OC-1067] GET /entities : allow all users for this operation
