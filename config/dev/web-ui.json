@@ -117,7 +117,7 @@
       "operatorfabric": {
         "name": "OperatorFabric",
         "rank": 0,
-        "version": "SNAPSHOT"
+        "version": "1.5.0.RELEASE"
       }
     },
     "infos": {
