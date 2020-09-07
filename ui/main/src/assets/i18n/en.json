@@ -2,12 +2,16 @@
   "menu": {
     "feed": "Card Feed",
     "archives": "Archives",
+    "logging": "Logging",
+    "monitoring": "Monitoring",
     "logout": "Logout",
     "settings": "Settings",
-    "about": "About"
+    "about": "About",
+    "freemessage": "New Card"
   },
   "timeline" : {
-    "buttonTitle" : { 
+    "businessPeriod": "Business period",
+    "buttonTitle" : {
       "TR": "RT",
       "J" : "D",
       "7D":"7D",
@@ -38,6 +42,18 @@
         },
         "information": {
           "label": "Information"
+        }
+      },
+      "ack": {
+        "title": "Acknowledgement",
+        "acknowledged": {
+          "label": "Acknowledged"
+        },
+        "notacknowledged": {
+          "label": "Not acknowledged"
+        },
+        "all": {
+          "label": "All"
         }
       }
     },
@@ -79,7 +95,8 @@
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Action",
     "playSoundForCompliant": "Compliant",
-    "playSoundForInformation": "Information"
+    "playSoundForInformation": "Information",
+    "invalidEmail": "Invalid email address"
   },
   "archive": {
     "filters": {
@@ -95,16 +112,71 @@
     "clear": "Clear",
     "noResult": "Your search did not match any results."
   },
+  "logging": {
+    "filters": {"process": "Service"},
+    "cardType": "Card Type",
+    "timeOfAction": "Time of Action",
+    "processName": "Process Name",
+    "description": "Description",
+    "sender": "Sender",
+    "noResult": "No result"
+  },
+  "monitoring": {
+    "filters": {"process": "Process"},
+    "time": "Time",
+    "businessPeriod": "Business Period",
+    "title": "Title",
+    "summary": "Summary",
+    "trigger": "Trigger",
+    "coordinationStatus": "Coordination Status",
+    "seeDetails": "see details"
+  },
   "button": {
     "ok": "OK",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "reset" : "Reset"
+
+  },
+  "free-message": {
+    "title": "Edit Free Message Notification",
+    "filters": {
+      "severity":  "Severity",
+      "process": "Process",
+      "state": "State",
+      "startDate":  "Start Date",
+      "endDate":  "End Date",
+      "comment": "Comment",
+      "entities": "Recipient"
+    },
+    "options": {
+      "severity": {
+        "ALARM": "Alarm",
+        "ACTION": "Action",
+        "COMPLIANT": "Compliant",
+        "INFORMATION": "Information"
+      }
+    },
+    "prepareCard": "Prepare Card before sending",
+    "confirmSending": "Send the following card?",
+    "accept": "Send",
+    "refuse": "Cancel",
+    "processInstanceId": "Id",
+    "state": "State",
+    "send-another-one": "Send another Card"
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",
     "error": {
       "submit": "The card could not been sent",
-      "form": "The form is not correctly filled"
+      "form": "The form is not correctly filled",
+      "ack": "Unable to change acknowledgement of this card for an error of remote system"
     },
     "submitSuccess": "Action succeeded"
+  },
+  "cardAcknowledgment": {
+    "button": {
+      "ack": "Acknowledge and close",
+      "unack": "Cancel acknowledgement"
+    }
   }
 }

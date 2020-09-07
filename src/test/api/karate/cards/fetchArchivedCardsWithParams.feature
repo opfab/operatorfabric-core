@@ -12,9 +12,9 @@ Feature: Archives
 
 [{
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card1",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -30,9 +30,9 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card2",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card2",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -48,9 +48,9 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card3",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card3",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -66,9 +66,9 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card4",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card4",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -84,9 +84,9 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card5",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card5",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -102,9 +102,9 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card6",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card6",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -121,9 +121,9 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card7",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card7",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -139,9 +139,9 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card8",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card8",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -157,9 +157,9 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card9",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card9",
 	"endDate" : 1583733122000,
 	"state": "messageState",
 	"recipient" : {
@@ -176,9 +176,9 @@ Feature: Archives
 },
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process2card10",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process2card10",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -198,9 +198,9 @@ Feature: Archives
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "2",
-	"process"  :"defaultProcess",
-	"processId" : "process10",
+	"processVersion" : "2",
+	"process"  :"api_test",
+	"processInstanceId" : "process10",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -290,7 +290,7 @@ Feature: Archives
      And assert response.numberOfElements >= 10
 
   Scenario: filter process
-    Given url opfabUrl + 'cards/archives/' +'?process=defaultProcess'
+    Given url opfabUrl + 'cards/archives/' +'?process=api_test'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200

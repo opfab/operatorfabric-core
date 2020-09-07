@@ -14,15 +14,15 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {AppState} from "@ofStore/index";
-import {ThirdsService} from "@ofServices/thirds.service";
+import {AppState} from '@ofStore/index';
+import {ProcessesService} from "@ofServices/processes.service";
 import {
     LoadMenu,
     LoadMenuFailure,
     LoadMenuSuccess,
     MenuActionTypes,
-} from "@ofActions/menu.actions";
-import {Router} from "@angular/router";
+} from '@ofActions/menu.actions';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class MenuEffects {
@@ -30,7 +30,7 @@ export class MenuEffects {
     /* istanbul ignore next */
     constructor(private store: Store<AppState>,
                 private actions$: Actions,
-                private service: ThirdsService,
+                private service: ProcessesService,
                 private router: Router
     ) {
     }
@@ -39,12 +39,12 @@ export class MenuEffects {
     load: Observable<Action> = this.actions$
         .pipe(
             ofType<LoadMenu>(MenuActionTypes.LoadMenu),
-            switchMap(action =>  this.service.computeThirdsMenu()),
+            switchMap(action =>  this.service.computeMenu()),
             map(menu =>
                 new LoadMenuSuccess({menu: menu})
             ),
             catchError((err, caught) => {
-                console.error(err);
+                console.error(new Date().toISOString(),err);
                 this.store.dispatch(new LoadMenuFailure(err));
                 return caught;
             })

@@ -5,9 +5,6 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-
-
-
 = Cards Examples
 
 Before detailing the content of cards, let's show you what cards look like through few examples of json.
@@ -15,7 +12,7 @@ Before detailing the content of cards, let's show you what cards look like throu
 [[minimal_card]]
 == Minimal Card
 
-The OperatorFabric Card specification defines 8 mandatory attributes, but some optional attributes are needed for cards to be useful in OperatorFabric. Let's clarify those point through few examples of minimal cards and what happens when they're used as if.
+The OperatorFabric Card specification defines mandatory attributes, but some optional attributes are needed for cards to be useful in OperatorFabric. Let's clarify those point through few examples of minimal cards and what happens when they're used as if.
 
 === Send to One User
 The following card contains only the mandatory attributes.
@@ -23,8 +20,9 @@ The following card contains only the mandatory attributes.
 ....
 {
 	"publisher":"TSO1",
-	"publisherVersion":"0.1",
-	"processId":"process-000",
+	"processVersion":"0.1",
+	"process":"process",
+	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
@@ -37,7 +35,9 @@ The following card contains only the mandatory attributes.
 }
 ....
 
-This an information about the process `process-000`, send by the `TSO1`. The title and the summary refer to `i18n` keys defined in the associated `i18n` files of the publisher. This card is displayable since the first january 2019 and should only be received by the user using the `tso1-operator` login.
+This an information about the process instance `process-000` of process `process`, sent by `TSO1`. The title and the summary refer to `i18n` keys
+defined in the associated `i18n` files of the process. This card is displayable since the first january 2019 and
+should only be received by the user using the `tso1-operator` login.
 
 === Send to several users
 
@@ -48,8 +48,9 @@ The following example is nearly the same as the previous one except for the reci
 ....
 {
 	"publisher":"TSO1",
-	"publisherVersion":"0.1",
-	"processId":"process-000",
+	"processVersion":"0.1",
+	"process":"process",
+	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
@@ -63,27 +64,7 @@ The following example is nearly the same as the previous one except for the reci
 
 Here, the recipient is a group, the `TSO1`. So all users who are members of this group will receive the card.
 
-==== Simple case (sending to an entity)
 
-The following example is nearly the same as the previous one except for the recipient.
-
-....
-{
-	"publisher":"TSO1",
-	"publisherVersion":"0.1",
-	"processId":"process-000",
-	"startDate":1546297200000,
-	"severity":"INFORMATION",
-	"title":{"key":"card.title.key"},
-	"summary":{"key":"card.summary.key"},
-	"recipient":{
-		"type":"USER",
-	}
-    "entityRecipients" : ["ENTITY1"]
-}
-....
-
-Here, the recipient is an entity, the `ENTITY1`. So all users who are members of this entity will receive the card.
 
 ==== Simple case (sending to a group and an entity)
 
@@ -92,8 +73,9 @@ The following example is nearly the same as the previous one except for the reci
 ....
 {
 	"publisher":"TSO1",
-	"publisherVersion":"0.1",
-	"processId":"process-000",
+	"processVersion":"0.1",
+	"process":"process",
+	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
@@ -101,16 +83,41 @@ The following example is nearly the same as the previous one except for the reci
 	"recipient":{
 		"type":"GROUP",
         "identity":"TSO1"
-	}
-    "entityRecipients" : ["ENTITY1"]
+	},
+	"entityRecipients" : ["ENTITY1"]
 }
 ....
 
-Here, the recipients are a group and an entity, the `TSO1` group and `ENTITY1` entity. So all users who are both members of this group and this entity will receive the card.
+Here, the recipients are a group and an entity, the `TSO1` group and `ENTITY1` entity. So all users who are both members
+of this group and this entity will receive the card.
+
+==== Simple case (sending to an entity)
+
+The following example is nearly the same as the previous one except for the recipient.
+
+....
+{
+	"publisher":"TSO1",
+	"processVersion":"0.1",
+	"process":"process",
+	"processInstanceId":"process-000",
+	"startDate":1546297200000,
+	"severity":"INFORMATION",
+	"title":{"key":"card.title.key"},
+	"summary":{"key":"card.summary.key"},
+	"entityRecipients" : ["ENTITY1"]
+}
+....
+
+Here, the recipient is an entity and there is no more groups. So all users who has the right perimeter and who are members of this entity will receive the card. More information on perimeter can be found in 
+ifdef::single-page-doc[<<'users_management,user documentation'>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#users_management, user documentation>>]
+
 
 ==== Complex case
 
-If this card need to be view by a user who is not in the `TSO1` group, it's possible to tune more precisely the definition of the recipient. If the `tso2-operator` needs to see also this card, the recipient definition could be(the following code details only the recipient part):
+If this card need to be viewed by a user who is not in the `TSO1` group, it's possible to tune more precisely the
+definition of the recipient. If the `tso2-operator` needs to see also this card, the recipient definition could be(the following code details only the recipient part):
 
 ....
 "recipient":{ 
@@ -135,8 +142,9 @@ For this example we will use our previous example for the `TSO1` group with a `d
 ....
 {
 	"publisher":"TSO1",
-	"publisherVersion":"0.1",
-	"processId":"process-000",
+	"processVersion":"0.1",
+	"process":"process",
+	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
@@ -159,9 +167,9 @@ there is no rendering configuration.
 === Fully useful
 
 When a card is selected in the feed (of the GUI), the data is displayed in the detail panel.
-The way details are formatted depends on the template uploaded by Third parties as
-ifdef::single-page-doc[<<bundle_technical_overview, described here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#bundle_technical_overview, described here>>]
+The way details are formatted depends on the template contained in the bundle associated with the process as
+ifdef::single-page-doc[<<template_description, described here>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#template_description, described here>>]
 . To have an effective example without to many actions to performed, the following example will use an already existing
 configuration.The one presents in the development version of OperatorFabric, for test purpose(`TEST` bundle).
 
@@ -169,9 +177,10 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 
 ....
 {
-	"publisher":"TEST",
-	"publisherVersion":"1",
-	"processId":"process-000",
+	"publisher":"TEST_PUBLISHER",
+	"processVersion":"1",
+	"process":"TEST",
+	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"process.title"},
@@ -186,7 +195,9 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 }
 ....
 
-So here a single custom data is defined and it's `rootProp`. This attribute is used by the template called by the `details` attribute. This attribute contains an array of `json` object containing an `i18n` key and a `template` reference. Each of those object is a tab in the detail panel of the GUI. The template to used are defined and configured in the `Third` bundle upload into the server by the publisher.
+So here a single custom data is defined and it's `rootProp`. This attribute is used by the template called by the
+`details` attribute. This attribute contains an array of `json` object containing an `i18n` key and a `template`
+reference. Each of those object is a tab in the detail panel of the GUI.
 
 [[display_rules]]
 == Display Rules

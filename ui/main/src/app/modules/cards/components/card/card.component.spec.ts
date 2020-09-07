@@ -19,7 +19,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ThirdsI18nLoaderFactory, ThirdsService} from '@ofServices/thirds.service';
+import {BusinessconfigI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
 import {ServicesModule} from '@ofServices/services.module';
 import {Router} from '@angular/router';
 import 'moment/locale/fr';
@@ -40,6 +40,8 @@ describe('CardComponent', () => {
 
     beforeEach(async(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
+        let myrout = {... routerSpy};
+        myrout.routerState = { snapshot : {url: "archives"}};
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
@@ -50,8 +52,8 @@ describe('CardComponent', () => {
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
-                        useFactory: ThirdsI18nLoaderFactory,
-                        deps: [ThirdsService]
+                        useFactory: BusinessconfigI18nLoaderFactory,
+                        deps: [ProcessesService]
                     },
                     useDefaultLang: false
                 }),
@@ -60,8 +62,8 @@ describe('CardComponent', () => {
             declarations: [CardComponent],
             providers: [
                 {provide: store, useClass: Store},
-                {provide: Router, useValue: routerSpy},
-                ThirdsService,
+                {provide: Router, useValue: myrout},
+                ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
                 TimeService, I18nService
             ]}).compileComponents();
@@ -86,18 +88,15 @@ describe('CardComponent', () => {
     it('should create and display minimal light card information', () => {
         const lightCard = getOneRandomLightCard();
         // extract expected data
-        const id = lightCard.id;
-        const uid = lightCard.uid;
+        const process = lightCard.process;
         const title = lightCard.title.key;
-        const summaryValue = lightCard.summary.key;
-        const publisher = lightCard.publisher;
-        const version = lightCard.publisherVersion;
+        const version = lightCard.processVersion;
 
         lightCardDetailsComp.lightCard = lightCard;
 
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('.card-title').innerText).toEqual(publisher + '.' + version + '.' + title);
+        expect(fixture.nativeElement.querySelector('.card-title').innerText).toEqual(process + '.' + version + '.' + title);
         expect(fixture.nativeElement.querySelector('.card-body > p')).toBeFalsy();
     });
     it('should select card', () => {
@@ -133,16 +132,7 @@ describe('CardComponent', () => {
         expect(FiveJune2019at10AMDateString).toEqual('05/06/2019 10:00');
         });
 
-    it('should return an empty string if NONE is configured', () => {
-        const lightCard = getOneRandomLightCard();
-        const expectedEmptyDisplayedDate = lightCardDetailsComp.computeDisplayedDates('NONE', lightCard);
-        expect(expectedEmptyDisplayedDate).toEqual('');
-        });
-    it('should return interval if BUSINESS is configured', () => {
-        const lightCard = getOneRandomLightCard();
-        const expectedBuisnessInterval = lightCardDetailsComp.computeDisplayedDates('BUSINESS', lightCard);
-        verifyCorrectInterval(expectedBuisnessInterval);
-    });
+
 
     function verifyCorrectInterval(testedString: string) {
         const minimalLengthOfDisplayDateWithStartAndEndDateInEnglishLocale = 39;
@@ -157,32 +147,5 @@ describe('CardComponent', () => {
         expect(testedLength).toBeGreaterThanOrEqual(min);
         expect(testedLength).toBeLessThanOrEqual(max);
     }
-
-    it('should return interval if there is no configuration', () => {
-        const lightCard = getOneRandomLightCard();
-        const expectedBusinessInterVal = lightCardDetailsComp.computeDisplayedDates(undefined, lightCard);
-        verifyCorrectInterval(expectedBusinessInterVal);
-    });
-
-    it('should return interval with unexpected configuration', () => {
-        const lightCard = getOneRandomLightCard();
-        const expectedBusinessInterVal = lightCardDetailsComp.computeDisplayedDates(getRandomAlphanumericValue(12), lightCard);
-        verifyCorrectInterval(expectedBusinessInterVal);
-    });
-
-    it( 'should return a single date with LTTD configuration', () => {
-       const expectDate = lightCardDetailsComp.computeDisplayedDates('LTTD', getOneRandomLightCard());
-       verifyCorrectString(expectDate, 18, 20);
-    });
-
-    it( 'should return a single date with BUSINESS_START configuration', () => {
-        const expectDate = lightCardDetailsComp.computeDisplayedDates('BUSINESS_START', getOneRandomLightCard());
-        verifyCorrectString(expectDate, 18, 20);
-    });
-
-    it( 'should return a single date with PUBLICATION configuration', () => {
-        const expectDate = lightCardDetailsComp.computeDisplayedDates('PUBLICATION', getOneRandomLightCard());
-        verifyCorrectString(expectDate, 18, 20);
-    });
 
 });

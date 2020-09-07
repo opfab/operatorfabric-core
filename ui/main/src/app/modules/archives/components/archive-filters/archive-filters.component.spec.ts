@@ -12,13 +12,13 @@
 import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 import { ArchiveFiltersComponent, FilterDateTypes, checkElement, transformToTimestamp } from './archive-filters.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MultiFilterComponent } from './multi-filter/multi-filter.component';
-import { DatetimeFilterComponent } from './datetime-filter/datetime-filter.component';
+import { MultiFilterComponent } from '../../../../components/share/multi-filter/multi-filter.component';
+import { DatetimeFilterComponent } from '../../../../components/share/datetime-filter/datetime-filter.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store, StoreModule } from '@ngrx/store';
 import { appReducer, AppState } from '@ofStore/index';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
-import { ThirdsI18nLoaderFactory, ThirdsService } from '@ofServices/thirds.service';
+import { BusinessconfigI18nLoaderFactory, ProcessesService } from '@ofServices/processes.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TimeService } from '@ofServices/time.service';
 import { Router } from '@angular/router';
@@ -56,8 +56,8 @@ describe('ArchiveFiltersComponent', () => {
         TranslateModule.forRoot({
           loader: {
               provide: TranslateLoader,
-              useFactory: ThirdsI18nLoaderFactory,
-              deps: [ThirdsService]
+              useFactory: BusinessconfigI18nLoaderFactory,
+              deps: [ProcessesService]
           },
           useDefaultLang: false
         })
@@ -70,7 +70,7 @@ describe('ArchiveFiltersComponent', () => {
       providers: [
         {provide: store, useClass: Store},
         {provide: Router, useValue: routerSpy},
-        ThirdsService,
+        ProcessesService,
         {provide: 'TimeEventSource', useValue: null},
         TimeService,
         I18nService,

@@ -10,18 +10,22 @@
 
 
 .timeline {
-  height: 150px;
   width: 98%;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
+  color : var(--opfab-text-color);
   background-color: var(--opfab-timeline-bgcolor);
 
   .of-custom-timeline-chart {
     max-height: 100px;
     margin-bottom: 40px;
+  }
+
+  .opfab-text {
+    font-size : 20px;
   }
 
   .menu-timeline {

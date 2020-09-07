@@ -14,18 +14,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authorization.AuthorizationContext;
 import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Collections;
 
 
 /**
@@ -38,7 +31,6 @@ import java.util.Collections;
 @Profile(value = {"!test"})
 public class WebSecurityConfiguration {
 
-    private static final Collection<String> allowedAuthorities= Collections.singletonList("ROLE_ADMIN");
     /**
      * Secures access (all uris are secured)
      * SecurityWebFilterChain
@@ -65,7 +57,7 @@ public class WebSecurityConfiguration {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeExchange()
-                .pathMatchers("/cards/userCard/**").access(WebSecurityConfiguration::currentUserHasAllowedRole)
+                .pathMatchers("/cards/userCard/**").authenticated()
                 .pathMatchers("/**").permitAll();
 
         http.csrf().disable();
@@ -73,16 +65,7 @@ public class WebSecurityConfiguration {
 
     }
 
-    /**
-     * */
-    private  static Mono<AuthorizationDecision> currentUserHasAllowedRole(Mono<Authentication> authentication, AuthorizationContext context) {
-        return authentication
-                .filter(Authentication::isAuthenticated)
-                .flatMapIterable(Authentication::getAuthorities)
-                .map(GrantedAuthority::getAuthority).any(allowedAuthorities::contains)
-                .map(AuthorizationDecision::new)
-                .defaultIfEmpty(new AuthorizationDecision(false));
-    }
+
 
 
 }

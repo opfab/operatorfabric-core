@@ -21,11 +21,9 @@ export enum LightCardActionTypes {
     SelectLightCard = '[LCard] Select One',
     ClearLightCardSelection = '[LCard] Clear Light Card Selection',
     AddLightCardFailure = '[LCard] Add Light Card Fail',
-    UpdatedSubscription = '[LCard] UpdateSubscription',
     HandleUnexpectedError = '[LCard] Handle unexpected error related to authentication issue',
     RemoveLightCard = '[LCard] Remove a card',
     UpdateALightCard = '[LCard] Update a Light Card',
-    DelayedLightCardUpdate = '[LCard] update Light Card actions later',
     LightCardAlreadyUpdated = '[LCard] Light Card already Updated'
 }
 
@@ -90,14 +88,6 @@ export class AddLightCardFailure implements Action {
     }
 }
 
-export class UpdatedSubscription implements Action {
-    readonly type = LightCardActionTypes.UpdatedSubscription;
-
-    /* istanbul ignore next */
-    constructor() {
-    }
-}
-
 export class HandleUnexpectedError implements Action {
     /* istanbul ignore next */
     readonly type = LightCardActionTypes.HandleUnexpectedError;
@@ -121,12 +111,6 @@ export class UpdateALightCard implements Action {
     }
 }
 
-export class DelayedLightCardUpdate implements Action {
-    readonly type = LightCardActionTypes.DelayedLightCardUpdate;
-
-    constructor(public payload: { card: LightCard }) {
-    }
-}
 
 export class LightCardAlreadyUpdated implements Action {
     readonly type = LightCardActionTypes.LightCardAlreadyUpdated;
@@ -142,10 +126,8 @@ export type LightCardActions =
     | SelectLightCard
     | ClearLightCardSelection
     | AddLightCardFailure
-    | UpdatedSubscription
     | HandleUnexpectedError
     | EmptyLightCards
     | UpdateALightCard
-    | DelayedLightCardUpdate
     | LightCardAlreadyUpdated
     | RemoveLightCard;

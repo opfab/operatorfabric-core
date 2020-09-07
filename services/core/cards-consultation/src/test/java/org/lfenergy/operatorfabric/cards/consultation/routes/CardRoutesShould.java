@@ -12,14 +12,13 @@
 package org.lfenergy.operatorfabric.cards.consultation.routes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.configureRecipientReferencesAndStartDate;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.createSimpleCard;
 import static org.lfenergy.operatorfabric.cards.consultation.TestUtilities.instantiateOneCardConsultationData;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
@@ -29,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.cards.consultation.configuration.webflux.CardRoutesConfig;
 import org.lfenergy.operatorfabric.cards.consultation.model.CardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.CardData;
 import org.lfenergy.operatorfabric.cards.consultation.repositories.CardRepository;
 import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.lfenergy.operatorfabric.test.EmptyListComparator;
@@ -97,13 +97,12 @@ public class CardRoutesShould {
             assertThat(cardRoutes).isNotNull();
             webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
                     .expectStatus().isOk()
-                    .expectBody(CardConsultationData.class).value(card -> {
-                assertThat(card)
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(),
-                                "tags", "details", "userRecipients","orphanedUsers")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard);
-            });
+                    .expectBody(CardData.class).value(cardData ->
+                            assertThat(cardData.getCard())
+                                //This is necessary because empty lists are ignored in the returned JSON
+                                .usingComparatorForFields(new EmptyListComparator<String>(),
+                                        "tags", "details", "userRecipients")
+                                .isEqualToComparingFieldByFieldRecursively(simpleCard));
         }
         
         @Test
@@ -119,8 +118,8 @@ public class CardRoutesShould {
 		    assertThat(cardRoutes).isNotNull();
 		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
 		            .expectStatus().isOk()
-		            .expectBody(CardConsultationData.class).value(card -> {
-		        assertThat(card.getHasBeenAcknowledged()).isTrue();});
+		            .expectBody(CardData.class).value(cardData ->
+                            assertThat(cardData.getCard().getHasBeenAcknowledged()).isTrue());
     
         }
         
@@ -137,8 +136,8 @@ public class CardRoutesShould {
 		    assertThat(cardRoutes).isNotNull();
 		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
 		            .expectStatus().isOk()
-		            .expectBody(CardConsultationData.class).value(card -> {
-		        assertThat(card.getHasBeenAcknowledged()).isFalse();});
+		            .expectBody(CardData.class).value(cardData ->
+                            assertThat(cardData.getCard().getHasBeenAcknowledged()).isFalse());
     
         }
         
@@ -146,6 +145,7 @@ public class CardRoutesShould {
         public void findOutCardWithoutAcks(){
         	Instant now = Instant.now();
         	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+        	simpleCard.setParentCardUid(null);
             configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
             StepVerifier.create(repository.save(simpleCard))
             .expectNextCount(1)
@@ -154,8 +154,62 @@ public class CardRoutesShould {
 		    assertThat(cardRoutes).isNotNull();
 		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
 		            .expectStatus().isOk()
-		            .expectBody(CardConsultationData.class).value(card -> {
-		        assertThat(card.getHasBeenAcknowledged()).isFalse();});
+		            .expectBody(CardData.class).value(cardData -> assertThat(
+		                    cardData.getCard().getHasBeenAcknowledged()).isFalse());
+    
+        }
+        
+        @Test
+        public void findOutCardByUserWithHisOwnRead(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            simpleCard.setUsersReads(Arrays.asList("userWithGroup","some-operator"));
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardData.class).value(cardData ->
+                            assertThat(cardData.getCard().getHasBeenRead()).isTrue());
+    
+        }
+        
+        @Test
+        public void findOutCardByUserWithoutHisOwnRead(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            simpleCard.setUsersReads(Arrays.asList("any-operator","some-operator"));
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardData.class).value(cardData ->
+                            assertThat(cardData.getCard().getHasBeenRead()).isFalse());
+    
+        }
+        
+        @Test
+        public void findOutCardWithoutReads(){
+        	Instant now = Instant.now();
+        	CardConsultationData simpleCard = instantiateOneCardConsultationData();
+        	simpleCard.setParentCardUid(null);
+            configureRecipientReferencesAndStartDate(simpleCard, "userWithGroup", now, new String[]{"SOME_GROUP"}, null);
+            StepVerifier.create(repository.save(simpleCard))
+            .expectNextCount(1)
+            .expectComplete()
+            .verify();
+		    assertThat(cardRoutes).isNotNull();
+		    webTestClient.get().uri("/cards/{id}", simpleCard.getId()).exchange()
+		            .expectStatus().isOk()
+		            .expectBody(CardData.class).value(cardData -> assertThat(
+		                    cardData.getCard().getHasBeenRead()).isFalse());
     
         }
     }
@@ -173,7 +227,7 @@ public class CardRoutesShould {
                     .verify();
             assertThat(cardRoutes).isNotNull();
             webTestClient.get().uri("/cards/{id}",simpleCard.getId()).exchange()
-                    .expectStatus().isForbidden()
+                    .expectStatus().isNotFound()
             ;
         }
         
@@ -218,13 +272,12 @@ public class CardRoutesShould {
             assertThat(cardRoutes).isNotNull();
             webTestClient.get().uri("/cards/{id}", simpleCard1.getId()).exchange()
                     .expectStatus().isOk()
-                    .expectBody(CardConsultationData.class).value(card -> {
-                assertThat(card)
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(),
-                                "tags", "details", "userRecipients","orphanedUsers")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard1);
-            });
+                    .expectBody(CardData.class).value(cardData ->
+                            assertThat(cardData.getCard())
+                                //This is necessary because empty lists are ignored in the returned JSON
+                                .usingComparatorForFields(new EmptyListComparator<String>(),
+                                        "tags", "details", "userRecipients")
+                                .isEqualToComparingFieldByFieldRecursively(simpleCard1));
 
             StepVerifier.create(repository.save(simpleCard2))
                     .expectNextCount(1)
@@ -249,13 +302,12 @@ public class CardRoutesShould {
             assertThat(cardRoutes).isNotNull();
             webTestClient.get().uri("/cards/{id}", simpleCard4.getId()).exchange()
                     .expectStatus().isOk()
-                    .expectBody(CardConsultationData.class).value(card -> {
-                assertThat(card)
-                        //This is necessary because empty lists are ignored in the returned JSON
-                        .usingComparatorForFields(new EmptyListComparator<String>(),
-                                "tags", "details", "userRecipients","orphanedUsers")
-                        .isEqualToComparingFieldByFieldRecursively(simpleCard4);
-            });
+                    .expectBody(CardData.class).value(cardData ->
+                            assertThat(cardData.getCard())
+                                //This is necessary because empty lists are ignored in the returned JSON
+                                .usingComparatorForFields(new EmptyListComparator<String>(),
+                                        "tags", "details", "userRecipients")
+                                .isEqualToComparingFieldByFieldRecursively(simpleCard4));
 
             StepVerifier.create(repository.save(simpleCard5))
                     .expectNextCount(1)
@@ -274,5 +326,62 @@ public class CardRoutesShould {
                     .expectStatus().isNotFound();
         }
 
+        @Test
+        public void findOutCardWithTwoChildCards() {
+
+            Instant now = Instant.now();
+
+            CardConsultationData parentCard = instantiateOneCardConsultationData();
+            parentCard.setUid("parentUid");
+            parentCard.setId(parentCard.getId() + "1");
+            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
+
+            CardConsultationData childCard1 = instantiateOneCardConsultationData();
+            childCard1.setParentCardUid("parentUid");
+            childCard1.setId(childCard1.getId() + "2");
+            configureRecipientReferencesAndStartDate(childCard1, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
+
+            CardConsultationData childCard2 = instantiateOneCardConsultationData();
+            childCard2.setParentCardUid("parentUid");
+            childCard2.setId(childCard2.getId() + "3");
+            configureRecipientReferencesAndStartDate(childCard2, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
+
+            StepVerifier.create(repository.saveAll(Arrays.asList(parentCard, childCard1, childCard2)))
+                    .expectNextCount(3)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}", parentCard.getId()).exchange()
+                    .expectStatus().isOk()
+                    .expectBody(CardData.class).value(cardData ->
+                        assertAll(
+                                () -> assertThat(cardData.getCard().getId()).isEqualTo(parentCard.getId()),
+                                () -> assertThat(cardData.getChildCards().size()).isEqualTo(2))
+                        );
+        }
+
+        @Test
+        public void findOutCardWithNoChildCard() {
+
+            Instant now = Instant.now();
+
+            CardConsultationData parentCard = instantiateOneCardConsultationData();
+            parentCard.setUid("parentUid");
+            parentCard.setId(parentCard.getId() + "1");
+            configureRecipientReferencesAndStartDate(parentCard, "userWithGroupAndEntity", now, new String[] {"SOME_GROUP"}, null);
+
+            StepVerifier.create(repository.save(parentCard))
+                    .expectNextCount(1)
+                    .expectComplete()
+                    .verify();
+            assertThat(cardRoutes).isNotNull();
+            webTestClient.get().uri("/cards/{id}", parentCard.getId()).exchange()
+                    .expectStatus().isOk()
+                    .expectBody(CardData.class).value(cardData ->
+                    assertAll(
+                            () -> assertThat(cardData.getCard().getId()).isEqualTo(parentCard.getId()),
+                            () -> assertThat(cardData.getChildCards().size()).isEqualTo(0))
+            );
+        }
     }
 }

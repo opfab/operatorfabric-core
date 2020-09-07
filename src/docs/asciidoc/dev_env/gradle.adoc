@@ -33,11 +33,11 @@ to gradle and plugins official documentation.
 /src/main/modeling/config.json to build/swagger-analyse
 ** swaggerHelp: display help regarding swagger configuration options for java
 
-=== Thirds Service
+=== Businessconfig Service
 
 * Test tasks
 ** prepareTestDataDir: prepare directory (build/test-data) for test data
-** compressBundle1Data, compressBundle2Data: generate tar.gz third party
+** compressBundle1Data, compressBundle2Data: generate tar.gz businessconfig party
 configuration data for tests in build/test-data
 ** prepareDevDataDir: prepare directory (build/dev-data) for bootRun task
 ** createDevData: prepare data in build/test-data for running bootRun task
@@ -46,11 +46,7 @@ during development
 ** copyCompileClasspathDependencies: copy compile classpath dependencies,
 catching lombok that must be sent for sonarqube
 
-=== infra/config
 
-* Test tasks
-** createDevData: prepare data in build/test-data for running bootRun task
-during development
 
 === tools/generic
 

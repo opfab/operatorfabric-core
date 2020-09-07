@@ -68,7 +68,7 @@
         ></svg:rect>
         <svg:g *ngFor="let circle of circles" type="button">
 
-        <svg:g *ngIf="(circle.count>1)" (click)="feedCircleHovered(circle)" container="body"   [ngbPopover]="tooltipTemplate"  [autoClose]="true">
+        <svg:g *ngIf="(circle.count>1)" (click)="feedCircleHovered(circle)" container="body"   [ngbPopover]="tooltipTemplate"   [autoClose]="true">
             <svg:circle [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.r]="'10'" [attr.fill]=circle.color [attr.stroke]="'stroke'"
                 [attr.opacity]="0.7" />
@@ -88,14 +88,20 @@
     </svg:g>
     </svg:g>
     <ng-template #tooltipTemplate>
-        <div *ngFor="let title of currentCircleHovered.summary"style="padding: 0px;margin: 0px;line-height: 8px">
-           <br/>
-            <button class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
-                <div style="text-align:left">
-                {{title.summaryDate}}  
-                <span translate [translateParams]="title.parameters" style="text-align:left;">{{title.i18nPrefix + title.key}}</span>
-                </div>
-            </button>
+        <div *ngFor="let title of currentCircleHovered.summary;let i=index" style="padding: 0px;margin: 0px;line-height: 8px">
+            <div *ngIf="i<maxNumberLinesForBubblePopover">
+                <br/>
+                <button class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
+                    <div style="text-align:left">
+                        {{title.summaryDate}}
+                        <span translate [translateParams]="title.parameters"
+                            style="text-align:left;">{{title.i18nPrefix + title.key}}</span>
+                    </div>
+                </button>
+            </div>
+            <div *ngIf="i===maxNumberLinesForBubblePopover">
+                <br/> &nbsp; &nbsp;......
+            </div>
         </div>
     </ng-template>
 </ngx-charts-chart>

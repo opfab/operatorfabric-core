@@ -9,8 +9,8 @@
 
 
 
-import {Severity} from "@ofModel/light-card.model";
-import {I18n} from "@ofModel/i18n.model";
+import {LightCard, Severity} from '@ofModel/light-card.model';
+import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
     /* istanbul ignore next */
@@ -18,13 +18,15 @@ export class Card {
         readonly uid: string,
         readonly id: string,
         readonly publisher: string,
-        readonly publisherVersion: string,
+        readonly processVersion: string,
         readonly publishDate: number,
         readonly startDate: number,
         readonly endDate: number,
         readonly severity: Severity,
+        public hasBeenAcknowledged: boolean = false,
+        readonly hasBeenRead: boolean = false,
         readonly process?: string,
-        readonly processId?: string,
+        readonly processInstanceId?: string,
         readonly state?: string,
         readonly lttd?: number,
         readonly title?: I18n,
@@ -35,7 +37,7 @@ export class Card {
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly recipient?: Recipient,
-        readonly parentCardId?: string
+        readonly parentCardUid?: string
     ) {
     }
 }
@@ -66,4 +68,17 @@ export class Recipient {
 
 export enum RecipientEnum {
     DEADEND, GROUP, UNION, USER
+}
+
+export class CardData {
+    constructor(
+        readonly card: Card,
+        readonly childCards: Card[]
+    ) {}
+}
+
+export function fromCardToLightCard(card: Card): LightCard {
+    return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
+        , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.processInstanceId
+        , card.lttd, card.title, card.summary, null, [], card.process, card.state, card.parentCardUid);
 }

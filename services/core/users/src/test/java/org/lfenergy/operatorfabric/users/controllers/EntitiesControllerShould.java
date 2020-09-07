@@ -419,30 +419,90 @@ class EntitiesControllerShould {
 
         @Test
         void deleteEntitiesFromUsers() throws Exception {
-            List<UserData> pythons = userRepository.findByEntitiesContaining("ENTITY1");
-            assertThat(pythons.size()).isEqualTo(2);
+            List<UserData> entity1 = userRepository.findByEntitiesContaining("ENTITY1");
+            assertThat(entity1.size()).isEqualTo(2);
             mockMvc.perform(delete("/entities/ENTITY1/users")
                     .contentType(MediaType.APPLICATION_JSON)
             )
                     .andExpect(status().isOk())
             ;
 
-            pythons = userRepository.findByEntitiesContaining("ENTITY1");
-            assertThat(pythons).isEmpty();
+            entity1 = userRepository.findByEntitiesContaining("ENTITY1");
+            assertThat(entity1).isEmpty();
+        }
+
+        @Test
+        void deleteEntity() throws Exception {
+
+            UserData jcleese = userRepository.findById("jcleese").get();
+            assertThat(jcleese).isNotNull();
+            assertThat(jcleese.getEntities()).containsExactlyInAnyOrder("ENTITY1", "ENTITY2");
+
+            UserData gchapman = userRepository.findById("gchapman").get();
+            assertThat(gchapman).isNotNull();
+            assertThat(gchapman.getEntities()).containsExactlyInAnyOrder("ENTITY1");
+
+            assertThat(entityRepository.findById("ENTITY1")).isNotEmpty();
+
+            mockMvc.perform(delete("/entities/ENTITY1")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isOk())
+            ;
+
+            jcleese = userRepository.findById("jcleese").get();
+            assertThat(jcleese).isNotNull();
+            assertThat(jcleese.getEntities()).containsExactlyInAnyOrder("ENTITY2");
+
+            gchapman = userRepository.findById("gchapman").get();
+            assertThat(gchapman).isNotNull();
+            assertThat(gchapman.getEntities()).isEmpty();
+
+            assertThat(entityRepository.findById("ENTITY1")).isEmpty();
+        }
+
+        @Test
+        void deleteEntityWithNotFoundError() throws Exception {
+
+            mockMvc.perform(get("/entities/unknownEntitySoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(EntitiesController.ENTITY_NOT_FOUND_MSG, "unknownEntitySoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(delete("/entities/unknownEntitySoFar")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(EntitiesController.ENTITY_NOT_FOUND_MSG, "unknownEntitySoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(get("/entities/unknownEntitySoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(EntitiesController.ENTITY_NOT_FOUND_MSG, "unknownEntitySoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
         }
 
         @Test
         void deleteEntitiesFromUser() throws Exception {
-            List<UserData> pythons = userRepository.findByEntitiesContaining("ENTITY1");
-            assertThat(pythons.size()).isEqualTo(2);
+            List<UserData> entity1 = userRepository.findByEntitiesContaining("ENTITY1");
+            assertThat(entity1.size()).isEqualTo(2);
             mockMvc.perform(delete("/entities/ENTITY1/users/gchapman")
                     .contentType(MediaType.APPLICATION_JSON)
             )
                     .andExpect(status().isOk())
             ;
 
-            pythons = userRepository.findByEntitiesContaining("ENTITY1");
-            assertThat(pythons.size()).isEqualTo(1);
+            entity1 = userRepository.findByEntitiesContaining("ENTITY1");
+            assertThat(entity1.size()).isEqualTo(1);
         }
 
         @Test
@@ -604,7 +664,9 @@ class EntitiesControllerShould {
         void fetchAll() throws Exception {
             ResultActions result = mockMvc.perform(get("/entities"));
             result
-                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(2)))
             ;
         }
 
@@ -661,6 +723,15 @@ class EntitiesControllerShould {
             mockMvc.perform(delete("/entities/ENTITY1/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"gchapman\"]")
+            )
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void deleteEntity() throws Exception {
+            mockMvc.perform(delete("/entities/ENTITY1")
+                    .contentType(MediaType.APPLICATION_JSON)
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
             ;

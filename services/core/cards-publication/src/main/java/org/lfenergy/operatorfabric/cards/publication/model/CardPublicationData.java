@@ -49,31 +49,34 @@ public class CardPublicationData implements Card {
     private String uid = UUID.randomUUID().toString();
     @Id
     private String id;
-    private String parentCardId;
-    @NotNull
+
+    private String parentCardUid;
+
     private String publisher;
-    @NotNull
-    private String publisherVersion;
+    
+    private String processVersion;
+    
     private String process;
-    @NotNull
-    private String processId;
+    
+    private String processInstanceId;
+    
     private String state;
-    @NotNull
+    
     private I18n title;
-    @NotNull
+    
     private I18n summary;
     @CreatedDate
     private Instant publishDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant deletionDate;
     private Instant lttd;
-    @NotNull
+    
     @Indexed
     private Instant startDate;
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
-    @NotNull
+    
     private SeverityEnum severity;
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -96,9 +99,6 @@ public class CardPublicationData implements Card {
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groupRecipients;
-    @Singular
-    @JsonIgnore
-    private List<String> orphanedUsers;
     @Singular("entitiesAllowedToRespond")
     @Indexed
     private List<String> entitiesAllowedToRespond;
@@ -108,17 +108,21 @@ public class CardPublicationData implements Card {
     @Singular
     @Indexed
     private List<String> externalRecipients;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonIgnore
     private List<String> usersAcks;
+    @JsonIgnore
+    private List<String> usersReads;
 
     @Transient
     private Boolean hasBeenAcknowledged;
+    @Transient
+    private Boolean hasBeenRead;
     @Indexed
     private String processStateKey;
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
-        this.id = publisher + "_" + processId;
+        this.id = process + "." + processInstanceId;
         if (null == this.uid)
         	this.uid = UUID.randomUUID().toString();
         this.setShardKey(Math.toIntExact(this.getStartDate().toEpochMilli() % 24 * 1000));
@@ -133,10 +137,11 @@ public class CardPublicationData implements Card {
         LightCardPublicationData.LightCardPublicationDataBuilder result = LightCardPublicationData.builder()
                 .id(this.getId())
                 .uid(this.getUid())
+                .parentCardUid(this.getParentCardUid())
                 .publisher(this.getPublisher())
-                .publisherVersion(this.getPublisherVersion())
+                .processVersion(this.getProcessVersion())
                 .process(this.getProcess())
-                .processId(this.getProcessId())
+                .processInstanceId(this.getProcessInstanceId())
                 .state(this.getState())
                 .lttd(this.getLttd())
                 .startDate(this.getStartDate())

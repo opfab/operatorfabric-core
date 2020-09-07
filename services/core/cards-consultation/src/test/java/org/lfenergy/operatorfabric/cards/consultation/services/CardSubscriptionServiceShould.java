@@ -7,20 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.lfenergy.operatorfabric.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.awaitility.core.ConditionTimeoutException;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.cards.consultation.application.IntegrationTestApplication;
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
-import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.test.StepVerifier;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,14 +56,15 @@ public class CardSubscriptionServiceShould {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
-    private FanoutExchange groupExchange;
-    @Autowired
-    private DirectExchange userExchange;
+    private FanoutExchange cardExchange;
     @Autowired
     private CardSubscriptionService service;
     @Autowired
     private ThreadPoolTaskScheduler taskScheduler;
     private CurrentUserWithPerimeters currentUserWithPerimeters;
+
+
+    private static String rabbitTestMessage = "{\"cards\":[{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5b\",\"state\":\"messageState\",\"startDate\":1592396243446}],\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"testgroup1\"],\"type\":\"ADD\"}";
 
     public CardSubscriptionServiceShould(){
         User user = new User();
@@ -86,7 +88,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void createAndDeleteSubscription(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.evict(subscription.getId());
@@ -97,7 +99,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void deleteSubscriptionWithDelay(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null,null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.scheduleEviction(subscription.getId());
@@ -108,7 +110,7 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void reviveSubscription(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         subscription.getPublisher().subscribe(log::info);
         Assertions.assertThat(subscription.checkActive()).isTrue();
         service.scheduleEviction(subscription.getId());
@@ -119,7 +121,7 @@ public class CardSubscriptionServiceShould {
         }catch (ConditionTimeoutException e){
             //nothing, everything is alright
         }
-        CardSubscription subscription2 = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription2 = service.subscribe(currentUserWithPerimeters, TEST_ID);
         Assertions.assertThat(subscription2).isSameAs(subscription);
         try {
             await().atMost(6, TimeUnit.SECONDS).until(() -> !subscription.checkActive() && subscription.isCleared());
@@ -134,49 +136,65 @@ public class CardSubscriptionServiceShould {
 
     @Test
     public void receiveCards(){
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
         StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher());
         taskScheduler.schedule(createSendMessageTask(),new Date(System.currentTimeMillis() + 1000));
         verifier
-           .expectNext("test message 1")
-           .expectNext("test message 2")
+           .expectNext(rabbitTestMessage)
+           .expectNext(rabbitTestMessage)
            .thenCancel()
            .verify();
     }
 
     private Runnable createSendMessageTask() {
         return () ->{
-            rabbitTemplate.convertAndSend(userExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),"test message 1");
-            rabbitTemplate.convertAndSend(userExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),"test message 2");
+          
+            rabbitTemplate.convertAndSend(cardExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),rabbitTestMessage);
+            rabbitTemplate.convertAndSend(cardExchange.getName(), currentUserWithPerimeters.getUserData().getLogin(),rabbitTestMessage);
         };
+    }
+
+    private  JSONObject createJSONObjectFromString(String jsonString)
+    {
+        try
+        {
+           return  (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(jsonString);
+        }
+        catch(ParseException e){ log.error("Error parsing", e); return null;}
     }
 
     @Test
     public void testCheckIfUserMustReceiveTheCard() {
-        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID, null, null, false);
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
 
         //groups only
-        String messageBody1 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"]}";  //true
-        String messageBody2 = "{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"]}";  //false
-        String messageBody3 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"], \"entityRecipientsIds\":[]}";  //true
-        String messageBody4 = "{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"], \"entityRecipientsIds\":[]}";  //false
+
+        JSONObject messageBody1 = createJSONObjectFromString("{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"]}");  //true
+        JSONObject messageBody2 = createJSONObjectFromString("{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"]}");  //false
+        JSONObject messageBody3 = createJSONObjectFromString("{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"], \"entityRecipientsIds\":[]}");  //true
+        JSONObject messageBody4 = createJSONObjectFromString("{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"], \"entityRecipientsIds\":[]}");  //false
 
         //entities only
-        String messageBody5 = "{\"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}";   //true
-        String messageBody6 = "{\"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}";   //false
-        String messageBody7 = "{\"groupRecipientsIds\":[], \"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}";    //true
-        String messageBody8 = "{\"groupRecipientsIds\":[], \"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}";    //false
+        JSONObject messageBody5 = createJSONObjectFromString("{\"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}");   //true
+        JSONObject messageBody6 = createJSONObjectFromString("{\"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}");   //false
+        JSONObject messageBody7 = createJSONObjectFromString("{\"groupRecipientsIds\":[], \"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}");    //true
+        JSONObject messageBody8 = createJSONObjectFromString("{\"groupRecipientsIds\":[], \"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}");    //false
 
         //groups and entities
-        String messageBody9 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}";  //true
-        String messageBody10 = "{\"groupRecipientsIds\":[\"testgroup2\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity2\", \"testentity4\"]}";  //true
-        String messageBody11 = "{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}";  //false (in group but not in entity)
-        String messageBody12 = "{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}";  //false (in entity but not in group)
-        String messageBody13 = "{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}";  //false (not in group and not in entity)
+        JSONObject messageBody9 = createJSONObjectFromString("{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}");  //true
+        JSONObject messageBody10 = createJSONObjectFromString("{\"groupRecipientsIds\":[\"testgroup2\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity2\", \"testentity4\"]}");  //true
+        JSONObject messageBody11 = createJSONObjectFromString("{\"groupRecipientsIds\":[\"testgroup1\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}");  //false (in group but not in entity)
+        JSONObject messageBody12 = createJSONObjectFromString("{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity1\", \"testentity4\"]}");  //false (in entity but not in group)
+        JSONObject messageBody13 = createJSONObjectFromString("{\"groupRecipientsIds\":[\"testgroup3\", \"testgroup4\"], \"entityRecipientsIds\":[\"testentity3\", \"testentity4\"]}");  //false (not in group and not in entity)
 
         //no groups and no entities
-        String messageBody14 = "{\"groupRecipientsIds\":[], \"entityRecipientsIds\":[]}";    //false
-        String messageBody15 = "{}";    //false
+        JSONObject messageBody14 = createJSONObjectFromString("{\"groupRecipientsIds\":[], \"entityRecipientsIds\":[]}");    //false
+        JSONObject messageBody15 = createJSONObjectFromString("{}");    //false
+
+        // users only 
+        JSONObject messageBody16 = createJSONObjectFromString("{\"userRecipientsIds\":[\"testuser\", \"noexistantuser2\"]}");   //true
+        JSONObject messageBody17 = createJSONObjectFromString("{\"userRecipientsIds\":[\"noexistantuser1\", \"noexistantuser2\"]}");
+
 
         Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody1)).isTrue();
         Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody2)).isFalse();
@@ -196,5 +214,22 @@ public class CardSubscriptionServiceShould {
 
         Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody14)).isFalse();
         Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody15)).isFalse();
+
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody16)).isTrue();
+        Assertions.assertThat(subscription.checkIfUserMustReceiveTheCard(messageBody17)).isFalse();
+    }
+
+
+    @Test
+    public void testCreateDeleteCardMessageForUserNotRecipient(){
+        CardSubscription subscription = service.subscribe(currentUserWithPerimeters, TEST_ID);
+
+        String messageBodyAdd = "{\"cards\":[{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5b\",\"state\":\"messageState\",\"startDate\":1592396243446}],\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"TSO1\"],\"type\":\"ADD\"}";
+        String messageBodyUpdate = "{\"cards\":[{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5c\",\"state\":\"messageState\",\"startDate\":1592396243446}],\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"TSO1\"],\"type\":\"UPDATE\"}";
+        String messageBodyDelete = "{\"cards\":[{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5d\",\"state\":\"messageState\",\"startDate\":1592396243446}],\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"TSO1\"],\"type\":\"DELETE\"}";
+
+        Assertions.assertThat(subscription.createDeleteCardMessageForUserNotRecipient(createJSONObjectFromString(messageBodyAdd)).equals("{\"cards\":[{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5b\",\"state\":\"messageState\",\"startDate\":1592396243446}],\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"TSO1\"],\"type\":\"DELETE\",\"cardIds\":\"api_test_process5b\"}"));
+        Assertions.assertThat(subscription.createDeleteCardMessageForUserNotRecipient(createJSONObjectFromString(messageBodyUpdate)).equals("{\"cards\":[{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5b\",\"state\":\"messageState\",\"startDate\":1592396243446}],\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"TSO1\"],\"type\":\"DELETE\",\"cardIds\":\"api_test_process5c\"}"));
+        Assertions.assertThat(subscription.createDeleteCardMessageForUserNotRecipient(createJSONObjectFromString(messageBodyDelete)).equals(messageBodyDelete));    //message must not be changed
     }
 }

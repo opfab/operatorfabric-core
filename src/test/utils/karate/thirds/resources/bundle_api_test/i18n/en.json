@@ -1,8 +1,0 @@
-{
-	"defaultProcess":{
-		"title":"Message",
-		"summary":"Message received"
-	},
-	"chartDetail" : { "title":"A Chart"},
-	"chartLine" : { "title":"Electricity consumption forecast"}
-}

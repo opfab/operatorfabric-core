@@ -14,6 +14,7 @@ package org.lfenergy.operatorfabric.cards.publication.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.model.CardOperation;
+import org.lfenergy.operatorfabric.cards.publication.model.CardOperationData;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,7 @@ import java.util.Queue;
 @Slf4j
 public class TestCardReceiver {
 
-    Queue<CardOperation> groupQueue = new LinkedList<>();
-    Queue<CardOperation> ericQueue = new LinkedList<>();
+    Queue<CardOperationData> cardQueue = new LinkedList<>();
     private ObjectMapper mapper;
 
     @Autowired
@@ -41,33 +41,22 @@ public class TestCardReceiver {
         this.mapper = mapper;
     }
 
-    @RabbitListener(queues = "#{groupQueue.name}")
+    @RabbitListener(queues = "#{cardQueue.name}")
     public void receiveGroup(Message message) throws IOException {
         String cardString = new String(message.getBody());
         log.info("receiving group card");
-        CardOperation card = mapper.readValue(cardString, CardOperation.class);
-        groupQueue.add(card);
+        CardOperationData card = mapper.readValue(cardString, CardOperationData.class);
+        cardQueue.add(card);
     }
 
-    @RabbitListener(queues = "#{userQueue.name}")
-    public void receiveUser(Message message) throws IOException {
-        String cardString = new String(message.getBody());
-        log.info("receiving user card");
-        CardOperation card = mapper.readValue(cardString, CardOperation.class);
-        ericQueue.add(card);
-    }
 
     public void clear(){
         log.info("clearing data");
-        groupQueue.clear();
-        ericQueue.clear();
+        cardQueue.clear();
     }
 
-    public Queue<CardOperation> getGroupQueue() {
-        return groupQueue;
+    public Queue<CardOperationData> getCardQueue() {
+        return cardQueue;
     }
 
-    public Queue<CardOperation> getEricQueue() {
-        return ericQueue;
-    }
 }

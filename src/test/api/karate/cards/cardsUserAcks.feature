@@ -14,9 +14,9 @@ Feature: CardsUserAcknowledgement
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process1",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -41,13 +41,12 @@ Feature: CardsUserAcknowledgement
     And match response.count == 1
     
 #get card with user tso1-operator and check not containing userAcks items
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == false
-    And def uid = response.uid
-
+    And match response.card.hasBeenAcknowledged == false
+    And def uid = response.card.uid
 
 
 #make an acknoledgement to the card with tso1
@@ -58,21 +57,20 @@ Feature: CardsUserAcknowledgement
     Then status 201
 
 #get card with user tso1-operator and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == true
-    And match response.uid == uid
+    And match response.card.hasBeenAcknowledged == true
+    And match response.card.uid == uid
 
 #get card with user tso2-operator and check containing no ack for him
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == false
-    And match response.uid == uid
-
+    And match response.card.hasBeenAcknowledged == false
+    And match response.card.uid == uid
 
 
 #make a second acknoledgement to the card with tso2
@@ -83,20 +81,20 @@ Feature: CardsUserAcknowledgement
     Then status 201
 
 #get card with user tso1-operator and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == true
-    And match response.uid == uid
+    And match response.card.hasBeenAcknowledged == true
+    And match response.card.uid == uid
 
 #get card with user tso2-operator and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == true
-    And match response.uid == uid
+    And match response.card.hasBeenAcknowledged == true
+    And match response.card.uid == uid
 
 
 
@@ -113,12 +111,12 @@ Feature: CardsUserAcknowledgement
     When method delete
     Then status 200
 
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == false
-    And match response.uid == uid
+    And match response.card.hasBeenAcknowledged == false
+    And match response.card.uid == uid
 
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
@@ -134,6 +132,6 @@ Feature: CardsUserAcknowledgement
   Scenario: Delete the test card
 
     delete card
-    Given url opfabPublishCardUrl + 'cards/api_test_process1'
+    Given url opfabPublishCardUrl + 'cards/api_test.process1'
     When method delete
     Then status 200

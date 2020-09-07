@@ -10,8 +10,11 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
+import com.mongodb.client.result.UpdateResult;
+import lombok.extern.slf4j.Slf4j;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
+import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -19,10 +22,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.mongodb.client.result.UpdateResult;
-
-import lombok.extern.slf4j.Slf4j;
-
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -56,40 +57,61 @@ public class CardRepositoryService {
         this.template.remove(cardToDelete);
     }
 
-    public CardPublicationData findCardToDelete(String processId) {
+
+
+    public CardPublicationData findCardById(String processInstanceId) {
         /**
          * Uses a projection instead the default 'findById' method. This projection
          * excludes data which can be unpredictably huge depending on publisher needs.
          */
         Query findCardByIdWithoutDataField = new Query();
         findCardByIdWithoutDataField.fields().exclude("data");
-        findCardByIdWithoutDataField.addCriteria(Criteria.where("Id").is(processId));
+        findCardByIdWithoutDataField.addCriteria(Criteria.where("Id").is(processInstanceId));
 
         return this.template.findOne(findCardByIdWithoutDataField, CardPublicationData.class);
     }
 
-	public UserAckOperationResult addUserAck(String name, String cardUid) {
+    public Optional<List<CardPublicationData>> findChildCard(CardPublicationData card) {
+
+        if (Objects.isNull(card)) return Optional.empty();
+        Query findCardByParentCardUidWithoutDataField = new Query();
+        findCardByParentCardUidWithoutDataField.fields().exclude("data");
+        findCardByParentCardUidWithoutDataField.addCriteria(Criteria.where("parentCardUid").is(card.getUid()));
+        return Optional.ofNullable(template.find(findCardByParentCardUidWithoutDataField, CardPublicationData.class));
+
+
+    }
+
+	public UserBasedOperationResult addUserAck(User user, String cardUid) {
 		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
-				new Update().addToSet("usersAcks", name),CardPublicationData.class);
+				new Update().addToSet("usersAcks", user.getLogin()),CardPublicationData.class);
 		log.debug("added {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
 				cardUid);
-		return toUserAckOperationResult(updateFirst);
+		return toUserBasedOperationResult(updateFirst);
+	}
+	
+	public UserBasedOperationResult addUserRead(String name, String cardUid) {
+		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
+				new Update().addToSet("usersReads", name),CardPublicationData.class);
+		log.debug("added {} occurrence of {}'s userReads in the card with uid: {}", updateFirst.getModifiedCount(),
+				cardUid);
+		return toUserBasedOperationResult(updateFirst);
 	}
 
-	public UserAckOperationResult deleteUserAck(String userName, String cardUid) {
+	public UserBasedOperationResult deleteUserAck(String userName, String cardUid) {
 		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
 				new Update().pull("usersAcks", userName), CardPublicationData.class);
 		log.debug("removed {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
 				cardUid);
-		return toUserAckOperationResult(updateFirst);
+		return toUserBasedOperationResult(updateFirst);
 	}
 	
-	private UserAckOperationResult toUserAckOperationResult(UpdateResult updateResult) {
-		UserAckOperationResult res = null;
+	private UserBasedOperationResult toUserBasedOperationResult(UpdateResult updateResult) {
+		UserBasedOperationResult res = null;
 		if (updateResult.getMatchedCount() == 0) {
-			res = UserAckOperationResult.cardNotFound();
+			res = UserBasedOperationResult.cardNotFound();
 		} else {
-			res = UserAckOperationResult.cardFound().operationDone(updateResult.getModifiedCount() > 0);
+			res = UserBasedOperationResult.cardFound().operationDone(updateResult.getModifiedCount() > 0);
 		}
 		return res;
 	}

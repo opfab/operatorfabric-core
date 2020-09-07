@@ -1,0 +1,40 @@
+{
+  "id": "second",
+  "name": "process.title",
+  "version": "2.1",
+  "templates": [
+    "template"
+  ],
+  "csses": [
+    "dastyle","nostyle"
+  ],
+  "locales": [
+    "fr",
+    "en"
+  ],
+  "processes": {
+    "testProcess": {
+      "states": {
+        "firstState": {
+          "name": "process.title",
+          "details": [
+            {
+              "title": {
+                "key": "template.title"
+              },
+              "templateName": "template"
+            }
+          ],
+          "actions": {
+            "action1": {
+              "type": "URL",
+              "label": {
+                "key": "my.card.my.action.label"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

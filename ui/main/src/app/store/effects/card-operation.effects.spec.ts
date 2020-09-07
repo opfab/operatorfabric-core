@@ -69,6 +69,7 @@ describe('CardOperationEffects', () => {
                 ...initialState,
                 card: {
                     selected: selectedLightCard,
+                    selectedChildCards: [],
                     loading: false,
                     error: null
                 }
@@ -97,6 +98,7 @@ describe('CardOperationEffects', () => {
                 ...initialState,
                 card: {
                     selected: selectedLightCard,
+                    selectedChildCards: [],
                     loading: false,
                     error: null
                 }

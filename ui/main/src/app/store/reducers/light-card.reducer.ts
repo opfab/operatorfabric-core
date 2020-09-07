@@ -8,15 +8,26 @@
  */
 
 
-
 import {LightCardActions, LightCardActionTypes} from '@ofActions/light-card.actions';
 import {CardFeedState, feedInitialState, LightCardAdapter} from '@ofStates/feed.state';
-import {FeedActions, FeedActionTypes} from "@ofActions/feed.actions";
+import {FeedActions, FeedActionTypes} from '@ofActions/feed.actions';
+import {FilterType} from '@ofServices/filter.service';
+import {Filter} from '@ofModel/feed-filter.model';
+
+export function changeActivationAndStatusOfFilter(filters: Map<FilterType, Filter>
+    , payload: { name: FilterType; active: boolean; status: any }) {
+    const filter = filters.get(payload.name).clone();
+    filter.active = payload.active;
+    filter.status = payload.status;
+    return filter;
+}
 
 export function reducer(
-    state:CardFeedState = feedInitialState,
-    action: LightCardActions|FeedActions
+    state: CardFeedState = feedInitialState,
+    action: LightCardActions | FeedActions
 ): CardFeedState {
+
+
     switch (action.type) {
         case LightCardActionTypes.LoadLightCardsSuccess: {
             return {
@@ -30,16 +41,16 @@ export function reducer(
                 ...LightCardAdapter.removeAll(state),
                 selectedCardId: null,
                 loading: false,
-                lastCards:[]
+                lastCards: []
             };
         }
 
-        case LightCardActionTypes.RemoveLightCard:{
+        case LightCardActionTypes.RemoveLightCard: {
             return {
-                ...LightCardAdapter.removeMany(action.payload.cards,state),
-                loading:false,
-                lastCards:[]
-            }
+                ...LightCardAdapter.removeMany(action.payload.cards, state),
+                loading: false,
+                lastCards: []
+            };
         }
         case LightCardActionTypes.LoadLightCardsFailure: {
             return {
@@ -55,14 +66,14 @@ export function reducer(
                 ...state,
                 selectedCardId: action.payload.selectedCardId,
                 lastCards: []
-            }
+            };
         }
 
         case LightCardActionTypes.ClearLightCardSelection: {
             return {
                 ...state,
                 selectedCardId: null
-            }
+            };
         }
 
         case LightCardActionTypes.AddLightCardFailure: {
@@ -75,26 +86,18 @@ export function reducer(
         }
 
         case FeedActionTypes.ApplyFilter: {
-            console.log(new Date().toISOString(),"BUG OC-604 light-card.reducer.ts case FeedActionTypes.ApplyFilter filtername = ",action.payload.name);
-            console.log(new Date().toISOString(),"BUG OC-604 light-card.reducer.ts case FeedActionTypes.ApplyFilter filters = ", state.filters);
-           
-           
-           
-            if(state.filters.get(action.payload.name)) {
-                console.log (new Date().toISOString(),"BUG OC-604 light-card.reducer.ts case FeedActionTypes.ApplyFilter state.filters = ",state.filters);
+            const payload = action.payload;
+            if (state.filters.get(payload.name)) {
                 const filters = new Map(state.filters);
-                const filter = filters.get(action.payload.name).clone();
-                filter.active = action.payload.active;
-                filter.status = action.payload.status;
-                filters.set(action.payload.name, filter);
+                const filter = changeActivationAndStatusOfFilter(filters, payload);
+                filters.set(payload.name, filter);
                 return {
                     ...state,
                     loading: false,
                     filters: filters
                 };
-            }
-            else {
-                return {...state} 
+            } else {
+                return {...state};
             }
         }
         case FeedActionTypes.ChangeSort: {
@@ -104,10 +107,18 @@ export function reducer(
             };
         }
 
-        case LightCardActionTypes.UpdateALightCard:{
+        case LightCardActionTypes.UpdateALightCard: {
             return LightCardAdapter.upsertOne(action.payload.card, state);
         }
 
+        case FeedActionTypes.ApplySeveralFilters: {
+            const filterStatuses = action.payload.filterStatuses;
+
+            return {
+                ...state,
+                filters: filterStatuses
+            };
+        }
         default: {
             return state;
         }

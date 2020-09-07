@@ -1,0 +1,21 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+= Card rendering 
+
+As stated above, third applications interact with OperatorFabric by sending cards.
+
+The Businessconfig service allows them to tell OperatorFabric for each process how these cards should be rendered including translation if 
+several languages are supported.  Configuration is done via files zipped in a "bundle", these files are send to OperatorFabric via a REST end point. 
+
+In addition, it lets third-party applications define additional menu entries for the navbar (for example linking back
+to the third-party application) that can be integrated either as iframe or external links.
+
+include::process_definition.adoc[leveloffset=+1]
+
+include::template_description.adoc[leveloffset=+1]

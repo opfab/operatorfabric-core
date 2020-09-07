@@ -58,19 +58,15 @@ public class CardOperationsController {
     /**
      * Registers to {@link CardSubscriptionService} to get access to a {@link Flux} of String. Those strings are Json
      * {@link org.lfenergy.operatorfabric.cards.consultation.model.CardOperation} representation
-     *
-     * @param input o tuple containing 1) user data 2) client id
-     * @return message publisher
      */
     public Flux<String> registerSubscriptionAndPublish(Mono<CardOperationsGetParameters> input) {
         return input
                 .flatMapMany(t -> {
                     if (t.getClientId() != null) {
-                        //init subscription if needed
                         CardSubscription subscription = null;
                         if (t.isNotification()) {
-                            subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId(), t.getRangeStart(), t.getRangeEnd(), false);
-                            subscription.publishInto(fetchOldCards(subscription));
+                            subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId());
+                            subscription.publishInto(Flux.just("INIT"));
                             return subscription.getPublisher();
                         } else {
                             return fetchOldCards(t);
@@ -89,34 +85,25 @@ public class CardOperationsController {
     }
 
     public Mono<CardSubscriptionDto> updateSubscriptionAndPublish(Mono<CardOperationsGetParameters> parameters) {
-        return parameters
-                .map(p -> {
-                    try {
-                        CardSubscription oldSubscription = cardSubscriptionService.findSubscription(p.getCurrentUserWithPerimeters(), p.getClientId());
-                        if (oldSubscription != null) {
-                            log.info("Found subscription: {}", oldSubscription.getId());
-                        } else {
-                            log.info("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
-                        }
-                        return Tuples.of(p, oldSubscription);
-                    } catch (IllegalArgumentException e) {
-                        log.error("Error searching for old subscription", e);
-                        throw new ApiErrorException(ApiError.builder().status(HttpStatus.BAD_REQUEST).message(e.getMessage()).build());
-                    }
-                })
-                .doOnNext(t -> {
-                    log.info("UPDATING Subscription {} updated with rangeStart: {}, rangeEnd: {}",
-                            t.getT2().getId(),
-                            t.getT1().getRangeStart(),
-                            t.getT1().getRangeEnd());
-                    t.getT2().updateRange(t.getT1().getRangeStart(), t.getT1().getRangeEnd());
-                    t.getT2().publishInto(fetchOldCards(t.getT2()));
-                })
-                .map(t -> CardSubscriptionDto.builder()
-                        .rangeStart(t.getT2().getRangeStart())
-                        .rangeEnd(t.getT2().getRangeEnd())
-                        .build())
-                ;
+        return parameters.map(p -> {
+            try {
+                CardSubscription oldSubscription = cardSubscriptionService
+                        .findSubscription(p.getCurrentUserWithPerimeters(), p.getClientId());
+                if (oldSubscription != null) {
+                    log.info("Found subscription: {}", oldSubscription.getId());
+                    oldSubscription.updateRange();
+                    oldSubscription.publishInto(fetchOldCards(oldSubscription, p.getRangeStart(), p.getRangeEnd()));
+                } else {
+                    log.info("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
+                }
+                return CardSubscriptionDto.builder().rangeStart(p.getRangeStart()).rangeEnd(p.getRangeEnd()).build();
+            } catch (IllegalArgumentException e) {
+                log.error("Error searching for old subscription", e);
+                throw new ApiErrorException(
+                        ApiError.builder().status(HttpStatus.BAD_REQUEST).message(e.getMessage()).build());
+            }
+        });
+
     }
 
     /**
@@ -125,9 +112,7 @@ public class CardOperationsController {
      * @param subscription
      * @return
      */
-    private Flux<String> fetchOldCards(CardSubscription subscription) {
-        Instant start = subscription.getRangeStart();
-        Instant end = subscription.getRangeEnd();
+    private Flux<String> fetchOldCards(CardSubscription subscription,Instant start,Instant end)  {
         return fetchOldCards0(subscription.getStartingPublishDate(), start, end, subscription.getCurrentUserWithPerimeters());
     }
 
@@ -140,26 +125,8 @@ public class CardOperationsController {
     private Flux<String> fetchOldCards0(Instant referencePublishDate, Instant start, Instant end, CurrentUserWithPerimeters currentUserWithPerimeters) {
         Flux<CardOperation> oldCards;
         referencePublishDate = referencePublishDate == null ? Instant.now() : referencePublishDate;
-        String login = currentUserWithPerimeters.getUserData().getLogin();
-        String[] groups = currentUserWithPerimeters.getUserData().getGroups().toArray(
-                new String[currentUserWithPerimeters.getUserData().getGroups().size()]);
-
-        String[] entities = new String[]{};
-        if (currentUserWithPerimeters.getUserData().getEntities() != null)
-            entities = currentUserWithPerimeters.getUserData().getEntities().toArray(
-                    new String[currentUserWithPerimeters.getUserData().getEntities().size()]);
-
-        List<String> processStateList = new ArrayList<>();
-        if (currentUserWithPerimeters.getComputedPerimeters() != null)
-            currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter ->
-                    processStateList.add(perimeter.getProcess() + "." + perimeter.getState()));
-
         if (end != null && start != null) {
-            oldCards = cardRepository.findUrgent(referencePublishDate, start, end, login, groups, entities, processStateList);
-        } else if (end != null) {
-            oldCards = cardRepository.findPastOnly(referencePublishDate, end, login, groups, entities, processStateList);
-        } else if (start != null) {
-            oldCards = cardRepository.findFutureOnly(referencePublishDate, start, login, groups, entities, processStateList);
+            oldCards = cardRepository.getCardOperations(referencePublishDate, start, end, currentUserWithPerimeters);
         } else {
             log.info("Not loading published cards as no range is provided");
             oldCards = Flux.empty();

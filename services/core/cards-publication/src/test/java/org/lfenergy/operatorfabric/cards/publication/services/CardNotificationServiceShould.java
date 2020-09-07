@@ -22,6 +22,7 @@ import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardReceiver;
+import org.lfenergy.operatorfabric.cards.publication.model.CardOperationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
@@ -31,7 +32,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,8 +74,8 @@ class CardNotificationServiceShould {
         Instant start = Instant.now().plusSeconds(3600);
         CardPublicationData newCard = CardPublicationData.builder()
            .publisher("PUBLISHER_1")
-           .publisherVersion("0.0.1")
-           .processId("PROCESS_1")
+           .processVersion("0.0.1")
+           .processInstanceId("PROCESS_1")
            .severity(SeverityEnum.ALARM)
            .startDate(start)
            .title(I18nPublicationData.builder().key("title").build())
@@ -110,7 +114,17 @@ class CardNotificationServiceShould {
 
         cardNotificationService.notifyOneCard(newCard,CardOperationTypeEnum.ADD);
         await().pollDelay(1, TimeUnit.SECONDS).until(()->true);
-        assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
-        assertThat(testCardReceiver.getGroupQueue().size()).isEqualTo(1);
+        assertThat(testCardReceiver.getCardQueue().size()).isEqualTo(1);
+
+        CardOperationData cardOperationData = testCardReceiver.getCardQueue().element();
+        List<String> groupRecipientsIds = cardOperationData.getGroupRecipientsIds();
+        assertThat(groupRecipientsIds.size()).isEqualTo(2);
+        assertThat(groupRecipientsIds.contains("mytso")).isTrue();
+        assertThat(groupRecipientsIds.contains("admin")).isTrue();
+
+        List<String> userRecipientsIds = cardOperationData.getUserRecipientsIds();
+        assertThat(userRecipientsIds.size()).isEqualTo(2);
+        assertThat(userRecipientsIds.contains("graham")).isTrue();
+        assertThat(userRecipientsIds.contains("eric")).isTrue();
     }
 }

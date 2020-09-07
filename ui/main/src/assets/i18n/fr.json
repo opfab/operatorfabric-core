@@ -2,25 +2,29 @@
   "menu": {
     "feed": "Flux de cartes",
     "archives": "Archives",
+    "logging": "Logging",
+    "monitoring": "Monitoring",
     "logout": "Déconnexion",
     "settings": "Paramètres",
-    "about": "À propos"
+    "about": "À propos",
+    "freemessage": "Nouvelle Carte"
   },
-  "timeline" : {
-    "buttonTitle" : { 
+  "timeline": {
+    "businessPeriod": "Periode métier",
+    "buttonTitle": {
       "TR": "TR",
-      "J" : "J",
-      "7D":"7J",
-      "W" : "S",
-      "M" : "M",
-      "Y" : "A"
+      "J": "J",
+      "7D": "7J",
+      "W": "S",
+      "M": "M",
+      "Y": "A"
     }
   },
   "feed": {
     "filters": {
       "title": "Filtres",
-      "time":{
-        "title":"Temps",
+      "time": {
+        "title": "Temps",
         "start.label": "Début",
         "end.label": "Fin",
         "active.label": "Actif"
@@ -39,6 +43,18 @@
         "information": {
           "label": "Information"
         }
+      },
+      "ack": {
+        "title": "Acquittement",
+        "acknowledged": {
+          "label": "Acquittées"
+        },
+        "notacknowledged": {
+          "label": "Non acquittées"
+        },
+        "all": {
+          "label": "Toutes"
+        }
       }
     },
     "sort": {
@@ -46,19 +62,19 @@
       "pub": "Triées par date de publication"
     }
   },
-  "login":{
+  "login": {
     "reset": "RaZ",
     "login": "Identifiant",
     "password": "Mot de passe",
-    "submit":{
-      "password":"Se connecter",
+    "submit": {
+      "password": "Se connecter",
       "code": "Se connecter avec {{name}}"
     },
-    "error":{
-      "authenticate":"Identifiant ou mot de passe incorrect",
-      "code":"Mauvais code d'authentification",
-      "unavailable":"Le service d'authentification n'est pas disponible",
-      "unexpected":"Une erreur inattendue a été détectée : {{error}}",
+    "error": {
+      "authenticate": "Identifiant ou mot de passe incorrect",
+      "code": "Mauvais code d'authentification",
+      "unavailable": "Le service d'authentification n'est pas disponible",
+      "unexpected": "Une erreur inattendue a été détectée : {{error}}",
       "disconnected": "Vous avez été deconnecté",
       "token": {
         "invalid": "Le jeton conservé est invalide",
@@ -66,7 +82,7 @@
       }
     }
   },
-  "settings":{
+  "settings": {
     "email": "Adresse email",
     "description": "Description",
     "locale": "Langue",
@@ -79,7 +95,8 @@
     "playSoundForAlarm": "Alarme",
     "playSoundForAction": "Action",
     "playSoundForCompliant": "Conforme",
-    "playSoundForInformation": "Information"
+    "playSoundForInformation": "Information",
+    "invalidEmail": "Adresse email invalide"
   },
   "archive": {
     "filters": {
@@ -94,11 +111,61 @@
     "search": "Rechercher",
     "clear": "Effacer",
     "noResult": "Votre recherche ne correspond à aucun résultat."
-
+  },
+  "logging": {
+    "filters": {
+      "process": "Service"
+    },
+    "cardType": "Type de Carte",
+    "timeOfAction": "Moment de l'action",
+    "processName": "Nom du process",
+    "description": "Description",
+    "sender": "Envoyeur",
+    "noResult": "Aucun résultat"
+  },
+  "monitoring": {
+    "filters": {
+      "process": "Processus"
+    },
+    "time": "Date",
+    "businessPeriod": "Période métier",
+    "title": "Titre",
+    "summary": "Résumé",
+    "trigger": "Déclencheur",
+    "coordinationStatus": "Status de coordination",
+    "seeDetails": "Voir les détails"
   },
   "button": {
     "ok": "OK",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "reset": "Effacer"
+  },
+  "free-message": {
+    "title": "Éditer la notification par Free Message",
+    "filters": {
+      "severity": "Sévérité",
+      "process": "Processus",
+      "state": "État",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "comment": "Commentaire",
+      "entities": "Recipiendaire"
+    },
+    "options": {
+      "severity": {
+        "ALARM": "Alarm",
+        "ACTION": "Action",
+        "COMPLIANT": "Compliant",
+        "INFORMATION": "Information"
+      }
+    },
+    "prepareCard": "Preparation de la carte avant envoi",
+    "confirmSending": "Envoyer la carte suivante ?",
+    "accept": "Envoyer",
+    "refuse": "Annuler",
+    "processInstanceId": "Identifiant",
+    "state": "État",
+    "send-another-one": "Envoyer une autre carte"
   },
   "response": {
     "btnTitle": "VALIDER REPONSES",
@@ -107,5 +174,11 @@
       "form": "Le formulaire n'est pas correctement rempli"
     },
     "submitSuccess": "Action effectuée"
+  },
+  "cardAcknowledgment": {
+    "button": {
+      "ack": "Acquitter et fermer",
+      "unack": "Annuler l'acquitement"
+    }
   }
 }

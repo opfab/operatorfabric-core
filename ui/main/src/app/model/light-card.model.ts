@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {I18n} from "@ofModel/i18n.model";
+import {I18n} from '@ofModel/i18n.model';
 
 export class LightCard {
     /* istanbul ignore next */
@@ -15,25 +15,28 @@ export class LightCard {
         readonly uid: string,
         readonly id: string,
         readonly publisher: string,
-        readonly publisherVersion: string,
+        readonly processVersion: string,
         readonly publishDate: number,
         readonly startDate: number,
         readonly endDate: number,
         readonly severity: Severity,
-        readonly processId?: string,
+        readonly hasBeenAcknowledged: boolean = false,
+        readonly hasBeenRead: boolean = false,
+        readonly processInstanceId?: string,
         readonly lttd?: number,
         readonly title?: I18n,
         readonly summary?: I18n,
         readonly tags?: string[],
         readonly timeSpans?: TimeSpan[],
         readonly process?: string,
-        readonly state?: string
+        readonly state?: string,
+        readonly parentCardUid?: string,
     ) {
     }
 }
 
 export enum Severity {
-    ALARM = "ALARM", ACTION = "ACTION", INFORMATION = "INFORMATION", COMPLIANT = "COMPLIANT"
+    ALARM = 'ALARM', ACTION = 'ACTION', COMPLIANT = 'COMPLIANT', INFORMATION = 'INFORMATION'
 }
 
 export function severityOrdinal(severity: Severity) {

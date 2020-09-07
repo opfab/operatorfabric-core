@@ -24,9 +24,9 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-featu
 Boot configuration] for more info.
 * Generic property list extract :
 ** server.port (defaults to 8080) : embedded server port
-* :services:core:third-party-service properties list extract :
-** operatorfabric.thirds.storage.path (defaults to &quot;&quot;) : where to
-save/load OperatorFabric Third Party data
+* :services:core:businessconfig-party-service properties list extract :
+** operatorfabric.businessconfig.storage.path (defaults to &quot;&quot;) : where to
+save/load OperatorFabric Businessconfig  data
 
 == Generating docker images
 

@@ -16,7 +16,7 @@ import * as moment from 'moment';
 import {Map} from "@ofModel/map";
 import {Observable, of} from "rxjs";
 import {map, tap} from "rxjs/operators";
-import {ThirdsService} from "../../../services/thirds.service";
+import {ProcessesService} from "@ofServices/processes.service";
 import {Guid} from "guid-typescript";
 import {DetailContext} from "@ofModel/detail-context.model";
 import {Store} from "@ngrx/store";
@@ -31,7 +31,7 @@ export class HandlebarsService {
 
     constructor(
                 private translate: TranslateService,
-                private thirds: ThirdsService,
+                private businessconfig: ProcessesService,
                 private store: Store<AppState>){
         this.registerPreserveSpace();
         this.registerNumberFormat();
@@ -48,6 +48,10 @@ export class HandlebarsService {
         this.registerBool();
         this.registerNow();
         this.registerJson();
+        this.registerKeyValue();
+        this.registerToBreakage();
+        this.registerArrayContains();
+        this.registerTimes();
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale))
     }
 
@@ -60,18 +64,18 @@ export class HandlebarsService {
     }
 
     public executeTemplate(templateName: string, context: DetailContext):Observable<string> {
-        return this.queryTemplate(context.card.publisher,context.card.publisherVersion,templateName).pipe(
+        return this.queryTemplate(context.card.process,context.card.processVersion,templateName).pipe(
             map(t=>t(context)));
     }
 
-    private queryTemplate(publisher:string, version:string, name: string):Observable<Function> {
+    private queryTemplate(process:string, version:string, name: string):Observable<Function> {
         const locale = this._locale;
-        const key = `${publisher}.${version}.${name}.${locale}`;
+        const key = `${process}.${version}.${name}.${locale}`;
         let template = this.templateCache[key];
         if(template){
            return of(template);
         }
-        return this.thirds.fetchHbsTemplate(publisher,version,name,locale).pipe(
+        return this.businessconfig.fetchHbsTemplate(process,version,name,locale).pipe(
             map(s=>Handlebars.compile(s)),
             tap(t=>this.templateCache[key]=t)
         );
@@ -288,6 +292,52 @@ export class HandlebarsService {
     private registerPreserveSpace() {
         Handlebars.registerHelper("preserveSpace", function (value, options) {
             return value.replace(/ /g, '\u00A0')
+        });
+    }
+
+    private registerArrayContains() {
+        Handlebars.registerHelper('arrayContains', function(arr, value, options) {
+            return arr.includes(value);
+        });
+    }
+
+    private registerTimes() {
+        Handlebars.registerHelper('times', function(n, block) {
+            var accum = '';
+            for(var i = 0; i < n; ++i)
+                accum += block.fn(i);
+            return accum;
+        });
+    }
+
+    private registerToBreakage() {
+        Handlebars.registerHelper('toBreakage', function (word, breakage, options) {
+            switch (breakage) {
+                case 'lowercase':
+                    return word.toLowerCase();
+                case 'uppercase':
+                    return word.toUpperCase();
+                default:
+                    console.error(`Invalid parameter ${breakage} for the toBreakage helper`);
+                    return 'ERROR';
+            }
+        });
+    }
+
+    private registerKeyValue() {
+        Handlebars.registerHelper('keyValue', function (obj, options) {
+            var buffer, key;
+            buffer = "";
+            for (key in obj) {
+                if (!Object.hasOwnProperty.call(obj, key)) {
+                    continue;
+                }
+                buffer += options.fn({
+                    key: key,
+                    value: obj[key]
+                }) || '';
+            }
+            return buffer;
         });
     }
 }

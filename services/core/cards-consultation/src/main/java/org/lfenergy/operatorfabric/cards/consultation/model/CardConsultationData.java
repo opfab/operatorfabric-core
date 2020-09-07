@@ -11,9 +11,9 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
-import java.time.Instant;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -21,14 +21,8 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
+import java.time.Instant;
+import java.util.List;
 
 /**
  * <p>Please use builder to instantiate</p>
@@ -46,14 +40,14 @@ import lombok.Singular;
 @Document(collection = "cards")
 public class CardConsultationData implements Card {
 
-    private String uid ;
+    private String uid;
     @Id
     private String id;
-    private String parentCardId;
+    private String parentCardUid;
     private String publisher;
-    private String publisherVersion;
+    private String processVersion;
     private String process;
-    private String processId;
+    private String processInstanceId;
     private String state;
     private I18n title;
     private I18n summary;
@@ -87,9 +81,6 @@ public class CardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> groupRecipients;
-    @JsonIgnore
-    @Singular
-    private List<String> orphanedUsers;
     @Singular
     @Indexed
     private List<String> entityRecipients;
@@ -103,8 +94,12 @@ public class CardConsultationData implements Card {
     private List<? extends TimeSpan> timeSpans;
     @JsonIgnore
     private List<String> usersAcks;
+    @JsonIgnore
+    private List<String> usersReads;
     @Transient
     private Boolean hasBeenAcknowledged;
+    @Transient
+    private Boolean hasBeenRead;
     
     
 }

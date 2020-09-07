@@ -43,11 +43,11 @@ public class ArchivedCardConsultationData implements Card {
     private String uid;
     @Id
     private String id;
-    private String parentCardId;
+    private String parentCardUid;
     private String publisher;
-    private String publisherVersion;
+    private String processVersion;
     private String process;
-    private String processId;
+    private String processInstanceId;
     private String state;
     private I18n title;
     private I18n summary;
@@ -94,6 +94,10 @@ public class ArchivedCardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<? extends TimeSpan> timeSpans;
     
+    @JsonIgnore
     @Transient
     private Boolean hasBeenAcknowledged;
+    @JsonIgnore
+    @Transient
+    private Boolean hasBeenRead;
 }

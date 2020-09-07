@@ -7,9 +7,10 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<ngb-pagination *ngIf="(collectionSize$ | async) > (size$ | async)"
+<ngb-pagination *ngIf="(collectionSize$ | async) > size"
   [collectionSize]="collectionSize$ | async"
-  [page]="first$ | async"
+  [page]="page"
+  [pageSize]="size"
   (pageChange)="updateResultPage($event)"
   [maxSize]="3"
   [rotate]="true">

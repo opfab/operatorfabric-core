@@ -17,10 +17,10 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 	  endDate = new Date().valueOf() + 8*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
-			"publisherVersion" : "1",
+			"publisher" : "publisher_test",
+			"processVersion" : "1",
 			"process"  :"defaultProcess",
-			"processId" : "process2",
+			"processInstanceId" : "process1",
 			"state": "messageState",
 			"tags":["test","test2"],
 			"recipient" : {
@@ -69,10 +69,10 @@ And match response.count == 1
 	  endDate = new Date().valueOf() + 8*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
-			"publisherVersion" : "1",
+			"publisher" : "publisher_test",
+			"processVersion" : "1",
 			"process"  :"defaultProcess",
-			"processId" : "process2b",
+			"processInstanceId" : "process2",
 			"state": "chartState",
 			"tags" : ["test2"],
 			"recipient" : {
@@ -116,11 +116,11 @@ And match response.count == 1
 	  endDate = new Date().valueOf() + 12*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
-			"publisherVersion" : "1",
+			"publisher" : "publisher_test",
+			"processVersion" : "1",
 			"process"  :"defaultProcess",
-			"processId" : "process3",
-			"state": "messageState",
+			"processInstanceId" : "process3",
+			"state": "processState",
 			"recipient" : {
 						"type" : "GROUP",
 						"identity" : "TSO1"
@@ -128,8 +128,8 @@ And match response.count == 1
 			"severity" : "COMPLIANT",
 			"startDate" : startDate,
 			"summary" : {"key" : "defaultProcess.summary"},
-			"title" : {"key" : "defaultProcess.title"},
-			"data" : {"message":" Compliant Card "},
+			"title" : {"key" : "process.title"},
+			"data" : {"state":"calcul1","stateName":"CALCUL1"},
 			"timeSpans" : [
 				{"start" : startDate},
 				{"start" : endDate}
@@ -151,7 +151,7 @@ Then status 201
 And match response.count == 1
 
 
-# Push an action card 
+# Push a question card 
 
     * def getCard = 
     """
@@ -161,19 +161,23 @@ And match response.count == 1
 	  endDate = new Date().valueOf() + 6*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
-			"publisherVersion" : "1",
+			"publisher" : "processAction",
+			"processVersion" : "1",
 			"process"  :"defaultProcess",
-			"processId" : "process4",
-			"state": "messageState",
+			"processInstanceId" : "process4",
+			"state": "questionState",
 			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
+					"type":"UNION",
+					"recipients":[
+						{ "type": "GROUP", "identity":"TSO1"},
+						{ "type": "GROUP", "identity":"TSO2"}
+						]
 					},
+			"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
 			"severity" : "ACTION",
 			"startDate" : startDate,
 			"summary" : {"key" : "defaultProcess.summary"},
-			"title" : {"key" : "defaultProcess.title"},
+			"title" : {"key" : "question.title"},
 			"data" : {"message":" Action Card"},
 			"timeSpans" : [
 				{"start" : startDate},
@@ -203,14 +207,17 @@ And match response.count == 1
       startDate = new Date().valueOf() + 1*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
-			"publisherVersion" : "1",
+			"publisher" : "publisher_test",
+			"processVersion" : "1",
 			"process"  :"defaultProcess",
-			"processId" : "process5",
+			"processInstanceId" : "process5",
 			"state": "chartLineState",
 			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
+					"type":"UNION",
+					"recipients":[
+						{ "type": "GROUP", "identity":"TSO1"},
+						{ "type": "GROUP", "identity":"TSO2"}
+						]
 					},
 			"severity" : "ALARM",
 			"startDate" : startDate,
@@ -241,20 +248,126 @@ And match response.count == 1
       startDate = new Date().valueOf() + 2*60*60*1000;
 
 		var card = {
-			"publisher" : "api_test",
-			"publisherVersion" : "1",
+			"publisher" : "publisher_test",
+			"processVersion" : "1",
 			"process"  :"defaultProcess",
-			"processId" : "process5b",
-			"state": "messageState",
+			"processInstanceId" : "process6",
+			"state": "contingenciesState",
 			"recipient" : {
-						"type" : "GROUP",
-						"identity" : "TSO1"
+						"type" : "USER",
+						"identity" : "tso1-operator"
 					},
 			"severity" : "ALARM",
 			"startDate" : startDate,
-			"summary" : {"key" : "defaultProcess.summary"},
-			"title" : {"key" : "defaultProcess.title"},
-			"data" : {"message":" Second Alarm card"},
+			"summary" : {"key" : "contingencies.summary"},
+			"title" : {"key" : "contingencies.title"},
+			"data" : 
+		{
+            "detail": null,
+            "networkContingencies": [
+                {
+                    "detail": null,"name": ".ASPHL71SIERE",
+                    "networkLimitViolations": [
+                        {
+							"detail":{"acceptableDuration":"60","cDisplayExists":"true","constraintDisplayLabel":"Surcharge1'","limitType":"CURRENT"},
+                            "name": ".EICHL71MUHLB",
+                            "networkContexts": [
+								{"date":1580167800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580171400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580175000000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580178600000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580182200000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580185800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580189400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}}
+                            ],
+                            "values": [
+								{},{},{"detail":{"acceptableDurationValue":"60","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2850.0","preValue":"2483.967041015625","preValueMw":"1736.8333740234375","sideValue":"TWO","value":"2943.1044921875","valueMw":"2064.444580078125"},"value":"103%20'"},
+								{"detail":{"acceptableDurationValue":"60","cDisplayExistsValue":"true","displayLabelValue":"Surcharge1'","limit":"3000.0","preValue":"2755.424560546875","preValueMw":"1924.5638427734375","sideValue":"TWO","value":"3264.133544921875","valueMw":"2280.184814453125"},"value":"109%1'"},
+								{"detail":{"acceptableDurationValue":"60","cDisplayExistsValue":"true","displayLabelValue":"Surcharge1'","limit":"3000.0","preValue":"2876.2236328125","preValueMw":"1991.7191162109375","sideValue":"TWO","value":"3404.917236328125","valueMw":"2357.58154296875"},"value":"113%1'"},
+								{"detail":{"acceptableDurationValue":"60","cDisplayExistsValue":"true","displayLabelValue":"Surcharge1'","limit":"3000.0","preValue":"2603.79296875","preValueMw":"1820.97509765625","sideValue":"TWO","value":"3082.24169921875","valueMw":"2155.914794921875"},"value":"103%1'"},
+								{}
+                            ]
+                        },
+                        {
+							"detail":{"acceptableDuration":"60","cDisplayExists":"true","constraintDisplayLabel":"Surcharge1'","limitType":"CURRENT"},
+                            "name": ".LAUFL71SIERE",
+                            "values": [
+								{},{},{},{"detail":{"acceptableDurationValue":"60","cDisplayExistsValue":"true","displayLabelValue":"Surcharge1'","limit":"2105.0","preValue":"1487.165771484375","preValueMw":"1030.4757080078125","sideValue":"TWO","value":"2138.459228515625","valueMw":"1478.4754638671875"},"value":"102%1'"},
+								{"detail":{"acceptableDurationValue":"60","cDisplayExistsValue":"true","displayLabelValue":"Surcharge1'","limit":"2105.0","preValue":"1540.552978515625","preValueMw":"1057.718017578125","sideValue":"TWO","value":"2215.884033203125","valueMw":"1517.965087890625"},"value":"105%1'"},
+								{"detail":{"acceptableDurationValue":"60","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2000.00048828125","preValue":"1396.576171875","preValueMw":"967.2131958007812","sideValue":"TWO","value":"2010.927001953125","valueMw":"1391.023193359375"},"value":"101%20'"},
+								{}
+                            ]
+                        },
+                        {
+							"detail":{"acceptableDuration":"1200","cDisplayExists":"true","constraintDisplayLabel":"Surcharge20'","limitType":"CURRENT"},
+                            "name": ".RODPL71ALBER",
+                            "values": [
+								{},{},{},{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2370.0","preValue":"2352.67236328125","preValueMw":"1490.8565673828125","sideValue":"TWO","value":"2376.933349609375","valueMw":"1501.7509765625"},"value":"100%"},
+								{},{},{}
+                            ]
+                        },
+                        {
+							"detail":{"acceptableDuration":"1200","cDisplayExists":"true","constraintDisplayLabel":"Surcharge20'","limitType":"CURRENT"},
+                            "name": ".RODPL72ALBER",
+                            "values": [
+                                {}, {},{},{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2370.0","preValue":"2353.75927734375","preValueMw":"1491.551513671875","sideValue":"TWO","value":"2378.0302734375","valueMw":"1502.4510498046875"},"value":"100%"},
+                                {},{}, {}
+                            ]
+                        }
+                    ], "networkRemedials": []
+                },
+                {
+                    "detail": null,"name": ".AVEL 7 .HORT 2",
+                    "networkLimitViolations": [
+                        {
+							"detail":{"acceptableDuration":"1200","cDisplayExists":"true","constraintDisplayLabel":"Surcharge20'","limitType":"CURRENT"},
+                            "name": ".AVELL72AVELI",
+                            "networkContexts": [
+								{"date":1580167800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580171400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580175000000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580178600000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580182200000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580185800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580189400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}}
+                            ],
+                            "values": [
+                                {},{},{},{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"2165.0419921875","preValueMw":"1512.98095703125","sideValue":"TWO","value":"2691.4501953125","valueMw":"1876.2672119140625"},"value":"101%"},
+                                {},{},{}
+                            ]
+                        }
+                    ], "networkRemedials": []
+                },
+                {
+                    "detail": null, "name": ".AVELL71MASTA",
+                    "networkLimitViolations": [
+                        {
+							"detail":{"acceptableDuration":"1200","cDisplayExists":"true","constraintDisplayLabel":"Surcharge20'","limitType":"CURRENT"},
+                            "name": ".AVELL72AVELI",
+                            "networkContexts": [
+								{"date":1580167800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580171400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580175000000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580178600000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580182200000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580185800000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}},
+								{"date":1580189400000,"detail":{"computationDate":1580116500000,"type":"srj-jm1"}}
+                            ],
+                            "values": [
+								{},{},{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1875.450439453125","preValueMw":"1312.4620361328125","sideValue":"TWO","value":"2745.7265625","valueMw":"1912.616455078125"},"value":"104%"},
+								{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"2165.0419921875","preValueMw":"1512.98095703125","sideValue":"TWO","value":"3160.505859375","valueMw":"2191.774658203125"},"value":"119%"},
+								{"detail":{"acceptableDurationValue":"1200","cDisplayExistsValue":"true","displayLabelValue":"Surcharge20'","limit":"2652.0","preValue":"1993.36279296875","preValueMw":"1394.3531494140625","sideValue":"TWO","value":"2898.87744140625","valueMw":"2016.7802734375"},"value":"109%"},
+								{},{}
+                            ]
+                        }
+                    ],
+                    "networkRemedials": []
+                }
+				
+				
+				]
+			}
+
 		}
 
 	return JSON.stringify(card);

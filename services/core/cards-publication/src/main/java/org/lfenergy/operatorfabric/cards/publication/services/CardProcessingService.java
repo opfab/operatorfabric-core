@@ -11,12 +11,15 @@
 package org.lfenergy.operatorfabric.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.aop.process.AopTraceType;
+import org.lfenergy.operatorfabric.aop.process.mongo.models.UserActionTraceData;
 import org.lfenergy.operatorfabric.cards.model.CardOperationTypeEnum;
 import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.lfenergy.operatorfabric.cards.publication.services.processors.UserCardProcessor;
+import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.lfenergy.operatorfabric.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -53,11 +57,16 @@ public class CardProcessingService {
     private UserCardProcessor userCardProcessor;
     @Autowired
     private ExternalAppClientImpl externalAppClient;
+    @Autowired
+    private TraceReposiory traceReposiory;
 
-    private Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards, Optional<User> user) {
+    private Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards, Optional<CurrentUserWithPerimeters> user) {
 
         long windowStart = Instant.now().toEpochMilli();
-        Flux<CardPublicationData> cards = registerRecipientProcess(pushedCards);
+
+        //delete child cards process should be prior to cards updates
+        Flux<CardPublicationData> cards = deleteChildCardsProcess(pushedCards);
+        cards = registerRecipientProcess(cards);
         cards = registerValidationProcess(cards);
 
         if (user.isPresent()) {
@@ -75,11 +84,23 @@ public class CardProcessingService {
                 });
     }
 
+    private Flux<CardPublicationData> deleteChildCardsProcess(Flux<CardPublicationData> cards) {
+        return cards.doOnNext(card->{
+            String idCard= card.getProcess()+"."+card.getProcessInstanceId();
+            Optional<List<CardPublicationData>> childCard=cardRepositoryService.findChildCard(cardRepositoryService.findCardById(idCard));
+            if(childCard.isPresent()){
+                deleteCards(childCard.get());
+            }
+        });
+    }
+
+
+
     public Mono<CardCreationReportData> processCards(Flux<CardPublicationData> pushedCards) {
         return processCards(pushedCards, Optional.empty());
     }
 
-    public Mono<CardCreationReportData> processUserCards(Flux<CardPublicationData> pushedCards, User user) {
+    public Mono<CardCreationReportData> processUserCards(Flux<CardPublicationData> pushedCards, CurrentUserWithPerimeters user) {
         return processCards(pushedCards, Optional.of(user));
     }
 
@@ -88,7 +109,7 @@ public class CardProcessingService {
         return cards.doOnNext(ignoreErrorDo(recipientProcessor::processAll));
     }
 
-    private Flux<CardPublicationData> userCardPublisherProcess(Flux<CardPublicationData> cards, User user) {
+    private Flux<CardPublicationData> userCardPublisherProcess(Flux<CardPublicationData> cards, CurrentUserWithPerimeters user) {
         return cards.doOnNext(card-> userCardProcessor.processPublisher(card,user));
     }
 
@@ -130,40 +151,60 @@ public class CardProcessingService {
      */
     void validate(CardPublicationData c) throws ConstraintViolationException {
 
-        String parentCardId = c.getParentCardId();
-        if (Optional.ofNullable(parentCardId).isPresent()) {
-            if (!cardRepositoryService.findByUid(parentCardId).isPresent()) {
-                throw new ConstraintViolationException("The parentCardId " + parentCardId + " is not the uid of any card", null);
-            }
-        }
+        // constraint check : parentCardUid must exist
+        if (!checkIsParentCardUidExisting(c))
+            throw new ConstraintViolationException("The parentCardUid " + c.getParentCardUid() + " is not the uid of any card", null);
 
         Set<ConstraintViolation<CardPublicationData>> results = localValidatorFactoryBean.validate(c);
         if (!results.isEmpty())
             throw new ConstraintViolationException(results);
 
         // constraint check : endDate must be after startDate
-        Instant endDateInstant = c.getEndDate();
-        Instant startDateInstant = c.getStartDate();
-        if ((endDateInstant != null) && (startDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0))
+        if (! checkIsEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : endDate must be after startDate", null);
 
-        // constraint check : timeSpans list : each end date must be after his start
-        // date
-        if (c.getTimeSpans() != null)
+        // constraint check : timeSpans list : each end date must be after his start date
+        if (! checkIsAllTimeSpanEndDateAfterStartDate(c))
+            throw new ConstraintViolationException("constraint violation : TimeSpan.end must be after TimeSpan.start", null);
+
+        // constraint check : process and state must not contain "." (because we use it as a separator)
+        if (! checkIsDotCharacterNotInProcessAndState(c))
+            throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
+    }
+
+    boolean checkIsParentCardUidExisting(CardPublicationData c){
+        String parentCardUid = c.getParentCardUid();
+        if (Optional.ofNullable(parentCardUid).isPresent()) {
+            if (!cardRepositoryService.findByUid(parentCardUid).isPresent()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean checkIsEndDateAfterStartDate(CardPublicationData c) {
+        Instant endDateInstant = c.getEndDate();
+        Instant startDateInstant = c.getStartDate();
+        return ! ((endDateInstant != null) && (startDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0));
+    }
+
+    boolean checkIsDotCharacterNotInProcessAndState(CardPublicationData c) {
+        return ! ((c.getProcess() != null && c.getProcess().contains(Character.toString('.'))) ||
+                  (c.getState() != null && c.getState().contains(Character.toString('.'))));
+    }
+
+    boolean checkIsAllTimeSpanEndDateAfterStartDate(CardPublicationData c) {
+        if (c.getTimeSpans() != null) {
             for (int i = 0; i < c.getTimeSpans().size(); i++) {
                 if (c.getTimeSpans().get(i) != null) {
                     Instant endInstant = c.getTimeSpans().get(i).getEnd();
                     Instant startInstant = c.getTimeSpans().get(i).getStart();
                     if ((endInstant != null) && (startInstant != null) && (endInstant.compareTo(startInstant) < 0))
-                        throw new ConstraintViolationException(
-                                "constraint violation : TimeSpan.end must be after TimeSpan.start", null);
+                        return false;
                 }
             }
-
-        // constraint check : process and state must not contain "." (because we use it as a separator)
-        if ((c.getProcess() != null && c.getProcess().contains(Character.toString('.')))  ||
-                (c.getState() != null && c.getState().contains(Character.toString('.'))))
-            throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
+        }
+        return true;
     }
 
     /**
@@ -186,19 +227,33 @@ public class CardProcessingService {
         });
     }
 
-    public void deleteCard(String processId) {
+    public void deleteCards(List<CardPublicationData> cardPublicationData) {
+        cardPublicationData.forEach(x->deleteCard(x.getId()));
+    }
 
-        CardPublicationData cardToDelete = cardRepositoryService.findCardToDelete(processId);
+    public Optional<CardPublicationData> deleteCard(String processInstanceId) {
+        CardPublicationData cardToDelete = cardRepositoryService.findCardById(processInstanceId);
+        Optional<CardPublicationData> deletedCard = Optional.ofNullable(cardToDelete);
         if (null != cardToDelete) {
             cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE);
             cardRepositoryService.deleteCard(cardToDelete);
+            Optional<List<CardPublicationData>> childCard=cardRepositoryService.findChildCard(cardToDelete);
+            if(childCard.isPresent()){
+                childCard.get().forEach(x->deleteCard(x.getId()));
+            }
         }
+        return deletedCard;
     }
 
-	public Mono<UserAckOperationResult> processUserAcknowledgement(Mono<String> cardUid, String userName) {
-		return cardUid.map(_cardUid -> cardRepositoryService.addUserAck(userName, _cardUid));
+
+	public Mono<UserBasedOperationResult> processUserAcknowledgement(Mono<String> cardUid, User user) {
+		return cardUid.map(uid -> cardRepositoryService.addUserAck(user, uid));
 	}
-        
+
+	public Mono<UserBasedOperationResult> processUserRead(Mono<String> cardUid, String userName) {
+		return cardUid.map(uid -> cardRepositoryService.addUserRead(userName, uid));
+	}
+
     /**
      * Logs card count and elapsed time since window start
      *
@@ -212,11 +267,13 @@ public class CardProcessingService {
         log.debug("{} cards handled in {} ms each (total: {})", count, cardWindowDurationMillis, windowDurationMillis);
     }
 
-	public Mono<UserAckOperationResult> deleteUserAcknowledgement(Mono<String> cardUid, String userName) {
+	public Mono<UserBasedOperationResult> deleteUserAcknowledgement(Mono<String> cardUid, String userName) {
 		return cardUid.map(_cardUid -> cardRepositoryService.deleteUserAck(userName, _cardUid));
 	}
 
-	
+    public Mono<UserActionTraceData> findTraceByCardUid(String name, String cardUid) {
+        return traceReposiory.findByCardUidAndActionAndUserName(cardUid, AopTraceType.ACK.getAction(),name);
+    }
 
 	
 }

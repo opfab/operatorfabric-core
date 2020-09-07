@@ -10,30 +10,7 @@
 
 package org.lfenergy.operatorfabric.cards.publication.services;
 
-import static java.nio.charset.Charset.forName;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
-import static org.jeasy.random.FieldPredicates.named;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
@@ -44,20 +21,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lfenergy.operatorfabric.aop.process.mongo.models.UserActionTraceData;
 import org.lfenergy.operatorfabric.cards.model.RecipientEnum;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.configuration.TestCardReceiver;
-import org.lfenergy.operatorfabric.cards.publication.model.ArchivedCardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
-import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.Recipient;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.TimeSpanPublicationData;
+import org.lfenergy.operatorfabric.cards.publication.model.*;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
-import org.lfenergy.operatorfabric.users.model.User;
+import org.lfenergy.operatorfabric.cards.publication.repositories.TraceReposioryForTest;
+import org.lfenergy.operatorfabric.users.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -68,13 +41,29 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
-
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import javax.validation.ConstraintViolationException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import static java.nio.charset.Charset.forName;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.jeasy.random.FieldPredicates.named;
+import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 /**
  * <p>
@@ -95,6 +84,9 @@ class CardProcessServiceShould {
 
     @Autowired
     private CardRepositoryForTest cardRepository;
+
+    @Autowired
+    private TraceReposioryForTest traceRepository;
 
     @Autowired
     private ArchivedCardRepositoryForTest archiveRepository;
@@ -129,8 +121,8 @@ class CardProcessServiceShould {
         }
 
 
-
         private User user;
+        private CurrentUserWithPerimeters currentUserWithPerimeters;
 
     public CardProcessServiceShould() {
 
@@ -146,59 +138,70 @@ class CardProcessServiceShould {
         entities.add("newPublisherId");
         entities.add("entity2");
         user.setEntities(entities);
+        currentUserWithPerimeters = new CurrentUserWithPerimeters();
+        currentUserWithPerimeters.setUserData(user);
+        ComputedPerimeter c1 = new ComputedPerimeter();
+        c1.setProcess("PROCESS_CARD_USER") ;
+        c1.setState("STATE1");
+        c1.setRights(RightsEnum.RECEIVEANDWRITE);
+        List list=new ArrayList<ComputedPerimeter>();
+        list.add(c1);
+        currentUserWithPerimeters.setComputedPerimeters(list);
     }
 
     private Flux<CardPublicationData> generateCards() {
         return Flux.just(
-                CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
-                        .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
+                        .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
+                        .process("process1")
+                        .state("state1")
                         .build(),
-                CardPublicationData.builder().publisher("PUBLISHER_2").publisherVersion("O")
-                        .processId("PROCESS_1").severity(SeverityEnum.INFORMATION)
+                CardPublicationData.builder().publisher("PUBLISHER_2").process("PROCESS_2").processVersion("O")
+                        .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .process("process2")
+                        .state("state2")
                         .build(),
-                CardPublicationData.builder().publisher("PUBLISHER_2").publisherVersion("O")
-                        .processId("PROCESS_2").severity(SeverityEnum.COMPLIANT)
+                CardPublicationData.builder().publisher("PUBLISHER_2").process("PROCESS_2").processVersion("O")
+                        .processInstanceId("PROCESS_2").severity(SeverityEnum.COMPLIANT)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .process("process3")
+                        .state("state3")
                         .build(),
-                CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
-                        .processId("PROCESS_2").severity(SeverityEnum.INFORMATION)
+                CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
+                        .processInstanceId("PROCESS_2").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .process("process4")
+                        .state("state4")
                         .build(),
-                CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
-                        .processId("PROCESS_1").severity(SeverityEnum.INFORMATION)
+                CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
+                        .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                        .process("process5")
+                        .state("state5")
                         .build());
     }
 
-    private CardPublicationData generateCardData(String publisher, String process) {
-        return CardPublicationData.builder().publisher(publisher).publisherVersion("O").processId(process)
-                .severity(SeverityEnum.INFORMATION)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build()).startDate(Instant.now())
-                .recipient(RecipientPublicationData.builder().type(DEADEND).build()).build();
-    }
-
     private CardPublicationData generateWrongCardData(String publisher, String process) {
-        return CardPublicationData.builder().publisher(publisher).publisherVersion("O").processId(process)
+        return CardPublicationData.builder().publisher(publisher).processVersion("O").processInstanceId(process)
                 .build();
     }
 
@@ -217,13 +220,16 @@ class CardProcessServiceShould {
         ArrayList<String> externalRecipients = new ArrayList<>();
         externalRecipients.add("api_test_externalRecipient1");
 
-        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").publisherVersion("O")
-                .processId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
+                .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+                .process("PROCESS_CARD_USER")
+                .state("STATE1")
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .externalRecipients(externalRecipients)
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .state("state1")
                 .build();
 
         mockServer.expect(ExpectedCount.once(),
@@ -232,9 +238,74 @@ class CardProcessServiceShould {
                 .andRespond(withStatus(HttpStatus.ACCEPTED)
                 );
 
-        StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card), user))
+        StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card), currentUserWithPerimeters))
                 .expectNextMatches(r -> r.getCount().equals(1)).verifyComplete();
         checkCardPublisherId(card);
+
+    }
+
+
+    @Test
+    void childCards() throws URISyntaxException {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 1;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.forEach(c -> c.setParentCardUid(null));
+
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                "The number of registered cards should be '%d' but is " + "'%d' actually",
+                numberOfCards, block).isEqualTo(numberOfCards);
+
+        CardPublicationData firstCard = cards.get(0);
+        String id = firstCard.getId();
+
+        ArrayList<String> externalRecipients = new ArrayList<>();
+        externalRecipients.add("api_test_externalRecipient1");
+
+        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_1").process("PROCESS_1").processVersion("O")
+                .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
+                .process("PROCESS_CARD_USER")
+                .parentCardUid(cards.get(0).getUid())
+                .state("STATE1")
+                .title(I18nPublicationData.builder().key("title").build())
+                .summary(I18nPublicationData.builder().key("summary").build())
+                .startDate(Instant.now())
+                .externalRecipients(externalRecipients)
+                .recipient(RecipientPublicationData.builder().type(DEADEND).build())
+                .state("state1")
+                .build();
+
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI(EXTERNALAPP_URL)))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.ACCEPTED)
+                );
+
+        StepVerifier.create(cardProcessingService.processUserCards(Flux.just(card), currentUserWithPerimeters))
+                .expectNextMatches(r -> r.getCount().equals(1)).verifyComplete();
+        checkCardPublisherId(card);
+
+
+
+        Assertions.assertThat(cardRepository.count().block())
+                .withFailMessage("The number of registered cards should be '%d' but is '%d' ",
+                        2, block)
+                .isEqualTo(2);
+
+        cardProcessingService.deleteCard(cards.get(0).getId());
+
+        Assertions.assertThat(cardRepository.count().block())
+                .withFailMessage("The number of registered cards should be '%d' but is '%d' "
+                                + "when first parent card is deleted(processInstanceId:'%s').",
+                        0, block, id)
+                .isEqualTo(0);
+
+
+
     }
 
     @Test
@@ -260,7 +331,8 @@ class CardProcessServiceShould {
         entityRecipients.add("TSO1");
         entityRecipients.add("TSO2");
         CardPublicationData newCard = CardPublicationData.builder().publisher("PUBLISHER_1")
-                .publisherVersion("0.0.1").processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .process("PROCESS_1")
+                .processVersion("0.0.1").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .startDate(start).title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").parameter("arg1", "value1")
                         .build())
@@ -274,20 +346,19 @@ class CardProcessServiceShould {
                         .build())
                 .entityRecipients(entityRecipients)
                 .timeSpan(TimeSpanPublicationData.builder().start(Instant.ofEpochMilli(123l)).build())
+                .process("process1")
+                .state("state1")
                 .build();
         cardProcessingService.processCards(Flux.just(newCard)).subscribe();
-        await().atMost(5, TimeUnit.SECONDS).until(() -> !newCard.getOrphanedUsers().isEmpty());
-        await().atMost(5, TimeUnit.SECONDS).until(() -> testCardReceiver.getEricQueue().size() >= 1);
         CardPublicationData persistedCard = cardRepository.findById(newCard.getId()).block();
-        assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardId", "orphanedUsers");
+        assertThat(persistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardUid");
 
         ArchivedCardPublicationData archivedPersistedCard = archiveRepository.findById(newCard.getUid())
                 .block();
-        assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardId", "uid", "id", "deletionDate",
+        assertThat(archivedPersistedCard).isEqualToIgnoringGivenFields(newCard, "parentCardUid", "uid", "id", "deletionDate",
                 "actions", "timeSpans");
         assertThat(archivedPersistedCard.getId()).isEqualTo(newCard.getUid());
-        assertThat(testCardReceiver.getEricQueue().size()).isEqualTo(1);
-        assertThat(testCardReceiver.getGroupQueue().size()).isEqualTo(1);
+        assertThat(testCardReceiver.getCardQueue().size()).isEqualTo(1);
     }
 
     private boolean checkCardCount(long expectedCount) {
@@ -301,8 +372,6 @@ class CardProcessServiceShould {
     }
 
     private boolean checkCardPublisherId(CardPublicationData card) {
-
-        CardPublicationData c = cardRepository.findByProcessId(card.getProcessId()).block();
         if (user.getEntities().get(0).equals(card.getPublisher())) {
             return true;
         } else {
@@ -322,34 +391,25 @@ class CardProcessServiceShould {
     }
 
     @Test
-    void deleteOneCard_with_it_s_ProcessId() {
+    void deleteOneCard_with_it_s_Id() {
 
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-        cards.forEach(c -> c.setParentCardId(null));
+        cards.forEach(c -> c.setParentCardUid(null));
 
-        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
-                .subscribe();
-
-        Long block = cardRepository.count().block();
-        Assertions.assertThat(block).withFailMessage(
-                "The number of registered cards should be '%d' but is " + "'%d' actually",
-                numberOfCards, block).isEqualTo(numberOfCards);
+        StepVerifier.create(cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards]))))
+                .expectNextMatches(r -> r.getCount().equals(numberOfCards)).verifyComplete();
 
         CardPublicationData firstCard = cards.get(0);
-        String processId = firstCard.getId();
-        ;
-        cardProcessingService.deleteCard(processId);
+        String id = firstCard.getId();
+        cardProcessingService.deleteCard(id);
 
         /* one card should be deleted(the first one) */
         int thereShouldBeOneCardLess = numberOfCards - 1;
 
-        Assertions.assertThat(cardRepository.count().block())
-                .withFailMessage("The number of registered cards should be '%d' but is '%d' "
-                                + "when first added card is deleted(processId:'%s').",
-                        thereShouldBeOneCardLess, block, processId)
-                .isEqualTo(thereShouldBeOneCardLess);
+        StepVerifier.create(cardRepository.count())
+                .expectNextMatches(r -> r.intValue()==thereShouldBeOneCardLess).verifyComplete();
     }
 
     // FIXME unify way test cards are created throughout tests
@@ -396,11 +456,11 @@ class CardProcessServiceShould {
     }
 
     @Test
-    void deleteCards_Non_existentProcessId() {
+    void deleteCards_Non_existentId() {
         EasyRandom easyRandom = instantiateRandomCardGenerator();
         int numberOfCards = 13;
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-        cards.forEach(c -> c.setParentCardId(null));
+        cards.forEach(c -> c.setParentCardUid(null));
 
         cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
                 .subscribe();
@@ -410,8 +470,8 @@ class CardProcessServiceShould {
                 "The number of registered cards should be '%d' but is " + "'%d' actually",
                 numberOfCards, block).isEqualTo(numberOfCards);
 
-        final String processId = generateIdNotInCardRepository();
-        cardProcessingService.deleteCard(processId);
+        final String id = generateIdNotInCardRepository();
+        cardProcessingService.deleteCard(id);
 
         int expectedNumberOfCards = numberOfCards;/* no card should be deleted */
 
@@ -419,8 +479,8 @@ class CardProcessServiceShould {
         Assertions.assertThat(block)
                 .withFailMessage(
                         "The number of registered cards should remain '%d' but is '%d' "
-                                + "when an non-existing processId('%s') is used.",
-                        expectedNumberOfCards, block, processId)
+                                + "when an non-existing processInstanceId('%s') is used.",
+                        expectedNumberOfCards, block, id)
                 .isEqualTo(expectedNumberOfCards);
 
     }
@@ -443,7 +503,7 @@ class CardProcessServiceShould {
         List<CardPublicationData> card = instantiateSeveralRandomCards(easyRandom, 1);
         String fakeDataContent = easyRandom.nextObject(String.class);
         CardPublicationData publishedCard = card.get(0);
-        publishedCard.setParentCardId(null);
+        publishedCard.setParentCardUid(null);
         publishedCard.setData(fakeDataContent);
 
         cardProcessingService.processCards(Flux.just(card.toArray(new CardPublicationData[1]))).subscribe();
@@ -453,8 +513,8 @@ class CardProcessServiceShould {
                 .withFailMessage("The number of registered cards should be '%d' but is '%d", 1, block)
                 .isEqualTo(1);
 
-        String computedCardId = publishedCard.getPublisher() + "_" + publishedCard.getProcessId();
-        CardPublicationData cardToDelete = cardRepositoryService.findCardToDelete(computedCardId);
+        String computedCardId = publishedCard.getProcess() + "." + publishedCard.getProcessInstanceId();
+        CardPublicationData cardToDelete = cardRepositoryService.findCardById(computedCardId);
 
         Assertions.assertThat(cardToDelete).isNotNull();
 
@@ -470,7 +530,7 @@ class CardProcessServiceShould {
         int numberOfCards = 1;
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
         cards.get(0).setUsersAcks(null);
-        cards.get(0).setParentCardId(null);
+        cards.get(0).setParentCardUid(null);
         cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
                         .subscribe();
 
@@ -483,26 +543,60 @@ class CardProcessServiceShould {
         Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card doesn't contain any ack at the beginning").isNullOrEmpty();
         
         String cardUid = firstCard.getUid();
-        
-        UserAckOperationResult res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "aaa").block();
+        user.setLogin("aaa");
+
+        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user).block();
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
         CardPublicationData cardReloaded = cardRepository.findByUid(cardUid).block();
-        Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly an ack by user aaa").containsExactly("aaa");              
-        
-        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "bbb").block();
+        Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly an ack by user aaa").containsExactly("aaa");
+
+        user.setLogin("bbb");
+        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user).block();
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting Card after ack processing contains exactly two acks by users aaa and bbb").containsExactly("aaa","bbb");
         //try to insert aaa again
-        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), "aaa").block();
+        user.setLogin("aaa");
+        res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user).block();
         Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).as("Expecting no addition because already done").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting  Card after ack processing contains exactly two acks by users aaa(only once) and bbb").containsExactly("aaa","bbb");
     }
-    
+
+
+    @Test
+    void processAddTraceAcknowledgement() {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 1;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.get(0).setUsersAcks(null);
+        cards.get(0).setParentCardUid(null);
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                "The number of registered cards should be '%d' but is " + "'%d' actually",
+                numberOfCards, block).isEqualTo(numberOfCards);
+
+        CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).block();
+        Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card doesn't contain any ack at the beginning").isNullOrEmpty();
+
+        String cardUid = firstCard.getUid();
+        user.setLogin("aaa");
+        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(Mono.just(cardUid), user).block();
+        Assertions.assertThat(UserBasedOperationResult.cardFound().operationDone(true).equals(res));
+        UserActionTraceData trace= cardProcessingService.findTraceByCardUid("aaa",cardUid).block();
+
+        Assertions.assertThat(trace.getAction()).as("Expecting Acknowledgment trace after ack ").isEqualToIgnoringCase("Acknowledgment");
+        Assertions.assertThat(trace.getUserName()).as("Expecting  Acknowledgment trace after ack with user name").isEqualTo("aaa");
+
+
+    }
+
     @Test
     void processDeleteUserAcknowledgement() {
         EasyRandom easyRandom = instantiateRandomCardGenerator();
@@ -510,8 +604,8 @@ class CardProcessServiceShould {
         List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
         cards.get(0).setUsersAcks(Arrays.asList("someUser","someOtherUser"));
         cards.get(1).setUsersAcks(null);
-        cards.get(0).setParentCardId(null);
-        cards.get(1).setParentCardId(null);
+        cards.get(0).setParentCardUid(null);
+        cards.get(1).setParentCardUid(null);
         cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
                         .subscribe();
 
@@ -524,8 +618,8 @@ class CardProcessServiceShould {
         Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card contains exactly 2 user acks").hasSize(2);
         
         String cardUid = firstCard.getUid();
-        
-        UserAckOperationResult res = cardProcessingService.deleteUserAcknowledgement(Mono.just(cardUid), "someUser").block();
+
+        UserBasedOperationResult res = cardProcessingService.deleteUserAcknowledgement(Mono.just(cardUid), "someUser").block();
         firstCard = cardRepository.findByUid(cardUid).block();
         Assertions.assertThat(firstCard.getUsersAcks()).as("Expecting Card1 doesn't contain someUser's card acknowledgement").containsExactly("someOtherUser");
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).isTrue();
@@ -543,6 +637,44 @@ class CardProcessServiceShould {
         Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).isTrue();
     }
 
+    @Test
+    void processAddUserRead() {
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 1;
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+        cards.get(0).setUsersReads(null);
+        cards.get(0).setParentCardUid(null);
+        cardProcessingService.processCards(Flux.just(cards.toArray(new CardPublicationData[numberOfCards])))
+                        .subscribe();
+
+        Long block = cardRepository.count().block();
+        Assertions.assertThat(block).withFailMessage(
+                        "The number of registered cards should be '%d' but is " + "'%d' actually",
+                        numberOfCards, block).isEqualTo(numberOfCards);
+
+        CardPublicationData firstCard = cardRepository.findById(cards.get(0).getId()).block();
+        Assertions.assertThat(firstCard.getUsersReads()).as("Expecting Card doesn't contain any read at the beginning").isNullOrEmpty();
+
+        String cardUid = firstCard.getUid();
+
+        UserBasedOperationResult res = cardProcessingService.processUserRead(Mono.just(cardUid), "aaa").block();
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
+
+        CardPublicationData cardReloaded = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting Card after read processing contains exactly an read by user aaa").containsExactly("aaa");
+
+        res = cardProcessingService.processUserRead(Mono.just(cardUid), "bbb").block();
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
+
+        cardReloaded = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting Card after read processing contains exactly two read by users aaa and bbb").containsExactly("aaa","bbb");
+        //try to insert aaa again
+        res = cardProcessingService.processUserRead(Mono.just(cardUid), "aaa").block();
+        Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).as("Expecting no addition because already done").isTrue();
+
+        cardReloaded = cardRepository.findByUid(cardUid).block();
+        Assertions.assertThat(cardReloaded.getUsersReads()).as("Expecting  Card after read processing contains exactly two read by users aaa(only once) and bbb").containsExactly("aaa","bbb");
+    }
 
     @Test
     void validate_processOk() {
@@ -550,38 +682,45 @@ class CardProcessServiceShould {
         StepVerifier.create(cardProcessingService.processCards(Flux.just(
                 CardPublicationData.builder()
                         .uid("uid_1")
-                        .publisher("PUBLISHER_1").publisherVersion("O")
-                        .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                        .publisher("PUBLISHER_1").processVersion("O")
+                        .process("PROCESS_1")
+                        .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
                         .startDate(Instant.now())
                         .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                         .timeSpan(TimeSpanPublicationData.builder()
                                 .start(Instant.ofEpochMilli(123l)).build())
+                        .process("process1")
+                        .state("state1")
                         .build()))).expectNextMatches(r -> r.getCount().equals(1)).verifyComplete();
 
         CardPublicationData card = CardPublicationData.builder()
-                .parentCardId("uid_1")
-                .publisher("PUBLISHER_1").publisherVersion("O")
-                .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .parentCardUid("uid_1")
+                .publisher("PUBLISHER_1").processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
+                .process("process2")
+                .state("state2")
                 .build();
 
         cardProcessingService.validate(card);
     }
 
     @Test
-    void validate_parentCardId_NotUidPresentInDb() {
+    void validate_parentCardUid_NotUidPresentInDb() {
 
         CardPublicationData card = CardPublicationData.builder()
-                .parentCardId("uid_1")
-                .publisher("PUBLISHER_1").publisherVersion("O")
-                .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .parentCardUid("uid_1")
+                .publisher("PUBLISHER_1").processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
@@ -592,22 +731,25 @@ class CardProcessServiceShould {
         try {
             cardProcessingService.validate(card);
         } catch (ConstraintViolationException e) {
-            Assertions.assertThat(e.getMessage()).isEqualTo("The parentCardId " + card.getParentCardId() + " is not the uid of any card");
+            Assertions.assertThat(e.getMessage()).isEqualTo("The parentCardUid " + card.getParentCardUid() + " is not the uid of any card");
         }
     }
 
     @Test
-    void validate_noParentCardId_processOk() {
+    void validate_noParentCardUid_processOk() {
 
         CardPublicationData card = CardPublicationData.builder()
-                .publisher("PUBLISHER_1").publisherVersion("O")
-                .processId("PROCESS_1").severity(SeverityEnum.ALARM)
+                .publisher("PUBLISHER_1").processVersion("O")
+                .process("PROCESS_1")
+                .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
                 .startDate(Instant.now())
                 .recipient(RecipientPublicationData.builder().type(DEADEND).build())
                 .timeSpan(TimeSpanPublicationData.builder()
                         .start(Instant.ofEpochMilli(123l)).build())
+                .process("process1")
+                .state("state1")
                 .build();
 
         cardProcessingService.validate(card);

@@ -13,8 +13,8 @@ import {Component, OnInit} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
-import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
 import { selectSubscriptionOpen } from '@ofStore/selectors/cards-subscription.selectors';
+import { ConfigService} from "@ofServices/config.service";
 
 @Component({
   selector: 'of-filters',
@@ -23,15 +23,24 @@ import { selectSubscriptionOpen } from '@ofStore/selectors/cards-subscription.se
 })
 export class FiltersComponent implements OnInit {
 
-  hideTags$: Observable<boolean>;
-  hideTimerTags$: Observable<boolean>;
+  hideAckFilter: boolean;
+  hideTags: boolean;
+  hideTimerTags: boolean;
   cardsSubscriptionOpen$ : Observable<boolean>;
+  filterByPublishDate : boolean = true;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>,private  configService: ConfigService) { }
 
   ngOnInit() {
-    this.hideTags$ = this.store.select(buildConfigSelector('settings.tags.hide'));
-    this.hideTimerTags$ = this.store.select(buildConfigSelector('feed.card.hideTimeFilter'));
+    this.hideTags = this.configService.getConfigValue('settings.tags.hide',false); 
+    this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter',false); 
+    this.hideAckFilter = this.configService.getConfigValue('feed.card.hideAckFilter',false); 
     this.cardsSubscriptionOpen$ = this.store.select(selectSubscriptionOpen);
+    
+    // When time line is hide , we use a date filter by business date and not publish date
+    this.filterByPublishDate = !this.configService.getConfigValue('feed.timeline.hide',false); 
+
   }
+
+
 }

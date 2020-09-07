@@ -1,0 +1,3 @@
+operatorfabric.businessconfig:
+  storage:
+    path: "./build/test-data/not-exist"

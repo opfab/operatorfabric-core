@@ -9,4 +9,21 @@
 
 
 <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-<div [hidden]="!active" [innerHtml]="htmlContent"></div>
+<div id="div-card-template" [hidden]="!active" [innerHtml]="htmlContent"></div>
+
+<div class="my-3">
+  <div id='div-detail-msg' *ngIf='message.display' class="alert alert-dismissible fade show text-center {{message.color}}"
+      role="alert" translate>
+    {{message.text}}
+    <button type="button" class="close" aria-label="Close" (click)="message.display = false">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div id='div-detail-btn' *ngIf="!isArchivePageType" class="mb-3">
+    <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists && isActionEnabled'
+      translate [translateParams]="responseDataParameters" (click)='submitResponse()'>{{btnText}}</button>
+    <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed' translate
+      (click)='acknowledge()'>{{btnAckText}}</button>
+  </div>
+</div>

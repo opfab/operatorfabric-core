@@ -9,7 +9,7 @@ Feature: Message with two different bundle versions
   Scenario: Post Bundles
 
     # Push bundle message version
-    Given url opfabUrl + 'thirds'
+    Given url opfabUrl + 'businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
     And multipart field file = read('resources/bundles/bundle_message.tar.gz')
     When method post
@@ -27,4 +27,3 @@ Feature: Message with two different bundle versions
     Then status 201
     And match response.count == 1
 
- 

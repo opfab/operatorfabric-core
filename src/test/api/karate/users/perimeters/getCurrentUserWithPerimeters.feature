@@ -33,11 +33,11 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "Read"
+        "right" : "Receive"
       },
       {
         "state" : "state2",
-        "right" : "All"
+        "right" : "ReceiveAndWrite"
       }
   ]
 }
@@ -51,11 +51,11 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "ReadAndRespond"
+        "right" : "Write"
       },
       {
         "state" : "state2",
-        "right" : "ReadAndWrite"
+        "right" : "Receive"
       }
   ]
 }
@@ -174,7 +174,7 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     Then status 200
     And match response.userData.login == 'tso1-operator'
     And assert response.computedPerimeters.length == 2
-    And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReadAndRespond"}, {"process":"process15","state":"state2","rights":"All"}]
+    And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReceiveAndWrite"}, {"process":"process15","state":"state2","rights":"ReceiveAndWrite"}]
 
 
   Scenario: Delete user tso1-operator from group15

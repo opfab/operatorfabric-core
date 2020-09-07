@@ -12,7 +12,7 @@
 = Troubleshooting
 
 +++ <details><summary> +++
-**Proxy error when running third-party docker-compose**
+**Proxy error when running businessconfig-party docker-compose**
 +++ </summary><div> +++
 
 .Error message
@@ -23,7 +23,7 @@ ERROR: Get https://registry-1.docker.io/v2/: Proxy Authentication Required
 ----
 
 .Possible causes & resolution
-When running docker-compose files using third-party images(such as rabbitmq,
+When running docker-compose files using businessconfig-party images(such as rabbitmq,
 mongodb etc.) the first time, docker will need to pull these images from
 their repositories.
 If the docker proxy isn't set properly, you will see the above message.

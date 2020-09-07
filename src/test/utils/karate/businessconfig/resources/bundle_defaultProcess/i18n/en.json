@@ -1,0 +1,12 @@
+{
+	"defaultProcess":{
+		"title":"Message",
+		"summary":"Message received"
+	},
+	"chartDetail" : { "title":"A Chart"},
+	"chartLine" : { "title":"Electricity consumption forecast"},
+	"process" : { "title":"Process state "},
+	"question" : {"title": "Planned Outage","button" : {"text" :"Send your response"}},
+	"contingencies": {"title" : "Network Contingencies","summary":"Contingencies report for french network"},
+	"response" : { "title":"Planned outage date response"}
+}

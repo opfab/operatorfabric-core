@@ -72,7 +72,7 @@ export class I18nService {
                 I18nService.loadedLocales.add(locale);
                 this.translate.setTranslation(locale, translation, true);
             },
-            error => console.log(`Error : impossible to load locale ${I18nService.localUrl}${locale}.json`));
+            error => console.log(new Date().toISOString(),`Error : impossible to load locale ${I18nService.localUrl}${locale}.json`));
     }
 
 

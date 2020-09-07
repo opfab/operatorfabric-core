@@ -11,10 +11,13 @@
     <div class="d-flex justify-content-between nomarginrow">
         <div>
             <of-type-filter></of-type-filter>
-            <span *ngIf="!(hideTimerTags$|async)">
-                <of-time-filter></of-time-filter>
+            <span *ngIf="!(hideTimerTags)">
+                <of-time-filter [filterByPublishDate]="filterByPublishDate"></of-time-filter>
             </span>
             <of-severity-sort></of-severity-sort>
+            <span *ngIf="!(hideAckFilter)">
+                <of-ack-filter></of-ack-filter>
+            </span>
         </div>
 
 
@@ -26,7 +29,7 @@
 
     </div>
 
-    <div *ngIf="!(hideTags$|async)">
+    <div *ngIf="!(hideTags)">
         <of-tags-filter></of-tags-filter>
     </div>
 </div>

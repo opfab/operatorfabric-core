@@ -5,11 +5,7 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-
-
-
 //TODO Remove unnecessary anchors
-
 [[card_structure]]
 = Card Structure
 
@@ -26,20 +22,25 @@ Those attributes are used by OperatorFabric to manage how cards are stored, to w
 
 Below, the `json` technical key is in the '()' following the title.
 
-[[card_publisher]]
 ==== Publisher (`publisher`)
+The publisher field bears the identifier of the emitter of the card, be it an entity or an external service.
 
-Quite obviously it's the Third party which publish the card. This information is used to look up for Presentation resources of the card.
+[[card_process]]
+==== Process (`process`)
+This field indicates which process the card is attached to. This information is used to resolve the presentation
+resources (bundle) used to render the card and card details.
 
-[[card_publisher_version]]
-==== Publisher Version (`publisherVersion`)
+[[card_process_version]]
+==== Process Version (`processVersion`)
+The rendering of cards of a given process can evolve over time. To allow for this while making sure previous cards
+remain correctly handled, OperatorFabric can manage several versions of the same process.
+The `processVersion` field indicate which version of the process should be used to retrieve the presentation resources
+(i18n, templates, etc.) to render this card.
 
-Refers the `version` of `publisher third` to use to render this card (i18n, title, summary and details).
-As through time, the presentation of a publisher card data changes, this changes are managed through `publisherVersion` in OperatorFabric. Each version is keep in the system in order to be able to display correctly old cards.
-
-==== Process Identifier (`processId`)
-
-It's the way to identify the process to which the card is associated. A card represent a state of a process.
+==== Process Instance Identifier (`processInstanceId`)
+A card is associated to a given process, which defines how it is rendered, but it is also more precisely associated to
+a *specific instance* of this process. The `processInstanceId` field contains the unique identifier of the process instance
+of which the card represents the current state.
 
 [[start_date]]
 ==== Start Date (`startDate`)
@@ -98,8 +99,6 @@ ifdef::single-page-doc[<<display_rules, Display rules>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
 for some examples.
 
-
-
 === Optional information
 
 ==== Tags (`tag`)
@@ -108,8 +107,13 @@ Tags are intended as an additional way to filter cards in the feed of the GUI.
 
 ==== EntityRecipients (`entityRecipients`)
 
-Used to send to cards to entity : all users members of the listed entities will receive the card. If it is used in conjunction with groups recipients, users must be members of one of the entities AND one of the groups to receive the cards.
+Used to send cards to entity : all users members of the listed entities who have the right for the process/state of the card will receive it. If this field is used in conjunction with groups recipients, to receive the cards :
 
+* users must be members of one of the entities AND one of the groups to receive the cards.
+
+OR
+
+* users must be members of one of the entities AND have the right for the process/state of the card.
 
 === Last Time to Decide (`lttd`)
 
@@ -123,8 +127,7 @@ Unique identifier of the card in the OperatorFabric system. This attribute can b
 
 ==== id (`id`)
 
-State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`.
-
+State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`. The id is determined by 'OperatorFabric' as follow : process.processIntanceId
 
 
 === Other technical attributes
@@ -167,8 +170,8 @@ displayed, see below.
 
 
 [WARNING]
-You must not use dot in json field names. In this case, the card will be refused with following message :  "Error, unable to handle pushed Cards: Map key xxx.xxx contains dots but no replacement was configured!""
-
+You must not use dot in json field names. In this case, the card will be refused with following message :
+"Error, unable to handle pushed Cards: Map key xxx.xxx contains dots but no replacement was configured!""
 
 == Presentation Information of the card
 
@@ -176,26 +179,26 @@ You must not use dot in json field names. In this case, the card will be refused
 
 This attribute is a string of objects containing a `title` attribute which is `i18n` key and a `template` attribute
 which refers to a template name contained in the publisher bundle. The bundle in which those resources will be looked
-for is the one corresponding of the
-ifdef::single-page-doc[<<card_publisher_version, version>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_publisher_version, version>>]
+for is the one corresponding to the
+ifdef::single-page-doc[<<card_process_version, version>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_process_version, version>>]
 declared in the card for the current
-ifdef::single-page-doc[<<card_publisher, publisher>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_publisher, publisher>>]
+ifdef::single-page-doc[<<card_process, process>>]
+ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#card_process, process>>]
 .
 If no resource is found, either because there is no bundle for the given version or
 there is no resource for the given key, then the corresponding key is displayed in the details section of the GUI.
 
-See more documentation about third bundles
-ifdef::single-page-doc[<<bundle_technical_overview, here>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#bundle_technical_overview, here>>]
-.
 
 *example:*
 
-The `TEST` publisher has only a `0.1` version uploaded in the current `OperatorFabric` system. The `details` value is `[{"title":{"key":"first.tab.title"},"template":"template0"}]`.
+The `TEST` process only has a `0.1` version uploaded in the current `OperatorFabric` system. The `details` value is
+`[{"title":{"key":"first.tab.title"},"template":"template0"}]`.
 
-If the `publisherVersion` of the card is `2` then only the `title` key declared in the `details` array will be displays without any translation, i.e. the tab will contains `TEST.2.first.tab.title` and will be empty. If the `l10n` for the title is not available, then the tab title will be still `TEST.2.first.tab.title` but the template will be compute and the details section will display the template content.
+If the `processVersion` of the card is `2` then only the `title` key declared in the `details` array will be displayed
+without any translation, i.e. the tab will contains `TEST.2.first.tab.title` and will be empty. If the `l10n` for
+the title is not available, then the tab title will be still `TEST.2.first.tab.title` but the template will be computed
+and the details section will display the template content.
 
 === TimeSpans (`timeSpans`)
 
@@ -213,7 +216,8 @@ card:
 {
 	"publisher":"TSO1",
 	"publisherVersion":"0.1",
-	"processId":"process-000",
+	"process":"process",
+	"processInstanceId":"process-000",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	...

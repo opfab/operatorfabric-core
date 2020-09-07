@@ -34,15 +34,15 @@ instead of:
 The line customized in the nginx configuration file must end with à semi-colon (';') otherwise the Nginx server will stop immediately
 ====
 
-
-== Service specific properties
+[[ui_properties]]
+== UI properties
 
 The properties lie in the `web-ui.json`.The following table describes their meaning and  how to use them. An example file can be found in the config/docker directory.
 
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.security.realm-url||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
+|operatorfabric.security.provider-realm||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
 |operatorfabric.security.provider-url||yes|The keycloak server instance
 |operatorfabric.security.logout-url||yes
 a|The keycloak logout URL. Is a composition of:
@@ -62,7 +62,6 @@ a|Url to redirect the browser to for authentication. Mandatory with:
 - CODE flow: must be the url with protocol choice and version as query parameters;
 - IMPLICIT flow: must be the url part before `.well-known/openid-configuration` (for example in dev configuration it's
  `http://localhost:89/auth/realms/dev`).
-|operatorfabric.feed.subscription.timeout|60000|no|Milliseconds between card subscription renewal
 |operatorfabric.feed.card.time.display|BUSINESS|no
 a|card time display mode in the feed. Values :
 
@@ -71,8 +70,11 @@ a|card time display mode in the feed. Values :
  - PUBLICATION: displays card with publication date;
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
-|operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen
-|operatorfabric.feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filtrer in the feed page
+|operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen. If the timeline is not loaded , the time filter on the feed is filtering on business date otherwise it is filtering on publish date.
+|operatorfabric.feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filter in the feed page
+|operatorfabric.feed.card.hideAckFilter|false|no|Control if you want to show or hide the acknowledgement filter in the feed page
+
+|operatorfabric.feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
 |operatorfabric.feed.notify|false|no|If set to true, new cards are notified in the OS through web-push notifications
 |operatorfabric.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |operatorfabric.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
@@ -81,19 +83,8 @@ a|card time display mode in the feed. Values :
 |operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 |operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
-|operatorfabric.navbar.thirdmenus.type|BOTH|no
-a|Defines how thirdparty menu links are displayed in the navigation bar and how
-they open. Possible values:
 
-- TAB: Only a text link is displayed, and clicking it opens the link in a new tab.
-- IFRAME: Only a text link is displayed, and clicking it opens the link in an iframe in the main content zone below
-the navigation bar.
-- BOTH: Both a text link and a little arrow icon are displayed. Clicking the text link opens the link in an iframe
-while clicking the icon opens in a new tab.
-
-
-|operatorfabric.archive.filters.page.size||no|The page size of archive filters
-|operatorfabric.archive.filters.page.first||no|The first page start of archiving module
+|operatorfabric.archive.filters.page.size|10|no|The page size of archive filters
 |operatorfabric.archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
 |operatorfabric.archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
 |operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 
@@ -131,6 +122,18 @@ It should look like:
 |operatorfabric.logo.width|150|no|The width of the logo (in px) (only taken into account if operatorfabric.logo.base64 is set).
 |operatorfabric.logo.limitSize|true|no|If it is true, the height limit is 32(px) and the width limit is 200(px), it means that if the height is over than 32, it will be set to 32, if the width is over than 200, it is set to 200. If it is false, no limit restriction for the height and the width. 
 |operatorfabric.title|OperatorFabric|no|Title of the application, displayed on the browser
+|navbar.hidden|["logging","monitoring"]|no
+a| Lists the application menu to hide in the navbar. +
+The `keys` used are the `route.path` declared in the `${OF_HOME}ui/main/src/app/app-routing.module.ts` file. +
+Currently the `application routes` are:
+
+- `feed`;
+- `archives`.
+
+There will be two new routes with the release of the `[OC-936]`:
+
+- `logging`;
+- `monitoring`.
 
 |===
 

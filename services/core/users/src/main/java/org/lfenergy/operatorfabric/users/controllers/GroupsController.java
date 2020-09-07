@@ -95,16 +95,8 @@ public class GroupsController implements GroupsApi {
         //Only existing groups can be updated
          findGroupOrThrow(id);
 
-        //Retrieve users from repository for users list, throwing an error if a login is not found
-        List<UserData> foundUsers = userRepository.findByGroupSetContaining(id);
-
-        if(foundUsers!=null) {
-            for (UserData userData : foundUsers) {
-                userData.deleteGroup(id);
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
-            }
-            userRepository.saveAll(foundUsers);
-        }
+        //We delete the link between the group and its users
+        removeTheReferenceToTheGroupForMemberUsers(id);
         return null;
     }
 
@@ -232,6 +224,33 @@ public class GroupsController implements GroupsApi {
 
         groupRepository.save(group);
         return null;
+    }
+
+    @Override
+    public Void deleteGroup(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+
+        // Only existing group can be deleted
+        GroupData foundGroupData = findGroupOrThrow(id);
+
+        // First we have to delete the link between the group to delete and its users
+        removeTheReferenceToTheGroupForMemberUsers(id);
+
+        // Then we can delete the group
+        groupRepository.delete(foundGroupData);
+        return null;
+    }
+
+    // Remove the link between the group and all its members (this link is in "user" mongo collection)
+    private void removeTheReferenceToTheGroupForMemberUsers(String idGroup) {
+        List<UserData> foundUsers = userRepository.findByGroupSetContaining(idGroup);
+
+        if (foundUsers != null) {
+            for (UserData userData : foundUsers) {
+                userData.deleteGroup(idGroup);
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+            }
+            userRepository.saveAll(foundUsers);
+        }
     }
 
     private GroupData findGroupOrThrow(String id) {

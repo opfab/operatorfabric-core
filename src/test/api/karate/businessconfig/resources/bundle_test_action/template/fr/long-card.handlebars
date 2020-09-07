@@ -1,0 +1,64 @@
+<div id='opfab-description'></div>
+
+<form id='opfab-form'>
+  <div class="form-row mt-3">
+    <div class="form-group col-md-4">
+      <label for="opfabOpinion">Que pensez-vous d'OpFab ?</label>
+      <select id="opfabOpinion" name="opfabOpinion" class="form-control">
+        <option selected>C'est top</option>
+        <option>C'est bien</option>
+        <option>C'est nul</option>
+      </select>
+    </div>
+  </div>
+</form>
+
+<div id="childs-div"></div>
+
+<script>
+
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function () {
+
+    if (this.readyState == 4 && this.status >= 200 && this.status < 300) {
+      var opfabDescription = this.responseText.split(/<\/nav>\s*<\/div>\s*/)[1].split('<footer')[0];
+      console.log(opfabDescription);
+      document.getElementById('opfab-description').innerHTML = opfabDescription;
+    }
+  }
+
+  xhttp.open("GET", "https://opfab.github.io/", true);
+  xhttp.send();
+
+  var childCards = {{json childCards}};
+  templateGateway.childCards = childCards;
+
+  function validateResponse(opfabOpinion) {
+    if (opfabOpinion == 'C\'est nul') {
+      templateGateway.formErrorMsg = 'Cette réponse n\'est pas acceptable';
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  templateGateway.applyChildCards = () => {
+    let childsDiv = document.getElementById("childs-div");
+    childsDiv.innerHTML = '<p>Réponses:</p>';
+    templateGateway.childCards.forEach( (c, i) => {
+      let text = `<p>L'opinion d'OpFab de l'entité ${c.publisher}: ${c.data.opfabOpinion}</p>`;
+      childsDiv.innerHTML += text;
+  }
+
+  templateGateway.applyChildCards();
+
+  templateGateway.validyForm = function(formData) {
+    if (validateResponse(formData.opfabOpinion[0])) {
+      this.isValid = true;
+    } else {
+      this.isValid = false;
+    }
+  }
+
+</script>

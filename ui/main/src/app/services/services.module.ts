@@ -17,7 +17,7 @@ import {TokenInjector} from './interceptors.service';
 import {CardService} from './card.service';
 import {GuidService} from '@ofServices/guid.service';
 import {TimeService} from '@ofServices/time.service';
-import {ThirdsService} from '@ofServices/thirds.service';
+import {ProcessesService} from '@ofServices/processes.service';
 import {FilterService} from '@ofServices/filter.service';
 import {ConfigService} from '@ofServices/config.service';
 import {I18nService} from '@ofServices/i18n.service';
@@ -26,6 +26,7 @@ import { UserService } from './user.service';
 import { NotifyService } from '@ofServices/notify.service';
 import {SoundNotificationService} from "@ofServices/sound-notification.service";
 import {GlobalStyleService} from "@ofServices/global-style.service";
+import { AppService } from './app.service';
 
 @NgModule({
     imports: [
@@ -37,7 +38,7 @@ import {GlobalStyleService} from "@ofServices/global-style.service";
         CardService,
         AuthenticationService,
         TimeService,
-        ThirdsService,
+        ProcessesService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInjector,
@@ -49,7 +50,8 @@ import {GlobalStyleService} from "@ofServices/global-style.service";
         UserService,
         NotifyService,
         SoundNotificationService,
-        GlobalStyleService
+        GlobalStyleService,
+        AppService
     ]
 })
 export class ServicesModule {

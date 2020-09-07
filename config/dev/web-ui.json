@@ -1,10 +1,8 @@
 {
+  "title": "OperatorFabric (Dev Mode)",
   "archive": {
     "filters": {
       "page": {
-        "first": [
-          "0"
-        ],
         "size": [
           "10"
         ]
@@ -13,18 +11,6 @@
         "list": [
           "process",
           "someOtherProcess"
-        ]
-      },
-      "publisher": {
-        "list": [
-          {
-            "label": "Test Publisher",
-            "value": "TEST"
-          },
-          {
-            "label": "Test Publisher 2",
-            "value": "TEST2"
-          }
         ]
       },
       "tags": {
@@ -46,13 +32,12 @@
       "hideTimeFilter": false,
       "time": {
         "display": "BUSINESS"
-      }
+      },
+      "hideAckFilter": false
     },
     "notify": false,
-    "subscription": {
-      "timeout": 600000
-    },
     "timeline": {
+      "hide" : false,
       "domains": [
         "TR",
         "J",
@@ -104,7 +89,7 @@
     "oauth2": {
       "client-id": "opfab-client",
       "flow": {
-        "delagate-url": "http://localhost:89/auth/realms/dev",
+        "delegate-url": "http://localhost:89/auth/realms/dev",
         "mode": "IMPLICIT",
         "provider": "Opfab Keycloak"
       }
@@ -113,6 +98,7 @@
     "provider-url": "http://localhost:89"
   },
   "settings": {
+    "tags": {"hide":false},
     "about": {
       "firstapplication": {
         "name": "First application",
@@ -135,9 +121,15 @@
       }
     },
     "infos": {
-      "description": true
+      "description": true,
+      "disable": false
     },
     "locale": "en",
-    "nightDayMode": true
+    "nightDayMode": true,
+    "styleWhenNightDayModeDesactivated" : "NIGHT"
+  },
+  "navbar": {
+    "hidden": ["logging","monitoring","freemessage"],
+    "businessmenus" : {"type":"BOTH"}
   }
 }

@@ -1,0 +1,62 @@
+<form id='opfab-form'>
+  <div class="form-row mt-3">
+    <div class="form-group col-md-4">
+      <label for="opfabOpinion">What do you think about OpFab ?</label>
+      <select id="opfabOpinion" name="opfabOpinion" class="form-control">
+        <option selected>It's very nice</option>
+        <option>It's nice</option>
+        <option>I don't like</option>
+      </select>
+    </div>
+  </div>
+</form>
+
+<div id="childs-div"></div>
+
+<script>
+
+  templateGateway.applyChildCards = () => {
+    let childsDiv = document.getElementById("childs-div");
+    childsDiv.innerHTML = '<p>Responses:</p>';
+    templateGateway.childCards.forEach( (c, i) => {
+      let text = `<p>Entity ${c.publisher} OpFab opinion: ${c.data.opfabOpinion}</p>`;
+      childsDiv.innerHTML += text;
+    });
+  }
+
+  templateGateway.applyChildCards();
+
+  var errorMsg;
+
+  function validateResponse(opfabOpinion) {
+    if (opfabOpinion == 'I don\'t like') {
+      errorMsg = 'This answer is not acceptable';
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  templateGateway.validyForm = function() {
+
+    const formData = {};
+
+    const formElement = document.getElementById('opfab-form');
+    for (const [key, value] of [... new FormData(formElement)]) {
+        (key in formData) ? formData[key].push(value) : formData[key] = [value];
+    }
+
+    if (validateResponse(formData.opfabOpinion[0])) {
+      return {
+        valid: true,
+        formData: formData
+      };
+    } else {
+      return {
+        valid: false,
+        errorMsg: errorMsg
+      }
+    }
+  }
+
+</script>

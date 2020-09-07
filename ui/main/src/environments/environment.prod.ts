@@ -18,7 +18,7 @@ export const environment = {
         cardspub: '/cardspub',
         users: '/users',
         archives : '',
-        thirds: '/thirds',
+        processes: '/businessconfig/processes',
         config: '/config/web-ui.json',
         time: '/time'
 

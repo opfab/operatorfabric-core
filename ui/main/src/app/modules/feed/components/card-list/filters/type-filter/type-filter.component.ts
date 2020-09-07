@@ -37,10 +37,6 @@ export class TypeFilterComponent implements OnInit, OnDestroy {
         return this._filter$;
     }
 
-    // set filter$(filter: Observable<Filter>) {
-    //     this._filter$ = filter;
-    // }
-
     constructor(private store: Store<AppState>) {
         this.typeFilterForm = this.createFormGroup();
     }
@@ -85,7 +81,6 @@ export class TypeFilterComponent implements OnInit, OnDestroy {
                     }),
                     debounce(() => timer(500)))
                 .subscribe(form => { 
-                    console.log(new Date().toISOString(),"BUG OC-604 type-filter.components.ts ngInit() , send new AppliFilter TYPE FILTER event");
                     return this.store.dispatch(
                     new ApplyFilter({
                         name: FilterType.TYPE_FILTER,

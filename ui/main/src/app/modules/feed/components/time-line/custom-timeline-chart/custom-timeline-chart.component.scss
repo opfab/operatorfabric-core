@@ -42,8 +42,8 @@
 
 .btn-cardlink {
   color: var(--opfab-timeline-cardlink);
-  background-color: var(--opfab-timeline-bgcolor);
-  border-color:var(--opfab-timeline-bgcolor);
+  background-color: var(--opfab-bgcolor);
+  border-color:var(--opfab-bgcolor);
 }
 
 .btn-cardlink:hover, .btn-cardlink:focus, .btn-cardlink.focus {
@@ -51,4 +51,8 @@
   background-color:  var(--opfab-timeline-cardlink-bgcolor-hover);
   border-color: var(--opfab-timeline-cardlink-bordercolor-hover);
   box-shadow: 0 0 0 0rem ;
+}
+
+.popover {
+  max-width: 800px;
 }

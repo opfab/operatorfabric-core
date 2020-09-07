@@ -8,8 +8,6 @@
  */
 
 
-
-
 export class Page<T> {
     /* istanbul ignore next */
     constructor(
@@ -19,3 +17,5 @@ export class Page<T> {
     ) {
     }
 }
+
+export const emptyPage: Page<any> = new Page(1, 0, []);

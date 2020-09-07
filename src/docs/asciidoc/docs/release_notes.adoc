@@ -5,108 +5,86 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Version 1.4.0.RELEASE
+= Version 1.5.0.RELEASE
 
-== Issues
 
-* *UI Improvements* :
-** [OC-868] As an admin I would like to be able to hide the time filter
-+
-See the link:https://opfab.github.io/documentation/current/deployment/#_web_ui[web-ui configuration documentation] for details
-** [OC-864] As a user I want to be able to reset archives filters so I can change my search criteria
-** [OC-402] As an Operator I want the archive screen to display an explicit message if no cards are found that match my filters
-** [OC-939] Synchronize timeline with feed (When a filter is set in the feed, it is applied to the timeline as well (severity, tags or business period))
-** [OC-947] As a user I want to be able to click on the links in the bubble so that i can display the related card on the feed
-** [OC-945] Add a spinning icon when connection with server is lost
-** [OC-972] Add charts functionality in template
-+
-It uses `charts.js` library, templates as example can be found in `src/test/utils/karate/thirds/resources/bundle_test_api`
+== Features
 
-* *Work in progress for the "Smart notification" epic* ( [OC-871][OC-872][OC-873][OC-874][OC-875][OC-881][OC-900][OC-913][OC-916][OC-917] )
-+
-It is now possible for the user to reply to a card, the response is sent back to an external app.
-+
-[IMPORTANT]
-====
-Work is in progress, it is not documented and usable yet in production.
-====
+- **Routing** ([OC-950] [OC-830])  : New routing mechanism is now fully functionnal, it is possible to define card visiblity per process/state for groups using perimeters, see users documentation : https://opfab.github.io/documentation/current/reference_doc/#_users_management
+- **Response card (Smart notification) ** ([OC-918] [OC-915] [OC-982] [OC-914] [OC-966] [OC-980] [OC-1051] [OC-969] [OC-1071]) : It is now possible for the user to reply on a card if configured, see documentation : https://opfab.github.io/documentation/current/reference_doc/#_response_cards
+- ** Acknowlegment ** ([OC-922][OC-923][OC-1033]): It is now possible for the user to acknowlege cards with a button on the bottom-right of the card .The feed can also been filtered to show acknowledged or not acknowledged cards. It is as well possible for the user to "unacknowledge" a card previously acknowlegded .This functionnality is activated on a process state basis via the setting of acknowledgementAllowed to true in the  config.json of the bundles (example in /src/test/utils/karate/src/test/utils/karate/businessconfig/resources/bundle_api_test/config.json)
 
-* *Work in progress for the "Routing" epic*
-** [OC-885] User Service : Perimeter model evolution
-** [OC-876] User Service : Implement group in JWT Token Option
-** [OC-742] When sending a card to an entity , use the group perimeter to send to the good users
-+
-[IMPORTANT]
-====
-Work is in progress, it is not documented and usable yet in production.
-====
+- **Logging and monitoring** : [OC-1023] New screens to see cards in monitoring/logging views   (experimental)
+- **Free Message** : [OC-928] First implementation of free message (permit the user to send card) , not useable yet
 
-* *Remove old action feature* (front and back) ([OC-960][OC-961][OC-962])
-+
-This feature was not fully operational and is now replaced by the smart notification feature
+- ** API ** : ([OC-1021] [OC-1022] [OC-1023] [OC-1024]) New endpoint to delete user, entity, group and perimeter
 
-* *Remove Netflix stack* ([OC-670][OC-836][OC-837][OC-838][OC-839][OC-971][OC-895][OC-906][OC-983][OC-996]) :
-- remove registry/configuration components
-- replace gateway with NGINX
-- remove all calls from business services to registry and configuration components
-- adapt documentation
-
-+
-[IMPORTANT]
-====
-- UI configuration is now done via a json file (web-ui.json) instead of a yaml file (web-ui.yml). Before upgrading, you
-should save a copy of your web-ui.json to back-up custom changes.
-- As there is no configuration server anymore, the content of services configuration files has changed, check the
-documentation and/or see default configuration files in dev/docker folders under config. We also took this as an
-opportunity to rearrange our docker-compose files so see the updated documentation on launching OperatorFabric.
-====
-
-* *Work in progress for the "Acknowledgment" epic* ([OC-920],[OC-921],[OC-944],[OC-976],[OC-977])
-+
-The backend code for the acknowledgment feature is ready. Front to be done.
-+
-[IMPORTANT]
-====
-Work is in progress, it is not documented and usable yet in production.
-====
-
-== Bugs
-* [OC-772] Bug on archives screen: clear results when exiting archive page
-* [OC-898] In implicit mode, first name and last name are not displayed
-* [OC-775] Bug on archives screen: cards details remain displayed when selecting another criteria that doesn't return any result
+- **UI** : 
+** [OC-948][OC-1037] Button to hide or display the timeline
+** [OC-949] Filter by publish date in feed when clicking on the clock icon +
+**NB:** When the timeline is not loaded (parameter `operatorfabric.feed.timeline.hide` set to true ), the time filter of the feed is based on business date.
+** [OC-1038] Incoming cards are signaled as new (little eye icon) in the feed until they've been read
+** [OC-1053] For each custom menu entry in the navbar, choose whether to integrate it as an iframe or an external link
 
 == Tasks
-* [OC-892] Add in documentation that it is not possible to use dot in json field names
-* [OC-845] Implement Git flow as our contribution and release workflow
-+
-_We have transitioned from a GitHub flow to a Git flow. See the documentation to see how it impacted our
-link:./single_page_doc.html#CICD[CICD pipeline]
-and how it translate into our link:./single_page_doc.html#_contribution_workflow[contribution workflow]
-(submitting a pull request etc.)._
-+
-[IMPORTANT]
-====
-_Now, the current state of developments is pushed daily to Docker Hub with the tag `SNAPSHOT`
-(rather than `snapshot` as before)._
-====
-* [OC-888][OC-692][OC-973] Fix SonarCloud issues
-* [OC-891] Removed unused field mainRecipient
-* [OC-896] Update getting started with 1.3.0.RELEASE and change getToken script
-* [OC-899] Use SNAPSHOT version on develop branch for docker and dev environment docker-compose
-+
-_When working on branch `develop`, the docker-compose files will rely on `SNAPSHOT` docker images generated daily.
-This lets you test OperatorFabric with the latest merged code. If you're interested in running a particular release on
-the other hand, you should checkout the associated X.X.X.RELEASE tag on `master`._
+- [OC-999] Minor edits to doc after 1rst git flow release 
+- [OC-951] Process and state fields of a card must be mandatory
+- [OC-1004] Add demo cards and template with svg drawing
+- [OC-1005] Clean karate tests
+- [OC-1014] Load configuration files from outside docker in `config/docker/docker-compose.yml`
+- **Configuration of business process** :
+[WARNING]
+**Breaking change** : see migration guide : https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_1_4_0_to_release_1_5_0
 
-* [OC-907] Remove Keycloak from test-quality-environment docker-compose
-* [OC-909] Simplify third menu code (Front)
-* [OC-911] Changing sounds due to incompatible license
-* [OC-897] Thirds service - added operation delete for the resource thirds
-* [OC-904] Thirds service - added delete version of a third, minor changes on general sync working
-* [OC-943] Add a gradle task to launch sonar analysis
-* [OC-535] Make bin/run_all.sh working even if not in the root directory
-* [OC-954] Add name field for process/state and color for state in third
-* [OC-957] Field recipient in card should be optional
+** [OC-978] Rename third module to businessconfig module
+** [OC-979] Link bundle with process instead of publisher 
+** [OC-1003] Rename processId in processInstanceId
+** [OC-981] Change way of creating card id . The id of the card is now build as process.processInstanceId and not anymore publisherID_process.
+- [OC-1029] possibility to hide some application menus
+- [OC-1036] Refactor configuration loading in front
+- [OC-735] Robustify subscription mechanism and refactoring
+- [OC-1013] @NotNull fields remove form XXXData.java, only need to set required fields in swagger.yml 
+- [OC-1030] : upgrade back to last version of librairies (SpringBoot,..) 
+[WARNING]
+The version of gradle has been changed, if you want to build operator fabric you need to upgrade gradle to version 6.5.1 (sdk install gradle 6.5.1) 
+- [OC-1063] Set java to version 8.0.265-zulu as current is no longer supported by sdkman
+[WARNING]
+Run `sdk install java 8.0.265-zulu` then `source ./bin/load_environment_light.sh ` to update your environment
+- [OC-1046] Refactoring card-consultation mongo access
+- [OC-1045] Remove unnecessary code (ngrx effect )
+- [OC-893] Check all subscribe in angular code
+- [OC-1047] Add a demo with response card in test/utils 
+- [OC-1017] Update governance documentation
+- [OC-1057] Explains how to use karate utilities
+- [OC-1041] Trace user actions, only acknowledgment for the moment
+- [OC-new-helpers] 4 new handlebars helpers added
+[NOTE]
+4 new handlebars helpers added: 'keyValue', 'arrayContains', 'times', 'toBreakage'. You can consult the documentation at the following url to check how to use them: https://opfab.github.io/documentation/current/docs/single_page_doc.html#templates
+- [OC-831] Update getting started documentation with routing mechanism
+- [OC-1065] Remove unused bundles
+- [OC-1067] GET /entities : allow all users for this operation
+- [OC-1068] Simplify backend card notification mechanism
+- [OC-1070] Add new example in defaultBundle
 
+== Bugs
 
+- [OC-1006] Archives - Bugs in pagination +
+**Information :** Parameters `operatorfabric.archive.filter.page.first` & `operatorfabric.archive.filter.publisher` in `web-ui.json` have been removed;
+- [OC-990] Automatic saving of the settings . No need anymore to press enter to save setting changes;
+- [OC-974] Redraw card when switching between day/night modes;
+- [OC-297] Card sent to another group or user is not discarded from the user feed
+- [OC-1011] Access to opfab is not working when the user is member of no group
+- [OC-1010] In PASSWORD authentication mode, afier having refresh UI, the user needs to enter login/pwd again
+- [OC-1035] Docker mode (config/dev) : cards and archivedCards stored in "test" database instead of "operator-fabric"
+- [OC-1012] Missing id in existing bundles cause Businessconfig service to crash
+- [OC-938] In archives, reset button doesn't really clear selected card
+- [OC-988] In Archives- No result message appears before rendering the real result of a search
+- [OC-997] Fix Angular build warning
+- [OC-941] Card deletion- The API doesn't return an error when the card deleted doesn't exist
+- [OC-1052] Cards sent to a user (rather than a group) don't appear immediately
+- [OC-713] Web-UI configuration: wrong yaml documented key + misspelled key in configuration
+[WARNING]
+Need to change in web-ui.json the key delagate-url into delegate-url.
+- [OC-934] fix Issue with cards published with client jars (due to Instant). `cards-publication` service accepts cards from client jar.
+- [OC-1069] Limit  line when clicking on timeline
 

@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.MultiValueMap;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
@@ -63,6 +64,10 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
     public Mono<ArchivedCardConsultationData> findByIdWithUser(String id, CurrentUserWithPerimeters currentUserWithPerimeters) {
         return findByIdWithUser(template, id, currentUserWithPerimeters, ArchivedCardConsultationData.class);
+    }
+
+    public Flux<ArchivedCardConsultationData> findByParentCardUid(String parentUid) {
+        return findByParentCardUid(template, parentUid, ArchivedCardConsultationData.class);
     }
 
     public Mono<Page<LightCard>> findWithUserAndParams(Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params) {
@@ -121,7 +126,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         criteria.addAll(regularParametersCriteria(queryParams));
 
         /* Add user criteria */
-        criteria.addAll(computeCriteriaList4User(currentUserWithPerimeters));
+        criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
 
         if (!criteria.isEmpty()) {
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));

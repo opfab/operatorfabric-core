@@ -18,17 +18,18 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  OnDestroy
 } from '@angular/core';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { BaseChartComponent, calculateViewDimensions, ChartComponent, ViewDimensions } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
-import {select,Store} from "@ngrx/store";
+import {select, Store} from '@ngrx/store';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {AppState} from "@ofStore/index";
+import {AppState} from '@ofStore/index';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subscription, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import * as feedSelectors from '@ofSelectors/feed.selectors';
 
 
@@ -38,47 +39,47 @@ import * as feedSelectors from '@ofSelectors/feed.selectors';
   styleUrls: ['./custom-timeline-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit {
+export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit, OnDestroy {
 
-  subscription: Subscription;
+  private ngUnsubscribe$ = new Subject<void>();
   public xTicks: Array<any> = [];
   public xTicksOne: Array<any> = [];
   public xTicksTwo: Array<any> = [];
   public xTicksOneFormat: string;
   public xTicksTwoFormat: string;
-  public underDayPeriod: boolean = false;
+  public underDayPeriod = false;
   public dateFirstTick: string;
-  public oldWidth: number = 0;
+  public oldWidth = 0;
 
 
   @ViewChild(ChartComponent, { read: ElementRef, static: false }) chart: ElementRef;
   public dims: ViewDimensions;
   public xDomain: any;
   public yScale: any;
-  private xAxisHeight: number = 0;
-  private yAxisWidth: number = 0 ;
+  private xAxisHeight = 0;
+  private yAxisWidth = 0 ;
   public xScale: any;
-  private margin: any[]= [10, 20, 10, 0];
+  private margin: any[] = [10, 20, 10, 0];
   public translateGraph: string;
   public translateXTicksTwo: string;
   public xRealTimeLine: moment.Moment;
-  private currentPath : string;
+  private currentPath: string;
 
 
   // TOOLTIP
   public currentCircleHovered;
   public circles;
   public cardsData;
-  
-  @Input() prod; // Workaround for testing, the variable is not set  in unit test an true in production mode 
+
+  @Input() prod; // Workaround for testing, the variable is not set  in unit test an true in production mode
   @Input() domainId;
   @Input() followClockTick;
   @Input()
   set valueDomain(value: any) {
     this.xDomain = value;
-    // allow to show on top left of component date of first tick 
+    // allow to show on top left of component date of first tick
     this.underDayPeriod = false;
-    if (value[1] - value[0] < 86401000) { // 1 Day + 1 second  , take into account the J domain form Oh to 0h the next day 
+    if (value[1] - value[0] < 86401000) { // 1 Day + 1 second  , take into account the J domain form Oh to 0h the next day
       this.underDayPeriod = true;
       this.dateFirstTick = moment(value[0]).format('ddd DD MMM YYYY');
     }
@@ -88,15 +89,15 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     return this.xDomain;
   }
 
-  @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>(); 
+  @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() widthChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef,private store: Store<AppState>,private router: Router) {
+  constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, private store: Store<AppState>, private router: Router) {
     super(chartElement, zone, cd);
   }
 
   ngOnInit(): void {
-    this.store.select(selectCurrentUrl).subscribe(url => {
+    this.store.select(selectCurrentUrl).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(url => {
       if (url) {
           const urlParts = url.split('/');
           this.currentPath = urlParts[1];
@@ -106,6 +107,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.updateRealTimeDate();
     this.initDataPipe();
   }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
+}
 
   // set inside ngx-charts library verticalSpacing variable to 10
   // library need to rotate ticks one time for set verticalSpacing to 10px on ngx-charts-x-axis-ticks
@@ -189,28 +195,27 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     this.xTicksTwo = [];
     switch (this.domainId) {
       case 'TR':
-        this.xTicks.forEach(tick => { 
+        this.xTicks.forEach(tick => {
           this.xTicksOne.push(tick);
-          if (tick.minute() === 0) this.xTicksTwo.push(tick)
+          if (tick.minute() === 0) { this.xTicksTwo.push(tick); }
         });
         break;
       case 'J':
       case 'M':
       case 'Y':
         for (let i = 0; i < this.xTicks.length; i++) {
-          if (i % 2 === 0) this.xTicksOne.push(this.xTicks[i]);
-          else this.xTicksTwo.push(this.xTicks[i]);
+          if (i % 2 === 0) { this.xTicksOne.push(this.xTicks[i]); } else { this.xTicksTwo.push(this.xTicks[i]); }
         }
         break;
       case '7D':
       case 'W':
         this.xTicks.forEach(tick => {
           this.xTicksOne.push(tick);
-          // [OC-797] 
+          // [OC-797]
           //  in case of a period containing the switch form winter/summer time
-          //  the tick are offset by one hour in a part of the timeline 
+          //  the tick are offset by one hour in a part of the timeline
           // in this case , we put the date on the tick representing 01:00
-          if ((tick.hour() === 0) || (tick.hour() === 1))  this.xTicksTwo.push(tick);
+          if ((tick.hour() === 0) || (tick.hour() === 1)) {  this.xTicksTwo.push(tick); }
         });
         break;
       default:
@@ -222,26 +227,28 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     const startDomain = moment(this.xDomain[0]);
     this.xTicks = [];
     this.xTicks.push(startDomain);
-    let nextTick = moment(startDomain);
+    const nextTick = moment(startDomain);
     const tickSize = this.getTickSize();
 
     while (nextTick.valueOf() < this.xDomain[1]) {
 
-      // we need to make half month tick when Y domain 
+      // we need to make half month tick when Y domain
       if (this.domainId === 'Y') {
-        if (nextTick.isSame(moment(nextTick).startOf('month'))) nextTick.add(15, 'day')
-        else nextTick.add(1, 'month').startOf('month');
-      }
-      else nextTick.add(tickSize.amount, tickSize.unit);
+        if (nextTick.isSame(moment(nextTick).startOf('month'))) {
+          nextTick.add(15, 'day');
+        } else {
+          nextTick.add(1, 'month').startOf('month');
+        }
+      } else { nextTick.add(tickSize.amount, tickSize.unit); }
       this.xTicks.push(moment(nextTick));
     }
   }
- 
+
 
 
   initDataPipe(): void {
-    this.subscription = this.store.pipe(select(feedSelectors.selectFilteredFeed))
-    .pipe(debounceTime(200), distinctUntilChanged())
+    this.store.pipe(select(feedSelectors.selectFilteredFeed))
+    .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(200), distinctUntilChanged())
     .subscribe(value => this.getAllCardsToDrawOnTheTimeLine(value));
   }
 
@@ -249,25 +256,27 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   getAllCardsToDrawOnTheTimeLine(cards) {
     const myCardsTimeline = [];
     for (const card of cards) {
+      if (!card.parentCardUid) {// is not child card
         if (card.timeSpans && card.timeSpans.length > 0) {
-            card.timeSpans.forEach(timeSpan => {
-                const myCardTimelineTimespans = {
-                    date: timeSpan.start, 
-                    id: card.id,
-                    severity: card.severity, publisher: card.publisher,
-                    publisherVersion: card.publisherVersion, summary: card.title
-                };
-                myCardsTimeline.push(myCardTimelineTimespans);
-            });
-        } else {
-            const myCardTimeline = {
-                date: card.startDate,
-                id: card.id,
-                severity: card.severity, publisher: card.publisher,
-                publisherVersion: card.publisherVersion, summary: card.title
+          card.timeSpans.forEach(timeSpan => {
+            const myCardTimelineTimespans = {
+              date: timeSpan.start,
+              id: card.id,
+              severity: card.severity, process: card.process,
+              processVersion: card.processVersion, summary: card.title
             };
-            myCardsTimeline.push(myCardTimeline);
+            myCardsTimeline.push(myCardTimelineTimespans);
+          });
+        } else {
+          const myCardTimeline = {
+            date: card.startDate,
+            id: card.id,
+            severity: card.severity, process: card.process,
+            processVersion: card.processVersion, summary: card.title
+          };
+          myCardsTimeline.push(myCardTimeline);
         }
+      }
     }
     this.cardsData = myCardsTimeline;
     this.createCircles();
@@ -278,38 +287,38 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
   createCircles(): void {
 
     this.circles = [];
-    if (this.cardsData === undefined || this.cardsData === []) return;
+    if (this.cardsData === undefined || this.cardsData === []) { return; }
 
-    // filter cards by date 
+    // filter cards by date
     this.cardsData.sort((val1, val2) => {
       return val1.date - val2.date;
     });
 
-    // seperate cards by severity 
-    let cardsBySeverity = [];
-    for (var i=0;i<4;i++) cardsBySeverity.push([]);
+    // seperate cards by severity
+    const cardsBySeverity = [];
+    for (let i = 0; i < 4; i++) { cardsBySeverity.push([]); }
     for (const card of this.cardsData) {
       card.circleYPosition = this.getCircleYPosition(card.severity);
-      cardsBySeverity[card.circleYPosition-1].push(card);
+      cardsBySeverity[card.circleYPosition - 1].push(card);
     }
 
-    // foreach severity array create the circles 
+    // foreach severity array create the circles
     for (const cards of cardsBySeverity ) {
       let cardIndex = 0;
-      // move index to the first card in the time domain 
+      // move index to the first card in the time domain
       if (cards.length > 0) {
-        while (cards[cardIndex] && (cards[cardIndex].date < this.xDomain[0]) && (cardIndex < cards.length)) cardIndex++;
+        while (cards[cardIndex] && (cards[cardIndex].date < this.xDomain[0]) && (cardIndex < cards.length)) { cardIndex++; }
       }
-      // for each interval , if a least one card in the interval , create a circle object. 
+      // for each interval , if a least one card in the interval , create a circle object.
       if (cardIndex < cards.length) {
         for (let tickIndex = 1; tickIndex < this.xTicks.length; tickIndex++) {
-          
+
           let endLimit = this.xTicks[tickIndex].valueOf();
-          if (tickIndex + 1 === this.xTicks.length) 
+          if (tickIndex + 1 === this.xTicks.length)
               {
                 endLimit += 1; // Include the limit domain value by adding 1ms
               }
-    
+
 
           if (cards[cardIndex] && cards[cardIndex].date < endLimit ) {
             // initialisation of a new circle
@@ -324,7 +333,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
               summary: []
             };
 
-            // while cards date is inside the interval of the two current ticks ,add card information in the circle 
+            // while cards date is inside the interval of the two current ticks ,add card information in the circle
             while (cards[cardIndex]  && cards[cardIndex].date < endLimit) {
               circle.count ++;
               circle.end = cards[cardIndex].date;
@@ -333,16 +342,16 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                 parameters: cards[cardIndex].summary.parameters,
                 key: cards[cardIndex].summary.key,
                 summaryDate: moment(cards[cardIndex].date).format('DD/MM - HH:mm :'),
-                i18nPrefix: cards[cardIndex].publisher + '.' + cards[cardIndex].publisherVersion + '.'
+                i18nPrefix: cards[cardIndex].process + '.' + cards[cardIndex].processVersion + '.'
               });
               cardIndex++;
             }
 
-            //  add the circle to the list of circles to display  
+            //  add the circle to the list of circles to display
             if (circle.start.valueOf() === circle.end.valueOf()) {
               circle.dateOrPeriod = 'Date : ' + this.getCircleDateFormatting(circle.start);
             } else {
-              circle.dateOrPeriod = 'Periode : ' + this.getCircleDateFormatting(circle.start) +
+              circle.dateOrPeriod = 'Period : ' + this.getCircleDateFormatting(circle.start) +
                 ' - ' + this.getCircleDateFormatting(circle.end);
             }
             this.circles.push(circle);
@@ -362,7 +371,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         case 'INFORMATION': return 1;
         default: return 1;
       }
-    } else  return 1;
+    } else {  return 1; }
   }
 
   getCircleColor(severity: string): string {
@@ -374,7 +383,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         case 'INFORMATION': return 'blue';
         default:  return 'blue';
       }
-    } else return 'blue';
+    } else { return 'blue'; }
   }
 
   /**
@@ -389,34 +398,32 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       case 'TR': return date.format('ddd DD MMM HH') +  'h' + date.format('mm');
       case '7D':
       case 'W':
-      case 'M': return date.format("ddd DD MMM HH") + 'h';
-      case 'Y': return date.format("ddd DD MMM YYYY");
+      case 'M': return date.format('ddd DD MMM HH') + 'h';
+      case 'Y': return date.format('ddd DD MMM YYYY');
       case 'J':
       default: return date.format('HH[h]mm');
     }
   }
 
   //
-  // FOLLOWING METHODS ARE  CALLED FROM THE HTML 
+  // FOLLOWING METHODS ARE  CALLED FROM THE HTML
   //
 
   /**
-   * return an empty value to display (use to have no label on y axis) 
+   * return an empty value to display (use to have no label on y axis)
    */
   hideLabelsTicks = (e): string => {
     return '';
   }
 
   showCard(cardId): void {
-    console.log("cardId=" , cardId);
     this.router.navigate(['/' + this.currentPath, 'cards', cardId]);
     this.scrollToSelectedCard();
   }
 
-  scrollToSelectedCard()
-  {
+  scrollToSelectedCard() {
     // wait for 500ms to be sure the card is selected and scroll to the card with his id (opfab-selected-card)
-    setTimeout(() => { document.getElementById("opfab-selected-card").scrollIntoView({behavior: "smooth", block: "center"});},500);
+    setTimeout(() => { document.getElementById('opfab-selected-card').scrollIntoView({behavior: 'smooth', block: 'center'}); }, 500);
   }
 
   checkInsideDomain(date): boolean {
@@ -444,12 +451,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
       case 'W':
         return value.format('HH') + 'h';
       case 'M':
-        if (isFirstOfJanuary) return value.format('DD MMM YY');
+        if (isFirstOfJanuary) { return value.format('DD MMM YY'); }
         return value.format('ddd DD MMM');
       case 'Y':
-        if (isFirstOfJanuary) return value.format('D MMM YY');
-        else return value.format('D MMM');
-      default: return "";
+        if (isFirstOfJanuary) { return value.format('D MMM YY'); }
+        else { return value.format('D MMM'); }
+      default: return '';
     }
   }
 
@@ -457,18 +464,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     const isFirstOfJanuary = (value.valueOf() === moment(value).startOf('year').valueOf());
     switch (this.domainId) {
       case 'TR':
-        if (moment(value).hours() === 0) return value.format('ddd DD MMM');
+        if (moment(value).hours() === 0) { return value.format('ddd DD MMM'); }
         return value.format('HH') + 'h';
       case 'J':
         return value.format('HH') + 'h' + value.format('mm');
       case '7D':
       case 'W':
       case 'M':
-        if (isFirstOfJanuary) return value.format('DD MMM YY');
+        if (isFirstOfJanuary) { return value.format('DD MMM YY'); }
         return value.format('ddd DD MMM');
       case 'Y':
         return value.format('D MMM');
-      default: return "";
+      default: return '';
     }
   }
 
@@ -518,6 +525,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
    */
   onZoom($event: MouseEvent, direction): void {
     this.zoomChange.emit(direction);
+  }
+
+  public get maxNumberLinesForBubblePopover() {
+    return Math.ceil(window.innerHeight / 60);
   }
 
 }

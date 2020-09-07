@@ -26,24 +26,14 @@ import org.springframework.context.annotation.Profile;
 @Profile("test")
 public class TestConsumerConfig {
 
-    static final String GROUP_EXCHANGE_NAME = "GroupExchange";
-    static final String USER_EXCHANGE_NAME = "UserExchange";
-
     @Bean
-    Queue groupQueue(){
+    Queue cardQueue(){
         return QueueBuilder.nonDurable().autoDelete().build();
     }
 
     @Bean
-    Queue userQueue(){return QueueBuilder.nonDurable().autoDelete().build();}
-
-    @Bean
-    Binding groupBinding(Queue groupQueue, FanoutExchange groupExchange) {
-        return BindingBuilder.bind(groupQueue).to(groupExchange);
+    Binding groupBinding(Queue cardQueue, FanoutExchange cardExchange) {
+        return BindingBuilder.bind(cardQueue).to(cardExchange);
     }
 
-    @Bean
-    Binding userBinding(Queue userQueue, DirectExchange userExchange) {
-        return BindingBuilder.bind(userQueue).to(userExchange).with("eric");
-    }
 }

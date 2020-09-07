@@ -1,0 +1,422 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+[[template_description]]
+= Templates
+
+
+Templates are https://handlebarsjs.com/[Handlebars] template files. Templates
+are fuelled with a scope structure composed of
+
+ * a *card* property (See
+ifdef::single-page-doc[link:../api/cards/index.html[card data model]]
+ifndef::single-page-doc[link:{gradle-rootdir}/documentation/current/api/cards/index.html[card data model]]
+for more information)
+
+ * a *userContext* :
+   ** *login*: user login
+   ** *token*: user jwt token
+   ** *firstName*: user first name
+   ** *lastName*: user last name
+
+In addition to Handlebars basic syntax and helpers, OperatorFabric defines the
+following helpers :
+
+== OperatorFabric specific handlebars helpers
+
+[[numberformat]]
+=== numberFormat
+
+formats a number parameter using
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Nu
+mberFormat[Intl.NumberFormat].
+The locale used is the current user selected one, and options are passed as hash
+parameters (https://handlebarsjs.com/[see Handlebars doc Literals section]).
+
+....
+{{numberFormat card.data.price style="currency" currency="EUR"}}
+....
+
+[[dateformat]]
+=== dateFormat
+
+formats the submitted parameters (millisecond since epoch) using
+https://momentjs.com/[mement.format]. The locale used is the current user
+selected one, the format is "format" hash parameter
+(https://handlebarsjs.com/[see Handlebars doc Literals section]).
+
+....
+{{dateFormat card.data.birthday format="MMMM Do YYYY, h:mm:ss a"}}
+....
+
+[[slice]]
+=== slice
+
+extracts a sub array from ann array
+
+example:
+
+....
+<!--
+{"array": ["foo","bar","baz"]}
+-->
+<ul>
+{{#each (slice array 0 2)}}
+  <li>{{this}}</li>
+{{/each}}
+</ul>
+....
+
+outputs:
+
+....
+<ul>
+  <li>foo</li>
+  <li>bar</li>
+</ul>
+....
+
+and
+
+....
+<!--
+{"array": ["foo","bar","baz"]}
+-->
+<ul>
+{{#each (slice array 1)}}
+  <li>{{this}}</li>
+{{/each}}
+</ul>
+....
+
+outputs:
+
+....
+<ul>
+  <li>bar</li>
+  <li>baz</li>
+</ul>
+....
+
+[[now]]
+=== now
+
+outputs the current date in millisecond from epoch. The date is computed from
+application internal time service and thus may be different from the date that
+one can compute from javascript api which relies on the browsers' system time.
+
+NB: Due to Handlebars limitation you must provide at least one argument to
+helpers otherwise, Handlebars will confuse a helper and a variable. In the
+bellow example, we simply pass an empty string.
+
+example:
+
+....
+<div>{{now ""}}</div>
+<br>
+<div>{{dateFormat (now "") format="MMMM Do YYYY, h:mm:ss a"}}</div>
+....
+
+outputs
+
+....
+<div>1551454795179</div>
+<br>
+<div>mars 1er 2019, 4:39:55 pm</div>
+....
+
+for a local set to `FR_fr`
+
+[[preservespace]]
+=== preserveSpace
+
+preserves space in parameter string to avoid html standard space trimming.
+
+....
+{{preserveSpace card.data.businessId}}
+....
+
+[[bool]]
+=== bool
+
+returns a boolean result value on an arithmetical operation (including object
+equality) or boolean operation.
+
+Arguments: - v1: left value operand - op: operator (string value) - v2: right
+value operand
+
+arithmetical operators:
+
+ - ==
+ - ===
+ - !=
+ - !==
+ - <
+ - <=
+ - >
+ - >=
+
+boolean operators:
+
+- &&
+- ||
+
+examples:
+
+....
+{{#if (bool v1 '<' v2)}}
+  v1 is strictly lower than v2
+{{else}}
+ V2 is lower or equal to v1
+{{/if}}
+....
+
+[[math]]
+=== math
+
+returns the result of a mathematical operation.
+
+arguments:
+
+- v1: left value operand
+- op: operator (string value)
+- v2: right value operand
+
+arithmetical operators:
+
+* +
+* -
+* *
+* /
+* %
+
+example:
+
+....
+{{math 1 '+' 2}}
+....
+
+[[split]]
+=== split
+
+splits a string into an array based on a split string.
+
+example:
+
+....
+<ul>
+{{#each (split 'my.example.string' '.')}}
+  <li>{{this}}</li>
+{{/each}}
+</ul>
+....
+
+outputs
+
+....
+<ul>
+  <li>my</li>
+  <li>example</li>
+  <li>string</li>
+</ul>
+....
+
+[[svg]]
+=== svg
+
+outputs a svg tag with lazy loading, and missing image replacement message. The
+image url is the concatenation of an arbitrary number of helper arguments
+
+....
+{{{svg baseUri scheduledOpId "/" substation "/before/" 
+computationPhaseOrdinal}}}
+....
+
+[[i18n]]
+=== i18n
+
+outputs a i18n result from a key and some parameters. There are two ways of
+configuration :
+
+* Pass an object as sole argument. The object must contain a key field (string)
+and an optional parameter field (map of parameterKey => value)
++
+....
+{{i18n card.data.i18nTitle}}
+....
+* Pass a string key as sole argument and use hash parameters
+(https://handlebarsjs.com/[see Handlebars doc Literals section]) for i18n string
+parameters.
+
+....
+<!--
+emergency.title=Emergency situation happened on {{date}}. Cause : {{cause}}.
+-->
+{{i18n "emergency.title" date="2018-06-14" cause="Broken Coffee Machine"}}
+....
+
+outputs
+
+....
+Emergency situation happened on 2018-06-14. Cause : Broken Cofee Machine
+....
+
+[[sort]]
+=== sort
+
+sorts an array or some object's properties (first argument) using an optional
+field name (second argument) to sort the collection on this fields natural
+order.
+
+If there is no field argument provided :
+
+* for an array, the original order of the array is kept ;
+* for an object, the structure is sorted by the object field name.
+
+....
+<!--
+users :
+
+{"john": { "firstName": "John", "lastName": "Cleese"},
+"graham": { "firstName": "Graham", "lastName": "Chapman"},
+"terry": { "firstName": "Terry", "lastName": "Gilliam"},
+"eric": { "firstName": "Eric", "lastName": "Idle"},
+"terry": { "firstName": "Terry", "lastName": "Jones"},
+"michael": { "firstName": "Michael", "lastName": "Palin"},
+-->
+
+<ul>
+{{#each (sort users)}}
+    <li>{{this.firstName}} {{this.lastName}}</li>
+{{/each}}
+</ul>
+....
+
+outputs :
+
+....
+<ul>
+  <li>Eric Idle</li>
+  <li>Graham Chapman</li>
+  <li>John Cleese</li>
+  <li>Michael Pallin</li>
+  <li>Terry Gilliam</li>
+  <li>Terry Jones</li>
+</ul>
+....
+
+and
+
+....
+<ul>
+{{#each (sort users "lastName")}}
+    <li>{{this.firstName}} {{this.lastName</li>
+{{/each}}
+</ul>
+....
+
+outputs :
+
+....
+<ul>
+  <li>Graham Chapman</li>
+  <li>John Cleese</li>
+  <li>Terry Gilliam</li>
+  <li>Eric Idle</li>
+  <li>Terry Jones</li>
+  <li>Michael Pallin</li>
+</ul>
+....
+
+[[arrayContains]]
+=== arrayContains
+
+Verify if an array contains a specified element. If the array does contain the element, it returns true. Otherwise, it returns false.
+
+....
+<p {{#if (arrayContains colors 'red')}}class="text-danger"{{/if}}>test</p>
+....
+
+If the colors array contains 'red', the output is:
+
+....
+<p class="text-danger">test</p>
+....
+
+[[times]]
+=== times
+
+Allows to perform the same action a certain number of times. Internally, this uses a for loop.
+
+....
+{{#times 3}}
+  <p>test</p>
+{{/times}}
+....
+
+outputs :
+
+....
+<p>test</p>
+<p>test</p>
+<p>test</p>
+....
+
+[[toBreakage]]
+=== toBreakage
+
+Change the breakage of a string. The arguments that you can specify are:
+
+* lowercase => The string will be lowercased
+* uppercase => The string will be uppercased
+
+....
+{{toBreakage key 'lowercase'}}s
+....
+
+If the value of the key variable is "TEST", the output will be:
+
+....
+tests
+....
+
+[[keyValue]]
+=== keyValue
+
+This allows to traverse a map.
+
+Notice that this should normally be feasible by using the built-in each helper, but a client was having some troubles using it so we added this custom helper.
+
+....
+{{#keyValue studentGrades}}
+  <p>{{key}}: {{value}}</p>
+{{/keyValue}}
+....
+
+If the value of the studentGrades map is:
+
+....
+{
+  'student1': 15,
+  'student2': 12,
+  'student3': 9
+}
+....
+
+The output will be:
+
+....
+<p>student1: 15</p>
+<p>student2: 12</p>
+<p>student3: 9</p>
+....
+
+== Charts 
+
+The library https://www.chartjs.org/[charts.js] is integrate in operator fabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/utils/karate/businessconfig/resources/bundle_api_test[src/test/utils/karate/businessconfig/resources/bundle_test_api]).
+

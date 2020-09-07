@@ -36,6 +36,7 @@ public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
         converterList.add(new I18nWriterConverter());
         converterList.add(new TimeSpanWriterConverter());
         converterList.add(new RecipientWriterConverter());
+        converterList.add(new TraceReadConverter());
         return converterList;
     }
 }

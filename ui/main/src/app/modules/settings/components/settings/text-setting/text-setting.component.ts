@@ -33,7 +33,7 @@ export class TextSettingComponent extends BaseSettingComponent implements OnInit
         const validators = this.computeTextValidators();
         return new FormGroup({
             setting: new FormControl(null, validators)
-        }, {updateOn: 'submit'});
+        }, {updateOn: 'change'});
     }
 
     protected computeTextValidators() {
@@ -52,7 +52,6 @@ export class TextSettingComponent extends BaseSettingComponent implements OnInit
     }
 
     protected isEqual(formA, formB): boolean {
-        console.log('TextSettingComponent.isEqual called');
         return formA.setting === formB.setting;
     }
 

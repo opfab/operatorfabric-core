@@ -41,13 +41,12 @@ public class ArchivedCardPublicationData implements Card {
     private String uid;
     @Id
     private String id;
-    private String parentCardId;
-    @NotNull
+    private String parentCardUid;
     private String publisher;
-    private String publisherVersion;
+    private String processVersion;
     private String process;
-    @NotNull
-    private String processId;
+    
+    private String processInstanceId;
     private String state;
     private I18n title;
     private I18n summary;
@@ -56,7 +55,7 @@ public class ArchivedCardPublicationData implements Card {
     @Transient
     private Instant deletionDate;
     private Instant lttd;
-    @NotNull
+    
     @Indexed
     private Instant startDate;
     @Indexed
@@ -80,17 +79,19 @@ public class ArchivedCardPublicationData implements Card {
 
     @Transient
     private Boolean hasBeenAcknowledged;
+    @Transient
+    private Boolean hasBeenRead;
     @Indexed
     private String processStateKey;
 
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
-        this.parentCardId = card.getParentCardId();
+        this.parentCardUid = card.getParentCardUid();
         this.publisher = card.getPublisher();
-        this.publisherVersion = card.getPublisherVersion();
+        this.processVersion = card.getProcessVersion();
         this.publishDate = card.getPublishDate();
         this.process = card.getProcess();
-        this.processId = card.getProcessId();
+        this.processInstanceId = card.getProcessInstanceId();
         this.state = card.getState();
         this.startDate = card.getStartDate();
         this.shardKey = card.getShardKey();

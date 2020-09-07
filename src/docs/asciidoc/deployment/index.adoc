@@ -5,9 +5,6 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-
-
-
 = Deployment and Administration of OperatorFabric
 
 The aim of this document is to explain how to configure and deploy OperatorFabric.
@@ -55,7 +52,7 @@ last name, as well as their settings) can be performed either by the user in que
 Any action on a list of users or on the groups (or entities) (if authorization is managed in OperatorFabric) can only be performed by
 a user with the ADMIN role.
 
-.Thirds Service
+.Businessconfig Service
 Any write (create, update or delete) action on bundles can only be performed by a user with the ADMIN role. As such,
 administrators are responsible for the quality and security of the provided bundles.
 In particular, as it is possible to use scripts in templates, they should perform a security check to make sure that
@@ -64,6 +61,5 @@ there is no XSS risk.
 IMPORTANT: The ADMIN role doesn't grant any special privileges when it comes to card consultation (be they current or
 archived), so a user with the ADMIN role will only see cards that have been addressed to them (or to one of their
 groups (or entities)), just like any other user.
-
 
 

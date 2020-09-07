@@ -1,0 +1,86 @@
+// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+= UI Customization
+
+
+== UI configuration 
+
+The web-ui.json file permit to configure parameters for customization , the list of parameters is 
+link:../deployment/index.html#ui_properties[described here]
+
+
+[[menu_entries]]
+== Menu Entries
+
+It is possible to declare specific business menu in the upper part of  OperatorFabric. Those elements are declared  in the `config.json` file of the bundles. 
+
+If there are several items to declare for a businessconfig service, a title for the businessconfig menu section need to be declared
+within the `i18nLabelKey` attribute, otherwise the first and only `menu entry` item is used to create an entry in the
+menu nav bar of OperatorFabric.
+
+=== config.json declaration
+
+This kind of objects contains the following attributes :
+
+- `id`: identifier of the entry menu in the UI;
+- `url`: url opening a new page in a tab in the browser;
+- `label`: it's an i18n key used to l10n the entry in the UI.
+- `linkType`: Defines how business menu links are displayed in the navigation bar and how
+they open. Possible values:
+** TAB: Only a text link is displayed, and clicking it opens the link in a new tab.
+** IFRAME: Only a text link is displayed, and clicking it opens the link in an iframe in the main content zone below
+the navigation bar.
+** BOTH: Both a text link and a little arrow icon are displayed. Clicking the text link opens the link in an iframe
+while clicking the icon opens in a new tab. This is also the default value.
+
+
+=== Examples
+
+In the following examples, only the part relative to menu entries in the `config.json` file is detailed, the other parts are omitted and represented with a '…'.
+
+*Single menu entry*
+
+....
+{
+	…
+	"menuEntries":[{
+			"id": "identifer-single-menu-entry",
+			"url": "https://opfab.github.io",
+			"label": "single-menu-entry-i18n-key",
+			"linkType": "BOTH"	
+		}],
+}
+....
+
+*Several menu entries*
+
+Here a sample with 3 menu entries.
+
+....
+{
+	…
+	"i18nLabelKey":"businessconfig-name-in-menu-navbar",
+	"menuEntries": [{
+			"id": "firstEntryIdentifier",
+			"url": "https://opfab.github.io/whatisopfab/",
+			"label": "first-menu-entry",
+			"linkType": "BOTH"
+		},
+		{
+			"id": "secondEntryIdentifier",
+			"url": "https://www.lfenergy.org/",
+			"label": "second-menu-entry"
+		} ,
+		{
+			"id": "businessconfigEntryIdentifier",
+			"url": "https://opfab.github.io",
+			"label": "businessconfig-menu-entry"
+		}]
+}
+....

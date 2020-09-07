@@ -28,12 +28,6 @@ Launch the `startserver.sh` in the server directory. You need to wait for all th
 
 Test the connection to the UI: to connect to OperatorFabric, open in a browser the following page: http://localhost:2002/ui/ and use `tso1-operator` as login and `test` as password.
 
-If you are not accessing the server from localhost, there is a bug with authentication redirection. Your must use the following URL, replacing `SERVER_IP` by the IP address of your server :
-
----- 
-http://SERVER_IP:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client&redirect_uri=http://SERVER_IP:2002/ui/
-----
-
 After connection, you should see the following screen
 
 image::empty-opfab-page.jpg[empty opfab screenshot]
@@ -63,7 +57,7 @@ or use the provided script
 ./sendCard.sh card.json 
 ----
 
-The result should be a 200 Http status, and a json object such as:
+The result should be a 201 Http status, and a json object such as:
 
 [source,JSON]
 ----
@@ -86,9 +80,9 @@ section of the reference documentation.
 ----
 {
 	"publisher" : "message-publisher",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process" :"defaultProcess",
-	"processId" : "hello-world-1",
+	"processInstanceId" : "hello-world-1",
 	"state" : "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -114,10 +108,10 @@ We can send a new version of the card (updateCard.json):
 ----
 {
 	"publisher" : "message-publisher",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"defaultProcess",
-	"processId" : "hello-world-1",
-	"state"  $: "messageState",
+	"processInstanceId" : "hello-world-1",
+	"state" : "messageState",
 	"recipient" : {
 				"type" : "GROUP",
 				"identity" : "TSO1"
@@ -140,9 +134,9 @@ The card should be updated on the UI.
 
 ==== Delete the card 
 
-You can delete the card using DELETE HTTP code with reference to publisher and processId
+You can delete the card using DELETE HTTP code with reference to publisher and processInstanceId
 ----
-curl -s -X DELETE http://localhost:2102/cards/message-publisher_hello-world-1
+curl -s -X DELETE http://localhost:2102/cards/defaultProcess.hello-world-1
 ---- 
 
 or use provided script:
@@ -200,26 +194,20 @@ The global configuration is defined in config.json :
 [source,JSON]
 ----
 {
-	"name":"message-publisher",
+	"id":"defaultProcess",
 	"version":"2",
 	"templates":["template"],
 	"csses":["style"],
-	"processes" : {
-		"defaultProcess" : {
-			"states":{
-				"messageState" : {
-					"details" : [{
-						"title" : { "key" : "defaultProcess.title"},
-						"templateName" : "template",
-						"styles" : [ "style.css" ]
-					}]
-				}
-			}
+	"states":{
+		"messageState" : {
+			"details" : [{
+				"title" : { "key" : "defaultProcess.title"},
+				"templateName" : "template",
+				"styles" : [ "style" ]
+			}]
 		}
 	}
 }
-
-
 ----
 To keep the old bundle, we create a new version by setting version to 2.
 
@@ -273,7 +261,7 @@ You should received the following JSON in response, describing your bundle.
 
 [source,JSON]
 ----
-{"name":"message-publisher","version":"2","templates":["template"],"csses":["style"],"i18nLabelKey":null,"processes":{"defaultProcess":{"statesData":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actionsData":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actions":null}},"states":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actionsData":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":null}],"actions":null}}}},"menuEntries":null}
+{"statesData":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"responseData":null,"acknowledgementAllowed":null,"color":null,"name":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"response":null,"acknowledgmentAllowed":null}},"id":"defaultProcess","name":null,"version":"2","templates":["template"],"csses":["style"],"menuLabel":null,"states":{"messageState":{"detailsData":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"responseData":null,"acknowledgementAllowed":null,"color":null,"name":null,"details":[{"title":{"key":"defaultProcess.title","parameters":null},"titleStyle":null,"templateName":"template","styles":["style"]}],"response":null,"acknowledgmentAllowed":null}},"menuEntries":null}
 ----
 
 ==== Send a card 
@@ -284,9 +272,9 @@ You can send the following card to test your new bundle:
 ----
 {
 	"publisher" : "message-publisher",
-	"publisherVersion" : "2",
+	"processVersion" : "2",
 	"process"  :"defaultProcess",
-	"processId" : "hello-world-1",
+	"processInstanceId" : "hello-world-1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -300,7 +288,7 @@ You can send the following card to test your new bundle:
 }
 ----
 
-To use the new bundle, we set publisherVersion to "2"
+To use the new bundle, we set processVersion to "2"
 
 To send the card:
 
@@ -329,39 +317,34 @@ of the bundle:
 [source,JSON]
 ----
 {
-  "name":"alert-publisher",
-  "version":"1",
-  "templates":["criticalSituationTemplate","endCriticalSituationTemplate"],
-  "csses":["style"],
-  "processes" : {
-    "criticalSituation" : {
-	  "states":{
+	"id":"criticalSituation",
+	"version":"1",
+	"templates":["criticalSituationTemplate","endCriticalSituationTemplate"],
+	"csses":["style"],
+	"states":{
 		"criticalSituation-begin" : {
-		  "details" : [{
-		    "title" : { "key" : "criticalSituation-begin.title"},
-			  "templateName" : "criticalSituationTemplate",
-			  "styles" : [ "style.css" ]
+			"details" : [{
+				"title" : { "key" : "criticalSituation-begin.title"},
+				"templateName" : "criticalSituationTemplate",
+				"styles" : [ "style" ]
 			}]
 		},
 		"criticalSituation-update" : {
-		  "details" : [{
-		    "title" : { "key" : "criticalSituation-update.title"},
-			  "templateName" : "criticalSituationTemplate",
-			  "styles" : [ "style.css" ]
+			"details" : [{
+				"title" : { "key" : "criticalSituation-update.title"},
+				"templateName" : "criticalSituationTemplate",
+				"styles" : [ "style" ]
 			}]
 		},
 		"criticalSituation-end" : {
-		  "details" : [{
-		    "title" : { "key" : "criticalSituation-end.title"},
-			"templateName" : "endCriticalSituationTemplate",
-			"styles" : [ "style.css" ]
-		  }]
+			"details" : [{
+				"title" : { "key" : "criticalSituation-end.title"},
+				"templateName" : "endCriticalSituationTemplate",
+				"styles" : [ "style" ]
+			}]
 		}
-	  }
 	}
-  }
 }
-
 ----
 
 You can see in the JSON we define a process name "criticalSituation" with 3 states: criticalSituation-begin,
@@ -397,9 +380,9 @@ We can now send cards and simulate the process, first we send a card at the begi
 ----
 {
 	"publisher" : "alert-publisher",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"criticalSituation",
-	"processId" : "alert1",
+	"processInstanceId" : "alert1",
 	"state": "criticalSituation-begin",
 	"recipient" : {
 				"type" : "GROUP",
@@ -442,9 +425,9 @@ To view the card in the time line, you need to set times in the card using timeS
 ----
  {
 	"publisher" : "scheduledMaintenance-publisher",
-	"publisherVersion" : "1",
+	"processVersion" : "1",
 	"process"  :"maintenanceProcess",
-	"processId" : "maintenance-1",
+	"processInstanceId" : "maintenance-1",
 	"state": "planned",
 	"recipient" : {
 				"type" : "GROUP",
@@ -468,9 +451,9 @@ To view the card in the time line, you need to set times in the card using timeS
 ----
 
 For this example, we use a new publisher called "scheduledMaintenance-publisher". You won't need to post the
-corresponding bundle to the thirds service as it has been loaded in advance to be available out of the box (only for the
+corresponding bundle to the businessconfig service as it has been loaded in advance to be available out of the box (only for the
 getting started). If you want to take a look at its content you can find it under
-server/thirds-storage/scheduledMaintenance-publisher/1.
+server/businessconfig-storage/scheduledMaintenance-publisher/1.
 
 Before sending the provided card provided, you need to set the good time values as
 link:https://en.wikipedia.org/wiki/Epoch_(computing)[epoch] (ms) in the json. For each value you set, you will have a
@@ -481,12 +464,12 @@ To get the dates in Epoch, you can use the following commands:
 
 For the first date: 
 ---- 
-date -d "+ 600 minutes" +%s%N | cut -b1-13
+date -d "+ 60 minutes" +%s%N | cut -b1-13
 ----
 
 And for the second 
 ---- 
-date -d "+ 900 minutes" +%s%N | cut -b1-13
+date -d "+ 120 minutes" +%s%N | cut -b1-13
 ----
 
 To send the card use the provided script in example4 directory 
@@ -503,5 +486,188 @@ A second card (card2.json) is provided as example, you need again to set times v
 This time the severity of the card is ALERT, you should see the point in red in the timeline
 
 image::example4.jpg[example 4 screenshot]
+
+=== Example 5: Card routing mechanism
+
+==== Card sent to a group
+As we saw previously, if a card is sent to a group, then you only need to be a member of the group to receive it.
+
+==== Card sent to an entity
+If a card is sent to an entity, then you must be a member of this entity and have the process / state of the card within the user's perimeter. As the perimeters are attached to groups, the user must therefore be a member of a group attached to this perimeter.
+
+Let's send this card :
+[source,JSON]
+----
+{
+    "publisher" : "message-publisher",
+    "processVersion" : "1",
+    "entityRecipients" : ["ENTITY1"],
+    "process" :"defaultProcess",
+    "processInstanceId" : "cardExample5",
+    "state" : "messageState",
+    "severity" : "INFORMATION",
+    "startDate" : 1553186770681,
+    "summary" : {"key" : "defaultProcess.summary"},
+    "title" : {"key" : "defaultProcess.title"},
+    "data" : {"message" : "Hello World !!! Here is a message for ENTITY1"}
+}
+----
+
+You can use this command line :
+----
+curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @cardSentToEntity.json
+----
+
+or use the provided script :
+----
+./sendCard.sh cardSentToEntity.json
+----
+
+The result should be a 201 Http status, and a json object such as:
+
+[source,JSON]
+----
+{"count":1,"message":"All pushedCards were successfully handled"}
+----
+
+See the result in the UI, you should not see the card.
+
+Now let's create this perimeter :
+[source,JSON]
+----
+{
+  "id" : "getting-startedPerimeter",
+  "process" : "defaultProcess",
+  "stateRights" : [
+    {
+      "state" : "messageState",
+      "right" : "Receive"
+    }
+  ]
+}
+----
+You can use this command line :
+----
+curl -X POST http://localhost:2103/perimeters -H "Content-type:application/json" -H "Authorization:Bearer $token" --data @perimeter.json
+----
+
+or use the provided script :
+----
+./createPerimeter.sh perimeter.json
+----
+
+The result should be a 201 Http status, and a json object such as:
+
+[source,JSON]
+----
+{"id":"getting-startedPerimeter","process":"defaultProcess","stateRights":[{"state":"messageState1","right":"Receive"},{"state":"messageState2","right":"ReceiveAndWrite"}]}
+----
+
+Now let's attach this perimeter to the TSO1 group.
+You can use this command line :
+----
+curl -X PUT http://localhost:2103/perimeters/getting-startedPerimeter/groups -H "Content-type:application/json" -H "Authorization:Bearer $token" --data "[\"TSO1\"]"
+----
+
+or use the provided script :
+----
+./putPerimeterForGroup.sh
+----
+
+The result should be a 200 Http status.
+
+Now, if you refresh the UI or send again the card, you should see the card.
+
+==== Card sent to a group and an entity
+If a card is sent to a group and an entity, then there are 2 possibilities to receive this card :
+
+- First possibility :
+the user is both a member of this entity and a member of this group.
+
+Let's send this card (for ENTITY1 and TSO1 group) :
+[source,JSON]
+----
+{
+	"publisher" : "message-publisher",
+	"processVersion" : "1",
+	"entityRecipients" : ["ENTITY1"],
+	"process"  :"defaultProcess",
+	"processInstanceId" : "cardExample5_1",
+	"state": "messageState2",
+	"recipient" : {
+		"type" : "GROUP",
+		"identity" : "TSO1"
+	},
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message" : "Hello World !!! Here is a message for ENTITY1 and group TSO1 - process/state not in tso1-operator perimeter "}
+}
+----
+
+You can use this command line :
+----
+curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @cardSentToEntityAndGroup_1.json
+----
+
+or use the provided script :
+----
+./sendCard.sh cardSentToEntityAndGroup_1.json
+----
+
+The result should be a 201 Http status, and a json object such as:
+
+[source,JSON]
+----
+{"count":1,"message":"All pushedCards were successfully handled"}
+----
+
+See the result in the UI, you should see the card.
+
+
+- Second possibility :
+the user is a member of this entity and have the process/state of the card within its perimeter. As the perimeters are attached to groups, the user must therefore be a member of a group attached to this perimeter.
+
+Let's send this card (for ENTITY1 and TSO2 group) :
+[source,JSON]
+----
+{
+	"publisher" : "message-publisher",
+	"processVersion" : "1",
+	"entityRecipients" : ["ENTITY1"],
+	"process"  :"defaultProcess",
+	"processInstanceId" : "cardExample5_2",
+	"state": "messageState",
+	"recipient" : {
+		"type" : "GROUP",
+		"identity" : "TSO2"
+	},
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message" : "Hello World !!! Here is a message for ENTITY1 and group TSO2 - process/state in tso1-operator perimeter "}
+}
+----
+
+You can use this command line :
+----
+curl -X POST http://localhost:2102/cards -H "Content-type:application/json" --data @cardSentToEntityAndGroup_2.json
+----
+
+or use the provided script :
+----
+./sendCard.sh cardSentToEntityAndGroup_2.json
+----
+
+The result should be a 201 Http status, and a json object such as:
+
+[source,JSON]
+----
+{"count":1,"message":"All pushedCards were successfully handled"}
+----
+
+See the result in the UI, you should see the card.
 
 include::troubleshooting.adoc[leveloffset=+1]

@@ -11,60 +11,37 @@
 
 package org.lfenergy.operatorfabric.cards.publication.controllers;
 
-import static java.nio.charset.Charset.forName;
+
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
-import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
+
+
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+
 
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
-import org.jeasy.random.EasyRandomParameters;
-import org.jeasy.random.FieldPredicates;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.lfenergy.operatorfabric.cards.publication.CardPublicationApplication;
 import org.lfenergy.operatorfabric.cards.publication.model.CardCreationReportData;
 import org.lfenergy.operatorfabric.cards.publication.model.CardPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.I18nPublicationData;
-import org.lfenergy.operatorfabric.cards.publication.model.RecipientPublicationData;
 import org.lfenergy.operatorfabric.cards.publication.repositories.ArchivedCardRepositoryForTest;
-import org.lfenergy.operatorfabric.cards.publication.repositories.CardRepositoryForTest;
-import org.lfenergy.operatorfabric.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
-import org.lfenergy.operatorfabric.springtools.configuration.test.OpFabUserDetails;
-import org.lfenergy.operatorfabric.springtools.configuration.test.WithMockOpFabUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
+
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
+
 
 /**
  * <p></p>
@@ -80,10 +57,10 @@ import reactor.core.publisher.Flux;
 @Tag("mongo")
 class CardControllerShould extends CardControllerShouldBase {
 
-    
+
     @Autowired
     private ArchivedCardRepositoryForTest archiveRepository;
-    
+
 
     @AfterEach
     public void cleanAfter() {
@@ -102,70 +79,9 @@ class CardControllerShould extends CardControllerShouldBase {
         Assertions.assertThat(archiveRepository.count().block()).isEqualTo(5);
     }
 
-    private Flux<CardPublicationData> generateCards() {
-        return Flux.just(
-                getCardPublicationData()
-        );
-    }
-
-    @NotNull
-    private CardPublicationData[] getCardPublicationData() {
-        return new CardPublicationData[]{
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_1")
-                        .publisherVersion("O")
-                        .processId("PROCESS_1")
-                        .severity(SeverityEnum.ALARM)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .build(),
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_2")
-                        .publisherVersion("O")
-                        .processId("PROCESS_1")
-                        .severity(SeverityEnum.INFORMATION)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .build(),
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_2")
-                        .publisherVersion("O")
-                        .processId("PROCESS_2")
-                        .severity(SeverityEnum.COMPLIANT)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .build(),
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_1")
-                        .publisherVersion("O")
-                        .processId("PROCESS_2")
-                        .severity(SeverityEnum.INFORMATION)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .build(),
-                CardPublicationData.builder()
-                        .publisher("PUBLISHER_1")
-                        .publisherVersion("O")
-                        .processId("PROCESS_1")
-                        .severity(SeverityEnum.INFORMATION)
-                        .title(I18nPublicationData.builder().key("title").build())
-                        .summary(I18nPublicationData.builder().key("summary").build())
-                        .startDate(Instant.now())
-                        .recipient(RecipientPublicationData.builder().type(DEADEND).build())
-                        .build()};
-    }
-
     // removes cards
     @Test
-    void deleteSynchronously_An_ExistingCard_whenT_ItSProcessIdIsProvided() {
+    void deleteSynchronously_An_ExistingCard_whenT_ItSIdIsProvided() {
 
         EasyRandom randomGenerator = instantiateEasyRandom();
 
@@ -185,9 +101,9 @@ class CardControllerShould extends CardControllerShouldBase {
         Assertions.assertThat(cardRepository.count().block()).isEqualTo(numberOfCards - 1);
 
     }
-
+    
     @Test
-    void keepTheCardRepository_Untouched_when_ARandomProcessId_isGiven() {
+    void keepTheCardRepository_Untouched_when_ARandomId_isGiven() {
 
         EasyRandom randomGenerator = instantiateEasyRandom();
 
@@ -210,13 +126,13 @@ class CardControllerShould extends CardControllerShouldBase {
         String testedId = randomGenerator.nextObject(String.class);
         this.webTestClient.delete().uri("/cards/" + testedId).accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isNotFound();
 
         Assertions.assertThat(cardRepository.count().block()).isEqualTo(cardNumber);
 
 
     }
-    
-	    
-    
+
+
+
 }

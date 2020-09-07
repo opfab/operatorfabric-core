@@ -11,15 +11,15 @@
 
 import {
     Directive, ElementRef,
-    Input, HostListener
+    Input, HostListener, OnDestroy
 } from '@angular/core';
-import {debounceTime} from "rxjs/operators";
+import {debounceTime, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 
 @Directive({
     selector: '[calcHeightDirective]'
 })
-export class CalcHeightDirective {
+export class CalcHeightDirective implements OnDestroy {
 
     @Input()
     parentId: any;
@@ -31,14 +31,20 @@ export class CalcHeightDirective {
     calcHeightClass: any;
 
     private _resizeSubject$: Subject<number>;
+    private ngUnsubscribe$ = new Subject<void>();
 
     constructor(private el: ElementRef) {
 
         this._resizeSubject$ = new Subject<number>();
         this._resizeSubject$.asObservable().pipe(
+            takeUntil(this.ngUnsubscribe$),
             debounceTime(300),
         ).subscribe(x => this.calcHeight(this.parentId, this.fixedHeightClass, this.calcHeightClass));
 
+    }
+    ngOnDestroy(): void {
+        this.ngUnsubscribe$.next();
+        this.ngUnsubscribe$.complete();
     }
 
     @HostListener('window:resize')
@@ -80,7 +86,6 @@ export class CalcHeightDirective {
         // Calculate available height by subtracting the heights of fixed elements from the total window height
         let availableHeight = parent.clientHeight - sumFixElemHeights;
 
-        //console.log("CalcHeightDirective "+fixedHeightClass+" "+parent.clientHeight+" "+sumFixElemHeights+" "+availableHeight);
 
         // Apply height and overflow
         Array.from(calcElements)

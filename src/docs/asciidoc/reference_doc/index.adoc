@@ -14,25 +14,21 @@ The aim of this document is to:
 
 * Explain what OperatorFabric is about and define the concepts it relies on
 * Give a basic tour of its features from a user perspective
-* Describe the technical implementation that makes it possible
+
 
 == Introduction
 
 include::../business_description.adoc[]
 
-== A quick walk through the user interface
-
-Work in progress
-//TODO Explain timeline, archives?
-//TODO Go through each screen to explain buttons? Filters etc.
-
-== Technical overview
-
-include::thirds_service.adoc[leveloffset=+1]
-
-include::users_service.adoc[leveloffset=+1]
-
 include::cards_publication_service.adoc[leveloffset=+1]
 
-include::cards_consultation_service.adoc[leveloffset=+1]
+include::card_rendering.adoc[leveloffset=+1]
+
+include::response_cards.adoc[leveloffset=+1]
+
+include::archives.adoc[leveloffset=+1]
+
+include::users_management.adoc[leveloffset=+1]
+
+include::ui_customization.adoc[leveloffset=+1]
 

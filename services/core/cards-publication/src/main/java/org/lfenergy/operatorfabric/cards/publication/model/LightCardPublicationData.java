@@ -38,19 +38,15 @@ import java.util.Set;
 @NoArgsConstructor
 public class LightCardPublicationData implements LightCard {
 
-    @NotNull
     private String uid ;
-    @NotNull
     private String id ;
     private String publisher;
-    private String publisherVersion;
+    private String processVersion;
     private String process;
-    @NotNull
-    private String processId;
+    private String processInstanceId;
     private String state;
     private Instant lttd;
     private Instant publishDate;
-    @NotNull
     private Instant startDate;
     private Instant endDate;
     private SeverityEnum severity;
@@ -67,6 +63,11 @@ public class LightCardPublicationData implements LightCard {
     
     @Transient
     private Boolean hasBeenAcknowledged;
+    
+    @Transient
+    public Boolean hasBeenRead;
+
+    private String parentCardUid;
 
     /**
      * return timespans, may be null

@@ -17,12 +17,6 @@ export function reducer(
     action: ConfigActions
 ): ConfigState {
     switch (action.type) {
-        case ConfigActionTypes.LoadConfig: {
-            return {
-                ...state,
-                loading: true
-            };
-        }
         case ConfigActionTypes.LoadConfigSuccess: {
             return {
                 ...state,
@@ -31,23 +25,6 @@ export function reducer(
                 loaded:true,
                 retry:0
             };
-        }
-
-        case ConfigActionTypes.LoadConfigFailure: {
-            return {
-                ...state,
-                loading: false,
-                error: `error while loading a Config: '${action.payload.error}'`,
-                retry: state.retry+1
-            };
-        }
-
-
-        case ConfigActionTypes.HandleUnexpectedError:{
-            return {
-                ...state,
-                error: action.payload.error.message
-            }
         }
         default: {
             return state;

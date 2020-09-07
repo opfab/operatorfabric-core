@@ -5,6 +5,7 @@ rm -rf target
 # Be careful : patchUserSettings must be before fetchUserSettings
 
 java -jar karate.jar                                         \
+      common/checkExpiredToken.feature                       \
       users/createUsers.feature                              \
       users/groups/createGroups.feature                      \
       users/groups/addUsersToGroup.feature                   \
@@ -40,5 +41,8 @@ java -jar karate.jar                                         \
       users/perimeters/updatePerimetersForAGroup.feature     \
       users/perimeters/addPerimetersForAGroup.feature        \
       users/perimeters/getCurrentUserWithPerimeters.feature  \
-      users/perimeters/postCardRoutingPerimeters.feature
-
+      users/perimeters/postCardRoutingPerimeters.feature     \
+      users/deleteUser.feature                               \
+      users/entities/deleteEntity.feature                    \
+      users/groups/deleteGroup.feature                       \
+      users/perimeters/deletePerimeter.feature

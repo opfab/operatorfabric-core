@@ -15,37 +15,48 @@ import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
+
+    public static final String ENTITY_RECIPIENTS = "entityRecipients";
+	public static final String GROUP_RECIPIENTS = "groupRecipients";
+    public static final String PROCESS_STATE_KEY = "processStateKey";
+    public static final String USER_RECIPIENTS = "userRecipients";
+	public static final String PUBLISH_DATE_FIELD = "publishDate";
+	public static final String START_DATE_FIELD = "startDate";
+	public static final String END_DATE_FIELD = "endDate";
+
     default Mono<T> findByIdWithUser(ReactiveMongoTemplate template, String id, CurrentUserWithPerimeters currentUserWithPerimeters, Class<T> clazz) {
         Query query = new Query();
-        List<Criteria> criteria = computeCriteriaToFindCardByProcessIdWithUser(id, currentUserWithPerimeters);
+        List<Criteria> criteria = computeCriteriaToFindCardByIdWithUser(id, currentUserWithPerimeters);
         if (!criteria.isEmpty())
             query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()])));
-
         return template.findOne(query, clazz);
     }
 
-    default List<Criteria> computeCriteriaToFindCardByProcessIdWithUser(String processId, CurrentUserWithPerimeters currentUserWithPerimeters) {
+    default Flux<T> findByParentCardUid(ReactiveMongoTemplate template, String parentUid, Class<T> clazz) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("parentCardUid").is(parentUid));
+        return template.find(query, clazz);
+    }
+
+    default List<Criteria> computeCriteriaToFindCardByIdWithUser(String id, CurrentUserWithPerimeters currentUserWithPerimeters) {
         List<Criteria> criteria = new ArrayList<>();
-        criteria.add(Criteria.where("_id").is(processId));
-        criteria.addAll(computeCriteriaList4User(currentUserWithPerimeters));
+        criteria.add(Criteria.where("_id").is(id));
+        criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
         return criteria;
     }
 
-    /*
-    Rules for receiving cards :
-    1) If the card is sent to entity A and group B, then to receive it,
-       the user must be part of A AND (be part of B OR have the right for the process/state of the card)
-    2) If the card is sent to entity A only, then to receive it, the user must be part of A and have the right for the process/state of the card
-    3) If the card is sent to group B only, then to receive it, the user must be part of B
-    */
-    default List<Criteria> computeCriteriaList4User(CurrentUserWithPerimeters currentUserWithPerimeters) {
+    default Criteria computeCriteriaForUser(CurrentUserWithPerimeters currentUserWithPerimeters) {
         List<Criteria> criteriaList = new ArrayList<>();
         List<Criteria> criteria = new ArrayList<>();
         String login = currentUserWithPerimeters.getUserData().getLogin();
@@ -56,33 +67,34 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
             currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter ->
                     processStateList.add(perimeter.getProcess() + "." + perimeter.getState()));
 
-        if (login != null) {
-            criteriaList.add(Criteria.where("userRecipients").in(login));
-        }
-        if (!(groups == null || groups.isEmpty())) {    //card sent to group only
-            criteriaList.add(Criteria.where("groupRecipients").in(groups).andOperator(new Criteria().orOperator(
-                    Criteria.where("entityRecipients").exists(false), Criteria.where("entityRecipients").size(0))));
-        }
-        if (!(entities == null || entities.isEmpty())) {    //card sent to entity only
-            criteriaList.add(Criteria.where("entityRecipients").in(entities)
-                    .andOperator(new Criteria().orOperator(Criteria.where("groupRecipients").exists(false), Criteria.where("groupRecipients").size(0)),
-                                 Criteria.where("processStateKey").in(processStateList)));
-        }
-        if (!(groups == null || groups.isEmpty()) &&  !(entities == null || entities.isEmpty()))    //card sent to group and entity
-            criteriaList.add(Criteria.where("entityRecipients").in(entities).and("groupRecipients").in(groups));
-
-        if (!(entities == null || entities.isEmpty()) &&  !(processStateList.isEmpty()))    //card sent to group and entity
-            criteriaList.add(Criteria.where("entityRecipients").in(entities).and("processStateKey").in(processStateList));
-
-        if (! criteriaList.isEmpty())
-            criteria.add(new Criteria().orOperator(criteriaList.toArray(new Criteria[criteriaList.size()])));
-        return criteria;
+        return computeCriteriaForUser(login,groups,entities,processStateList);
     }
 
-    default Criteria computeUserCriteria(CurrentUserWithPerimeters currentUserWithPerimeters) {
-        Criteria criteria = new Criteria();
-        return (!computeCriteriaList4User(currentUserWithPerimeters).isEmpty()) ? computeCriteriaList4User(currentUserWithPerimeters).get(0) : criteria;
+      /*
+    Rules for receiving cards :
+    1) If the card is sent to entity A and group B, then to receive it,
+       the user must be part of A AND (be part of B OR have the right for the process/state of the card)
+    2) If the card is sent to entity A only, then to receive it, the user must be part of A and have the right for the process/state of the card
+    3) If the card is sent to group B only, then to receive it, the user must be part of B
+    */
+    default Criteria computeCriteriaForUser(String login, List<String> groups, List<String> entities, List<String> processStateList) {
+        List<String> groupsList = (groups != null ? groups : new ArrayList<>());
+        List<String> entitiesList = (entities != null ? entities : new ArrayList<>());
+
+      return  new Criteria().orOperator(
+                where(USER_RECIPIENTS).in(login),
+                where(GROUP_RECIPIENTS).in(groupsList).andOperator(new Criteria().orOperator(   //card sent to group only
+                        Criteria.where(ENTITY_RECIPIENTS).exists(false), Criteria.where(ENTITY_RECIPIENTS).size(0))),
+                where(ENTITY_RECIPIENTS).in(entitiesList).andOperator(new Criteria().orOperator(    //card sent to entity only
+                        Criteria.where(GROUP_RECIPIENTS).exists(false), Criteria.where(GROUP_RECIPIENTS).size(0)),
+                        Criteria.where(PROCESS_STATE_KEY).in(processStateList)),
+                where(ENTITY_RECIPIENTS).in(entitiesList).and(GROUP_RECIPIENTS).in(groupsList),    //card sent to group and entity
+                where(ENTITY_RECIPIENTS).in(entitiesList).and(PROCESS_STATE_KEY).in(processStateList));  //card sent to group and entity 
+                
     }
+
+
 
     Mono<T> findByIdWithUser(String id, CurrentUserWithPerimeters user);
+    Flux<T> findByParentCardUid(String parentCardUid);
 }

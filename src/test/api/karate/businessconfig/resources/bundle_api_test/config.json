@@ -1,0 +1,15 @@
+{
+	"id":"api_test",
+	"version":"1",
+	"templates":["template"],
+	"csses":["style"],
+	"states":{
+		"messageState" : {
+			"details" : [{
+				"title" : { "key" : "detail.title"},
+				"templateName" : "template",
+				"styles" : [ "style" ]
+			}]
+		}
+	}
+}

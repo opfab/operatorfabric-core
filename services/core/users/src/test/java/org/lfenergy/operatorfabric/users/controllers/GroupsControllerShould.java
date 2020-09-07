@@ -132,22 +132,22 @@ class GroupsControllerShould {
         p1 = PerimeterData.builder()
                 .id("PERIMETER1_1")
                 .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READ),
-                                                         new StateRightData("state2", RightsEnum.READANDWRITE))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE),
+                                                         new StateRightData("state2", RightsEnum.RECEIVEANDWRITE))))
                 .build();
 
         p2 = PerimeterData.builder()
                 .id("PERIMETER1_2")
                 .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READANDRESPOND),
-                                                         new StateRightData("state2", RightsEnum.ALL))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE),
+                                                         new StateRightData("state2", RightsEnum.WRITE))))
                 .build();
 
         p3 = PerimeterData.builder()
                 .id("PERIMETER2")
                 .process("process2")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.ALL),
-                                                         new StateRightData("state2", RightsEnum.READ))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE),
+                                                         new StateRightData("state2", RightsEnum.RECEIVE))))
                 .build();
 
         perimeterRepository.insert(p1);
@@ -548,6 +548,66 @@ class GroupsControllerShould {
         }
 
         @Test
+        void deleteGroupWithNotFoundError() throws Exception {
+
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(delete("/groups/unknownGroupSoFar")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(get("/groups/unknownGroupSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(GroupsController.GROUP_NOT_FOUND_MSG, "unknownGroupSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+        }
+
+        @Test
+        void deleteGroup() throws Exception {
+
+            UserData jcleese = userRepository.findById("jcleese").get();
+            assertThat(jcleese).isNotNull();
+            assertThat(jcleese.getGroups()).containsExactlyInAnyOrder("MONTY", "WANDA");
+
+            UserData gchapman = userRepository.findById("gchapman").get();
+            assertThat(gchapman).isNotNull();
+            assertThat(gchapman.getGroups()).containsExactlyInAnyOrder("MONTY");
+
+            assertThat(groupRepository.findById("MONTY")).isNotEmpty();
+
+            mockMvc.perform(delete("/groups/MONTY")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isOk())
+            ;
+
+            jcleese = userRepository.findById("jcleese").get();
+            assertThat(jcleese).isNotNull();
+            assertThat(jcleese.getGroups()).containsExactlyInAnyOrder("WANDA");
+
+            gchapman = userRepository.findById("gchapman").get();
+            assertThat(gchapman).isNotNull();
+            assertThat(gchapman.getGroups()).isEmpty();
+
+            assertThat(groupRepository.findById("MONTY")).isEmpty();
+        }
+
+        @Test
         void updateGroupsFromUsers() throws Exception {
             mockMvc.perform(put("/groups/WANDA/users")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -647,15 +707,15 @@ class GroupsControllerShould {
                             "@.id == \"PERIMETER1_1\" && " +
                             "@.process == \"process1\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Receive\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReceiveAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Receive\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReceiveAndWrite\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists())
                     .andExpect(jsonPath("$.[?(" +
                             "@.id == \"PERIMETER2\" && " +
                             "@.process == \"process2\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"All\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Read\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"All\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Read\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Write\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"Receive\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Write\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"Receive\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists());
 
             //WANDA group has perimeter PERIMETER1_1.
@@ -668,8 +728,8 @@ class GroupsControllerShould {
                             "@.id == \"PERIMETER1_1\" && " +
                             "@.process == \"process1\" && " +
                             "@.stateRights.length() == 2 && " +
-                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Read\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReadAndWrite\") && " +
-                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Read\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReadAndWrite\") &&" +
+                            "(@.stateRights.[0].state==\"state1\" && @.stateRights.[0].right==\"Receive\" || @.stateRights.[0].state==\"state2\" && @.stateRights.[0].right==\"ReceiveAndWrite\") && " +
+                            "(@.stateRights.[1].state==\"state1\" && @.stateRights.[1].right==\"Receive\" || @.stateRights.[1].state==\"state2\" && @.stateRights.[1].right==\"ReceiveAndWrite\") &&" +
                             "@.stateRights.[0] != @.stateRights.[1])]").exists())
             ;
         }
@@ -969,6 +1029,15 @@ class GroupsControllerShould {
             mockMvc.perform(patch("/groups/WANDA/perimeters")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"PERIMETER1_2\"]")
+            )
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void deleteGroup() throws Exception {
+            mockMvc.perform(delete("/groups/MONTY")
+                    .contentType(MediaType.APPLICATION_JSON)
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
             ;

@@ -1,0 +1,113 @@
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div class="text-center text-secondary py-3" translate xmlns="http://www.w3.org/1999/html">free-message.title</div>
+
+<form *ngIf="displayForm()" [formGroup]="messageForm">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <of-single-filter i18nRootLabelKey="free-message.filters."
+                                  [parentForm]="messageForm"
+                                  filterPath="severity"
+                                  [values]="severityOptions"></of-single-filter>
+            </div>
+            <div class="col">
+                <of-single-filter i18nRootLabelKey="free-message.filters."
+                                  [parentForm]="messageForm"
+                                  filterPath="process"
+                                  [valuesInObservable]="processOptions$"></of-single-filter>
+            </div>
+            <div class="col">
+                <of-single-filter i18nRootLabelKey="free-message.filters."
+                                  [parentForm]="messageForm"
+                                  filterPath="state"
+                                  [valuesInObservable]="stateOptions$"></of-single-filter>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <of-datetime-filter filterPath="startDate"
+                                    formControlName="startDate"
+                                    labelKey="free-message.filters."
+                                    [offset]="[{amount:1,unit:'minute'}]"
+                ></of-datetime-filter>
+            </div>
+            <div class="col">
+                <of-datetime-filter filterPath="endDate" formControlName="endDate"
+                                    labelKey="free-message.filters."></of-datetime-filter>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <of-text-area i18nRootLabelKey="free-message.filters."
+                              [parentForm]="messageForm"
+                              filterPath="comment"
+                              lineNumber=4></of-text-area>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <of-single-filter i18nRootLabelKey="free-message.filters."
+                                  [parentForm]="messageForm"
+                                  filterPath="entities"
+                                  [valuesInObservable]="entityOptions$"></of-single-filter>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="onSubmitForm(resumeCardBeforeSend)" translate>
+            free-message.prepareCard
+
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="reset()">
+            reset
+        </button>
+    </div>
+
+</form>
+
+    <div *ngIf="displaySendResult">
+        {{message}}{{error}}
+        <of-card *ngIf="noError()" [lightCard]="card"  [open]="true" [displayUnreadIcon]="false"></of-card>
+    <br/>
+        <button type="button" class="btn btn-primary" (click)="sendAnotherFreeMessage()" translate>free-message.send-another-one</button>
+    </div>
+
+<ng-template #resumeCardBeforeSend let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Bootstrap Modal</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p translate translate>free-message.confirmSending</p>
+        <div>
+            <p>Free Message</p>
+            <of-card [lightCard]="getLightCard()" [open]="true" [displayUnreadIcon]="false"></of-card>
+            <p>Complementary data</p>
+            <dl>
+                <dt  translate>free-message.filters.process</dt>
+                <dd>{{card.process}} </dd>
+                <dt  translate>free-message.filters.startDate</dt>
+                <dd>{{card.startDate}} </dd>
+                <dt  translate>free-message.state</dt>
+                <dd>{{card.state}} </dd>
+                <dt translate>free-message.processInstanceId</dt>
+                <dd>{{card.processInstanceId}} </dd>
+                <dt  translate>free-message.filters.entities</dt>
+                <dd>{{card.entityRecipients}}</dd>
+                <dt >UID</dt>
+                <dd>{{card.uid}}</dd>
+            </dl>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="decline()" translate>free-message.refuse</button>
+            <button type="button" class="btn btn-outline-dark" (click)="confirm()">Third</button>
+        </div>
+    </div>
+</ng-template>

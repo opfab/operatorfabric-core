@@ -29,9 +29,9 @@ import java.util.*;
  * publication and deletion is then accessible to other services or
  * entities through bindings to these exchanges.
  * </p>
- * <p>Two exchanges are used, groupExchange and userExchange.
+ * <p>One exchange is used, carsExchange 
  * See amqp.xml resource file ([project]/services/core/cards-publication/src/main/resources/amqp.xml)
- * for their exact configuration</p>
+ * for the exact configuration</p>
  */
 @Service
 @Slf4j
@@ -62,8 +62,6 @@ public class CardNotificationService {
 
         }
         CardOperationData cardOperation = builderEncapsulator.builder().build();
-        card.getUserRecipients().forEach(user -> pushCardInRabbit(cardOperation,"USER_EXCHANGE", user));
-
         List<String> listOfGroupRecipients = new ArrayList<>();
         card.getGroupRecipients().forEach(group -> listOfGroupRecipients.add(group));
         cardOperation.setGroupRecipientsIds(listOfGroupRecipients);
@@ -72,20 +70,25 @@ public class CardNotificationService {
         if (card.getEntityRecipients() != null)
             card.getEntityRecipients().forEach(entity -> listOfEntityRecipients.add(entity));
         cardOperation.setEntityRecipientsIds(listOfEntityRecipients);
-        pushCardInRabbit(cardOperation, "GROUP_EXCHANGE", "");
+
+        List<String> listOfUserRecipients = new ArrayList<>();
+        if (card.getUserRecipients() != null)
+            card.getUserRecipients().forEach(user -> listOfUserRecipients.add(user));
+        cardOperation.setUserRecipientsIds(listOfUserRecipients);
+
+        pushCardInRabbit(cardOperation);
     }
 
-    private void pushCardInRabbit(CardOperationData cardOperation,String queueName,String routingKey) {
+    private void pushCardInRabbit(CardOperationData cardOperation) {
         try {
-            rabbitTemplate.convertAndSend(queueName, routingKey, mapper.writeValueAsString(cardOperation));
-            log.debug("Operation sent to Exchange[{}] with routing key {}, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}"
-                    , queueName
-                    , routingKey
+            rabbitTemplate.convertAndSend("CARD_EXCHANGE", "", mapper.writeValueAsString(cardOperation));
+            log.debug("Operation sent to CARD_EXCHANGE, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}, userRecipientsIds={}"
                     , cardOperation.getType()
                     , cardOperation.getCardIds().toString()
                     , cardOperation.getCards().toString()
                     , cardOperation.getGroupRecipientsIds().toString()
-                    , cardOperation.getEntityRecipientsIds().toString());
+                    , cardOperation.getEntityRecipientsIds().toString()
+                    , cardOperation.getUserRecipientsIds().toString());
         } catch (JsonProcessingException e) {
             log.error("Unable to linearize card to json on amqp notification");
         }

@@ -1,0 +1,141 @@
+{
+  "id": "defaultProcess",
+  "name": "Test api",
+  "version": "1",
+  "templates": [
+    "template",
+    "chart",
+    "chart-line",
+    "process",
+    "question",
+    "contingencies",
+    "response"
+  ],
+  "csses": [
+    "style",
+    "contingencies"
+  ],
+  "states": {
+    "messageState": {
+      "name":  "defaultProcess.title",
+      "color": "#FAF0AF",
+      "details": [
+        {
+          "title": {
+            "key": "defaultProcess.title"
+          },
+          "templateName": "template",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },
+    "chartState": {
+      "name": "chartDetail.title",
+      "color": "#f1c5c5",
+      "details": [
+        {
+          "title": {
+            "key": "chartDetail.title"
+          },
+          "templateName": "chart",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },
+    "chartLineState": {
+      "name": "chartLine.title",
+      "color": "#e5edb7",
+      "details": [
+        {
+          "title": {
+            "key": "chartLine.title"
+          },
+          "templateName": "chart-line",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },
+    "processState": {
+      "name": "process.title",
+      "color": "#8bcdcd",
+      "details": [
+        {
+          "title": {
+            "key": "process.title"
+          },
+          "templateName": "process",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },
+    "contingenciesState": {
+      "name": "contingencies.title",
+      "color": "#8bcdcd",
+      "details": [
+        {
+          "title": {
+            "key": "contingencies.title"
+          },
+          "templateName": "contingencies",
+          "styles": [
+            "contingencies"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },
+    "questionState": {
+      "name": "question.title",
+      "color": "#8bcdcd",
+      "response": {
+        "lock": true,
+        "state": "responseState",
+        "btnColor": "GREEN",
+        "btnText": {
+          "key": "question.button.text"
+        }
+      },
+      "details": [
+        {
+          "title": {
+            "key": "question.title"
+          },
+          "templateName": "question",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": false
+    },   
+    "responseState": {
+      "name": "response.title",
+      "color": "#8bcdcd",
+      "details": [
+        {
+          "title": {
+            "key": "response.title"
+          },
+          "templateName": "response",
+          "styles": [
+            "style"
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    }
+
+  }
+}

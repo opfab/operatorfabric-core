@@ -8,18 +8,17 @@
  */
 
 
-
 import {Injectable} from '@angular/core';
-import {Filter} from "@ofModel/feed-filter.model";
-import {LightCard, Severity} from "@ofModel/light-card.model";
-import * as _ from "lodash";
+import {Filter} from '@ofModel/feed-filter.model';
+import {LightCard, Severity} from '@ofModel/light-card.model';
+import * as _ from 'lodash';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FilterService {
 
-    private _defaultFilters = new Map();
+    readonly _defaultFilters = new Map();
 
     constructor() {
         this._defaultFilters = this.initFilters();
@@ -37,12 +36,10 @@ export class FilterService {
         const information = Severity.INFORMATION;
         return new Filter(
             (card, status) => {
-                const result =
-                    status.alarm && card.severity == alarm ||
-                    status.action && card.severity == action ||
-                    status.compliant && card.severity == compliant ||
-                    status.information && card.severity == information;
-                return result;
+                return status.alarm && card.severity === alarm ||
+                    status.action && card.severity === action ||
+                    status.compliant && card.severity === compliant ||
+                    status.information && card.severity === information;
             },
             true,
             {
@@ -56,19 +53,20 @@ export class FilterService {
 
     private initTagFilter() {
         return new Filter(
-            (card, status) => _.intersection(card.tags,status.tags).length > 0,
+            (card, status) => _.intersection(card.tags, status.tags).length > 0,
             false,
-            {tags:[]}
+            {tags: []}
         );
     }
 
 
-    private initTimeFilter() {
+    private initBusinessDateFilter() {
         return new Filter(
-            (card:LightCard, status) => {
+            (card: LightCard, status) => {
                 if (!!status.start && !!status.end) {
-                    if (!card.endDate)
+                    if (!card.endDate) {
                         return card.startDate <= status.end;
+                    }
                     return status.start <= card.startDate && card.startDate <= status.end
                         || status.start <= card.endDate && card.endDate <= status.end
                         || card.startDate <= status.start && status.end <= card.endDate;
@@ -77,29 +75,109 @@ export class FilterService {
                 } else if (!!status.end) {
                     return card.startDate <= status.end;
                 }
-                console.warn("Unexpected time filter situation");
+                console.warn(new Date().toISOString(), 'Unexpected business date filter situation');
                 return false;
             },
             false,
-            {start: new Date().valueOf()-2*60*60*1000, end: new Date().valueOf()+48*60*60*1000})
+            {start: new Date().valueOf() - 2 * 60 * 60 * 1000, end: new Date().valueOf() + 48 * 60 * 60 * 1000});
+    }
+
+    private initMonitorDateFilter() {
+        return new Filter(
+            (card: LightCard, status) => {
+                if (!!status.start && !!status.end) {
+                    const isCardStartOk = card.startDate >= status.start && card.startDate <= status.end;
+                    if (!card.endDate) {
+                        return false ;
+                    }
+                    const isCardEndOk = card.endDate >= status.start && card.endDate <= status.end;
+                    return isCardStartOk && isCardEndOk;
+                } else if (!!status.start) {
+                    return card.startDate >= status.start;
+                } else if (!!status.end) {
+                    return (!! card.endDate && card.endDate <= status.end ) || card.startDate <= status.end;
+                }
+                console.warn(new Date().toISOString(), 'Unexpected business date filter situation');
+                return false;
+            },
+            false,
+            {start: new Date().valueOf() - 2 * 60 * 60 * 1000});
     }
 
 
+    private initPublishDateFilter() {
+        return new Filter(
+            (card: LightCard, status) => {
+                if (!!status.start && !!status.end) {
+                    return status.start <= card.publishDate && card.publishDate <= status.end;
+
+                } else if (!!status.start) {
+                    return status.start <= card.publishDate;
+                } else if (!!status.end) {
+                    return card.publishDate <= status.end;
+                }
+                return true;
+            },
+            false,
+            {start: null, end: null});
+    }
+
+    private initAcknowledgementFilter() {
+        return new Filter(
+            (card: LightCard, status) => {
+                return status && card.hasBeenAcknowledged ||
+                    !status && !card.hasBeenAcknowledged;
+            },
+            true,
+            false
+        );
+    }
+
+    private initProcessFilter()  {
+        return new Filter(
+            (card: LightCard, status) => {
+                const processList = status.processes;
+                if (!! processList) {
+                    return processList.includes(card.process);
+                }
+                // permissive filter
+                return true;
+            },
+            false,
+            {processes: null}
+        );
+    }
+
     private initFilters(): Map<string, Filter> {
-        console.log(new Date().toISOString(),"BUG OC-604 filter.service.ts init filter");
         const filters = new Map();
         filters.set(FilterType.TYPE_FILTER, this.initTypeFilter());
-        filters.set(FilterType.TIME_FILTER, this.initTimeFilter());
+        filters.set(FilterType.BUSINESSDATE_FILTER, this.initBusinessDateFilter());
+        filters.set(FilterType.PUBLISHDATE_FILTER, this.initPublishDateFilter());
         filters.set(FilterType.TAG_FILTER, this.initTagFilter());
-        console.log(new Date().toISOString(),"BUG OC-604 filter.service.ts init filter done");
+        filters.set(FilterType.ACKNOWLEDGEMENT_FILTER, this.initAcknowledgementFilter());
+        filters.set(FilterType.PROCESS_FILTER, this.initProcessFilter());
+        filters.set(FilterType.MONITOR_DATE_FILTER, this.initMonitorDateFilter());
         return filters;
     }
 }
 
+// need a process type ?
 export enum FilterType {
     TYPE_FILTER,
     RECIPIENT_FILTER,
     TAG_FILTER,
-    TIME_FILTER,
-    TEST_FILTER
+    BUSINESSDATE_FILTER,
+    PUBLISHDATE_FILTER,
+    ACKNOWLEDGEMENT_FILTER,
+    TEST_FILTER,
+    PROCESS_FILTER,
+    MONITOR_DATE_FILTER
+}
+export const BUSINESS_DATE_FILTER_INITIALISATION = {
+    name: FilterType.BUSINESSDATE_FILTER,
+    active: true,
+    status: {
+        start: new Date().valueOf() - 2 * 60 * 60 * 1000,
+        end: new Date().valueOf() + 48 * 60 * 60 * 1000
+    }
 }

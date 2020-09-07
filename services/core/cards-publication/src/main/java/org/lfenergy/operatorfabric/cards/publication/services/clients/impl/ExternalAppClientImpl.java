@@ -21,8 +21,8 @@ import java.util.*;
 @Slf4j
 public class ExternalAppClientImpl implements ExternalAppClient {
 
-    public static final String REMOTE_404_MESSAGE = "Specified external application was not handle by third party endpoint (not found)";
-    public static final String UNEXPECTED_REMOTE_MESSAGE = "Unexpected behaviour of third party handler endpoint";
+    public static final String REMOTE_404_MESSAGE = "Specified external application was not handle by businessconfig party endpoint (not found)";
+    public static final String UNEXPECTED_REMOTE_MESSAGE = "Unexpected behaviour of businessconfig party handler endpoint";
     public static final String EMPTY_URL_MESSAGE = "Url Specified for external application is empty";
     public static final String NO_EXTERNALRECIPIENTS_MESSAGE = "No external recipients found in the card";
     public static final String ERR_CONNECTION_REFUSED = "No external recipients found in the card";

@@ -90,16 +90,8 @@ public class EntitiesController implements EntitiesApi {
         //Only existing entities can be updated
          findEntityOrThrow(id);
 
-        //Retrieve users from repository for users list, throwing an error if a login is not found
-        List<UserData> foundUsers = userRepository.findByEntitiesContaining(id);
-
-        if(foundUsers!=null) {
-            for (UserData userData : foundUsers) {
-                userData.deleteEntity(id);
-                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
-            }
-            userRepository.saveAll(foundUsers);
-        }
+        //We delete the links between the users who are part of the entity to delete, and the entity
+        removeTheReferenceToTheEntityForMemberUsers(id);
         return null;
     }
 
@@ -181,6 +173,34 @@ public class EntitiesController implements EntitiesApi {
         userRepository.saveAll(toUpdate);
         addEntityUsers(request, response, id, newUsersInEntity); //For users that are added to the entity, the event will be published by addEntityUsers.
         return null;
+    }
+
+    @Override
+    public Void deleteEntity(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+
+        // Only existing entity can be deleted
+        EntityData foundEntityData = findEntityOrThrow(id);
+
+        // First we have to delete the links between the users who are part of the entity to delete, and the entity
+        removeTheReferenceToTheEntityForMemberUsers(id);
+
+        // Then we can delete the entity
+        entityRepository.delete(foundEntityData);
+
+        return null;
+    }
+
+    // Remove the link between the entity and all its members (this link is in "user" mongo collection)
+    private void removeTheReferenceToTheEntityForMemberUsers(String idEntity) {
+        List<UserData> foundUsers = userRepository.findByEntitiesContaining(idEntity);
+
+        if (foundUsers != null) {
+            for (UserData userData : foundUsers) {
+                userData.deleteEntity(idEntity);
+                publisher.publishEvent(new UpdatedUserEvent(this, busServiceMatcher.getServiceId(), userData.getLogin()));
+            }
+            userRepository.saveAll(foundUsers);
+        }
     }
 
     private EntityData findEntityOrThrow(String id) {

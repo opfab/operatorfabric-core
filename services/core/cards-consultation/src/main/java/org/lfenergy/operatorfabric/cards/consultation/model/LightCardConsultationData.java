@@ -11,27 +11,18 @@
 
 package org.lfenergy.operatorfabric.cards.consultation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
+import org.springframework.data.annotation.Transient;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
-import org.springframework.data.annotation.Transient;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Singular;
 
 /**
  * <p>Please use builder to instantiate</p>
@@ -51,9 +42,9 @@ public class LightCardConsultationData implements LightCard {
     private String uid;
     private String id;
     private String publisher;
-    private String publisherVersion;
+    private String processVersion;
     private String process;
-    private String processId;
+    private String processInstanceId;
     private String state;
     private Instant lttd;
     private Instant publishDate;
@@ -75,6 +66,10 @@ public class LightCardConsultationData implements LightCard {
     private List<String> usersAcks;
     @Transient
     private Boolean hasBeenAcknowledged;
+    @Transient
+    private Boolean hasBeenRead;
+
+    private String parentCardUid;
 
     /**
      * return timespans, may return null
@@ -100,9 +95,12 @@ public class LightCardConsultationData implements LightCard {
         LightCardConsultationDataBuilder builder = builder()
                 .uid(other.getUid())
                 .id(other.getId())
+                .parentCardUid(other.getParentCardUid())
+                .publisher(other.getPublisher())
                 .process(other.getProcess())
+                .processVersion(other.getProcessVersion())
                 .state(other.getState())
-                .processId(other.getProcessId())
+                .processInstanceId(other.getProcessInstanceId())
                 .lttd(other.getLttd())
                 .startDate(other.getStartDate())
                 .publishDate(other.getPublishDate())
@@ -110,7 +108,9 @@ public class LightCardConsultationData implements LightCard {
                 .severity(other.getSeverity())
                 .title(I18nConsultationData.copy(other.getTitle()))
                 .summary(I18nConsultationData.copy(other.getSummary()))
-                .hasBeenAcknowledged(false);
+                .hasBeenAcknowledged(other.getHasBeenAcknowledged())
+                .hasBeenRead(other.getHasBeenRead());
+                
         if(other.getTags()!=null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());
         if(other.getTimeSpans()!=null && !other.getTimeSpans().isEmpty())

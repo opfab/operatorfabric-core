@@ -34,7 +34,7 @@ import {Map} from '@ofModel/map';
 import {CardService} from '@ofServices/card.service';
 import {EmptyLightCards} from '@ofActions/light-card.actions';
 import {ClearCard} from '@ofActions/card.actions';
-import { buildConfigSelector } from '@ofStore/selectors/config.selectors';
+import {ConfigService} from "@ofServices/config.service";
 import {redirectToCurrentLocation} from "../../app-routing.module";
 import {TranslateService} from "@ngx-translate/core";
 
@@ -59,7 +59,8 @@ export class AuthenticationEffects {
                 private authService: AuthenticationService,
                 private cardService: CardService,
                 private router: Router,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private configService: ConfigService) {
     }
 
     /**
@@ -222,7 +223,7 @@ export class AuthenticationEffects {
                 }
                 ),
                 catchError(err => {
-                    console.error(err);
+                    console.error(new Date().toISOString(),err);
                     const parameters = new Map<string>();
                     parameters['message'] = err;
                     return of(this.handleRejectedLogin(new Message(err,
@@ -273,12 +274,8 @@ export class AuthenticationEffects {
     
     private resetState() {
         this.authService.clearAuthenticationInformation();
-        this.store.select(buildConfigSelector('security.logout-url')).subscribe(url => {
-            if (url) {
-                window.location.href = url;
-            }
-        });
-        this.cardService.unsubscribeCardOperation();
+        window.location.href = this.configService.getConfigValue('security.logout-url','https://opfab.github.io');
+       
     }
 
 }

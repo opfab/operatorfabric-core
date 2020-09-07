@@ -8,7 +8,6 @@
  */
 
 
-
 import {Component, OnInit} from '@angular/core';
 import {navigationRoutes} from '../../app-routing.module';
 import {Store} from '@ngrx/store';
@@ -17,12 +16,15 @@ import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {LoadMenu} from '@ofActions/menu.actions';
 import {selectMenuStateMenu} from '@ofSelectors/menu.selectors';
-import {Observable, BehaviorSubject} from 'rxjs';
-import {ThirdMenu} from '@ofModel/thirds.model';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Menu} from '@ofModel/processes.model';
 import {tap} from 'rxjs/operators';
 import * as _ from 'lodash';
-import {buildConfigSelector} from '@ofStore/selectors/config.selectors';
 import {GlobalStyleService} from '@ofServices/global-style.service';
+import {Route} from '@angular/router';
+import {ConfigService} from '@ofServices/config.service';
+import {QueryAllProcesses} from '@ofActions/process.action';
+import {QueryAllEntities} from "@ofActions/user.actions";
 
 @Component({
     selector: 'of-navbar',
@@ -30,14 +32,14 @@ import {GlobalStyleService} from '@ofServices/global-style.service';
     styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+    private static nightMode: BehaviorSubject<boolean>;
 
     navbarCollapsed = true;
-    navigationRoutes = navigationRoutes;
+    navigationRoutes: Route[];
     currentPath: string[];
-    private _thirdMenus: Observable<ThirdMenu[]>;
+    private _businessconfigMenus: Observable<Menu[]>;
     expandedMenu: boolean[] = [];
     expandedUserMenu = false;
-    
 
     customLogo: string;
     height: number;
@@ -45,10 +47,8 @@ export class NavbarComponent implements OnInit {
     limitSize: boolean;
 
     nightDayMode = false;
-    private static nightMode: BehaviorSubject<boolean>;
 
-    constructor(private store: Store<AppState>,private globalStyleService: GlobalStyleService) {
-
+    constructor(private store: Store<AppState>, private globalStyleService: GlobalStyleService, private  configService: ConfigService) {
     }
 
     ngOnInit() {
@@ -57,63 +57,58 @@ export class NavbarComponent implements OnInit {
                 this.currentPath = url.split('/');
             }
         });
-        this._thirdMenus = this.store.select(selectMenuStateMenu)
+        this._businessconfigMenus = this.store.select(selectMenuStateMenu)
             .pipe(tap(menus => {
                 this.expandedMenu = new Array<boolean>(menus.length);
                 _.fill(this.expandedMenu, false);
             }));
         this.store.dispatch(new LoadMenu());
-
-        this.store.select(buildConfigSelector('logo.base64')).subscribe(
-            data => {
-                if (data) {
-                    this.customLogo = `data:image/svg+xml;base64,${data}`;
-                }
-            }
-        );
-
-        this.store.select(buildConfigSelector('logo.height')).subscribe(
-            height => {
-                if (height) {
-                    this.height = height;
-                }
-            }
-        );
-
-        this.store.select(buildConfigSelector('logo.width')).subscribe(
-            width => {
-                if (width) {
-                    this.width = width;
-                }
-            }
-        );
-        this.store.select(buildConfigSelector('logo.limitSize')).subscribe(
-            (limitSize: boolean) => {
-                // BE CAREFUL, as a boolean it has to be test with undefined value to know if it has been set.
-                if (limitSize !== undefined && typeof (limitSize) === 'boolean') {
-                    this.limitSize = limitSize;
-                }
-            }
-        );
-        this.store.select(buildConfigSelector('settings')).subscribe(
-            (settings) => {
-                if (settings.nightDayMode) this.nightDayMode = <boolean>settings.nightDayMode;
-                if (!this.nightDayMode) {
-                    if (settings.styleWhenNightDayModeDesactivated) this.globalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
-                }
-                else this.loadNightModeFromLocalStorage();
-            }
-        );
+        this.store.dispatch(new QueryAllProcesses());
+        this.store.dispatch(new QueryAllEntities());
 
 
+        const logo = this.configService.getConfigValue('logo.base64');
+        if (!!logo) {
+            this.customLogo = `data:image/svg+xml;base64,${logo}`;
+        }
+        const logo_height = this.configService.getConfigValue('logo.height');
+        if (!!logo_height) {
+            this.height = logo_height;
+        }
+
+        const logo_width = this.configService.getConfigValue('logo.width');
+        if (!!logo_width) {
+            this.width = logo_width;
+        }
+
+        const logo_limitSize = this.configService.getConfigValue('logo.limitSize');
+        this.limitSize = (logo_limitSize === true);
+
+
+        const settings = this.configService.getConfigValue('settings');
+        if (settings) {
+            if (settings.nightDayMode) {
+                this.nightDayMode = <boolean>settings.nightDayMode;
+            }
+            if (!this.nightDayMode) {
+                if (settings.styleWhenNightDayModeDesactivated) {
+                    this.globalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
+                }
+            } else {
+                this.loadNightModeFromLocalStorage();
+            }
+        }
+
+        const hiddenMenus = this.configService.getConfigValue('navbar.hidden', []);
+        this.navigationRoutes = navigationRoutes.filter(route => !hiddenMenus.includes(route.path));
     }
 
     logOut() {
         this.store.dispatch(new TryToLogOut());
     }
 
-    get thirdMenus() {
-        return this._thirdMenus;
+    get businessconfigMenus() {
+        return this._businessconfigMenus;
     }
 
     toggleMenu(index: number) {
@@ -135,31 +130,29 @@ export class NavbarComponent implements OnInit {
         const nightMode = localStorage.getItem('opfab.nightMode');
         if ((nightMode !== null) && (nightMode === 'false')) {
             NavbarComponent.nightMode.next(false);
-            this.globalStyleService.setStyle("DAY");
+            this.globalStyleService.setStyle('DAY');
+        } else {
+            this.globalStyleService.setStyle('NIGHT');
         }
-        else  this.globalStyleService.setStyle("NIGHT");
 
     }
-    
 
-    switchToNightMode()
-    {
-        this.globalStyleService.setStyle("NIGHT");
+    switchToNightMode() {
+        this.globalStyleService.setStyle('NIGHT');
         NavbarComponent.nightMode.next(true);
-        localStorage.setItem('opfab.nightMode','true')
+        localStorage.setItem('opfab.nightMode', 'true');
     }
 
-    switchToDayMode()
-    {
-        this.globalStyleService.setStyle("DAY");
+    switchToDayMode() {
+        this.globalStyleService.setStyle('DAY');
         NavbarComponent.nightMode.next(false);
-        localStorage.setItem('opfab.nightMode','false')
+        localStorage.setItem('opfab.nightMode', 'false');
 
     }
 
     getNightMode(): Observable<boolean> {
-        return  NavbarComponent.nightMode.asObservable();
-      }
+        return NavbarComponent.nightMode.asObservable();
+    }
 }
 
 

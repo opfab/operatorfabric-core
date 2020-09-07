@@ -15,11 +15,11 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "Read"
+        "right" : "Receive"
       },
       {
         "state" : "state2",
-        "right" : "ReadAndWrite"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }
@@ -32,7 +32,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "All"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }

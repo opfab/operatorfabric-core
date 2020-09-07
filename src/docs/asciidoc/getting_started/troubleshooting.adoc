@@ -73,7 +73,7 @@ The server sends `+{"status":"BAD_REQUEST","message":"Incorrect inner file
 structure","errors":["$OPERATOR_FABRIC_INSTANCE_PATH/d91ba68c-de6b-4635-a8e8-b58
 fff77dfd2/config.json (Aucun fichier ou dossier de ce type)"]}+`
 
-Where `$OPERATOR_FABRIC_INSTANCE_PATH` is the folder where thirds files are 
+Where `$OPERATOR_FABRIC_INSTANCE_PATH` is the folder where businessconfig files are 
 stored server side.
 
 === Reason
@@ -82,28 +82,28 @@ folders need to be at the first level.
 
 === Solution
 
-Add or organize the files and folders of the bundle to fit the Third bundle 
+Add or organize the files and folders of the bundle to fit the Businessconfig bundle 
 requirements.
 
 == No template display 
 
 The server send 404 for requested template with a response like
 `+{"status":"NOT_FOUND","message":"The specified resource does not 
-exist","errors":["$OPERATOR_FABRIC_INSTANCE_PATH/thirds-storage/BUNDLE_TEST/1/te
+exist","errors":["$OPERATOR_FABRIC_INSTANCE_PATH/businessconfig-storage/BUNDLE_TEST/1/te
 mplate/fr/template1.handlebars (Aucun fichier ou dossier de ce type)"]}+`
 
 === Verification 
 
 The previous server response is return for a request like: 
-`+http://localhost:2002/thirds/BUNDLE_TEST/templates/template1?locale=fr&version
+`+http://localhost:2002/businessconfig/BUNDLE_TEST/templates/template1?locale=fr&version
 =1+`
 
 The bundle is lacking localized folder and doesn't contain the requested 
 localization.
 
-If you have access to the `card-publication` micro service source code you
+If you have access to the `businessconfig` micro service source code you
 should list the content of 
-`$CARDS_PUBLICATION_PROJECT/build/docker-volume/third-storage`
+`$THIRDS_PROJECT/build/docker-volume/businessconfig-storage`
 
 === Solution
 

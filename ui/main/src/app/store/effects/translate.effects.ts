@@ -27,8 +27,8 @@ import {
 import {LightCard} from "@ofModel/light-card.model";
 import {Map} from "@ofModel/map";
 import * as _ from 'lodash';
-import {ThirdsService} from "@ofServices/thirds.service";
-import {ThirdMenu} from "@ofModel/thirds.model";
+import {ProcessesService} from "@ofServices/processes.service";
+import {Menu} from "@ofModel/processes.model";
 import {LoadMenuSuccess, MenuActionTypes} from "@ofActions/menu.actions";
 
 @Injectable()
@@ -38,7 +38,7 @@ export class TranslateEffects {
     constructor(private store: Store<AppState>
         , private actions$: Actions
         , private translate: TranslateService
-        , private thirdService: ThirdsService
+        , private businessconfigService: ProcessesService
     ) {
     }
 
@@ -50,11 +50,11 @@ export class TranslateEffects {
             ofType(TranslateActionsTypes.UpdateTranslation)
             ,
             mergeMap((action: UpdateTranslation) => {
-                const thirdsWithTheirVersions = action.payload.versions;
-                return forkJoin(this.mapLanguages(thirdsWithTheirVersions)).pipe(
+                const businessconfigWithTheirVersions = action.payload.versions;
+                return forkJoin(this.mapLanguages(businessconfigWithTheirVersions)).pipe(
                     concatAll(),
                     catchError((error, caught) => {
-                        console.error('error while trying to update translation', error);
+                        console.error(new Date().toISOString(),'error while trying to update translation', error);
                         return caught;
                     }));
             })
@@ -67,28 +67,28 @@ export class TranslateEffects {
         );
 
 // iterate over configured languages
-    mapLanguages(thirdsAndVersions: Map<Set<string>>): Observable<boolean>[] {
+    mapLanguages(businessconfigAndVersions: Map<Set<string>>): Observable<boolean>[] {
         const locales = this.translate.getLangs();
         return locales.map(locale => {
-            return forkJoin(this.mapThirds(locale, thirdsAndVersions))
+            return forkJoin(this.mapBusinessconfig(locale, businessconfigAndVersions))
                 .pipe(concatAll())
         });
     }
 
-    // iterate over thirds
-    mapThirds(locale: string, thirdsAndVersion: Map<Set<string>>): Observable<boolean>[] {
-        const thirds = Object.keys(thirdsAndVersion);
+    // iterate over businessconfig
+    mapBusinessconfig(locale: string, businessconfigAndVersion: Map<Set<string>>): Observable<boolean>[] {
+        const businessconfig = Object.keys(businessconfigAndVersion);
 
-        return thirds.map(third => {
-            return forkJoin(this.mapVersions(locale, third, thirdsAndVersion[third]))
+        return businessconfig.map(businessconfig => {
+            return forkJoin(this.mapVersions(locale, businessconfig, businessconfigAndVersion[businessconfig]))
                 .pipe(concatAll());
         })
     }
 
     // iterate over versions
-    mapVersions(locale: string, publisher: string, versions: Set<string>): Observable<boolean>[] {
+    mapVersions(locale: string, process: string, versions: Set<string>): Observable<boolean>[] {
         return Array.from(versions.values()).map(version => {
-            return this.thirdService.askForI18nJson(publisher, locale, version)
+            return this.businessconfigService.askForI18nJson(process, locale, version)
                 .pipe(map(i18n => {
                     this.translate.setTranslation(locale, i18n, true);
                     return true;
@@ -103,29 +103,29 @@ export class TranslateEffects {
             ofType(LightCardActionTypes.LoadLightCardsSuccess)
             // extract cards
             , map((loadedCardAction: LoadLightCardsSuccess) => loadedCardAction.payload.lightCards)
-            // extract thirds+version
-            , map((cards: LightCard[]) => TranslateEffects.extractPublisherAssociatedWithDistinctVersionsFromCards(cards))
+            // extract businessconfig+version
+            , map((cards: LightCard[]) => TranslateEffects.extractProcessAssociatedWithDistinctVersionsFromCards(cards))
             // extract version needing to be updated
             , switchMap((versions: Map<Set<string>>) => {
                 return this.extractI18nToUpdate(versions);
             })
             // send action accordingly
-            , map((publisherAndVersion: Map<Set<string>>) => {
-                return TranslateEffects.sendTranslateAction(publisherAndVersion)
+            , map((processAndVersion: Map<Set<string>>) => {
+                return TranslateEffects.sendTranslateAction(processAndVersion)
             })
         );
 
     private extractI18nToUpdate(versions: Map<Set<string>>) {
-            return of(TranslateEffects.extractThirdToUpdate(versions, TranslateEffects.i18nBundleVersionLoaded));
+            return of(TranslateEffects.extractBusinessconfigToUpdate(versions, TranslateEffects.i18nBundleVersionLoaded));
     }
 
-    static extractPublisherAssociatedWithDistinctVersionsFromCards(cards: LightCard[]): Map<Set<string>> {
-        let thirdsAndVersions: TransitionalThirdWithItSVersion[];
-        thirdsAndVersions = cards.map(card => {
-            return new TransitionalThirdWithItSVersion(card.publisher,card.publisherVersion);
+    static extractProcessAssociatedWithDistinctVersionsFromCards(cards: LightCard[]): Map<Set<string>> {
+        let businessconfigAndVersions: TransitionalBusinessconfigWithItSVersion[];
+        businessconfigAndVersions = cards.map(card => {
+            return new TransitionalBusinessconfigWithItSVersion(card.process,card.processVersion);
         });
         
-        return this.consolidateThirdAndVersions(thirdsAndVersions);
+        return this.consolidateBusinessconfigAndVersions(businessconfigAndVersions);
     }
 
     @Effect()
@@ -133,62 +133,62 @@ export class TranslateEffects {
         .pipe(
             ofType(MenuActionTypes.LoadMenuSuccess)
             , map((loadedMenusAction:LoadMenuSuccess)=>loadedMenusAction.payload.menu)
-            , map((menus:ThirdMenu[])=>TranslateEffects.extractPublisherAssociatedWithDistinctVersionsFrom(menus))
+            , map((menus:Menu[])=>TranslateEffects.extractProcessAssociatedWithDistinctVersionsFrom(menus))
             , switchMap((versions: Map<Set<string>>)=>this.extractI18nToUpdate(versions))
-            , map((publisherAndVersions:Map<Set<string>>)=>TranslateEffects.sendTranslateAction(publisherAndVersions))
+            , map((processAndVersions:Map<Set<string>>)=>TranslateEffects.sendTranslateAction(processAndVersions))
 
 
         );
 
 
-    static extractPublisherAssociatedWithDistinctVersionsFrom(menus: ThirdMenu[]):Map<Set<string>>{
+    static extractProcessAssociatedWithDistinctVersionsFrom(menus: Menu[]):Map<Set<string>>{
         
-        const thirdsAndVersions = menus.map(menu=>{
-            return new TransitionalThirdWithItSVersion(menu.id,menu.version);
+        const businessconfigAndVersions = menus.map(menu=>{
+            return new TransitionalBusinessconfigWithItSVersion(menu.id,menu.version);
         })
-        return this.consolidateThirdAndVersions(thirdsAndVersions);
+        return this.consolidateBusinessconfigAndVersions(businessconfigAndVersions);
 
     }
 
-    private static consolidateThirdAndVersions(thirdsAndVersions:TransitionalThirdWithItSVersion[]) {
+    private static consolidateBusinessconfigAndVersions(businessconfigAndVersions:TransitionalBusinessconfigWithItSVersion[]) {
         const result = new Map<Set<string>>();
-        thirdsAndVersions.forEach(u => {
-            const versions = result[u.third];
+        businessconfigAndVersions.forEach(u => {
+            const versions = result[u.businessconfig];
             if (versions) {
                 versions.add(u.version)
             } else {
-                result[u.third] = new Set([u.version]);
+                result[u.businessconfig] = new Set([u.version]);
             }
         });
         return result;
     }
 
-    static extractThirdToUpdate(versionInput: Map<Set<string>>, cachedVersions: Map<Set<string>>): Map<Set<string>> {
-        const inputPublishers = Object.keys(versionInput);
-        const cachedPublishers = Object.keys(cachedVersions);
-        const unCachedPublishers = _.difference(inputPublishers, cachedPublishers);
+    static extractBusinessconfigToUpdate(versionInput: Map<Set<string>>, cachedVersions: Map<Set<string>>): Map<Set<string>> {
+        const inputProcesses = Object.keys(versionInput);
+        const cachedProcesses = Object.keys(cachedVersions);
+        const unCachedProcesses = _.difference(inputProcesses, cachedProcesses);
 
         const translationReferencesToUpdate = new Map<Set<string>>();
-        unCachedPublishers.forEach(publisher => {
-            const versions2Update = versionInput[publisher];
-            translationReferencesToUpdate[publisher] = versions2Update;
+        unCachedProcesses.forEach(process => {
+            const versions2Update = versionInput[process];
+            translationReferencesToUpdate[process] = versions2Update;
         });
 
-        let cachedPublishersForVersionVerification = inputPublishers;
-        if (unCachedPublishers && (unCachedPublishers.length > 0)) {
-            cachedPublishersForVersionVerification = _.difference(unCachedPublishers, inputPublishers);
+        let cachedProcessesForVersionVerification = inputProcesses;
+        if (unCachedProcesses && (unCachedProcesses.length > 0)) {
+            cachedProcessesForVersionVerification = _.difference(unCachedProcesses, inputProcesses);
         }
 
-        cachedPublishersForVersionVerification.forEach(third => {
-            const currentInputVersions = versionInput[third];
-            const currentCachedVersions = cachedVersions[third];
+        cachedProcessesForVersionVerification.forEach(businessconfig => {
+            const currentInputVersions = versionInput[businessconfig];
+            const currentCachedVersions = cachedVersions[businessconfig];
             const untrackedVersions = _.difference(Array.from(currentInputVersions), Array.from(currentCachedVersions));
             if (untrackedVersions && Object.keys(untrackedVersions).length > 0) {
-                translationReferencesToUpdate[third] = new Set(untrackedVersions);
+                translationReferencesToUpdate[businessconfig] = new Set(untrackedVersions);
             }
         });
-        const nbOfPublishers = Object.keys(translationReferencesToUpdate).length;
-        return (nbOfPublishers > 0) ? translationReferencesToUpdate : null;
+        const nbOfProcess = Object.keys(translationReferencesToUpdate).length;
+        return (nbOfProcess > 0) ? translationReferencesToUpdate : null;
     }
 
     static sendTranslateAction(versionToUpdate: Map<Set<string>>): TranslateActions {
@@ -200,7 +200,7 @@ export class TranslateEffects {
     }
 }
 
-class TransitionalThirdWithItSVersion {
-    constructor(public third:string, public version:string){}
+class TransitionalBusinessconfigWithItSVersion {
+    constructor(public businessconfig:string, public version:string){}
 }
 

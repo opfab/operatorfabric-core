@@ -1,0 +1,50 @@
+{
+  "id": "TEST",
+  "version": "1",
+  "name": "process.label",
+  "defaultLocale": "fr",
+  "templates": [
+    "security",
+    "unschedulledPeriodicOp",
+    "operation",
+    "template1",
+    "template2"
+  ],
+  "csses": [
+    "tabs",
+    "accordions",
+    "filter",
+    "operations",
+    "security"
+  ],
+  "menuLabel": "menu.label",
+  "menuEntries": [
+    {
+      "id": "uid test 0",
+      "url": "https://opfab.github.io/",
+      "label": "menu.first",
+      "linkType" : "BOTH"
+    },
+    {
+      "id": "uid test 1",
+      "url": "https://www.lfenergy.org/",
+      "label": "menu.second",
+      "linkType" : "TAB"
+    }
+  ],
+  "states": {
+    "firstState": {
+      "name":  "state.label",
+      "color": "blue",
+      "details": [
+        {
+          "title": {
+            "key": "template.title"
+          },
+          "templateName": "operation"
+        }
+      ],
+      "acknowledgementAllowed": false
+    }
+  }
+}

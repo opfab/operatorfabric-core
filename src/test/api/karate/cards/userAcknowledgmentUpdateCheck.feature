@@ -14,9 +14,9 @@ Feature: CardsUserAcknowledgementUpdateCheck
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process1",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -38,12 +38,12 @@ Feature: CardsUserAcknowledgementUpdateCheck
     Then status 201
     And match response.count == 1
 
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == false
-    And def uid = response.uid
+    And match response.card.hasBeenAcknowledged == false
+    And def uid = response.card.uid
 
 #make an acknoledgement to the card with tso1
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
@@ -53,22 +53,29 @@ Feature: CardsUserAcknowledgementUpdateCheck
     Then status 201
 
 #get card with user tso1-operator and check containing his ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == true
-    And match response.uid == uid
+    And match response.card.hasBeenAcknowledged == true
+    And match response.card.uid == uid
 
-    
+#get card with user tso1-operator and check containing his ack
+      Given url opfabPublishCardUrl + 'cards/traces/ack/' + uid
+      And header Authorization = 'Bearer ' + authToken
+      When method get
+      Then status 200
+      And match response.userName == "tso1-operator"
+      And match response.action == "Acknowledgment"
+
 
     * def cardUpdated =
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process1",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
 	"state": "messageState2",
 	"recipient" : {
 				"type" : "GROUP",
@@ -91,17 +98,17 @@ Feature: CardsUserAcknowledgementUpdateCheck
     And match response.count == 1
 
     #get card with user tso1-operator and check containing any ack
-    Given url opfabUrl + 'cards/cards/api_test_process1'
+    Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.hasBeenAcknowledged == false
-    And match response.uid != uid
+    And match response.card.hasBeenAcknowledged == false
+    And match response.card.uid != uid
 
     
   Scenario: Delete the test card
 
     delete card
-    Given url opfabPublishCardUrl + 'cards/api_test_process1'
+    Given url opfabPublishCardUrl + 'cards/api_test.process1'
     When method delete
     Then status 200

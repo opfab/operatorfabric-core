@@ -29,7 +29,7 @@ on depending on your profile.
 
 [horizontal]
 Contributor:: A developer who contributes (or wishes to) to the OperatorFabric project
-Developer:: A developer working on an application using OperatorFabric or a third-party application posting content to
+Developer:: A developer working on an application using OperatorFabric or a businessconfig-party application posting content to
 an OperatorFabric instance
 Admin:: Someone who is in charge of deploying and maintaining OperatorFabric in production as part of an integrated
 solution

@@ -134,22 +134,22 @@ class PerimetersControllerShould {
         p1 = PerimeterData.builder()
                 .id("PERIMETER1_1")
                 .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READ),
-                                                         new StateRightData("state2", RightsEnum.READANDWRITE))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE),
+                                                         new StateRightData("state2", RightsEnum.RECEIVEANDWRITE))))
                 .build();
 
         p2 = PerimeterData.builder()
                 .id("PERIMETER1_2")
                 .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.READANDRESPOND),
-                                                         new StateRightData("state2", RightsEnum.ALL))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE),
+                                                         new StateRightData("state2", RightsEnum.WRITE))))
                 .build();
 
         p3 = PerimeterData.builder()
                 .id("PERIMETER2")
                 .process("process2")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.ALL),
-                                                         new StateRightData("state2", RightsEnum.READ))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE),
+                                                         new StateRightData("state2", RightsEnum.RECEIVE))))
                 .build();
 
         perimeterRepository.insert(p1);
@@ -187,8 +187,8 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.id", is("PERIMETER1_1")))
                     .andExpect(jsonPath("$.process", is("process1")))
                     .andExpect(jsonPath("$.stateRights", hasSize(2)))
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"Read\")]").exists())
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"ReadAndWrite\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"Receive\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"ReceiveAndWrite\")]").exists())
             ;
         }
 
@@ -213,10 +213,10 @@ class PerimetersControllerShould {
                             "\"process\": \"process3\"," +
                             "\"stateRights\": [{" +
                                 "\"state\": \"state1\"," +
-                                "\"right\": \"Read\"" +
+                                "\"right\": \"Receive\"" +
                                 "},{" +
                                 "\"state\": \"state2\"," +
-                                "\"right\": \"All\"}]" +
+                                "\"right\": \"ReceiveAndWrite\"}]" +
                             "}")
             )
                     .andExpect(status().isCreated())
@@ -224,8 +224,8 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.id", is("PERIMETER3")))
                     .andExpect(jsonPath("$.process", is("process3")))
                     .andExpect(jsonPath("$.stateRights", hasSize(2)))
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"Read\")]").exists())
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"All\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"Receive\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"ReceiveAndWrite\")]").exists())
             ;
 
             mockMvc.perform(post("/perimeters")
@@ -235,10 +235,10 @@ class PerimetersControllerShould {
                             "\"process\": \"process3\"," +
                             "\"stateRights\": [{" +
                                 "\"state\": \"state1\"," +
-                                "\"right\": \"Read\"" +
+                                "\"right\": \"Receive\"" +
                                 "},{" +
                                 "\"state\": \"state2\"," +
-                                "\"right\": \"All\"}]" +
+                                "\"right\": \"ReceiveAndWrite\"}]" +
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
@@ -258,8 +258,8 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.id", is("PERIMETER3")))
                     .andExpect(jsonPath("$.process", is("process3")))
                     .andExpect(jsonPath("$.stateRights", hasSize(2)))
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"Read\")]").exists())
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"All\")]").exists());
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"Receive\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"ReceiveAndWrite\")]").exists());
         }
 
         @Test
@@ -271,13 +271,13 @@ class PerimetersControllerShould {
                             "\"process\": \"process3\"," +
                             "\"stateRights\": [{" +
                               "\"state\": \"state1\"," +
-                              "\"right\": \"Read\"" +
+                              "\"right\": \"Receive\"" +
                               "},{" +
                               "\"state\": \"state2\"," +
-                              "\"right\": \"All\"" +
+                              "\"right\": \"ReceiveAndWrite\"" +
                               "},{" +
                               "\"state\": \"state1\"," +
-                              "\"right\": \"ReadAndRespond\"}]" +
+                              "\"right\": \"Write\"}]" +
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
@@ -308,10 +308,10 @@ class PerimetersControllerShould {
                             "\"process\": \"process1\"," +
                             "\"stateRights\": [{" +
                                 "\"state\": \"state1\"," +
-                                "\"right\": \"ReadAndRespond\"" +
+                                "\"right\": \"Write\"" +
                                 "},{" +
                                 "\"state\": \"state2\"," +
-                                "\"right\": \"Read\"}]" +
+                                "\"right\": \"Receive\"}]" +
                             "}")
             )
                     .andExpect(status().isOk())
@@ -319,8 +319,8 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.id", is("PERIMETER1_2")))
                     .andExpect(jsonPath("$.process", is("process1")))
                     .andExpect(jsonPath("$.stateRights", hasSize(2)))
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReadAndRespond\")]").exists())
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"Read\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"Write\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"Receive\")]").exists())
             ;
 
             mockMvc.perform(get("/perimeters"))
@@ -334,8 +334,8 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.id", is("PERIMETER1_2")))
                     .andExpect(jsonPath("$.process", is("process1")))
                     .andExpect(jsonPath("$.stateRights", hasSize(2)))
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReadAndRespond\")]").exists())
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"Read\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"Write\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"Receive\")]").exists())
             ;
         }
 
@@ -348,8 +348,8 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.id", is("PERIMETER1_2")))
                     .andExpect(jsonPath("$.process", is("process1")))
                     .andExpect(jsonPath("$.stateRights", hasSize(2)))
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReadAndRespond\")]").exists())
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"All\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReceiveAndWrite\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"Write\")]").exists())
             ;
 
             mockMvc.perform(put("/perimeters/PERIMETER1_2")
@@ -359,10 +359,10 @@ class PerimetersControllerShould {
                             "\"process\": \"process1\"," +
                             "\"stateRights\": [{" +
                                 "\"state\": \"state1\"," +
-                                "\"right\": \"ReadAndRespond\"" +
+                                "\"right\": \"Write\"" +
                                 "},{" +
                                 "\"state\": \"state2\"," +
-                                "\"right\": \"Read\"}]" +
+                                "\"right\": \"Receive\"}]" +
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
@@ -378,8 +378,8 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.id", is("PERIMETER1_2")))
                     .andExpect(jsonPath("$.process", is("process1")))
                     .andExpect(jsonPath("$.stateRights", hasSize(2)))
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReadAndRespond\")]").exists())
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"All\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReceiveAndWrite\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"Write\")]").exists())
             ;
         }
 
@@ -392,8 +392,8 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.id", is("PERIMETER1_2")))
                     .andExpect(jsonPath("$.process", is("process1")))
                     .andExpect(jsonPath("$.stateRights", hasSize(2)))
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReadAndRespond\")]").exists())
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"All\")]").exists());
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReceiveAndWrite\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"Write\")]").exists());
 
             mockMvc.perform(put("/perimeters/PERIMETER1_2")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -402,13 +402,13 @@ class PerimetersControllerShould {
                             "\"process\": \"process1\"," +
                             "\"stateRights\": [{" +
                             "\"state\": \"state1\"," +
-                            "\"right\": \"ReadAndWrite\"" +
+                            "\"right\": \"ReceiveAndWrite\"" +
                             "},{" +
                             "\"state\": \"state2\"," +
-                            "\"right\": \"Read\"" +
+                            "\"right\": \"Receive\"" +
                             "},{" +
                             "\"state\": \"state1\"," +
-                            "\"right\": \"All\"}]" +
+                            "\"right\": \"ReceiveAndWrite\"}]" +
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
@@ -423,8 +423,8 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.id", is("PERIMETER1_2")))
                     .andExpect(jsonPath("$.process", is("process1")))
                     .andExpect(jsonPath("$.stateRights", hasSize(2)))
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReadAndRespond\")]").exists())
-                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"All\")]").exists());
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state1\" && @.right == \"ReceiveAndWrite\")]").exists())
+                    .andExpect(jsonPath("$.stateRights[?(@.state == \"state2\" && @.right == \"Write\")]").exists());
         }
 
         @Test
@@ -444,7 +444,7 @@ class PerimetersControllerShould {
                             "\"id\": \"someOtherPerimeterId\"," +
                             "\"process\": \"someOtherPerimeterProcess\"," +
                             "\"state\": \"stateOther\"," +
-                            "\"rights\": \"Read\"" +
+                            "\"rights\": \"Receive\"" +
                             "}")
             )
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
@@ -753,6 +753,74 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist());
 
         }
+
+        @Test
+        void deletePerimeterWithNotFoundError() throws Exception {
+
+            mockMvc.perform(get("/perimeters/unknownPerimeterSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(PerimetersController.PERIMETER_NOT_FOUND_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(delete("/perimeters/unknownPerimeterSoFar")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(PerimetersController.PERIMETER_NOT_FOUND_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+
+            mockMvc.perform(get("/perimeters/unknownPerimeterSoFar"))
+                    .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+                    .andExpect(jsonPath("$.message", is(String.format(PerimetersController.PERIMETER_NOT_FOUND_MSG, "unknownPerimeterSoFar"))))
+                    .andExpect(jsonPath("$.errors").doesNotExist())
+            ;
+        }
+
+        @Test
+        void deletePerimeter() throws Exception {
+
+            GroupData g1 = groupRepository.findById("G1").get();
+            assertThat(g1).isNotNull();
+            assertThat(g1.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
+
+            GroupData g2 = groupRepository.findById("G2").get();
+            assertThat(g2).isNotNull();
+            assertThat(g2.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1");
+
+            GroupData g3 = groupRepository.findById("G3").get();
+            assertThat(g3).isNotNull();
+            assertThat(g3.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_2");
+
+            assertThat(perimeterRepository.findById("PERIMETER1_1")).isNotEmpty();
+
+            mockMvc.perform(delete("/perimeters/PERIMETER1_1")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isOk())
+            ;
+
+            g1 = groupRepository.findById("G1").get();
+            assertThat(g1).isNotNull();
+            assertThat(g1.getPerimeters()).containsExactlyInAnyOrder("PERIMETER2");
+
+            g2 = groupRepository.findById("G2").get();
+            assertThat(g2).isNotNull();
+            assertThat(g2.getPerimeters()).isEmpty();
+
+            g3 = groupRepository.findById("G3").get();
+            assertThat(g3).isNotNull();
+            assertThat(g3.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_2");
+
+            assertThat(perimeterRepository.findById("PERIMETER1_1")).isEmpty();
+        }
     }
 
     @Nested
@@ -783,7 +851,7 @@ class PerimetersControllerShould {
                             "\"id\": \"PERIMETER1_3\","+
                             "\"process\": \"process1\","+
                             "\"state\": \"state3\","+
-                            "\"rights\": \"ReadAndWrite\""+
+                            "\"rights\": \"ReceiveAndWrite\""+
                             "}")
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
@@ -798,7 +866,7 @@ class PerimetersControllerShould {
                             "\"id\": \"PERIMETER1_2\","+
                             "\"process\": \"process1\","+
                             "\"state\": \"state2\","+
-                            "\"rights\": \"Read\""+
+                            "\"rights\": \"Receive\""+
                             "}")
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
@@ -831,6 +899,15 @@ class PerimetersControllerShould {
             mockMvc.perform(put("/perimeters/PERIMETER1_2/groups")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("[\"G2\"]")
+            )
+                    .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
+            ;
+        }
+
+        @Test
+        void deletePerimeter() throws Exception {
+            mockMvc.perform(delete("/perimeters/PERIMETER1_1")
+                    .contentType(MediaType.APPLICATION_JSON)
             )
                     .andExpect(status().is(HttpStatus.FORBIDDEN.value()))
             ;

@@ -1,0 +1,67 @@
+{
+  "content": [
+    {
+      "cardType": "action",
+      "businessDate": "2020-06-23T08:19:40.757Z",
+      "i18nKeyForDescription": {
+        "key": "TEST.1.process.summary","parameters": {"value": "this a test parameter"}
+      },
+      "i18nKeyForProcessName": {
+        "key": "TEST.1.process.title","parameters": {"value": "test0"}
+      },
+      "sender": " emitter"
+    },
+    {
+      "cardType": "alarm",
+      "businessDate": "2020-06-23T08:19:40.757Z",
+      "i18nKeyForDescription": {
+        "key": "description.line.key"
+      },
+      "i18nKeyForProcessName": {
+        "key": "processName.line.key"
+      },
+      "sender": " emitter"
+    },
+    {
+      "cardType": "compliant",
+      "businessDate": "2020-06-23T08:19:40.757Z",
+      "i18nKeyForDescription": {
+        "key": "description.line.key"
+      },
+      "i18nKeyForProcessName": {
+        "key": "processName.line.key"
+      },
+      "sender": " emitter"
+    },
+    {
+      "cardType": "information",
+      "businessDate": "2020-06-23T08:19:40.757Z",
+      "i18nKeyForDescription": {
+        "key": "description.line.key"
+      },
+      "i18nKeyForProcessName": {
+        "key": "processName.line.key"
+      },
+      "sender": " emitter"
+    },
+    {
+      "cardType": "action",
+      "businessDate": "2020-06-23T08:19:40.757Z",
+      "i18nKeyForDescription": {
+        "key": "description.line.key"
+      },
+      "i18nKeyForProcessName": {
+        "key": "processName.line.key"
+      },
+      "sender": " emitter"
+    }
+  ],
+  "first": true,
+  "last": true,
+  "totalPages": 1,
+  "totalElements": 5,
+  "numberOfElements": 5,
+  "size": 10,
+  "number": 0
+}
+

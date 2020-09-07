@@ -8,19 +8,18 @@
  */
 
 
+import {Menu} from '@ofModel/processes.model';
 
-import {ThirdMenu} from "@ofModel/thirds.model";
-
-export interface MenuState{
-    menu: ThirdMenu[],
-    loading: boolean,
-    error:string,
-    selected_iframe_url: string
+export interface MenuState {
+    menu: Menu[];
+    loading: boolean;
+    error: string;
+    selected_iframe_url: string;
 }
 
 export const menuInitialState: MenuState = {
-    menu:[],
+    menu: [],
     loading: false,
-    error:null,
+    error: null,
     selected_iframe_url: null
-}
+};

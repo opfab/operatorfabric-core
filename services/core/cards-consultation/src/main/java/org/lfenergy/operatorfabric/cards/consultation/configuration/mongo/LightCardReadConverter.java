@@ -35,12 +35,13 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
         LightCardConsultationData.LightCardConsultationDataBuilder builder = LightCardConsultationData.builder();
         builder
                 .publisher(source.getString("publisher"))
-                .publisherVersion(source.getString("publisherVersion"))
+                .parentCardUid(source.getString("parentCardUid"))
+                .processVersion(source.getString("processVersion"))
                 .uid(source.getString("uid"))
                 .id(source.getString("_id"))
                 .process(source.getString("process"))
                 .state(source.getString("state"))
-                .processId(source.getString("processId"))
+                .processInstanceId(source.getString("processInstanceId"))
                 .lttd(source.getDate("lttd") == null ? null : source.getDate("lttd").toInstant())
                 .startDate(source.getDate("startDate") == null ? null : source.getDate("startDate").toInstant())
                 .endDate(source.getDate("endDate") == null ? null : source.getDate("endDate").toInstant())

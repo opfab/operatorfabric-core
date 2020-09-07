@@ -23,5 +23,5 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface ArchivedCardRepositoryForTest extends ReactiveMongoRepository<ArchivedCardPublicationData,String> {
 
-    public Flux<ArchivedCardPublicationData> findByProcessId(String processId);
+    public Flux<ArchivedCardPublicationData> findByProcessInstanceId(String processInstanceId);
 }

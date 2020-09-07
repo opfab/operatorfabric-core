@@ -16,11 +16,10 @@ appreciated.
 However, because the project is still in its early stages, we're not fully equipped for any of it yet, so please bear
 with us while the contribution process and tooling are sorted out.
 
-This project and everyone participating in it is governed by the
-ifdef::single-page-doc[<<code_of_conduct, OperatorFabric Code of Conduct>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/community/index.adoc#code_of_conduct, OperatorFabric Code of Conduct>>]
-.
-By participating, you are expected to uphold this code.
+
+This project is governed by the link:../pdf/technical-charter.pdf[OperatorFabric Technical Charter].
+
+This project applies the LF Energy Code of Conduct. By participating, you are expected to uphold this code.
 Please report unacceptable behavior to mailto:opfab_AT_lists.lfenergy.org[opfab_AT_lists.lfenergy.org].
 
 == License and Developer Certificate of Origin
@@ -70,6 +69,7 @@ include::workflow.adoc[leveloffset=+2]
 
 * We don't mention specific authors by name in each file (in Javadoc or in the documentation for example), so as not
 to have to maintain these mentions (since this information is tracked by git anyway).
+* For ui code, you must use a linter with rules provided in ui/main/tslint.json
 
 include::documentation.adoc[leveloffset=+2]
 

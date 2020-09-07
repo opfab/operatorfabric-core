@@ -1,0 +1,21 @@
+{
+  "library": "spring-boot",
+  "java8": true,
+  "modelPackage": "org.lfenergy.operatorfabric.businessconfig.model",
+  "hideGenerationTimestamp": true,
+  "apiPackage": "org.lfenergy.operatorfabric.businessconfig.controllers",
+  "configPackage": "org.lfenergy.operatorfabric.businessconfig.config",
+  "invokerPackage": "org.lfenergy.operatorfabric.businessconfig.invokers",
+  "dateLibrary": "java8",
+  "useBeanValidation": false,
+  "interfaceOnly": false,
+  "delegatePattern": true,
+  "singleContentTypes": false,
+  "importMappings" : {
+    "ActionEnum": "org.lfenergy.operatorfabric.businessconfig.model.ActionEnum",
+    "ResponseBtnColorEnum": "org.lfenergy.operatorfabric.businessconfig.model.ResponseBtnColorEnum",
+    "LinkTypeEnum":         "org.lfenergy.operatorfabric.businessconfig.model.LinkTypeEnum",
+    "EpochDate": "java.time.Instant",
+    "LongInteger": "java.lang.Long"
+  }
+}

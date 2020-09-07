@@ -8,32 +8,59 @@
  */
 
 
-import { Injectable } from "@angular/core";
-import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
-import { User } from '@ofModel/user.model';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {environment} from '@env/environment';
+import {Observable,Subject} from 'rxjs';
+import {Entity, User} from '@ofModel/user.model';
+import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {HttpClient} from '@angular/common/http';
+import {takeUntil} from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
 
-    readonly userUrl : string;
+    readonly userUrl: string;
+    private _userWithPerimeters: UserWithPerimeters;
+    private ngUnsubscribe = new Subject<void>();
 
     /**
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient : HttpClient) {
+    constructor(private httpClient: HttpClient) {
         this.userUrl = `${environment.urls.users}`;
     }
 
-    askUserApplicationRegistered(user : string) : Observable<User> {
-        console.log("user in askUserApplicationRegistered service : " + user);
+    askUserApplicationRegistered(user: string): Observable<User> {
         return this.httpClient.get<User>(`${this.userUrl}/users/${user}`);
     }
 
-    askCreateUser(userData : User) : Observable<User> {
-        console.log("user in askCreateUser service : " + userData.login);
+    askCreateUser(userData: User): Observable<User> {
         return this.httpClient.put<User>(`${this.userUrl}/users/${userData.login}`, userData);
+    }
+
+    currentUserWithPerimeters(): Observable<UserWithPerimeters> {
+        return this.httpClient.get<UserWithPerimeters>(`${this.userUrl}/CurrentUserWithPerimeters`);
+    }
+
+    queryAllEntities(): Observable<Entity[]> {
+        const url = `${this.userUrl}/entities`;
+        return this.httpClient.get<Entity[]>(url);
+
+    }
+    public loadUserWithPerimetersData(): void {
+        this.currentUserWithPerimeters()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(
+                (userWithPerimeters) => {
+                    if (userWithPerimeters) {
+                        this._userWithPerimeters = userWithPerimeters;
+                    }
+                }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+            );
+    }
+
+    public getCurrentUserWithPerimeters(): UserWithPerimeters {
+        return this._userWithPerimeters;
     }
 }

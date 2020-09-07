@@ -8,116 +8,135 @@
  */
 
 
+import {ConfigService} from '@ofServices/config.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subject} from 'rxjs';
 
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { AppState } from '@ofStore/index';
-import { buildConfigSelector } from '@ofSelectors/config.selectors';
-import { FormGroup, FormControl } from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {FormControl, FormGroup} from '@angular/forms';
 import { SendArchiveQuery ,FlushArchivesResult} from '@ofStore/actions/archive.actions';
-import { DateTimeNgb } from '@ofModel/datetime-ngb.model';
-import { NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import { TimeService } from '@ofServices/time.service';
-import { TranslateService } from '@ngx-translate/core';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import {TimeService} from '@ofServices/time.service';
+import {TranslateService} from '@ngx-translate/core';
+import { Router } from '@angular/router';
+import {takeUntil} from 'rxjs/operators';
+import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
 
 
 export enum FilterDateTypes {
-  PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
-  PUBLISH_DATE_TO_PARAM = 'publishDateTo',
-  ACTIVE_FROM_PARAM = 'activeFrom',
-  ACTIVE_TO_PARAM = 'activeTo'
+    PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
+    PUBLISH_DATE_TO_PARAM = 'publishDateTo',
+    ACTIVE_FROM_PARAM = 'activeFrom',
+    ACTIVE_TO_PARAM = 'activeTo'
 
 }
 
 export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
-  let result = false;
-  if (Object.values(enumeration).includes(value)) {
-    result = true;
-  }
-  return result;
+    let result = false;
+    if (Object.values(enumeration).includes(value)) {
+        result = true;
+    }
+    return result;
 };
 
 export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): string => {
-  return new DateTimeNgb(date, time).formatDateTime();
+    return new DateTimeNgb(date, time).formatDateTime();
 };
 
 @Component({
-  selector: 'of-archive-filters',
-  templateUrl: './archive-filters.component.html',
-  styleUrls: ['./archive-filters.component.css']
+    selector: 'of-archive-filters',
+    templateUrl: './archive-filters.component.html',
+    styleUrls: ['./archive-filters.component.css']
 })
-export class ArchiveFiltersComponent implements OnInit {
+export class ArchiveFiltersComponent implements OnInit, OnDestroy {
 
-  tags$: Observable<string []>;
-  processes$: Observable<string []>;
-  size$: Observable<number>;
-  first$: Observable<number>;
-
-  archiveForm: FormGroup;
-
-  constructor(private store: Store<AppState>, private timeService: TimeService,private translateService: TranslateService) {
-    this.archiveForm = new FormGroup({
-      tags: new FormControl(''),
-      process: new FormControl(),
-      publishDateFrom: new FormControl(),
-      publishDateTo: new FormControl(''),
-      activeFrom: new FormControl(''),
-      activeTo: new FormControl(''),
-    });
-  }
+    tags: string [];
+    processes: string [];
+    size: number;
+    archiveForm: FormGroup;
+    unsubscribe$: Subject<void> = new Subject<void>();
+    currentPath: any;
 
 
-  ngOnInit() {
-    this.tags$ = this.store.select(buildConfigSelector('archive.filters.tags.list'));
-    this.processes$ = this.store.select(buildConfigSelector('archive.filters.process.list'));
-    this.size$ = this.store.select(buildConfigSelector('archive.filters.page.size'));
-    this.first$ = this.store.select(buildConfigSelector('archive.filters.page.first'));
-  }
-
-  /**
-   * Transorm the filters list to Map
-   */
-  filtersToMap = (filters: any): Map<string, string[]> => {
-    const params = new Map();
-    Object.keys(filters).forEach(key => {
-      const element = filters[key];
-        // if the form element is date
-      if (element) {
-        if (checkElement(FilterDateTypes, key)) {
-          const {date, time} = element;
-          if (date) {
-
-            const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
-            if (timeStamp!== 'NaN') params.set(key, [timeStamp]);
-          }
-        } else {
-          if (element.length) {
-            params.set(key, element);
-          }
-        }
-      }
-    });
-    return params;
-  }
-
-  sendQuery(): void {
-    const {value} = this.archiveForm;
-    const params = this.filtersToMap(value);
-    this.size$.subscribe(size => params.set('size', [size.toString()]));
-    this.first$.subscribe(first => params.set('page', [first.toString()]));
-    this.store.dispatch(new SendArchiveQuery({params}));
-  }
-    clearFilters(): void {
-        this.store.dispatch(new FlushArchivesResult());
-        this.archiveForm.get("tags").setValue('');
-        this.archiveForm.get("process").setValue('');
-        this.archiveForm.get("publishDateFrom").setValue({date :'' , time:{hour: 0, minute: 0}});
-        this.archiveForm.get("publishDateTo").setValue({date :'', time:{hour: 0, minute: 0}});
-        this.archiveForm.get("activeFrom").setValue({date :'', time:{hour: 0, minute: 0}});
-        this.archiveForm.get("activeTo").setValue({date :'', time:{hour: 0, minute: 0}});
+    constructor(private store: Store<AppState>
+        , private timeService: TimeService
+        , private router: Router
+        , private translateService: TranslateService
+        , private  configService: ConfigService) {
+        this.archiveForm = new FormGroup({
+            tags: new FormControl(''),
+            process: new FormControl(),
+            publishDateFrom: new FormControl(),
+            publishDateTo: new FormControl(''),
+            activeFrom: new FormControl(''),
+            activeTo: new FormControl(''),
+        });
     }
 
+
+    ngOnInit() {
+        this.tags = this.configService.getConfigValue('archive.filters.tags.list');
+        this.processes = this.configService.getConfigValue('archive.filters.process.list');
+        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+
+        this.store.select(selectCurrentUrl)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(url => {
+                if (url) {
+                    const urlParts = url.split('/');
+                    this.currentPath = urlParts[1];
+                }
+            });
+    }
+
+
+    /**
+     * Transforms the filters list to Map
+     */
+    filtersToMap = (filters: any): Map<string, string[]> => {
+        const params = new Map();
+        Object.keys(filters).forEach(key => {
+            const element = filters[key];
+            // if the form element is date
+            if (element) {
+                if (checkElement(FilterDateTypes, key)) {
+                    const {date, time} = element;
+                    if (date) {
+
+                        const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
+                        if (timeStamp !== 'NaN') {
+                            params.set(key, [timeStamp]);
+                        }
+                    }
+                } else {
+                    if (element.length) {
+                        params.set(key, element);
+                    }
+                }
+            }
+        });
+        return params;
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
+
+    clearResult(): void {
+        this.store.dispatch(new FlushArchivesResult());
+        this.router.navigate(['/' + this.currentPath]);
+    }
+
+    sendQuery(): void {
+        const {value} = this.archiveForm;
+        const params = this.filtersToMap(value);
+        params.set('size', [this.size.toString()]);
+        params.set('page', ['0']);
+        this.store.dispatch(new SendArchiveQuery({params}));
+    }
 
 }
 

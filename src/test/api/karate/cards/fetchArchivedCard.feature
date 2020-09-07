@@ -13,9 +13,9 @@ Feature: fetchArchive
 """
 {
 	"publisher" : "api_test",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process_archive_1",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process_archive_1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -39,12 +39,12 @@ Feature: fetchArchive
 
 
 #get card with user tso1-operator
-    Given url opfabUrl + 'cards/cards/api_test_process_archive_1'
+    Given url opfabUrl + 'cards/cards/api_test.process_archive_1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.data.message == 'a message'
-    And def cardUid = response.uid
+    And match response.card.data.message == 'a message'
+    And def cardUid = response.card.uid
 
 #get card form archives with user tso1-operator
 
@@ -77,9 +77,9 @@ Feature: fetchArchive
 """
 {
 	"publisher" : "api_test123",
-	"publisherVersion" : "1",
-	"process"  :"defaultProcess",
-	"processId" : "process1",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "process1",
 	"state": "messageState",
 	"recipient" : {
 				"type" : "GROUP",
@@ -103,9 +103,9 @@ Feature: fetchArchive
 
 
 #get card with user tso1-operator
-        Given url opfabUrl + 'cards/cards/api_test123_process1'
+        Given url opfabUrl + 'cards/cards/api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200
-        And match response.externalRecipients[1] == "api_test16566111"
+        And match response.card.externalRecipients[1] == "api_test16566111"
         And def cardUid = response.uid

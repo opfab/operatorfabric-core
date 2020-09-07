@@ -8,12 +8,10 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
   rabbitmq:
-    container_name: rabbitmq
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "15672:15672"
-#      - "15674:15674"
   keycloak:
     image: jboss/keycloak:6.0.1
     command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export
@@ -28,68 +26,60 @@ services:
     - "90:9990"
   users:
     container_name: users
-    image: "lfeoperatorfabric/of-users-business-service:1.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-users-business-service:1.5.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2103:8080"
      - "4103:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
     volumes:
-      - "../certificates:/certificates_to_add"
-  thirds:
-    container_name: thirds
-    image: "lfeoperatorfabric/of-thirds-business-service:1.4.0.RELEASE"
+    - "../certificates:/certificates_to_add"
+    - "./users-docker.yml:/config/application.yml"
+    - "./common-docker.yml:/config/common-docker.yml"
+  businessconfig:
+    container_name: businessconfig
+    image: "lfeoperatorfabric/of-businessconfig-business-service:1.5.0.RELEASE"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2100:8080"
      - "4100:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
     volumes:
      - "../certificates:/certificates_to_add"
-     - "../../services/core/thirds/src/main/docker/volume/thirds-storage:/thirds-storage"
+     - "../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage:/businessconfig-storage"
+     - "./common-docker.yml:/config/common-docker.yml"
+     - "./businessconfig-docker.yml:/config/application-docker.yml"
   cards-publication:
     container_name: cards-publication
-    image: "lfeoperatorfabric/of-cards-publication-business-service:1.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-publication-business-service:1.5.0.RELEASE"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2102:8080"
      - "4102:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
     volumes:
       - "../certificates:/certificates_to_add"
+      - "./common-docker.yml:/config/common-docker.yml"
+      - "./cards-publication-docker.yml:/config/application-docker.yml"
   cards-consultation:
     container_name: cards-consultation
-    image: "lfeoperatorfabric/of-cards-consultation-business-service:1.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-cards-consultation-business-service:1.5.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
      - "2104:8080"
      - "4104:5005"
-    environment:
-    - REGISTRY_HOST=registry
-    - REGISTRY_PORT=8080
-    - DEPENDS_ON=CONFIG
     volumes:
       - "../certificates:/certificates_to_add"
+      - "./common-docker.yml:/config/common-docker.yml"
+      - "./cards-consultation-docker.yml:/config/application-docker.yml"
   web-ui:
-    image: "lfeoperatorfabric/of-web-ui:1.4.0.RELEASE"
+    image: "lfeoperatorfabric/of-web-ui:1.5.0.RELEASE"
     ports:
     - "2002:80"
     depends_on:
       - users
-      - thirds
+      - businessconfig
       - cards-consultation
     volumes:
       - "./web-ui.json:/usr/share/nginx/html/opfab/web-ui.json"

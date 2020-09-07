@@ -18,7 +18,7 @@ Feature: Update list of perimeter groups (endpoint tested : PUT /perimeters/{id}
    "stateRights" : [
      {
        "state" : "state1",
-       "right" : "Read"
+       "right" : "Receive"
      }
    ]
 }
