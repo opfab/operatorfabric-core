@@ -45,11 +45,7 @@ of which the card represents the current state.
 [[start_date]]
 ==== Start Date (`startDate`)
 
-This attribute is a part of the card life management system. It's indicate OperatorFabric the moment since the card
-can be displayed to the operators or main recipients, see
-ifdef::single-page-doc[<<display_rules, Display rules>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
-.
+Start date of the active period of the card (process business time).
 
 ==== Severity (`severity`)
 
@@ -64,12 +60,12 @@ A color is associated in the GUI to each severity. Here the details about severi
 [[card_title]]
 ==== Title (`title`)
 
-This attribute is display as header of a card in the feed of the GUI. It's the main User destined Information of a card. The value refer to an `i18n` value used to localized this information.
+This attribute is display as header of a card in the feed of the GUI. It's the main User destined Information of a card. The value refer to an `i18n` value used to localize this information.
 
 [[card_summary]]
 ==== Summary (`summary`)
 
-This attribute is display as a description of a card in the feed of the GUI, when the card is selected by the operator. It's completing the information of the card title. The value refer to an `i18n` value used to localized this information.
+This attribute is display as a description of a card in the feed of the GUI, when the card is selected by the operator. It's completing the information of the card title. The value refer to an `i18n` value used to localize this information.
 
 === Recipient (`recipient`)
 
@@ -77,27 +73,6 @@ Declares to whom the card is send. For more details about way recipient works se
 ifdef::single-page-doc[<<display_rules, Display rules>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
 . Without recipient declaration a card is useless in `OperatorFabric` system.
-
-=== Card Life Management Configuration
-
-With this attributes OperatorFabric knows when to display or hide cards.
-
-==== Start Date (`startDate`)
-
-See
-ifdef::single-page-doc[<<start_date, Start Date>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#start_date, Start Date>>]
- and
-ifdef::single-page-doc[<<display_rules, Display rules>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
-for more examples.
-
-==== End Date (`endDate`)
-
-Fixes the moment until when `OperatorFabric` displays the card. After the card is remove from the GUI feed,
-ifdef::single-page-doc[<<display_rules, Display rules>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
-for some examples.
 
 === Optional information
 
@@ -205,7 +180,7 @@ and the details section will display the template content.
 When the simple startDate and endDate are not enough to characterize your
 process business times, you can add a list of TimeSpan to your card. TimeSpans
 are rendered in the timeline component as cluster bubbles. This has no effect on the feed
-content
+content.
 
 *example :*
 

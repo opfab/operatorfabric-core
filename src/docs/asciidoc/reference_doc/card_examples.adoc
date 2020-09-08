@@ -202,40 +202,6 @@ reference. Each of those object is a tab in the detail panel of the GUI.
 [[display_rules]]
 == Display Rules
 
-=== Dates
-
-Dates impact both the feed rendering and the timeline rendering.
-
-In the feed cards are visible based on a collection of filters among which a
-time filter.
-
-In the time line cards are visible based on a similar filter plus the time line
-renders the "position" in time of said cards. By default, it groups cards at
-close time in bubbles whom color indicates severity and inner number indicates
-number of cards.
-
-==== Start Date (`startDate`)
-
-The card is only display after this date is reach by the current time. It's a mandatory attributes for OperatorFabric cards.
-
-example:
-
-The current day is the 29 january 2019.
-
-A card with the following configuration `"startDate":1548758040000`, has a start date equals to the iso date: "2019-01-29T10:34:00Z". So the operator will see it appearing in it's feed at 10h34 AM universal time. And if there is no `endDate` defines for it, it will stay in the feed indefinitely, so this card should be still visible the 30th january 2019. Before "10h34 AM universal time", this card was not visible in the feed.
-
-==== End Date (`endDate`)
-
-This optional attribute, corresponds to the moment after which the card will be remove from the feed of the GUI.
-
-example: 
-
-Imagine that the current day is still the 29 january 2019.
-
-The card we are looking after, has the same value for the startDate than in the previous example but has the following configuration for the `endDate`: `"endDate":1548765240000`. It's corresponding to "2019-01-29T12:34:00Z" universal time.
-
-So our card is present in the feed between "11h34" and "13h34". Before and after those hours, the card is not available.
-
 [[card_recipients]]
 === Recipients
 
