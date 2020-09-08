@@ -149,6 +149,7 @@ public class CardPublicationData implements Card {
                 .publishDate(this.getPublishDate())
                 .severity(this.getSeverity())
                 .tags(this.getTags())
+                .entitiesAllowedToRespond(this.getEntitiesAllowedToRespond())
                 .title(((I18nPublicationData) this.getTitle()).copy())
                 .summary(((I18nPublicationData) this.getSummary()).copy());
         if(this.getTimeSpans()!=null)

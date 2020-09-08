@@ -27,7 +27,8 @@
         "title":"Time",
         "start.label": "Start",
         "end.label": "End",
-        "active.label": "Active"
+        "active.label": "Active",
+        "lttd.label" :"Finished"
       },
       "type": {
         "title": "Type",

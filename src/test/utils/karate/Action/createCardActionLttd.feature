@@ -1,16 +1,35 @@
-Feature: Cards
+Feature: API - creatCardAction
 
 
   Background:
 
-    * def signIn = call read('../common/getToken.feature') { username: 'tso1-operator'}
-    * def authToken = signIn.authToken
+    * def signInAsTso = call read('../common/getToken.feature') { username: 'tso1-operator'}
+    * def authTokenAsTso = signInAsTso.authToken
 
-  Scenario: Post card
+Scenario: Create a card with a valid lttd conditions
 
-    * def card_response_full =
-"""
-{
+# Push an action card with :
+
+    # one entity of enitiesAllowedToRepond  in the card match the entity of the user connected*
+    # AND the card has no child card of the entity of the connected user*
+    # AND the lttd is present in the card data
+    # AND 0 < lttd - currenttime < secondsBeforeLttdForClockDisplay (Param in web-ui.json)
+
+    * def getCard = 
+
+    """
+    function() {
+     date = new Date();
+      serveurCurrentDate = new Date(date.valueOf());
+
+      startDate = new Date().valueOf();
+	  endDate = new Date().valueOf() + 6*60*60*1000;
+
+      lttd = new Date().valueOf() + 10*1000;
+
+        var card =
+
+        {
     "uid": null,
     "id": null,
     "publisher": "processAction",
@@ -19,11 +38,11 @@ Feature: Cards
     "processId": "processAction_1_response_full",
     "processInstanceId": "processInstanceId1",
     "state": "response_full",
-    "publishDate": 1589376144000,
+    "publishDate": startDate,
     "deletionDate": null,
-    "lttd": 1596042927,
-    "startDate": 1589580000000,
-    "endDate": 1590184800000,
+    "lttd": lttd,
+    "startDate": startDate,
+    "endDate": endDate,
     "severity": "ACTION",
     "media": null,
     "tags": [
@@ -40,13 +59,13 @@ Feature: Cards
     "title": {
         "key": "cardFeed.title",
         "parameters": {
-            "title": "Test action - Response full"
+            "title": "Card with valid lttd conditions"
         }
     },
     "summary": {
         "key": "cardFeed.summary",
         "parameters": {
-        "summary": "Test the action process"
+        "summary": "New test  the action processInstanceId1"
         }
     },
     "recipient": {
@@ -68,14 +87,44 @@ Feature: Cards
     "userRecipients": null,
     "groupRecipients": null,
     "data": {
-        "data1": "data1 data1 testtttttttttt content"
+        "data1": "data1 data1  content"
     }
 }
-"""
 
-    * def card_btnColorMissing =
-"""
-{
+	return JSON.stringify(card);
+
+      }
+    """
+    * def card = call getCard
+
+
+# Push card
+
+    Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTso
+    And header Content-Type = 'application/json'
+    And request card
+    When method post
+    Then status 201
+    And match response.count == 1
+    * def statusCode = responseStatus
+    * def body = $
+
+Scenario: Create a card - entity of enitiesAllowedToRepond  in the card not matched the entity of the user connected
+
+# Push an action card
+
+    * def getCard2 =
+    """
+    function() {
+
+    startDate = new Date().valueOf() + 4*60*60*1000;
+	endDate = new Date().valueOf() + 6*60*60*1000;
+    lttd = new Date().valueOf() + 4*60*1000;
+
+        var card2 =
+
+       {
     "uid": null,
     "id": null,
     "publisher": "processAction",
@@ -83,12 +132,12 @@ Feature: Cards
     "process": "processAction",
     "processId": "processAction_1_btnColorMissing",
     "processInstanceId": "processInstanceId2",
-    "state": "btnColor_missing",
-    "publishDate": 1589376144000,
+    "state": "response_full",
+    "publishDate": startDate,
     "deletionDate": null,
-    "lttd": 1583733121994,
-    "startDate": 1589580000000,
-    "endDate": 1590184800000,
+    "lttd": lttd,
+    "startDate": startDate,
+    "endDate": endDate,
     "severity": "ACTION",
     "media": null,
     "tags": [
@@ -105,13 +154,13 @@ Feature: Cards
     "title": {
         "key": "cardFeed.title",
         "parameters": {
-            "title": "Test action - btnColor missing"
+            "title": "Entity user not allowed to respond"
         }
     },
     "summary": {
         "key": "cardFeed.summary",
         "parameters": {
-        "summary": "Test the action process"
+        "summary": "Test the action processInstanceId2"
         }
     },
     "recipient": {
@@ -128,7 +177,7 @@ Feature: Cards
         "preserveMain": null
     },
     "entityRecipients": ["ENTITY1"],
-    "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
+    "entitiesAllowedToRespond": ["TSO","ENTITY2"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -136,11 +185,38 @@ Feature: Cards
         "data1": "data1 content"
     }
 }
-"""
 
-    * def card_btnTextMissing =
-"""
-{
+	return JSON.stringify(card2);
+
+      }
+    """
+    * def card2 = call getCard2
+
+
+ # Push card
+
+    Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTso
+    And header Content-Type = 'application/json'
+    And request card2
+    When method post
+    Then status 201
+    And match response.count == 1
+
+Scenario: Create a card - with expired lttd
+
+# Push an action card
+
+    * def getCard3 =
+    """
+    function() {
+        startDate = new Date().valueOf() + 4*60*60*1000;
+	    endDate = new Date().valueOf() + 5*60*60*1000;
+        lttd = new Date().valueOf();
+
+        var card3 =
+
+        {
     "uid": null,
     "id": null,
     "publisher": "processAction",
@@ -148,141 +224,12 @@ Feature: Cards
     "process": "processAction",
     "processId": "processAction_1_btnTextMissing",
     "processInstanceId": "processInstanceId3",
-    "state": "btnText_missing",
-    "publishDate": 1589376144000,
-    "deletionDate": null,
-    "lttd": 1583733121997,
-    "startDate": 1589580000000,
-    "endDate": 1590184800000,
-    "severity": "ACTION",
-    "media": null,
-    "tags": [
-        "tag1"
-    ],
-    "timeSpans": [
-        {
-            "start": 1589376144000,
-            "end": 1590184800000,
-            "display": null
-        }
-    ],
-    "details": null,
-    "title": {
-        "key": "cardFeed.title",
-        "parameters": {
-            "title": "Test action - btnText missing"
-        }
-    },
-    "summary": {
-        "key": "cardFeed.summary",
-        "parameters": {
-        "summary": "Test the action process"
-        }
-    },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
-    "entityRecipients": ["ENTITY1"],
-    "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
-    "mainRecipient": null,
-    "userRecipients": null,
-    "groupRecipients": null,
-    "data": {
-        "data1": "data1 content"
-    }
-}
-"""
-
-    * def card_btnColorAndTextMissings =
-"""
-{
-    "uid": null,
-    "id": null,
-    "publisher": "processAction",
-    "processVersion": "1",
-    "process": "processAction",
-    "processId": "processAction_1_btnColorAndTextMissings",
-    "processInstanceId": "processInstanceId4",
-    "state": "btnColor_btnText_missings",
-    "publishDate": 1589376144000,
-    "deletionDate": null,
-    "lttd": 1583733121998,
-    "startDate": 1589580000000,
-    "endDate": 1590184800000,
-    "severity": "ACTION",
-    "media": null,
-    "tags": [
-        "tag1"
-    ],
-    "timeSpans": [
-        {
-            "start": 1589376144000,
-            "end": 1590184800000,
-            "display": null
-        }
-    ],
-    "details": null,
-    "title": {
-        "key": "cardFeed.title",
-        "parameters": {
-            "title": "Test action - btnColor & btnText missings"
-        }
-    },
-    "summary": {
-        "key": "cardFeed.summary",
-        "parameters": {
-        "summary": "Test the action process"
-        }
-    },
-    "recipient": {
-        "type": "UNION",
-        "recipients": [
-            {
-                "type": "GROUP",
-                "recipients": null,
-                "identity": "TSO1",
-                "preserveMain": null
-            }
-        ],
-        "identity": null,
-        "preserveMain": null
-    },
-    "entityRecipients": ["ENTITY1"],
-    "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
-    "mainRecipient": null,
-    "userRecipients": null,
-    "groupRecipients": null,
-    "data": {
-        "data1": "data1 content"
-    }
-}
-"""
-      * def card_response_without_entity_in_entitiesAllowedToRespond =
-"""
-{
-    "uid": null,
-    "id": null,
-    "publisher": "processAction",
-    "processVersion": "1",
-    "process": "processAction",
-    "processId": "processAction_1_without_entity_in_entitiesAllowedToRespond",
-    "processInstanceId": "processInstanceId1",
     "state": "response_full",
-    "publishDate": 1589376144000,
+    "publishDate": startDate,
     "deletionDate": null,
-    "lttd": 1583733121999,
-    "startDate": 1589580000000,
-    "endDate": 1590184800000,
+    "lttd": lttd,
+    "startDate": startDate,
+    "endDate": endDate,
     "severity": "ACTION",
     "media": null,
     "tags": [
@@ -299,13 +246,13 @@ Feature: Cards
     "title": {
         "key": "cardFeed.title",
         "parameters": {
-            "title": "Test action - without entity in entitiesAllowedToRespond"
+            "title": "Card - with expired lttd"
         }
     },
     "summary": {
         "key": "cardFeed.summary",
         "parameters": {
-        "summary": "Test the action without entity in entitiesAllowedToRespond"
+        "summary": "Test the action processInstanceId3"
         }
     },
     "recipient": {
@@ -322,7 +269,7 @@ Feature: Cards
         "preserveMain": null
     },
     "entityRecipients": ["ENTITY1"],
-    "entitiesAllowedToRespond": ["TSO1","ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
     "mainRecipient": null,
     "userRecipients": null,
     "groupRecipients": null,
@@ -330,44 +277,111 @@ Feature: Cards
         "data1": "data1 content"
     }
 }
-"""
 
-# Push card - response full
+	return JSON.stringify(card3);
+
+      }
+    """
+    * def card3 = call getCard3
+
+ # Push card
+
     Given url opfabPublishCardUrl + 'cards'
-
-    And request card_response_full
+    And header Authorization = 'Bearer ' + authTokenAsTso
+    And header Content-Type = 'application/json'
+    And request card3
     When method post
     Then status 201
     And match response.count == 1
 
-# Push card - btnColor missing
-    Given url opfabPublishCardUrl + 'cards'
 
-    And request card_btnColorMissing
+     Scenario: Create a card - with lttd null
+
+
+# Push an action card
+
+    * def getCard4 =
+    """
+    function() {
+        startDate = new Date().valueOf() + 4*60*60*1000;
+  	    endDate = new Date().valueOf() + 4*60*60*1000;
+
+
+        var card4 =
+
+        {
+    "uid": null,
+    "id": null,
+    "publisher": "processAction",
+    "processVersion": "1",
+    "process": "processAction",
+    "processId": "processAction_1_btnTextMissing",
+    "processInstanceId": "processInstanceId4",
+    "state": "response_full",
+    "publishDate": startDate,
+    "deletionDate": null,
+    "startDate": startDate,
+    "endDate": endDate,
+    "severity": "ACTION",
+    "media": null,
+    "tags": [
+        "tag1"
+    ],
+    "timeSpans": [
+        {
+            "start": 1589376144000,
+            "end": 1590184800000,
+            "display": null
+        }
+    ],
+    "details": null,
+    "title": {
+        "key": "cardFeed.title",
+        "parameters": {
+            "title": "Card - with lttd null"
+        }
+    },
+    "summary": {
+        "key": "cardFeed.summary",
+        "parameters": {
+        "summary": "Test the action processInstanceId4"
+        }
+    },
+    "recipient": {
+        "type": "UNION",
+        "recipients": [
+            {
+                "type": "GROUP",
+                "recipients": null,
+                "identity": "TSO1",
+                "preserveMain": null
+            }
+        ],
+        "identity": null,
+        "preserveMain": null
+    },
+    "entityRecipients": ["ENTITY1"],
+    "entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
+    "mainRecipient": null,
+    "userRecipients": null,
+    "groupRecipients": null,
+    "data": {
+        "data1": "data1 content"
+    }
+}
+
+	return JSON.stringify(card4);
+
+      }
+    """
+    * def card4 = call getCard4
+
+ # Push card
+
+    Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTso
+    And header Content-Type = 'application/json'
+    And request card4
     When method post
     Then status 201
     And match response.count == 1
-
-# Push card - btnText missing
-    Given url opfabPublishCardUrl + 'cards'
-
-    And request card_btnTextMissing
-    When method post
-    Then status 201
-    And match response.count == 1
-
-# Push card - btnColor & btnText missings
-    Given url opfabPublishCardUrl + 'cards'
-
-    And request card_btnColorAndTextMissings
-    When method post
-    Then status 201
-    And match response.count == 1
-
-# Push card - card response without entity in entity  in entitiesAllowedToRespond
-      Given url opfabPublishCardUrl + 'cards'
-
-      And request card_response_without_entity_in_entitiesAllowedToRespond
-      When method post
-      Then status 201
-      And match response.count == 1

@@ -31,6 +31,7 @@ export class LightCard {
         readonly process?: string,
         readonly state?: string,
         readonly parentCardUid?: string,
+        readonly entitiesAllowedToRespond?: string[]
     ) {
     }
 }
