@@ -219,6 +219,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
         if (this._responseData != null && this._responseData !== undefined) {
             this.getPrivilegetoRespond(this.card, this._responseData);
+        } else {
+           return false;
         }
 
         return this.card.entitiesAllowedToRespond.includes(this.user.entities[0])
