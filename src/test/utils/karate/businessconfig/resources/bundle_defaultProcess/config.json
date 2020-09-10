@@ -2,6 +2,11 @@
   "id": "defaultProcess",
   "name": "Test api",
   "version": "1",
+  "uiVisibility": {
+    "monitoring": true,
+    "logging": true,
+    "calendar": true
+  },
   "templates": [
     "template",
     "chart",

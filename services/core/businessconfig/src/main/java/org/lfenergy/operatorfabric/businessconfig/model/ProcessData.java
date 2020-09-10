@@ -45,6 +45,7 @@ public class ProcessData implements Process {
   private List<? extends MenuEntry> menuEntriesData;
   @Singular("stateData")
   private Map<String, ProcessStatesData> statesData;
+  private ProcessUiVisibilityData uiVisibility;
 
   @Override
   public Map<String, ? extends ProcessStates> getStates(){
@@ -52,8 +53,18 @@ public class ProcessData implements Process {
   }
 
   @Override
+  public ProcessUiVisibility getUiVisibility(){
+    return uiVisibility;
+  }
+
+  @Override
   public void setStates(Map<String, ? extends ProcessStates> statesData){
     this.statesData = new HashMap<>((Map<String, ProcessStatesData>) statesData);
+  }
+
+  @Override
+  public void setUiVisibility(ProcessUiVisibility uiVisibilityData){
+    this.uiVisibility = (ProcessUiVisibilityData) uiVisibilityData;
   }
 
   @Override

@@ -29,5 +29,6 @@ public class BusinessconfigModule extends SimpleModule {
         addAbstractTypeMapping(Detail.class,DetailData.class);
         addAbstractTypeMapping(I18n.class,I18nData.class);
         addAbstractTypeMapping(Response.class,ResponseData.class);
+        addAbstractTypeMapping(ProcessUiVisibility.class,ProcessUiVisibilityData.class);
     }
 }

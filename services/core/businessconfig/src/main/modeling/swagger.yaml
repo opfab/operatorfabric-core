@@ -408,6 +408,18 @@ definitions:
             color:
               type: string
               description: use as a display cue in the UI
+      uiVisibility:
+        type: object
+        properties:
+          monitoring:
+            type: boolean
+            description: This flag indicates if the monitoring screen must be visible or not
+          logging:
+            type: boolean
+            description: This flag indicates if the logging screen must be visible or not
+          calendar:
+            type: boolean
+            description: This flag indicates if the calendar screen must be visible or not
       menuLabel:
         type: string
         description: >-

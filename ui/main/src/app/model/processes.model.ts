@@ -23,7 +23,8 @@ export class Process {
         readonly locales?: string[],
         readonly menuLabel?: string,
         readonly menuEntries?: MenuEntry[],
-        readonly states?: OfMap<State>
+        readonly states?: OfMap<State>,
+        readonly uiVisibility?: UiVisibility
     ) { 
     }
 
@@ -37,7 +38,7 @@ export class Process {
 }
 
 export const unfouundProcess: Process = new Process('', '', 'process.not-found',
-     [], [], [], '', [], null);
+     [], [], [], '', [], null, null);
 
 export class MenuEntry {
 
@@ -49,6 +50,16 @@ export class MenuEntry {
         readonly label: string,
         readonly url: string,
         linkType?: MenuEntryLinkTypeEnum
+    ) {
+    }
+}
+
+export class UiVisibility {
+
+    /* istanbul ignore next */
+    constructor(
+        readonly monitoring: boolean,
+        readonly logging: boolean
     ) {
     }
 }
