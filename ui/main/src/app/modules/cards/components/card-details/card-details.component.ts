@@ -11,7 +11,7 @@ import { UserService } from '@ofServices/user.service';
 import { User } from '@ofModel/user.model';
 import { UserWithPerimeters } from '@ofModel/userWithPerimeters.model';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
-import { AppService } from '@ofServices/app.service';
+import {AppService, PageType} from '@ofServices/app.service';
 
 @Component({
     selector: 'of-card-details',
@@ -86,6 +86,10 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
 
     closeDetails() {
         this.appService.closeDetails(this._currentPath);
+    }
+
+    get isButtonCloseVisible() {
+        return this.appService.pageType !== PageType.CALENDAR;
     }
 
     ngOnDestroy() {

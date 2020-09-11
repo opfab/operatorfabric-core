@@ -33,6 +33,7 @@ import {FontAwesomeIconsModule} from './modules/utilities/fontawesome-icons.modu
 import {LoggingModule} from './modules/logging/logging.module';
 import {MonitoringModule} from './modules/monitoring/monitoring.module';
 import { CountdownModule, CountdownGlobalConfig, CountdownConfig } from 'ngx-countdown';
+import {CalendarModule} from './modules/calendar/calendar.module';
 
 
 export function countdownConfigFactory(): CountdownConfig {
@@ -57,7 +58,8 @@ export function countdownConfigFactory(): CountdownConfig {
         LoggingModule,
         MonitoringModule,
         AppRoutingModule,
-        CountdownModule
+        CountdownModule,
+        CalendarModule
     ],
     declarations: [AppComponent,
         NavbarComponent,
@@ -78,3 +80,5 @@ export function countdownConfigFactory(): CountdownConfig {
 export class AppModule {
 
 }
+
+

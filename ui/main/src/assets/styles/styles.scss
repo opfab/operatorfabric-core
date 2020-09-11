@@ -17,6 +17,7 @@
 @import "navbar.scss";
 @import "utilities.scss";
 @import "popover.scss";
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 $top-padding: 80px ;
 $bottom-padding: 30px ;
@@ -46,4 +47,16 @@ select.form-control[multiple] {
 }
 .pagination {
   margin-top: 5px;
+}
+
+// For calendar module we need to set here the color of the grid 
+// if set in the component it does not work 
+.fc th,
+.fc td {
+ border-color: var(--opfab-timeline-grid-color);
+}
+
+// Override color for today in calendar 
+.alert-info {
+  background-color: var(--opfab-bgcolor);
 }

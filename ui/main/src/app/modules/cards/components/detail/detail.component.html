@@ -20,7 +20,7 @@
     </button>
   </div>
 
-  <div id='div-detail-btn' *ngIf="!isArchivePageType" class="mb-3">
+  <div id='div-detail-btn' *ngIf="isButtonsActivated" class="mb-3">
     <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists && isActionEnabled'
       translate [translateParams]="responseDataParameters" [disabled]="lttdExpiredIsTrue"
             (click)='submitResponse()'>{{btnText}}</button>
