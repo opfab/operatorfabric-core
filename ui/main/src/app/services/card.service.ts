@@ -192,6 +192,8 @@ export class CardService {
                 const lines = cards.map((card: LightCard) => {
                     const i18nPrefix = `${card.process}.${card.processVersion}.`;
                     return ({
+                        process: card.process,
+                        processVersion: card.processVersion,
                         cardType: card.severity.toLowerCase(),
                         businessDate: moment(card.startDate),
                         i18nKeyForProcessName: this.addPrefix(i18nPrefix, card.title),

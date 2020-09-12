@@ -11,6 +11,6 @@
 <div class="form-group" [formGroup]="parentForm">
     <label translate>{{computeI18nLabelKey()}}</label>
     <select class="form-control" [formControlName]="filterPath">
-        <option *ngFor="let v of preparedList" value="{{v.value}}">{{v.label|async}}</option>
+        <option *ngFor="let v of preparedList" value="{{v.value}}" translate>{{v.label|async}}</option>
     </select>
 </div>

@@ -13,6 +13,8 @@ import {I18n} from '@ofModel/i18n.model';
 
 export interface LineOfLoggingResult {
     cardType: string;
+    process: string;
+    processVersion: string;
     businessDate: Moment;
     i18nKeyForProcessName: I18n;
     i18nKeyForDescription: I18n;
