@@ -1,6 +1,6 @@
 {
   "id": "defaultProcess",
-  "name": "Test api",
+  "name": "process.label",
   "version": "1",
   "uiVisibility": {
     "monitoring": true,
@@ -22,12 +22,12 @@
   ],
   "states": {
     "messageState": {
-      "name":  "defaultProcess.title",
+      "name":  "message.title",
       "color": "#FAF0AF",
       "details": [
         {
           "title": {
-            "key": "defaultProcess.title"
+            "key": "message.title"
           },
           "templateName": "template",
           "styles": [
@@ -70,7 +70,7 @@
       "acknowledgementAllowed": true
     },
     "processState": {
-      "name": "process.title",
+      "name": "processState.title",
       "color": "#8bcdcd",
       "details": [
         {
