@@ -413,13 +413,13 @@ definitions:
         properties:
           monitoring:
             type: boolean
-            description: This flag indicates if the monitoring screen must be visible or not
+            description: If this flag is set to true, the cards of this process will be visible on the monitoring screen 
           logging:
             type: boolean
-            description: This flag indicates if the logging screen must be visible or not
+            description: If this flag is set to true, the cards of this process will be visible on the logging screen 
           calendar:
             type: boolean
-            description: This flag indicates if the calendar screen must be visible or not
+            description: If this flag is set to true, the cards of this process will be visible on the calendar screen
       menuLabel:
         type: string
         description: >-
