@@ -22,6 +22,7 @@ import { catchError } from 'rxjs/operators';
 import { I18nService } from '@ofServices/i18n.service';
 import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
+import { EntitiesService } from '@ofServices/entities.service';
 
 
 @Component({
@@ -45,7 +46,8 @@ export class AppComponent implements OnInit {
         , private translate: TranslateService
         , private i18nService: I18nService
         , private cardService: CardService
-        , private userService: UserService) {
+        , private userService: UserService
+        ,private entitiesService: EntitiesService) {
     }
 
     ngOnInit() {
@@ -89,6 +91,7 @@ export class AppComponent implements OnInit {
                     console.log(new Date().toISOString(),`User ${identifier} logged`);
                     this.isAuthenticated = true;
                     this.userService.loadUserWithPerimetersData();
+                    this.entitiesService.loadAllEntitiesData();
                     this.cardService.initCardSubscription();
                     this.cardService.initSubscription.subscribe( ()=> this.loaded = true);
                 }

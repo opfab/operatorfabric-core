@@ -21,6 +21,8 @@ export const environment = {
         cards: 'http://opfab.rte-europe.com:2002/cards',
         cardspub: 'http://opfab.rte-europe.com:2002/cardspub',
         users: 'http://opfab.rte-europe.com:2002/users',
+        groups: 'http://opfab.rte-europe.com:2002/groups',
+        entities: 'http://opfab.rte-europe.com:2002/entities',
         archives : '',
         processes: 'http://opfab.rte-europe.com:2002/businessconfig/processes',
         config: 'http://opfab.rte-europe.com:2002/config/web-ui.json',
