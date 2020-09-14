@@ -51,7 +51,10 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                 Array.prototype.forEach.call(allProcesses, (proc: Process) => {
                     const id = proc.id;
                     this.mapOfProcesses.set(id, proc);
-                    filterValue.push({value: id, label: proc.name});
+
+                    if (proc.uiVisibility && proc.uiVisibility.monitoring === true) {
+                        filterValue.push({value: id, label: proc.name});
+                    }
                 });
                 return filterValue;
             })

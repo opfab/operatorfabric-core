@@ -13,6 +13,9 @@ Feature: Bundle
     When method GET
     Then status 200
     And match response.id == 'api_test'
+    And match response.uiVisibility.monitoring == true
+    And match response.uiVisibility.logging == true
+    And match response.uiVisibility.calendar == true
 
   Scenario: check bundle without authentication
 
