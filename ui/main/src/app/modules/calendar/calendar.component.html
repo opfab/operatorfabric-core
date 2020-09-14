@@ -1,0 +1,33 @@
+<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+    <div class='app-calendar' *ngIf="calendarVisible">
+      <full-calendar
+        #calendar
+        defaultView="dayGridMonth"
+        [header]="{
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        }"
+        [plugins]="calendarPlugins"
+        [weekends]="true"
+        [height]="'400'"
+        [scrollTime]="'06:00'"
+        [selectable]="true"
+        [events]="calendarEvents"
+        [locales]="locales"
+        [themeSystem]="themeSystem"
+        (dateClick)="handleDateClick($event)"
+        (eventClick)="selectCard($event)"
+      ></full-calendar>
+
+
+    </div>
+

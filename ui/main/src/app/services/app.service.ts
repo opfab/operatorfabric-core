@@ -5,7 +5,7 @@ import { AppState } from '@ofStore/index';
 import { ClearLightCardSelection } from '@ofStore/actions/light-card.actions';
 
 export enum PageType {
-    FEED, ARCHIVE, THIRPARTY, SETTING, ABOUT
+    FEED, ARCHIVE, THIRPARTY, SETTING, ABOUT, CALENDAR
 }
 
 @Injectable()
@@ -25,6 +25,8 @@ export class AppService {
             return PageType.SETTING;
         } else if ( this._router.routerState.snapshot.url.startsWith("/about") ) {
             return PageType.ABOUT;
+        } else if ( this._router.routerState.snapshot.url.startsWith("/calendar") ) {
+            return PageType.CALENDAR;
         }
     }
 

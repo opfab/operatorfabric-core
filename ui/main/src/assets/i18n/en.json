@@ -1,6 +1,7 @@
 {
   "menu": {
     "feed": "Card Feed",
+    "calendar" : "Calendar",
     "archives": "Archives",
     "logging": "Logging",
     "monitoring": "Monitoring",

@@ -1,6 +1,7 @@
 {
   "menu": {
     "feed": "Flux de cartes",
+    "calendar" : "Calendrier",
     "archives": "Archives",
     "logging": "Logging",
     "monitoring": "Monitoring",

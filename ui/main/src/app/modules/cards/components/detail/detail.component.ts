@@ -190,9 +190,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return `${this.card.process}.${this.card.processVersion}.`;
     }
 
-    get isArchivePageType() {
-        return this._appService.pageType === PageType.ARCHIVE;
+    get isButtonsActivated() {
+        return !((this._appService.pageType === PageType.ARCHIVE) || (this._appService.pageType === PageType.CALENDAR));
     }
+
 
     get responseDataParameters(): Map<string> {
         return this._responseData.btnText ? this._responseData.btnText.parameters : undefined;
