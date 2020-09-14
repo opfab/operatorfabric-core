@@ -69,14 +69,6 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
-            },
-            "vps": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.vps.ts"
-                }
-              ]
             }
           }
         },
@@ -91,9 +83,6 @@
             },
             "productionDebug": {
               "browserTarget": "ui-home:build:productionDebug"
-            },
-            "vps": {
-              "browserTarget": "ui-home:build:vps"
             }
           }
         },
