@@ -17,7 +17,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
-import {generateBusinessconfigWithVersion, getOneRandomLightCard, getRandomAlphanumericValue} from '@tests/helpers';
+import {getRandomAlphanumericValue} from '@tests/helpers';
 import * as _ from 'lodash';
 import {LightCard} from '@ofModel/light-card.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
@@ -25,9 +25,8 @@ import {GuidService} from '@ofServices/guid.service';
 import {Menu, MenuEntry, Process, MenuEntryLinkTypeEnum} from '@ofModel/processes.model';
 import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
-import {UpdateTranslation} from '@ofActions/translate.actions';
 import {TranslateEffects} from '@ofEffects/translate.effects';
-import {I18n} from "@ofModel/i18n.model";
+
 
 describe('Processes Services', () => {
     let injector: TestBed;
@@ -139,41 +138,6 @@ describe('Processes Services', () => {
         });
     });
 
-    it('should update translate service upon new card arrival', (done) => {
-        const card = getOneRandomLightCard();
-        const i18n = {};
-        _.set(i18n, `en.${card.title.key}`, 'en title');
-        _.set(i18n, `en.${card.summary.key}`, 'en summary');
-        _.set(i18n, `fr.${card.title.key}`, 'titre fr');
-        _.set(i18n, `fr.${card.summary.key}`, 'résumé fr');
-        const setTranslationSpy = spyOn(translateService, 'setTranslation').and.callThrough();
-        const getLangsSpy = spyOn(translateService, 'getLangs').and.callThrough();
-        const translationToUpdate = generateBusinessconfigWithVersion(card.publisher, new Set([card.processVersion]));
-        store.dispatch(
-            new UpdateTranslation({versions: translationToUpdate})
-        );
-        const calls = httpMock.match(req => req.url === `${environment.urls.processes}/testPublisher/i18n`);
-        expect(calls.length).toEqual(2);
-
-        expect(calls[0].request.method).toBe('GET');
-        flushI18nJson(calls[0], i18n);
-        expect(calls[1].request.method).toBe('GET');
-        flushI18nJson(calls[1], i18n);
-        setTimeout(() => {
-            expect(setTranslationSpy.calls.count()).toEqual(2);
-            translateService.use('fr');
-            translateService.get(cardPrefix(card) + card.title.key)
-                .subscribe(value => expect(value).toEqual('titre fr'));
-            translateService.get(cardPrefix(card) + card.summary.key)
-                .subscribe(value => expect(value).toEqual('résumé fr'));
-            translateService.use('en');
-            translateService.get(cardPrefix(card) + card.title.key)
-                .subscribe(value => expect(value).toEqual('en title'));
-            translateService.get(cardPrefix(card) + card.summary.key)
-                .subscribe(value => expect(value).toEqual('en summary'));
-            done();
-        }, 1000);
-    });
 
     it('should compute url with encoding special characters', () => {
         const urlFromPublishWithSpaces = processesService.computeBusinessconfigCssUrl('publisher with spaces'
