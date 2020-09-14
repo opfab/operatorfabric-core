@@ -174,7 +174,8 @@
       "form": "The form is not correctly filled",
       "ack": "Unable to change acknowledgement of this card for an error of remote system"
     },
-    "submitSuccess": "Action succeeded"
+    "submitSuccess": "Action succeeded",
+    "answers": "Answers"
   },
   "cardAcknowledgment": {
     "button": {

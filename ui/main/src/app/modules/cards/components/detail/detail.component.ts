@@ -8,30 +8,33 @@
  */
 
 
-import {AfterViewChecked, DoCheck, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
-import {Card, Detail} from '@ofModel/card.model';
-import {ProcessesService} from '@ofServices/processes.service';
-import {HandlebarsService} from '../../services/handlebars.service';
-import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {Response} from '@ofModel/processes.model';
-import {DetailContext} from '@ofModel/detail-context.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
-import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
-import {UserContext} from '@ofModel/user-context.model';
-import {TranslateService} from '@ngx-translate/core';
-import {map, skip, switchMap, take, takeUntil} from 'rxjs/operators';
-import {fetchLightCard, selectLastCards} from '@ofStore/selectors/feed.selectors';
-import {CardService} from '@ofServices/card.service';
-import {Observable, Subject, zip} from 'rxjs';
-import {LightCard, Severity} from '@ofModel/light-card.model';
-import {AppService, PageType} from '@ofServices/app.service';
-import {User} from '@ofModel/user.model';
-import {Map} from '@ofModel/map';
-import {RightsEnum, userRight} from '@ofModel/userWithPerimeters.model';
-import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
+import { AfterViewChecked, DoCheck, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Card, Detail } from '@ofModel/card.model';
+import { ProcessesService } from '@ofServices/processes.service';
+import { HandlebarsService } from '../../services/handlebars.service';
+import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
+import { Response } from '@ofModel/processes.model';
+import { DetailContext } from '@ofModel/detail-context.model';
+import { Store } from '@ngrx/store';
+import { AppState } from '@ofStore/index';
+import { selectAuthenticationState } from '@ofSelectors/authentication.selectors';
+import { selectGlobalStyleState } from '@ofSelectors/global-style.selectors';
+import { UserContext } from '@ofModel/user-context.model';
+import { TranslateService } from '@ngx-translate/core';
+import { map, skip, switchMap, take, takeUntil } from 'rxjs/operators';
+import { fetchLightCard, selectLastCards } from '@ofStore/selectors/feed.selectors';
+import { CardService } from '@ofServices/card.service';
+import { Observable, Subject, zip } from 'rxjs';
+import { LightCard, Severity } from '@ofModel/light-card.model';
+import { AppService, PageType } from '@ofServices/app.service';
+import { User } from '@ofModel/user.model';
+import { Map } from '@ofModel/map';
+import { RightsEnum, userRight } from '@ofModel/userWithPerimeters.model';
+import { UpdateALightCard } from '@ofStore/actions/light-card.actions';
 import { UserService } from '@ofServices/user.service';
+import { EntitiesService } from '@ofServices/entities.service';
+import { Entity } from '@ofModel/entity.model';
+
 
 declare const templateGateway: any;
 
@@ -39,6 +42,11 @@ class Message {
     text: string;
     display: boolean;
     color: ResponseMsgColor;
+}
+
+class EntityMessage {
+    name: string;
+    color: EntityMsgColor;
 }
 
 class FormResult {
@@ -69,6 +77,10 @@ const enum ResponseMsgColor {
     GREEN = 'alert-success',
     RED = 'alert-danger'
 }
+const enum EntityMsgColor {
+    GREEN = 'green',
+    YELLOW = 'yellow'
+}
 
 @Component({
     selector: 'of-detail',
@@ -85,6 +97,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
+    private _listEntitiesToRespond = new Array<EntityMessage>();
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
@@ -95,10 +108,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     message: Message = {display: false, text: undefined, color: undefined};
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
-                private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
-                private store: Store<AppState>, private translate: TranslateService,
-                private cardService: CardService, private _appService: AppService,
-                private userService:UserService) {
+        private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
+        private store: Store<AppState>, private translate: TranslateService,
+        private cardService: CardService, private _appService: AppService,
+        private userService: UserService,
+        private entitiesService: EntitiesService) {
 
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
@@ -385,6 +399,30 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
         this.message = {display: false, text: undefined, color: undefined};
+    }
+
+    get listEntitiesToRespond() {
+
+        this._listEntitiesToRespond = new Array<EntityMessage>();
+
+        if (this.card.entitiesAllowedToRespond) {
+            this.card.entitiesAllowedToRespond.forEach(entity => {
+                const entityName = this.getEntityName(entity);
+                if (entityName) {
+                    this._listEntitiesToRespond.push({ name: entityName.name, color:this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.YELLOW});
+                }
+            });
+        }
+
+        return this._listEntitiesToRespond;
+    }
+
+    getEntityName(id: string): Entity {
+        return this.entitiesService.getEntities().find(entity => entity.id === id);
+    }
+
+    checkEntityAnswered(entity: string): boolean {
+        return this.childCards.some(childCard => childCard.publisher === entity);
     }
 
     private initializeHrefsOfCssLink() {
