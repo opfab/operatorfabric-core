@@ -119,7 +119,7 @@
     "filters": {"process": "Service"},
     "cardType": "Card Type",
     "timeOfAction": "Time of Action",
-    "processName": "Process Name",
+    "processName": "Title",
     "description": "Description",
     "sender": "Sender",
     "noResult": "No result"

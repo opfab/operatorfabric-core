@@ -121,7 +121,7 @@
     },
     "cardType": "Type de Carte",
     "timeOfAction": "Moment de l'action",
-    "processName": "Nom du process",
+    "processName": "Titre",
     "description": "Description",
     "sender": "Envoyeur",
     "noResult": "Aucun résultat"
