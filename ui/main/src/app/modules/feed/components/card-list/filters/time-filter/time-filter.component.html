@@ -48,7 +48,14 @@
   </div>
 
 </ng-template>
-<ng-template #filterTimeTitle><span translate>feed.filters.time.title</span> </ng-template>
+<ng-template #filterTimeTitle>
+    <div *ngIf="filterByPublishDate">
+      <span translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
+    </div>
+    <div *ngIf="!filterByPublishDate">
+      <span translate>feed.filters.time.titleIfFilterBasedOnBusinessDate</span>
+    </div>
+</ng-template>
 <button type="button" class="btn btn-outline-light p-1 mr-1 border-0 opfab-feed-icon" placement="auto right" [ngbPopover]="filterTimeContent"
   [popoverTitle]="filterTimeTitle" [autoClose]="false" triggers="manual" #p="ngbPopover" (click)="p.open()">
   <fa-icon   icon="clock"></fa-icon>

@@ -25,7 +25,8 @@
     "filters": {
       "title": "Filtres",
       "time": {
-        "title": "Temps",
+        "titleIfFilterBasedOnPublishDate": "Date de réception",
+        "titleIfFilterBasedOnBusinessDate": "Période métier",
         "start.label": "Début",
         "end.label": "Fin",
         "active.label": "Actif",
