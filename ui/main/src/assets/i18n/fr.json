@@ -135,7 +135,7 @@
     "title": "Titre",
     "summary": "Résumé",
     "trigger": "Déclencheur",
-    "coordinationStatus": "Status de coordination",
+    "status": "Status",
     "seeDetails": "Voir les détails"
   },
   "button": {

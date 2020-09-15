@@ -14,8 +14,9 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
 import {ApplyFilter, ResetFilter} from '@ofActions/feed.actions';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
 import {ConfigService} from '@ofServices/config.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'of-monitoring-filters',
@@ -37,6 +38,8 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         this.monitoringForm = new FormGroup(
             {
                 process: new FormControl(''),
+                publishDateFrom: new FormControl(''),
+                publishDateTo: new FormControl(''),
                 activeFrom: new FormControl(''),
                 activeTo: new FormControl('')
             }
@@ -58,6 +61,23 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
                 , status: {processes: testProc.value}
             };
             this.store.dispatch(new ApplyFilter(procFilter));
+        }
+        const pubStart = this.monitoringForm.get('publishDateFrom');
+        const pubEnd = this.monitoringForm.get('publishDateTo');
+        if (this.hasFormControlValueChanged(pubStart)
+            || this.hasFormControlValueChanged(pubEnd)) {
+
+            const start = this.extractDateOrDefaultOne(pubStart,  this.offsetCurrentTime([{amount: -2, unit: 'hours'}]));
+            const end = this.extractDateOrDefaultOne(pubEnd, this.offsetCurrentTime([{amount: 2, unit: 'days'}]));
+            const publishDateFilter = {
+                name: FilterType.PUBLISHDATE_FILTER
+                , active: true
+                , status: {
+                    start: start,
+                    end: end
+                }
+            };
+            this.store.dispatch(new ApplyFilter(publishDateFilter));
         }
         const busiStart = this.monitoringForm.get('activeFrom');
         const busiEnd = this.monitoringForm.get('activeTo');
@@ -82,6 +102,14 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
             ;
             this.store.dispatch(new ApplyFilter(businessDateFilter));
         }
+    }
+
+    offsetCurrentTime(offset: { amount: number, unit: string }[]): DateTimeNgb {
+        const now = moment();
+        // @ts-ignore
+        offset.forEach(os => now.add(os.amount, os.unit));
+        return getDateTimeNgbFromMoment(now);
+
     }
 
     hasFormControlValueChanged(control: AbstractControl): boolean {

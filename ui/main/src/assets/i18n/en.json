@@ -131,7 +131,7 @@
     "title": "Title",
     "summary": "Summary",
     "trigger": "Trigger",
-    "coordinationStatus": "Coordination Status",
+    "status": "Status",
     "seeDetails": "see details"
   },
   "button": {
