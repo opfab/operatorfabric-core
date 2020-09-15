@@ -14,7 +14,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FilterType} from '@ofServices/filter.service';
 import {ApplyFilter, ResetFilter} from '@ofActions/feed.actions';
-import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
+import {DateTimeNgb, getDateTimeNgbFromMoment, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
 import {ConfigService} from '@ofServices/config.service';
 import * as moment from 'moment';
 
@@ -67,8 +67,8 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         if (this.hasFormControlValueChanged(pubStart)
             || this.hasFormControlValueChanged(pubEnd)) {
 
-            const start = this.extractDateOrDefaultOne(pubStart,  this.offsetCurrentTime([{amount: -2, unit: 'hours'}]));
-            const end = this.extractDateOrDefaultOne(pubEnd, this.offsetCurrentTime([{amount: 2, unit: 'days'}]));
+            const start = this.extractDateOrDefaultOne(pubStart,  offSetCurrentTime([{amount: -2, unit: 'hours'}]));
+            const end = this.extractDateOrDefaultOne(pubEnd, offSetCurrentTime([{amount: 2, unit: 'days'}]));
             const publishDateFilter = {
                 name: FilterType.PUBLISHDATE_FILTER
                 , active: true
@@ -104,13 +104,7 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
         }
     }
 
-    offsetCurrentTime(offset: { amount: number, unit: string }[]): DateTimeNgb {
-        const now = moment();
-        // @ts-ignore
-        offset.forEach(os => now.add(os.amount, os.unit));
-        return getDateTimeNgbFromMoment(now);
 
-    }
 
     hasFormControlValueChanged(control: AbstractControl): boolean {
         if (!!control) {

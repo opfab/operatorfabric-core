@@ -13,7 +13,7 @@ import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
+import {getDateTimeNgbFromMoment, offSetCurrentTime} from '@ofModel/datetime-ngb.model';
 
 @Component({
     selector: 'of-datetime-filter',
@@ -54,10 +54,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
 
     ngOnInit() {
         if (!!this.offset) {
-            const temp = moment();
-            // @ts-ignore
-            this.offset.forEach(os => temp.add(os.amount, os.unit));
-            const converted = getDateTimeNgbFromMoment(temp);
+            const converted = offSetCurrentTime(this.offset);
             this.defaultDate = converted.date;
             this.defaultTime = converted.time;
             this.disabled = false;
