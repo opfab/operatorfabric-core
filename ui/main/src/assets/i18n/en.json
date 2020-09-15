@@ -25,7 +25,8 @@
     "filters": {
       "title": "Filters",
       "time":{
-        "title":"Time",
+        "titleIfFilterBasedOnPublishDate": "Receipt date",
+        "titleIfFilterBasedOnBusinessDate": "Business period",
         "start.label": "Start",
         "end.label": "End",
         "active.label": "Active",
