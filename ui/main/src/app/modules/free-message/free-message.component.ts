@@ -7,27 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, TemplateRef} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {CardService} from '@ofServices/card.service';
-import {UserService} from '@ofServices/user.service';
-import {selectIdentifier} from '@ofSelectors/authentication.selectors';
-import {map, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
-import {Card, fromCardToLightCard} from '@ofModel/card.model';
-import {I18n} from '@ofModel/i18n.model';
-import {Observable, Subject} from 'rxjs';
-import {selectProcesses} from '@ofSelectors/process.selector';
-import {Process, State} from '@ofModel/processes.model';
-import {transformToTimestamp} from '../archives/components/archive-filters/archive-filters.component';
-import {TimeService} from '@ofServices/time.service';
-import {selectAllEntities} from '@ofSelectors/user.selector';
-import {Entity, User} from '@ofModel/user.model';
-import {Severity} from '@ofModel/light-card.model';
-import {Guid} from 'guid-typescript';
-import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { Component, OnDestroy, TemplateRef } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { AppState } from '@ofStore/index';
+import { CardService } from '@ofServices/card.service';
+import { UserService } from '@ofServices/user.service';
+import { selectIdentifier } from '@ofSelectors/authentication.selectors';
+import { map, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { Card, fromCardToLightCard } from '@ofModel/card.model';
+import { I18n } from '@ofModel/i18n.model';
+import { Observable, Subject } from 'rxjs';
+import { selectProcesses } from '@ofSelectors/process.selector';
+import { Process, State } from '@ofModel/processes.model';
+import { transformToTimestamp } from '../archives/components/archive-filters/archive-filters.component';
+import { TimeService } from '@ofServices/time.service';
+import { selectAllEntities } from '@ofSelectors/user.selector';
+import { Entity, User } from '@ofModel/user.model';
+import { Severity } from '@ofModel/light-card.model';
+import { Guid } from 'guid-typescript';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
 @Component({
     selector: 'of-free-message',
@@ -67,22 +67,22 @@ export class FreeMessageComponent implements OnDestroy {
     }
 
     constructor(private store: Store<AppState>,
-                private formBuilder: FormBuilder,
-                private cardService: CardService,
-                private userService: UserService,
-                private timeService: TimeService,
-                private modalService: NgbModal
+        private formBuilder: FormBuilder,
+        private cardService: CardService,
+        private userService: UserService,
+        private timeService: TimeService,
+        private modalService: NgbModal
     ) {
 
         this.messageForm = new FormGroup({
-                severity: new FormControl(''),
-                process: new FormControl(''),
-                state: new FormControl(''),
-                startDate: new FormControl(''),
-                endDate: new FormControl(''),
-                comment: new FormControl(''),
-                entities: new FormControl('')
-            }
+            severity: new FormControl(''),
+            process: new FormControl(''),
+            state: new FormControl(''),
+            startDate: new FormControl(''),
+            endDate: new FormControl(''),
+            comment: new FormControl(''),
+            entities: new FormControl('')
+        }
         );
 
         this.processOptions$ = this.store.select(selectProcesses).pipe(
@@ -122,22 +122,21 @@ export class FreeMessageComponent implements OnDestroy {
         this.entityOptions$ = this.store.select(selectAllEntities).pipe(
             takeUntil(this.unsubscribe$),
             map((allEntities: Entity[]) => allEntities.map((entity: Entity) => {
-                    return {value: entity.id, label: entity.name};
-                })
+                return { value: entity.id, label: entity.name };
+            })
             )
         );
-        this.store.select(selectIdentifier)
-            .pipe(
-                switchMap(id => this.userService.askUserApplicationRegistered(id)),
-                withLatestFrom(this.store.select(selectProcesses))
-            )
-            .subscribe(([user, allProcesses]: [User, Process[]]) => {
 
-                this.currentUser = user;
+        this.store.select(selectProcesses)
+            .pipe(takeUntil(this.unsubscribe$)).
+            subscribe((allProcesses: Process[]) => {
                 this.fetchedProcesses = allProcesses;
-
-
             });
+
+        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        if (userWithPerimeters) {
+            this.currentUser = userWithPerimeters.userData;
+        }
     }
 
     onSubmitForm(template: TemplateRef<any>) {
@@ -191,7 +190,7 @@ export class FreeMessageComponent implements OnDestroy {
     }
 
     createTimestampFromValue = (value: any): number => {
-        const {date, time} = value;
+        const { date, time } = value;
         if (date) {
             return this.timeService.toNgBNumberTimestamp(transformToTimestamp(date, time));
             // TODO Why do we need 2 transformations? What is an NgBTimestamp vs a plain Timestamp?
