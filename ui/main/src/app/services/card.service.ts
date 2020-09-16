@@ -37,7 +37,6 @@ import {
 
 @Injectable()
 export class CardService {
-    private static MINIMUM_DELAY_FOR_SUBSCRIPTION = 2000;
     readonly cardOperationsUrl: string;
     readonly cardsUrl: string;
     readonly archivesUrl: string;
@@ -71,9 +70,11 @@ export class CardService {
                 operation => {
                     switch (operation.type) {
                         case CardOperationType.ADD:
+                            console.log(new Date().toISOString(), `CardService - Receive card to add id=` , operation.cards[0].id);
                             this.store.dispatch(new LoadLightCardsSuccess({lightCards: operation.cards}));
                             break;
                         case CardOperationType.DELETE:
+                            console.log(new Date().toISOString(), `CardService - Receive card to delete id=` , operation.cardIds[0]);
                             this.store.dispatch(new RemoveLightCard({cards: operation.cardIds}));
                             break;
                         default:
@@ -82,10 +83,12 @@ export class CardService {
                             );
                     }
                 }, (error) => {
+                    console.error('CardService - Error received from  getCardSubscription ' , error);
                     this.store.dispatch(new AddLightCardFailure({error: error}));
                 }
             );
         catchError((error, caught) => {
+            console.error('CardService - Global  error in subscription ' , error);
             this.store.dispatch(new HandleUnexpectedError({error: error}));
             return caught;
         });
@@ -94,17 +97,11 @@ export class CardService {
 
     private getCardSubscription(): Observable<CardOperation> {
         // security header needed here as SSE request are not intercepted by our header interceptor
-        const oneYearInMilliseconds = 31536000000;
         const eventSource = new EventSourcePolyfill(
             `${this.cardOperationsUrl}&notification=true`
             , {
                 headers: this.authService.getSecurityHeader(),
-                /** We loose sometimes cards when reconnecting after a heartbeat timeout
-                 * ..there 's no way to inhibit this heartbeat timeout
-                 * so putting it to 31536000000 milliseconds make it sufficiently long (1 year)
-                 * Anyway the token will expire long before and the connection will restart
-                 */
-                heartbeatTimeout: oneYearInMilliseconds
+               // if necessary , we cans set here  heartbeatTimeout: xxx (in ms)
             });
         return Observable.create(observer => {
             try {
@@ -114,24 +111,26 @@ export class CardService {
                         return observer.error(message);
                     }
                     if (message.data === 'INIT') {
-                        console.log(new Date().toISOString(), `Card subscription initialized`);
+                        console.log(new Date().toISOString(), `CardService - Card subscription initialized`);
                         this.initSubscription.next();
                         this.initSubscription.complete();
                     } else {
-                        return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
+                        if (message.data === 'HEARTBEAT') {
+                            console.log(new Date().toISOString(), `CardService - HEARTBEAT received - Connection alive `);
+                        } else { return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum)); }
                     }
                 };
                 eventSource.onerror = error => {
                     this.store.dispatch(new CardSubscriptionClosed());
-                    console.error(new Date().toISOString(), 'Error occurred in card subscription:', error);
+                    console.error(new Date().toISOString(), 'CardService - Error event in card subscription:', error);
                 };
                 eventSource.onopen = open => {
                     this.store.dispatch(new CardSubscriptionOpen());
-                    console.log(new Date().toISOString(), `Open card subscription`);
+                    console.log(new Date().toISOString(), `CardService- Open card subscription`);
                 };
 
             } catch (error) {
-                console.error(new Date().toISOString(), 'an error occurred', error);
+                console.error(new Date().toISOString(), 'CardService - Error in interpreting message from subscription', error);
                 return observer.error(error);
             }
             return () => {
@@ -145,7 +144,7 @@ export class CardService {
 
     public setSubscriptionDates(rangeStart: number, rangeEnd: number) {
 
-        console.log(new Date().toISOString(), 'Set subscription date', new Date(rangeStart), ' -', new Date(rangeEnd));
+        console.log(new Date().toISOString(), 'CardService - Set subscription date', new Date(rangeStart), ' -', new Date(rangeEnd));
         this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
             {rangeStart: rangeStart, rangeEnd: rangeEnd}).subscribe();

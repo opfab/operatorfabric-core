@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.lfenergy.operatorfabric.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.FanoutExchange;
@@ -42,6 +42,7 @@ public class CardSubscriptionService {
     private final FanoutExchange cardExchange;
     private final AmqpAdmin amqpAdmin;
     private final long deletionDelay;
+    private final long heartbeatDelay;
     private final ConnectionFactory connectionFactory;
     private Map<String, CardSubscription> cache = new ConcurrentHashMap<>();
     private Map<String, ScheduledFuture<?>> pendingEvict = new ConcurrentHashMap<>();
@@ -51,13 +52,47 @@ public class CardSubscriptionService {
                                    FanoutExchange cardExchange,
                                    ConnectionFactory connectionFactory,
                                    AmqpAdmin amqpAdmin,
-                                   @Value("${opfab.subscriptiondeletion.delay:10000}")
-                                      long deletionDelay) {
+                                   @Value("${operatorfabric.subscriptiondeletion.delay:10000}")
+                                   long deletionDelay,
+                                   @Value("${operatorfabric.heartbeat.delay:10000}")
+                                   long heartbeatDelay) {
         this.cardExchange = cardExchange;
         this.taskScheduler = taskScheduler;
         this.amqpAdmin = amqpAdmin;
         this.connectionFactory = connectionFactory;
         this.deletionDelay = deletionDelay;
+        this.heartbeatDelay = heartbeatDelay;
+        Thread heartbeat = new Thread(){
+            public void run(){
+                sendHeartbeatMessageInAllSubscriptions();
+            }
+          };
+        
+        heartbeat.start();
+    }
+
+
+    private void sendHeartbeatMessageInAllSubscriptions()
+    {
+        for(;;)
+        {
+            try
+                {
+                Thread.sleep(heartbeatDelay);
+                }
+                catch (InterruptedException ex)
+                {
+                    log.error("Impossible to launch heartbeat ",ex);
+                    return; 
+                }
+            log.debug("Send heartbeat to all subscription");
+            cache.keySet().forEach(key -> sendHeartbeat(cache.get(key)));
+        }
+    }
+
+    private void sendHeartbeat(CardSubscription subscription)
+    {
+        if (subscription!=null) subscription.publishInto(Flux.just("HEARTBEAT"));
     }
 
     /**
