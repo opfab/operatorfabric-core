@@ -1,0 +1,29 @@
+{
+  "type": "record",
+  "name": "CardCommand",
+  "namespace": "org.lfenergy.operatorfabric.avro",
+  "fields": [
+    { "name": "command",
+      "type":
+        {
+          "name": "CommandType",
+          "type": "enum",
+          "symbols" : ["UNKNOWN","CREATE_CARD", "UPDATE_CARD", "DELETE_CARD"],
+          "default": "UNKNOWN"
+        }
+    },
+    {
+      "name": "taskId",
+      "type": "string"
+    },
+    {
+      "name": "processId",
+      "type": "string"
+    },
+    {
+      "name": "card",
+      "type": ["null","Card"],
+      "default": null
+    }
+  ]
+}
