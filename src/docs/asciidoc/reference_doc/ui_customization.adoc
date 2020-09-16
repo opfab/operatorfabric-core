@@ -84,3 +84,15 @@ Here a sample with 3 menu entries.
 		}]
 }
 ....
+
+=== Operator Fabric theme
+
+If the page opened via the menu is in a iframe, the current theme of operator fabric will be passed as a parameter in the request send to the web site. The parameter is named opfab_theme and has the value of the current theme : DAY, NIGHT or LEGACY. 
+
+Example : 
+
+....
+ http://mysite.com/index.htm?opfab_theme=NIGHT 
+....
+
+When user is switching theme and the iframe is opened, the iframe will be reloaded.
