@@ -10,8 +10,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {FreeMessageComponent} from './free-message.component';
-import {FreeMessageRoutingModule} from './free-message-routing.module';
+import {UserCardComponent} from './usercard.component';
+import {UserCardRoutingModule} from './usercard-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {FlatpickrModule} from 'angularx-flatpickr';
 import {ArchivesModule} from '../archives/archives.module';
@@ -22,12 +22,12 @@ import {CardsModule} from '../cards/cards.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-    declarations: [FreeMessageComponent],
+    declarations: [UserCardComponent],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        FreeMessageRoutingModule,
+        UserCardRoutingModule,
         TranslateModule,
         FlatpickrModule.forRoot(),
         ArchivesModule,
@@ -38,5 +38,5 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
         NgbModule
     ]
 })
-export class FreeMessageModule {
+export class UserCardModule {
 }

@@ -8,7 +8,7 @@
     "logout": "Déconnexion",
     "settings": "Paramètres",
     "about": "À propos",
-    "freemessage": "Nouvelle Carte"
+    "usercard": "Nouvelle Carte"
   },
   "timeline": {
     "businessPeriod": "Periode métier",
@@ -143,7 +143,7 @@
     "cancel": "Annuler",
     "reset": "Effacer"
   },
-  "free-message": {
+  "usercard": {
     "title": "Éditer la notification par Free Message",
     "filters": {
       "severity": "Sévérité",

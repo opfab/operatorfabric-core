@@ -33,8 +33,8 @@ const routes: Routes = [
         component: MonitoringComponent
     },
     {
-        path: 'freemessage',
-        loadChildren: () => import('./modules/free-message/free-message.module').then(m => m.FreeMessageModule),
+        path: 'usercard',
+        loadChildren: () => import('./modules/usercard/usercard.module').then(m => m.UserCardModule),
     },
     {
         path: archivePath,

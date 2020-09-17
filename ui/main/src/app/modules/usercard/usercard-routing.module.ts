@@ -10,12 +10,12 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {FreeMessageComponent} from '../free-message/free-message.component';
+import {UserCardComponent} from '../usercard/usercard.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: FreeMessageComponent
+        component: UserCardComponent
     }
 ];
 
@@ -23,4 +23,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class FreeMessageRoutingModule { }
+export class UserCardRoutingModule { }
