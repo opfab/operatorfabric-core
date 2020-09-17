@@ -11,11 +11,12 @@ spring:
       name: camundaKafka
 
 logging:
-  org:
-    lfenergy:
-      operatorfabric:
-        cards:
-          publication: DEBUG
+  level:
+    org:
+      lfenergy:
+        operatorfabric:
+          cards:
+            publication: DEBUG
 
 
 #here we put urls for all feign clients
