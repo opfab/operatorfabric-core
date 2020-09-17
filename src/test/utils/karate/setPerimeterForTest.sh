@@ -2,4 +2,5 @@
 
 java -jar karate.jar                           \
       cards/setPerimeterFor6Cards.feature         \
+      cards/setPerimeterForUserCardExamples.feature  \
 

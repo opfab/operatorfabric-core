@@ -140,14 +140,19 @@
     "reset" : "Reset"
 
   },
-  "usercard": {
-    "title": "Edit Free Message Notification",
+  "userCard": {
+    "title": "New Card Edition",
+    "error": {
+      "noRecipientSelected" : "You must at least choose one recipient",
+      "templateError" : "Technical error : invalid template",
+      "impossibleToSendCard" : "Impossible to send card for technical reasons"
+    },
     "filters": {
       "severity":  "Severity",
       "process": "Process",
       "state": "State",
-      "startDate":  "Start Date",
-      "endDate":  "End Date",
+      "startDate":  "Validity Start Date",
+      "endDate":  "Validity End Date",
       "comment": "Comment",
       "entities": "Recipient"
     },
@@ -165,7 +170,8 @@
     "refuse": "Cancel",
     "processInstanceId": "Id",
     "state": "State",
-    "send-another-one": "Send another Card"
+    "send-another-one": "Send another Card",
+    "cardSendWithNoError": "Card send"
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",
