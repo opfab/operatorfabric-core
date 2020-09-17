@@ -79,7 +79,7 @@ const enum ResponseMsgColor {
 }
 const enum EntityMsgColor {
     GREEN = 'green',
-    YELLOW = 'yellow'
+    ORANGE = '#ff6600'
 }
 
 @Component({
@@ -409,7 +409,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.card.entitiesAllowedToRespond.forEach(entity => {
                 const entityName = this.getEntityName(entity);
                 if (entityName) {
-                    this._listEntitiesToRespond.push({ name: entityName.name, color:this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.YELLOW});
+                    this._listEntitiesToRespond.push({ name: entityName.name, color:this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE});
                 }
             });
         }
