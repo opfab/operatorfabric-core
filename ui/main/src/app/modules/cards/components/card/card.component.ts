@@ -61,7 +61,7 @@ export class CardComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue(
             'feed.card.secondsBeforeLttdForClockDisplay',
-            false
+            180
         );
 
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
