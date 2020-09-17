@@ -115,7 +115,7 @@ src/test/**/karate/target/**/*
 ## Karate jar
 src/test/**/karate.jar
 ## Tar.gz bundles
-src/test/**/karate/**/*.tar.gz
+src/test/**/*.tar.gz
 
 # UI
 ui/main/node_modules
