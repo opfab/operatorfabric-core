@@ -27,13 +27,7 @@ public class BaseCommandHandler {
         }
     }
 
-    private static class I18nTypeConverter
-            implements JsonSerializer<I18nPublicationData>, JsonDeserializer<I18n> {
-        @Override
-        public JsonElement serialize(I18nPublicationData src, Type srcType, JsonSerializationContext context) {
-           return context.serialize(src);
-        }
-
+    private static class I18nTypeConverter implements  JsonDeserializer<I18n> {
         @Override
         public I18n deserialize(JsonElement json, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
@@ -41,13 +35,7 @@ public class BaseCommandHandler {
         }
     }
 
-    private static class RecipientTypeConverter
-            implements JsonSerializer<RecipientPublicationData>, JsonDeserializer<Recipient> {
-        @Override
-        public JsonElement serialize(RecipientPublicationData src, Type srcType, JsonSerializationContext context) {
-            return context.serialize(src);
-        }
-
+    private static class RecipientTypeConverter implements  JsonDeserializer<Recipient> {
         @Override
         public Recipient deserialize(JsonElement json, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
