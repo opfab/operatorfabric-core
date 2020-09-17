@@ -30,11 +30,11 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
 @Component({
-    selector: 'of-free-message',
-    templateUrl: './free-message.component.html',
-    styleUrls: ['./free-message.component.scss']
+    selector: 'of-usercard',
+    templateUrl: './usercard.component.html',
+    styleUrls: ['./usercard.component.scss']
 })
-export class FreeMessageComponent implements OnDestroy {
+export class UserCardComponent implements OnDestroy {
 
     messageForm: FormGroup;
     message: string;
@@ -46,7 +46,7 @@ export class FreeMessageComponent implements OnDestroy {
     severityOptions = Object.keys(Severity).map(severity => {
         return {
             value: severity,
-            label: new I18n('free-message.options.severity.' + severity)
+            label: new I18n('usercard.options.severity.' + severity)
         };
     });
     processOptions$: Observable<any>;
@@ -247,7 +247,7 @@ export class FreeMessageComponent implements OnDestroy {
         this.messageForm.reset();
     }
 
-    sendAnotherFreeMessage() {
+    sendAnotherUserCard() {
         this.card = null;
         this.displaySendResult = false;
         this.reset();
