@@ -45,13 +45,21 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
 
     // when filter by publish date instead of business date
     // endDate and startDate are optionnal and there is a button to reset all the field 
-    // this is not the case otherwise 
+    // this is not the case otherwise
 
-    @Input() filterByPublishDate:boolean;
+    @Input() filterByPublishDate: boolean;
 
 
     constructor(private store: Store<AppState>) {
+        this.initTime();
     }
+
+    initTime() {
+        this.startTime = '00:00';
+        this.oldStartTime = '00:00';
+        this.endTime = '00:00';
+        this.oldEndTime = '00:00';
+     }
 
     ngOnDestroy() {
         this.ngUnsubscribe$.next();
@@ -148,13 +156,12 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
 
 
     /**
-     *  use when user click on Reset button 
+     *  use when user click on Reset button
      */
     public resetDate(): void {
         this.startDate = null;
         this.endDate = null;
-        this.startTime = null;
-        this.endTime = null;
+        this.initTime();
     }
     /**
      *  use when user click on Confirm button
@@ -164,7 +171,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         let startHour = 0;
         let startMin = 0;
         if (this.startTime) {
-            const startValues = this.startTime.split(":");
+            const startValues = this.startTime.split(':');
             if (startValues.length > 1) {
                 startHour = Number(startValues[0]);
                 if (Number.isNaN(startHour)) startHour = 0;
@@ -175,7 +182,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
         let endHour = 23;
         let endMin = 59;
         if (this.endTime) {
-            const endValues = this.endTime.split(":");
+            const endValues = this.endTime.split(':');
             if (endValues.length > 1) {
                 endHour = Number(endValues[0]);
                 if (Number.isNaN(endHour)) endHour = 0;
@@ -183,7 +190,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
                 if (Number.isNaN(endMin)) endMin = 0;
             }
         }
-        let status = { start: null, end: null };
+        const status = { start: null, end: null };
         if (this.startDate) status.start = this.convertDateFromDatePickerToMillis(this.startDate, startHour, startMin);
         if (this.endDate) status.end = this.convertDateFromDatePickerToMillis(this.endDate, endHour, endMin);
 
@@ -192,7 +199,7 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
                 name: this.filterType,
                 active: true,
                 status: status
-            }))
+            }));
 
     }
 
@@ -218,7 +225,6 @@ export class TimeFilterComponent implements OnInit, OnDestroy {
             .add(hour, 'hour' )
             .add(minute, 'minutes');
 
-        
         return newDateWithTime.valueOf();
     }
 
