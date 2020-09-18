@@ -27,7 +27,7 @@
       "details": [
         {
           "title": {
-            "key": "process.label"
+            "key": "message.title"
           },
           "templateName": "template",
           "styles": [
