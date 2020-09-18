@@ -166,6 +166,16 @@ public class PathUtils {
       Files.createDirectories(dir);
     }
   }
+
+  public static void copyInputStreamToFile(InputStream is, String outPath) throws IOException {
+
+    File targetFile = new File(outPath);
+
+    java.nio.file.Files.copy(
+            is,
+            targetFile.toPath(),
+            StandardCopyOption.REPLACE_EXISTING);
+  }
 }
 
 /**

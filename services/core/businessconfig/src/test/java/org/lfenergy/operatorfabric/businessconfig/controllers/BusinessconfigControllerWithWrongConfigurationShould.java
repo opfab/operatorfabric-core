@@ -19,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.lfenergy.operatorfabric.businessconfig.application.IntegrationTestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -65,5 +66,16 @@ public class BusinessconfigControllerWithWrongConfigurationShould {
        .readAllBytes(pathToBundle));
     mockMvc.perform(multipart("/businessconfig/processes").file(bundle))
        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void notAllowProcessGroupsToBePosted() throws Exception {
+    Path pathToProcessGroupsFile = Paths.get("./build/test-data/processgroups.json");
+
+    MockMultipartFile processGroupsFile = new MockMultipartFile("file", "processgroups.json", MediaType.TEXT_PLAIN_VALUE, Files
+            .readAllBytes(pathToProcessGroupsFile));
+
+    mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
+            .andExpect(status().isBadRequest());
   }
 }
