@@ -29,8 +29,8 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 					},
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
-			"summary" : {"key" : "process.label"},
-			"title" : {"key" : "process.label"},
+			"summary" : {"key" : "message.summary"},
+			"title" : {"key" : "message.title"},
 			"data" : {"message":" Information card number 1"},
 			"timeSpans" : [
 				{"start" : startDate},
