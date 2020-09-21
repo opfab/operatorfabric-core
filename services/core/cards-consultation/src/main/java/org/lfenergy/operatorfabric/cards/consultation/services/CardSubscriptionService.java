@@ -82,6 +82,7 @@ public class CardSubscriptionService {
                 catch (InterruptedException ex)
                 {
                     log.error("Impossible to launch heartbeat ",ex);
+                    Thread.currentThread().interrupt(); // Cf sonar java:S2142 "InterruptedException" should not be ignored
                     return; 
                 }
             log.debug("Send heartbeat to all subscription");
