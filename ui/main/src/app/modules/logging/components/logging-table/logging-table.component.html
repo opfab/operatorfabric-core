@@ -10,19 +10,20 @@
     <caption class="hidden-caption">List of current cards filtered by process or by active dates</caption>
     <thead>
     <tr>
-        <th scope="col" translate >logging.cardType</th>
         <th scope="col" translate>logging.timeOfAction</th>
         <th scope="col" translate>logging.processName</th>
         <th scope="col" translate>logging.description</th>
+        <th scope="col"  ></th>
+
         <th scope="col" translate>logging.sender</th>
     </tr>
     </thead>
     <tbody>
         <tr mdbTableCol *ngFor="let element of results">
-            <td ><i class="fas fa-circle text-sev-{{element.cardType}}"></i></td>
             <td>{{displayTime(element.businessDate)}}</td>
             <td translate [translateParams]="element.i18nKeyForProcessName.parameters">{{element.i18nKeyForProcessName.key}}</td>
             <td translate [translateParams]="element.i18nKeyForDescription.parameters">{{element.i18nKeyForDescription.key}}</td>
+            <td ><i class="fas fa-circle text-sev-{{element.cardType}}"></i></td>
             <td>{{element.sender}}</td>
         </tr>
     </tbody>

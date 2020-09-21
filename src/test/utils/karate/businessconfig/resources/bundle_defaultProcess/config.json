@@ -70,12 +70,12 @@
       "acknowledgementAllowed": true
     },
     "processState": {
-      "name": "processState.title",
+      "name": "process.label",
       "color": "#8bcdcd",
       "details": [
         {
           "title": {
-            "key": "process.title"
+            "key": "process.label"
           },
           "templateName": "process",
           "styles": [
