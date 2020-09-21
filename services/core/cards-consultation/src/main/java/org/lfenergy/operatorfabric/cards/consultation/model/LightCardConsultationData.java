@@ -73,6 +73,7 @@ public class LightCardConsultationData implements LightCard {
 
     private List<String> entitiesAllowedToRespond;
 
+    private PublisherTypeEnum publisherType;
 
     /**
      * return timespans, may return null
@@ -113,8 +114,9 @@ public class LightCardConsultationData implements LightCard {
                 .summary(I18nConsultationData.copy(other.getSummary()))
                 .hasBeenAcknowledged(other.getHasBeenAcknowledged())
                 .hasBeenRead(other.getHasBeenRead())
-                .entitiesAllowedToRespond(other.getEntitiesAllowedToRespond());
-                
+                .entitiesAllowedToRespond(other.getEntitiesAllowedToRespond())
+                .publisherType(other.getPublisherType())
+                ;
         if(other.getTags()!=null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());
         if(other.getTimeSpans()!=null && !other.getTimeSpans().isEmpty())

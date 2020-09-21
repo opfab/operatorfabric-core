@@ -100,4 +100,5 @@ public class ArchivedCardConsultationData implements Card {
     @JsonIgnore
     @Transient
     private Boolean hasBeenRead;
+    private PublisherTypeEnum publisherType;
 }

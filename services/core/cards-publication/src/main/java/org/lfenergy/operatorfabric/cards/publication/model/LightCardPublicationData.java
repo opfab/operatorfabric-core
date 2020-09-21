@@ -71,6 +71,8 @@ public class LightCardPublicationData implements LightCard {
 
     private List<String> entitiesAllowedToRespond;
 
+    private PublisherTypeEnum publisherType;
+
     /**
      * return timespans, may be null
      * @return

@@ -348,6 +348,7 @@ class CardProcessServiceShould {
                 .timeSpan(TimeSpanPublicationData.builder().start(Instant.ofEpochMilli(123l)).build())
                 .process("process1")
                 .state("state1")
+                .publisherType(PublisherTypeEnum.EXTERNAL)
                 .build();
         cardProcessingService.processCards(Flux.just(newCard)).subscribe();
         CardPublicationData persistedCard = cardRepository.findById(newCard.getId()).block();

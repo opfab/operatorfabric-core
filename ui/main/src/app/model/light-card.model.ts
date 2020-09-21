@@ -31,7 +31,8 @@ export class LightCard {
         readonly process?: string,
         readonly state?: string,
         readonly parentCardUid?: string,
-        readonly entitiesAllowedToRespond?: string[]
+        readonly entitiesAllowedToRespond?: string[],
+        readonly publisherType?: PublisherType | string
     ) {
     }
 }
@@ -73,4 +74,9 @@ export class TimeSpan {
         readonly end?: number,
         readonly display = Display.BUBBLE) {
     }
+}
+
+export enum PublisherType {
+    EXTERNAL,
+    SYSTEM
 }

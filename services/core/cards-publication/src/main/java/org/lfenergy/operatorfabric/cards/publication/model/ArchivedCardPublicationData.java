@@ -84,6 +84,8 @@ public class ArchivedCardPublicationData implements Card {
     @Indexed
     private String processStateKey;
 
+    private PublisherTypeEnum publisherType;
+
     public ArchivedCardPublicationData(CardPublicationData card){
         this.id = card.getUid();
         this.parentCardUid = card.getParentCardUid();
@@ -110,6 +112,7 @@ public class ArchivedCardPublicationData implements Card {
         this.externalRecipients = card.getExternalRecipients() == null ? null : new ArrayList<>(card.getExternalRecipients());
         this.entitiesAllowedToRespond = card.getEntitiesAllowedToRespond() == null ? null : new ArrayList<>(card.getEntitiesAllowedToRespond());
         this.processStateKey = process + "." + state;
+        this.publisherType = card.getPublisherType();
     }
 
 }
