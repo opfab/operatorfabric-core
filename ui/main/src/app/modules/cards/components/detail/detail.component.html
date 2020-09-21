@@ -9,7 +9,7 @@
 
 
 <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-<div class="my-3">
+<div class="my-3" *ngIf='responseDataExists'>
   <table>
     <tr>
       <td> <span class="h4" translate>response.answers</span> : </td>
