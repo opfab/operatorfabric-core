@@ -26,10 +26,10 @@ public class CreateCardCommandHandler extends BaseCommandHandler implements Comm
 
     @Override
     public void executeCommand(CardCommand cardCommand) {
-        log.debug("Received Kafka CREATE CARD with processId {}, taskId {} and variables: {}",
-                cardCommand.getProcessId(), cardCommand.getTaskId(), cardCommand.getCard().getData());
+        log.debug("Received Kafka CREATE CARD with processInstanceId {}, taskId {} and variables: {}",
+                cardCommand.getProcessInstanceId(), cardCommand.getProcess(), cardCommand.getCard().getData());
 
         CardPublicationData card = buildCardPublicationData(cardCommand);
-        cardProcessingService.processCards(Flux.just(card));
+        cardProcessingService.processCards(Flux.just(card)).subscribe();
     }
 }

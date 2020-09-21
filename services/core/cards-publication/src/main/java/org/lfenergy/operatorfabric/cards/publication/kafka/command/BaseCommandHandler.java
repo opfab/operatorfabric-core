@@ -18,8 +18,8 @@ public class BaseCommandHandler {
         Card kafkaCard = cardCommand.getCard();
 
         CardPublicationData card = gson.fromJson(gson.toJson(kafkaCard), CardPublicationData.class);
-        card.setId(cardCommand.getTaskId());
-        card.setProcess(cardCommand.getProcessId());
+        card.setProcess(cardCommand.getProcess());
+        card.setProcessInstanceId(cardCommand.getProcessInstanceId());
         return card;
     }
 }

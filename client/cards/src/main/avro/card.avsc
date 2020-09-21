@@ -18,14 +18,14 @@
       "type": "string"
     },
     {
-      "name": "publisherVersion",
+      "name": "processVersion",
       "type": "string"
     },
-    {
-      "name": "process",
-      "type": ["null","string"],
-      "default": null
-    },
+    // process is mapped to process in cardCommand
+//    {
+//      "name": "process",
+//      "type": "string"
+//    },
     // processId is mapped to processId in cardCommand
 //    {
 //      "name": "processId",

@@ -13,11 +13,11 @@
         }
     },
     {
-      "name": "taskId",
+      "name": "process",
       "type": "string"
     },
     {
-      "name": "processId",
+      "name": "processInstanceId",
       "type": "string"
     },
     {
