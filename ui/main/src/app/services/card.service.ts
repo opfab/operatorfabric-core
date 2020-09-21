@@ -37,12 +37,17 @@ import {
 
 @Injectable()
 export class CardService {
+
+    private static TWO_MINUTES = 120000;
+
     readonly cardOperationsUrl: string;
     readonly cardsUrl: string;
     readonly archivesUrl: string;
     readonly cardsPubUrl: string;
     readonly userAckUrl: string;
     readonly userCardReadUrl: string;
+    private lastHeardBeatDate: number;
+    private firstSubscriptionInitDone = false;
     public initSubscription = new Subject<void>();
 
     constructor(private httpClient: HttpClient,
@@ -110,14 +115,23 @@ export class CardService {
                     if (!message) {
                         return observer.error(message);
                     }
-                    if (message.data === 'INIT') {
-                        console.log(new Date().toISOString(), `CardService - Card subscription initialized`);
-                        this.initSubscription.next();
-                        this.initSubscription.complete();
-                    } else {
-                        if (message.data === 'HEARTBEAT') {
+                    switch (message.data) {
+                        case 'INIT':
+                            console.log(new Date().toISOString(), `CardService - Card subscription initialized`);
+                            this.initSubscription.next();
+                            this.initSubscription.complete();
+                            if (this.firstSubscriptionInitDone) this.recoverAnyLostCardWhenConnectionHasBeenReset();
+                            else this.firstSubscriptionInitDone = true ;
+                            break;
+                        case 'HEARTBEAT':
+                            this.lastHeardBeatDate = new Date().valueOf();
                             console.log(new Date().toISOString(), `CardService - HEARTBEAT received - Connection alive `);
-                        } else { return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum)); }
+                            break;
+                        case 'RESTORE':
+                            console.log(new Date().toISOString(), `CardService - Subscription restored with server`);
+                            break;
+                        default :
+                            return observer.next(JSON.parse(message.data, CardOperation.convertTypeIntoEnum));
                     }
                 };
                 eventSource.onerror = error => {
@@ -141,6 +155,19 @@ export class CardService {
         });
     }
 
+
+    private recoverAnyLostCardWhenConnectionHasBeenReset() {
+
+        // Subtracts two minutes from the last heard beat to avoid loosing card due to latency, buffering and not synchronized clock
+        const dateForRecovering = this.lastHeardBeatDate - CardService.TWO_MINUTES;
+
+        console.log(new Date().toISOString(), `CardService - Card subscription has been init again , recover any lost card from date `
+            + new Date(dateForRecovering));
+        this.httpClient.post<any>(
+            `${this.cardOperationsUrl}`,
+            { publishFrom: dateForRecovering }).subscribe();
+
+    }
 
     public setSubscriptionDates(rangeStart: number, rangeEnd: number) {
 

@@ -66,7 +66,6 @@ public class CardOperationsController {
                         CardSubscription subscription = null;
                         if (t.isNotification()) {
                             subscription = cardSubscriptionService.subscribe(t.getCurrentUserWithPerimeters(), t.getClientId());
-                            subscription.publishInto(Flux.just("INIT"));
                             return subscription.getPublisher();
                         } else {
                             return fetchOldCards(t);
@@ -92,7 +91,7 @@ public class CardOperationsController {
                 if (oldSubscription != null) {
                     log.info("Found subscription: {}", oldSubscription.getId());
                     oldSubscription.updateRange();
-                    oldSubscription.publishInto(fetchOldCards(oldSubscription, p.getRangeStart(), p.getRangeEnd()));
+                    oldSubscription.publishDataFluxIntoSubscription(fetchOldCards(oldSubscription, p.getPublishFrom(),p.getRangeStart(), p.getRangeEnd()));
                 } else {
                     log.info("No subscription found for {}#{}", p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
                 }
@@ -112,23 +111,24 @@ public class CardOperationsController {
      * @param subscription
      * @return
      */
-    private Flux<String> fetchOldCards(CardSubscription subscription,Instant start,Instant end)  {
-        return fetchOldCards0(subscription.getStartingPublishDate(), start, end, subscription.getCurrentUserWithPerimeters());
+    private Flux<String> fetchOldCards(CardSubscription subscription,Instant publishFrom,Instant start,Instant end)  {
+        return fetchOldCards0(publishFrom, start, end, subscription.getCurrentUserWithPerimeters());
     }
 
     private Flux<String> fetchOldCards(CardOperationsGetParameters parameters) {
         Instant start = parameters.getRangeStart();
         Instant end = parameters.getRangeEnd();
-        return fetchOldCards0(null, start, end, parameters.getCurrentUserWithPerimeters());
+        Instant publishFrom = parameters.getPublishFrom();
+        return fetchOldCards0(publishFrom, start, end, parameters.getCurrentUserWithPerimeters());
     }
 
-    private Flux<String> fetchOldCards0(Instant referencePublishDate, Instant start, Instant end, CurrentUserWithPerimeters currentUserWithPerimeters) {
+    private Flux<String> fetchOldCards0(Instant publishFrom, Instant start, Instant end, CurrentUserWithPerimeters currentUserWithPerimeters) {
         Flux<CardOperation> oldCards;
-        referencePublishDate = referencePublishDate == null ? Instant.now() : referencePublishDate;
-        if (end != null && start != null) {
-            oldCards = cardRepository.getCardOperations(referencePublishDate, start, end, currentUserWithPerimeters);
+        log.debug("Fetch card with startDate = {} and endDate = {} and publishFrom = {}",start,end,publishFrom);
+        if ((end != null && start != null) || (publishFrom!=null)) {
+            oldCards = cardRepository.getCardOperations(publishFrom, start, end, currentUserWithPerimeters);
         } else {
-            log.info("Not loading published cards as no range is provided");
+            log.info("Not loading published cards as no range or no publish date is provided");
             oldCards = Flux.empty();
         }
         return oldCards.map(this::writeValueAsString);
