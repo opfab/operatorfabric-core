@@ -25,6 +25,7 @@ import java.util.List;
 public class CardSubscriptionDto implements Subscription {
     private Instant rangeStart;
     private Instant rangeEnd;
+    private Instant publishFrom;
     private List<String> loadedCards;
 
 }

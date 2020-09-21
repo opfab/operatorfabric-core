@@ -118,35 +118,11 @@ public class CardRepositoryShould {
         repository.deleteAll().subscribe();
     }
 
-    @BeforeEach
-    private void initCardData() {
-        int processNo = 0;
-        //create past cards
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, new String[]{"entity1", "entity2"}));
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, null));
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusOne, now, LOGIN, new String[]{"rte","operator"}, null, new String[]{"any-operator","some-operator"},new String[]{"rte-operator","some-operator"}));
-        //create future cards
-        persistCard(createSimpleCard(processNo++, nowMinusThree, now, nowPlusOne, LOGIN, new String[]{"rte","operator"}, null));
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusOne, nowPlusTwo, LOGIN, new String[]{"rte","operator"}, new String[]{"entity1", "entity2"}, new String[]{"rte-operator","some-operator"}, new String[]{"any-operator","some-operator"}));
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusTwo, nowPlusThree, LOGIN, new String[]{"rte","operator"}, null));
 
-        //card starts in past and ends in future
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, nowPlusThree, LOGIN, new String[]{"rte","operator"}, null));
-
-        //card starts in past and never ends
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowMinusThree, null, LOGIN, new String[]{"rte","operator"}, null, null, new String[]{"rte-operator","some-operator"}));
-
-        //card starts in future and never ends
-        persistCard(createSimpleCard(processNo++, nowMinusThree, nowPlusThree, null, LOGIN, new String[]{"rte","operator"}, null));
-
-        //create later published cards in past
-        //this one overrides first
-        persistCard(createSimpleCard(1, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, null));
-        persistCard(createSimpleCard(processNo++, nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, new String[]{"rte","operator"}, null));
-        //create later published cards in future
-        // this one overrides businessconfig
-        persistCard(createSimpleCard(3, nowPlusOne, nowPlusOne, nowPlusTwo, LOGIN, new String[]{"rte","operator"}, null));
-        persistCard(createSimpleCard(processNo++, nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN, new String[]{"rte","operator"}, null));
+    private void assertCard(CardOperation op,Object processName, Object publisher, Object processVersion) {
+        assertThat(op.getCards().get(0).getId()).isEqualTo(processName);
+        assertThat(op.getCards().get(0).getPublisher()).isEqualTo(publisher);
+        assertThat(op.getCards().get(0).getProcessVersion()).isEqualTo(processVersion);
     }
 
     private void persistCard(CardConsultationData simpleCard) {
@@ -205,291 +181,290 @@ public class CardRepositoryShould {
     }
 
     @Test
-    public void fetchPast() {
-        //matches rte group and entity1
-        log.info(String.format("Fetching past before now(%s), published after now(%s)", TestUtilities.format(now), TestUtilities.format(now)));
-        StepVerifier.create(repository.getCardOperations(now, null,now, rteUserEntity1)
+    public void getZeroCardInRange()
+    {
+        persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
+        persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null,null));
+        persistCard(createSimpleCard("3", now, nowPlusTwo, nowPlusThree, LOGIN,null,null));
+
+        StepVerifier.create(repository.getCardOperations(null, nowMinusThree,nowMinusTwo, adminUser)
+                .doOnNext(TestUtilities::logCardOperation))
+                .expectComplete()
+                .verify();
+    }
+
+
+    @Test
+    public void getTwoCardsInRange()
+    {
+        persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
+        persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null,null));
+        persistCard(createSimpleCard("3", now, nowPlusTwo, nowPlusThree, LOGIN,null,null));
+
+        StepVerifier.create(repository.getCardOperations(null, now,nowPlusOne, adminUser)
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertCard(op,"PROCESS.PROCESS0", "PUBLISHER", "0");
+                    assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
+                })
+                .assertNext(op -> {
+                    assertThat(op.getCards().size()).isEqualTo(1);
+                    assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();
+       
+    }
 
+    @Test
+    public void getThreeCardsInRange()
+    {
+        persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
+        persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null,null));
+        persistCard(createSimpleCard("3", now, nowPlusTwo, nowPlusThree, LOGIN,null,null));
 
-        //matches admin  user
-        StepVerifier.create(repository.getCardOperations(now,null, now,adminUser)
+        StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertCard(op, "PROCESS.PROCESS0", "PUBLISHER", "0");
-                })
-                .expectComplete()
-                .verify();
-
-        log.info(String.format("Fetching past before now plus three hours(%s), published after now(%s)", TestUtilities.format(nowPlusThree), TestUtilities.format(now)));
-        StepVerifier.create(repository.getCardOperations(now,null,nowPlusThree, rteUserEntity1)
-                .doOnNext(TestUtilities::logCardOperation))
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertCard(op,"PROCESS.PROCESS0", "PUBLISHER", "0");
+                    assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
                 })
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
                     assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
                 })
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertCard(op,"PROCESS.PROCESS4", "PUBLISHER", "0");
+                    assertCard(op,"PROCESS.PROCESS3", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();
-        log.info(String.format("Fetching past before now (%s), published after now plus three hours(%s)", TestUtilities.format(now), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.getCardOperations(nowPlusThree, null,now,rteUserEntity1)
+       
+    }
+
+    
+    @Test
+    public void getZeroCardAfterPublishDate()
+    {
+        persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
+        persistCard(createSimpleCard("2", nowPlusTwo, now, nowPlusTwo, LOGIN, null,null));
+        persistCard(createSimpleCard("3", nowPlusTwo, nowPlusTwo, nowPlusThree, LOGIN,null,null));
+
+        StepVerifier.create(repository.getCardOperations(nowPlusThree, now,nowPlusThree, adminUser)
+                .doOnNext(TestUtilities::logCardOperation))
+                .expectComplete()
+                .verify();
+            }
+
+    @Test
+    public void getTwoCardsAfterPublishDate()
+    {
+        persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
+        persistCard(createSimpleCard("2", nowPlusTwo, now, nowPlusTwo, LOGIN, null,null));
+        persistCard(createSimpleCard("3", nowPlusTwo, nowPlusTwo, nowPlusThree, LOGIN,null,null));
+
+        StepVerifier.create(repository.getCardOperations(nowPlusOne, now,nowPlusThree, adminUser)
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertCard(op,"PROCESS.PROCESS0", "PUBLISHER", "0");
+                    assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
                 })
                 .assertNext(op -> {
                     assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                    assertCard(op, "PROCESS.PROCESS1", "PUBLISHER", "0");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                    assertCard(op,"PROCESS.PROCESS9", "PUBLISHER", "0");
+                    assertCard(op,"PROCESS.PROCESS3", "PUBLISHER", "0");
                 })
                 .expectComplete()
                 .verify();
-    }
+       
+        }
 
-    private void assertCard(CardOperation op,Object processName, Object publisher, Object processVersion) {
-        assertThat(op.getCards().get(0).getId()).isEqualTo(processName);
-        assertThat(op.getCards().get(0).getPublisher()).isEqualTo(publisher);
-        assertThat(op.getCards().get(0).getProcessVersion()).isEqualTo(processVersion);
-    }
-
-    @Test
-    public void fetchFuture() {
-        log.info(String.format("Fetching future from now(%s), published after now(%s)", TestUtilities.format(now), TestUtilities.format(now)));
-        StepVerifier.create(repository.getCardOperations(now, now,null, rteUserEntity1)
-                .doOnNext(TestUtilities::logCardOperation))
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS5");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(2).getId()).isEqualTo("PROCESS.PROCESS8");
-                });
-
-        log.info(String.format("Fetching future from now minus two hours(%s), published after now(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(now)));
-        StepVerifier.create(repository.getCardOperations(now, nowMinusTwo,null,rteUserEntity2)
-                .doOnNext(TestUtilities::logCardOperation))
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS5");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS8");
-                })
-                .expectComplete()
-                .verify();
-        log.info(String.format("Fetching future from now minus two hours(%s), published after now plus three hours(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(nowPlusThree)));
-        StepVerifier.create(repository.getCardOperations(nowPlusThree, nowMinusTwo, null,rteUserEntity1)
-                .doOnNext(TestUtilities::logCardOperation))
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS3");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS5");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS8");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS10");
-                })
-                .expectComplete()
-                .verify();
-    }
-
-
-    @Test
-    public void fetchRange() {
-        log.info(String.format("Fetching urgent from now minus one hours(%s) and now plus one hours(%s), published after now (%s)", TestUtilities.format(nowMinusOne), TestUtilities.format(nowPlusOne), TestUtilities.format(now)));
-        StepVerifier.create(repository.getCardOperations(now, nowMinusOne, nowPlusOne, rteUserEntity1)
-                .doOnNext(TestUtilities::logCardOperation))
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS6");
-                })
-                .assertNext(op -> {
-                    assertThat(op.getCards().size()).isEqualTo(1);
-                    assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
-                    assertThat(op.getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS7");
-                })
-
-                .expectComplete()
-                .verify();
-    }
+        @Test
+        public void getOneCardInRangeAndAfterPublishDate ()
+        {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
+            persistCard(createSimpleCard("2", nowPlusTwo, now, nowPlusOne, LOGIN, null,null));
+            persistCard(createSimpleCard("3", nowPlusTwo, nowPlusTwo, nowPlusThree, LOGIN,null,null));
     
-    @Test
-    public void fetchPastAndCheckUserAcks() {
-        log.info(String.format("Fetching past before now plus three hours(%s), published after now(%s)", TestUtilities.format(nowPlusThree), TestUtilities.format(now)));
-        List<CardOperation> list = repository.getCardOperations(now, null,nowPlusThree, rteUserEntity1)
-	        .doOnNext(TestUtilities::logCardOperation)
-	        .filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCards().get(0).getId()))
-			.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId())).block();
-        assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
-        assertThat(list.get(0).getCards().get(0).getHasBeenAcknowledged()).isFalse();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-        assertThat(list.get(1).getCards().get(0).getHasBeenAcknowledged()).isFalse();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(2).getCards().get(0).getHasBeenAcknowledged()).isTrue();
-    }
-    
-    @Test
-    public void fetchFutureAndCheckUserAcks() {
-    	log.info(String.format("Fetching future from now minus two hours(%s), published after now(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(now)));
-    	List<CardOperation> list = repository.getCardOperations(now, nowMinusTwo, null, rteUserEntity2)
-                .doOnNext(TestUtilities::logCardOperation)
-                .filter(co -> Arrays.asList("PROCESS.PROCESS2","PROCESS.PROCESS4","PROCESS.PROCESS5").contains(co.getCards().get(0).getId()))
-    			.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId())).block();
+            StepVerifier.create(repository.getCardOperations(nowPlusOne, nowPlusTwo,nowPlusThree, adminUser)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS3", "PUBLISHER", "0");
+                    })
+                    .expectComplete()
+                    .verify();
+           
+        }
 
-    	assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-        assertThat(list.get(0).getCards().get(0).getHasBeenAcknowledged()).isFalse();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(1).getCards().get(0).getHasBeenAcknowledged()).isTrue();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS5");
-        assertThat(list.get(2).getCards().get(0).getHasBeenAcknowledged()).isFalse();              
-    }
-    
-    @Test
-    public void fetchRangeAndCheckUserAcks() {
-        log.info(String.format("Fetching urgent from now minus one hours(%s) and now plus one hours(%s), published after now (%s)", TestUtilities.format(nowMinusOne), TestUtilities.format(nowPlusOne), TestUtilities.format(now)));
-        List<CardOperation> list = repository.getCardOperations(now, nowMinusOne, nowPlusOne, rteUserEntity1)
-                .doOnNext(TestUtilities::logCardOperation)
-                .filter(co -> Arrays.asList("PROCESS.PROCESS4","PROCESS.PROCESS6","PROCESS.PROCESS7").contains(co.getCards().get(0).getId()))
-    			.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId())).block();
-        assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(0).getCards().get(0).getHasBeenAcknowledged()).isTrue();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS6");
-        assertThat(list.get(1).getCards().get(0).getHasBeenAcknowledged()).isFalse();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS7");
-        assertThat(list.get(2).getCards().get(0).getHasBeenAcknowledged()).isFalse();
 
-    }
-    
-    @Test
-    public void fetchPastAndCheckUserReads() {
-        log.info(String.format("Fetching past before now plus three hours(%s), published after now(%s)", TestUtilities.format(nowPlusThree), TestUtilities.format(now)));
-        List<CardOperation> list = repository.getCardOperations(now, null,nowPlusThree, rteUserEntity1)
-	        .doOnNext(TestUtilities::logCardOperation)
-	        .filter(co -> Arrays.asList("PROCESS.PROCESS0","PROCESS.PROCESS2","PROCESS.PROCESS4").contains(co.getCards().get(0).getId()))
-			.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId())).block();
-        assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS0");
-        assertThat(list.get(0).getCards().get(0).getHasBeenRead()).isFalse();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-        assertThat(list.get(1).getCards().get(0).getHasBeenRead()).isTrue();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(2).getCards().get(0).getHasBeenRead()).isFalse();
-    }
-    
-    @Test
-    public void fetchFutureAndCheckUserReads() {
-    	log.info(String.format("Fetching future from now minus two hours(%s), published after now(%s)", TestUtilities.format(nowMinusTwo), TestUtilities.format(now)));
-    	List<CardOperation> list = repository.getCardOperations(now, nowMinusTwo, null, rteUserEntity2)
-                .doOnNext(TestUtilities::logCardOperation)
-                .filter(co -> Arrays.asList("PROCESS.PROCESS2","PROCESS.PROCESS4","PROCESS.PROCESS5").contains(co.getCards().get(0).getId()))
-    			.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId())).block();
+        @Test
+        public void getNoCardAsRteUserEntity1IsNotAdminUser() {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN, null, null));
+            persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null, null));
 
-    	assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS2");
-        assertThat(list.get(0).getCards().get(0).getHasBeenRead()).isTrue();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(1).getCards().get(0).getHasBeenRead()).isFalse();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS5");
-        assertThat(list.get(2).getCards().get(0).getHasBeenRead()).isFalse();              
-    }
+            StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .expectComplete()
+                    .verify();
+        }
+
+
+        @Test
+        public void getNoCardAsAdminUserIsNotInGroupRteOrInGroupOperator() {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[]{"rte","operator"}, null));
+            persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[]{"rte","operator"}, null));
+
+            StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .expectComplete()
+                    .verify();
+        }
+
+
+        @Test
+        public void getTwoCardAsRteUserEntity1IsInGroupRte() {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[]{"rte","operator"}, null));
+            persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[]{"rte","operator"}, null));
+
+            StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
+                    })
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
+                    })
+                    .expectComplete()
+                    .verify();
+        }
+
+
+        @Test
+        public void getNoCardAsRteUserEntity1IsInGroupRteButNotInEntity2() {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[]{"rte","operator"}, new String[]{"entity2"}));
+            persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[]{"rte","operator"}, new String[]{"entity2"}));
+
+            StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .expectComplete()
+                    .verify();
+        }
+
+        @Test
+        public void getTwoCardAsRteUserEntity1IsInGroupRteAndInEntity1() {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[]{"rte","operator"}, new String[]{"entity1"}));
+            persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[]{"rte","operator"}, new String[]{"entity1"}));
+
+            StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
+                    })
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
+                    })
+                    .expectComplete()
+                    .verify();
+        }
+
+
+
+        @Test
+        public void getTwoCardsWithOneAcknowledge()
+        {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"admin"},null));
     
-    @Test
-    public void fetchRangeAndCheckUserReads() {
-        log.info(String.format("Fetching urgent from now minus one hours(%s) and now plus one hours(%s), published after now (%s)", TestUtilities.format(nowMinusOne), TestUtilities.format(nowPlusOne), TestUtilities.format(now)));
-        List<CardOperation> list = repository.getCardOperations(now, nowMinusOne, nowPlusOne, rteUserEntity1)
-                .doOnNext(TestUtilities::logCardOperation)
-                .filter(co -> Arrays.asList("PROCESS.PROCESS4","PROCESS.PROCESS6","PROCESS.PROCESS7").contains(co.getCards().get(0).getId()))
-    			.collectSortedList((co1,co2) -> co1.getCards().get(0).getId().compareTo(co2.getCards().get(0).getId())).block();
-        assertThat(list.get(0).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS4");
-        assertThat(list.get(0).getCards().get(0).getHasBeenRead()).isFalse();
-        assertThat(list.get(1).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS6");
-        assertThat(list.get(1).getCards().get(0).getHasBeenRead()).isFalse();
-        assertThat(list.get(2).getCards().get(0).getId()).isEqualTo("PROCESS.PROCESS7");
-        assertThat(list.get(2).getCards().get(0).getHasBeenRead()).isTrue();
+            StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
+                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
+                    })
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
+                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isTrue();
+                    })
+                    .expectComplete()
+                    .verify();
+           
+        }
 
-    }
+        @Test
+        public void getTwoCardsWithNoneAcknowledgeAsCardsHasNotBeenAcknowledgeByCurrentUser()
+        {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,new String[] {"user1","user2"},null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,new String[] {"dummyuser"},null));
+    
+            StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
+                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
+                    })
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
+                        assertThat(op.getCards().get(0).getHasBeenAcknowledged()).isFalse();
+                    })
+                    .expectComplete()
+                    .verify();
+           
+        }
+    
+        @Test
+        public void getTwoCardsWithOneRead()
+        {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"admin"}));
+    
+            StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
+                        assertThat(op.getCards().get(0).getHasBeenRead()).isFalse();
+                    })
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
+                        assertThat(op.getCards().get(0).getHasBeenRead()).isTrue();
+                    })
+                    .expectComplete()
+                    .verify();
+           
+        }
 
+        @Test
+        public void getTwoCardsWithNoneReadAsCardsHasNotBeenReadByCurrentUser()
+        {
+            persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN,null, null,null,new String[] {"user1","user2"}));
+            persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN,null,null,null,new String[] {"dummyuser"}));
+    
+            StepVerifier.create(repository.getCardOperations(null, now,nowPlusThree, adminUser)
+                    .doOnNext(TestUtilities::logCardOperation))
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS1", "PUBLISHER", "0");
+                        assertThat(op.getCards().get(0).getHasBeenRead()).isFalse();
+                    })
+                    .assertNext(op -> {
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertCard(op,"PROCESS.PROCESS2", "PUBLISHER", "0");
+                        assertThat(op.getCards().get(0).getHasBeenRead()).isFalse();
+                    })
+                    .expectComplete()
+                    .verify();
+           
+        }
+        
     @NotNull
     private Predicate<CardConsultationData> computeCardPredicate(CardConsultationData card) {
         Predicate<CardConsultationData> predicate = c -> card.getId().equals(c.getId());

@@ -140,6 +140,7 @@ public class CardSubscriptionServiceShould {
         StepVerifier.FirstStep<String> verifier = StepVerifier.create(subscription.getPublisher());
         taskScheduler.schedule(createSendMessageTask(),new Date(System.currentTimeMillis() + 1000));
         verifier
+           .expectNext("INIT")
            .expectNext(rabbitTestMessage)
            .expectNext(rabbitTestMessage)
            .thenCancel()

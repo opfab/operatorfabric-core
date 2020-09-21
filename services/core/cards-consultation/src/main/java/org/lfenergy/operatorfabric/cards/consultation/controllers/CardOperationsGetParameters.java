@@ -47,6 +47,7 @@ public class CardOperationsGetParameters {
      */
     private Instant rangeStart;
     private Instant rangeEnd;
+    private Instant publishFrom;
     /**
      * Filter only cards for which this user is a recipient
      * */

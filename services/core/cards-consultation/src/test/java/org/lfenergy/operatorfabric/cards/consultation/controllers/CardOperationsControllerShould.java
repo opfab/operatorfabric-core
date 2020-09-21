@@ -218,7 +218,7 @@ public class CardOperationsControllerShould {
                 })
                 .assertNext(op->{
                         assertThat(op.getCards().size()).isEqualTo(1);
-                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
                         cardIds.add(op.getCards().get(0).getId());
                 })
                 .assertNext(op->{
@@ -239,6 +239,16 @@ public class CardOperationsControllerShould {
                 .assertNext(op->{
                         assertThat(op.getCards().size()).isEqualTo(1);
                         assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        cardIds.add(op.getCards().get(0).getId());
+                })
+                .assertNext(op->{
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getPublishDate()).isEqualTo(nowMinusThree);
+                        cardIds.add(op.getCards().get(0).getId());
+                })
+                .assertNext(op->{
+                        assertThat(op.getCards().size()).isEqualTo(1);
+                        assertThat(op.getPublishDate()).isEqualTo(nowPlusOne);
                         cardIds.add(op.getCards().get(0).getId());
                 })
                 .expectComplete()
