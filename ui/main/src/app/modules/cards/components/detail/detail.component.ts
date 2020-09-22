@@ -20,7 +20,6 @@ import { AppState } from '@ofStore/index';
 import { selectAuthenticationState } from '@ofSelectors/authentication.selectors';
 import { selectGlobalStyleState } from '@ofSelectors/global-style.selectors';
 import { UserContext } from '@ofModel/user-context.model';
-import { TranslateService } from '@ngx-translate/core';
 import { map, skip, switchMap, take, takeUntil } from 'rxjs/operators';
 import { fetchLightCard, selectLastCards } from '@ofStore/selectors/feed.selectors';
 import { CardService } from '@ofServices/card.service';
@@ -95,6 +94,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() currentPath: string;
 
     public active = false;
+    public isActionEnabled = false;
+    public lttdExpiredIsTrue: boolean;
+
+
     unsubscribe$: Subject<void> = new Subject<void>();
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
     private _listEntitiesToRespond = new Array<EntityMessage>();
@@ -102,16 +105,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
     private _responseData: Response;
-    private _hasPrivilegeToRespond = false;
     private _acknowledgementAllowed: boolean;
-    lttdExpiredIsTrue:boolean;
     message: Message = {display: false, text: undefined, color: undefined};
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
         private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
-        private store: Store<AppState>, private translate: TranslateService,
-        private cardService: CardService, private _appService: AppService,
-        private userService: UserService,
+        private store: Store<AppState>, private cardService: CardService,
+        private _appService: AppService, private userService: UserService,
         private entitiesService: EntitiesService) {
 
         this.store.select(selectAuthenticationState).subscribe(authState => {
@@ -154,8 +154,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnInit() {
 
-
         if (this._appService.pageType === PageType.FEED) {
+
+            this.setEntitiesToRespond();
 
             this._lastCards$ = this.store.select(selectLastCards);
 
@@ -185,6 +186,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             });
 
                             templateGateway.childCards = this.childCards;
+                            this.setEntitiesToRespond();
                             templateGateway.applyChildCards();
                         });
                 });
@@ -193,10 +195,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngDoCheck() {
-        this.tchekLttdExpired();
+        this.checkLttdExpired();
     }
 
-    tchekLttdExpired():void {
+    checkLttdExpired():void {
         this.lttdExpiredIsTrue =  (this.card.lttd != null && Math.floor((this.card.lttd - new Date().getTime()) / 1000) <= 0);
     }
 
@@ -224,38 +226,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     get responseDataExists(): boolean {
         return this._responseData != null && this._responseData !== undefined;
-    }
-
-    get isActionEnabled(): boolean {
-        if (!this.card.entitiesAllowedToRespond) {
-            console.log('Card error : no field entitiesAllowedToRespond');
-            return false;
-        }
-
-        if (this._responseData != null && this._responseData !== undefined) {
-            this.getPrivilegetoRespond(this.card, this._responseData);
-        } else {
-           return false;
-        }
-
-        return this.card.entitiesAllowedToRespond.includes(this.user.entities[0])
-            && this._hasPrivilegeToRespond;
-    }
-
-    getPrivilegetoRespond(card: Card, responseData: Response) {
-
-        this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
-            if ((perim.process === card.process) && (perim.state === responseData.state)
-                && (this.compareRightAction(perim.rights, RightsEnum.Write)
-                    || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
-                this._hasPrivilegeToRespond = true;
-            }
-
-        });
-    }
-
-    compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
-        return (userRight(userRights) - userRight(rightsAction)) === 0;
     }
 
     get btnAckText(): string {
@@ -399,21 +369,54 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
         this.message = {display: false, text: undefined, color: undefined};
+        if (this._responseData != null && this._responseData !== undefined) {
+            this.setEntitiesToRespond();
+            this.setIsActionEnabled();
+        }
+
     }
 
-    get listEntitiesToRespond() {
-
+    private setEntitiesToRespond() {
         this._listEntitiesToRespond = new Array<EntityMessage>();
-
         if (this.card.entitiesAllowedToRespond) {
             this.card.entitiesAllowedToRespond.forEach(entity => {
                 const entityName = this.getEntityName(entity);
                 if (entityName) {
-                    this._listEntitiesToRespond.push({ name: entityName.name, color:this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE});
+                    this._listEntitiesToRespond.push(
+                        { name: entityName.name, color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE });
                 }
             });
         }
+    }
 
+    private setIsActionEnabled() {
+            this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
+    }
+
+    private isUserInEntityAllowedToRespond(): boolean {
+        if (this.card.entitiesAllowedToRespond) return this.card.entitiesAllowedToRespond.includes(this.user.entities[0]);
+        else return false;
+    }
+
+
+    private doesTheUserHavePermissionToRespond(): boolean {
+        let permission = false ;
+        this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
+            if ((perim.process === this.card.process) && (perim.state === this._responseData.state)
+                && (this.compareRightAction(perim.rights, RightsEnum.Write)
+                    || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+                permission = true;
+                return true;
+            }
+        });
+        return permission;
+    }
+
+    private compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
+        return (userRight(userRights) - userRight(rightsAction)) === 0;
+    }
+
+    get listEntitiesToRespond() {
         return this._listEntitiesToRespond;
     }
 
