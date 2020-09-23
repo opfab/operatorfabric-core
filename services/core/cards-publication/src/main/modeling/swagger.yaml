@@ -630,10 +630,10 @@ definitions:
     description: |-
       Publisher type >
       * EXTERNAL - The sender is an external service
-      * SYSTEM - The sender of the card is OperatorFabric itself
+      * ENTITY - The sender of the card is the user on behalf of the entity
     enum:
       - EXTERNAL
-      - SYSTEM
+      - ENTITY
     example: EXTERNAL
 paths:
   /async/cards:

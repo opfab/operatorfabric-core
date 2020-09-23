@@ -59,7 +59,7 @@ public class CardController {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         return cardProcessingService.processUserCards(cards.map(card -> {
-            card.setPublisherType(PublisherTypeEnum.SYSTEM);
+            card.setPublisherType(PublisherTypeEnum.ENTITY);
             return card;
         }), user);
 

@@ -78,5 +78,5 @@ export class TimeSpan {
 
 export enum PublisherType {
     EXTERNAL,
-    SYSTEM
+    ENTITY
 }

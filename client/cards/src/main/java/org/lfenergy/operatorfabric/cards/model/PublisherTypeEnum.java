@@ -15,12 +15,12 @@ package org.lfenergy.operatorfabric.cards.model;
  * Define the kind of the card sender
  * <dl>
  *     <dt>THIRD_PARTY</dt><dd>The sender is an external service</dd>
- *     <dt>SYSTEM</dt><dd>The sender of the card is OperatorFabric itself</dd>
+ *     <dt>ENTITY</dt><dd>The sender of the card is a user on behalf of the entity</dd>
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Cards API.
  *
  */
 public enum PublisherTypeEnum {
     EXTERNAL,
-    SYSTEM
+    ENTITY
 }
