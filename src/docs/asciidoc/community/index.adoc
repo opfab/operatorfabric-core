@@ -71,6 +71,12 @@ include::workflow.adoc[leveloffset=+2]
 to have to maintain these mentions (since this information is tracked by git anyway).
 * For ui code, you must use a linter with rules provided in ui/main/tslint.json
 
+==== Angular development caution
+
+* Do not use ngFor / ngIf  with methods with computing as angular will call these methods very regularly
+(around ten times per seconds), use instead variables and compute them only when necessary.
+* ngInit() :  ngInit is called when component is created, the creation is made by the parent component : be careful to check when initialization is done when calling method inside ngInit. When the context of the parent component change, it can lead to a new initialization or not.
+
 include::documentation.adoc[leveloffset=+2]
 
 include::copyright.adoc[leveloffset=+2]
