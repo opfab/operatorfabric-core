@@ -48,7 +48,7 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
                 Array.prototype.forEach.call(allProcesses, (proc: Process) => {
                     const id = proc.id;
 
-                    if (proc.uiVisibility && proc.uiVisibility.logging === true) {
+                    if (proc.uiVisibility && !! proc.uiVisibility.logging) {
                         filterValue.push({value: id, label: proc.name});
                     }
                 });

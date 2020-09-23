@@ -391,7 +391,9 @@ definitions:
         description: Is true if the card was acknowledged by current user
       hasBeenRead:
         type: boolean
-        description: Is true if the card was read by current user  
+        description: Is true if the card was read by current user
+      publisherType:
+          $ref: '#/definitions/PublisherTypeEnum'
     required:
       - publisher
       - process
@@ -553,6 +555,8 @@ definitions:
       parentCardUid:
         type: string
         description: The uid of its parent card if it's a child card
+      publisherType:
+        $ref: '#/definitions/PublisherTypeEnum'
     required:
       - uid
       - id
@@ -621,6 +625,16 @@ definitions:
         type: number
         description: >-
           Page number
+  PublisherTypeEnum:
+    type: string
+    description: |-
+      Publisher type >
+      * EXTERNAL - The sender is an external service
+      * ENTITY - The sender of the card is the user on behalf of the entity
+    enum:
+      - EXTERNAL
+      - ENTITY
+    example: EXTERNAL
 paths:
   /async/cards:
     post:

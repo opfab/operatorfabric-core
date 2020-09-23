@@ -17,7 +17,7 @@ import {Card, CardData} from '@ofModel/card.model';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {GuidService} from '@ofServices/guid.service';
-import {LightCard} from '@ofModel/light-card.model';
+import {LightCard, PublisherType} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {NotifyService} from '@ofServices/notify.service';
 import {AppState} from '@ofStore/index';
@@ -75,11 +75,11 @@ export class CardService {
                 operation => {
                     switch (operation.type) {
                         case CardOperationType.ADD:
-                            console.log(new Date().toISOString(), `CardService - Receive card to add id=` , operation.cards[0].id);
+                            console.log(new Date().toISOString(), `CardService - Receive card to add id=`, operation.cards[0].id);
                             this.store.dispatch(new LoadLightCardsSuccess({lightCards: operation.cards}));
                             break;
                         case CardOperationType.DELETE:
-                            console.log(new Date().toISOString(), `CardService - Receive card to delete id=` , operation.cardIds[0]);
+                            console.log(new Date().toISOString(), `CardService - Receive card to delete id=`, operation.cardIds[0]);
                             this.store.dispatch(new RemoveLightCard({cards: operation.cardIds}));
                             break;
                         default:
@@ -88,12 +88,12 @@ export class CardService {
                             );
                     }
                 }, (error) => {
-                    console.error('CardService - Error received from  getCardSubscription ' , error);
+                    console.error('CardService - Error received from  getCardSubscription ', error);
                     this.store.dispatch(new AddLightCardFailure({error: error}));
                 }
             );
         catchError((error, caught) => {
-            console.error('CardService - Global  error in subscription ' , error);
+            console.error('CardService - Global  error in subscription ', error);
             this.store.dispatch(new HandleUnexpectedError({error: error}));
             return caught;
         });
@@ -106,7 +106,7 @@ export class CardService {
             `${this.cardOperationsUrl}&notification=true`
             , {
                 headers: this.authService.getSecurityHeader(),
-               // if necessary , we cans set here  heartbeatTimeout: xxx (in ms)
+                // if necessary , we cans set here  heartbeatTimeout: xxx (in ms)
             });
         return Observable.create(observer => {
             try {
@@ -121,7 +121,7 @@ export class CardService {
                             this.initSubscription.next();
                             this.initSubscription.complete();
                             if (this.firstSubscriptionInitDone) this.recoverAnyLostCardWhenConnectionHasBeenReset();
-                            else this.firstSubscriptionInitDone = true ;
+                            else this.firstSubscriptionInitDone = true;
                             break;
                         case 'HEARTBEAT':
                             this.lastHeardBeatDate = new Date().valueOf();
@@ -165,7 +165,7 @@ export class CardService {
             + new Date(dateForRecovering));
         this.httpClient.post<any>(
             `${this.cardOperationsUrl}`,
-            { publishFrom: dateForRecovering }).subscribe();
+            {publishFrom: dateForRecovering}).subscribe();
 
     }
 
@@ -217,6 +217,10 @@ export class CardService {
                 const cards = page.content;
                 const lines = cards.map((card: LightCard) => {
                     const i18nPrefix = `${card.process}.${card.processVersion}.`;
+                    const publisherType = card.publisherType;
+                    const enumThirdParty = PublisherType.EXTERNAL;
+                    const isThirdPartyPublisher = enumThirdParty === PublisherType[publisherType];
+                    const sender = (isThirdPartyPublisher) ? 'SYSTEM' : card.publisher ;
                     return ({
                         process: card.process,
                         processVersion: card.processVersion,
@@ -224,7 +228,7 @@ export class CardService {
                         businessDate: moment(card.startDate),
                         i18nKeyForProcessName: this.addPrefix(i18nPrefix, card.title),
                         i18nKeyForDescription: this.addPrefix(i18nPrefix, card.summary),
-                        sender: card.publisher
+                        sender: sender
                     } as LineOfLoggingResult);
                 });
                 return {
