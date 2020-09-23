@@ -29,7 +29,7 @@ import static org.lfenergy.operatorfabric.cards.model.RecipientEnum.DEADEND;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes={UnitTestApplication.class, GsonConfig.class})
-@ActiveProfiles(profiles = {"native"})
+@ActiveProfiles(profiles = {"native", "test"})
 @Slf4j
 class GsonConfigShould {
     @Autowired
