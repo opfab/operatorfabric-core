@@ -191,7 +191,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         });
                 });
         }
-        this.markAsRead();
+        this.markAsReadIfNecessary();
     }
 
     ngDoCheck() {
@@ -335,7 +335,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             });
     }
 
-    markAsRead() {
+    markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
             this.cardService.postUserCardRead(this.card).subscribe(resp => {
                 if (resp.status === 201 || resp.status === 200) {
@@ -368,6 +368,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnChanges(): void {
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
+        this.markAsReadIfNecessary();
         this.message = {display: false, text: undefined, color: undefined};
         if (this._responseData != null && this._responseData !== undefined) {
             this.setEntitiesToRespond();
