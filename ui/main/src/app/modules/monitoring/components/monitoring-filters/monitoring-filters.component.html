@@ -1,9 +1,7 @@
 <form [formGroup]="monitoringForm">
     <div class="container-fluid">
         <div class="form-row nomarginrow justify-content-center">
-            <div class="col-lg-3 col-md-4 nopaddingrow">
-                <div class="row" style='margin-right:0;margin-left:0;'>
-                    <div [ngClass]="{ 'col-md-12':true}">
+            <div class="col-lg-3 col-md-4">
                         <of-multi-filter-2 filterPath="process"
                                            id="process"
                                            formControlName="process"
@@ -13,26 +11,24 @@
                                            [dropdownSettings]="dropdownSettings"
                                            i18nRootLabelKey="monitoring.filters."
                         ></of-multi-filter-2>
-                    </div>
-                </div>
             </div>
-            <div class="col-lg-2 col-md-4 archive-filter">
+            <div class="col-lg-2 col-md-4">
                 <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
                                     labelKey="archive.filters."
                 ></of-datetime-filter>
             </div>
-            <div class="col-lg-2 col-md-4 archive-filter">
+            <div class="col-lg-2 col-md-4">
                 <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
                                     labelKey="archive.filters."
                 ></of-datetime-filter>
             </div>
-            <div class="col-lg-2 col-md-4 archive-filter">
+            <div class="col-lg-2 col-md-4">
                 <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
                                     labelKey="archive.filters."
                                     [offset]="[{amount:-2, unit:'hours'}]"
                 ></of-datetime-filter>
             </div>
-            <div class="col-lg-2 col-md-4 archive-filter">
+            <div class="col-lg-2 col-md-4">
                 <of-datetime-filter filterPath="activeTo" formControlName="activeTo"
                                     labelKey="archive.filters."
                 ></of-datetime-filter>
