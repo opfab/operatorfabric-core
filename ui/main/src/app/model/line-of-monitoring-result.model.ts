@@ -7,7 +7,7 @@ export interface LineOfMonitoringResult {
     endOfBusinessPeriod: Moment;
     title: I18n;
     summary: I18n;
-    trigger: string;
+    processName: string;
     coordinationStatus: string;
     coordinationStatusColor: string;
     cardId: string;

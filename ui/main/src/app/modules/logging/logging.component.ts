@@ -44,10 +44,15 @@ export class LoggingComponent implements  AfterViewInit, OnDestroy {
                  * work around because allProcesses.forEach(…)
                  * 'is not a function', for some reason.
                  */
-                return Array.prototype.map.call(allProcesses, (proc: Process) => {
+                const filterValue = [];
+                Array.prototype.forEach.call(allProcesses, (proc: Process) => {
                     const id = proc.id;
-                    return{value: id, label: proc.name, i18nPrefix: `${id}.${proc.version}`};
+
+                    if (proc.uiVisibility && !! proc.uiVisibility.logging) {
+                        filterValue.push({value: id, label: proc.name});
+                    }
                 });
+                return filterValue;
             })
         );
     }

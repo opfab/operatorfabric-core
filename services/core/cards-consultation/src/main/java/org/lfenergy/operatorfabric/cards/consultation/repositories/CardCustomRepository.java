@@ -41,7 +41,7 @@ public interface CardCustomRepository extends UserUtilitiesCommonToCardRepositor
      * Cards fetched are limited to the ones that have been published either to <code>login</code> or to <code>groups</code> or to <code>entities</code>
  
      */
-    Flux<CardOperation> getCardOperations(Instant latestPublication, Instant rangeStart, Instant rangeEnd,
+    Flux<CardOperation> getCardOperations(Instant publishFrom, Instant rangeStart, Instant rangeEnd,
     CurrentUserWithPerimeters currentUserWithPerimeters);
 
 }

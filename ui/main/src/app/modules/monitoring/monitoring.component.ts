@@ -51,7 +51,10 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                 Array.prototype.forEach.call(allProcesses, (proc: Process) => {
                     const id = proc.id;
                     this.mapOfProcesses.set(id, proc);
-                    filterValue.push({value: id, label: proc.name});
+
+                    if (proc.uiVisibility && !!proc.uiVisibility.monitoring)  {
+                        filterValue.push({value: id, label: proc.name});
+                    }
                 });
                 return filterValue;
             })
@@ -85,20 +88,21 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                                     color = state.color;
                                     name = state.name;
                                 }
-                            }
-                            return (
-                                {
-                                    creationDateTime: moment(card.publishDate),
-                                    beginningOfBusinessPeriod: moment(card.startDate),
-                                    endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
-                                    title: this.prefixI18nKey(card, 'title'),
-                                    summary: this.prefixI18nKey(card, 'summary'),
-                                    trigger: 'source ?',
-                                    coordinationStatusColor: color,
-                                    coordinationStatus: this.prefixForTranslation(card, name),
-                                    cardId: card.id
+                                return (
+                                    {
+                                        creationDateTime: moment(card.publishDate),
+                                        beginningOfBusinessPeriod: moment(card.startDate),
+                                        endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
+                                        title: this.prefixI18nKey(card, 'title'),
+                                        summary: this.prefixI18nKey(card, 'summary'),
+                                        processName: this.prefixForTranslation(card, currentProcess.name),
+                                        coordinationStatusColor: color,
+                                        coordinationStatus: this.prefixForTranslation(card, name),
+                                        cardId: card.id
 
-                                } as LineOfMonitoringResult);
+                                    } as LineOfMonitoringResult);
+                            }
+
                         }
                     );
                 }

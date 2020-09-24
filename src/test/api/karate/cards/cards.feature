@@ -76,6 +76,7 @@ Feature: Cards
     Then status 200
     And match response.card.data.message == 'new message'
     And def cardUid = response.uid
+	And match response.card.publisherType == "EXTERNAL"
 
     #get card without  authentication
     Given url opfabUrl + 'cards/cards/api_test.process1'

@@ -8,30 +8,32 @@
  */
 
 
-import {AfterViewChecked, DoCheck, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
-import {Card, Detail} from '@ofModel/card.model';
-import {ProcessesService} from '@ofServices/processes.service';
-import {HandlebarsService} from '../../services/handlebars.service';
-import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {Response} from '@ofModel/processes.model';
-import {DetailContext} from '@ofModel/detail-context.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
-import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
-import {UserContext} from '@ofModel/user-context.model';
-import {TranslateService} from '@ngx-translate/core';
-import {map, skip, switchMap, take, takeUntil} from 'rxjs/operators';
-import {fetchLightCard, selectLastCards} from '@ofStore/selectors/feed.selectors';
-import {CardService} from '@ofServices/card.service';
-import {Observable, Subject, zip} from 'rxjs';
-import {LightCard, Severity} from '@ofModel/light-card.model';
-import {AppService, PageType} from '@ofServices/app.service';
-import {User} from '@ofModel/user.model';
-import {Map} from '@ofModel/map';
-import {RightsEnum, userRight} from '@ofModel/userWithPerimeters.model';
-import {UpdateALightCard} from '@ofStore/actions/light-card.actions';
+import { AfterViewChecked, DoCheck, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Card, Detail } from '@ofModel/card.model';
+import { ProcessesService } from '@ofServices/processes.service';
+import { HandlebarsService } from '../../services/handlebars.service';
+import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
+import { Response } from '@ofModel/processes.model';
+import { DetailContext } from '@ofModel/detail-context.model';
+import { Store } from '@ngrx/store';
+import { AppState } from '@ofStore/index';
+import { selectAuthenticationState } from '@ofSelectors/authentication.selectors';
+import { selectGlobalStyleState } from '@ofSelectors/global-style.selectors';
+import { UserContext } from '@ofModel/user-context.model';
+import { map, skip, switchMap, take, takeUntil } from 'rxjs/operators';
+import { fetchLightCard, selectLastCards } from '@ofStore/selectors/feed.selectors';
+import { CardService } from '@ofServices/card.service';
+import { Observable, Subject, zip } from 'rxjs';
+import { LightCard, Severity } from '@ofModel/light-card.model';
+import { AppService, PageType } from '@ofServices/app.service';
+import { User } from '@ofModel/user.model';
+import { Map } from '@ofModel/map';
+import { RightsEnum, userRight } from '@ofModel/userWithPerimeters.model';
+import { UpdateALightCard } from '@ofStore/actions/light-card.actions';
 import { UserService } from '@ofServices/user.service';
+import { EntitiesService } from '@ofServices/entities.service';
+import { Entity } from '@ofModel/entity.model';
+
 
 declare const templateGateway: any;
 
@@ -39,6 +41,11 @@ class Message {
     text: string;
     display: boolean;
     color: ResponseMsgColor;
+}
+
+class EntityMessage {
+    name: string;
+    color: EntityMsgColor;
 }
 
 class FormResult {
@@ -69,6 +76,10 @@ const enum ResponseMsgColor {
     GREEN = 'alert-success',
     RED = 'alert-danger'
 }
+const enum EntityMsgColor {
+    GREEN = 'green',
+    ORANGE = '#ff6600'
+}
 
 @Component({
     selector: 'of-detail',
@@ -83,22 +94,25 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() currentPath: string;
 
     public active = false;
+    public isActionEnabled = false;
+    public lttdExpiredIsTrue: boolean;
+
+
     unsubscribe$: Subject<void> = new Subject<void>();
     readonly hrefsOfCssLink = new Array<SafeResourceUrl>();
+    private _listEntitiesToRespond = new Array<EntityMessage>();
     private _htmlContent: SafeHtml;
     private _userContext: UserContext;
     private _lastCards$: Observable<LightCard[]>;
     private _responseData: Response;
-    private _hasPrivilegeToRespond = false;
     private _acknowledgementAllowed: boolean;
-    lttdExpiredIsTrue:boolean;
     message: Message = {display: false, text: undefined, color: undefined};
 
     constructor(private element: ElementRef, private businessconfigService: ProcessesService,
-                private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
-                private store: Store<AppState>, private translate: TranslateService,
-                private cardService: CardService, private _appService: AppService,
-                private userService:UserService) {
+        private handlebars: HandlebarsService, private sanitizer: DomSanitizer,
+        private store: Store<AppState>, private cardService: CardService,
+        private _appService: AppService, private userService: UserService,
+        private entitiesService: EntitiesService) {
 
         this.store.select(selectAuthenticationState).subscribe(authState => {
             this._userContext = new UserContext(
@@ -140,8 +154,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnInit() {
 
-
         if (this._appService.pageType === PageType.FEED) {
+
+            this.setEntitiesToRespond();
 
             this._lastCards$ = this.store.select(selectLastCards);
 
@@ -171,18 +186,19 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             });
 
                             templateGateway.childCards = this.childCards;
+                            this.setEntitiesToRespond();
                             templateGateway.applyChildCards();
                         });
                 });
         }
-        this.markAsRead();
+        this.markAsReadIfNecessary();
     }
 
     ngDoCheck() {
-        this.tchekLttdExpired();
+        this.checkLttdExpired();
     }
 
-    tchekLttdExpired():void {
+    checkLttdExpired():void {
         this.lttdExpiredIsTrue =  (this.card.lttd != null && Math.floor((this.card.lttd - new Date().getTime()) / 1000) <= 0);
     }
 
@@ -210,36 +226,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     get responseDataExists(): boolean {
         return this._responseData != null && this._responseData !== undefined;
-    }
-
-    get isActionEnabled(): boolean {
-        if (!this.card.entitiesAllowedToRespond) {
-            console.log('Card error : no field entitiesAllowedToRespond');
-            return false;
-        }
-
-        if (this._responseData != null && this._responseData !== undefined) {
-            this.getPrivilegetoRespond(this.card, this._responseData);
-        }
-
-        return this.card.entitiesAllowedToRespond.includes(this.user.entities[0])
-            && this._hasPrivilegeToRespond;
-    }
-
-    getPrivilegetoRespond(card: Card, responseData: Response) {
-
-        this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
-            if ((perim.process === card.process) && (perim.state === responseData.state)
-                && (this.compareRightAction(perim.rights, RightsEnum.Write)
-                    || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
-                this._hasPrivilegeToRespond = true;
-            }
-
-        });
-    }
-
-    compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
-        return (userRight(userRights) - userRight(rightsAction)) === 0;
     }
 
     get btnAckText(): string {
@@ -349,7 +335,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             });
     }
 
-    markAsRead() {
+    markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
             this.cardService.postUserCardRead(this.card).subscribe(resp => {
                 if (resp.status === 201 || resp.status === 200) {
@@ -382,7 +368,65 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     ngOnChanges(): void {
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
+        this.markAsReadIfNecessary();
         this.message = {display: false, text: undefined, color: undefined};
+        if (this._responseData != null && this._responseData !== undefined) {
+            this.setEntitiesToRespond();
+            this.setIsActionEnabled();
+        }
+
+    }
+
+    private setEntitiesToRespond() {
+        this._listEntitiesToRespond = new Array<EntityMessage>();
+        if (this.card.entitiesAllowedToRespond) {
+            this.card.entitiesAllowedToRespond.forEach(entity => {
+                const entityName = this.getEntityName(entity);
+                if (entityName) {
+                    this._listEntitiesToRespond.push(
+                        { name: entityName.name, color: this.checkEntityAnswered(entity) ? EntityMsgColor.GREEN : EntityMsgColor.ORANGE });
+                }
+            });
+        }
+    }
+
+    private setIsActionEnabled() {
+            this.isActionEnabled = (this.isUserInEntityAllowedToRespond() && this.doesTheUserHavePermissionToRespond());
+    }
+
+    private isUserInEntityAllowedToRespond(): boolean {
+        if (this.card.entitiesAllowedToRespond) return this.card.entitiesAllowedToRespond.includes(this.user.entities[0]);
+        else return false;
+    }
+
+
+    private doesTheUserHavePermissionToRespond(): boolean {
+        let permission = false ;
+        this.userService.getCurrentUserWithPerimeters().computedPerimeters.forEach(perim => {
+            if ((perim.process === this.card.process) && (perim.state === this._responseData.state)
+                && (this.compareRightAction(perim.rights, RightsEnum.Write)
+                    || this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))) {
+                permission = true;
+                return true;
+            }
+        });
+        return permission;
+    }
+
+    private compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
+        return (userRight(userRights) - userRight(rightsAction)) === 0;
+    }
+
+    get listEntitiesToRespond() {
+        return this._listEntitiesToRespond;
+    }
+
+    getEntityName(id: string): Entity {
+        return this.entitiesService.getEntities().find(entity => entity.id === id);
+    }
+
+    checkEntityAnswered(entity: string): boolean {
+        return this.childCards.some(childCard => childCard.publisher === entity);
     }
 
     private initializeHrefsOfCssLink() {

@@ -12,6 +12,16 @@
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 archive-filter">
+                <of-datetime-filter filterPath="publishDateFrom" formControlName="publishDateFrom"
+                                    labelKey="archive.filters."
+                ></of-datetime-filter>
+            </div>
+            <div class="col-lg-2 col-md-4 archive-filter">
+                <of-datetime-filter filterPath="publishDateTo" formControlName="publishDateTo"
+                                    labelKey="archive.filters."
+                ></of-datetime-filter>
+            </div>
+            <div class="col-lg-2 col-md-4 archive-filter">
                 <of-datetime-filter filterPath="activeFrom" formControlName="activeFrom"
                                     labelKey="archive.filters."
                                     [offset]="[{amount:-2, unit:'hours'}]"

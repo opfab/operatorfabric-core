@@ -20,6 +20,10 @@ Feature: Add perimeters/group for action test
         {
       "state" : "questionState",
       "right" : "Receive"
+    },
+    {
+      "state" : "messageState",
+      "right" : "ReceiveAndWrite"
     }
   ]
 }

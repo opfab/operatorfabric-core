@@ -188,7 +188,9 @@ public class TestUtilities {
                 .severity(SeverityEnum.ALARM)
                 .title(I18nConsultationData.builder().key("title").build())
                 .summary(I18nConsultationData.builder().key("summary").build())
-                .recipient(computeRecipient(login, groups));
+                .recipient(computeRecipient(login, groups))
+                .publisherType(PublisherTypeEnum.EXTERNAL)
+                ;
 
         if (groups != null && groups.length > 0)
             archivedCardBuilder.groupRecipients(Arrays.asList(groups));

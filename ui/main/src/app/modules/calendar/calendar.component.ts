@@ -83,8 +83,8 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
       if (card.severity === 'COMPLIANT') { color = 'green'; }
       if (card.severity === 'ACTION') { color = 'orange'; }
       if (card.severity === 'ALARM') { color = 'red'; }
-
-      this.translate.get(card.process + '.' + card.processVersion + '.' + card.title.key).subscribe(title => {
+      this.translate.get(card.process + '.' + card.processVersion + '.' + card.title.key
+          , card.title.parameters).subscribe(title => {
         if (card.timeSpans) {
           for (const timespan of card.timeSpans) {
             if (timespan.end) {

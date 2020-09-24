@@ -106,6 +106,7 @@ public class CardSubscriptionRoutesConfig {
                             .clientId(request.queryParam("clientId").orElse(null))
                             .rangeStart(parseAsInstant(request.queryParam("rangeStart").orElse(null)))
                             .rangeEnd(parseAsInstant(request.queryParam("rangeEnd").orElse(null)))
+                            .publishFrom(parseAsInstant(request.queryParam("publishFrom").orElse(null)))
                             .test(request.queryParam("test").orElse(FALSE).equals(TRUE))
                             .notification(request.queryParam("notification").orElse(FALSE).equals(TRUE))
                             .build();
@@ -127,6 +128,7 @@ public class CardSubscriptionRoutesConfig {
                             .clientId(request.queryParam("clientId").orElse(null))
                             .rangeStart(t.getT2().getRangeStart())
                             .rangeEnd(t.getT2().getRangeEnd())
+                            .publishFrom(t.getT2().getPublishFrom())
                             .test(false)
                             .notification(true);
                     if(t.getT2().getLoadedCards()!=null)

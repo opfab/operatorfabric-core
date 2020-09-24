@@ -8,6 +8,14 @@ Feature: Bundle
 
   Scenario: Post Bundle
 
+
+     # Push bundle
+    Given url opfabUrl + 'businessconfig/processes'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart field file = read('resources/bundle_defaultProcess_V0.1.tar.gz')
+    When method post
+    Then status 201
+
     # Push bundle
     Given url opfabUrl + 'businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken

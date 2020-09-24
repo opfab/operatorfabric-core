@@ -56,8 +56,7 @@ project.
 
 == Reporting Bugs and Suggesting Enhancements
 
-Work in Progress
-//TODO OC-887 Describe JIRA workflows and how to sign up/login
+Reporting bug and suggesting enhancements shall be done via issues on github.
 
 == Contributing Code or Documentation
 
@@ -70,6 +69,13 @@ include::workflow.adoc[leveloffset=+2]
 * We don't mention specific authors by name in each file (in Javadoc or in the documentation for example), so as not
 to have to maintain these mentions (since this information is tracked by git anyway).
 * For ui code, you must use a linter with rules provided in ui/main/tslint.json
+
+==== Angular development caution and tooltips
+
+* Use !!myVariable to test if a variable is undefined or null 
+* Do not use ngFor / ngIf  with methods with computing as angular will call these methods very regularly
+(around ten times per seconds), use instead variables and compute them only when necessary.
+* ngInit() :  ngInit is called when component is created, the creation is made by the parent component : be careful to check when initialization is done when calling method inside ngInit. When the context of the parent component change, it can lead to a new initialization or not.
 
 include::documentation.adoc[leveloffset=+2]
 
@@ -138,12 +144,6 @@ you would be interested in as a contributor.
 TIP: We also use this website to broadcast any news we have about the project so don't hesitate to subscribe to the
 RSS feed on the home page to be informed of any update.
 
-=== Spectrum Community : https://spectrum.chat/opfab
-
-If you would like to join the discussions regarding OperatorFabric, please
-https://spectrum.chat/opfab[join our community on Spectrum]!
-
-Regarding issue tracking, our Jira platform should be open soon.
 
 === LF Energy Mailing Lists
 

@@ -42,27 +42,27 @@ The properties lie in the `web-ui.json`.The following table describes their mean
 |===
 |name|default|mandatory?|Description
 
-|operatorfabric.security.provider-realm||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
-|operatorfabric.security.provider-url||yes|The keycloak server instance
-|operatorfabric.security.logout-url||yes
+|security.provider-realm||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
+|security.provider-url||yes|The keycloak server instance
+|security.logout-url||yes
 a|The keycloak logout URL. Is a composition of:
  - Your keycloak instance and the _auth_ keyword (ex: https://www.keycloakurl.com/auth), but we also support domains without _auth_ (ex: https://www.keycloakurl.com/customPath)
  - The realm name (Ex: dev)
  - The redirect URL (_redirect_uri_): The redirect URL after success authentification
-|operatorfabric.security.oauth2.flow.mode|PASSWORD|no
+|security.oauth2.flow.mode|PASSWORD|no
 a|authentication mode, awailable options:
 
  - CODE: Authorization Code Flow;
  - PASSWORD: Direct Password Flow (fallback);
  - IMPLICIT: Implicit Flow.
-|operatorfabric.security.oauth2.flow.provider|null|no|provider name to display on log in button
-|operatorfabric.security.oauth2.flow.delegate-url|null|no
+|security.oauth2.flow.provider|null|no|provider name to display on log in button
+|security.oauth2.flow.delegate-url|null|no
 a|Url to redirect the browser to for authentication. Mandatory with:
 
 - CODE flow: must be the url with protocol choice and version as query parameters;
 - IMPLICIT flow: must be the url part before `.well-known/openid-configuration` (for example in dev configuration it's
  `http://localhost:89/auth/realms/dev`).
-|operatorfabric.feed.card.time.display|BUSINESS|no
+|feed.card.time.display|BUSINESS|no
 a|card time display mode in the feed. Values :
 
  - BUSINESS: displays card with entire business period. It the fallback if the set value is none of the values listed here;
@@ -70,37 +70,38 @@ a|card time display mode in the feed. Values :
  - PUBLICATION: displays card with publication date;
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
-|operatorfabric.feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen. If the timeline is not loaded , the time filter on the feed is filtering on business date otherwise it is filtering on publish date.
-|operatorfabric.feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filter in the feed page
-|operatorfabric.feed.card.hideAckFilter|false|no|Control if you want to show or hide the acknowledgement filter in the feed page
+|feed.timeline.hide|false|no|If set to true, the time line is not loaded in the feed screen. If the timeline is not loaded , the time filter on the feed is filtering on business date otherwise it is filtering on publish date.
+|feed.card.hideTimeFilter|false|no|Control if you want to show or hide the time filter in the feed page
+|feed.card.hideAckFilter|false|no|Control if you want to show or hide the acknowledgement filter in the feed page
+|feed.card.secondsBeforeLttdForClockDisplay|180|no| Number of seconds before lttd when a clock is activated in cards on the feed 
 
-|operatorfabric.feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
-|operatorfabric.feed.notify|false|no|If set to true, new cards are notified in the OS through web-push notifications
-|operatorfabric.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
-|operatorfabric.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
-|operatorfabric.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
-|operatorfabric.playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
-|operatorfabric.i18n.supported.locales||no|List of supported locales (Only fr and en so far)
-|operatorfabric.i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
+|feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
+|feed.notify|false|no|If set to true, new cards are notified in the OS through web-push notifications
+|playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
+|playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
+|playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
+|playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
+|i18n.supported.locales||no|List of supported locales (Only fr and en so far)
+|i10n.supported.time-zones||no|List of supported time zones, for instance 'Europe/Paris'.
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
 
-|operatorfabric.archive.filters.page.size|10|no|The page size of archive filters
-|operatorfabric.archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
-|operatorfabric.archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
-|operatorfabric.settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 
-|operatorfabric.settings.nightDayMode|false|no|if you want to activate toggle for night or day mode 
-|operatorfabric.settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY,NIGHT or LEGACY (black background and white timeline) 
-|operatorfabric.settings.infos.disable||no|Control if we want to disable/enable editing user email, description in the settings page
-|operatorfabric.settings.infos.email|false|no|Control if we want to hide(true) or display(false or not specified) the user email in the settings page
-|operatorfabric.settings.infos.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
-|operatorfabric.settings.infos.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
-|operatorfabric.settings.infos.timezone|false|no|Control if we want to hide(true) or display(false or not specified) the timezone in the settings page
-|operatorfabric.settings.infos.timeformat|false|no|Control if we want to hide(true) or display(false or not specified) the timeformat in the settings page
-|operatorfabric.settings.infos.dateformat|false|no|Control if we want to hide(true) or display(false or not specified) the dateformat in the settings page
-|operatorfabric.settings.infos.datetimeformat|false|no|Control if we want to hide(true) or display(false or not specified) the datetimeformat in the settings page
-|operatorfabric.settings.infos.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
-|operatorfabric.settings.infos.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
-|operatorfabric.settings.about
+|archive.filters.page.size|10|no|The page size of archive filters
+|archive.filters.process.list||no|List of processes to choose from in the corresponding filter in archives
+|archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives
+|settings.tags.hide||no|Control if you want to show or hide the tags filter in settings and feed page 
+|settings.nightDayMode|false|no|if you want to activate toggle for night or day mode 
+|settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY,NIGHT or LEGACY (black background and white timeline) 
+|settings.infos.disable||no|Control if we want to disable/enable editing user email, description in the settings page
+|settings.infos.email|false|no|Control if we want to hide(true) or display(false or not specified) the user email in the settings page
+|settings.infos.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
+|settings.infos.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
+|settings.infos.timezone|false|no|Control if we want to hide(true) or display(false or not specified) the timezone in the settings page
+|settings.infos.timeformat|false|no|Control if we want to hide(true) or display(false or not specified) the timeformat in the settings page
+|settings.infos.dateformat|false|no|Control if we want to hide(true) or display(false or not specified) the dateformat in the settings page
+|settings.infos.datetimeformat|false|no|Control if we want to hide(true) or display(false or not specified) the datetimeformat in the settings page
+|settings.infos.tags|false|no|Control if we want to hide(true) or display(false or not specified) the tags in the settings page
+|settings.infos.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
+|settings.about
 a|none
 a|no
 a|Declares application names and their version into web-ui about section. +
@@ -117,11 +118,11 @@ It should look like:
  "rank": 0
 }
 ----
-|operatorfabric.logo.base64|medium OperatorFabric icon|no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg. If it is not set, a medium (32px) OperatorFabric icon is displayed.
-|operatorfabric.logo.height|32|no|The height of the logo (in px) (only taken into account if operatorfabric.logo.base64 is set).
-|operatorfabric.logo.width|150|no|The width of the logo (in px) (only taken into account if operatorfabric.logo.base64 is set).
-|operatorfabric.logo.limitSize|true|no|If it is true, the height limit is 32(px) and the width limit is 200(px), it means that if the height is over than 32, it will be set to 32, if the width is over than 200, it is set to 200. If it is false, no limit restriction for the height and the width. 
-|operatorfabric.title|OperatorFabric|no|Title of the application, displayed on the browser
+|logo.base64|medium OperatorFabric icon|no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg. If it is not set, a medium (32px) OperatorFabric icon is displayed.
+|logo.height|32|no|The height of the logo (in px) (only taken into account if logo.base64 is set).
+|logo.width|150|no|The width of the logo (in px) (only taken into account if logo.base64 is set).
+|logo.limitSize|true|no|If it is true, the height limit is 32(px) and the width limit is 200(px), it means that if the height is over than 32, it will be set to 32, if the width is over than 200, it is set to 200. If it is false, no limit restriction for the height and the width. 
+|title|OperatorFabric|no|Title of the application, displayed on the browser
 |navbar.hidden|["logging","monitoring"]|no
 a| Lists the application menu to hide in the navbar. +
 The `keys` used are the `route.path` declared in the `${OF_HOME}ui/main/src/app/app-routing.module.ts` file. +
@@ -141,11 +142,11 @@ There will be two new routes with the release of the `[OC-936]`:
 
 |===
 |name|default|mandatory?|Description
-|operatorfabric.settings.timeZone||no|Default user time zone for users (use|operatorfabric.settings.timeFormat|LT|no|Default user time format (moment)
-|operatorfabric.settings.dateFormat|LL|no|Default user date format (moment)
-|operatorfabric.settings.dateTimeFormat|LL LT|no|Default user date format (moment)
-|operatorfabric.settings.locale|en|no|Default user locale (use en if not set)
-|operatorfabric.settings.default-tags||no|Default user list of filtered in tags
+|settings.timeZone||no|Default user time zone for users (use|settings.timeFormat|LT|no|Default user time format (moment)
+|settings.dateFormat|LL|no|Default user date format (moment)
+|settings.dateTimeFormat|LL LT|no|Default user date format (moment)
+|settings.locale|en|no|Default user locale (use en if not set)
+|settings.default-tags||no|Default user list of filtered in tags
 
 |===
 

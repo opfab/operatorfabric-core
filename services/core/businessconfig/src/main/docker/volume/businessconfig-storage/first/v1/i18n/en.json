@@ -4,5 +4,6 @@
   },
   "menu": {
     "first": "Test menu"
-  }
+  },
+  "firstState" : {"label" : "Status test" }
 }
