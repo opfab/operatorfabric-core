@@ -1,0 +1,34 @@
+{
+  "type": "record",
+  "name": "Recipient",
+  "namespace": "org.lfenergy.operatorfabric.avro",
+  "fields": [
+    {
+      "name": "type",
+      "type": {
+        "name": "RecipientType",
+        "type": "enum",
+        "symbols" : ["DEADEND", "GROUP", "UNION","USER"]
+      }
+    },
+    {
+      "name": "recipients",
+      "type" : [
+        "null",
+        {
+          "type": "array",
+          "items": "Recipient"
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "identity",
+      "type": [
+        "null",
+        "string"
+        ],
+      "default": null
+    }
+  ]
+}

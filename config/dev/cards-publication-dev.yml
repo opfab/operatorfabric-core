@@ -3,6 +3,21 @@ server:
 spring:
   application:
     name: cards-publication
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: smt01
+    topics:
+      name: camundaKafka
+
+logging:
+  level:
+    org:
+      lfenergy:
+        operatorfabric:
+          cards:
+            publication: DEBUG
+
 
 #here we put urls for all feign clients
 users:
