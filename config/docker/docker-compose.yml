@@ -50,7 +50,7 @@ services:
 #     - "4100:5005"
     volumes:
      - "../certificates:/certificates_to_add"
-     - "../../services/core/businessconfig/src/main/docker/volume/businessconfig-storage:/businessconfig-storage"
+     - "../../services/core/businessconfig/build/docker-volume/businessconfig-storage:/businessconfig-storage"
      - "./common-docker.yml:/config/common-docker.yml"
      - "./businessconfig-docker.yml:/config/application-docker.yml"
   cards-publication:
