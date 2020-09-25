@@ -3,11 +3,6 @@
   "name": "Card",
   "namespace": "org.lfenergy.operatorfabric.avro",
   "fields": [
-    // id is mapped to taskId in cardCommand
-////    {
-////      "name": "id",
-////      "type": "string"
-////    },
     {
       "name": "parentCardId",
       "type": ["null", "string"],
@@ -18,19 +13,9 @@
       "type": "string"
     },
     {
-      "name": "publisherVersion",
+      "name": "processVersion",
       "type": "string"
     },
-    {
-      "name": "process",
-      "type": ["null","string"],
-      "default": null
-    },
-    // processId is mapped to processId in cardCommand
-//    {
-//      "name": "processId",
-//      "type": "string"
-//    },
     {
       "name": "state",
       "type": ["null","string"],
