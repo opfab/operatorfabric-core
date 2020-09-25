@@ -62,6 +62,8 @@ services:
       - "../certificates:/certificates_to_add"
       - "./common-docker.yml:/config/common-docker.yml"
       - "./cards-publication-docker.yml:/config/application-docker.yml"
+    env_file:
+      - kafka-env.properties
   cards-consultation:
     container_name: cards-consultation
     image: "lfeoperatorfabric/of-cards-consultation-business-service:SNAPSHOT"
