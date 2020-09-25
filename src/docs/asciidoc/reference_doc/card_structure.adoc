@@ -39,8 +39,11 @@ The `processVersion` field indicate which version of the process should be used 
 
 ==== Process Instance Identifier (`processInstanceId`)
 A card is associated to a given process, which defines how it is rendered, but it is also more precisely associated to
-a *specific instance* of this process. The `processInstanceId` field contains the unique identifier of the process instance
-of which the card represents the current state.
+a *specific instance* of this process. The `processInstanceId` field contains the unique identifier of the process instance.
+
+=== State in the process (`state`)
+The card represent a specific state in the process. In addition to the process, this information is used to resolve the presentation
+resources used to render the card and card details.
 
 [[start_date]]
 ==== Start Date (`startDate`)
