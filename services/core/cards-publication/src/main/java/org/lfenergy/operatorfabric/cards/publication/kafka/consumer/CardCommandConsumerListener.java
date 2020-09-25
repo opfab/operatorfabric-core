@@ -7,14 +7,12 @@ import org.lfenergy.operatorfabric.avro.CommandType;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.CommandHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
 public class CardCommandConsumerListener {
 
     private final Map<CommandType,CommandHandler> commandHandlerMap;
@@ -24,7 +22,7 @@ public class CardCommandConsumerListener {
                 .collect(Collectors.toMap(CommandHandler::getCommandType, it -> it));
     }
 
-    @KafkaListener(topics = "${spring.kafka.topics.name}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${spring.kafka.topics.name:opfab}", containerFactory = "kafkaListenerContainerFactory")
     public void receivedCommand(@Payload ConsumerRecord<String, CardCommand> record) {
         log.info("Key: {}, Value: {}, Partition: {}, Offset: {}",
                 record.key(), record.value(), record.partition(), record.offset());
