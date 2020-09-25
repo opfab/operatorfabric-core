@@ -67,9 +67,9 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
 
     sendQuery() {
         this.store.dispatch(new ResetFilter());
-        const testProc = this.monitoringForm.get('process');
-        const processesId = Array.prototype.map.call(testProc.value, item => item.id);
-        if (this.hasFormControlValueChanged(testProc)) {
+        const selectedProcesses = this.monitoringForm.get('process');
+        const processesId = Array.prototype.map.call(selectedProcesses.value, item => item.id);
+        if (this.hasFormControlValueChanged(selectedProcesses)) {
             const procFilter = {
                 name: FilterType.PROCESS_FILTER
                 , active: true
