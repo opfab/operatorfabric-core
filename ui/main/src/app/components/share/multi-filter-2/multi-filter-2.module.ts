@@ -9,21 +9,22 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SingleFilterComponent} from './single-filter.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
+import {MultiFilter2Component} from './multi-filter-2.component';
+import {AngularMultiSelectModule} from 'angular2-multiselect-dropdown';
 
 @NgModule({
-    declarations: [SingleFilterComponent],
+    declarations: [MultiFilter2Component],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         TranslateModule,
-        NgbModule
+        NgbModule,
+        AngularMultiSelectModule
     ],
-    exports: [SingleFilterComponent]
+    exports: [MultiFilter2Component]
 })
-export class SingleFilterModule { }
+export class MultiFilter2Module { }

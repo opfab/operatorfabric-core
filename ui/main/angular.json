@@ -34,6 +34,7 @@
               "node_modules/@fullcalendar/daygrid/main.css",
               "node_modules/@fullcalendar/timegrid/main.css",
               "node_modules/@fullcalendar/bootstrap/main.css",
+              "node_modules/angular2-multiselect-dropdown/themes/default.theme.css",
               "src/assets/styles/style.css",
               "src/assets/styles/styles.scss"
             ],

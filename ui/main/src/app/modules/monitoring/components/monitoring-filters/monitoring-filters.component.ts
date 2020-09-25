@@ -20,8 +20,7 @@ import * as moment from 'moment';
 
 @Component({
     selector: 'of-monitoring-filters',
-    templateUrl: './monitoring-filters.component.html',
-    styleUrls: ['./monitoring-filters.component.scss']
+    templateUrl: './monitoring-filters.component.html'
 })
 export class MonitoringFiltersComponent implements OnInit, OnDestroy {
 
@@ -29,36 +28,51 @@ export class MonitoringFiltersComponent implements OnInit, OnDestroy {
     monitoringForm: FormGroup;
     unsubscribe$: Subject<void> = new Subject<void>();
 
+    dropdownList = [];
+    selectedItems = [];
+    dropdownSettings = {};
+
     @Input()
     public processData: Observable<any>;
 
     public submittedOnce = false;
 
     constructor(private store: Store<AppState>, private configService: ConfigService) {
+
+    }
+
+    ngOnInit() {
+        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
         this.monitoringForm = new FormGroup(
             {
-                process: new FormControl(''),
+                process: new FormControl([]),
                 publishDateFrom: new FormControl(''),
                 publishDateTo: new FormControl(''),
                 activeFrom: new FormControl(''),
                 activeTo: new FormControl('')
             }
         );
-    }
+        this.processData.subscribe(items => this.dropdownList = items);
 
-    ngOnInit() {
-        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
+        this.dropdownSettings = {
+            text: 'Select a Process',
+            selectAllText: 'Select All',
+            unSelectAllText: 'UnSelect All',
+            enableSearchFilter: true,
+            classes: 'custom-class-example'
+        };
+
     }
 
     sendQuery() {
         this.store.dispatch(new ResetFilter());
-
-        const testProc = this.monitoringForm.get('process');
-        if (this.hasFormControlValueChanged(testProc)) {
+        const selectedProcesses = this.monitoringForm.get('process');
+        const processesId = Array.prototype.map.call(selectedProcesses.value, item => item.id);
+        if (this.hasFormControlValueChanged(selectedProcesses)) {
             const procFilter = {
                 name: FilterType.PROCESS_FILTER
                 , active: true
-                , status: {processes: testProc.value}
+                , status: {processes: processesId}
             };
             this.store.dispatch(new ApplyFilter(procFilter));
         }

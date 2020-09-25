@@ -9,11 +9,11 @@
 
 
 import {Component, Input, OnInit} from '@angular/core';
-import {Observable, of} from "rxjs";
-import {I18n} from "@ofModel/i18n.model";
-import {FormControl, FormGroup} from "@angular/forms";
-import {TranslateService} from "@ngx-translate/core";
-import {map} from "rxjs/operators";
+import {Observable, of} from 'rxjs';
+import {I18n} from '@ofModel/i18n.model';
+import {FormControl, FormGroup} from '@angular/forms';
+import {TranslateService} from '@ngx-translate/core';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'of-single-filter',
