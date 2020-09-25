@@ -20,8 +20,7 @@ import * as moment from 'moment';
 
 @Component({
     selector: 'of-monitoring-filters',
-    templateUrl: './monitoring-filters.component.html',
-    styleUrls: ['./monitoring-filters.component.scss']
+    templateUrl: './monitoring-filters.component.html'
 })
 export class MonitoringFiltersComponent implements OnInit, OnDestroy {
 

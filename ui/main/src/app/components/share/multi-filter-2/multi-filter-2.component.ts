@@ -14,8 +14,7 @@ import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-multi-filter-2',
-    templateUrl: './multi-filter-2.component.html',
-    styleUrls: ['./multi-filter-2.component.scss']
+    templateUrl: './multi-filter-2.component.html'
 })
 export class MultiFilter2Component implements OnInit {
 
