@@ -8,7 +8,7 @@
     "logout": "Déconnexion",
     "settings": "Paramètres",
     "about": "À propos",
-    "freemessage": "Nouvelle Carte"
+    "usercard": "Nouvelle Carte"
   },
   "timeline": {
     "businessPeriod": "Periode métier",
@@ -121,7 +121,7 @@
     },
     "cardType": "Type de Carte",
     "timeOfAction": "Moment de l'action",
-    "processName": "Nom du process",
+    "processName": "Titre",
     "description": "Description",
     "sender": "Envoyeur",
     "noResult": "Aucun résultat"
@@ -135,7 +135,7 @@
     "title": "Titre",
     "summary": "Résumé",
     "trigger": "Déclencheur",
-    "coordinationStatus": "Status de coordination",
+    "status": "Status",
     "seeDetails": "Voir les détails"
   },
   "button": {
@@ -143,7 +143,7 @@
     "cancel": "Annuler",
     "reset": "Effacer"
   },
-  "free-message": {
+  "usercard": {
     "title": "Éditer la notification par Free Message",
     "filters": {
       "severity": "Sévérité",

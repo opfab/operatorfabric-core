@@ -188,6 +188,15 @@ Feature: UserCards tests
     Then status 201
     And match response.count == 1
 
+
+#get card with user tso1-operator
+    Given url opfabUrl + 'cards/cards/process_1.process_id_w'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And match response.card.publisherType == "ENTITY"
+
+
     * def card =
 """
 {

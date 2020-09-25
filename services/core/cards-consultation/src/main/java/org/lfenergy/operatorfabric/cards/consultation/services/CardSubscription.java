@@ -24,7 +24,6 @@ import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
@@ -58,9 +57,7 @@ public class CardSubscription {
     @Getter
     private Flux<String> publisher;
     private Flux<String> amqpPublisher;
-    private EmitterProcessor<String> externalPublisher;
-    private Flux<String> externalFlux;
-    private FluxSink<String> externalSink;
+    private FluxSink<String> messageSink;
     private AmqpAdmin amqpAdmin;
     private FanoutExchange cardExchange;
     private ConnectionFactory connectionFactory;
@@ -71,6 +68,9 @@ public class CardSubscription {
     private boolean cleared = false;
     private final String clientId;
     private String userLogin;
+    private boolean fluxHasBeenFirstInit = false;
+
+
 
     /**
      * Constructs a card subscription and init access to AMQP exchanges
@@ -96,51 +96,34 @@ public class CardSubscription {
         return prefix + "#" + clientId;
     }
 
-    /**
-     * <ul>
-     * <li>Create a user queue and a group topic queue</li>
-     * <li>Associate queues to message {@link MessageListenerContainer}.</li>
-     * <li>Creates a amqpPublisher {@link Flux} to publish AMQP messages to</li>
-     * </ul>
-     * <p>
-     * Listeners starts on {@link Flux} subscription.
-     * </p>
-     * <p>On subscription cancellation triggers doOnCancel</p>
-     * @param doOnCancel
-     */
+
     public void initSubscription(Runnable doOnCancel) {
         createQueue();
         this.cardListener = createMessageListenerContainer(queueName);
-        amqpPublisher = Flux.create(emitter -> {
-            registerListener(cardListener, emitter,userLogin+ GROUPS_SUFFIX);
-            emitter.onRequest(v -> {
-                log.debug("STARTING subscription for user {}",userLogin);
-                cardListener.start();
-                startingPublishDate = Instant.now();
-            });
+        this.publisher  = Flux.create(emitter -> {
+            log.debug("Create message flux for user {}",userLogin);
+            this.messageSink = emitter;
+            registerListener(cardListener);
+            emitter.onRequest(v -> log.debug("STARTING subscription for user {}",userLogin));
             emitter.onDispose(()->{
-                log.info("DISPOSING amqp publisher");
+                log.debug("DISPOSING subscription for user {}",userLogin);
                 doOnCancel.run();
             });
+
+            if (!this.fluxHasBeenFirstInit) {
+                emitter.next("INIT");
+                this.fluxHasBeenFirstInit = true;
+            }
+            else emitter.next("RESTORE");
+            cardListener.start();
+
+            
         });
-        this.externalPublisher = EmitterProcessor.create();
-        this.externalSink = this.externalPublisher.sink();
-        this.amqpPublisher = amqpPublisher
-                .doOnError(t->log.error("ERROR on amqp publisher",t))
-                .doOnComplete(()->log.info("COMPLETE amqp Publisher"))
-                .doOnCancel(()->log.info("CANCELED amqp publisher"));
-        this.externalFlux = this.externalPublisher
-                .doOnError(t->log.error("ERROR on external publisher",t))
-                .doOnComplete(()->log.info("COMPLETE external Publisher"))
-                .doOnCancel(()->log.info("CANCELED external publisher"));
-        this.publisher = amqpPublisher.mergeWith(externalFlux)
-                .doOnError(t->log.error("ERROR on merged publisher",t))
-                .doOnComplete(()->log.info("COMPLETE merged publisher"))
-                .doOnCancel(()->log.info("CANCELED merged publisher"));
+        
     }
 
-    private void registerListener(MessageListenerContainer groupMlc, FluxSink<String> emitter, String queueName) {
-        groupMlc.setupMessageListener(message -> {
+    private void registerListener(MessageListenerContainer mlc) {
+        mlc.setupMessageListener(message -> {
             JSONObject card;
             try
             {
@@ -149,13 +132,12 @@ public class CardSubscription {
             catch(ParseException e){ log.error(ERROR_MESSAGE_PARSING, e); return;}
 
             if (checkIfUserMustReceiveTheCard(card)){
-                emitter.next(new String(message.getBody()));
+                publishDataIntoSubscription(new String(message.getBody()));
             }
             // In case of ADD or UPDATE, we send a delete card operation (to delete the card from the feed, more information in OC-297)
             else {
                 String deleteMessage = createDeleteCardMessageForUserNotRecipient(card);
-                if (! deleteMessage.isEmpty())
-                    emitter.next(deleteMessage);
+                if (! deleteMessage.isEmpty()) publishDataIntoSubscription(deleteMessage);
             }
         });
     }
@@ -212,8 +194,16 @@ public class CardSubscription {
         startingPublishDate = Instant.now();
     }
 
-    public void publishInto(Flux<String> fetchOldCards) {
-        fetchOldCards.subscribe(next->this.externalSink.next(next));
+
+    public void publishDataIntoSubscription(String message)
+    {
+        this.messageSink.next(message); 
+    }
+
+
+    public void publishDataFluxIntoSubscription(Flux<String> messageFlux) {
+        
+        messageFlux.subscribe(next->this.messageSink.next(next));
     }
 
     public String createDeleteCardMessageForUserNotRecipient(JSONObject cardOperation) {

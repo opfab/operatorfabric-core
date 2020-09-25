@@ -10,7 +10,6 @@
 package org.lfenergy.operatorfabric.cards.consultation.services;
 
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
 
 import org.lfenergy.operatorfabric.users.model.CurrentUserWithPerimeters;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -83,16 +82,21 @@ public class CardSubscriptionService {
                 catch (InterruptedException ex)
                 {
                     log.error("Impossible to launch heartbeat ",ex);
+                    Thread.currentThread().interrupt(); // Cf sonar java:S2142 "InterruptedException" should not be ignored
                     return; 
                 }
             log.debug("Send heartbeat to all subscription");
-            cache.keySet().forEach(key -> sendHeartbeat(cache.get(key)));
+            cache.keySet().forEach(key -> {
+                log.debug("Send heartbeat to {}",key);
+                sendHeartbeat(cache.get(key));
+            });
+
         }
     }
 
     private void sendHeartbeat(CardSubscription subscription)
     {
-        if (subscription!=null) subscription.publishInto(Flux.just("HEARTBEAT"));
+        if (subscription!=null) subscription.publishDataIntoSubscription("HEARTBEAT");
     }
 
     /**

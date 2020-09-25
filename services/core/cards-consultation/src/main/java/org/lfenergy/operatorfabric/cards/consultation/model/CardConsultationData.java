@@ -100,6 +100,7 @@ public class CardConsultationData implements Card {
     private Boolean hasBeenAcknowledged;
     @Transient
     private Boolean hasBeenRead;
+    private PublisherTypeEnum publisherType;
     
     
 }
