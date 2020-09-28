@@ -53,8 +53,6 @@ public class CardConsultationData implements Card {
     private I18n summary;
     @CreatedDate
     private Instant publishDate;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant deletionDate;
     private Instant lttd;
     @Indexed
     private Instant startDate;
