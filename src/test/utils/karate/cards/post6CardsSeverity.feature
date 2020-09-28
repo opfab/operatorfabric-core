@@ -29,8 +29,8 @@ Scenario: Post 6 Cards (2 INFORMATION, 1 COMPLIANT, 1 ACTION, 2 ALARM)
 					},
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
-			"summary" : {"key" : "defaultProcess.summary"},
-			"title" : {"key" : "defaultProcess.title"},
+			"summary" : {"key" : "message.summary"},
+			"title" : {"key" : "message.title"},
 			"data" : {"message":" Information card number 1"},
 			"timeSpans" : [
 				{"start" : startDate},
@@ -66,7 +66,9 @@ And match response.count == 1
     function() {
 
       startDate = new Date().valueOf() + 2*60*60*1000;
-	  endDate = new Date().valueOf() + 8*60*60*1000;
+
+	  startDateTimeSpans = new Date().valueOf() + 2*60*60*1000;
+	  endDateTimeSpans = new Date().valueOf() +   5*30*60*1000;
 
 		var card = {
 			"publisher" : "publisher_test",
@@ -81,12 +83,11 @@ And match response.count == 1
 					},
 			"severity" : "INFORMATION",
 			"startDate" : startDate,
-			"summary" : {"key" : "defaultProcess.summary"},
+			"summary" : {"key" : "message.summary"},
 			"title" : {"key" : "chartDetail.title"},
 			"data" : {"values":[12, 19, 3, 5, 2, 3]},
 			"timeSpans" : [
-				{"start" : startDate},
-				{"start" : endDate}
+				{"start" : startDateTimeSpans,"end" : endDateTimeSpans}
 				]
 		}
 
@@ -113,7 +114,12 @@ And match response.count == 1
     function() {
 
       startDate = new Date().valueOf() + 4*60*60*1000;
-	  endDate = new Date().valueOf() + 12*60*60*1000;
+	  
+	  startDateTimeSpans1 = new Date().valueOf() + 12*60*60*1000;
+	  endDateTimeSpans1 = new Date().valueOf() + 13*60*60*1000;
+
+	  startDateTimeSpans2 = new Date().valueOf() + 48*60*60*1000;
+	  endDateTimeSpans2 = new Date().valueOf() + 49*60*60*1000;
 
 		var card = {
 			"publisher" : "publisher_test",
@@ -127,12 +133,12 @@ And match response.count == 1
 					},
 			"severity" : "COMPLIANT",
 			"startDate" : startDate,
-			"summary" : {"key" : "defaultProcess.summary"},
-			"title" : {"key" : "process.title"},
+			"summary" : {"key" : "message.summary"},
+			"title" : {"key" : "processState.title"},
 			"data" : {"state":"calcul1","stateName":"CALCUL1"},
 			"timeSpans" : [
-				{"start" : startDate},
-				{"start" : endDate}
+				{"start" : startDateTimeSpans1,"end" : endDateTimeSpans1},
+				{"start" : startDateTimeSpans2,"end" : endDateTimeSpans2 }
 				]
 		}
 
@@ -158,7 +164,8 @@ And match response.count == 1
     function() {
 
       startDate = new Date().valueOf() + 4*60*60*1000;
-	  endDate = new Date().valueOf() + 6*60*60*1000;
+	  lttdDate = new Date().valueOf() + 60*1000*3;
+	  endDate = new Date().valueOf() + 8*60*60*1000;
 
 		var card = {
 			"publisher" : "processAction",
@@ -176,12 +183,12 @@ And match response.count == 1
 			"entitiesAllowedToRespond": ["ENTITY1","ENTITY2"],
 			"severity" : "ACTION",
 			"startDate" : startDate,
-			"summary" : {"key" : "defaultProcess.summary"},
+			"summary" : {"key" : "message.summary"},
 			"title" : {"key" : "question.title"},
 			"data" : {"message":" Action Card"},
+			"lttd" : lttdDate,
 			"timeSpans" : [
-				{"start" : startDate},
-				{"start" : endDate}
+				{"start" : startDate ,"end" : endDate}
 				]
 		}
 
@@ -221,7 +228,7 @@ And match response.count == 1
 					},
 			"severity" : "ALARM",
 			"startDate" : startDate,
-			"summary" : {"key" : "defaultProcess.summary"},
+			"summary" : {"key" : "message.summary"},
 			"title" : {"key" : "chartLine.title"},
 			"data" : {"values":[10000, 11000, 30000, 45000, 30000, 35000,10000]}
 		}
@@ -246,6 +253,8 @@ And match response.count == 1
     function() {
 
       startDate = new Date().valueOf() + 2*60*60*1000;
+	  startDateTimeSpans = new Date().valueOf() + 24*60*60*1000;
+	  endDateTimeSpans = new Date().valueOf() + 26*60*60*1000;
 
 		var card = {
 			"publisher" : "publisher_test",
@@ -259,6 +268,9 @@ And match response.count == 1
 					},
 			"severity" : "ALARM",
 			"startDate" : startDate,
+			"timeSpans" : [
+				{"start" : startDateTimeSpans ,"end" : endDateTimeSpans}
+				],
 			"summary" : {"key" : "contingencies.summary"},
 			"title" : {"key" : "contingencies.title"},
 			"data" : 

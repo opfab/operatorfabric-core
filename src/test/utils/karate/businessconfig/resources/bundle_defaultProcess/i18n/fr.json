@@ -1,13 +1,18 @@
 {
-	"name": "test API",
-	"defaultProcess":{
+	"process": {"label": "Processus d'example"},
+	"message":{
 		"title":"Message",
 		"summary":"Message reçu"
 	},
 	"chartDetail" : { "title":"Un graphique"},
 	"chartLine" : { "title":"Prévison de consommation électrique"},
-	"process" : { "title":"Etat du processus"},
-	"question" : {"title": "Indisponibilité planifiée","button" : {"text" :"Envoyer votre réponse"}},
-	"contingencies": {"title" : "Contraintes réseau","summary":"Synthèse des contraintes sur le réseau français"},
-	"response" : { "title":"Indisponibilité planifiée - Choix de date"}
+	"processState" : { "title":"Etat du processus"},
+	"question" : {"title": "⚡ Indisponibilité planifiée","button" : {"text" :"Envoyer votre réponse"}},
+	"contingencies": {"title" : "⚠️ Contraintes réseau ⚠️","summary":"Synthèse des contraintes sur le réseau français"},
+	"response" : { "title":"Indisponibilité planifiée - Choix de date"},
+	"menu":{
+		"label": "Menu du Processus de Test",
+		"first":"Documentation Operator Fabric",
+		"second":"LF Energy"
+	}
 }

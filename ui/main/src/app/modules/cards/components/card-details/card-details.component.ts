@@ -1,17 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Card, Detail} from '@ofModel/card.model';
+import { Card, Detail } from '@ofModel/card.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import * as cardSelectors from '@ofStore/selectors/card.selectors';
-import { ProcessesService } from "@ofServices/processes.service";
-import {Subject} from 'rxjs';
-import {takeUntil, switchMap} from 'rxjs/operators';
+import { ProcessesService } from '@ofServices/processes.service';
+import { Subject } from 'rxjs';
+import { takeUntil, switchMap } from 'rxjs/operators';
 import { selectIdentifier } from '@ofStore/selectors/authentication.selectors';
 import { UserService } from '@ofServices/user.service';
 import { User } from '@ofModel/user.model';
 import { UserWithPerimeters } from '@ofModel/userWithPerimeters.model';
 import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
-import { AppService } from '@ofServices/app.service';
+import { AppService, PageType } from '@ofServices/app.service';
 
 @Component({
     selector: 'of-card-details',
@@ -28,7 +28,7 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
     private _currentPath: string;
 
     constructor(private store: Store<AppState>,
-        private businessconfigService: ProcessesService, private userService: UserService, 
+        private businessconfigService: ProcessesService, private userService: UserService,
         private appService: AppService) {
     }
 
@@ -59,21 +59,6 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                 }
             });
 
-        let userId = null;
-        this.store.select(selectIdentifier)
-            .pipe(takeUntil(this.unsubscribe$))
-            .pipe(switchMap(id => {
-                    userId = id;
-                    return this.userService.askUserApplicationRegistered(userId)
-                }))
-            .subscribe(user => {
-                if (user) {
-                    this.user = user
-                }
-            },
-                error => console.log(`something went wrong while trying to ask user application registered service with user id : ${userId}`)
-            );
-
         this.store.select(selectCurrentUrl)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(url => {
@@ -82,10 +67,20 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                     this._currentPath = urlParts[1];
                 }
             });
+
+        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        if (userWithPerimeters) {
+            this.user = userWithPerimeters.userData;
+        }
+
     }
 
     closeDetails() {
         this.appService.closeDetails(this._currentPath);
+    }
+
+    get isButtonCloseVisible() {
+        return this.appService.pageType !== PageType.CALENDAR;
     }
 
     ngOnDestroy() {

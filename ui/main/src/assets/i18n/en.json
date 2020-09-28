@@ -1,13 +1,14 @@
 {
   "menu": {
     "feed": "Card Feed",
+    "calendar" : "Calendar",
     "archives": "Archives",
     "logging": "Logging",
     "monitoring": "Monitoring",
     "logout": "Logout",
     "settings": "Settings",
     "about": "About",
-    "freemessage": "New Card"
+    "usercard": "New Card"
   },
   "timeline" : {
     "businessPeriod": "Business period",
@@ -24,10 +25,12 @@
     "filters": {
       "title": "Filters",
       "time":{
-        "title":"Time",
+        "titleIfFilterBasedOnPublishDate": "Receipt date",
+        "titleIfFilterBasedOnBusinessDate": "Business period",
         "start.label": "Start",
         "end.label": "End",
-        "active.label": "Active"
+        "active.label": "Active",
+        "lttd.label" :"Finished"
       },
       "type": {
         "title": "Type",
@@ -116,7 +119,7 @@
     "filters": {"process": "Service"},
     "cardType": "Card Type",
     "timeOfAction": "Time of Action",
-    "processName": "Process Name",
+    "processName": "Title",
     "description": "Description",
     "sender": "Sender",
     "noResult": "No result"
@@ -128,7 +131,7 @@
     "title": "Title",
     "summary": "Summary",
     "trigger": "Trigger",
-    "coordinationStatus": "Coordination Status",
+    "status": "Status",
     "seeDetails": "see details"
   },
   "button": {
@@ -137,7 +140,7 @@
     "reset" : "Reset"
 
   },
-  "free-message": {
+  "usercard": {
     "title": "Edit Free Message Notification",
     "filters": {
       "severity":  "Severity",
@@ -171,7 +174,8 @@
       "form": "The form is not correctly filled",
       "ack": "Unable to change acknowledgement of this card for an error of remote system"
     },
-    "submitSuccess": "Action succeeded"
+    "submitSuccess": "Action succeeded",
+    "answers": "Answers"
   },
   "cardAcknowledgment": {
     "button": {

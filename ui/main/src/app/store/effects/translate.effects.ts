@@ -7,200 +7,100 @@
  * This file is part of the OperatorFabric project.
  */
 
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, of} from 'rxjs';
+import { LightCardActionTypes, LoadLightCardsSuccess } from '@ofActions/light-card.actions';
+import { LoadAllProcesses, ProcessActionType } from '@ofActions/process.action';
+import { map } from 'rxjs/operators';
+import { TranslateActions, TranslationUpdateDone } from '@ofActions/translate.actions';
+import { LightCard } from '@ofModel/light-card.model';
+import { ProcessesService } from '@ofServices/processes.service';
+import { Process } from '@ofModel/processes.model';
+import { Store, select } from '@ngrx/store';
+import { AppState } from '@ofStore/index';
+import { selectArchiveLightCards } from '@ofStore/selectors/archive.selectors';
+import { selectLinesOfLoggingResult } from '@ofStore/selectors/logging.selectors';
+import { LineOfLoggingResult } from '@ofModel/line-of-logging-result.model';
 
-import {Injectable} from "@angular/core";
-import {Store} from "@ngrx/store";
-import {AppState} from "@ofStore/index";
-import {Actions, Effect, ofType} from "@ngrx/effects";
-import {TranslateService} from "@ngx-translate/core";
-import {forkJoin, Observable, of} from "rxjs";
-import {LightCardActionTypes, LoadLightCardsSuccess} from "@ofActions/light-card.actions";
-import {catchError, concatAll, map, mergeMap, switchMap} from "rxjs/operators";
-import {
-    TranslateActions,
-    TranslateActionsTypes,
-    TranslationUpToDate,
-    UpdateTranslation,
-    UpdateTranslationFailed,
-    UpdateTranslationSuccessful
-} from "@ofActions/translate.actions";
-import {LightCard} from "@ofModel/light-card.model";
-import {Map} from "@ofModel/map";
-import * as _ from 'lodash';
-import {ProcessesService} from "@ofServices/processes.service";
-import {Menu} from "@ofModel/processes.model";
-import {LoadMenuSuccess, MenuActionTypes} from "@ofActions/menu.actions";
 
 @Injectable()
 export class TranslateEffects {
 
+    /**
+     Class use to launch loading of translation file specific to business processes
 
-    constructor(private store: Store<AppState>
-        , private actions$: Actions
-        , private translate: TranslateService
-        , private businessconfigService: ProcessesService
-    ) {
+     All translation are loaded after all processes definition has been loaded
+     These translation are loaded only for last process definition version
+     So when loading cards or archives cards, we need to check if translation has been loaded
+     because they can use old version of process definition
+    */
+
+    private static translationsAlreadyLoaded = new Set<string>();
+
+    constructor(private actions$: Actions,
+        private translateService: TranslateService,
+        private processesService: ProcessesService,
+        private store: Store<AppState>) {
+        this.loadTranslationIfNeededAfterLoadingArchiveCard();
+        this.loadTranslationIfNeededAfterLoadingLoggingCard();
     }
 
-    private static i18nBundleVersionLoaded = new Map<Set<string>>();
 
     @Effect()
-    updateTranslateService: Observable<TranslateActions> = this.actions$
+    initProcessesTranslations: Observable<TranslateActions> = this.actions$
         .pipe(
-            ofType(TranslateActionsTypes.UpdateTranslation)
-            ,
-            mergeMap((action: UpdateTranslation) => {
-                const businessconfigWithTheirVersions = action.payload.versions;
-                return forkJoin(this.mapLanguages(businessconfigWithTheirVersions)).pipe(
-                    concatAll(),
-                    catchError((error, caught) => {
-                        console.error(new Date().toISOString(),'error while trying to update translation', error);
-                        return caught;
-                    }));
-            })
-            ,
-            map(elem => new UpdateTranslationSuccessful({language: this.translate.currentLang}))
-            ,
-            catchError(error => {
-                return of(new UpdateTranslationFailed({error: error}))
-            })
+            ofType(ProcessActionType.LoadAllProcesses)
+            , map((loadedProcesses: LoadAllProcesses) => loadedProcesses.payload.processes)
+            , map((processes: Process[]) => processes.forEach(process => this.loadTranslationsForProcess(process)))
+            , map(() => new TranslationUpdateDone())
         );
 
-// iterate over configured languages
-    mapLanguages(businessconfigAndVersions: Map<Set<string>>): Observable<boolean>[] {
-        const locales = this.translate.getLangs();
-        return locales.map(locale => {
-            return forkJoin(this.mapBusinessconfig(locale, businessconfigAndVersions))
-                .pipe(concatAll())
-        });
-    }
-
-    // iterate over businessconfig
-    mapBusinessconfig(locale: string, businessconfigAndVersion: Map<Set<string>>): Observable<boolean>[] {
-        const businessconfig = Object.keys(businessconfigAndVersion);
-
-        return businessconfig.map(businessconfig => {
-            return forkJoin(this.mapVersions(locale, businessconfig, businessconfigAndVersion[businessconfig]))
-                .pipe(concatAll());
-        })
-    }
-
-    // iterate over versions
-    mapVersions(locale: string, process: string, versions: Set<string>): Observable<boolean>[] {
-        return Array.from(versions.values()).map(version => {
-            return this.businessconfigService.askForI18nJson(process, locale, version)
-                .pipe(map(i18n => {
-                    this.translate.setTranslation(locale, i18n, true);
-                    return true;
-                }));
-        });
-    }
-
-
     @Effect()
-    verifyTranslationNeeded: Observable<TranslateActions> = this.actions$
+    loadTranslationifNeededAfterLoadingCards: Observable<TranslateActions> = this.actions$
         .pipe(
             ofType(LightCardActionTypes.LoadLightCardsSuccess)
-            // extract cards
             , map((loadedCardAction: LoadLightCardsSuccess) => loadedCardAction.payload.lightCards)
-            // extract businessconfig+version
-            , map((cards: LightCard[]) => TranslateEffects.extractProcessAssociatedWithDistinctVersionsFromCards(cards))
-            // extract version needing to be updated
-            , switchMap((versions: Map<Set<string>>) => {
-                return this.extractI18nToUpdate(versions);
-            })
-            // send action accordingly
-            , map((processAndVersion: Map<Set<string>>) => {
-                return TranslateEffects.sendTranslateAction(processAndVersion)
-            })
-        );
-
-    private extractI18nToUpdate(versions: Map<Set<string>>) {
-            return of(TranslateEffects.extractBusinessconfigToUpdate(versions, TranslateEffects.i18nBundleVersionLoaded));
-    }
-
-    static extractProcessAssociatedWithDistinctVersionsFromCards(cards: LightCard[]): Map<Set<string>> {
-        let businessconfigAndVersions: TransitionalBusinessconfigWithItSVersion[];
-        businessconfigAndVersions = cards.map(card => {
-            return new TransitionalBusinessconfigWithItSVersion(card.process,card.processVersion);
-        });
-        
-        return this.consolidateBusinessconfigAndVersions(businessconfigAndVersions);
-    }
-
-    @Effect()
-    verifyTranslationNeedForMenus:Observable<TranslateActions> = this.actions$
-        .pipe(
-            ofType(MenuActionTypes.LoadMenuSuccess)
-            , map((loadedMenusAction:LoadMenuSuccess)=>loadedMenusAction.payload.menu)
-            , map((menus:Menu[])=>TranslateEffects.extractProcessAssociatedWithDistinctVersionsFrom(menus))
-            , switchMap((versions: Map<Set<string>>)=>this.extractI18nToUpdate(versions))
-            , map((processAndVersions:Map<Set<string>>)=>TranslateEffects.sendTranslateAction(processAndVersions))
-
-
+            , map((cards: LightCard[]) => cards.forEach(card => this.loadTranslationsForCard(card)))
+            , map(() => new TranslationUpdateDone())
         );
 
 
-    static extractProcessAssociatedWithDistinctVersionsFrom(menus: Menu[]):Map<Set<string>>{
-        
-        const businessconfigAndVersions = menus.map(menu=>{
-            return new TransitionalBusinessconfigWithItSVersion(menu.id,menu.version);
-        })
-        return this.consolidateBusinessconfigAndVersions(businessconfigAndVersions);
-
+    private loadTranslationIfNeededAfterLoadingArchiveCard() {
+        this.store.pipe(
+            select(selectArchiveLightCards))
+            .subscribe(cards => { cards.forEach(card => this.loadTranslationsForCard(card)); return of(); });
     }
 
-    private static consolidateBusinessconfigAndVersions(businessconfigAndVersions:TransitionalBusinessconfigWithItSVersion[]) {
-        const result = new Map<Set<string>>();
-        businessconfigAndVersions.forEach(u => {
-            const versions = result[u.businessconfig];
-            if (versions) {
-                versions.add(u.version)
-            } else {
-                result[u.businessconfig] = new Set([u.version]);
-            }
-        });
-        return result;
+    private loadTranslationIfNeededAfterLoadingLoggingCard() {
+        this.store.pipe(
+            select(selectLinesOfLoggingResult))
+            .subscribe(lines => { lines.forEach(loggingResult => this.loadTranslationsForLoggingResult(loggingResult)); return of(); });
     }
 
-    static extractBusinessconfigToUpdate(versionInput: Map<Set<string>>, cachedVersions: Map<Set<string>>): Map<Set<string>> {
-        const inputProcesses = Object.keys(versionInput);
-        const cachedProcesses = Object.keys(cachedVersions);
-        const unCachedProcesses = _.difference(inputProcesses, cachedProcesses);
+    private loadTranslationsForProcess(process: Process) {
+        this.translateService.getLangs().forEach(
+            local => this.addTranslationIfNeeded(local, process.id, process.version));
+    }
 
-        const translationReferencesToUpdate = new Map<Set<string>>();
-        unCachedProcesses.forEach(process => {
-            const versions2Update = versionInput[process];
-            translationReferencesToUpdate[process] = versions2Update;
-        });
+    private loadTranslationsForCard(card: LightCard) {
+        this.translateService.getLangs().forEach(
+            local => this.addTranslationIfNeeded(local, card.process, card.processVersion));
+    }
 
-        let cachedProcessesForVersionVerification = inputProcesses;
-        if (unCachedProcesses && (unCachedProcesses.length > 0)) {
-            cachedProcessesForVersionVerification = _.difference(unCachedProcesses, inputProcesses);
+    private loadTranslationsForLoggingResult(loggingResult: LineOfLoggingResult) {
+        this.translateService.getLangs().forEach(
+            local => this.addTranslationIfNeeded(local, loggingResult.process, loggingResult.processVersion));
+    }
+
+    private addTranslationIfNeeded(locale: string, process: string, version: string) {
+        if (!TranslateEffects.translationsAlreadyLoaded.has(locale + '/' + process + '/' + version)) {
+            TranslateEffects.translationsAlreadyLoaded.add(locale + '/' + process + '/' + version);
+            this.processesService.askForI18nJson(process, locale, version)
+                .pipe(map(i18n => this.translateService.setTranslation(locale, i18n, true))).subscribe();
         }
-
-        cachedProcessesForVersionVerification.forEach(businessconfig => {
-            const currentInputVersions = versionInput[businessconfig];
-            const currentCachedVersions = cachedVersions[businessconfig];
-            const untrackedVersions = _.difference(Array.from(currentInputVersions), Array.from(currentCachedVersions));
-            if (untrackedVersions && Object.keys(untrackedVersions).length > 0) {
-                translationReferencesToUpdate[businessconfig] = new Set(untrackedVersions);
-            }
-        });
-        const nbOfProcess = Object.keys(translationReferencesToUpdate).length;
-        return (nbOfProcess > 0) ? translationReferencesToUpdate : null;
-    }
-
-    static sendTranslateAction(versionToUpdate: Map<Set<string>>): TranslateActions {
-        if (versionToUpdate) {
-            TranslateEffects.i18nBundleVersionLoaded = {...TranslateEffects.i18nBundleVersionLoaded, ...versionToUpdate};
-            return new UpdateTranslation({versions: versionToUpdate});
-            }
-        return new TranslationUpToDate();
     }
 }
 
-class TransitionalBusinessconfigWithItSVersion {
-    constructor(public businessconfig:string, public version:string){}
-}
 

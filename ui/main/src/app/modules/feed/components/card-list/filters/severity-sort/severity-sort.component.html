@@ -15,11 +15,11 @@
 
  <span *ngIf="toggleActive">
      <button type="button" class="btn p-1 btn-outline-light border-0 opfab-feed-icon" data-placement="right" [ngbTooltip]="sortLabel" placement="right" (click)="toggleSort()">
-         <fa-icon icon="toggle-on"></fa-icon>
+         <fa-icon icon="toggle-on" style="margin-right: 5px;"></fa-icon>
      </button>
  </span>
  <span *ngIf="!toggleActive">
      <button type="button" class="btn p-1 btn-outline-light border-0 opfab-feed-icon" data-toggle="tooltip"  [ngbTooltip]="sortLabel" placement="right" (click)="toggleSort()">
-         <fa-icon icon="toggle-off"></fa-icon>
+         <fa-icon icon="toggle-off" style="margin-right: 5px;"></fa-icon>
      </button>
  </span>

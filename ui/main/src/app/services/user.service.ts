@@ -7,60 +7,80 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-import {Injectable} from '@angular/core';
-import {environment} from '@env/environment';
-import {Observable,Subject} from 'rxjs';
-import {Entity, User} from '@ofModel/user.model';
-import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {HttpClient} from '@angular/common/http';
-import {takeUntil} from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { environment } from "@env/environment";
+import { Observable, Subject } from 'rxjs';
+import { Entity, User } from '@ofModel/user.model';
+import { UserWithPerimeters } from "@ofModel/userWithPerimeters.model";
+import { HttpClient } from "@angular/common/http";
+import { CrudService } from "./crud-service";
+import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 
 @Injectable()
-export class UserService {
+export class UserService implements CrudService {
+  readonly userUrl: string;
 
-    readonly userUrl: string;
-    private _userWithPerimeters: UserWithPerimeters;
-    private ngUnsubscribe = new Subject<void>();
+  private _userWithPerimeters: UserWithPerimeters;
+  private ngUnsubscribe = new Subject<void>();
 
-    /**
-     * @constructor
-     * @param httpClient - Angular build-in
-     */
-    constructor(private httpClient: HttpClient) {
-        this.userUrl = `${environment.urls.users}`;
-    }
+  /**
+   * @constructor
+   * @param httpClient - Angular build-in
+   */
+  constructor(private httpClient: HttpClient) {
+    this.userUrl = `${environment.urls.users}`;
+  }
 
-    askUserApplicationRegistered(user: string): Observable<User> {
-        return this.httpClient.get<User>(`${this.userUrl}/users/${user}`);
-    }
+  askUserApplicationRegistered(user: string): Observable<User> {
+    return this.httpClient.get<User>(`${this.userUrl}/users/${user}`);
+  }
 
-    askCreateUser(userData: User): Observable<User> {
-        return this.httpClient.put<User>(`${this.userUrl}/users/${userData.login}`, userData);
-    }
+  askCreateUser(userData: User): Observable<User> {
+    return this.httpClient.put<User>(
+      `${this.userUrl}/users/${userData.login}`,
+      userData
+    );
+  }
 
-    currentUserWithPerimeters(): Observable<UserWithPerimeters> {
-        return this.httpClient.get<UserWithPerimeters>(`${this.userUrl}/CurrentUserWithPerimeters`);
-    }
+  currentUserWithPerimeters(): Observable<UserWithPerimeters> {
+    return this.httpClient.get<UserWithPerimeters>(
+      `${this.userUrl}/CurrentUserWithPerimeters`
+    );
+  }
 
-    queryAllEntities(): Observable<Entity[]> {
-        const url = `${this.userUrl}/entities`;
-        return this.httpClient.get<Entity[]>(url);
+  getAllUsers(): Observable<User[]> {
+    return this.httpClient.get<User[]>(`${this.userUrl}`);
+  }
 
-    }
-    public loadUserWithPerimetersData(): void {
-        this.currentUserWithPerimeters()
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(
-                (userWithPerimeters) => {
-                    if (userWithPerimeters) {
-                        this._userWithPerimeters = userWithPerimeters;
-                    }
-                }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-            );
-    }
+  getAll(): Observable<User[]> {
+    return this.getAllUsers();
+  }
 
-    public getCurrentUserWithPerimeters(): UserWithPerimeters {
-        return this._userWithPerimeters;
-    }
+  updateUser(userData: User): Observable<User> {
+    return this.httpClient.post<User>(`${this.userUrl}`, userData);
+  }
+
+  update(userData: User): Observable<User> {
+    return this.updateUser(userData);
+  }
+  queryAllEntities(): Observable<Entity[]> {
+    const url = `${this.userUrl}/entities`;
+    return this.httpClient.get<Entity[]>(url);
+
+  }
+  public loadUserWithPerimetersData(): void {
+    this.currentUserWithPerimeters()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(
+        (userWithPerimeters) => {
+          if (userWithPerimeters) {
+            this._userWithPerimeters = userWithPerimeters;
+          }
+        }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+      );
+  }
+
+  public getCurrentUserWithPerimeters(): UserWithPerimeters {
+    return this._userWithPerimeters;
+  }
 }

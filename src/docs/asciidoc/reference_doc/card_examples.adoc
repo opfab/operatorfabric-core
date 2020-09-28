@@ -23,6 +23,7 @@ The following card contains only the mandatory attributes.
 	"processVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",
+	"state":"myState",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
@@ -51,6 +52,7 @@ The following example is nearly the same as the previous one except for the reci
 	"processVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",
+	"state":"myState",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
@@ -76,6 +78,7 @@ The following example is nearly the same as the previous one except for the reci
 	"processVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",
+	"state":"myState",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
@@ -101,6 +104,7 @@ The following example is nearly the same as the previous one except for the reci
 	"processVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",
+	"state":"myState",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
@@ -131,6 +135,23 @@ definition of the recipient. If the `tso2-operator` needs to see also this card,
 
 So here, all the users of the `TSO1` group will receive the `INFORMATION` as should the `tos2-operator` user.
 
+Another example, if a card is destined to the operators of `TSO1` and `TSO2` and needs to be also seen by the `admin`, the recipient configuration looks like:
+
+....
+"recipient":{"type":"UNION",
+	"recipients":[
+		{"type":"GROUP","identity":"TSO1"},
+		{"type":"GROUP","identity":"TSO2"},
+		{"type":"USER","identity":"admin"}
+		]
+	}
+....
+
+
+
+
+
+
 == Regular Card
 
 The previous cards were nearly empty regarding information carrying. In fact, cards are intended to contain more information than a title and a summary. The optional attribute `data` is here for that. This attribute is destined to contain any `json` object. The creator of the card is free to put any information needed as long as it's in a `json` format.
@@ -145,6 +166,7 @@ For this example we will use our previous example for the `TSO1` group with a `d
 	"processVersion":"0.1",
 	"process":"process",
 	"processInstanceId":"process-000",
+	"state":"myState",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"card.title.key"},
@@ -181,6 +203,7 @@ At the card level, the attributes in the card telling OperatorFabric which templ
 	"processVersion":"1",
 	"process":"TEST",
 	"processInstanceId":"process-000",
+	"state":"myState",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
 	"title":{"key":"process.title"},
@@ -199,73 +222,6 @@ So here a single custom data is defined and it's `rootProp`. This attribute is u
 `details` attribute. This attribute contains an array of `json` object containing an `i18n` key and a `template`
 reference. Each of those object is a tab in the detail panel of the GUI.
 
-[[display_rules]]
-== Display Rules
 
-=== Dates
 
-Dates impact both the feed rendering and the timeline rendering.
-
-In the feed cards are visible based on a collection of filters among which a
-time filter.
-
-In the time line cards are visible based on a similar filter plus the time line
-renders the "position" in time of said cards. By default, it groups cards at
-close time in bubbles whom color indicates severity and inner number indicates
-number of cards.
-
-==== Start Date (`startDate`)
-
-The card is only display after this date is reach by the current time. It's a mandatory attributes for OperatorFabric cards.
-
-example:
-
-The current day is the 29 january 2019.
-
-A card with the following configuration `"startDate":1548758040000`, has a start date equals to the iso date: "2019-01-29T10:34:00Z". So the operator will see it appearing in it's feed at 10h34 AM universal time. And if there is no `endDate` defines for it, it will stay in the feed indefinitely, so this card should be still visible the 30th january 2019. Before "10h34 AM universal time", this card was not visible in the feed.
-
-==== End Date (`endDate`)
-
-This optional attribute, corresponds to the moment after which the card will be remove from the feed of the GUI.
-
-example: 
-
-Imagine that the current day is still the 29 january 2019.
-
-The card we are looking after, has the same value for the startDate than in the previous example but has the following configuration for the `endDate`: `"endDate":1548765240000`. It's corresponding to "2019-01-29T12:34:00Z" universal time.
-
-So our card is present in the feed between "11h34" and "13h34". Before and after those hours, the card is not available.
-
-[[card_recipients]]
-=== Recipients
-
-The attribute `recipient` of a card tells to whom it's sent.
-
-The available types are:
-
-- `GROUP`: Card is sent to every user belonging to a group (identity)
-- `USER` : Card is sent to a single user (identity)
-- `UNION` : Card is sent to users according to the union of a recipient list (recipients)
-- `DEADEND` : Card is sent to no one (mostly for testing purposes)
-
-The simplest way to determine the recipient is to assign the card to a `user` or a `group` as seen previously in
-ifdef::single-page-doc[<<minimal_card, Minimal Card>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#minimal_card, Minimal Card>>]
-.
-
-But it's possible to combine groups and potentially users using `UNION`  type to have a better control on whom should receive the card.
-
-==== UNION
-
-For example, if a card is destined to the operators of `TSO1` and `TSO2` and needs to be also seen by the `admin`, the recipient configuration looks like:
-
-....
-"recipient":{"type":"UNION",
-	"recipients":[
-		{"type":"GROUP","identity":"TSO1"},
-		{"type":"GROUP","identity":"TSO2"},
-		{"type":"USER","identity":"admin"}
-		]
-	}
-....
 

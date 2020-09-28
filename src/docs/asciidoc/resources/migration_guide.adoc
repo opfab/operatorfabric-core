@@ -197,11 +197,11 @@ The id of the card is now build as process.processInstanceId an not anymore publ
 
 == Change on the web-ui.json 
 
-The parameter operatorfabric.navbar.thirdmenus.type has been removed from this file. Starting from this release the related functionality has been moved on bundle basis and it's not more global. See "Changes on bundle config.json" for more information.
+The parameter navbar.thirdmenus.type has been removed from this file. Starting from this release the related functionality has been moved on bundle basis and it's not more global. See "Changes on bundle config.json" for more information.
 
 == Changes on bundle config.json
 
-Under menuEntries a new subproperty has been added: linkType. This property replace the old property operatorfabric.navbar.thirdmenus.type in web-ui.json, making possible a more fine control of the related behaviour.
+Under menuEntries a new subproperty has been added: linkType. This property replace the old property navbar.thirdmenus.type in web-ui.json, making possible a more fine control of the related behaviour.
 
 == Component name 
 
@@ -224,7 +224,7 @@ version while there are still "old" bundles in the businessconfig storage will c
 . Edit your bundles as detailed above. In particular, if you had bundles containing several processes, you will need to
 split them into several bundles. The `id` of the bundles should match the `process` field in the corresponding cards.
 
-. If you use operatorfabric.navbar.thirdmenus.type in web-ui.json, rename it to operatorfabric.navbar.businessmenus.type
+. If you use navbar.thirdmenus.type in web-ui.json, rename it to navbar.businessmenus.type
 
 . Run the following scripts in the mongo shell to copy the value of `publisherVersion` to a new `processVersion` field and to copy the value of `processId` to a new `processInstanceId` field for all cards (current and archived):
 

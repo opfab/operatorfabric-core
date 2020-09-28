@@ -9,7 +9,7 @@
 
 
 
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import {ModuleWithProviders, NgModule,NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardComponent} from "./components/card/card.component";
 import {CardDetailsComponent} from "./components/card-details/card-details.component";
@@ -20,6 +20,7 @@ import {ProcessesService} from "@ofServices/processes.service";
 import {HandlebarsService} from "./services/handlebars.service";
 import {UtilitiesModule} from "../utilities/utilities.module";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import { CountdownModule } from 'ngx-countdown';
 
 @NgModule({
   declarations: [CardComponent
@@ -28,6 +29,7 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
       , DetailComponent],
   imports: [
     CommonModule,
+    CountdownModule,
       TranslateModule,
       UtilitiesModule,
       NgbModule
@@ -37,11 +39,16 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
         , DetailsComponent
         , DetailComponent
     ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA,
+        NO_ERRORS_SCHEMA
+      ],
     providers: [HandlebarsService],
     entryComponents: []
 })
+
 export class CardsModule {
-    static forRoot(): ModuleWithProviders{
+    static forRoot(): ModuleWithProviders {
         return {
             ngModule: CardsModule,
             providers: [ProcessesService]

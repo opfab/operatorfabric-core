@@ -16,6 +16,18 @@ configurations {
 	}
 }
 
+
+//create a single Jar with all dependencies
+jar {
+	    manifest {
+	        attributes 'Main-Class': 'org.lfenergy.operatorfabric.externalApp.ExternalAppApplication'
+	    }
+	 
+	    from {
+	        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+	    }
+	}
+
 repositories {
 	mavenCentral()
 	maven { url 'https://repo.spring.io/milestone' }

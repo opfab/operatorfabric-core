@@ -124,8 +124,9 @@ export class ProcessesService {
             .pipe(
                 map(this.convertJsonToI18NObject(locale, process, version))
                 , catchError(error => {
-                    console.error(new Date().toISOString(),`error trying fetch i18n of '${process}' version:'${version}' for locale: '${locale}'`);
-                    return error;
+                    console.error(new Date().toISOString(),
+                    `error trying fetch i18n of '${process}' version:'${version}' for locale: '${locale}'`);
+                    return of(error);
                 })
             );
     }

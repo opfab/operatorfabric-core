@@ -14,6 +14,7 @@ import {LoginComponent} from './components/login/login.component';
 import {AboutComponent} from './modules/about/about.component';
 import {LoggingComponent} from './modules/logging/logging.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
+import {CalendarComponent} from './modules/calendar/calendar.component';
 
 const defaultPath = '/feed';
 const archivePath = 'archives';
@@ -24,12 +25,16 @@ const routes: Routes = [
         loadChildren: () => import('./modules/feed/feed.module').then(m => m.FeedModule),
     },
     {
+        path: 'calendar',
+        component: CalendarComponent
+    },
+    {
         path: 'monitoring',
         component: MonitoringComponent
     },
     {
-        path: 'freemessage',
-        loadChildren: () => import('./modules/free-message/free-message.module').then(m => m.FreeMessageModule),
+        path: 'usercard',
+        loadChildren: () => import('./modules/usercard/usercard.module').then(m => m.UserCardModule),
     },
     {
         path: archivePath,

@@ -33,7 +33,8 @@
       "time": {
         "display": "BUSINESS"
       },
-      "hideAckFilter": false
+      "hideAckFilter": false,
+      "secondsBeforeLttdForClockDisplay": 180
     },
     "notify": false,
     "timeline": {
@@ -129,7 +130,7 @@
     "styleWhenNightDayModeDesactivated" : "NIGHT"
   },
   "navbar": {
-    "hidden": ["logging","monitoring","freemessage"],
+    "hidden": [],
     "businessmenus" : {"type":"BOTH"}
   }
 }

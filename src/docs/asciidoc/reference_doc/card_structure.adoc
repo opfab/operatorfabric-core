@@ -39,17 +39,16 @@ The `processVersion` field indicate which version of the process should be used 
 
 ==== Process Instance Identifier (`processInstanceId`)
 A card is associated to a given process, which defines how it is rendered, but it is also more precisely associated to
-a *specific instance* of this process. The `processInstanceId` field contains the unique identifier of the process instance
-of which the card represents the current state.
+a *specific instance* of this process. The `processInstanceId` field contains the unique identifier of the process instance.
+
+=== State in the process (`state`)
+The card represent a specific state in the process. In addition to the process, this information is used to resolve the presentation
+resources used to render the card and card details.
 
 [[start_date]]
 ==== Start Date (`startDate`)
 
-This attribute is a part of the card life management system. It's indicate OperatorFabric the moment since the card
-can be displayed to the operators or main recipients, see
-ifdef::single-page-doc[<<display_rules, Display rules>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
-.
+Start date of the active period of the card (process business time).
 
 ==== Severity (`severity`)
 
@@ -64,12 +63,12 @@ A color is associated in the GUI to each severity. Here the details about severi
 [[card_title]]
 ==== Title (`title`)
 
-This attribute is display as header of a card in the feed of the GUI. It's the main User destined Information of a card. The value refer to an `i18n` value used to localized this information.
+This attribute is display as header of a card in the feed of the GUI. It's the main User destined Information of a card. The value refer to an `i18n` value used to localize this information.
 
 [[card_summary]]
 ==== Summary (`summary`)
 
-This attribute is display as a description of a card in the feed of the GUI, when the card is selected by the operator. It's completing the information of the card title. The value refer to an `i18n` value used to localized this information.
+This attribute is display as a description of a card in the feed of the GUI, when the card is selected by the operator. It's completing the information of the card title. The value refer to an `i18n` value used to localize this information.
 
 === Recipient (`recipient`)
 
@@ -78,28 +77,14 @@ ifdef::single-page-doc[<<display_rules, Display rules>>]
 ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
 . Without recipient declaration a card is useless in `OperatorFabric` system.
 
-=== Card Life Management Configuration
+=== Optional information
 
-With this attributes OperatorFabric knows when to display or hide cards.
 
-==== Start Date (`startDate`)
 
-See
-ifdef::single-page-doc[<<start_date, Start Date>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#start_date, Start Date>>]
- and
-ifdef::single-page-doc[<<display_rules, Display rules>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
-for more examples.
-
+[[end_date]]
 ==== End Date (`endDate`)
 
-Fixes the moment until when `OperatorFabric` displays the card. After the card is remove from the GUI feed,
-ifdef::single-page-doc[<<display_rules, Display rules>>]
-ifndef::single-page-doc[<<{gradle-rootdir}/documentation/current/reference_doc/index.adoc#display_rules, Display rules>>]
-for some examples.
-
-=== Optional information
+End date of the active period of the card (process business time).
 
 ==== Tags (`tag`)
 
@@ -115,9 +100,14 @@ OR
 
 * users must be members of one of the entities AND have the right for the process/state of the card.
 
-=== Last Time to Decide (`lttd`)
+==== Last Time to Decide (`lttd`)
 
-Fixes the moment until when a `actions` associated to the card are available. After then, the associated actions won't be displayed or actionable.
+Fixes the moment until when a `response` is possible for the card. After this moment, the response button won't be useable. When lttd time is approaching, a clock is visible on the card in the feed with the residual time.  
+
+=== Business period 
+
+We define the business period as starting form startDate to endDate.  The card will be visible on the UI if the business period overlap the user chosen period (i.e the period selected on  the timeline). If endDate is not set, the  card will be visible as soon as the startDate is before the end of the chosen period.
+
 
 === Store information 
 
@@ -129,14 +119,11 @@ Unique identifier of the card in the OperatorFabric system. This attribute can b
 
 State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`. The id is determined by 'OperatorFabric' as follow : process.processIntanceId
 
-
-=== Other technical attributes
-
-=== Publish Date (`publishDate`)
+==== Publish Date (`publishDate`)
 
 Indicates when the card has been registered in `OperatorFabric` system. This is a technical information exclusively managed by `OperatorFabric`.
 
-=== Deletion Date (`deletionDate°)
+==== Deletion Date (`deletionDate°)
 
 Indicates when the card has been removes from `OperatorFabric` system. Technical information manage by `OperatorFabric`.
 
@@ -205,7 +192,7 @@ and the details section will display the template content.
 When the simple startDate and endDate are not enough to characterize your
 process business times, you can add a list of TimeSpan to your card. TimeSpans
 are rendered in the timeline component as cluster bubbles. This has no effect on the feed
-content
+content.
 
 *example :*
 

@@ -20,6 +20,7 @@ import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {BusinessconfigI18nLoaderFactory, ProcessesService} from '@ofServices/processes.service';
+import { CountdownModule, CountdownGlobalConfig, CountdownConfig } from 'ngx-countdown';
 import {ServicesModule} from '@ofServices/services.module';
 import {Router} from '@angular/router';
 import 'moment/locale/fr';
@@ -29,6 +30,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 
+export function countdownConfigFactory(): CountdownConfig {
+    return { format: `mm:ss` };
+  }
+
+
 describe('CardComponent', () => {
     let lightCardDetailsComp: CardComponent;
     let fixture: ComponentFixture<CardComponent>;
@@ -37,6 +43,7 @@ describe('CardComponent', () => {
     let injector: TestBed;
     let translateService: TranslateService;
     let i18nService: I18nService;
+    
 
     beforeEach(async(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -49,6 +56,7 @@ describe('CardComponent', () => {
                 StoreModule.forRoot(appReducer),
                 RouterTestingModule,
                 HttpClientTestingModule,
+                CountdownModule,
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
@@ -63,6 +71,7 @@ describe('CardComponent', () => {
             providers: [
                 {provide: store, useClass: Store},
                 {provide: Router, useValue: myrout},
+                {provide: CountdownGlobalConfig, useFactory: countdownConfigFactory},
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
                 TimeService, I18nService
@@ -85,34 +94,6 @@ describe('CardComponent', () => {
         lightCardDetailsComp = fixture.debugElement.componentInstance;
         router = TestBed.get(Router);
     });
-    it('should create and display minimal light card information', () => {
-        const lightCard = getOneRandomLightCard();
-        // extract expected data
-        const process = lightCard.process;
-        const title = lightCard.title.key;
-        const version = lightCard.processVersion;
-
-        lightCardDetailsComp.lightCard = lightCard;
-
-        fixture.detectChanges();
-
-        expect(fixture.nativeElement.querySelector('.card-title').innerText).toEqual(process + '.' + version + '.' + title);
-        expect(fixture.nativeElement.querySelector('.card-body > p')).toBeFalsy();
-    });
-    it('should select card', () => {
-        const lightCard = getOneRandomLightCard();
-
-        router.navigate.and.callThrough();
-
-        lightCardDetailsComp.lightCard = lightCard;
-        lightCardDetailsComp.ngOnInit();
-        fixture.detectChanges();
-
-        expect(lightCardDetailsComp.open).toBeFalsy();
-        lightCardDetailsComp.select();
-        expect(router.navigate).toHaveBeenCalledWith(['/' + lightCardDetailsComp.currentPath, 'cards', lightCard.id]);
-    });
-
     it('should handle non existent timestamp with an empty string', () => {
         const expectedEmptyString = lightCardDetailsComp.handleDate(undefined);
         expect(expectedEmptyString).toEqual('');

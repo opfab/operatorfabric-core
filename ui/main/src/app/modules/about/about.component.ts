@@ -12,6 +12,7 @@ import {Component, OnInit} from '@angular/core';
 import _ from 'lodash';
 import {ConfigService} from "@ofServices/config.service";
 
+
 /**
  * extracts configured application names along with their version, and sort them using their rank if declared
  *
@@ -33,6 +34,7 @@ export class AboutComponent implements OnInit {
 
     aboutElements : any;
 
+
     constructor(private  configService: ConfigService) {
     }
 
@@ -43,3 +45,7 @@ export class AboutComponent implements OnInit {
 
 
 }
+
+
+
+

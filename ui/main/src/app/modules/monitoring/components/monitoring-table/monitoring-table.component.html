@@ -12,10 +12,10 @@
     <tr>
         <th scope="col" translate>monitoring.time</th>
         <th colspan="2" scope="col" translate>monitoring.businessPeriod</th>
+        <th scope="col" translate>monitoring.filters.process</th>
         <th scope="col" translate>monitoring.title</th>
         <th scope="col" translate>monitoring.summary</th>
-        <th scope="col" translate>monitoring.trigger</th>
-        <th scope="col" translate>monitoring.coordinationStatus</th>
+        <th scope="col" translate>monitoring.status</th>
         <th scope="col"></th>
     </tr>
     </thead>
@@ -24,12 +24,12 @@
         <td>{{displayTime(line.creationDateTime)}}</td>
         <td>{{displayTime(line.beginningOfBusinessPeriod)}}</td>
         <td>{{displayTime(line.endOfBusinessPeriod)}}</td>
+        <td translate >{{line.processName}}</td>
         <td translate [translateParams]="line.title.parameters">{{line.title.key}}</td>
         <td translate [translateParams]="line.summary.parameters">{{line.summary.key}}</td>
-        <td>{{line.trigger}}</td>
-        <td  translate > <p class="status"
-                 [ngStyle]="{'background-color': line.coordinationStatusColor, 'color': line.coordinationStatusColor}">.</p>
-            {{line.coordinationStatus}}
+        <td  translate >{{line.coordinationStatus}}
+            <p class="status"
+               [ngStyle]="{'background-color': line.coordinationStatusColor, 'color': line.coordinationStatusColor}">.</p>
             </td>
         <td><a routerLink="../feed/cards/{{line.cardId}}" translate>monitoring.seeDetails</a></td>
     </tr>

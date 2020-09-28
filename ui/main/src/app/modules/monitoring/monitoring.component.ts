@@ -51,7 +51,14 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                 Array.prototype.forEach.call(allProcesses, (proc: Process) => {
                     const id = proc.id;
                     this.mapOfProcesses.set(id, proc);
-                    filterValue.push({value: id, label: proc.name});
+
+                    if (proc.uiVisibility && !!proc.uiVisibility.monitoring)  {
+                        let itemName = proc.name;
+                        if (!itemName) {
+                            itemName = id;
+                        }
+                        filterValue.push({id: id, itemName: itemName, i18nPrefix: `${proc.id}.${proc.version}` });
+                    }
                 });
                 return filterValue;
             })
@@ -85,20 +92,21 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                                     color = state.color;
                                     name = state.name;
                                 }
-                            }
-                            return (
-                                {
-                                    creationDateTime: moment(card.publishDate),
-                                    beginningOfBusinessPeriod: moment(card.startDate),
-                                    endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
-                                    title: this.prefixI18nKey(card, 'title'),
-                                    summary: this.prefixI18nKey(card, 'summary'),
-                                    trigger: 'source ?',
-                                    coordinationStatusColor: color,
-                                    coordinationStatus: this.prefixForTranslation(card, name),
-                                    cardId: card.id
+                                return (
+                                    {
+                                        creationDateTime: moment(card.publishDate),
+                                        beginningOfBusinessPeriod: moment(card.startDate),
+                                        endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
+                                        title: this.prefixI18nKey(card, 'title'),
+                                        summary: this.prefixI18nKey(card, 'summary'),
+                                        processName: this.prefixForTranslation(card, currentProcess.name),
+                                        coordinationStatusColor: color,
+                                        coordinationStatus: this.prefixForTranslation(card, name),
+                                        cardId: card.id
 
-                                } as LineOfMonitoringResult);
+                                    } as LineOfMonitoringResult);
+                            }
+
                         }
                     );
                 }
@@ -108,6 +116,7 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store.dispatch(new ApplyFilter(BUSINESS_DATE_FILTER_INITIALISATION));
 
     }
+
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();

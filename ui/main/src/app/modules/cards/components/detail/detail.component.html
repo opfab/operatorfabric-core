@@ -9,6 +9,17 @@
 
 
 <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
+<div class="my-3" *ngIf='responseDataExists'>
+  <table>
+    <tr>
+      <td> <span class="h4" translate>response.answers</span> : </td>
+      <td *ngFor="let entity of listEntitiesToRespond; let isLast = last"
+        [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','width': '150px','font-size': '20px','text-align': 'center'}">
+        {{entity.name}}
+      </td>
+    </tr>
+  </table>
+</div>
 <div id="div-card-template" [hidden]="!active" [innerHtml]="htmlContent"></div>
 
 <div class="my-3">
@@ -20,9 +31,10 @@
     </button>
   </div>
 
-  <div id='div-detail-btn' *ngIf="!isArchivePageType" class="mb-3">
-    <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists && isActionEnabled'
-      translate [translateParams]="responseDataParameters" (click)='submitResponse()'>{{btnText}}</button>
+  <div id='div-detail-btn' *ngIf="isButtonsActivated" class="mb-3">
+    <button class="btn mr-3 {{btnColor}}" style="float: right;" *ngIf='responseDataExists'
+      translate [translateParams]="responseDataParameters" [disabled]='lttdExpiredIsTrue || !isActionEnabled'
+            (click)='submitResponse()'>{{btnText}}</button>
     <button class="btn mr-3 {{btnAckColor}}" style="float: right;" *ngIf='isAcknowledgementAllowed' translate
       (click)='acknowledge()'>{{btnAckText}}</button>
   </div>

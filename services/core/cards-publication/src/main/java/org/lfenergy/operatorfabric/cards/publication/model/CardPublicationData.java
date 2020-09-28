@@ -119,6 +119,7 @@ public class CardPublicationData implements Card {
     private Boolean hasBeenRead;
     @Indexed
     private String processStateKey;
+    private PublisherTypeEnum publisherType = PublisherTypeEnum.EXTERNAL;
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
@@ -149,8 +150,11 @@ public class CardPublicationData implements Card {
                 .publishDate(this.getPublishDate())
                 .severity(this.getSeverity())
                 .tags(this.getTags())
+                .entitiesAllowedToRespond(this.getEntitiesAllowedToRespond())
                 .title(((I18nPublicationData) this.getTitle()).copy())
-                .summary(((I18nPublicationData) this.getSummary()).copy());
+                .summary(((I18nPublicationData) this.getSummary()).copy())
+                .publisherType(this.getPublisherType())
+                ;
         if(this.getTimeSpans()!=null)
             result.timeSpansSet(new HashSet<>(this.getTimeSpans()));
         return result.build();

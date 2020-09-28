@@ -5,86 +5,44 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Version 1.5.0.RELEASE
+= Version 1.6.0.RELEASE
 
 
 == Features
 
-- **Routing** ([OC-950] [OC-830])  : New routing mechanism is now fully functionnal, it is possible to define card visiblity per process/state for groups using perimeters, see users documentation : https://opfab.github.io/documentation/current/reference_doc/#users_management
-- **Response card (Smart notification) ** ([OC-918] [OC-915] [OC-982] [OC-914] [OC-966] [OC-980] [OC-1051] [OC-969] [OC-1071]) : It is now possible for the user to reply on a card if configured, see documentation : https://opfab.github.io/documentation/current/reference_doc/#response_cards
-- ** Acknowlegment ** ([OC-922][OC-923][OC-1033]): It is now possible for the user to acknowlege cards with a button on the bottom-right of the card .The feed can also been filtered to show acknowledged or not acknowledged cards. It is as well possible for the user to "unacknowledge" a card previously acknowlegded .This functionnality is activated on a process state basis via the setting of acknowledgementAllowed to true in the  config.json of the bundles (example in /src/test/utils/karate/src/test/utils/karate/businessconfig/resources/bundle_api_test/config.json)
+- [OC-968] Add UI alert via a clock when ltdd time is approaching
+- [OC-967] When showing an action card with responses , view the list of entity that had respond or not in the top of the card
+- [OC-1098] When opening an external app in an iframe from business menu, the night/day mode (or style) is passed in the request via a param in the GET Request. When the user switch the mode, the iframe is reloaded
+- [OC-1116] Init hours and minutes to 00:00 in feed time filter instead of blank field
+- [OC-1121] New ack icons in feed filter
 
-- **Logging and monitoring** : [OC-1023] New screens to see cards in monitoring/logging views   (experimental)
-- **Free Message** : [OC-928] First implementation of free message (permit the user to send card) , not useable yet
+**Experimental features:**
 
-- ** API ** : ([OC-1021] [OC-1022] [OC-1023] [OC-1024]) New endpoint to delete user, entity, group and perimeter
-
-- **UI** : 
-** [OC-948][OC-1037] Button to hide or display the timeline
-** [OC-949] Filter by publish date in feed when clicking on the clock icon +
-**NB:** When the timeline is not loaded (parameter `operatorfabric.feed.timeline.hide` set to true ), the time filter of the feed is based on business date.
-** [OC-1038] Incoming cards are signaled as new (little eye icon) in the feed until they've been read
-** [OC-1053] For each custom menu entry in the navbar, choose whether to integrate it as an iframe or an external link
+- [OC-1056] View card in an agenda style screen  
+- Monitoring and logging screens  
+  * [OC-1076] Add a filter to see only relevant process in monitoring and logging screen. Relevant processes are configured in the config.json of each process
+  * [OC-1079] Adjust Monitoring and Logging pages
+  * [OC-1118] Adds publisher type to cards and sets it to ENTITY when user card end point called and to EXTERNAL otherwise
+  * [OC-1119] Displays entity as sender in logging page for ENTITY publisher type
+  * [OC-1074] Implements new share multi-choice component
 
 == Tasks
-- [OC-999] Minor edits to doc after 1rst git flow release 
-- [OC-951] Process and state fields of a card must be mandatory
-- [OC-1004] Add demo cards and template with svg drawing
-- [OC-1005] Clean karate tests
-- [OC-1014] Load configuration files from outside docker in `config/docker/docker-compose.yml`
-- **Configuration of business process** :
-[WARNING]
-**Breaking change** : see migration guide : https://opfab.github.io/documentation/current/docs/single_page_doc.html#_migration_guide_from_release_1_4_0_to_release_1_5_0
 
-** [OC-978] Rename third module to businessconfig module
-** [OC-979] Link bundle with process instead of publisher 
-** [OC-1003] Rename processId in processInstanceId
-** [OC-981] Change way of creating card id . The id of the card is now build as process.processInstanceId and not anymore publisherID_process.
-- [OC-1029] possibility to hide some application menus
-- [OC-1036] Refactor configuration loading in front
-- [OC-735] Robustify subscription mechanism and refactoring
-- [OC-1013] @NotNull fields remove form XXXData.java, only need to set required fields in swagger.yml 
-- [OC-1030] : upgrade back to last version of librairies (SpringBoot,..) 
-[WARNING]
-The version of gradle has been changed, if you want to build operator fabric you need to upgrade gradle to version 6.5.1 (sdk install gradle 6.5.1) 
-- [OC-1063] Set java to version 8.0.265-zulu as current is no longer supported by sdkman
-[WARNING]
-Run `sdk install java 8.0.265-zulu` then `source ./bin/load_environment_light.sh ` to update your environment
-- [OC-1046] Refactoring card-consultation mongo access
-- [OC-1045] Remove unnecessary code (ngrx effect )
-- [OC-893] Check all subscribe in angular code
-- [OC-1047] Add a demo with response card in test/utils 
-- [OC-1017] Update governance documentation
-- [OC-1057] Explains how to use karate utilities
-- [OC-1041] Trace user actions, only acknowledgment for the moment
-- [OC-new-helpers] 4 new handlebars helpers added
-[NOTE]
-4 new handlebars helpers added: 'keyValue', 'arrayContains', 'times', 'toBreakage'. You can consult the documentation at the following url to check how to use them: https://opfab.github.io/documentation/current/docs/single_page_doc.html#template_description
-- [OC-831] Update getting started documentation with routing mechanism
-- [OC-1065] Remove unused bundles
-- [OC-1067] GET /entities : allow all users for this operation
-- [OC-1068] Simplify backend card notification mechanism
-- [OC-1070] Add new example in defaultBundle
+- [OC-419] Correcting Publication Service Documentation (User Guide)
+- [OC-1080] When user has no right to respond to a card , instead of not showing response button , disable it
+- [OC-1095] UI - Load i18n for all processes at startup
+- [OC-1097] Remove unused vps env configuration
+- [OC-1082] UI - Remove use of method askUserApplicationRegistered
+- [OC-1072] UI - Load All Entities information in the UI when user is starting OpFab 
+- [OC-867] UI - Change time filter label, depending on the timeline hidden or not
+- [OC-1094] Add write access for defaultprocess with state message in standard config and bundle cleaning
+- SSE permanent connection for notification 
+  * [OC-1096] Add an heartbeat mechanism to avoid setting long timeout in nginx and to be compatible with the use of external proxies
+  * [OC-1122] "Robustify" reconnection mechanism when losing connection
+- [OC-1081] Add documentation for lttd and default config value for secondsBeforeLttdForClockDisplay
+- [OC-1124] Refactor card detail component to avoid unnecessary processing
+- [OC-1129] Modify storage directory for bundle in docker reference configuration (in config/docker)
+- [OC-1128] Add state as mandatory information in documentation
 
 == Bugs
-
-- [OC-1006] Archives - Bugs in pagination +
-**Information :** Parameters `operatorfabric.archive.filter.page.first` & `operatorfabric.archive.filter.publisher` in `web-ui.json` have been removed;
-- [OC-990] Automatic saving of the settings . No need anymore to press enter to save setting changes;
-- [OC-974] Redraw card when switching between day/night modes;
-- [OC-297] Card sent to another group or user is not discarded from the user feed
-- [OC-1011] Access to opfab is not working when the user is member of no group
-- [OC-1010] In PASSWORD authentication mode, afier having refresh UI, the user needs to enter login/pwd again
-- [OC-1035] Docker mode (config/dev) : cards and archivedCards stored in "test" database instead of "operator-fabric"
-- [OC-1012] Missing id in existing bundles cause Businessconfig service to crash
-- [OC-938] In archives, reset button doesn't really clear selected card
-- [OC-988] In Archives- No result message appears before rendering the real result of a search
-- [OC-997] Fix Angular build warning
-- [OC-941] Card deletion- The API doesn't return an error when the card deleted doesn't exist
-- [OC-1052] Cards sent to a user (rather than a group) don't appear immediately
-- [OC-713] Web-UI configuration: wrong yaml documented key + misspelled key in configuration
-[WARNING]
-Need to change in web-ui.json the key delagate-url into delegate-url.
-- [OC-934] fix Issue with cards published with client jars (due to Instant). `cards-publication` service accepts cards from client jar.
-- [OC-1069] Limit  line when clicking on timeline
-
+- [OC-1125] Card are sometimes not marked as read

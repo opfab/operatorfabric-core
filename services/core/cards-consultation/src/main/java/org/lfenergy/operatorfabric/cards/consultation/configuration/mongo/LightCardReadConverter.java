@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCard;
 import org.lfenergy.operatorfabric.cards.consultation.model.LightCardConsultationData;
+import org.lfenergy.operatorfabric.cards.consultation.model.PublisherTypeEnum;
 import org.lfenergy.operatorfabric.cards.consultation.model.TimeSpanConsultationData;
 import org.lfenergy.operatorfabric.cards.model.SeverityEnum;
 import org.springframework.core.convert.converter.Converter;
@@ -48,7 +49,9 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .publishDate(source.getDate("publishDate") == null ? null : source.getDate("publishDate").toInstant())
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
                 .usersAcks(source.getList("usersAcks", String.class))
+                .publisherType(PublisherTypeEnum.valueOf(source.getString("publisherType")))
         ;
+
         Document titleDoc = (Document) source.get("title");
         if(titleDoc!=null)
             builder.title(i18nReadConverter.convert(titleDoc));
@@ -62,6 +65,12 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
             for (String t : tags) {
                 builder.tag(t);
             }
+        List<String> entitiesAllowedToRespond = (List<String>) source.get("entitiesAllowedToRespond");
+        if (entitiesAllowedToRespond != null){
+            for (String entities : entitiesAllowedToRespond) {
+                builder.tag(entities);
+            }
+        }
         List<Document> timeSpans = (List<Document>) source.get("timeSpans");
         if (timeSpans != null)
             for (Document d : timeSpans) {

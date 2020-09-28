@@ -1,13 +1,14 @@
 {
   "menu": {
     "feed": "Flux de cartes",
+    "calendar" : "Calendrier",
     "archives": "Archives",
     "logging": "Logging",
     "monitoring": "Monitoring",
     "logout": "Déconnexion",
     "settings": "Paramètres",
     "about": "À propos",
-    "freemessage": "Nouvelle Carte"
+    "usercard": "Nouvelle Carte"
   },
   "timeline": {
     "businessPeriod": "Periode métier",
@@ -24,10 +25,12 @@
     "filters": {
       "title": "Filtres",
       "time": {
-        "title": "Temps",
+        "titleIfFilterBasedOnPublishDate": "Date de réception",
+        "titleIfFilterBasedOnBusinessDate": "Période métier",
         "start.label": "Début",
         "end.label": "Fin",
-        "active.label": "Actif"
+        "active.label": "Actif",
+        "lttd.label" :"Terminée"
       },
       "type": {
         "title": "Type",
@@ -118,7 +121,7 @@
     },
     "cardType": "Type de Carte",
     "timeOfAction": "Moment de l'action",
-    "processName": "Nom du process",
+    "processName": "Titre",
     "description": "Description",
     "sender": "Envoyeur",
     "noResult": "Aucun résultat"
@@ -132,7 +135,7 @@
     "title": "Titre",
     "summary": "Résumé",
     "trigger": "Déclencheur",
-    "coordinationStatus": "Status de coordination",
+    "status": "Status",
     "seeDetails": "Voir les détails"
   },
   "button": {
@@ -140,7 +143,7 @@
     "cancel": "Annuler",
     "reset": "Effacer"
   },
-  "free-message": {
+  "usercard": {
     "title": "Éditer la notification par Free Message",
     "filters": {
       "severity": "Sévérité",
@@ -173,7 +176,8 @@
       "submit": "La carte n'a pas pu être envoyée",
       "form": "Le formulaire n'est pas correctement rempli"
     },
-    "submitSuccess": "Action effectuée"
+    "submitSuccess": "Action effectuée",
+    "answers": "Réponses"
   },
   "cardAcknowledgment": {
     "button": {

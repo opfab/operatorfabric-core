@@ -16,10 +16,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MonitoringComponent} from './monitoring.component';
 import { MonitoringFiltersComponent } from './components/monitoring-filters/monitoring-filters.component';
 import { MonitoringTableComponent } from './components/monitoring-table/monitoring-table.component';
-import { MonitoringPageComponent } from './components/monitoring-table/monitoring-page/monitoring-page.component';
 import {DatetimeFilterModule} from '../../components/share/datetime-filter/datetime-filter.module';
 import {MultiFilterModule} from '../../components/share/multi-filter/multi-filter.module';
 import {AppRoutingModule} from '../../app-routing.module';
+import {AngularMultiSelect, AngularMultiSelectModule} from 'angular2-multiselect-dropdown';
+import {MultiFilter2Module} from '../../components/share/multi-filter-2/multi-filter-2.module';
 
 
 
@@ -27,8 +28,7 @@ import {AppRoutingModule} from '../../app-routing.module';
   declarations: [
       MonitoringComponent,
       MonitoringFiltersComponent,
-      MonitoringTableComponent,
-      MonitoringPageComponent
+      MonitoringTableComponent
   ],
   imports: [
     CommonModule
@@ -40,6 +40,7 @@ import {AppRoutingModule} from '../../app-routing.module';
       , DatetimeFilterModule
       , MultiFilterModule
       , AppRoutingModule
+      , MultiFilter2Module
   ]
 })
 export class MonitoringModule { }

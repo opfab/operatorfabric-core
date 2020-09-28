@@ -33,6 +33,13 @@ export function getDateTimeNgbFromMoment(date: moment.Moment): DateTimeNgb {
         , {hour: date.hour(), minute: date.minute(), second: date.second()});
 }
 
+export function offSetCurrentTime(offset: { amount: number, unit: string }[]): DateTimeNgb {
+    const now = moment();
+    // @ts-ignore
+    offset.forEach(os => now.add(os.amount, os.unit));
+    return getDateTimeNgbFromMoment(now);
+}
+
 export class DateTimeNgb {
 
     /* istanbul ignore next */

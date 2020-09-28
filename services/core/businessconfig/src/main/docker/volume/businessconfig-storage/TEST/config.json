@@ -1,6 +1,11 @@
 {
   "id": "TEST",
   "version": "1",
+  "uiVisibility": {
+    "monitoring": true,
+    "logging": true,
+    "calendar": true
+  },
   "name": "process.label",
   "defaultLocale": "fr",
   "templates": [
