@@ -5,10 +5,44 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
+= Version 1.6.0.RELEASE
 
-= Version SNAPSHOT
 
-//The release notes are managed in an outside repository to avoid constantly having conflicts when merging PRs on the
-//develop branch. See https://github.com/opfab/release-notes/.
-//The content from this repository is then pasted back to this file during the release process.
+== Features
 
+- [OC-968] Add UI alert via a clock when ltdd time is approaching
+- [OC-967] When showing an action card with responses , view the list of entity that had respond or not in the top of the card
+- [OC-1098] When opening an external app in an iframe from business menu, the night/day mode (or style) is passed in the request via a param in the GET Request. When the user switch the mode, the iframe is reloaded
+- [OC-1116] Init hours and minutes to 00:00 in feed time filter instead of blank field
+- [OC-1121] New ack icons in feed filter
+
+**Experimental features:**
+
+- [OC-1056] View card in an agenda style screen  
+- Monitoring and logging screens  
+  * [OC-1076] Add a filter to see only relevant process in monitoring and logging screen. Relevant processes are configured in the config.json of each process
+  * [OC-1079] Adjust Monitoring and Logging pages
+  * [OC-1118] Adds publisher type to cards and sets it to ENTITY when user card end point called and to EXTERNAL otherwise
+  * [OC-1119] Displays entity as sender in logging page for ENTITY publisher type
+  * [OC-1074] Implements new share multi-choice component
+
+== Tasks
+
+- [OC-419] Correcting Publication Service Documentation (User Guide)
+- [OC-1080] When user has no right to respond to a card , instead of not showing response button , disable it
+- [OC-1095] UI - Load i18n for all processes at startup
+- [OC-1097] Remove unused vps env configuration
+- [OC-1082] UI - Remove use of method askUserApplicationRegistered
+- [OC-1072] UI - Load All Entities information in the UI when user is starting OpFab 
+- [OC-867] UI - Change time filter label, depending on the timeline hidden or not
+- [OC-1094] Add write access for defaultprocess with state message in standard config and bundle cleaning
+- SSE permanent connection for notification 
+  * [OC-1096] Add an heartbeat mechanism to avoid setting long timeout in nginx and to be compatible with the use of external proxies
+  * [OC-1122] "Robustify" reconnection mechanism when losing connection
+- [OC-1081] Add documentation for lttd and default config value for secondsBeforeLttdForClockDisplay
+- [OC-1124] Refactor card detail component to avoid unnecessary processing
+- [OC-1129] Modify storage directory for bundle in docker reference configuration (in config/docker)
+- [OC-1128] Add state as mandatory information in documentation
+
+== Bugs
+- [OC-1125] Card are sometimes not marked as read
