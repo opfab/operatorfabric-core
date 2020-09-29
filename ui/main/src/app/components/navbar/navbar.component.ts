@@ -23,7 +23,6 @@ import * as _ from 'lodash';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from '@ofServices/config.service';
-import {QueryAllProcesses} from '@ofActions/process.action';
 import {QueryAllEntities} from "@ofActions/user.actions";
 
 @Component({
@@ -63,7 +62,6 @@ export class NavbarComponent implements OnInit {
                 _.fill(this.expandedMenu, false);
             }));
         this.store.dispatch(new LoadMenu());
-        this.store.dispatch(new QueryAllProcesses());
         this.store.dispatch(new QueryAllEntities());
 
 

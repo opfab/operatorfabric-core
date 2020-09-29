@@ -12,6 +12,7 @@ import {Action} from '@ngrx/store';
 
 export enum TranslateActionsTypes {
     TranslationUpdateDone = '[i18n] translation update Done ',
+    LoadProcessesTranslation = '[i18n] load processes translation '
 
 }
 
@@ -19,5 +20,9 @@ export class TranslationUpdateDone implements Action {
     readonly type = TranslateActionsTypes.TranslationUpdateDone;
 }
 
+export class LoadProcessesTranslation implements Action {
+    readonly type = TranslateActionsTypes.LoadProcessesTranslation;
+}
 
-export type TranslateActions =  TranslationUpdateDone ;
+
+export type TranslateActions =  TranslationUpdateDone | LoadProcessesTranslation ;

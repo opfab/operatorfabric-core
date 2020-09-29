@@ -23,12 +23,30 @@ export class ProcessesService {
     readonly processesUrl: string;
     private urlCleaner: HttpUrlEncodingCodec;
     private processCache = new Map();
+    private processes: Process[];
 
     constructor(private httpClient: HttpClient,
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
     }
+
+    public loadAllProcesses(): Observable<any> {
+        return this.queryAllProcesses()
+          .pipe(tap(
+            (processesLoaded) => {
+              if (!!processesLoaded) {
+                this.processes = processesLoaded;
+                console.log(new Date().toISOString(), 'List of processes loaded');
+              }
+            }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+          ));
+      }
+
+    public getAllProcesses(): Process[] {
+        return this.processes;
+      }
+
 
     queryProcessFromCard(card: Card): Observable<Process> {
         return this.queryProcess(card.process, card.processVersion);
