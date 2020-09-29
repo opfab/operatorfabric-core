@@ -52,8 +52,6 @@ public class ArchivedCardPublicationData implements Card {
     private I18n summary;
     @CreatedDate
     private Instant publishDate;
-    @Transient
-    private Instant deletionDate;
     private Instant lttd;
     
     @Indexed
