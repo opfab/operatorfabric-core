@@ -1,0 +1,28 @@
+
+
+        <div style="width:100%">
+            <label for="message">Message</label>
+        </div>
+        <div style="width:100%">
+            <textarea  id="message" name="message" placeholder="Write something.." style="width:100%" ></textarea>
+        </div>
+
+
+
+
+
+<script>
+    templateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const card = {
+        summary : {key : "message.summary"},
+		title : {key : "message.title"},
+        data : {message: message}
+        };
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+</script>

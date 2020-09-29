@@ -143,16 +143,21 @@
     "cancel": "Annuler",
     "reset": "Effacer"
   },
-  "usercard": {
-    "title": "Éditer la notification par Free Message",
+  "userCard": {
+    "title": "Édition d'une nouvelle carte",
+    "error": {
+      "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
+      "templateError" : "Erreur technique : template non conforme",
+      "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques"
+    },
     "filters": {
       "severity": "Sévérité",
       "process": "Processus",
       "state": "État",
-      "startDate": "Date de début",
-      "endDate": "Date de fin",
+      "startDate": "Date de début de validité",
+      "endDate": "Date de fin de validité",
       "comment": "Commentaire",
-      "entities": "Recipiendaire"
+      "entities": "Destinataire"
     },
     "options": {
       "severity": {
@@ -168,7 +173,8 @@
     "refuse": "Annuler",
     "processInstanceId": "Identifiant",
     "state": "État",
-    "send-another-one": "Envoyer une autre carte"
+    "send-another-one": "Envoyer une autre carte",
+    "cardSendWithNoError": "Carte envoyée"
   },
   "response": {
     "btnTitle": "VALIDER REPONSES",

@@ -14,7 +14,9 @@
     "process",
     "question",
     "contingencies",
-    "response"
+    "response",
+    "usercard_message",
+    "usercard_process"  
   ],
   "csses": [
     "style",
@@ -38,6 +40,7 @@
     "messageState": {
       "name":  "message.title",
       "color": "#FAF0AF",
+      "userCardTemplate": "usercard_message",
       "details": [
         {
           "title": {
@@ -86,6 +89,7 @@
     "processState": {
       "name": "process.label",
       "color": "#8bcdcd",
+      "userCardTemplate": "usercard_process",
       "details": [
         {
           "title": {

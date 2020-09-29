@@ -8,7 +8,7 @@
  */
 
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, OnChanges} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {I18n} from '@ofModel/i18n.model';
 import {FormControl, FormGroup} from '@angular/forms';
@@ -19,7 +19,7 @@ import {map} from 'rxjs/operators';
   selector: 'of-single-filter',
   templateUrl: './single-filter.component.html'
 })
-export class SingleFilterComponent implements OnInit {
+export class SingleFilterComponent implements OnInit, OnChanges {
 
   preparedList: { value: string, label: Observable<string> }[];
   @Input() public i18nRootLabelKey: string;
@@ -37,7 +37,7 @@ export class SingleFilterComponent implements OnInit {
   ngOnInit() {
     this.preparedList = [];
 
-    if (!this.valuesInObservable && this.values) {
+    if (!this.valuesInObservable && !!this.values) {
       for (const v of this.values) {
         this.preparedList.push(this.computeValueAndLabel(v));
       }
@@ -53,6 +53,17 @@ export class SingleFilterComponent implements OnInit {
             ))
             .subscribe();
       }
+    }
+  }
+
+
+  ngOnChanges() {
+    if (!this.valuesInObservable && this.values) {
+      this.preparedList = [];
+      for (const v of this.values) {
+        this.preparedList.push(this.computeValueAndLabel(v));
+      }
+
     }
   }
 

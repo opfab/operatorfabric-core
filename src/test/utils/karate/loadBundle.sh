@@ -9,4 +9,7 @@ cd businessconfig/resources
 echo "Launch Karate test"
 java -jar karate.jar                           \
       businessconfig/postBundleDefaultProcess.feature         \
+      businessconfig/postBundleUserCardExamples.feature       \
+
+
 

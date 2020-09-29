@@ -1,0 +1,34 @@
+{
+  "id": "userCardExamples",
+  "name": "userCardExamples.label",
+  "version": "1",
+  "uiVisibility": {
+    "monitoring": true,
+    "logging": true,
+    "calendar": true
+  },
+  "templates": [
+    "message",
+    "usercard_message"
+  ],
+  "csses": [
+  ],
+  "states": {
+    "messageState": {
+      "name":  "message.title",
+      "color": "#FAF0AF",
+      "userCardTemplate": "usercard_message",
+      "details": [
+        {
+          "title": {
+            "key": "message.title"
+          },
+          "templateName": "message",
+          "styles": [
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    }
+  }
+}

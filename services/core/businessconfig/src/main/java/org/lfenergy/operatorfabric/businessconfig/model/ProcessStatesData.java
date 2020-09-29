@@ -26,6 +26,7 @@ public class ProcessStatesData implements ProcessStates {
     private Boolean acknowledgementAllowed;
     private String color;
     private String name;
+    private String userCardTemplate;
 
     @Override
     public void setDetails(List<? extends Detail> details) {
