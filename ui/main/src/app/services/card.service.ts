@@ -34,6 +34,7 @@ import {
     LoadLightCardsSuccess,
     RemoveLightCard
 } from '@ofActions/light-card.actions';
+import {EntitiesService} from '@ofServices/entities.service';
 
 @Injectable()
 export class CardService {
@@ -54,7 +55,8 @@ export class CardService {
                 private notifyService: NotifyService,
                 private guidService: GuidService,
                 private store: Store<AppState>,
-                private authService: AuthenticationService) {
+                private authService: AuthenticationService,
+                private entitiesService: EntitiesService) {
         const clientId = this.guidService.getCurrentGuidString();
         this.cardOperationsUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.cardsUrl = `${environment.urls.cards}/cards`;
@@ -220,7 +222,7 @@ export class CardService {
                     const publisherType = card.publisherType;
                     const enumThirdParty = PublisherType.EXTERNAL;
                     const isThirdPartyPublisher = enumThirdParty === PublisherType[publisherType];
-                    const sender = (isThirdPartyPublisher) ? 'SYSTEM' : card.publisher ;
+                    const sender = (isThirdPartyPublisher) ? 'SYSTEM' : this.entitiesService.getEntityName(card.publisher);
                     return ({
                         process: card.process,
                         processVersion: card.processVersion,
