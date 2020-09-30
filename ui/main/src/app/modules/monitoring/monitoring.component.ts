@@ -92,7 +92,7 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                                     color = state.color;
                                     name = state.name;
                                 }
-                                return (
+                                 return (
                                     {
                                         creationDateTime: moment(card.publishDate),
                                         beginningOfBusinessPeriod: moment(card.startDate),
@@ -108,7 +108,7 @@ export class MonitoringComponent implements OnInit, OnDestroy, AfterViewInit {
                             }
 
                         }
-                    );
+                    ).filter(elem => !!elem);
                 }
             ),
             catchError(err => of([]))
