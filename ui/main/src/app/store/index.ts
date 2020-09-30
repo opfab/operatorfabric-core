@@ -29,7 +29,6 @@ import {reducer as archiveReducer} from '@ofStore/reducers/archive.reducer';
 import {reducer as globalStyleReducer} from '@ofStore/reducers/global-style.reducer';
 import {reducer as loggingReducer} from '@ofStore/reducers/logging.reducer';
 import {reducer as monitoringReducer} from '@ofStore/reducers/monitoring.reducer';
-import {reducer as processReducer} from '@ofStore/reducers/process.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 import {CardState} from '@ofStates/card.state';
 import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
@@ -55,8 +54,7 @@ import {LoggingState} from '@ofStates/loggingState';
 import {LoggingEffects} from '@ofEffects/logging.effects';
 import {MonitoringState} from '@ofStates/monitoring.state';
 import {MonitoringEffects} from '@ofEffects/monitoring.effects';
-import {ProcessState} from '@ofStates/process.state';
-import {ProcessEffects} from '@ofEffects/process.effects';
+
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -72,7 +70,6 @@ export interface AppState {
     globalStyle: GlobalStyleState;
     logging: LoggingState;
     monitoring: MonitoringState;
-    process: ProcessState;
 }
 
 export const appEffects = [
@@ -88,8 +85,7 @@ export const appEffects = [
     UserEffects,
     TranslateEffects,
     LoggingEffects,
-    MonitoringEffects,
-    ProcessEffects
+    MonitoringEffects
 ];
 
 export const appReducer: ActionReducerMap<AppState> = {
@@ -106,7 +102,7 @@ export const appReducer: ActionReducerMap<AppState> = {
     globalStyle: globalStyleReducer,
     logging: loggingReducer,
     monitoring: monitoringReducer,
-    process: processReducer
+
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production

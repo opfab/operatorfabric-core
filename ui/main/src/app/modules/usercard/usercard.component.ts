@@ -13,12 +13,10 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@ofStore/index';
 import { CardService } from '@ofServices/card.service';
 import { UserService } from '@ofServices/user.service';
-import { map, takeUntil, tap } from 'rxjs/operators';
 import { Card} from '@ofModel/card.model';
 import { I18n } from '@ofModel/i18n.model';
-import { Observable, Subject } from 'rxjs';
-import { selectProcesses } from '@ofSelectors/process.selector';
-import { Process, State } from '@ofModel/processes.model';
+import {  Subject } from 'rxjs';
+import { Process } from '@ofModel/processes.model';
 import { TimeService } from '@ofServices/time.service';
 import { Severity } from '@ofModel/light-card.model';
 import { Guid } from 'guid-typescript';
@@ -29,6 +27,7 @@ import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { UserWithPerimeters, RightsEnum, ComputedPerimeter } from '@ofModel/userWithPerimeters.model';
 import { EntitiesService } from '@ofServices/entities.service';
 import { transformToTimestamp } from '../archives/components/archive-filters/archive-filters.component';
+import { ProcessesService } from '@ofServices/processes.service';
 
 declare const templateGateway: any;
 
@@ -36,6 +35,7 @@ class Message {
     text: string;
     display: boolean;
 }
+
 
 @Component({
     selector: 'of-usercard',
@@ -57,10 +57,11 @@ export class UserCardComponent implements OnDestroy, OnInit {
             label: new I18n('userCard.options.severity.' + severity)
         };
     });
-    processOptions$: Observable<any>;
+
     stateOptions: any[];
     entityOptions = new Array();
     dropdownSettings = {};
+    processOptions = new Array();
 
     selectedProcess: Process;
     selectedState: string;
@@ -92,7 +93,8 @@ export class UserCardComponent implements OnDestroy, OnInit {
         private modalService: NgbModal,
         private newCardTemplateService: NewCardTemplateService,
         private sanitizer: DomSanitizer,
-        private element: ElementRef
+        private element: ElementRef,
+        private processesService: ProcessesService
     ) {
     }
 
@@ -134,27 +136,21 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
 
     loadAllProcessAndStateInUserPerimeter(): void {
-        this.processOptions$ = this.store.select(selectProcesses).pipe(
-            takeUntil(this.unsubscribe$),
-            tap((allProcesses: Process[]) => this.processesDefinition = allProcesses),
-            map((allProcesses: Process[]) => {
-                const processesToShow: any[] = new Array();
-                const processesInPerimeter: Set<string> = new Set();
-                this.currentUserWithPerimeters.computedPerimeters.forEach(perimeter => {
+        this.processesDefinition = this.processesService.getAllProcesses();
+        const processesInPerimeter: Set<string> = new Set();
+        this.currentUserWithPerimeters.computedPerimeters.forEach(perimeter => {
                     if (this.userCanSendCard(perimeter)) processesInPerimeter.add(perimeter.process);
                 });
-                allProcesses.forEach(process => {
+
+        this.processesDefinition.forEach(process => {
                     if (processesInPerimeter.has(process.id)) {
                         const _i18nPrefix = process.id + '.' + process.version + '.';
                         const label = process.name ? (_i18nPrefix + process.name) : process.id;
                         const processToShow = { value: process.id, label: label };
-                        processesToShow.push(processToShow);
+                        this.processOptions.push(processToShow);
                         this.loadStatesForProcess(process);
                     }
                 });
-                return processesToShow;
-            })
-        );
     }
 
 
@@ -187,7 +183,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
         this.messageForm.get('severity').setValue(this.severityOptions[0].value);
 
     }
-
 
     changeStatesWhenSelectProcess(): void {
         this.messageForm.get('process').valueChanges.subscribe((process) => {

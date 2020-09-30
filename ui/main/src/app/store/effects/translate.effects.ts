@@ -12,9 +12,8 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of} from 'rxjs';
 import { LightCardActionTypes, LoadLightCardsSuccess } from '@ofActions/light-card.actions';
-import { LoadAllProcesses, ProcessActionType } from '@ofActions/process.action';
 import { map } from 'rxjs/operators';
-import { TranslateActions, TranslationUpdateDone } from '@ofActions/translate.actions';
+import { TranslateActions, TranslationUpdateDone, TranslateActionsTypes } from '@ofActions/translate.actions';
 import { LightCard } from '@ofModel/light-card.model';
 import { ProcessesService } from '@ofServices/processes.service';
 import { Process } from '@ofModel/processes.model';
@@ -51,11 +50,12 @@ export class TranslateEffects {
     @Effect()
     initProcessesTranslations: Observable<TranslateActions> = this.actions$
         .pipe(
-            ofType(ProcessActionType.LoadAllProcesses)
-            , map((loadedProcesses: LoadAllProcesses) => loadedProcesses.payload.processes)
-            , map((processes: Process[]) => processes.forEach(process => this.loadTranslationsForProcess(process)))
-            , map(() => new TranslationUpdateDone())
-        );
+            ofType(TranslateActionsTypes.LoadProcessesTranslation)
+            , map(() =>  this.processesService.getAllProcesses().forEach(process => this.loadTranslationsForProcess(process)))
+            , map(() => {
+                console.log(new Date().toISOString(), 'Translation for processes loaded');
+                return new TranslationUpdateDone();
+            }));
 
     @Effect()
     loadTranslationifNeededAfterLoadingCards: Observable<TranslateActions> = this.actions$

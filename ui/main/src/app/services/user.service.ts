@@ -15,6 +15,7 @@ import { UserWithPerimeters } from "@ofModel/userWithPerimeters.model";
 import { HttpClient } from "@angular/common/http";
 import { CrudService } from "./crud-service";
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class UserService implements CrudService {
@@ -68,16 +69,19 @@ export class UserService implements CrudService {
     return this.httpClient.get<Entity[]>(url);
 
   }
-  public loadUserWithPerimetersData(): void {
-    this.currentUserWithPerimeters()
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(
+
+
+  public loadUserWithPerimetersData(): Observable<any> {
+    return this.currentUserWithPerimeters()
+      .pipe(takeUntil(this.ngUnsubscribe)
+      , tap(
         (userWithPerimeters) => {
-          if (userWithPerimeters) {
+          if (!!userWithPerimeters) {
             this._userWithPerimeters = userWithPerimeters;
+            console.log(new Date().toISOString(), 'User perimeter loaded');
           }
-        }, (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-      );
+        }, (error) => console.error(new Date().toISOString(), 'An error occurred when loading perimeter', error)
+      ));
   }
 
   public getCurrentUserWithPerimeters(): UserWithPerimeters {
