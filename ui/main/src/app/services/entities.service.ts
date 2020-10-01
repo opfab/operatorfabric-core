@@ -69,4 +69,9 @@ export class EntitiesService implements CrudService {
     return this._entities;
   }
 
+  public getEntityName(idEntity: string): string {
+      const name = this._entities.find(entity => entity.id === idEntity).name;
+      return (name ? name : idEntity);
+    }
+
 }
