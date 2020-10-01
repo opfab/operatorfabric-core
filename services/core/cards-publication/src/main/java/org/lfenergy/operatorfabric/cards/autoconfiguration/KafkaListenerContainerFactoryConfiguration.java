@@ -2,6 +2,7 @@ package org.lfenergy.operatorfabric.cards.autoconfiguration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.avro.CardCommand;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.CommandHandler;
 import org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerListener;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -23,13 +24,13 @@ public class KafkaListenerContainerFactoryConfiguration {
     private final KafkaProperties kafkaProperties;
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String,String>> kafkaListenerContainerFactory(ConsumerFactory<String,String> consumerFactory) {
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CardCommand>> kafkaListenerContainerFactory(ConsumerFactory<String,CardCommand> consumerFactory) {
         KafkaProperties.Listener listener = kafkaProperties.getListener();
         Integer concurrency = getConcurrency(listener);
         Long pollTimeOut = getPollTimeout(listener);
         log.debug("Concurrency: " + concurrency);
         log.debug("PollTimeout: " + pollTimeOut);
-        ConcurrentKafkaListenerContainerFactory<String,String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String,CardCommand> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setConcurrency(concurrency);
         factory.getContainerProperties().setPollTimeout(pollTimeOut);

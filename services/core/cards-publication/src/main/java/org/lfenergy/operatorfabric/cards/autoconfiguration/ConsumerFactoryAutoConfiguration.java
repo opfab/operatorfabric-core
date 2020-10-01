@@ -2,6 +2,7 @@ package org.lfenergy.operatorfabric.cards.autoconfiguration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lfenergy.operatorfabric.avro.CardCommand;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +28,7 @@ public class ConsumerFactoryAutoConfiguration {
     }
 
     @Bean
-    ConsumerFactory<String, String> consumerFactory() {
+    ConsumerFactory<String, CardCommand> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
 
