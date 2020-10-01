@@ -74,6 +74,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .apply(springSecurity())
                 .build();
         service.loadCache();
+        service.loadProcessGroupsCache();
     }
 
     @AfterAll
@@ -89,6 +90,15 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
+        ;
+    }
+
+    @Test
+    void listProcessGroups() throws Exception {
+        mockMvc.perform(get("/businessconfig/processgroups"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.groups", hasSize(0)))
         ;
     }
 
@@ -230,8 +240,23 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$", hasSize(2)));
+        }
 
+        @Test
+        void createProcessGroups() throws Exception {
+            Path pathToProcessGroupsFile = Paths.get("./build/test-data/processgroups.json");
 
+            MockMultipartFile processGroupsFile = new MockMultipartFile("file", "processgroups.json", MediaType.TEXT_PLAIN_VALUE, Files
+                    .readAllBytes(pathToProcessGroupsFile));
+
+            mockMvc.perform(multipart("/businessconfig/processgroups").file(processGroupsFile))
+                    .andExpect(status().isForbidden())
+            ;
+
+            mockMvc.perform(get("/businessconfig/processgroups"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.groups", hasSize(0)));
         }
         
         @Nested

@@ -18,12 +18,14 @@ cd ../..
 echo "Launch Karate test"
 java -jar karate.jar                      \
       businessconfig/deleteBundle.feature `#nice to be the very first one`\
-      businessconfig/deleteBundleVersion.feature  \
-      businessconfig/uploadBundle.feature         \
-      businessconfig/getABusinessconfig.feature            \
-      businessconfig/getCss.feature               \
-      businessconfig/getDetailsBusinessconfig.feature      \
-      businessconfig/getI18n.feature              \
-      businessconfig/getBusinessconfigActions.feature      \
+      businessconfig/deleteBundleVersion.feature          \
+      businessconfig/uploadBundle.feature                 \
+      businessconfig/getABusinessconfig.feature           \
+      businessconfig/getCss.feature                       \
+      businessconfig/getDetailsBusinessconfig.feature     \
+      businessconfig/getI18n.feature                      \
+      businessconfig/getBusinessconfigActions.feature     \
       businessconfig/getBusinessconfig.feature            \
-      businessconfig/getBusinessconfigTemplate.feature
+      businessconfig/getBusinessconfigTemplate.feature    \
+      businessconfig/getProcessGroups.feature             \
+      businessconfig/uploadProcessGroupsFile.feature

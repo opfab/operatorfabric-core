@@ -60,6 +60,7 @@ class ProcessesServiceShould {
   void prepare() throws IOException {
     copy(Paths.get("./src/test/docker/volume/businessconfig-storage"), testDataDir);
     service.loadCache();
+    service.loadProcessGroupsCache();
   }
 
   @AfterAll
