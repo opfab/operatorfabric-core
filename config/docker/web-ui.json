@@ -133,6 +133,6 @@
     "businessmenus" : {"type":"BOTH"}
   },
   "admin": {
-    "hidden": true
+    "hidden": false
   }
 }
