@@ -31,6 +31,8 @@ public class DeleteCardCommandHandler extends BaseCommandHandler implements Comm
                 cardCommand.getProcessInstanceId(), cardCommand.getProcess(), cardCommand.getCard().getData());
 
         CardPublicationData card = buildCardPublicationData(cardCommand);
-        cardProcessingService.deleteCard(card.getProcessInstanceId());
+        if (card != null) {
+            cardProcessingService.deleteCard(card.getProcessInstanceId());
+        }
     }
 }

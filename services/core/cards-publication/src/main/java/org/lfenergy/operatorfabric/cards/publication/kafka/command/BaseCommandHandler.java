@@ -34,7 +34,6 @@ public abstract class BaseCommandHandler {
 
         } catch (JsonProcessingException e) {
             log.error("Unable to serialize card {} into CardPublicationData. Message: {}", kafkaCard, e.getMessage());
-            e.printStackTrace();
         }
         return card;
     }

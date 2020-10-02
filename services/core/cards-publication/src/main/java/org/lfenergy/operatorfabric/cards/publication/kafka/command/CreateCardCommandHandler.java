@@ -1,5 +1,6 @@
 package org.lfenergy.operatorfabric.cards.publication.kafka.command;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +28,13 @@ public class CreateCardCommandHandler extends BaseCommandHandler implements Comm
     }
 
     @Override
-    public void executeCommand(CardCommand cardCommand) {
+    public void executeCommand(CardCommand cardCommand)  {
         log.debug("Received Kafka CREATE CARD with processInstanceId {}, taskId {} and variables: {}",
                 cardCommand.getProcessInstanceId(), cardCommand.getProcess(), cardCommand.getCard().getData());
 
         CardPublicationData card = buildCardPublicationData(cardCommand);
-        cardProcessingService.processCards(Flux.just(card)).subscribe();
+        if (card != null) {
+            cardProcessingService.processCards(Flux.just(card)).subscribe();
+        }
     }
 }

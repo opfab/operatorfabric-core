@@ -53,4 +53,19 @@ class UpdateCardCommandHandlerTest {
 
         verify(cardProcessingService).processCards(any());
     }
+
+    @Test
+    void executeCommandNoCard() throws JsonProcessingException {
+        UpdateCardCommandHandler updateCardCommandHandlerRealMapper = new UpdateCardCommandHandler(cardProcessingService, new ObjectMapper());
+
+        CardCommand cardCommandMock = mock(CardCommand.class);
+        CardPublicationData cardPublicationDataMock = mock (CardPublicationData.class);
+        Card cardMock = mock(Card.class);
+        when(cardCommandMock.getCard()).thenReturn(cardMock);
+        when(objectMapper.writeValueAsString(any())).thenReturn("");
+        when(objectMapper.readValue(anyString(), eq(CardPublicationData.class))).thenReturn(cardPublicationDataMock);
+        when(cardProcessingService.processCards(any())).thenReturn(Mono.just(new CardCreationReportData()));
+        updateCardCommandHandlerRealMapper.executeCommand(cardCommandMock);
+        verify(cardProcessingService, times(0)).processCards(any());
+    }
 }

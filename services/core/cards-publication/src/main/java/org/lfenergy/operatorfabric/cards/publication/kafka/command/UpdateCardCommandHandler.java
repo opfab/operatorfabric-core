@@ -32,6 +32,8 @@ public class UpdateCardCommandHandler extends BaseCommandHandler implements Comm
                 cardCommand.getProcessInstanceId(), cardCommand.getProcess(), cardCommand.getCard().getData());
 
         CardPublicationData card = buildCardPublicationData(cardCommand);
-        cardProcessingService.processCards(Flux.just(card)).subscribe();
+        if (card != null) {
+            cardProcessingService.processCards(Flux.just(card)).subscribe();
+        }
     }
 }
