@@ -125,7 +125,8 @@
     "processName": "Title",
     "description": "Description",
     "sender": "Sender",
-    "noResult": "No result"
+    "noResult": "No result",
+    "ExportTOExcel": "Export to Excel"
   },
   "monitoring": {
     "filters": {
@@ -137,7 +138,8 @@
     "summary": "Summary",
     "trigger": "Trigger",
     "status": "Status",
-    "seeDetails": "see details"
+    "seeDetails": "see details",
+    "ExportTOExcel": "Export to Excel"
   },
   "button": {
     "ok": "OK",

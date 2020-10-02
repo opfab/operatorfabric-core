@@ -1,4 +1,5 @@
 <!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,27 +7,41 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<table class="table table-dark">
-    <caption class="hidden-caption">List of current cards filtered by process or by active dates</caption>
-    <thead>
-    <tr>
-        <th scope="col" translate>logging.timeOfAction</th>
-        <th scope="col" translate>logging.processName</th>
-        <th scope="col" translate>logging.description</th>
-        <th scope="col"  ></th>
 
-        <th scope="col" translate>logging.sender</th>
+<table class="table table-dark">
+  <caption class="hidden-caption">List of current cards filtered by process or by active dates</caption>
+  <thead>
+    <tr>
+      <th scope="col" translate>logging.timeOfAction</th>
+      <th scope="col" translate>logging.processName</th>
+      <th scope="col" translate>logging.description</th>
+      <th scope="col"></th>
+
+      <th scope="col" translate>logging.sender</th>
     </tr>
-    </thead>
-    <tbody>
-        <tr mdbTableCol *ngFor="let element of results">
-            <td>{{displayTime(element.businessDate)}}</td>
-            <td translate [translateParams]="element.i18nKeyForProcessName.parameters">{{element.i18nKeyForProcessName.key}}</td>
-            <td translate [translateParams]="element.i18nKeyForDescription.parameters">{{element.i18nKeyForDescription.key}}</td>
-            <td ><i class="fas fa-circle text-sev-{{element.cardType}}"></i></td>
-            <td>{{element.sender}}</td>
-        </tr>
-    </tbody>
+  </thead>
+  <tbody>
+    <tr mdbTableCol *ngFor="let element of results">
+      <td>{{displayTime(element.businessDate)}}</td>
+      <td translate [translateParams]="element.i18nKeyForProcessName.parameters">{{element.i18nKeyForProcessName.key}}
+      </td>
+      <td translate [translateParams]="element.i18nKeyForDescription.parameters">{{element.i18nKeyForDescription.key}}
+      </td>
+      <td><em class="fas fa-circle text-sev-{{element.cardType}}"></em></td>
+      <td>{{element.sender}}</td>
+    </tr>
+  </tbody>
 </table>
-<of-logging-page></of-logging-page>
+
+<div class="export-div">
+  <button class="btn btn-primary btn-sm export-btn" type="button"  (click)="export()"
+  fileName="loggingResults" translate>
+  <em class="fa fa-file-export"></em> logging.ExportTOExcel</button>
+  <of-logging-page></of-logging-page>
+</div>
+
+
+
+
+
 
