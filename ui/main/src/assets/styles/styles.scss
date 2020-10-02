@@ -60,3 +60,13 @@ select.form-control[multiple] {
 .alert-info {
   background-color: var(--opfab-bgcolor);
 }
+
+html, body { height: 100%; }
+
+.cdk-overlay-container, .cdk-overlay-pane {
+     z-index: 9999 !important;
+}
+
+.mat-select-panel {
+    background-color: var(--opfab-bgcolor);
+}

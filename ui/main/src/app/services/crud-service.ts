@@ -10,6 +10,8 @@
  import { Observable } from 'rxjs';
 
 export interface CrudService {
-  getAll():Observable<Array<any>>;
-  update(data: any):Observable<any>;
+  getAll(): Observable<Array<any>>;
+  update(data: any): Observable<any>;
+  deleteById(id: string): Observable<any>;
+
 }

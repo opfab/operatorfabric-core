@@ -34,7 +34,7 @@ import java.util.HashSet;
 public class UserServiceShould {
 
     @Autowired
-    UserService userService;
+    UserServiceImp userService;
 
     @Test
     public void testIsEachStateUniqueInPerimeter() {

@@ -46,11 +46,14 @@ public class UserData implements User {
     @Singular("group")
     private Set<String> groupSet;
 
-    public UserData(SimpleUser simpleUser){
+    public UserData(User user){
         this();
-        this.login = simpleUser.getLogin();
-        this.firstName = simpleUser.getFirstName();
-        this.lastName = simpleUser.getLastName();
+        this.login = user.getLogin();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.entities = new HashSet<>(user.getEntities());
+        this.groupSet = new HashSet<>(user.getGroups());
+
     }
 
     public void addGroup(String group){

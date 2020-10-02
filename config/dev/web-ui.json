@@ -132,5 +132,8 @@
   "navbar": {
     "hidden": [],
     "businessmenus" : {"type":"BOTH"}
+  },
+  "admin": {
+    "hidden": false
   }
 }
