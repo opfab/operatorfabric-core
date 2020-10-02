@@ -4,7 +4,7 @@
   "namespace": "org.lfenergy.operatorfabric.avro",
   "fields": [
     {
-      "name": "parentCardId",
+      "name": "parentCardUid",
       "type": ["null", "string"],
       "default": null
     },
