@@ -1,0 +1,8 @@
+spring:
+  kafka:
+    consumer:
+      group-id: opfab-command
+      value-deserializer: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerDeserializer
+      auto-offset-reset: earliest
+
+
