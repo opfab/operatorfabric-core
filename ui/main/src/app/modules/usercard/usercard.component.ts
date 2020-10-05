@@ -314,7 +314,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
 
         const options: NgbModalOptions = {
-            size: 'lg'
+            size: 'fullscreen'
         };
         this.errorMessage.display = false;
         this.modalRef = this.modalService.open(template, options);

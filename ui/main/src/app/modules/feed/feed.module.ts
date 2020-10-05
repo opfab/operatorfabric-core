@@ -44,7 +44,7 @@ import { AcknowledgementFilterComponent } from './components/card-list/filters/a
         ChartCommonModule,
         ReactiveFormsModule,
         TranslateModule,
-        NgbModule.forRoot(),
+        NgbModule,
         CardsModule,
         FeedRoutingModule,
         FontAwesomeIconsModule,

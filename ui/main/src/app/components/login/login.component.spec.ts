@@ -50,7 +50,7 @@ describe('LoginComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
-                NgbModule.forRoot(),
+                NgbModule,
                 FormsModule,
                 ReactiveFormsModule,
                 RouterTestingModule,

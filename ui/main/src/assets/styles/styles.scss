@@ -70,3 +70,7 @@ html, body { height: 100%; }
 .mat-select-panel {
     background-color: var(--opfab-bgcolor);
 }
+
+.modal-fullscreen{
+  max-width: 100vw * 0.8;
+}

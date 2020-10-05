@@ -1,7 +1,7 @@
 {
   "name": "operatorfabric-ui-main",
   "version": "0.0.1",
-  "scripts": {
+"scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -25,14 +25,14 @@
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
     "@fortawesome/angular-fontawesome": "^0.5.0",
-    "@fortawesome/fontawesome-svg-core": "^1.2.30",
-    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.31",
+    "@fortawesome/free-solid-svg-icons": "^5.15.0",
     "@fullcalendar/angular": "^4.2.2",
     "@fullcalendar/bootstrap": "^4.2.2",
     "@fullcalendar/daygrid": "^4.2.2",
     "@fullcalendar/interaction": "^4.2.2",
     "@fullcalendar/timegrid": "^4.2.2",
-    "@ng-bootstrap/ng-bootstrap": "^4.2.2",
+    "@ng-bootstrap/ng-bootstrap": "5.3.0",
     "@ngrx/effects": "^7.4.0",
     "@ngrx/entity": "^7.1.0",
     "@ngrx/router-store": "^7.1.0",
@@ -72,8 +72,9 @@
     "@angular/cli": "^8.3.29",
     "@angular/compiler-cli": "^8.2.14",
     "@angular/language-service": "^8.2.14",
+    "@babel/compat-data": "~7.8.0",
     "@compodoc/compodoc": "^1.1.10",
-    "@fortawesome/fontawesome-free": "^5.14.0",
+    "@fortawesome/fontawesome-free": "^5.15.0",
     "@ngrx/schematics": "^7.1.0",
     "@types/file-saver": "^2.0.1",
     "@types/handlebars": "^4.0.40",
@@ -99,7 +100,6 @@
     "ts-mockito": "^2.6.1",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
-    "typescript": "~3.5.3",
-    "@babel/compat-data": "~7.8.0"
+    "typescript": "~3.5.3"
   }
 }
