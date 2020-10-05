@@ -4,7 +4,6 @@ spring:
   application:
     name: cards-publication
   kafka:
-    bootstrap-servers: localhost:9092
     consumer:
       group-id: smt01
 #    topics:

@@ -1,0 +1,10 @@
+#spring:
+#  kafka:
+#    consumer:
+#      group-id: smt01
+#      value-deserializer: nl.prototype.kafka.basic.consumer.CardCommandConsumerDeserializer
+#      auto-offset-reset: earliest
+#      enable-auto-commit: false
+#    listener:
+#      concurrency: 1
+#      poll-timeout: 2000
