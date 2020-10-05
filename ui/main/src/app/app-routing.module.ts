@@ -26,14 +26,6 @@ const routes: Routes = [
         loadChildren: () => import('./modules/feed/feed.module').then(m => m.FeedModule),
     },
     {
-        path: 'calendar',
-        component: CalendarComponent
-    },
-    {
-        path: 'monitoring',
-        component: MonitoringComponent
-    },
-    {
         path: 'usercard',
         loadChildren: () => import('./modules/usercard/usercard.module').then(m => m.UserCardModule),
     },
@@ -42,8 +34,16 @@ const routes: Routes = [
         loadChildren: () => import('./modules/archives/archives.module').then(m => m.ArchivesModule),
     },
     {
+        path: 'monitoring',
+        component: MonitoringComponent
+    },
+    {
         path: 'logging',
         component: LoggingComponent
+    },
+    {
+        path: 'calendar',
+        component: CalendarComponent
     },
     {
         path: 'businessconfigparty',
