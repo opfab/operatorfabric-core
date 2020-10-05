@@ -3,11 +3,6 @@ server:
 spring:
   application:
     name: cards-publication
-  kafka:
-    consumer:
-      group-id: smt01
-#    topics:
-#      name: opfab
 
 logging:
   level:
