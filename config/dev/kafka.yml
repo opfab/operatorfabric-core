@@ -2,9 +2,8 @@ spring:
   kafka:
     consumer:
       group-id: smt01
-#      value-deserializer: nl.prototype.kafka.basic.consumer.CardCommandConsumerDeserializer
-#      auto-offset-reset: earliest
-#      enable-auto-commit: false
+      value-deserializer: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerDeserializer
+      auto-offset-reset: earliest
 #    listener:
 #      concurrency: 1
 #      poll-timeout: 2000

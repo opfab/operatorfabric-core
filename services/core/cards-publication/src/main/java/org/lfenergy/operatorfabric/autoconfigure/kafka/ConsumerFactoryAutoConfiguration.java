@@ -2,10 +2,7 @@ package org.lfenergy.operatorfabric.autoconfigure.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.avro.specific.SpecificDatumReader;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.lfenergy.operatorfabric.avro.CardCommand;
-import org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerDeserializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,12 +29,7 @@ public class ConsumerFactoryAutoConfiguration {
 
     @Bean
     ConsumerFactory<String, CardCommand> consumerFactory() {
-//        return new DefaultKafkaConsumerFactory<>(consumerConfig());
-        return new DefaultKafkaConsumerFactory<>(
-                consumerConfig(),
-                new StringDeserializer(),
-                new CardCommandConsumerDeserializer<>(new SpecificDatumReader<>(CardCommand.class))
-        );
+        return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
 
 }
