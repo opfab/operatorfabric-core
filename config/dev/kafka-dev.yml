@@ -1,8 +1,10 @@
 spring:
   kafka:
     consumer:
-      group-id: opfab-command
+      group-id: smt01
       value-deserializer: org.lfenergy.operatorfabric.cards.publication.kafka.consumer.CardCommandConsumerDeserializer
       auto-offset-reset: earliest
+    listener:
+      poll-timeout: 2000
 
 
