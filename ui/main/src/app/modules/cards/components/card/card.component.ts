@@ -1,4 +1,5 @@
 /* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+ * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,18 +9,18 @@
  */
 
 
-import {Component, Input, OnDestroy, OnInit,ViewChild} from '@angular/core';
-import {LightCard} from '@ofModel/light-card.model';
-import {Router} from '@angular/router';
-import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {takeUntil} from 'rxjs/operators';
-import {TimeService} from '@ofServices/time.service';
-import {Subject} from 'rxjs';
-import {ConfigService} from "@ofServices/config.service";
-import {AppService, PageType} from '@ofServices/app.service';
-import { CountdownComponent,CountdownConfig,CountdownEvent} from 'ngx-countdown';
+import { Component, Input, OnDestroy, OnInit, ViewChild, DoCheck } from '@angular/core';
+import { LightCard } from '@ofModel/light-card.model';
+import { Router } from '@angular/router';
+import { selectCurrentUrl } from '@ofStore/selectors/router.selectors';
+import { Store } from '@ngrx/store';
+import { AppState } from '@ofStore/index';
+import { takeUntil } from 'rxjs/operators';
+import { TimeService } from '@ofServices/time.service';
+import { Subject } from 'rxjs';
+import { ConfigService } from '@ofServices/config.service';
+import { AppService, PageType } from '@ofServices/app.service';
+import { CountdownComponent, CountdownConfig, CountdownEvent } from 'ngx-countdown';
 import { UserService } from '@ofServices/user.service';
 
 @Component({
@@ -27,7 +28,7 @@ import { UserService } from '@ofServices/user.service';
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss']
 })
-export class CardComponent implements OnInit, OnDestroy {
+export class CardComponent implements OnInit, OnDestroy, DoCheck {
 
     @ViewChild('countdown', { static: true })
     private countdown: CountdownComponent;
@@ -44,7 +45,9 @@ export class CardComponent implements OnInit, OnDestroy {
     stopTime = false;
     secondsBeforeLttdForClockDisplay: number;
     interval: any;
-    
+    checkHour = false;
+    MILLISECONDS_SECOND = 1000;
+
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -59,11 +62,7 @@ export class CardComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
-        this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue(
-            'feed.card.secondsBeforeLttdForClockDisplay',
-            180
-        );
-
+        this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue('feed.card.secondsBeforeLttdForClockDisplay', false);
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
         this.store
             .select(selectCurrentUrl)
@@ -79,6 +78,18 @@ export class CardComponent implements OnInit, OnDestroy {
         this.startCountdownWhenNecessary();
     }
 
+    ngDoCheck() {
+        const leftTimeSeconds = this.getSecondsBeforeLttd();
+        if (!this.checkHour && leftTimeSeconds < 3600) {
+            this.prettyConfig = {
+                leftTime: leftTimeSeconds,
+                format: 'mm:ss'
+            };
+            this.checkHour = true;
+        }
+    }
+
+
     public isValidatelttd(): boolean {
         const entityUser = this.userService.getCurrentUserWithPerimeters().userData.entities[0];
         return !this.isArchivePageType() && this.lightCard.entitiesAllowedToRespond.includes(entityUser);
@@ -93,7 +104,7 @@ export class CardComponent implements OnInit, OnDestroy {
         const leftTimeSeconds = this.getSecondsBeforeLttd();
         this.prettyConfig = {
             leftTime: leftTimeSeconds,
-            format: 'mm:ss',
+            format: leftTimeSeconds >= 3600 ? 'HH:mm:ss' : 'mm:ss'
         };
         this.enableLastTimeToAct = true;
         this.stopTime = false;
@@ -101,7 +112,7 @@ export class CardComponent implements OnInit, OnDestroy {
     }
 
     getSecondsBeforeLttd(): number {
-        return Math.floor((this.lightCard.lttd - new Date().getTime()) / 1000);
+        return Math.floor((this.lightCard.lttd - new Date().getTime()) / this.MILLISECONDS_SECOND);
     }
 
     startCountdownWhenNecessary() {
@@ -118,7 +129,7 @@ export class CardComponent implements OnInit, OnDestroy {
                     clearInterval(this.interval);
                     return;
                 }
-            }, 1000);
+            }, this.MILLISECONDS_SECOND);
         }
 
 

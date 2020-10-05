@@ -33,7 +33,7 @@
         "display": "BUSINESS"
       },
       "hideAckFilter": false,
-      "secondsBeforeLttdForClockDisplay": 180
+      "secondsBeforeLttdForClockDisplay": 3700
     },
     "notify": false,
     "timeline": {

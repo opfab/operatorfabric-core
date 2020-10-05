@@ -25,7 +25,7 @@ Scenario: Create a card with a valid lttd conditions
       startDate = new Date().valueOf();
 	  endDate = new Date().valueOf() + 6*60*60*1000;
 
-      lttd = new Date().valueOf() + 10*1000;
+      lttd = new Date().valueOf() + 3750*1000;
 
         var card =
 
