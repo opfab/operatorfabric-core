@@ -1,29 +1,348 @@
-{
-  "type": "record",
-  "name": "CardCommand",
-  "namespace": "org.lfenergy.operatorfabric.avro",
-  "fields": [
-    { "name": "command",
-      "type":
+[
+  {
+    "type": "record",
+    "name": "Timespan",
+    "namespace": "org.lfenergy.operatorfabric.avro",
+    "fields": [
+      {
+        "name": "start",
+        "type": "int",
+        "logicalType": "date"
+      },
+      {
+        "name" : "end",
+        "type": [
+          "null",
+          "int"
+        ],
+        "logicalType": "date",
+        "default" : null
+      }
+    ]
+  },
+  {
+    "type": "record",
+    "name": "I18n",
+    "namespace": "org.lfenergy.operatorfabric.avro",
+    "fields": [
+      {
+        "name": "key",
+        "type": "string"
+      },
+      {
+        "name": "parameters",
+        "type": [
+          "null",
+          {
+            "type": "map",
+            "values": "string"
+          }
+        ],
+        "default": null
+      }
+    ]
+  },
+  {
+    "type": "record",
+    "name": "Detail",
+    "namespace": "org.lfenergy.operatorfabric.avro",
+    "fields": [
+      {
+        "name": "title",
+        "type": "I18n"
+      },
+      {
+        "name": "titleStyle",
+        "type": [
+          "null",
+          "string"
+        ],
+        "default": null
+      },
+      {
+        "name": "titlePosition",
+        "type": [
+          "null",
+          {
+            "name": "TitlePositionType",
+            "type": "enum",
+            "symbols": [
+              "UP",
+              "DOWN",
+              "NONE"
+            ]
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "templateName",
+        "type": "string"
+      },
+      {
+        "name": "styles",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": "string"
+          }
+        ],
+        "default": null
+      }
+    ]
+  },
+  {
+    "type": "record",
+    "name": "Recipient",
+    "namespace": "org.lfenergy.operatorfabric.avro",
+    "fields": [
+      {
+        "name": "type",
+        "type": {
+          "name": "RecipientType",
+          "type": "enum",
+          "symbols": [
+            "DEADEND",
+            "GROUP",
+            "UNION",
+            "USER"
+          ]
+        }
+      },
+      {
+        "name": "recipients",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": "Recipient"
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "identity",
+        "type": [
+          "null",
+          "string"
+        ],
+        "default": null
+      }
+    ]
+  },
+  {
+    "type": "record",
+    "name": "Card",
+    "namespace": "org.lfenergy.operatorfabric.avro",
+    "fields": [
+      {
+        "name": "parentCardUid",
+        "type": ["null", "string"],
+        "default": null
+      },
+      {
+        "name": "publisher",
+        "type": "string"
+      },
+      {
+        "name": "processVersion",
+        "type": "string"
+      },
+      {
+        "name": "state",
+        "type": ["null","string"],
+        "default": null
+      },
+      {
+        "name": "publishDate",
+        "type": ["null","int"],
+        "logicalType": "date",
+        "default": null
+      },
+      {
+        "name": "deletionDate",
+        "type": ["null","int"],
+        "logicalType": "date",
+        "default": null
+      },
+      {
+        "name": "lttd",
+        "type": ["null","int"],
+        "logicalType": "date",
+        "default": null
+      },
+      {
+        "name": "startDate",
+        "type": "long",
+        "logicalType": "date"
+      },
+      {
+        "name": "endDate",
+        "type": ["null","long"],
+        "logicalType": "date",
+        "default": null
+      },
+      {
+        "name": "severity",
+        "type": {
+          "name": "SeverityType",
+          "type": "enum",
+          "symbols" : ["ALARM", "ACTION", "INFORMATION", "COMPLIANT"]
+        }
+      },
+      {
+        "name": "tags",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": "string"
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "timespans",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": {
+              "name": "timespan",
+              "type": "Timespan"
+            }
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "details",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": {
+              "name": "detail",
+              "type": "Detail"
+            }
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "title",
+        "type": "I18n"
+      },
+      {
+        "name": "summary",
+        "type":  "I18n"
+      },
+      {
+        "name": "recipient",
+        "type": ["null","Recipient"],
+        "default": null
+      },
+      {
+        "name": "userRecipients",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": "string"
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "groupRecipients",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": "string"
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "externalRecipients",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": "string"
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "entitiesAllowedToRespond",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": "string"
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "entityRecipients",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": "string"
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "hasBeenAcknowledged",
+        "type": [
+          "null",
+          "boolean"
+        ],
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": [
+          "null",
+          "string"
+        ],
+        "default":  null
+      }
+    ]
+  },
+  {
+    "type": "record",
+    "name": "CardCommand",
+    "namespace": "org.lfenergy.operatorfabric.avro",
+    "fields": [
+      { "name": "command",
+        "type":
         {
           "name": "CommandType",
           "type": "enum",
           "symbols" : ["UNKNOWN","CREATE_CARD", "UPDATE_CARD", "DELETE_CARD"],
           "default": "UNKNOWN"
         }
-    },
-    {
-      "name": "process",
-      "type": "string"
-    },
-    {
-      "name": "processInstanceId",
-      "type": "string"
-    },
-    {
-      "name": "card",
-      "type": ["null","Card"],
-      "default": null
-    }
-  ]
-}
+      },
+      {
+        "name": "process",
+        "type": "string"
+      },
+      {
+        "name": "processInstanceId",
+        "type": "string"
+      },
+      {
+        "name": "card",
+        "type": ["null","Card"],
+        "default": null
+      }
+    ]
+  }
+]

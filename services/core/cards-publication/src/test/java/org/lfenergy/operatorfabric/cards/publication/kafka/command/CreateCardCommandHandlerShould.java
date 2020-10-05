@@ -16,7 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import reactor.core.publisher.Mono;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +38,7 @@ class CreateCardCommandHandlerShould {
 
     @Test
     void getCommandType() {
-        assertThat(createCardCommandHandler.getCommandType().equals(CommandType.CREATE_CARD));
+        assertThat(createCardCommandHandler.getCommandType(), is(CommandType.CREATE_CARD));
     }
 
     @Test
@@ -53,7 +54,6 @@ class CreateCardCommandHandlerShould {
 
         verify(cardProcessingService).processCards(any());
     }
-
     @Test
     void executeCommandNoCard() throws JsonProcessingException {
         CreateCardCommandHandler createCardCommandHandlerRealMapper = new CreateCardCommandHandler(cardProcessingService, new ObjectMapper());
