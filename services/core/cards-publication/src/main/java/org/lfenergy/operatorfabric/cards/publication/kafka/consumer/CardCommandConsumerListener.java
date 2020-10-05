@@ -5,7 +5,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.lfenergy.operatorfabric.avro.CardCommand;
 import org.lfenergy.operatorfabric.avro.CommandType;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.CommandHandler;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-@ConditionalOnExpression("!T(org.springframework.util.StringUtils).isEmpty('${spring.kafka.topics.name:}')")
+//@ConditionalOnExpression("!T(org.springframework.util.StringUtils).isEmpty('${spring.kafka.topics.name:}')")
 public class CardCommandConsumerListener {
 
     private final Map<CommandType,CommandHandler> commandHandlerMap;
@@ -26,7 +25,7 @@ public class CardCommandConsumerListener {
                 .collect(Collectors.toMap(CommandHandler::getCommandType, it -> it));
     }
 
-    @KafkaListener(topics = "${spring.kafka.topics.name}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${spoc.kafka.topics.topicname:opfab}", containerFactory = "kafkaListenerContainerFactory")
     public void receivedCommand(@Payload ConsumerRecord<String, CardCommand> record) {
         log.info("Key: {}, Value: {}, Partition: {}, Offset: {}",
                 record.key(), record.value(), record.partition(), record.offset());

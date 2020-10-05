@@ -7,8 +7,8 @@ spring:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: smt01
-    topics:
-      name: camundaKafka
+#    topics:
+#      name: opfab
 
 logging:
   level:
