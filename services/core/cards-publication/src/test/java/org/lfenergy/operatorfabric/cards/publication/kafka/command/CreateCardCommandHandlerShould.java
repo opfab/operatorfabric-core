@@ -1,5 +1,6 @@
 package org.lfenergy.operatorfabric.cards.publication.kafka.command;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +14,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Mono;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +39,7 @@ class CreateCardCommandHandlerShould {
 
     @Test
     void getCommandType() {
-        assertThat(createCardCommandHandler.getCommandType().equals(CommandType.CREATE_CARD));
+        assertThat(createCardCommandHandler.getCommandType(), is(CommandType.CREATE_CARD));
     }
 
     @Test
@@ -47,5 +53,42 @@ class CreateCardCommandHandlerShould {
         createCardCommandHandler.executeCommand(cardCommandMock);
 
         verify(cardProcessingService).processCards(any());
+    }
+
+
+    @Test
+    void deserializeOK() {
+        ReflectionTestUtils.setField(createCardCommandHandler, "mapper", new ObjectMapper());
+        String key1="key1";
+        Integer value1 = 123;
+        String key2 = "another key";
+        String value2 ="another value";
+
+        Map<String, Object> dataMap = deserializeCardDataTest("{\""+key1+"\":"+value1+",\""+key2+"\":\""+value2+"\"}");
+        assertNotNull(dataMap);
+        assertThat(dataMap.get(key1), is(value1));
+        assertThat(dataMap.get(key2), is(value2));
+    }
+
+    @Test
+    void deserializeWithError() {
+        Map<String, Object> dataMap =  deserializeCardDataTest("{-}");
+        assertNotNull(dataMap);
+        assertThat(dataMap.isEmpty(),is(true));
+    }
+
+    private Map<String, Object>  deserializeCardDataTest(String cardData) {
+        ReflectionTestUtils.setField(createCardCommandHandler, "mapper", new ObjectMapper());
+
+        CardCommand cardCommandMock = mock(CardCommand.class);
+
+        Card card = new Card();
+        card.setData(cardData);
+
+        when(cardCommandMock.getCard()).thenReturn(card);
+        when(gson.fromJson((String) any(), any())).thenReturn(new CardPublicationData());
+
+        CardPublicationData cardPublicationData = createCardCommandHandler.buildCardPublicationData(cardCommandMock);
+        return ( Map<String, Object>) cardPublicationData.getData();
     }
 }
