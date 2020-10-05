@@ -2,12 +2,6 @@
   "id": "processAction",
   "version": "1",
   "defaultLocale": "fr",
-  "templates": [
-    "template1",
-    "long-card"
-  ],
-  "csses": [
-  ],
   "menuEntries": [
   ],
   "states": {

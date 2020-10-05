@@ -7,14 +7,6 @@
     "logging": true,
     "calendar": true
   },
-  "templates": [
-    "message",
-    "usercard_message",
-    "conference",
-    "usercard_conference"
-  ],
-  "csses": [
-  ],
   "states": {
     "messageState": {
       "name":  "message.title",

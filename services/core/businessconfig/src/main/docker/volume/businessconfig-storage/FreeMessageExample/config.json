@@ -2,12 +2,6 @@
   "id": "UserCardExample",
   "version": "2",
   "name":  "process.label",
-  "templates": [
-    "template1",
-    "template2"
-  ],
-  "csses": [
-  ],
   "states": {
     "firstState": {
       "name":  "firstState.label",

@@ -7,21 +7,7 @@
     "logging": true,
     "calendar": true
   },
-  "templates": [
-    "template",
-    "chart",
-    "chart-line",
-    "process",
-    "question",
-    "contingencies",
-    "response",
-    "usercard_message",
-    "usercard_process"  
-  ],
-  "csses": [
-    "style",
-    "contingencies"
-  ],  "menuLabel": "menu.label",
+  "menuLabel": "menu.label",
   "menuEntries": [
     {
       "id": "uid test 0",
