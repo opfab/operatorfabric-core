@@ -24,7 +24,8 @@ public class ConsumerFactoryAutoConfiguration {
 
     private Map<String,Object> consumerConfig() {
         log.info("bootstrapServers: " + kafkaProperties.getBootstrapServers());
-        return kafkaProperties.buildConsumerProperties();
+        Map<String,Object> props = kafkaProperties.buildConsumerProperties();
+        return props;
     }
 
     @Bean
