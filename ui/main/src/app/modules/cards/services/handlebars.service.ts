@@ -52,6 +52,7 @@ export class HandlebarsService {
         this.registerToBreakage();
         this.registerArrayContains();
         this.registerTimes();
+        this.registerTextToHtml();
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale))
     }
 
@@ -339,6 +340,16 @@ export class HandlebarsService {
             }
             return buffer;
         });
+    }
+
+    private registerTextToHtml() {
+        Handlebars.registerHelper('textToHtml', function (value, options) {
+            let  result =  Handlebars.escapeExpression(value);
+            result = result.replace(/\n/g, '<br/>');
+            result = result.replace(/\s\s/g, '&nbsp;&nbsp;');
+            return new Handlebars.SafeString(result);
+        });
+
     }
 }
 

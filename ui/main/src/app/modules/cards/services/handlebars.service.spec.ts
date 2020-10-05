@@ -539,6 +539,50 @@ describe('Handlebars Services', () => {
                 call.flush('{{{action "action-id"}}}');
             });
         });
+
+        it('compile textToHTML for two lines ', (done) => {
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
+                .subscribe((result) => {
+                    expect(result).toEqual('test<br/>test');
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush('{{textToHtml "test\ntest"}}');
+            });
+        });
+
+        it('compile textToHTML for two lines with two spaces ', (done) => {
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
+                .subscribe((result) => {
+                    expect(result).toEqual('&nbsp;&nbsp;test<br/>test');
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush('{{textToHtml "  test\ntest"}}');
+            });
+        });
+        it('compile textToHTML for five lines and one space ', (done) => {
+            const templateName = Guid.create().toString();
+            handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
+                .subscribe((result) => {
+                    expect(result).toEqual('test<br/>test<br/><br/><br/>last line');
+                    done();
+                });
+            let calls = httpMock.match(req => req.url == computeTemplateUri(templateName));
+            expect(calls.length).toEqual(1);
+            calls.forEach(call => {
+                expect(call.request.method).toBe('GET');
+                call.flush('{{textToHtml "test\ntest\n\n\nlast line"}}');
+            });
+        });
     });
 
 });
