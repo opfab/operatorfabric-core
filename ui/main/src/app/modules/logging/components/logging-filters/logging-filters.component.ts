@@ -7,11 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {FormControl, FormGroup} from '@angular/forms';
-import {Observable, Subject} from 'rxjs';
 import {
     checkElement,
     FilterDateTypes,
@@ -26,15 +25,14 @@ import {TimeService} from '@ofServices/time.service';
     templateUrl: './logging-filters.component.html',
     styleUrls: ['./logging-filters.component.scss']
 })
-export class LoggingFiltersComponent implements OnInit, OnDestroy {
+export class LoggingFiltersComponent implements OnInit {
 
     size = 10;
     loggingForm: FormGroup;
-    unsubscribe$: Subject<void> = new Subject<void>();
     public submittedOnce = false;
 
     @Input()
-    public processData: Observable<any>;
+    public processData: [];
 
     constructor(private store: Store<AppState>, private timeService: TimeService, private configService: ConfigService) {
         this.loggingForm = new FormGroup(
@@ -89,9 +87,6 @@ export class LoggingFiltersComponent implements OnInit, OnDestroy {
         return params;
     }
 
-    ngOnDestroy() {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
-    }
+
 
 }

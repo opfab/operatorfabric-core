@@ -35,9 +35,8 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
 
+import org.lfenergy.operatorfabric.businessconfig.model.*;
 import org.lfenergy.operatorfabric.businessconfig.model.Process;
-import org.lfenergy.operatorfabric.businessconfig.model.ProcessData;
-import org.lfenergy.operatorfabric.businessconfig.model.ResourceTypeEnum;
 import org.lfenergy.operatorfabric.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +69,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private Table<String,String, Process> completeCache;
     private ResourceLoader resourceLoader;
     private LocalValidatorFactoryBean validator;
+    private ProcessGroupsData processGroupsCache;
     
     @Autowired
     public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator) {
@@ -82,6 +82,11 @@ public class ProcessesService implements ResourceLoaderAware {
     @PostConstruct
     private void init() {
     	loadCache();
+    	loadProcessGroupsCache();
+    }
+
+    public ProcessGroups getProcessGroupsCache() {
+        return processGroupsCache;
     }
 
     /**
@@ -92,7 +97,28 @@ public class ProcessesService implements ResourceLoaderAware {
 	public List<Process> listProcesses() {
 		return new ArrayList<>(defaultCache.values());		
 	}
-    
+
+    /**
+     * Loads processGroups data to processGroupsCache
+     */
+    public void loadProcessGroupsCache() {
+
+        this.processGroupsCache = new ProcessGroupsData(new ArrayList<>(), new ProcessGroupsLocaleData());
+        try {
+            Path rootPath = Paths
+                    .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                    .normalize();
+
+            File f = new File(rootPath.toString() + "/processGroups.json");
+            if (f.exists() && f.isFile()) {
+                log.info("loading processGroups.json file from {}", new File(storagePath).getAbsolutePath());
+                this.processGroupsCache = objectMapper.readValue(f, ProcessGroupsData.class);
+            }
+        }
+        catch (IOException e) {
+            log.warn("Unreadable processGroups.json file at  {}", storagePath);
+        }
+    }
 
     /**
      * Loads process data to defaultCache (not thread safe)
@@ -311,6 +337,29 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     /**
+     * Updates or creates processgroups file from a file uploaded from POST /businessconfig/processgroups
+     *
+     * @param is processgroups file input stream
+     * @throws IOException if error arise during stream reading
+     */
+    public synchronized void updateProcessGroupsFile(InputStream is) throws IOException {
+        Path rootPath = Paths
+                .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                .normalize();
+        if (!rootPath.toFile().exists())
+            throw new FileNotFoundException("No directory available to copy processgroups file");
+
+        ProcessGroupsData newProcessGroups = objectMapper.readValue(is, ProcessGroupsData.class);
+        is.reset();
+
+        //copy file
+        PathUtils.copyInputStreamToFile(is, rootPath.toString() + "/processGroups.json");
+
+        //update cache
+        processGroupsCache = newProcessGroups;
+    }
+
+    /**
      * Updates or creates process from disk saved bundle
      *
      * @param outPath path to the bundle
@@ -451,10 +500,12 @@ public class ProcessesService implements ResourceLoaderAware {
             }finally {
                 this.completeCache.clear();
                 this.defaultCache.clear();
+                this.processGroupsCache.clear();
             }
         }else{
             this.completeCache.clear();
             this.defaultCache.clear();
+            this.processGroupsCache.clear();
         }
     }
         

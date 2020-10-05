@@ -40,6 +40,12 @@ task compressBundle2Data(type: Exec){
     executable "bash"
     args "-c", "tar -czf $project.projectDir/build/test-data/bundles/second-2.1.tar.gz *"
 }
+task copyProcessGroupsFile(type: Exec){
+    description 'copy processgroups.json file for businessconfig party configuration data for tests in build/test-data'
+    workingDir "$project.projectDir/src/test/data/"
+    executable "bash"
+    args "-c", "cp processgroups.json $project.projectDir/build/test-data/"
+}
 
 task createDevData(type: Copy){
     description 'prepare data in build/test-data for running bootRun task during development'
@@ -79,8 +85,9 @@ task copyCompileClasspathDependencies(type: Copy) {
 createDevData.dependsOn prepareDevDataDir
 compressBundle1Data.dependsOn prepareTestDataDir
 compressBundle2Data.dependsOn prepareTestDataDir
-test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data
-unitTest.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data
+copyProcessGroupsFile.dependsOn prepareTestDataDir
+test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile
+unitTest.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile
 bootRun.dependsOn createDevData
 
 // <<<<< Test data tasks

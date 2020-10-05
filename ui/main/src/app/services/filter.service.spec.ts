@@ -8,7 +8,6 @@
  */
 
 
-
 import {TestBed} from '@angular/core/testing';
 
 import {FilterService, FilterType} from './filter.service';

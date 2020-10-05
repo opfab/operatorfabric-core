@@ -39,6 +39,17 @@
       "es2019",
       "dom",
       "dom.iterable"
+    ],
+
+     "plugins": [
+      {
+        "name": "typescript-tslint-plugin",
+        "alwaysShowRuleFailuresAsWarnings": false,
+        "ignoreDefinitionFiles": true,
+        "configFile": "../tslint.json",
+        "suppressWhileTypeErrorsPresent": false
+      }
     ]
   }
+
 }

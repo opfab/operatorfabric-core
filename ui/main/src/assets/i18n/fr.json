@@ -4,6 +4,7 @@
     "calendar" : "Calendrier",
     "archives": "Archives",
     "logging": "Logging",
+    "admin": "Administration",
     "monitoring": "Monitoring",
     "logout": "Déconnexion",
     "settings": "Paramètres",
@@ -30,7 +31,7 @@
         "start.label": "Début",
         "end.label": "Fin",
         "active.label": "Actif",
-        "lttd.label" :"Terminée"
+        "lttd.label": "Terminée"
       },
       "type": {
         "title": "Type",
@@ -124,7 +125,8 @@
     "processName": "Titre",
     "description": "Description",
     "sender": "Envoyeur",
-    "noResult": "Aucun résultat"
+    "noResult": "Aucun résultat",
+    "ExportTOExcel": "Exporter vers Excel"
   },
   "monitoring": {
     "filters": {
@@ -136,23 +138,29 @@
     "summary": "Résumé",
     "trigger": "Déclencheur",
     "status": "Status",
-    "seeDetails": "Voir les détails"
+    "seeDetails": "Voir les détails",
+    "ExportTOExcel": "Exporter vers Excel"
   },
   "button": {
     "ok": "OK",
     "cancel": "Annuler",
     "reset": "Effacer"
   },
-  "usercard": {
-    "title": "Éditer la notification par Free Message",
+  "userCard": {
+    "title": "Édition d'une nouvelle carte",
+    "error": {
+      "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
+      "templateError" : "Erreur technique : template non conforme",
+      "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques"
+    },
     "filters": {
       "severity": "Sévérité",
       "process": "Processus",
       "state": "État",
-      "startDate": "Date de début",
-      "endDate": "Date de fin",
+      "startDate": "Date de début de validité",
+      "endDate": "Date de fin de validité",
       "comment": "Commentaire",
-      "entities": "Recipiendaire"
+      "entities": "Destinataire"
     },
     "options": {
       "severity": {
@@ -168,7 +176,8 @@
     "refuse": "Annuler",
     "processInstanceId": "Identifiant",
     "state": "État",
-    "send-another-one": "Envoyer une autre carte"
+    "send-another-one": "Envoyer une autre carte",
+    "cardSendWithNoError": "Carte envoyée"
   },
   "response": {
     "btnTitle": "VALIDER REPONSES",
@@ -183,6 +192,54 @@
     "button": {
       "ack": "Acquitter et fermer",
       "unack": "Annuler l'acquitement"
+    }
+  },
+  "admin": {
+    "input": {
+      "user": {
+        "login": "Identifiant",
+        "lastname": "Nom",
+        "firstname": "Prénom",
+        "groups": "Groupes",
+        "entities": "Entitiés",
+        "add": "Ajouter un nouveau utilisateur",
+        "edit": "Editer",
+        "delete": "Supprimer",
+        "save": "Sauvegarder les changements",
+        "close": "Fermer",
+        "cancel": "Abondonner",
+        "confirm":"Confirmez..",
+        "user":"utilisateur",
+        "filter": "filtrer par ",
+        "filterAll": "filtrer toutes les colonnes"
+      },
+      "delete" :"Voulez vous vraiment supprimer l'utilisateur",
+      "login": {
+        "required": "L'identifiant est obligatoire .",
+        "minLength": "L'identifiant doit avoir au moins 4 caractères .",
+        "maxLength": "L'identifiant doit avoir au maximum 20 caractères .",
+        "alreadyTaken": "Cet identifiant est déjà pris."
+      },
+      "firstname": {
+        "required": "Le prénom est obligatoire .",
+        "maxLength": "Le prénom doit avoir  au maximum 20 caractères ."
+      },
+      "lastname": {
+        "required": "Le nom est obligatoire .",
+        "maxLength": "Le nom doit avoir  au maximum 20 caractères ."
+      },
+      "lines": "lignes"
+    },
+    "tabs": {
+      "users": "Gestion des utilisateurs",
+      "groups": "Gestion des groupes",
+      "entities": "Gestion des entités"
+    },
+    "pagination": {
+      "firstText": "Premier",
+      "lastText": "Dernier",
+      "nextText": "Suivant",
+      "prevText": "Précédent"
     }
   }
 }

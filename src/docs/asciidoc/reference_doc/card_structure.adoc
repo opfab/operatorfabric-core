@@ -123,10 +123,6 @@ State id of the associated process, determined by `OperatorFabric` can be set ar
 
 Indicates when the card has been registered in `OperatorFabric` system. This is a technical information exclusively managed by `OperatorFabric`.
 
-==== Deletion Date (`deletionDate°)
-
-Indicates when the card has been removes from `OperatorFabric` system. Technical information manage by `OperatorFabric`.
-
 == User destined Information of the card
 
 There are two kind of User destined information in a card. Some are restricted to the card format, others are defined by the publisher as long as there are encoded in `json` format. 

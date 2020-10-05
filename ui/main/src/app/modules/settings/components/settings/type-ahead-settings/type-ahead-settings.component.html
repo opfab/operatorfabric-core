@@ -11,6 +11,10 @@
 <form [formGroup]="form" id="time-filter-form">
     <div class="form-group">
         <label for="setting" translate>settings.{{settingPath}}</label>
-        <type-ahead id="setting" formControlName="setting" class="form-control tags-field rounded" [multi]="true" [custom]="true"></type-ahead>
+        <type-ahead id="setting"
+                    formControlName="setting"
+                    class="form-control tags-field rounded"
+                    [multi]="true"
+                    [custom]="true"></type-ahead>
     </div>
 </form>

@@ -53,9 +53,6 @@ public class ArchivedCardConsultationData implements Card {
     private I18n summary;
     @CreatedDate
     private Instant publishDate;
-    @Transient
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant deletionDate;
     private Instant lttd;
     @Indexed
     private Instant startDate;
