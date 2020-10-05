@@ -9,7 +9,6 @@ dependencies {
     annotationProcessor boot.annotationConfiguration
 
     implementation 'org.springframework.kafka:spring-kafka'
-    implementation "com.google.code.gson:gson:${versions['com.google.code.gson']}"
 
     compile boot.starterWebflux
     compile project(':client:cards-client-data')
