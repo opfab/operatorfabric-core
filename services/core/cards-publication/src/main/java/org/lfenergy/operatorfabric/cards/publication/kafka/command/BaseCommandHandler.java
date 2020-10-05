@@ -26,9 +26,6 @@ public abstract class BaseCommandHandler {
         this.objectMapper.enable(MapperFeature.REQUIRE_SETTERS_FOR_GETTERS);
     }
 
-    @Autowired
-    private ObjectMapper mapper;
-
     protected CardPublicationData buildCardPublicationData(CardCommand cardCommand) {
         Card kafkaCard = cardCommand.getCard();
 
@@ -41,7 +38,7 @@ public abstract class BaseCommandHandler {
 
             String cardDataString = kafkaCard.getData();
             if (cardDataString != null) {
-                cardData = mapper.readValue(cardDataString, new TypeReference<Map<String, Object>>() {
+                cardData = objectMapper.readValue(cardDataString, new TypeReference<Map<String, Object>>() {
                 });
             }
         card.setData(cardData);
