@@ -9,7 +9,9 @@
   },
   "templates": [
     "message",
-    "usercard_message"
+    "usercard_message",
+    "conference",
+    "usercard_conference"
   ],
   "csses": [
   ],
@@ -24,6 +26,22 @@
             "key": "message.title"
           },
           "templateName": "message",
+          "styles": [
+          ]
+        }
+      ],
+      "acknowledgementAllowed": true
+    },
+    "conferenceState": {
+      "name":  "conference.title",
+      "color": "#FAF0AF",
+      "userCardTemplate": "usercard_conference",
+      "details": [
+        {
+          "title": {
+            "key": "conference.title"
+          },
+          "templateName": "conference",
           "styles": [
           ]
         }

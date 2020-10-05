@@ -8,7 +8,7 @@
     "logout": "Déconnexion",
     "settings": "Paramètres",
     "about": "À propos",
-    "usercard": "Nouvelle Carte"
+    "usercard": "Création de cartes"
   },
   "timeline": {
     "businessPeriod": "Periode métier",
@@ -144,7 +144,7 @@
     "reset": "Effacer"
   },
   "userCard": {
-    "title": "Édition d'une nouvelle carte",
+    "title": "Création d'une nouvelle carte",
     "error": {
       "noRecipientSelected" : "Vous devez au moins choisir un destinataire",
       "templateError" : "Erreur technique : template non conforme",
@@ -154,8 +154,8 @@
       "severity": "Sévérité",
       "process": "Processus",
       "state": "État",
-      "startDate": "Date de début de validité",
-      "endDate": "Date de fin de validité",
+      "startDate": "Date de début ",
+      "endDate": "Date de fin ",
       "comment": "Commentaire",
       "entities": "Destinataire"
     },

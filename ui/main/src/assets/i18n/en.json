@@ -8,7 +8,7 @@
     "logout": "Logout",
     "settings": "Settings",
     "about": "About",
-    "usercard": "New Card"
+    "usercard": "Card Creation"
   },
   "timeline" : {
     "businessPeriod": "Business period",
@@ -141,7 +141,7 @@
 
   },
   "userCard": {
-    "title": "New Card Edition",
+    "title": "Create a new card",
     "error": {
       "noRecipientSelected" : "You must at least choose one recipient",
       "templateError" : "Technical error : invalid template",
@@ -151,10 +151,10 @@
       "severity":  "Severity",
       "process": "Process",
       "state": "State",
-      "startDate":  "Validity Start Date",
-      "endDate":  "Validity End Date",
+      "startDate":  "Start Date",
+      "endDate":  "End Date",
       "comment": "Comment",
-      "entities": "Recipient"
+      "entities": "Recipients"
     },
     "options": {
       "severity": {
@@ -171,7 +171,7 @@
     "processInstanceId": "Id",
     "state": "State",
     "send-another-one": "Send another Card",
-    "cardSendWithNoError": "Card send"
+    "cardSendWithNoError": "Card sent"
   },
   "response": {
     "btnTitle": "VALIDATE ANSWERS",
