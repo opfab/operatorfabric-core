@@ -31,6 +31,8 @@ import { DataTableShareService } from 'app/modules/admin/services/data.service';
 import { GroupsService } from './groups.service';
 import { EntitiesService } from './entities.service';
 import { LoginValidatorService } from 'app/modules/admin/services/login-validator.service';
+import { ExportService } from './export.service';
+
 
 @NgModule({
     imports: [
@@ -40,6 +42,7 @@ import { LoginValidatorService } from 'app/modules/admin/services/login-validato
         ConfigService,
         SettingsService,
         CardService,
+        ExportService,
         AuthenticationService,
         TimeService,
         ProcessesService,

@@ -47,6 +47,7 @@
     "angularx-flatpickr": "^6.5.1",
     "bootstrap": "^4.5.2",
     "core-js": "^2.6.3",
+    "file-saver": "^2.0.2",
     "flatpickr": "^4.6.6",
     "guid-typescript": "^1.0.9",
     "handlebars": "^4.7.6",
@@ -63,6 +64,7 @@
     "rxjs": "^6.6.3",
     "svg-pan-zoom": "^3.6.1",
     "tslib": "^1.13.0",
+    "xlsx": "^0.16.7",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
@@ -73,6 +75,7 @@
     "@compodoc/compodoc": "^1.1.10",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@ngrx/schematics": "^7.1.0",
+    "@types/file-saver": "^2.0.1",
     "@types/handlebars": "^4.0.40",
     "@types/jasmine": "~3.3.7",
     "@types/jasminewd2": "~2.0.6",
@@ -84,7 +87,7 @@
     "jasmine-marbles": "^0.6.0",
     "jasmine-spec-reporter": "^4.2.1",
     "jasmine-sse": "^0.2.0",
-    "karma": "^4.2.0",
+    "karma": "^5.2.2",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage-istanbul-reporter": "~2.0.4",
     "karma-jasmine": "^2.0.1",
