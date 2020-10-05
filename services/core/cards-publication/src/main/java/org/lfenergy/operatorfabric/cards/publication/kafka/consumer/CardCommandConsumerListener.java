@@ -7,15 +7,12 @@ import org.lfenergy.operatorfabric.avro.CommandType;
 import org.lfenergy.operatorfabric.cards.publication.kafka.command.CommandHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
-//@ConditionalOnExpression("!T(org.springframework.util.StringUtils).isEmpty('${spring.kafka.topics.name:}')")
 public class CardCommandConsumerListener {
 
     private final Map<CommandType,CommandHandler> commandHandlerMap;

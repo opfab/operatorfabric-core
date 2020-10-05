@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @ConditionalOnProperty("spring.kafka.consumer.group-id")
-//@Import(KafkaListenerContainerFactoryConfiguration.class)
+@Import(KafkaListenerContainerFactoryConfiguration.class)
 @Configuration
 public class ConsumerFactoryAutoConfiguration {
 
