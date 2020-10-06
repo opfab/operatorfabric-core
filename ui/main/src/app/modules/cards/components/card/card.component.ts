@@ -1,5 +1,4 @@
 /* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
- * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -94,7 +93,15 @@ export class CardComponent implements OnInit, OnDestroy, DoCheck {
 
     public isValidatelttd(): boolean {
         const entityUser = this.userService.getCurrentUserWithPerimeters().userData.entities[0];
-        return !this.isArchivePageType() && this.lightCard.entitiesAllowedToRespond.includes(entityUser);
+
+        if (!this.isArchivePageType()) {
+            if (this.lightCard.severity === 'ACTION') {
+                return this.lightCard.entitiesAllowedToRespond.includes(entityUser);
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     isTimeToStartCountDown(): boolean {
