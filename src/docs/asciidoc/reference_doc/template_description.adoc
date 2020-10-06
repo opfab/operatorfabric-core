@@ -416,9 +416,9 @@ The output will be:
 <p>student3: 9</p>
 ....
 
-=== textToHtml
+=== keepSpacesAndEndOfLine
 
-Convert a string to HTML by replacing :
+Convert a string to a light HTML by replacing :
 
   -  each new line character with <br/>
   -  spaces with \&nbsp; when there is at least two consecutive spaces.

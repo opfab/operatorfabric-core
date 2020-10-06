@@ -52,7 +52,7 @@ export class HandlebarsService {
         this.registerToBreakage();
         this.registerArrayContains();
         this.registerTimes();
-        this.registerTextToHtml();
+        this.registerKeepSpacesAndEndOfLine();
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe(locale => this.changeLocale(locale))
     }
 
@@ -342,8 +342,8 @@ export class HandlebarsService {
         });
     }
 
-    private registerTextToHtml() {
-        Handlebars.registerHelper('textToHtml', function (value, options) {
+    private registerKeepSpacesAndEndOfLine() {
+        Handlebars.registerHelper('keepSpacesAndEndOfLine', function (value, options) {
             let  result =  Handlebars.escapeExpression(value);
             result = result.replace(/\n/g, '<br/>');
             result = result.replace(/\s\s/g, '&nbsp;&nbsp;');

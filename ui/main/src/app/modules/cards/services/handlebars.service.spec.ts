@@ -540,7 +540,7 @@ describe('Handlebars Services', () => {
             });
         });
 
-        it('compile textToHTML for two lines ', (done) => {
+        it('compile keepSpacesAndEndOfLine for two lines ', (done) => {
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
@@ -551,11 +551,11 @@ describe('Handlebars Services', () => {
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{textToHtml "test\ntest"}}');
+                call.flush('{{keepSpacesAndEndOfLine "test\ntest"}}');
             });
         });
 
-        it('compile textToHTML for two lines with two spaces ', (done) => {
+        it('compile keepSpacesAndEndOfLine for two lines with two spaces ', (done) => {
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
@@ -566,10 +566,10 @@ describe('Handlebars Services', () => {
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{textToHtml "  test\ntest"}}');
+                call.flush('{{keepSpacesAndEndOfLine "  test\ntest"}}');
             });
         });
-        it('compile textToHTML for five lines and one space ', (done) => {
+        it('compile keepSpacesAndEndOfLine for five lines and one space ', (done) => {
             const templateName = Guid.create().toString();
             handlebarsService.executeTemplate(templateName, new DetailContext(card, userContext, null))
                 .subscribe((result) => {
@@ -580,7 +580,7 @@ describe('Handlebars Services', () => {
             expect(calls.length).toEqual(1);
             calls.forEach(call => {
                 expect(call.request.method).toBe('GET');
-                call.flush('{{textToHtml "test\ntest\n\n\nlast line"}}');
+                call.flush('{{keepSpacesAndEndOfLine "test\ntest\n\n\nlast line"}}');
             });
         });
     });
