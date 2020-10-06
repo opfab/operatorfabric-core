@@ -47,6 +47,7 @@ export class CardService {
     readonly cardsPubUrl: string;
     readonly userAckUrl: string;
     readonly userCardReadUrl: string;
+    readonly userCardUrl: string;
     private lastHeardBeatDate: number;
     private firstSubscriptionInitDone = false;
     public initSubscription = new Subject<void>();
@@ -64,6 +65,7 @@ export class CardService {
         this.cardsPubUrl = `${environment.urls.cardspub}/cards`;
         this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
         this.userCardReadUrl = `${environment.urls.cardspub}/cards/userCardRead`;
+        this.userCardUrl = `${environment.urls.cardspub}/cards/userCard`;
     }
 
     loadCard(id: string): Observable<CardData> {
@@ -207,6 +209,10 @@ export class CardService {
 
     deleteUserAcnowledgement(card: Card): Observable<HttpResponse<void>> {
         return this.httpClient.delete<void>(`${this.userAckUrl}/${card.uid}`, {observe: 'response'});
+    }
+
+    deleteCard(card: Card): Observable<HttpResponse<void>> {
+        return this.httpClient.delete<void>(`${this.userCardUrl}/${card.id}`, {observe: 'response'});
     }
 
     postUserCardRead(card: Card): Observable<HttpResponse<void>> {

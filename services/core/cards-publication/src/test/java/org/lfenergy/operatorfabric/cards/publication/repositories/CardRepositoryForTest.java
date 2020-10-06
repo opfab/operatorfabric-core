@@ -26,4 +26,6 @@ public interface CardRepositoryForTest extends ReactiveMongoRepository<CardPubli
     public Mono<CardPublicationData> findByProcessInstanceId(String processInstanceId);
     
     public Mono<CardPublicationData> findByUid(String Uid);
+
+    public Mono<CardPublicationData> findById(String id);
 }

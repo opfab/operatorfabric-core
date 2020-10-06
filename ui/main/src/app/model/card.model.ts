@@ -9,7 +9,7 @@
 
 
 
-import {LightCard, Severity} from '@ofModel/light-card.model';
+import {LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
@@ -37,7 +37,8 @@ export class Card {
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly recipient?: Recipient,
-        readonly parentCardUid?: string
+        readonly parentCardUid?: string,
+        readonly publisherType?: PublisherType | string
     ) {
     }
 }

@@ -27,7 +27,8 @@ java -jar karate.jar                              \
       cards/post1CardThenUpdateThenDelete.feature \
       cards/getArchive.feature                    \
       cards/post2CardsGroupRouting.feature        \
-      cards/post1BigCards.feature                 
+      cards/post1BigCards.feature                 \
+      cards/deleteUserCard.feature
       #cards/updateCardSubscription.feature
       #cards/delete3BigCards.feature               
 
