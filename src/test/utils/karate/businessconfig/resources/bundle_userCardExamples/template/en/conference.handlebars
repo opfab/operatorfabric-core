@@ -1,4 +1,3 @@
-
 <!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -7,13 +6,28 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-<h2>  Vous avez reçu le message suivant</h2>
 <br/>
 <br/>
 
-<h3 style="text-align: justify;">
+<h2>  You are invited to a conference call at {{dateFormat  card.startDate format="MMMM Do YYYY, h:mm: a"}}</h2>
+<br/>
+<br/>
 
-{{keepSpacesAndEndOfLine card.data.message}}
+<center>
+<h1>
+Conference subject : {{card.data.conf_subject}}
+</h1>
 
-</h3>
+<br/>
+<br/>
+The conference call is available via : <a href="{{card.data.conf_link}}" target="_blank"> This link </a>
+
+<br/>
+<br/>
+Please consult the full report :  <a href="{{card.data.report_link}}" target="_blank"> {{card.data.report_title}}</a>
+
+</center>
+<br/>
+<p>
+Complementary information : {{keepSpacesAndEndOfLine card.data.message}}
+</p>

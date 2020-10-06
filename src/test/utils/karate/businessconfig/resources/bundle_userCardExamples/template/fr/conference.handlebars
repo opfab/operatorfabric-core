@@ -1,4 +1,3 @@
-
 <!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -8,12 +7,28 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<h2>  Vous avez reçu le message suivant</h2>
 <br/>
 <br/>
 
-<h3 style="text-align: justify;">
+<h2>  Vous êtes invité à une conference le {{dateFormat  card.startDate format="DD MMMM YYYY à HH:mm"}}</h2>
+<br/>
+<br/>
 
-{{keepSpacesAndEndOfLine card.data.message}}
+<center>
+<h1>
+Sujet de la conférence : {{card.data.conf_subject}}
+</h1>
 
-</h3>
+<br/>
+<br/>
+La conférence est accessible via  <a href="{{card.data.conf_link}}" target="_blank"> ce lien </a>
+
+<br/>
+<br/>
+Consulter le rapport :  <a href="{{card.data.report_link}}" target="_blank"> {{card.data.report_title}}</a>
+
+</center>
+<br/>
+<p>
+Informations complémentaires : {{keepSpacesAndEndOfLine card.data.message}}
+</p>

@@ -1,0 +1,74 @@
+
+<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+
+    <table style="width: 100%;padding:2px">
+        <tr "padding:5px">
+            <td style="width: 15%;padding:5px">
+                Conference subject
+            </td>
+             <td style="width: 35%;padding:5px">
+                <input  id="conf_subject" name="conf_subject" style="width: 100%;"></input >
+            </td>
+             <td style="width: 15%;padding:5px">
+                Link for conference
+            </td>
+             <td style="width: 35%;padding:5px">
+                <input  id="conf_link" name="conf_link" placeholder="http://...." style="width: 100%"></input >
+            </td>
+        </tr>
+        <tr "padding:5px">
+            <td style="width: 15%;padding:5px">
+                Report name 
+            </td>
+             <td style="width: 35%;padding:5px">
+                <input  id="report_title" name="report_title" style="width: 100%;"></input >
+            </td>
+             <td style="width: 15%;padding:5px">
+                Link for report 
+            </td>
+             <td style="width: 35%;padding:5px">
+                <input  id="report_link" name="report_link" placeholder="http://...." style="width: 100%;"></input >
+            </td>
+        </tr>
+
+    </table>
+<br/>
+        Complementary information :  
+        <div style="width:100%">
+            <textarea  id="message" name="message"  style="width:100%" ></textarea>
+        </div>
+
+
+<script>
+    templateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const conf_subject = document.getElementById('conf_subject').value;
+        const conf_link = document.getElementById('conf_link').value;
+        const report_title = document.getElementById('report_title').value;
+        const report_link = document.getElementById('report_link').value;
+        const card = {
+        summary : {key : "conference.summary"},
+		title : {key : "conference.title"},
+        data : {
+                message: message,
+                conf_subject:conf_subject,
+                conf_link:conf_link,
+                report_title:report_title,
+                report_link:report_link
+                 }
+        };
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+</script>

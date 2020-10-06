@@ -45,6 +45,7 @@ class Message {
 export class UserCardComponent implements OnDestroy, OnInit {
 
     messageForm: FormGroup;
+    recipientForm: FormGroup;
     messageAfterSendingCard: string;
 
 
@@ -111,9 +112,13 @@ export class UserCardComponent implements OnDestroy, OnInit {
             state: new FormControl(''),
             startDate: new FormControl(''),
             endDate: new FormControl(''),
-            comment: new FormControl(''),
+            comment: new FormControl('')
+        });
+
+        this.recipientForm = new FormGroup({
             entities: new FormControl([])
         });
+
 
         this.changeSeverityToDefaultValue();
         this.changeStatesWhenSelectProcess();
@@ -193,7 +198,6 @@ export class UserCardComponent implements OnDestroy, OnInit {
                     return processDefinition.id === process;
                 });
                 this.messageForm.get('state').setValue(this.selectedState);
-                this.loadTemplate();
             }
         });
     }
@@ -240,6 +244,7 @@ export class UserCardComponent implements OnDestroy, OnInit {
 
     onSubmitForm(template: TemplateRef<any>) {
         const formValue = this.messageForm.value;
+        const recipients = this.recipientForm.value['entities'];
         const processFormVal = formValue['process'];
         const selectedProcess = this.processesDefinition.find(process => {
             return process.id === processFormVal;
@@ -269,12 +274,12 @@ export class UserCardComponent implements OnDestroy, OnInit {
         }
 
         const entities = new Array();
-        if (formValue['entities'].length < 1) {
+        if (recipients.length < 1) {
             this.errorMessage.display = true;
             this.errorMessage.text = 'userCard.error.noRecipientSelected';
             return;
         } else {
-            formValue['entities'].forEach(entity => entities.push(entity.id));
+            recipients.forEach(entity => entities.push(entity.id));
         }
 
         let startDate = this.messageForm.get('startDate').value;
