@@ -128,20 +128,22 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     // -------------------------- [OC-980] -------------------------- //
     adaptTemplateSize() {
         const cardTemplate = document.getElementById('div-card-template');
-        const diffWindow = cardTemplate.getBoundingClientRect();
-        const divMsg = document.getElementById('div-detail-msg');
-        const divBtn = document.getElementById('div-detail-btn');
+        if (!!cardTemplate) {
+            const diffWindow = cardTemplate.getBoundingClientRect();
+            const divMsg = document.getElementById('div-detail-msg');
+            const divBtn = document.getElementById('div-detail-btn');
 
-        let cardTemplateHeight = window.innerHeight - diffWindow.top;
-        if (divMsg) {
-            cardTemplateHeight -= divMsg.scrollHeight + 35;
-        }
-        if (divBtn) {
-            cardTemplateHeight -= divBtn.scrollHeight + 50;
-        }
+            let cardTemplateHeight = window.innerHeight - diffWindow.top;
+            if (divMsg) {
+                cardTemplateHeight -= divMsg.scrollHeight + 35;
+            }
+            if (divBtn) {
+                cardTemplateHeight -= divBtn.scrollHeight + 50;
+            }
 
-        cardTemplate.style.maxHeight = `${cardTemplateHeight}px`;
-        cardTemplate.style.overflowX = 'hidden';
+            cardTemplate.style.maxHeight = `${cardTemplateHeight}px`;
+            cardTemplate.style.overflowX = 'hidden';
+        }
     }
 
     ngAfterViewChecked() {
