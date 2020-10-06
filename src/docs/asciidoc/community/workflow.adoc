@@ -337,13 +337,26 @@ image::feature1_PR_autom_merge_OK.png[]
 As of today, only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
 stop anyone interested in the topic of a PR to comment and review it.
 
-[[review_checklist]]
-****
-include::{gradle-rootdir}/PULL_REQUEST_TEMPLATE.adoc[tag=review_checklist]
-****
+==== Before reviewing the code
 
-If the PR doesn't meet some of these criteria, use the GitHub review process to suggest changes and discuss problems
-with the PR author.
+===== For front-end check
+
+====== Create and run Docker images
+
+Compile and run OperatorFabric docker images is the most effective way to check any regression.
+
+. Pull the submitted branch on a testing machine;
+. Run a `docker-compose` with the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml` file;
+. Create `SNAPSHOT` docker images, from the `${OF_HOME}` directory with the following command: `./gradlew clean dockerTagSNAPSHOT`;
+. Stop the `test-environment` docker-compose;
+. Go to `${OF_HOME}/config/docker`;
+. Run the `./docker-compose.sh` script (or use the `docker-compose.yml` with a `docker-compose` command);
+
+====== Setup front-end test configuration
+
+. Go to `${OF_HOME}/src/test/utils/karate`;
+. Run the following scripts: `./loadBundle.sh && ./setPerimeterForTest.sh && ./postTestCards.sh`;
+. Open the front-end in a browser and look for any regression.
 
 === Merging a Pull Request
 
