@@ -45,7 +45,7 @@ export class CardComponent implements OnInit, OnDestroy, DoCheck {
     stopTime = false;
     secondsBeforeLttdForClockDisplay: number;
     interval: any;
-    checkHour = false;
+    hideHourInCountDown = false;
     MILLISECONDS_SECOND = 1000;
 
 
@@ -79,13 +79,15 @@ export class CardComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     ngDoCheck() {
-        const leftTimeSeconds = this.getSecondsBeforeLttd();
-        if (!this.checkHour && leftTimeSeconds < 3600) {
-            this.prettyConfig = {
-                leftTime: leftTimeSeconds,
-                format: 'mm:ss'
-            };
-            this.checkHour = true;
+        if (!!this.lightCard.lttd && !this.hideHourInCountDown) {
+            const leftTimeSeconds = this.getSecondsBeforeLttd();
+            if (leftTimeSeconds < 3600) {
+                this.prettyConfig = {
+                    leftTime: leftTimeSeconds,
+                    format: 'mm:ss'
+                };
+                this.hideHourInCountDown = true;
+            }
         }
     }
 
