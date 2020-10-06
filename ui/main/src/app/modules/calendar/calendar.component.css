@@ -7,7 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-::ng-deep .mat-dialog-container {
+ .modal-body{
+  background-color: var(--opfab-bgcolor);
+  color: var(--opfab-textcolor);
+}
+
+.modal-header{
   background-color: var(--opfab-bgcolor);
   color: var(--opfab-textcolor);
 }
