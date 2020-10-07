@@ -95,7 +95,7 @@ export class CardComponent implements OnInit, OnDestroy, DoCheck {
         const entityUser = this.userService.getCurrentUserWithPerimeters().userData.entities[0];
 
         if (!this.isArchivePageType()) {
-            if (this.lightCard.severity === 'ACTION') {
+            if (!!this.lightCard.entitiesAllowedToRespond) {
                 return this.lightCard.entitiesAllowedToRespond.includes(entityUser);
             } else {
                 return true;
