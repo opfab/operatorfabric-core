@@ -304,11 +304,11 @@ Open file `dummy1.txt`:
 
 .dummy1.txt
 ----
-<<<<<<< HEAD
-Some content from feature 1.
-=======
-Some content that has been changed on develop since Feature 1 branched off.
->>>>>>> develop
+ <<<<<<< HEAD
+ Some content from feature 1.
+ =======
+ Some content that has been changed on develop since Feature 1 branched off.
+ >>>>>>> develop
 ----
 
 Update the content to reflect the changes that you want to keep:
@@ -337,13 +337,48 @@ image::feature1_PR_autom_merge_OK.png[]
 As of today, only developers from the `reviewers` group can merge pull requests into `develop`, but this shouldn't
 stop anyone interested in the topic of a PR to comment and review it.
 
-[[review_checklist]]
-****
-include::{gradle-rootdir}/PULL_REQUEST_TEMPLATE.adoc[tag=review_checklist]
-****
 
-If the PR doesn't meet some of these criteria, use the GitHub review process to suggest changes and discuss problems
-with the PR author.
+
+==== Reviewer check list 
+
+* The PR comment contains the text to insert in release note. Otherwise, it should say why this development doesn't need
+to be on the release notes.
+* Check that Travis build is passing (for both branch and PR)
+* Check that the base branch (i.e. the branch into which we want to merge changes) is correct: for feature branches
+pull requests, this branch should be `develop`.
+* Look through changed files to make sure everything is relevant to the PR (no mistakenly added changes,
+no secret information, no malicious changes) and to see if you have remarks on the way things are implemented
+* Check that the commit(s) message(s) is(are) relevant and follow conventions ([OC-XXX] ... )
+* If there is more than one commit, is it meaningful or do we need to squash ?
+* Meaningful and sufficient unit tests for the backend (80% coverage is the threshold)
+* Meaningful unit tests for the frontend (Angular tests can be complex to implement, we should focus on testing complex
+logic and not the framework itself)
+* Check Sonar analysis on SonarCloud to see if Sonar reports any bugs or code smells on the new code
+* API testing via Karate has been updated
+* Documentation has been updated (especially if configuration is needed)
+* Configuration examples have been updated (both for dev and docker)
+* Build and run OpFab locally to see the new feature or bug fix at work. In the case of a new feature, it's also a way
+of making sure that the configuration documentation is correct and easily understandable.
+* Depending on the scope of the PR , build docker images and test in docker mode
+* Check that the copyright header has been updated on the changed files if need be, and in the case of a first-time
+    contributor, make sure they're added to the AUTHORS.txt file.
+* Check dependency added to the project to see if there are compliant with opfab licencing. 
+
+
+==== Testing environnement for reviewer 
+
+Compile and run OperatorFabric docker images is the most effective way to check any regression.
+
+. Pull the submitted branch on a testing machine;
+. Run a `docker-compose` with the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml` file;
+. Create `SNAPSHOT` docker images, from the `${OF_HOME}` directory with the following command: `./gradlew clean dockerTagSNAPSHOT`;
+. Stop the `test-environment` docker-compose;
+. Go to `${OF_HOME}/config/docker`;
+. Run the `./docker-compose.sh` script (or use the `docker-compose.yml` with a `docker-compose` command);
+. Go to `${OF_HOME}/src/test/utils/karate`;
+. Run the following scripts: `./loadBundle.sh && ./setPerimeterForTest.sh && ./postTestCards.sh`;
+. Open the front-end in a browser and look for any regression.
+
 
 === Merging a Pull Request
 
