@@ -9,18 +9,21 @@
 
 
 <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-<div class="my-3" *ngIf='responseDataExists'>
-  <table>
-    <tr>
-      <td> <span class="h4" translate>response.answers</span> : </td>
-      <td *ngFor="let entity of listEntitiesToRespond; let isLast = last"
-        [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','width': '150px','font-size': '20px','text-align': 'center'}">
-        {{entity.name}}
-      </td>
-    </tr>
-  </table>
+<div class="opfab-card-detail-border">
+  <div  *ngIf='responseDataExists'>
+    <div style="font-size: 5pt;"> <br/></div>
+    <table>
+      <tr>
+        <td> <span class="h4" translate>response.answers</span> : </td>
+        <td *ngFor="let entity of listEntitiesToRespond; let isLast = last"
+          [ngStyle]="{'color': entity.color,'border-right': (!isLast) ? '3px solid white':'','width': '150px','font-size': '20px','text-align': 'center'}">
+          {{entity.name}}
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div id="div-card-template" [hidden]="!active" [innerHtml]="htmlContent"></div>
 </div>
-<div id="div-card-template" [hidden]="!active" [innerHtml]="htmlContent"></div>
 
 <div class="my-3">
   <div id='div-detail-msg' *ngIf='message.display' class="alert alert-dismissible fade show text-center {{message.color}}"
