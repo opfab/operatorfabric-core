@@ -75,3 +75,14 @@ html, body { height: 100%; }
 .modal-fullscreen{
   max-width: 100vw * 0.9;
 }
+
+// Global colors 
+
+.opfab-colors {
+  background-color: var(--opfab-bgcolor);
+  color: var(--opfab-text-color);
+}
+
+.opfab-timeline-bgcolor {
+  background-color: var(--opfab-timeline-bgcolor);
+}
