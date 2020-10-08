@@ -253,6 +253,7 @@ And match response.count == 1
     function() {
 
       startDate = new Date().valueOf() + 2*60*60*1000;
+	  lttdDate = new Date().valueOf() + 60*1000*61;
 	  startDateTimeSpans = new Date().valueOf() + 24*60*60*1000;
 	  endDateTimeSpans = new Date().valueOf() + 26*60*60*1000;
 
@@ -268,6 +269,7 @@ And match response.count == 1
 					},
 			"severity" : "ALARM",
 			"startDate" : startDate,
+			"lttd" : lttdDate,
 			"timeSpans" : [
 				{"start" : startDateTimeSpans ,"end" : endDateTimeSpans}
 				],
