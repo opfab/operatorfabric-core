@@ -14,7 +14,7 @@ import java.io.IOException;
 public class CardCommandConsumerDeserializer implements Deserializer<CardCommand> {
 
     private final DecoderFactory decoderFactory = DecoderFactory.get();
-    private final DatumReader<CardCommand> datumReader = new SpecificDatumReader<>();
+    private final DatumReader<CardCommand> datumReader = new SpecificDatumReader<>(CardCommand.class);
 
     @Override
     public CardCommand deserialize(String s, byte[] payload) {

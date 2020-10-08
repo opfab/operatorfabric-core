@@ -2,7 +2,9 @@ package org.lfenergy.operatorfabric.cards.autoconfiguration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.lfenergy.operatorfabric.avro.CardCommand;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 
 import java.util.Map;
 
@@ -22,9 +25,19 @@ public class ConsumerFactoryAutoConfiguration {
 
     private final KafkaProperties kafkaProperties;
 
+    @Value("${spring.deserializer.value.delegate.class}")
+    private String deserializerValueClass;
+
+    @Value("${spring.deserializer.key.delegate.class}")
+    private String deserializerKeyClass;
+
     private Map<String,Object> consumerConfig() {
         log.info("bootstrapServers: " + kafkaProperties.getBootstrapServers());
         Map<String,Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, deserializerKeyClass);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, deserializerValueClass);
         return props;
     }
 
